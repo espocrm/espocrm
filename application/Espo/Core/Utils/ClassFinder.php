@@ -46,6 +46,17 @@ class ClassFinder
     {}
 
     /**
+     * Reset runtime cache.
+     *
+     * @internal
+     * @since 8.4.0
+     */
+    public function resetRuntimeCache(): void
+    {
+        $this->dataHashMap = [];
+    }
+
+    /**
      * Find class name by a category and name.
      *
      * @return ?class-string

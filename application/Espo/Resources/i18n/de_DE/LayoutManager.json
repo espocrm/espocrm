@@ -9,7 +9,11 @@
     "dynamicLogicStyled": "Bedingungen für die Anwendung des Stils",
     "noLabel": "Kein Label",
     "tabLabel": "Registerkartenbeschriftung",
-    "tabBreak": "Registerkartenumbruch"
+    "tabBreak": "Registerkartenumbruch",
+    "width": "Breite",
+    "noteText": "Notiztext",
+    "noteStyle": "Notizstil",
+    "isMuted": "Gedeckte Farbe"
   },
   "options": {
     "align": {
@@ -36,7 +40,9 @@
     "dynamicLogicStyled": "Eine Farbe wird angewendet, wenn eine bestimmte Bedingung erfüllt ist. Die Farbe wird durch den Parameter *Style* definiert.",
     "tabBreak": "Eine eigene Registerkarte für das Panel und alle folgenden Paneele bis zum nächsten Registerkartenumbruch.",
     "noLabel": "Zeige keine Spaltenbeschriftung in der Kopfzeile an.",
-    "notSortable": "Deaktiviert die Möglichkeit, nach der Spalte zu sortieren."
+    "notSortable": "Deaktiviert die Möglichkeit, nach der Spalte zu sortieren.",
+    "width": "Eine Spaltenbreite. Es wird empfohlen, eine Spalte ohne angegebene Breite zu haben, normalerweise sollte es das Feld *Name* sein.",
+    "noteText": "Ein Text, der im Panel angezeigt werden soll. Markdown wird unterstützt."
   },
   "messages": {
     "cantBeEmpty": "Layout kann nicht leer sein.",

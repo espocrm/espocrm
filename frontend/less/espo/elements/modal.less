@@ -173,12 +173,13 @@
     }
 }
 
-.modal-dialog .modal-body .list-buttons-container .sticked-bar {
+.modal-dialog .modal-body .list-sticky-bar {
     top: 94px !important;
     width: 100% !important;
     right: 0 !important;
     left: unset !important;
     padding-left: @container-padding - 1px;
+    padding-right: calc(@container-padding - ~'1px + var(--scroll-width)');
 }
 
 @media screen and (max-width: (@screen-sm-min - 1px)) {
@@ -238,6 +239,11 @@
 .modal-body > .no-side-margin {
     margin-left: -@panel-padding;
     margin-right: -@panel-padding;
+
+    > .negate-no-side-margin {
+        margin-left: @panel-padding;
+        margin-right: @panel-padding;
+    }
 }
 
 .modal.in .modal.in {

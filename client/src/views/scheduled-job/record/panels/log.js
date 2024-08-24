@@ -26,16 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/scheduled-job/record/panels/log', ['views/record/panels/relationship'], function (Dep) {
+import RelationshipPanelView from 'views/record/panels/relationship';
 
-    return Dep.extend({
+export default class extends RelationshipPanelView {
 
-        setupListLayout: function () {
-            var jobWithTargetList = this.getMetadata().get(['clientDefs', 'ScheduledJob', 'jobWithTargetList']) || [];
+    setupListLayout() {
+        const jobWithTargetList = this.getMetadata().get(['clientDefs', 'ScheduledJob', 'jobWithTargetList']) || [];
 
-            if (~jobWithTargetList.indexOf(this.model.get('job'))) {
-                this.listLayoutName = 'listSmallWithTarget'
-            }
-        },
-    });
-});
+        if (~jobWithTargetList.indexOf(this.model.get('job'))) {
+            this.listLayoutName = 'listSmallWithTarget'
+        }
+    }
+}

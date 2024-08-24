@@ -36,6 +36,7 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\Select\Where\Converter;
 use Espo\Core\Select\Where\ConverterFactory;
 use Espo\Core\Select\Where\DateTimeItemTransformer;
+use Espo\Core\Select\Where\DefaultDateTimeItemTransformer;
 use Espo\Core\Select\Where\ItemConverter;
 use Espo\Core\Select\Where\ItemGeneralConverter;
 use Espo\Core\Utils\Metadata;
@@ -56,7 +57,7 @@ class ConverterFactoryTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->itemConverter = $this->createMock(ItemGeneralConverter::class);
-        $this->dateTimeItemTransformer = $this->createMock(DateTimeItemTransformer::class);
+        $this->dateTimeItemTransformer = $this->createMock(DefaultDateTimeItemTransformer::class);
     }
 
     public function testCreate1()
@@ -82,7 +83,7 @@ class ConverterFactoryTest extends \PHPUnit\Framework\TestCase
                 [['selectDefs', $entityType, 'whereConverterClassName'], null, $className3],
             ]);
 
-        $className1 = $className1 ?? DateTimeItemTransformer::class;
+        $className1 = $className1 ?? DefaultDateTimeItemTransformer::class;
         $className2 = $className2 ?? ItemGeneralConverter::class;
         $className3 = $className3 ?? Converter::class;
 
@@ -100,7 +101,7 @@ class ConverterFactoryTest extends \PHPUnit\Framework\TestCase
             ->bindValue('$entityType', $entityType);
 
         $binder1
-            ->for(DateTimeItemTransformer::class)
+            ->for(DefaultDateTimeItemTransformer::class)
             ->bindValue('$entityType', $entityType);
 
         $bindingContainer1 = new BindingContainer($bindingData1);

@@ -5,5 +5,6 @@
     "acl": true,
     "aclActionList": ["read"],
     "aclLevelList": ["all", "team", "no"],
+    "importable": true,
     "customizable": false
 }

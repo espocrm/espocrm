@@ -34,6 +34,7 @@ use Espo\Core\Repositories\Database as DatabaseRepository;
 use Espo\Core\Utils\ClassFinder;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity as Entity;
+use Espo\ORM\EventDispatcher;
 use Espo\ORM\Repository\Repository as Repository;
 
 class ClassNameProvider
@@ -51,8 +52,16 @@ class ClassNameProvider
 
     public function __construct(
         private Metadata $metadata,
-        private ClassFinder $classFinder
-    ) {}
+        private ClassFinder $classFinder,
+        EventDispatcher $eventDispatcher,
+    ) {
+        $eventDispatcher->subscribeToMetadataUpdate(function () {
+            $this->entityCache = [];
+            $this->repositoryCache = [];
+
+            $this->classFinder->resetRuntimeCache();
+        });
+    }
 
     /**
      * @param string $entityType
@@ -87,6 +96,13 @@ class ClassNameProvider
     private function findEntityClassName(string $entityType): string
     {
         /** @var ?class-string<Entity> $className */
+        $className = $this->metadata->get("entityDefs.$entityType.entityClassName");
+
+        if ($className) {
+            return $className;
+        }
+
+        /** @var ?class-string<Entity> $className */
         $className = $this->classFinder->find('Entities', $entityType);
 
         if ($className) {
@@ -114,6 +130,13 @@ class ClassNameProvider
      */
     private function findRepositoryClassName(string $entityType): string
     {
+        /** @var ?class-string<Repository<Entity>> $className */
+        $className = $this->metadata->get("entityDefs.$entityType.repositoryClassName");
+
+        if ($className) {
+            return $className;
+        }
+
         /** @var ?class-string<Repository<Entity>> $className */
         $className = $this->classFinder->find('Repositories', $entityType);
 

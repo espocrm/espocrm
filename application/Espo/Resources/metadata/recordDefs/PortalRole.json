@@ -3,5 +3,18 @@
         "delete": {
             "allowed": true
         }
-    }
+    },
+    "forceSelectAllAttributes": true,
+    "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Role\\BeforeSaveValidate"
+    ],
+    "beforeUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Role\\BeforeSaveValidate"
+    ],
+    "afterCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\PortalRole\\AfterSave"
+    ],
+    "afterUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\PortalRole\\AfterSave"
+    ]
 }

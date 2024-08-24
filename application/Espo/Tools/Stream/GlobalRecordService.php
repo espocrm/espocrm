@@ -43,6 +43,7 @@ use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\SthCollection;
+use Espo\Tools\Stream\RecordService\NoteHelper;
 use Espo\Tools\Stream\RecordService\QueryHelper;
 
 class GlobalRecordService
@@ -56,7 +57,8 @@ class GlobalRecordService
         private Metadata $metadata,
         private EntityManager $entityManager,
         private QueryHelper $queryHelper,
-        private NoteAccessControl $noteAccessControl
+        private NoteAccessControl $noteAccessControl,
+        private NoteHelper $noteHelper
     ) {}
 
     /**
@@ -134,6 +136,7 @@ class GlobalRecordService
         foreach ($collection as $note) {
             $note->loadAdditionalFields();
             $this->noteAccessControl->apply($note, $this->user);
+            $this->noteHelper->prepare($note);
         }
 
         return RecordCollection::createNoCount($collection, $maxSize);

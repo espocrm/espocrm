@@ -45,7 +45,8 @@ define('crm:views/meeting/record/row-actions/default', ['views/record/row-action
                     data: {
                         id: this.model.id,
                         scope: this.model.entityType,
-                    }
+                    },
+                    groupIndex: 1,
                 });
 
                 actionList.push({
@@ -54,7 +55,8 @@ define('crm:views/meeting/record/row-actions/default', ['views/record/row-action
                     data: {
                         id: this.model.id,
                         scope: this.model.entityType,
-                    }
+                    },
+                    groupIndex: 1,
                 });
             }
 
@@ -65,7 +67,8 @@ define('crm:views/meeting/record/row-actions/default', ['views/record/row-action
                     data: {
                         id: this.model.id,
                         scope: this.model.entityType,
-                    }
+                    },
+                    groupIndex: 0,
                 });
             }
 

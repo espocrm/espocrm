@@ -61,7 +61,8 @@ class MainView extends View {
      * @property {string} [label] A translatable label.
      * @property {string} [labelTranslation] A label translation path.
      * @property {'default'|'danger'|'success'|'warning'} [style] A style. Only for buttons.
-     * @property {boolean} [hidden]
+     * @property {boolean} [hidden] Hidden.
+     * @property {boolean} [disabled] Disabled.
      * @property {Object.<string,string|number|boolean>} [data] Data attribute values.
      * @property {string} [title] A title.
      * @property {string} [iconHtml] An icon HTML.
@@ -428,6 +429,43 @@ class MainView extends View {
     }
 
     /**
+     * Update a menu item.
+     *
+     * @param {string} name An item name.
+     * @param {module:views/main~MenuItem} item New item definitions to write.
+     * @param {boolean} [doNotReRender=false] Skip re-render.
+     *
+     * @since 8.2.0
+     */
+    updateMenuItem(name, item, doNotReRender) {
+        const actionItem = this._getHeaderActionItem(name);
+
+        if (!actionItem) {
+            return;
+        }
+
+        for (const key in item) {
+            actionItem[key] = item[key];
+        }
+
+        if (doNotReRender) {
+            return;
+        }
+
+        if (this.isRendered()) {
+            this.getHeaderView().reRender();
+
+            return;
+        }
+
+        if (this.isBeingRendered()) {
+            this.whenRendered().then(() => {
+                this.getHeaderView().reRender();
+            })
+        }
+    }
+
+    /**
      * Add a menu item.
      *
      * @param {'buttons'|'dropdown'} type A type.
@@ -528,10 +566,30 @@ class MainView extends View {
      * @param {string} name A name.
      */
     disableMenuItem(name) {
-        this.$headerActionsContainer
-            .find('[data-name="' + name + '"]')
-            .addClass('disabled')
-            .attr('disabled');
+        const item = this._getHeaderActionItem(name);
+
+        if (item) {
+            item.disabled = true;
+        }
+
+        const process = () => {
+            this.$headerActionsContainer
+                .find(`[data-name="${name}"]`)
+                .addClass('disabled')
+                .attr('disabled');
+        };
+
+        if (this.isBeingRendered()) {
+            this.whenRendered().then(() => process());
+
+            return;
+        }
+
+        if (!this.isRendered()) {
+            return;
+        }
+
+        process();
     }
 
     /**
@@ -540,10 +598,30 @@ class MainView extends View {
      * @param {string} name A name.
      */
     enableMenuItem(name) {
-        this.$headerActionsContainer
-            .find('[data-name="' + name + '"]')
-            .removeClass('disabled')
-            .removeAttr('disabled');
+        const item = this._getHeaderActionItem(name);
+
+        if (item) {
+            item.disabled = false;
+        }
+
+        const process = () => {
+            this.$headerActionsContainer
+                .find(`[data-name="${name}"]`)
+                .removeClass('disabled')
+                .removeAttr('disabled');
+        };
+
+        if (this.isBeingRendered()) {
+            this.whenRendered().then(() => process());
+
+            return;
+        }
+
+        if (!this.isRendered()) {
+            return;
+        }
+
+        process();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -557,15 +635,31 @@ class MainView extends View {
         event.stopPropagation();
 
         this.getRouter().checkConfirmLeaveOut(() => {
-            const options = {
-                isReturn: true,
-            };
-
             const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
 
-            this.getRouter().navigate(rootUrl, {trigger: false});
-            this.getRouter().dispatch(this.scope, null, options);
+            this.getRouter().navigate(rootUrl, {trigger: true, isReturn: true});
         });
+    }
+
+    /**
+     * @private
+     * @param {string} name
+     * @return {module:views/main~MenuItem|undefined}
+     */
+    _getHeaderActionItem(name) {
+        for (const type of this.headerActionItemTypeList) {
+            if (!this.menu[type]) {
+                continue;
+            }
+
+            for (const item of this.menu[type]) {
+                if (item && item.name === name) {
+                    return item;
+                }
+            }
+        }
+
+        return undefined;
     }
 
     /**
@@ -574,25 +668,25 @@ class MainView extends View {
      * @param {string} name A name.
      */
     hideHeaderActionItem(name) {
-        this.headerActionItemTypeList.forEach(t => {
-            (this.menu[t] || []).forEach(item => {
-                item = item || {};
+        const item = this._getHeaderActionItem(name);
 
-                if (item.name === name) {
-                    item.hidden = true;
-                }
-            });
-        });
+        if (item) {
+            item.hidden = true;
+        }
 
         if (!this.isRendered()) {
             return;
         }
 
-        this.$headerActionsContainer.find('li > .action[data-name="'+name+'"]').parent().addClass('hidden');
-        this.$headerActionsContainer.find('a.action[data-name="'+name+'"]').addClass('hidden');
+        this.$headerActionsContainer.find(`li > .action[data-name="${name}"]`).parent().addClass('hidden');
+        this.$headerActionsContainer.find(`a.action[data-name="${name}"]`).addClass('hidden');
 
         this.controlMenuDropdownVisibility();
         this.adjustButtons();
+
+        if (this.getHeaderView()) {
+            this.getHeaderView().trigger('action-item-update');
+        }
     }
 
     /**
@@ -601,22 +695,22 @@ class MainView extends View {
      * @param {string} name A name.
      */
     showHeaderActionItem(name) {
-        this.headerActionItemTypeList.forEach(t => {
-            (this.menu[t] || []).forEach(item => {
-                item = item || {};
+        const item = this._getHeaderActionItem(name);
 
-                if (item.name === name) {
-                    item.hidden = false;
-                }
-            });
-        });
+        if (item) {
+            item.hidden = false;
+        }
 
         const processUi = () => {
-            this.$headerActionsContainer.find('li > .action[data-name="' + name + '"]').parent().removeClass('hidden');
-            this.$headerActionsContainer.find('a.action[data-name="' + name + '"]').removeClass('hidden');
+            this.$headerActionsContainer.find(`li > .action[data-name="${name}"]`).parent().removeClass('hidden');
+            this.$headerActionsContainer.find(`a.action[data-name="${name}"]`).removeClass('hidden');
 
             this.controlMenuDropdownVisibility();
             this.adjustButtons();
+
+            if (this.getHeaderView()) {
+                this.getHeaderView().trigger('action-item-update');
+            }
         };
 
         if (!this.isRendered()) {

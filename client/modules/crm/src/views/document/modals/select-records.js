@@ -31,7 +31,5 @@ define('crm:views/document/modals/select-records', ['views/modals/select-records
     return Dep.extend({
 
         categoryScope: 'DocumentFolder',
-        categoryField: 'folder',
-        categoryFilterType: 'inCategory',
     });
 });

@@ -13,8 +13,9 @@
                 "options": [0, 0.5, 1, 2, 5, 10]
             },
             "displayRecords": {
-                "type": "enumInt",
-                "options": [3,4,5,7,10,15,20,30]
+                "type": "int",
+                "min": 1,
+                "max": 20
             },
             "expandedLayout": {
                 "type": "base",
@@ -22,7 +23,7 @@
             }
         },
         "defaults": {
-            "orderBy": "dateEnd",
+            "orderBy": "dateUpcoming",
             "order": "asc",
             "displayRecords": 5,
             "expandedLayout": {
@@ -39,6 +40,9 @@
                         },
                         {
                             "name": "dateEnd"
+                        },
+                        {
+                            "name": "parent"
                         }
                     ]
                 ]

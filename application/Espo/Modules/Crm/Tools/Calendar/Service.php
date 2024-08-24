@@ -29,8 +29,10 @@
 
 namespace Espo\Modules\Crm\Tools\Calendar;
 
+use DateTimeZone;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -38,6 +40,7 @@ use Espo\Core\Field\DateTime as DateTimeField;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\Preferences;
 use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Call;
@@ -174,7 +177,8 @@ class Service
     private function accessCheck(Entity $entity): void
     {
         if ($entity instanceof User) {
-            if (!$this->acl->checkUserPermission($entity, 'user')) {
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
+            if (!$this->acl->checkUserPermission($entity, Acl\Permission::USER)) {
                 throw new Forbidden();
             }
 
@@ -272,38 +276,43 @@ class Service
             $orGroup['assignedUsersMiddle.userId'] = $userId;
         }
 
-        $queryBuilder = $builder
-            ->buildQueryBuilder()
-            ->select($select)
-            ->where([
-                'OR' => $orGroup,
-                [
-                    'OR' => [
-                        [
-                            'dateEnd' => null,
-                            'dateStart>=' => $from,
-                            'dateStart<' => $to,
-                        ],
-                        [
-                            'dateStart>=' => $from,
-                            'dateStart<' => $to,
-                        ],
-                        [
-                            'dateEnd>=' => $from,
-                            'dateEnd<' => $to,
-                        ],
-                        [
-                            'dateStart<=' => $from,
-                            'dateEnd>=' => $to,
-                        ],
-                        [
-                            'dateEndDate!=' => null,
-                            'dateEndDate>=' => $from,
-                            'dateEndDate<' => $to,
+        try {
+            $queryBuilder = $builder
+                ->buildQueryBuilder()
+                ->select($select)
+                ->where([
+                    'OR' => $orGroup,
+                    [
+                        'OR' => [
+                            [
+                                'dateEnd' => null,
+                                'dateStart>=' => $from,
+                                'dateStart<' => $to,
+                            ],
+                            [
+                                'dateStart>=' => $from,
+                                'dateStart<' => $to,
+                            ],
+                            [
+                                'dateEnd>=' => $from,
+                                'dateEnd<' => $to,
+                            ],
+                            [
+                                'dateStart<=' => $from,
+                                'dateEnd>=' => $to,
+                            ],
+                            [
+                                'dateEndDate!=' => null,
+                                'dateEndDate>=' => $from,
+                                'dateEndDate<' => $to,
+                            ],
                         ],
                     ],
-                ],
-            ]);
+                ]);
+        }
+        catch (BadRequest|Forbidden $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         if ($seed->hasRelation('users')) {
             $queryBuilder
@@ -356,29 +365,34 @@ class Service
                 ['null', $attribute];
         }
 
-        return $builder
-            ->buildQueryBuilder()
-            ->select($select)
-            ->leftJoin('users')
-            ->where([
-                'usersMiddle.userId' => $userId,
-                'usersMiddle.status!=' => Meeting::ATTENDEE_STATUS_DECLINED,
-                'OR' => [
-                    [
-                        'dateStart>=' => $from,
-                        'dateStart<' => $to,
+        try {
+            return $builder
+                ->buildQueryBuilder()
+                ->select($select)
+                ->leftJoin('users')
+                ->where([
+                    'usersMiddle.userId' => $userId,
+                    'usersMiddle.status!=' => Meeting::ATTENDEE_STATUS_DECLINED,
+                    'OR' => [
+                        [
+                            'dateStart>=' => $from,
+                            'dateStart<' => $to,
+                        ],
+                        [
+                            'dateEnd>=' => $from,
+                            'dateEnd<' => $to,
+                        ],
+                        [
+                            'dateStart<=' => $from,
+                            'dateEnd>=' => $to,
+                        ],
                     ],
-                    [
-                        'dateEnd>=' => $from,
-                        'dateEnd<' => $to,
-                    ],
-                    [
-                        'dateStart<=' => $from,
-                        'dateEnd>=' => $to,
-                    ],
-                ],
-            ])
-            ->build();
+                ])
+                ->build();
+        }
+        catch (BadRequest|Forbidden $e) {
+            throw new RuntimeException($e->getMessage());
+        }
     }
 
     protected function getCalendarCallQuery(string $userId, string $from, string $to, bool $skipAcl): Select
@@ -417,29 +431,34 @@ class Service
                 ['null', $attribute];
         }
 
-        return $builder
-            ->buildQueryBuilder()
-            ->select($select)
-            ->leftJoin('users')
-            ->where([
-                'usersMiddle.userId' => $userId,
-                'usersMiddle.status!=' => Meeting::ATTENDEE_STATUS_DECLINED,
-                'OR' => [
-                    [
-                        'dateStart>=' => $from,
-                        'dateStart<' => $to,
+        try {
+            return $builder
+                ->buildQueryBuilder()
+                ->select($select)
+                ->leftJoin('users')
+                ->where([
+                    'usersMiddle.userId' => $userId,
+                    'usersMiddle.status!=' => Meeting::ATTENDEE_STATUS_DECLINED,
+                    'OR' => [
+                        [
+                            'dateStart>=' => $from,
+                            'dateStart<' => $to,
+                        ],
+                        [
+                            'dateEnd>=' => $from,
+                            'dateEnd<' => $to,
+                        ],
+                        [
+                            'dateStart<=' => $from,
+                            'dateEnd>=' => $to,
+                        ],
                     ],
-                    [
-                        'dateEnd>=' => $from,
-                        'dateEnd<' => $to,
-                    ],
-                    [
-                        'dateStart<=' => $from,
-                        'dateEnd>=' => $to,
-                    ],
-                ],
-            ])
-            ->build();
+                ])
+                ->build();
+        }
+        catch (BadRequest|Forbidden $e) {
+            throw new RuntimeException($e->getMessage());
+        }
     }
 
     protected function getCalendarTaskQuery(string $userId, string $from, string $to, bool $skipAcl): Select
@@ -478,27 +497,32 @@ class Service
                 ['null', $attribute];
         }
 
-        $queryBuilder = $builder
-            ->buildQueryBuilder()
-            ->select($select)
-            ->where([
-                'OR' => [
-                    [
-                        'dateEnd' => null,
-                        'dateStart>=' => $from,
-                        'dateStart<' => $to,
+        try {
+            $queryBuilder = $builder
+                ->buildQueryBuilder()
+                ->select($select)
+                ->where([
+                    'OR' => [
+                        [
+                            'dateEnd' => null,
+                            'dateStart>=' => $from,
+                            'dateStart<' => $to,
+                        ],
+                        [
+                            'dateEnd>=' => $from,
+                            'dateEnd<' => $to,
+                        ],
+                        [
+                            'dateEndDate!=' => null,
+                            'dateEndDate>=' => $from,
+                            'dateEndDate<' => $to,
+                        ],
                     ],
-                    [
-                        'dateEnd>=' => $from,
-                        'dateEnd<' => $to,
-                    ],
-                    [
-                        'dateEndDate!=' => null,
-                        'dateEndDate>=' => $from,
-                        'dateEndDate<' => $to,
-                    ],
-                ],
-            ]);
+                ]);
+        }
+        catch (BadRequest|Forbidden $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         if (
             $this->metadata->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'type']) === 'linkMultiple' &&
@@ -576,11 +600,11 @@ class Service
      */
     public function fetchForTeams(array $teamIdList, FetchParams $fetchParams): array
     {
-        if ($this->acl->getPermissionLevel('userPermission') === Table::LEVEL_NO) {
+        if ($this->acl->getPermissionLevel(Acl\Permission::USER) === Table::LEVEL_NO) {
             throw new Forbidden("User Permission not allowing to view calendars of other users.");
         }
 
-        if ($this->acl->getPermissionLevel('userPermission') === Table::LEVEL_TEAM) {
+        if ($this->acl->getPermissionLevel(Acl\Permission::USER) === Table::LEVEL_TEAM) {
             $userTeamIdList = $this->user->getLinkMultipleIdList('teams');
 
             foreach ($teamIdList as $teamId) {
@@ -747,6 +771,7 @@ class Service
     {
         $rangeList = [];
 
+        /** @noinspection PhpRedundantOptionalArgumentInspection */
         $eventList = $this->fetch($userId, $fetchParams->withSkipAcl(true));
 
         $ignoreHash = (object) [];
@@ -868,18 +893,21 @@ class Service
         $from = $fetchParams->getFrom();
         $to = $fetchParams->getTo();
 
+        $timezone = !$fetchParams->isAgenda() ?
+            $this->getCurrentUserTimezone() : null;
+
         $extractor = new Extractor();
 
         $itemList = $fetchParams->workingTimeRangesInverted() ?
             (
             $fetchParams->isAgenda() ?
                 $extractor->extractInversion($calendar, $from, $to) :
-                $extractor->extractAllDayInversion($calendar, $from, $to)
+                $extractor->extractAllDayInversion($calendar, $from, $to, $timezone)
             ) :
             (
             $fetchParams->isAgenda() ?
                 $extractor->extract($calendar, $from, $to) :
-                $extractor->extractAllDay($calendar, $from, $to)
+                $extractor->extractAllDay($calendar, $from, $to, $timezone)
             );
 
         $list = [];
@@ -991,5 +1019,30 @@ class Service
         }
 
         return $result;
+    }
+
+    private function getCurrentUserTimezone(): DateTimeZone
+    {
+        try {
+            return new DateTimeZone($this->getCurrentUserTimezoneString());
+        } catch (Exception $e) {
+            throw new RuntimeException($e->getMessage(), 0, $e);
+        }
+    }
+
+    /**
+     * @todo Move to a separate class.
+     */
+    private function getCurrentUserTimezoneString(): string
+    {
+        $preferences = $this->entityManager
+            ->getRepositoryByClass(Preferences::class)
+            ->getById($this->user->getId());
+
+        if ($preferences && $preferences->getTimeZone()) {
+            return $preferences->getTimeZone();
+        }
+
+        return $this->config->get('timeZone') ?? 'UTC';
     }
 }

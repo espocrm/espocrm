@@ -36,4 +36,3 @@ class Google extends OAuth2Abstract
         return 'https://www.googleapis.com/calendar/v3/users/me/calendarList';
     }
 }
-

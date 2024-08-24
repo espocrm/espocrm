@@ -31,7 +31,7 @@ namespace Espo\Hooks\Common;
 
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\Entity;
-use Espo\Tools\Stream\Service as Service;
+use Espo\Tools\Stream\NoteAcl\AccessModifier;
 
 /**
  * Notes having `related` or `superParent` are subjects to access control
@@ -46,7 +46,7 @@ class StreamNotesAcl
 {
     public static int $order = 10;
 
-    public function __construct(private Service $service)
+    public function __construct(private AccessModifier $processor)
     {}
 
     /**
@@ -70,8 +70,6 @@ class StreamNotesAcl
             return;
         }
 
-        $forceProcessNoteNotifications = !empty($options['forceProcessNoteNotifications']);
-
-        $this->service->processNoteAcl($entity, $forceProcessNoteNotifications);
+        $this->processor->process($entity);
     }
 }

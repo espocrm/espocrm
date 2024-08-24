@@ -33,8 +33,40 @@ import FileUpload from 'helpers/file-upload';
 
 /**
  * An attachment-multiple field.
+ *
+ * @extends BaseFieldView<module:views/fields/attachment-multiple~params>
  */
 class AttachmentMultipleFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/attachment-multiple~options
+     * @property {
+     *     module:views/fields/attachment-multiple~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/attachment-multiple~params
+     * @property {boolean} [required] Required.
+     * @property {boolean} [showPreviews] Show previews.
+     * @property {'x-small'|'small'|'medium'|'large'} [previewSize] A preview size.
+     * @property {string[]} [sourceList] A source list.
+     * @property {string[]} [accept] Formats to accept.
+     * @property {number} [maxFileSize] A max file size (in Mb).
+     * @property {number} [maxCount] A max number of items.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/attachment-multiple~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'attachmentMultiple'
 
@@ -48,9 +80,22 @@ class AttachmentMultipleFieldView extends BaseFieldView {
     idsName
     nameHash
     foreignScope
-    showPreviews = true
     accept = null
-    validations = ['ready', 'required']
+    /** @protected */
+    showPreviews = true
+    /** @protected */
+    showPreviewsInListMode = false
+
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
+    validations = [
+        'ready',
+        'required',
+        'maxCount',
+    ]
+
     searchTypeList = ['isNotEmpty', 'isEmpty']
 
     events = {
@@ -492,7 +537,7 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         if (exceedsMaxFileSize) {
             const msg = this.translate('fieldMaxFileSizeError', 'messages')
                 .replace('{field}', this.getLabelText())
-                .replace('{max}', maxFileSize);
+                .replace('{max}', maxFileSize.toString());
 
             this.showValidationMessage(msg, 'label');
 
@@ -504,12 +549,14 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         this.getModelFactory().create('Attachment', model => {
             const canceledList = [];
             const fileList = [];
+            const uploadedList = [];
 
             for (let i = 0; i < files.length; i++) {
                 fileList.push(files[i]);
 
                 totalCount++;
             }
+
 
             /** @type module:helpers/file-upload */
             const uploadHelper = new FileUpload(this.getConfig());
@@ -566,9 +613,10 @@ class AttachmentMultipleFieldView extends BaseFieldView {
                         $attachmentBox.trigger('ready');
 
                         uploadedCount++;
+                        uploadedList.push(attachment);
 
                         if (uploadedCount === totalCount && this.isUploading) {
-                            this.model.trigger('attachment-uploaded:' + this.name);
+                            this.model.trigger('attachment-uploaded:' + this.name, uploadedList);
                             this.afterAttachmentsUploaded.call(this);
 
                             this.isUploading = false;
@@ -717,11 +765,12 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         if (this.isDetailMode() || this.isListMode()) {
             const nameHash = this.nameHash;
             const typeHash = this.model.get(this.typeHashName) || {};
+            const ids = /** @type {string[]} */this.model.get(this.idsName) || [];
 
             const previews = [];
             const names = [];
 
-            for (const id in nameHash) {
+            for (const id of ids) {
                 const type = typeHash[id] || false;
                 const name = nameHash[id];
 
@@ -896,6 +945,33 @@ class AttachmentMultipleFieldView extends BaseFieldView {
 
             return true;
         }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    validateMaxCount() {
+        const maxCount = this.params.maxCount;
+
+        if (!maxCount) {
+            return false;
+        }
+
+        const idList = this.model.get(this.idsName) || [];
+
+        if (idList.length === 0) {
+            return false;
+        }
+
+        if (idList.length <= maxCount) {
+            return false;
+        }
+
+        const msg = this.translate('fieldExceedsMaxCount', 'messages')
+            .replace('{field}', this.getLabelText())
+            .replace('{maxCount}', maxCount.toString());
+
+        this.showValidationMessage(msg, 'label');
+
+        return true;
     }
 
     fetch() {

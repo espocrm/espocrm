@@ -54,5 +54,34 @@
         "route": "/Campaign/:id/generateMailMerge",
         "method": "post",
         "actionClassName": "Espo\\Modules\\Crm\\Tools\\Campaign\\Api\\PostGenerateMailMerge"
+    },
+    {
+        "route": "/TargetList/:id/optedOut",
+        "method": "get",
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\TargetList\\Api\\GetOptedOut"
+    },
+    {
+        "route": "/Campaign/unsubscribe/:id",
+        "method": "post",
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\MassEmail\\Api\\PostUnsubscribe",
+        "noAuth": true
+    },
+    {
+        "route": "/Campaign/unsubscribe/:id",
+        "method": "delete",
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\MassEmail\\Api\\DeleteUnsubscribe",
+        "noAuth": true
+    },
+    {
+        "route": "/Campaign/unsubscribe/:emailAddress/:hash",
+        "method": "post",
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\MassEmail\\Api\\PostUnsubscribe",
+        "noAuth": true
+    },
+    {
+        "route": "/Campaign/unsubscribe/:emailAddress/:hash",
+        "method": "delete",
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\MassEmail\\Api\\DeleteUnsubscribe",
+        "noAuth": true
     }
 ]

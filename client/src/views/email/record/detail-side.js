@@ -26,7 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/record/detail-side', ['views/record/detail-side'], function (Dep) {
+import DetailSideRecordView from 'views/record/detail-side';
 
-    return Dep.extend({});
-});
+export default class extends DetailSideRecordView {}

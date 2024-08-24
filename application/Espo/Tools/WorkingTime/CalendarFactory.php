@@ -33,15 +33,12 @@ use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\InjectableFactory;
 use Espo\Entities\Team;
 use Espo\Entities\User;
+use Espo\Entities\WorkingTimeCalendar;
 
 class CalendarFactory
 {
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private InjectableFactory $injectableFactory)
+    {}
 
     public function createGlobal(): GlobalCalendar
     {
@@ -64,5 +61,17 @@ class CalendarFactory
             ->build();
 
         return $this->injectableFactory->createWithBinding(TeamCalendar::class, $binding);
+    }
+
+    /**
+     * @since 8.4.0
+     */
+    public function create(WorkingTimeCalendar $calendar): Calendar
+    {
+        $binding = BindingContainerBuilder::create()
+            ->bindInstance(WorkingTimeCalendar::class, $calendar)
+            ->build();
+
+        return $this->injectableFactory->createWithBinding(SpecificCalendar::class, $binding);
     }
 }

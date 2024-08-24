@@ -35,6 +35,9 @@
         "teams": {
             "nonAdminReadOnly": true
         },
+        "defaultTeam": {
+            "nonAdminReadOnly": true
+        },
         "roles": {
             "nonAdminReadOnly": true
         },
@@ -89,9 +92,6 @@
             "onlyAdmin": true
         },
         "dashboardTemplate": {
-            "onlyAdmin": true
-        },
-        "preferences": {
             "onlyAdmin": true
         },
         "userData": {

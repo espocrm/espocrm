@@ -3,7 +3,8 @@
     "roles": "Rollen",
     "positionList": "Positionsbezeichnungen",
     "layoutSet": "Layout-Set",
-    "workingTimeCalendar": "Arbeitszeitkalender"
+    "workingTimeCalendar": "Arbeitszeitkalender",
+    "userRole": "Benutzerrolle"
   },
   "links": {
     "users": "Benutzer",

@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils\Database\Orm\FieldConverters;
 
+use Espo\Core\ORM\Defs\AttributeParam;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\FieldConverter;
@@ -49,7 +51,7 @@ class LinkMultiple implements FieldConverter
             ->withType(AttributeType::JSON_ARRAY)
             ->withNotStorable()
             ->withParamsMerged([
-                'isLinkMultipleIdList' => true,
+                AttributeParam::IS_LINK_MULTIPLE_ID_LIST => true,
                 'relation' => $name,
                 'isUnordered' => true,
                 'attributeRole' => 'idList',
@@ -67,9 +69,9 @@ class LinkMultiple implements FieldConverter
             ->withType(AttributeType::JSON_OBJECT)
             ->withNotStorable()
             ->withParamsMerged([
-                'isLinkMultipleNameMap' => true,
+                AttributeParam::IS_LINK_MULTIPLE_NAME_MAP => true,
                 'attributeRole' => 'nameMap',
-                'fieldType' => 'linkMultiple',
+                'fieldType' => FieldType::LINK_MULTIPLE,
             ]);
 
         $orderBy = $fieldDefs->getParam('orderBy');

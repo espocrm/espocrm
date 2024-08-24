@@ -33,18 +33,23 @@ use Espo\Core\ORM\EntityManager;
 use Espo\Core\Field\PhoneNumber;
 use Espo\Core\Field\PhoneNumberGroup;
 use Espo\Modules\Crm\Entities\Lead;
+use Espo\Core\Record\ServiceContainer;
+use Espo\Core\Record\UpdateParams;
+use Espo\Modules\Crm\Entities\Contact;
+
 use tests\integration\Core\BaseTestCase;
 
 class PhoneNumberTest extends BaseTestCase
 {
     public function testPhoneNumber1(): void
     {
-        /* @var $entityManager EntityManager */
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
-        $contact = $entityManager->createEntity('Contact', [
-            'phoneNumber' => '+1',
-        ]);
+        $contact = $entityManager->getEntity(Contact::ENTITY_TYPE);
+        $contact->set('phoneNumber', '+1');
+        $entityManager->saveEntity($contact);
+
+        $this->assertEquals('+1', $contact->get('phoneNumber'));
 
         $contact = $entityManager->getEntity('Contact', $contact->getId());
 
@@ -114,5 +119,23 @@ class PhoneNumberTest extends BaseTestCase
         $em->refreshEntity($lead);
 
         $this->assertEquals('+0000000001', $lead->getPhoneNumber());
+    }
+
+    public function testPhoneNumber2(): void
+    {
+        $service = $this->getContainer()->getByClass(ServiceContainer::class)->getByClass(Contact::class);
+        $em = $this->getEntityManager();
+
+        /** @var Contact $contact */
+        $contact = $em->createEntity(Contact::ENTITY_TYPE);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->update($contact->getId(), (object) [
+            'phoneNumber' => '+11111111111',
+        ], UpdateParams::create());
+
+        $em->refreshEntity($contact);
+
+        $this->assertEquals('+11111111111', $contact->getPhoneNumber());
     }
 }

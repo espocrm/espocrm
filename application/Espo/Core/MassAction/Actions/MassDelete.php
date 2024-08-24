@@ -30,7 +30,6 @@
 namespace Espo\Core\MassAction\Actions;
 
 use Espo\Core\Record\ActionHistory\Action;
-use Espo\Entities\ActionHistoryRecord;
 use Espo\Entities\User;
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\Forbidden;
@@ -62,7 +61,7 @@ class MassDelete implements MassAction
 
         if (
             !$params->hasIds() &&
-            $this->acl->getPermissionLevel('massUpdate') !== Acl\Table::LEVEL_YES
+            $this->acl->getPermissionLevel(Acl\Permission::MASS_UPDATE) !== Acl\Table::LEVEL_YES
         ) {
             throw new Forbidden("No mass-update permission.");
         }

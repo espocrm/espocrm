@@ -60,7 +60,9 @@
             "layout": "listForContact",
             "createAttributeMap": {
                 "accountId": "accountId",
-                "accountName": "accountName"
+                "accountName": "accountName",
+                "id": "contactId",
+                "name": "contactName"
             },
             "selectHandler": "handlers/select-related/same-account"
         },

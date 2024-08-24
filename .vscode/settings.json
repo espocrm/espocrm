@@ -16,7 +16,7 @@
             "fileMatch": [
                 "*/Resources/module.json"
             ],
-            "url": "./schema/routes.json"
+            "url": "./schema/module.json"
         },
         {
             "fileMatch": [
@@ -57,12 +57,6 @@
                 "*/metadata/dashlets/*.json"
             ],
             "url": "./schema/metadata/dashlets.json"
-        },
-        {
-            "fileMatch": [
-                "*/metadata//*.json"
-            ],
-            "url": "./schema/metadata/.json"
         },
         {
             "fileMatch": [

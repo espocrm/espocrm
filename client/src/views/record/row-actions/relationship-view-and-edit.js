@@ -38,6 +38,7 @@ class RelationshipViewAndEditActionsView extends RelationshipActionsView {
                 id: this.model.id,
             },
             link: '#' + this.model.entityType + '/view/' + this.model.id,
+            groupIndex: 0,
         }];
 
         if (this.options.acl.edit) {
@@ -48,6 +49,7 @@ class RelationshipViewAndEditActionsView extends RelationshipActionsView {
                     id: this.model.id,
                 },
                 link: '#' + this.model.entityType + '/edit/' + this.model.id,
+                groupIndex: 0,
             });
         }
 

@@ -37,6 +37,7 @@ use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\Text\MetadataProvider as TextMetadataProvider;
 use Espo\Core\Utils\Json;
 
+use InvalidArgumentException;
 use JsonException;
 
 class SearchParamsFetcher
@@ -56,9 +57,12 @@ class SearchParamsFetcher
      */
     public function fetch(Request $request): SearchParams
     {
-        return SearchParams::fromRaw(
-            $this->fetchRaw($request)
-        );
+        try {
+            return SearchParams::fromRaw($this->fetchRaw($request));
+        }
+        catch (InvalidArgumentException $e) {
+            throw new BadRequest($e->getMessage());
+        }
     }
 
     /**
@@ -140,8 +144,10 @@ class SearchParamsFetcher
                 SearchParams::ORDER_ASC : SearchParams::ORDER_DESC;
         }
 
-        if ($request->getQueryParam('q')) {
-            $params['q'] = trim($request->getQueryParam('q'));
+        $q = $request->getQueryParam('q');
+
+        if ($q && is_string($q)) {
+            $params['q'] = trim($q);
         }
 
         if ($request->getQueryParam('textFilter')) {
@@ -178,20 +184,7 @@ class SearchParamsFetcher
             throw new BadRequest('maxSize must be integer.');
         }
 
-        /** @var ?string $q */
-        $q = $params['q'] ?? null;
-
-        if (
-            $q !== null &&
-            !str_contains($q, '*') &&
-            !str_contains($q, '"') &&
-            !str_contains($q, '+') &&
-            !str_contains($q, '-') &&
-            $this->hasFullTextSearch($request)
-        ) {
-            $params['q'] = $q . '*';
-        }
-
+        $this->handleQ($params, $request);
         $this->handleMaxSize($params);
     }
 
@@ -225,7 +218,38 @@ class SearchParamsFetcher
         }
 
         if ($value > $limit) {
-            throw new Forbidden("Max size should not exceed {$limit}. Use offset and limit.");
+            throw new Forbidden("Max size should not exceed $limit. Use offset and limit.");
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     * @throws BadRequest
+     */
+    private function handleQ(array &$params, Request $request): void
+    {
+        $q = $params['q'] ?? null;
+
+        if ($q === null) {
+            return;
+        }
+
+        if (!is_string($q)) {
+            throw new BadRequest("q must be string.");
+        }
+
+        if (!$this->config->get('quickSearchFullTextAppendWildcard')) {
+            return;
+        }
+
+        if (
+            !str_contains($q, '*') &&
+            !str_contains($q, '"') &&
+            !str_contains($q, '+') &&
+            !str_contains($q, '-') &&
+            $this->hasFullTextSearch($request)
+        ) {
+            $params['q'] = $q . '*';
         }
     }
 }

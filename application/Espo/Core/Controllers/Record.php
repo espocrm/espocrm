@@ -48,7 +48,6 @@ class Record extends RecordBase
      * @throws BadRequest
      * @throws NotFound
      * @throws Forbidden
-     * @throws Error
      * @noinspection PhpUnused
      */
     public function getActionListLinked(Request $request): stdClass
@@ -80,7 +79,6 @@ class Record extends RecordBase
      * @throws BadRequest
      * @throws Forbidden
      * @throws NotFound
-     * @throws Error
      */
     public function postActionCreateLink(Request $request): bool
     {

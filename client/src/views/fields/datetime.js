@@ -33,14 +33,55 @@ import moment from 'moment';
 
 /**
  * A date-time field.
+ *
+ * @extends DateFieldView<module:views/fields/datetime~params>
  */
 class DatetimeFieldView extends DateFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/datetime~options
+     * @property {
+     *     module:views/fields/varchar~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/datetime~params
+     * @property {boolean} [required] Required.
+     * @property {boolean} [useNumericFormat] Use numeric format.
+     * @property {boolean} [hasSeconds] Display seconds.
+     * @property {number} [minuteStep] A minute step.
+     * @property {string} [after] Validate to be after another date field.
+     * @property {string} [before] Validate to be before another date field.
+     * @property {boolean} [afterOrEqual] Allow an equal date for 'after' validation.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/datetime~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'datetime'
 
     editTemplate = 'fields/datetime/edit'
 
-    validations = ['required', 'datetime', 'after', 'before']
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
+    validations = [
+        'required',
+        'datetime',
+        'after',
+        'before',
+    ]
 
     searchTypeList = [
         'lastSevenDays',
@@ -80,14 +121,14 @@ class DatetimeFieldView extends DateFieldView {
     }
 
     data() {
-        let data = super.data();
+        const data = super.data();
 
         data.date = data.time = '';
 
-        let value = this.getDateTime().toDisplay(this.model.get(this.name));
+        const value = this.getDateTime().toDisplay(this.model.get(this.name));
 
         if (value) {
-            let pair = this.splitDatetime(value);
+            const pair = this.splitDatetime(value);
 
             data.date = pair[0];
             data.time = pair[1];
@@ -101,12 +142,12 @@ class DatetimeFieldView extends DateFieldView {
             return -1;
         }
 
-        let value = this.model.get(this.name);
+        const value = this.model.get(this.name);
 
         if (!value) {
             if (
-                this.mode === this.MODE_EDIT |
-                this.mode === this.MODE_SEARCH |
+                this.mode === this.MODE_EDIT ||
+                this.mode === this.MODE_SEARCH ||
                 this.mode === this.MODE_LIST ||
                 this.mode === this.MODE_LIST_LINK
             ) {
@@ -131,11 +172,11 @@ class DatetimeFieldView extends DateFieldView {
                 timeFormat = timeFormat.replace(/:mm/, ':mm:ss');
             }
 
-            let d = this.getDateTime().toMoment(value);
-            let now = moment().tz(this.getDateTime().timeZone || 'UTC');
-            let dt = now.clone().startOf('day');
+            const d = this.getDateTime().toMoment(value);
+            const now = moment().tz(this.getDateTime().timeZone || 'UTC');
+            const dt = now.clone().startOf('day');
 
-            let ranges = {
+            const ranges = {
                 'today': [dt.unix(), dt.add(1, 'days').unix()],
                 'tomorrow': [dt.unix(), dt.add(1, 'days').unix()],
                 'yesterday': [dt.add(-3, 'days').unix(), dt.add(1, 'days').unix()]
@@ -144,28 +185,29 @@ class DatetimeFieldView extends DateFieldView {
             if (d.unix() >= ranges['today'][0] && d.unix() < ranges['today'][1]) {
                 return this.translate('Today') + ' ' + d.format(timeFormat);
             }
-            else if (d.unix() > ranges['tomorrow'][0] && d.unix() < ranges['tomorrow'][1]) {
+
+            if (d.unix() > ranges['tomorrow'][0] && d.unix() < ranges['tomorrow'][1]) {
                 return this.translate('Tomorrow') + ' ' + d.format(timeFormat);
             }
-            else if (d.unix() > ranges['yesterday'][0] && d.unix() < ranges['yesterday'][1]) {
+
+            if (d.unix() > ranges['yesterday'][0] && d.unix() < ranges['yesterday'][1]) {
                 return this.translate('Yesterday') + ' ' + d.format(timeFormat);
             }
 
-            let readableFormat = this.getDateTime().getReadableDateFormat();
+            const readableFormat = this.getDateTime().getReadableDateFormat();
 
             if (d.format('YYYY') === now.format('YYYY')) {
                 return d.format(readableFormat) + ' ' + d.format(timeFormat);
             }
-            else {
-                return d.format(readableFormat + ', YYYY') + ' ' + d.format(timeFormat);
-            }
+
+            return d.format(readableFormat + ', YYYY') + ' ' + d.format(timeFormat);
         }
 
         return this.getDateTime().toDisplay(value);
     }
 
     initTimepicker() {
-        let $time = this.$time;
+        const $time = this.$time;
 
         $time.timepicker({
             step: this.params.minuteStep || 30,
@@ -182,9 +224,9 @@ class DatetimeFieldView extends DateFieldView {
     }
 
     setDefaultTime() {
-        let dtString = moment('2014-01-01 00:00').format(this.getDateTime().getDateTimeFormat()) || '';
+        const dtString = moment('2014-01-01 00:00').format(this.getDateTime().getDateTimeFormat()) || '';
 
-        let pair = this.splitDatetime(dtString);
+        const pair = this.splitDatetime(dtString);
 
         if (pair.length === 2) {
             this.$time.val(pair[1]);
@@ -192,10 +234,10 @@ class DatetimeFieldView extends DateFieldView {
     }
 
     splitDatetime(value) {
-        let m = moment(value, this.getDateTime().getDateTimeFormat());
+        const m = moment(value, this.getDateTime().getDateTimeFormat());
 
-        let dateValue = m.format(this.getDateTime().getDateFormat());
-        let timeValue = value.substr(dateValue.length + 1);
+        const dateValue = m.format(this.getDateTime().getDateFormat());
+        const timeValue = value.substr(dateValue.length + 1);
 
         return [dateValue, timeValue];
     }
@@ -221,7 +263,7 @@ class DatetimeFieldView extends DateFieldView {
         }
 
         this.$date = this.$element;
-        let $time = this.$time = this.$el.find('input.time-part');
+        const $time = this.$time = this.$el.find('input.time-part');
 
         this.initTimepicker();
 
@@ -280,10 +322,10 @@ class DatetimeFieldView extends DateFieldView {
     }
 
     fetch() {
-        let data = {};
+        const data = {};
 
-        let date = this.$date.val();
-        let time = this.$time.val();
+        const date = this.$date.val();
+        const time = this.$time.val();
 
         let value = null;
 
@@ -299,7 +341,7 @@ class DatetimeFieldView extends DateFieldView {
     // noinspection JSUnusedGlobalSymbols
     validateDatetime() {
         if (this.model.get(this.name) === -1) {
-            let msg = this.translate('fieldShouldBeDatetime', 'messages')
+            const msg = this.translate('fieldShouldBeDatetime', 'messages')
                 .replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg);
@@ -310,10 +352,11 @@ class DatetimeFieldView extends DateFieldView {
 
     /** @inheritDoc */
     fetchSearch() {
-        let data = super.fetchSearch();
+        const data = super.fetchSearch();
 
         if (data) {
             data.dateTime = true;
+            delete data.date;
         }
 
         return data;

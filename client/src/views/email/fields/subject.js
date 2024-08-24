@@ -26,83 +26,82 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/subject', ['views/fields/varchar'], function (Dep) {
+import VarcharFieldView from 'views/fields/varchar';
 
-    return Dep.extend({
+class EmailSubjectFieldView extends VarcharFieldView {
 
-        listLinkTemplate: 'email/fields/subject/list-link',
+    listLinkTemplate = 'email/fields/subject/list-link'
 
-        data: function () {
-            let data = Dep.prototype.data.call(this);
+    data() {
+        const data = super.data();
 
-            data.isRead = (this.model.get('sentById') === this.getUser().id) || this.model.get('isRead');
-            data.isImportant = this.model.has('isImportant') && this.model.get('isImportant');
-            data.hasAttachment = this.model.has('hasAttachment') && this.model.get('hasAttachment');
-            data.isReplied = this.model.has('isReplied') && this.model.get('isReplied');
-            data.inTrash = this.model.has('inTrash') && this.model.get('inTrash');
+        data.isRead = (this.model.get('sentById') === this.getUser().id) || this.model.get('isRead');
+        data.isImportant = this.model.has('isImportant') && this.model.get('isImportant');
+        data.hasAttachment = this.model.has('hasAttachment') && this.model.get('hasAttachment');
+        data.isReplied = this.model.has('isReplied') && this.model.get('isReplied');
+        data.inTrash = this.model.has('inTrash') && this.model.get('inTrash');
 
-            if (!data.isRead && !this.model.has('isRead')) {
-                data.isRead = true;
+        if (!data.isRead && !this.model.has('isRead')) {
+            data.isRead = true;
+        }
+
+        if (!data.isNotEmpty) {
+            if (
+                this.model.get('name') !== null &&
+                this.model.get('name') !== '' &&
+                this.model.has('name')
+            ) {
+                data.isNotEmpty = true;
             }
+        }
 
-            if (!data.isNotEmpty) {
-                if (
-                    this.model.get('name') !== null &&
-                    this.model.get('name') !== '' &&
-                    this.model.has('name')
-                ) {
-                    data.isNotEmpty = true;
+        return data;
+    }
+
+    getValueForDisplay() {
+        return this.model.get('name');
+    }
+
+    getAttributeList() {
+        return ['name', 'subject', 'isRead', 'isImportant', 'hasAttachment', 'inTrash'];
+    }
+
+    setup() {
+        super.setup();
+
+        this.events['click [data-action="showAttachments"]'] = e => {
+            e.stopPropagation();
+
+            this.showAttachments();
+        }
+
+        this.listenTo(this.model, 'change', () => {
+            if (this.mode === this.MODE_LIST || this.mode === this.MODE_LIST_LINK) {
+                if (this.model.hasChanged('isRead') || this.model.hasChanged('isImportant')) {
+                    this.reRender();
                 }
             }
+        });
+    }
 
-            return data;
-        },
+    fetch() {
+        const data = super.fetch();
 
-        getValueForDisplay: function () {
-            return this.model.get('name');
-        },
+        data.name = data.subject;
 
-        getAttributeList: function () {
-            return ['name', 'subject', 'isRead', 'isImportant', 'hasAttachment', 'inTrash'];
-        },
+        return data;
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    showAttachments() {
+        Espo.Ui.notify(' ... ');
 
-            this.events['click [data-action="showAttachments"]'] = e => {
-                e.stopPropagation();
+        this.createView('dialog', 'views/email/modals/attachments', {model: this.model})
+            .then(view => {
+                view.render();
 
-                this.showAttachments();
-            }
-
-            this.listenTo(this.model, 'change', () => {
-                if (this.mode === 'list' || this.mode === 'listLink') {
-                    if (this.model.hasChanged('isRead') || this.model.hasChanged('isImportant')) {
-                        this.reRender();
-                    }
-                }
+                Espo.Ui.notify(false);
             });
-        },
+    }
+}
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-        },
-
-        fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
-            data.name = data.subject;
-            return data;
-        },
-
-        showAttachments: function () {
-            Espo.Ui.notify(' ... ');
-
-            this.createView('dialog', 'views/email/modals/attachments', {model: this.model})
-                .then(view => {
-                    view.render();
-
-                    Espo.Ui.notify(false);
-                });
-        },
-    });
-});
+export default EmailSubjectFieldView;

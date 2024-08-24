@@ -29,7 +29,16 @@
 
 namespace Espo\Entities;
 
-class WebhookEventQueueItem extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class WebhookEventQueueItem extends Entity
 {
     public const ENTITY_TYPE = 'WebhookEventQueueItem';
+
+    public function setIsProcessed(bool $isProcessed = true): self
+    {
+        $this->set('isProcessed', $isProcessed);
+
+        return $this;
+    }
 }

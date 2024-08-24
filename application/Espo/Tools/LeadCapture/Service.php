@@ -43,19 +43,11 @@ use stdClass;
 
 class Service
 {
-    private EntityManager $entityManager;
-    private ServiceContainer $recordServiceContainer;
-    private User $user;
-
     public function __construct(
-        EntityManager $entityManager,
-        ServiceContainer $recordServiceContainer,
-        User $user
-    ) {
-        $this->entityManager = $entityManager;
-        $this->recordServiceContainer = $recordServiceContainer;
-        $this->user = $user;
-    }
+        private EntityManager $entityManager,
+        private ServiceContainer $recordServiceContainer,
+        private User $user
+    ) {}
 
     public function isApiKeyValid(string $apiKey): bool
     {
@@ -77,6 +69,7 @@ class Service
     /**
      * @throws ForbiddenSilent
      * @throws NotFound
+     * @throws Forbidden
      */
     public function generateNewApiKeyForEntity(string $id): Entity
     {

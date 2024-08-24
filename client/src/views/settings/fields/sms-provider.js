@@ -26,18 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/sms-provider', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+export default class extends EnumFieldView {
 
-        fetchEmptyValueAsNull: true,
+    fetchEmptyValueAsNull = true
 
-        setupOptions: function () {
-            this.params.options = Object.keys(
-                this.getMetadata().get(['app', 'smsProviders']) || {}
-            );
+    setupOptions() {
+        this.params.options = Object.keys(
+            this.getMetadata().get(['app', 'smsProviders']) || {}
+        );
 
-            this.params.options.unshift('');
-        },
-    });
-});
+        this.params.options.unshift('');
+    }
+}

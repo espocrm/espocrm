@@ -31,14 +31,14 @@ namespace Espo\Tools\Stream\Jobs;
 
 use Espo\Core\Job\Job;
 use Espo\Core\Job\Job\Data;
+use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\ORM\EntityManager;
-use Espo\Tools\Stream\Service as Service;
+use Espo\Tools\Stream\NoteAcl\Processor;
 
 class ProcessNoteAcl implements Job
 {
-
     public function __construct(
-        private Service $service,
+        private Processor $processor,
         private EntityManager $entityManager
     ) {}
 
@@ -46,6 +46,7 @@ class ProcessNoteAcl implements Job
     {
         $targetType = $data->getTargetType();
         $targetId = $data->getTargetId();
+        $notify = $data->get('notify') === true;
 
         if (!$targetType || !$targetId) {
             return;
@@ -57,10 +58,10 @@ class ProcessNoteAcl implements Job
 
         $entity = $this->entityManager->getEntityById($targetType, $targetId);
 
-        if (!$entity) {
+        if (!$entity instanceof CoreEntity) {
             return;
         }
 
-        $this->service->processNoteAcl($entity, true);
+        $this->processor->process($entity, $notify);
     }
 }

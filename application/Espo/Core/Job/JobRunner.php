@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\System;
 use Espo\Core\Job\Job\Data;
@@ -51,7 +49,6 @@ class JobRunner
         private EntityManager $entityManager,
         private ServiceFactory $serviceFactory,
         private Log $log,
-        private Config $config
     ) {}
 
     /**
@@ -131,7 +128,7 @@ class JobRunner
             else {
                 $id = $jobEntity->getId();
 
-                throw new Error("Not runnable job '$id'.");
+                throw new RuntimeException("Not runnable job '$id'.");
             }
         }
         catch (Throwable $e) {
@@ -139,14 +136,11 @@ class JobRunner
 
             $jobId = $jobEntity->hasId() ? $jobEntity->getId() : null;
 
-            $msg = "JobManager: Failed job running, job '$jobId'. " .
-                $e->getMessage() . "; at " . $e->getFile() . ":" . $e->getLine() . ".";
-
-            if ($this->config->get('logger.printTrace')) {
-                $msg .= " :: " . $e->getTraceAsString();
-            }
-
-            $this->log->error($msg);
+            $this->log->critical("Failed job {id}. {message}", [
+                'exception' => $e,
+                'message' => $e->getMessage(),
+                'id' => $jobId,
+            ]);
 
             if ($throwException) {
                 $exception = $e;
@@ -178,15 +172,12 @@ class JobRunner
         }
     }
 
-    /**
-     * @throws Error
-     */
     private function runJobNamed(JobEntity $jobEntity): void
     {
         $jobName = $jobEntity->getJob();
 
         if (!$jobName) {
-            throw new Error("No job name.");
+            throw new RuntimeException("No job name.");
         }
 
         $job = $this->jobFactory->create($jobName);
@@ -194,15 +185,12 @@ class JobRunner
         $this->runJob($job, $jobEntity);
     }
 
-    /**
-     * @throws Error
-     */
     private function runScheduledJob(JobEntity $jobEntity): void
     {
         $jobName = $jobEntity->getScheduledJobJob();
 
         if (!$jobName) {
-            throw new Error("Can't run job '" . $jobEntity->getId() . "'. Not a scheduled job.");
+            throw new RuntimeException("Can't run job '{$jobEntity->getId()}'. Not a scheduled job.");
         }
 
         $job = $this->jobFactory->create($jobName);
@@ -242,19 +230,16 @@ class JobRunner
         $job->run($data);
     }
 
-    /**
-     * @throws Error
-     */
     private function runService(JobEntity $jobEntity): void
     {
         $serviceName = $jobEntity->getServiceName();
 
         if (!$serviceName) {
-            throw new Error("Job with empty serviceName.");
+            throw new RuntimeException("Job with empty serviceName.");
         }
 
         if (!$this->serviceFactory->checkExists($serviceName)) {
-            throw new Error();
+            throw new RuntimeException("No service $serviceName.");
         }
 
         $service = $this->serviceFactory->create($serviceName);
@@ -262,11 +247,11 @@ class JobRunner
         $methodName = $jobEntity->getMethodName();
 
         if (!$methodName) {
-            throw new Error('Job with empty methodName.');
+            throw new RuntimeException('Job with empty methodName.');
         }
 
         if (!method_exists($service, $methodName)) {
-            throw new Error("No method '$methodName' in service '$serviceName'.");
+            throw new RuntimeException("No method '$methodName' in service '$serviceName'.");
         }
 
         $service->$methodName(

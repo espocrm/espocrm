@@ -29,15 +29,14 @@
 
 namespace Espo\Modules\Crm\Services;
 
+use Espo\ORM\Entity;
 use Espo\Services\Record;
 
 /**
- * @extends Record<\Espo\Modules\Crm\Entities\Opportunity>
+ * For backward compatibility.
+ * @todo Remove in v9.0.
+ * @deprecated As of v8.2.
+ * @extends Record<Entity>
  */
 class Opportunity extends Record
-{
-    protected $mandatorySelectAttributeList = [
-        'accountId',
-        'accountName',
-    ];
-}
+{}

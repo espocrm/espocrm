@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "message": "Съобщение",
+    "code": "Код",
+    "level": "Ниво",
+    "exceptionClass": "Тип грешка",
+    "file": "Файл",
+    "line": "Ред",
+    "requestMethod": "HTTP метод",
+    "requestResourcePath": "Път до ресурс"
+  },
+  "presetFilters": {
+    "errors": "Грешки"
+  }
+}

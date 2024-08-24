@@ -82,7 +82,7 @@ class DataCache
         $result = $this->fileManager->putPhpContents($cacheFile, $data, true, true);
 
         if ($result === false) {
-            throw new RuntimeException("Could not store '{$key}'.");
+            throw new RuntimeException("Could not store '$key'.");
         }
     }
 

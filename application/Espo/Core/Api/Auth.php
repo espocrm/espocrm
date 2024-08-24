@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Api;
 
+use Espo\Core\Authentication\HeaderKey;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ServiceUnavailable;
 use Espo\Core\Exceptions\Forbidden;
@@ -47,8 +48,6 @@ use Exception;
  */
 class Auth
 {
-    private const HEADER_ESPO_AUTHORIZATION = 'Espo-Authorization';
-
     public function __construct(
         private Log $log,
         private Authentication $authentication,
@@ -195,8 +194,12 @@ class Auth
             throw new BadRequest("Auth: Bad authorization string provided.");
         }
 
-        /** @var array{string, string} */
-        return explode(':', $stringDecoded, 2);
+        [$username, $password] = explode(':', $stringDecoded, 2);
+
+        $username = trim($username);
+        $password = trim($password);
+
+        return [$username, $password];
     }
 
     private function handleSecondStepRequired(Response $response, Result $result): void
@@ -237,7 +240,9 @@ class Auth
                 $response->writeBody($e->getBody());
             }
 
-            $this->log->notice("Auth: " . $e->getMessage());
+            if ($e->getMessage()) {
+                $this->log->notice("Auth exception: {message}", ['message' => $e->getMessage()]);
+            }
 
             return;
         }
@@ -269,7 +274,7 @@ class Auth
 
     private function obtainAuthenticationMethodFromRequest(Request $request): ?string
     {
-        if ($request->hasHeader(self::HEADER_ESPO_AUTHORIZATION)) {
+        if ($request->hasHeader(HeaderKey::AUTHORIZATION)) {
             return null;
         }
 
@@ -299,12 +304,10 @@ class Auth
      */
     private function obtainUsernamePasswordFromRequest(Request $request): array
     {
-        if ($request->hasHeader(self::HEADER_ESPO_AUTHORIZATION)) {
-            [$username, $password] = $this->decodeAuthorizationString(
-                $request->getHeader(self::HEADER_ESPO_AUTHORIZATION) ?? ''
-            );
+        if ($request->hasHeader(HeaderKey::AUTHORIZATION)) {
+            $headerValue = $request->getHeader(HeaderKey::AUTHORIZATION) ?? '';
 
-            return [$username, $password];
+            return $this->decodeAuthorizationString($headerValue);
         }
 
         if (
@@ -313,6 +316,14 @@ class Auth
         ) {
             $username = $request->getServerParam('PHP_AUTH_USER');
             $password = $request->getServerParam('PHP_AUTH_PW');
+
+            if (is_string($username)) {
+                $username = trim($username);
+            }
+
+            if (is_string($password)) {
+                $password = trim($password);
+            }
 
             return [$username, $password];
         }

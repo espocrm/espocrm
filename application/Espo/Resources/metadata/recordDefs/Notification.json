@@ -1,3 +1,4 @@
 {
-    "exportDisabled": true
+    "exportDisabled": true,
+    "actionHistoryDisabled": true
 }

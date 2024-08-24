@@ -2,13 +2,13 @@
   "labels": {
     "Create EmailTemplateCategory": "Sınıf Oluştur",
     "Manage Categories": "Sınıf Yönetimi",
-    "EmailTemplates": "Email Şablonları"
+    "EmailTemplates": "Eposta Şablonları"
   },
   "fields": {
     "order": "Sipariş",
     "childList": "Alt Liste"
   },
   "links": {
-    "emailTemplates": "Email şablonları"
+    "emailTemplates": "Eposta şablonları"
   }
 }

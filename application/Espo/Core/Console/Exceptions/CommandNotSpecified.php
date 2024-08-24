@@ -33,5 +33,4 @@ use RuntimeException;
 
 class CommandNotSpecified extends RuntimeException
 {
-
 }

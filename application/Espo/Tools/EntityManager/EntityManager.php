@@ -71,11 +71,12 @@ class EntityManager
 
     /**
      * @param array<string, mixed> $params
+     * @return string An actual name.
      * @throws BadRequest
      * @throws Error
      * @throws Conflict
      */
-    public function create(string $name, string $type, array $params = [], ?CreateParams $createParams = null): void
+    public function create(string $name, string $type, array $params = [], ?CreateParams $createParams = null): string
     {
         $createParams ??= new CreateParams();
 
@@ -96,6 +97,8 @@ class EntityManager
         if (!empty($templateDefs['isNotCreatable']) && !$createParams->forceCreate()) {
             throw new Error("Type '$type' is not creatable.");
         }
+
+        $name = $this->nameUtil->addCustomPrefix($name, true);
 
         if ($this->nameUtil->nameIsBad($name)) {
             throw new Error("Entity name should contain only letters and numbers, " .
@@ -285,6 +288,8 @@ class EntityManager
         }
 
         $this->dataManager->rebuild();
+
+        return $name;
     }
 
     /**
@@ -362,6 +367,10 @@ class EntityManager
             throw new Error("Entity `$name` does not exist.");
         }
 
+        if (!$this->isScopeCustomizable($name)) {
+            throw new Error("Entity type $name is not customizable.");
+        }
+
         $isCustom = $this->metadata->get(['scopes', $name, 'isCustom']);
         $type = $this->metadata->get(['scopes', $name, 'type']);
 
@@ -389,6 +398,11 @@ class EntityManager
 
         if (array_key_exists('statusField', $params)) {
             $this->metadata->set('scopes', $name, ['statusField' => $params['statusField']]);
+
+            if (!$params['statusField'] && $this->metadata->get("clientDefs.$name.kanbanViewMode")) {
+                $params['kanbanViewMode'] = false;
+                $params['kanbanStatusIgnoreList'] = null;
+            }
         }
 
         if (isset($params['sortBy'])) {
@@ -497,6 +511,10 @@ class EntityManager
 
         if (!$this->isCustom($name)) {
             throw new Forbidden;
+        }
+
+        if (!$this->isScopeCustomizable($name)) {
+            throw new Error("Entity type $name is not customizable.");
         }
 
         $normalizedName = Util::normalizeClassName($name);
@@ -618,6 +636,10 @@ class EntityManager
      */
     public function setFormulaData(string $scope, array $data): void
     {
+        if (!$this->isScopeCustomizableFormula($scope)) {
+            throw new Error("Entity type $scope is not customizable.");
+        }
+
         $this->metadata->set('formula', $scope, $data);
         $this->metadata->save();
 
@@ -684,6 +706,7 @@ class EntityManager
             'iconClass',
             'statusField',
             'kanbanViewMode',
+            'color',
         ]);
 
         $this->metadata->delete('entityDefs', $name, [
@@ -795,5 +818,31 @@ class EntityManager
     {
         $this->metadata->delete('formula', $scope, $type);
         $this->metadata->save();
+    }
+
+    private function isScopeCustomizable(string $scope): bool
+    {
+        if (!$this->metadata->get("scopes.$scope.customizable")) {
+            return false;
+        }
+
+        if ($this->metadata->get("scopes.$scope.entityManager.edit") === false) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function isScopeCustomizableFormula(string $scope): bool
+    {
+        if (!$this->metadata->get("scopes.$scope.customizable")) {
+            return false;
+        }
+
+        if ($this->metadata->get("scopes.$scope.entityManager.formula") === false) {
+            return false;
+        }
+
+        return true;
     }
 }

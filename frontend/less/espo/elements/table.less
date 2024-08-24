@@ -30,6 +30,30 @@ table.table,
             }
         }
     }
+
+    &:has(> tbody > tr.border-top-highlighted:first-child) {
+        > thead > tr:last-child {
+            > th {
+                border-bottom: 3px solid var(--brand-info) !important;
+            }
+        }
+    }
+
+    > tbody {
+        > tr {
+            &.border-bottom-highlighted {
+                > td {
+                    border-bottom: 3px solid var(--brand-info) !important;
+                }
+            }
+
+            &.border-top-highlighted {
+                > td {
+                    border-top: 3px solid var(--brand-info) !important;
+                }
+            }
+        }
+    }
 }
 
 table.table > thead th > a {
@@ -61,7 +85,6 @@ th {
     background-color: @table-bg-accent;
 }
 
-
 table.table-bordered-inside {
     border-collapse: collapse;
     border-style: hidden;
@@ -69,6 +92,10 @@ table.table-bordered-inside {
     td, th {
         border: 1px solid var(--default-border-color);
     }
+}
+
+table.table-bottom-bordered {
+    border-bottom: 1px solid var(--default-border-color);
 }
 
 table.table > tbody td > .list-row-buttons button {
@@ -113,8 +140,8 @@ table.table-panel {
         border-bottom: 0;
     }
 
-    &.table-striped {
-        tbody > tr:last-child {
+    tbody {
+        > tr:nth-last-child(1 of :not(.hidden)) {
             > td:first-child {
                 border-bottom-left-radius: var(--panel-border-radius);
             }

@@ -49,6 +49,7 @@ class EditView extends MainView {
         'rootUrl',
         'duplicateSourceId',
         'returnAfterCreate',
+        'highlightFieldList',
     ]
 
     /**
@@ -127,6 +128,15 @@ class EditView extends MainView {
         }
 
         return this.createView('record', this.getRecordViewName(), o);
+    }
+
+
+
+    /**
+     * @return {module:views/record/edit}
+     */
+    getRecordView() {
+        return this.getView('record');
     }
 
     /**

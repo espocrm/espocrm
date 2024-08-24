@@ -26,48 +26,52 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-template/record/detail', ['views/record/detail'], function (Dep) {
+import DetailRecordView from 'views/record/detail';
 
-    return Dep.extend({
+export default class extends DetailRecordView {
 
-        duplicateAction: true,
+    duplicateAction = true
+    saveAndContinueEditingAction = true
 
-        saveAndContinueEditingAction: true,
+    setup() {
+        super.setup();
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-            this.listenToInsertField();
+        this.listenToInsertField();
 
+        this.hideField('insertField');
 
-            this.hideField('insertField');
+        this.on('before:set-edit-mode', () => this.showField('insertField'));
+        this.on('before:set-detail-mode', () => this.hideField('insertField'));
+    }
 
-            this.on('before:set-edit-mode', function () {
-                this.showField('insertField');
-            }, this);
+    listenToInsertField() {
+        this.listenTo(this.model, 'insert-field', /** {entityType: string, field: string} */o => {
+            const tag = `{${o.entityType}.${o.field}}`;
 
-            this.on('before:set-detail-mode', function () {
-                this.hideField('insertField');
-            }, this);
-        },
+            const bodyView = /** @type {import('views/fields/wysiwyg').default} */
+                this.getFieldView('body');
 
-        listenToInsertField: function () {
-            this.listenTo(this.model, 'insert-field', function (o) {
-                var tag = '{' + o.entityType + '.' + o.field + '}';
+            if (!bodyView) {
+                return;
+            }
 
-                var bodyView = this.getFieldView('body');
-                if (!bodyView) return;
+            if (this.model.attributes.isHtml) {
+                const $anchor = $(window.getSelection().anchorNode);
 
-                if (this.model.get('isHtml')) {
-                    var $anchor = $(window.getSelection().anchorNode);
-                    if (!$anchor.closest('.note-editing-area').length) return;
-                    bodyView.$summernote.summernote('insertText', tag);
-                } else {
-                    var $body = bodyView.$element;
-                    var text = $body.val();
-                    text += tag;
-                    $body.val(text);
+                if (!$anchor.closest('.note-editing-area').length) {
+                    return;
                 }
-            }, this);
-        },
-    });
-});
+
+                bodyView.insertText(tag);
+
+                return;
+            }
+
+            const $body = $(bodyView.element.querySelector('textarea.main-element'));
+
+            let text = $body.val();
+            text += tag;
+            $body.val(text);
+        });
+    }
+}

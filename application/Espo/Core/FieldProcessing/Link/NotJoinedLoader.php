@@ -41,20 +41,13 @@ use Espo\ORM\Defs as OrmDefs;
  */
 class NotJoinedLoader implements LoaderInterface
 {
-    private OrmDefs $ormDefs;
+    /** @var array<string, string[]> */
+    private array $fieldListCacheMap = [];
 
-    private EntityManager $entityManager;
-
-    /**
-     * @var array<string, string[]>
-     */
-    private $fieldListCacheMap = [];
-
-    public function __construct(OrmDefs $ormDefs, EntityManager $entityManager)
-    {
-        $this->ormDefs = $ormDefs;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        private OrmDefs $ormDefs,
+        private EntityManager $entityManager
+    ) {}
 
     public function process(Entity $entity, Params $params): void
     {
@@ -92,12 +85,25 @@ class NotJoinedLoader implements LoaderInterface
             ->findOne();
 
         if (!$foreignEntity) {
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
             $entity->set($nameAttribute, null);
 
             return;
         }
 
-        $entity->set($nameAttribute, $foreignEntity->get('name'));
+        $name = $foreignEntity->get('name');
+
+        if ($name === null) {
+            $foreignEntity = $this->entityManager
+                ->getRDBRepository($foreignEntityType)
+                ->getById($id);
+
+            if ($foreignEntity) {
+                $name = $foreignEntity->get('name');
+            }
+        }
+
+        $entity->set($nameAttribute, $name);
     }
 
     /**
@@ -118,9 +124,10 @@ class NotJoinedLoader implements LoaderInterface
                 continue;
             }
 
-            if (!$relationDefs->getParam('noJoin')) {
+            // Commented to load name of leads w/o person name.
+            /*if (!$relationDefs->getParam('noJoin')) {
                 continue;
-            }
+            }*/
 
             if (!$relationDefs->hasForeignEntityType()) {
                 continue;

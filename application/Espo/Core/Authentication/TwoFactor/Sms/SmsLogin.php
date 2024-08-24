@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Authentication\TwoFactor\Sms;
 
+use Espo\Core\Authentication\HeaderKey;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Log;
 use Espo\ORM\EntityManager;
@@ -55,7 +56,7 @@ class SmsLogin implements Login
 
     public function login(Result $result, Request $request): Result
     {
-        $code = $request->getHeader('Espo-Authorization-Code');
+        $code = $request->getHeader(HeaderKey::AUTHORIZATION_CODE);
 
         $user = $result->getUser();
 

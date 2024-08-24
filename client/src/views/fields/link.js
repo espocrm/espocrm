@@ -30,11 +30,40 @@
 
 import BaseFieldView from 'views/fields/base';
 import RecordModal from 'helpers/record-modal';
+import Autocomplete from 'ui/autocomplete';
 
 /**
  * A link field (belongs-to relation).
+ *
+ * @extends BaseFieldView<module:views/fields/link~params>
  */
 class LinkFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/link~options
+     * @property {
+     *     module:views/fields/link~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/link~params
+     * @property {boolean} [required] Required.
+     * @property {boolean} [autocompleteOnEmpty] Autocomplete on empty input.
+     * @property {boolean} [createButton] Show 'Create' button.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/link~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     /** @inheritDoc */
     type = 'link'
@@ -380,11 +409,17 @@ class LinkFieldView extends BaseFieldView {
 
         this.controlCreateButtonVisibility();
 
-        this.getSelectFieldHandler().then(handler => {
-            handler.getAttributes(model)
-                .then(attributes => {
-                    this.model.set(attributes)
-                });
+        const attributes = {};
+
+        for (const [foreign, field] of Object.entries(this.getDependantForeignMap())) {
+            attributes[field] = model.get(foreign);
+        }
+
+        this.getSelectFieldHandler().then(async handler => {
+            this.model.set({
+                ...attributes,
+                ...(await handler.getAttributes(model)),
+            });
         });
     }
 
@@ -399,10 +434,14 @@ class LinkFieldView extends BaseFieldView {
 
         this.controlCreateButtonVisibility();
 
+        for (const [, field] of Object.entries(this.getDependantForeignMap())) {
+            this.model.unset(field, {fromField: this.name})
+        }
+
         this.getSelectFieldHandler().then(handler => {
             handler.getClearAttributes()
                 .then(attributes => {
-                    this.model.set(attributes);
+                    this.model.set(attributes, {fromField: this.name});
                 });
         });
     }
@@ -505,6 +544,49 @@ class LinkFieldView extends BaseFieldView {
         return this.getConfig().get('recordsPerPage');
     }
 
+    /**
+     * @private
+     * @return {string[]}
+     */
+    getMandatorySelectAttributeList() {
+        const list = this.mandatorySelectAttributeList || this.panelDefs.selectMandatoryAttributeList || []
+
+        const map = this.getDependantForeignMap();
+
+        return [...list, ...Object.keys(map)];
+    }
+
+    /**
+     * @private
+     * @return {Record<string>}
+     */
+    getDependantForeignMap() {
+        if (this._dependantForeignMap) {
+            return this._dependantForeignMap;
+        }
+
+        const map = {};
+
+        this.model.getFieldList()
+            .filter(it => {
+                return this.model.getFieldType(it) === 'foreign' &&
+                    this.model.getFieldParam(it, 'link') === this.name;
+            })
+            .forEach(field => {
+                const foreign = this.model.getFieldParam(field, 'field');
+
+                if (!foreign) {
+                    return;
+                }
+
+                map[foreign] = field ;
+            });
+
+        this._dependantForeignMap = map;
+
+        return map;
+    }
+
     // noinspection JSUnusedLocalSymbols
     /**
      * Compose an autocomplete URL. Can be extended.
@@ -517,8 +599,7 @@ class LinkFieldView extends BaseFieldView {
         let url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
 
         if (!this.forceSelectAllAttributes) {
-            const mandatorySelectAttributeList = this.mandatorySelectAttributeList ||
-                this.panelDefs.selectMandatoryAttributeList;
+            const mandatorySelectAttributeList = this.getMandatorySelectAttributeList();
 
             let select = ['id', 'name'];
 
@@ -604,130 +685,71 @@ class LinkFieldView extends BaseFieldView {
                         e.currentTarget.value = this.model.get(this.nameName);
                     }
                 }, 100);
-
-                if (!this.autocompleteDisabled) {
-                    setTimeout(() => this.$elementName.autocomplete('clear'), 300);
-                }
             });
 
             const $elementName = this.$elementName;
 
             if (!this.autocompleteDisabled) {
-                let isEmptyQueryResult = false;
+                /** @type {module:ajax.AjaxPromise & Promise<any>} */
+                let lastAjaxPromise;
 
-                if (this.getEmptyAutocompleteResult()) {
-                    this.$elementName.on('keydown', e => {
-                        if (e.code === 'Tab' && isEmptyQueryResult) {
-                            e.stopImmediatePropagation();
-                        }
-                    });
-                }
-
-                this.$elementName.autocomplete({
-                    beforeRender: $c => {
-                        if (this.$elementName.hasClass('input-sm')) {
-                            $c.addClass('small');
-                        }
-
-                        // Prevent an issue that suggestions are shown and not hidden
-                        // when clicking outside the window and then focusing back on the document.
-                        if (this.$elementName.get(0) !== document.activeElement) {
-                            setTimeout(() => this.$elementName.autocomplete('hide'), 30);
-                        }
-                    },
-                    lookup: (q, callback) => {
-                        if (!this.autocompleteOnEmpty && q.length === 0) {
-                            isEmptyQueryResult = true;
-
-                            const emptyResult = this.getEmptyAutocompleteResult();
-
-                            if (emptyResult) {
-                                callback(this._transformAutocompleteResult(emptyResult));
-                            }
-
-                            return;
-                        }
-
-                        isEmptyQueryResult = false;
-
-                        Promise.resolve(this.getAutocompleteUrl(q))
-                            .then(url => {
-                                Espo.Ajax
-                                    .getRequest(url, {q: q})
-                                    .then(response => {
-                                        callback(this._transformAutocompleteResult(response));
-                                    });
-                            });
-                    },
-                    minChars: 0,
-                    triggerSelectOnValidInput: false,
+                const autocomplete = new Autocomplete(this.$elementName.get(0), {
+                    name: this.name,
+                    handleFocusMode: 2,
                     autoSelectFirst: true,
-                    noCache: true,
-                    formatResult: suggestion => {
-                        // noinspection JSUnresolvedReference
-                        return this.getHelper().escapeString(suggestion.name);
-                    },
-                    onSelect: s => {
-                        this.getModelFactory().create(this.foreignScope, (model) => {
-                            // noinspection JSUnresolvedReference
-                            model.set(s.attributes);
-
+                    forceHide: true,
+                    triggerSelectOnValidInput: false,
+                    onSelect: item => {
+                        this.getModelFactory().create(this.foreignScope, model => {
+                            model.set(item.attributes);
                             this.select(model);
 
                             this.$elementName.focus();
                         });
                     },
+                    lookupFunction: query => {
+                        if (!this.autocompleteOnEmpty && query.length === 0) {
+                            const onEmptyPromise = this.getOnEmptyAutocomplete();
+
+                            if (onEmptyPromise) {
+                                return onEmptyPromise.then(list => this._transformAutocompleteResult({list: list}));
+                            }
+
+                            return Promise.resolve([]);
+                        }
+
+                        return Promise.resolve(this.getAutocompleteUrl(query))
+                            .then(url => {
+                                if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
+                                    lastAjaxPromise.abort();
+                                }
+
+                                lastAjaxPromise = Espo.Ajax.getRequest(url, {q: query});
+
+                                return lastAjaxPromise;
+                            })
+                            .then(response => this._transformAutocompleteResult(response));
+                    },
                 });
 
-                this.$elementName.off('focus.autocomplete');
-
-                this.$elementName.on('focus', () => {
-                    if (this.$elementName.val()) {
-                        this.$elementName.get(0).select();
-
-                        return;
-                    }
-
-                    this.$elementName.autocomplete('onFocus');
-                });
-
-                this.$elementName.attr('autocomplete', 'espo-' + this.name);
-
-                this.once('render', () => {
-                    $elementName.autocomplete('dispose');
-                });
-
-                this.once('remove', () => {
-                    $elementName.autocomplete('dispose');
-                });
+                this.once('render remove', () => autocomplete.dispose());
 
                 if (this.isSearchMode()) {
                     const $elementOneOf = this.$el.find('input.element-one-of');
 
-                    // noinspection JSCheckFunctionSignatures
-                    $elementOneOf.autocomplete({
-                        beforeRender: $c => {
-                            if (this.$elementName.hasClass('input-sm')) {
-                                $c.addClass('small');
-                            }
-                        },
-                        serviceUrl: () => {
-                            return this.getAutocompleteUrl();
-                        },
+                    /** @type {module:ajax.AjaxPromise & Promise<any>} */
+                    let lastAjaxPromise;
+
+                    const autocomplete = new Autocomplete($elementOneOf.get(0), {
                         minChars: 1,
-                        paramName: 'q',
-                        noCache: true,
-                        formatResult: suggestion => {
-                            // noinspection JSUnresolvedReference
-                            return this.getHelper().escapeString(suggestion.name);
-                        },
-                        transformResult: response => {
-                            return this._transformAutocompleteResult(JSON.parse(response));
-                        },
-                        onSelect: s => {
+                        focusOnSelect: true,
+                        handleFocusMode: 3,
+                        autoSelectFirst: true,
+                        triggerSelectOnValidInput: false,
+                        forceHide: true,
+                        onSelect: item => {
                             this.getModelFactory().create(this.foreignScope, model => {
-                                // noinspection JSUnresolvedReference
-                                model.set(s.attributes);
+                                model.set(item.attributes);
 
                                 this.selectOneOf([model]);
 
@@ -735,17 +757,27 @@ class LinkFieldView extends BaseFieldView {
                                 setTimeout(() => $elementOneOf.focus(), 50);
                             });
                         },
+                        lookupFunction: query => {
+                            return Promise.resolve(this.getAutocompleteUrl(query))
+                                .then(url => {
+                                    if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
+                                        lastAjaxPromise.abort();
+                                    }
+
+                                    lastAjaxPromise = Espo.Ajax.getRequest(url, {q: query});
+
+                                    return lastAjaxPromise;
+                                })
+                                .then(/** {list: Record[]} */response => {
+                                    return response.list.map(item => ({
+                                        value: item.name,
+                                        attributes: item,
+                                    }));
+                                });
+                        },
                     });
 
-                    $elementOneOf.attr('autocomplete', 'espo-' + this.name);
-
-                    this.once('render', () => {
-                        $elementOneOf.autocomplete('dispose');
-                    });
-
-                    this.once('remove', () => {
-                        $elementOneOf.autocomplete('dispose');
-                    });
+                    this.once('render remove', () => autocomplete.dispose());
 
                     this.$el.find('select.search-type').on('change', () => {
                         this.trigger('change');
@@ -789,7 +821,7 @@ class LinkFieldView extends BaseFieldView {
             });
         });
 
-        return {suggestions: list};
+        return list;
     }
 
     /** @inheritDoc */
@@ -1110,8 +1142,7 @@ class LinkFieldView extends BaseFieldView {
             this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'select']) ||
             this.selectRecordsView;
 
-        const mandatorySelectAttributeList = this.mandatorySelectAttributeList ||
-            panelDefs.selectMandatoryAttributeList;
+        const mandatorySelectAttributeList = this.getMandatorySelectAttributeList();
 
         const createButton = this.isEditMode() && (!this.createDisabled || this.forceCreateButton);
 
@@ -1286,7 +1317,13 @@ class LinkFieldView extends BaseFieldView {
         });
     }
 
-    getEmptyAutocompleteResult() {
+    /**
+     * Get an empty autocomplete result.
+     *
+     * @protected
+     * @return {Promise<[{name: ?string, id: string} & Record]>}
+     */
+    getOnEmptyAutocomplete() {
         return undefined;
     }
 

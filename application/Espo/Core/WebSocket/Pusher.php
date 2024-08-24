@@ -29,8 +29,12 @@
 
 namespace Espo\Core\WebSocket;
 
+use GuzzleHttp\Psr7\Query;
+
+use Psr\Http\Message\RequestInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\Topic;
+use Ratchet\Wamp\WampConnection;
 use Ratchet\Wamp\WampServerInterface;
 
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -88,7 +92,7 @@ class Pusher implements WampServerInterface
      * @param Topic<object> $topic
      * @return void
      */
-    public function onSubscribe(ConnectionInterface $connection, $topic)
+    public function onSubscribe(ConnectionInterface $conn, $topic)
     {
         $topicId = $topic->getId();
 
@@ -101,10 +105,9 @@ class Pusher implements WampServerInterface
         }
 
         /** @var string $connectionId */
-        /** @phpstan-ignore-next-line */
-        $connectionId = $connection->resourceId;
+        $connectionId = $conn->resourceId ?? throw new RuntimeException();
 
-        $userId = $this->getUserIdByConnection($connection);
+        $userId = $this->getUserIdByConnection($conn);
 
         if (!$userId) {
             return;
@@ -114,27 +117,27 @@ class Pusher implements WampServerInterface
             $this->connectionIdTopicIdListMap[$connectionId] = [];
         }
 
-        $checkCommand = $this->getAccessCheckCommandForTopic($connection, $topic);
+        $checkCommand = $this->getAccessCheckCommandForTopic($conn, $topic);
 
         if ($checkCommand) {
             $checkResult = shell_exec($checkCommand);
 
             if ($checkResult !== 'true') {
                 if ($this->isDebugMode) {
-                    $this->log("{$connectionId}: check access failed for topic {$topicId} for user {$userId}");
+                    $this->log("$connectionId: check access failed for topic $topicId for user $userId");
                 }
 
                 return;
             }
 
             if ($this->isDebugMode) {
-                $this->log("{$connectionId}: check access succeed for topic {$topicId} for user {$userId}");
+                $this->log("$connectionId: check access succeed for topic $topicId for user $userId");
             }
         }
 
         if (!in_array($topicId, $this->connectionIdTopicIdListMap[$connectionId])) {
             if ($this->isDebugMode) {
-                $this->log("{$connectionId}: add topic {$topicId} for user {$userId}");
+                $this->log("$connectionId: add topic $topicId for user $userId");
             }
 
             $this->connectionIdTopicIdListMap[$connectionId][] = $topicId;
@@ -147,7 +150,7 @@ class Pusher implements WampServerInterface
      * @param Topic<object> $topic
      * @return void
      */
-    public function onUnSubscribe(ConnectionInterface $connection, $topic)
+    public function onUnSubscribe(ConnectionInterface $conn, $topic)
     {
         $topicId = $topic->getId();
 
@@ -160,36 +163,38 @@ class Pusher implements WampServerInterface
         }
 
         /** @var string $connectionId */
-        /** @phpstan-ignore-next-line */
-        $connectionId = $connection->resourceId;
+        $connectionId = $conn->resourceId ?? throw new RuntimeException();
 
-        $userId = $this->getUserIdByConnection($connection);
+        $userId = $this->getUserIdByConnection($conn);
 
         if (!$userId) {
             return;
         }
 
-        if (isset($this->connectionIdTopicIdListMap[$connectionId])) {
-            $index = array_search($topicId, $this->connectionIdTopicIdListMap[$connectionId]);
-
-            if ($index !== false) {
-                if ($this->isDebugMode) {
-                    $this->log("{$connectionId}: remove topic {$topicId} for user {$userId}");
-                }
-
-                unset($this->connectionIdTopicIdListMap[$connectionId][$index]);
-
-                $this->connectionIdTopicIdListMap[$connectionId] = array_values(
-                    $this->connectionIdTopicIdListMap[$connectionId]
-                );
-            }
+        if (!isset($this->connectionIdTopicIdListMap[$connectionId])) {
+            return;
         }
+
+        $index = array_search($topicId, $this->connectionIdTopicIdListMap[$connectionId]);
+
+        if ($index === false) {
+            return;
+        }
+
+        if ($this->isDebugMode) {
+            $this->log("$connectionId: remove topic $topicId for user $userId");
+        }
+
+        unset($this->connectionIdTopicIdListMap[$connectionId][$index]);
+
+        $this->connectionIdTopicIdListMap[$connectionId] =
+            array_values($this->connectionIdTopicIdListMap[$connectionId]);
     }
 
     /**
      * @return array<string, mixed>
      */
-    protected function getCategoryData(string $topicId): array
+    private function getCategoryData(string $topicId): array
     {
         $arr = explode('.', $topicId);
 
@@ -197,11 +202,9 @@ class Pusher implements WampServerInterface
 
         if (array_key_exists($category, $this->categoriesData)) {
             $data = $this->categoriesData[$category];
-        }
-        else if (array_key_exists($topicId, $this->categoriesData)) {
+        } else if (array_key_exists($topicId, $this->categoriesData)) {
             $data = $this->categoriesData[$topicId];
-        }
-        else {
+        } else {
             $data = [];
         }
 
@@ -211,7 +214,7 @@ class Pusher implements WampServerInterface
     /**
      * @return array<string, mixed>
      */
-    protected function getParamsFromTopicId(string $topicId): array
+    private function getParamsFromTopicId(string $topicId): array
     {
         $arr = explode('.', $topicId);
 
@@ -222,10 +225,10 @@ class Pusher implements WampServerInterface
         if (array_key_exists('paramList', $data)) {
             foreach ($data['paramList'] as $i => $item) {
                 /** @var string $item */
+
                 if (isset($arr[$i + 1])) {
                     $params[$item] = $arr[$i + 1];
-                }
-                else {
+                } else {
                     $params[$item] = '';
                 }
             }
@@ -237,15 +240,15 @@ class Pusher implements WampServerInterface
     /**
      * @param Topic<object> $topic
      */
-    protected function getAccessCheckCommandForTopic(ConnectionInterface $connection, $topic): ?string
+    private function getAccessCheckCommandForTopic(ConnectionInterface $conn, $topic): ?string
     {
         $topicId = $topic->getId();
 
         $params = $this->getParamsFromTopicId($topicId);
-        $params['userId'] = $this->getUserIdByConnection($connection);
+        $params['userId'] = $this->getUserIdByConnection($conn);
 
         if (!$params['userId']) {
-            $connection->close();
+            $conn->close();
 
             return null;
         }
@@ -270,23 +273,12 @@ class Pusher implements WampServerInterface
     }
 
     /**
-     * @param Topic<object> $topic
-     * @return string
-     */
-    protected function getTopicCategory($topic)
-    {
-        list($category) = explode('.', $topic->getId());
-
-        return $category;
-    }
-
-    /**
      * @param string $topicId
      * @return bool
      */
-    protected function isTopicAllowed($topicId)
+    private function isTopicAllowed($topicId)
     {
-        list($category) = explode('.', $topicId);
+        [$category] = explode('.', $topicId);
 
         return in_array($topicId, $this->categoryList) || in_array($category, $this->categoryList);
     }
@@ -295,7 +287,7 @@ class Pusher implements WampServerInterface
      * @param string $userId
      * @return string[]
      */
-    protected function getConnectionIdListByUserId($userId)
+    private function getConnectionIdListByUserId($userId)
     {
         if (!isset($this->userIdConnectionIdListMap[$userId])) {
             return [];
@@ -307,26 +299,25 @@ class Pusher implements WampServerInterface
     /**
      * @return ?string
      */
-    protected function getUserIdByConnection(ConnectionInterface $connection)
+    private function getUserIdByConnection(ConnectionInterface $conn)
     {
-        /** @phpstan-ignore-next-line */
-        if (!isset($this->connectionIdUserIdMap[$connection->resourceId])) {
+        $connectionId = $conn->resourceId ?? '';
+
+        if (!isset($this->connectionIdUserIdMap[$connectionId])) {
             return null;
         }
 
-        /** @phpstan-ignore-next-line */
-        return $this->connectionIdUserIdMap[$connection->resourceId];
+        return $this->connectionIdUserIdMap[$connectionId];
     }
 
     /**
      * @param string $userId
      * @return void
      */
-    protected function subscribeUser(ConnectionInterface $connection, $userId)
+    private function subscribeUser(ConnectionInterface $conn, $userId)
     {
         /** @var string $resourceId */
-        /** @phpstan-ignore-next-line */
-        $resourceId = $connection->resourceId;
+        $resourceId = $conn->resourceId ?? '';
 
         $this->connectionIdUserIdMap[$resourceId] = $userId;
 
@@ -338,10 +329,10 @@ class Pusher implements WampServerInterface
             $this->userIdConnectionIdListMap[$userId][] = $resourceId;
         }
 
-        $this->connections[$resourceId] = $connection;
+        $this->connections[$resourceId] = $conn;
 
         if ($this->isDebugMode) {
-            $this->log("{$resourceId}: user {$userId} subscribed");
+            $this->log("$resourceId: user $userId subscribed");
         }
     }
 
@@ -349,10 +340,9 @@ class Pusher implements WampServerInterface
      * @param string $userId
      * @return void
      */
-    protected function unsubscribeUser(ConnectionInterface $connection, $userId)
+    private function unsubscribeUser(ConnectionInterface $conn, $userId)
     {
-        /** @phpstan-ignore-next-line */
-        $resourceId = $connection->resourceId;
+        $resourceId = $conn->resourceId ?? '';
 
         unset($this->connectionIdUserIdMap[$resourceId]);
 
@@ -366,51 +356,52 @@ class Pusher implements WampServerInterface
         }
 
         if ($this->isDebugMode) {
-            $this->log("{$resourceId}: user {$userId} unsubscribed");
+            $this->log("$resourceId: user $userId unsubscribed");
         }
     }
 
     /**
      * @return void
      */
-    public function onOpen(ConnectionInterface $connection)
+    public function onOpen(ConnectionInterface $conn)
     {
         if ($this->isDebugMode) {
-            /** @phpstan-ignore-next-line */
-            $this->log("{$connection->resourceId}: open");
+            $resourceId = $conn->resourceId ?? '';
+
+            $this->log("$resourceId: open");
         }
 
-        /** @phpstan-ignore-next-line */
-        $httpRequest = $connection->httpRequest;
+        /** @var RequestInterface $httpRequest */
+        $httpRequest = $conn->httpRequest ?? throw new RuntimeException();
 
         $query = $httpRequest->getUri()->getQuery();
 
-        $params = \GuzzleHttp\Psr7\parse_query($query ?: '');
+        $params = Query::parse($query ?: '');
 
         if (empty($params['userId']) || empty($params['authToken'])) {
-            $this->closeConnection($connection);
+            $this->closeConnection($conn);
 
             return;
         }
 
-        $authToken = preg_replace('/[^a-zA-Z0-9]+/', '', $params['authToken']);
-        $userId = preg_replace('/[^a-zA-Z0-9]+/', '', $params['userId']);
+        $authToken = preg_replace('/[^a-zA-Z0-9\-]+/', '', $params['authToken']);
+        $userId = preg_replace('/[^a-zA-Z0-9\-]+/', '', $params['userId']);
 
         $result = $this->getUserIdByAuthToken($authToken);
 
         if (empty($result)) {
-            $this->closeConnection($connection);
+            $this->closeConnection($conn);
 
             return;
         }
 
         if ($result !== $userId) {
-            $this->closeConnection($connection);
+            $this->closeConnection($conn);
 
             return;
         }
 
-        $this->subscribeUser($connection, $userId);
+        $this->subscribeUser($conn, $userId);
     }
 
     /**
@@ -432,35 +423,35 @@ class Pusher implements WampServerInterface
     /**
      * @return void
      */
-    protected function closeConnection(ConnectionInterface $connection)
+    private function closeConnection(ConnectionInterface $conn)
     {
-        $userId = $this->getUserIdByConnection($connection);
+        $userId = $this->getUserIdByConnection($conn);
 
         if ($userId) {
-            $this->unsubscribeUser($connection, $userId);
+            $this->unsubscribeUser($conn, $userId);
         }
 
-        $connection->close();
+        $conn->close();
     }
 
     /**
      * @return void
      */
-    public function onClose(ConnectionInterface $connection)
+    public function onClose(ConnectionInterface $conn)
     {
+        $connectionId = $conn->resourceId ?? '';
+
         if ($this->isDebugMode) {
-            /** @phpstan-ignore-next-line */
-            $this->log("{$connection->resourceId}: close");
+            $this->log("$connectionId: close");
         }
 
-        $userId = $this->getUserIdByConnection($connection);
+        $userId = $this->getUserIdByConnection($conn);
 
         if ($userId) {
-            $this->unsubscribeUser($connection, $userId);
+            $this->unsubscribeUser($conn, $userId);
         }
 
-        /** @phpstan-ignore-next-line */
-        unset($this->connections[$connection->resourceId]);
+        unset($this->connections[$connectionId]);
     }
 
     /**
@@ -469,35 +460,38 @@ class Pusher implements WampServerInterface
      * @param array<string, mixed> $params
      * @return void
      */
-    public function onCall(ConnectionInterface $connection, $id, $topic, array $params)
+    public function onCall(ConnectionInterface $conn, $id, $topic, array $params)
     {
-        if (!method_exists($connection, 'callError')) {
+        if (!method_exists($conn, 'callError')) {
             return;
         }
 
-        $connection
-            ->callError($id, $topic, 'You are not allowed to make calls')
+        $conn->callError($id, $topic, 'You are not allowed to make calls')
             ->close();
     }
 
     /**
      * @param Topic<object> $topic
      * @param string $event
-     * @param array<mixed, mixed> $exclude
-     * @param array<mixed, mixed> $eligible
+     * @param array<int|string, mixed> $exclude
+     * @param array<int|string, mixed> $eligible
      * @return void
      */
-    public function onPublish(ConnectionInterface $connection, $topic, $event, array $exclude, array $eligible)
+    public function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible)
     {
         $topicId = $topic->getId();
 
-        $connection->close();
+        if ($topicId === '') {
+            return;
+        }
+
+        $conn->close();
     }
 
     /**
      * @return void
      */
-    public function onError(ConnectionInterface $connection, Exception $e)
+    public function onError(ConnectionInterface $conn, Exception $e)
     {
     }
 
@@ -530,12 +524,12 @@ class Pusher implements WampServerInterface
                     continue;
                 }
 
-                /** @var \Ratchet\Wamp\WampConnection $connection */
+                /** @var WampConnection $connection */
                 $connection = $this->connections[$connectionId];
 
                 if (in_array($topicId, $this->connectionIdTopicIdListMap[$connectionId])) {
                     if ($this->isDebugMode) {
-                        $this->log("send {$topicId} for connection {$connectionId}");
+                        $this->log("send $topicId for connection $connectionId");
                     }
 
                     $connection->event($topicId, $data);
@@ -543,7 +537,7 @@ class Pusher implements WampServerInterface
             }
 
             if ($this->isDebugMode) {
-                $this->log("message {$topicId} for user {$userId}");
+                $this->log("message $topicId for user $userId");
             }
 
             return;
@@ -555,16 +549,16 @@ class Pusher implements WampServerInterface
             $topic->broadcast($data);
 
             if ($this->isDebugMode) {
-                $this->log("send {$topicId} to all");
+                $this->log("send $topicId to all");
             }
         }
 
         if ($this->isDebugMode) {
-            $this->log("message {$topicId} for all");
+            $this->log("message $topicId for all");
         }
     }
 
-    protected function log(string $msg): void
+    private function log(string $msg): void
     {
         echo "[" . date('Y-m-d H:i:s') . "] " . $msg . "\n";
     }

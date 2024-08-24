@@ -40,7 +40,9 @@
     "duplicateCheckFieldList": "Campi controllo duplicati",
     "author": "Autore",
     "module": "Modulo",
-    "version": "Versione"
+    "version": "Versione",
+    "selectFilter": "Filtro Selezione",
+    "primaryFilters": "Filtri Primari"
   },
   "options": {
     "type": {
@@ -62,6 +64,9 @@
     "sortDirection": {
       "asc": "Ascendente",
       "desc": "Discendente"
+    },
+    "module": {
+      "Custom": "Personalizzato"
     }
   },
   "messages": {
@@ -73,7 +78,9 @@
     "beforeSaveApiScript": "Uno script chiamato nelle richieste API di creazione e aggiornamento prima che un'entità venga salvata. Da utilizzare per la convalida personalizzata e il controllo dei duplicati.",
     "nameIsAlreadyUsed": "Nome '{name}' è già in uso.",
     "nameIsNotAllowed": "Nome '{name}' non permesso.",
-    "nameIsTooLong": "Nome troppo lungo."
+    "nameIsTooLong": "Nome troppo lungo.",
+    "confirmRemoveLink": "Sei sicuro di voler rimuovere la relazione *{link}*?",
+    "urlHashCopiedToClipboard": "Un frammento dell'url per il filtro *{name}* è stato copiato negli appunti. Puoi aggiungerlo alla barra di navigazione."
   },
   "tooltips": {
     "statusField": "Gli aggiornamenti a questo campo verranno registrati nel flusso attività.",
@@ -87,6 +94,7 @@
     "countDisabled": "Il numero totale non verrà visualizzato nella visualizzazione lista. Può ridurre il tempo di caricamento quando la tabella DB è grande.",
     "optimisticConcurrencyControl": "Previene i conflitti.",
     "duplicateCheckFieldList": "Quali campi controllare quando viene eseguito il controllo duplicati.",
-    "updateDuplicateCheck": "Esegui il controllo duplicati quando un record viene aggiornato."
+    "updateDuplicateCheck": "Esegui il controllo duplicati quando un record viene aggiornato.",
+    "linkSelectFilter": "Un filtro primario da applicare di default quando si seleziona un record."
   }
 }

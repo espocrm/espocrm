@@ -9,7 +9,7 @@
     "trashFolder": "Cestino",
     "createCase": "Crea Caso",
     "reply": "Risposta Automatica",
-    "caseDistribution": "Caso di Distribuzione",
+    "caseDistribution": "Distribuzione Casi",
     "replyEmailTemplate": "Modello Email di Risposta",
     "replyFromAddress": "Rispondi Da (Indirizzo)",
     "replyToAddress": "Rispondi A (Indirizzo)",
@@ -18,6 +18,7 @@
     "fetchSince": "Recupera da",
     "addAllTeamUsers": "Per tutti gli utenti del team",
     "team": "Team",
+    "teams": "Team",
     "sentFolder": "Cartella inviate",
     "storeSentEmails": "Memorizza email inviate",
     "useSmtp": "Usa SMTP",
@@ -40,12 +41,12 @@
     "reply": "Notifica ai mittenti che le loro email sono state ricevute.\n\nVerrà inviata una sola email per destinatario, in un determinato periodo di tempo, per evitare loops.",
     "createCase": "Creazione automatica di un Caso all'arrivo di una email.",
     "replyToAddress": "Indicare l'indirizzo email di questo account di posta, per indirizzare qui le risposte.",
-    "caseDistribution": "Come verranno assegnati i Ticket. Assegnato direttamente all'utente o all'interno del team.",
+    "caseDistribution": "Come verranno assegnati i Casi. Assegnato direttamente all'utente o tra i membri del team.",
     "assignToUser": "Assegnatari dei processi utente.",
-    "team": "Assegnatari dei processi dei teams.",
+    "team": "il team a cui saranno assegnati i casi.",
     "teams": "Team a cui verranno assegnate le email.",
     "addAllTeamUsers": "I Messaggi di posta elettronica vengono visualizzati nella cartella di Posta in arrivo di tutti gli utenti di un gruppo specifico.",
-    "targetUserPosition": "Gli utenti con posizione specifica verranno distribuiti con i tickets.",
+    "targetUserPosition": "Gli utenti con posizione specifica verranno distribuiti con i casi.",
     "monitoredFolders": "Se più cartelle, devono essere separate da virgola",
     "smtpIsShared": "Se selezionato, gli utenti saranno in grado di inviare e-mail utilizzando questo SMTP. La disponibilità è controllata dai ruoli tramite l'autorizzazione dell'account e-mail di gruppo.",
     "smtpIsForMassEmail": "Se selezionato, SMTP sarà disponibile per l'e-mail di massa.",
@@ -68,10 +69,6 @@
       "": "Nessuno",
       "Direct-Assignment": "Assegnazione diretta",
       "Least-Busy": "Least-Occupato"
-    },
-    "smtpAuthMechanism": {
-      "plain": "Semplice\n",
-      "login": "Login"
     }
   },
   "labels": {

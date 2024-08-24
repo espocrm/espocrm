@@ -55,8 +55,8 @@ class HeaderView extends View {
         });
 
         data.noBreakWords = this.options.fontSizeFlexible;
-
         data.isXsSingleRow = this.options.isXsSingleRow;
+        data.menuItemsHidden = this.menuItemsHidden;
 
         if ((data.items.buttons || []).length < 2) {
             data.isHeaderAdditionalSpace = true;
@@ -77,11 +77,44 @@ class HeaderView extends View {
         }
 
         this.wasRendered = false;
+
+        if (this.options.fontSizeFlexible) {
+            this.on('action-item-update', () => {
+                if (this.isRendered()) {
+                    this.adjustFontSize();
+                }
+            });
+        }
     }
 
+    /**
+     * Hide all menu items.
+     *
+     * @return {Promise}
+     */
+    hideAllMenuItems() {
+        this.menuItemsHidden = true;
+
+        return this.reRender();
+    }
+
+    /**
+     * Show all menu items.
+     *
+     * @return {Promise}
+     */
+    showAllActionItems() {
+        this.menuItemsHidden = false;
+
+        return this.reRender();
+    }
 
     afterRender() {
         if (this.options.fontSizeFlexible) {
+            /** @private */
+            this.$headerBreadcrumps = this.$el.find('.header-breadcrumbs');
+            this._titleIsInitiated = false;
+
             this.adjustFontSize();
         }
 
@@ -92,14 +125,17 @@ class HeaderView extends View {
         this.wasRendered = true;
     }
 
-    adjustFontSize(step) {
-        step = step || 0;
-
+    /**
+     * @private
+     * @param {number} step
+     */
+    adjustFontSize(step = 0) {
         if (!step) {
             this.fontSizePercentage = 100;
         }
 
-        const $container = this.$el.find('.header-breadcrumbs');
+        const $container = this.$headerBreadcrumps;
+
         const containerWidth = $container.width();
         let childrenWidth = 0;
 
@@ -107,53 +143,68 @@ class HeaderView extends View {
             childrenWidth += $(el).outerWidth(true);
         });
 
-        if (containerWidth < childrenWidth) {
-            if (step > 7) {
-                $container.addClass('overlapped');
+        if (containerWidth >= childrenWidth) {
+            return;
+        }
 
-                this.$el.find('.title').each((i, el) => {
-                    const $el = $(el);
-                    const text = $(el).text();
-
-                    $el.attr('title', text);
-
-                    let isInitialized = false;
-
-                    $el.on('touchstart', () => {
-                        if (!isInitialized) {
-                            $el.attr('title', '');
-                            isInitialized = true;
-
-                            Espo.Ui.popover($el, {
-                                content: text,
-                                noToggleInit: true,
-                            }, this);
-                        }
-
-                        $el.popover('toggle');
-                    });
-                });
-
+        if (step > 7) {
+            if (this._titleIsInitiated) {
                 return;
             }
 
-            this.fontSizePercentage -= 4;
+            this._titleIsInitiated = true;
 
-            const $flexible = this.$el.find('.font-size-flexible');
+            $container.addClass('overlapped');
 
-            $flexible.css('font-size', this.fontSizePercentage + '%');
-            $flexible.css('position', 'relative');
+            this.$el.find('.title').each((i, el) => {
+                const $el = $(el);
+                const text = $(el).text();
 
-            if (step > 6) {
-                $flexible.css('top', '-1px');
-            } else if (step > 4) {
-                $flexible.css('top', '-1px');
-            }
+                $el.attr('title', text);
 
-            this.adjustFontSize(step + 1);
+                let isInitialized = false;
+
+                $el.on('touchstart', () => {
+                    if (!isInitialized) {
+                        $el.attr('title', '');
+                        isInitialized = true;
+
+                        Espo.Ui.popover($el, {
+                            content: text,
+                            noToggleInit: true,
+                        }, this);
+                    }
+
+                    $el.popover('toggle');
+                });
+            });
+
+            return;
         }
+
+        this.fontSizePercentage -= 4;
+        const $flexible = this.$el.find('.font-size-flexible');
+
+        $flexible.css('font-size', this.fontSizePercentage + '%');
+        $flexible.css('position', 'relative');
+
+        if (step > 6) {
+            $flexible.css('top', '-1px');
+        } else if (step > 4) {
+            $flexible.css('top', '-1px');
+        }
+
+        this.adjustFontSize(step + 1);
     }
 
+    /**
+     * @private
+     * @returns {{
+     *     buttons?: module:views/main~MenuItem[],
+     *     dropdown?: module:views/main~MenuItem[],
+     *     actions?: module:views/main~MenuItem[],
+     * }}
+     */
     getItems() {
         return this.getParentMainView().getMenu() || {};
     }

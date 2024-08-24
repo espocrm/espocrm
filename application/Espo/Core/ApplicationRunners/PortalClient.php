@@ -60,6 +60,9 @@ class PortalClient implements RunnerParameterized
         private ErrorOutput $errorOutput
     ) {}
 
+    /**
+     * @throws BadRequest
+     */
     public function run(Params $params): void
     {
         $id = $params->get('id') ??

@@ -37,7 +37,8 @@ define('views/record/row-actions/relationship-no-remove', ['views/record/row-act
                 data: {
                     id: this.model.id
                 },
-                link: '#' + this.model.entityType + '/view/' + this.model.id
+                link: '#' + this.model.entityType + '/view/' + this.model.id,
+                groupIndex: 0,
             }];
 
             if (this.options.acl.edit) {
@@ -47,15 +48,18 @@ define('views/record/row-actions/relationship-no-remove', ['views/record/row-act
                     data: {
                         id: this.model.id
                     },
-                    link: '#' + this.model.entityType + '/edit/' + this.model.id
+                    link: '#' + this.model.entityType + '/edit/' + this.model.id,
+                    groupIndex: 0,
                 });
+
                 if (!this.options.unlinkDisabled) {
                     list.push({
                         action: 'unlinkRelated',
                         label: 'Unlink',
                         data: {
                             id: this.model.id
-                        }
+                        },
+                        groupIndex: 0,
                     });
                 }
             }

@@ -1,6 +1,8 @@
 {
   "labels": {
-    "Dynamic Logic": "Dinamička Logika"
+    "Dynamic Logic": "Dinamička Logika",
+    "Name": "Ime",
+    "Type": "Tip"
   },
   "options": {
     "dateTimeDefault": {
@@ -71,5 +73,21 @@
     "before": "Vrednost datuma mora da bude pre datuma vrednosti određenog polja.",
     "after": "Vrednost datuma mora da bude nakon datuma vrednosti određenog polja.",
     "readOnly": "Vrednost polja ne može biti određen od strane korisnika. Ali može se izračunati formulom."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Ulica",
+      "city": "Grad",
+      "country": "Država",
+      "postalCode": "Poštanski Broj",
+      "map": "Mapa"
+    },
+    "personName": {
+      "first": "Ime",
+      "last": "Prezime"
+    },
+    "datetimeOptional": {
+      "date": "Datum"
+    }
   }
 }

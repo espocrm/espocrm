@@ -50,10 +50,10 @@ class SettingsOutboundEmailFromAddressFieldView extends EmailAddressFieldView {
         });
     }
 
-    transformAutocompleteResult(response) {
-        const result = super.transformAutocompleteResult(response);
+    transformAutocompleteResult(list) {
+        const result = super.transformAutocompleteResult(list);
 
-        result.suggestions.forEach(item => {
+        result.forEach(item => {
             item.value = item.attributes.emailAddress;
         });
 

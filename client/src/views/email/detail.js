@@ -117,7 +117,11 @@ class EmailDetailView extends DetailView {
                 return;
             }
 
-            if (!this.model.hasChanged('isImportant') && !this.model.hasChanged('inTrash')) {
+            if (
+                !this.model.hasChanged('isImportant') &&
+                !this.model.hasChanged('inTrash') &&
+                !this.model.hasChanged('inArchive')
+            ) {
                 return;
             }
 
@@ -127,6 +131,23 @@ class EmailDetailView extends DetailView {
                 headerView.reRender();
             }
         });
+
+        this.shortcutKeys['Control+Backspace'] = e => {
+            if ($(e.target).hasClass('note-editable')) {
+                return;
+            }
+
+            const recordView = /** @type {module:views/email/record/detail} */ this.getRecordView();
+
+            if (!this.model.get('isUsers') || this.model.get('inArchive')) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            recordView.actionMoveToArchive();
+        };
 
         this.shortcutKeys['Control+Delete'] = e => {
             if ($(e.target).hasClass('note-editable')) {
@@ -228,7 +249,7 @@ class EmailDetailView extends DetailView {
             attributes.emailAddress = this.model.get('from');
         }
 
-        attributes.emailId = this.model.id;
+        attributes.originalEmailId = this.model.id;
 
         const viewName = this.getMetadata().get('clientDefs.Lead.modalViews.edit') || 'views/modals/edit';
 
@@ -291,7 +312,7 @@ class EmailDetailView extends DetailView {
         }
 
         attributes.emailsIds = [this.model.id];
-        attributes.emailId = this.model.id;
+        attributes.originalEmailId = this.model.id;
         attributes.name = this.model.get('name');
         attributes.description = this.model.get('bodyPlain') || '';
 
@@ -432,7 +453,7 @@ class EmailDetailView extends DetailView {
             attributes.emailAddress = this.model.get('from');
         }
 
-        attributes.emailId = this.model.id;
+        attributes.originalEmailId = this.model.id;
 
         const viewName = this.getMetadata().get('clientDefs.Contact.modalViews.edit') || 'views/modals/edit';
 
@@ -465,7 +486,7 @@ class EmailDetailView extends DetailView {
             this.getLanguage(),
             this.getUser(),
             this.getDateTime(),
-            this.getAcl()
+            this.getAcl(),
         );
 
         const attributes = emailHelper.getReplyAttributes(this.model, data, cc);
@@ -539,6 +560,7 @@ class EmailDetailView extends DetailView {
 
         const isImportant = this.model.get('isImportant');
         const inTrash = this.model.get('inTrash');
+        const inArchive = this.model.get('inArchive');
 
         const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
 
@@ -558,12 +580,21 @@ class EmailDetailView extends DetailView {
                 .get(0).innerHTML;
         }
 
+        let styleClass = '';
+
+        if (isImportant) {
+            styleClass = 'text-warning'
+        } else if (inTrash) {
+            styleClass = 'text-muted';
+        } else if (inArchive) {
+            styleClass = 'text-info';
+        }
+
         return this.buildHeaderHtml([
             $root,
             $('<span>')
                 .addClass('font-size-flexible title')
-                .addClass(isImportant ? 'text-warning' : '')
-                .addClass(inTrash ? 'text-muted' : '')
+                .addClass(styleClass)
                 .text(name),
         ]);
     }

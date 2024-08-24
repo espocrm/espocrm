@@ -26,23 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/event/fields/name-for-history', ['views/fields/varchar'], function (Dep) {
+import VarcharFieldView from 'views/fields/varchar';
 
-    return Dep.extend({
+export default class extends VarcharFieldView {
 
-        listLinkTemplate: 'event/fields/name-for-history/list-link',
+    listLinkTemplate = 'event/fields/name-for-history/list-link'
 
-        data: function () {
-            let data = Dep.prototype.data.call(this);
+    data () {
+        const data = super.data();
 
-            let status = this.model.get('status');
+        const status = this.model.get('status');
 
-            let canceledStatusList = this.getMetadata()
-                .get(['scopes', this.model.entityType, 'canceledStatusList']) || [];
+        const canceledStatusList = this.getMetadata()
+            .get(['scopes', this.model.entityType, 'canceledStatusList']) || [];
 
-            data.strikethrough = canceledStatusList.includes(status);
+        data.strikethrough = canceledStatusList.includes(status);
 
-            return data;
-        },
-    });
-});
+        return data;
+    }
+}

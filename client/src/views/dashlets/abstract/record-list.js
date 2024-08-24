@@ -34,6 +34,12 @@ class RecordListDashletView extends BaseDashletView {
     templateContent = '<div class="list-container">{{{list}}}</div>'
 
     /**
+     * @protected
+     * @type {string[]}
+     */
+    additionalRowActionList = undefined
+
+    /**
      * A scope.
      * @type {string}
      */
@@ -135,13 +141,14 @@ class RecordListDashletView extends BaseDashletView {
             this.createView('list', viewName, {
                 collection: collection,
                 selector: '.list-container',
-                pagination: this.getOption('pagination') ? 'bottom' : false,
+                pagination: !!this.getOption('pagination'),
                 type: 'listDashlet',
                 rowActionsView: this.rowActionsView,
                 checkboxes: false,
                 showMore: true,
                 listLayout: this.getOption(this.layoutType + 'Layout'),
                 skipBuildRows: true,
+                additionalRowActionList: this.additionalRowActionList,
             }, (view) => {
                 view.getSelectAttributeList(selectAttributeList => {
                     if (selectAttributeList) {

@@ -64,5 +64,8 @@
     "textFilter": true,
     "textFilterForeign": true,
     "fullTextSearch": true,
+    "sanitizerClassNameList": [
+        "Espo\\Classes\\FieldSanitizers\\EmptyStringToNull"
+    ],
     "default": null
 }

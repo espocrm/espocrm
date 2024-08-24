@@ -20,7 +20,8 @@
     "acceptanceStatusMeetings": "Akzeptanzstatus (Meetings)",
     "acceptanceStatusCalls": "Akzeptanzstatus (Anrufe)",
     "title": "Konto-Titel",
-    "hasPortalUser": "Hat Portal-Benutzer"
+    "hasPortalUser": "Hat Portal-Benutzer",
+    "originalEmail": "Ursprüngliche E-Mail"
   },
   "links": {
     "opportunities": "Verkaufschancen",

@@ -10,6 +10,10 @@
         </div>
     {{/if}}
 
+    {{#if settings}}
+        <div class="settings-container pull-right">{{{settings}}}</div>
+    {{/if}}
+
     {{#each buttonList}}
         {{button
             name
@@ -29,26 +33,24 @@
         <thead>
             <tr class="kanban-row">
                 {{#each groupDataList}}
-                <th
-                    data-name="{{name}}"
-                    class="group-header{{#if style}} group-header-{{style}}{{/if}}{{#if nextStyle}} group-header-before-{{nextStyle}}{{/if}}"
-                >
-                    <div>
-                        <span class="kanban-group-label">{{label}}</span>
-                        {{#if ../isCreatable}}
-                        <a
-                            role="button"
-                            tabindex="0"
-                            title="{{translate 'Create'}}"
-                            class="create-button hidden"
-                            data-action="createInGroup"
-                            data-group="{{name}}"
-                        >
-                            <span class="fas fa-plus fa-sm"></span>
-                        </a>
-                        {{/if}}
-                    </div>
-                </th>
+                    <th
+                        data-name="{{name}}"
+                        class="group-header{{#if style}} group-header-{{style}}{{/if}}"
+                    >
+                        <div>
+                            <span class="kanban-group-label">{{label}}</span>
+                            <a
+                                role="button"
+                                tabindex="0"
+                                title="{{translate 'Create'}}"
+                                class="create-button hidden"
+                                data-action="createInGroup"
+                                data-group="{{name}}"
+                            >
+                                <span class="fas fa-plus fa-sm"></span>
+                            </a>
+                        </div>
+                    </th>
                 {{/each}}
             </tr>
         </thead>
@@ -82,8 +84,8 @@
 </div>
 
 
-{{#if isEmptyList}}
-<div class="margin-top no-data">
-    {{translate 'No Data'}}
-</div>
-{{/if}}
+{{#if isEmptyList}}{{#unless noDataDisabled}}
+    <div class="margin-top no-data">
+        {{translate 'No Data'}}
+    </div>
+{{/unless}}{{/if}}

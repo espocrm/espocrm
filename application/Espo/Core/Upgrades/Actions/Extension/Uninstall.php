@@ -31,29 +31,28 @@ namespace Espo\Core\Upgrades\Actions\Extension;
 
 use Espo\Core\Exceptions\Error;
 
+use Espo\Entities\Extension;
 use Throwable;
 
 class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
 {
-    /**
-     * @var ?\Espo\Entities\Extension
-     */
-    protected $extensionEntity;
+    protected ?Extension $extensionEntity = null;
 
     /**
      * Get entity of this extension.
      *
-     * @return \Espo\Entities\Extension
+     * @return Extension
      * @throws Error
      */
     protected function getExtensionEntity()
     {
         if (!isset($this->extensionEntity)) {
             $processId = $this->getProcessId();
-            $this->extensionEntity = $this->getEntityManager()->getEntity('Extension', $processId);
 
-            if (!isset($this->extensionEntity)) {
-                throw new Error('Extension Entity not found.');
+            $this->extensionEntity = $this->getEntityManager()->getEntityById(Extension::ENTITY_TYPE, $processId);
+
+            if (!$this->extensionEntity) {
+                throw new Error('Extension entity not found.');
             }
         }
 
@@ -61,10 +60,9 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
     }
 
     /**
-     * @return void
      * @throws Error
      */
-    protected function afterRunAction()
+    protected function afterRunAction(): void
     {
         /** Set extension entity, isInstalled = false */
         $extensionEntity = $this->getExtensionEntity();
@@ -87,13 +85,13 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
      * @return string[]
      * @throws Error
      */
-    protected function getRestoreFileList()
+    protected function getRestoreFileList(): array
     {
         if (!isset($this->data['restoreFileList'])) {
             $extensionEntity = $this->getExtensionEntity();
             $this->data['restoreFileList'] = $extensionEntity->get('fileList');
         }
 
-        return $this->data['restoreFileList'];
+        return $this->data['restoreFileList'] ?? [];
     }
 }

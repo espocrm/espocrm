@@ -10,7 +10,8 @@
     "excludingActionList": "Esclude",
     "optedOutCount": "Conteggio Cancellazioni",
     "targetStatus": "Stato target",
-    "isOptedOut": "È Stato Cancellato"
+    "isOptedOut": "È Stato Cancellato",
+    "sourceCampaign": "Campagna di Provenienza"
   },
   "links": {
     "accounts": "Account",

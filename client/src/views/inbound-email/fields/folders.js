@@ -26,11 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/inbound-email/fields/folders', ['views/email-account/fields/folders'], function (Dep) {
+import FoldersView from 'views/email-account/fields/folders';
 
-    return Dep.extend({
+export default class extends FoldersView {
 
-        getFoldersUrl: 'InboundEmail/action/getFolders',
-
-    });
-});
+    // noinspection JSUnusedGlobalSymbols
+    getFoldersUrl = 'InboundEmail/action/getFolders'
+}

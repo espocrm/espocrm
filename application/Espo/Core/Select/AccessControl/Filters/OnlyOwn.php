@@ -59,10 +59,10 @@ class OnlyOwn implements Filter
                 ->select('id')
                 ->from($this->entityType)
                 ->leftJoin($middleEntityType, 'assignedUsersMiddle', [
-                    "assignedUsersMiddle.{$key1}:" => 'id',
+                    "assignedUsersMiddle.$key1:" => 'id',
                     'assignedUsersMiddle.deleted' => false,
                 ])
-                ->where(["assignedUsersMiddle.{$key2}" => $this->user->getId()])
+                ->where(["assignedUsersMiddle.$key2" => $this->user->getId()])
                 ->build();
 
             $queryBuilder->where(['id=s' => $subQuery]);

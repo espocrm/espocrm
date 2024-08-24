@@ -32,7 +32,6 @@ namespace Espo\Core\Api;
 use Espo\Core\Api\Request as ApiRequest;
 
 use Psr\Http\Message\UriInterface;
-
 use Slim\Psr7\Factory\UriFactory;
 
 use stdClass;
@@ -49,6 +48,7 @@ class RequestNull implements ApiRequest
 
     /**
      * @return null
+     * @noinspection PhpDocSignatureInspection
      */
     public function getQueryParam(string $name): ?string
     {

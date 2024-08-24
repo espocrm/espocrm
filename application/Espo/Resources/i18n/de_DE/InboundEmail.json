@@ -34,7 +34,9 @@
     "keepFetchedEmailsUnread": "Geholte E-Mails ungelesen halten",
     "smtpAuthMechanism": "SMTP-Auth-Mechanismus",
     "security": "Sicherheit",
-    "groupEmailFolder": "E-Mail Gruppenordner"
+    "groupEmailFolder": "E-Mail Gruppenordner",
+    "connectedAt": "Verbunden mit",
+    "excludeFromReply": "Von Antwort ausschließen"
   },
   "tooltips": {
     "reply": "Benachrichtigt E-Mail Empfänger beim Empfang der Nachrichten.\n\n Nur eine E-Mail pro Empfänger wird zu einer Zeit versendet, um eine Endlosschleife zu verhindern.",
@@ -51,7 +53,8 @@
     "smtpIsForMassEmail": "Wenn diese Option aktiviert ist, steht SMTP für Massen-E-Mail zur Verfügung.",
     "storeSentEmails": "Gesendete E-Mails werden auf dem IMAP-Server gespeichert.",
     "useSmtp": "Die Möglichkeit, E-Mails zu versenden.",
-    "groupEmailFolder": "Eingehende E-Mails in einem Gruppenordner ablegen."
+    "groupEmailFolder": "Eingehende E-Mails in einem Gruppenordner ablegen.",
+    "excludeFromReply": "Beim Beantworten von E-Mails, die an die E-Mail-Adresse dieses Kontos gesendet werden, wird dessen E-Mail-Adresse nicht zur Kopie (CC-Feld) hinzugefügt.\n\nBeachten Sie, dass durch die Aktivierung dieses Parameters die E-Mail-Adresse dieses Kontos für Benutzer, die Zugriff auf das Senden von E-Mails haben, sichtbar wird."
   },
   "links": {
     "filters": "Filter",
@@ -77,6 +80,7 @@
     "Main": "Hauptteil"
   },
   "messages": {
-    "couldNotConnectToImap": "Kann keine Verbindung zum IMAP Server herstellen"
+    "couldNotConnectToImap": "Kann keine Verbindung zum IMAP Server herstellen",
+    "imapNotConnected": "Konnte keine Verbindung zum Gruppen-[IMAP account](#InboundEmail/view/{id}) herstellen."
   }
 }

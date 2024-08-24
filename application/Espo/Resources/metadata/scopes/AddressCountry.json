@@ -1,0 +1,9 @@
+{
+    "entity": true,
+    "importable": true,
+    "exportFormatList": ["csv"],
+    "duplicateCheckFieldList": [
+        "name",
+        "code"
+    ]
+}

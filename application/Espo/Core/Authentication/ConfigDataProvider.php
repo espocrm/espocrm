@@ -34,21 +34,14 @@ use Espo\Core\Authentication\Logins\Espo;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 
-use RuntimeException;
-
 class ConfigDataProvider
 {
     private const FAILED_ATTEMPTS_PERIOD =  '60 seconds';
+    private const FAILED_CODE_ATTEMPTS_PERIOD =  '5 minutes';
     private const MAX_FAILED_ATTEMPT_NUMBER = 10;
 
-    private Config $config;
-    private Metadata $metadata;
-
-    public function __construct(Config $config, Metadata $metadata)
-    {
-        $this->config = $config;
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Config $config, private Metadata $metadata)
+    {}
 
     /**
      * A period for max failed attempts checking.
@@ -56,6 +49,14 @@ class ConfigDataProvider
     public function getFailedAttemptsPeriod(): string
     {
         return $this->config->get('authFailedAttemptsPeriod', self::FAILED_ATTEMPTS_PERIOD);
+    }
+
+    /**
+     * A period for max failed 2FA code attempts checking.
+     */
+    public function getFailedCodeAttemptsPeriod(): string
+    {
+        return $this->config->get('authFailedCodeAttemptsPeriod', self::FAILED_CODE_ATTEMPTS_PERIOD);
     }
 
     /**
@@ -156,15 +157,24 @@ class ConfigDataProvider
         return $list;
     }
 
-    public function getMethodLoginMetadataParams(string $method): MetadataParams
+    public function ipAddressCheck(): bool
     {
-        /** @var ?array<string, mixed> $data */
-        $data = $this->metadata->get(['authenticationMethods', $method]);
+        return (bool) $this->config->get('authIpAddressCheck');
+    }
 
-        if ($data === null) {
-            throw new RuntimeException();
-        }
+    /**
+     * @return string[]
+     */
+    public function getIpAddressWhitelist(): array
+    {
+        return $this->config->get('authIpAddressWhitelist') ?? [];
+    }
 
-        return MetadataParams::fromRaw($method, $data);
+    /**
+     * @return string[]
+     */
+    public function getIpAddressCheckExcludedUserIdList(): array
+    {
+        return $this->config->get('authIpAddressCheckExcludedUsersIds') ?? [];
     }
 }

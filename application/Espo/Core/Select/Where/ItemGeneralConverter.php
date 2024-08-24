@@ -32,6 +32,7 @@ namespace Espo\Core\Select\Where;
 use DateTimeZone;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Field\DateTime;
+use Espo\Core\Select\Where\Item\Data;
 use Espo\Core\Select\Where\Item\Type;
 use Espo\Core\Select\Helpers\RandomStringGenerator;
 use Espo\Core\Select\Helpers\UserTimeZoneProvider;
@@ -194,35 +195,35 @@ class ItemGeneralConverter implements ItemConverter
         }
 
         if ($type === Type::TODAY) {
-            return WhereClause::fromRaw($this->processToday($attribute));
+            return WhereClause::fromRaw($this->processToday($attribute, $item->getData()));
         }
 
         if ($type === Type::PAST) {
-            return WhereClause::fromRaw($this->processPast($attribute));
+            return WhereClause::fromRaw($this->processPast($attribute, $item->getData()));
         }
 
         if ($type === Type::FUTURE) {
-            return WhereClause::fromRaw($this->processFuture($attribute));
+            return WhereClause::fromRaw($this->processFuture($attribute, $item->getData()));
         }
 
         if ($type === Type::LAST_SEVEN_DAYS) {
-            return WhereClause::fromRaw($this->processLastSevenDays($attribute));
+            return WhereClause::fromRaw($this->processLastSevenDays($attribute, $item->getData()));
         }
 
         if ($type === Type::LAST_X_DAYS) {
-            return WhereClause::fromRaw($this->processLastXDays($attribute, $value));
+            return WhereClause::fromRaw($this->processLastXDays($attribute, $value, $item->getData()));
         }
 
         if ($type === Type::NEXT_X_DAYS) {
-            return WhereClause::fromRaw($this->processNextXDays($attribute, $value));
+            return WhereClause::fromRaw($this->processNextXDays($attribute, $value, $item->getData()));
         }
 
         if ($type === Type::OLDER_THAN_X_DAYS) {
-            return WhereClause::fromRaw($this->processOlderThanXDays($attribute, $value));
+            return WhereClause::fromRaw($this->processOlderThanXDays($attribute, $value, $item->getData()));
         }
 
         if ($type === Type::AFTER_X_DAYS) {
-            return WhereClause::fromRaw($this->processAfterXDays($attribute, $value));
+            return WhereClause::fromRaw($this->processAfterXDays($attribute, $value, $item->getData()));
         }
 
         if ($type === Type::CURRENT_WEEK) {
@@ -976,11 +977,12 @@ class ItemGeneralConverter implements ItemConverter
 
     /**
      * @return array<string|int, mixed>
+     * @throws BadRequest
      */
-    private function processToday(string $attribute): array
+    private function processToday(string $attribute, ?Data $data): array
     {
-        $today = DateTime::createNow()
-            ->withTimezone($this->getSystemTimeZone());
+        $timeZone = $this->getTimeZone($data);
+        $today = DateTime::createNow()->withTimezone($timeZone);
 
         return [
             $attribute . '=' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
@@ -989,11 +991,12 @@ class ItemGeneralConverter implements ItemConverter
 
     /**
      * @return array<string|int, mixed>
+     * @throws BadRequest
      */
-    private function processPast(string $attribute): array
+    private function processPast(string $attribute, ?Data $data): array
     {
-        $today = DateTime::createNow()
-            ->withTimezone($this->getSystemTimeZone());
+        $timeZone = $this->getTimeZone($data);
+        $today = DateTime::createNow()->withTimezone($timeZone);
 
         return [
             $attribute . '<' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
@@ -1002,11 +1005,12 @@ class ItemGeneralConverter implements ItemConverter
 
     /**
      * @return array<string|int, mixed>
+     * @throws BadRequest
      */
-    private function processFuture(string $attribute): array
+    private function processFuture(string $attribute, ?Data $data): array
     {
-        $today = DateTime::createNow()
-            ->withTimezone($this->getSystemTimeZone());
+        $timeZone = $this->getTimeZone($data);
+        $today = DateTime::createNow()->withTimezone($timeZone);
 
         return [
             $attribute . '>' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
@@ -1015,11 +1019,12 @@ class ItemGeneralConverter implements ItemConverter
 
     /**
      * @return array<string|int, mixed>
+     * @throws BadRequest
      */
-    private function processLastSevenDays(string $attribute): array
+    private function processLastSevenDays(string $attribute, ?Data $data): array
     {
-        $today = DateTime::createNow()
-            ->withTimezone($this->getSystemTimeZone());
+        $timeZone = $this->getTimeZone($data);
+        $today = DateTime::createNow()->withTimezone($timeZone);
 
         $from = $today->addDays(-7);
 
@@ -1032,13 +1037,13 @@ class ItemGeneralConverter implements ItemConverter
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
+     * @throws BadRequest
      */
-    private function processLastXDays(string $attribute, $value): array
+    private function processLastXDays(string $attribute, mixed $value, ?Data $data): array
     {
-        $today = DateTime::createNow()
-            ->withTimezone($this->getSystemTimeZone());
+        $timeZone = $this->getTimeZone($data);
+        $today = DateTime::createNow()->withTimezone($timeZone);
 
         $number = intval($value);
 
@@ -1053,13 +1058,13 @@ class ItemGeneralConverter implements ItemConverter
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
+     * @throws BadRequest
      */
-    private function processNextXDays(string $attribute, $value): array
+    private function processNextXDays(string $attribute, mixed $value, ?Data $data): array
     {
-        $today = DateTime::createNow()
-            ->withTimezone($this->getSystemTimeZone());
+        $timeZone = $this->getTimeZone($data);
+        $today = DateTime::createNow()->withTimezone($timeZone);
 
         $number = intval($value);
 
@@ -1074,16 +1079,17 @@ class ItemGeneralConverter implements ItemConverter
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
+     * @throws BadRequest
      */
-    private function processOlderThanXDays(string $attribute, $value): array
+    private function processOlderThanXDays(string $attribute, mixed $value, ?Data $data): array
     {
+        $timeZone = $this->getTimeZone($data);
+        $today = DateTime::createNow()->withTimezone($timeZone);
+
         $number = intval($value);
 
-        $date = DateTime::createNow()
-            ->withTimezone($this->getSystemTimeZone())
-            ->addDays(- $number);
+        $date = $today->addDays(- $number);
 
         return [
             $attribute . '<' =>  $date->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
@@ -1091,16 +1097,17 @@ class ItemGeneralConverter implements ItemConverter
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
+     * @throws BadRequest
      */
-    private function processAfterXDays(string $attribute, $value): array
+    private function processAfterXDays(string $attribute, mixed $value, ?Data $data): array
     {
+        $timeZone = $this->getTimeZone($data);
+        $today = DateTime::createNow()->withTimezone($timeZone);
+
         $number = intval($value);
 
-        $date = DateTime::createNow()
-            ->withTimezone($this->getSystemTimeZone())
-            ->addDays($number);
+        $date = $today->addDays($number);
 
         return [
             $attribute . '>' => $date->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
@@ -1823,6 +1830,25 @@ class ItemGeneralConverter implements ItemConverter
         }
         catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
+        }
+    }
+
+    /**
+     * @throws BadRequest
+     */
+    private function getTimeZone(?Data $data): DateTimeZone
+    {
+        $timeZone = $data instanceof Data\Date ? $data->getTimeZone() : null;
+
+        if (!$timeZone) {
+            return $this->getSystemTimeZone();
+        }
+
+        try {
+            return new DateTimeZone($timeZone);
+        }
+        catch (Exception $e) {
+            throw new BadRequest($e->getMessage());
         }
     }
 }

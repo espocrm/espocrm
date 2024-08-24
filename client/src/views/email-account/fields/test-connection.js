@@ -26,97 +26,97 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-account/fields/test-connection', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+export default class extends BaseFieldView {
 
-        readOnly: true,
+    readOnly = true
 
-        templateContent:
-            '<button class="btn btn-default disabled" data-action="testConnection">'+
-            '{{translate \'Test Connection\' scope=\'EmailAccount\'}}</button>',
+    templateContent = `
+        <button class="btn btn-default disabled" data-action="testConnection"
+        >{{translate 'Test Connection' scope='EmailAccount'}}</button>
+    `
 
-        url: 'EmailAccount/action/testConnection',
+    url = 'EmailAccount/action/testConnection'
 
-        events: {
-            'click [data-action="testConnection"]': function () {
-                this.test();
-            },
-        },
+    setup() {
+        super.setup();
 
-        fetch: function () {
-            return {};
-        },
+        this.addActionHandler('testConnection', () => this.test());
+    }
 
-        checkAvailability: function () {
-            if (this.model.get('host')) {
-                this.$el.find('button').removeClass('disabled').removeAttr('disabled');
-            } else {
-                this.$el.find('button').addClass('disabled').attr('disabled', 'disabled');
-            }
-        },
+    fetch() {
+        return {};
+    }
 
-        afterRender: function () {
+    checkAvailability() {
+        if (this.model.get('host')) {
+            this.$el.find('button').removeClass('disabled').removeAttr('disabled');
+        } else {
+            this.$el.find('button').addClass('disabled').attr('disabled', 'disabled');
+        }
+    }
+
+    afterRender() {
+        this.checkAvailability();
+
+        this.stopListening(this.model, 'change:host');
+
+        this.listenTo(this.model, 'change:host', () => {
             this.checkAvailability();
+        });
+    }
 
-            this.stopListening(this.model, 'change:host');
+    getData() {
+        return {
+            host: this.model.get('host'),
+            port: this.model.get('port'),
+            security: this.model.get('security'),
+            username: this.model.get('username'),
+            password: this.model.get('password') || null,
+            id: this.model.id,
+            emailAddress: this.model.get('emailAddress'),
+            userId: this.model.get('assignedUserId'),
+        };
+    }
 
-            this.listenTo(this.model, 'change:host', () => {
-                this.checkAvailability();
+    test() {
+        const data = this.getData();
+
+        const $btn = this.$el.find('button');
+
+        $btn.addClass('disabled');
+
+        Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
+        Espo.Ajax.postRequest(this.url, data)
+            .then(() => {
+                $btn.removeClass('disabled');
+
+                Espo.Ui.success(this.translate('connectionIsOk', 'messages', 'EmailAccount'));
+            })
+            .catch(xhr => {
+                let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
+                statusReason = statusReason.replace(/ $/, '');
+                statusReason = statusReason.replace(/,$/, '');
+
+                let msg = this.translate('Error');
+
+                if (parseInt(xhr.status) !== 200) {
+                    msg += ' ' + xhr.status;
+                }
+
+                if (statusReason) {
+                    msg += ': ' + statusReason;
+                }
+
+                Espo.Ui.error(msg, true);
+
+                console.error(msg);
+
+                xhr.errorIsHandled = true;
+
+                $btn.removeClass('disabled');
             });
-        },
-
-        getData: function () {
-            return {
-                'host': this.model.get('host'),
-                'port': this.model.get('port'),
-                'security': this.model.get('security'),
-                'username': this.model.get('username'),
-                'password': this.model.get('password') || null,
-                'id': this.model.id,
-                emailAddress: this.model.get('emailAddress'),
-                userId: this.model.get('assignedUserId'),
-            };
-        },
-
-        test: function () {
-            let data = this.getData();
-
-            let $btn = this.$el.find('button');
-
-            $btn.addClass('disabled');
-
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-
-            Espo.Ajax.postRequest(this.url, data)
-                .then(() => {
-                    $btn.removeClass('disabled');
-
-                    Espo.Ui.success(this.translate('connectionIsOk', 'messages', 'EmailAccount'));
-                })
-                .catch(xhr => {
-                    let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
-                    statusReason = statusReason.replace(/ $/, '');
-                    statusReason = statusReason.replace(/,$/, '');
-
-                    let msg = this.translate('Error');
-
-                    if (parseInt(xhr.status) !== 200) {
-                        msg += ' ' + xhr.status;
-                    }
-
-                    if (statusReason) {
-                        msg += ': ' + statusReason;
-                    }
-
-                    Espo.Ui.error(msg, true);
-
-                    console.error(msg);
-
-                    xhr.errorIsHandled = true;
-
-                    $btn.removeClass('disabled');
-                });
-        },
-    });
-});
+    }
+}

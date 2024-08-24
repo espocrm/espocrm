@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\Text;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Select\Text\Filter\Data;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\Query\Part\Where\OrGroup;
@@ -102,7 +103,7 @@ class DefaultFilter implements Filter
 
         if (
             !str_contains($attribute, '.') &&
-            $this->metadataProvider->getFieldType($this->entityType, $attribute) === 'email' &&
+            $this->metadataProvider->getFieldType($this->entityType, $attribute) === FieldType::EMAIL &&
             str_contains($filter, ' ')
         ) {
             return;
@@ -110,7 +111,7 @@ class DefaultFilter implements Filter
 
         if (
             !str_contains($attribute, '.') &&
-            $this->metadataProvider->getFieldType($this->entityType, $attribute) === 'phone'
+            $this->metadataProvider->getFieldType($this->entityType, $attribute) === FieldType::PHONE
         ) {
             if (!preg_match("#[0-9()\-+% ]+$#", $filter)) {
                 return;

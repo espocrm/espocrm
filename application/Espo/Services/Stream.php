@@ -31,5 +31,6 @@ namespace Espo\Services;
 
 /**
  * For backward compatibility.
+ * @todo Remove in v10.0.
  */
 class Stream extends \Espo\Tools\Stream\Service {}

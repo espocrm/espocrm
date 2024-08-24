@@ -1,91 +1,145 @@
 [
     {
-        "rows": [
-            [{"name": "dateFormat"}, {"name": "timeZone"}],
-            [{"name": "timeFormat"}, {"name": "weekStart"}],
-            [{"name": "defaultCurrency"}, {"name": "thousandSeparator"}],
-            [false, {"name": "decimalMark"}],
-            [{"name": "language"}, false]
-        ],
         "tabBreak": true,
-        "tabLabel": "$label:Locale"
-    },
-    {
+        "tabLabel": "$label:Locale",
         "rows": [
-            [{"name": "exportDelimiter"}, {"name":"autoFollowEntityTypeList"}],
             [
-                {
-                    "name": "signature"
-                },
-                {
-                    "name": "defaultReminders"
-                }
-            ],
-            [
-                {
-                    "name": "emailReplyToAllByDefault"
-                },
-                {
-                    "name": "doNotFillAssignedUserIfNotRequired"
-                }
-            ],
-            [
-                {
-                    "name": "emailReplyForceHtml"
-                },
-                {
-                    "name": "followEntityOnStreamPost"
-                }
-            ],
-            [
-                {
-                    "name": "emailUseExternalClient"
-                },
-                {
-                    "name": "followCreatedEntities"
-                }
-            ],
-            [
-                {
-                    "name": "textSearchStoringDisabled"
-                },
-                {
-                    "name": "followCreatedEntityTypeList"
-                }
+                {"name": "language"},
+                false
             ]
-        ],
-        "tabBreak": true,
-        "tabLabel": "$label:Misc"
+        ]
     },
     {
         "rows": [
             [
-                {"name":"theme"},
+                {"name": "timeZone"},
+                {"name": "weekStart"}
+            ],
+            [
+                {"name": "dateFormat"},
                 false
             ],
             [
-                {"name":"scopeColorsDisabled"},
-                {"name":"tabColorsDisabled"}
-            ],
-            [
-                {"name":"useCustomTabList"},
-                {"name":"tabList"}
-            ],
-            [
-                {"name":"dashboardLayout", "fullWidth": true}
+                {"name": "timeFormat"},
+                false
             ]
-        ],
-        "tabBreak": true,
-        "tabLabel": "$label:User Interface"
+        ]
     },
     {
+        "rows": [
+            [
+                {"name": "defaultCurrency"},
+                false
+            ]
+        ]
+    },
+    {
+        "rows": [
+            [
+                {"name": "thousandSeparator"},
+                {"name": "decimalMark"}
+            ]
+        ]
+    },
+    {
+        "tabBreak": true,
+        "tabLabel": "$label:Misc",
+        "rows": [
+            [
+                {"name": "emailReplyToAllByDefault"},
+                {"name": "emailReplyForceHtml"}
+            ],
+            [
+                {"name": "emailUseExternalClient"},
+                false
+            ],
+            [
+                {"name": "signature"}
+            ]
+        ]
+    },
+    {
+        "rows": [
+            [
+                {"name": "followEntityOnStreamPost"},
+                {"name": "autoFollowEntityTypeList"}
+            ],
+            [
+                {"name": "followCreatedEntities"},
+                {"name": "followCreatedEntityTypeList"}
+            ]
+        ]
+    },
+    {
+        "rows": [
+            [
+                {"name": "exportDelimiter"},
+                false
+            ],
+            [
+                {"name": "textSearchStoringDisabled"},
+                {"name": "doNotFillAssignedUserIfNotRequired"}
+            ]
+        ]
+    },
+    {
+        "rows": [
+            [
+                {"name": "calendarSlotDuration"},
+                {"name": "calendarScrollHour"}
+            ],
+            [
+                {"name": "defaultReminders"},
+                {"name": "defaultRemindersTask"}
+            ]
+        ]
+    },
+    {
+        "tabBreak": true,
+        "tabLabel": "$label:User Interface",
+        "rows": [
+            [
+                {"name": "theme"},
+                false
+            ]
+        ]
+    },
+    {
+        "rows": [
+            [
+                {"name": "useCustomTabList"},
+                {"name": "addCustomTabs"}
+            ],
+            [
+                {"name": "tabList"},
+                false
+            ]
+        ]
+    },
+    {
+        "name": "dashboard",
+        "rows": [
+            [
+                {"name": "dashboardLayout"}
+            ]
+        ]
+    },
+    {
+        "tabBreak": true,
+        "tabLabel": "$label:Notifications",
         "name": "notifications",
         "rows": [
-            [{"name": "receiveAssignmentEmailNotifications"}, {"name": "receiveMentionEmailNotifications"}],
-            [{"name": "receiveStreamEmailNotifications"}, false],
-            [{"name": "assignmentNotificationsIgnoreEntityTypeList"}, {"name": "assignmentEmailNotificationsIgnoreEntityTypeList"}]
-        ],
-        "tabBreak": true,
-        "tabLabel": "$label:Notifications"
+            [
+                {"name": "receiveAssignmentEmailNotifications"},
+                {"name": "receiveMentionEmailNotifications"}],
+            [
+                {"name": "receiveStreamEmailNotifications"},
+                false
+            ],
+            [
+                {"name": "assignmentNotificationsIgnoreEntityTypeList"},
+                {"name": "assignmentEmailNotificationsIgnoreEntityTypeList"}
+            ]
+        ]
     }
 ]

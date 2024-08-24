@@ -133,7 +133,6 @@
     "minHeight": "Min visina (px)",
     "provider": "Provajder",
     "typeList": "Tip liste",
-    "rows": "Broj redova tekstualnog polja",
     "lengthOfCut": "Dužina reza",
     "sourceList": "Lista izvora",
     "tooltipText": "Objašnjenje",

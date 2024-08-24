@@ -73,4 +73,11 @@ class EmailAddress extends Entity
     {
         return $this->get('invalid');
     }
+
+    public function setOptedOut(bool $optedOut): self
+    {
+        $this->set('optOut', $optedOut);
+
+        return $this;
+    }
 }

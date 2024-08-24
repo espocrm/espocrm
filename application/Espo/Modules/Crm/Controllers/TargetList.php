@@ -31,79 +31,92 @@ namespace Espo\Modules\Crm\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
-use Espo\Modules\Crm\Services\TargetList as Service;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Controllers\Record;
+use Espo\Modules\Crm\Tools\TargetList\OptOutService;
+use Espo\Modules\Crm\Tools\TargetList\RecordService;
 
 class TargetList extends Record
 {
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function postActionUnlinkAll(Request $request): bool
     {
         $data = $request->getParsedBody();
 
-        if (empty($data->id)) {
+        $id = $data->id ?? null;
+        $link = $data->link ?? null;
+
+        if (
+            !is_string($id) ||
+            !is_string($link)
+        ) {
             throw new BadRequest();
         }
 
-        if (empty($data->link)) {
-            throw new BadRequest();
-        }
-
-        $this->getTargetListService()->unlinkAll($data->id, $data->link);
+        $this->injectableFactory->create(RecordService::class)->unlinkAll($id, $link);
 
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws NotFound
+     * @throws Forbidden
+     */
     public function postActionOptOut(Request $request): bool
     {
         $data = $request->getParsedBody();
 
-        if (empty($data->id)) {
+        $id = $data->id ?? null;
+        $targetType = $data->targetType ?? null;
+        $targetId = $data->targetId ?? null;
+
+        if (
+            !is_string($id) ||
+            !is_string($targetType) ||
+            !is_string($targetId)
+        ) {
             throw new BadRequest();
         }
 
-        if (empty($data->targetType)) {
-            throw new BadRequest();
-        }
-
-        if (empty($data->targetId)) {
-            throw new BadRequest();
-        }
-
-        $data->id = strval($data->id);
-        $data->targetId = strval($data->targetId);
-
-        $this->getTargetListService()->optOut($data->id, $data->targetType, $data->targetId);
+        $this->getOptOutService()->optOut($id, $targetType, $targetId);
 
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws NotFound
+     * @throws Forbidden
+     */
     public function postActionCancelOptOut(Request $request): bool
     {
         $data = $request->getParsedBody();
 
-        if (empty($data->id)) {
+        $id = $data->id ?? null;
+        $targetType = $data->targetType ?? null;
+        $targetId = $data->targetId ?? null;
+
+        if (
+            !is_string($id) ||
+            !is_string($targetType) ||
+            !is_string($targetId)
+        ) {
             throw new BadRequest();
         }
 
-        if (empty($data->targetType)) {
-            throw new BadRequest();
-        }
-
-        if (empty($data->targetId)) {
-            throw new BadRequest();
-        }
-
-        $data->id = strval($data->id);
-        $data->targetId = strval($data->targetId);
-
-        $this->getTargetListService()->cancelOptOut($data->id, $data->targetType, $data->targetId);
+        $this->getOptOutService()->cancelOptOut($id, $targetType, $targetId);
 
         return true;
     }
 
-    private function getTargetListService(): Service
+    private function getOptOutService(): OptOutService
     {
-        /** @var Service */
-        return $this->getRecordService();
+        return $this->injectableFactory->create(OptOutService::class);
     }
 }

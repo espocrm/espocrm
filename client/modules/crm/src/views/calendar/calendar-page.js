@@ -222,8 +222,6 @@ class CalendarPage extends View {
                 this.date = date;
                 this.mode = mode;
 
-                Espo.Ui.notify(' ... ');
-
                 if (!initial) {
                     this.updateUrl();
                 }
@@ -338,7 +336,7 @@ class CalendarPage extends View {
 
     /**
      * @private
-     * @return {module:modules/crm/views/calendar/calendar | module:modules/crm/views/calendar/timeline}
+     * @return {import('./calendar').default|import('./timeline').default}
      */
     getCalendarView() {
         return this.getView('calendar');

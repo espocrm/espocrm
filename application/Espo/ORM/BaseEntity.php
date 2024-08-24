@@ -86,7 +86,7 @@ class BaseEntity implements Entity
         $this->entityType = $entityType;
         $this->entityManager = $entityManager;
 
-        $this->attributes = $defs['attributes'] /*?? $defs['fields']*/ ?? $this->attributes;
+        $this->attributes = $defs['attributes'] ?? $this->attributes;
         $this->relations = $defs['relations'] ?? $this->relations;
 
         if ($valueAccessorFactory) {
@@ -228,6 +228,7 @@ class BaseEntity implements Entity
             return $this->id;
         }
 
+        // Legacy.
         $method = '_get' . ucfirst($attribute);
 
         if (method_exists($this, $method)) {
@@ -246,7 +247,7 @@ class BaseEntity implements Entity
             );
         }
 
-        // @todo Remove support in v9.0.
+        // @todo Remove support in v10.0.
         if ($this->hasRelation($attribute) && $this->id && $this->entityManager) {
             trigger_error(
                 "Accessing related records with Entity::get is deprecated. " .
@@ -271,10 +272,11 @@ class BaseEntity implements Entity
     protected function setInContainer(string $attribute, $value): void
     {
         $this->valuesContainer[$attribute] = $value;
+        $this->writtenMap[$attribute] = true;
     }
 
     /**
-     * whether an attribute is set in the container.
+     * Whether an attribute is set in the container.
      */
     protected function hasInContainer(string $attribute): bool
     {
@@ -285,6 +287,7 @@ class BaseEntity implements Entity
      * Get a value from the container.
      *
      * @return mixed
+     * @todo Add return type in v9.0.
      */
     protected function getFromContainer(string $attribute)
     {
@@ -323,6 +326,7 @@ class BaseEntity implements Entity
      * Get a value from the fetched-container.
      *
      * @return mixed
+     * @todo Add return type in v9.0.
      */
     protected function getFromFetchedContainer(string $attribute)
     {
@@ -333,7 +337,7 @@ class BaseEntity implements Entity
         $value = $this->fetchedValuesContainer[$attribute] ?? null;
 
         if ($value === null) {
-            return $value;
+            return null;
         }
 
         $type = $this->getAttributeType($attribute);
@@ -358,6 +362,7 @@ class BaseEntity implements Entity
             return (bool) $this->id;
         }
 
+        // Legacy.
         $method = '_has' . ucfirst($attribute);
 
         if (method_exists($this, $method)) {
@@ -409,10 +414,14 @@ class BaseEntity implements Entity
         $this->valueAccessor->set($field, $value);
     }
 
+    /**
+     * @todo Make private in v9.0.
+     */
     protected function populateFromArrayItem(string $attribute, mixed $value): void
     {
         $preparedValue = $this->prepareAttributeValue($attribute, $value);
 
+        // Legacy.
         $method = '_set' . ucfirst($attribute);
 
         if (method_exists($this, $method)) {
@@ -422,8 +431,6 @@ class BaseEntity implements Entity
         }
 
         $this->setInContainer($attribute, $preparedValue);
-
-        $this->writtenMap[$attribute] = true;
     }
 
     protected function prepareAttributeValue(string $attribute, mixed $value): mixed
@@ -440,6 +447,7 @@ class BaseEntity implements Entity
 
         switch ($attributeType) {
             case self::VARCHAR:
+                // @todo Convert to string if not null in v9.0.
                 return $value;
 
             case self::BOOL:
@@ -965,7 +973,11 @@ class BaseEntity implements Entity
                 continue;
             }
 
+            $wasSet = $this->hasInContainer($attribute);
+
             $this->setInContainer($attribute, $defs['default']);
+
+            $this->writtenMap[$attribute] = $wasSet;
         }
     }
 

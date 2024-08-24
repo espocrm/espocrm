@@ -13,5 +13,6 @@
     "billingAddressCountry",
     "billingAddress",
     "shippingAddress",
-    "website"
+    "website",
+    "campaign"
 ]

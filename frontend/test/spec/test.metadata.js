@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-describe('metadata', function () {
-	var metadata;
+describe('metadata', () => {
+    let metadata;
 
-	beforeEach(function (done) {
-		require('metadata', function (Metadata) {
+    beforeEach(done => {
+		require('metadata', Metadata => {
 			metadata = new Metadata();
 			metadata.data = {
 				recordDefs: {
@@ -43,7 +43,7 @@ describe('metadata', function () {
 		});
 	});
 
-	it('#get should work correctly', function () {
+	it('#get should work correctly', () => {
 		expect(metadata.get('recordDefs.Lead.some')).toBe(metadata.data.recordDefs.Lead.some);
 		expect(metadata.get('recordDefs.Contact')).toBe(null);
 	});

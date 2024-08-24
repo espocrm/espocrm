@@ -26,36 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-folder/record/row-actions/default', ['views/record/row-actions/default'], function (Dep) {
+import DefaultRowActionsView from 'views/record/row-actions/default';
 
-    return Dep.extend({
+export default class extends DefaultRowActionsView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+    getActionList() {
+        const list = super.getActionList();
 
-        getActionList: function () {
-            var list = Dep.prototype.getActionList.call(this);
+        if (this.options.acl.edit) {
+            list.unshift({
+                action: 'moveDown',
+                label: 'Move Down',
+                data: {
+                    id: this.model.id,
+                },
+            });
 
-            if (this.options.acl.edit) {
-                list.unshift({
-                    action: 'moveDown',
-                    label: 'Move Down',
-                    data: {
-                        id: this.model.id,
-                    },
-                });
+            list.unshift({
+                action: 'moveUp',
+                label: 'Move Up',
+                data: {
+                    id: this.model.id,
+                },
+            });
+        }
 
-                list.unshift({
-                    action: 'moveUp',
-                    label: 'Move Up',
-                    data: {
-                        id: this.model.id,
-                    },
-                });
-            }
-
-            return list;
-        },
-    });
-});
+        return list;
+    }
+}

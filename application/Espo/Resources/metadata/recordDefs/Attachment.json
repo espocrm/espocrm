@@ -3,5 +3,17 @@
         "delete": {
             "allowed": true
         }
-    }
+    },
+    "createInputFilterClassNameList": [
+        "Espo\\Classes\\Record\\Attachment\\CreateInputFilter"
+    ],
+    "updateInputFilterClassNameList": [
+        "Espo\\Classes\\Record\\Attachment\\UpdateInputFilter"
+    ],
+    "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Attachment\\BeforeCreate"
+    ],
+    "afterCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Attachment\\AfterCreate"
+    ]
 }

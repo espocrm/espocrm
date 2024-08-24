@@ -30,6 +30,7 @@
 namespace Espo\Core\Mail\Account;
 
 use Espo\Core\Field\Date;
+use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Mail\SmtpParams;
@@ -41,6 +42,11 @@ interface Account
      * Update fetch-data.
      */
     public function updateFetchData(FetchData $fetchData): void;
+
+    /**
+     * Update connected-at.
+     */
+    public function updateConnectedAt(): void;
 
     /**
      * Relate an email with the account.
@@ -153,4 +159,9 @@ interface Account
      * Store sent emails on IMAP.
      */
     public function storeSentEmails(): bool;
+
+    /**
+     * Get the last connection time;
+     */
+    public function getConnectedAt(): ?DateTime;
 }

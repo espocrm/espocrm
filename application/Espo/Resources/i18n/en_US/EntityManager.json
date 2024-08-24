@@ -43,10 +43,13 @@
         "optimisticConcurrencyControl": "Optimistic concurrency control",
         "updateDuplicateCheck": "Duplicate check on update",
         "duplicateCheckFieldList": "Duplicate check fields",
+        "stars": "Stars",
         "layout": "Layout",
+        "selectFilter": "Select Filter",
         "author": "Author",
         "module": "Module",
-        "version": "Version"
+        "version": "Version",
+        "primaryFilters": "Primary Filters"
     },
     "options": {
         "type": {
@@ -70,9 +73,13 @@
         "sortDirection": {
             "asc": "Ascending",
             "desc": "Descending"
+        },
+        "module": {
+            "Custom": "Custom"
         }
     },
     "messages": {
+        "urlHashCopiedToClipboard": "A URL fragment for the *{name}* filter is copied to the clipboard. You can add it to the navbar.",
         "confirmRemoveLink": "Are you sure you want to remove the *{link}* relationship?",
         "nameIsAlreadyUsed": "Name '{name}' is already used.",
         "nameIsNotAllowed": "Name '{name}' is not allowed.",
@@ -88,12 +95,14 @@
         "duplicateCheckFieldList": "Which fields to check when performing checking for duplicates.",
         "updateDuplicateCheck": "Perform checking for duplicates when updating a record.",
         "optimisticConcurrencyControl": "Prevents writing conflicts.",
+        "stars": "The ability to star records. Stars can be used by users to bookmark records.",
         "statusField": "Updates of this field are logged in stream.",
         "textFilterFields": "Fields used by text search.",
         "stream": "Whether entity has a Stream.",
         "disabled": "Check if you don't need this entity in your system.",
         "linkAudited": "Creating related record and linking with existing record will be logged in Stream.",
         "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records.",
+        "linkSelectFilter": "A primary filter to apply by default when selecting a record.",
         "entityType": "Base Plus - has Activities, History and Tasks panels.\n\nEvent - available in Calendar and Activities panel.",
         "countDisabled": "Total number won't be displayed on the list view. Can decrease loading time when the DB table is big.",
         "fullTextSearch": "Running rebuild is required."

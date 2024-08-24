@@ -10,7 +10,8 @@
             "options": ["Planned", "Held", "Not Held"],
             "default": "Planned",
             "style": {
-                "Held": "success"
+                "Held": "success",
+                "Not Held": "info"
             },
             "audited": true,
             "customizationOptionsReferenceDisabled": true
@@ -19,13 +20,14 @@
             "type": "datetime",
             "required": true,
             "default": "javascript: return this.dateTime.getNow(15);",
-            "audited": true
+            "audited": true,
+            "view": "crm:views/call/fields/date-start"
         },
         "dateEnd": {
             "type": "datetime",
             "required": true,
-            "view": "crm:views/call/fields/date-end",
-            "after": "dateStart"
+            "after": "dateStart",
+            "afterOrEqual": true
         },
         "duration": {
             "type": "duration",
@@ -46,12 +48,14 @@
         "reminders": {
             "type": "jsonArray",
             "notStorable": true,
+            "orderDisabled": true,
             "view": "crm:views/meeting/fields/reminders",
             "layoutListDisabled": true,
             "validatorClassNameList": [
                 "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\Valid",
                 "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\MaxCount"
-            ]
+            ],
+            "dynamicLogicDisabled": true
         },
         "direction": {
             "type": "enum",
@@ -67,7 +71,8 @@
         },
         "account": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "customizationReadOnlyDisabled": true
         },
         "acceptanceStatus": {
             "type": "enum",
@@ -80,6 +85,7 @@
             },
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
+            "orderDisabled": true,
             "importDisabled": true,
             "exportDisabled": true,
             "customizationDefaultDisabled": true,
@@ -88,6 +94,7 @@
             "customizationReadOnlyDisabled": true,
             "customizationAuditedDisabled": true,
             "customizationOptionsReferenceDisabled": true,
+            "directAccessDisabled": true,
             "where": {
                 "=": {
                     "whereClause": {
@@ -245,7 +252,8 @@
                 "status": "acceptanceStatus"
             },
             "additionalAttributeList": ["columns"],
-            "orderBy": "name"
+            "orderBy": "name",
+            "duplicatorClassName": "Espo\\Modules\\Crm\\Classes\\FieldDuplicators\\Meeting\\Attendees"
         },
         "contacts": {
             "type": "linkMultiple",
@@ -256,7 +264,8 @@
                 "status": "acceptanceStatus"
             },
             "additionalAttributeList": ["columns"],
-            "orderBy": "name"
+            "orderBy": "name",
+            "duplicatorClassName": "Espo\\Modules\\Crm\\Classes\\FieldDuplicators\\Meeting\\Attendees"
         },
         "leads": {
             "type": "linkMultiple",
@@ -267,7 +276,8 @@
                 "status": "acceptanceStatus"
             },
             "additionalAttributeList": ["columns"],
-            "orderBy": "name"
+            "orderBy": "name",
+            "duplicatorClassName": "Espo\\Modules\\Crm\\Classes\\FieldDuplicators\\Meeting\\Attendees"
         },
         "createdAt": {
             "type": "datetime",
@@ -298,6 +308,7 @@
         "phoneNumbersMap": {
             "type": "jsonObject",
             "notStorable": true,
+            "orderDisabled": true,
             "utility": true,
             "customizationDisabled": true
         },
@@ -404,5 +415,6 @@
         "assignedUserStatus": {
             "columns": ["assignedUserId", "status"]
         }
-    }
+    },
+    "repositoryClassName": "Espo\\Core\\Repositories\\Event"
 }

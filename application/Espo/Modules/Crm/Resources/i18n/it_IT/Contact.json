@@ -17,17 +17,18 @@
     "acceptanceStatusMeetings": "Stato Accettazione (Riunioni)",
     "acceptanceStatusCalls": "Stato Accettazione (Chiamate)",
     "title": "Titolo Account",
-    "hasPortalUser": "Ha un Utente Portale"
+    "hasPortalUser": "Ha un Utente Portale",
+    "originalEmail": "Email Originale"
   },
   "links": {
     "opportunities": "Opportunità",
-    "cases": "Ticket",
+    "cases": "Casi",
     "targetLists": "Liste di Destinazione",
     "campaignLogRecords": "Log campagna",
     "campaign": "Campagna",
     "account": "Account (Primario)",
     "accounts": "Account",
-    "casesPrimary": "Ticket (Primario)",
+    "casesPrimary": "Casi (Primario)",
     "portalUser": "Utente Portale",
     "originalLead": "Lead originale",
     "documents": "Documenti",

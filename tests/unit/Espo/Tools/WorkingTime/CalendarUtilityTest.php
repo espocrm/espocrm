@@ -52,7 +52,7 @@ class CalendarUtilityTest extends \PHPUnit\Framework\TestCase
         $time = DateTime::fromString('2023-01-01 01:01:01');
 
         $from = DateTime::fromString('2023-01-01 00:00:00');
-        $to = DateTime::fromString('2023-01-02 00:00:00');
+        $to = DateTime::fromString('2023-01-01 00:00:00');
 
         $this->extractor
             ->expects($this->any())

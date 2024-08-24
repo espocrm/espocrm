@@ -220,6 +220,7 @@ class Starter
 
         $clientManager->setBasePath($this->clientManager->getBasePath());
         $clientManager->setApiUrl('api/v1/portal-access/' . $portalId);
+        $clientManager->setApplicationId($portalId);
 
         $params = RunnerParams::fromArray([
             'entryPoint' => $entryPoint,

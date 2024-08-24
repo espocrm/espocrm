@@ -113,8 +113,8 @@ class Language {
      * Translate a label.
      *
      * @param {string} name An item name.
-     * @param {string|null} [category='labels'] A category.
-     * @param {string|null} [scope='Global'] A scope.
+     * @param {string|'messages'|'labels'|'fields'|'links'|'scopeNames'|'scopeNamesPlural'} [category='labels'] A category.
+     * @param {string} [scope='Global'] A scope.
      * @returns {string}
      */
     translate(name, category, scope) {
@@ -198,28 +198,26 @@ class Language {
     /**
      * Load data from cache or backend (if not yet cached).
      *
-     * @param {Function} [callback] Deprecated.
-     * @param {boolean} [disableCache=false] Deprecated
-     * @param {boolean} [loadDefault=false] Deprecated.
      * @returns {Promise}
      */
-    load(callback, disableCache, loadDefault) {
-        if (callback) {
-            this.once('sync', callback);
+    load() {
+        return this._loadInternal();
+    }
+
+    /**
+     * @private
+     * @param {boolean} [disableCache=false]
+     * @param {boolean} [loadDefault=false].
+     * @returns {Promise}
+     */
+    _loadInternal(disableCache, loadDefault) {
+        if (!disableCache && this.loadFromCache(loadDefault)) {
+            this.trigger('sync');
+
+            return Promise.resolve();
         }
 
-        if (!disableCache) {
-            if (this.loadFromCache(loadDefault)) {
-                this.trigger('sync');
-
-                return new Promise(resolve => resolve());
-            }
-        }
-
-        return new Promise(resolve => {
-            this.fetch(loadDefault)
-                .then(() => resolve());
-        });
+        return this.fetch(loadDefault);
     }
 
     /**
@@ -228,7 +226,7 @@ class Language {
      * @returns {Promise}
      */
     loadDefault() {
-        return this.load(null, false, true);
+        return this._loadInternal(false, true);
     }
 
     /**
@@ -237,7 +235,7 @@ class Language {
      * @returns {Promise}
      */
     loadSkipCache() {
-        return this.load(null, true);
+        return this._loadInternal(true);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -247,7 +245,7 @@ class Language {
      * @returns {Promise}
      */
     loadDefaultSkipCache() {
-        return this.load(null, true, true);
+        return this._loadInternal(true, true);
     }
 
     /**

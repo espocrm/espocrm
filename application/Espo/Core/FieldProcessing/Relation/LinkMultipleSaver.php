@@ -94,6 +94,18 @@ class LinkMultipleSaver
             $columns = $defs->getField($name)->getParam('columns');
         }
 
+        $allColumns = $columns;
+
+        if (is_array($columns)) {
+            $additionalColumns = $defs->getRelation($name)->getParam('additionalColumns') ?? [];
+
+            foreach ($columns as $column => $field) {
+                if (!array_key_exists($column, $additionalColumns)) {
+                    unset($columns[$column]);
+                }
+            }
+        }
+
         $columnData = !empty($columns) ?
             $entity->get($columnsAttribute) :
             null;
@@ -104,7 +116,7 @@ class LinkMultipleSaver
             foreach ($foreignEntityList as $foreignEntity) {
                 $existingIdList[] = $foreignEntity->getId();
 
-                if (empty($columns)) {
+                if (empty($allColumns)) {
                     continue;
                 }
 
@@ -112,7 +124,7 @@ class LinkMultipleSaver
 
                 $foreignId = $foreignEntity->getId();
 
-                foreach ($columns as $columnName => $columnField) {
+                foreach ($allColumns as $columnName => $columnField) {
                     $data->$columnName = $foreignEntity->get($columnField);
                 }
 
@@ -129,7 +141,7 @@ class LinkMultipleSaver
                 $entity->setFetched($idListAttribute, $existingIdList);
             }
 
-            if ($entity->has($columnsAttribute) && !empty($columns)) {
+            if ($entity->has($columnsAttribute) && !empty($allColumns)) {
                 $entity->setFetched($columnsAttribute, $existingColumnsData);
             }
         }
@@ -175,8 +187,14 @@ class LinkMultipleSaver
         foreach ($toCreateIdList as $id) {
             $data = null;
 
-            if (!empty($columns) && isset($columnData->$id)) {
+            if (is_array($columns) && isset($columnData->$id)) {
                 $data = (array) $columnData->$id;
+
+                foreach ($data as $column => $v) {
+                    if (!array_key_exists($column, $columns)) {
+                        unset($data[$column]);
+                    }
+                }
             }
 
             $repository->getRelation($entity, $name)->relateById($id, $data, [
@@ -192,6 +210,14 @@ class LinkMultipleSaver
 
         foreach ($toUpdateIdList as $id) {
             $data = (array) $columnData->$id;
+
+            if (is_array($columns)) {
+                foreach ($data as $column => $v) {
+                    if (!array_key_exists($column, $columns)) {
+                        unset($data[$column]);
+                    }
+                }
+            }
 
             $repository->getRelation($entity, $name)->updateColumnsById($id, (array) $data);
         }

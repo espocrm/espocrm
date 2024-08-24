@@ -7,9 +7,17 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Not Started", "Started", "Completed", "Canceled", "Deferred"],
+            "options": [
+                "Not Started",
+                "Started",
+                "Completed",
+                "Canceled",
+                "Deferred"
+            ],
             "style": {
-                "Completed": "success"
+                "Completed": "success",
+                "Started": "primary",
+                "Canceled": "info"
             },
             "default": "Not Started",
             "audited": true,
@@ -24,7 +32,12 @@
         },
         "priority": {
             "type": "enum",
-            "options": ["Low", "Normal", "High", "Urgent"],
+            "options": [
+                "Low",
+                "Normal",
+                "High",
+                "Urgent"
+            ],
             "default": "Normal",
             "displayAsLabel": true,
             "style": {
@@ -60,12 +73,14 @@
             "type": "bool",
             "readOnly": true,
             "notStorable": true,
+            "orderDisabled": true,
             "view": "crm:views/task/fields/is-overdue",
             "utility": true
         },
         "reminders": {
             "type": "jsonArray",
             "notStorable": true,
+            "orderDisabled": true,
             "view": "crm:views/meeting/fields/reminders",
             "dateField": "dateEnd",
             "validatorClassNameList": [
@@ -82,11 +97,13 @@
         },
         "account": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "customizationReadOnlyDisabled": true
         },
         "contact": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "customizationReadOnlyDisabled": true
         },
         "createdAt": {
             "type": "datetime",
@@ -189,5 +206,6 @@
         "assignedUserStatus": {
             "columns": ["assignedUserId", "status"]
         }
-    }
+    },
+    "repositoryClassName": "Espo\\Core\\Repositories\\Event"
 }

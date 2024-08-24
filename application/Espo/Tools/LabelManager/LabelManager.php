@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\LabelManager;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Json;
 use Espo\Core\Di;
 use Espo\Core\InjectableFactory;
@@ -132,12 +133,15 @@ class LabelManager implements
         }
 
         foreach ($this->metadata->get(['entityDefs', $scope, 'fields'], []) as $field => $item) {
-            if (!$this->metadata->get(['entityDefs', $scope, 'fields', $field, 'options'])) {
+            if (
+                !$this->metadata->get("entityDefs.$scope.fields.$field.options") ||
+                $this->metadata->get("entityDefs.$scope.fields.$field.type") === FieldType::VARCHAR
+            ) {
                 continue;
             }
 
             $optionsData = [];
-            $optionList = $this->metadata->get(['entityDefs', $scope, 'fields', $field, 'options'], []);
+            $optionList = $this->metadata->get("entityDefs.$scope.fields.$field.options", []);
 
             if (!array_key_exists('options', $data)) {
                 $data['options'] = [];

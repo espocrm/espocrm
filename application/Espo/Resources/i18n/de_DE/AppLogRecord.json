@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "message": "Nachricht",
+    "level": "Stufe",
+    "exceptionClass": "Ausnahmeklasse",
+    "file": "Datei",
+    "line": "Zeile",
+    "requestMethod": "Anfrage-Methode",
+    "requestResourcePath": "Angeforderter Ressourcenpfad"
+  },
+  "presetFilters": {
+    "errors": "Fehler"
+  }
+}

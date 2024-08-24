@@ -43,7 +43,7 @@ use Espo\ORM\EntityManager;
 /**
  * Compatible only with default Espo auth tokens.
  *
- * @todo Use a token-sessionId map to retrieve tokens.
+ * @todo Use a token-sessionId map to retrieve tokens. Send sid claim in id_token.
  */
 class BackchannelLogout
 {
@@ -81,7 +81,7 @@ class BackchannelLogout
         $username = $token->getPayload()->get($usernameClaim);
 
         if (!$username) {
-            throw new Invalid("No username claim `{$usernameClaim}` in token.");
+            throw new Invalid("No username claim `$usernameClaim` in token.");
         }
 
         $user = $this->userRepository->findByUsername($username);

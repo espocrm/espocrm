@@ -6,5 +6,11 @@
         "delete": {
             "allowed": true
         }
-    }
+    },
+    "mandatoryAttributeList": [
+        "campaignId"
+    ],
+    "beforeCreateHookClassNameList": [
+        "Espo\\Modules\\Crm\\Classes\\RecordHooks\\CampaignTrackingUrl\\BeforeCreate"
+    ]
 }

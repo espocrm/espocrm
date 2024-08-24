@@ -71,11 +71,11 @@
         },
         "favicon": {
             "type": "string",
-            "description": "A favicon image path. The default value: client/img/favicon.ico."
+            "description": "A favicon. SVG or PNG. The default value: client/img/favicon.svg."
         },
-        "favicon196": {
+        "faviconAlternate": {
             "type": "string",
-            "description": "A big favicon image path. The default value: client/img/favicon196x196.png."
+            "description": "An ico 16px favicon. The default value: client/img/favicon.ico."
         }
     }
 }

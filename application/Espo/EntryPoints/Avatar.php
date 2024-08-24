@@ -36,33 +36,62 @@ use Espo\Core\Api\Response;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
-
 use Espo\Core\Utils\SystemUser;
 use Espo\Entities\User;
-use Identicon\Identicon;
 
+use LasseRafn\InitialAvatarGenerator\InitialAvatar;
+use LasseRafn\StringScript;
+
+/**
+ * @noinspection PhpUnused
+ */
 class Avatar extends Image
 {
-    protected string $systemColor = '#a4b5bd';
+    private string $systemColor = '#a4b5bd';
+    private string $portalColor = '#c9a3d1';
 
-    /** @var array<int, string|array{int, int, int}> */
-    protected $colorList = [
-        [111, 168, 214],
-        [237, 197, 85],
-        [212, 114, 155],
-        '#8093BD',
-        [124, 196, 164],
-        [138, 124, 194],
-        [222, 102, 102],
-        '#ABE3A1',
-        '#E8AF64',
+    private string $lightTextColor = '#FFF';
+    private string $darkTextColor = '#6e6e6e';
+    private int $darkThreshold = 200;
+
+    /**
+     * @noinspection SpellCheckingInspection
+     * @var string[]
+     */
+    private array $colorList = [
+        '#6fa8d6', // blue
+        '#e3bf59', // yellow
+        '#d4729b', // red
+        '#8093BD', // gray blue
+        '#7cbac4', // blue in green
+        '#8a7cc2', // purple
+        '#77c9b9', // green
+        '#d6aa6b', // dark yellow
+        '#e6859d', // red
     ];
 
     /**
-     * @return string|array{int, int, int}
+     * @noinspection SpellCheckingInspection
+     * The explicintly specified font prevents warnings in some environments.
      */
-    private function getColor(string $hash)
+    private string $fontFile = 'vendor/lasserafn/php-initial-avatar-generator/src/fonts/OpenSans-Semibold.ttf';
+
+    private function getColor(User $user): string
     {
+        if ($user->getUserName() === SystemUser::NAME) {
+            return $this->metadata->get(['app', 'avatars', 'systemColor']) ?? $this->systemColor;
+        }
+
+        if ($user->isPortal()) {
+            return $this->metadata->get(['app', 'avatars', 'portalColor']) ?? $this->portalColor;
+        }
+
+        if ($user->getAvatarColor()) {
+            return $user->getAvatarColor();
+        }
+
+        $hash = $user->getId();
+
         $length = strlen($hash);
 
         $sum = 0;
@@ -94,14 +123,13 @@ class Avatar extends Image
     public function run(Request $request, Response $response): void
     {
         $userId = $request->getQueryParam('id');
-        $size = $request->getQueryParam('size') ?? null;
+        $size = $request->getQueryParam('size') ?? 'small';
 
         if (!$userId) {
             throw new BadRequest();
         }
 
-        /** @var ?User $user */
-        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
+        $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getById( $userId);
 
         if (!$user) {
             $this->renderBlank($response);
@@ -109,43 +137,48 @@ class Avatar extends Image
             return;
         }
 
-        $id = $user->get('avatarId');
-
-        if ($id) {
-            $this->show($response, $id, $size, true);
+        if ($user->getAvatarId()) {
+            $this->show($response, $user->getAvatarId(), $size, true);
 
             return;
         }
 
-        $identicon = new Identicon();
+        $sizes = $this->getSizes()[$size];
 
-        if (!$size) {
-            $size = 'small';
-        }
-
-        if (empty($this->getSizes()[$size])) {
+        if (empty($sizes)) {
             $this->renderBlank($response);
 
             return;
         }
 
-        $width = $this->getSizes()[$size][0];
+        $textColors = $this->getTextColors();
+
+        $width = $sizes[0];
+        $color = $this->getColor($user);
+        $textColor = $this->isDark($color) ? $textColors[0] : $textColors[1];
+
+        $avatar = (new InitialAvatar())
+            ->name($user->getName() ?? $user->getUserName() ?? $userId);
+
+        if ($user->getName() && !self::isAllowedLanguage($avatar)) {
+            $avatar = $avatar->name($user->getUserName() ?? $userId);
+        }
+
+        $image = $avatar
+            ->width($width)
+            ->height($width)
+            ->color($textColor)
+            ->fontSize(0.56)
+            ->preferBold()
+            ->font($this->fontFile)
+            ->background($color)
+            ->generate();
 
         $response
             ->setHeader('Cache-Control', 'max-age=360000, must-revalidate')
             ->setHeader('Content-Type', 'image/png');
 
-        $hash = $userId;
-
-        $color = $this->getColor($userId);
-
-        if ($user->getUserName() === SystemUser::NAME) {
-            $color = $this->metadata->get(['app', 'avatars', 'systemColor']) ?? $this->systemColor;
-        }
-
-        $imgContent = $identicon->getImageData($hash, $width, $color);
-
-        $response->writeBody($imgContent);
+        $response->writeBody($image->stream('png', 100));
     }
 
     /**
@@ -186,5 +219,72 @@ class Avatar extends Image
         $response
             ->setHeader('Content-Type', 'image/png')
             ->writeBody($contents);
+    }
+
+    private static function isAllowedLanguage(InitialAvatar $avatar): bool
+    {
+        $initials = $avatar->getInitials();
+
+        if (StringScript::isArabic($initials)) {
+            return false;
+        }
+
+        if (StringScript::isArmenian($initials)) {
+            return false;
+        }
+
+        if (StringScript::isBengali($initials)) {
+            return false;
+        }
+
+        if (StringScript::isGeorgian($initials)) {
+            return false;
+        }
+
+        if (StringScript::isHebrew($initials)) {
+            return false;
+        }
+
+        if (StringScript::isMongolian($initials)) {
+            return false;
+        }
+
+        if (StringScript::isThai($initials)) {
+            return false;
+        }
+
+        if (StringScript::isTibetan($initials)) {
+            return false;
+        }
+
+        if (StringScript::isJapanese($initials) || StringScript::isChinese($initials)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function isDark(string $color): bool
+    {
+        $hex = substr($color, 1);
+
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+
+        $value = (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
+
+        return $value < $this->darkThreshold;
+    }
+
+    /**
+     * @return array{string, string}
+     */
+    private function getTextColors(): array
+    {
+        $light = $this->metadata->get("app.avatars.lightTextColor") ?? $this->lightTextColor;
+        $dark = $this->metadata->get("app.avatars.darkTextColor") ?? $this->darkTextColor;
+
+        return [$light, $dark];
     }
 }

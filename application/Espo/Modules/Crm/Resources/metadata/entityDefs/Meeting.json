@@ -10,7 +10,8 @@
             "options": ["Planned", "Held", "Not Held"],
             "default": "Planned",
             "style": {
-                "Held": "success"
+                "Held": "success",
+                "Not Held": "info"
             },
             "audited": true,
             "customizationOptionsReferenceDisabled": true
@@ -54,12 +55,14 @@
         "reminders": {
             "type": "jsonArray",
             "notStorable": true,
+            "orderDisabled": true,
             "view": "crm:views/meeting/fields/reminders",
             "layoutListDisabled": true,
             "validatorClassNameList": [
                 "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\Valid",
                 "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\MaxCount"
-            ]
+            ],
+            "dynamicLogicDisabled": true
         },
         "description": {
             "type": "text"
@@ -70,11 +73,13 @@
         },
         "account": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "customizationReadOnlyDisabled": true
         },
         "acceptanceStatus": {
             "type": "enum",
             "notStorable": true,
+            "orderDisabled": true,
             "options": ["None", "Accepted", "Tentative", "Declined"],
             "style": {
                 "Accepted": "success",
@@ -91,6 +96,7 @@
             "customizationReadOnlyDisabled": true,
             "customizationAuditedDisabled": true,
             "customizationOptionsReferenceDisabled": true,
+            "directAccessDisabled": true,
             "where": {
                 "=": {
                     "whereClause": {
@@ -248,7 +254,8 @@
                 "status": "acceptanceStatus"
             },
             "additionalAttributeList": ["columns"],
-            "orderBy": "name"
+            "orderBy": "name",
+            "duplicatorClassName": "Espo\\Modules\\Crm\\Classes\\FieldDuplicators\\Meeting\\Attendees"
         },
         "contacts": {
             "type": "linkMultiple",
@@ -259,7 +266,8 @@
                 "status": "acceptanceStatus"
             },
             "additionalAttributeList": ["columns"],
-            "orderBy": "name"
+            "orderBy": "name",
+            "duplicatorClassName": "Espo\\Modules\\Crm\\Classes\\FieldDuplicators\\Meeting\\Attendees"
         },
         "leads": {
             "type": "linkMultiple",
@@ -270,11 +278,13 @@
                 "status": "acceptanceStatus"
             },
             "additionalAttributeList": ["columns"],
-            "orderBy": "name"
+            "orderBy": "name",
+            "duplicatorClassName": "Espo\\Modules\\Crm\\Classes\\FieldDuplicators\\Meeting\\Attendees"
         },
         "sourceEmail": {
             "type": "link",
             "notStorable": true,
+            "orderDisabled": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
@@ -413,5 +423,6 @@
         "assignedUserStatus": {
             "columns": ["assignedUserId", "status"]
         }
-    }
+    },
+    "repositoryClassName": "Espo\\Core\\Repositories\\Event"
 }

@@ -1,6 +1,8 @@
-<div class="link-container list-group">{{#each itemHtmlList}}{{{./this}}}{{/each}}</div>
+<div
+    class="link-container list-group{{#if keepItems}} no-input{{/if}}"
+>{{#each itemHtmlList}}{{{./this}}}{{/each}}</div>
 <div class="array-control-container">
-{{#if hasOptions}}
+{{#if hasAdd}}
 <button
     class="btn btn-default btn-block"
     type="button"

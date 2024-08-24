@@ -6,5 +6,31 @@
     "listLoaderClassNameList": [
         "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\TargetList\\EntryCountLoader",
         "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\TargetList\\OptedOutCountLoader"
-    ]
+    ],
+    "afterCreateHookClassNameList": [
+        "Espo\\Modules\\Crm\\Classes\\RecordHooks\\TargetList\\AfterCreate",
+        "Espo\\Modules\\Crm\\Classes\\RecordHooks\\TargetList\\AfterCreateDuplicate"
+    ],
+    "relationships": {
+        "users": {
+            "massLink": true,
+            "linkRequiredForeignAccess": "read",
+            "mandatoryAttributeList": ["targetListIsOptedOut"]
+        },
+        "leads": {
+            "massLink": true,
+            "linkRequiredForeignAccess": "read",
+            "mandatoryAttributeList": ["targetListIsOptedOut"]
+        },
+        "contacts": {
+            "massLink": true,
+            "linkRequiredForeignAccess": "read",
+            "mandatoryAttributeList": ["targetListIsOptedOut"]
+        },
+        "accounts": {
+            "massLink": true,
+            "linkRequiredForeignAccess": "read",
+            "mandatoryAttributeList": ["targetListIsOptedOut"]
+        }
+    }
 }

@@ -19,6 +19,7 @@
         "newPasswordConfirm": "Confirm New Password",
         "yourPassword": "Your current password",
         "avatar": "Avatar",
+        "avatarColor": "Avatar Color",
         "isActive": "Is Active",
         "isPortalUser": "Is Portal User",
         "contact": "Contact",
@@ -57,7 +58,7 @@
         "userData": "User Data",
         "dashboardTemplate": "Dashboard Template",
         "workingTimeCalendar": "Working Time Calendar",
-        "workingTimeRanges": "Working Time Ranges",
+        "workingTimeRanges": "Working Time Exceptions",
         "layoutSet": "Layout Set"
     },
     "labels": {
@@ -134,7 +135,8 @@
         "auth2FARequiredHeader": "2 factor authentication required",
         "auth2FARequired": "You need to set up 2 factor authentication. Use an authenticator application on your mobile phone (e.g. Google Authenticator).",
         "ldapUserInEspoNotFound": "User is not found in EspoCRM. Contact your administrator to create the user.",
-        "passwordChangeRequestNotFound": "The password change request is not found. It might be expired. Try to initiate a new password recovery from the [login page]({url})."
+        "passwordChangeRequestNotFound": "The password change request is not found. It might be expired. Try to initiate a new password recovery from the [login page]({url}).",
+        "defaultTeamIsNotUsers": "Default Team should be one of user's Teams"
     },
     "options": {
         "gender": {
@@ -157,11 +159,15 @@
         }
     },
     "boolFilters": {
-        "onlyMyTeam": "Only My Team"
+        "onlyMyTeam": "Only My Team",
+        "onlyMe": "OnlyMe"
     },
     "presetFilters": {
         "active": "Active",
         "activePortal": "Portal Active",
         "activeApi": "API Active"
+    },
+    "actions": {
+        "changePosition": "Change Position"
     }
 }

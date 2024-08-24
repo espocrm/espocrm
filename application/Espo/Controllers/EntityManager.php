@@ -43,8 +43,6 @@ use Espo\Tools\ExportCustom\Service as ExportCustomService;
 use Espo\Tools\LinkManager\LinkManager;
 use stdClass;
 
-use const FILTER_SANITIZE_STRING;
-
 class EntityManager
 {
     /**
@@ -66,7 +64,7 @@ class EntityManager
      * @throws Error
      * @throws Conflict
      */
-    public function postActionCreateEntity(Request $request): bool
+    public function postActionCreateEntity(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
@@ -78,9 +76,6 @@ class EntityManager
 
         $name = $data['name'];
         $type = $data['type'];
-
-        $name = filter_var($name, FILTER_SANITIZE_STRING);
-        $type = filter_var($type, FILTER_SANITIZE_STRING);
 
         if (!is_string($name) || !is_string($type)) {
             throw new BadRequest();
@@ -142,9 +137,9 @@ class EntityManager
             $params['kanbanStatusIgnoreList'] = $data['kanbanStatusIgnoreList'];
         }
 
-        $this->entityManagerTool->create($name, $type, $params);
+        $name = $this->entityManagerTool->create($name, $type, $params);
 
-        return true;
+        return (object) ['name' => $name];
     }
 
     /**
@@ -162,8 +157,6 @@ class EntityManager
         }
 
         $name = $data['name'];
-
-        $name = filter_var($name, FILTER_SANITIZE_STRING);
 
         if (!is_string($name)) {
             throw new BadRequest();
@@ -190,8 +183,6 @@ class EntityManager
         }
 
         $name = $data['name'];
-
-        $name = filter_var($name, FILTER_SANITIZE_STRING);
 
         if (!is_string($name)) {
             throw new BadRequest();
@@ -234,11 +225,15 @@ class EntityManager
                 throw new BadRequest();
             }
 
-            $params[$item] = filter_var($data[$item], FILTER_SANITIZE_STRING);
+            $params[$item] = htmlspecialchars($data[$item]);
         }
 
         foreach ($additionalParamList as $item) {
-            $params[$item] = filter_var($data[$item] ?? null, FILTER_SANITIZE_STRING);
+            $params[$item] = $data[$item];
+
+            if (is_string($params[$item])) {
+                $params[$item] = htmlspecialchars($params[$item]);
+            }
         }
 
         $params['labelForeign'] = $params['labelForeign'] ?? $params['linkForeign'];
@@ -275,21 +270,31 @@ class EntityManager
             $params['layoutForeign'] = $data['layoutForeign'];
         }
 
+        if (array_key_exists('selectFilter', $data)) {
+            $params['selectFilter'] = $data['selectFilter'];
+        }
+
+        if (array_key_exists('selectFilterForeign', $data)) {
+            $params['selectFilterForeign'] = $data['selectFilterForeign'];
+        }
+
         /** @var array{
-         *   linkType: string,
-         *   entity: string,
-         *   link: string,
-         *   entityForeign: string,
-         *   linkForeign: string,
-         *   label: string,
-         *   labelForeign: string,
-         *   relationName?: ?string,
-         *   linkMultipleField?: bool,
-         *   linkMultipleFieldForeign?: bool,
-         *   audited?: bool,
-         *   auditedForeign?: bool,
-         *   layout?: string,
-         *   layoutForeign?: string,
+         *     linkType: string,
+         *     entity: string,
+         *     link: string,
+         *     entityForeign: string,
+         *     linkForeign: string,
+         *     label: string,
+         *     labelForeign: string,
+         *     relationName?: ?string,
+         *     linkMultipleField?: bool,
+         *     linkMultipleFieldForeign?: bool,
+         *     audited?: bool,
+         *     auditedForeign?: bool,
+         *     layout?: string,
+         *     layoutForeign?: string,
+         *     selectFilter?: string,
+         *     selectFilterForeign?: string,
          * } $params
          */
 
@@ -321,7 +326,7 @@ class EntityManager
 
         foreach ($paramList as $item) {
             if (array_key_exists($item, $data)) {
-                $params[$item] = filter_var($data[$item], FILTER_SANITIZE_STRING);
+                $params[$item] = htmlspecialchars($data[$item]);
             }
         }
 
@@ -352,26 +357,36 @@ class EntityManager
             $params['layout'] = $data['layout'];
         }
 
-        if (array_key_exists('auditedForeign', $data)) {
+        if (array_key_exists('layoutForeign', $data)) {
             $params['layoutForeign'] = $data['layoutForeign'];
+        }
+
+        if (array_key_exists('selectFilter', $data)) {
+            $params['selectFilter'] = $data['selectFilter'];
+        }
+
+        if (array_key_exists('selectFilterForeign', $data)) {
+            $params['selectFilterForeign'] = $data['selectFilterForeign'];
         }
 
         /**
          * @var array{
-         *   entity: string,
-         *   link: string,
-         *   entityForeign?: ?string,
-         *   linkForeign?: ?string,
-         *   label?: string,
-         *   labelForeign?: string,
-         *   linkMultipleField?: bool,
-         *   linkMultipleFieldForeign?: bool,
-         *   audited?: bool,
-         *   auditedForeign?: bool,
-         *   parentEntityTypeList?: string[],
-         *   foreignLinkEntityTypeList?: string[],
-         *   layout?: string,
-         *   layoutForeign?: string,
+         *     entity: string,
+         *     link: string,
+         *     entityForeign?: ?string,
+         *     linkForeign?: ?string,
+         *     label?: string,
+         *     labelForeign?: string,
+         *     linkMultipleField?: bool,
+         *     linkMultipleFieldForeign?: bool,
+         *     audited?: bool,
+         *     auditedForeign?: bool,
+         *     parentEntityTypeList?: string[],
+         *     foreignLinkEntityTypeList?: string[],
+         *     layout?: string,
+         *     layoutForeign?: string,
+         *     selectFilter?: string,
+         *     selectFilterForeign?: string,
          * } $params
          */
 
@@ -398,7 +413,7 @@ class EntityManager
         $params = [];
 
         foreach ($paramList as $item) {
-            $params[$item] = filter_var($data[$item], FILTER_SANITIZE_STRING);
+            $params[$item] = htmlspecialchars($data[$item]);
         }
 
         /**

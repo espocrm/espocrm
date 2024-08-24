@@ -52,13 +52,18 @@ class ManyMany implements LinkConverter
             $linkDefs->getRelationshipName() :
             self::composeRelationshipName($entityType, $foreignEntityType);
 
-        $key1 = lcfirst($entityType) . 'Id';
-        $key2 = lcfirst($foreignEntityType) . 'Id';
+        if ($linkDefs->hasMidKey() && $linkDefs->hasForeignMidKey()) {
+            $key1 = $linkDefs->getMidKey();
+            $key2 = $linkDefs->getForeignMidKey();
+        } else {
+            $key1 = lcfirst($entityType) . 'Id';
+            $key2 = lcfirst($foreignEntityType) . 'Id';
 
-        if ($key1 === $key2) {
-            [$key1, $key2] = strcmp($name, $foreignRelationName) ?
-                ['leftId', 'rightId'] :
-                ['rightId', 'leftId'];
+            if ($key1 === $key2) {
+                [$key1, $key2] = strcmp($name, $foreignRelationName) > 0 ?
+                    ['leftId', 'rightId'] :
+                    ['rightId', 'leftId'];
+            }
         }
 
         $relationDefs = RelationDefs::create($name)

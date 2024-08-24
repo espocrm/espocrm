@@ -66,6 +66,14 @@ class RelatedListModalView extends ModalView {
         'Control+Period': function (e) {
             this.handleShortcutKeyCtrlPeriod(e);
         },
+        /** @this RelatedListModalView */
+        'Control+ArrowLeft': function () {
+            this.handleShortcutKeyControlArrowLeft();
+        },
+        /** @this RelatedListModalView */
+        'Control+ArrowRight': function () {
+            this.handleShortcutKeyControlArrowRight();
+        },
     }
 
     events = {
@@ -95,7 +103,7 @@ class RelatedListModalView extends ModalView {
             }
         ];
 
-        this.scope = this.options.scope || this.scope;
+        this.scope = this.options.scope || this.options.entityType || this.scope;
 
         this.defaultOrderBy = this.options.defaultOrderBy;
         this.defaultOrder = this.options.defaultOrder;
@@ -286,6 +294,7 @@ class RelatedListModalView extends ModalView {
             collection.url = this.url;
 
             collection.setOrder(this.defaultOrderBy, this.defaultOrder, true);
+            collection.parentModel = this.model;
 
             this.collection = collection;
 
@@ -334,6 +343,14 @@ class RelatedListModalView extends ModalView {
         return this.getView('search');
     }
 
+    /**
+     * @protected
+     * @return {module:views/record/list}
+     */
+    getRecordView() {
+        return this.getView('list');
+    }
+
     setupSearch() {
         const searchManager = this.searchManager =
             new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
@@ -349,6 +366,10 @@ class RelatedListModalView extends ModalView {
         this.collection.where = searchManager.getWhere();
 
         let filterList = Espo.Utils.clone(this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || []);
+
+        if (this.options.noDefaultFilters) {
+            filterList = [];
+        }
 
         if (this.filterList) {
             this.filterList.forEach(item1 => {
@@ -421,10 +442,14 @@ class RelatedListModalView extends ModalView {
                 editDisabled: this.defs.editDisabled,
                 removeDisabled: this.defs.removeDisabled,
             },
+            forcePagination: this.options.forcePagination,
             pagination: this.getConfig().get('listPagination') ||
                 this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) ||
                 null,
-        }, view => {
+        }, /** import('views/record/list').default */view => {
+
+            this.listenTo(view, 'after:paginate', () => this.bodyElement.scrollTop = 0);
+            this.listenTo(view, 'sort', () => this.bodyElement.scrollTop = 0);
 
             this.listenToOnce(view, 'select', model => {
                 this.trigger('select', model);
@@ -510,6 +535,9 @@ class RelatedListModalView extends ModalView {
         });
     }
 
+    /**
+     * @private
+     */
     actionCreateRelated() {
         // noinspection JSUnresolvedReference
         const actionName = this.defs.createAction || 'createRelated';
@@ -648,6 +676,20 @@ class RelatedListModalView extends ModalView {
         }
 
         this.getSearchView().selectNextPreset();
+    }
+
+    /**
+     * @protected
+     */
+    handleShortcutKeyControlArrowLeft() {
+        this.getRecordView().trigger('request-page', 'previous');
+    }
+
+    /**
+     * @protected
+     */
+    handleShortcutKeyControlArrowRight() {
+        this.getRecordView().trigger('request-page', 'next');
     }
 }
 

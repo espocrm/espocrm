@@ -41,7 +41,7 @@ class HeaderSiteView extends View {
     }
 
     setup() {
-        let navbarView = this.getMetadata().get(this.customViewPath) || this.navbarView;
+        const navbarView = this.getMetadata().get(this.customViewPath) || this.navbarView;
 
         this.createView('navbar', navbarView, {
             fullSelector: '#navbar',

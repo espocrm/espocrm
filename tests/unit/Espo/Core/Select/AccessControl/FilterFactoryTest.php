@@ -29,24 +29,21 @@
 
 namespace tests\unit\Espo\Core\Select\AccessControl;
 
-use Espo\Core\{
-    Select\AccessControl\FilterFactory,
-    Select\AccessControl\Filters\OnlyOwn,
-    Select\Helpers\FieldHelper,
-    Utils\Metadata,
-    AclManager,
-    Acl,
-    InjectableFactory,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\Acl;
+use Espo\Core\AclManager;
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Select\AccessControl\FilterFactory;
+use Espo\Core\Select\AccessControl\Filters\OnlyOwn;
+use Espo\Core\Select\Helpers\FieldHelper;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\User;
 
-use Espo\{
-    Entities\User,
-};
+use PHPUnit\Framework\TestCase;
 
-class FilterFactoryTest extends \PHPUnit\Framework\TestCase
+class FilterFactoryTest extends TestCase
 {
     protected function setUp() : void
     {

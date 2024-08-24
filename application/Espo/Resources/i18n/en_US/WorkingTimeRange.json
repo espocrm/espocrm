@@ -1,6 +1,6 @@
 {
     "labels": {
-        "Create WorkingTimeRange": "Create Range",
+        "Create WorkingTimeRange": "Create Exception",
         "Calendars": "Calendars"
     },
     "fields": {
@@ -23,5 +23,9 @@
     },
     "presetFilters": {
         "actual": "Actual"
+    },
+    "tooltips": {
+        "calendars": "Calendars to apply the exception to. The exception will be applied to all users of selected calendars.\n\nLeave the field empty if you need to apply the exception only for specific users.",
+        "users": "Specific users to apply the exception to."
     }
 }

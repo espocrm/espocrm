@@ -29,41 +29,24 @@
 
 namespace Espo\Core\Upgrades;
 
+use Espo\Core\Container;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Upgrades\Actions\Base as ActionBase;
 
 class ActionManager
 {
-    /**
-     * @var string
-     */
-    private $managerName;
-
-    /**
-     * @var \Espo\Core\Container
-     */
-    private $container;
-
-    /**
-     * @var array<string, array<string, \Espo\Core\Upgrades\Actions\Base>>
-     */
+    private string $managerName;
+    private Container $container;
+    /** @var array<string, array<string, ActionBase>> */
     private $objects;
+    protected ?string $currentAction;
+    /** @var array<string, mixed> */
+    protected array $params;
 
     /**
-     * @var ?string
-     */
-    protected $currentAction;
-
-    /**
-     * @var array<string, mixed>
-     */
-    protected $params;
-
-    /**
-     * @param string $managerName
-     * @param \Espo\Core\Container $container
      * @param array<string, mixed> $params
      */
-    public function __construct($managerName, $container, $params)
+    public function __construct(string $managerName, Container $container, array $params)
     {
         $this->managerName = $managerName;
         $this->container = $container;
@@ -72,35 +55,22 @@ class ActionManager
         $this->params = $params;
     }
 
-    /**
-     * @return string
-     */
-    protected function getManagerName()
+    protected function getManagerName(): string
     {
         return $this->managerName;
     }
 
-    /**
-     * @return \Espo\Core\Container
-     */
-    protected function getContainer()
+    protected function getContainer(): Container
     {
         return $this->container;
     }
 
-    /**
-     * @param string $action
-     * @return void
-     */
-    public function setAction($action)
+    public function setAction(string $action): void
     {
         $this->currentAction = $action;
     }
 
-    /**
-     * @return string
-     */
-    public function getAction()
+    public function getAction(): string
     {
         assert($this->currentAction !== null);
 
@@ -110,17 +80,15 @@ class ActionManager
     /**
      * @return array<string, mixed>
      */
-    public function getParams()
+    public function getParams(): array
     {
         return $this->params;
     }
 
     /**
-     * @param mixed $data
-     * @return mixed
      * @throws Error
      */
-    public function run($data)
+    public function run(mixed $data): mixed
     {
         $object = $this->getObject();
 
@@ -128,11 +96,9 @@ class ActionManager
     }
 
     /**
-     * @param string $actionName
-     * @return \Espo\Core\Upgrades\Actions\Base
      * @throws Error
      */
-    public function getActionClass($actionName)
+    public function getActionClass(string $actionName): ActionBase
     {
         return $this->getObject($actionName);
     }
@@ -141,17 +107,16 @@ class ActionManager
      * @return array<string, mixed>
      * @throws Error
      */
-    public function getManifest()
+    public function getManifest(): array
     {
         return $this->getObject()->getManifest();
     }
 
     /**
      * @param ?string $actionName
-     * @return \Espo\Core\Upgrades\Actions\Base
      * @throws Error
      */
-    protected function getObject($actionName = null)
+    protected function getObject(string $actionName = null): ActionBase
     {
         $managerName = $this->getManagerName();
 
@@ -160,13 +125,13 @@ class ActionManager
         }
 
         if (!isset($this->objects[$managerName][$actionName])) {
-            $class = '\Espo\Core\Upgrades\Actions\\' . ucfirst($managerName) . '\\' . ucfirst($actionName);
+            $class = "Espo\\Core\\Upgrades\\Actions\\" . ucfirst($managerName) . '\\' . ucfirst($actionName);
 
             if (!class_exists($class)) {
                 throw new Error('Could not find an action ['.ucfirst($actionName).'], class ['.$class.'].');
             }
 
-            /** @var class-string<\Espo\Core\Upgrades\Actions\Base> $class */
+            /** @var class-string<ActionBase> $class */
 
             $this->objects[$managerName][$actionName] = new $class($this->container, $this);
         }

@@ -6,6 +6,7 @@
     cursor: default;
     overflow: auto;
     padding: 5px 0;
+    user-select: none;
 
     .autocomplete-suggestion.autocomplete-selected {
         background-color: var(--dropdown-link-hover-bg) !important;
@@ -84,10 +85,6 @@ ul.dropdown-menu > li.checkbox {
 }
 
 ul.dropdown-menu {
-    > li.divider + li.divider {
-        display: none;
-    }
-
     > li > a {
         padding-top: 4px;
         padding-bottom: 4px;
@@ -110,6 +107,10 @@ ul.dropdown-menu {
 
         span.fa-check {
             padding-top: 2px;
+        }
+
+        &.disabled {
+            color: var(--text-muted-color);
         }
     }
 
@@ -161,4 +162,96 @@ ul.dropdown-menu-with-icons {
     margin-right: 2px;
 }
 
+.fix-overflow {
+    .btn-group {
+        position: unset;
+    }
+}
 
+.dropdown-menu {
+    .quick-search-list-item {
+        input {
+            border-left: 0;
+            border-right: 0;
+            border-radius: 0;
+        }
+    }
+}
+
+ul.dropdown-menu {
+    > li.divider + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden)  + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden)  + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden)  + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden)  + li.hidden + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden)  + li.hidden + li.hidden + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden) + li.hidden + li.hidden + li.hidden + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.hidden + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.hidden + li.hidden + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden:last-child) {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden + li.hidden:last-child) {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden + li.hidden + li.hidden:last-child) {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden + li.hidden + li.hidden + li.hidden:last-child) {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden + li.hidden + li.hidden + li.hidden + li.hidden:last-child) {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden + li.hidden + li.hidden + li.hidden + li.hidden + li.hidden:last-child) {
+        display: none;
+    }
+}

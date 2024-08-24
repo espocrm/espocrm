@@ -50,25 +50,13 @@ class Meeting implements AssignmentNotificator
     private const ATTR_USERS_IDS = 'usersIds';
     private const NOTIFICATION_TYPE_EVENT_ATTENDEE = 'EventAttendee';
 
-    private DefaultAssignmentNotificator $defaultAssignmentNotificator;
-    private UserEnabledChecker $userEnabledChecker;
-    private EntityManager $entityManager;
-    private User $user;
-    private Metadata $metadata;
-
     public function __construct(
-        DefaultAssignmentNotificator $defaultAssignmentNotificator,
-        UserEnabledChecker $userEnabledChecker,
-        EntityManager $entityManager,
-        User $user,
-        Metadata $metadata
-    ) {
-        $this->defaultAssignmentNotificator = $defaultAssignmentNotificator;
-        $this->userEnabledChecker = $userEnabledChecker;
-        $this->entityManager = $entityManager;
-        $this->user = $user;
-        $this->metadata = $metadata;
-    }
+        private DefaultAssignmentNotificator $defaultAssignmentNotificator,
+        private UserEnabledChecker $userEnabledChecker,
+        private EntityManager $entityManager,
+        private User $user,
+        private Metadata $metadata
+    ) {}
 
     /**
      * @param MeetingEntity|Call $entity

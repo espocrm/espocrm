@@ -138,7 +138,7 @@ class EntityManagerEditView extends View {
                         return false;
                     }
 
-                    if (fieldDefs[item].notStorable) {
+                    if (fieldDefs[item].orderDisabled) {
                         return false;
                     }
 
@@ -641,7 +641,7 @@ class EntityManagerEditView extends View {
 
         Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-        Espo.Ajax.postRequest(url, data).then(() => {
+        Espo.Ajax.postRequest(url, data).then(/** Record */response => {
             this.model.fetchedAttributes = this.model.getClonedAttributes();
 
             this.scope ?
@@ -685,7 +685,7 @@ class EntityManagerEditView extends View {
                 this.getRecordView().setIsNotChanged();
 
                 if (this.isNew) {
-                    this.getRouter().navigate('#Admin/entityManager/scope=' + name, {trigger: true});
+                    this.getRouter().navigate(`#Admin/entityManager/scope=${response.name}`, {trigger: true});
                 }
             });
         })

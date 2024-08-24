@@ -26,12 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/icon', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+export default class extends BaseFieldView {
 
-        listTemplate: 'email/fields/icon/detail',
-
-        detailTemplate: 'email/fields/icon/detail',
-    });
-});
+    listTemplate = 'email/fields/icon/detail'
+    detailTemplate = 'email/fields/icon/detail'
+}

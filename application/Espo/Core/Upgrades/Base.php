@@ -29,169 +29,119 @@
 
 namespace Espo\Core\Upgrades;
 
+use Espo\Core\Container;
 use Espo\Core\Exceptions\Error;
 
 abstract class Base
 {
-    /**
-     * @var \Espo\Core\Container
-     */
-    private $container;
+    protected ActionManager $actionManager;
 
-    /**
-     * @var ActionManager
-     */
-    protected $actionManager;
-
-    /**
-     * @var ?string
-     */
-    protected $name = null;
-
-    /**
-     * @var array<string, mixed>
-     */
-    protected $params = [];
+    protected ?string $name = null;
+    /** @var array<string, mixed> */
+    protected array $params = [];
 
     const UPLOAD = 'upload';
-
     const INSTALL = 'install';
-
     const UNINSTALL = 'uninstall';
-
     const DELETE = 'delete';
 
-    /**
-     * @param \Espo\Core\Container $container
-     */
-    public function __construct($container)
+    public function __construct(Container $container)
     {
-        $this->container = $container;
-
         $this->actionManager = new ActionManager($this->name ?? '', $container, $this->params);
     }
 
     /**
-     * @return \Espo\Core\Container
+     * @return array<string, mixed>
+     * @throws Error
      */
-    protected function getContainer()
+    public function getManifest(): array
     {
-        return $this->container;
-    }
-
-    /**
-     * @return ActionManager
-     */
-    protected function getActionManager()
-    {
-        return $this->actionManager;
+        return $this->actionManager->getManifest();
     }
 
     /**
      * @return array<string, mixed>
      * @throws Error
      */
-    public function getManifest()
+    public function getManifestById(string $processId): array
     {
-        return $this->getActionManager()->getManifest();
-    }
-
-    /**
-     * @param string $processId
-     * @return array<string, mixed>
-     * @throws Error
-     */
-    public function getManifestById($processId)
-    {
-        $actionClass = $this->getActionManager()->getActionClass(self::INSTALL);
+        $actionClass = $this->actionManager->getActionClass(self::INSTALL);
         $actionClass->setProcessId($processId);
 
         return $actionClass->getManifest();
     }
 
     /**
-     * @param string $data
-     * @return string
      * @throws Error
      */
-    public function upload($data)
+    public function upload(string $data): string
     {
-        $this->getActionManager()->setAction(self::UPLOAD);
+        $this->actionManager->setAction(self::UPLOAD);
 
-        return $this->getActionManager()->run($data);
+        return $this->actionManager->run($data);
     }
 
     /**
      * @param array<string, mixed> $data
-     * @return mixed
      * @throws Error
      */
-    public function install($data)
+    public function install(array $data): mixed
     {
-        $this->getActionManager()->setAction(self::INSTALL);
+        $this->actionManager->setAction(self::INSTALL);
 
-        return $this->getActionManager()->run($data);
+        return $this->actionManager->run($data);
     }
 
     /**
      * @param array<string, mixed> $data
-     * @return mixed
      * @throws Error
      */
-    public function uninstall($data)
+    public function uninstall(array $data): mixed
     {
-        $this->getActionManager()->setAction(self::UNINSTALL);
+        $this->actionManager->setAction(self::UNINSTALL);
 
-        return $this->getActionManager()->run($data);
+        return $this->actionManager->run($data);
     }
 
     /**
      * @param array<string, mixed> $data
-     * @return mixed
      * @throws Error
      */
-    public function delete($data)
+    public function delete(array $data): mixed
     {
-        $this->getActionManager()->setAction(self::DELETE);
+        $this->actionManager->setAction(self::DELETE);
 
-        return $this->getActionManager()->run($data);
+        return $this->actionManager->run($data);
     }
 
     /**
-     * @param string $stepName
      * @param array<string, mixed> $params
-     * @return bool
      * @throws Error
      */
-    public function runInstallStep($stepName, array $params = [])
+    public function runInstallStep(string $stepName, array $params = []): void
     {
-        return $this->runActionStep(self::INSTALL, $stepName, $params);
+        $this->runActionStep(self::INSTALL, $stepName, $params);
     }
 
     /**
-     *
-     * @param string $actionName
-     * @param string $stepName
      * @param array<string, mixed> $params
-     * @return bool
      * @throws Error
+     * @noinspection PhpSameParameterValueInspection
      */
-    protected function runActionStep($actionName, $stepName, array $params = [])
+    private function runActionStep(string $actionName, string $stepName, array $params = []): void
     {
-        $actionClass = $this->getActionManager()->getActionClass($actionName);
+        $actionClass = $this->actionManager->getActionClass($actionName);
         $methodName = 'step' . ucfirst($stepName);
 
         if (!method_exists($actionClass, $methodName)) {
             if (!empty($params['id'])) {
                 $actionClass->setProcessId($params['id']);
-                $actionClass->throwErrorAndRemovePackage('Step "'. $stepName .'" is not found.');
+                $actionClass->throwErrorAndRemovePackage("Step \"$stepName\" is not found.");
             }
 
             throw new Error('Step "'. $stepName .'" is not found.');
         }
 
         $actionClass->$methodName($params); // throw an Exception on error
-
-        return true;
     }
 }

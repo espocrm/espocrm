@@ -42,11 +42,13 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
             hasPost: this.hasPost,
             hasAttachments: this.hasAttachments,
             emailIconClassName: this.getMetadata().get(['clientDefs', 'Email', 'iconClass']) || '',
+            isPinned: this.isThis && this.model.get('isPinned') && this.model.collection &&
+                !this.model.collection.pinnedList,
         };
     }
 
     setup() {
-        let data = /** @type Object.<string, *> */this.model.get('data') || {};
+        const data = /** @type {Record} */this.model.get('data') || {};
 
         this.emailId = data.emailId;
         this.emailName = data.emailName;
@@ -68,7 +70,11 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
                     'attachments',
                     'attachmentMultiple',
                     {},
-                    'views/stream/fields/attachment-multiple'
+                    'views/stream/fields/attachment-multiple',
+                    {
+                        previewSize: this.options.isNotification || this.options.isUserStream ?
+                            'small' : 'medium',
+                    }
                 );
 
                 this.hasAttachments = true;
@@ -77,8 +83,10 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
 
         this.messageData['email'] =
             $('<a>')
-                .attr('href', '#Email/view/' + data.emailId)
-                .text(data.emailName);
+                .attr('href', `#Email/view/${data.emailId}`)
+                .text(data.emailName)
+                .attr('data-scope', 'Email')
+                .attr('data-id', data.emailId);
 
         this.messageName = 'emailReceived';
 
@@ -91,8 +99,10 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
 
             this.messageData['from'] =
                 $('<a>')
-                    .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
-                    .text(data.personEntityName);
+                    .attr('href', `#${data.personEntityType}/view/${data.personEntityId}`)
+                    .text(data.personEntityName)
+                    .attr('data-scope', data.personEntityType)
+                    .attr('data-id', data.personEntityId);
         }
 
         if (

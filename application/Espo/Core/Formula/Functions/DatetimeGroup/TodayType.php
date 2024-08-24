@@ -29,17 +29,37 @@
 
 namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
-use Espo\Core\Utils\DateTime;
+use DateTimeZone;
+use Espo\Core\Field\DateTime;
+use Espo\Core\Formula\EvaluatedArgumentList;
+use Espo\Core\Formula\Func;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Exception;
+use RuntimeException;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
-
-class TodayType extends BaseFunction
+/**
+ * @noinspection PhpUnused
+ */
+class TodayType implements Func
 {
-    public function process(ArgumentList $args)
+    public function __construct(
+        private Config $config
+    ) {}
+
+    public function process(EvaluatedArgumentList $arguments): string
     {
-        return DateTime::getSystemTodayString();
+        /** @var string $timezone */
+        $timezone = $this->config->get('timeZone') ?? 'UTC';
+
+        try {
+            $today = DateTime::createNow()
+                ->withTimezone(new DateTimeZone($timezone));
+        }
+        catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
+        }
+
+        return $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT);
     }
 }

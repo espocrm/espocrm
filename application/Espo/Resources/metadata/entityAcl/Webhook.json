@@ -1,0 +1,10 @@
+{
+    "fields": {
+        "user": {
+            "onlyAdmin": true
+        },
+        "secretKey": {
+            "readOnly": true
+        }
+    }
+}

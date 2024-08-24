@@ -26,44 +26,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/scheduled-job/list', ['views/list'], function (Dep) {
+import ListView from 'views/list';
 
-    return Dep.extend({
+export default class extends ListView {
 
-        searchPanel: false,
+    searchPanel = false
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.menu.buttons.push({
-                link: '#Admin/jobs',
-                text: this.translate('Jobs', 'labels', 'Admin'),
+        this.addMenuItem('buttons', {
+            link: '#Admin/jobs',
+            text: this.translate('Jobs', 'labels', 'Admin'),
+        });
+
+        this.createView('search', 'views/base', {
+            fullSelector: '#main > .search-container',
+            template: 'scheduled-job/cronjob',
+        });
+    }
+
+    afterRender() {
+        super.afterRender();
+
+        Espo.Ajax
+            .getRequest('Admin/action/cronMessage')
+            .then(data => {
+                this.$el.find('.cronjob .message').html(data.message);
+                this.$el.find('.cronjob .command').html('<strong>' + data.command + '</strong>');
             });
+    }
 
-            this.createView('search', 'views/base', {
-                fullSelector: '#main > .search-container',
-                template: 'scheduled-job/cronjob',
-            });
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            Espo.Ajax
-                .getRequest('Admin/action/cronMessage')
-                .then(data => {
-                    this.$el.find('.cronjob .message').html(data.message);
-                    this.$el.find('.cronjob .command').html('<strong>' + data.command + '</strong>');
-                });
-        },
-
-        getHeader: function () {
-            return this.buildHeaderHtml([
-                $('<a>')
-                    .attr('href', '#Admin')
-                    .text(this.translate('Administration', 'labels', 'Admin')),
-                this.getLanguage().translate(this.scope, 'scopeNamesPlural')
-            ]);
-        },
-    });
-});
+    getHeader() {
+        return this.buildHeaderHtml([
+            $('<a>')
+                .attr('href', '#Admin')
+                .text(this.translate('Administration', 'labels', 'Admin')),
+            this.getLanguage().translate(this.scope, 'scopeNamesPlural')
+        ]);
+    }
+}

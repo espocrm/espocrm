@@ -1,4 +1,5 @@
 {
+    "defaultsPopulatorClassName": "Espo\\Classes\\Record\\Webhook\\DefaultsPopulator",
     "massActions": {
         "delete": {
             "allowed": true
@@ -6,5 +7,23 @@
         "update": {
             "allowed": true
         }
-    }
+    },
+    "updateInputFilterClassNameList": [
+        "Espo\\Classes\\Record\\Webhook\\UpdateInputFilter"
+    ],
+    "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Webhook\\BeforeSave"
+    ],
+    "beforeUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Webhook\\BeforeSave"
+    ],
+    "afterCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Webhook\\AfterSave"
+    ],
+    "afterUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Webhook\\AfterSave"
+    ],
+    "afterDeleteHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Webhook\\AfterDelete"
+    ]
 }

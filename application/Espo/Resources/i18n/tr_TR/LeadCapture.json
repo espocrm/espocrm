@@ -2,30 +2,38 @@
   "fields": {
     "name": "Ad",
     "campaign": "Kampanya",
-    "isActive": "Aktif mi?",
+    "isActive": "Etkin mi?",
     "subscribeToTargetList": "Hedef Listeye Abone Ol",
+    "subscribeContactToTargetList": "Abone Mevcut ise İletişime Geçin",
     "targetList": "Hedef Liste",
+    "fieldList": "Ödeme Alanı",
     "optInConfirmationSuccessMessage": "Kaydolma onayından sonra gösterilecek metin",
     "leadSource": "Fırsat Kaynağı",
     "apiKey": "Api Anahtarı",
     "targetTeam": "Hedef Takım",
     "exampleRequestMethod": "Yöntem",
     "exampleRequestPayload": "Yük",
+    "createLeadBeforeOptInConfirmation": "Onaydan önce Potansiyel Müşteri Oluşturun",
     "duplicateCheck": "Yineleme Kontrolü",
+    "skipOptInConfirmationIfSubscribed": "Potansiyel müşteri zaten hedef listesindeyse onayı atla",
     "smtpAccount": "SMTP Hesabı",
-    "inboundEmail": "Grup e-mail Adresi"
+    "inboundEmail": "Grup Eposta Adresi",
+    "phoneNumberCountry": "Telefon ülke kodu"
   },
   "links": {
     "targetList": "Hedef Liste",
     "campaign": "Kampanyalar",
     "targetTeam": "Hedef Takım",
     "logRecords": "Kayıt",
-    "inboundEmail": "Grup e-mail Hesabı"
+    "inboundEmail": "Grup Eposta Hesabı"
   },
   "labels": {
     "Create LeadCapture": "Giriş Noktası Oluştur",
     "Generate New API Key": "Yeni API Anahtarı Oluştur",
     "Request": "İstek"
+  },
+  "messages": {
+    "generateApiKey": "Yeni API Anahtarı Üret"
   },
   "tooltips": {
     "optInConfirmationSuccessMessage": "İşaretleme desteklenir."

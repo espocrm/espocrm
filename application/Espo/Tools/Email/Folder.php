@@ -36,5 +36,6 @@ class Folder
     public const SENT = 'sent';
     public const DRAFTS = 'drafts';
     public const IMPORTANT = 'important';
+    public const ARCHIVE = 'archive';
     public const TRASH = 'trash';
 }

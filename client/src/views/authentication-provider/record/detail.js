@@ -26,37 +26,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/authentication-provider/record/detail', ['views/record/detail', 'helpers/misc/authentication-provider'],
-function (Dep, Helper) {
+import DetailRecordView from 'views/record/detail';
+import Helper from 'helpers/misc/authentication-provider';
 
-    return Dep.extend({
+export default class extends DetailRecordView {
 
-        editModeDisabled: true,
+    editModeDisabled = true
 
-        /**
-         * @private
-         * @type {module:helpers/misc/authentication-provider.Class}
-         */
-        helper: null,
+    /**
+     * @private
+     * @type {Helper}
+     */
+    helper
 
-        setup: function () {
-            this.helper = new Helper(this);
+    setup() {
+        this.helper = new Helper(this);
 
-            Dep.prototype.setup.call(this);
-        },
+        super.setup();
+    }
 
-        setupBeforeFinal: function () {
-            this.dynamicLogicDefs = this.helper.setupMethods();
+    setupBeforeFinal() {
+        this.dynamicLogicDefs = this.helper.setupMethods();
 
-            Dep.prototype.setupBeforeFinal.call(this);
+        super.setupBeforeFinal();
 
-            this.helper.setupPanelsVisibility(() => {
-                this.processDynamicLogic();
-            });
-        },
+        this.helper.setupPanelsVisibility(() => {
+            this.processDynamicLogic();
+        });
+    }
 
-        modifyDetailLayout: function (layout) {
-            this.helper.modifyDetailLayout(layout);
-        },
-    });
-});
+    // noinspection JSUnusedGlobalSymbols
+    modifyDetailLayout(layout) {
+        this.helper.modifyDetailLayout(layout);
+    }
+}

@@ -1,8 +1,8 @@
 [
-    {"name":"name", "link":true},
-    {"name":"status", "width": 14},
-    {"name":"priority", "width": 12},
-    {"name":"dateEnd", "width": 15},
-    {"name":"assignedUser", "width": 15},
-    {"name":"createdAt", "width": 15}
+    {"name": "name", "link": true},
+    {"name": "status", "width": 14},
+    {"name": "priority", "width": 12},
+    {"name": "dateEnd", "width": 15},
+    {"name": "assignedUser", "width": 15},
+    {"name": "createdAt", "width": 15, "hidden": true}
 ]

@@ -48,16 +48,30 @@ class Ics
     private ?int $endDate = null;
     private ?string $summary = null;
     private ?string $address = null;
-    private ?string $email = null;
-    private ?string $who = null;
     private ?string $description = null;
     private ?string $uid = null;
     /** @var self::STATUS_* string */
     private string $status;
+    private ?int $stamp = null;
+    /** @var array{string, ?string}|null  */
+    private ?array $organizer = null;
+    /** @var array{string, ?string}[]  */
+    private array $attendees = [];
 
     /**
-     * @param array<string, string|int|null> $attributes
-     * @throws RuntimeException
+     * @param array{
+     *     organizer?: array{string, ?string}|null,
+     *     attendees?: array{string, ?string}[],
+     *     startDate?: ?int,
+     *     endDate?: ?int,
+     *     summary?: ?string,
+     *     address?: ?string,
+     *     description?: ?string,
+     *     uid?: ?string,
+     *     status?: self::STATUS_CONFIRMED|self::STATUS_TENTATIVE|self::STATUS_CANCELLED,
+     *     method?: self::METHOD_REQUEST|self::METHOD_CANCEL,
+     *     stamp?: ?int,
+     * } $attributes
      */
     public function __construct(string $prodid, array $attributes = [])
     {
@@ -71,7 +85,7 @@ class Ics
 
         foreach ($attributes as $key => $value) {
             if (!property_exists($this, $key)) {
-                throw new RuntimeException("Bad attribute '{$key}'.");
+                throw new RuntimeException("Bad attribute '$key'.");
             }
 
             $this->$key = $value;
@@ -88,26 +102,48 @@ class Ics
         return $this->output;
     }
 
+    /** @noinspection SpellCheckingInspection */
     private function generate(): void
     {
-        $this->output =
-            "BEGIN:VCALENDAR\r\n".
-            "VERSION:2.0\r\n".
-            "PRODID:-" . $this->prodid . "\r\n".
-            "METHOD:" . $this->method . "\r\n".
-            "BEGIN:VEVENT\r\n".
-            "DTSTART:" . $this->formatTimestamp($this->startDate) . "\r\n".
-            "DTEND:" . $this->formatTimestamp($this->endDate) . "\r\n".
-            "SUMMARY:" . $this->escapeString($this->summary) . "\r\n".
-            "LOCATION:" . $this->escapeString($this->address) . "\r\n".
-            "ORGANIZER;CN=" . $this->escapeString($this->who) . ":MAILTO:" . $this->escapeString($this->email) . "\r\n".
-            "DESCRIPTION:" . $this->escapeString($this->formatMultiline($this->description)) . "\r\n".
-            "UID:" . $this->uid . "\r\n".
-            "SEQUENCE:0\r\n".
-            "DTSTAMP:" . $this->formatTimestamp(time()) . "\r\n".
-            "STATUS:" . $this->status . "\r\n" .
+        $start =
+            "BEGIN:VCALENDAR\r\n" .
+            "VERSION:2.0\r\n" .
+            "PRODID:-$this->prodid\r\n" .
+            "METHOD:$this->method\r\n" .
+            "BEGIN:VEVENT\r\n";
+
+        $organizerPart = '';
+
+        if ($this->organizer) {
+            $organizerPart = "ORGANIZER;{$this->preparePerson($this->organizer[0], $this->organizer[1])}";
+        }
+
+        $body =
+            "DTSTART:{$this->formatTimestamp($this->startDate)}\r\n" .
+            "DTEND:{$this->formatTimestamp($this->endDate)}\r\n" .
+            "SUMMARY:{$this->escapeString($this->summary)}\r\n" .
+            "LOCATION:{$this->escapeString($this->address)}\r\n" .
+            $organizerPart .
+            "DESCRIPTION:{$this->escapeString($this->formatMultiline($this->description))}\r\n" .
+            "UID:$this->uid\r\n" .
+            "SEQUENCE:0\r\n" .
+            "DTSTAMP:{$this->formatTimestamp($this->stamp ?? time())}\r\n" .
+            "STATUS:$this->status\r\n";
+
+        foreach ($this->attendees as $attendee) {
+            $body .= "ATTENDEE;{$this->preparePerson($attendee[0], $attendee[1])}";
+        }
+
+        $end =
             "END:VEVENT\r\n".
             "END:VCALENDAR";
+
+        $this->output = $start . $body . $end;
+    }
+
+    private function preparePerson(string $address, ?string $name): string
+    {
+        return "CN={$this->escapeString($name)}:MAILTO:{$this->escapeString($address)}\r\n";
     }
 
     private function formatTimestamp(?int $timestamp): string
@@ -126,7 +162,7 @@ class Ics
         }
 
         /** @var string */
-        return preg_replace('/([\,;])/', '\\\$1', $string);
+        return preg_replace('/([,;])/', '\\\$1', $string);
     }
 
     private function formatMultiline(?string $string): string
@@ -135,6 +171,6 @@ class Ics
             return '';
         }
 
-        return str_replace(["\r\n", "\n"], "\\r\\n", $string);
+        return str_replace(["\r\n", "\n"], "\\n", $string);
     }
 }

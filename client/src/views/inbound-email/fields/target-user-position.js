@@ -26,57 +26,54 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/inbound-email/fields/target-user-position', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+export default class extends EnumFieldView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.translatedOptions = {
-                '': '--' + this.translate('All') + '--'
-            };
+        this.translatedOptions = {'': `--${this.translate('All')}--`};
 
-            this.params.options = [''];
+        this.params.options = [''];
 
-            if (this.model.get('targetUserPosition') && this.model.get('teamId')) {
-                this.params.options.push(this.model.get('targetUserPosition'));
-            }
+        if (this.model.get('targetUserPosition') && this.model.get('teamId')) {
+            this.params.options.push(this.model.get('targetUserPosition'));
+        }
 
-            this.loadRoleList(() => {
-                if (this.mode === 'edit') {
-                    if (this.isRendered()) {
-                        this.render();
-                    }
-                }
-            });
-
-            this.listenTo(this.model, 'change:teamId', () => {
-                this.loadRoleList(() => {
+        this.loadRoleList(() => {
+            if (this.mode === this.MODE_EDIT) {
+                if (this.isRendered()) {
                     this.render();
-                });
-            });
-        },
-
-        loadRoleList: function (callback, context) {
-            var teamId = this.model.get('teamId');
-
-            if (!teamId) {
-                this.params.options = [''];
+                }
             }
+        });
 
-            this.getModelFactory().create('Team', (team) => {
-                team.id = teamId;
+        this.listenTo(this.model, 'change:teamId', () => {
+            this.loadRoleList(() => this.render());
+        });
+    }
 
-                this.listenToOnce(team, 'sync', () => {
-                    this.params.options = team.get('positionList') || [];
-                    this.params.options.unshift('');
+    /**
+     * @private
+     * @param {function} callback
+     */
+    loadRoleList(callback) {
+        const teamId = this.model.attributes.teamId;
 
-                    callback.call(context);
-                });
+        if (!teamId) {
+            this.params.options = [''];
+        }
 
-                team.fetch();
+        this.getModelFactory().create('Team', /** import('model').default */team => {
+            team.id = teamId;
+
+            team.fetch().then(() => {
+                this.params.options = team.get('positionList') || [];
+                this.params.options.unshift('');
+
+                callback.call(this);
             });
-        },
-    });
-});
+        });
+    }
+}

@@ -42,10 +42,10 @@ class MessageNotificationItemView extends BaseNotificationItemView {
     }
 
     setup() {
-        let data = /** @type Object.<string, *> */this.model.get('data') || {};
+        const data = /** @type {Object.<string, *>} */this.model.get('data') || {};
 
-        let messageRaw = this.model.get('message') || data.message || '';
-        let message = marked.parse(messageRaw);
+        const messageRaw = this.model.get('message') || data.message || '';
+        const message = marked.parse(messageRaw);
 
         this.messageTemplate = DOMPurify.sanitize(message, {}).toString();
 

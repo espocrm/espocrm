@@ -12,9 +12,14 @@
             <header>{{translate 'Enabled' scope='Admin'}}</header>
             <ul class="enabled connected">
                 {{#each layout}}
-                    <li class="cell" draggable="true" {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}>
+                    <li
+                        class="cell"
+                        draggable="true"
+                        {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}
+                        title="{{labelText}}"
+                    >
                         <div class="left" style="width: calc(100% - 17px);">
-                            <span>{{label}}</span>
+                            <span>{{labelText}}</span>
                         </div>
                         {{#if ../editable}}
                         {{#unless notEditable}}
@@ -40,9 +45,10 @@
                         class="cell"
                         draggable="true"
                         {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}
+                        title="{{labelText}}"
                     >
                         <div class="left" style="width: calc(100% - 17px);">
-                            <span>{{label}}</span>
+                            <span>{{labelText}}</span>
                         </div>
                         {{#if ../editable}}
                         {{#unless notEditable}}

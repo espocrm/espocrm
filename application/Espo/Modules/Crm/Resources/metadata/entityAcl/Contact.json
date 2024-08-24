@@ -1,0 +1,10 @@
+{
+    "fields": {
+        "inboundEmail": {
+            "readOnly": true
+        },
+        "portalUser": {
+            "readOnly": true
+        }
+    }
+}

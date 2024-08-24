@@ -35,9 +35,9 @@ class AddressFieldTest extends Base
     {
         return [
             ['testAddressStreet', 255],
-            ['testAddressCity', 255],
-            ['testAddressState', 255],
-            ['testAddressCountry', 255],
+            ['testAddressCity', 100],
+            ['testAddressState', 100],
+            ['testAddressCountry', 100],
             ['testAddressPostalCode', 40],
         ];
     }

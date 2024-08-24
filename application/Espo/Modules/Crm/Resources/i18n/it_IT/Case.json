@@ -3,13 +3,14 @@
     "name": "Nome",
     "number": "Numero",
     "status": "Stato",
-    "contact": "Contatti",
+    "contact": "Contatto",
     "contacts": "Contatti",
     "priority": "Priorità",
     "type": "Tipo",
     "description": "Descrizione",
     "attachments": "Allegati",
-    "inboundEmail": "Gruppo Account Email"
+    "inboundEmail": "Account Email di Gruppo",
+    "originalEmail": "Email Originale"
   },
   "links": {
     "contact": "Contatto (Primario)",
@@ -20,7 +21,7 @@
     "emails": "Email",
     "articles": "Articoli della Base di Conoscenza",
     "attachments": "Allegati",
-    "inboundEmail": "Gruppo Account Email"
+    "inboundEmail": "Account Email di Gruppo"
   },
   "options": {
     "status": {

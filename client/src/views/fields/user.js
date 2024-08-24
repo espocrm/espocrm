@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import LinkFieldView from 'views/fields/link';
+import Autocomplete from 'ui/autocomplete';
 
 class UserFieldView extends LinkFieldView {
 
@@ -44,7 +45,7 @@ class UserFieldView extends LinkFieldView {
             this.searchParams.teamNameHash || {};
 
         this.events['click a[data-action="clearLinkTeams"]'] = e => {
-            let id = $(e.currentTarget).data('id').toString();
+            const id = $(e.currentTarget).data('id').toString();
 
             this.deleteLinkTeams(id);
         };
@@ -52,7 +53,7 @@ class UserFieldView extends LinkFieldView {
         this.addActionHandler('selectLinkTeams', () => {
             Espo.Ui.notify(' ... ');
 
-            let viewName = this.getMetadata().get('clientDefs.Team.modalViews.select') ||
+            const viewName = this.getMetadata().get('clientDefs.Team.modalViews.select') ||
                 'views/modals/select-records';
 
             this.createView('dialog', viewName, {
@@ -77,7 +78,7 @@ class UserFieldView extends LinkFieldView {
         });
 
         this.events['click a[data-action="clearLinkTeams"]'] = e => {
-            let id = $(e.currentTarget).data('id').toString();
+            const id = $(e.currentTarget).data('id').toString();
 
             this.deleteLinkTeams(id);
         };
@@ -98,60 +99,48 @@ class UserFieldView extends LinkFieldView {
         super.afterRender();
 
         if (this.mode === this.MODE_SEARCH) {
-            let $elementTeams = this.$el.find('input.element-teams');
+            const $elementTeams = this.$el.find('input.element-teams');
 
+            /** @type {module:ajax.AjaxPromise & Promise<any>} */
+            let lastAjaxPromise;
 
-            $elementTeams.autocomplete({
-                beforeRender: $c => {
-                    if (this.$elementName.hasClass('input-sm')) {
-                        $c.addClass('small');
-                    }
-                },
-                serviceUrl: () => {
-                    return 'Team?&maxSize=' + this.getAutocompleteMaxCount() + '&select=id,name';
-                },
+            const autocomplete = new Autocomplete($elementTeams.get(0), {
                 minChars: 1,
-                triggerSelectOnValidInput: false,
-                paramName: 'q',
-                noCache: true,
-                formatResult: suggestion => {
-                    // noinspection JSUnresolvedReference
-                    return this.getHelper().escapeString(suggestion.name);
-                },
-                transformResult: response => {
-                    response = JSON.parse(response);
-                    let list = [];
+                focusOnSelect: true,
+                handleFocusMode: 3,
+                autoSelectFirst: true,
+                forceHide: true,
+                onSelect: item => {
+                    this.addLinkTeams(item.id, item.name);
 
-                    response.list.forEach(item => {
-                        list.push({
+                    $elementTeams.val('');
+                },
+                lookupFunction: query => {
+                    if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
+                        lastAjaxPromise.abort();
+                    }
+
+                    lastAjaxPromise = Espo.Ajax
+                        .getRequest('Team', {
+                            maxSize: this.getAutocompleteMaxCount(),
+                            select: 'id,name',
+                            q: query,
+                        });
+
+                    return lastAjaxPromise.then(/** {list: Record[]} */response => {
+                        return response.list.map(item => ({
                             id: item.id,
                             name: item.name,
                             data: item.id,
                             value: item.name,
-                        });
+                        }));
                     });
-
-                    return {suggestions: list};
-                },
-                onSelect: /** {id: string, name: string } */s => {
-                    this.addLinkTeams(s.id, s.name);
-
-                    $elementTeams.val('');
-                    $elementTeams.focus();
                 },
             });
 
-            $elementTeams.attr('autocomplete', 'espo-' + this.name);
+            this.once('render remove', () => autocomplete.dispose());
 
-            this.once('render', () => {
-                $elementTeams.autocomplete('dispose');
-            });
-
-            this.once('remove', () => {
-                $elementTeams.autocomplete('dispose');
-            });
-
-            let type = this.$el.find('select.search-type').val();
+            const type = this.$el.find('select.search-type').val();
 
             if (type === 'isFromTeams') {
                 this.searchData.teamIdList.forEach(id => {
@@ -164,7 +153,7 @@ class UserFieldView extends LinkFieldView {
     deleteLinkTeams(id) {
         this.deleteLinkTeamsHtml(id);
 
-        let index = this.searchData.teamIdList.indexOf(id);
+        const index = this.searchData.teamIdList.indexOf(id);
 
         if (index > -1) {
             this.searchData.teamIdList.splice(index, 1);
@@ -195,9 +184,9 @@ class UserFieldView extends LinkFieldView {
         id = this.getHelper().escapeString(id);
         name = this.getHelper().escapeString(name);
 
-        let $container = this.$el.find('.link-teams-container');
+        const $container = this.$el.find('.link-teams-container');
 
-        let $el = $('<div />')
+        const $el = $('<div />')
             .addClass('link-' + id)
             .addClass('list-group-item');
 
@@ -214,7 +203,7 @@ class UserFieldView extends LinkFieldView {
     }
 
     fetchSearch() {
-        let type = this.$el.find('select.search-type').val();
+        const type = this.$el.find('select.search-type').val();
 
         if (type === 'isFromTeams') {
             return {

@@ -126,16 +126,19 @@ class FieldManager {
      * Get a list of attributes of an entity type.
      *
      * @param {string} entityType An entity type.
+     * @param {module:field-manager~FieldFilters} [options] Filters.
      * @returns {string[]}
      */
-    getEntityTypeAttributeList(entityType) {
+    getEntityTypeAttributeList(entityType, options) {
         const list = [];
 
-        const defs = this.metadata.get('entityDefs.' + entityType + '.fields') || {};
+        const defs = this.metadata.get(`entityDefs.${entityType}.fields`) || {};
 
-        Object.keys(defs).forEach(field => {
-            this.getAttributeList(defs[field]['type'], field).forEach(attr => {
-                if (!~list.indexOf(attr)) {
+        this.getEntityTypeFieldList(entityType, options).forEach(field => {
+            const fieldDefs = /** @type {Record} */defs[field] || {};
+
+            this.getAttributeList(fieldDefs.type, field).forEach(attr => {
+                if (!list.includes(attr)) {
                     list.push(attr);
                 }
             });
@@ -321,6 +324,7 @@ class FieldManager {
      *
      * @property {string} [type] Only of a specific field type.
      * @property {string[]} [typeList] Only of a specific field types.
+     * @property {string[]} [ignoreTypeList] Ignore field types.
      * @property {boolean} [onlyAvailable] To exclude disabled, admin-only, internal, forbidden fields.
      * @property {'read'|'edit'} [acl] To exclude fields not accessible for a current user over
      *   a specified access level.
@@ -330,41 +334,52 @@ class FieldManager {
      * Get a list of fields of a specific entity type.
      *
      * @param {string} entityType An entity type.
-     * @param {module:field-manager~FieldFilters} [o] Filters.
+     * @param {module:field-manager~FieldFilters} [options] Filters.
      * @returns {string[]}
      */
-    getEntityTypeFieldList(entityType, o) {
-        let list = Object.keys(this.metadata.get(['entityDefs', entityType, 'fields']) || {});
+    getEntityTypeFieldList(entityType, options) {
+        /** @type {Record} */
+        const fieldDefs = this.metadata.get(['entityDefs', entityType, 'fields']) || {}
 
-        o = o || {};
+        let list = Object.keys(fieldDefs);
 
-        let typeList = o.typeList;
+        options = options || {};
 
-        if (!typeList && o.type) {
-            typeList = [o.type];
+        let typeList = options.typeList;
+
+        if (!typeList && options.type) {
+            typeList = [options.type];
         }
 
         if (typeList) {
             list = list.filter(item => {
                 const type = this.metadata.get(['entityDefs', entityType, 'fields', item, 'type']);
 
-                return ~typeList.indexOf(type);
+                return typeList.includes(type);
             });
         }
 
-        if (o.onlyAvailable || o.acl) {
+        if (options.ignoreTypeList) {
+            list = list.filter(field => {
+                const type = (fieldDefs[field] || {}).type;
+
+                return !options.ignoreTypeList.includes(type);
+            });
+        }
+
+        if (options.onlyAvailable || options.acl) {
             list = list.filter(item => {
                 return this.isEntityTypeFieldAvailable(entityType, item);
             });
         }
 
-        if (o.acl) {
-            const level = o.acl || 'read';
+        if (options.acl) {
+            const level = options.acl || 'read';
 
             const forbiddenEditFieldList = this.acl.getScopeForbiddenFieldList(entityType, level);
 
             list = list.filter(item => {
-                return !~forbiddenEditFieldList.indexOf(item);
+                return !forbiddenEditFieldList.includes(item);
             });
         }
 
@@ -373,6 +388,7 @@ class FieldManager {
 
     /**
      * @deprecated Since v5.7.
+     * @todo Remove.
      */
     getScopeFieldList(entityType) {
         return this.getEntityTypeFieldList(entityType);
@@ -408,6 +424,7 @@ class FieldManager {
 
     /**
      * @deprecated Use `getParamList`.
+     * @todo Remove.
      */
     getParams(fieldType) {
         return this.getParamList(fieldType);
@@ -415,6 +432,7 @@ class FieldManager {
 
     /**
      * @deprecated Use `getAttributeList`.
+     * @todo Remove.
      */
     getAttributes(fieldType, fieldName) {
         return this.getAttributeList(fieldType, fieldName);
@@ -422,6 +440,7 @@ class FieldManager {
 
     /**
      * @deprecated Use `getActualAttributeList`.
+     * @todo Remove.
      */
     getActualAttributes(fieldType, fieldName) {
         return this.getActualAttributeList(fieldType, fieldName);
@@ -442,6 +461,7 @@ class FieldManager {
      * @returns {boolean}
      */
     isEntityTypeFieldAvailable(entityType, field) {
+        /** @type {Record} */
         const defs = this.metadata.get(['entityDefs', entityType, 'fields', field]) || {};
 
         if (
@@ -451,6 +471,7 @@ class FieldManager {
             return false;
         }
 
+        /** @type {Record} */
         const aclDefs = this.metadata.get(['entityAcl', entityType, 'fields', field]) || {};
 
         if (
@@ -466,6 +487,7 @@ class FieldManager {
 
     /**
      * @deprecated Use `isEntityTypeFieldAvailable`.
+     * @todo Remove.
      */
     isScopeFieldAvailable(entityType, field) {
         return this.isEntityTypeFieldAvailable(entityType, field);

@@ -51,6 +51,11 @@
             "type": "bool"
         },
         {
+            "name": "labelType",
+            "type": "enum",
+            "options": ["", "state"]
+        },
+        {
             "name": "displayAsList",
             "type": "bool",
             "tooltip": true
@@ -110,6 +115,10 @@
         "update",
         "add",
         "remove"
+    ],
+    "sanitizerClassNameList": [
+        "Espo\\Classes\\FieldSanitizers\\ArrayFromNull",
+        "Espo\\Classes\\FieldSanitizers\\ArrayStringTrim"
     ],
     "default": []
 }

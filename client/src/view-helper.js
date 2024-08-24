@@ -42,18 +42,20 @@ class ViewHelper {
 
         /** @private */
         this.mdBeforeList = [
-            {
-                regex: /&#x60;&#x60;&#x60;\n?([\s\S]*?)&#x60;&#x60;&#x60;/g,
+            /*{
+                regex: /```\n?([\s\S]*?)```/g,
                 value: (s, string) => {
-                    return '```' + string.replace(/\*/g, '&#42;').replace(/~/g, '&#126;') + '```';
+                    return '```\n' + string.replace(/\\\>/g, '>') + '```';
+                },
+            },*/
+            {
+                // Also covers triple-backtick blocks.
+                regex: /`([\s\S]*?)`/g,
+                value: (s, string) => {
+                    // noinspection RegExpRedundantEscape
+                    return '`' + string.replace(/\\\</g, '<') + '`';
                 },
             },
-            {
-                regex: /&#x60;([\s\S]*?)&#x60;/g,
-                value: (s, string) => {
-                    return '`' + string.replace(/\*/g, '&#42;').replace(/~/g, '&#126;') + '`';
-                },
-            }
         ];
 
         marked.setOptions({
@@ -258,9 +260,17 @@ class ViewHelper {
         });
 
         Handlebars.registerHelper('prop', (object, name) => {
+            if (object === undefined) {
+                console.warn(`Undefined value passed to 'prop' helper.`);
+
+                return undefined;
+            }
+
             if (name in object) {
                 return object[name];
             }
+
+            return undefined;
         });
 
         Handlebars.registerHelper('var', (name, context, options) => {
@@ -529,7 +539,7 @@ class ViewHelper {
             return translationHash[name] || name;
         });
 
-        Handlebars.registerHelper('options', (list, value, options) => {
+        Handlebars.registerHelper('options', (/** any[] */list, value, options) => {
             if (typeof value === 'undefined') {
                 value = false;
             }
@@ -545,10 +555,10 @@ class ViewHelper {
                     return value.indexOf(name) !== -1;
                 }
 
-                return value === name || !value && !name;
+                return value === name || (!value && !name && name !== 0);
             };
 
-            options.hash = /** @type {Object.<string, *>} */ options.hash || {};
+            options.hash = /** @type {Record} */options.hash || {};
 
             const scope = options.hash.scope || false;
             const category = options.hash.category || false;
@@ -556,7 +566,7 @@ class ViewHelper {
             const styleMap = options.hash.styleMap || {};
 
             if (!multiple && options.hash.includeMissingOption && (value || value === '')) {
-                if (!~list.indexOf(value)) {
+                if (!list.includes(value)) {
                     list = Espo.Utils.clone(list);
 
                     list.push(value);
@@ -568,16 +578,15 @@ class ViewHelper {
                 null;
 
             if (translationHash === null) {
+                translationHash = {};
+
                 if (!category && field) {
                     translationHash = this.language
-                        .translate(/** @type {string}*/field, 'options', /** @type {string}*/scope) || {};
+                        .translate(/** @type {string} */field, 'options', /** @type {string} */scope) || {};
 
                     if (typeof translationHash !== 'object') {
                         translationHash = {};
                     }
-                }
-                else {
-                    translationHash = {};
                 }
             }
 
@@ -648,7 +657,7 @@ class ViewHelper {
             return '';
         }
 
-        const t = this.cache ? this.cache.get('app', 'timestamp') : Date.now();
+        const t = this.cache ? this.cache.get('app', 'timestamp') : this.settings.get('cacheTimestamp');
 
         const basePath = this.basePath || '';
         size = size || 'small';
@@ -689,7 +698,8 @@ class ViewHelper {
     transformMarkdownText(text, options) {
         text = text || '';
 
-        text = Handlebars.Utils.escapeExpression(text).replace(/&gt;+/g, '>');
+        // noinspection RegExpRedundantEscape
+        text = text.replace(/\</g, '\\<');
 
         this.mdBeforeList.forEach(item => {
             text = text.replace(item.regex, item.value);
@@ -697,12 +707,9 @@ class ViewHelper {
 
         options = options || {};
 
-        if (options.inline) {
-            text = marked.parseInline(text);
-        }
-        else {
-            text = marked.parse(text);
-        }
+        text = options.inline ?
+            marked.parseInline(text) :
+            marked.parse(text);
 
         text = DOMPurify.sanitize(text, {}).toString();
 
@@ -711,7 +718,7 @@ class ViewHelper {
         }
 
         text = text.replace(
-            /<a href="mailto:(.*)"/gm,
+            /<a href="mailto:([^"]*)"/gm,
             '<a role="button" class="selectable" data-email-address="$1" data-action="mailTo"'
         );
 
@@ -872,17 +879,18 @@ class ViewHelper {
     /**
      * Calculate a content container height.
      *
-     * @param {JQuery} $el Element.
+     * @param {HTMLElement|JQuery} element An element.
      * @returns {number}
      */
-    calculateContentContainerHeight($el) {
+    calculateContentContainerHeight(element) {
         const smallScreenWidth = this.themeManager.getParam('screenWidthXs');
 
         const $window = $(window);
 
         const footerHeight = $('#footer').height() || 26;
         let top = 0;
-        const element = $el.get(0);
+
+        element = $(element).get(0);
 
         if (element) {
             top = element.getBoundingClientRect().top;

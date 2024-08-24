@@ -47,7 +47,7 @@ class TabListFieldView extends ArrayFieldView {
         });
 
         this.events['click [data-action="editGroup"]'] = e => {
-            let id = $(e.currentTarget).parent().data('value').toString();
+            const id = $(e.currentTarget).parent().data('value').toString();
 
             this.editGroup(id);
         };
@@ -60,7 +60,7 @@ class TabListFieldView extends ArrayFieldView {
     setupOptions() {
         this.params.options = Object.keys(this.getMetadata().get('scopes'))
             .filter(scope => {
-                if (this.getMetadata().get('scopes.' + scope + '.disabled')) {
+                if (this.getMetadata().get(`scopes.${scope}.disabled`)) {
                     return false;
                 }
 
@@ -68,7 +68,7 @@ class TabListFieldView extends ArrayFieldView {
                     return false;
                 }
 
-                return this.getMetadata().get('scopes.' + scope + '.tab');
+                return this.getMetadata().get(`scopes.${scope}.tab`);
             })
             .sort((v1, v2) => {
                 return this.translate(v1, 'scopeNamesPlural')
@@ -96,7 +96,7 @@ class TabListFieldView extends ArrayFieldView {
                 value.id = this.generateItemId();
             }
 
-            let html = this.getItemHtml(value);
+            const html = this.getItemHtml(value);
 
             this.$list.append(html);
             this.selected.push(value);
@@ -110,10 +110,10 @@ class TabListFieldView extends ArrayFieldView {
     }
 
     removeValue(value) {
-        let index = this.getGroupIndexById(value);
+        const index = this.getGroupIndexById(value);
 
         if (~index) {
-            this.$list.children('[data-value="' + value + '"]').remove();
+            this.$list.children(`[data-value="${value}"]`).remove();
 
             this.selected.splice(index, 1);
             this.trigger('change');
@@ -133,9 +133,9 @@ class TabListFieldView extends ArrayFieldView {
     }
 
     getGroupItemHtml(item) {
-        let label = item.text || '';
+        const label = item.text || '';
 
-        let $label = $('<span>').text(label);
+        const $label = $('<span>').text(label);
 
         let $icon = null;
 
@@ -145,12 +145,18 @@ class TabListFieldView extends ArrayFieldView {
                 .addClass('text-muted')
         }
 
+        if (item.type === 'url') {
+            $icon = $('<span>')
+                .addClass('fas fa-link fa-sm')
+                .addClass('text-muted')
+        }
+
         if (item.type === 'divider') {
             $label.addClass('text-soft')
                 .addClass('text-italic');
         }
 
-        let $item = $('<span>').append($label);
+        const $item = $('<span>').append($label);
 
         if ($icon) {
             $item.prepend(
@@ -189,11 +195,11 @@ class TabListFieldView extends ArrayFieldView {
     }
 
     fetchFromDom() {
-        let selected = [];
+        const selected = [];
 
         this.$el.find('.list-group .list-group-item').each((i, el) => {
-            let value = $(el).data('value').toString();
-            let groupItem = this.getGroupValueById(value);
+            const value = $(el).data('value').toString();
+            const groupItem = this.getGroupValueById(value);
 
             if (groupItem) {
                 selected.push(groupItem);
@@ -209,7 +215,7 @@ class TabListFieldView extends ArrayFieldView {
 
     getGroupIndexById(id) {
         for (let i = 0; i < this.selected.length; i++) {
-            let item = this.selected[i];
+            const item = this.selected[i];
 
             if (item && typeof item === 'object') {
                 if (item.id === id) {
@@ -222,7 +228,7 @@ class TabListFieldView extends ArrayFieldView {
     }
 
     getGroupValueById(id) {
-        for (let item of this.selected) {
+        for (const item of this.selected) {
             if (item && typeof item === 'object') {
                 if (item.id === id) {
                     return item;
@@ -234,20 +240,24 @@ class TabListFieldView extends ArrayFieldView {
     }
 
     editGroup(id) {
-        let item = Espo.Utils.cloneDeep(this.getGroupValueById(id) || {});
+        const item = Espo.Utils.cloneDeep(this.getGroupValueById(id) || {});
 
-        let index = this.getGroupIndexById(id);
-        let tabList = Espo.Utils.cloneDeep(this.selected);
+        const index = this.getGroupIndexById(id);
+        const tabList = Espo.Utils.cloneDeep(this.selected);
 
-        let view = item.type === 'divider' ?
-            'views/settings/modals/edit-tab-divider' :
-            'views/settings/modals/edit-tab-group';
+        const view = {
+            divider: 'views/settings/modals/edit-tab-divider',
+            url: 'views/settings/modals/edit-tab-url'
+        }[item.type] ||  'views/settings/modals/edit-tab-group';
 
-        this.createView('dialog', view, {itemData: item}, view => {
+        this.createView('dialog', view, {
+            itemData: item,
+            parentType: this.model.entityType,
+        }, view => {
             view.render();
 
             this.listenToOnce(view, 'apply', itemData => {
-                for (let a in itemData) {
+                for (const a in itemData) {
                     tabList[index][a] = itemData[a];
                 }
 

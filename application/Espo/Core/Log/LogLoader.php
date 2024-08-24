@@ -29,20 +29,20 @@
 
 namespace Espo\Core\Log;
 
+use Espo\Core\ApplicationState;
+use Espo\Core\Log\Handler\DatabaseHandler;
 use Espo\Core\Log\Handler\EspoFileHandler;
 use Espo\Core\Log\Handler\EspoRotatingFileHandler;
+use Espo\Core\ORM\EntityManagerProxy;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 
 use Monolog\ErrorHandler as MonologErrorHandler;
-use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Logger;
 
 class LogLoader
 {
-    private const LINE_FORMAT = "[%datetime%] %level_name%: %message% %context% %extra%\n";
-    private const DATE_FORMAT = 'Y-m-d H:i:s';
     private const PATH = 'data/logs/espo.log';
 
     private const MAX_FILE_NUMBER = 30;
@@ -50,7 +50,9 @@ class LogLoader
 
     public function __construct(
         private readonly Config $config,
-        private readonly HandlerListLoader $handlerListLoader
+        private readonly HandlerListLoader $handlerListLoader,
+        private readonly EntityManagerProxy $entityManagerProxy,
+        private readonly ApplicationState $applicationState
     ) {}
 
     public function load(): Log
@@ -68,6 +70,10 @@ class LogLoader
             $handlerList = [$this->createDefaultHandler()];
         }
 
+        if ($this->config->get('logger.databaseHandler')) {
+            $handlerList[] = $this->createDatabaseHandler();
+        }
+
         foreach ($handlerList as $handler) {
             $log->pushHandler($handler);
         }
@@ -83,8 +89,8 @@ class LogLoader
     private function createDefaultHandler(): HandlerInterface
     {
         $path = $this->config->get('logger.path') ?? self::PATH;
-        $rotation = $this->config->get('logger.rotation') ?? true;
         $level = $this->config->get('logger.level') ?? self::DEFAULT_LEVEL;
+        $rotation = $this->config->get('logger.rotation') ?? true;
 
         $levelCode = Logger::toMonologLevel($level);
 
@@ -97,15 +103,26 @@ class LogLoader
             $handler = new EspoFileHandler($this->config, $path, $levelCode, true);
         }
 
-        $formatter = new LineFormatter(
-            self::LINE_FORMAT,
-            self::DATE_FORMAT,
-            false,
-            true
-        );
+        $formatter = new DefaultFormatter($this->printTrace());
 
         $handler->setFormatter($formatter);
 
         return $handler;
+    }
+
+    private function printTrace(): bool
+    {
+        return (bool) $this->config->get('logger.printTrace');
+    }
+
+    private function createDatabaseHandler(): HandlerInterface
+    {
+        $rawLevel = $this->config->get('logger.databaseHandlerLevel') ??
+            $this->config->get('logger.level') ??
+            self::DEFAULT_LEVEL;
+
+        $level = Logger::toMonologLevel($rawLevel);
+
+        return new DatabaseHandler($level, $this->entityManagerProxy, $this->applicationState);
     }
 }

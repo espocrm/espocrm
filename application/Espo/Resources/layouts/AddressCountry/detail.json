@@ -1,0 +1,14 @@
+[
+    {
+        "rows": [
+            [
+                {"name": "name"},
+                {"name": "code"}
+            ],
+            [
+                {"name": "isPreferred"},
+                false
+            ]
+        ]
+    }
+]

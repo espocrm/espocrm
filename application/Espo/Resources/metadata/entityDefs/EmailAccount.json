@@ -58,7 +58,11 @@
             "type": "bool"
         },
         "fetchSince": {
-            "type": "date"
+            "type": "date",
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\InboundEmail\\FetchSince\\Required"
+            ],
+            "forceValidation": true
         },
         "fetchData": {
             "type": "jsonObject",
@@ -82,6 +86,10 @@
             "type": "link",
             "required": true,
             "view": "views/fields/assigned-user"
+        },
+        "connectedAt": {
+            "type": "datetime",
+            "readOnly": true
         },
         "useImap": {
             "type": "bool",

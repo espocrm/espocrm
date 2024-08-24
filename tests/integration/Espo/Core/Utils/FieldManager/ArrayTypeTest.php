@@ -75,7 +75,7 @@ class ArrayTypeTest extends \tests\integration\Core\BaseTestCase
         $app = $this->createApplication();
 
         $metadata = $app->getContainer()->get('metadata');
-        $savedFieldDefs = $metadata->get('entityDefs.Account.fields.testArray');
+        $savedFieldDefs = $metadata->get('entityDefs.Account.fields.cTestArray');
 
         $this->assertArrayHasKey('type', $savedFieldDefs);
         $this->assertArrayHasKey('isCustom', $savedFieldDefs);
@@ -87,13 +87,13 @@ class ArrayTypeTest extends \tests\integration\Core\BaseTestCase
         $account = $entityManager->getEntity('Account');
         $account->set([
             'name' => 'Test',
-            'testArray' => ['option1', 'option3']
+            'cTestArray' => ['option1', 'option3']
         ]);
 
         $entityManager->saveEntity($account);
 
         $account = $entityManager->getEntity('Account', $account->id);
-        $this->assertEquals(['option1', 'option3'], $account->get('testArray'));
+        $this->assertEquals(['option1', 'option3'], $account->get('cTestArray'));
     }
 
     public function testUpdate()
@@ -107,14 +107,14 @@ class ArrayTypeTest extends \tests\integration\Core\BaseTestCase
         $fieldDefs = get_object_vars(json_decode($this->jsonFieldDefs));
         $fieldDefs['required'] = true;
 
-        $fieldManager->update('Account', 'testArray', $fieldDefs);
+        $fieldManager->update('Account', 'cTestArray', $fieldDefs);
 
         $this->getContainer()->get('dataManager')->rebuild(['Account']);
 
         $app = $this->createApplication();
 
         $metadata = $app->getContainer()->get('metadata');
-        $savedFieldDefs = $metadata->get('entityDefs.Account.fields.testArray');
+        $savedFieldDefs = $metadata->get('entityDefs.Account.fields.cTestArray');
 
         $this->assertTrue($savedFieldDefs['required']);
 

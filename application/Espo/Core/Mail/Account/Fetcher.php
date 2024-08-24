@@ -32,6 +32,8 @@ namespace Espo\Core\Mail\Account;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Mail\Account\Storage\Flag;
+use Espo\Core\Mail\Exceptions\ImapError;
+use Espo\Core\Mail\Exceptions\NoImap;
 use Espo\Core\Mail\Importer;
 use Espo\Core\Mail\Importer\Data as ImporterData;
 use Espo\Core\Mail\ParserFactory;
@@ -69,6 +71,8 @@ class Fetcher
 
     /**
      * @throws Error
+     * @throws ImapError
+     * @throws NoImap
      */
     public function fetch(Account $account): void
     {
@@ -114,7 +118,7 @@ class Fetcher
         catch (Throwable $e) {
             $this->log->error(
                 "{$account->getEntityType()} {$account->getId()}, " .
-                "could not select folder '{$folder}'; [{$e->getCode()}] {$e->getMessage()}"
+                "could not select folder '$folder'; [{$e->getCode()}] {$e->getMessage()}"
             );
 
             return;
@@ -359,7 +363,7 @@ class Fetcher
             );
         }
 
-        return BeforeFetchHookResult::create()->withToSkip(true);
+        return BeforeFetchHookResult::create()->withToSkip();
     }
 
     /**
@@ -412,13 +416,9 @@ class Fetcher
         }
 
         try {
-            $size = $storage->getSize((int) $id);
+            $size = $storage->getSize($id);
         }
-        catch (Throwable $e) {
-            return false;
-        }
-
-        if (!is_int($size)) {
+        catch (Throwable) {
             return false;
         }
 

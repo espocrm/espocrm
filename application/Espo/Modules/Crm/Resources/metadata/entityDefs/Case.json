@@ -15,8 +15,10 @@
             "default": "New",
             "style": {
                 "Closed": "success",
-                "Duplicate": "danger",
-                "Rejected": "danger"
+                "Assigned": "primary",
+                "Duplicate": "info",
+                "Pending": "warning",
+                "Rejected": "info"
             },
             "audited": true,
             "fieldManagerAdditionalParamList": [
@@ -68,6 +70,15 @@
         "inboundEmail": {
             "type": "link",
             "readOnly": true
+        },
+        "originalEmail": {
+            "type": "link",
+            "notStorable": true,
+            "orderDisabled": true,
+            "entity": "Email",
+            "customizationDisabled": true,
+            "layoutAvailabilityList": [],
+            "directAccessDisabled": true
         },
         "createdAt": {
             "type": "datetime",

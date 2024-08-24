@@ -26,26 +26,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/preferences/fields/auto-follow-entity-type-list', ['views/fields/multi-enum'], function (Dep) {
+import MultiEnumFieldView from 'views/fields/multi-enum';
 
-    return Dep.extend({
+// noinspection JSUnusedGlobalSymbols
+export default class extends MultiEnumFieldView {
 
-        setup: function () {
-            this.params.options = Object.keys(this.getMetadata().get('scopes'))
-                .filter(scope => {
-                    if (this.getMetadata().get('scopes.' + scope + '.disabled')) {
-                        return;
-                    }
+    setup() {
+        this.params.options = Object.keys(this.getMetadata().get('scopes'))
+            .filter(scope => {
+                if (this.getMetadata().get(`scopes.${scope}.disabled`)) {
+                    return;
+                }
 
-                    return this.getMetadata().get('scopes.' + scope + '.entity') &&
-                        this.getMetadata().get('scopes.' + scope + '.stream');
-                })
-                .sort((v1, v2) => {
-                    return this.translate(v1, 'scopeNamesPlural')
-                        .localeCompare(this.translate(v2, 'scopeNamesPlural'));
-                });
+                return this.getMetadata().get(`scopes.${scope}.entity`) &&
+                    this.getMetadata().get(`scopes.${scope}.stream`);
+            })
+            .sort((v1, v2) => {
+                return this.translate(v1, 'scopeNamesPlural')
+                    .localeCompare(this.translate(v2, 'scopeNamesPlural'));
+            });
 
-            Dep.prototype.setup.call(this);
-        },
-    });
-});
+        super.setup();
+    }
+}

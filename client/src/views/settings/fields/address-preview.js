@@ -26,38 +26,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/address-preview', ['views/fields/address'], function (Dep) {
+import AddressFieldView from 'views/fields/address';
 
-    return Dep.extend({
+export default class extends AddressFieldView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            var mainModel = this.model;
-            var model = mainModel.clone();
+        const mainModel = this.model;
+        const model = mainModel.clone();
 
-            model.entityType = mainModel.entityType;
-            model.name = mainModel.name;
+        model.entityType = mainModel.entityType;
+        model.name = mainModel.name;
 
-            model.set({
-                addressPreviewStreet: 'Street',
-                addressPreviewPostalCode: 'PostalCode',
-                addressPreviewCity: 'City',
-                addressPreviewState: 'State',
-                addressPreviewCountry: 'Country',
-            });
+        model.set({
+            addressPreviewStreet: 'Street',
+            addressPreviewPostalCode: 'PostalCode',
+            addressPreviewCity: 'City',
+            addressPreviewState: 'State',
+            addressPreviewCountry: 'Country',
+        });
 
-            this.listenTo(mainModel, 'change:addressFormat', () => {
-                model.set('addressFormat', mainModel.get('addressFormat'));
+        this.listenTo(mainModel, 'change:addressFormat', () => {
+            model.set('addressFormat', mainModel.get('addressFormat'));
 
-                this.reRender();
-            });
+            this.reRender();
+        });
 
-            this.model = model;
-        },
+        this.model = model;
+    }
 
-        getAddressFormat: function () {
-            return this.model.get('addressFormat') || 1;
-        },
-    });
-});
+    getAddressFormat() {
+        return this.model.get('addressFormat') || 1;
+    }
+}

@@ -26,17 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-template/record/edit-quick',
-['views/record/edit', 'views/email-template/record/detail'], function (Dep, Detail) {
+import EditRecordView from 'views/record/edit';
+import Detail from 'views/email-template/record/detail';
 
-    return Dep.extend({
+export default class extends EditRecordView {
 
-    	isWide: true,
-        sideView: false,
+    isWide = true
+    sideView = false
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-            Detail.prototype.listenToInsertField.call(this);
-        },
-    });
-});
+    setup() {
+        super.setup();
+        Detail.prototype.listenToInsertField.call(this);
+    }
+}

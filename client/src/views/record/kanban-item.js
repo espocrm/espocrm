@@ -39,8 +39,6 @@ class KanbanRecordItem extends View {
         };
     }
 
-    events = {}
-
     setup() {
         this.itemLayout = this.options.itemLayout;
         this.rowActionsView = this.options.rowActionsView;
@@ -56,6 +54,7 @@ class KanbanRecordItem extends View {
                 name: name,
                 isAlignRight: item.align === 'right',
                 isLarge: item.isLarge,
+                isMuted: item.isMuted,
                 isFirst: i === 0,
                 key: key,
             };
@@ -95,6 +94,7 @@ class KanbanRecordItem extends View {
                 selector: '.item-menu-container',
                 model: this.model,
                 acl: acl,
+                moveOverRowAction: this.options.moveOverRowAction,
                 statusFieldIsEditable: this.options.statusFieldIsEditable,
                 rowActionHandlers: this.options.rowActionHandlers || {},
                 additionalActionList: this.options.additionalRowActionList,

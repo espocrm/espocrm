@@ -39,6 +39,8 @@ class ColorpickerFieldView extends VarcharFieldView {
     setup() {
         super.setup();
 
+        this.params.maxLength = 7;
+
         this.wait(Espo.loader.requirePromise('lib!bootstrap-colorpicker'));
     }
 
@@ -46,12 +48,24 @@ class ColorpickerFieldView extends VarcharFieldView {
         super.afterRender();
 
         if (this.isEditMode()) {
-            let isModal = !!this.$el.closest('.modal').length;
+            const isModal = !!this.$el.closest('.modal').length;
 
             // noinspection JSUnresolvedReference
             this.$element.parent().colorpicker({
                 format: 'hex',
                 container: isModal ? this.$el : false,
+                sliders: {
+                    saturation: {
+                        maxLeft: 200,
+                        maxTop: 200,
+                    },
+                    hue: {
+                        maxTop: 200,
+                    },
+                    alpha: {
+                        maxTop: 200,
+                    },
+                },
             });
 
             if (isModal) {

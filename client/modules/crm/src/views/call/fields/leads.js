@@ -54,7 +54,7 @@ function (Dep, Contacts) {
                 var innerHtml = $(html).html();
 
                 innerHtml += (
-                    ' <span class="text-muted chevron-right"></span> ' +
+                    ' <span class="text-muted middle-dot"></span> ' +
                     '<a href="tel:' + number + '" class="small" data-phone-number="' + number + '" data-action="dial">' +
                     number + '</a>'
                 );

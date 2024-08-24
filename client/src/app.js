@@ -57,6 +57,7 @@ import Ajax from 'ajax';
 import NumberUtil from 'number-util';
 import PageTitle from 'page-title';
 import BroadcastChannel from 'broadcast-channel';
+import uiAppInit from 'ui/app-init';
 
 /**
  * A main application class.
@@ -78,7 +79,7 @@ class App {
          * @private
          * @type {string}
          */
-        this.id = options.id || 'espocrm-application-id';
+        this.id = options.id || 'espocrm';
 
         /**
          * Use cache.
@@ -126,7 +127,7 @@ class App {
         this.initCache(options)
             .then(() => this.init(options, callback));
 
-        this.initDomEventListeners();
+        uiAppInit();
     }
 
     /**
@@ -1402,29 +1403,6 @@ class App {
 
                 this.logout(true);
             }
-        });
-    }
-
-    /**
-     * @private
-     */
-    initDomEventListeners() {
-        $(document).on('keydown.espo.button', e => {
-            if (
-                e.code !== 'Enter' ||
-                e.target.tagName !== 'A' ||
-                e.target.getAttribute('role') !== 'button' ||
-                e.target.getAttribute('href') ||
-                e.ctrlKey ||
-                e.altKey ||
-                e.metaKey
-            ) {
-                return;
-            }
-
-            $(e.target).click();
-
-            e.preventDefault();
         });
     }
 

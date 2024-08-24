@@ -1,18 +1,21 @@
 {
   "fields": {
-    "name": "İsim",
-    "roles": "Görevler",
-    "positionList": "Pozisyon Listesi"
+    "name": "Ad",
+    "roles": "Roller",
+    "positionList": "Pozisyon Listesi",
+    "workingTimeCalendar": "Çalışma Süresi Takvimi"
   },
   "links": {
     "users": "Kullanıcılar",
     "notes": "Notlar",
     "roles": "Roller",
-    "inboundEmails": "Grup E-posta Hesapları"
+    "inboundEmails": "Grup Eposta Hesapları",
+    "workingTimeCalendar": "Çalışma Süresi Takvimi",
+    "groupEmailFolders": "Grup Eposta Klasörü"
   },
   "tooltips": {
     "roles": "Rollere Erişim. Bu ekibin kullanıcıları, seçilen rollerden erişim kontrolü düzeyi elde eder.",
-    "positionList": "Bu takımda mevcut pozisyonlar. Örneğin Satış Görevlisi, Müdür."
+    "positionList": "Bu takımdaki mevcut pozisyonlar. Örn, Satış Görevlisi, Müdür."
   },
   "labels": {
     "Create Team": "Takım Oluştur"

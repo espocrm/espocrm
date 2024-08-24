@@ -51,10 +51,20 @@ class KanbanRecordView extends ListRecordView {
     showMore = true
     quickDetailDisabled = false
     quickEditDisabled = false
-    listLayout = null
     _internalLayout = null
     buttonsDisabled = false
     backDragStarted = true
+    paginationDisabled = true
+
+    /**
+     * @private
+     * @type {{
+     *     list: Record[],
+     *     total: number,
+     *     name: string,
+     * }[]}
+     */
+    groupRawDataList
 
     /**
      * A button list.
@@ -64,8 +74,72 @@ class KanbanRecordView extends ListRecordView {
      */
     buttonList = []
 
+    /**
+     * @private
+     * @type {import('collection').default}
+     */
+    seedCollection
+
+    /**
+     * Layout item definitions.
+     *
+     * @typedef module:views/record/kanban~layoutItemDefs
+     * @type {Object}
+     * @property {string} name A name (usually a field name).
+     * @property {string} [view] An overridden field view name.
+     * @property {boolean} [link] To use `listLink` mode (link to the detail view).
+     * @property {'left'|'right'} [align] An alignment.
+     * @property {boolean} [isLarge] Large.
+     * @property {boolean} [isMuted] Muted.
+     * @property {boolean} [hidden] Hidden by default.
+     */
+
+    /**
+     * Kanban view options.
+     *
+     * @typedef {Record} module:views/record/kanban~options
+     * @property {import('collection').default} collection A collection.
+     * @property {module:views/record/kanban~layoutItemDefs[]} [listLayout] A layout.
+     * @property {boolean} [keepCurrentRootUrl] Keep a current root URL.
+     * @property {string|'kanban'} [type] A type.
+     * @property {boolean} [rowActionsDisabled] Disable row actions.
+     * @property {boolean} [buttonsDisabled] Disable buttons.
+     * @property {Record} [rowActionsOptions] Row-actions options.
+     * @property {string[]} [additionalRowActionList] Additional row-action list.
+     * @property {import('helpers/list/settings').default} [settingsHelper] A settings helper.
+     * @property {string} [layoutName] A layout name.
+     * @property {boolean} [skipBuildRows] Do not build rows on initialization. Use when the collection will be fetched
+     *    afterward.
+     * @property {boolean} [rowActionsDisabled] Disable row actions.
+     * @property {boolean} [displayTotalCount] Display total count.
+     * @property {boolean} [showCount] To show a record count.
+     * @property {boolean} [topBarDisabled] Disable the top bar.
+     * @property {function(string, string[]): Promise} [onGroupOrder] On group order function.
+     * @property {function(string): Promise<Record>} [getCreateAttributes] Get create attributes function.
+     * @property {function(string)} [createActionHandler] A create handler.
+     * @property {string} [statusField] A status field.
+     * @property {boolean} [canChangeGroup] Can change group.
+     * @property {boolean} [canCreate] Can create.
+     * @property {boolean} [canReOrder] Can re-order.
+     * @property {boolean} [moveOverRowAction] Enable a move-over row action.
+     */
+
+    /**
+     * @param {module:views/record/kanban~options} options Options.
+     */
+    constructor(options) {
+        super(options);
+
+        /** @private */
+        this.onGroupOrder = options.onGroupOrder;
+        /** @private */
+        this.getCreateAttributes = options.getCreateAttributes;
+        /** @private */
+        this.createActionHandler = options.createActionHandler;
+    }
+
     events = {
-         /** @this KanbanRecordView */
+        /** @this KanbanRecordView */
         'click a.link': function (e) {
             if (e.ctrlKey || e.metaKey || e.shiftKey) {
                 return;
@@ -113,6 +187,10 @@ class KanbanRecordView extends ListRecordView {
         },
         /** @this KanbanRecordView */
         'mouseenter th.group-header': function (e) {
+            if (!this.isCreatable) {
+                return;
+            }
+
             const group = $(e.currentTarget).attr('data-name');
 
             this.showPlus(group);
@@ -173,25 +251,32 @@ class KanbanRecordView extends ListRecordView {
 
     // noinspection JSCheckFunctionSignatures
     data() {
+        const topBar = !this.options.topBarDisabled && (
+            this.displayTotalCount ||
+            this.buttonList.length &&
+            !this.buttonsDisabled ||
+            !!this._listSettingsHelper
+        );
+
         // noinspection JSValidateTypes
         return {
             scope: this.scope,
             header: this.header,
-            topBar: this.displayTotalCount || this.buttonList.length && !this.buttonsDisabled,
+            topBar: topBar,
             showCount: this.showCount && this.collection.total > 0,
             buttonList: this.buttonList,
-            displayTotalCount: this.displayTotalCount && this.collection.total >= 0,
+            displayTotalCount: this.displayTotalCount && this.collection.total >= 0 && !this._renderEmpty,
             totalCount: this.collection.total,
-            statusList: this.statusList,
             groupDataList: this.groupDataList,
-            minTableWidthPx: this.minColumnWidthPx * this.statusList.length,
+            minTableWidthPx: this.minColumnWidthPx * this.groupDataList.length,
             isEmptyList: this.collection.models.length === 0,
             totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
-            isCreatable: this.isCreatable,
+            noDataDisabled: this._renderEmpty,
         };
     }
 
     init() {
+        /** @type {module:views/record/list~columnDefs[]|null} */
         this.listLayout = this.options.listLayout || this.listLayout;
         this.type = this.options.type || this.type;
 
@@ -223,6 +308,11 @@ class KanbanRecordView extends ListRecordView {
             throw new Error('Collection has not been injected into Record.List view.');
         }
 
+        this.listenTo(this.collection, 'sync', (c, response) => {
+            // noinspection JSUnresolvedReference
+            this.groupRawDataList = response.groups;
+        });
+
         this.layoutLoadCallbackList = [];
 
         this.entityType = this.collection.entityType || null;
@@ -242,40 +332,29 @@ class KanbanRecordView extends ListRecordView {
             this.displayTotalCount = this.options.displayTotalCount;
         }
 
-        if (this.getUser().isPortal() && !this.portalLayoutDisabled) {
-            if (
-                this.getMetadata()
-                    .get(['clientDefs', this.scope, 'additionalLayouts', this.layoutName + 'Portal'])
-            ) {
-                this.layoutName += 'Portal';
+        if (
+            this.getUser().isPortal() &&
+            !this.portalLayoutDisabled &&
+            this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts', this.layoutName + 'Portal'])
+        ) {
+            this.layoutName += 'Portal';
+        }
+
+        if ('canReOrder' in this.options) {
+            this.orderDisabled = !this.options.canReOrder;
+        } else {
+            this.orderDisabled = this.getMetadata().get(['scopes', this.scope, 'kanbanOrderDisabled']);
+
+            if (this.getUser().isPortal()) {
+                this.orderDisabled = true;
             }
         }
 
-        this.orderDisabled = this.getMetadata().get(['scopes', this.scope, 'kanbanOrderDisabled']);
-
-        if (this.getUser().isPortal()) {
-            this.orderDisabled = true;
-        }
-
-        this.statusField = this.getMetadata().get(['scopes', this.scope, 'statusField']);
+        this.statusField = this.options.statusField || this.getMetadata().get(['scopes', this.scope, 'statusField']);
 
         if (!this.statusField) {
-            throw new Error("No status field for entity type '" + this.scope + "'.");
+            throw new Error(`No status field for entity type '${this.scope}'.`);
         }
-
-        this.statusList = Espo.Utils.clone(this.getMetadata().get(
-            ['entityDefs', this.scope, 'fields', this.statusField, 'options'])
-        );
-
-        const statusIgnoreList = this.getMetadata().get(['scopes', this.scope, 'kanbanStatusIgnoreList']) || [];
-
-        this.statusList = this.statusList.filter((item) => {
-            if (~statusIgnoreList.indexOf(item)) {
-                return;
-            }
-
-            return true;
-        });
 
         this.seedCollection = this.collection.clone();
         this.seedCollection.reset();
@@ -286,8 +365,11 @@ class KanbanRecordView extends ListRecordView {
         this.seedCollection.order = this.collection.defaultOrder;
 
         this.setupRowActionDefs();
+        this.setupSettings();
 
         this.listenTo(this.collection, 'sync', () => {
+            this._renderEmpty = false;
+
             if (this.hasView('modal') && this.getView('modal').isRendered()) {
                 return;
             }
@@ -312,13 +394,30 @@ class KanbanRecordView extends ListRecordView {
             $(window).off('resize.kanban-' + this.cid);
         });
 
-        this.statusFieldIsEditable =
-            this.getAcl().checkScope(this.entityType, 'edit') &&
-            !this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit').includes(this.statusField) &&
-            !this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) &&
-            !this.getMetadata().get(['entityDefs', this.entityType, 'fields', this.statusField, 'readOnly']);
+        if ('canChangeGroup' in this.options) {
+            this.statusFieldIsEditable = this.options.canChangeGroup;
+        } else {
+            this.statusFieldIsEditable =
+                this.getAcl().checkScope(this.entityType, 'edit') &&
+                !this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit').includes(this.statusField) &&
+                !this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) &&
+                !this.getMetadata().get(['entityDefs', this.entityType, 'fields', this.statusField, 'readOnly']);
+        }
 
-        this.isCreatable = this.statusFieldIsEditable && this.getAcl().check(this.entityType, 'create');
+        if ('canCreate' in this.options) {
+            this.isCreatable = this.options.canCreate;
+        } else {
+            this.isCreatable = this.statusFieldIsEditable && this.getAcl().check(this.entityType, 'create');
+        }
+
+        /** @private */
+        this.moveOverRowAction = true;
+
+        if ('moveOverRowAction' in this.options) {
+            this.moveOverRowAction = this.options.moveOverRowAction;
+        }
+
+        this._renderEmpty = this.options.skipBuildRows;
 
         this.wait(
             this.getHelper().processSetupHandlers(this, 'record/kanban')
@@ -352,11 +451,10 @@ class KanbanRecordView extends ListRecordView {
 
         this.plusElementMap = {};
 
-        this.statusList.forEach(status => {
-            const value = status.replace(/"/g, '\\"');
+        this.groupDataList.forEach(item => {
+            const value = item.name.replace(/"/g, '\\"');
 
-            this.plusElementMap[status] = this.$el
-                .find('.kanban-head .create-button[data-group="' + value + '"]');
+            this.plusElementMap[item.name] = this.$el.find(`.kanban-head .create-button[data-group="${value}"]`);
         });
     }
 
@@ -577,6 +675,10 @@ class KanbanRecordView extends ListRecordView {
             ids.unshift(id);
         }
 
+        if (this.onGroupOrder) {
+            return this.onGroupOrder(group, ids);
+        }
+
         return Espo.Ajax.putRequest('Kanban/order', {
             entityType: this.entityType,
             group: group,
@@ -674,7 +776,7 @@ class KanbanRecordView extends ListRecordView {
 
         const containerEl = this.$container.get(0);
 
-        if (containerEl.scrollWidth > containerEl.clientWidth) {
+        if (containerEl && containerEl.scrollWidth > containerEl.clientWidth) {
             height -= 18;
         }
 
@@ -713,24 +815,34 @@ class KanbanRecordView extends ListRecordView {
     }
 
     buildRows(callback) {
-        // noinspection JSUnresolvedReference
-        const groupList = (this.collection.dataAdditional || {}).groupList || [];
+        const groupList = this.groupRawDataList || [];
 
         this.collection.reset();
 
-        this.collection.subCollectionList = [];
+        /** @type {import('collection').default[]} */
+        this.subCollectionList = [];
 
         this.wait(true);
 
+        /**
+         * @type {{
+         *     name: string,
+         *     label: string,
+         *     style: string,
+         *     hasShowMore: boolean,
+         *     collection: import('collection').default,
+         *     dataList: Record[],
+         * }[]}
+         */
         this.groupDataList = [];
 
         let count = 0;
         let loadedCount = 0;
 
-        this.getListLayout((listLayout) => {
+        this.getListLayout(listLayout => {
             this.listLayout = listLayout;
 
-            groupList.forEach((item, i) => {
+            groupList.forEach(item => {
                 const collection = this.seedCollection.clone();
 
                 this.listenTo(collection, 'destroy', (model, attributes, o) => {
@@ -742,10 +854,8 @@ class KanbanRecordView extends ListRecordView {
                 });
 
                 collection.total = item.total;
-
                 collection.url = this.collection.url;
                 collection.where = this.collection.where;
-
                 collection.entityType = this.seedCollection.entityType;
                 collection.maxSize = this.seedCollection.maxSize;
                 collection.orderBy = this.seedCollection.orderBy;
@@ -759,11 +869,10 @@ class KanbanRecordView extends ListRecordView {
                     }
                 ];
 
-                collection.groupName = item.name;
-                collection.set(item.list);
+                collection.data.groupName = item.name;
+                collection.add(item.list);
 
-                this.collection.subCollectionList.push(collection);
-
+                this.subCollectionList.push(collection);
                 this.collection.add(collection.models);
 
                 const itemDataList = [];
@@ -777,24 +886,19 @@ class KanbanRecordView extends ListRecordView {
                     });
                 });
 
-                let nextStyle = null;
+                const style = item.style ||
+                    this.getMetadata().get(`entityDefs.${this.scope}.fields.${this.statusField}.style.${item.name}`);
 
-                if (i < groupList.length - 1) {
-                    nextStyle = this.getMetadata()
-                        .get(['entityDefs', this.scope, 'fields', this.statusField,
-                            'style', groupList[i + 1].name]);
-                }
+                const label = item.label ||
+                    this.getLanguage().translateOption(item.name, this.statusField, this.scope);
 
                 const o = {
                     name: item.name,
-                    label: this.getLanguage().translateOption(item.name, this.statusField, this.scope),
+                    label: label,
                     dataList: itemDataList,
                     collection: collection,
-                    isLast: i === groupList.length - 1,
                     hasShowMore: collection.total > collection.length || collection.total === -1,
-                    style: this.getMetadata()
-                        .get(['entityDefs', this.scope, 'fields', this.statusField, 'style', item.name]),
-                    nextStyle: nextStyle,
+                    style: style,
                 };
 
                 this.groupDataList.push(o);
@@ -833,26 +937,53 @@ class KanbanRecordView extends ListRecordView {
     buildRow(i, model, callback) {
         const key = model.id;
 
+        const hiddenMap = this._listSettingsHelper ?
+            this._listSettingsHelper.getHiddenColumnMap() : {};
+
+        const itemLayout = this.listLayout.filter(item => {
+            const name = item.name;
+
+            if (!name) {
+                return true;
+            }
+
+            if (hiddenMap[name]) {
+                return false;
+            }
+
+            if (item.hidden && !(name in hiddenMap)) {
+                return false;
+            }
+
+            return true;
+        });
+
         this.createView(key, this.itemViewName, {
             model: model,
-            selector: '.item[data-id="'+model.id+'"]',
-            itemLayout: this.listLayout,
+            selector: `.item[data-id="${model.id}"]`,
+            itemLayout:  itemLayout,
             rowActionsDisabled: this.rowActionsDisabled,
             rowActionsView: this.rowActionsView,
             rowActionHandlers: this._rowActionHandlers || {},
             setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
             statusFieldIsEditable: this.statusFieldIsEditable,
+            moveOverRowAction: this.moveOverRowAction,
             additionalRowActionList: this._additionalRowActionList,
             scope: this.scope,
         }, callback);
     }
 
+    /**
+     * @param {string} id
+     */
     removeRecordFromList(id) {
         this.collection.remove(id);
 
         if (this.collection.total > 0) {
             this.collection.total--;
         }
+
+        this.collection.trigger('update-total');
 
         this.totalCount = this.collection.total;
 
@@ -862,7 +993,7 @@ class KanbanRecordView extends ListRecordView {
 
         this.$el.find('.item[data-id="'+id+'"]').remove();
 
-        this.collection.subCollectionList.forEach(collection => {
+        this.subCollectionList.forEach(collection => {
             if (collection.get(id)) {
                 collection.remove(id);
             }
@@ -894,7 +1025,7 @@ class KanbanRecordView extends ListRecordView {
         const id = model.id;
         const group = model.get(this.statusField);
 
-        this.collection.subCollectionList.forEach((collection) => {
+        this.subCollectionList.forEach((collection) => {
             if (collection.get(id)) {
                 collection.remove(id);
 
@@ -1030,8 +1161,8 @@ class KanbanRecordView extends ListRecordView {
     getGroupCollection(group) {
         let collection = null;
 
-        this.collection.subCollectionList.forEach(itemCollection => {
-            if (itemCollection.groupName === group) {
+        this.subCollectionList.forEach(itemCollection => {
+            if (itemCollection.data.groupName === group) {
                 collection = itemCollection;
             }
         });
@@ -1068,35 +1199,48 @@ class KanbanRecordView extends ListRecordView {
     /**
      * @param {string} group
      */
-    actionCreateInGroup(group) {
-        const attributes = {};
+    async actionCreateInGroup(group) {
+        if (this.createActionHandler) {
+            this.createActionHandler(group);
 
-        attributes[this.statusField] = group;
+            return;
+        }
 
-        const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
+        const viewName = this.getMetadata().get(`clientDefs.${this.scope}.modalViews.edit`) ||
             'views/modals/edit';
+
+        const getCreateAttributes = () => {
+            if (this.getCreateAttributes) {
+                return this.getCreateAttributes(group);
+            }
+
+            return Promise.resolve({[this.statusField]: group});
+        };
+
+        const attributes = await getCreateAttributes();
 
         const options = {
             attributes: attributes,
             scope: this.scope,
         };
 
-        this.createView('quickCreate', viewName, options, /** module:views/modals/edit */view => {
-            view.getRecordView().setFieldReadOnly(this.statusField, true);
+        const view = /** @type {module:views/modals/edit} */
+            await this.createView('quickCreate', viewName, options);
 
-            view.render();
+        view.getRecordView().setFieldReadOnly(this.statusField, true);
 
-            this.listenToOnce(view, 'after:save', () => {
-                if (this.orderDisabled) {
-                    this.collection.fetch();
+        this.listenToOnce(view, 'after:save', () => {
+            if (this.orderDisabled) {
+                this.collection.fetch({maxSize: this.collection.maxSize});
 
-                    return;
-                }
+                return;
+            }
 
-                this.storeGroupOrder(group, view.model.id)
-                    .then(() => this.collection.fetch());
-            });
+            this.storeGroupOrder(group, view.model.id)
+                .then(() => this.collection.fetch({maxSize: this.collection.maxSize}));
         });
+
+        await view.render();
     }
 
     initBackDrag(e) {
@@ -1232,6 +1376,36 @@ class KanbanRecordView extends ListRecordView {
         if (!isLeft && !isRight) {
             this.sortWasCentered = true;
         }
+    }
+
+    /** @protected */
+    afterSettingsChange() {
+        Espo.Ui.notify(' ... ');
+
+        this.collection.fetch({maxSize: this.collection.maxSize})
+            .then(() => Espo.Ui.notify(false));
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Set can create.
+     *
+     * @param {boolean} canCreate
+     * @sinc 8.4.0
+     */
+    setCanCreate(canCreate) {
+        this.isCreatable = canCreate;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Set can re-order.
+     *
+     * @param {boolean} canReOrder
+     * @sinc 8.4.0
+     */
+    setCanReOrder(canReOrder) {
+        this.orderDisabled = !canReOrder;
     }
 }
 

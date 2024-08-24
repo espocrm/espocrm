@@ -9,5 +9,6 @@
     "emailAddress",
     "phoneNumber",
     "title",
-    "targetLists"
+    "targetLists",
+    "campaign"
 ]

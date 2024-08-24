@@ -10,7 +10,7 @@
         <span class="input-group-item input-group-item-middle">
             <input
                 type="input"
-                class="form-control phone-number no-margin-shifting"
+                class="form-control phone-number no-margin-shifting{{#if optOut}} text-strikethrough{{/if}}{{#if invalid}} text-danger{{/if}}"
                 value="{{phoneNumber}}"
                 autocomplete="espo-{{../name}}"
                 maxlength={{../itemMaxLength}}

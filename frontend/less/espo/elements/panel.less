@@ -29,6 +29,10 @@
 .panel > .panel-body.panel-body-form {
     padding-bottom: @panel-padding - @form-group-margin-bottom;
 
+    > .alert {
+        margin-bottom: @form-group-margin-bottom;
+    }
+
     > .button-container {
         padding-bottom: 12px;
     }
@@ -490,12 +494,24 @@ body {
             border-bottom-left-radius: var(--panel-border-radius);
             border-bottom-right-radius: var(--panel-border-radius);
 
-            > table,
+            > table:not(:has(+ .show-more)),
+            > table:has(+ .show-more.hidden),
             > .list-group,
             > .list-group:last-child > .list-group-item:last-child,
             > .show-more > a {
                 border-bottom-left-radius: var(--panel-border-radius);
                 border-bottom-right-radius: var(--panel-border-radius);
+            }
+
+            > table:not(:has(+ .show-more)) tr:last-child,
+            > table:has(+ .show-more.hidden) tr:last-child {
+                > td:first-child {
+                    border-bottom-left-radius: var(--panel-border-radius);
+                }
+
+                > td:last-child {
+                    border-bottom-right-radius: var(--panel-border-radius);
+                }
             }
         }
 
@@ -512,6 +528,7 @@ body {
             border-bottom-right-radius: 0;
 
             > table,
+            > table tr:last-child td,
             > .list-group,
             > .list-group:last-child > .list-group-item:last-child,
             > .show-more > a {
@@ -677,4 +694,51 @@ body {
 
 .panel-group-accordion > .panel {
     overflow: hidden;
+}
+
+.panel > .panel-body > .list-container > {
+    > .list > .list-group {
+        > .list-group-item {
+            border-width: 0;
+            border-bottom-width: 1px;
+        }
+
+        > li.list-group-item:first-child {
+            border-top-width: 1px;
+            border-top-color: transparent;
+        }
+
+        > li.list-group-item:last-child {
+            border-bottom-width: 0;
+        }
+    }
+
+    &:has(+ .list-container) {
+        > .list > .list-group {
+            > li.list-group-item:last-child {
+                border-bottom-width: 1px;
+            }
+        }
+    }
+}
+
+.panel > .panel-heading {
+    .panel-actions-container-left {
+        margin-left: -10px;
+    }
+
+    .panel-actions-container {
+        > span {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 14px;
+            line-height: 1.5;
+            float: left;
+        }
+    }
+}
+
+.panel.highlighted {
+    outline: 2px solid var(--brand-info);
+    outline-offset: -1px;
 }

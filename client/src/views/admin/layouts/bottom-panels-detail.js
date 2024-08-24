@@ -26,362 +26,369 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-panels-detail'], function (Dep) {
+import LayoutSidePanelsDetailView from 'views/admin/layouts/side-panels-detail';
 
-    return Dep.extend({
+class LayoutBottomPanelsDetail extends LayoutSidePanelsDetailView {
 
-        hasStream: true,
-        hasRelationships: true,
+    hasStream = true
+    hasRelationships = true
 
-        TAB_BREAK_KEY: '_tabBreak_{n}',
+    TAB_BREAK_KEY = '_tabBreak_{n}'
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.on('update-item', (name, attributes) => {
-                if (this.isTabName(name)) {
-                    const $li = $("#layout ul > li[data-name='" + name + "']");
+        this.on('update-item', (name, attributes) => {
+            if (this.isTabName(name)) {
+                const $li = $("#layout ul > li[data-name='" + name + "']");
 
-                    $li.find('.left > span')
-                        .text(this.composeTabBreakLabel(attributes));
-                }
-            });
-        },
+                $li.find('.left > span')
+                    .text(this.composeTabBreakLabel(attributes));
+            }
+        });
+    }
 
-        composeTabBreakLabel: function (item) {
-            let label = '. . . ' + this.translate('tabBreak', 'fields', 'LayoutManager');
+    composeTabBreakLabel(item) {
+        let label = '. . . ' + this.translate('tabBreak', 'fields', 'LayoutManager');
 
-            if (item.tabLabel) {
-                label += ' : ' + item.tabLabel;
+        if (item.tabLabel) {
+            label += ' : ' + item.tabLabel;
+        }
+
+        return label;
+    }
+
+    readDataFromLayout(layout) {
+        let panelListAll = [];
+        const labels = {};
+        const params = {};
+
+        layout = Espo.Utils.cloneDeep(layout);
+
+        if (
+            this.hasStream &&
+            (this.getMetadata().get(['scopes', this.scope, 'stream']) || this.scope === 'User')
+        ) {
+            panelListAll.push('stream');
+
+            labels['stream'] = this.translate('Stream');
+
+            params['stream'] = {
+                name: 'stream',
+                sticked: true,
+                index: 2,
+            };
+        }
+
+        (this.getMetadata()
+            .get(['clientDefs', this.scope, 'bottomPanels', this.viewType]) || []
+        ).forEach(item => {
+            if (!item.name) {
+                return;
             }
 
-            return label;
-        },
+            panelListAll.push(item.name);
 
-        readDataFromLayout: function (layout) {
-            let panelListAll = [];
-            const labels = {};
-            const params = {};
+            if (item.labelText) {
+                // @todo Revise.
+                labels[item.name] = item.labelText;
+            }
 
-            layout = Espo.Utils.cloneDeep(layout);
+            if (item.label) {
+                labels[item.name] = item.label;
+            }
 
-            if (
-                this.hasStream &&
-                (this.getMetadata().get(['scopes', this.scope, 'stream']) || this.scope === 'User')
-            ) {
-                panelListAll.push('stream');
+            params[item.name] = Espo.Utils.clone(item);
 
-                labels['stream'] = this.translate('Stream');
+            if ('order' in item) {
+                params[item.name].index = item.order;
+            }
+        });
 
-                params['stream'] = {
-                    name: 'stream',
-                    sticked: true,
-                    index: 2,
+        for (const name in layout) {
+            const item = layout[name];
+
+            if (item.tabBreak) {
+                panelListAll.push(name);
+
+                labels[name] = this.composeTabBreakLabel(item);
+
+                params[name] = {
+                    name: item.name,
+                    index: item.index,
+                    tabBreak: true,
+                    tabLabel: item.tabLabel || null,
                 };
             }
+        }
 
-            (this.getMetadata()
-                .get(['clientDefs', this.scope, 'bottomPanels', this.viewType]) || []
-            ).forEach(item => {
-                if (!item.name) {
+        this.links = {};
+
+        if (this.hasRelationships) {
+            /** @type {Record<string, Record>} */
+            const linkDefs = this.getMetadata().get(['entityDefs', this.scope, 'links']) || {};
+
+            Object.keys(linkDefs).forEach(link => {
+                if (
+                    linkDefs[link].disabled ||
+                    linkDefs[link].utility ||
+                    linkDefs[link].layoutRelationshipsDisabled
+                ) {
                     return;
                 }
 
-                panelListAll.push(item.name);
-
-                if (item.label) {
-                    labels[item.name] = item.label;
+                if (!~['hasMany', 'hasChildren'].indexOf(linkDefs[link].type)) {
+                    return;
                 }
 
-                params[item.name] = Espo.Utils.clone(item);
+                panelListAll.push(link);
 
-                if ('order' in item) {
-                    params[item.name].index = item.order;
-                }
-            });
+                labels[link] = this.translate(link, 'links', this.scope);
 
-            for (const name in layout) {
-                const item = layout[name];
+                const item = {
+                    name: link,
+                    index: 5,
+                };
 
-                if (item.tabBreak) {
-                    panelListAll.push(name);
-
-                    labels[name] = this.composeTabBreakLabel(item);
-
-                    params[name] = {
-                        name: item.name,
-                        index: item.index,
-                        tabBreak: true,
-                        tabLabel: item.tabLabel || null,
-                    };
-                }
-            }
-
-            this.links = {};
-
-            if (this.hasRelationships) {
-                const linkDefs = this.getMetadata().get(['entityDefs', this.scope, 'links']) || {};
-
-                Object.keys(linkDefs).forEach(link => {
-                    if (
-                        linkDefs[link].disabled ||
-                        linkDefs[link].utility ||
-                        linkDefs[link].layoutRelationshipsDisabled
-                    ) {
+                this.dataAttributeList.forEach(attribute => {
+                    if (attribute in item) {
                         return;
                     }
 
-                    if (!~['hasMany', 'hasChildren'].indexOf(linkDefs[link].type)) {
+                    const value = this.getMetadata()
+                        .get(['clientDefs', this.scope, 'relationshipPanels', item.name, attribute]);
+
+                    if (value === null) {
                         return;
                     }
 
-                    panelListAll.push(link);
-
-                    labels[link] = this.translate(link, 'links', this.scope);
-
-                    const item = {
-                        name: link,
-                        index: 5,
-                    };
-
-                    this.dataAttributeList.forEach(attribute => {
-                        if (attribute in item) {
-                            return;
-                        }
-
-                        const value = this.getMetadata()
-                            .get(['clientDefs', this.scope, 'relationshipPanels', item.name, attribute]);
-
-                        if (value === null) {
-                            return;
-                        }
-
-                        item[attribute] = value;
-                    });
-
-                    this.links[link] = true;
-
-                    params[item.name] = item;
+                    item[attribute] = value;
                 });
-            }
 
-            this.disabledFields = [];
+                this.links[link] = true;
 
-            layout = layout || {};
-
-            this.rowLayout = [];
-
-            panelListAll = panelListAll.sort((v1, v2) => {
-                return params[v1].index - params[v2].index
+                params[item.name] = item;
             });
+        }
 
-            panelListAll.push('_delimiter_');
+        this.disabledFields = [];
 
-            if (!layout['_delimiter_']) {
-                layout['_delimiter_'] = {
-                    disabled: true,
-                };
+        layout = layout || {};
+
+        this.rowLayout = [];
+
+        panelListAll = panelListAll.sort((v1, v2) => {
+            return params[v1].index - params[v2].index
+        });
+
+        panelListAll.push('_delimiter_');
+
+        if (!layout['_delimiter_']) {
+            layout['_delimiter_'] = {
+                disabled: true,
+            };
+        }
+
+        labels[this.TAB_BREAK_KEY] = '. . . ' + this.translate('tabBreak', 'fields', 'LayoutManager');
+
+        panelListAll.push(this.TAB_BREAK_KEY);
+
+        panelListAll.forEach((item, index) => {
+            let disabled = false;
+            const itemData = layout[item] || {};
+
+            if (itemData.disabled) {
+                disabled = true;
             }
 
-            labels[this.TAB_BREAK_KEY] = '. . . ' + this.translate('tabBreak', 'fields', 'LayoutManager');
-
-            panelListAll.push(this.TAB_BREAK_KEY);
-
-            panelListAll.forEach((item, index) => {
-                let disabled = false;
-                const itemData = layout[item] || {};
-
-                if (itemData.disabled) {
+            if (!layout[item]) {
+                if ((params[item] || {}).disabled) {
                     disabled = true;
                 }
+            }
 
+            if (this.links[item]) {
                 if (!layout[item]) {
-                    if ((params[item] || {}).disabled) {
-                        disabled = true;
-                    }
-                }
-
-                if (this.links[item]) {
-                    if (!layout[item]) {
-                        disabled = true;
-                    }
-                }
-
-                if (item === this.TAB_BREAK_KEY) {
                     disabled = true;
                 }
+            }
 
-                let labelText;
+            if (item === this.TAB_BREAK_KEY) {
+                disabled = true;
+            }
 
-                if (labels[item]) {
-                    labelText = this.getLanguage().translate(labels[item], 'labels', this.scope);
-                } else {
-                    labelText = this.getLanguage().translate(item, 'panels', this.scope);
-                }
+            let labelText;
 
-                if (disabled) {
-                    const o = {
-                        name: item,
-                        label: labelText,
-                    };
+            if (labels[item]) {
+                labelText = this.getLanguage().translate(labels[item], 'labels', this.scope);
+            } else {
+                labelText = this.getLanguage().translate(item, 'panels', this.scope);
+            }
 
-                    if (o.name[0] === '_') {
-                        if (o.name === '_delimiter_') {
-                            o.notEditable = true;
-                            o.label = '. . .';
-                        }
-                    }
-
-                    this.disabledFields.push(o);
-
-                    return;
-                }
-
+            if (disabled) {
                 const o = {
                     name: item,
-                    label: labelText,
+                    labelText: labelText,
                 };
 
                 if (o.name[0] === '_') {
                     if (o.name === '_delimiter_') {
                         o.notEditable = true;
-                        o.label = '. . .';
+                        o.labelText = '. . .';
                     }
                 }
 
-                if (o.name in params) {
-                    this.dataAttributeList.forEach(attribute => {
-                        if (attribute === 'name') {
-                            return;
-                        }
+                this.disabledFields.push(o);
 
-                        const itemParams = params[o.name] || {};
+                return;
+            }
 
-                        if (attribute in itemParams) {
-                            o[attribute] = itemParams[attribute];
-                        }
-                    });
+            const o = {
+                name: item,
+                labelText: labelText,
+            };
+
+            if (o.name[0] === '_') {
+                if (o.name === '_delimiter_') {
+                    o.notEditable = true;
+                    o.labelText = '. . .';
                 }
+            }
 
-                for (const i in itemData) {
-                    o[i] = itemData[i];
-                }
-
-                o.index = ('index' in itemData) ? itemData.index : index;
-
-                this.rowLayout.push(o);
-
-                this.itemsData[o.name] = Espo.Utils.cloneDeep(o);
-            });
-
-            this.rowLayout.sort((v1, v2) => {
-                return (v1.index || 0) - (v2.index || 0);
-            });
-        },
-
-        onDrop: function () {
-            let tabBreakIndex = -1;
-
-            let $tabBreak = null;
-
-            this.$el.find('ul.enabled').children().each((i, li) => {
-                const $li = $(li);
-                const name = $li.attr('data-name');
-
-                if (this.isTabName(name)) {
-                    if (name !== this.TAB_BREAK_KEY) {
-                        const itemIndex = parseInt(name.split('_')[2]);
-
-                        if (itemIndex > tabBreakIndex) {
-                            tabBreakIndex = itemIndex;
-                        }
+            if (o.name in params) {
+                this.dataAttributeList.forEach(attribute => {
+                    if (attribute === 'name') {
+                        return;
                     }
-                }
-            });
 
-            tabBreakIndex++;
+                    const itemParams = params[o.name] || {};
 
-            this.$el.find('ul.enabled').children().each((i, li) => {
-                const $li = $(li);
-                const name = $li.attr('data-name');
-
-                if (this.isTabName(name) && name === this.TAB_BREAK_KEY) {
-                    $tabBreak = $li.clone();
-
-                    const realName = this.TAB_BREAK_KEY.slice(0, -3) + tabBreakIndex;
-
-                    $li.attr('data-name', realName);
-
-                    delete this.itemsData[realName];
-                }
-            });
-
-            if (!$tabBreak) {
-                this.$el.find('ul.disabled').children().each((i, li) => {
-                    const $li = $(li);
-
-                    const name = $li.attr('data-name');
-
-                    if (this.isTabName(name) && name !== this.TAB_BREAK_KEY) {
-                        $li.remove();
+                    if (attribute in itemParams) {
+                        o[attribute] = itemParams[attribute];
                     }
                 });
             }
 
-            if ($tabBreak) {
-                $tabBreak.appendTo(this.$el.find('ul.disabled'));
-            }
-        },
-
-        isTabName: function (name) {
-            return name.substring(0, this.TAB_BREAK_KEY.length - 3) === this.TAB_BREAK_KEY.slice(0, -3);
-        },
-
-        getEditAttributesModalViewOptions: function (attributes) {
-            const options = Dep.prototype.getEditAttributesModalViewOptions.call(this, attributes);
-
-            if (this.isTabName(attributes.name)) {
-                options.attributeList = [
-                    'tabLabel',
-                ];
-
-                options.attributeDefs = {
-                    tabLabel: {
-                        type: 'varchar',
-                    },
-                };
+            for (const i in itemData) {
+                o[i] = itemData[i];
             }
 
-            return options;
-        },
+            o.index = ('index' in itemData) ? itemData.index : index;
 
-        fetch: function () {
-            const layout = Dep.prototype.fetch.call(this);
+            this.rowLayout.push(o);
 
-            const newLayout = {};
+            this.itemsData[o.name] = Espo.Utils.cloneDeep(o);
+        });
 
-            for (const name in layout) {
-                if (layout[name].disabled && this.links[name]) {
-                    continue;
-                }
+        this.rowLayout.sort((v1, v2) => {
+            return (v1.index || 0) - (v2.index || 0);
+        });
+    }
 
-                newLayout[name] = layout[name];
+    onDrop() {
+        let tabBreakIndex = -1;
 
-                if (this.isTabName(name) && name !== this.TAB_BREAK_KEY /*&& this.itemsData[name]*/) {
-                    const data = this.itemsData[name] || {};
+        let $tabBreak = null;
 
-                    newLayout[name].tabBreak = true;
-                    newLayout[name].tabLabel = data.tabLabel;
-                }
-                else {
-                   delete newLayout[name].tabBreak;
-                   delete newLayout[name].tabLabel;
+        this.$el.find('ul.enabled').children().each((i, li) => {
+            const $li = $(li);
+            const name = $li.attr('data-name');
+
+            if (this.isTabName(name)) {
+                if (name !== this.TAB_BREAK_KEY) {
+                    const itemIndex = parseInt(name.split('_')[2]);
+
+                    if (itemIndex > tabBreakIndex) {
+                        tabBreakIndex = itemIndex;
+                    }
                 }
             }
+        });
 
-            delete newLayout[this.TAB_BREAK_KEY];
+        tabBreakIndex++;
 
-            return newLayout;
-        },
-    });
-});
+        this.$el.find('ul.enabled').children().each((i, li) => {
+            const $li = $(li);
+            const name = $li.attr('data-name');
+
+            if (this.isTabName(name) && name === this.TAB_BREAK_KEY) {
+                $tabBreak = $li.clone();
+
+                const realName = this.TAB_BREAK_KEY.slice(0, -3) + tabBreakIndex;
+
+                $li.attr('data-name', realName);
+
+                delete this.itemsData[realName];
+            }
+        });
+
+        if (!$tabBreak) {
+            this.$el.find('ul.disabled').children().each((i, li) => {
+                const $li = $(li);
+
+                const name = $li.attr('data-name');
+
+                if (this.isTabName(name) && name !== this.TAB_BREAK_KEY) {
+                    $li.remove();
+                }
+            });
+        }
+
+        if ($tabBreak) {
+            $tabBreak.appendTo(this.$el.find('ul.disabled'));
+        }
+    }
+
+    isTabName(name) {
+        return name.substring(0, this.TAB_BREAK_KEY.length - 3) === this.TAB_BREAK_KEY.slice(0, -3);
+    }
+
+    getEditAttributesModalViewOptions(attributes) {
+        const options = super.getEditAttributesModalViewOptions(attributes);
+
+        if (this.isTabName(attributes.name)) {
+            options.attributeList = [
+                'tabLabel',
+            ];
+
+            options.attributeDefs = {
+                tabLabel: {
+                    type: 'varchar',
+                },
+            };
+        }
+
+        return options;
+    }
+
+    fetch() {
+        const layout = super.fetch();
+
+        const newLayout = {};
+
+        for (const name in layout) {
+            if (layout[name].disabled && this.links[name]) {
+                continue;
+            }
+
+            newLayout[name] = layout[name];
+
+            if (this.isTabName(name) && name !== this.TAB_BREAK_KEY /*&& this.itemsData[name]*/) {
+                const data = this.itemsData[name] || {};
+
+                newLayout[name].tabBreak = true;
+                newLayout[name].tabLabel = data.tabLabel;
+            }
+            else {
+               delete newLayout[name].tabBreak;
+               delete newLayout[name].tabLabel;
+            }
+        }
+
+        delete newLayout[this.TAB_BREAK_KEY];
+
+        return newLayout;
+    }
+}
+
+export default LayoutBottomPanelsDetail;

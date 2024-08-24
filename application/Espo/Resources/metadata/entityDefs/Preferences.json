@@ -31,6 +31,9 @@
                 ".",
                 ",",
                 "'"
+            ],
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\Settings\\ThousandSeparator\\Valid"
             ]
         },
         "decimalMark": {
@@ -118,7 +121,20 @@
         "defaultReminders": {
             "type": "jsonArray",
             "view": "crm:views/meeting/fields/reminders",
-            "default": []
+            "default": [],
+            "validatorClassNameList": [
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\Valid",
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\MaxCount"
+            ]
+        },
+        "defaultRemindersTask": {
+            "type": "jsonArray",
+            "view": "crm:views/meeting/fields/reminders",
+            "default": [],
+            "validatorClassNameList": [
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\Valid",
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\MaxCount"
+            ]
         },
         "theme": {
             "type": "enum",
@@ -131,6 +147,11 @@
         "useCustomTabList": {
             "type": "bool",
             "default": false
+        },
+        "addCustomTabs": {
+            "type": "bool",
+            "default": false,
+            "tooltip": true
         },
         "tabList": {
             "type": "array",
@@ -190,6 +211,18 @@
         "textSearchStoringDisabled": {
             "type": "bool",
             "default": false
+        },
+        "calendarSlotDuration": {
+            "type": "enumInt",
+            "options": ["", 15, 30],
+            "default": null,
+            "view": "views/preferences/fields/calendar-slot-duration"
+        },
+        "calendarScrollHour": {
+            "type": "enumInt",
+            "options": ["", 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15],
+            "default": null,
+            "view": "views/preferences/fields/calendar-scroll-hour"
         }
     },
     "noDeletedAttribute": true,

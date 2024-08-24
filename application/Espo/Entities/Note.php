@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Entity;
 
 use Espo\Core\Field\DateTime;
@@ -216,11 +217,55 @@ class Note extends Entity
         return $this->get('createdById');
     }
 
+    public function setType(string $type): self
+    {
+        $this->set('type', $type);
+
+        return $this;
+    }
+
+    public function setParent(LinkParent $parent): self
+    {
+        $this->setValueObject('parent', $parent);
+
+        return $this;
+    }
+
+    public function setRelated(LinkParent $related): self
+    {
+        $this->setValueObject('related', $related);
+
+        return $this;
+    }
+
+    public function setSuperParent(LinkParent $superParent): self
+    {
+        $this->set('superParentId', $superParent->getId());
+        $this->set('superParentType', $superParent->getEntityType());
+
+        return $this;
+    }
+
+    public function setPost(?string $post): self
+    {
+        $this->set('post', $post);
+
+        return $this;
+    }
+
+    public function setData(stdClass $data): self
+    {
+        $this->set('data', $data);
+
+        return $this;
+    }
+
     public function loadAdditionalFields(): void
     {
         if (
             $this->getType() == self::TYPE_POST ||
-            $this->getType() == self::TYPE_EMAIL_RECEIVED
+            $this->getType() == self::TYPE_EMAIL_RECEIVED ||
+            $this->getType() == self::TYPE_EMAIL_SENT
         ) {
             $this->loadAttachments();
         }
@@ -260,5 +305,37 @@ class Note extends Entity
                 }
             }
         }
+    }
+
+    /**
+     * @param string[] $ids
+     */
+    public function setTeamsIds(array $ids): self
+    {
+        $this->set('teamsIds', $ids);
+
+        return $this;
+    }
+
+    /**
+     * @param string[] $ids
+     */
+    public function setUsersIds(array $ids): self
+    {
+        $this->set('usersIds', $ids);
+
+        return $this;
+    }
+
+    public function isPinned(): bool
+    {
+        return (bool) $this->get('isPinned');
+    }
+
+    public function setIsPinned(bool $isPinned): self
+    {
+        $this->set('isPinned', $isPinned);
+
+        return $this;
     }
 }

@@ -31,6 +31,7 @@ namespace Espo\Core;
 
 use Espo\Core\Acl\Exceptions\NotImplemented;
 use Espo\Core\Acl\GlobalRestriction;
+use Espo\Core\Acl\Permission;
 use Espo\Core\Acl\Table;
 
 use Espo\ORM\Entity;
@@ -60,6 +61,7 @@ class Acl
      * Get an access level for a specific scope and action.
      *
      * @param Table::ACTION_* $action
+     * @noinspection PhpDocSignatureInspection
      */
     public function getLevel(string $scope, string $action): string
     {
@@ -158,6 +160,7 @@ class Acl
      */
     public function checkEntityRead(Entity $entity): bool
     {
+        /** @noinspection PhpRedundantOptionalArgumentInspection */
         return $this->checkEntity($entity, Table::ACTION_READ);
     }
 
@@ -215,6 +218,7 @@ class Acl
      * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.
      * @param string $thresholdLevel Should not be used. Stands for possible future enhancements.
      * @return string[]
+     * @noinspection PhpDocSignatureInspection
      */
     public function getScopeForbiddenAttributeList(
         string $scope,
@@ -232,6 +236,7 @@ class Acl
      * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.
      * @param string $thresholdLevel Should not be used. Stands for possible future enhancements.
      * @return string[]
+     * @noinspection PhpDocSignatureInspection
      */
     public function getScopeForbiddenFieldList(
         string $scope,
@@ -250,6 +255,7 @@ class Acl
      * @param string $field A field to check.
      * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.
      * @return bool
+     * @noinspection PhpDocSignatureInspection
      */
     public function checkField(string $scope, string $field, string $action = Table::ACTION_READ): bool
     {
@@ -262,6 +268,7 @@ class Acl
      * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.
      * @param string $thresholdLevel Should not be used. Stands for possible future enhancements.
      * @return string[]
+     * @noinspection PhpDocSignatureInspection
      */
     public function getScopeForbiddenLinkList(
         string $scope,
@@ -277,7 +284,7 @@ class Acl
      *
      * @param User|string $target User entity or user ID.
      */
-    public function checkUserPermission($target, string $permissionType = 'user'): bool
+    public function checkUserPermission($target, string $permissionType = Permission::USER): bool
     {
         return $this->aclManager->checkUserPermission($this->user, $target, $permissionType);
     }
@@ -354,6 +361,7 @@ class Acl
      */
     public function checkUser(string $permission, User $entity): bool
     {
+        /** @noinspection PhpDeprecationInspection */
         return $this->aclManager->checkUser($this->user, $permission, $entity);
     }
 }

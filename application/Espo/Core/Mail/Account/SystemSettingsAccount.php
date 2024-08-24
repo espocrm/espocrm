@@ -30,6 +30,7 @@
 namespace Espo\Core\Mail\Account;
 
 use Espo\Core\Field\Date;
+use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Mail\Exceptions\NoSmtp;
@@ -44,6 +45,14 @@ class SystemSettingsAccount implements Account
     {}
 
     public function updateFetchData(FetchData $fetchData): void {}
+
+    public function getConnectedAt(): ?DateTime
+    {
+        return null;
+    }
+
+    public function updateConnectedAt(): void
+    {}
 
     public function relateEmail(Email $email): void {}
 

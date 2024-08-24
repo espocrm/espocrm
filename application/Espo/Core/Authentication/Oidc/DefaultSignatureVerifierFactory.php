@@ -64,7 +64,7 @@ class DefaultSignatureVerifierFactory implements SignatureVerifierFactory
         $className = self::ALGORITHM_VERIFIER_CLASS_NAME_MAP[$algorithm] ?? null;
 
         if (!$className) {
-            throw new RuntimeException("Not supported algorithm {$algorithm}.");
+            throw new RuntimeException("Not supported algorithm $algorithm.");
         }
 
         if ($className === Rsa::class) {

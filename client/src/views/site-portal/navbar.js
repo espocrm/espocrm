@@ -26,32 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/site-portal/navbar', ['views/site/navbar'], function (Dep) {
+import NavbarSiteView from 'views/site/navbar';
 
-    return Dep.extend({
+export default class extends NavbarSiteView {
 
-        getLogoSrc: function () {
-            var companyLogoId = this.getConfig().get('companyLogoId');
-            if (!companyLogoId) {
-                return this.getBasePath() + (this.getThemeManager().getParam('logo') || 'client/img/logo.svg');
-            }
-            return this.getBasePath() + '?entryPoint=LogoImage&id='+companyLogoId+'&t=' + companyLogoId;
-        },
+    getLogoSrc() {
+        const companyLogoId = this.getConfig().get('companyLogoId');
 
-        getTabList: function () {
-            var tabList = this.getConfig().get('tabList') || [];
-            tabList = Espo.Utils.clone(tabList || []);
-
-            if (this.getThemeManager().getParam('navbarIsVertical') || tabList.length) {
-                tabList.unshift('Home');
-            }
-            return tabList;
-        },
-
-        getQuickCreateList: function () {
-            return this.getConfig().get('quickCreateList') || []
+        if (!companyLogoId) {
+            return this.getBasePath() + (this.getThemeManager().getParam('logo') || 'client/img/logo.svg');
         }
 
-    });
+        return `${this.getBasePath()}?entryPoint=LogoImage&id=${companyLogoId}&t=${companyLogoId}`;
+    }
 
-});
+    getTabList() {
+        const tabList = [...(this.getConfig().get('tabList') || [])];
+
+        if (this.getThemeManager().getParam('navbarIsVertical') || tabList.length) {
+            tabList.unshift('Home');
+        }
+
+        return tabList;
+    }
+}
+

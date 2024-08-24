@@ -41,6 +41,29 @@ class TeamsFieldView extends LinkMultipleFieldView {
             return ['onlyMy'];
         }
     }
+
+    /** @inheritDoc */
+    getOnEmptyAutocomplete() {
+        if (this.autocompleteOnEmpty) {
+            return undefined;
+        }
+
+        if (this.assignmentPermission === 'no') {
+            return undefined;
+        }
+
+        /** @type {Record} */
+        const names = this.getUser().get('teamsNames') || {};
+
+        const list = this.getUser().getTeamIdList()
+            .filter(id => !this.ids.includes(id))
+            .map(id => ({
+                id: id,
+                name: names[id] || id,
+            }));
+
+        return Promise.resolve(list);
+    }
 }
 
 export default TeamsFieldView;

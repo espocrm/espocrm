@@ -17,5 +17,10 @@
     "completedStatusList": ["Held"],
     "canceledStatusList": ["Not Held"],
     "statusField": "status",
-    "statusFieldLocked": true
+    "statusFieldLocked": true,
+    "attendeeLinkMap": {
+        "Contact": "contacts",
+        "Lead": "leads",
+        "User": "users"
+    }
 }

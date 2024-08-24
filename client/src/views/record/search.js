@@ -30,6 +30,7 @@
 
 import View from 'view';
 import StoredTextSearch from 'helpers/misc/stored-text-search';
+import Autocomplete from 'ui/autocomplete';
 
 /**
  * @typedef {Object} module:views/record/search~boolFilterDefs
@@ -70,6 +71,7 @@ class SearchView extends View {
     toShowApplyFiltersButton = false
     toShowResetFiltersText = false
     isSearchedWithAdvancedFilter = false
+    primaryFiltersDisabled = false
 
     viewModeIconClassMap = {
         list: 'fas fa-align-justify',
@@ -92,7 +94,7 @@ class SearchView extends View {
             filterDataList: this.getFilterDataList(),
             presetName: this.presetName,
             presetFilterList: this.getPresetFilterList(),
-            leftDropdown: this.isLeftDropdown(),
+            leftDropdown: this.hasLeftDropdown(),
             textFilterDisabled: this.textFilterDisabled,
             viewMode: this.viewMode,
             viewModeDataList: this.viewModeDataList || [],
@@ -100,6 +102,7 @@ class SearchView extends View {
             isWide: this.options.isWide,
             toShowApplyFiltersButton: this.toShowApplyFiltersButton,
             toShowResetFiltersText: this.toShowResetFiltersText,
+            primaryFiltersDisabled: this.primaryFiltersDisabled,
         };
     }
 
@@ -107,6 +110,12 @@ class SearchView extends View {
         this.entityType = this.collection.entityType;
         this.scope = this.options.scope || this.entityType;
         this.filtersLayoutName = this.options.filtersLayoutName || this.filtersLayoutName;
+        this.primaryFiltersDisabled = this.options.primaryFiltersDisabled || this.primaryFiltersDisabled;
+
+        this.viewModeIconClassMap = {
+            ...this.viewModeIconClassMap,
+            ...this.getMetadata().get(`clientDefs.${this.scope}.viewModeIconClassMap`),
+        };
 
         /** @type {module:search-manager} */
         this.searchManager = this.options.searchManager;
@@ -191,42 +200,7 @@ class SearchView extends View {
                 });
             })
         );
-
-        const filterList = this.options.filterList ||
-            this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || [];
-
-        this.presetFilterList = Espo.Utils.clone(filterList).filter(item => {
-            if (typeof item === 'string') {
-                return true;
-            }
-
-            item = item || {};
-
-            if (item.aux) {
-                return false;
-            }
-
-            if (item.inPortalDisabled && this.getUser().isPortal()) {
-                return false;
-            }
-
-            if (item.isPortalOnly && !this.getUser().isPortal()) {
-                return false;
-            }
-
-            if (item.accessDataList) {
-                if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
-                    return false;
-                }
-            }
-
-            return true;
-        });
-
-        ((this.getPreferences().get('presetFilters') || {})[this.scope] || [])
-            .forEach(item => {
-                this.presetFilterList.push(item);
-            });
+        this.setupPresetFilters();
 
         if (this.getMetadata().get(['scopes', this.entityType, 'stream'])) {
             this.boolFilterList.push('followed');
@@ -274,6 +248,59 @@ class SearchView extends View {
         );
     }
 
+    setupPresetFilters() {
+        if (this.primaryFiltersDisabled) {
+            this.presetFilterList = [];
+
+            return;
+        }
+
+        const filterList = this.options.filterList ||
+            this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || [];
+
+        this.presetFilterList = filterList.filter(item => {
+            if (typeof item === 'string') {
+                return true;
+            }
+
+            item = item || {};
+
+            if (item.aux) {
+                return false;
+            }
+
+            if (item.inPortalDisabled && this.getUser().isPortal()) {
+                return false;
+            }
+
+            if (item.isPortalOnly && !this.getUser().isPortal()) {
+                return false;
+            }
+
+            if (item.accessDataList) {
+                if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        if (
+            this.getMetadata().get(`scopes.${this.scope}.stars`) &&
+            !this.getUser().isPortal()
+        ) {
+            this.presetFilterList.unshift({
+                name: 'starred',
+            });
+        }
+
+        ((this.getPreferences().get('presetFilters') || {})[this.scope] || [])
+            .forEach(item => {
+                this.presetFilterList.push(item);
+            });
+    }
+
     setupViewModeDataList() {
         if (!this.viewModeList) {
             return [];
@@ -309,19 +336,25 @@ class SearchView extends View {
             }
         }
 
+        this.collection.offset = 0;
+
         if (toTriggerEvent) {
             this.trigger('change-view-mode', mode);
         }
     }
 
-    isLeftDropdown() {
+    hasLeftDropdown() {
+        if (this.primaryFiltersDisabled && !this.boolFilterList.length) {
+            return false;
+        }
+
         return this.presetFilterList.length ||
             this.boolFilterList.length ||
             Object.keys(this.advanced || {}).length;
     }
 
     handleLeftDropdownVisibility() {
-        if (this.isLeftDropdown()) {
+        if (this.hasLeftDropdown()) {
             this.$leftDropdown.removeClass('hidden');
         }
         else {
@@ -716,37 +749,17 @@ class SearchView extends View {
             return;
         }
 
-        let preventCloseOnBlur = false;
-
-
-        // noinspection JSUnusedGlobalSymbols
-        const options = {
-            minChars: 0,
-            noCache: true,
+        const autocomplete = new Autocomplete(this.$textFilter.get(0), {
             triggerSelectOnValidInput: false,
-            beforeRender: $container => {
-                $container.addClass('text-search-suggestions');
-
-                $container.off('mousedown');
-                $container.on('mousedown', e => {
-                    if (e.originalEvent.button !== 0) {
-                        return;
-                    }
-
-                    preventCloseOnBlur = true;
-                    setTimeout(() => preventCloseOnBlur = false, 201);
-                });
-
-                $container.find('a[data-action="clearStoredTextSearch"]').on('click', e => {
-                    e.stopPropagation();
-                    e.preventDefault();
-
-                    const text = e.currentTarget.getAttribute('data-value');
-
-                    this.storedTextSearchHelper.remove(text);
-
-                    setTimeout(() => this.$textFilter.focus(), 205);
-                });
+            focusOnSelect: true,
+            onSelect: () => {
+                setTimeout(() => autocomplete.hide(), 1);
+            },
+            lookupFunction: query => {
+                return Promise.resolve(
+                    this.storedTextSearchHelper.match(query, this.autocompleteLimit)
+                        .map(item => ({value: item}))
+                );
             },
             formatResult: item => {
                 return $('<span>')
@@ -763,38 +776,25 @@ class SearchView extends View {
                     )
                     .get(0).innerHTML;
             },
-            lookup: (text, done) => {
-                const suggestions = this.storedTextSearchHelper.match(text, this.autocompleteLimit)
-                    .map(item => {
-                        return {value: item};
-                    });
+            beforeRender: container => {
+                const $container = $(container);
+                $container.addClass('text-search-suggestions');
 
-                done({suggestions: suggestions});
+                $container.find('a[data-action="clearStoredTextSearch"]').on('click', e => {
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    const text = e.currentTarget.getAttribute('data-value');
+                    this.storedTextSearchHelper.remove(text);
+
+                    autocomplete.hide();
+                    // 200 is hardcoded in autocomplete lib.
+                    setTimeout(() => this.$textFilter.focus(), 201);
+                });
             },
-            onSelect: () => {
-                this.$textFilter.focus();
-                this.$textFilter.autocomplete('hide');
-            },
-        };
-
-        this.$textFilter.autocomplete(options);
-
-        this.$textFilter.on('blur', () => {
-            if (preventCloseOnBlur) {
-                return;
-            }
-
-            setTimeout(() => this.$textFilter.autocomplete('hide'), 1);
         });
 
-        this.$textFilter.on('focus', () => {
-            if (this.$textFilter.val()) {
-                this.$textFilter.autocomplete('hide');
-            }
-        });
-
-        this.once('render', () => this.$textFilter.autocomplete('dispose'));
-        this.once('remove', () => this.$textFilter.autocomplete('dispose'));
+        this.once('render remove', () => autocomplete.dispose());
     }
 
     initQuickSearchUi() {

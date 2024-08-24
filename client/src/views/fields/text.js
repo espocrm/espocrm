@@ -29,11 +29,46 @@
 /** @module views/fields/text */
 
 import BaseFieldView from 'views/fields/base';
+import MailtoHelper from 'helpers/misc/mailto';
 
 /**
  * A text field.
+ *
+ * @extends BaseFieldView<module:views/fields/text~params>
  */
 class TextFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/text~options
+     * @property {
+     *     module:views/fields/text~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/text~params
+     * @property {boolean} [required] Required.
+     * @property {number} [maxLength] A max length.
+     * @property {number} [rows] A number of rows.
+     * @property {number} [rowsMin] A min number of rows.
+     * @property {boolean} [noResize] No resize.
+     * @property {boolean} [seeMoreDisabled] Disable 'See-more'.
+     * @property {boolean} [autoHeightDisabled] Disable auto-height.
+     * @property {number} [cutHeight] A height of cut in pixels.
+     * @property {boolean} [displayRawText] Display raw text.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/text~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'text'
 
@@ -419,17 +454,10 @@ class TextFieldView extends BaseFieldView {
             to: emailAddress,
         };
 
-        if (
-            this.getConfig().get('emailForceUseExternalClient') ||
-            this.getPreferences().get('emailUseExternalClient') ||
-            !this.getAcl().checkScope('Email', 'create')
-        ) {
-            Espo.loader.require('email-helper', EmailHelper => {
-                const emailHelper = new EmailHelper();
+        const helper = new MailtoHelper(this.getConfig(), this.getPreferences(), this.getAcl());
 
-                document.location.href = emailHelper
-                    .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
-            });
+        if (helper.toUse()) {
+            document.location.href = helper.composeLink(attributes);
 
             return;
         }

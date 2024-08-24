@@ -12,7 +12,8 @@
   },
   "filters": {
     "all": "Alle",
-    "posts": "Berichten"
+    "posts": "Berichten",
+    "activity": "Activiteit"
   },
   "messages": {
     "writeMessage": "Schrijf je bericht hier"
@@ -24,10 +25,25 @@
       "teams": "naar een specifiek(e) groep(en)",
       "all": "voor alle interne gebruikers",
       "portals": "voor portaalgebruikers"
+    },
+    "type": {
+      "Create": "Creër",
+      "CreateRelated": "Gerelateerde creëren",
+      "Assign": "Toewijzen",
+      "Relate": "Koppel",
+      "Unrelate": "Ontkoppel",
+      "EmailReceived": "Email ontvangen",
+      "EmailSent": "Email verstuurd"
     }
   },
   "links": {
     "superParent": "Behorende bij",
-    "related": "Verwant"
+    "related": "Verwant",
+    "portals": "Portalen",
+    "attachments": "Bijlagen"
+  },
+  "labels": {
+    "View Posts": "Posts bekijken",
+    "View Activity": "Activiteit bekijken"
   }
 }

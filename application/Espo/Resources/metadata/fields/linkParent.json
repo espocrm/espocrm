@@ -22,6 +22,10 @@
         {
             "name": "readOnlyAfterCreate",
             "type": "bool"
+        },
+        {
+            "name": "autocompleteOnEmpty",
+            "type": "bool"
         }
     ],
     "actualFields": [

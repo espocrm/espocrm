@@ -26,20 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/fiscal-year-shift', ['views/fields/enum-int'], function (Dep) {
+import EnumIntFieldView from 'views/fields/enum-int';
 
-    return Dep.extend({
+// noinspection JSUnusedGlobalSymbols
+export default class extends EnumIntFieldView {
 
-        setupOptions: function () {
-            this.params.options = [];
-            this.translatedOptions = {};
+    setupOptions() {
+        this.params.options = [];
+        this.translatedOptions = {};
 
-            var monthNameList = this.getLanguage().get('Global', 'lists', 'monthNames') || [];
+        const monthNameList = this.getLanguage().get('Global', 'lists', 'monthNames') || [];
 
-            monthNameList.forEach((name, i) => {
-                this.params.options.push(i);
-                this.translatedOptions[i] = name;
-            });
-        },
-    });
-});
+        monthNameList.forEach((name, i) => {
+            this.params.options.push(i);
+            this.translatedOptions[i] = name;
+        });
+    }
+}

@@ -95,5 +95,12 @@
             "name":"complete",
             "style": "success"
         }
-    ]
+    ],
+    "relationshipPanels": {
+        "queueItems": {
+            "unlinkDisabled": true,
+            "viewDisabled": true,
+            "editDisabled": true
+        }
+    }
 }

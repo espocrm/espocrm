@@ -33,7 +33,7 @@ class ComplexCreatedFieldView extends BaseFieldView {
     // language=Handlebars
     detailTemplateContent =
         `{{#if hasAt}}<span data-name="{{baseName}}At" class="field">{{{atField}}}</span>{{/if}}
-        {{#if hasBoth}}<span class="text-muted chevron-right"></span>{{/if}}
+        {{#if hasBoth}}<span class="text-muted middle-dot"></span>{{/if}}
         {{#if hasBy}}<span data-name="{{baseName}}By" class="field">{{{byField}}}</span>{{/if}}`
 
     baseName = 'created'

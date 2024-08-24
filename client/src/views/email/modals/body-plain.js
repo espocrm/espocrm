@@ -26,35 +26,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/modals/body-plain', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+export default class extends ModalView {
 
-        backdrop: true,
+    backdrop = true
 
-        templateContent: '<div class="field" data-name="body-plain">{{{bodyPlain}}}</div>',
+    templateContent = `<div class="field" data-name="body-plain">{{{bodyPlain}}}</div>`
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.buttonList.push({
-                'name': 'cancel',
-                'label': 'Close'
-            });
+        this.buttonList.push({
+            'name': 'cancel',
+            'label': 'Close',
+        });
 
-            this.headerText = this.model.get('name');
+        this.headerText = this.model.get('name');
 
-            this.createView('bodyPlain', 'views/fields/text', {
-                selector: '.field[data-name="bodyPlain"]',
-                model: this.model,
-                defs: {
-                    name: 'bodyPlain',
-                    params: {
-                        readOnly: true,
-                        inlineEditDisabled: true,
-                    },
+        this.createView('bodyPlain', 'views/fields/text', {
+            selector: '.field[data-name="bodyPlain"]',
+            model: this.model,
+            defs: {
+                name: 'bodyPlain',
+                params: {
+                    readOnly: true,
+                    inlineEditDisabled: true,
                 },
-            });
-        },
-    });
-});
+            },
+        });
+    }
+}

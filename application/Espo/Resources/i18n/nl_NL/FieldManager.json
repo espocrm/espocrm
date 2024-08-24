@@ -90,7 +90,10 @@
     "displayAsList": "Elk item op een nieuwe regel.",
     "optionsVarchar": "Een lijst van autocomplete waarden.",
     "currencyDecimal": "Gebruik het Decimale DB type. In de app worden waarden weergegeven als strings. Vink deze parameter aan als precisie vereist is.",
-    "optionsReference": "Hergebruik opties van een ander veld."
+    "optionsReference": "Hergebruik opties van een ander veld.",
+    "readOnlyAfterCreate": "De veldwaarde kan worden opgegeven bij het maken van een nieuw record. Daarna wordt het veld alleen-lezen. Het kan nog steeds worden berekend met een formule.",
+    "linkReadOnly": "De veldwaarde kan niet worden opgegeven door de gebruiker. Maar kan wel worden berekend met een formule.\n\nHet schakelt ook de mogelijkheid uit om een gerelateerd record te maken vanuit relatiepanelen.",
+    "relateOnImport": "Als je importeert met dit veld, wordt automatisch een record gekoppeld aan een overeenkomend buitenlands record. Gebruik deze functionaliteit alleen als het vreemde veld als uniek wordt beschouwd."
   },
   "fieldParts": {
     "address": {
@@ -148,6 +151,7 @@
   "messages": {
     "fieldNameIsNotAllowed": "Veldnaam '{field}' is niet toegestaan.",
     "fieldAlreadyExists": "Veld '{field}' bestaat al in '{entityType}'.",
-    "linkWithSameNameAlreadyExists": "Link met de naam '{field}' bestaat al in '{entityType}'."
+    "linkWithSameNameAlreadyExists": "Link met de naam '{field}' bestaat al in '{entityType}'.",
+    "confirmRemove": "Weet je zeker dat je het veld *{field}* wilt verwijderen?\n\nHet verwijderen van velden verwijdert geen gegevens uit de database. Gegevens uit de database worden verwijderd als je een harde rebuild uitvoert."
   }
 }

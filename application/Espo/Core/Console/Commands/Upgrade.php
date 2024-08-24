@@ -46,13 +46,22 @@ use Exception;
 use Throwable;
 use stdClass;
 
+use const CURLOPT_FILE;
+use const CURLOPT_RETURNTRANSFER;
+use const CURLOPT_SSL_VERIFYPEER;
+use const CURLOPT_TIMEOUT;
+use const CURLOPT_URL;
+use const FILTER_VALIDATE_URL;
+use const STDOUT;
+
+/**
+ * @noinspection PhpUnused
+ */
 class Upgrade implements Command
 {
     private ?UpgradeManager $upgradeManager = null;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $upgradeStepList = [
         'copyBefore',
         'rebuild',
@@ -66,9 +75,7 @@ class Upgrade implements Command
         'rebuild',
     ];
 
-    /**
-     * @var array<string, string>
-     */
+    /** @var array<string, string> */
     private $upgradeStepLabels = [
         'init' => 'Initialization',
         'copyBefore' => 'Copying before upgrade files',
@@ -81,17 +88,15 @@ class Upgrade implements Command
         'revert' => 'Reverting',
     ];
 
-    private FileManager $fileManager;
-    private Config $config;
-    private Log $log;
+    public function __construct(
+        private FileManager $fileManager,
+        private Config $config,
+        private Log $log
+    ) {}
 
-    public function __construct(FileManager $fileManager, Config $config, Log $log)
-    {
-        $this->fileManager = $fileManager;
-        $this->config = $config;
-        $this->log = $log;
-    }
-
+    /**
+     * @throws Error
+     */
     public function run(Params $params, IO $io): void
     {
         $options = $params->getOptions();
@@ -122,10 +127,10 @@ class Upgrade implements Command
             $nextVersion = $manifest['version'];
         }
 
-        fwrite(\STDOUT, "Current version is {$fromVersion}.\n");
+        fwrite(STDOUT, "Current version is $fromVersion.\n");
 
         if (!$upgradeParams->skipConfirmation) {
-            fwrite(\STDOUT, "EspoCRM will be upgraded to version {$nextVersion} now. Enter [Y] to continue.\n");
+            fwrite(STDOUT, "EspoCRM will be upgraded to version $nextVersion now. Enter [Y] to continue.\n");
 
             if (!$this->confirm()) {
                 echo "Upgrade canceled.\n";
@@ -134,17 +139,17 @@ class Upgrade implements Command
             }
         }
 
-        fwrite(\STDOUT, "This may take a while. Do not close the terminal.\n");
+        fwrite(STDOUT, "This may take a while. Do not close the terminal.\n");
 
-        if (filter_var($packageFile, \FILTER_VALIDATE_URL)) {
-            fwrite(\STDOUT, "Downloading...");
+        if (filter_var($packageFile, FILTER_VALIDATE_URL)) {
+            fwrite(STDOUT, "Downloading...");
 
             $packageFile = $this->downloadFile($packageFile);
 
-            fwrite(\STDOUT, "\n");
+            fwrite(STDOUT, "\n");
 
             if (!$packageFile) {
-                fwrite(\STDOUT, "Error: Unable to download upgrade package.\n");
+                fwrite(STDOUT, "Error: Unable to download upgrade package.\n");
 
                 return;
             }
@@ -152,7 +157,7 @@ class Upgrade implements Command
 
         $upgradeId = $upgradeId ?? $this->upload($packageFile);
 
-        fwrite(\STDOUT, "Upgrading...");
+        fwrite(STDOUT, "Upgrading...");
 
         try {
             $this->runUpgradeProcess($upgradeId, $upgradeParams);
@@ -162,7 +167,7 @@ class Upgrade implements Command
             $errorMessage = $e->getMessage();
         }
 
-        fwrite(\STDOUT, "\n");
+        fwrite(STDOUT, "\n");
 
         if (!$upgradeParams->keepPackageFile) {
             $this->fileManager->unlink($packageFile);
@@ -171,25 +176,23 @@ class Upgrade implements Command
         if (isset($errorMessage)) {
             $errorMessage = !empty($errorMessage) ? $errorMessage : "Error: An unexpected error occurred.";
 
-            fwrite(\STDOUT, $errorMessage . "\n");
+            fwrite(STDOUT, $errorMessage . "\n");
 
             return;
         }
 
         $currentVersion = $this->getCurrentVersion();
 
-        fwrite(\STDOUT, "Upgrade is complete. Current version is {$currentVersion}.\n");
+        fwrite(STDOUT, "Upgrade is complete. Current version is $currentVersion.\n");
 
         if ($lastVersion && $lastVersion !== $currentVersion && $fromVersion !== $currentVersion) {
-            fwrite(\STDOUT, "Newer version is available. Run command again to upgrade.\n");
+            fwrite(STDOUT, "Newer version is available. Run command again to upgrade.\n");
 
             return;
         }
 
         if ($lastVersion && $lastVersion === $currentVersion) {
-            fwrite(\STDOUT, "You have the latest version.\n");
-
-            return;
+            fwrite(STDOUT, "You have the latest version.\n");
         }
     }
 
@@ -203,7 +206,8 @@ class Upgrade implements Command
      * @param array<string, string> $options
      * @param string[] $flagList
      * @param string[] $argumentList
-     * @return \stdClass
+     * @return stdClass
+     * @noinspection PhpUnusedParameterInspection
      */
     private function normalizeParams(array $options, array $flagList, array $argumentList): object
     {
@@ -253,19 +257,19 @@ class Upgrade implements Command
 
         if (!$params->localMode) {
             if (empty($versionInfo)) {
-                fwrite(\STDOUT, "Error: Upgrade server is currently unavailable. Please try again later.\n");
+                fwrite(STDOUT, "Error: Upgrade server is currently unavailable. Please try again later.\n");
 
                 return null;
             }
 
             if (!isset($versionInfo->nextVersion)) {
-                fwrite(\STDOUT, "There are no available upgrades.\n");
+                fwrite(STDOUT, "There are no available upgrades.\n");
 
                 return null;
             }
 
             if (!isset($versionInfo->nextPackage)) {
-                fwrite(\STDOUT, "Error: Upgrade package is not found.\n");
+                fwrite(STDOUT, "Error: Upgrade package is not found.\n");
 
                 return null;
             }
@@ -274,7 +278,7 @@ class Upgrade implements Command
         }
 
         if (!$packageFile || !file_exists($packageFile)) {
-            fwrite(\STDOUT, "Error: Upgrade package is not found.\n");
+            fwrite(STDOUT, "Error: Upgrade package is not found.\n");
 
             return null;
         }
@@ -310,7 +314,7 @@ class Upgrade implements Command
         $stepList = !empty($params->step) ? [$params->step] : $this->upgradeStepList;
 
         array_unshift($stepList, 'init');
-        array_push($stepList, 'finalize');
+        $stepList[] = 'finalize';
 
         if (!$useSingleProcess && $this->isShellEnabled()) {
             $this->runSteps($upgradeId, $stepList);
@@ -342,7 +346,7 @@ class Upgrade implements Command
             try {
                 $this->log->error('Upgrade Error: ' . $e->getMessage());
             }
-            catch (Throwable $t) {}
+            catch (Throwable) {}
 
             throw new Error($e->getMessage());
         }
@@ -380,7 +384,7 @@ class Upgrade implements Command
     {
         $stepLabel = $this->upgradeStepLabels[$stepName] ?? "";
 
-        fwrite(\STDOUT, "\n  {$stepLabel}...");
+        fwrite(STDOUT, "\n  $stepLabel...");
     }
 
     private function confirm(): bool
@@ -435,9 +439,9 @@ class Upgrade implements Command
 
         $ch = curl_init();
 
-        curl_setopt($ch, \CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, \CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, \CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $url);
 
         $result = curl_exec($ch);
 
@@ -446,7 +450,7 @@ class Upgrade implements Command
         try {
             $data = json_decode($result); /** @phpstan-ignore-line */
         }
-        catch (Exception $e) { /** @phpstan-ignore-line */
+        catch (Exception) { /** @phpstan-ignore-line */
             echo "Could not parse info about next version.\n";
 
             return null;
@@ -472,9 +476,9 @@ class Upgrade implements Command
         }
         else {
             $options = [
-                \CURLOPT_FILE => fopen($localFilePath, 'w'),
-                \CURLOPT_TIMEOUT => 3600,
-                \CURLOPT_URL => $url,
+                CURLOPT_FILE => fopen($localFilePath, 'w'),
+                CURLOPT_TIMEOUT => 3600,
+                CURLOPT_URL => $url,
             ];
 
             $ch = curl_init();

@@ -31,6 +31,8 @@
 import BottomPanelView from 'views/record/panels/bottom';
 import SearchManager from 'search-manager';
 import RecordModal from 'helpers/record-modal';
+import CreateRelatedHelper from 'helpers/record/create-related';
+import SelectRelatedHelper from 'helpers/record/select-related';
 
 /**
  * A relationship panel.
@@ -95,6 +97,11 @@ class RelationshipPanelView extends BottomPanelView {
      * @protected
      */
     viewModalView = null
+
+    /**
+     * @protected
+     */
+    listLayoutName
 
     setup() {
         super.setup();
@@ -288,7 +295,7 @@ class RelationshipPanelView extends BottomPanelView {
                 this.listenTo(this.model, 'after:relate', () => collection.fetch());
             }
 
-            this.listenTo(this.model, 'update-all', () => collection.fetch());
+            this.listenTo(this.model, `update-related:${this.link} update-all`, () => collection.fetch());
 
             if (this.defs.syncWithModel) {
                 this.listenTo(this.model, 'sync', (m, a, o) => {
@@ -547,6 +554,7 @@ class RelationshipPanelView extends BottomPanelView {
             }
         });
 
+        this.collection.abortLastFetch();
         this.collection.reset();
 
         const listView = this.getView('list');
@@ -818,6 +826,28 @@ class RelationshipPanelView extends BottomPanelView {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @protected
+     * @since 8.4.0
+     */
+    actionCreateRelated() {
+        const helper = new CreateRelatedHelper(this);
+
+        helper.process(this.model, this.link);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @protected
+     * @since 8.4.0
+     */
+    actionSelectRelated() {
+        const helper = new SelectRelatedHelper(this);
+
+        helper.process(this.model, this.link);
+    }
+
     /**
      * @private
      */
@@ -844,6 +874,8 @@ class RelationshipPanelView extends BottomPanelView {
 
         this.defs.create = false;
     }
+
+
 }
 
 export default RelationshipPanelView;

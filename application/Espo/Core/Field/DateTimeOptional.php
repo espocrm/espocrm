@@ -503,7 +503,7 @@ class DateTimeOptional implements DateTimeable
     }
 
     /**
-     * @deprecated As of v8.1. Use `getTimestamp` instead.
+     * @deprecated As of v8.1. Use `toTimestamp` instead.
      * @todo Remove in v10.0.
      */
     public function getTimestamp(): int

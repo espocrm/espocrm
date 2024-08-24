@@ -34,8 +34,50 @@ import MultiSelect from 'ui/multi-select';
 
 /**
  * An array field.
+ *
+ * @extends BaseFieldView<module:views/fields/array~params>
  */
 class ArrayFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/array~options
+     * @property {
+     *     module:views/fields/array~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/array~params
+     * @property {number} [maxLength] A max length.
+     * @property {string} [translation] A translation string. E.g. `Global.scopeNames`.
+     * @property {string[]} [options] Select options.
+     * @property {boolean} [required] Required.
+     * @property {boolean} [displayAsList] Display as list (line breaks).
+     * @property {boolean} [displayAsLabel] Display as label.
+     * @property {string|'state'} [labelType] A label type.
+     * @property {boolean} [noEmptyString] No empty string.
+     * @property {string} [optionsReference] A reference to options. E.g. `Account.industry`.
+     * @property {string} [optionsPath] An options metadata path.
+     * @property {boolean} [isSorted] To sort options.
+     * @property {Object.<string, string>} [translatedOptions] Option translations.
+     * @property {Object.<string, 'warning'|'danger'|'success'|'info'|'primary'>} [style] A style map.
+     * @property {number} [maxCount] A max number of items.
+     * @property {boolean} [allowCustomOptions] Allow custom options.
+     * @property {string} [pattern] A regular expression pattern.
+     * @property {boolean} [keepItems] Disable the ability to add or remove items. Reordering is allowed.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/array~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'array'
 
@@ -47,7 +89,13 @@ class ArrayFieldView extends BaseFieldView {
 
     searchTypeList = ['anyOf', 'noneOf', 'allOf', 'isEmpty', 'isNotEmpty']
     maxItemLength = null
+
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = ['required', 'maxCount']
+
     MAX_ITEM_LENGTH = 100
 
     /**
@@ -74,12 +122,13 @@ class ArrayFieldView extends BaseFieldView {
     translatedOptions = null
 
 
+    // noinspection JSCheckFunctionSignatures
     /** @inheritDoc */
     data() {
         const itemHtmlList = [];
 
         (this.selected || []).forEach(value => {
-            itemHtmlList.push(this.getItemHtml(value));
+            itemHtmlList.push(this.getItemHtml(value || ''));
         });
 
         // noinspection JSValidateTypes
@@ -87,7 +136,8 @@ class ArrayFieldView extends BaseFieldView {
             ...super.data(),
             selected: this.selected,
             translatedOptions: this.translatedOptions,
-            hasOptions: !!this.params.options,
+            hasAdd: !!this.params.options && !this.params.keepItems,
+            keepItems: this.params.keepItems,
             itemHtmlList: itemHtmlList,
             isEmpty: (this.selected || []).length === 0,
             valueIsSet: this.model.has(this.name),
@@ -122,7 +172,7 @@ class ArrayFieldView extends BaseFieldView {
 
         this.selected = Espo.Utils.clone(this.model.get(this.name) || []);
 
-        if (Object.prototype.toString.call(this.selected) !== '[object Array]')    {
+        if (Object.prototype.toString.call(this.selected) !== '[object Array]') {
             this.selected = [];
         }
 
@@ -509,9 +559,15 @@ class ArrayFieldView extends BaseFieldView {
 
             const style = this.styleMap[item] || 'default';
 
-            if (this.params.displayAsLabel) {
+            if (this.displayAsLabel) {
+                let className = 'label label-md label-' + style;
+
+                if (this.params.labelType === 'state') {
+                    className += ' label-state'
+                }
+
                 return $('<span>')
-                    .addClass('label label-md label-' + style)
+                    .addClass(className)
                     .text(label)
                     .get(0).outerHTML;
 
@@ -581,15 +637,17 @@ class ArrayFieldView extends BaseFieldView {
             .attr('data-value', value)
             .css('cursor', 'default')
             .append(
-                $('<a>')
-                    .attr('role', 'button')
-                    .attr('tabindex', '0')
-                    .addClass('pull-right')
-                    .attr('data-value', value)
-                    .attr('data-action', 'removeValue')
-                    .append(
-                        $('<span>').addClass('fas fa-times')
-                    )
+                !this.params.keepItems ?
+                    $('<a>')
+                        .attr('role', 'button')
+                        .attr('tabindex', '0')
+                        .addClass('pull-right')
+                        .attr('data-value', value)
+                        .attr('data-action', 'removeValue')
+                        .append(
+                            $('<span>').addClass('fas fa-times')
+                        ) :
+                    undefined
             )
             .append(
                 $('<span>')

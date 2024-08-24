@@ -43,7 +43,7 @@ class EmailReceivedNotificationItemView extends BaseNotificationItemView {
     }
 
     setup() {
-        let data = /** @type Object.<string, *> */this.model.get('data') || {};
+        const data = /** @type {Record} */this.model.get('data') || {};
 
         this.userId = data.userId;
 
@@ -58,7 +58,7 @@ class EmailReceivedNotificationItemView extends BaseNotificationItemView {
                     .text(data.personEntityName);
         }
         else {
-            let text = data.fromString || this.translate('empty address');
+            const text = data.fromString || this.translate('empty address');
 
             this.messageData['from'] = $('<span>').text(text);
         }

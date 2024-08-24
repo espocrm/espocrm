@@ -35,6 +35,9 @@ use Espo\Core\Console\IO;
 use Espo\Core\DataManager;
 use Espo\Core\Exceptions\Error;
 
+/**
+ * @noinspection PhpUnused
+ */
 class ClearCache implements Command
 {
     public function __construct(private DataManager $dataManager)

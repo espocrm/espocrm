@@ -17,7 +17,8 @@
       "CheckEmailAccounts": "Proverite lične naloge e-pošte",
       "SendEmailReminders": "Pošalji podsetnike e-poštom",
       "AuthTokenControl": "Kontrola autorizacionih tokena",
-      "SendEmailNotifications": "Pošalji E-mail obaveštenja"
+      "SendEmailNotifications": "Pošalji E-mail obaveštenja",
+      "CheckNewVersion": "Proveri novu verziju"
     },
     "cronSetup": {
       "linux": "Napomena: Dodajte ovu liniju u crontab datoteku za pokretanje ESPO zakazanih poslova:",

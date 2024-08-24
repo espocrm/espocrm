@@ -124,7 +124,7 @@ class SelectRecordsModalView extends ModalView {
             });
         }
 
-        this.scope = this.entityType = this.options.scope || this.scope;
+        this.scope = this.entityType = this.options.scope || this.scope || this.options.entityType;
 
         const orderBy = this.options.orderBy ||
             this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'orderBy']);
@@ -170,18 +170,20 @@ class SelectRecordsModalView extends ModalView {
             }
         }
 
-        this.$header = $('<span>');
+        if (!this.options.headerText) {
+            this.$header = $('<span>');
 
-        this.$header.append(
-            $('<span>').text(
-                this.translate('Select') + ' · ' +
-                this.getLanguage().translate(this.scope, 'scopeNamesPlural')
-            )
-        );
+            this.$header.append(
+                $('<span>').text(
+                    this.translate('Select') + ' · ' +
+                    this.getLanguage().translate(this.scope, 'scopeNamesPlural')
+                )
+            );
 
-        this.$header.prepend(
-            this.getHelper().getScopeColorIconHtml(this.scope)
-        );
+            this.$header.prepend(
+                this.getHelper().getScopeColorIconHtml(this.scope)
+            );
+        }
 
         this.waitForView('list');
 

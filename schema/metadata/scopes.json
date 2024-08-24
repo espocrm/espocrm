@@ -21,6 +21,10 @@
             "description": "Whether the entity has the stream.",
             "type": "boolean"
         },
+        "stars": {
+            "description": "Enables stars.",
+            "type": "boolean"
+        },
         "importable": {
             "description": "Whether the entity is available in the Import tool.",
             "type": "boolean"
@@ -83,9 +87,8 @@
             "description": "A list of available levels in Roles.",
             "type": "array",
             "items": {
-                "enum": ["all", "team", "own", "no"]
+                "enum": ["yes", "all", "team", "own", "no"]
             }
-
         },
         "aclPortalLevelList": {
             "description": "A list of available levels in Portal Roles.",
@@ -205,6 +208,14 @@
                     }
                 }
             }
+        },
+        "aclFieldLevelDisabled": {
+            "type": "boolean",
+            "description": "Disable field-level security."
+        },
+        "aclPortalFieldLevelDisabled": {
+            "type": "boolean",
+            "description": "Disable field-level security for portals."
         },
         "statusField": {
             "description": "Defines a field that should be used as a status field.",

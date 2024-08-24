@@ -1,4 +1,5 @@
 {
     "accessCheckerClassName": "Espo\\Modules\\Crm\\Classes\\Acl\\Meeting\\AccessChecker",
+    "assignmentCheckerClassName": "Espo\\Modules\\Crm\\Classes\\Acl\\Meeting\\AssignmentChecker",
     "readOwnerUserField": "users"
 }

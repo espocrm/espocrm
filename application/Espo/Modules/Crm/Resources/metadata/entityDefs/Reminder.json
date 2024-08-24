@@ -10,7 +10,10 @@
         },
         "type": {
             "type": "enum",
-            "options": ["Popup", "Email"],
+            "options": [
+                "Popup",
+                "Email"
+            ],
             "maxLength": 36,
             "index": true,
             "default": "Popup"
@@ -20,20 +23,23 @@
             "options": [0, 60, 120, 300, 600, 900, 1800, 3600, 7200, 18000, 86400, 604800],
             "default": 0
         },
-        "entityType": {
-            "type": "varchar",
-            "maxLength": 100
+        "user": {
+            "type": "link"
         },
-        "entityId": {
-            "type": "varchar",
-            "maxLength": 50
-        },
-        "userId": {
-            "type": "varchar",
-            "maxLength": 50
+        "entity": {
+            "type": "linkParent"
         },
         "isSubmitted": {
             "type": "bool"
+        }
+    },
+    "links": {
+        "user": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "entity": {
+            "type": "belongsToParent"
         }
     },
     "collection": {

@@ -32,12 +32,19 @@ class UpdateNoteStreamView extends NoteStreamView {
 
     template = 'stream/notes/update'
     messageName = 'update'
+    rowActionsView = 'views/stream/record/row-actions/update'
 
     data() {
+        const fieldsString = this.fieldDataList
+            .map(it => it.label)
+            .join(', ');
+
         return {
             ...super.data(),
-            fieldsArr: this.fieldsArr,
+            fieldDataList: this.fieldDataList,
             parentType: this.model.get('parentType'),
+            iconHtml: this.getIconHtml(),
+            fieldsString: fieldsString,
         };
     }
 
@@ -57,30 +64,30 @@ class UpdateNoteStreamView extends NoteStreamView {
         this.wait(true);
 
         this.getModelFactory().create(this.model.get('parentType'), model => {
-            let modelWas = model;
-            let modelBecame = model.clone();
+            const modelWas = model;
+            const modelBecame = model.clone();
 
-            let data = this.model.get('data');
+            const data = this.model.get('data');
 
             data.attributes = data.attributes || {};
 
             modelWas.set(data.attributes.was);
             modelBecame.set(data.attributes.became);
 
-            this.fieldsArr = [];
+            this.fieldDataList = [];
 
-            let fields = data.fields;
+            const fields = this.fieldList = data.fields;
 
             fields.forEach(field => {
-                let type = model.getFieldType(field) || 'base';
-                let viewName = this.getMetadata().get(['entityDefs', model.entityType, 'fields', field, 'view']) ||
+                const type = model.getFieldType(field) || 'base';
+                const viewName = this.getMetadata().get(['entityDefs', model.entityType, 'fields', field, 'view']) ||
                     this.getFieldManager().getViewName(type);
 
-                let attributeList = this.getFieldManager().getEntityTypeFieldAttributeList(model.entityType, field);
+                const attributeList = this.getFieldManager().getEntityTypeFieldAttributeList(model.entityType, field);
 
                 let hasValue = false;
 
-                for (let attribute of attributeList) {
+                for (const attribute of attributeList) {
                     if (attribute in data.attributes.was) {
                         hasValue = true;
 
@@ -89,9 +96,10 @@ class UpdateNoteStreamView extends NoteStreamView {
                 }
 
                 if (!hasValue) {
-                    this.fieldsArr.push({
+                    this.fieldDataList.push({
                         field: field,
                         noValues: true,
+                        label: this.translate(field, 'fields',  this.model.attributes.parentType),
                     });
 
                     return;
@@ -105,6 +113,7 @@ class UpdateNoteStreamView extends NoteStreamView {
                     },
                     mode: 'detail',
                     inlineEditDisabled: true,
+                    selector: `.row[data-name="${field}"] .cell-was`,
                 });
 
                 this.createView(field + 'Became', viewName, {
@@ -115,12 +124,14 @@ class UpdateNoteStreamView extends NoteStreamView {
                     },
                     mode: 'detail',
                     inlineEditDisabled: true,
+                    selector: `.row[data-name="${field}"] .cell-became`,
                 });
 
-                this.fieldsArr.push({
+                this.fieldDataList.push({
                     field: field,
                     was: field + 'Was',
                     became: field + 'Became',
+                    label: this.translate(field, 'fields',  this.model.attributes.parentType),
                 });
             });
 
@@ -133,8 +144,22 @@ class UpdateNoteStreamView extends NoteStreamView {
      * @param {HTMLElement} target
      */
     toggleDetails(event, target) {
-        if (this.$el.find('.details').hasClass('hidden')) {
-            this.$el.find('.details').removeClass('hidden');
+        const $details = this.$el.find('> .details');
+        const $fields = this.$el.find('> .fields');
+
+        if ($details.hasClass('hidden')) {
+            $details.removeClass('hidden');
+            $fields.addClass('hidden');
+
+            this.fieldList.forEach(field => {
+                const wasField = this.getView(field + 'Was');
+                const becomeField = this.getView(field + 'Became');
+
+                if (wasField && becomeField) {
+                    wasField.trigger('panel-show-propagated');
+                    becomeField.trigger('panel-show-propagated');
+                }
+            });
 
             $(target).find('span')
                 .removeClass('fa-chevron-down')
@@ -143,7 +168,8 @@ class UpdateNoteStreamView extends NoteStreamView {
             return;
         }
 
-        this.$el.find('.details').addClass('hidden');
+        $details.addClass('hidden');
+        $fields.removeClass('hidden');
 
         $(target).find('span')
             .addClass('fa-chevron-down')

@@ -26,69 +26,66 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/currency-rates', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+export default class extends BaseFieldView {
 
-        editTemplate: 'settings/fields/currency-rates/edit',
+    editTemplate = 'settings/fields/currency-rates/edit'
 
-        data: function () {
-            var baseCurrency = this.model.get('baseCurrency');
-            var currencyRates = this.model.get('currencyRates') || {};
+    data() {
+        const baseCurrency = this.model.get('baseCurrency');
+        const currencyRates = this.model.get('currencyRates') || {};
 
-            var rateValues = {};
+        const rateValues = {};
 
-            (this.model.get('currencyList') || []).forEach(currency => {
-                if (currency !== baseCurrency) {
-                    rateValues[currency] = currencyRates[currency];
+        (this.model.get('currencyList') || []).forEach(currency => {
+            if (currency !== baseCurrency) {
+                rateValues[currency] = currencyRates[currency];
+
+                if (!rateValues[currency]) {
+                    if (currencyRates[baseCurrency]) {
+                        rateValues[currency] = Math.round(1 / currencyRates[baseCurrency] * 1000) / 1000;
+                    }
 
                     if (!rateValues[currency]) {
-                        if (currencyRates[baseCurrency]) {
-                            rateValues[currency] = Math.round(1 / currencyRates[baseCurrency] * 1000) / 1000;
-                        }
-
-                        if (!rateValues[currency]) {
-                            rateValues[currency] = 1.00
-                        }
+                        rateValues[currency] = 1.00
                     }
                 }
-            });
-
-            return {
-                rateValues: rateValues,
-                baseCurrency: baseCurrency,
-            };
-        },
-
-        setup: function () {
-        },
-
-        fetch: function () {
-            var data = {};
-            var currencyRates = {};
-
-            var baseCurrency = this.model.get('baseCurrency');
-
-            var currencyList = this.model.get('currencyList') || [];
-
-            currencyList.forEach(currency => {
-                if (currency !== baseCurrency) {
-                    currencyRates[currency] = parseFloat(
-                        this.$el.find('input[data-currency="'+currency+'"]').val() || 1);
-                }
-            });
-
-            delete currencyRates[baseCurrency];
-
-            for (var c in currencyRates) {
-                if (!~currencyList.indexOf(c)) {
-                    delete currencyRates[c];
-                }
             }
+        });
 
-            data[this.name] = currencyRates;
+        return {
+            rateValues: rateValues,
+            baseCurrency: baseCurrency,
+        };
+    }
 
-            return data;
-        },
-    });
-});
+    fetch() {
+        const data = {};
+        const currencyRates = {};
+
+        const baseCurrency = this.model.get('baseCurrency');
+
+        const currencyList = this.model.get('currencyList') || [];
+
+        currencyList.forEach(currency => {
+            if (currency !== baseCurrency) {
+                const value = this.$el.find(`input[data-currency="${currency}"]`).val() || '1';
+
+                currencyRates[currency] = parseFloat(value);
+            }
+        });
+
+        delete currencyRates[baseCurrency];
+
+        for (const c in currencyRates) {
+            if (!~currencyList.indexOf(c)) {
+                delete currencyRates[c];
+            }
+        }
+
+        data[this.name] = currencyRates;
+
+        return data;
+    }
+}

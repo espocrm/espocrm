@@ -37,6 +37,8 @@ use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\NumberUtil;
 use Espo\Core\Utils\Language;
 
+use Stringable;
+
 class Formatter
 {
     private Metadata $metadata;
@@ -163,7 +165,10 @@ class Formatter
             return $this->number->format($value);
         }
 
-        if (!is_string($value) && is_scalar($value) || is_callable([$value, '__toString'])) {
+        if (
+            !is_string($value) && is_scalar($value) ||
+            $value instanceof Stringable
+        ) {
             return strval($value);
         }
 

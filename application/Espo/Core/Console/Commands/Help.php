@@ -36,14 +36,13 @@ use Espo\Core\Console\IO;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
 
+/**
+ * @noinspection PhpUnused
+ */
 class Help implements Command
 {
-    private $metadata;
-
-    public function __construct(Metadata $metadata)
-    {
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Metadata $metadata)
+    {}
 
     public function run(Params $params, IO $io): void
     {

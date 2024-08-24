@@ -26,38 +26,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/lead/detail', ['views/detail'], function (Dep) {
+import DetailView from 'views/detail';
 
-    return Dep.extend({
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+class LeadDetailView extends DetailView {
 
-            this.addMenuItem('buttons', {
-                name: 'convert',
-                action: 'convert',
-                label: 'Convert',
-                acl: 'edit',
-                hidden: !this.isConvertable(),
-                onClick: () => this.actionConvert(),
-            });
+    setup() {
+        super.setup();
 
-            if (!this.model.has('status')) {
-                this.listenToOnce(this.model, 'sync', () => {
-                    if (this.isConvertable()) {
-                        this.showHeaderActionItem('convert');
-                    }
-                });
-            }
-        },
+        this.addMenuItem('buttons', {
+            name: 'convert',
+            action: 'convert',
+            label: 'Convert',
+            acl: 'edit',
+            hidden: !this.isConvertable(),
+            onClick: () => this.actionConvert(),
+        });
 
-        isConvertable: function () {
-            return !['Converted', 'Dead'].includes(this.model.get('status')) ||
-                !this.model.has('status');
-        },
+        this.listenTo(this.model, 'sync', () => {
+            this.isConvertable() ?
+                this.showHeaderActionItem('convert') :
+                this.hideHeaderActionItem('convert');
+        });
+    }
 
-        actionConvert: function () {
-            this.getRouter().navigate(this.model.entityType + '/convert/' + this.model.id , {trigger: true});
-        },
-    });
-});
+    isConvertable() {
+        const notActualList = [
+            ...(this.getMetadata().get(`entityDefs.Lead.fields.status.notActualOptions`) || []),
+            'Converted',
+       ];
+
+        return !notActualList.includes(this.model.get('status')) && this.model.has('status');
+    }
+
+    actionConvert() {
+        this.getRouter().navigate(`${this.model.entityType}/convert/${this.model.id}` , {trigger: true});
+    }
+}
+
+export default LeadDetailView;

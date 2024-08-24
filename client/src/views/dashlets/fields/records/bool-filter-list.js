@@ -26,62 +26,60 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashlets/fields/records/bool-filter-list', ['views/fields/multi-enum'], function (Dep) {
+import MultiEnumFieldView from 'views/fields/multi-enum';
 
-    return Dep.extend({
+export default class extends MultiEnumFieldView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.listenTo(this.model, 'change:entityType', () => {
-                this.setupOptions();
-                this.reRender();
-            });
-        },
+        this.listenTo(this.model, 'change:entityType', () => {
+            this.setupOptions();
+            this.reRender();
+        });
+    }
 
-        setupOptions: function () {
-            var entityType = this.model.get('entityType');
+    setupOptions() {
+        const entityType = this.model.get('entityType');
 
-            if (!entityType) {
-                this.params.options = [];
+        if (!entityType) {
+            this.params.options = [];
+
+            return;
+        }
+
+        const filterList = this.getMetadata().get(['clientDefs', entityType, 'boolFilterList']) || [];
+
+        this.params.options = [];
+
+        filterList.forEach(item => {
+            if (typeof item === 'object' && item.name) {
+                if (
+                    item.accessDataList &&
+                    !Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser(), null, true)
+                ) {
+                    return false;
+                }
+
+                this.params.options.push(item.name);
 
                 return;
             }
 
-            var filterList = this.getMetadata().get(['clientDefs', entityType, 'boolFilterList']) || [];
+            this.params.options.push(item);
+        });
 
-            this.params.options = [];
+        if (
+            this.getMetadata().get(['scopes', entityType, 'stream']) &&
+            this.getAcl().checkScope(entityType, 'stream')
+        ) {
+            this.params.options.push('followed');
+        }
 
-            filterList.forEach(item => {
-                if (typeof item === 'object' && item.name) {
-                    if (item.accessDataList) {
-                        if (
-                            !Espo.Utils
-                                .checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser(), null, true)
-                        ) {
-                            return false;
-                        }
-                    }
+        this.translatedOptions = {};
 
-                    this.params.options.push(item.name);
-                    return;
-                }
-
-                this.params.options.push(item);
-            });
-
-            if (
-                this.getMetadata().get(['scopes', entityType, 'stream']) &&
-                this.getAcl().checkScope(entityType, 'stream')
-            ) {
-                this.params.options.push('followed');
-            }
-
-            this.translatedOptions = {};
-
-            this.params.options.forEach(item => {
-                this.translatedOptions[item] = this.translate(item, 'boolFilters', entityType);
-            });
-        },
-    });
-});
+        this.params.options.forEach(item => {
+            this.translatedOptions[item] = this.translate(item, 'boolFilters', entityType);
+        });
+    }
+}

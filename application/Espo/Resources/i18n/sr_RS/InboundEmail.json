@@ -18,7 +18,9 @@
     "fetchSince": "Preuzmi od",
     "addAllTeamUsers": "Za sve korisnike tima",
     "team": "Ciljani tim",
-    "teams": "Timovi"
+    "teams": "Timovi",
+    "sentFolder": "Poslato",
+    "storeSentEmails": "Sačuvaj poslat email"
   },
   "tooltips": {
     "reply": "Obavesti e-pošiljaoce da je primljena e-pošta. \n\n Samo jedna poruka će biti poslata određenom primaocu u određenom vremenskom periodu da se spreči ponavljanje.",

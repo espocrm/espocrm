@@ -29,27 +29,26 @@
 
 namespace Espo\Core\Upgrades\Actions\Extension;
 use Espo\Core\Exceptions\Error;
+use Espo\Entities\Extension;
 
 class Delete extends \Espo\Core\Upgrades\Actions\Base\Delete
 {
-    /**
-     * @var ?\Espo\Entities\Extension
-     */
-    protected $extensionEntity;
+    protected ?Extension $extensionEntity = null;
 
     /**
-     * Get entity of this extension.
+     * Get an entity of this extension.
      *
-     * @return \Espo\Entities\Extension
      * @throws Error
      */
-    protected function getExtensionEntity()
+    protected function getExtensionEntity(): Extension
     {
-        if (!isset($this->extensionEntity)) {
+        if (!$this->extensionEntity) {
             $processId = $this->getProcessId();
-            $this->extensionEntity = $this->getEntityManager()->getEntity('Extension', $processId);
-            if (!isset($this->extensionEntity)) {
-                throw new Error('Extension Entity not found.');
+
+            $this->extensionEntity = $this->getEntityManager()->getEntityById(Extension::ENTITY_TYPE, $processId);
+
+            if (!$this->extensionEntity) {
+                throw new Error('Extension entity not found.');
             }
         }
 
@@ -57,10 +56,9 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base\Delete
     }
 
     /**
-     * @return void
      * @throws Error
      */
-    protected function afterRunAction()
+    protected function afterRunAction(): void
     {
         /** Delete extension entity */
         $extensionEntity = $this->getExtensionEntity();

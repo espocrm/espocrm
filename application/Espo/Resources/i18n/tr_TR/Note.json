@@ -1,11 +1,11 @@
 {
   "fields": {
     "post": "Yayınla",
-    "attachments": "Dosya Ekle",
+    "attachments": "Ekler",
     "targetType": "Hedef",
     "teams": "Takımlar",
     "users": "Kullanıcılar",
-    "portals": "Portallar",
+    "portals": "Portaller",
     "type": "Tip",
     "related": "İlgili",
     "createdByGender": "Cinsiyete Göre Oluşturuldu",
@@ -15,7 +15,8 @@
   "filters": {
     "all": "Hepsi",
     "posts": "Yazılar",
-    "updates": "Güncellemeler"
+    "updates": "Güncellemeler",
+    "activity": "Aktivite"
   },
   "messages": {
     "writeMessage": "Mesajınızı buraya yazınız"
@@ -27,9 +28,27 @@
       "teams": "Belirli takımlara",
       "all": "Tüm dahili kullanıcılara",
       "portals": "Portal kullanıcılarına"
+    },
+    "type": {
+      "Post": "İleti",
+      "Create": "Oluştur",
+      "CreateRelated": "İlgili Oluştur",
+      "Update": "Güncelleme",
+      "Status": "Durum",
+      "Assign": "Atanmış",
+      "Relate": "İlgili",
+      "Unrelate": "İlgiliyi Kaldır",
+      "EmailReceived": "Eposta Alındı",
+      "EmailSent": "Eposta Gönderildi"
     }
   },
   "links": {
-    "related": "İlgili"
+    "related": "İlgili",
+    "portals": "Portaller",
+    "attachments": "Ekler"
+  },
+  "labels": {
+    "View Posts": "Eposta Görüntüleme",
+    "View Activity": "Aktivite Görüntüleme"
   }
 }

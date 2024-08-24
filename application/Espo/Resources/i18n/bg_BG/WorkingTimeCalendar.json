@@ -1,7 +1,6 @@
 {
   "labels": {
-    "Create WorkingTimeCalendar": "Създаване на календар",
-    "Ranges": "Диапазони"
+    "Create WorkingTimeCalendar": "Създаване на календар"
   },
   "fields": {
     "timeZone": "Времева зона",
@@ -22,6 +21,6 @@
     "weekday6TimeRanges": "График за Събота"
   },
   "links": {
-    "ranges": "Диапазони"
+    "ranges": "Изключения"
   }
 }

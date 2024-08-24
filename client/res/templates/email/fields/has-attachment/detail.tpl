@@ -3,8 +3,9 @@
     role="button"
     tabindex="0"
     data-action="show"
+    class="text-soft"
 ><span
-    class="fas fa-paperclip text-soft{{#if isSmall}} small{{/if}}"
-    title="{{translate 'hasAttachment' category='fields' scope='Email'}}"
+    class="fas fa-paperclip{{#if isSmall}} small{{/if}}"
+    title="{{translate 'View Attachments' scope='Email'}}"
 ></span></a>
 {{~/if~}}

@@ -21,5 +21,14 @@
     },
     "subscribers": {
         "className": "Espo\\Classes\\Cleanup\\Subscribers"
+    },
+    "audit": {
+        "className": "Espo\\Classes\\Cleanup\\Audit"
+    },
+    "stars": {
+        "className": "Espo\\Classes\\Cleanup\\Stars"
+    },
+    "appLog": {
+        "className": "Espo\\Classes\\Cleanup\\AppLog"
     }
 }

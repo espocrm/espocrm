@@ -7,7 +7,24 @@
             "implementationClassName": "Espo\\Classes\\MassAction\\User\\MassDelete"
         }
     },
+    "mandatoryAttributeList": [
+        "isActive",
+        "userName",
+        "type"
+    ],
+    "outputFilterClassNameList": [
+        "Espo\\Classes\\Record\\User\\OutputFilter"
+    ],
     "readLoaderClassNameList": [
         "Espo\\Classes\\FieldProcessing\\User\\LastAccessLoader"
+    ],
+    "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\User\\BeforeCreate"
+    ],
+    "beforeUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\User\\BeforeUpdate"
+    ],
+    "afterUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\User\\AfterUpdate"
     ]
 }

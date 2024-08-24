@@ -26,82 +26,81 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/personal-data/modals/personal-data', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+export default class extends ModalView {
 
-        className: 'dialog dialog-record',
+    template = 'personal-data/modals/personal-data'
 
-        template: 'personal-data/modals/personal-data',
+    className = 'dialog dialog-record'
+    backdrop = true
 
-        backdrop: true,
+    setup() {
+        super.setup();
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        this.buttonList = [
+            {
+                name: 'cancel',
+                label: 'Close'
+            },
+        ];
 
-            this.buttonList = [
-                {
-                    name: 'cancel',
-                    label: 'Close'
-                },
-            ];
+        this.headerText = this.getLanguage().translate('Personal Data');
+        this.headerText += ': ' + this.model.get('name');
 
-            this.headerText = this.getLanguage().translate('Personal Data');
-            this.headerText += ': ' + this.model.get('name');
+        if (this.getAcl().check(this.model, 'edit')) {
+            this.buttonList.unshift({
+                name: 'erase',
+                label: 'Erase',
+                style: 'danger',
+                disabled: true,
+                onClick: () => this.actionErase(),
+            });
+        }
 
-            if (this.getAcl().check(this.model, 'edit')) {
-                this.buttonList.unshift({
-                    name: 'erase',
-                    label: 'Erase',
-                    style: 'danger',
-                    disabled: true,
-                });
-            }
+        this.fieldList = [];
 
-            this.fieldList = [];
+        this.scope = this.model.entityType;
 
-            this.scope = this.model.entityType;
+        this.createView('record', 'views/personal-data/record/record', {
+            selector: '.record',
+            model: this.model,
+        }, (view) => {
+            this.listenTo(view, 'check', (fieldList) => {
+                this.fieldList = fieldList;
 
-            this.createView('record', 'views/personal-data/record/record', {
-                selector: '.record',
-                model: this.model
-            }, (view) => {
-                this.listenTo(view, 'check', (fieldList) => {
-                    this.fieldList = fieldList;
-
-                    if (fieldList.length) {
-                        this.enableButton('erase');
-                    } else {
-                        this.disableButton('erase');
-                    }
-                });
-
-                if (!view.fieldList.length) {
-                    this.disableButton('export');
+                if (fieldList.length) {
+                    this.enableButton('erase');
+                } else {
+                    this.disableButton('erase');
                 }
             });
-        },
 
-        actionErase: function () {
-            this.confirm({
-                message: this.translate('erasePersonalDataConfirmation', 'messages'),
-                confirmText: this.translate('Erase')
-            }, () => {
-                this.disableButton('erase');
+            if (!view.fieldList.length) {
+                this.disableButton('export');
+            }
+        });
+    }
 
-                Espo.Ajax.postRequest('DataPrivacy/action/erase', {
-                    fieldList: this.fieldList,
-                    entityType: this.scope,
-                    id: this.model.id,
-                }).then(() => {
-                    Espo.Ui.success(this.translate('Done'));
+    actionErase() {
+        this.confirm({
+            message: this.translate('erasePersonalDataConfirmation', 'messages'),
+            confirmText: this.translate('Erase')
+        }, () => {
+            this.disableButton('erase');
 
-                    this.trigger('erase');
-                })
-                .catch(() => {
-                    this.enableButton('erase');
-                });
+            Espo.Ajax.postRequest('DataPrivacy/action/erase', {
+                fieldList: this.fieldList,
+                entityType: this.scope,
+                id: this.model.id,
+            }).then(() => {
+                Espo.Ui.success(this.translate('Done'));
+
+                this.trigger('erase');
+            })
+            .catch(() => {
+                this.enableButton('erase');
             });
-        },
-    });
-});
+        });
+    }
+}

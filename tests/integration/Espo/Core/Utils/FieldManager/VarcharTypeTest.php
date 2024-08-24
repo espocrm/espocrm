@@ -72,7 +72,7 @@ class VarcharTypeTest extends \tests\integration\Core\BaseTestCase
         $app = $this->createApplication();
 
         $metadata = $app->getContainer()->get('metadata');
-        $savedFieldDefs = $metadata->get('entityDefs.Account.fields.testVarchar');
+        $savedFieldDefs = $metadata->get('entityDefs.Account.fields.cTestVarchar');
 
         $this->assertArrayHasKey('type', $savedFieldDefs);
         $this->assertArrayHasKey('isCustom', $savedFieldDefs);
@@ -84,13 +84,13 @@ class VarcharTypeTest extends \tests\integration\Core\BaseTestCase
         $account = $entityManager->getEntity('Account');
         $account->set([
             'name' => 'Test',
-            'testVarchar' => 'test-value'
+            'cTestVarchar' => 'test-value'
         ]);
 
         $entityManager->saveEntity($account);
 
         $account = $entityManager->getEntity('Account', $account->id);
-        $this->assertEquals('test-value', $account->get('testVarchar'));
+        $this->assertEquals('test-value', $account->get('cTestVarchar'));
     }
 
     public function testUpdate()
@@ -105,13 +105,13 @@ class VarcharTypeTest extends \tests\integration\Core\BaseTestCase
         $fieldDefs['required'] = false;
         $fieldDefs['default'] = 'default-value';
 
-        $fieldManager->update('Account', 'testVarchar', $fieldDefs);
+        $fieldManager->update('Account', 'cTestVarchar', $fieldDefs);
         $this->getContainer()->get('dataManager')->rebuild(['Account']);
 
         $app = $this->createApplication();
 
         $metadata = $app->getContainer()->get('metadata');
-        $savedFieldDefs = $metadata->get('entityDefs.Account.fields.testVarchar');
+        $savedFieldDefs = $metadata->get('entityDefs.Account.fields.cTestVarchar');
 
         $this->assertFalse($savedFieldDefs['required']);
         $this->assertEquals('default-value', $savedFieldDefs['default']);
@@ -126,6 +126,6 @@ class VarcharTypeTest extends \tests\integration\Core\BaseTestCase
         $entityManager->saveEntity($account);
 
         $account = $entityManager->getEntity('Account', $account->id);
-        $this->assertEquals('default-value', $account->get('testVarchar'));
+        $this->assertEquals('default-value', $account->get('cTestVarchar'));
     }
 }

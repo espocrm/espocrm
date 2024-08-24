@@ -4,7 +4,7 @@
             [{"name": "name"}, {"name": "isActive"}],
             [{"name": "url"}, {"name": "isDefault"}],
             [{"name": "portalRoles"}, {"name": "customId"}],
-            [{"name": "authenticationProvider"}, {"name": "customUrl"}]
+            [{"name": "customUrl"}, false]
         ],
         "tabBreak": true,
         "tabLabel": "$label:General"
@@ -17,6 +17,12 @@
         ],
         "tabBreak": true,
         "tabLabel": "$label:Settings"
+    },
+    {
+        "rows": [
+            [{"name": "authenticationProvider"}, {"name": "authTokenLifetime"}],
+            [false, {"name": "authTokenMaxIdleTime"}]
+        ]
     },
     {
         "rows": [

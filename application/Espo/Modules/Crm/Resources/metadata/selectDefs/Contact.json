@@ -6,5 +6,8 @@
     },
     "accessControlFilterClassNameMap": {
         "portalOnlyContact": "Espo\\Modules\\Crm\\Classes\\Select\\Contact\\AccessControlFilters\\PortalOnlyContact"
+    },
+    "selectAttributesDependencyMap": {
+        "accountId": ["accountIsInactive"]
     }
 }

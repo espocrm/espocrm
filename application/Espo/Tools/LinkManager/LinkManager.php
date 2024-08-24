@@ -84,6 +84,8 @@ class LinkManager
      *     auditedForeign?: bool,
      *     layout?: string,
      *     layoutForeign?: string,
+     *     selectFilter?: string,
+     *     selectFilterForeign?: string,
      *     parentEntityTypeList?: string[],
      *     foreignLinkEntityTypeList?: string[],
      * } $params
@@ -124,6 +126,10 @@ class LinkManager
                 $params['relationName'] :
                 lcfirst($entity) . $entityForeign;
 
+            if ($relationName[0] !== 'c' || !preg_match('/[A-Z]/', $relationName[1])) {
+                $relationName = $this->nameUtil->addCustomPrefix($relationName);
+            }
+
             if ($this->isNameTooLong($relationName)) {
                 throw new Error("Relation name is too long.");
             }
@@ -141,6 +147,14 @@ class LinkManager
             }
         }
 
+        if (!$this->isScopeCustom($entity)) {
+            $link = $this->nameUtil->addCustomPrefix($link);
+        }
+
+        if (!$entityForeign || !$this->isScopeCustom($entityForeign)) {
+            $linkForeign = $this->nameUtil->addCustomPrefix($linkForeign);
+        }
+
         $linkParams = LinkParams::createBuilder()
             ->setType($linkType)
             ->setEntityType($entity)
@@ -150,15 +164,15 @@ class LinkManager
             ->setName($relationName)
             ->build();
 
+        if (is_numeric($link[0]) || is_numeric($linkForeign[0])) {
+            throw new Error('Bad link name.');
+        }
+
         if (
             $this->isNameTooLong($link) ||
             $this->isNameTooLong($linkForeign)
         ) {
             throw new Error("Link name is too long.");
-        }
-
-        if (is_numeric($link[0]) || is_numeric($linkForeign[0])) {
-            throw new Error('Bad link name.');
         }
 
         if (preg_match('/[^a-z]/', $link[0])) {
@@ -175,6 +189,14 @@ class LinkManager
 
         if (in_array($linkForeign, NameUtil::LINK_FORBIDDEN_NAME_LIST)) {
             throw new Conflict("Link name '$linkForeign' is not allowed.");
+        }
+
+        if (!$this->isScopeCustomizable($entity)) {
+            throw new Error("Entity type '$entity' is not customizable.");
+        }
+
+        if ($entityForeign && !$this->isScopeCustomizable($entityForeign)) {
+            throw new Error("Entity type '$entityForeign' is not customizable.");
         }
 
         foreach ($this->routeUtil->getFullList() as $route) {
@@ -540,6 +562,10 @@ class LinkManager
 
         $this->setLayouts($params);
 
+        if ($linkType !== self::CHILDREN_TO_PARENT) {
+            $this->setSelectFilters($params);
+        }
+
         $this->metadata->save();
 
         $this->language->set($entity, 'fields', $link, $label);
@@ -579,20 +605,22 @@ class LinkManager
 
     /**
      * @param array{
-     *   entity: string,
-     *   link: string,
-     *   entityForeign?: ?string,
-     *   linkForeign?: ?string,
-     *   label?: string,
-     *   labelForeign?: string,
-     *   linkMultipleField?: bool,
-     *   linkMultipleFieldForeign?: bool,
-     *   audited?: bool,
-     *   auditedForeign?: bool,
-     *   parentEntityTypeList?: string[],
-     *   foreignLinkEntityTypeList?: string[],
-     *   layout?: string,
-     *   layoutForeign?: string,
+     *     entity: string,
+     *     link: string,
+     *     entityForeign?: ?string,
+     *     linkForeign?: ?string,
+     *     label?: string,
+     *     labelForeign?: string,
+     *     linkMultipleField?: bool,
+     *     linkMultipleFieldForeign?: bool,
+     *     audited?: bool,
+     *     auditedForeign?: bool,
+     *     parentEntityTypeList?: string[],
+     *     foreignLinkEntityTypeList?: string[],
+     *     layout?: string,
+     *     layoutForeign?: string,
+     *     selectFilter?: string,
+     *     selectFilterForeign?: string,
      * } $params
      * @throws BadRequest
      * @throws Error
@@ -757,6 +785,11 @@ class LinkManager
         }
 
         $this->setLayouts($params);
+
+        if ($linkType !== self::CHILDREN_TO_PARENT) {
+            $this->setSelectFilters($params);
+        }
+
         $this->metadata->save();
 
         $label = null;
@@ -859,6 +892,8 @@ class LinkManager
                 'links.' . $link,
             ]);
 
+            $this->metadata->delete('clientDefs', $entity, ["dynamicLogic.fields.$link"]);
+
             $this->metadata->save();
 
             if ($linkForeign) {
@@ -912,6 +947,9 @@ class LinkManager
                 ->setForeignLink($linkForeign)
                 ->build();
         }
+
+        $this->metadata->delete('clientDefs', $entity, ["dynamicLogic.fields.$link"]);
+        $this->metadata->delete('clientDefs', $entityForeign, ["dynamicLogic.fields.$linkForeign"]);
 
         $this->metadata->delete('entityDefs', $entity, [
             'fields.' . $link,
@@ -968,6 +1006,39 @@ class LinkManager
             'relationshipPanels' => [
                 $link => [
                     'layout' => $layout,
+                ]
+            ]
+        ]);
+    }
+
+    /**
+     * @param array{
+     *   entity: string,
+     *   link: string,
+     *   entityForeign?: ?string,
+     *   linkForeign?: ?string,
+     *   selectFilter?: string,
+     *   selectFilterForeign?: string,
+     * } $params
+     */
+    private function setSelectFilters(array $params): void
+    {
+        $this->setSelectFilter($params['entity'], $params['link'], $params['selectFilter'] ?? null);
+
+        if (!isset($params['entityForeign']) || !isset($params['linkForeign'])) {
+            return;
+        }
+
+        $this->setSelectFilter(
+            $params['entityForeign'], $params['linkForeign'], $params['selectFilterForeign'] ?? null);
+    }
+
+    private function setSelectFilter(string $entityType, string $link, ?string $selectFilter): void
+    {
+        $this->metadata->set('clientDefs', $entityType, [
+            'relationshipPanels' => [
+                $link => [
+                    'selectPrimaryFilterName' => $selectFilter,
                 ]
             ]
         ]);
@@ -1088,5 +1159,23 @@ class LinkManager
         if ($this->isLanguageNotBase()) {
             $this->baseLanguage->save();
         }
+    }
+
+    private function isScopeCustom(string $scope): bool
+    {
+        return (bool) $this->metadata->get("scopes.$scope.isCustom");
+    }
+
+    private function isScopeCustomizable(string $scope): bool
+    {
+        if (!$this->metadata->get("scopes.$scope.customizable")) {
+            return false;
+        }
+
+        if ($this->metadata->get("scopes.$scope.entityManager.relationships") === false) {
+            return false;
+        }
+
+        return true;
     }
 }

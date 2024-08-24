@@ -66,7 +66,7 @@ class BaseNotificationItemView extends View {
     }
 
     createMessage() {
-        let parentType = this.model.get('relatedParentType') || null;
+        const parentType = this.model.get('relatedParentType') || null;
 
         if (!this.messageTemplate && this.messageName) {
             this.messageTemplate = this.translate(this.messageName, 'notificationMessages', parentType) || '';
@@ -111,9 +111,9 @@ class BaseNotificationItemView extends View {
 
         string = string.toLowerCase();
 
-        let language = this.getPreferences().get('language') || this.getConfig().get('language');
+        const language = this.getPreferences().get('language') || this.getConfig().get('language');
 
-        if (~['de_DE', 'nl_NL'].indexOf(language)) {
+        if (['de_DE', 'nl_NL'].includes(language)) {
             string = Espo.Utils.upperCaseFirst(string);
         }
 

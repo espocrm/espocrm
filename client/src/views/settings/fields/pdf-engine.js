@@ -26,16 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/pdf-engine', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+// noinspection JSUnusedGlobalSymbols
+export default class extends EnumFieldView {
 
-        setupOptions: function () {
-            this.params.options = Object.keys(this.getMetadata().get(['app', 'pdfEngines']));
+    setupOptions() {
+        this.params.options = Object.keys(this.getMetadata().get(['app', 'pdfEngines']));
 
-            if (this.params.options.length === 0) {
-                this.params.options = [''];
-            }
-        },
-    });
-});
+        if (this.params.options.length === 0) {
+            this.params.options = [''];
+        }
+    }
+}

@@ -86,7 +86,6 @@
     "Loading...": "Učitavanje...",
     "Uploading...": "Otpremanje...",
     "Sending...": "Slanje...",
-    "Merging...": "Spajanje ...",
     "Removed": "Uklonjeno",
     "Posted": "Objavljeno",
     "Linked": "Povezano",
@@ -99,14 +98,10 @@
     "Record has been removed": "Unos je uklonjen",
     "Wrong username/password": "Pogrešno korisničko ime / lozinka",
     "Post cannot be empty": "Unos ne može biti prazan",
-    "Removing...": "Uklanjanje ...",
-    "Unlinking...": "Opoziv veze ...",
-    "Posting...": "Postavljanje ...",
     "Username can not be empty!": "Korisničko ime ne može biti prazno!",
     "Cache is not enabled": "Keš nije omogućen",
     "Cache has been cleared": "Keš je obrisan",
     "Rebuild has been done": "Obnova je urađena",
-    "Saving...": "Čuvanje...",
     "Modified": "Izmenjeno",
     "Created": "Napravljeno",
     "Create": "Napravi",
@@ -209,11 +204,16 @@
     "Self-Assign": "Samo-dodela",
     "Self-Assigned": "Samo-dodeljeno",
     "Return to Application": "Povratak na aplikaciju",
-    "Select All Results": "Izaberi sve rezultate"
+    "Select All Results": "Izaberi sve rezultate",
+    "Expand": "Proširi",
+    "Collapse": "Skupi",
+    "New notifications": "Nova notifikacija",
+    "Manage Categories": "Prilagodi Kategorije",
+    "Manage Folders": "Prilagodi Foldere",
+    "Convert to": "Pretvori u"
   },
   "messages": {
     "pleaseWait": "Sačekajte...",
-    "posting": "Postavljanje ...",
     "confirmLeaveOutMessage": "Da li ste sigurni da želite da napustite formular?",
     "notModified": "Niste modifikovali upis",
     "fieldIsRequired": "{field} je obavezno",
@@ -260,9 +260,7 @@
     "fieldShouldBeDatetime": "{field} treba da bude važeći datum / vreme",
     "internalPostTitle": "Upis se prikazuje samo internim korisnicima",
     "loading": "Učitava se...",
-    "saving": "Čuva se...",
-    "fieldShouldBeLess": "{Field} treba da bude manje od {value}",
-    "fieldShouldBeGreater": "{Field} mora biti veće od {value}"
+    "saving": "Čuva se..."
   },
   "boolFilters": {
     "onlyMy": "Samo moje",
@@ -278,7 +276,8 @@
     "massUpdate": "Masovna izmena",
     "export": "Izvoz...",
     "follow": "Pratiti",
-    "unfollow": "Otkaži praćenje"
+    "unfollow": "Otkaži praćenje",
+    "convertCurrency": "Promeni valutu"
   },
   "fields": {
     "name": "Ime",
@@ -467,7 +466,8 @@
       "ever": "ikad",
       "isEmpty": "je prazno",
       "olderThanXDays": "Stariji od x dana",
-      "afterXDays": "Posle x dana"
+      "afterXDays": "Posle x dana",
+      "nextMonth": "Sledeći mesec"
     },
     "searchRanges": {
       "is": "je",

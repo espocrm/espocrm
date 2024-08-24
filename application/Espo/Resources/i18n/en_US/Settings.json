@@ -26,6 +26,7 @@
         "outboundEmailFromAddress": "From Address",
         "outboundEmailIsShared": "Is Shared",
         "emailAddressLookupEntityTypeList": "Email address look-up scopes",
+        "emailAddressSelectEntityTypeList": "Email address select scopes",
         "recordsPerPage": "Records Per Page",
         "recordsPerPageSmall": "Records Per Page (Small)",
         "recordsPerPageSelect": "Records Per Page (Select)",
@@ -112,6 +113,7 @@
         "textFilterUseContainsForVarchar": "Use 'contains' operator when filtering varchar fields",
         "phoneNumberNumericSearch": "Numeric phone number search",
         "phoneNumberInternational": "International phone numbers",
+        "phoneNumberExtensions": "Phone number extensions",
         "phoneNumberPreferredCountryList": "Preferred telephone country codes",
         "authTokenPreventConcurrent": "Only one auth token per user",
         "scopeColorsDisabled": "Disable scope colors",
@@ -120,7 +122,6 @@
         "emailAddressIsOptedOutByDefault": "Mark new email addresses as opted-out",
         "outboundEmailBccAddress": "BCC address for external clients",
         "cleanupDeletedRecords": "Clean up deleted records",
-        "addressCountryList": "Address Country Autocomplete List",
         "addressCityList": "Address City Autocomplete List",
         "addressStateList": "Address State Autocomplete List",
         "fiscalYearShift": "Fiscal Year Start",
@@ -166,7 +167,12 @@
         "oidcAllowRegularUserFallback": "OIDC Allow fallback login for regular users",
         "oidcAllowAdminUser": "OIDC Allow OIDC login for admin users",
         "oidcLogoutUrl": "OIDC Logout URL",
-        "pdfEngine": "PDF Engine"
+        "oidcAuthorizationPrompt": "OIDC Authorization Prompt",
+        "pdfEngine": "PDF Engine",
+        "quickSearchFullTextAppendWildcard": "Append wildcard in quick search",
+        "authIpAddressCheck": "Restrict access by IP address",
+        "authIpAddressWhitelist": "IP Address Whitelist",
+        "authIpAddressCheckExcludedUsers": "Users excluded from check"
     },
     "options": {
         "authenticationMethod": {
@@ -195,6 +201,8 @@
         }
     },
     "tooltips": {
+        "authIpAddressCheckExcludedUsers": "Users that will be able to log in regardless whether their IP address is in the whitelist.",
+        "authIpAddressWhitelist": "A list of IP addresses or ranges in CIDR notation.\n\nPortals are not affected by restriction.",
         "workingTimeCalendar": "A working time calendar that will be applied to all users by default.",
         "displayListViewRecordCount": "A total number of records will be shown on the list view.",
         "currencyList": "What currencies will be available in the system.",
@@ -212,6 +220,7 @@
         "passwordRecoveryForInternalUsersDisabled": "Only portal users will be able to recover password.",
         "passwordRecoveryNoExposure": "It won't be possible to determine whether a specific email address is registered in the system.",
         "emailAddressLookupEntityTypeList": "For email address autocomplete.",
+        "emailAddressSelectEntityTypeList": "Entity types available when searching for an email address from a modal.",
         "emailNotificationsDelay": "A message can be edited within the specified timeframe before the notification is sent.",
         "outboundEmailFromAddress": "The system email address.",
         "smtpServer": "If empty, then Group Email Account with the corresponding email address will be used.",
@@ -258,7 +267,7 @@
         "textFilterUseContainsForVarchar": "If not checked then 'starts with' operator is used. You can use the wildcard '%'.",
         "streamEmailNotificationsEntityList": "Email notifications about stream updates of followed records. Users will receive email notifications only for specified entity types.",
         "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously.",
-        "emailAddressIsOptedOutByDefault": "When creating new record email addess will be marked as opted-out.",
+        "emailAddressIsOptedOutByDefault": "When creating new record email address will be marked as opted-out.",
         "cleanupDeletedRecords": "Removed records will be deleted from database after a while.",
         "jobRunInParallel": "Jobs will be executed in parallel processes.",
         "jobPoolConcurrencyNumber": "Max number of processes run simultaneously.",
@@ -269,14 +278,15 @@
         "daemonProcessTimeout": "Max execution time (in seconds) allocated for a single cron process.",
         "cronDisabled": "Cron will not run.",
         "maintenanceMode": "Only administrators will have access to the system.",
-        "oidcGroupClaim": "A claim to user for team mapping.",
+        "oidcGroupClaim": "A claim to use for team mapping.",
         "oidcFallback": "Allow login by username/password.",
         "oidcCreateUser": "Create a new user in Espo when no matching user found.",
         "oidcSync": "Sync user data (on every login).",
         "oidcSyncTeams": "Sync user teams (on every login).",
         "oidcUsernameClaim": "A claim to use for a username (for user matching and creation).",
         "oidcTeams": "Espo teams mapped against groups/teams/roles of the identity provider. Teams with an empty mapping value will be always assigned to a user (when creating or syncing).",
-        "oidcLogoutUrl": "An URL the browser will redirect to after logging out from Espo. Intended for clearing the session information in the browser and doing logging out on the provider side. Usually the URL contains a redirect-URL parameter, to return back to Espo.\n\nAvailable placeholders:\n* `{siteUrl}`\n* `{clientId}`"
+        "oidcLogoutUrl": "An URL the browser will redirect to after logging out from Espo. Intended for clearing the session information in the browser and doing logging out on the provider side. Usually the URL contains a redirect-URL parameter, to return back to Espo.\n\nAvailable placeholders:\n* `{siteUrl}`\n* `{clientId}`",
+        "quickSearchFullTextAppendWildcard": "Append a wildcard to an autocomplete search query when Full-Text search is enabled. Reduces search performance."
     },
     "labels": {
         "Group Tab": "Group Tab",
@@ -303,7 +313,10 @@
         "Passwords": "Passwords",
         "2-Factor Authentication": "2-Factor Authentication",
         "Attachments": "Attachments",
-        "IdP Group": "IdP Group"
+        "IdP Group": "IdP Group",
+        "Access": "Access",
+        "Strength": "Strength",
+        "Recovery": "Recovery"
     },
     "messages": {
         "ldapTestConnection": "The connection successfully established."

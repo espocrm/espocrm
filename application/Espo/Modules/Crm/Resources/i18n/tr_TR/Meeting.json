@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "İsim",
+    "name": "Ad",
     "parent": "Üst Seçenek",
     "status": "Durum",
     "dateStart": "Başlangıç Tarihi",
@@ -9,10 +9,11 @@
     "description": "Açıklama",
     "users": "Kullanıcılar",
     "contacts": "Kişiler",
-    "leads": "Müşteri Potansiyelleri",
+    "leads": "Potansiyeller",
     "reminders": "Hatırlatıcılar",
-    "account": "Hesap",
-    "acceptanceStatus": "Kabul Durumu"
+    "account": "Firma",
+    "acceptanceStatus": "Kabul Durumu",
+    "sourceEmail": "Kaynak Eposta"
   },
   "options": {
     "status": {
@@ -38,7 +39,9 @@
     "Send Invitations": "Davetleri Gönder",
     "on time": "Zamanında",
     "before": "Önce",
-    "All-Day": "Tüm Gün"
+    "All-Day": "Tüm Gün",
+    "Send Cancellation": "İptal Gönder",
+    "Acceptance": "Onama"
   },
   "presetFilters": {
     "planned": "Planlandı",
@@ -47,6 +50,8 @@
   },
   "messages": {
     "nothingHasBeenSent": "Hiçbir şey gönderilmedi",
-    "selectAcceptanceStatus": "Kabul durumunuzu ayarlayın."
+    "selectAcceptanceStatus": "Kabul durumunuzu ayarlayın.",
+    "sendInvitationsToSelectedAttendees": "Seçilen katılımcılara davetiye epotaları gönderilecektir.",
+    "sendCancellationsToSelectedAttendees": "Seçilen katılımcılara iptal postaları gönderilecektir."
   }
 }

@@ -171,6 +171,11 @@
         "sanitizerClassName": {
             "type": "string",
             "description": "A sanitizer. Should implement Espo\\Core\\FieldSanitize\\Sanitizer."
+        },
+        "sanitizerClassNameList": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Sanitizers. Classes should implement Espo\\Core\\FieldSanitize\\Sanitizer. As of v8.2."
         }
     }
 }

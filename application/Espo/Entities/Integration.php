@@ -183,4 +183,9 @@ class Integration extends Entity
 
         return (object) $arr;
     }
+
+    public function isEnabled(): bool
+    {
+        return (bool) $this->get('enabled');
+    }
 }

@@ -30,7 +30,39 @@
 
 import VarcharFieldView from 'views/fields/varchar';
 
+/**
+ * A URL field.
+ *
+ * @extends BaseFieldView<module:views/fields/url~params>
+ */
 class UrlFieldView extends VarcharFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/url~options
+     * @property {
+     *     module:views/fields/varchar~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/url~params
+     * @property {number} [maxLength] A max length.
+     * @property {boolean} [required] Required.
+     * @property {boolean} [copyToClipboard] To display a Copy-to-clipboard button.
+     * @property {boolean} [strip] To strip.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/url~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'url'
 
@@ -38,6 +70,10 @@ class UrlFieldView extends VarcharFieldView {
     detailTemplate = 'fields/url/detail'
     defaultProtocol = 'https:'
 
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = [
         'required',
         'valid',
@@ -45,6 +81,7 @@ class UrlFieldView extends VarcharFieldView {
     ]
 
     noSpellCheck = true
+    optionalProtocol = true
 
     DEFAULT_MAX_LENGTH =255
 
@@ -69,7 +106,7 @@ class UrlFieldView extends VarcharFieldView {
                     return;
                 }
 
-                const decoded = parsedValue ? decodeURI(parsedValue) : '';
+                const decoded = parsedValue ? this.decodeURI(parsedValue) : '';
 
                 this.$element.val(decoded);
             });
@@ -79,7 +116,22 @@ class UrlFieldView extends VarcharFieldView {
     getValueForDisplay() {
         const value = this.model.get(this.name);
 
-        return value ? decodeURI(value) : null;
+        return value ? this.decodeURI(value) : null;
+    }
+
+    /**
+     * @private
+     * @param {string} value
+     * @return {string}
+     */
+    decodeURI(value) {
+        try {
+            return decodeURI(value);
+        } catch (e) {
+            console.warn(`Malformed URI ${value}.`);
+
+            return value;
+        }
     }
 
     /**
@@ -93,8 +145,14 @@ class UrlFieldView extends VarcharFieldView {
             value = this.strip(value);
         }
 
-        if (value === decodeURI(value)) {
-            value = encodeURI(value);
+        try {
+            if (value === decodeURI(value)) {
+                value = encodeURI(value);
+            }
+        } catch (e) {
+            console.warn(`Malformed URI ${value}.`);
+
+            return value;
         }
 
         return value;
@@ -136,8 +194,10 @@ class UrlFieldView extends VarcharFieldView {
             return false;
         }
 
+        const patternName = this.optionalProtocol ? 'uriOptionalProtocol' : 'uri';
+
         /** @var {string} */
-        const pattern = this.getMetadata().get(['app', 'regExpPatterns', 'uriOptionalProtocol', 'pattern']);
+        const pattern = this.getMetadata().get(['app', 'regExpPatterns', patternName, 'pattern']);
 
         const regExp = new RegExp('^' + pattern + '$');
 
@@ -146,7 +206,7 @@ class UrlFieldView extends VarcharFieldView {
         }
 
         const msg = this.translate('fieldInvalid', 'messages')
-            .replace('{field}', this.translate(this.name, 'fields', this.entityType));
+            .replace('{field}', this.getLabelText());
 
         this.showValidationMessage(msg);
 
@@ -168,8 +228,8 @@ class UrlFieldView extends VarcharFieldView {
         }
 
         const msg = this.translate('fieldUrlExceedsMaxLength', 'messages')
-            .replace('{maxLength}', maxLength)
-            .replace('{field}', this.translate(this.name, 'fields', this.entityType));
+            .replace('{maxLength}', maxLength.toString())
+            .replace('{field}', this.getLabelText());
 
         this.showValidationMessage(msg);
 

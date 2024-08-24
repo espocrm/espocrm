@@ -119,21 +119,20 @@ define('views/admin/layouts/relationships', ['views/admin/layouts/rows'], functi
                         if (typeof item == 'string' || item instanceof String) {
                             o = {
                                 name: item,
-
-                                label: this.getLanguage().translate(item, 'links', this.scope)
+                                labelText: this.getLanguage().translate(item, 'links', this.scope)
                             };
                         }
                         else {
                             o = item;
 
-                            o.label = this.getLanguage().translate(o.name, 'links', this.scope);
+                            o.labelText = this.getLanguage().translate(o.name, 'links', this.scope);
                         }
 
                         if (o.name[0] === '_') {
                             o.notEditable = true;
 
                             if (o.name === '_delimiter_') {
-                                o.label = '. . .';
+                                o.labelText = '. . .';
                             }
                         }
 
@@ -168,14 +167,14 @@ define('views/admin/layouts/relationships', ['views/admin/layouts/rows'], functi
 
                             let o = {
                                 name: name,
-                                label: label,
+                                labelText: label,
                             };
 
                             if (o.name[0] === '_') {
                                 o.notEditable = true;
 
                                 if (o.name === '_delimiter_') {
-                                    o.label = '. . .';
+                                    o.labelText = '. . .';
                                 }
                             }
 
@@ -188,10 +187,10 @@ define('views/admin/layouts/relationships', ['views/admin/layouts/rows'], functi
                     for (let i in this.rowLayout) {
                         let o = this.rowLayout[i];
 
-                        o.label = this.getLanguage().translate(this.rowLayout[i].name, 'links', this.scope);
+                        o.labelText = this.getLanguage().translate(this.rowLayout[i].name, 'links', this.scope);
 
                         if (o.name === '_delimiter_') {
-                            o.label = '. . .';
+                            o.labelText = '. . .';
                         }
 
                         this.itemsData[this.rowLayout[i].name] = Espo.Utils.cloneDeep(this.rowLayout[i]);

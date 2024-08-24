@@ -138,6 +138,7 @@ class SendService
         $userAddressList = [];
 
         if ($user) {
+            // @todo Use getEmailAddressGroup.
             /** @var Collection<EmailAddress> $emailAddressCollection */
             $emailAddressCollection = $this->entityManager
                 ->getRDBRepositoryByClass(User::class)

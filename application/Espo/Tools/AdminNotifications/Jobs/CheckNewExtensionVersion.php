@@ -41,30 +41,18 @@ use Espo\Tools\AdminNotifications\LatestReleaseDataRequester;
  */
 class CheckNewExtensionVersion implements JobDataLess
 {
-    private Config $config;
-    private ConfigWriter $configWriter;
-    private EntityManager $entityManager;
-    private LatestReleaseDataRequester $requester;
-
     public function __construct(
-        Config $config,
-        ConfigWriter $configWriter,
-        EntityManager $entityManager,
-        LatestReleaseDataRequester $requester
-    ) {
-        $this->config = $config;
-        $this->configWriter = $configWriter;
-        $this->entityManager = $entityManager;
-        $this->requester = $requester;
-    }
+        private Config $config,
+        private ConfigWriter $configWriter,
+        private EntityManager $entityManager,
+        private LatestReleaseDataRequester $requester
+    ) {}
 
     public function run(): void
     {
-        $config = $this->config;
-
         if (
-            !$config->get('adminNotifications') ||
-            !$config->get('adminNotificationsNewExtensionVersion')
+            !$this->config->get('adminNotifications') ||
+            !$this->config->get('adminNotificationsNewExtensionVersion')
         ) {
             return;
         }
@@ -99,7 +87,7 @@ class CheckNewExtensionVersion implements JobDataLess
             }
         }
 
-        $latestExtensionVersions = $config->get('latestExtensionVersions', []);
+        $latestExtensionVersions = $this->config->get('latestExtensionVersions', []);
 
         $save = false;
 
@@ -114,18 +102,18 @@ class CheckNewExtensionVersion implements JobDataLess
             if ($latestExtensionVersions[$extensionName] != $extensionData['version']) {
                 $latestExtensionVersions[$extensionName] = $extensionData['version'];
 
-                if (!empty($extensionData['notes'])) {
+                /*if (!empty($extensionData['notes'])) {
                     //todo: create notification
-                }
+                }*/
 
                 $save = true;
 
-                continue;
+                //continue;
             }
 
-            if (!empty($extensionData['notes'])) {
+            /*if (!empty($extensionData['notes'])) {
                 //todo: find and modify notification
-            }
+            }*/
         }
 
         if ($save) {

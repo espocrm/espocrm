@@ -1,1 +1,6 @@
-{{#if dateValue}}<span title="{{dateValue}}">{{dateValue}}</span>{{/if}}
+{{#if dateValue~}}
+    <span
+        title="{{dateValue}}"
+        {{#if style}}class="text-{{style}}"{{/if}}
+    >{{dateValue}}</span>
+{{~/if}}

@@ -66,6 +66,24 @@ class HookManager
         }
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Conflict
+     */
+    public function processAfterCreate(Entity $entity, CreateParams $params): void
+    {
+        foreach ($this->getAfterCreateHookList($entity->getEntityType()) as $hook) {
+            if ($hook instanceof SaveHook) {
+                $hook->process($entity);
+
+                continue;
+            }
+
+            $hook->process($entity, $params);
+        }
+    }
+
     public function processBeforeRead(Entity $entity, ReadParams $params): void
     {
         foreach ($this->getBeforeReadHookList($entity->getEntityType()) as $hook) {
@@ -96,9 +114,39 @@ class HookManager
      * @throws Forbidden
      * @throws Conflict
      */
+    public function processAfterUpdate(Entity $entity, UpdateParams $params): void
+    {
+        foreach ($this->getAfterUpdateHookList($entity->getEntityType()) as $hook) {
+            if ($hook instanceof SaveHook) {
+                $hook->process($entity);
+
+                continue;
+            }
+
+            $hook->process($entity, $params);
+        }
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Conflict
+     */
     public function processBeforeDelete(Entity $entity, DeleteParams $params): void
     {
         foreach ($this->getBeforeDeleteHookList($entity->getEntityType()) as $hook) {
+            $hook->process($entity, $params);
+        }
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Conflict
+     */
+    public function processAfterDelete(Entity $entity, DeleteParams $params): void
+    {
+        foreach ($this->getAfterDeleteHookList($entity->getEntityType()) as $hook) {
             $hook->process($entity, $params);
         }
     }
@@ -117,6 +165,20 @@ class HookManager
         }
     }
 
+    public function processAfterLink(Entity $entity, string $link, Entity $foreignEntity): void
+    {
+        foreach ($this->getAfterLinkHookList($entity->getEntityType()) as $hook) {
+            $hook->process($entity, $link, $foreignEntity);
+        }
+    }
+
+    public function processAfterUnlink(Entity $entity, string $link, Entity $foreignEntity): void
+    {
+        foreach ($this->getAfterUnlinkHookList($entity->getEntityType()) as $hook) {
+            $hook->process($entity, $link, $foreignEntity);
+        }
+    }
+
     /**
      * @return ReadHook<Entity>[]
      */
@@ -131,8 +193,17 @@ class HookManager
      */
     private function getBeforeCreateHookList(string $entityType): array
     {
-        /** @var CreateHook<Entity>[] */
+        /** @var (CreateHook<Entity>|SaveHook<Entity>)[] */
         return $this->provider->getList($entityType, Type::BEFORE_CREATE);
+    }
+
+    /**
+     * @return (CreateHook<Entity>|SaveHook<Entity>)[]
+     */
+    private function getAfterCreateHookList(string $entityType): array
+    {
+        /** @var (CreateHook<Entity>|SaveHook<Entity>)[] */
+        return $this->provider->getList($entityType, Type::AFTER_CREATE);
     }
 
     /**
@@ -140,8 +211,17 @@ class HookManager
      */
     private function getBeforeUpdateHookList(string $entityType): array
     {
-        /** @var UpdateHook<Entity>[] */
+        /** @var (UpdateHook<Entity>|SaveHook<Entity>)[] */
         return $this->provider->getList($entityType, Type::BEFORE_UPDATE);
+    }
+
+    /**
+     * @return (UpdateHook<Entity>|SaveHook<Entity>)[]
+     */
+    private function getAfterUpdateHookList(string $entityType): array
+    {
+        /** @var (UpdateHook<Entity>|SaveHook<Entity>)[] */
+        return $this->provider->getList($entityType, Type::AFTER_UPDATE);
     }
 
     /**
@@ -151,6 +231,15 @@ class HookManager
     {
         /** @var DeleteHook<Entity>[] */
         return $this->provider->getList($entityType, Type::BEFORE_DELETE);
+    }
+
+    /**
+     * @return DeleteHook<Entity>[]
+     */
+    private function getAfterDeleteHookList(string $entityType): array
+    {
+        /** @var DeleteHook<Entity>[] */
+        return $this->provider->getList($entityType, Type::AFTER_DELETE);
     }
 
     /**
@@ -169,5 +258,23 @@ class HookManager
     {
         /** @var UnlinkHook<Entity>[] */
         return $this->provider->getList($entityType, Type::BEFORE_UNLINK);
+    }
+
+    /**
+     * @return LinkHook<Entity>[]
+     */
+    private function getAfterLinkHookList(string $entityType): array
+    {
+        /** @var LinkHook<Entity>[] */
+        return $this->provider->getList($entityType, Type::AFTER_LINK);
+    }
+
+    /**
+     * @return UnlinkHook<Entity>[]
+     */
+    private function getAfterUnlinkHookList(string $entityType): array
+    {
+        /** @var UnlinkHook<Entity>[] */
+        return $this->provider->getList($entityType, Type::AFTER_UNLINK);
     }
 }

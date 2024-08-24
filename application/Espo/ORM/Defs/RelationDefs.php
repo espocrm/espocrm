@@ -150,11 +150,37 @@ class RelationDefs
     }
 
     /**
+     * Get a foreign entity type.
+     */
+    public function tryGetForeignEntityType(): ?string
+    {
+        if (!$this->hasForeignEntityType()) {
+            return null;
+        }
+
+        return $this->getForeignEntityType();
+    }
+
+    /**
      * Whether has a foreign relation name.
      */
     public function hasForeignRelationName(): bool
     {
         return isset($this->data['foreign']);
+    }
+
+    /**
+     * Try to get a foreign relation name.
+     *
+     * @since 8.3.0
+     */
+    public function tryGetForeignRelationName(): ?string
+    {
+        if (!$this->hasForeignRelationName()) {
+            return null;
+        }
+
+        return $this->getForeignRelationName();
     }
 
     /**

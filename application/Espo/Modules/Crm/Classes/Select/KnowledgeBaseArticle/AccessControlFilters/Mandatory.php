@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Classes\Select\KnowledgeBaseArticle\AccessControlFilters;
 
 use Espo\Core\Select\AccessControl\Filter;
+use Espo\Core\Utils\Metadata;
 use Espo\Modules\Crm\Entities\KnowledgeBaseArticle;
 use Espo\ORM\Query\SelectBuilder;
 
@@ -37,8 +38,10 @@ use Espo\Entities\User;
 
 class Mandatory implements Filter
 {
-    public function __construct(private User $user)
-    {}
+    public function __construct(
+        private User $user,
+        private Metadata $metadata
+    ) {}
 
     public function apply(SelectBuilder $queryBuilder): void
     {
@@ -46,10 +49,11 @@ class Mandatory implements Filter
             return;
         }
 
+        $statusList = $this->metadata->get("entityDefs.KnowledgeBaseArticle.fields.status.activeOptions") ??
+            [KnowledgeBaseArticle::STATUS_PUBLISHED];
+
         $queryBuilder
-            ->where([
-                'status' => KnowledgeBaseArticle::STATUS_PUBLISHED,
-            ])
+            ->where(['status' => $statusList])
             ->distinct()
             ->leftJoin('portals', 'portalsAccess')
             ->where([

@@ -41,18 +41,6 @@ class UnsubscribeController extends Controller {
             view.render();
         });
     }
-
-    // noinspection JSUnusedGlobalSymbols
-    actionSubscribeAgain(data) {
-        const viewName = data.view || 'crm:views/campaign/subscribe-again';
-
-        this.entire(viewName, {
-            actionData: data.actionData,
-            template: data.template,
-        }, view => {
-            view.render();
-        });
-    }
 }
 
 export default UnsubscribeController;

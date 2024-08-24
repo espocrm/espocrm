@@ -33,8 +33,40 @@ import {init as initSummernoteCustom} from 'helpers/misc/summernote-custom';
 
 /**
  * A wysiwyg field.
+ *
+ * @extends TextFieldView<module:views/fields/wysiwyg~params>
  */
 class WysiwygFieldView extends TextFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/wysiwyg~options
+     * @property {
+     *     module:views/fields/wysiwyg~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/wysiwyg~params
+     * @property {boolean} [required] Required.
+     * @property {number} [maxLength] A max length.
+     * @property {number} [height] A height in pixels.
+     * @property {number} [minHeight] A min height in pixels.
+     * @property {boolean} [useIframe] Use iframe.
+     * @property {Array} [toolbar] A custom toolbar.
+     * @property {string} [attachmentField] An attachment field name.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/wysiwyg~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'wysiwyg'
 
@@ -47,7 +79,7 @@ class WysiwygFieldView extends TextFieldView {
     fallbackBodySideMargin = 5
     fallbackBodyTopMargin = 4
     seeMoreDisabled = true
-    fetchEmptyValueAsNull = false
+    fetchEmptyValueAsNull = true
     validationElementSelector = '.note-editor'
     htmlPurificationDisabled = false
     htmlPurificationForEditDisabled = false
@@ -55,6 +87,11 @@ class WysiwygFieldView extends TextFieldView {
     noStylesheet = false
     useIframe = false
     handlebars = false
+
+    /** @protected */
+    toolbar
+    /** @protected */
+    hasBodyPlainField = false
 
     events = {
         /** @this WysiwygFieldView */
@@ -73,21 +110,7 @@ class WysiwygFieldView extends TextFieldView {
 
     setup() {
         super.setup();
-
-        this.wait(
-            Espo.loader.requirePromise('lib!summernote')
-                .then(() => {
-                    if (!$.summernote.options || 'espoImage' in $.summernote.options) {
-                        return;
-                    }
-
-                    this.initEspoPlugin();
-                })
-        );
-
-        this.hasBodyPlainField = !!~this.getFieldManager()
-            .getEntityTypeFieldList(this.model.entityType)
-            .indexOf(this.name + 'Plain');
+        this.loadSummernote();
 
         if ('height' in this.params) {
             this.height = this.params.height;
@@ -100,6 +123,40 @@ class WysiwygFieldView extends TextFieldView {
         this.useIframe = this.params.useIframe || this.useIframe;
 
         this.setupToolbar();
+        this.setupIsHtml();
+
+        this.once('remove', () => this.destroySummernote());
+        this.on('inline-edit-off', () => this.destroySummernote());
+        this.on('render', () => this.destroySummernote());
+
+        this.once('remove', () => {
+            $(window).off(`resize.${this.cid}`);
+
+            if (this.$scrollable) {
+                this.$scrollable.off(`scroll.${this.cid}-edit`);
+            }
+        });
+    }
+
+    /** @private */
+    loadSummernote() {
+        this.wait(
+            Espo.loader.requirePromise('lib!summernote')
+                .then(() => {
+                    if (!$.summernote.options || 'espoImage' in $.summernote.options) {
+                        return;
+                    }
+
+                    this.initEspoPlugin();
+                })
+        );
+    }
+
+    /** @protected */
+    setupIsHtml() {
+        if (!this.hasBodyPlainField) {
+            return;
+        }
 
         this.listenTo(this.model, 'change:isHtml', (model, value, o) => {
             if (o.ui && this.isEditMode()) {
@@ -107,7 +164,7 @@ class WysiwygFieldView extends TextFieldView {
                     return;
                 }
 
-                if (!model.has('isHtml') || model.get('isHtml')) {
+                if (this.isHtml()) {
                     let value = this.plainToHtml(this.model.get(this.name));
 
                     if (
@@ -124,40 +181,16 @@ class WysiwygFieldView extends TextFieldView {
                 }
 
                 this.lastHtmlValue = this.model.get(this.name);
-
                 const value = this.htmlToPlain(this.model.get(this.name));
 
                 this.disableWysiwygMode();
-
                 this.model.set(this.name, value);
 
                 return;
             }
 
-            if (this.isDetailMode()) {
-                if (this.isRendered()) {
-                    this.reRender();
-                }
-            }
-        });
-
-        this.once('remove', () => {
-            this.destroySummernote();
-        });
-
-        this.on('inline-edit-off', () => {
-            this.destroySummernote();
-        });
-
-        this.on('render', () => {
-            this.destroySummernote();
-        });
-
-        this.once('remove', () => {
-            $(window).off('resize.' + this.cid);
-
-            if (this.$scrollable) {
-                this.$scrollable.off('scroll.' + this.cid + '-edit');
+            if (this.isDetailMode() && this.isRendered()) {
+                this.reRender();
             }
         });
     }
@@ -166,7 +199,7 @@ class WysiwygFieldView extends TextFieldView {
         const data = super.data();
 
         data.useIframe = this.useIframe;
-        data.isPlain = this.isPlain();
+        data.isPlain = !this.isHtml();
 
         // noinspection JSValidateTypes
         return data;
@@ -207,12 +240,6 @@ class WysiwygFieldView extends TextFieldView {
                 tooltip: this.translate('Attach File'),
                 click: () => {
                     this.attachFile();
-
-                    this.listenToOnce(this.model, 'attachment-uploaded:attachments', () => {
-                        if (this.isEditMode()) {
-                            Espo.Ui.success(this.translate('Attached'));
-                        }
-                    });
                 }
             });
 
@@ -220,8 +247,16 @@ class WysiwygFieldView extends TextFieldView {
         };
     }
 
-    isPlain() {
-        return this.model.has('isHtml') && !this.model.get('isHtml');
+    /**
+     * @protected
+     * @return {boolean}
+     */
+    isHtml() {
+        if (!this.hasBodyPlainField) {
+            return true;
+        }
+
+        return !this.model.has('isHtml') || this.model.get('isHtml');
     }
 
     fixPopovers() {
@@ -229,25 +264,41 @@ class WysiwygFieldView extends TextFieldView {
     }
 
     getValueForDisplay() {
+        if (!this.isReadMode()) {
+            return undefined;
+        }
+
         const value = super.getValueForDisplay();
 
-        if (this.isPlain()) {
+        if (!this.isHtml()) {
             return value;
         }
 
         return this.sanitizeHtml(value);
     }
 
+    /**
+     * @protected
+     * @param {string} value
+     * @return {string}
+     */
     sanitizeHtml(value) {
-        if (value) {
-            if (!this.htmlPurificationDisabled) {
-                value = this.getHelper().sanitizeHtml(value);
-            } else {
-                value = this.sanitizeHtmlLight(value);
-            }
+        if (!value) {
+            return '';
         }
 
-        return value || '';
+        if (this.htmlPurificationDisabled) {
+            return this.sanitizeHtmlLight(value);
+        }
+
+        value = this.getHelper().sanitizeHtml(value);
+
+        if (this.isEditMode()) {
+            // Trick to handle the issue that attributes are re-ordered.
+            value = this.getHelper().sanitizeHtml(value);
+        }
+
+        return value;
     }
 
     sanitizeHtmlLight(value) {
@@ -278,11 +329,14 @@ class WysiwygFieldView extends TextFieldView {
         }
 
         if (this.isEditMode()) {
-            if (!this.model.has('isHtml') || this.model.get('isHtml')) {
+            if (this.isHtml()) {
                 this.enableWysiwygMode();
-            }
-            else {
+            } else {
                 this.$element.removeClass('hidden');
+            }
+
+            if (this.params.attachmentField && this.isInlineEditMode()) {
+                this.$el.find('.note-attachment').addClass('hidden');
             }
         }
 
@@ -292,11 +346,10 @@ class WysiwygFieldView extends TextFieldView {
     }
 
     renderDetail() {
-        if (this.model.has('isHtml') && !this.model.get('isHtml')) {
+        if (!this.isHtml()) {
             this.$el.find('.plain').removeClass('hidden');
 
             return;
-
         }
 
         if (!this.useIframe) {
@@ -322,7 +375,7 @@ class WysiwygFieldView extends TextFieldView {
 
         const documentElement = iframeElement.contentWindow.document;
 
-        let bodyHtml = this.sanitizeHtml(this.model.get(this.name) || '');
+        let bodyHtml = this.getValueForIframe();
 
         const useFallbackStylesheet = this.getThemeManager().getParam('isDark') && this.htmlHasColors(bodyHtml);
         const addFallbackClass = this.getThemeManager().getParam('isDark') &&
@@ -458,8 +511,7 @@ class WysiwygFieldView extends TextFieldView {
 
                 iframeElement.style.height = height + 'px';
                 processIncreaseHeight(iteration, diff);
-            }
-            else {
+            } else {
                 processWidth();
             }
         };
@@ -476,7 +528,7 @@ class WysiwygFieldView extends TextFieldView {
             if (!isOnLoad) {
                 $iframe.css({
                     overflowY: 'hidden',
-                    overflowX: 'hidden'
+                    overflowX: 'hidden',
                 });
 
                 iframeElement.style.height = '0px';
@@ -501,7 +553,7 @@ class WysiwygFieldView extends TextFieldView {
             if (!isOnLoad) {
                 $iframe.css({
                     overflowY: 'hidden',
-                    overflowX: 'scroll'
+                    overflowX: 'scroll',
                 });
             }
         };
@@ -514,7 +566,7 @@ class WysiwygFieldView extends TextFieldView {
             processHeight();
 
             $iframe.css({
-                visibility: 'visible'
+                visibility: 'visible',
             });
 
             $iframe.on('load', () => {
@@ -541,6 +593,14 @@ class WysiwygFieldView extends TextFieldView {
         });
     }
 
+    /**
+     * @protected
+     * @return {string}
+     */
+    getValueForIframe() {
+        return this.sanitizeHtml(this.model.get(this.name) || '');
+    }
+
     enableWysiwygMode() {
         if (!this.$element) {
             return;
@@ -553,6 +613,7 @@ class WysiwygFieldView extends TextFieldView {
 
         this.$summernote.html(contents);
 
+        // The same sanitizing in the email body field.
         this.$summernote.find('style').remove();
         this.$summernote.find('link[ref="stylesheet"]').remove();
 
@@ -596,9 +657,6 @@ class WysiwygFieldView extends TextFieldView {
                             Espo.Ui.notify(false);
                         });
                 },
-                /*onBlurCodeview: () => {
-                    this.trigger('change');
-                },*/
                 onBlur: () => {
                     this.trigger('change');
                 },
@@ -617,12 +675,13 @@ class WysiwygFieldView extends TextFieldView {
             dialogsInBody: this.$el,
             codeviewFilter: true,
             tableClassName: this.tableClassName,
+            // Dnd has issues.
+            disableDragAndDrop: true,
         };
 
         if (this.height) {
             options.height = this.height;
-        }
-        else {
+        } else {
             let $scrollable = this.$el.closest('.modal-body');
 
             if (!$scrollable.length) {
@@ -631,10 +690,8 @@ class WysiwygFieldView extends TextFieldView {
 
             this.$scrollable = $scrollable;
 
-            $scrollable.off('scroll.' + this.cid + '-edit');
-            $scrollable.on('scroll.' + this.cid + '-edit', (e) => {
-                this.onScrollEdit(e);
-            });
+            $scrollable.off(`scroll.${this.cid}-edit`);
+            $scrollable.on(`scroll.${this.cid}-edit`, e => this.onScrollEdit(e));
         }
 
         if (this.minHeight) {
@@ -682,8 +739,7 @@ class WysiwygFieldView extends TextFieldView {
                     attachment.set('file', e.target.result);
                     attachment.set('field', this.name);
 
-                    attachment
-                        .save()
+                    attachment.save()
                         .then(() => resolve(attachment))
                         .catch(() => reject());
                 };
@@ -719,7 +775,7 @@ class WysiwygFieldView extends TextFieldView {
         $div.find('style').remove();
         $div.find('link[ref="stylesheet"]').remove();
 
-        value =  $div.text();
+        value = $div.text();
 
         return value;
     }
@@ -743,38 +799,38 @@ class WysiwygFieldView extends TextFieldView {
     fetch() {
         const data = {};
 
-        if (!this.model.has('isHtml') || this.model.get('isHtml')) {
+        if (this.isHtml()) {
             let code = this.$summernote.summernote('code');
 
             if (code === '<p><br></p>') {
                 code = '';
             }
 
-            const imageTagString = '<img src="' + window.location.origin + window.location.pathname +
-                '?entryPoint=attachment';
+            const imageTagString =
+                `<img src="${window.location.origin}${window.location.pathname}?entryPoint=attachment`;
 
             code = code.replace(
                 new RegExp(imageTagString.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g'),
                 '<img src="?entryPoint=attachment'
             );
             data[this.name] = code;
-        }
-        else {
+        } else {
             data[this.name] = this.$element.val();
-
-            if (this.fetchEmptyValueAsNull) {
-                if (!data[this.name]) {
-                    data[this.name] = null;
-                }
-            }
         }
 
-        if (this.model.has('isHtml') && this.hasBodyPlainField) {
-            if (this.model.get('isHtml')) {
-                data[this.name + 'Plain'] = this.htmlToPlain(data[this.name]);
-            }
-            else {
-                data[this.name + 'Plain'] = data[this.name];
+        if (this.fetchEmptyValueAsNull && !data[this.name]) {
+            data[this.name] = null;
+        }
+
+        if (this.hasBodyPlainField && this.model.has('isHtml')) {
+            const plainAttribute = this.name + 'Plain';
+
+            if (data[this.name] === null) {
+                data[plainAttribute] = null;
+            } else {
+                data[plainAttribute] = this.isHtml() ?
+                    this.htmlToPlain(data[this.name]) :
+                    data[this.name];
             }
         }
 
@@ -793,7 +849,7 @@ class WysiwygFieldView extends TextFieldView {
             const offset = $buttonContainer.offset();
 
             if (offset) {
-                edgeTop = offset.top + $buttonContainer.height();
+                edgeTop = offset.top + $buttonContainer.outerHeight();
                 edgeTopAbsolute = edgeTop - $(window).scrollTop();
             }
         }
@@ -846,7 +902,18 @@ class WysiwygFieldView extends TextFieldView {
     attachFile() {
         const $form = this.$el.closest('.record');
 
-        $form.find('.field[data-name="' + this.params.attachmentField + '"] input.file').click();
+        $form.find(`.field[data-name="${this.params.attachmentField}"] input.file`).click();
+
+        this.stopListening(this.model, 'attachment-uploaded:attachments');
+
+        this.listenToOnce(this.model, 'attachment-uploaded:attachments', /** module:model[] */attachments => {
+            if (this.isEditMode()) {
+                const msg = this.translate('Attached') + '\n' +
+                    attachments.map(m => m.attributes.name).join('\n');
+
+                Espo.Ui.notify(msg, 'success', 3000);
+            }
+        });
     }
 
     initEspoPlugin() {
@@ -873,6 +940,16 @@ class WysiwygFieldView extends TextFieldView {
         }
 
         return false;
+    }
+
+    /**
+     * @param {string} text
+     * @since 8.4.0
+     */
+    insertText(text) {
+        if (this.isHtml()) {
+            this.$summernote.summernote('insertText', text);
+        }
     }
 }
 

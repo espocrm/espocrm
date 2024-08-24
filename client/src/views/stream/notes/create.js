@@ -40,6 +40,7 @@ class CreateNoteStreamView extends NoteStreamView {
             ...super.data(),
             statusText: this.statusText,
             statusStyle: this.statusStyle,
+            iconHtml: this.getIconHtml(),
         };
     }
 
@@ -58,9 +59,16 @@ class CreateNoteStreamView extends NoteStreamView {
         this.assignedUserName = data.assignedUserName || data.assignedUserId || null;
 
         this.messageData['assignee'] =
-            $('<a>')
-                .attr('href', '#User/view/' + this.assignedUserId)
-                .text(this.assignedUserName);
+            $('<span>')
+                .addClass('nowrap name-avatar')
+                .append(
+                    this.getHelper().getAvatarHtml(data.assignedUserId, 'small', 16, 'avatar-link'),
+                    $('<a>')
+                        .attr('href', `#User/view/${this.assignedUserId}`)
+                        .text(this.assignedUserName)
+                        .attr('data-scope', 'User')
+                        .attr('data-id', this.assignedUserId)
+                );
 
         let isYou = false;
 

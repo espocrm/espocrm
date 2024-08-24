@@ -47,6 +47,7 @@
         "Preferences": "Preferences",
         "EmailAddress": "Email Address",
         "PhoneNumber": "Phone Number",
+        "AppLogRecord": "App Log Record",
         "AuthLogRecord": "Auth Log Record",
         "AuthFailLogRecord": "Auth Fail Log Record",
         "LeadCapture": "Lead Capture Entry Point",
@@ -56,11 +57,13 @@
         "Currency": "Currency",
         "LayoutSet": "Layout Set",
         "Webhook": "Webhook",
+        "WebhookQueueItem": "Webhook Queue Item",
         "Mass Action": "Mass Action",
         "WorkingTimeCalendar": "Working Time Calendar",
-        "WorkingTimeRange": "Working Time Range",
+        "WorkingTimeRange": "Working Time Exception",
         "AuthenticationProvider": "Authentication Provider",
-        "GlobalStream": "Global Stream"
+        "GlobalStream": "Global Stream",
+        "AddressCountry": "Address Country"
     },
     "scopeNamesPlural": {
         "Note": "Notes",
@@ -99,6 +102,7 @@
         "AuthToken": "Auth Tokens",
         "UniqueId": "Unique IDs",
         "LastViewed": "Last Viewed",
+        "AppLogRecord": "App Log",
         "AuthLogRecord": "Auth Log",
         "AuthFailLogRecord": "Auth Fail Log",
         "LeadCapture": "Lead Capture",
@@ -108,12 +112,19 @@
         "Currency": "Currency",
         "LayoutSet": "Layout Sets",
         "Webhook": "Webhooks",
+        "WebhookQueueItem": "Webhook Queue Items",
         "WorkingTimeCalendar": "Working Time Calendars",
-        "WorkingTimeRange": "Working Time Ranges",
+        "WorkingTimeRange": "Working Time Exceptions",
         "AuthenticationProvider": "Authentication Providers",
-        "GlobalStream": "Global Stream"
+        "GlobalStream": "Global Stream",
+        "AddressCountry": "Address Countries"
     },
     "labels": {
+        "Previous Page": "Previous Page",
+        "Next Page": "Next Page",
+        "First Page": "First Page",
+        "Last Page": "Last Page",
+        "Page": "Page",
         "Sort": "Sort",
         "Misc": "Misc",
         "Merge": "Merge",
@@ -186,6 +197,9 @@
         "Country": "Country",
         "City": "City",
         "PostalCode": "Postal Code",
+        "Star": "Star",
+        "Unstar": "Unstar",
+        "Starred": "Starred",
         "Followed": "Followed",
         "Follow": "Follow",
         "Followers": "Followers",
@@ -224,6 +238,8 @@
         "Change": "Change",
         "Primary": "Primary",
         "Save Filter": "Save Filter",
+        "Remove Filter": "Remove Filter",
+        "Ready": "Ready",
         "Administration": "Administration",
         "Run Import": "Run Import",
         "Duplicate": "Duplicate",
@@ -285,7 +301,9 @@
         "Show Navigation Panel": "Show Navigation Panel",
         "Hide Navigation Panel": "Hide Navigation Panel",
         "Copy to Clipboard": "Copy to Clipboard",
-        "Copied to clipboard": "Copied to clipboard"
+        "Copied to clipboard": "Copied to clipboard",
+        "Audit Log": "Audit Log",
+        "View Audit Log": "View Audit Log"
     },
     "messages": {
         "pleaseWait": "Please wait...",
@@ -295,6 +313,7 @@
         "notModified": "You have not modified the record",
         "duplicate": "The record you are creating might already exist",
         "dropToAttach": "Drop to attach",
+        "pageNumberIsOutOfBound": "Page number is out of bound",
         "fieldUrlExceedsMaxLength": "Encoded URL exceeds max length of {maxLength}",
         "fieldNotMatchingPattern": "{field} does not match the pattern `{pattern}`",
         "fieldNotMatchingPattern$noBadCharacters": "{field} contains not allowed characters",
@@ -305,6 +324,7 @@
         "fieldNotMatchingPattern$latinLettersWhitespace": "{field} can contain only latin letters and whitespace",
         "fieldNotMatchingPattern$digits": "{field} can contain only digits",
         "fieldNotMatchingPattern$uriOptionalProtocol": "{field} must be a valid URL",
+        "fieldNotMatchingPattern$phoneNumberLoose": "{field} contains characters not allowed in a phone number",
         "fieldInvalid": "{field} is invalid",
         "fieldIsRequired": "{field} is required",
         "fieldPhoneInvalid": "{field} is invalid",
@@ -312,6 +332,7 @@
         "fieldPhoneTooShort": "{field} is too short",
         "fieldPhoneTooLong": "{field} is too long",
         "fieldPhoneInvalidCharacters": "Only digits, latin letters and characters `-+_@:#().` are allowed",
+        "fieldPhoneExtensionTooLong": "Extension should not be longer than {maxLength}",
         "fieldShouldBeEmail": "{field} should be a valid email",
         "fieldShouldBeFloat": "{field} should be a valid float",
         "fieldShouldBeInt": "{field} should be a valid integer",
@@ -383,10 +404,17 @@
         "cannotRelateNonExisting": "Can't relate with non-existing {foreignEntityType} record.",
         "cannotRelateForbidden": "Can't relate with forbidden {foreignEntityType} record. `{action}` access required.",
         "cannotRelateForbiddenLink": "No access to link '{link}'.",
+        "cannotLinkAlreadyLinked": "Cannot link an already linked record.",
         "error404": "The url you requested can't be handled.",
         "error403": "You don't have an access to this area.",
         "emptyMassUpdate": "No fields available for Mass Update.",
-        "attemptIntervalFailure": "The operation is not allowed during a specific time interval. Wait for some time before the next attempt."
+        "attemptIntervalFailure": "The operation is not allowed during a specific time interval. Wait for some time before the next attempt.",
+        "confirmRestoreFromAudit": "The previous values will be set in a form. Then you can save the record to restore the previous values.",
+        "starsLimitExceeded": "The number of stars exceeded the limit.",
+        "select2OrMoreRecords": "Select 2 or more records",
+        "selectNotMoreThanNumberRecords": "Select not more than {number} records",
+        "selectAtLeastOneRecord": "Select at least one record",
+        "duplicateConflict": "A record already exists."
     },
     "boolFilters": {
         "onlyMy": "Only My",
@@ -395,7 +423,8 @@
     },
     "presetFilters": {
         "followed": "Followed",
-        "all": "All"
+        "all": "All",
+        "starred": "Starred"
     },
     "massActions": {
         "delete": "Delete",
@@ -425,6 +454,7 @@
         "emailAddressIsInvalid": "Email Address is Invalid",
         "assignedUserName": "Assigned User Name",
         "teams": "Teams",
+        "users": "Users",
         "createdAt": "Created At",
         "modifiedAt": "Modified At",
         "createdBy": "Created By",
@@ -448,7 +478,8 @@
         "type": "Type",
         "names": "Names",
         "types": "Types",
-        "targetListIsOptedOut": "Is Opted Out (Target List)"
+        "targetListIsOptedOut": "Is Opted Out (Target List)",
+        "childList": "Child List"
     },
     "links": {
         "assignedUser": "Assigned User",
@@ -877,12 +908,15 @@
         "phoneNumber": "Valid Phone Number",
         "array": "Array",
         "arrayOfString": "Array of Strings",
-        "valid": "Valid",
+        "valid": "Validity",
         "noEmptyString": "No Empty String",
         "max": "Max Value",
         "min": "Min Value"
     },
     "fieldValidationExplanations": {
+        "valid": "Invalid value.",
+        "maxLength": "Value length exceeds maximum value.",
+        "phone_valid": "Phone number is not valid. May be caused by a wrong or empty country code.",
         "url_valid": "Invalid URL value.",
         "currency_valid": "Invalid amount value.",
         "currency_validCurrency": "The currency code value is invalid or not allowed.",
@@ -903,5 +937,31 @@
         "Support": "Support",
         "CRM": "CRM",
         "Activities": "Activities"
+    },
+    "wysiwygLabels": {
+        "cell": "Cell",
+        "align": "Align",
+        "width": "Width",
+        "height": "Height",
+        "borderWidth": "Border Width",
+        "borderColor": "Border Color",
+        "cellPadding": "Cell Padding",
+        "backgroundColor": "Background Color",
+        "verticalAlign": "Vertical Align"
+    },
+    "wysiwygOptions": {
+        "align": {
+            "left": "Left",
+            "center": "Center",
+            "right": "Right"
+        },
+        "verticalAlign": {
+            "top": "Top",
+            "middle": "Middle",
+            "bottom": "Bottom"
+        }
+    },
+    "detailViewModes": {
+        "detail": "Detail"
     }
 }

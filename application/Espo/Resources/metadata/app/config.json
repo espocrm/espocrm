@@ -52,6 +52,9 @@
             "level": "admin",
             "readOnly": true
         },
+        "userNameRegularExpression": {
+            "readOnly": true
+        },
         "workingTimeCalendar": {
             "level": "admin"
         },
@@ -138,6 +141,18 @@
         },
         "customExportManifest": {
             "level": "admin"
+        },
+        "starsLimit": {
+            "level": "admin"
+        },
+        "authIpAddressCheck": {
+            "level": "superAdmin"
+        },
+        "authIpAddressWhitelist": {
+            "level": "superAdmin"
+        },
+        "authIpAddressCheckExcludedUsers": {
+            "level": "superAdmin"
         }
     }
 }

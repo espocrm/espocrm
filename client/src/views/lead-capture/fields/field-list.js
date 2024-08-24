@@ -26,38 +26,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/lead-capture/fields/field-list', ['views/fields/multi-enum'], function (Dep) {
+import MultiEnumFieldView from 'views/fields/multi-enum';
 
-    return Dep.extend({
+export default class extends MultiEnumFieldView {
 
-        setupOptions: function () {
-            this.params.options = [];
-            this.translatedOptions = {};
+    setupOptions() {
+        this.params.options = [];
+        this.translatedOptions = {};
 
-            var fields = this.getMetadata()
-                .get(['entityDefs', 'Lead', 'fields']) || {};
+        const fields = this.getMetadata().get(['entityDefs', 'Lead', 'fields']) || {};
 
-            var ignoreFieldList = this.getMetadata()
-                .get(['entityDefs', 'LeadCapture', 'fields', 'fieldList', 'ignoreFieldList']) || [];
+        /** @type {string[]} */
+        const ignoreFieldList = this.getMetadata()
+            .get(['entityDefs', 'LeadCapture', 'fields', 'fieldList', 'ignoreFieldList']) || [];
 
-            for (let field in fields) {
-                var defs = fields[field];
+        for (const field in fields) {
+            const defs = fields[field];
 
-                if (defs.disabled) {
-                    continue;
-                }
-
-                if (defs.readOnly) {
-                    continue;
-                }
-
-                if (~ignoreFieldList.indexOf(field)) {
-                    continue;
-                }
-
-                this.params.options.push(field);
-                this.translatedOptions[field] = this.translate(field, 'fields', 'Lead');
+            if (defs.disabled) {
+                continue;
             }
+
+            if (defs.readOnly) {
+                continue;
+            }
+
+            if (ignoreFieldList.includes(field)) {
+                continue;
+            }
+
+            this.params.options.push(field);
+            this.translatedOptions[field] = this.translate(field, 'fields', 'Lead');
         }
-    });
-});
+    }
+}

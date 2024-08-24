@@ -26,89 +26,81 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/role/record/edit', ['views/record/edit'], function (Dep) {
+import EditRecordView from 'views/record/edit';
 
-    return Dep.extend({
+class RoleEditRecordView extends EditRecordView {
 
-        tableView: 'views/role/record/table',
+    tableView = 'views/role/record/table'
 
-        sideView: false,
+    sideView = false
+    isWide = true
+    stickButtonsContainerAllTheWay = true
 
-        isWide: true,
+    fetch() {
+        const data = super.fetch();
 
-        stickButtonsContainerAllTheWay: true,
+        data['data'] = {};
 
-        fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
+        const scopeList = this.getTableView().scopeList;
+        const actionList = this.getTableView().actionList;
+        const aclTypeMap = this.getTableView().aclTypeMap;
 
-            data['data'] = {};
+        for (const i in scopeList) {
+            const scope = scopeList[i];
 
-            var scopeList = this.getView('extra').scopeList;
-            var actionList = this.getView('extra').actionList;
-            var aclTypeMap = this.getView('extra').aclTypeMap;
+            if (this.$el.find('select[name="' + scope + '"]').val() === 'not-set') {
+                continue;
+            }
 
-            for (var i in scopeList) {
-                var scope = scopeList[i];
+            if (this.$el.find('select[name="' + scope + '"]').val() === 'disabled') {
+                data['data'][scope] = false;
 
-                if (this.$el.find('select[name="' + scope + '"]').val() === 'not-set') {
-                    continue;
-                }
+                continue;
+            }
 
-                if (this.$el.find('select[name="' + scope + '"]').val() === 'disabled') {
-                    data['data'][scope] = false;
-                } else {
-                    var o = true;
+            let o = true;
 
-                    if (aclTypeMap[scope] !== 'boolean') {
-                        o = {};
+            if (aclTypeMap[scope] !== 'boolean') {
+                o = {};
 
-                        for (var j in actionList) {
-                            var action = actionList[j];
-                            o[action] = this.$el.find('select[name="' + scope + '-' + action + '"]').val();
-                        }
-                    }
+                for (const j in actionList) {
+                    const action = actionList[j];
 
-                    data['data'][scope] = o;
+                    o[action] = this.$el.find('select[name="' + scope + '-' + action + '"]').val();
                 }
             }
 
-            data['data'] = this.getView('extra').fetchScopeData();
-            data['fieldData'] = this.getView('extra').fetchFieldData();
+            data['data'][scope] = o;
+        }
 
-            return data;
-        },
+        data['data'] = this.getTableView().fetchScopeData();
+        data['fieldData'] = this.getTableView().fetchFieldData();
 
-        getDetailLayout: function (callback) {
-            var simpleLayout = [
-                {
-                    label: '',
-                    cells: [
-                        {
-                            name: 'name',
-                            type: 'varchar',
-                        },
-                    ]
-                }
-            ];
-            callback({
-                type: 'record',
-                layout: this._convertSimplifiedLayout(simpleLayout)
+        return data;
+    }
+
+    setup() {
+        super.setup();
+
+        this.createView('extra', this.tableView, {
+            mode: 'edit',
+            selector: '.extra',
+            model: this.model,
+        }, view => {
+            this.listenTo(view, 'change', () => {
+                const data = this.fetch();
+
+                this.model.set(data);
             });
-        },
+        });
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    /**
+     * @return {import('./table').default}
+     */
+    getTableView() {
+        return this.getView('extra');
+    }
+}
 
-            this.createView('extra', this.tableView, {
-                mode: 'edit',
-                selector: '.extra',
-                model: this.model,
-            }, view => {
-                this.listenTo(view, 'change', () => {
-                    var data = this.fetch();
-                    this.model.set(data);
-                });
-            });
-        },
-    });
-});
+export default RoleEditRecordView;

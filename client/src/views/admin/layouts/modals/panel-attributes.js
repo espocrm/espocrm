@@ -58,7 +58,7 @@ define('views/admin/layouts/modals/panel-attributes', ['views/modal', 'model'], 
                 },
                 {
                     name: 'cancel',
-                    text: 'Cancel',
+                    label: 'Cancel',
                 },
             ];
 

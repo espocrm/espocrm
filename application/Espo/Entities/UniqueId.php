@@ -30,11 +30,13 @@
 namespace Espo\Entities;
 
 use Espo\Core\Field\DateTime;
+use Espo\Core\Field\LinkParent;
+use Espo\Core\ORM\Entity;
 
 use stdClass;
 use LogicException;
 
-class UniqueId extends \Espo\Core\ORM\Entity
+class UniqueId extends Entity
 {
     public const ENTITY_TYPE = 'UniqueId';
 
@@ -64,5 +66,39 @@ class UniqueId extends \Espo\Core\ORM\Entity
         }
 
         return $value;
+    }
+
+    /**
+     * @param array<string, mixed>|stdClass $data
+     */
+    public function setData(array|stdClass $data): self
+    {
+        $this->set('data', $data);
+
+        return $this;
+    }
+
+    public function setTarget(?LinkParent $target): self
+    {
+        if (!$target) {
+            $this->setMultiple([
+                'targetId' => null,
+                'targetType' => null,
+            ]);
+        } else {
+            $this->setMultiple([
+                'targetId' => $target->getId(),
+                'targetType' => $target->getEntityType(),
+            ]);
+        }
+
+        return $this;
+    }
+
+    public function setTerminateAt(?DateTime $terminateAt): self
+    {
+        $this->setValueObject('terminateAt', $terminateAt);
+
+        return $this;
     }
 }

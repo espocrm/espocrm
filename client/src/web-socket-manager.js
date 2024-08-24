@@ -36,6 +36,23 @@ import Base64 from 'js-base64';
 class WebSocketManager {
 
     /**
+     * @private
+     * @type {number}
+     */
+    pingInterval = 60;
+
+    /**
+     * @private
+     * @type {number}
+     */
+    reconnectInterval = 3;
+
+    /**
+     * @private
+     */
+    pingTimeout
+
+    /**
      * @param {module:models/settings} config A config.
      */
     constructor(config) {
@@ -50,6 +67,12 @@ class WebSocketManager {
          * @type {{category: string, callback: Function}[]}
          */
         this.subscribeQueue = [];
+
+        /**
+         * @private
+         * @type {{category: string, callback: Function}[]}
+         */
+        this.subscriptions = [];
 
         /**
          * @private
@@ -127,36 +150,12 @@ class WebSocketManager {
      */
     connect(auth, userId) {
         const authArray = Base64.decode(auth).split(':');
-
         const authToken = authArray[1];
 
-        let url = this.protocolPart + this.url;
-
-        url += '?authToken=' + authToken + '&userId=' + userId;
+        const url = `${this.protocolPart + this.url}?authToken=${authToken}&userId=${userId}`;
 
         try {
-            this.connection = new ab.Session(
-                url,
-                () => {
-                    this.isConnected = true;
-
-                    this.subscribeQueue.forEach(item => {
-                        this.subscribe(item.category, item.callback);
-                    });
-
-                    this.subscribeQueue = [];
-                },
-                e => {
-                    if (e === ab.CONNECTION_CLOSED) {
-                        this.subscribeQueue = [];
-                    }
-
-                    if (e === ab.CONNECTION_LOST || e === ab.CONNECTION_UNREACHABLE) {
-                        setTimeout(() => this.connect(auth, userId), 3000);
-                    }
-                },
-                {skipSubprotocolCheck: true}
-            );
+            this.connectInternal(auth, userId, url);
         }
         catch (e) {
             console.error(e.message);
@@ -166,10 +165,50 @@ class WebSocketManager {
     }
 
     /**
+     * @private
+     * @param {string} auth
+     * @param {string} userId
+     * @param {string} url
+     */
+    connectInternal(auth, userId, url) {
+        this.connection = new ab.Session(
+            url,
+            () => {
+                this.isConnected = true;
+
+                this.subscribeQueue.forEach(item => {
+                    this.subscribe(item.category, item.callback);
+                });
+
+                this.subscribeQueue = [];
+
+                this.schedulePing();
+            },
+            code => {
+                if (code === ab.CONNECTION_CLOSED) {
+                    this.subscribeQueue = [];
+                }
+
+                if (code === ab.CONNECTION_LOST || code === ab.CONNECTION_UNREACHABLE) {
+                    if (this.isConnected) {
+                        this.subscribeQueue = this.subscriptions;
+                        this.subscriptions = [];
+                    }
+
+                    setTimeout(() => this.connect(auth, userId), this.reconnectInterval * 1000);
+                }
+
+                this.isConnected = false;
+            },
+            {skipSubprotocolCheck: true}
+        );
+    }
+
+    /**
      * Subscribe to a topic.
      *
      * @param {string} category A topic.
-     * @param {Function} callback A callback.
+     * @param {function(string, *): void} callback A callback.
      */
     subscribe(category, callback) {
         if (!this.connection) {
@@ -187,6 +226,11 @@ class WebSocketManager {
 
         try {
             this.connection.subscribe(category, callback);
+
+            this.subscriptions.push({
+                category: category,
+                callback: callback,
+            });
         }
         catch (e) {
             if (e.message) {
@@ -213,6 +257,10 @@ class WebSocketManager {
             return item.category !== category && item.callback !== callback;
         });
 
+        this.subscriptions = this.subscriptions.filter(item => {
+            return item.category !== category && item.callback !== callback;
+        });
+
         try {
             this.connection.unsubscribe(category, callback);
         }
@@ -230,9 +278,14 @@ class WebSocketManager {
      * Close a connection.
      */
     close() {
+        this.stopPing();
+
         if (!this.connection) {
             return;
         }
+
+        this.subscribeQueue = [];
+        this.subscriptions = [];
 
         try {
             this.connection.close();
@@ -242,6 +295,35 @@ class WebSocketManager {
         }
 
         this.isConnected = false;
+    }
+
+    /**
+     * @private
+     */
+    stopPing() {
+        this.pingTimeout = undefined;
+    }
+
+    /**
+     * @private
+     */
+    schedulePing() {
+        //ab._debugws = true;
+
+        if (!this.connection) {
+            this.stopPing();
+
+            return;
+        }
+
+        this.pingTimeout = setTimeout(() => {
+            if (!this.connection) {
+                return;
+            }
+
+            this.connection.publish('', '');
+            this.schedulePing();
+        }, this.pingInterval * 1000);
     }
 }
 

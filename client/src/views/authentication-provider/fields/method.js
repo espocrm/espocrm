@@ -26,25 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/authentication-provider/fields/method', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+export default class extends EnumFieldView {
 
-        setupOptions: function () {
-            /** @var {Object.<string, Object.<string, *>>} defs */
-            let defs = this.getMetadata().get(['authenticationMethods']) || {};
+    setupOptions() {
+        /** @var {Object.<string, Object.<string, *>>} defs */
+        const defs = this.getMetadata().get(['authenticationMethods']) || {};
 
-            let options = Object.keys(defs)
-                .filter(item => {
-                    /** @var {Object.<string, *>} */
-                    let data = defs[item].provider || {};
+        const options = Object.keys(defs)
+            .filter(item => {
+                /** @var {Record} */
+                const data = defs[item].provider || {};
 
-                    return data.isAvailable;
-                });
+                return data.isAvailable;
+            });
 
-            options.unshift('');
+        options.unshift('');
 
-            this.params.options = options;
-        },
-    });
-});
+        this.params.options = options;
+    }
+}

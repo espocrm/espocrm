@@ -1,7 +1,7 @@
 {
   "labels": {
-    "Create WorkingTimeRange": "Zeitraum erstellen",
-    "Calendars": "Kalender"
+    "Calendars": "Kalender",
+    "Create WorkingTimeRange": "Ausnahme erstellen"
   },
   "fields": {
     "timeRanges": "Zeitplan",

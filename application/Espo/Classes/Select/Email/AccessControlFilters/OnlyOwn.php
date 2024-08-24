@@ -32,6 +32,7 @@ namespace Espo\Classes\Select\Email\AccessControlFilters;
 use Espo\Core\Select\AccessControl\Filter;
 
 use Espo\Classes\Select\Email\Helpers\JoinHelper;
+use Espo\Entities\Email;
 use Espo\Entities\User;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
@@ -46,6 +47,6 @@ class OnlyOwn implements Filter
     {
         $this->joinHelper->joinEmailUser($queryBuilder, $this->user->getId());
 
-        $queryBuilder->where(['emailUser.userId' => $this->user->getId()]);
+        $queryBuilder->where([Email::ALIAS_INBOX . '.userId' => $this->user->getId()]);
     }
 }

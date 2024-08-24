@@ -53,7 +53,7 @@ class OwnerUserFieldProvider
 
     /**
      * Get an entity field that stores an owner-user (or multiple users).
-     * Must be link or linkMulitple field. NULL means no owner.
+     * Must be a link or linkMultiple field. NULL means no owner.
      */
     public function get(string $entityType): ?string
     {
