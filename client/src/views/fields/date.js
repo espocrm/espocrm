@@ -47,32 +47,10 @@ class DateFieldView extends BaseFieldView {
     validations = ['required', 'date', 'after', 'before']
 
     searchTypeList = [
-        'lastSevenDays',
-        'ever',
-        'isEmpty',
-        'currentWeek',
-        'lastWeek',
-        'lastXWeeks',
-        'nextWeek',
-        'nextXWeeks',
-        'currentMonth',
-        'lastMonth',
-        'nextMonth',
-        'currentQuarter',
-        'lastQuarter',
-        'currentYear',
-        'lastYear',
-        'today',
-        'past',
-        'future',
-        'lastXDays',
-        'nextXDays',
-        'olderThanXDays',
-        'afterXDays',
-        'on',
-        'after',
-        'before',
-        'between',
+      'lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'nextMonth', 'currentQuarter',
+      'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays',
+      'olderThanXDays', 'afterXDays', 'on', 'after', 'before', 'between',
+      'currentWeek', 'lastWeek', 'lastXWeeks', 'nextWeek', 'nextXWeeks',
     ]
 
     initialSearchIsNotIdle = true
