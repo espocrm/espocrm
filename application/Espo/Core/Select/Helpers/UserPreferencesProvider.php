@@ -29,10 +29,10 @@
 
 namespace Espo\Core\Select\Helpers;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\Entities\Preferences;
+use Espo\Core\Exceptions\Error;
 
 class UserPreferencesProvider
 {
