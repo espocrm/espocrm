@@ -132,7 +132,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 break;
 
-            case 'lastSevenDays':
+            case Type::LAST_SEVEN_DAYS:
                 $where['type'] = Type::BETWEEN;
 
                 $dtFrom = clone $dt;
