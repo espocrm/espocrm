@@ -79,5 +79,9 @@
     "translatedOptions": true,
     "dynamicLogicOptions": true,
     "personalData": true,
+    "sanitizerClassNameList": [
+        "Espo\\Classes\\FieldSanitizers\\ArrayFromNull",
+        "Espo\\Classes\\FieldSanitizers\\ArrayStringTrim"
+    ],
     "default": []
 }

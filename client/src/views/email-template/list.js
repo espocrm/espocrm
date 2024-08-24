@@ -26,10 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-template/list', ['views/list-with-categories'], function (Dep) {
+import ListWithCategories from 'views/list-with-categories';
 
-    return Dep.extend({
+export default class extends ListWithCategories {
 
-        quickCreate: false,
-    });
-});
+    quickCreate = false
+}

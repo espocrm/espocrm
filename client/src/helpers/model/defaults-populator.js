@@ -36,18 +36,23 @@ class DefaultsPopulator {
      * @param {module:models/preferences} preferences
      * @param {module:acl-manager} acl
      * @param {module:models/settings} config
+     * @param {module:metadata} metadata
+     * @param {module:view-helper} viewHelper
      */
-    constructor(user, preferences, acl, config) {
+    constructor(user, preferences, acl, config, metadata, viewHelper) {
         this.user = user;
         this.preferences = preferences;
         this.acl = acl;
         this.config = config;
+        this.metadata = metadata;
+        this.viewHelper = viewHelper;
     }
 
     /**
      * Populate default values.
      *
      * @param {module:model} model A model.
+     * @return {Promise|undefined}
      */
     populate(model) {
         model.populateDefaults();
@@ -71,6 +76,23 @@ class DefaultsPopulator {
         }
 
         model.set(defaultHash, {silent: true});
+
+        const preparatorClass = this.metadata.get(`clientDefs.${model.entityType}.modelDefaultsPreparator`);
+
+        if (!preparatorClass) {
+            return undefined;
+        }
+
+        return Espo.loader.requirePromise(preparatorClass)
+            .then(Class => {
+                /** @type {import('handlers/model/defaults-preparator').default} */
+                const preparator = new Class(this.viewHelper);
+
+                return preparator.prepare(model)
+            })
+            .then(attributes => {
+                model.set(attributes, {silent: true});
+            });
     }
 
     /**
@@ -79,8 +101,7 @@ class DefaultsPopulator {
      * @private
      */
     prepare(model, defaultHash) {
-        const hasAssignedUsers =
-            model.hasField('assignedUsers') &&
+        const hasAssignedUsers = model.hasField('assignedUsers') &&
             model.getLinkParam('assignedUsers', 'entity') === 'User';
 
         if (model.hasField('assignedUser') || hasAssignedUsers) {
@@ -90,31 +111,7 @@ class DefaultsPopulator {
                 assignedUserField = 'assignedUsers';
             }
 
-            let fillAssignedUser = true;
-
-            if (this.preferences.get('doNotFillAssignedUserIfNotRequired')) {
-                fillAssignedUser = false;
-
-                if (model.getFieldParam(assignedUserField, 'required')) {
-                    fillAssignedUser = true;
-                }
-                else if (this.acl.getPermissionLevel('assignmentPermission') === 'no') {
-                    fillAssignedUser = true;
-                }
-                else if (
-                    this.acl.getPermissionLevel('assignmentPermission') === 'team' &&
-                    !this.user.get('defaultTeamId')
-                ) {
-                    fillAssignedUser = true;
-                }
-                else if (
-                    this.acl.getScopeForbiddenFieldList(model.entityType, 'edit').includes(assignedUserField)
-                ) {
-                    fillAssignedUser = true;
-                }
-            }
-
-            if (fillAssignedUser) {
+            if (this.toFillAssignedUser(model, assignedUserField)) {
                 if (hasAssignedUsers) {
                     defaultHash['assignedUsersIds'] = [this.user.id];
                     defaultHash['assignedUsersNames'] = {};
@@ -140,6 +137,42 @@ class DefaultsPopulator {
                 defaultHash['teamsNames'][defaultTeamId] = this.user.get('defaultTeamName');
             }
         }
+    }
+
+    /**
+     *
+     * @param {import('model').default} model
+     * @param {string} assignedUserField
+     */
+    toFillAssignedUser(model, assignedUserField) {
+        if (!this.preferences.get('doNotFillAssignedUserIfNotRequired')) {
+            return true;
+        }
+
+        if (model.getFieldParam(assignedUserField, 'required')) {
+            return true;
+        }
+
+        if (this.acl.getPermissionLevel('assignmentPermission') === 'no') {
+            return true;
+        }
+
+        if (
+            this.acl.getPermissionLevel('assignmentPermission') === 'team' &&
+            !this.user.get('defaultTeamId')
+        ) {
+            return true;
+        }
+
+        if (this.acl.getLevel(model.entityType, 'read') === 'own') {
+            return true;
+        }
+
+        if (!this.acl.checkField(model.entityType, assignedUserField, 'edit')) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

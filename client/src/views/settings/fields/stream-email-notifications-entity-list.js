@@ -26,22 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/stream-email-notifications-entity-list',
-['views/fields/entity-type-list'], function (Dep) {
+import EntityTypeListFieldView from 'views/fields/entity-type-list';
 
-    return Dep.extend({
+export default class extends EntityTypeListFieldView {
 
-        setupOptions: function () {
+    setupOptions() {
+        super.setupOptions();
 
-            Dep.prototype.setupOptions.call(this);
+        this.params.options = this.params.options.filter(scope => {
+            if (this.getMetadata().get(`scopes.${scope}.disabled`)) return;
+            if (!this.getMetadata().get(`scopes.${scope}.object`)) return;
+            if (!this.getMetadata().get(`scopes.${scope}.stream`)) return;
 
-            this.params.options = this.params.options.filter(function (scope) {
-                if (this.getMetadata().get('scopes.' + scope + '.disabled')) return;
-                if (!this.getMetadata().get('scopes.' + scope + '.object')) return;
-                if (!this.getMetadata().get('scopes.' + scope + '.stream')) return;
-
-                return true;
-            }, this)
-        },
-    });
-});
+            return true;
+        });
+    }
+}

@@ -12,7 +12,8 @@
     "inboundEmail": "Nalog E-pošte",
     "targetLists": "Liste meta",
     "excludingTargetLists": "Isključujući liste meta",
-    "optOutEntirely": "Potpuno \"ne želi\""
+    "optOutEntirely": "Potpuno \"ne želi\"",
+    "smtpAccount": "SMTP Nalog"
   },
   "links": {
     "targetLists": "Liste meta",
@@ -34,7 +35,10 @@
   },
   "labels": {
     "Create MassEmail": "Napravi masovnu e-poruku",
-    "Send Test": "Pošalji Test"
+    "Send Test": "Pošalji Test",
+    "System SMTP": "Sistem SMTP",
+    "system": "sistem",
+    "group": "grupa"
   },
   "messages": {
     "selectAtLeastOneTarget": "Izabrati najmanje jedan cilj.",

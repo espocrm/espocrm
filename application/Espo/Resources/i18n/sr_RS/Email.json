@@ -30,7 +30,9 @@
     "emailAccounts": "Lični nalozi",
     "hasAttachment": "ima prilog",
     "sentBy": "Poslato od strane",
-    "assignedUsers": "Zaduženi korisnici"
+    "assignedUsers": "Zaduženi korisnici",
+    "messageIdInternal": "Poruka ID (Interno)",
+    "folderId": "Folder ID"
   },
   "links": {
     "replied": "odgovorio",
@@ -38,7 +40,9 @@
     "inboundEmails": "Grupni nalozi",
     "emailAccounts": "Lični nalozi",
     "assignedUsers": "Zaduženi korisnici",
-    "sentBy": "Poslato od strane"
+    "sentBy": "Poslato od strane",
+    "fromEmailAddress": "Od Email Adrese",
+    "toEmailAddresses": "Za Email Adresu"
   },
   "options": {
     "status": {
@@ -81,7 +85,8 @@
   "messages": {
     "testEmailSent": "Test poruka je poslata",
     "emailSent": "Poruka je poslata",
-    "savedAsDraft": "Sačuvano kao nacrt"
+    "savedAsDraft": "Sačuvano kao nacrt",
+    "confirmInsertTemplate": "Telo emaila će biti izgubljeno. Da li ste sigurni da želite da ubacite template?"
   },
   "presetFilters": {
     "sent": "Poslato",

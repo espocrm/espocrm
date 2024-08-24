@@ -38,6 +38,7 @@ class RelationshipActionsView extends DefaultRowActionsView {
                 id: this.model.id
             },
             link: '#' + this.model.entityType + '/view/' + this.model.id,
+            groupIndex: 0,
         }];
 
         if (this.options.acl.edit && !this.options.editDisabled) {
@@ -48,6 +49,7 @@ class RelationshipActionsView extends DefaultRowActionsView {
                     id: this.model.id,
                 },
                 link: '#' + this.model.entityType + '/edit/' + this.model.id,
+                groupIndex: 0,
             });
         }
 
@@ -58,6 +60,7 @@ class RelationshipActionsView extends DefaultRowActionsView {
                 data: {
                     id: this.model.id,
                 },
+                groupIndex: 0,
             });
         }
 
@@ -70,6 +73,7 @@ class RelationshipActionsView extends DefaultRowActionsView {
                 data: {
                     id: this.model.id,
                 },
+                groupIndex: 0,
             });
         }
 

@@ -15,12 +15,12 @@
     "apiKey": "Chiave API",
     "targetTeam": "Team di Destinazione",
     "exampleRequestMethod": "Metodo",
-    "exampleRequestPayload": "Carico utile",
     "createLeadBeforeOptInConfirmation": "Crea lead prima della conferma",
     "duplicateCheck": "Controllo Duplicati",
     "skipOptInConfirmationIfSubscribed": "Salta la conferma se il lead è già nella lista di destinazione",
     "smtpAccount": "Account SMTP",
-    "inboundEmail": "Account e-mail di gruppo"
+    "inboundEmail": "Account e-mail di gruppo",
+    "phoneNumberCountry": "Prefisso telefonico"
   },
   "links": {
     "targetList": "Lista di Destinazione",
@@ -30,7 +30,7 @@
     "inboundEmail": "Account e-mail di gruppo"
   },
   "labels": {
-    "Create LeadCapture": "Crea punto d'ingresso",
+    "Create LeadCapture": "Crea Punto D'ingresso",
     "Generate New API Key": "Genera una nuova chiave API",
     "Request": "Richiesta",
     "Confirm Opt-In": "Conferma Iscrizione"

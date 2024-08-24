@@ -37,6 +37,9 @@ use Espo\Core\Upgrades\UpgradeManager;
 
 use Exception;
 
+/**
+ * @noinspection PhpUnused
+ */
 class UpgradeStep implements Command
 {
     public function __construct() {}
@@ -60,13 +63,7 @@ class UpgradeStep implements Command
         $stepName = $options['step'];
         $upgradeId = $options['id'];
 
-        $result = $this->runUpgradeStep($stepName, ['id' => $upgradeId]);
-
-        if (!$result) {
-            echo "false";
-
-            return;
-        }
+        $this->runUpgradeStep($stepName, ['id' => $upgradeId]);
 
         echo "true";
     }
@@ -74,7 +71,7 @@ class UpgradeStep implements Command
     /**
      * @param array<string, mixed> $params
      */
-    private function runUpgradeStep(string $stepName, array $params): bool
+    private function runUpgradeStep(string $stepName, array $params): void
     {
         $app = new Application();
 
@@ -83,12 +80,10 @@ class UpgradeStep implements Command
         $upgradeManager = new UpgradeManager($app->getContainer());
 
         try {
-            $result = $upgradeManager->runInstallStep($stepName, $params);
+            $upgradeManager->runInstallStep($stepName, $params);
         }
         catch (Exception $e) {
             die("Error: " . $e->getMessage());
         }
-
-        return $result;
     }
 }

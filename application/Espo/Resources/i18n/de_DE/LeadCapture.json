@@ -19,7 +19,8 @@
     "skipOptInConfirmationIfSubscribed": "Bestätigung überspringen, wenn Lead bereits in der Zielliste ist",
     "smtpAccount": "SMTP-Konto",
     "inboundEmail": "Gruppen-E-Mail-Konto",
-    "exampleRequestHeaders": "Kopfzeilen"
+    "exampleRequestHeaders": "Kopfzeilen",
+    "phoneNumberCountry": "Landesvorwahl"
   },
   "links": {
     "targetList": "Kontaktliste",

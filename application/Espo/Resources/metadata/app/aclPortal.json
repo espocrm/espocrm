@@ -66,6 +66,7 @@
                 "followEntityOnStreamPost": false,
                 "doNotFillAssignedUserIfNotRequired": false,
                 "useCustomTabList": false,
+                "addCustomTabs": false,
                 "tabList": false,
                 "emailUseExternalClient": false,
                 "assignmentNotificationsIgnoreEntityTypeList": false,

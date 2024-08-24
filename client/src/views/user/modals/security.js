@@ -77,7 +77,7 @@ class UserSecurityModalView extends ModalView {
         model.id = this.userModel.id;
         model.url = 'UserSecurity/' + this.userModel.id;
 
-        let auth2FAMethodList = this.getConfig().get('auth2FAMethodList') || [];
+        const auth2FAMethodList = this.getConfig().get('auth2FAMethodList') || [];
 
         model.setDefs({
             fields: {
@@ -170,7 +170,7 @@ class UserSecurityModalView extends ModalView {
     }
 
     apply(reset) {
-        let data = this.getRecordView().processFetch();
+        const data = this.getRecordView().processFetch();
 
         if (!data) {
             return;
@@ -197,7 +197,7 @@ class UserSecurityModalView extends ModalView {
 
     processApply(reset) {
         if (this.model.get('auth2FA')) {
-            let auth2FAMethod = this.model.get('auth2FAMethod');
+            const auth2FAMethod = this.model.get('auth2FAMethod');
 
             const view = this.getMetadata().get(['app', 'authentication2FAMethods', auth2FAMethod, 'userApplyView']);
 

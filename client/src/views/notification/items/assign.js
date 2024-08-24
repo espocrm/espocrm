@@ -35,7 +35,7 @@ class AssignNotificationItemView extends BaseNotificationItemView {
     template = 'notification/items/assign'
 
     setup() {
-        let data = this.model.get('data') || {};
+        const data = this.model.get('data') || {};
 
         this.userId = data.userId;
 

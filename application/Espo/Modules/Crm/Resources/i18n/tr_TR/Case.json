@@ -1,30 +1,30 @@
 {
   "fields": {
-    "name": "İsim",
+    "name": "Ad",
     "number": "Numara",
     "status": "Durum",
     "account": "Hesap",
-    "contact": "Bağlantı",
-    "contacts": "İletişim ",
+    "contact": "Kişi",
+    "contacts": "Kişiler",
     "priority": "Öncelik",
     "type": "Tür",
     "description": "Açıklama",
-    "lead": "Müşteri Potansiyeli",
+    "lead": "Potansiyel",
     "attachments": "Ekler",
-    "inboundEmail": "Grup Email Hesabı"
+    "inboundEmail": "Grup Eposta Hesabı"
   },
   "links": {
     "account": "Hesap",
     "contact": "İletişim (Birincil)",
-    "Contacts": "İletişim kişileri",
+    "Contacts": "Kişiler",
     "meetings": "Toplantılar",
     "calls": "Aramalar",
     "tasks": "Görevler",
-    "emails": "E-postalar ",
+    "emails": "Epostalar",
     "articles": "Bilgi Bankası Makaleleri",
-    "lead": "Müşteri Potansiyeli",
+    "lead": "Potansiyel",
     "attachments": "Ekler",
-    "inboundEmail": "Grup Email Hesabı"
+    "inboundEmail": "Grup Eposta Hesabı"
   },
   "options": {
     "status": {
@@ -42,19 +42,18 @@
     },
     "type": {
       "Question": "Soru",
-      "Incident": "Olay",
-      "Problem": "sorun"
+      "Incident": "Olay"
     }
   },
   "labels": {
     "Create Case": "Dosya Oluştur",
-    "Close": "Kapat ",
-    "Reject": "Reddet  ",
-    "Closed": "Kapalı ",
+    "Close": "Kapalı",
+    "Reject": "Reddedildi",
+    "Closed": "Kapalı",
     "Rejected": "Reddedildi"
   },
   "presetFilters": {
-    "open": "Aç ",
-    "closed": "Kapalı "
+    "open": "Açık",
+    "closed": "Kapalı"
   }
 }

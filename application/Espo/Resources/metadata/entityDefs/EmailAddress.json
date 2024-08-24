@@ -21,10 +21,10 @@
             "notStorable": true
         }
     },
-    "links": {
-    },
+    "links": {},
     "collection": {
         "orderBy": "name",
         "order": "asc"
-    }
+    },
+    "hooksDisabled": true
 }

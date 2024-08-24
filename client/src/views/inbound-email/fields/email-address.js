@@ -26,22 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/inbound-email/fields/email-address', ['views/fields/email-address'], function (Dep) {
+import EmailAddressFieldView from 'views/fields/email-address';
 
-    return Dep.extend({
+export default class extends EmailAddressFieldView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.on('change', () => {
-                var emailAddress = this.model.get('emailAddress');
+        this.on('change', () => {
+            const emailAddress = this.model.get('emailAddress');
 
-                this.model.set('name', emailAddress);
+            this.model.set('name', emailAddress);
 
-                if (this.model.isNew() || !this.model.get('replyToAddress')) {
-                    this.model.set('replyToAddress', emailAddress);
-                }
-            });
-        },
-    });
-});
+            if (this.model.isNew() || !this.model.get('replyToAddress')) {
+                this.model.set('replyToAddress', emailAddress);
+            }
+        });
+    }
+}

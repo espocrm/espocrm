@@ -12,7 +12,7 @@
         {
             "name": "maxLength",
             "type": "int",
-            "default": 150,
+            "default": 100,
             "min": 1,
             "max": 65535
         },
@@ -65,6 +65,9 @@
     ],
     "mandatoryValidationList": [
         "maxLength"
+    ],
+    "sanitizerClassNameList": [
+        "Espo\\Classes\\FieldSanitizers\\StringTrim"
     ],
     "filter": true,
     "personalData": true,

@@ -31,8 +31,9 @@ import LayoutIndexView from 'views/admin/layouts/index';
 class LayoutsView extends LayoutIndexView {
 
     setup() {
-        let setId = this.setId = this.options.layoutSetId;
-        this.baseUrl = '#LayoutSet/editLayouts/id=' + setId;
+        const setId = this.setId = this.options.layoutSetId;
+
+        this.baseUrl = `#LayoutSet/editLayouts/id=${setId}`;
 
         super.setup();
 
@@ -49,16 +50,16 @@ class LayoutsView extends LayoutIndexView {
     }
 
     getLayoutScopeDataList() {
-        let dataList = [];
-        let list = this.sModel.get('layoutList') || [];
+        const dataList = [];
+        const list = this.sModel.get('layoutList') || [];
 
-        let scopeList = [];
+        const scopeList = [];
 
         list.forEach(item => {
-            let arr = item.split('.');
-            let scope = arr[0];
+            const arr = item.split('.');
+            const scope = arr[0];
 
-            if (~scopeList.indexOf(scope)) {
+            if (scopeList.includes(scope)) {
                 return;
             }
 
@@ -66,16 +67,16 @@ class LayoutsView extends LayoutIndexView {
         });
 
         scopeList.forEach(scope => {
-            let o = {};
+            const o = {};
 
             o.scope = scope;
             o.url = this.baseUrl + '&scope=' + scope;
             o.typeDataList = [];
 
-            let typeList = [];
+            const typeList = [];
 
             list.forEach(item => {
-                let [scope, type] = item.split('.');
+                const [scope, type] = item.split('.');
 
                 if (scope !== o.scope) {
                     return;
@@ -87,7 +88,7 @@ class LayoutsView extends LayoutIndexView {
             typeList.forEach(type => {
                 o.typeDataList.push({
                     type: type,
-                    url: this.baseUrl + '&scope=' + scope + '&type=' + type,
+                    url: `${this.baseUrl}&scope=${scope}&type=${type}`,
                     label: this.translateLayoutName(type, scope),
                 });
             });
@@ -120,7 +121,7 @@ class LayoutsView extends LayoutIndexView {
     }
 
     navigate(scope, type) {
-        let url = '#LayoutSet/editLayouts/id=' + this.setId + '&scope=' + scope + '&type=' + type;
+        const url = '#LayoutSet/editLayouts/id=' + this.setId + '&scope=' + scope + '&type=' + type;
 
         this.getRouter().navigate(url, {trigger: false});
     }

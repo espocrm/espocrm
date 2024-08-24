@@ -55,22 +55,22 @@ class Download implements EntryPoint
         $id = $request->getQueryParam('id');
 
         if (!$id) {
-            throw new BadRequest();
+            throw new BadRequest("No id.");
         }
 
         /** @var ?AttachmentEntity $attachment */
         $attachment = $this->entityManager->getEntityById(AttachmentEntity::ENTITY_TYPE, $id);
 
         if (!$attachment) {
-            throw new NotFoundSilent();
+            throw new NotFoundSilent("Attachment not found.");
         }
 
         if (!$this->acl->checkEntity($attachment)) {
-            throw new Forbidden();
+            throw new Forbidden("No access to attachment.");
         }
 
         if ($attachment->isBeingUploaded()) {
-            throw new Forbidden();
+            throw new Forbidden("Attachment is being uploaded.");
         }
 
         $stream = $this->fileStorageManager->getStream($attachment);

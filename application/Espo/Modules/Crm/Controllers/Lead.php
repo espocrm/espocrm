@@ -32,9 +32,10 @@ namespace Espo\Modules\Crm\Controllers;
 use Espo\Core\Controllers\Record;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
-use Espo\Core\Exceptions\ConflictSilent;
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Core\Exceptions\NotFound;
 use Espo\Modules\Crm\Tools\Lead\Convert\Params as ConvertParams;
 use Espo\Modules\Crm\Tools\Lead\Convert\Values;
 use Espo\Modules\Crm\Tools\Lead\ConvertService;
@@ -45,7 +46,8 @@ class Lead extends Record
     /**
      * @throws BadRequest
      * @throws Forbidden
-     * @throws ConflictSilent
+     * @throws Conflict
+     * @throws NotFound
      */
     public function postActionConvert(Request $request): stdClass
     {

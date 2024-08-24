@@ -48,7 +48,11 @@
         },
         "contents": {
             "type": "text",
-            "notStorable": true
+            "notStorable": true,
+            "sanitizerClassNameList": [],
+            "sanitizerSuppressClassNameList": [
+                "Espo\\Classes\\FieldSanitizers\\EmptyStringToNull"
+            ]
         },
         "role": {
             "type": "enum",

@@ -697,7 +697,7 @@ class FieldManagerEditView extends View {
             this.model.set('tooltip', false);
         }
 
-        this.listenToOnce(this.model, 'sync', () => {
+        const onSave = () => {
             Espo.Ui.notify(false);
 
             this.setIsNotChanged();
@@ -706,19 +706,19 @@ class FieldManagerEditView extends View {
             Promise.all([
                 this.getMetadata().loadSkipCache(),
                 this.getLanguage().loadSkipCache(),
-            ])
-            .then(() => this.trigger('after:save'));
+            ]).then(() => this.trigger('after:save'));
 
             this.model.fetchedAttributes = this.model.getClonedAttributes();
 
             this.broadcastUpdate();
-        });
+        };
 
-        Espo.Ui.notify(this.translate('saving', 'messages'));
+        Espo.Ui.notify(' ... ');
 
         if (this.isNew) {
             this.model
                 .save()
+                .then(() => onSave())
                 .catch(() => this.enableButtons());
 
             return;
@@ -745,6 +745,7 @@ class FieldManagerEditView extends View {
 
         this.model
             .save(attributes, {patch: true})
+            .then(() => onSave())
             .catch(() => this.enableButtons());
     }
 

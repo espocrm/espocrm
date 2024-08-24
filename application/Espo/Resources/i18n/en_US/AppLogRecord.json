@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "message": "Message",
+        "code": "Code",
+        "level": "Level",
+        "exceptionClass": "Exception Class",
+        "file": "File",
+        "line": "Line",
+        "requestMethod": "Request Method",
+        "requestResourcePath": "Request Resource Path"
+    },
+    "presetFilters": {
+        "errors": "Errors"
+    }
+}

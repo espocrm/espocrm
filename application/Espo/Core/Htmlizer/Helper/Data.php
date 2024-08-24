@@ -35,61 +35,19 @@ use Closure;
 class Data
 {
     /**
-     * @var mixed[]
-     */
-    private $argumentList;
-
-    private stdClass $options;
-
-    private int $blockParams;
-
-    /**
-     * @var array<string, mixed>
-     */
-    private $context;
-
-    private string $name;
-
-    /**
-     * @var array<string, mixed>
-     */
-    private $rootContext;
-
-    /**
-     * @var ?Closure
-     */
-    private $func = null;
-
-    /**
-     * @var ?Closure
-     */
-    private $inverseFunc = null;
-
-    /**
      * @param mixed[] $argumentList
-     * @param array<string, mixed> $context
      * @param array<string, mixed> $rootContext
-     * @param int $blockParams
+     * @noinspection PhpPluralMixedCanBeReplacedWithArrayInspection
      */
     public function __construct(
-        string $name,
-        array $argumentList,
-        stdClass $options,
-        array $context,
-        array $rootContext,
-        int $blockParams,
-        ?Closure $func,
-        ?Closure $inverseFunc
-    ) {
-        $this->name = $name;
-        $this->argumentList = $argumentList;
-        $this->options = $options;
-        $this->context = $context;
-        $this->rootContext = $rootContext;
-        $this->blockParams = $blockParams;
-        $this->func = $func;
-        $this->inverseFunc = $inverseFunc;
-    }
+        private string $name,
+        private array $argumentList,
+        private stdClass $options,
+        private mixed $context,
+        private array $rootContext,
+        private ?Closure $func,
+        private ?Closure $inverseFunc
+    ) {}
 
     public function getName(): string
     {
@@ -97,9 +55,9 @@ class Data
     }
 
     /**
-     * @return array<string, mixed>
+     * @return mixed A context.
      */
-    public function getContext(): array
+    public function getContext(): mixed
     {
         return $this->context;
     }
@@ -119,6 +77,7 @@ class Data
 
     /**
      * @return mixed[]
+     * @noinspection PhpPluralMixedCanBeReplacedWithArrayInspection
      */
     public function getArgumentList(): array
     {
@@ -143,6 +102,7 @@ class Data
         return $this->func;
     }
 
+    /** @noinspection PhpUnused */
     public function getInverseFunction(): ?Closure
     {
         return $this->inverseFunc;

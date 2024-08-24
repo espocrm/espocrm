@@ -20,5 +20,6 @@
         "entityValue": {
             "columns": ["entityType", "entityId", "value"]
         }
-    }
+    },
+    "hooksDisabled": true
 }

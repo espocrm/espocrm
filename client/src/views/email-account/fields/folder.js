@@ -26,36 +26,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-account/fields/folder', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+export default class extends BaseFieldView {
 
-        editTemplate: 'email-account/fields/folder/edit',
+    editTemplate = 'email-account/fields/folder/edit'
 
-        getFoldersUrl: 'EmailAccount/action/getFolders',
+    getFoldersUrl = 'EmailAccount/action/getFolders'
 
-        events: {
-            'click [data-action="selectFolder"]': function () {
-                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+    setup() {
+        super.setup();
 
-                var data = {
-                    host: this.model.get('host'),
-                    port: this.model.get('port'),
-                    security: this.model.get('security'),
-                    username: this.model.get('username'),
-                    emailAddress: this.model.get('emailAddress'),
-                    userId: this.model.get('assignedUserId'),
-                };
+        this.addActionHandler('selectFolder', () => {
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-                if (this.model.has('password')) {
-                    data.password = this.model.get('password');
-                }
+            const data = {
+                host: this.model.get('host'),
+                port: this.model.get('port'),
+                security: this.model.get('security'),
+                username: this.model.get('username'),
+                emailAddress: this.model.get('emailAddress'),
+                userId: this.model.get('assignedUserId'),
+            };
 
-                if (!this.model.isNew()) {
-                    data.id = this.model.id;
-                }
+            if (this.model.has('password')) {
+                data.password = this.model.get('password');
+            }
 
-                Espo.Ajax.postRequest(this.getFoldersUrl, data).then(folders => {
+            if (!this.model.isNew()) {
+                data.id = this.model.id;
+            }
+
+            Espo.Ajax
+                .postRequest(this.getFoldersUrl, data).then(folders => {
                     this.createView('modal', 'views/email-account/modals/select-folder', {
                         folders: folders
                     }, view => {
@@ -75,11 +78,10 @@ define('views/email-account/fields/folder', ['views/fields/base'], function (Dep
 
                     xhr.errorIsHandled = true;
                 });
-            }
-        },
+        })
+    }
 
-        addFolder: function (folder) {
-            this.$element.val(folder);
-        },
-    });
-});
+    addFolder(folder) {
+        this.$element.val(folder);
+    }
+}

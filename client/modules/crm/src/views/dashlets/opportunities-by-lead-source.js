@@ -33,7 +33,7 @@ define('crm:views/dashlets/opportunities-by-lead-source', ['crm:views/dashlets/a
         name: 'OpportunitiesByLeadSource',
 
         url: function () {
-            var url = 'Opportunity/action/reportByLeadSource?dateFilter='+ this.getDateFilter();
+            let url = 'Opportunity/action/reportByLeadSource?dateFilter=' + this.getDateFilter();
 
             if (this.getDateFilter() === 'between') {
                 url += '&dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
@@ -82,9 +82,9 @@ define('crm:views/dashlets/opportunities-by-lead-source', ['crm:views/dashlets/a
                     fillOpacity: 1,
                     sizeRatio: 0.8,
                     labelFormatter: (total, value) => {
-                        var percentage = (100 * value / total).toFixed(2);
+                        const percentage = Math.round(100 * value / total);
 
-                        if (percentage < 7) {
+                        if (percentage < 5) {
                             return '';
                         }
 
@@ -111,12 +111,12 @@ define('crm:views/dashlets/opportunities-by-lead-source', ['crm:views/dashlets/a
                     relative: true,
                     lineColor: this.hoverColor,
                     trackFormatter: (obj) => {
-                        var value = this.currencySymbol + this.formatNumber(obj.y, true);
+                        const value = this.currencySymbol + this.formatNumber(obj.y, true);
 
-                        var fraction = obj.fraction || 0;
-                        var percentage = (100 * fraction).toFixed(2).toString();
+                        const fraction = obj.fraction || 0;
+                        const percentage = (100 * fraction).toFixed(2).toString();
 
-                        let label = this.getHelper().escapeString(obj.series.label || this.translate('None'));
+                        const label = this.getHelper().escapeString(obj.series.label || this.translate('None'));
 
                         return label + '<br>' +  value + ' / ' + percentage + '%';
                     },

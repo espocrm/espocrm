@@ -46,5 +46,8 @@
 
 <div class="stream-date-container">
     <a class="text-muted small" href="#Note/view/{{model.id}}">{{{createdAt}}}</a>
+    {{#if isPinned}}
+        <span class="fas fa-map-pin fa-sm pin-icon" title="{{translate 'Pinned' scope='Note'}}"></span>
+    {{/if}}
 </div>
 

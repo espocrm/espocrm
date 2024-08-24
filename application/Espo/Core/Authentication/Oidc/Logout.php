@@ -34,6 +34,9 @@ use Espo\Core\Authentication\Logout as LogoutInterface;
 use Espo\Core\Authentication\Logout\Params;
 use Espo\Core\Authentication\Logout\Result;
 
+/**
+ * @noinspection PhpUnused
+ */
 class Logout implements LogoutInterface
 {
     public function __construct(

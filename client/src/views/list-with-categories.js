@@ -70,9 +70,13 @@ class ListWithCategories extends ListView {
     setup() {
         super.setup();
 
+        this.defaultMaxSize = this.collection.maxSize;
+
         if (!this.categoryScope) {
             this.categoryScope = this.scope + 'Category';
         }
+
+        this.categoryField = this.getMetadata().get(`scopes.${this.categoryScope}.categoryField`) || this.categoryField;
 
         this.showEditLink =
             this.getAcl().check(this.categoryScope, 'edit') ||
@@ -117,6 +121,10 @@ class ListWithCategories extends ListView {
 
         if (this.hasNavigationPanelStoredValue()) {
             this.hasNavigationPanel = this.getNavigationPanelStoredValue();
+        } else {
+            this.hasNavigationPanel =
+                this.getMetadata().get(`scopes.${this.categoryScope}.showNavigationPanel`) ||
+                this.hasNavigationPanel;
         }
 
         const params = this.options.params || {};
@@ -287,18 +295,21 @@ class ListWithCategories extends ListView {
     }
 
     navigateToCurrentCategory() {
-        if (!this.isExpanded) {
-            if (this.currentCategoryId) {
-                this.getRouter().navigate('#' + this.scope + '/list/categoryId=' + this.currentCategoryId);
+        let url = '#' + this.scope;
+
+        if (!this.isExpanded && this.currentCategoryId) {
+            url += '/list/categoryId=' + this.currentCategoryId;
+
+            if (this._primaryFilter) {
+                url += '&primaryFilter=' + this.getHelper().escapeString(this._primaryFilter);
             }
-            else {
-                this.getRouter().navigate('#' + this.scope);
+        } else {
+            if (this._primaryFilter) {
+                url += '/list/primaryFilter=' + this.getHelper().escapeString(this._primaryFilter);
             }
-        }
-        else {
-            this.getRouter().navigate('#' + this.scope);
         }
 
+        this.getRouter().navigate(url);
         this.updateLastUrl();
     }
 
@@ -318,6 +329,8 @@ class ListWithCategories extends ListView {
 
         this.nestedCategoriesCollection.reset();
         this.collection.reset();
+        this.collection.offset = 0;
+        this.collection.maxSize = this.defaultMaxSize;
 
         this.$listContainer.empty();
 
@@ -468,6 +481,7 @@ class ListWithCategories extends ListView {
                 hasExpandedToggler: this.hasExpandedToggler,
                 hasNavigationPanel: this.hasNavigationPanel,
                 subjectEntityType: this.collection.entityType,
+                primaryFilter: this._primaryFilter,
             }, view => {
                 view.render();
             });
@@ -520,8 +534,11 @@ class ListWithCategories extends ListView {
                         this.currentCategoryName = model.get('name');
                     }
 
-                    this.applyCategoryToCollection();
+                    this.collection.offset = 0;
+                    this.collection.maxSize = this.defaultMaxSize;
+                    this.collection.reset();
 
+                    this.applyCategoryToCollection();
                     this.collection.abortLastFetch();
 
                     Espo.Ui.notify(' ... ');
@@ -662,7 +679,11 @@ class ListWithCategories extends ListView {
             return super.getHeader();
         }
 
-        const rootUrl = '#' + this.scope;
+        let rootUrl = '#' + this.scope;
+
+        if (this._primaryFilter) {
+            rootUrl += '/list/primaryFilter=' + this.getHelper().escapeString(this._primaryFilter);
+        }
 
         const $root = $('<a>')
             .attr('href', rootUrl)
@@ -682,7 +703,11 @@ class ListWithCategories extends ListView {
         }
 
         if (upperId) {
-            const url = rootUrl + '/' + 'list/categoryId=' + this.escapeString(upperId);
+            let url = rootUrl + '/' + 'list/categoryId=' + this.getHelper().escapeString(upperId);
+
+            if (this._primaryFilter) {
+                url += '&primaryFilter=' + this.getHelper().escapeString(this._primaryFilter);
+            }
 
             const $folder = $('<a>')
                 .attr('href', url)

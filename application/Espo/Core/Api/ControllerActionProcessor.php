@@ -156,7 +156,6 @@ class ControllerActionProcessor
         $type = $params[0]->getType();
 
         if (
-            !$type ||
             !$type instanceof ReflectionNamedType ||
             $type->isBuiltin()
         ) {

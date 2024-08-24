@@ -30,6 +30,7 @@
 namespace Espo\Core\Select\Primary\Filters;
 
 use Espo\Core\Select\Primary\Filter;
+use Espo\Entities\StreamSubscription;
 use Espo\Entities\User;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
@@ -43,7 +44,7 @@ class Followed implements Filter
         $alias = 'subscriptionFollowedPrimaryFilter';
 
         $queryBuilder->join(
-            'Subscription',
+            StreamSubscription::ENTITY_TYPE,
             $alias,
             [
                 $alias . '.entityType' => $this->entityType,

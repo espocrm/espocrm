@@ -26,42 +26,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-account/fields/email-folder', ['views/fields/link'], function (Dep) {
+import LinkFieldView from 'views/fields/link';
 
-    return Dep.extend({
+export default class extends LinkFieldView {
 
-        createDisabled: true,
-        autocompleteDisabled: true,
+    createDisabled = true
+    autocompleteDisabled = true
 
-        getSelectFilters: function () {
-            if (this.getUser().isAdmin()) {
-                if (this.model.get('assignedUserId')) {
-                    return {
-                        assignedUser: {
-                            type: 'equals',
-                            attribute: 'assignedUserId',
-                            value: this.model.get('assignedUserId'),
-                            data: {
-                                type: 'is',
-                                nameValue: this.model.get('assignedUserName'),
-                            },
-                        }
-                    };
+    getSelectFilters() {
+        if (this.getUser().isAdmin() && this.model.get('assignedUserId')) {
+            return {
+                assignedUser: {
+                    type: 'equals',
+                    attribute: 'assignedUserId',
+                    value: this.model.get('assignedUserId'),
+                    data: {
+                        type: 'is',
+                        nameValue: this.model.get('assignedUserName'),
+                    },
                 }
+            };
+        }
+    }
+
+    setup() {
+        super.setup();
+
+        this.listenTo(this.model, 'change:assignedUserId', (model, e, o) => {
+            if (!o.ui) {
+                return;
             }
-        },
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.listenTo(this.model, 'change:assignedUserId', (model, e, o) => {
-                if (o.ui) {
-                    this.model.set({
-                        emailFolderId: null,
-                        emailFolderName: null,
-                    });
-                }
+            this.model.set({
+                emailFolderId: null,
+                emailFolderName: null,
             });
-        },
-    });
-});
+        });
+    }
+}

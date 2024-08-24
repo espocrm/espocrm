@@ -31,7 +31,5 @@ define('crm:views/knowledge-base-article/list', ['views/list-with-categories'], 
     return Dep.extend({
 
         categoryScope: 'KnowledgeBaseCategory',
-        categoryField: 'categories',
-        categoryFilterType: 'inCategory',
     });
 });

@@ -34,6 +34,8 @@ import Select from 'ui/select'
 
 /**
  * An enum field (select-box).
+ *
+ * @extends BaseFieldView<module:views/fields/enumeration~params>
  */
 class EnumFieldView extends BaseFieldView {
 
@@ -52,6 +54,8 @@ class EnumFieldView extends BaseFieldView {
      * @property {boolean} [required] Required.
      * @property {string} [translation] A translation string. E.g. `Global.scopeNames`.
      * @property {boolean} [displayAsLabel] Display as label.
+     * @property {string|'state'} [labelType] A label type.
+     * @property {'regular'|'state'} [labelType] A label type.
      * @property {string} [optionsReference] A reference to options. E.g. `Account.industry`.
      * @property {string} [optionsPath] An options metadata path.
      * @property {boolean} [isSorted] To sort options.
@@ -93,27 +97,34 @@ class EnumFieldView extends BaseFieldView {
 
     validationElementSelector = '.selectize-control'
 
+    // noinspection JSCheckFunctionSignatures
     /** @inheritDoc */
     data() {
-        let data = super.data();
+        const data = super.data();
 
         data.translatedOptions = this.translatedOptions;
 
-        let value = this.model.get(this.name);
+        const value = this.model.get(this.name);
 
         if (this.isReadMode() && this.styleMap) {
             data.style = this.styleMap[value || ''] || 'default';
         }
 
         if (this.isReadMode()) {
-            if (this.params.displayAsLabel && data.style && data.style !== 'default') {
-                data.class = 'label label-md label';
-            } else {
+            if (!this.params.displayAsLabel) {
                 data.class = 'text';
+            } else {
+                if (this.params.labelType === 'state') {
+                    data.class = 'label label-md label-state label';
+                } else {
+                    data.class = data.style && data.style !== 'default' ?
+                        'label label-md label' :
+                        'text';
+                }
             }
         }
 
-        let translationKey = value || '';
+        const translationKey = value || '';
 
         if (
             typeof value !== 'undefined' && value !== null && value !== ''
@@ -136,12 +147,13 @@ class EnumFieldView extends BaseFieldView {
 
         }
 
+        // noinspection JSValidateTypes
         return data;
     }
 
     setup() {
         if (!this.params.options) {
-            let methodName = 'get' + Espo.Utils.upperCaseFirst(this.name) + 'Options';
+            const methodName = 'get' + Espo.Utils.upperCaseFirst(this.name) + 'Options';
 
             if (typeof this.model[methodName] === 'function') {
                 this.params.options = this.model[methodName].call(this.model);
@@ -150,10 +162,10 @@ class EnumFieldView extends BaseFieldView {
 
         let optionsPath = this.params.optionsPath;
         /** @type {?string} */
-        let optionsReference = this.params.optionsReference;
+        const optionsReference = this.params.optionsReference;
 
         if (!optionsPath && optionsReference) {
-            let [refEntityType, refField] = optionsReference.split('.');
+            const [refEntityType, refField] = optionsReference.split('.');
 
             optionsPath = `entityDefs.${refEntityType}.fields.${refField}.options`;
         }
@@ -189,8 +201,8 @@ class EnumFieldView extends BaseFieldView {
             this.params.options = Espo.Utils.clone(this.params.options) || [];
 
             this.params.options = this.params.options.sort((v1, v2) => {
-                 return (this.translatedOptions[v1] || v1)
-                     .localeCompare(this.translatedOptions[v2] || v2);
+                return (this.translatedOptions[v1] || v1)
+                    .localeCompare(this.translatedOptions[v2] || v2);
             });
         }
 
@@ -202,10 +214,10 @@ class EnumFieldView extends BaseFieldView {
     setupTranslation() {
         let translation = this.params.translation;
         /** @type {?string} */
-        let optionsReference = this.params.optionsReference;
+        const optionsReference = this.params.optionsReference;
 
         if (!translation && optionsReference) {
-            let [refEntityType, refField] = optionsReference.split('.');
+            const [refEntityType, refField] = optionsReference.split('.');
 
             translation = `${refEntityType}.options.${refField}`;
         }
@@ -220,9 +232,9 @@ class EnumFieldView extends BaseFieldView {
             return;
         }
 
-        let obj = this.getLanguage().translatePath(translation);
+        const obj = this.getLanguage().translatePath(translation);
 
-        let map = {};
+        const map = {};
 
         this.params.options.forEach(item => {
             if (typeof obj === 'object' && item in obj) {
@@ -244,7 +256,7 @@ class EnumFieldView extends BaseFieldView {
             map[item] = item;
         });
 
-        let value = this.model.get(this.name);
+        const value = this.model.get(this.name);
 
         if ((value || value === '') && !(value in map)) {
             if (typeof obj === 'object' && value in obj) {
@@ -261,29 +273,40 @@ class EnumFieldView extends BaseFieldView {
     setupOptions() {}
 
     /**
+     * Set translated options.
+     *
+     * @param {Record} translatedOptions
+     * @since 8.4.0
+     */
+    setTranslatedOptions(translatedOptions) {
+        this.translatedOptions = translatedOptions;
+    }
+
+    /**
      * Set an option list.
      *
      * @param {string[]} optionList An option list.
+     * @return {Promise}
      */
     setOptionList(optionList) {
-        let previousOptions = this.params.options;
+        const previousOptions = this.params.options;
 
         if (!this.originalOptionList) {
             this.originalOptionList = this.params.options;
         }
 
-        let newOptions = Espo.Utils.clone(optionList) || [];
+        const newOptions = Espo.Utils.clone(optionList) || [];
 
         this.params.options = newOptions;
 
-        let isChanged = !_(previousOptions).isEqual(optionList);
+        const isChanged = !_(previousOptions).isEqual(optionList);
 
         if (!this.isEditMode() || !isChanged) {
-            return;
+            return Promise.resolve();
         }
 
         let triggerChange = false;
-        let currentValue = this.model.get(this.name);
+        const currentValue = this.model.get(this.name);
 
         if (!newOptions.includes(currentValue) && this.isReady) {
             this.model.set(this.name, newOptions[0] ?? null, {silent: true});
@@ -291,7 +314,7 @@ class EnumFieldView extends BaseFieldView {
             triggerChange = true;
         }
 
-        this.reRender()
+        return this.reRender()
             .then(() => {
                 if (triggerChange) {
                     this.trigger('change');
@@ -301,25 +324,29 @@ class EnumFieldView extends BaseFieldView {
 
     /**
      * Reset a previously set option list.
+     *
+     * @return {Promise}
      */
     resetOptionList() {
         if (!this.originalOptionList) {
-            return;
+            return Promise.resolve();
         }
 
-        let previousOptions = this.params.options;
+        const previousOptions = this.params.options;
 
         this.params.options = Espo.Utils.clone(this.originalOptionList);
 
-        let isChanged = !_(previousOptions).isEqual(this.originalOptionList);
+        const isChanged = !_(previousOptions).isEqual(this.originalOptionList);
 
         if (!this.isEditMode() || !isChanged) {
-            return;
+            return Promise.resolve();
         }
 
         if (this.isRendered()) {
-            this.reRender();
+            return this.reRender();
         }
+
+        return Promise.resolve();
     }
 
     setupSearch() {
@@ -331,7 +358,7 @@ class EnumFieldView extends BaseFieldView {
     }
 
     handleSearchType(type) {
-        var $inputContainer = this.$el.find('div.input-container');
+        const $inputContainer = this.$el.find('div.input-container');
 
         if (~['anyOf', 'noneOf'].indexOf(type)) {
             $inputContainer.removeClass('hidden');
@@ -346,15 +373,15 @@ class EnumFieldView extends BaseFieldView {
         if (this.isSearchMode()) {
             this.$element = this.$el.find('.main-element');
 
-            let type = this.$el.find('select.search-type').val();
+            const type = this.$el.find('select.search-type').val();
 
             this.handleSearchType(type);
 
-            let valueList = this.getSearchParamsData().valueList || this.searchParams.value || [];
+            const valueList = this.getSearchParamsData().valueList || this.searchParams.value || [];
 
             this.$element.val(valueList.join(':,:'));
 
-            let items = [];
+            const items = [];
 
             (this.params.options || []).forEach(value => {
                 let label = this.getLanguage().translateOption(value, this.name, this.scope);
@@ -376,7 +403,7 @@ class EnumFieldView extends BaseFieldView {
             });
 
             /** @type {module:ui/multi-select~Options} */
-            let multiSelectOptions = {
+            const multiSelectOptions = {
                 items: items,
                 delimiter: ':,:',
                 matchAnyWord: true,
@@ -401,7 +428,7 @@ class EnumFieldView extends BaseFieldView {
     validateRequired() {
         if (this.isRequired()) {
             if (!this.model.get(this.name)) {
-                let msg = this.translate('fieldIsRequired', 'messages')
+                const msg = this.translate('fieldIsRequired', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg);
@@ -418,7 +445,7 @@ class EnumFieldView extends BaseFieldView {
             value = null;
         }
 
-        let data = {};
+        const data = {};
 
         data[this.name] = value;
 
@@ -430,7 +457,7 @@ class EnumFieldView extends BaseFieldView {
     }
 
     fetchSearch() {
-        let type = this.fetchSearchType();
+        const type = this.fetchSearchType();
 
         let list = this.$element.val().split(':,:');
 
@@ -516,7 +543,7 @@ class EnumFieldView extends BaseFieldView {
         }
 
         if (type === 'isNotEmpty') {
-            let value = [
+            const value = [
                 {
                     type: 'isNotNull',
                     attribute: this.name,

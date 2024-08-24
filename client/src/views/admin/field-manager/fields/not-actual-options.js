@@ -26,20 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/fields/not-actual-options', ['views/fields/multi-enum'], function (Dep) {
+import MultiEnumFieldView from 'views/fields/multi-enum';
 
-    return Dep.extend({
+class NotActualOptionsFieldView extends MultiEnumFieldView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.params.options = Espo.Utils.clone(this.model.get('options')) || [];
+        this.params.options = Espo.Utils.clone(this.model.get('options')) || [];
 
-            this.listenTo(this.model, 'change:options', (m, v, o) => {
-                this.params.options = Espo.Utils.clone(m.get('options')) || [];
+        this.listenTo(this.model, 'change:options', (m) => {
+            this.params.options = Espo.Utils.clone(m.get('options')) || [];
 
-                this.reRender();
-            });
-        },
-    });
-});
+            this.reRender();
+        });
+    }
+}
+
+export default NotActualOptionsFieldView;

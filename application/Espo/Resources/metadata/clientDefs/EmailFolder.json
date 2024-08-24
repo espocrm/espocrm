@@ -4,7 +4,8 @@
         "list": "views/email-folder/list"
     },
     "recordViews": {
-        "list": "views/email-folder/record/list"
+        "list": "views/email-folder/record/list",
+        "editQuick": "views/email-folder/record/edit-small"
     },
     "menu": {
         "list": {

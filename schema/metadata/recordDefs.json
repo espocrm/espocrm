@@ -9,6 +9,10 @@
             "description": "A class for building a where clause for duplicate checking. Should implement Espo\\Core\\Duplicate\\WhereBuilder interface.",
             "type": "string"
         },
+        "defaultsPopulatorClassName": {
+            "description": "Populates default values when creating a record. Should implement Espo\\Core\\Record\\Defaults\\Populator. As of v8.2.",
+            "type": "string"
+        },
         "readLoaderClassNameList": {
             "description": "Classes to load additional fields for an entity. Should implement Espo\\Core\\FieldProcessing\\Loader interface.",
             "type": "array",
@@ -91,16 +95,39 @@
             "description": "Disable export regardless ACL.",
             "type": "boolean"
         },
+        "actionHistoryDisabled": {
+            "description": "Disable Action History processing. As of v8.2.",
+            "type": "boolean"
+        },
         "updateDuplicateCheck": {
             "description": "If true, then duplicate checking will be processed while updating a record.",
             "type": "boolean"
+        },
+        "forceSelectAllAttributes": {
+            "type": "boolean",
+            "description": "Always select all attributes when calling find. As of v8.2."
+        },
+        "mandatoryAttributeList": {
+            "description": "Mandatory attributes to be selected when calling find. As of v8.2.",
+            "type": "array",
+            "items": {"type": "string"}
+        },
+        "duplicateLinkList": {
+            "description": "Links to be copied when duplicating a record. As of v8.2.",
+            "type": "array",
+            "items": {"type": "string"}
         },
         "relationships": {
             "description": "Relationship parameters. Key-object pairs, where keys are link names.",
             "type": "object",
             "additionalProperties": {
                 "type": "object",
+                "description": "A link.",
                 "properties": {
+                    "countDisabled": {
+                        "type": "boolean",
+                        "description": "Disable total count. As of v8.2."
+                    },
                     "selectAccessControlDisabled": {
                         "description": "Disable access control when listing related records; only access to a parent record will be checked.",
                         "type": "boolean"
@@ -122,6 +149,19 @@
                     "linkCheckDisabled": {
                         "description": "Disable a link-check functionality when linking through link or link-multiple field.",
                         "type": "boolean"
+                    },
+                    "mandatoryAttributeList": {
+                        "description": "Mandatory attributes to be selected when find related. As of v8.2.",
+                        "type": "array",
+                        "items": {"type": "string"}
+                    },
+                    "massLink": {
+                        "type": "boolean",
+                        "default": "Allow mass link. As of v8.2."
+                    },
+                    "linkOnlyNotLinked": {
+                        "type": "boolean",
+                        "description": "Allow linking only if a record is not linked with any. As of v8.3."
                     }
                 }
             }
@@ -129,6 +169,27 @@
         "loadAdditionalFieldsAfterUpdate": {
             "type": "boolean",
             "description": "Load additional fields after update. Needed for cases when additional fields need to be re-loaded since they are not actual after update."
+        },
+        "createInputFilterClassNameList": {
+            "description": "Create input filters. Should implement Espo\\Core\\Record\\Input\\Filter. As of v8.2.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "updateInputFilterClassNameList": {
+            "description": "Update input filters. Should implement Espo\\Core\\Record\\Input\\Filter. As of v8.2.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "outputFilterClassNameList": {
+            "description": "Output filters. Should implement Espo\\Core\\Record\\Output\\Filter. As of v8.2.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
         },
         "beforeReadHookClassNameList": {
             "description": "Before-read hooks. Should implement the Espo\\Core\\Record\\Hook\\ReadHook interface.",
@@ -144,6 +205,13 @@
                 "type": "string"
             }
         },
+        "afterCreateHookClassNameList": {
+            "description": "After-create hooks. Should implement the Espo\\Core\\Record\\Hook\\CreateHook or Espo\\Core\\Record\\Hook\\SaveHook interface. As of v8.2.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
         "beforeUpdateHookClassNameList": {
             "description": "Before-update hooks. Should implement the Espo\\Core\\Record\\Hook\\UpdateHook or Espo\\Core\\Record\\Hook\\SaveHook interface.",
             "type": "array",
@@ -151,8 +219,22 @@
                 "type": "string"
             }
         },
+        "afterUpdateHookClassNameList": {
+            "description": "Before-update hooks. Should implement the Espo\\Core\\Record\\Hook\\UpdateHook or Espo\\Core\\Record\\Hook\\SaveHook interface. As of v8.2.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
         "beforeDeleteHookClassNameList": {
             "description": "Before-delete hooks. Should implement the Espo\\Core\\Record\\Hook\\DeleteHook interface.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "afterDeleteHookClassNameList": {
+            "description": "Before-delete hooks. Should implement the Espo\\Core\\Record\\Hook\\DeleteHook interface. As of v8.2.",
             "type": "array",
             "items": {
                 "type": "string"
@@ -167,6 +249,20 @@
         },
         "beforeUnlinkHookClassNameList": {
             "description": "Before-unlink hooks. Should implement the Espo\\Core\\Record\\Hook\\UnlinkHook interface.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "afterLinkHookClassNameList": {
+            "description": "After-link hooks. Should implement the Espo\\Core\\Record\\Hook\\LinkHook interface. As of v8.2.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "afterUnlinkHookClassNameList": {
+            "description": "After-unlink hooks. Should implement the Espo\\Core\\Record\\Hook\\UnlinkHook interface. As of v8.2.",
             "type": "array",
             "items": {
                 "type": "string"

@@ -64,7 +64,7 @@
         "amdId": "jquery-textcomplete"
     },
     {
-        "src": "node_modules/bootstrap/dist/js/bootstrap.js",
+        "src": "node_modules/bootstrap/dist/js/bootstrap-for-espo.js",
         "bundle": true
     },
     {

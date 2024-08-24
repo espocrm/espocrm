@@ -1,10 +1,63 @@
 {
     "items": {
+        "globalSearch": {
+            "view": "views/global-search/global-search",
+            "class": "navbar-form global-search-container",
+            "order": 5,
+            "disabled": false
+        },
         "quickCreate": {
             "view": "views/site/navbar/quick-create",
             "class": "dropdown hidden-xs quick-create-container",
-            "order": 0,
+            "order": 10,
             "disabled": false
+        },
+        "notificationBadge": {
+            "view": "views/notification/badge",
+            "class": "dropdown notifications-badge-container",
+            "order": 15,
+            "disabled": false
+        }
+    },
+    "menuItems": {
+        "admin": {
+            "order": 0,
+            "groupIndex": 1,
+            "link": "#Admin",
+            "labelTranslation": "Global.labels.Administration",
+            "accessDataList": [
+                {
+                    "isAdminOnly": true
+                }
+            ]
+        },
+        "preferences": {
+            "order": 1,
+            "groupIndex": 1,
+            "link": "#Preferences",
+            "labelTranslation": "Global.labels.Preferences"
+        },
+        "lastViewed": {
+            "order": 0,
+            "groupIndex": 5,
+            "link": "#LastViewed",
+            "labelTranslation": "Global.scopeNamesPlural.LastViewed",
+            "configCheck": "!actionHistoryDisabled",
+            "handler": "handlers/navbar-menu",
+            "actionFunction": "lastViewed"
+        },
+        "about": {
+            "order": 0,
+            "groupIndex": 10,
+            "link": "#About",
+            "labelTranslation": "Global.labels.About"
+        },
+        "logout": {
+            "order": 1,
+            "groupIndex": 10,
+            "labelTranslation": "Global.labels.Log Out",
+            "handler": "handlers/navbar-menu",
+            "actionFunction": "logout"
         }
     }
 }

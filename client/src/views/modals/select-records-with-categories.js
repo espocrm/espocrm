@@ -34,7 +34,6 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
     template = 'modals/select-records-with-categories'
 
     // Used in applyCategoryToCollection.
-    // noinspection JSUnusedGlobalSymbols
     categoryField = 'category'
     // noinspection JSUnusedGlobalSymbols
     categoryFilterType = 'inCategory'
@@ -51,6 +50,7 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
     setup() {
         this.scope = this.entityType = this.options.scope || this.scope;
         this.categoryScope = this.categoryScope || this.scope + 'Category';
+        this.categoryField = this.getMetadata().get(`scopes.${this.categoryScope}.categoryField`) || this.categoryField;
 
         this.categoriesDisabled = this.categoriesDisabled ||
            this.getMetadata().get(['scopes',  this.categoryScope, 'disabled']) ||

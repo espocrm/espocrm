@@ -55,5 +55,8 @@
         "len": 255
     },
     "validatorClassName": "Espo\\Classes\\FieldValidators\\VarcharType",
+    "sanitizerClassNameList": [
+        "Espo\\Classes\\FieldSanitizers\\StringTrim"
+    ],
     "default": null
 }

@@ -47,7 +47,8 @@
         },
         "childList": {
             "type": "jsonArray",
-            "notStorable": true
+            "notStorable": true,
+            "orderDisabled": true
         }
     },
     "links": {
@@ -105,5 +106,6 @@
                 }
             }
         }
-    }
+    },
+    "repositoryClassName": "Espo\\Core\\Repositories\\CategoryTree"
 }

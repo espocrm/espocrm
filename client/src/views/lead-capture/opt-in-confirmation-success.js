@@ -26,35 +26,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/lead-capture/opt-in-confirmation-success', ['view', 'model'], function (Dep, Model) {
+import View from 'view';
+import Model from 'model';
 
-    return Dep.extend({
+class OptInConfirmationSuccessView extends View {
 
-        template: 'lead-capture/opt-in-confirmation-success',
+    template = 'lead-capture/opt-in-confirmation-success'
 
-        setup: function () {
-            let model = new Model();
+    setup() {
+        const model = new Model();
 
-            this.resultData = this.options.resultData;
+        this.resultData = this.options.resultData;
 
-            if (this.resultData.message) {
-                model.set('message', this.resultData.message);
+        if (this.resultData.message) {
+            model.set('message', this.resultData.message);
 
-                this.createView('messageField', 'views/fields/text', {
-                    selector: '.field[data-name="message"]',
-                    mode: 'detail',
-                    inlineEditDisabled: true,
-                    model: model,
-                    name: 'message',
-                });
-            }
-        },
+            this.createView('messageField', 'views/fields/text', {
+                selector: '.field[data-name="message"]',
+                mode: 'detail',
+                inlineEditDisabled: true,
+                model: model,
+                name: 'message',
+            });
+        }
+    }
 
-        data: function () {
-            return {
-                resultData: this.options.resultData,
-                defaultMessage: this.getLanguage().translate('optInIsConfirmed', 'messages', 'LeadCapture'),
-            };
-        },
-    });
-});
+    data() {
+        return {
+            resultData: this.options.resultData,
+            defaultMessage: this.getLanguage().translate('optInIsConfirmed', 'messages', 'LeadCapture'),
+        };
+    }
+}
+
+export default OptInConfirmationSuccessView;

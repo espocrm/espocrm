@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\FieldManager;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Language;
 use Espo\Core\InjectableFactory;
@@ -39,6 +40,8 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
 use Espo\Core\Utils\Util;
 
+use Espo\Tools\EntityManager\NameUtil;
+use RuntimeException;
 use stdClass;
 
 /**
@@ -52,8 +55,10 @@ class FieldManager
     private $forbiddenFieldNameList = [
         'id',
         'deleted',
+        'deleteId',
         'skipDuplicateCheck',
         'isFollowed',
+        'isStarred',
         'versionNumber',
         'null',
         'false',
@@ -73,12 +78,20 @@ class FieldManager
     // 64 - margin (for attribute name suffixes and prefixes)
     private const MAX_NAME_LENGTH = 50;
 
+    /** @var array<string, array<string, mixed>> */
+    private array $defaultParams = [
+        FieldType::ENUM => [
+            'maxLength' => 100,
+        ],
+    ];
+
     public function __construct(
         private InjectableFactory $injectableFactory,
         private Metadata $metadata,
         private Language $language,
         private Language $baseLanguage,
-        private MetadataHelper $metadataHelper
+        private MetadataHelper $metadataHelper,
+        private NameUtil $nameUtil
     ) {}
 
     /**
@@ -104,14 +117,23 @@ class FieldManager
 
     /**
      * @param array<string, mixed> $fieldDefs
+     * @return string An actual name.
      * @throws BadRequest
      * @throws Conflict
      * @throws Error
      */
-    public function create(string $scope, string $name, array $fieldDefs): void
+    public function create(string $scope, string $name, array $fieldDefs): string
     {
         if (strlen($name) === 0) {
             throw new BadRequest("Empty field name.");
+        }
+
+        if (!$this->isScopeCustom($scope)) {
+            $name = $this->nameUtil->addCustomPrefix($name);
+        }
+
+        if (!$this->isScopeCustomizable($scope)) {
+            throw new Error("Entity type $scope is not customizable.");
         }
 
         if (strlen(Util::camelCaseToUnderscore($name)) > self::MAX_NAME_LENGTH) {
@@ -177,11 +199,26 @@ class FieldManager
             throw new Error("Field name should contain only letters and numbers.");
         }
 
+        $type = $fieldDefs['type'] ?? null;
+
+        if (!$type) {
+            throw new BadRequest("No type.");
+        }
+
+        foreach (($this->defaultParams[$type] ?? []) as $param => $value) {
+            if (!array_key_exists($param, $fieldDefs)) {
+                $fieldDefs[$param] = $value;
+            }
+        }
+
         $this->update($scope, $name, $fieldDefs, true);
+
+        return $name;
     }
 
     /**
      * @param array<string, mixed> $fieldDefs
+     * @throws Error
      */
     public function update(string $scope, string $name, array $fieldDefs, bool $isNew = false): void
     {
@@ -191,6 +228,10 @@ class FieldManager
 
         if (!$this->isCore($scope, $name)) {
             $fieldDefs['isCustom'] = true;
+        }
+
+        if (!$this->isScopeCustomizable($scope)) {
+            throw new Error("Entity type $scope is not customizable.");
         }
 
         $isCustom = false;
@@ -422,15 +463,15 @@ class FieldManager
     private function prepareClientDefsOptionsDynamicLogic(&$clientDefs, $name): void
     {
         if (!array_key_exists('dynamicLogic', $clientDefs)) {
-            $clientDefs['dynamicLogic'] = array();
+            $clientDefs['dynamicLogic'] = [];
         }
 
         if (!array_key_exists('options', $clientDefs['dynamicLogic'])) {
-            $clientDefs['dynamicLogic']['options'] = array();
+            $clientDefs['dynamicLogic']['options'] = [];
         }
 
         if (!array_key_exists($name, $clientDefs['dynamicLogic']['options'])) {
-            $clientDefs['dynamicLogic']['options'][$name] = array();
+            $clientDefs['dynamicLogic']['options'][$name] = [];
         }
     }
 
@@ -443,7 +484,22 @@ class FieldManager
             throw new Error("Cannot delete core field '$name' in '$scope'.");
         }
 
+        if (!$this->isScopeCustomizable($scope)) {
+            throw new Error("Entity type $scope is not customizable.");
+        }
+
         $type = $this->metadata->get(['entityDefs', $scope, 'fields', $name, 'type']);
+
+        if (
+            in_array($type, [
+                FieldType::LINK_MULTIPLE,
+                FieldType::LINK,
+                FieldType::LINK_ONE,
+                FieldType::LINK_PARENT,
+            ])
+        ) {
+            throw new Error("Field type $type cannot be removed.");
+        }
 
         $this->processHook('beforeRemove', $type, $scope, $name);
 
@@ -643,7 +699,7 @@ class FieldManager
      * @param array<string, mixed> $fieldDefs
      * @return array<string, mixed>
      */
-    private function prepareFieldDefs(string $scope, string $name, $fieldDefs)
+    private function prepareFieldDefs(string $scope, string $name, array $fieldDefs): array
     {
         $additionalParamList = [
             'type' => [
@@ -670,23 +726,25 @@ class FieldManager
             ],
         ];
 
-        if (isset($fieldDefs['fieldManagerAdditionalParamList'])) {
-            foreach ($fieldDefs['fieldManagerAdditionalParamList'] as $additionalParam) {
-                $additionalParamList[$additionalParam->name] = [
-                    'type' => $fieldDefs['type']
-                ];
-            }
+        $type = $fieldDefs['type'] ?? null;
+
+        if (!$type) {
+            throw new RuntimeException("No type.");
+        }
+
+        foreach (($fieldDefs['fieldManagerAdditionalParamList'] ?? []) as $additionalParam) {
+            $additionalParamList[$additionalParam->name] = [
+                'type' => $type,
+            ];
         }
 
         $fieldDefsByType = $this->metadataHelper->getFieldDefsByType($fieldDefs);
 
-        if (!isset($fieldDefsByType['params'])) {
-            return $fieldDefs;
-        }
+        $paramDataList = $fieldDefsByType['params'] ?? [];
 
         $params = [];
 
-        foreach ($fieldDefsByType['params'] as $paramData) {
+        foreach ($paramDataList as $paramData) {
             $params[$paramData['name']] = $paramData;
         }
 
@@ -702,37 +760,41 @@ class FieldManager
         assert($actualFieldDefs !== null);
         assert($actualCustomFieldDefs !== null);
 
-        $permittedParamList = array_keys($params);
+        $permittedParamList = array_unique(array_merge(
+            array_keys($params),
+            array_keys($this->defaultParams[$type] ?? [])
+        ));
 
         $filteredFieldDefs = !empty($actualCustomFieldDefs) ? $actualCustomFieldDefs : [];
 
         foreach ($fieldDefs as $paramName => $paramValue) {
-            if (in_array($paramName, $permittedParamList)) {
+            if (!in_array($paramName, $permittedParamList)) {
+                continue;
+            }
 
-                $defaultParamValue = null;
+            $defaultParamValue = null;
 
-                switch ($params[$paramName]['type']) {
-                    case 'bool':
-                        $defaultParamValue = false;
-                        break;
-                }
+            $paramType = $params[$paramName]['type'] ?? null;
 
-                $actualValue = array_key_exists($paramName, $actualFieldDefs) ?
-                    $actualFieldDefs[$paramName] :
-                    $defaultParamValue;
+            if ($paramType === FieldType::BOOL) {
+                $defaultParamValue = false;
+            }
 
-                if (
-                    !array_key_exists($paramName, $actualCustomFieldDefs) &&
-                    !Util::areValuesEqual($actualValue, $paramValue)
-                ) {
-                    $filteredFieldDefs[$paramName] = $paramValue;
+            $actualValue = array_key_exists($paramName, $actualFieldDefs) ?
+                $actualFieldDefs[$paramName] :
+                $defaultParamValue;
 
-                    continue;
-                }
+            if (
+                !array_key_exists($paramName, $actualCustomFieldDefs) &&
+                !Util::areValuesEqual($actualValue, $paramValue)
+            ) {
+                $filteredFieldDefs[$paramName] = $paramValue;
 
-                if (array_key_exists($paramName, $actualCustomFieldDefs)) {
-                    $filteredFieldDefs[$paramName] = $paramValue;
-                }
+                continue;
+            }
+
+            if (array_key_exists($paramName, $actualCustomFieldDefs)) {
+                $filteredFieldDefs[$paramName] = $paramValue;
             }
         }
 
@@ -744,6 +806,7 @@ class FieldManager
 
         if ($actualCustomFieldDefs) {
             $actualCustomFieldDefs = array_diff_key($actualCustomFieldDefs, array_flip($permittedParamList));
+
             foreach ($actualCustomFieldDefs as $paramName => $paramValue) {
                 if (!array_key_exists($paramName, $filteredFieldDefs)) {
                     $filteredFieldDefs[$paramName] = $paramValue;
@@ -775,14 +838,14 @@ class FieldManager
         $metaLinkDefs = $this->metadataHelper->getLinkDefsInFieldMeta($scope, $fieldDefs);
 
         if (isset($linkDefs) || isset($metaLinkDefs)) {
-            $metaLinkDefs = $metaLinkDefs ?? array();
-            $linkDefs = $linkDefs ?? array();
+            $metaLinkDefs = $metaLinkDefs ?? [];
+            $linkDefs = $linkDefs ?? [];
 
             $normalizedLinkedDefs = Util::merge($metaLinkDefs, $linkDefs);
             if (!empty($normalizedLinkedDefs)) {
-                $defs->links = (object) array(
+                $defs->links = (object) [
                     $fieldName => (object) $normalizedLinkedDefs,
-                );
+                ];
             }
         }
 
@@ -811,6 +874,8 @@ class FieldManager
     }
 
     /**
+     * @todo Add interfaces for hooks.
+     *
      * @param string $name
      * @param array<string, mixed> $defs
      * @param array<string, mixed> $options
@@ -851,5 +916,18 @@ class FieldManager
         }
 
         return $this->injectableFactory->create($className);
+    }
+
+    private function isScopeCustomizable(string $scope): bool
+    {
+        if (!$this->metadata->get("scopes.$scope.customizable")) {
+            return false;
+        }
+
+        if ($this->metadata->get("scopes.$scope.entityManager.fields") === false) {
+            return false;
+        }
+
+        return true;
     }
 }

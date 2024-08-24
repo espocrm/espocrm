@@ -33,11 +33,13 @@
         "isGlobal": {
             "type": "bool",
             "tooltip": true,
-            "default": false
+            "default": false,
+            "readOnlyAfterCreate": true
         },
         "parent": {
             "type": "linkParent",
-            "view": "views/email-filter/fields/parent"
+            "view": "views/email-filter/fields/parent",
+            "readOnlyAfterCreate": true
         },
         "action": {
             "type": "enum",
@@ -47,8 +49,7 @@
                 "Move to Folder",
                 "Move to Group Folder",
                 "None"
-            ],
-            "view": "views/email-filter/fields/action"
+            ]
         },
         "emailFolder": {
             "type": "link",

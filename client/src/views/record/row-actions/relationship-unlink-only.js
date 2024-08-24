@@ -39,9 +39,12 @@ class RelationshipUnlinkOnlyActionsView extends RelationshipActionsView {
                     data: {
                         id: this.model.id,
                     },
+                    groupIndex: 0,
                 },
             ];
         }
+
+        return [];
     }
 }
 

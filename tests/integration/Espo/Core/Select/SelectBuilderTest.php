@@ -31,13 +31,17 @@ namespace tests\integration\Espo\Core\Select;
 
 use Espo\Core\Application;
 use Espo\Core\Container;
+use Espo\Core\InjectableFactory;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
-
 use Espo\Classes\Select\Email\AdditionalAppliers\Main as EmailAdditionalApplier;
+use Espo\Entities\User;
+use Espo\Entities\Email;
+use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Select;
+use tests\integration\Core\BaseTestCase;
 
-class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
+class SelectBuilderTest extends BaseTestCase
 {
     /**
      * @var SelectBuilderFactory
@@ -48,7 +52,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
     {
         parent::setUp();
 
-        $injectableFactory = $this->getContainer()->get('injectableFactory');
+        $injectableFactory = $this->getContainer()->getByClass(InjectableFactory::class);
 
         $this->factory = $injectableFactory->create(SelectBuilderFactory::class);
     }
@@ -65,11 +69,11 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $injectableFactory = $app->getContainer()->get('injectableFactory');
+        $injectableFactory = $app->getContainer()->getByClass(InjectableFactory::class);
 
         $this->factory = $injectableFactory->create(SelectBuilderFactory::class);
 
-        $this->user = $app->getContainer()->get('user');
+        $this->user = $app->getContainer()->getByClass(User::class);
 
         return $app;
     }
@@ -78,7 +82,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
     {
         $app = $this->createApplication();
 
-        $em = $app->getContainer()->get('entityManager');
+        $em = $app->getContainer()->getByClass(EntityManager::class);
 
         $this->contact = $em->createEntity('Contact', []);
         $this->account = $em->createEntity('Account', []);
@@ -89,9 +93,9 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
         $this->createUser(
             [
                 'userName' => 'tester',
-                'portalsIds' => [$this->portal->id],
-                'contactId' => $this->contact->id,
-                'accountsIds' => [$this->account->id],
+                'portalsIds' => [$this->portal->getId()],
+                'contactId' => $this->contact->getId(),
+                'accountsIds' => [$this->account->getId()],
             ],
             [
                 'data' => $aclData,
@@ -100,18 +104,18 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
         );
 
         if (!$skipLogin) {
-            $this->auth('tester', null, $this->portal->id);
+            $this->auth('tester', null, $this->portal->getId());
         }
 
         $app = $this->createApplication();
 
-        $injectableFactory = $app->getContainer()->get('injectableFactory');
+        $injectableFactory = $app->getContainer()->getByClass(InjectableFactory::class);
 
         $this->factory = $injectableFactory->create(SelectBuilderFactory::class);
 
         $container = $app->getContainer();
 
-        $this->user = $container->get('user');
+        $this->user = $container->getByClass(User::class);
 
         return $app;
     }
@@ -128,7 +132,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
 
         $container = $app->getContainer();
 
-        $userId = $container->get('user')->id;
+        $userId = $container->getByClass(User::class)->getId();
 
         $builder = $this->factory->create();
 
@@ -198,9 +202,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
                     ],
                 ]),
                 'OR' => [
-                    [
-                        'assignedUserId' => $userId,
-                    ],
+                    'assignedUserId=' => $userId,
                 ],
                 'type' => 'Customer',
                 [
@@ -227,7 +229,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
 
         $container = $app->getContainer();
 
-        $userId = $container->get('user')->id;
+        $userId = $container->getByClass(User::class)->getId();
 
         $builder = $this->factory->create();
 
@@ -309,7 +311,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
 
         $container = $app->getContainer();
 
-        $userId = $container->get('user')->id;
+        $userId = $container->getByClass(User::class)->getId();
 
         $builder = $this->factory->create();
 
@@ -327,18 +329,18 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
                     0 =>
                         [
                             0 => 'EmailUser',
-                            1 => 'emailUser',
+                            1 => Email::ALIAS_INBOX,
                             2 =>
                                 [
-                                    'emailUser.emailId:' => 'id',
-                                    'emailUser.deleted' => false,
-                                    'emailUser.userId' => $userId,
+                                    Email::ALIAS_INBOX . '.emailId:' => 'id',
+                                    Email::ALIAS_INBOX . '.deleted' => false,
+                                    Email::ALIAS_INBOX . '.userId' => $userId,
                                 ],
                         ],
                 ],
             'whereClause' =>
                 [
-                    'emailUser.userId' => $userId,
+                    Email::ALIAS_INBOX . '.userId' => $userId,
                 ]
         ];
 
@@ -357,7 +359,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
 
         $container = $app->getContainer();
 
-        $userId = $container->get('user')->id;
+        $userId = $container->getByClass(User::class)->getId();
 
         $builder = $this->factory->create();
 
@@ -395,12 +397,12 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
                                     1 =>
                                         [
                                             0 => 'EmailUser',
-                                            1 => 'emailUser',
+                                            1 => Email::ALIAS_INBOX,
                                             2 =>
                                                 [
-                                                    'emailUser.emailId:' => 'id',
-                                                    'emailUser.deleted' => false,
-                                                    'emailUser.userId' => $userId,
+                                                    Email::ALIAS_INBOX . '.emailId:' => 'id',
+                                                    Email::ALIAS_INBOX . '.deleted' => false,
+                                                    Email::ALIAS_INBOX . '.userId' => $userId,
                                                 ],
                                         ],
                                 ],
@@ -409,7 +411,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
                                     'OR' =>
                                         [
                                             'entityTeam.teamId' => [],
-                                            'emailUser.userId' => $userId,
+                                            Email::ALIAS_INBOX . '.userId' => $userId,
                                         ],
                                 ],
                         ]),
@@ -444,21 +446,21 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
             'leftJoins' => [
                 [
                     'EmailUser',
-                    'emailUser',
+                    Email::ALIAS_INBOX,
                     [
-                        'emailUser.emailId:' => 'id',
-                        'emailUser.deleted' => false,
-                        'emailUser.userId' => $this->user->id,
+                        Email::ALIAS_INBOX . '.emailId:' => 'id',
+                        Email::ALIAS_INBOX . '.deleted' => false,
+                        Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
                     ]
                 ],
             ],
             'whereClause' => [
                 'OR' => [
-                    'emailUser.userId' => $this->user->id,
-                    'accountId' => [$this->account->id],
+                    Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
+                    'accountId' => [$this->account->getId()],
                     [
                         'parentType' => 'Contact',
-                        'parentId' => $this->contact->id,
+                        'parentId' => $this->contact->getId(),
                     ]
                 ],
             ],
@@ -493,20 +495,20 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
             'leftJoins' => [
                 [
                     'EmailUser',
-                    'emailUser',
+                    Email::ALIAS_INBOX,
                     [
-                        'emailUser.emailId:' => 'id',
-                        'emailUser.deleted' => false,
-                        'emailUser.userId' => $this->user->id,
+                        Email::ALIAS_INBOX . '.emailId:' => 'id',
+                        Email::ALIAS_INBOX . '.deleted' => false,
+                        Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
                     ]
                 ],
             ],
             'whereClause' => [
                 'OR' => [
-                    'emailUser.userId' => $this->user->id,
+                    Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
                     [
                         'parentType' => 'Contact',
-                        'parentId' => $this->contact->id,
+                        'parentId' => $this->contact->getId(),
                     ]
                 ],
             ],
@@ -599,7 +601,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
 
         $container = $app->getContainer();
 
-        $userId = $container->get('user')->id;
+        $userId = $container->getByClass(User::class)->getId();
 
         $emailAddressId = $this->createUserEmailAddress($container);
 
@@ -626,9 +628,10 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
         $raw = $query->getRaw();
 
         $expectedWhereClause = [
-            'emailUser.inTrash' => false,
-            'emailUser.folderId' => null,
-            'emailUser.userId' => $userId,
+            Email::ALIAS_INBOX . '.inTrash' => false,
+            Email::ALIAS_INBOX . '.inArchive' => false,
+            Email::ALIAS_INBOX . '.folderId' => null,
+            Email::ALIAS_INBOX . '.userId' => $userId,
             [
                 'status' => ['Archived', 'Sent'],
                 'groupFolderId' => null,
@@ -645,21 +648,22 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
         $expectedLeftJoins = [
             [
                 'EmailUser',
-                'emailUser',
+                Email::ALIAS_INBOX,
                 [
-                    'emailUser.emailId:' => 'id',
-                    'emailUser.deleted' => false,
-                    'emailUser.userId' => $this->user->id,
+                    Email::ALIAS_INBOX . '.emailId:' => 'id',
+                    Email::ALIAS_INBOX . '.deleted' => false,
+                    Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
                 ],
             ],
         ];
 
         $expectedSelect = [
             '*',
-            ['emailUser.isRead', 'isRead'],
-            ['emailUser.isImportant', 'isImportant'],
-            ['emailUser.inTrash', 'inTrash'],
-            ['emailUser.folderId', 'folderId'],
+            [Email::ALIAS_INBOX . '.isRead', 'isRead'],
+            [Email::ALIAS_INBOX . '.isImportant', 'isImportant'],
+            [Email::ALIAS_INBOX . '.inTrash', 'inTrash'],
+            [Email::ALIAS_INBOX . '.inArchive', 'inArchive'],
+            [Email::ALIAS_INBOX . '.folderId', 'folderId'],
         ];
 
         $expectedUseIndex = ['dateSent'];
@@ -678,7 +682,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
 
         $container = $app->getContainer();
 
-        $userId = $container->get('user')->id;
+        $userId = $container->getByClass(User::class)->getId();
 
         $emailAddressId = $this->createUserEmailAddress($container);
 
@@ -712,17 +716,17 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
             [
                 'status!=' => 'Draft',
             ],
-            'emailUser.inTrash' => false,
+            Email::ALIAS_INBOX . '.inTrash' => false,
         ];
 
         $expectedLeftJoins = [
             [
                 'EmailUser',
-                'emailUser',
+                Email::ALIAS_INBOX,
                 [
-                    'emailUser.emailId:' => 'id',
-                    'emailUser.deleted' => false,
-                    'emailUser.userId' => $this->user->id,
+                    Email::ALIAS_INBOX . '.emailId:' => 'id',
+                    Email::ALIAS_INBOX . '.deleted' => false,
+                    Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
                 ],
             ],
         ];
@@ -737,7 +741,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
             []
         );
 
-        $em = $app->getContainer()->get('entityManager');
+        $em = $app->getContainer()->getByClass(EntityManager::class);
 
         $emailAddress = $em->createEntity('EmailAddress', [
            'name' => 'test@test.com',
@@ -762,14 +766,14 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
 
         $raw = $query->getRaw();
 
-        $this->assertEquals($emailAddress->id, $raw['whereClause']['OR']['fromEmailAddressId']);
+        $this->assertEquals($emailAddress->getId(), $raw['whereClause']['OR']['fromEmailAddressId']);
     }
 
     public function testEmailFromEquals()
     {
         $app = $this->initTest();
 
-        $em = $app->getContainer()->get('entityManager');
+        $em = $app->getContainer()->getByClass(EntityManager::class);
 
         $emailAddress = $em->createEntity('EmailAddress', [
            'name' => 'test@test.com',
@@ -795,7 +799,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
         $raw = $query->getRaw();
 
         $expectedWhereClause = [
-            'fromEmailAddressId' => $emailAddress->id,
+            'fromEmailAddressId' => $emailAddress->getId(),
         ];
 
         $this->assertEquals($expectedWhereClause, $raw['whereClause']);
@@ -817,7 +821,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
         $expectedWhereClause = [
             'OR' => [
                 [
-                    'emailUser.userId' => $this->user->id,
+                    Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
                 ],
             ],
         ];
@@ -853,9 +857,9 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
 
     protected function createUserEmailAddress(Container $container) : string
     {
-        $userId = $container->get('user')->id;
+        $userId = $container->getByClass(User::class)->getId();
 
-        $em = $container->get('entityManager');
+        $em = $container->getByClass(EntityManager::class);
 
         $user = $em->getEntity('User', $userId);
 
@@ -864,10 +868,10 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
         ]);
 
         $em
-            ->getRepository('User')
+            ->getRDBRepository('User')
             ->getRelation($user, 'emailAddresses')
             ->relate($emailAddress);
 
-        return $emailAddress->id;
+        return $emailAddress->getId();
     }
 }

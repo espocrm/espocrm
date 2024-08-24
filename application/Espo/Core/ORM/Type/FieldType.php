@@ -32,6 +32,7 @@ namespace Espo\Core\ORM\Type;
 class FieldType
 {
     public const VARCHAR = 'varchar';
+    public const BOOL = 'bool';
     public const TEXT = 'text';
     public const INT = 'int';
     public const FLOAT = 'float';
@@ -52,9 +53,11 @@ class FieldType
     public const NUMBER = 'number';
     public const LINK = 'link';
     public const LINK_ONE = 'linkOne';
+    public const LINK_PARENT = 'linkParent';
     public const FILE = 'file';
     public const IMAGE = 'image';
     public const LINK_MULTIPLE = 'linkMultiple';
     public const ATTACHMENT_MULTIPLE = 'attachmentMultiple';
     public const FOREIGN = 'foreign';
+    public const WYSIWYG = 'wysiwyg';
 }

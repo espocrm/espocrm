@@ -1,0 +1,21 @@
+[
+    {
+        "rows": [
+            [{"name": "level"}, false],
+            [{"name": "message"}]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "code"}, false],
+            [{"name": "exceptionClass"}],
+            [{"name": "file"}],
+            [{"name": "line"}, false]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "requestMethod"}, {"name": "requestResourcePath"}]
+        ]
+    }
+]

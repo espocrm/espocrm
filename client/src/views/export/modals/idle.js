@@ -26,143 +26,149 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/export/modals/idle', ['views/modal', 'model'], function (Dep, Model) {
+import ModalView from 'views/modal';
+import Model from 'model';
 
-    return Dep.extend({
+class ExportIdleModalView extends ModalView {
 
-        className: 'dialog dialog-record',
+    template = 'export/modals/idle'
 
-        template: 'export/modals/idle',
+    className = 'dialog dialog-record'
+    checkInterval = 4000
 
-        checkInterval: 4000,
+    data() {
+        return {
+            infoText: this.translate('infoText', 'messages', 'Export'),
+        };
+    }
 
-        data: function () {
-            return {
-                infoText: this.translate('infoText', 'messages', 'Export'),
-            };
-        },
+    setup() {
+        this.addActionHandler('download', () => this.actionDownload());
 
-        events: {
-            'click [data-action="download"]': function () {
-                this.actionDownload();
-            },
-        },
+        this.action = this.options.action;
+        this.id = this.options.id;
+        this.status = 'Pending';
 
-        setup: function () {
-            this.action = this.options.action;
-            this.id = this.options.id;
-            this.status = 'Pending';
+        this.headerText = this.translate('Export');
 
-            this.headerText = this.translate('Export');
+        this.model = new Model();
+        this.model.name = 'Export';
 
-            this.model = new Model();
-            this.model.name = 'Export';
-
-            this.model.setDefs({
-                fields: {
-                    'status': {
-                        type: 'enum',
-                        readOnly: true,
-                        options: [
-                            'Pending',
-                            'Running',
-                            'Success',
-                            'Failed',
-                        ],
-                        style: {
-                            'Success': 'success',
-                            'Failed': 'danger',
-                        },
+        this.model.setDefs({
+            fields: {
+                'status': {
+                    type: 'enum',
+                    readOnly: true,
+                    options: [
+                        'Pending',
+                        'Running',
+                        'Success',
+                        'Failed',
+                    ],
+                    style: {
+                        'Success': 'success',
+                        'Failed': 'danger',
                     },
-                    'attachmentId': {
-                        type: 'varchar',
-                    },
-                }
-            });
+                },
+                'attachmentId': {
+                    type: 'varchar',
+                },
+            }
+        });
 
-            this.model.set({
-                status: this.status,
-                processedCount: null,
-            });
+        this.model.set({
+            status: this.status,
+            processedCount: null,
+        });
 
-            this.createView('record', 'views/record/edit-for-modal', {
-                scope: 'None',
-                model: this.model,
-                selector: '.record',
-                detailLayout: [
-                    {
-                        rows: [
-                            [
-                                {
-                                    name: 'status',
-                                    labelText: this.translate('status', 'fields', 'Export'),
-                                }
-                            ]
+        this.createView('record', 'views/record/edit-for-modal', {
+            scope: 'None',
+            model: this.model,
+            selector: '.record',
+            detailLayout: [
+                {
+                    rows: [
+                        [
+                            {
+                                name: 'status',
+                                labelText: this.translate('status', 'fields', 'Export'),
+                            }
                         ]
-                    }
-                ],
-            });
+                    ]
+                }
+            ],
+        });
 
-            this.on('close', () => {
-                let status = this.model.get('status');
+        this.on('close', () => {
+            const status = this.model.get('status');
 
-                if (
-                    status !== 'Pending' &&
-                    status !== 'Running'
-                ) {
+            if (
+                status !== 'Pending' &&
+                status !== 'Running'
+            ) {
+                return;
+            }
+
+            Espo.Ajax.postRequest(`Export/${this.id}/subscribe`);
+        });
+
+        this.checkStatus();
+    }
+
+    /**
+     * @private
+     */
+    checkStatus() {
+        Espo.Ajax
+            .getRequest(`Export/${this.id}/status`)
+            .then(response => {
+                const status = response.status;
+
+                this.model.set('status', status);
+
+                if (status === 'Pending' || status === 'Running') {
+                    setTimeout(() => this.checkStatus(), this.checkInterval);
+
                     return;
                 }
 
-                Espo.Ajax.postRequest(`Export/${this.id}/subscribe`);
-            });
+                this.model.set({
+                    attachmentId: response.attachmentId,
+                });
 
-            this.checkStatus();
-        },
-
-        checkStatus: function () {
-            Espo.Ajax
-                .getRequest(`Export/${this.id}/status`)
-                .then(response => {
-                    let status = response.status;
-
-                    this.model.set('status', status);
-
-                    if (status === 'Pending' || status === 'Running') {
-                        setTimeout(() => this.checkStatus(), this.checkInterval);
-
-                        return;
-                    }
-
-                    this.model.set({
+                if (status === 'Success') {
+                    this.trigger('success', {
                         attachmentId: response.attachmentId,
                     });
 
-                    if (status === 'Success') {
-                        this.trigger('success', {
-                            attachmentId: response.attachmentId,
-                        });
+                    this.showDownload();
+                }
 
-                        this.showDownload();
-                    }
+                if (this.$el) {
+                    this.$el.find('.info-text').addClass('hidden');
+                }
+            });
+    }
 
-                    if (this.$el) {
-                        this.$el.find('.info-text').addClass('hidden');
-                    }
-                });
-        },
+    /**
+     * @private
+     */
+    showDownload() {
+        this.$el.find('.download-container').removeClass('hidden');
 
-        showDownload: function () {
-            this.$el.find('.download-container').removeClass('hidden');
+        const $download = this.$el.find('[data-action="download"]');
 
-            let $download = this.$el.find('[data-action="download"]');
+        $download.removeClass('hidden');
+    }
 
-            $download.removeClass('hidden');
-        },
+    /**
+     * @private
+     */
+    actionDownload() {
+        this.trigger('download', this.model.get('attachmentId'));
 
-        actionDownload: function () {
-            this.trigger('download', this.model.get('attachmentId'));
+        this.close();
+    }
+}
 
-            this.close();
-        },
-    });
-});
+export default ExportIdleModalView;

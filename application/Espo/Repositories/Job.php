@@ -44,8 +44,6 @@ class Job extends Database implements
 {
     use Di\ConfigSetter;
 
-    protected $hooksDisabled = true;
-
     /**
      * @param JobEntity $entity
      */

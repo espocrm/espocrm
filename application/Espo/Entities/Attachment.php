@@ -140,6 +140,13 @@ class Attachment extends Entity
         return $this;
     }
 
+    public function setStorage(?string $storage): self
+    {
+        $this->set('storage', $storage);
+
+        return $this;
+    }
+
     public function setName(?string $name): self
     {
         $this->set('name', $name);

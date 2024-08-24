@@ -55,7 +55,7 @@ define('crm:views/call/fields/contacts', ['crm:views/meeting/fields/contacts'], 
             $item
                 .append(
                     ' ',
-                    $('<span>').addClass('text-muted chevron-right'),
+                    $('<span>').addClass('text-muted middle-dot'),
                     ' ',
                     $('<a>')
                         .attr('href', 'tel:' + number)

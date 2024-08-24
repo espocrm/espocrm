@@ -4,13 +4,17 @@
         "listed": true
     },
     "clearCache": {
-        "listed": true
+        "listed": true,
+        "noSystemUser": true
     },
     "rebuild": {
-        "listed": true
+        "listed": true,
+        "noSystemUser": true,
+        "allowedFlags": ["hard"]
     },
     "updateAppTimestamp": {
-        "listed": true
+        "listed": true,
+        "noSystemUser": true
     },
     "appInfo": {
         "listed": true
@@ -25,10 +29,16 @@
         "listed": true
     },
     "runJob": {
-        "listed": true
+        "listed": true,
+        "allowedOptions": [
+            "job",
+            "targetId",
+            "targetType"
+        ]
     },
     "version": {
-        "listed": true
+        "listed": true,
+        "noSystemUser": true
     },
     "createAdminUser": {
         "className": "Espo\\Classes\\ConsoleCommands\\CreateAdminUser",
@@ -36,14 +46,27 @@
     },
     "rebuildCategoryPaths": {
         "className": "Espo\\Classes\\ConsoleCommands\\RebuildCategoryPaths",
-        "listed": false
+        "listed": true
     },
     "populateArrayValues": {
         "className": "Espo\\Classes\\ConsoleCommands\\PopulateArrayValues",
-        "listed": false
+        "listed": true
     },
     "populateNumbers": {
         "className": "Espo\\Classes\\ConsoleCommands\\PopulateNumbers",
         "listed": false
+    },
+    "checkFilePermissions": {
+        "className": "Espo\\Classes\\ConsoleCommands\\CheckFilePermissions",
+        "listed": true,
+        "noSystemUser": true
+    },
+    "migrate": {
+        "listed": true,
+        "noSystemUser": true
+    },
+    "migrationVersionStep": {
+        "listed": false,
+        "noSystemUser": true
     }
 }

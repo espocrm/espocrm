@@ -34,8 +34,13 @@ use DOMDocument;
 use DOMElement;
 use DOMException;
 use DOMXPath;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\ORM\Type\FieldType;
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Entities\Attachment;
+use Espo\Entities\User;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Core\Utils\Json;
 use Espo\Core\Acl;
@@ -43,7 +48,6 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime;
-use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata;
@@ -71,17 +75,18 @@ class Htmlizer
     private const LINK_LIMIT = 100;
 
     public function __construct(
-        private FileManager $fileManager, /** @phpstan-ignore-line  */
         private DateTime $dateTime,
         private NumberUtil $number,
+        private SelectBuilderFactory $selectBuilderFactory,
+        private User $user,
+        private EntityManager $entityManager,
+        private Metadata $metadata,
+        private Language $language,
+        private Config $config,
+        private Log $log,
+        private InjectableFactory $injectableFactory,
         private ?Acl $acl = null,
-        private ?EntityManager $entityManager = null,
-        private ?Metadata $metadata = null,
-        private ?Language $language = null,
-        private ?Config $config = null,
         private ?ServiceFactory $serviceFactory = null,
-        private ?Log $log = null,
-        private ?InjectableFactory $injectableFactory = null
     ) {}
 
     /**
@@ -100,11 +105,13 @@ class Htmlizer
         bool $skipInlineAttachmentHandling = false
     ): string {
 
-        $template = $this->prepare($template);
+        $helpers = $this->getHelpers();
+
+        $template = $this->prepare($template, array_keys($helpers));
 
         $code = LightnCandy::compile($template, [
             'flags' => Flags::FLAG_HANDLEBARSJS | Flags::FLAG_ERROR_EXCEPTION,
-            'helpers' => $this->getHelpers(),
+            'helpers' => $helpers,
         ]);
 
         if ($code === false) {
@@ -154,18 +161,16 @@ class Htmlizer
             $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
         }
 
-        if (!$skipInlineAttachmentHandling && $this->entityManager) {
+        if (!$skipInlineAttachmentHandling) {
             /** @var string $html */
             $html = preg_replace_callback(
-                '/\?entryPoint=attachment\&id=([A-Za-z0-9]*)/',
+                '/\?entryPoint=attachment&id=([A-Za-z0-9]*)/',
                 function ($matches) {
                     $id = $matches[1];
 
                     if (!$id) {
                         return '';
                     }
-
-                    assert($this->entityManager !== null);
 
                     /** @var Attachment $attachment */
                     $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $id);
@@ -249,7 +254,6 @@ class Htmlizer
         if (
             !$skipLinks &&
             $level === 0 &&
-            $this->entityManager &&
             $entity->hasId()
         ) {
             $this->loadRelatedCollections($entity, $template, $data);
@@ -360,8 +364,7 @@ class Htmlizer
             }
 
             if (
-                $fieldType === 'currency' &&
-                $this->metadata &&
+                $fieldType === FieldType::CURRENCY &&
                 $entity instanceof CoreEntity &&
                 $entity->getAttributeParam($attribute, 'attributeRole') === 'currency'
             ) {
@@ -382,21 +385,16 @@ class Htmlizer
 
                 $fieldType = $this->getFieldType($entity->getEntityType(), $attribute);
 
-                if ($fieldType === 'enum') {
-                    if ($this->language) {
-                        $data[$attribute] = $this->language->translateOption(
-                            $data[$attribute], $attribute, $entity->getEntityType()
-                        );
+                if ($fieldType === FieldType::ENUM) {
+                    $data[$attribute] = $this->language->translateOption(
+                        $data[$attribute], $attribute, $entity->getEntityType()
+                    );
 
-                        if ($this->metadata) {
-                            $translationPath = $this->metadata->get(
-                                ['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'translation']
-                            );
+                    $translationPath = $this->metadata
+                        ->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'translation']);
 
-                            if ($translationPath) {
-                                $data[$attribute] = $this->language->get($translationPath . '.' . $attribute, $data[$attribute]);
-                            }
-                        }
+                    if ($translationPath) {
+                        $data[$attribute] = $this->language->get($translationPath . '.' . $attribute, $data[$attribute]);
                     }
                 }
 
@@ -404,7 +402,7 @@ class Htmlizer
             }
         }
 
-        if (!$skipLinks && $this->entityManager) {
+        if (!$skipLinks) {
             foreach ($entity->getRelationList() as $relation) {
                 if (in_array($relation, $forbiddenLinkList)) {
                     continue;
@@ -413,26 +411,26 @@ class Htmlizer
                 $relationType = $entity->getRelationType($relation);
 
                 if (
-                    $relationType === Entity::BELONGS_TO ||
-                    $relationType === Entity::BELONGS_TO_PARENT
+                    $relationType !== Entity::BELONGS_TO &&
+                    $relationType !== Entity::BELONGS_TO_PARENT
                 ) {
-                    $relatedEntity = $this->entityManager
-                        ->getRDBRepository($entity->getEntityType())
-                        ->getRelation($entity, $relation)
-                        ->findOne();
-
-                    if (!$relatedEntity) {
-                        continue;
-                    }
-
-                    if ($this->acl) {
-                        if (!$this->acl->checkEntityRead($relatedEntity)) {
-                            continue;
-                        }
-                    }
-
-                    $data[$relation] = $this->getDataFromEntity($relatedEntity, true, $level + 1);
+                    continue;
                 }
+
+                $relatedEntity = $this->entityManager
+                    ->getRDBRepository($entity->getEntityType())
+                    ->getRelation($entity, $relation)
+                    ->findOne();
+
+                if (!$relatedEntity) {
+                    continue;
+                }
+
+                if ($this->acl && !$this->acl->checkEntityRead($relatedEntity)) {
+                    continue;
+                }
+
+                $data[$relation] = $this->getDataFromEntity($relatedEntity, true, $level + 1);
             }
         }
 
@@ -458,11 +456,7 @@ class Htmlizer
      */
     private function loadRelatedCollection(Entity $entity, string $relation, ?string $template): ?Collection
     {
-        assert($this->entityManager !== null);
-
-        $limit = $this->config ?
-            $this->config->get('htmlizerLinkLimit', self::LINK_LIMIT) :
-            self::LINK_LIMIT;
+        $limit = $this->config->get('htmlizerLinkLimit', self::LINK_LIMIT);
 
         $orderData = $this->getRelationOrder($entity->getEntityType(), $relation);
 
@@ -496,9 +490,33 @@ class Htmlizer
             ) &&
             mb_stripos($template, '{{#each ' . $relation . '}}') !== false
         ) {
+            $foreignEntityType = $this->entityManager
+                ->getDefs()
+                ->getEntity($entity->getEntityType())
+                ->getRelation($relation)
+                ->getForeignEntityType();
+
+            $selectBuilder = $this->selectBuilderFactory->create();
+
+            $selectBuilder->from($foreignEntityType);
+
+            if ($this->acl) {
+                $selectBuilder
+                    ->forUser($this->user)
+                    ->withAccessControlFilter();
+            }
+
+            try {
+                $query = $selectBuilder->build();
+            }
+            catch (BadRequest|Forbidden $e) {
+                throw new RuntimeException($e->getMessage(), 0, $e);
+            }
+
             return $this->entityManager
                 ->getRDBRepository($entity->getEntityType())
                 ->getRelation($entity, $relation)
+                ->clone($query)
                 ->limit(0, $limit)
                 ->order($orderData)
                 ->find();
@@ -513,6 +531,63 @@ class Htmlizer
     private function getHelpers(): array
     {
         $helpers = [
+            'and' => function () {
+                $args = func_get_args();
+
+                if (count($args) === 1) {
+                    return false;
+                }
+
+                for ($i = 0; $i < count($args) - 1; $i++) {
+                    $arg = $args[$i];
+
+                    if (!$arg) {
+                        return false;
+                    }
+                }
+
+                return true;
+            },
+            'or' => function () {
+                $args = func_get_args();
+
+                for ($i = 0; $i < count($args) - 1; $i++) {
+                    $arg = $args[$i];
+
+                    if (!$arg) {
+                        return true;
+                    }
+                }
+
+                return false;
+            },
+            'not' => function () {
+                $args = func_get_args();
+
+                if (count($args) !== 2) {
+                    return false;
+                }
+
+                $arg = $args[0];
+
+                return !$arg;
+            },
+            'equal' => function () {
+                $args = func_get_args();
+
+                $arg1 = $args[0] ?? null;
+                $arg2 = $args[1] ?? null;
+
+                return $arg1 === $arg2;
+            },
+            'notEqual' => function () {
+                $args = func_get_args();
+
+                $arg1 = $args[0] ?? null;
+                $arg2 = $args[1] ?? null;
+
+                return $arg1 !== $arg2;
+            },
             'file' => function () {
                 $args = func_get_args();
 
@@ -522,10 +597,14 @@ class Htmlizer
                     return '';
                 }
 
+                /** @noinspection PhpUndefinedClassInspection */
+                /** @noinspection PhpUndefinedNamespaceInspection */
                 /** @phpstan-ignore-next-line */
                 return new LightnCandy\SafeString("?entryPoint=attachment&id=" . $id);
             },
             'pagebreak' => function () {
+                /** @noinspection PhpUndefinedClassInspection, HtmlUnknownAttribute */
+                /** @noinspection PhpUndefinedNamespaceInspection */
                 /** @phpstan-ignore-next-line */
                 return new LightnCandy\SafeString('<br pagebreak="true">');
             },
@@ -555,15 +634,18 @@ class Htmlizer
                 $attributesPart = "";
 
                 if ($width) {
-                    $attributesPart .= " width=\"" .strval($width) . "\"";
+                    $attributesPart .= " width=\"$width\"";
                 }
 
                 if ($height) {
-                    $attributesPart .= " height=\"" .strval($height) . "\"";
+                    $attributesPart .= " height=\"$height\"";
                 }
 
-                $html = "<img src=\"?entryPoint=attachment&id={$id}\"{$attributesPart}>";
+                /** @noinspection HtmlRequiredAltAttribute */
+                $html = "<img src=\"?entryPoint=attachment&id=$id\"$attributesPart>";
 
+                /** @noinspection PhpUndefinedNamespaceInspection */
+                /** @noinspection PhpUndefinedClassInspection */
                 /** @phpstan-ignore-next-line */
                 return new LightnCandy\SafeString($html);
             },
@@ -636,8 +718,10 @@ class Htmlizer
                 /** @phpstan-ignore-next-line */
                 $paramsString = urlencode(json_encode($params));
 
+                /** @noinspection PhpUndefinedNamespaceInspection */
+                /** @noinspection PhpUndefinedClassInspection */
                 /** @phpstan-ignore-next-line */
-                return new LightnCandy\SafeString("<barcodeimage data=\"{$paramsString}\"/>");
+                return new LightnCandy\SafeString("<barcodeimage data=\"$paramsString\"/>");
             },
             'ifEqual' => function () {
                 $args = func_get_args();
@@ -709,7 +793,7 @@ class Htmlizer
                     return null;
                 }
 
-                $css = "font-family: zapfdingbats; color: {$color}";
+                $css = "font-family: zapfdingbats; color: $color";
 
                 if (in_array($option, $list)) {
                     $html =
@@ -719,6 +803,8 @@ class Htmlizer
                     $html = '<input type="checkbox" name="1" readonly="true" value="1" style="color: '.$css.'">';
                 }
 
+                /** @noinspection PhpUndefinedNamespaceInspection */
+                /** @noinspection PhpUndefinedClassInspection */
                 /** @phpstan-ignore-next-line */
                 return new LightnCandy\SafeString($html);
             },
@@ -740,15 +826,16 @@ class Htmlizer
             $className = $metadata->get(['app', 'templateHelpers', $name]);
 
             // Not using FQN deliberately.
+            /** @noinspection PhpFullyQualifiedNameUsageInspection */
             $data = new \Espo\Core\Htmlizer\Helper\Data(
                 $name,
                 $argumentList,
                 (object) $options,
                 $context['_this'],
                 $rootData,
-                $context['fn.blockParams'],
                 $context['fn'] ?? null,
-                $context['inverse'] ?? null
+                $context['inverse'] ?? null,
+                //$context['fn.blockParams'],
             );
 
             $helper = $injectableFactory->create($className);
@@ -757,6 +844,7 @@ class Htmlizer
 
             $value = $result->getValue();
 
+            /** @noinspection PhpFullyQualifiedNameUsageInspection */
             if ($value instanceof \Espo\Core\Htmlizer\Helper\SafeString) {
                 return $value->getWrappee();
             }
@@ -764,28 +852,26 @@ class Htmlizer
             return $value;
         };
 
-        if ($this->metadata) {
-            $additionalHelpers = array_filter(
+        $additionalHelpers = array_filter(
+            $this->metadata->get(['app', 'templateHelpers']) ?? [],
+            function (string $item) {
+                return str_contains($item, '::');
+            }
+        );
+
+        $helpers = array_merge($helpers, $additionalHelpers);
+
+        $additionalHelper2NameList = array_keys(
+            array_filter(
                 $this->metadata->get(['app', 'templateHelpers']) ?? [],
                 function (string $item) {
-                    return str_contains($item, '::');
+                    return !str_contains($item, '::');
                 }
-            );
+            )
+        );
 
-            $helpers = array_merge($helpers, $additionalHelpers);
-
-            $additionalHelper2NameList = array_keys(
-                array_filter(
-                    $this->metadata->get(['app', 'templateHelpers']) ?? [],
-                    function (string $item) {
-                        return !str_contains($item, '::');
-                    }
-                )
-            );
-
-            foreach ($additionalHelper2NameList as $name) {
-                $helpers[$name] = $customHelper;
-            }
+        foreach ($additionalHelper2NameList as $name) {
+            $helpers[$name] = $customHelper;
         }
 
         return $helpers;
@@ -793,10 +879,6 @@ class Htmlizer
 
     private function getFieldType(string $entityType, string $field): ?string
     {
-        if (!$this->metadata) {
-            return null;
-        }
-
         return $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
     }
 
@@ -805,10 +887,6 @@ class Htmlizer
      */
     private function getRelationOrder(string $entityType, string $relation): array
     {
-        if (!$this->entityManager) {
-            return [];
-        }
-
         $relationDefs = $this->entityManager
             ->getDefs()
             ->getEntity($entityType)
@@ -839,10 +917,17 @@ class Htmlizer
         return [[$orderBy, $order]];
     }
 
-    private function handleIteration(string $template): string
+    /**
+     * @param string[] $helpers
+     */
+    private function handleAttributeHelper(string $template, string $attribute, string $helper, array $helpers): string
     {
+        if ($template === '') {
+            return $template;
+        }
+
         if (!extension_loaded('dom')) {
-            $this->log?->warning("Extension 'dom' is not enabled. HTML templating functionality is restricted.");
+            $this->log->warning("Extension 'dom' is not enabled. HTML templating functionality is restricted.");
 
             return $template;
         }
@@ -852,7 +937,7 @@ class Htmlizer
         $loadResult = $xml->loadHTML($template);
 
         if ($loadResult === false) {
-            $this->log?->warning("HTML template parsing error.");
+            $this->log->warning("HTML template parsing error.");
 
             return $template;
         }
@@ -861,7 +946,7 @@ class Htmlizer
 
         $found = false;
 
-        $elements = $xpath->query("//*[@iterate]");
+        $elements = $xpath->query("//*[@$attribute]");
 
         if (!$elements) {
             return $template;
@@ -873,13 +958,13 @@ class Htmlizer
             }
 
             try {
-                $wrapperElement = $xml->createElement('iteration-wrapper');
+                $wrapperElement = $xml->createElement("$attribute-wrapper");
 
                 if (!$wrapperElement) {
                     throw new LogicException();
                 }
 
-                $wrapperElement->setAttribute('v', $element->getAttribute('iterate'));
+                $wrapperElement->setAttribute('v', $element->getAttribute($attribute));
             }
             catch (DOMException $e) {
                 throw new LogicException($e->getMessage());
@@ -897,7 +982,7 @@ class Htmlizer
                 throw new LogicException();
             }
 
-            $newElement->removeAttribute('iterate');
+            $newElement->removeAttribute($attribute);
 
             $wrapperElement->appendChild($newElement);
             $parentNode->replaceChild($wrapperElement, $element);
@@ -912,25 +997,54 @@ class Htmlizer
         $newTemplate = $xml->saveXML();
 
         if ($newTemplate === false || !is_string($newTemplate)) {
-            $this->log?->warning("DOM save error.");
+            $this->log->warning("DOM save error.");
 
             return $template;
         }
 
-        $newTemplate = str_replace('</iteration-wrapper>', '{{/each}}', $newTemplate);
+        $newTemplate = str_replace("</$attribute-wrapper>", "{{/$helper}}", $newTemplate);
 
         $from = strpos($newTemplate,'<body>') + 6;
         $to = strrpos($newTemplate, '</body>') - strlen($newTemplate);
 
         $newTemplate = substr($newTemplate, $from, $to);
 
-        return preg_replace('/<iteration-wrapper v="{{(.*)}}">/', '{{#each $1}}', $newTemplate) ?? '';
+        $regExp = '/<' . $attribute . '-wrapper v="{{(.*?)}}">/';
+
+        $newTemplate = preg_replace_callback($regExp, function ($matches) use ($helpers, $helper) {
+            $expression = trim($matches[1]);
+
+            $isHelper = false;
+
+            foreach ($helpers as $it) {
+                if (str_starts_with($expression, $it . ' ')) {
+                    $isHelper = true;
+
+                    break;
+                }
+            }
+
+            if ($isHelper) {
+                $expression = "($expression)";
+            }
+
+            return "{{#$helper $expression}}";
+        }, $newTemplate);
+
+        return $newTemplate ?? '';
     }
 
-    private function prepare(string $template): string
+    /**
+     * @param string[] $helpers
+     */
+    private function prepare(string $template, array $helpers): string
     {
         $template = str_replace('<tcpdf ', '', $template);
 
-        return $this->handleIteration($template);
+        $template = $this->handleAttributeHelper($template, 'iterate', 'each', $helpers);
+        /** @noinspection PhpUnnecessaryLocalVariableInspection */
+        $template = $this->handleAttributeHelper($template, 'x-if', 'if', $helpers);
+
+        return $template;
     }
 }

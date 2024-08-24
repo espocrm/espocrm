@@ -78,10 +78,6 @@ class Controller {
         this._dateTime = injections.dateTime || null;
         this._broadcastChannel = injections.broadcastChannel || null;
 
-        if (!this.baseController) {
-            this.on('logout', () => this.clearAllStoredMainViews());
-        }
-
         this.set('masterRendered', false);
     }
 
@@ -259,13 +255,34 @@ class Controller {
     }
 
     /**
+     * @param {string} key
+     * @param {string} [name]
+     * @return {string}
+     * @private
+     */
+    _composeScrollKey(key, name) {
+        name = name || this.name;
+
+        return `scrollTop-${name}-${key}`;
+    }
+
+    /**
+     * @param {string} key
+     * @return {string}
+     * @private
+     */
+    _composeMainViewKey(key) {
+        return `mainView-${this.name}-${key}`;
+    }
+
+    /**
      * Get a stored main view.
      *
      * @param {string} key A key.
      * @returns {module:view|null}
      */
     getStoredMainView(key) {
-        return this.get('storedMainView-' + key);
+        return this.get(this._composeMainViewKey(key));
     }
 
     /**
@@ -274,7 +291,7 @@ class Controller {
      * @returns {boolean}
      */
     hasStoredMainView(key) {
-        return this.has('storedMainView-' + key);
+        return this.has(this._composeMainViewKey(key));
     }
 
     /**
@@ -288,7 +305,8 @@ class Controller {
             view.remove(true);
         }
 
-        this.unset('storedMainView-' + key);
+        this.unset(this._composeScrollKey(key));
+        this.unset(this._composeMainViewKey(key));
     }
 
     /**
@@ -298,7 +316,7 @@ class Controller {
      * @param {module:view} view A view.
      */
     storeMainView(key, view) {
-        this.set('storedMainView-' + key, view);
+        this.set(this._composeMainViewKey(key), view);
 
         this.listenTo(view, 'remove', (o) => {
             o = o || {};
@@ -311,21 +329,6 @@ class Controller {
 
             this.clearStoredMainView(key);
         });
-    }
-
-    /**
-     * Clear all stored main views.
-     */
-    clearAllStoredMainViews() {
-        for (const k in this.params) {
-            if (k.indexOf('storedMainView-') !== 0) {
-                continue;
-            }
-
-            const key = k.slice(15);
-
-            this.clearStoredMainView(key);
-        }
     }
 
     /**
@@ -448,19 +451,18 @@ class Controller {
     }
 
     /**
-     * @param {module:views/site/master} masterView
+     * @param {import('views/site/master').default} masterView
      * @private
      */
     _unchainMainView(masterView) {
-        // noinspection JSUnresolvedReference
         if (
-            !masterView.currentViewKey ||
-            !this.hasStoredMainView(masterView.currentViewKey)
+            !masterView.currentViewKey /*||
+            !this.hasStoredMainView(masterView.currentViewKey)*/
         ) {
             return;
         }
 
-        const currentMainView = masterView.getView('main');
+        const currentMainView = masterView.getMainView();
 
         if (!currentMainView) {
             return;
@@ -567,8 +569,8 @@ class Controller {
     }
 
     /**
-     * @param {module:view} mainView
-     * @param {module:views/site/master} masterView
+     * @param {import('view').default} mainView
+     * @param {import('views/site/master').default} masterView
      * @param {{
      *     isCanceled: boolean,
      *     key?: string,
@@ -597,7 +599,9 @@ class Controller {
         mainView.listenToOnce(this.baseController, 'action', onAction);
 
         if (masterView.currentViewKey) {
-            this.set('storedScrollTop-' + masterView.currentViewKey, $(window).scrollTop());
+            const scrollKey = this._composeScrollKey(masterView.currentViewKey, masterView.currentName);
+
+            this.set(scrollKey, $(window).scrollTop());
 
             if (!dto.isSet) {
                 this._unchainMainView(masterView);
@@ -605,6 +609,7 @@ class Controller {
         }
 
         masterView.currentViewKey = key;
+        masterView.currentName = this.name;
 
         if (!dto.isSet) {
             masterView.setView('main', mainView);
@@ -615,8 +620,10 @@ class Controller {
 
             mainView.updatePageTitle();
 
-            if (dto.useStored && this.has('storedScrollTop-' + key)) {
-                $(window).scrollTop(this.get('storedScrollTop-' + key));
+            const scrollKey = this._composeScrollKey(key);
+
+            if (dto.useStored && this.has(scrollKey)) {
+                $(window).scrollTop(this.get(scrollKey));
 
                 return;
             }

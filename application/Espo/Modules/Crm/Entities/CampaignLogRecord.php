@@ -29,7 +29,10 @@
 
 namespace Espo\Modules\Crm\Entities;
 
-class CampaignLogRecord extends \Espo\Core\ORM\Entity
+use Espo\Core\Field\LinkParent;
+use Espo\Core\ORM\Entity;
+
+class CampaignLogRecord extends Entity
 {
     public const ENTITY_TYPE = 'CampaignLogRecord';
 
@@ -43,4 +46,10 @@ class CampaignLogRecord extends \Espo\Core\ORM\Entity
 
     public const BOUNCED_TYPE_HARD = 'Hard';
     public const BOUNCED_TYPE_SOFT = 'Soft';
+
+    public function getParent(): ?LinkParent
+    {
+        /** @var ?LinkParent */
+        return $this->getValueObject('parent');
+    }
 }

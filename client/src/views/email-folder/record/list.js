@@ -26,56 +26,54 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-folder/record/list', ['views/record/list'], function (Dep) {
+import ListRecordView from 'views/record/list';
 
-    return Dep.extend({
+export default class extends ListRecordView {
 
-        massUpdateDisabled: true,
+    massUpdateDisabled = true
+    mergeDisabled = true
+    exportDisabled = true
+    removeDisabled = true
 
-        massRemoveDisabled: true,
+    rowActionsView = 'views/email-folder/record/row-actions/default'
 
-        mergeDisabled: true,
+    // noinspection JSUnusedGlobalSymbols
+    actionMoveUp(data) {
+        const model = this.collection.get(data.id);
 
-        exportDisabled: true,
+        if (!model) {
+            return;
+        }
 
-        removeDisabled: true,
+        const index = this.collection.indexOf(model);
 
-        rowActionsView: 'views/email-folder/record/row-actions/default',
+        if (index === 0) {
+            return;
+        }
 
-        actionMoveUp: function (data) {
-            var model = this.collection.get(data.id);
-
-            if (!model) {
-                return;
-            }
-
-            var index = this.collection.indexOf(model);
-
-            if (index === 0) {
-                return;
-            }
-
-            Espo.Ajax.postRequest('EmailFolder/action/moveUp', {id: model.id}).then(() => {
+        Espo.Ajax.postRequest('EmailFolder/action/moveUp', {id: model.id})
+            .then(() => {
                 this.collection.fetch();
             });
-        },
+    }
 
-        actionMoveDown: function (data) {
-            var model = this.collection.get(data.id);
+    // noinspection JSUnusedGlobalSymbols
+    actionMoveDown(data) {
+        const model = this.collection.get(data.id);
 
-            if (!model) {
-                return;
-            }
+        if (!model) {
+            return;
+        }
 
-            var index = this.collection.indexOf(model);
+        const index = this.collection.indexOf(model);
 
-            if ((index === this.collection.length - 1) && (this.collection.length === this.collection.total)) {
-                return;
-            }
+        if ((index === this.collection.length - 1) && (this.collection.length === this.collection.total)) {
+            return;
+        }
 
-            Espo.Ajax.postRequest('EmailFolder/action/moveDown', {id: model.id}).then(() => {
+        Espo.Ajax.postRequest('EmailFolder/action/moveDown', {id: model.id})
+            .then(() => {
                 this.collection.fetch();
             });
-        },
-    });
-});
+    }
+}

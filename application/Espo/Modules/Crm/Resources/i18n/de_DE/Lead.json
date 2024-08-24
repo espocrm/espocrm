@@ -28,7 +28,8 @@
     "opportunityAmountCurrency": "Währungsbetrag der Verkaufschance",
     "acceptanceStatusMeetings": "Akzeptanzstatus (Meetings)",
     "acceptanceStatusCalls": "Akzeptanzstatus (Anrufe)",
-    "convertedAt": "Konvertiert am"
+    "convertedAt": "Konvertiert am",
+    "originalEmail": "Ursprüngliche E-Mail"
   },
   "links": {
     "targetLists": "Kontaktlisten",

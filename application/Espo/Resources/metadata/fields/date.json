@@ -52,6 +52,11 @@
         },
         {
             "type": "bool",
+            "name": "afterOrEqual",
+            "hidden": true
+        },
+        {
+            "type": "bool",
             "name": "useNumericFormat"
         },
         {
@@ -80,5 +85,8 @@
     "personalData": true,
     "valueFactoryClassName": "Espo\\Core\\Field\\Date\\DateFactory",
     "attributeExtractorClassName": "Espo\\Core\\Field\\Date\\DateAttributeExtractor",
+    "sanitizerClassNameList": [
+        "Espo\\Classes\\FieldSanitizers\\Date"
+    ],
     "default": null
 }

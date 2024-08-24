@@ -4,12 +4,13 @@
             "type": "varchar",
             "required": true,
             "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         },
         "subject": {
             "type": "varchar",
             "required": true,
             "notStorable": true,
+            "orderDisabled": true,
             "view": "views/email/fields/subject",
             "utility": true
         },
@@ -21,47 +22,52 @@
             "layoutFiltersDisabled": true,
             "customizationDisabled": true,
             "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         },
         "fromAddress": {
             "type": "varchar",
             "readOnly": true,
             "notStorable": true,
+            "orderDisabled": true,
             "textFilterDisabled": true,
             "layoutFiltersDisabled": true,
             "customizationDisabled": true,
             "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         },
         "fromString": {
             "type": "varchar",
             "customizationDisabled": true,
             "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         },
         "replyToString": {
             "type": "varchar",
             "customizationDisabled": true,
             "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         },
         "replyToName": {
             "type": "varchar",
             "readOnly": true,
             "notStorable": true,
+            "orderDisabled": true,
             "textFilterDisabled": true,
             "layoutFiltersDisabled": true,
             "customizationDisabled": true,
-            "layoutDefaultSidePanelDisabled": true
+            "layoutDefaultSidePanelDisabled": true,
+            "massUpdateDisabled": true
         },
         "replyToAddress": {
             "type": "varchar",
             "readOnly": true,
             "notStorable": true,
+            "orderDisabled": true,
             "textFilterDisabled": true,
             "layoutFiltersDisabled": true,
             "customizationDisabled": true,
-            "layoutDefaultSidePanelDisabled": true
+            "layoutDefaultSidePanelDisabled": true,
+            "massUpdateDisabled": true
         },
         "addressNameMap": {
             "type": "jsonObject",
@@ -72,16 +78,21 @@
         "from": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "required": true,
             "view": "views/email/fields/from-address-varchar",
             "textFilterDisabled": true,
             "customizationDisabled": true,
-            "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutAvailabilityList": [
+                "detail",
+                "filters"
+            ],
+            "massUpdateDisabled": true
         },
         "to": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "required": true,
             "view": "views/email/fields/email-address-varchar",
             "validatorClassName": "Espo\\Classes\\FieldValidators\\Email\\EmailAddresses",
@@ -91,12 +102,16 @@
             ],
             "textFilterDisabled": true,
             "customizationDisabled": true,
-            "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutAvailabilityList": [
+                "detail",
+                "filters"
+            ],
+            "massUpdateDisabled": true
         },
         "cc": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "view": "views/email/fields/email-address-varchar",
             "validatorClassNameList": [
                 "Espo\\Classes\\FieldValidators\\Email\\Addresses\\Valid",
@@ -104,12 +119,16 @@
             ],
             "customizationDisabled": true,
             "textFilterDisabled": true,
-            "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutAvailabilityList": [
+                "detail",
+                "filters"
+            ],
+            "massUpdateDisabled": true
         },
         "bcc": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "view": "views/email/fields/email-address-varchar",
             "validatorClassNameList": [
                 "Espo\\Classes\\FieldValidators\\Email\\Addresses\\Valid",
@@ -117,24 +136,31 @@
             ],
             "customizationDisabled": true,
             "textFilterDisabled": true,
-            "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutAvailabilityList": [
+                "detail"
+            ],
+            "massUpdateDisabled": true
         },
         "replyTo": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "view": "views/email/fields/email-address-varchar",
             "textFilterDisabled": true,
             "customizationDisabled": true,
-            "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutAvailabilityList": [
+                "detail"
+            ],
+            "massUpdateDisabled": true
         },
         "personStringData": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "utility": true,
             "view": "views/email/fields/person-string-data",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "massUpdateDisabled": true
         },
         "isRead": {
             "type": "bool",
@@ -171,14 +197,21 @@
             "notStorable": true,
             "default": false,
             "customizationDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "readOnly": true
         },
         "inTrash": {
             "type": "bool",
             "notStorable": true,
             "default": false,
             "customizationDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "readOnly": true
+        },
+        "inArchive": {
+            "type": "bool",
+            "notStorable": true,
+            "default": false,
+            "customizationDisabled": true,
+            "readOnly": true
         },
         "folderId": {
             "type": "varchar",
@@ -186,25 +219,47 @@
             "default": null,
             "textFilterDisabled": true,
             "customizationDisabled": true,
-            "layoutAvailabilityList": []
+            "layoutAvailabilityList": [],
+            "readOnly": true
         },
         "isUsers": {
             "type": "bool",
             "notStorable": true,
             "default": false,
             "customizationDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "readOnly": true
+        },
+        "isUsersSent": {
+            "type": "bool",
+            "notStorable": true,
+            "readOnly": true,
+            "utility": true
         },
         "folder": {
             "type": "link",
             "notStorable": true,
+            "orderDisabled": true,
             "readOnly": true,
             "entity": "EmailFolder",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutAvailabilityList": []
+        },
+        "folderString": {
+            "type": "link",
+            "notStorable": true,
+            "orderDisabled": true,
+            "readOnly": true,
+            "entity": "EmailFolder",
+            "customizationDisabled": true,
+            "view": "views/email/fields/folder-string",
+            "layoutAvailabilityList": [
+                "defaultSidePanel"
+            ]
         },
         "nameHash": {
             "type": "text",
             "notStorable": true,
+            "orderDisabled": true,
             "readOnly": true,
             "utility": true,
             "customizationDisabled": true
@@ -219,6 +274,7 @@
         "idHash": {
             "type": "text",
             "notStorable": true,
+            "orderDisabled": true,
             "readOnly": true,
             "utility": true,
             "customizationDisabled": true
@@ -245,34 +301,39 @@
             "view": "views/email/fields/email-address",
             "customizationDisabled": true,
             "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         },
         "fromEmailAddress": {
             "type": "link",
             "view": "views/email/fields/from-email-address",
             "textFilterDisabled": true,
             "customizationDisabled": true,
-            "layoutAvailabilityList": []
+            "layoutAvailabilityList": [],
+            "massUpdateDisabled": true
         },
         "toEmailAddresses": {
             "type": "linkMultiple",
             "customizationDisabled": true,
-            "layoutAvailabilityList": []
+            "layoutAvailabilityList": [],
+            "massUpdateDisabled": true
         },
         "ccEmailAddresses": {
             "type": "linkMultiple",
             "customizationDisabled": true,
-            "layoutAvailabilityList": []
+            "layoutAvailabilityList": [],
+            "massUpdateDisabled": true
         },
         "bccEmailAddresses": {
             "type": "linkMultiple",
             "customizationDisabled": true,
-            "layoutAvailabilityList": []
+            "layoutAvailabilityList": [],
+            "massUpdateDisabled": true
         },
         "replyToEmailAddresses": {
             "type": "linkMultiple",
             "customizationDisabled": true,
-            "layoutAvailabilityList": []
+            "layoutAvailabilityList": [],
+            "massUpdateDisabled": true
         },
         "bodyPlain": {
             "type": "text",
@@ -280,7 +341,8 @@
             "clientReadOnly": true,
             "customizationDisabled": true,
             "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutMassUpdateDisabled": true,
+            "massUpdateDisabled": true
         },
         "body": {
             "type": "wysiwyg",
@@ -289,7 +351,8 @@
             "useIframe": true,
             "customizationDisabled": true,
             "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutMassUpdateDisabled": true,
+            "massUpdateDisabled": true
         },
         "isHtml": {
             "type": "bool",
@@ -299,7 +362,8 @@
                 "tooltipText"
             ],
             "inlineEditDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutDefaultSidePanelDisabled": true,
+            "massUpdateDisabled": true
         },
         "status": {
             "type": "enum",
@@ -312,13 +376,13 @@
                 "Sending": "warning"
             },
             "customizationDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         },
         "attachments": {
             "type": "attachmentMultiple",
             "sourceList": ["Document"],
             "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         },
         "hasAttachment": {
             "type": "bool",
@@ -331,6 +395,7 @@
             "fieldManagerParamList": [
                 "required",
                 "entityList",
+                "autocompleteOnEmpty",
                 "audited",
                 "tooltipText"
             ]
@@ -339,7 +404,7 @@
             "type": "datetime",
             "customizationDisabled": true,
             "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         },
         "deliveryDate": {
             "type": "datetime",
@@ -382,14 +447,14 @@
             "type": "link",
             "required": false,
             "view": "views/fields/assigned-user",
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         },
         "replied": {
             "type": "link",
             "noJoin": true,
             "view": "views/email/fields/replied",
             "customizationDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         },
         "replies": {
             "type": "linkMultiple",
@@ -400,14 +465,14 @@
             "columns": {
                 "status": "status"
             },
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         },
         "isSystem": {
             "type": "bool",
             "default": false,
             "readOnly": true,
             "customizationDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         },
         "isJustSent": {
             "type": "bool",
@@ -415,14 +480,14 @@
             "utility": true,
             "notStorable": true,
             "customizationDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         },
         "isBeingImported": {
             "type": "bool",
             "utility": true,
             "notStorable": true,
             "customizationDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         },
         "teams": {
             "type": "linkMultiple",
@@ -433,7 +498,6 @@
             "noLoad": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "layoutMassUpdateDisabled": true,
             "readOnly": true,
             "columns": {
                 "inTrash": "inTrash",
@@ -444,7 +508,6 @@
         "assignedUsers": {
             "type": "linkMultiple",
             "layoutListDisabled": true,
-            "layoutMassUpdateDisabled": true,
             "readOnly": true,
             "customizationDisabled": true
         },
@@ -452,7 +515,6 @@
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "layoutMassUpdateDisabled": true,
             "noLoad": true,
             "readOnly": true,
             "fieldManagerParamList": [
@@ -463,7 +525,6 @@
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "layoutMassUpdateDisabled": true,
             "noLoad": true,
             "readOnly": true,
             "fieldManagerParamList": [
@@ -491,6 +552,7 @@
             "type": "varchar",
             "maxLength": 255,
             "index": true,
+            "readOnly": true,
             "customizationDisabled": true,
             "layoutAvailabilityList": []
         },
@@ -507,6 +569,7 @@
             "notStorable": true,
             "view": "views/email/fields/create-event",
             "customizationDisabled": true,
+            "massUpdateDisabled": true,
             "layoutAvailabilityList": []
         },
         "createdEvent": {
@@ -520,7 +583,7 @@
         },
         "groupFolder": {
             "type": "link",
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         }
     },
     "links": {
@@ -560,6 +623,10 @@
                     "default": false
                 },
                 "inTrash": {
+                    "type": "bool",
+                    "default": false
+                },
+                "inArchive": {
                     "type": "bool",
                     "default": false
                 },

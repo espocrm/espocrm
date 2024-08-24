@@ -26,35 +26,51 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-account/list', ['views/list'], function (Dep) {
+import ListView from 'views/list';
 
-    return Dep.extend({
+class EmailAccountListView extends ListView {
 
-        keepCurrentRootUrl: true,
+    keepCurrentRootUrl = true
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        this.options.params = this.options.params || {};
+        const params = this.options.params || {};
 
-            this.options.params = this.options.params || {};
+        this.userId = params.userId;
 
-            var params = this.options.params || {};
-            if (params.userId) {
-                this.collection.where = [{
-                    type: 'equals',
-                    field: 'assignedUserId',
-                    value: params.userId
-                }];
-            }
-        },
+        super.setup();
 
-        getCreateAttributes: function () {
-            var attributes = {};
-            if (this.options.params.userId) {
-                attributes.assignedUserId = this.options.params.userId;
-                attributes.assignedUserName = this.options.params.userName || this.options.params.userId;
-            }
-            return attributes;
-        },
+        if (this.userId) {
+            this.collection.where = [{
+                type: 'equals',
+                field: 'assignedUserId',
+                value: params.userId,
+            }];
+        }
+    }
 
-    });
-});
+    setupSearchPanel() {
+        if (this.userId || !this.getUser().isAdmin()) {
+            this.searchPanel = false;
+
+            this.searchManager.reset();
+
+            return;
+        }
+
+        super.setupSearchPanel();
+    }
+
+    getCreateAttributes() {
+        const attributes = {};
+
+        if (this.options.params.userId) {
+            attributes.assignedUserId = this.options.params.userId;
+            attributes.assignedUserName = this.options.params.userName || this.options.params.userId;
+        }
+
+        return attributes;
+    }
+}
+
+export default EmailAccountListView;

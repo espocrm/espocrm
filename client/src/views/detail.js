@@ -29,6 +29,7 @@
 /** @module module:views/detail */
 
 import MainView from 'views/main';
+import DetailModesView from 'views/detail/modes';
 
 /**
  * A detail view.
@@ -93,6 +94,45 @@ class DetailView extends MainView {
      */
     entityType
 
+    /**
+     * A default view mode.
+     *
+     * @protected
+     */
+    defaultViewMode = 'detail'
+
+    /**
+     * A view mode.
+     *
+     * @protected
+     * @type {string}
+     */
+    viewMode
+
+    /**
+     * @private
+     * @type {string}
+     */
+    viewModeIsStorable
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    hasMultipleModes = false
+
+    /**
+     * @private
+     * @type {import('views/detail/modes').default}
+     */
+    modesView
+
+    /**
+     * A 'detail' view mode.
+     * @const
+     */
+    MODE_DETAIL = 'detail'
+
     /** @inheritDoc */
     setup() {
         super.setup();
@@ -105,10 +145,12 @@ class DetailView extends MainView {
         this.rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
         this.isReturn = this.options.isReturn || this.options.params.isReturn || false;
 
+        this.setupModes();
         this.setupHeader();
         this.setupRecord();
         this.setupPageTitle();
         this.initFollowButtons();
+        this.initStarButtons();
         this.initRedirect();
     }
 
@@ -183,7 +225,73 @@ class DetailView extends MainView {
     }
 
     /**
+     * Set up modes.
+     */
+    setupModes() {
+        // @todo Add parameters to schema.
+
+        this.defaultViewMode = this.options.defaultViewMode ||
+            this.getMetadata().get(`clientDefs.${this.scope}.detailDefaultViewMode`) ||
+            this.defaultViewMode;
+
+        this.viewMode = this.viewMode || this.defaultViewMode;
+
+        const viewModeList = this.options.viewModeList || this.viewModeList ||
+            this.getMetadata().get(`clientDefs.${this.scope}.detailViewModeList`);
+
+        this.viewModeList = viewModeList ? viewModeList : [this.MODE_DETAIL];
+
+        this.viewModeIsStorable = this.viewModeIsStorable !== undefined ?
+            this.viewModeIsStorable :
+            this.getMetadata().get(`clientDefs.${this.scope}.detailViewModeIsStorable`);
+
+        this.hasMultipleModes = this.viewModeList.length > 1;
+
+        if (this.viewModeIsStorable && this.hasMultipleModes) {
+            let viewMode = null;
+
+            const modeKey = this.getViewModeKey();
+
+            if (this.getStorage().has('state', modeKey)) {
+                const storedViewMode = this.getStorage().get('state', modeKey);
+
+                if (storedViewMode && this.viewModeList.includes(storedViewMode)) {
+                    viewMode = storedViewMode;
+                }
+            }
+
+            if (!viewMode) {
+                viewMode = this.defaultViewMode;
+            }
+
+            this.viewMode = /** @type {string} */viewMode;
+        }
+
+        if (this.hasMultipleModes) {
+            this.addActionHandler('switchMode', (e, target) => this.switchViewMode(target.dataset.value));
+
+            this.modesView = new DetailModesView({
+                mode: this.viewMode,
+                modeList: this.viewModeList,
+                scope: this.scope,
+            });
+
+            this.assignView('modes', this.modesView, '.modes');
+        }
+    }
+
+    /**
+     * @private
+     * @return {string}
+     */
+    getViewModeKey() {
+        return `detailViewMode-${this.scope}-${this.model.id}}`;
+    }
+
+    /**
      * Set up a record.
+     *
+     * @return {Promise<import('view').default>}
      */
     setupRecord() {
         const o = {
@@ -206,8 +314,19 @@ class DetailView extends MainView {
             o.readOnly = true;
         }
 
+        // noinspection JSValidateTypes
         return this.createView('record', this.getRecordViewName(), o, view => {
-            this.listenTo(view, 'after:mode-change', () => this.getHeaderView().reRender());
+            this.listenTo(view, 'after:mode-change', mode => {
+                // Mode change should also re-render the header what the methods do.
+                mode === 'edit' ?
+                    this.hideAllHeaderActionItems() :
+                    this.showAllHeaderActionItems();
+            });
+
+            if (this.modesView) {
+                this.listenTo(view, 'after:set-detail-mode', () => this.modesView.enable());
+                this.listenTo(view, 'after:set-edit-mode', () => this.modesView.disable());
+            }
         });
     }
 
@@ -217,8 +336,126 @@ class DetailView extends MainView {
      * @returns {string}
      */
     getRecordViewName() {
-        return this.getMetadata()
-            .get('clientDefs.' + this.scope + '.recordViews.detail') || this.recordView;
+        return this.getMetadata().get(`clientDefs.${this.scope}.recordViews.${this.viewMode}`) || this.recordView;
+    }
+
+    /**
+     * Switch a view mode.
+     *
+     * @param {string} mode
+     */
+    switchViewMode(mode) {
+        this.clearView('record');
+        this.setViewMode(mode, true);
+
+        Espo.Ui.notify(' ... ');
+
+        if (this.modesView) {
+            this.modesView.changeMode(mode);
+        }
+
+        this.setupRecord().then(view => {
+            view.render()
+                .then(() => Espo.Ui.notify(false));
+        });
+    }
+
+    /**
+     * Set a view mode.
+     *
+     * @param {string} mode A mode.
+     * @param {boolean} [toStore=false] To preserve a mode being set.
+     */
+    setViewMode(mode, toStore) {
+        this.viewMode = mode;
+
+        if (toStore && this.viewModeIsStorable) {
+            const modeKey = this.getViewModeKey();
+
+            this.getStorage().set('state', modeKey, mode);
+        }
+    }
+
+    /** @private */
+    initStarButtons() {
+        if (!this.getMetadata().get(`scopes.${this.scope}.stars`)) {
+            return;
+        }
+
+        this.addStarButtons();
+        this.listenTo(this.model, 'change:isStarred', () => this.controlStarButtons());
+    }
+
+    /** @private */
+    addStarButtons() {
+        const isStarred = this.model.get('isStarred');
+
+        this.addMenuItem('buttons', {
+            name: 'unstar',
+            iconHtml: '<span class="fas fa-star fa-sm text-warning"></span>',
+            className: 'btn-s-wide',
+            text: this.translate('Starred'),
+            hidden: !isStarred,
+            //title: this.translate('Unstar'),
+            onClick: () => this.actionUnstar(),
+        }, true);
+
+        this.addMenuItem('buttons', {
+            name: 'star',
+            iconHtml: '<span class="far fa-star fa-sm"></span>',
+            className: 'btn-s-wide',
+            text: this.translate('Star'),
+            //title: this.translate('Star'),
+            hidden: isStarred || !this.model.has('isStarred'),
+            onClick: () => this.actionStar(),
+        }, true);
+    }
+
+    /** @private */
+    controlStarButtons() {
+        const isStarred = this.model.get('isStarred');
+
+        if (isStarred) {
+            this.hideHeaderActionItem('star');
+            this.showHeaderActionItem('unstar');
+
+            return;
+        }
+
+        this.hideHeaderActionItem('unstar');
+        this.showHeaderActionItem('star');
+    }
+
+    /**
+     * Action 'star'.
+     */
+    actionStar() {
+        this.disableMenuItem('star');
+
+        Espo.Ajax
+            .putRequest(`${this.entityType}/${this.model.id}/starSubscription`)
+            .then(() => {
+                this.hideHeaderActionItem('star');
+
+                this.model.set('isStarred', true, {sync: true});
+            })
+            .finally(() => this.enableMenuItem('star'));
+    }
+
+    /**
+     * Action 'unstar'.
+     */
+    actionUnstar() {
+        this.disableMenuItem('unstar');
+
+        Espo.Ajax
+            .deleteRequest(`${this.entityType}/${this.model.id}/starSubscription`)
+            .then(() => {
+                this.hideHeaderActionItem('unstar');
+
+                this.model.set('isStarred', false, {sync: true});
+            })
+            .finally(() => this.enableMenuItem('unstar'));
     }
 
     /** @private */
@@ -380,320 +617,15 @@ class DetailView extends MainView {
         return this.getView('record');
     }
 
-    /**
-     * Update a relationship panel (fetch data).
-     *
-     * @param {string} name A relationship name.
-     */
-    updateRelationshipPanel(name) {
-        const bottom = this.getView('record').getView('bottom');
-
-        if (bottom) {
-            const rel = bottom.getView(name);
-
-            if (rel) {
-                rel.collection.fetch();
-            }
-        }
-    }
-
-    /**
-     * @deprecated Use metadata clientDefs > {EntityType} > relationshipPanels > {link} > createAttributeMap.
-     * @type {Object}
-     */
-    relatedAttributeMap = {}
-
-    /**
-     * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > createHandler.
-     * @type {Object}
-     */
-    relatedAttributeFunctions = {}
-
-    /**
-     * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > selectHandler.
-     * @type {Object}
-     */
-    selectRelatedFilters = {}
-
-    /**
-     * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > selectHandler or
-     *  clientDefs > {EntityType} > relationshipPanels > {link} > selectPrimaryFilter.
-     * @type {Object}
-     */
-    selectPrimaryFilterNames = {}
-
-    /**
-     * @deprecated Use clientDefs > {EntityType} > relationshipPanels > {link} > selectHandler or
-     *  clientDefs > {EntityType} > relationshipPanels > {link} > selectBoolFilterList.
-     * @type {Object}
-     */
-    selectBoolFilterLists = []
-
-    /**
-     * Action 'createRelated'.
-     *
-     * @param {Object} data
-     */
-    actionCreateRelated(data) {
-        data = data || {};
-
-        const link = data.link;
-        const scope = this.model.defs['links'][link].entity;
-        const foreignLink = this.model.defs['links'][link].foreign;
-
-        let attributes = {};
-
-        if (
-            this.relatedAttributeFunctions[link] &&
-            typeof this.relatedAttributeFunctions[link] === 'function'
-        ) {
-            attributes = _.extend(this.relatedAttributeFunctions[link].call(this), attributes);
-        }
-
-        const attributeMap = this.getMetadata()
-                .get(['clientDefs', this.scope, 'relationshipPanels', link, 'createAttributeMap']) ||
-            this.relatedAttributeMap[link] || {};
-
-        Object.keys(attributeMap)
-            .forEach(attr => {
-                attributes[attributeMap[attr]] = this.model.get(attr);
-            });
-
-        Espo.Ui.notify(' ... ');
-
-        const handler = this.getMetadata()
-            .get(['clientDefs', this.scope, 'relationshipPanels', link, 'createHandler']);
-
-        new Promise(resolve => {
-            if (!handler) {
-                resolve({});
-
-                return;
-            }
-
-            Espo.loader.requirePromise(handler)
-                .then(Handler => new Handler(this.getHelper()))
-                .then(handler => {
-                    handler.getAttributes(this.model)
-                        .then(attributes => resolve(attributes));
-                });
-        }).then(additionalAttributes => {
-            attributes = {...attributes, ...additionalAttributes};
-
-            const viewName = this.getMetadata()
-                .get(['clientDefs', scope, 'modalViews', 'edit']) || 'views/modals/edit';
-
-            this.createView('quickCreate', viewName, {
-                scope: scope,
-                relate: {
-                    model: this.model,
-                    link: foreignLink,
-                },
-                attributes: attributes,
-            }, view => {
-                view.render();
-                view.notify(false);
-
-                this.listenToOnce(view, 'after:save', () => {
-                    if (data.fromSelectRelated) {
-                        setTimeout(() => this.clearView('dialogSelectRelated'), 25);
-                    }
-
-                    this.updateRelationshipPanel(link);
-
-                    this.model.trigger('after:relate');
-                    this.model.trigger('after:relate:' + link);
-                });
-            });
-        });
-    }
-
     // noinspection JSUnusedGlobalSymbols
     /**
-     * Action 'selectRelated'.
-     *
-     * @param {Object.<string, *>} data
+     * @param {string} name A relationship name.
+     * @deprecated As of v8.4.
      */
-    actionSelectRelated(data) {
-        const link = data.link;
+    updateRelationshipPanel(name) {
+        this.model.trigger(`update-related:${name}`);
 
-        if (!data.foreignEntityType && !this.model.defs['links'][link]) {
-            throw new Error('Link ' + link + ' does not exist.');
-        }
-
-        const scope = data.foreignEntityType || this.model.defs['links'][link].entity;
-        const massRelateEnabled = data.massSelect;
-
-        /** @var {Object.<string, *>} */
-        const panelDefs = this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', link]) || {};
-
-        let advanced = {};
-
-        if (link in this.selectRelatedFilters) {
-            advanced = Espo.Utils.cloneDeep(this.selectRelatedFilters[link]) || advanced;
-
-            for (const filterName in advanced) {
-                if (typeof advanced[filterName] === 'function') {
-                    const filtersData = advanced[filterName].call(this);
-
-                    if (filtersData) {
-                        advanced[filterName] = filtersData;
-                    } else {
-                        delete advanced[filterName];
-                    }
-                }
-            }
-        }
-
-        const foreignLink = this.model.getLinkParam(link, 'foreign');
-
-        if (foreignLink && scope) {
-            // Select only records not related with any.
-            const foreignLinkType = this.getMetadata()
-                .get(['entityDefs', scope, 'links', foreignLink, 'type']);
-            const foreignLinkFieldType = this.getMetadata()
-                .get(['entityDefs', scope, 'fields', foreignLink, 'type']);
-
-            if (
-                ~['belongsTo', 'belongsToParent'].indexOf(foreignLinkType) &&
-                foreignLinkFieldType &&
-                !advanced[foreignLink] &&
-                ~['link', 'linkParent'].indexOf(foreignLinkFieldType)
-            ) {
-                advanced[foreignLink] = {
-                    type: 'isNull',
-                    attribute: foreignLink + 'Id',
-                    data: {
-                        type: 'isEmpty',
-                    },
-                };
-            }
-        }
-
-        let primaryFilterName = data.primaryFilterName || this.selectPrimaryFilterNames[link] || null;
-
-        if (typeof primaryFilterName === 'function') {
-            primaryFilterName = primaryFilterName.call(this);
-        }
-
-        let dataBoolFilterList = data.boolFilterList;
-
-        if (typeof data.boolFilterList === 'string') {
-            dataBoolFilterList = data.boolFilterList.split(',');
-        }
-
-        let boolFilterList = dataBoolFilterList ||
-            panelDefs.selectBoolFilterList ||
-            this.selectBoolFilterLists[link];
-
-        if (typeof boolFilterList === 'function') {
-            boolFilterList = boolFilterList.call(this);
-        }
-
-        boolFilterList = Espo.Utils.clone(boolFilterList);
-
-        primaryFilterName = primaryFilterName || panelDefs.selectPrimaryFilterName || null;
-
-        const viewKey = data.viewKey || 'select';
-
-        const viewName = panelDefs.selectModalView ||
-            this.getMetadata().get(['clientDefs', scope, 'modalViews', viewKey]) ||
-            'views/modals/select-records';
-
-        Espo.Ui.notify(' ... ');
-
-        const handler = panelDefs.selectHandler || null;
-
-        new Promise(resolve => {
-            if (!handler) {
-                resolve({});
-
-                return;
-            }
-
-            Espo.loader.requirePromise(handler)
-                .then(Handler => new Handler(this.getHelper()))
-                .then(/** module:handlers/select-related */handler => {
-                    handler.getFilters(this.model)
-                        .then(filters => resolve(filters));
-                });
-        }).then(filters => {
-            advanced = {...advanced, ...(filters.advanced || {})};
-
-            if (boolFilterList || filters.bool) {
-                boolFilterList = [
-                    ...(boolFilterList || []),
-                    ...(filters.bool || []),
-                ];
-            }
-
-            if (filters.primary && !primaryFilterName) {
-                primaryFilterName = filters.primary;
-            }
-
-            const orderBy = filters.orderBy || panelDefs.selectOrderBy;
-            const orderDirection = filters.orderBy ? filters.order : panelDefs.selectOrderDirection;
-
-            this.createView('dialogSelectRelated', viewName, {
-                scope: scope,
-                multiple: true,
-                createButton: data.createButton || false,
-                triggerCreateEvent: true,
-                filters: advanced,
-                massRelateEnabled: massRelateEnabled,
-                primaryFilterName: primaryFilterName,
-                boolFilterList: boolFilterList,
-                mandatorySelectAttributeList: panelDefs.selectMandatoryAttributeList,
-                layoutName: panelDefs.selectLayout,
-                orderBy: orderBy,
-                orderDirection: orderDirection,
-            }, dialog => {
-                dialog.render();
-
-                Espo.Ui.notify(false);
-
-                this.listenTo(dialog, 'create', () => {
-                    this.actionCreateRelated({
-                        link: data.link,
-                        fromSelectRelated: true,
-                    });
-                });
-
-                this.listenToOnce(dialog, 'select', (selectObj) => {
-                    const data = {};
-
-                    if (Object.prototype.toString.call(selectObj) === '[object Array]') {
-                        const ids = [];
-
-                        selectObj.forEach(model => ids.push(model.id));
-
-                        data.ids = ids;
-                    }
-                    else {
-                        if (selectObj.massRelate) {
-                            data.massRelate = true;
-                            data.where = selectObj.where;
-                            data.searchParams = selectObj.searchParams;
-                        }
-                        else {
-                            data.id = selectObj.id;
-                        }
-                    }
-
-                    const url = this.scope + '/' + this.model.id + '/' + link;
-
-                    Espo.Ajax.postRequest(url, data)
-                        .then(() => {
-                            Espo.Ui.success(this.translate('Linked'))
-
-                            this.updateRelationshipPanel(link);
-
-                            this.model.trigger('after:relate');
-                            this.model.trigger('after:relate:' + link);
-                        });
-                });
-            });
-        });
+        console.warn('updateRelationshipPanel method is deprecated.');
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -720,6 +652,28 @@ class DetailView extends MainView {
 
                 this.getRouter().navigate(url, {trigger: false});
             });
+    }
+
+    /**
+     * @protected
+     */
+    hideAllHeaderActionItems() {
+        if (!this.getHeaderView()) {
+            return;
+        }
+
+        this.getHeaderView().hideAllMenuItems();
+    }
+
+    /**
+     * @protected
+     */
+    showAllHeaderActionItems() {
+        if (!this.getHeaderView()) {
+            return;
+        }
+
+        this.getHeaderView().showAllActionItems();
     }
 }
 

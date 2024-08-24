@@ -2,7 +2,8 @@
     "fields": {
         "number": {
             "type": "autoincrement",
-            "index": true
+            "index": true,
+            "dbType": "bigint"
         },
         "targetType": {
             "type": "varchar",
@@ -68,8 +69,10 @@
         }
     },
     "collection": {
-        "sortBy": "number",
-        "asc": false,
-        "textFilterFields": ["ipAddress", "userName"]
-    }
+        "orderBy": "number",
+        "order": "desc",
+        "textFilterFields": ["ipAddress", "userName"],
+        "countDisabled": true
+    },
+    "hooksDisabled": true
 }

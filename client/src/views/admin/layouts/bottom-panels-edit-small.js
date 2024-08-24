@@ -26,10 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/bottom-panels-edit-small', ['views/admin/layouts/bottom-panels-edit'], function (Dep) {
+import LayoutBottomPanelsEdit from 'views/admin/layouts/bottom-panels-edit';
 
-    return Dep.extend({
+export default class extends LayoutBottomPanelsEdit {
 
-        viewType: 'editSmall',
-    });
-});
+    viewType = 'editSmall'
+}
+

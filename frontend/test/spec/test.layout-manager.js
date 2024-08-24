@@ -26,10 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-describe('layout-manager', function () {
-	var layoutManager;
+describe('layout-manager', () => {
+    let layoutManager;
 
-	beforeEach((done) => {
+    beforeEach((done) => {
 		require('layout-manager', (LayoutManager) => {
 			layoutManager = new LayoutManager();
 			spyOn(layoutManager.ajax, 'getRequest')
@@ -40,7 +40,7 @@ describe('layout-manager', function () {
 		});
 	});
 
-	it("should call ajax to fetch new layout", function () {
+	it("should call ajax to fetch new layout", () => {
 		layoutManager.get('some', 'list');
 
 		expect(layoutManager.ajax.getRequest.calls.mostRecent().args[0]).toBe('some/layout/list');

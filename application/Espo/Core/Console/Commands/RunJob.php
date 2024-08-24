@@ -40,9 +40,11 @@ use Espo\Entities\Job;
 
 use Throwable;
 
+/**
+ * @noinspection PhpUnused
+ */
 class RunJob implements Command
 {
-
     public function __construct(private JobManager $jobManager, private EntityManager $entityManager)
     {}
 
@@ -79,6 +81,7 @@ class RunJob implements Command
 
         $entityManager = $this->entityManager;
 
+        /** @var Job $job */
         $job = $entityManager->createEntity(Job::ENTITY_TYPE, [
             'name' => $jobName,
             'job' => $jobName,
@@ -92,7 +95,7 @@ class RunJob implements Command
             $this->jobManager->runJob($job);
         }
         catch (Throwable $e) {
-            $message = "Error: Job '{$jobName}' failed to execute.";
+            $message = "Error: Job '$jobName' failed to execute.";
 
             if ($e->getMessage()) {
                 $message .= ' ' . $e->getMessage();
@@ -104,6 +107,6 @@ class RunJob implements Command
             return;
         }
 
-        $io->writeLine("Job '{$jobName}' has been executed.");
+        $io->writeLine("Job '$jobName' has been executed.");
     }
 }

@@ -5,8 +5,8 @@
         <div class="row">
             <div class="col-md-12">
                 <div style="text-align: center">
-                    <div class="content-img">
-                        <img class="devices" src="img/devices.png" alt="EspoCRM">
+                    <div class="content-img margin-bottom">
+                        <img class="devices" src="img/start.png" alt="EspoCRM" style="border-radius: var(--border-radius);">
                     </div>
                     {$langs['labels']['Main page header']}
                 </div>

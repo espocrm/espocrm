@@ -222,6 +222,8 @@ class Params
 
         if ($this->getAttributeList()) {
             $searchParams = $searchParams->withSelect($this->getAttributeList());
+        } else {
+            $searchParams = $searchParams->withSelect(['*']);
         }
 
         return $searchParams;

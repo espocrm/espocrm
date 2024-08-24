@@ -25,29 +25,28 @@
  * In accordance with Section 7(b) of the GNU Affero General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
+import EntityTypeListFieldView from 'views/fields/entity-type-list';
 
-define('views/settings/fields/busy-ranges-entity-list', ['views/fields/entity-type-list'], function (Dep) {
+// noinspection JSUnusedGlobalSymbols
+export default class extends EntityTypeListFieldView {
 
-    return Dep.extend({
+    setupOptions() {
+        super.setupOptions();
 
-        setupOptions: function () {
-            Dep.prototype.setupOptions.call(this);
+        this.params.options = this.params.options.filter(scope => {
+            if (this.getMetadata().get(['scopes', scope, 'disabled'])) {
+                return;
+            }
 
-            this.params.options = this.params.options.filter(scope => {
-                if (this.getMetadata().get(['scopes', scope, 'disabled'])) {
-                    return;
-                }
+            if (!this.getMetadata().get(['scopes', scope, 'object'])) {
+                return;
+            }
 
-                if (!this.getMetadata().get(['scopes', scope, 'object'])) {
-                    return;
-                }
+            if (!this.getMetadata().get(['scopes', scope, 'calendar'])) {
+                return;
+            }
 
-                if (!this.getMetadata().get(['scopes', scope, 'calendar'])) {
-                    return;
-                }
-
-                return true;
-            })
-        },
-    });
-});
+            return true;
+        });
+    }
+}

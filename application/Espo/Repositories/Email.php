@@ -69,14 +69,12 @@ class Email extends Database implements
 
         if (!empty($addressValue)) {
             $addressList = array_map(
-                function ($item) {
-                    return trim($item);
-                },
+                fn ($item) => trim($item),
                 explode(';', $addressValue)
             );
 
             $addressList = array_filter($addressList, function ($item) {
-                return filter_var($item, FILTER_VALIDATE_EMAIL);
+                return filter_var($item, FILTER_VALIDATE_EMAIL) !== false;
             });
 
             $idList = $eaRepository->getIdListFormAddressList($addressList);
@@ -111,8 +109,11 @@ class Email extends Database implements
 
     public function loadFromField(EmailEntity $entity): void
     {
-        if ($entity->get('fromEmailAddressName')) {
-            $entity->set('from', $entity->get('fromEmailAddressName'));
+        $fromEmailAddressName = $entity->get('fromEmailAddressName');
+
+        if ($fromEmailAddressName && !$entity->isAttributeChanged('fromEmailAddressName')) {
+            $entity->set('from', $fromEmailAddressName);
+            $entity->setFetched('from', $fromEmailAddressName);
 
             return;
         }
@@ -124,6 +125,7 @@ class Email extends Database implements
 
             if ($ea) {
                 $entity->set('from', $ea->get('name'));
+                $entity->setFetched('from', $ea->get('name'));
 
                 return;
             }
@@ -134,6 +136,7 @@ class Email extends Database implements
         }
 
         $entity->set('from', null);
+        $entity->setFetched('from', null);
     }
 
     public function loadToField(EmailEntity $entity): void

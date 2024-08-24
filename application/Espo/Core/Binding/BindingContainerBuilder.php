@@ -62,6 +62,7 @@ class BindingContainerBuilder
      *
      * @param class-string<object>|NamedClassKey<object> $key An interface or interface with a parameter name.
      * @param string $serviceName A service name.
+     * @noinspection PhpUnused
      */
     public function bindService(string|NamedClassKey $key, string $serviceName): self
     {
@@ -77,6 +78,7 @@ class BindingContainerBuilder
      * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
      * @param Closure $callback A callback that will resolve a dependency.
      * @todo Change to Closure(...): T Once https://github.com/phpstan/phpstan/issues/8214 is implemented.
+     * @noinspection PhpUnused
      */
     public function bindCallback(string|NamedClassKey $key, Closure $callback): self
     {
@@ -91,6 +93,7 @@ class BindingContainerBuilder
      * @template T of object
      * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
      * @param T $instance An instance.
+     * @noinspection PhpDocSignatureInspection
      */
     public function bindInstance(string|NamedClassKey $key, object $instance): self
     {
@@ -105,6 +108,7 @@ class BindingContainerBuilder
      * @template T of object
      * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
      * @param class-string<Factory<T>> $factoryClassName A factory class name.
+     * @noinspection PhpUnused
      */
     public function bindFactory(string|NamedClassKey $key, string $factoryClassName): self
     {

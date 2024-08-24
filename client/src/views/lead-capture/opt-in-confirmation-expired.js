@@ -26,20 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/lead-capture/opt-in-confirmation-expired', ['view', 'model'], function (Dep, Model) {
+import View from 'view';
 
-    return Dep.extend({
+class OptInConfirmationExpiredView extends View {
 
-        template: 'lead-capture/opt-in-confirmation-expired',
+    template = 'lead-capture/opt-in-confirmation-expired'
 
-        setup: function () {
-            this.resultData = this.options.resultData;
-        },
+    setup() {
+        this.resultData = this.options.resultData;
+    }
 
-        data: function () {
-            return {
-                defaultMessage: this.getLanguage().translate('optInConfirmationExpired', 'messages', 'LeadCapture'),
-            };
-        },
-    });
-});
+    data() {
+        return {
+            defaultMessage: this.getLanguage().translate('optInConfirmationExpired', 'messages', 'LeadCapture'),
+        };
+    }
+}
+
+export default OptInConfirmationExpiredView;

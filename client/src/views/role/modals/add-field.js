@@ -26,64 +26,173 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/role/modals/add-field', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+class RoleAddFieldModalView extends ModalView {
 
-        template: 'role/modals/add-field',
+    template = 'role/modals/add-field'
 
-        events: {
-            'click a[data-action="addField"]': function (e) {
-                this.trigger('add-field', $(e.currentTarget).data().name);
+    backdrop = true
+
+    events = {
+        /** @this RoleAddFieldModalView */
+        'click a[data-action="addField"]': function (e) {
+            this.trigger('add-fields', [$(e.currentTarget).data().name]);
+        }
+    }
+
+    data() {
+        return {
+            dataList: this.dataList,
+            scope: this.scope,
+        };
+    }
+
+    setup() {
+        this.addHandler('keyup', 'input[data-name="quick-search"]', (e, /** HTMLInputElement */target) => {
+            this.processQuickSearch(target.value);
+        });
+
+        this.addHandler('click', 'input[type="checkbox"]', (e, /** HTMLInputElement */target) => {
+            const name = target.dataset.name;
+
+            if (target.checked) {
+                this.checkedList.push(name);
+            } else {
+                const index = this.checkedList.indexOf(name);
+
+                if (index !== -1) {
+                    this.checkedList.splice(index, 1);
+                }
             }
-        },
 
-        data: function () {
-            var dataList = [];
+            this.checkedList.length ?
+                this.enableButton('select') :
+                this.disableButton('select');
+        });
 
-            this.fieldList.forEach((field, i) => {
-                if (i % 4 === 0) {
-                    dataList.push([]);
-                }
+        this.buttonList = [
+            {
+                name: 'select',
+                label: 'Select',
+                style: 'danger',
+                disabled: true,
+                onClick: () => {
+                    this.trigger('add-fields', this.checkedList);
+                },
+            },
+            {
+                name: 'cancel',
+                label: 'Cancel',
+                onClick: () => this.actionCancel(),
+            },
+        ]
 
-                dataList[dataList.length -1].push(field);
-            });
+        /** @type {string[]} */
+        this.checkedList = [];
 
+        const scope = this.scope = this.options.scope;
+
+        this.headerText = this.translate(scope, 'scopeNamesPlural') + ' · ' + this.translate('Add Field');
+
+        const fields = this.getMetadata().get(`entityDefs.${scope}.fields`) || {};
+        const fieldList = [];
+
+        const ignoreFieldList = this.options.ignoreFieldList || [];
+
+        Object.keys(fields).filter(field => !ignoreFieldList.includes(field)).forEach(field => {
+            if (!this.getFieldManager().isEntityTypeFieldAvailable(scope, field)) {
+                return;
+            }
+
+            const mandatoryLevel = this.getMetadata()
+                .get(['app', this.options.type, 'mandatory', 'scopeFieldLevel', this.scope, field]);
+
+            if (mandatoryLevel != null) {
+                return;
+            }
+
+            fieldList.push(field);
+        });
+
+        this.fieldList = this.getLanguage().sortFieldList(scope, fieldList);
+
+        /** @type {{name: string, label: string}[]} */
+        this.dataList = this.fieldList.map(field => {
             return {
-                dataList: dataList,
-                scope: this.scope
+                name: field,
+                label: this.translate(field, 'fields', this.scope),
             };
-        },
+        });
+    }
 
-        setup: function () {
-            this.headerText = this.translate('Add Field');
+    afterRender() {
+        this.$table = this.$el.find('table.fields-table');
 
-            var scope = this.scope = this.options.scope;
-            var fields = this.getMetadata().get('entityDefs.' + scope + '.fields') || {};
-            var fieldList = [];
+        setTimeout(() => {
+            this.element.querySelector('input[data-name="quick-search"]').focus();
+        }, 0);
+    }
 
-            Object.keys(fields).forEach(field => {
-                var d = fields[field];
+    processQuickSearch(text) {
+        text = text.trim();
 
-                if (field in this.options.ignoreFieldList) {
-                    return;
-                }
+        if (!text) {
+            this.$table.find('tr').removeClass('hidden');
 
-                if (d.disabled) {
-                    return;
-                }
+            return;
+        }
 
-                if (
-                    this.getMetadata()
-                        .get(['app', this.options.type, 'mandatory', 'scopeFieldLevel', this.scope, field]) !== null
-                ) {
-                    return;
-                }
+        const matchedList = [];
 
-                fieldList.push(field);
-            });
+        const lowerCaseText = text.toLowerCase();
 
-            this.fieldList = this.getLanguage().sortFieldList(scope, fieldList);
-        },
-    });
-});
+        this.dataList.forEach(item => {
+            let matched = false;
+
+            const field = item.name;
+            const label = item.label;
+
+            if (
+                label.indexOf(lowerCaseText) === 0 ||
+                field.toLowerCase().indexOf(lowerCaseText) === 0
+            ) {
+                matched = true;
+            }
+
+            if (!matched) {
+                const wordList = label.split(' ').concat(label.split(' '));
+
+                wordList.forEach((word) => {
+                    if (word.toLowerCase().indexOf(lowerCaseText) === 0) {
+                        matched = true;
+                    }
+                });
+            }
+
+            if (matched) {
+                matchedList.push(item);
+            }
+        });
+
+        if (matchedList.length === 0) {
+            this.$table.find('tr').addClass('hidden');
+
+            return;
+        }
+
+        this.dataList.forEach(item => {
+            const $row = this.$table.find(`tr[data-name="${item.name}"]`);
+
+            if (!matchedList.includes(item)) {
+                $row.addClass('hidden');
+
+                return;
+            }
+
+            $row.removeClass('hidden');
+        });
+    }
+}
+
+export default RoleAddFieldModalView;

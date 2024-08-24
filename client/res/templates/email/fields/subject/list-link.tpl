@@ -4,8 +4,9 @@
         role="button"
         tabindex="0"
         data-action="showAttachments"
+        class="text-muted"
     ><span
-        class="fas fa-paperclip small text-muted"
+        class="fas fa-paperclip small"
         title="{{translate 'hasAttachment' category='fields' scope='Email'}}"
     ></span></a>
 </span>

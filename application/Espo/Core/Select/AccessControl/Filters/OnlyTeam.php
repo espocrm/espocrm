@@ -75,11 +75,11 @@ class OnlyTeam implements Filter
             $key2 = $relationDefs->getForeignMidKey();
 
             $subQueryBuilder->leftJoin($middleEntityType, 'assignedUsersMiddle', [
-                "assignedUsersMiddle.{$key1}:" => 'id',
+                "assignedUsersMiddle.$key1:" => 'id',
                 'assignedUsersMiddle.deleted' => false,
             ]);
 
-            $orGroup["assignedUsersMiddle.{$key2}"] = $this->user->getId();
+            $orGroup["assignedUsersMiddle.$key2"] = $this->user->getId();
         }
         else if ($this->fieldHelper->hasAssignedUserField()) {
             $orGroup['assignedUserId'] = $this->user->getId();

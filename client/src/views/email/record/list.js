@@ -35,24 +35,33 @@ class EmailListRecordView extends ListRecordView {
 
     rowActionsView = 'views/email/record/row-actions/default'
 
-    massActionList = ['remove', 'massUpdate']
+    massActionList = [
+        'remove',
+        'massUpdate',
+    ]
 
     setup() {
         super.setup();
 
         if (this.collection.url === this.entityType) {
-            this.addMassAction('retrieveFromTrash', false, true);
-            this.addMassAction('moveToFolder', true, true);
-            this.addMassAction('markAsNotImportant', false, true);
-            this.addMassAction('markAsImportant', false, true);
-            this.addMassAction('markAsNotRead', false, true);
-            this.addMassAction('markAsRead', false, true);
-            this.addMassAction('moveToTrash', false, true);
+            this.addMassAction({name: 'retrieveFromTrash', groupIndex: -6}, false);
+
+            this.addMassAction({name: 'moveToTrash', groupIndex: -5}, false);
+            this.addMassAction({name: 'moveToArchive', groupIndex: -5}, false);
+            this.addMassAction({name: 'moveToFolder', groupIndex: -5}, true);
+
+            this.addMassAction({name: 'markAsImportant', groupIndex: -4}, false);
+            this.addMassAction({name: 'markAsNotImportant', groupIndex: -4}, false);
+            this.addMassAction({name: 'markAsRead', groupIndex: -3}, false);
+            this.addMassAction({name: 'markAsNotRead', groupIndex: -3}, false);
 
             this.dropdownItemList.push({
                 name: 'markAllAsRead',
                 label: 'Mark all as read',
             });
+
+            this.controlEmailMassActionsVisibility();
+            this.listenTo(this.collection, 'select-folder', () => this.controlEmailMassActionsVisibility());
         }
 
         this.listenTo(this.collection, 'moving-to-trash', (id) => {
@@ -75,6 +84,18 @@ class EmailListRecordView extends ListRecordView {
             }
 
             if (this.collection.selectedFolderId === 'trash') {
+                this.removeRecordFromList(id);
+            }
+        });
+
+        this.listenTo(this.collection, 'moving-to-archive', id => {
+            const model = this.collection.get(id);
+
+            if (model) {
+                model.set('inArchive', true);
+            }
+
+            if (this.collection.selectedFolderId !== 'archive') {
                 this.removeRecordFromList(id);
             }
         });
@@ -225,22 +246,31 @@ class EmailListRecordView extends ListRecordView {
                 Espo.Ui.notify(false);
 
                 if (result.id) {
-                    helper
-                        .process(result.id, 'moveToFolder')
+                    helper.process(result.id, 'moveToFolder')
                         .then(view => {
                             this.listenToOnce(view, 'close:success', () => {
-                                this.collection.fetch().then(() => {
-                                    Espo.Ui.success(this.translate('Done'));
-                                });
+                                this.collection.fetch()
+                                    .then(() => Espo.Ui.success(this.translate('Done')));
                             });
                         });
 
                     return;
                 }
 
-                this.collection.fetch().then(() => {
-                    Espo.Ui.success(this.translate('Done'));
-                });
+                if (folderId === 'archive') {
+                    [...this.checkedList].forEach(id => {
+                        this.collection.trigger('moving-to-archive', id, this.collection.get(id));
+
+                        this.uncheckRecord(id, null, true);
+                    });
+
+                    Espo.Ui.info(this.translate('Moved to Archive', 'labels', 'Email'));
+
+                    return;
+                }
+
+                this.collection.fetch()
+                    .then(() => Espo.Ui.success(this.translate('Done')));
             });
     }
 
@@ -257,6 +287,11 @@ class EmailListRecordView extends ListRecordView {
                 this.massMoveToFolder(folderId);
             });
         });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    massActionMoveToArchive() {
+        this.massMoveToFolder('archive');
     }
 
     actionMarkAsImportant(data) {
@@ -395,9 +430,16 @@ class EmailListRecordView extends ListRecordView {
 
             this.moveToFolder(id, folderId)
                 .then(() => {
-                    this.collection.fetch().then(() => {
-                        Espo.Ui.success(this.translate('Done'));
-                    });
+                    if (folderId === 'archive') {
+                        this.collection.trigger('moving-to-archive', id, this.collection.get(id));
+
+                        Espo.Ui.info(this.translate('Moved to Archive', 'labels', 'Email'));
+
+                        return;
+                    }
+
+                    this.collection.fetch()
+                        .then(() => Espo.Ui.success(this.translate('Done')));
                 });
 
             return;
@@ -421,6 +463,23 @@ class EmailListRecordView extends ListRecordView {
                     });
             });
         });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @private
+     * @param {{id: string}} data
+     */
+    actionMarkAsRead(data) {
+        const id = data.id;
+
+        const model = this.collection.get(id);
+
+        Espo.Ajax.postRequest('Email/inbox/read', {ids: [id]});
+
+        if (model) {
+            model.set('isRead', true);
+        }
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -469,6 +528,33 @@ class EmailListRecordView extends ListRecordView {
         }
 
         this.massActionMarkAsImportant();
+    }
+
+    /**
+     * @private
+     */
+    controlEmailMassActionsVisibility() {
+        const moveToArchive =
+            this.collection.selectedFolderId !== 'trash' &&
+            this.collection.selectedFolderId !== 'archive'
+
+        moveToArchive ?
+            this.showMassAction('moveToArchive') :
+            this.hideMassAction('moveToArchive');
+
+        if (this.collection.selectedFolderId === 'trash') {
+            this.hideMassAction('moveToTrash');
+            this.showMassAction('retrieveFromTrash');
+        } else {
+            this.showMassAction('moveToTrash');
+            this.hideMassAction('retrieveFromTrash');
+        }
+
+        if (this.collection.selectedFolderId === 'important') {
+            this.hideMassAction('markAsImportant');
+        } else {
+            this.showMassAction('markAsImportant');
+        }
     }
 }
 

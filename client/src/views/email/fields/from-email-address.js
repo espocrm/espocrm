@@ -26,12 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/from-email-address', ['views/fields/link'], function (Dep) {
+import LinkFieldView from 'views/fields/link';
 
-    return Dep.extend({
+export default class extends LinkFieldView {
 
-        listTemplate: 'email/fields/from-email-address/detail',
-
-        detailTemplate: 'email/fields/from-email-address/detail',
-    });
-});
+    listTemplate = 'email/fields/from-email-address/detail'
+    detailTemplate = 'email/fields/from-email-address/detail'
+}

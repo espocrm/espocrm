@@ -51,36 +51,36 @@ class Helper
 
         switch ($format) {
             case self::FORMAT_LAST_FIRST:
-                if (!$first && !$last) {
+                if ($first === null && $last === null) {
                     return null;
                 }
 
-                if (!$first) {
+                if ($first === null) {
                     return $last;
                 }
 
-                if (!$last) {
+                if ($last === null) {
                     return $first;
                 }
 
                 return $last . ' ' . $first;
 
             case self::FORMAT_LAST_FIRST_MIDDLE:
-                if (!$first && !$last && !$middle) {
+                if ($first === null && $last === null && $middle === null) {
                     return null;
                 }
 
                 $arr = [];
 
-                if ($last) {
+                if ($last !== null) {
                     $arr[] = $last;
                 }
 
-                if ($first) {
+                if ($first !== null) {
                     $arr[] = $first;
                 }
 
-                if ($middle) {
+                if ($middle !== null) {
                     $arr[] = $middle;
                 }
 
@@ -93,30 +93,30 @@ class Helper
 
                 $arr = [];
 
-                if ($first) {
+                if ($first !== null) {
                     $arr[] = $first;
                 }
 
-                if ($middle) {
+                if ($middle !== null) {
                     $arr[] = $middle;
                 }
 
-                if ($last) {
+                if ($last !== null) {
                     $arr[] = $last;
                 }
 
                 return implode(' ', $arr);
         }
 
-        if (!$first && !$last) {
+        if ($first === null && $last === null) {
             return null;
         }
 
-        if (!$first) {
+        if ($first === null) {
             return $last;
         }
 
-        if (!$last) {
+        if ($last === null) {
             return $first;
         }
 

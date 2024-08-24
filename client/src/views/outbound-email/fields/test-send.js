@@ -26,122 +26,150 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/outbound-email/fields/test-send', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+export default class extends BaseFieldView {
 
-        templateContent:
-            '<button class="btn btn-default hidden" data-action="sendTestEmail">'+
-            '{{translate \'Send Test Email\' scope=\'Email\'}}</button>',
+    templateContent =
+        '<button class="btn btn-default hidden" data-action="sendTestEmail">'+
+        '{{translate \'Send Test Email\' scope=\'Email\'}}</button>'
 
-        events: {
-            'click [data-action="sendTestEmail"]': function () {
-                this.send();
-            },
-        },
+    setup() {
+        super.setup();
 
-        fetch: function () {
-            return {};
-        },
+        this.addActionHandler('sendTestEmail', () => this.send());
+    }
 
-        checkAvailability: function () {
-            if (this.model.get('smtpServer')) {
-                this.$el.find('button').removeClass('hidden');
-            } else {
-                this.$el.find('button').addClass('hidden');
-            }
-        },
+    fetch() {
+        return {};
+    }
 
-        afterRender: function () {
+    /**
+     * @protected
+     */
+    checkAvailability() {
+        if (this.model.get('smtpServer')) {
+            this.$el.find('button').removeClass('hidden');
+        } else {
+            this.$el.find('button').addClass('hidden');
+        }
+    }
+
+    afterRender() {
+        this.checkAvailability();
+
+        this.stopListening(this.model, 'change:smtpServer');
+
+        this.listenTo(this.model, 'change:smtpServer', () => {
             this.checkAvailability();
+        });
+    }
 
-            this.stopListening(this.model, 'change:smtpServer');
+    /**
+     * @protected
+     * @return {Record}
+     */
+    getSmtpData() {
+        return {
+            'server': this.model.get('smtpServer'),
+            'port': this.model.get('smtpPort'),
+            'auth': this.model.get('smtpAuth'),
+            'security': this.model.get('smtpSecurity'),
+            'username': this.model.get('smtpUsername'),
+            'password': this.model.get('smtpPassword') || null,
+            'fromName': this.model.get('outboundEmailFromName'),
+            'fromAddress': this.model.get('outboundEmailFromAddress'),
+            'type': 'outboundEmail',
+        };
+    }
 
-            this.listenTo(this.model, 'change:smtpServer', () => {
-                this.checkAvailability();
-            });
-        },
+    /**
+     * @protected
+     */
+    enableButton() {
+        this.$el.find('button').removeClass('disabled').removeAttr('disabled');
+    }
 
-        getSmtpData: function () {
-            return {
-                'server': this.model.get('smtpServer'),
-                'port': this.model.get('smtpPort'),
-                'auth': this.model.get('smtpAuth'),
-                'security': this.model.get('smtpSecurity'),
-                'username': this.model.get('smtpUsername'),
-                'password': this.model.get('smtpPassword') || null,
-                'fromName': this.model.get('outboundEmailFromName'),
-                'fromAddress': this.model.get('outboundEmailFromAddress'),
-                'type': 'outboundEmail',
-            };
-        },
+    /**
+     * @protected
+     */
+    disabledButton() {
+        this.$el.find('button').addClass('disabled').attr('disabled', 'disabled');
+    }
 
-        send: function () {
-            var data = this.getSmtpData();
+    /**
+     * @private
+     */
+    send() {
+        const data = this.getSmtpData();
 
-            this.createView('popup', 'views/outbound-email/modals/test-send', {
-                emailAddress: this.getUser().get('emailAddress')
-            }, (view) => {
-                view.render();
+        this.createView('popup', 'views/outbound-email/modals/test-send', {
+            emailAddress: this.getUser().get('emailAddress')
+        }, (view) => {
+            view.render();
 
-                this.listenToOnce(view, 'send', (emailAddress) => {
-                    this.$el.find('button').addClass('disabled');
-                    data.emailAddress = emailAddress;
+            this.listenToOnce(view, 'send', (emailAddress) => {
+                this.disabledButton();
 
-                    this.notify('Sending...');
+                data.emailAddress = emailAddress;
 
-                    view.close();
+                this.notify('Sending...');
 
-                    Espo.Ajax.postRequest('Email/sendTest', data)
-                        .then(() => {
-                            this.$el.find('button').removeClass('disabled');
+                view.close();
 
-                            Espo.Ui.success(this.translate('testEmailSent', 'messages', 'Email'));
-                        })
-                        .catch(xhr => {
-                            let reason = xhr.getResponseHeader('X-Status-Reason') || '';
+                Espo.Ajax.postRequest('Email/sendTest', data)
+                    .then(() => {
+                        this.enableButton();
 
-                            reason = reason
-                                .replace(/ $/, '')
-                                .replace(/,$/, '');
+                        Espo.Ui.success(this.translate('testEmailSent', 'messages', 'Email'));
+                    })
+                    .catch(xhr => {
+                        let reason = xhr.getResponseHeader('X-Status-Reason') || '';
 
-                            let msg = this.translate('Error');
+                        reason = reason
+                            .replace(/ $/, '')
+                            .replace(/,$/, '');
 
-                            if (xhr.status !== 200) {
-                                msg += ' ' + xhr.status;
-                            }
+                        let msg = this.translate('Error');
 
-                            if (xhr.responseText) {
-                                try {
-                                    const data = /** @type {Record} */JSON.parse(xhr.responseText);
+                        if (xhr.status !== 200) {
+                            msg += ' ' + xhr.status;
+                        }
 
-                                    if (data.messageTranslation) {
-                                        return;
-                                    }
+                        if (xhr.responseText) {
+                            try {
+                                const data = /** @type {Record} */JSON.parse(xhr.responseText);
 
-                                    reason = data.message || reason;
-                                }
-                                catch (e) {
-                                    console.error('Could not parse error response body.');
+                                if (data.messageTranslation) {
+                                    this.enableButton();
 
                                     return;
                                 }
+
+                                reason = data.message || reason;
                             }
+                            catch (e) {
+                                this.enableButton();
 
-                            if (reason) {
-                                msg += ': ' + reason;
+                                console.error('Could not parse error response body.');
+
+                                return;
                             }
-
-                            Espo.Ui.error(msg, true);
-                            console.error(msg);
-
-                            xhr.errorIsHandled = true;
-
-                            this.$el.find('button').removeClass('disabled');
                         }
-                    );
-                });
+
+                        if (reason) {
+                            msg += ': ' + reason;
+                        }
+
+                        Espo.Ui.error(msg, true);
+                        console.error(msg);
+
+                        xhr.errorIsHandled = true;
+
+                        this.enableButton();
+                    }
+                );
             });
-        },
-    });
-});
+        });
+    }
+}

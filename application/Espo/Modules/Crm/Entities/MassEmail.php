@@ -90,4 +90,11 @@ class MassEmail extends Entity
     {
         return (bool) $this->get('optOutEntirely');
     }
+
+    public function setStatus(string $status): self
+    {
+        $this->set('status', $status);
+
+        return $this;
+    }
 }

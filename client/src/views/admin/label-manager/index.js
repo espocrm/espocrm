@@ -41,7 +41,7 @@ class LabelManagerView extends  View {
     events = {
         /** @this LabelManagerView */
         'click [data-action="selectScope"]': function (e) {
-            let scope = $(e.currentTarget).data('name');
+            const scope = $(e.currentTarget).data('name');
 
             this.getRouter().checkConfirmLeaveOut(() => {
                 this.selectScope(scope);
@@ -49,7 +49,7 @@ class LabelManagerView extends  View {
         },
         /** @this LabelManagerView */
         'change select[data-name="language"]': function (e) {
-            let language = $(e.currentTarget).val();
+            const language = $(e.currentTarget).val();
 
             this.getRouter().checkConfirmLeaveOut(() => {
                 this.selectLanguage(language);

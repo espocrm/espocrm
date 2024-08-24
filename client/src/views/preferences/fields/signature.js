@@ -26,18 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/preferences/fields/signature', ['views/fields/wysiwyg'], function (Dep) {
+import WysiwygFieldView from 'views/fields/wysiwyg';
 
-    return Dep.extend({
+export default class extends WysiwygFieldView {
 
-        fetchEmptyValueAsNull: true,
+    fetchEmptyValueAsNull = true
 
-        toolbar: [
+    setupToolbar() {
+        super.setupToolbar();
+
+        const codeviewName = this.getConfig().get('wysiwygCodeEditorDisabled') ?
+            'codeview' : 'aceCodeview';
+
+        this.toolbar = [
             ["style", ["bold", "italic", "underline", "clear"]],
             ["color", ["color"]],
             ["height", ["height"]],
             ['table', ['espoLink']],
-            ["misc",["codeview", "fullscreen"]],
-        ],
-    });
-});
+            ["misc", [codeviewName, "fullscreen"]],
+        ];
+    }
+}

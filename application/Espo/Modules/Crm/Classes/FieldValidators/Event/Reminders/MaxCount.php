@@ -32,6 +32,7 @@ namespace Espo\Modules\Crm\Classes\FieldValidators\Event\Reminders;
 use Espo\Core\FieldValidation\Validator;
 use Espo\Core\FieldValidation\Validator\Data;
 use Espo\Core\FieldValidation\Validator\Failure;
+use Espo\Core\Utils\Config;
 use Espo\ORM\Entity;
 
 /**
@@ -41,19 +42,23 @@ class MaxCount implements Validator
 {
     private const MAX_COUNT = 10;
 
+    public function __construct(private Config $config)
+    {}
+
     public function validate(Entity $entity, string $field, Data $data): ?Failure
     {
-        /** @var ?mixed[] $list */
-        $list = $entity->get($field);
+        $maxCount = $this->config->get('reminderMaxCount') ?? self::MAX_COUNT;
 
-        if ($list === null) {
+        $value = $entity->get($field);
+
+        if (!is_array($value)) {
             return null;
         }
 
-        if (count($list) > self::MAX_COUNT) {
-            return Failure::create();
+        if (count($value) <= $maxCount) {
+            return null;
         }
 
-        return null;
+        return Failure::create();
     }
 }

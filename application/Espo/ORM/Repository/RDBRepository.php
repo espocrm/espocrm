@@ -199,6 +199,7 @@ class RDBRepository implements Repository
      * Get an access point for a specific relation of a record.
      *
      * @param TEntity $entity
+     * @return RDBRelation<Entity>
      */
     public function getRelation(Entity $entity, string $relationName): RDBRelation
     {
@@ -489,6 +490,7 @@ class RDBRepository implements Repository
 
     /**
      * Use hooks instead.
+     *
      * @param array<string, mixed> $options
      * @return void
      */
@@ -498,7 +500,8 @@ class RDBRepository implements Repository
     }
 
     /**
-     * Use hooks instead.
+     * @deprecated Use hooks instead.
+     *
      * @param array<string, mixed> $options
      * @return void
      */
@@ -508,7 +511,8 @@ class RDBRepository implements Repository
     }
 
     /**
-     * Use hooks instead.
+     * @deprecated Use hooks instead.
+     *
      * @param array<string, mixed> $options
      * @return void
      */
@@ -518,7 +522,8 @@ class RDBRepository implements Repository
     }
 
     /**
-     * Use hooks instead.
+     * @deprecated Use hooks instead.
+     *
      * @param array<string, mixed> $options
      * @return void
      */

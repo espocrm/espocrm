@@ -202,7 +202,7 @@ class RouteProcessor
             $action = $crudMethodActionMap[strtolower($method)] ?? null;
 
             if (!$action) {
-                throw new BadRequest("No action for method `{$method}`.");
+                throw new BadRequest("No action for method `$method`.");
             }
         }
 

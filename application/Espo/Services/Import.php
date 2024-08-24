@@ -31,7 +31,6 @@ namespace Espo\Services;
 
 use Espo\Repositories\Import as Repository;
 use Espo\Entities\Import as ImportEntity;
-
 use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFoundSilent;
@@ -74,7 +73,6 @@ class Import extends Record
             ->withSearchParams($searchParams)
             ->build();
 
-        /** @var \Espo\ORM\Collection<\Espo\ORM\Entity> $collection */
         $collection = $this->getImportRepository()->findResultRecords($entity, $link, $query);
 
         $listLoadProcessor = $this->injectableFactory->create(ListLoadProcessor::class);

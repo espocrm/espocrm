@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import RelatedListModalView from 'views/modals/related-list';
+import SelectRelatedHelper from 'helpers/record/select-related';
 
 class FollowersListModalView extends RelatedListModalView {
 
@@ -47,21 +48,6 @@ class FollowersListModalView extends RelatedListModalView {
     }
 
     actionSelectRelated() {
-        let p = this.getParentView();
-
-        let view = null;
-
-        while (p) {
-            // noinspection JSUnresolvedReference
-            if (p.actionSelectRelated) {
-                view = p;
-
-                break;
-            }
-
-            p = p.getParentView();
-        }
-
         let filter = 'active';
 
         if (
@@ -72,9 +58,9 @@ class FollowersListModalView extends RelatedListModalView {
             filter = 'activePortal';
         }
 
-        // noinspection JSUnresolvedReference
-        p.actionSelectRelated({
-            link: this.link,
+        const helper = new SelectRelatedHelper(this);
+
+        helper.process(this.model, this.link, {
             primaryFilterName: filter,
             massSelect: false,
             foreignEntityType: 'User',

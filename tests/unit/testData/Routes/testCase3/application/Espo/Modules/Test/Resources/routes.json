@@ -1,22 +1,23 @@
 [
-  {
-    "route":"/Activities/:scope/:id/:name",
-    "method":"get",
-    "params":{
-        "controller":"Test",
-        "action":"list",
-        "scope":":scope",
-        "id":":id",
-        "name":":name"
+    {
+        "route": "/Activities/:scope/:id/:name",
+        "method": "get",
+        "params": {
+            "controller": "Test",
+            "action": "list",
+            "scope": ":scope",
+            "id": ":id",
+            "name": ":name"
+        },
+        "noAuth": false,
+        "actionClassName": ""
+    },
+    {
+        "route": "/Test",
+        "method": "get",
+        "params": {
+            "controller": "Test",
+            "action": "listCalendarEvents"
+        }
     }
-  },
-
-  {
-    "route":"/Test",
-    "method":"get",
-    "params":{
-        "controller":"Test",
-        "action":"listCalendarEvents"
-    }
-  }
 ]

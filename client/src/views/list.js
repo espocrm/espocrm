@@ -172,6 +172,14 @@ class ListView extends MainView {
         'Control+Period': function (e) {
             this.handleShortcutKeyCtrlPeriod(e);
         },
+        /** @this ListView */
+        'Control+ArrowLeft': function (e) {
+            this.handleShortcutKeyControlArrowLeft(e);
+        },
+        /** @this ListView */
+        'Control+ArrowRight': function (e) {
+            this.handleShortcutKeyControlArrowRight(e);
+        },
     }
 
     /** @inheritDoc */
@@ -180,6 +188,13 @@ class ListView extends MainView {
 
         this.collectionUrl = this.collection.url;
         this.collectionMaxSize = this.collection.maxSize;
+
+        /**
+         * @type {string}
+         * @protected
+         */
+        this._primaryFilter = this.options.params.primaryFilter;
+        this._fromAdmin = this.options.params.fromAdmin;
 
         this.setupModes();
         this.setViewMode(this.viewMode);
@@ -225,7 +240,7 @@ class ListView extends MainView {
             this.setupCreateButton();
         }
 
-        if (this.options.params && this.options.params.fromAdmin) {
+        if (this._fromAdmin || this._primaryFilter) {
             this.keepCurrentRootUrl = true;
         }
     }
@@ -344,6 +359,7 @@ class ListView extends MainView {
      * @protected
      */
     createSearchView() {
+        // noinspection JSValidateTypes
         return this.createView('search', this.searchView, {
             collection: this.collection,
             fullSelector: '#main > .search-container',
@@ -352,6 +368,8 @@ class ListView extends MainView {
             viewMode: this.viewMode,
             viewModeList: this.viewModeList,
             isWide: true,
+            disableSavePreset: !!this._primaryFilter,
+            primaryFiltersDisabled: !!this._primaryFilter,
         }, view => {
             this.listenTo(view, 'reset', () => this.resetSorting());
 
@@ -441,9 +459,15 @@ class ListView extends MainView {
     setupSearchManager() {
         const collection = this.collection;
 
+        let key = 'list';
+
+        if (this._primaryFilter) {
+            key += 'Filter' + Espo.Utils.upperCaseFirst(this._primaryFilter);
+        }
+
         const searchManager = new SearchManager(
             collection,
-            'list',
+            key,
             this.getStorage(),
             this.getDateTime(),
             this.getSearchDefaultData()
@@ -451,6 +475,11 @@ class ListView extends MainView {
 
         searchManager.scope = this.scope;
         searchManager.loadStored();
+
+        if (this._primaryFilter) {
+            searchManager.clearPreset();
+            searchManager.setPrimary(this._primaryFilter);
+        }
 
         collection.where = searchManager.getWhere();
 
@@ -586,6 +615,7 @@ class ListView extends MainView {
      * @return {Promise<module:views/record/list>}
      */
     createListRecordView(fetch) {
+        /** @type {module:views/record/list~options | Bull.View~Options} */
         const o = {
             collection: this.collection,
             selector: '.list-container',
@@ -613,9 +643,6 @@ class ListView extends MainView {
             this.getConfig().get('listPagination') ||
             this.getMetadata().get(['clientDefs', this.scope, 'listPagination'])
         ) {
-            // @todo Remove in v8.1.
-            console.warn(`'listPagination' parameter is deprecated and will be removed in the future.`);
-
             o.pagination = true;
         }
 
@@ -623,12 +650,16 @@ class ListView extends MainView {
 
         const listViewName = this.getRecordViewName();
 
-        return this.createView('list', listViewName, o, view => {
+        // noinspection JSValidateTypes
+        return this.createView('list', listViewName, o, /** import('views/record/list').default */view => {
             if (!this.hasParentView()) {
                 view.undelegateEvents();
 
                 return;
             }
+
+            this.listenTo(view, 'after:paginate', () => window.scrollTo({top: 0}));
+            this.listenTo(view, 'sort', () => window.scrollTo({top: 0}));
 
             this.listenToOnce(view, 'after:render', () => {
                 if (!this.hasParentView()) {
@@ -678,7 +709,7 @@ class ListView extends MainView {
         const $root = $('<span>')
             .text(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
 
-        if (this.options.params && this.options.params.fromAdmin) {
+        if (this._fromAdmin) {
             const $root = $('<a>')
                 .attr('href', '#Admin')
                 .text(this.translate('Administration', 'labels', 'Admin'));
@@ -693,6 +724,11 @@ class ListView extends MainView {
 
         if (headerIconHtml) {
             $root.prepend(headerIconHtml);
+        }
+
+        if (this._primaryFilter) {
+            const label = this.translate(this._primaryFilter, 'presetFilters', this.entityType);
+            $root.append(' · ' + label);
         }
 
         return this.buildHeaderHtml([$root]);
@@ -769,6 +805,7 @@ class ListView extends MainView {
             returnDispatchParams: returnDispatchParams,
         };
 
+        // noinspection JSValidateTypes
         return this.createView('quickCreate', viewName, options, (view) => {
             view.render();
             view.notify(false);
@@ -903,6 +940,24 @@ class ListView extends MainView {
         }
 
         this.getSearchView().selectNextPreset();
+    }
+
+    // noinspection JSUnusedLocalSymbols
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyControlArrowLeft(e) {
+        this.getRecordView().trigger('request-page', 'previous');
+    }
+
+    // noinspection JSUnusedLocalSymbols
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyControlArrowRight(e) {
+        this.getRecordView().trigger('request-page', 'next');
     }
 }
 

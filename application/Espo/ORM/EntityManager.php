@@ -40,6 +40,7 @@ use Espo\ORM\QueryComposer\QueryComposerWrapper;
 use Espo\ORM\Mapper\Mapper;
 use Espo\ORM\Mapper\MapperFactory;
 use Espo\ORM\Mapper\BaseMapper;
+use Espo\ORM\Repository\RDBRelation;
 use Espo\ORM\Repository\RepositoryFactory;
 use Espo\ORM\Repository\Repository;
 use Espo\ORM\Repository\RDBRepository;
@@ -367,6 +368,17 @@ class EntityManager
 
         /** @var Repository<T> */
         return $this->getRepository($entityType);
+    }
+
+    /**
+     * Get an access point for a specific relation of a record.
+     *
+     * @return RDBRelation<Entity>
+     * @since 8.4.0
+     */
+    public function getRelation(Entity $entity, string $relationName): RDBRelation
+    {
+        return $this->getRDBRepository($entity->getEntityType())->getRelation($entity, $relationName);
     }
 
     /**

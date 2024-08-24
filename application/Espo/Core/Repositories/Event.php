@@ -30,7 +30,6 @@
 namespace Espo\Core\Repositories;
 
 use Espo\Core\ORM\Entity as CoreEntity;
-use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Reminder;
 use Espo\ORM\Entity;
 use Espo\Core\Di;
@@ -52,12 +51,6 @@ class Event extends Database implements
     use Di\DateTimeSetter;
     use Di\ConfigSetter;
 
-    /** @var string[] */
-    protected $reminderSkippingStatusList = [
-        Meeting::STATUS_HELD,
-        Meeting::STATUS_NOT_HELD,
-    ];
-
     /**
      * @param array<string, mixed> $options
      * @return void
@@ -66,7 +59,7 @@ class Event extends Database implements
     {
         if (
             $entity->isAttributeChanged('status') &&
-            in_array($entity->get('status'), $this->reminderSkippingStatusList)
+            in_array($entity->get('status'), $this->getNotActualStatuses())
         ) {
             $entity->set('reminders', []);
         }
@@ -82,6 +75,7 @@ class Event extends Database implements
                 $entity->set('dateStart', $dateStart);
             }
             else {
+                /** @noinspection PhpRedundantOptionalArgumentInspection */
                 $entity->set('dateStartDate', null);
             }
         }
@@ -104,6 +98,7 @@ class Event extends Database implements
                 $entity->set('dateEnd', $dateEnd);
             }
             else {
+                /** @noinspection PhpRedundantOptionalArgumentInspection */
                 $entity->set('dateEndDate', null);
             }
         }
@@ -139,12 +134,17 @@ class Event extends Database implements
     {
         $timeZone = $this->config->get('timeZone') ?? 'UTC';
 
-        $tz = new DateTimeZone($timeZone);
+        try {
+            $tz = new DateTimeZone($timeZone);
+        }
+        catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         $dt = DateTime::createFromFormat(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, $string, $tz);
 
         if ($dt === false) {
-            throw new RuntimeException("Could not parse date-time `{$string}`.");
+            throw new RuntimeException("Could not parse date-time `$string`.");
         }
 
         $utcTz = new DateTimeZone('UTC');
@@ -152,5 +152,16 @@ class Event extends Database implements
         return $dt
             ->setTimezone($utcTz)
             ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getNotActualStatuses(): array
+    {
+        return array_merge(
+            $this->metadata->get("scopes.$this->entityType.completedStatusList") ?? [],
+            $this->metadata->get("scopes.$this->entityType.canceledStatusList") ?? [],
+        );
     }
 }

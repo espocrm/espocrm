@@ -29,6 +29,7 @@
 import RelationshipPanelView from 'views/record/panels/relationship';
 // noinspection ES6UnusedImports
 import Textcomplete from 'jquery-textcomplete';
+import _ from 'underscore';
 
 class PanelStreamView extends RelationshipPanelView {
 
@@ -39,9 +40,14 @@ class PanelStreamView extends RelationshipPanelView {
     relatedListFiltersDisabled = true
     layoutName = null
     filterList = ['all', 'posts', 'updates']
-
     /** @type {import('collections/note').default} */
     collection
+
+    /** @private */
+    _justPosted = false
+
+    /** @type {import('collections/note').default} */
+    pinnedCollection
 
     additionalEvents = {
         /** @this PanelStreamView */
@@ -100,6 +106,7 @@ class PanelStreamView extends RelationshipPanelView {
         data.postDisabled = this.postDisabled;
         data.placeholderText = this.placeholderText;
         data.allowInternalNotes = this.allowInternalNotes;
+        data.hasPinned = this.hasPinned;
 
         return data;
     }
@@ -202,6 +209,8 @@ class PanelStreamView extends RelationshipPanelView {
             this.allowInternalNotes = this.getMetadata().get(['clientDefs', this.entityType, 'allowInternalNotes']);
         }
 
+        this.hasPinned = this.model.entityType !== 'User';
+
         this.isInternalNoteMode = false;
 
         this.storageTextKey = 'stream-post-' + this.model.entityType + '-' + this.model.id;
@@ -224,9 +233,7 @@ class PanelStreamView extends RelationshipPanelView {
 
         this.setupActions();
 
-        this.wait(true);
-
-        this.getModelFactory().create('Note', (model) => {
+        const promise = this.getModelFactory().create('Note', model => {
             this.seed = model;
 
             if (storedAttachments) {
@@ -267,14 +274,17 @@ class PanelStreamView extends RelationshipPanelView {
                 this.initPostEvents(view);
             });
 
-            this.createCollection(() => {
-                this.wait(false);
-            });
+            this.wait(
+                this.createCollection()
+                    .then(() => this.setupPinned())
+            );
 
             this.listenTo(this.seed, 'change:attachmentsIds', () => {
                 this.controlPostButtonAvailability();
             });
         });
+
+        this.wait(promise);
 
         if (!this.defs.hidden) {
             this.subscribeToWebSocket();
@@ -286,7 +296,7 @@ class PanelStreamView extends RelationshipPanelView {
             }
         });
 
-        this.once('remove', () => {
+        this.on('remove', () => {
             if (this.isSubscribedToWebSocket) {
                 this.unsubscribeFromWebSocket();
             }
@@ -308,7 +318,7 @@ class PanelStreamView extends RelationshipPanelView {
         this.isSubscribedToWebSocket = true;
 
         this.getHelper().webSocketManager.subscribe(topic, (t, /** Record */data) => {
-            if (data.createdById === this.getUser().id) {
+            if (data.createdById === this.getUser().id && this._justPosted) {
                 return;
             }
 
@@ -316,10 +326,13 @@ class PanelStreamView extends RelationshipPanelView {
                 const model = this.collection.get(data.noteId);
 
                 if (model) {
-                    model.fetch();
+                    model.fetch()
+                        .then(() => this.syncPinnedModel(model, true));
                 }
 
-                return;
+                if (!data.pin) {
+                    return;
+                }
             }
 
             this.collection.fetchNew();
@@ -382,19 +395,22 @@ class PanelStreamView extends RelationshipPanelView {
         }
     }
 
-    createCollection(callback, context) {
-        this.getCollectionFactory().create('Note', (collection) => {
+    /**
+     * @private
+     * @return {Promise}
+     */
+    createCollection() {
+        return this.getCollectionFactory().create('Note', collection => {
             this.collection = collection;
 
-            collection.url = this.model.entityType + '/' + this.model.id + '/stream';
+            collection.url = `${this.model.entityType}/${this.model.id}/stream`;
             collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
             this.setFilter(this.filter);
-
-            callback.call(context);
         });
     }
 
+    /** @private */
     initPostEvents(view) {
         this.listenTo(view, 'add-files', (files) => {
             this.getAttachmentsFieldView().uploadFiles(files);
@@ -424,15 +440,46 @@ class PanelStreamView extends RelationshipPanelView {
             this.$el.find('.action[data-action="switchInternalMode"]').addClass('enabled');
         }
 
-        const collection = this.collection;
+        const onSync = () => {
+            if (this.hasPinned) {
+                this.pinnedCollection.add(this.collection.pinnedList);
 
-        this.listenToOnce(collection, 'sync', () => {
+                this.createView('pinnedList', 'views/stream/record/list', {
+                    selector: '> .list-container[data-role="pinned"]',
+                    collection: this.pinnedCollection,
+                    model: this.model,
+                    noDataDisabled: true,
+                }, view => {
+                    view.render();
+
+                    this.listenTo(view, 'after:save', /** import('model').default */model => {
+                        this.syncPinnedModel(model, false);
+                    });
+
+                    this.listenTo(view, 'after:delete', /** import('model').default */model => {
+                        this.collection.remove(model.id);
+                        this.collection.trigger('update-sync');
+                    });
+                });
+            }
+
             this.createView('list', 'views/stream/record/list', {
-                selector: '> .list-container',
-                collection: collection,
+                selector: '> .list-container[data-role="stream"]',
+                collection: this.collection,
                 model: this.model,
             }, view => {
                 view.render();
+
+                if (this.pinnedCollection) {
+                    this.listenTo(view, 'after:delete', /** import('model').default */model => {
+                        this.pinnedCollection.remove(model.id);
+                        this.pinnedCollection.trigger('update-sync');
+                    });
+
+                    this.listenTo(view, 'after:save', /** import('model').default */model => {
+                        this.syncPinnedModel(model, true);
+                    });
+                }
             });
 
             this.stopListening(this.model, 'all');
@@ -440,41 +487,42 @@ class PanelStreamView extends RelationshipPanelView {
 
             setTimeout(() => {
                 this.listenTo(this.model, 'all', event => {
-                    if (!~['sync', 'after:relate'].indexOf(event)) {
+                    if (!['sync', 'after:relate'].includes(event)) {
                         return;
                     }
 
-                    collection.fetchNew();
+                    this.collection.fetchNew();
                 });
 
                 this.listenTo(this.model, 'destroy', () => {
                     this.stopListening(this.model, 'all');
                 });
             }, 500);
-        });
+        };
 
         if (!this.defs.hidden) {
-            collection.fetch();
-        }
-        else {
-            this.once('show', () => collection.fetch());
+            this.collection.fetch().then(() => onSync());
+        } else {
+            this.once('show', () => {
+                this.collection.fetch().then(() => onSync());
+            });
         }
 
-        const assignmentPermission = this.getAcl().getPermissionLevel('assignmentPermission');
+        const mentionPermission = this.getAcl().getPermissionLevel('mention');
 
         const buildUserListUrl = term => {
-            let url = 'User?orderBy=name&limit=7&q=' + term + '&' + $.param({'primaryFilter': 'active'});
+            let url = `User?orderBy=name&limit=7&q=${term}&${$.param({'primaryFilter': 'active'})}`;
 
-            if (assignmentPermission === 'team') {
+            if (mentionPermission === 'team') {
                 url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
             }
 
             return url;
         };
 
-        if (assignmentPermission !== 'no') {
+        if (mentionPermission !== 'no') {
             this.$textarea.textcomplete([{
-                match: /(^|\s)@(\w*)$/,
+                match: /(^|\s)@(\w[\w@.-]*)$/,
                 index: 2,
                 search: (term, callback) => {
                     if (term.length === 0) {
@@ -483,19 +531,15 @@ class PanelStreamView extends RelationshipPanelView {
                         return;
                     }
 
-                    Espo.Ajax
-                        .getRequest(buildUserListUrl(term))
+                    Espo.Ajax.getRequest(buildUserListUrl(term))
                         .then(data => callback(data.list));
                 },
                 template: (mention) => {
-                    return this.getHelper()
-                        .escapeString(mention.name) +
+                    return this.getHelper().escapeString(mention.name) +
                         ' <span class="text-muted">@' +
                         this.getHelper().escapeString(mention.userName) + '</span>';
                 },
-                replace: (o) => {
-                    return '$1@' + o.userName + '';
-                },
+                replace: (o) => '$1@' + o.userName + '',
             }]);
 
             this.once('remove', () => {
@@ -553,6 +597,33 @@ class PanelStreamView extends RelationshipPanelView {
         });
     }
 
+    /**
+     * @private
+     * @param {import('model').default} model
+     * @param {boolean} toPinned
+     */
+    syncPinnedModel(model, toPinned) {
+        if (toPinned && !this.pinnedCollection) {
+            return;
+        }
+
+        const cModel = toPinned ?
+            this.pinnedCollection.get(model.id) :
+            this.collection.get(model.id);
+
+        if (!cModel) {
+            return;
+        }
+
+        cModel.setMultiple({
+            post: model.attributes.post,
+            attachmentsIds: model.attributes.attachmentsIds,
+            attachmentsNames: model.attributes.attachmentsNames,
+            attachmentsTypes: model.attributes.attachmentsTypes,
+            data: model.attributes.data,
+        });
+    }
+
     afterPost() {
         this.$el.find('textarea.note').prop('rows', 1);
     }
@@ -603,6 +674,9 @@ class PanelStreamView extends RelationshipPanelView {
             model.set('isInternal', this.isInternalNoteMode);
 
             this.prepareNoteForPost(model);
+
+            this._justPosted = true;
+            setTimeout(() => this._justPosted = false, 1000);
 
             Espo.Ui.notify(' ... ');
 
@@ -695,6 +769,7 @@ class PanelStreamView extends RelationshipPanelView {
                 title: this.translate('Stream') +
                     ' @right ' + this.translate('posts', 'filters', 'Note'),
                 forceSelectAllAttributes: true,
+                forcePagination: true,
             },
         };
 
@@ -711,6 +786,7 @@ class PanelStreamView extends RelationshipPanelView {
                 title: this.translate('Stream') + ' @right ' + this.translate('activity', 'filters', 'Note'),
                 forceSelectAllAttributes: true,
                 filtersLayoutName: 'filtersGlobal',
+                forcePagination: true,
             },
         };
 
@@ -724,8 +800,7 @@ class PanelStreamView extends RelationshipPanelView {
     storeFilter(filter) {
         if (filter) {
             this.getStorage().set('state', 'streamPanelFilter' + this.entityType, filter);
-        }
-        else {
+        } else {
             this.getStorage().clear('state', 'streamPanelFilter' + this.entityType);
         }
     }
@@ -743,7 +818,7 @@ class PanelStreamView extends RelationshipPanelView {
      * @return {import('views/stream/record/list').default}
      */
     getListView() {
-        this.getView('list')
+        return this.getView('list')
     }
 
     actionRefresh() {
@@ -754,8 +829,8 @@ class PanelStreamView extends RelationshipPanelView {
 
     preview() {
         this.createView('dialog', 'views/modal', {
-            templateContent: '<div class="complex-text">' +
-                   '{{complexText viewObject.options.text linksInNewTab=true}}</div>',
+            templateContent:
+                `<div class="complex-text">{{complexText viewObject.options.text linksInNewTab=true}}</div>`,
             text: this.$textarea.val(),
             headerText: this.translate('Preview'),
             backdrop: true,
@@ -797,6 +872,62 @@ class PanelStreamView extends RelationshipPanelView {
 
     enablePostButton() {
         this.$postButton.removeClass('disabled').removeAttr('disabled');
+    }
+
+    setupPinned() {
+        if (!this.hasPinned) {
+            return;
+        }
+
+        const promise = this.getCollectionFactory().create('Note')
+            .then(/** import('collections/note').default */collection => {
+                this.pinnedCollection = collection;
+
+                this.listenTo(this.collection, 'sync', () => {
+                    if (!this.collection.pinnedList) {
+                        return;
+                    }
+
+                    if (
+                        _.isEqual(
+                            this.collection.pinnedList,
+                            this.pinnedCollection.models.map(m => m.attributes)
+                        )
+                    ) {
+                        return;
+                    }
+
+                    this.pinnedCollection.reset();
+                    this.pinnedCollection.add(this.collection.pinnedList);
+                    this.pinnedCollection.trigger('sync', this.pinnedCollection, {}, {});
+                });
+
+                this.listenTo(this.pinnedCollection, 'pin unpin', () => {
+                    this.collection.fetchNew();
+                });
+
+                this.listenTo(this.pinnedCollection, 'pin', id => {
+                    const model = this.collection.get(id);
+
+                    if (!model) {
+                        return;
+                    }
+
+                    model.set('isPinned', true);
+                });
+
+                this.listenTo(this.pinnedCollection, 'unpin', id => {
+                    const model = this.collection.get(id);
+
+                    if (!model) {
+                        return;
+                    }
+
+                    model.set('isPinned', false);
+                });
+            });
+
+        this.wait(promise);
     }
 }
 

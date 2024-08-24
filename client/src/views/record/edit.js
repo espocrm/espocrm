@@ -124,11 +124,23 @@ class EditRecordView extends DetailRecordView {
 
     /** @inheritDoc */
     setupBeforeFinal() {
+        /** @type {Promise|undefined} */
+        let promise = undefined;
+
         if (this.model.isNew()) {
-            this.populateDefaults();
+            promise = this.populateDefaults();
         }
 
-        super.setupBeforeFinal();
+        if (!promise) {
+            super.setupBeforeFinal();
+        }
+
+        if (promise) {
+            this.wait(promise);
+
+            // @todo Revise. Possible race condition issues.
+            promise.then(() => super.setupBeforeFinal());
+        }
 
         if (this.model.isNew()) {
             this.once('after:render', () => {
@@ -147,6 +159,8 @@ class EditRecordView extends DetailRecordView {
                 this.focusForCreate();
             });
         }
+
+        this.setupHighlight();
     }
 
     /** @inheritDoc */
@@ -256,6 +270,22 @@ class EditRecordView extends DetailRecordView {
         }
 
         this.actionSaveAndNew({focusForCreate: true});
+    }
+
+    /** @private */
+    setupHighlight() {
+        if (!this.options.highlightFieldList) {
+            return;
+        }
+
+        this.on('after:render', () => {
+            const fieldList = /** @type {string[]} */this.options.highlightFieldList;
+
+            fieldList
+                .map(it => this.getFieldView(it))
+                .filter(view => view)
+                .forEach(view => view.highlight());
+        });
     }
 }
 

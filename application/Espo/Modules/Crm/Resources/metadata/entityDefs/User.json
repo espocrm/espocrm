@@ -3,6 +3,7 @@
         "targetListIsOptedOut": {
             "type": "bool",
             "notStorable": true,
+            "orderDisabled": true,
             "readOnly": true,
             "utility": true,
             "fieldManagerParamList": []

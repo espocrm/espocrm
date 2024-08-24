@@ -1,9 +1,9 @@
 {
   "fields": {
-    "name": "Tanım",
+    "name": "Ad",
     "body": "Gövde",
     "entityType": "Varlık Türü",
-    "header": "Başlık ",
+    "header": "Başlık",
     "footer": "Sayfa Altbilgi",
     "leftMargin": "Sol Boşluk",
     "topMargin": "Üst boşluk",
@@ -14,7 +14,10 @@
     "variables": "Uygun Yertutucuları",
     "pageOrientation": "Sayfa yönlendirmesi",
     "pageFormat": "Kağıt Biçimi",
-    "fontFace": "Yazı Tipi"
+    "fontFace": "Yazı Tipi",
+    "pageWidth": "Sayfa Genişliği (mm",
+    "pageHeight": "Sayfa Yüksekliği (mm)",
+    "style": "Stil"
   },
   "labels": {
     "Create Template": "Şablon Oluştur"
@@ -24,6 +27,10 @@
     "variables": "Başlık, Gövde veya Alt Satır yertutucusu için kopyala-yapıştır gerekli."
   },
   "options": {
+    "pageOrientation": {
+      "Portrait": "Dikey",
+      "Landscape": "Yatay"
+    },
     "placeholders": {
       "today": "Bugün (Tarih)"
     },

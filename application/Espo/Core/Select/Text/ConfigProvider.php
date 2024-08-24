@@ -38,6 +38,17 @@ class ConfigProvider
     public function __construct(private Config $config)
     {}
 
+    /**
+     * Full-text search min indexed word length.
+     *
+     * @internal Do not use.
+     * @since 8.3.0
+     */
+    public function getFullTextSearchMinLength(): ?int
+    {
+        return $this->config->get('fullTextSearchMinLength');
+    }
+
     public function getMinLengthForContentSearch(): int
     {
         return $this->config->get('textFilterContainsMinLength') ??

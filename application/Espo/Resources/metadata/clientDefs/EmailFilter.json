@@ -1,5 +1,5 @@
 {
-    "controller": "controllers/record",
+    "controller": "controllers/email-filter",
     "dynamicHandler": "handlers/email-filter",
     "modalViews": {
         "edit": "views/email-filter/modals/edit"

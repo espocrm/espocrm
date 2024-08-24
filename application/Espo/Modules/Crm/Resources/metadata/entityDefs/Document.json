@@ -29,11 +29,25 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Active", "Draft", "Expired", "Canceled"],
+            "options": [
+                "Draft",
+                "Active",
+                "Canceled",
+                "Expired"
+            ],
             "style": {
-                "Canceled": "danger",
+                "Canceled": "info",
                 "Expired": "danger"
             },
+            "default": "Active",
+            "audited": true,
+            "fieldManagerAdditionalParamList": [
+                {
+                    "name": "activeOptions",
+                    "view": "views/admin/field-manager/fields/not-actual-options"
+                }
+            ],
+            "activeOptions": ["Active"],
             "customizationOptionsReferenceDisabled": true
         },
         "type": {

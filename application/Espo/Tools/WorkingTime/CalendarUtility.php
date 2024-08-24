@@ -53,7 +53,7 @@ class CalendarUtility
             ->withTimezone($this->calendar->getTimezone())
             ->withTime(0, 0, 0);
 
-        return $this->extractor->extractAllDay($this->calendar, $point, $point->modify('+1 day')) !== [];
+        return $this->extractor->extractAllDay($this->calendar, $point, $point->modify('+0 seconds')) !== [];
     }
 
     public function hasWorkingTime(DateTime $from, DateTime $to): bool

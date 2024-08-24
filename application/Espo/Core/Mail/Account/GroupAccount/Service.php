@@ -29,12 +29,19 @@
 
 namespace Espo\Core\Mail\Account\GroupAccount;
 
+use Espo\Core\Exceptions\ErrorSilent;
 use Espo\Core\Mail\Account\Account as Account;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Mail\Account\Fetcher;
 use Espo\Core\Mail\Account\Storage\Params;
 use Espo\Core\Mail\Account\StorageFactory;
 
+use Espo\Core\Mail\Account\Util\NotificationHelper;
+use Espo\Core\Mail\Exceptions\ImapError;
+use Espo\Core\Mail\Exceptions\NoImap;
+use Espo\Core\Utils\Log;
+use Exception;
+use Laminas\Mail\Exception\ExceptionInterface;
 use Laminas\Mail\Message;
 
 class Service
@@ -42,23 +49,37 @@ class Service
     public function __construct(
         private Fetcher $fetcher,
         private AccountFactory $accountFactory,
-        private StorageFactory $storageFactory
+        private StorageFactory $storageFactory,
+        private Log $log,
+        private NotificationHelper $notificationHelper
     ) {}
 
     /**
      * @param string $id Account ID.
      * @throws Error
+     * @throws NoImap
+     * @throws ImapError
      */
     public function fetch(string $id): void
     {
         $account = $this->accountFactory->create($id);
 
-        $this->fetcher->fetch($account);
+        try {
+            $this->fetcher->fetch($account);
+        }
+        catch (ImapError $e) {
+            $this->notificationHelper->processImapError($account);
+
+            throw $e;
+        }
+
+        $account->updateConnectedAt();
     }
 
     /**
      * @return string[]
      * @throws Error
+     * @throws ImapError
      */
     public function getFolderList(Params $params): array
     {
@@ -88,9 +109,21 @@ class Service
                 ->withImapHandlerClassName($account->getImapHandlerClassName());
         }
 
-        $storage = $this->storageFactory->createWithParams($params);
+        try {
+            $storage = $this->storageFactory->createWithParams($params);
+            $storage->getFolderNames();
+        }
+        catch (Exception $e) {
+            $this->log->warning("IMAP test connection failed; {message}", [
+                'exception' => $e,
+                'message' => $e->getMessage(),
+            ]);
 
-        $storage->getFolderNames();
+            $message = $e instanceof ExceptionInterface || $e instanceof ImapError ?
+                $e->getMessage() : '';
+
+            throw new ErrorSilent($message);
+        }
     }
 
     private function getPassword(Params $params, Account $account): ?string
@@ -109,6 +142,8 @@ class Service
     /**
      * @param string $id Account ID.
      * @throws Error
+     * @throws ImapError
+     * @throws NoImap
      */
     public function storeSentMessage(string $id, Message $message): void
     {

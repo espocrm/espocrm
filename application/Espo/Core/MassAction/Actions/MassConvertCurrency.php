@@ -68,7 +68,7 @@ class MassConvertCurrency implements MassAction
             throw new Forbidden("No edit access for '{$entityType}'.");
         }
 
-        if ($this->acl->getPermissionLevel('massUpdate') !== Table::LEVEL_YES) {
+        if ($this->acl->getPermissionLevel(Acl\Permission::MASS_UPDATE) !== Table::LEVEL_YES) {
             throw new Forbidden("No mass-update permission.");
         }
 

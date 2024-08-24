@@ -3,7 +3,8 @@
     "number": "numara",
     "data": "Veri",
     "target": "Hedef",
-    "leadCapture": "Yakalanan Fırsat"
+    "leadCapture": "Yakalanan Fırsat",
+    "createdAt": "Giriş Tarihi"
   },
   "links": {
     "leadCapture": "Yakalanan Fırsat",

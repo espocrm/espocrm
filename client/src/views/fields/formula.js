@@ -240,9 +240,8 @@ class FormulaFieldView extends TextFieldView {
     }
 
     getFunctionDataList() {
-        let list = Espo.Utils.clone(
-            this.getMetadata().get(['app', 'formula', 'functionList']) || []
-        );
+        let list = [...this.getMetadata().get(['app', 'formula', 'functionList'], [])]
+            .filter(item => item.insertText);
 
         if (this.options.additionalFunctionDataList) {
             list = list.concat(this.options.additionalFunctionDataList);

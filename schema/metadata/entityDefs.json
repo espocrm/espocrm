@@ -82,7 +82,23 @@
         },
         "noDeletedAttribute": {
             "type": "boolean",
-            "description": "Do not add the `deleted` attribute."
+            "description": "Do not add the `deleted` attribute. Soft-deletes will be impossible."
+        },
+        "deleteId": {
+            "type": "boolean",
+            "description": "Adds `deletedId` attribute. An random ID is written there on soft-deletes. As of v8.4."
+        },
+        "hooksDisabled": {
+            "type": "boolean",
+            "description": "Disable hooks. As of v8.2."
+        },
+        "entityClassName": {
+            "type": "string",
+            "description": "An entity. Should implement Espo\\ORM\\Entity. Usually should extend Espo\\Core\\ORM\\Entity. As of v8.2."
+        },
+        "repositoryClassName": {
+            "type": "string",
+            "description": "A repository. Should implement Espo\\ORM\\Repository\\Repository. As of v8.2."
         }
     },
     "definitions": {
@@ -163,6 +179,7 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {"const": "varchar"},
                                     {"const": "enum"},
                                     {"const": "multiEnum"},
                                     {"const": "array"},
@@ -203,6 +220,10 @@
                             "optionsPath": {
                                 "type": "string",
                                 "description": "An options path. E.g. `entityDefs.SomeEntityType.fields.someField.options`."
+                            },
+                            "optionsReference": {
+                                "type": "string",
+                                "description": "An options reference. E.g. `SomeEntityType.someField`."
                             }
                         }
                     }
@@ -225,6 +246,87 @@
                             "translation": {
                                 "type": "string",
                                 "description": "A translation path. E.g. `Global.scopeNames`."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "array"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "noEmptyString": {
+                                "type": "boolean",
+                                "description": "Don't allow empty string."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "multiEnum"},
+                                    {"const": "array"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "allowCustomOptions": {
+                                "type": "boolean",
+                                "description": "Allow custom options."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "enum"},
+                                    {"const": "multiEnum"},
+                                    {"const": "array"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "displayAsLabel": {
+                                "type": "boolean",
+                                "description": "Display as a label."
+                            },
+                            "labelType": {
+                                "type": "string",
+                                "enum": [
+                                    null,
+                                    "state"
+                                ],
+                                "description": "A label type."
+                            },
+                            "style": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "enum": [
+                                        "default",
+                                        "success",
+                                        "info",
+                                        "warning",
+                                        "danger",
+                                        "primary"
+                                    ]
+                                }
                             }
                         }
                     }
@@ -257,6 +359,92 @@
                             "type": {
                                 "anyOf": [
                                     {"const": "varchar"},
+                                    {"const": "array"},
+                                    {"const": "multiEnum"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "pattern": {
+                                "type": "string",
+                                "description": "A regular expression to check a field value against. If starts with $, a predefined named expression will be used."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "varchar"},
+                                    {"const": "url"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "copyToClipboard": {
+                                "type": "boolean",
+                                "description": "Display 'Copy to Clipboard' button."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "date"},
+                                    {"const": "datetime"},
+                                    {"const": "datetimeOptional"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "before": {
+                                "type": "string",
+                                "description": "Before a field. To validate that the date should be before the date specified in another field."
+                            },
+                            "after": {
+                                "type": "string",
+                                "description": "After a field. To validate that the date should be after the date specified in another field."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "date"},
+                                    {"const": "datetime"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "afterOrEqual": {
+                                "type": "boolean",
+                                "description": "Allow an equal date for 'after' validation."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "varchar"},
                                     {"const": "text"},
                                     {"const": "url"},
                                     {"const": "int"},
@@ -266,11 +454,15 @@
                                     {"const": "datetime"},
                                     {"const": "datetimeOptional"},
                                     {"const": "link"},
+                                    {"const": "linkParent"},
+                                    {"const": "linkOne"},
+                                    {"const": "linkMultiple"},
                                     {"const": "multiEnum"},
                                     {"const": "urlMultiple"},
                                     {"const": "checklist"},
                                     {"const": "file"},
-                                    {"const": "image"}
+                                    {"const": "image"},
+                                    {"const": "enum"}
                                 ]
                             }
                         }
@@ -379,6 +571,25 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {"const": "float"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "decimalPlaces": {
+                                "type": "number",
+                                "description": "Decimal places."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
                                     {"const": "float"},
                                     {"const": "currency"}
                                 ]
@@ -432,7 +643,8 @@
                                 "anyOf": [
                                     {"const": "link"},
                                     {"const": "linkMultiple"},
-                                    {"const": "linkOne"}
+                                    {"const": "linkOne"},
+                                    {"const": "linkParent"}
                                 ]
                             }
                         }
@@ -442,6 +654,27 @@
                             "autocompleteOnEmpty": {
                                 "type": "boolean",
                                 "description": "Autocomplete on empty input."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "link"},
+                                    {"const": "linkMultiple"},
+                                    {"const": "linkOne"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "entity": {
+                                "type": "string",
+                                "description": "An entity type. To be specified if there's no corresponding link defined."
                             }
                         }
                     }
@@ -587,6 +820,10 @@
                     "type": ["string", "boolean"],
                     "description": "Enable a tooltip for the field. A tooltip text is taken from the language by: {EntityType} > tooltips > {fieldName}. If defined as a string, then text will be taken from the language by: {EntityType} > tooltips > {value}."
                 },
+                "forceValidation": {
+                    "type": "boolean",
+                    "description": "Always to perform validation, regardless whether field values are sent. As of v8.2."
+                },
                 "validatorClassNameMap": {
                     "type": "object",
                     "description": "Validators defined as validation-type => class-name map. Classes should implement Espo\\Core\\FieldValidation\\Validator interface. If not defined for a type, metadata > fields > {fieldType} > validatorClassNameMap > {type} is used.",
@@ -628,6 +865,13 @@
                         "type": "string"
                     },
                     "description": "A list of sanitizers. Should implement Espo\\Core\\FieldSanitize\\Sanitizer."
+                },
+                "sanitizerSuppressClassNameList": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "A list of sanitizers to be suppressed."
                 },
                 "inlineEditDisabled": {
                     "type": "boolean",
@@ -680,13 +924,17 @@
                     },
                     "description": "A list of layout types the field won't be available in. As of v8.2."
                 },
+                "orderDisabled": {
+                    "type": "boolean",
+                    "description": "Disables the ability to order by the field."
+                },
                 "textFilterDisabled": {
                     "type": "boolean",
                     "description": "Disables the ability to add the field to text filters (in the Entity Manager tool)."
                 },
                 "directAccessDisabled": {
                     "type": "boolean",
-                    "description": "Disables the ability to add the field in formula-script, templates and some other tools."
+                    "description": "Indicates that the field value is not accessed directly but through some additional logic. The filed won't be available in PDF Templates, Email Templates and some other tools."
                 },
                 "directUpdateDisabled": {
                     "type": "boolean",
@@ -703,6 +951,10 @@
                 "exportDisabled": {
                     "type": "boolean",
                     "description": "Disables the ability to export the field."
+                },
+                "massUpdateDisabled": {
+                    "type": "boolean",
+                    "description": "Disables the ability perform mass-update on the field. As of v8.4."
                 },
                 "isPersonalData": {
                     "type": "boolean",
@@ -958,6 +1210,30 @@
                                     "type": "string"
                                 },
                                 "description": "Entity types."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "hasMany"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "midKeys": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "minLength": 2,
+                                "maxLength": 2,
+                                "description": "Middle keys. The second is the foreign middle key."
                             }
                         }
                     }

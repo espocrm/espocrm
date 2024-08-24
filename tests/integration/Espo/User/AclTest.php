@@ -40,7 +40,12 @@ use Espo\Core\Select\Where\Item as WhereItem;
 
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Lead;
+use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Exception;
 
@@ -224,7 +229,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $processor->process('User', 'update', $request, $this->createResponse());
 
-        $service = $app->getContainer()->get('serviceFactory')->create('User');
+        $service = $app->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(User::class);
 
         $resultData = $service->update($user1->getId(), $data, UpdateParams::create());
 
@@ -340,7 +347,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(Forbidden::class);
 
-        $service = $app->getContainer()->get('serviceFactory')->create('Account');
+        $service = $app->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Account::class);
 
         $service->create((object) ['name' => 'Test'], CreateParams::create());
     }
@@ -353,7 +362,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(Forbidden::class);
 
-        $service = $app->getContainer()->get('serviceFactory')->create('Lead');
+        $service = $app->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Lead::class);
 
         $service->create((object) ['lastName' => 'Test'], CreateParams::create());
     }
@@ -367,9 +378,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(Forbidden::class);
 
-        $service = $app->getContainer()->get('serviceFactory')->create('Case');
+        $service = $app->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(CaseObj::class);
 
-        $e = $service->create((object) ['name' => 'Test'], CreateParams::create());
+        $service->create((object) ['name' => 'Test'], CreateParams::create());
     }
 
     public function testUserAccessAclStrictCreateYes()
@@ -379,7 +392,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $this->auth('test');
         $app = $this->createApplication(true);
 
-        $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
+        $service = $app->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Meeting::class);
 
         $e = $service->create((object) [
             'name' => 'Test',
@@ -405,7 +420,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $this->auth('test');
         $app = $this->createApplication();
 
-        $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
+        $service = $app->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Meeting::class);
 
         $this->expectException(Forbidden::class);
 
@@ -423,7 +440,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $this->auth('test');
         $app = $this->createApplication();
 
-        $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
+        $service = $app->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Meeting::class);
 
         $this->expectException(Forbidden::class);
 
@@ -443,7 +462,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $this->auth('test');
         $app = $this->createApplication();
 
-        $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
+        $service = $app->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Meeting::class);
 
         $e = $service->create((object) [
             'name' => 'Test',
@@ -471,7 +492,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         ]);
         $entityManager->saveEntity($lead);
 
-        $service = $app->getContainer()->get('serviceFactory')->create('Lead');
+        $service = $app->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Lead::class);
 
         $this->expectException(Forbidden::class);
 
@@ -495,7 +518,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($meeting);
 
-        $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
+        $service = $app->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Meeting::class);
 
         $this->expectException(Forbidden::class);
 
@@ -519,7 +544,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($lead);
 
-        $service = $app->getContainer()->get('serviceFactory')->create('Lead');
+        $service = $app->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Lead::class);
 
         $e = $service->getEntity('testLeadId');
 
@@ -543,7 +570,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($meeting);
 
-        $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
+        $service = $app->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Meeting::class);
 
         $e = $service->getEntity('testMeetingId');
 
@@ -564,7 +593,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'teamsIds' => ['testTeamId']
         ]);
 
-        $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
+        $service = $app->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Meeting::class);
 
         $this->expectException(Forbidden::class);
 
@@ -579,7 +610,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $service = $app->getContainer()->get('serviceFactory')->create('User');
+        $service = $app->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(User::class);
 
         $this->expectException(Forbidden::class);
 
@@ -614,9 +647,10 @@ class AclTest extends \tests\integration\Core\BaseTestCase
                 'lastName' => 'Contact 2',
             ]);
 
-        /** @var ServiceContainer $recordServiceContainer */
         $recordServiceContainer = $this->getContainer()->get('recordServiceContainer');
-        $service = $recordServiceContainer->get(Opportunity::ENTITY_TYPE);
+        $service = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Opportunity::class);
 
         $service->create((object) [
             'name' => 'Test 1',

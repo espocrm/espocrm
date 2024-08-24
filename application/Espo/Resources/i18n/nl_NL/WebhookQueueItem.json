@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "event": "Evenement",
+    "target": "Doel",
+    "data": "Gegevens",
+    "processedAt": "Verwerkt op",
+    "attempts": "Pogingen",
+    "processAt": "Verwerking bij"
+  },
+  "options": {
+    "status": {
+      "Pending": "In behandeling",
+      "Success": "Succes",
+      "Failed": "Mislukt"
+    }
+  }
+}

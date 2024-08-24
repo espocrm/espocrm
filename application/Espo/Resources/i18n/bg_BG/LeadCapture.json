@@ -20,7 +20,8 @@
     "skipOptInConfirmationIfSubscribed": "Пропуснете потвърждението, ако потенциалният клиент вече е в целевия списък",
     "smtpAccount": "SMTP профил",
     "inboundEmail": "Групов имейл акаунт",
-    "exampleRequestHeaders": "HTTP Хедъри"
+    "exampleRequestHeaders": "HTTP Хедъри",
+    "phoneNumberCountry": "Телефонен код на държавата"
   },
   "links": {
     "targetList": "Целеви списък",

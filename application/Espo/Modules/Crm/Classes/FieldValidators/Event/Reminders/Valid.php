@@ -33,6 +33,7 @@ use Espo\Core\FieldValidation\Validator;
 use Espo\Core\FieldValidation\Validator\Data;
 use Espo\Core\FieldValidation\Validator\Failure;
 use Espo\Modules\Crm\Entities\Reminder;
+use Espo\ORM\Defs;
 use Espo\ORM\Entity;
 use stdClass;
 
@@ -41,6 +42,10 @@ use stdClass;
  */
 class Valid implements Validator
 {
+    public function __construct(
+        private Defs $ormDefs
+    ) {}
+
     public function validate(Entity $entity, string $field, Data $data): ?Failure
     {
         /** @var ?mixed[] $list */
@@ -49,6 +54,11 @@ class Valid implements Validator
         if ($list === null) {
             return null;
         }
+
+        $typeList = $this->ormDefs
+            ->getEntity(Reminder::ENTITY_TYPE)
+            ->getField('type')
+            ->getParam('options') ?? [];
 
         foreach ($list as $item) {
             if (!$item instanceof stdClass) {
@@ -66,7 +76,7 @@ class Valid implements Validator
                 return Failure::create();
             }
 
-            if (!in_array($type, [Reminder::TYPE_POPUP, Reminder::TYPE_EMAIL])) {
+            if (!in_array($type, $typeList)) {
                 return Failure::create();
             }
         }

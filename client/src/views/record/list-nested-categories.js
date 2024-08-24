@@ -65,6 +65,17 @@ class ListNestedCategoriesRecordView extends View {
             '#' + this.subjectEntityType + '/list/categoryId=' + categoryData.upperId:
             '#' + this.subjectEntityType;
 
+        if (this.options.primaryFilter) {
+            const part = 'primaryFilter=' + this.getHelper().escapeString(this.options.primaryFilter);
+
+            if (categoryData.upperId) {
+                data.upperLink += '&' + part;
+            }
+            else {
+                data.upperLink += '/list/' + part;
+            }
+        }
+
         return data;
     }
 
@@ -72,12 +83,18 @@ class ListNestedCategoriesRecordView extends View {
         const list = [];
 
         this.collection.forEach(model => {
+            let url = '#' + this.subjectEntityType + '/list/categoryId=' + model.id;
+
+            if (this.options.primaryFilter) {
+                url += '&primaryFilter=' + this.getHelper().escapeString(this.options.primaryFilter);
+            }
+
             const o = {
                 id: model.id,
                 name: model.get('name'),
                 recordCount: model.get('recordCount'),
                 isEmpty: model.get('isEmpty'),
-                link: '#' + this.subjectEntityType + '/list/categoryId=' + model.id,
+                link: url,
             };
 
             list.push(o);

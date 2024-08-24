@@ -9,6 +9,7 @@
         {{{avatar}}}
     </div>
     <div class="stream-head-text-container">
+        {{#if iconHtml}}{{{iconHtml}}}{{/if}}
         <span class="text-muted message">{{{message}}}</span>
     </div>
 </div>

@@ -36,11 +36,14 @@ class PostNoteStreamView extends NoteStreamView {
     isRemovable = true
 
     data() {
-        let data = super.data();
+        const data = super.data();
 
         data.showAttachments = !!(this.model.get('attachmentsIds') || []).length;
         data.showPost = !!this.model.get('post');
         data.isInternal = this.isInternal;
+
+        data.isPinned = this.isThis && this.model.get('isPinned') && this.model.collection &&
+            !this.model.collection.pinnedList;
 
         return data;
     }
@@ -49,7 +52,7 @@ class PostNoteStreamView extends NoteStreamView {
         this.createField('post', null, null, 'views/stream/fields/post');
 
         this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple', {
-            previewSize: this.options.isNotification ? 'small' : 'medium'
+            previewSize: this.options.isNotification || this.options.isUserStream ? 'small' : 'medium'
         });
 
         this.isInternal = this.model.get('isInternal');
@@ -82,18 +85,19 @@ class PostNoteStreamView extends NoteStreamView {
         }
 
         if (this.model.has('teamsIds') && this.model.get('teamsIds').length) {
-            let teamIdList = this.model.get('teamsIds');
-            let teamNameHash = this.model.get('teamsNames') || {};
+            const teamIdList = this.model.get('teamsIds');
+            const teamNameHash = this.model.get('teamsNames') || {};
+
             this.messageName = 'postTargetTeam';
 
             if (teamIdList.length > 1) {
                 this.messageName = 'postTargetTeams';
             }
 
-            let teamHtmlList = [];
+            const teamHtmlList = [];
 
             teamIdList.forEach(teamId => {
-                let teamName = teamNameHash[teamId];
+                const teamName = teamNameHash[teamId];
 
                 if (!teamName) {
                     return;
@@ -115,8 +119,8 @@ class PostNoteStreamView extends NoteStreamView {
         }
 
         if (this.model.has('portalsIds') && this.model.get('portalsIds').length) {
-            let portalIdList = this.model.get('portalsIds');
-            let portalNameHash = this.model.get('portalsNames') || {};
+            const portalIdList = this.model.get('portalsIds');
+            const portalNameHash = this.model.get('portalsNames') || {};
 
             this.messageName = 'postTargetPortal';
 
@@ -124,10 +128,10 @@ class PostNoteStreamView extends NoteStreamView {
                 this.messageName = 'postTargetPortals';
             }
 
-            let portalHtmlList = [];
+            const portalHtmlList = [];
 
             portalIdList.forEach(portalId =>{
-                let portalName = portalNameHash[portalId];
+                const portalName = portalNameHash[portalId];
 
                 if (!portalName) {
                     return;
@@ -154,8 +158,8 @@ class PostNoteStreamView extends NoteStreamView {
             return;
         }
 
-        let userIdList = this.model.get('usersIds');
-        let userNameHash = this.model.get('usersNames') || {};
+        const userIdList = this.model.get('usersIds');
+        const userNameHash = this.model.get('usersNames') || {};
 
         this.messageName = 'postTarget';
 
@@ -166,7 +170,7 @@ class PostNoteStreamView extends NoteStreamView {
             return;
         }
 
-        let userHtmlList = [];
+        const userHtmlList = [];
 
         userIdList.forEach(userId => {
             if (userId === this.getUser().id) {
@@ -189,7 +193,7 @@ class PostNoteStreamView extends NoteStreamView {
                 return;
             }
 
-            let userName = userNameHash[userId];
+            const userName = userNameHash[userId];
 
             if (!userName) {
                 return;

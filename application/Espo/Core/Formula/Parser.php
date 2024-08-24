@@ -46,7 +46,7 @@ use LogicException;
 class Parser
 {
     /** @var array<int, string[]> */
-    private $priorityList = [
+    private array $priorityList = [
         ['='],
         ['??'],
         ['||'],
@@ -57,7 +57,7 @@ class Parser
     ];
 
     /** @var array<string, string> */
-    private $operatorMap = [
+    private array $operatorMap = [
         '=' => 'assign',
         '??' => 'comparison\\nullCoalescing',
         '||' => 'logical\\or',
@@ -109,7 +109,7 @@ class Parser
                 $variable = substr($firstPart, 1);
 
                 if ($variable === '' || !preg_match($this->variableNameRegExp, $variable)) {
-                    throw new SyntaxError("Bad variable name `{$variable}`.");
+                    throw new SyntaxError("Bad variable name `$variable`.");
                 }
 
                 return new Node('assign', [
@@ -131,13 +131,20 @@ class Parser
         $functionName = $this->operatorMap[$operator];
 
         if ($functionName === '' || !preg_match($this->functionNameRegExp, $functionName)) {
-            throw new SyntaxError("Bad function name `{$functionName}`.");
+            throw new SyntaxError("Bad function name `$functionName`.");
         }
 
         return new Node($functionName, [
             $this->split($firstPart),
             $this->split($secondPart),
         ]);
+    }
+
+    private static function isNotAfterBackslash(string $string, int $i): bool
+    {
+        return
+            ($string[$i - 1] ?? null) !== "\\" ||
+            (($string[$i - 2] ?? null) === "\\" && ($string[$i - 3] ?? null) !== "\\");
     }
 
     /**
@@ -168,17 +175,17 @@ class Parser
             $isLast = $i === strlen($string) - 1;
 
             if (!$isLineComment && !$isComment) {
-                if ($string[$i] === "'" && ($i === 0 || $string[$i - 1] !== "\\")) {
+                if ($string[$i] === "'" && self::isNotAfterBackslash($string, $i)) {
                     if (!$isString) {
                         $isString = true;
-                        $isSingleQuote = true;
                         $isStringStart = true;
+                        $isSingleQuote = true;
                     }
                     else if ($isSingleQuote) {
                         $isString = false;
                     }
                 }
-                else if ($string[$i] === "\"" && ($i === 0 || $string[$i - 1] !== "\\")) {
+                else if ($string[$i] === "\"" && self::isNotAfterBackslash($string, $i)) {
                     if (!$isString) {
                         $isString = true;
                         $isStringStart = true;
@@ -858,79 +865,67 @@ class Parser
 
         foreach ($this->priorityList as $operationList) {
             foreach ($operationList as $operator) {
-                $startFrom = 1;
+                $offset = -1;
 
                 while (true) {
-                    $index = strpos($expression, $operator, $startFrom);
+                    $index = strrpos($modifiedExpression, $operator, $offset);
 
                     if ($index === false) {
                         break;
                     }
 
-                    if ($expressionOutOfParenthesisList[$index]) {
+                    if (
+                        $expressionOutOfParenthesisList[$index] &&
+                        !$this->isAtAnotherOperator($index, $operator, $modifiedExpression)
+                    ) {
                         break;
                     }
 
-                    $startFrom = $index + 1;
+                    $offset = -(strlen($expression) - $index) - 1;
                 }
 
-                if ($index !== false) {
-                    $possibleRightOperator = null;
+                if ($index === false) {
+                    continue;
+                }
 
-                    if (strlen($operator) === 1) {
-                        if ($index < strlen($expression) - 1) {
-                            $possibleRightOperator = trim($operator . $expression[$index + 1]);
+                if ($operator === '+' || $operator === '-') {
+                    $j = $index - 1;
+
+                    while ($j >= 0) {
+                        $char = $expression[$j];
+
+                        if ($this->isWhiteSpace($char)) {
+                            $j--;
+
+                            continue;
                         }
-                    }
 
-                    if (
-                        $possibleRightOperator &&
-                        $possibleRightOperator != $operator &&
-                        !empty($this->operatorMap[$possibleRightOperator])
-                    ) {
-                        continue;
-                    }
-
-                    $possibleLeftOperator = null;
-
-                    if (strlen($operator) === 1) {
-                        if ($index > 0) {
-                            $possibleLeftOperator = trim($expression[$index - 1] . $operator);
+                        if (array_key_exists($char, $this->operatorMap)) {
+                            continue 2;
                         }
+
+                        break;
                     }
+                }
 
-                    if (
-                        $possibleLeftOperator &&
-                        $possibleLeftOperator != $operator &&
-                        !empty($this->operatorMap[$possibleLeftOperator])
-                    ) {
-                        continue;
-                    }
+                $firstPart = substr($expression, 0, $index);
+                $secondPart = substr($expression, $index + strlen($operator));
 
-                    $firstPart = substr($expression, 0, $index);
-                    $secondPart = substr($expression, $index + strlen($operator));
+                $modifiedFirstPart = $modifiedSecondPart = '';
 
-                    $modifiedFirstPart = $modifiedSecondPart = '';
+                $isString = $this->processString($firstPart, $modifiedFirstPart);
 
-                    $isString = $this->processString($firstPart, $modifiedFirstPart);
+                $this->processString($secondPart, $modifiedSecondPart);
 
-                    $this->processString($secondPart, $modifiedSecondPart);
+                if (
+                    substr_count($modifiedFirstPart, '(') === substr_count($modifiedFirstPart, ')') &&
+                    substr_count($modifiedSecondPart, '(') === substr_count($modifiedSecondPart, ')') &&
+                    !$isString
+                ) {
+                    if ($minIndex === null || $index > $minIndex) {
+                        $minIndex = $index;
 
-                    if (
-                        substr_count($modifiedFirstPart, '(') === substr_count($modifiedFirstPart, ')') &&
-                        substr_count($modifiedSecondPart, '(') === substr_count($modifiedSecondPart, ')') &&
-                        !$isString
-                    ) {
-                        if ($minIndex === null) {
-                            $minIndex = $index;
-
-                            $firstOperator = $operator;
-                        }
-                        else if ($index < $minIndex) {
-                            $minIndex = $index;
-
-                            $firstOperator = $operator;
-                        }
+                        $firstOperator = $operator;
                     }
                 }
             }
@@ -978,16 +973,14 @@ class Parser
             $expression[0] === "'" && $expression[strlen($expression) - 1] === "'" ||
             $expression[0] === "\"" && $expression[strlen($expression) - 1] === "\""
         ) {
-            $subExpression = substr($expression, 1, strlen($expression) - 2);
-
-            return new Value($subExpression);
+            return new Value(self::prepareStringValue($expression));
         }
 
         if ($expression[0] === "$") {
             $value = substr($expression, 1);
 
             if ($value === '' || !preg_match($this->variableNameRegExp, $value)) {
-                throw new SyntaxError("Bad variable name `{$value}`.");
+                throw new SyntaxError("Bad variable name `$value`.");
             }
 
             return new Variable($value);
@@ -1037,7 +1030,7 @@ class Parser
                 }
 
                 if ($functionName === '' || !preg_match($this->functionNameRegExp, $functionName)) {
-                    throw new SyntaxError("Bad function name `{$functionName}`.");
+                    throw new SyntaxError("Bad function name `$functionName`.");
                 }
 
                 return new Node($functionName, $argumentSplitList);
@@ -1057,6 +1050,43 @@ class Parser
         }
 
         return new Attribute($expression);
+    }
+
+    private function isAtAnotherOperator(int $index, string $operator, string $expression): bool
+    {
+        $possibleRightOperator = null;
+
+        if (strlen($operator) === 1) {
+            if ($index < strlen($expression) - 1) {
+                $possibleRightOperator = trim($operator . $expression[$index + 1]);
+            }
+        }
+
+        if (
+            $possibleRightOperator &&
+            $possibleRightOperator != $operator &&
+            !empty($this->operatorMap[$possibleRightOperator])
+        ) {
+            return true;
+        }
+
+        $possibleLeftOperator = null;
+
+        if (strlen($operator) === 1) {
+            if ($index > 0) {
+                $possibleLeftOperator = trim($expression[$index - 1] . $operator);
+            }
+        }
+
+        if (
+            $possibleLeftOperator &&
+            $possibleLeftOperator != $operator &&
+            !empty($this->operatorMap[$possibleLeftOperator])
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -1203,7 +1233,7 @@ class Parser
         $braceCounter = 0;
 
         for ($i = 0; $i < strlen($functionContent); $i++) {
-            if ($functionContent[$i] === "'" && ($i === 0 || $functionContent[$i - 1] !== "\\")) {
+            if ($functionContent[$i] === "'" && self::isNotAfterBackslash($functionContent, $i)) {
                 if (!$isString) {
                     $isString = true;
                     $isSingleQuote = true;
@@ -1214,7 +1244,7 @@ class Parser
                     }
                 }
             }
-            else if ($functionContent[$i] === "\"" && ($i === 0 || $functionContent[$i - 1] !== "\\")) {
+            else if ($functionContent[$i] === "\"" && self::isNotAfterBackslash($functionContent, $i)) {
                 if (!$isString) {
                     $isString = true;
                     $isSingleQuote = false;
@@ -1264,5 +1294,69 @@ class Parser
         }
 
         return $argumentList;
+    }
+
+    static private function prepareStringValue(string $expression): string
+    {
+        $string = substr($expression, 1, strlen($expression) - 2);
+
+        $isDoubleQuote = $expression[0] === '"';
+
+        /** @var array{bool, string}[] $tokens */
+        $tokens = [];
+
+        $stripList = ["\\\\", "\\\"", "\\n", "\\t", "\\r"];
+        $replaceList = ["\\",  "\"", "\n", "\t", "\r"];
+
+        if ($isDoubleQuote) {
+            $stripList[] = "\\\"";
+            $replaceList[] = "\"";
+        } else {
+            $stripList[] = "\\'";
+            $replaceList[] = "'";
+        }
+
+        $k = 0;
+
+        for ($i = 0; $i < strlen($string); $i++) {
+            $part = substr($string, $i, 2);
+
+            if (in_array($part, $stripList)) {
+                $len = strlen($part);
+
+                $before = substr($string, $k, $i - $k);
+
+                if (strlen($before)) {
+                    $tokens[] = [false, $before];
+                }
+
+                $tokens[] = [true, $part];
+
+                $i += $len - 1;
+                $k = $i + 1;
+            }
+
+            if ($i >= strlen($string) - 1) {
+                $after = substr($string, $k);
+
+                if (strlen($after)) {
+                    $tokens[] = [false, $after];
+                }
+            }
+        }
+
+        $result = '';
+
+        foreach ($tokens as $token) {
+            if (!$token[0]) {
+                $result .= $token[1];
+
+                continue;
+            }
+
+            $result .= str_replace($stripList, $replaceList, $token[1]);
+        }
+
+        return $result;
     }
 }

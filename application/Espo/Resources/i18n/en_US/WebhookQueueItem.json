@@ -1,0 +1,22 @@
+{
+    "fields": {
+        "event": "Event",
+        "webhook": "Webhook",
+        "target": "Target",
+        "data": "Data",
+        "status": "Status",
+        "processedAt": "Processed At",
+        "attempts": "Attempts",
+        "processAt": "Process At"
+    },
+    "links": {
+        "webhook": "Webhook"
+    },
+    "options": {
+        "status": {
+            "Pending": "Pending",
+            "Success": "Success",
+            "Failed": "Failed"
+        }
+    }
+}

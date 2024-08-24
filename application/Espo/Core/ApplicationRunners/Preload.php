@@ -43,6 +43,9 @@ class Preload implements Runner
 {
     use Cli;
 
+    /**
+     * @throws Throwable
+     */
     public function run(): void
     {
         $preload = new PreloadUtil();
@@ -59,7 +62,7 @@ class Preload implements Runner
         $count = $preload->getCount();
 
         echo "Success." . PHP_EOL;
-        echo "Files loaded: " . (string) $count . "." . PHP_EOL;
+        echo "Files loaded: " . $count . "." . PHP_EOL;
     }
 
     protected function processException(Throwable $e): void
@@ -69,13 +72,13 @@ class Preload implements Runner
         $msg = $e->getMessage();
 
         if ($msg) {
-            echo "Message: {$msg}" . PHP_EOL;
+            echo "Message: $msg" . PHP_EOL;
         }
 
         $file = $e->getFile();
 
         if ($file) {
-            echo "File: {$file}" . PHP_EOL;
+            echo "File: $file" . PHP_EOL;
         }
 
         echo "Line: " . $e->getLine() . PHP_EOL;

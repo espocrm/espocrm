@@ -88,7 +88,7 @@ class LayoutBaseView extends View {
         this.setId = this.options.setId;
         this.em = this.options.em;
 
-        const defs = this.getMetadata()
+        const defs = /** @type {Record} */this.getMetadata()
             .get(['clientDefs', this.scope, 'additionalLayouts', this.type]) ?? {};
 
         this.typeDefs = defs;

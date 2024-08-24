@@ -51,23 +51,28 @@ class Email extends Entity
     public const STATUS_DRAFT = 'Draft';
 
     public const RELATIONSHIP_EMAIL_USER = 'EmailUser';
+    public const ALIAS_INBOX = 'emailUserInbox';
 
     public const USERS_COLUMN_IS_READ = 'isRead';
     public const USERS_COLUMN_IN_TRASH = 'inTrash';
+    public const USERS_COLUMN_IN_ARCHIVE = 'inArchive';
     public const USERS_COLUMN_FOLDER_ID = 'folderId';
     public const USERS_COLUMN_IS_IMPORTANT = 'isImportant';
 
+    /** @noinspection PhpUnused */
     protected function _getSubject(): ?string
     {
         return $this->get('name');
     }
 
+    /** @noinspection PhpUnused */
     protected function _setSubject(?string $value): void
     {
         $this->set('name', $value);
     }
 
     /**
+     * @noinspection PhpUnused
      * @return bool
      */
     protected function _hasSubject(): bool
@@ -75,26 +80,31 @@ class Email extends Entity
         return $this->has('name');
     }
 
+    /** @noinspection PhpUnused */
     protected function _hasFromName(): bool
     {
         return $this->has('fromString');
     }
 
+    /** @noinspection PhpUnused */
     protected function _hasFromAddress(): bool
     {
         return $this->has('fromString');
     }
 
+    /** @noinspection PhpUnused */
     protected function _hasReplyToName(): bool
     {
         return $this->has('replyToString');
     }
 
+    /** @noinspection PhpUnused */
     protected function _hasReplyToAddress(): bool
     {
         return $this->has('replyToString');
     }
 
+    /** @noinspection PhpUnused */
     protected function _getFromName(): ?string
     {
         if (!$this->has('fromString')) {
@@ -110,6 +120,7 @@ class Email extends Entity
         return $string;
     }
 
+    /** @noinspection PhpUnused */
     protected function _getFromAddress(): ?string
     {
         if (!$this->has('fromString')) {
@@ -119,6 +130,7 @@ class Email extends Entity
         return EmailUtil::parseFromAddress($this->get('fromString'));
     }
 
+    /** @noinspection PhpUnused */
     protected function _getReplyToName(): ?string
     {
         if (!$this->has('replyToString')) {
@@ -136,6 +148,7 @@ class Email extends Entity
         );
     }
 
+    /** @noinspection PhpUnused */
     protected function _getReplyToAddress(): ?string
     {
         if (!$this->has('replyToString')) {
@@ -153,6 +166,7 @@ class Email extends Entity
         );
     }
 
+    /** @noinspection PhpUnused */
     protected function _setIsRead(?bool $value): void
     {
         $this->setInContainer('isRead', $value !== false);
@@ -198,6 +212,7 @@ class Email extends Entity
         $this->entityManager->saveEntity($attachment);
     }
 
+    /** @noinspection PhpUnused */
     protected function _getBodyPlain(): ?string
     {
         return $this->getBodyPlain();
@@ -272,18 +287,14 @@ class Email extends Entity
                 $id = $attachment->getId();
 
                 $body = str_replace(
-                    "\"?entryPoint=attachment&amp;id={$id}\"",
-                    "\"cid:{$id}\"",
+                    "\"?entryPoint=attachment&amp;id=$id\"",
+                    "\"cid:$id\"",
                     $body
                 );
             }
         }
 
-        return str_replace(
-            "<table class=\"table table-bordered\">",
-            "<table class=\"table table-bordered\" width=\"100%\">",
-            $body
-        );
+        return $body;
     }
 
     /**
@@ -346,6 +357,7 @@ class Email extends Entity
 
     /**
      * @param Email::STATUS_* $status
+     * @noinspection PhpDocSignatureInspection
      */
     public function setStatus(string $status): self
     {
@@ -443,6 +455,7 @@ class Email extends Entity
 
     /**
      * @param string[] $addressList
+     * @noinspection PhpUnused
      */
     public function setBccAddressList(array $addressList): self
     {

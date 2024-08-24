@@ -2,7 +2,8 @@
   "fields": {
     "type": "Tipo",
     "optOut": "Escluso",
-    "invalid": "Invalido"
+    "invalid": "Invalido",
+    "numeric": "Valore Numerico"
   },
   "presetFilters": {
     "orphan": "Orfano"

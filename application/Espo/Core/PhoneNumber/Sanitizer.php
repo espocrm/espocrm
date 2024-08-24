@@ -62,13 +62,25 @@ class Sanitizer
 
     private function parsePhoneNumber(string $value, ?string $countryCode): string
     {
+        $ext = null;
+
+        if ($this->config->get('phoneNumberExtensions')) {
+            [$value, $ext] = Util::splitExtension($value);
+        }
+
         try {
             $number = PhoneNumber::parse($value, $countryCode);
-
-            return (string) $number;
         }
         catch (PhoneNumberParseException) {
             return $value;
         }
+
+        $output = (string) $number;
+
+        if ($ext) {
+            $output .= ' ext. ' . $ext;
+        }
+
+        return $output;
     }
 }

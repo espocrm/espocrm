@@ -11,14 +11,17 @@
     "related": "Verbunden",
     "createdByGender": "Erstellt von Geschlecht",
     "data": "Daten",
-    "number": "Nummer"
+    "number": "Nummer",
+    "isPinned": "Ist angeheftet"
   },
   "filters": {
     "all": "Alle",
-    "updates": "Aktualisierungen"
+    "updates": "Aktualisierungen",
+    "activity": "Aktivität"
   },
   "messages": {
-    "writeMessage": "Schreiben Sie hier Ihre Nachricht"
+    "writeMessage": "Schreiben Sie hier Ihre Nachricht",
+    "pinnedMaxCountExceeded": "Es können nicht mehr Notizen angeheftet werden. Die maximal zulässige Anzahl ist {count}."
   },
   "options": {
     "targetType": {
@@ -29,11 +32,28 @@
       "portals": "An alle Portal Benutzer"
     },
     "type": {
-      "Post": "Senden"
+      "Post": "Senden",
+      "Create": "Erstellen",
+      "CreateRelated": "Verknüpft erstellen",
+      "Update": "Aktualisieren",
+      "Assign": "Zuweisen",
+      "Relate": "Verknüpfen",
+      "Unrelate": "Verknüpfung lösen",
+      "EmailReceived": "E-Mail erhalten",
+      "EmailSent": "E-Mail gesendet"
     }
   },
   "links": {
     "superParent": "Super Eltern",
-    "related": "Verbunden"
+    "related": "Verbunden",
+    "portals": "Portale",
+    "attachments": "Anhänge"
+  },
+  "labels": {
+    "View Posts": "Nachrichten anzeigen",
+    "View Activity": "Aktivitäten anzeigen",
+    "Pin": "Anheften",
+    "Unpin": "Lösen",
+    "Pinned": "Angeheftet"
   }
 }

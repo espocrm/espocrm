@@ -28,9 +28,10 @@
 
 describe('collection', () => {
 	let collection;
-    /** @type {module:collection} */
+
+    /** @type {typeof import('collection').default} */
     let CollectionClass;
-    /** @type {module:model} */
+    /** @type {typeof import('model').default} */
     let ModelClass;
 
 	beforeEach(done => {
@@ -38,11 +39,11 @@ describe('collection', () => {
             CollectionClass = Collection;
             ModelClass = Model;
 
-            let m1 = new Model({id: '1'});
-            let m2 = new Model({id: '2'});
-            let m3 = new Model({id: '3'});
+            const m1 = new Model({id: '1'});
+            const m2 = new Model({id: '2'});
+            const m3 = new Model({id: '3'});
 
-			collection = new Collection([m1, m2, m3], {
+            collection = new Collection([m1, m2, m3], {
                 entityType: 'Some',
             });
 
@@ -57,15 +58,15 @@ describe('collection', () => {
     it('should have correct length', () => {
         expect(collection.length).toBe(3);
 
-        let collection2 = new CollectionClass();
+        const collection2 = new CollectionClass();
         expect(collection2.length).toBe(0);
 
-        let collection3 = new CollectionClass([new ModelClass({id: '1'})]);
+        const collection3 = new CollectionClass([new ModelClass({id: '1'})]);
         expect(collection3.length).toBe(1);
     });
 
     it('should add array', () => {
-        let model = new ModelClass({id: '4'});
+        const model = new ModelClass({id: '4'});
 
         collection.add([model]);
 
@@ -77,7 +78,7 @@ describe('collection', () => {
     });
 
     it('should add one', () => {
-        let model = new ModelClass({id: '4'});
+        const model = new ModelClass({id: '4'});
 
         collection.add(model, {at: 1});
 
@@ -106,7 +107,7 @@ describe('collection', () => {
     });
 
     it('should push', () => {
-        let model = new ModelClass({id: '4'});
+        const model = new ModelClass({id: '4'});
 
         collection.push(model);
 
@@ -115,7 +116,7 @@ describe('collection', () => {
     });
 
     it('should unshift', () => {
-        let model = new ModelClass({id: '4'});
+        const model = new ModelClass({id: '4'});
 
         collection.unshift(model);
 
@@ -124,7 +125,7 @@ describe('collection', () => {
     });
 
     it('should pop', () => {
-        let model = collection.pop();
+        const model = collection.pop();
 
         expect(collection.length).toBe(2);
         expect(model.id).toBe('3');
@@ -132,14 +133,14 @@ describe('collection', () => {
     });
 
     it('should shift', () => {
-        let model = collection.shift();
+        const model = collection.shift();
 
         expect(collection.length).toBe(2);
         expect(model.id).toBe('1');
     });
 
     it('should for-each', () => {
-        let ids = [];
+        const ids = [];
 
         collection.forEach(m => ids.push(m.id));
 
@@ -163,6 +164,14 @@ describe('collection', () => {
 
 	it('#nextPage and #previousPage should change offset to the next and previous pages', () => {
 		collection.total = 16;
+
+		collection.add([
+            {id: '1'},
+            {id: '2'},
+            {id: '3'},
+            {id: '4'},
+            {id: '5'},
+        ]);
 
 		collection.nextPage();
 		expect(collection.offset).toBe(5);

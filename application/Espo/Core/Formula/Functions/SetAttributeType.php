@@ -29,13 +29,12 @@
 
 namespace Espo\Core\Formula\Functions;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\Error;
 
 class SetAttributeType extends Base
 {
     /**
      * @return mixed
-     * @throws \Espo\Core\Formula\Exceptions\Error
      * @throws Error
      */
     public function process(\stdClass $item)

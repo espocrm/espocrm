@@ -36,12 +36,12 @@ class MessageStreamView extends View {
 
     setup() {
         let template = this.options.messageTemplate;
-        let data = Espo.Utils.clone(this.options.messageData || {});
+        const data = Espo.Utils.clone(this.options.messageData || {});
 
         this.dataForTemplate = {};
 
         for (let key in data) {
-            let value = data[key] || '';
+            const value = data[key] || '';
 
             if (key.indexOf('html:') === 0) {
                 key = key.substring(5);
@@ -70,10 +70,10 @@ class MessageStreamView extends View {
             }
 
             if (value.indexOf('field:') === 0) {
-                let field = value.substring(6);
+                const field = value.substring(6);
                 this.createField(key, field);
 
-                let keyEscaped = this.getHelper().escapeString(key);
+                const keyEscaped = this.getHelper().escapeString(key);
 
                 template = template.replace(
                     '{' + key + '}',
@@ -84,7 +84,7 @@ class MessageStreamView extends View {
             }
 
             this.dataForTemplate[key] = value;
-            template = template.replace('{' + key + '}', '{{' + key + '}}');
+            template = template.replace(`{${key}}`, `{{${key}}}`);
         }
 
         this.templateContent = template;

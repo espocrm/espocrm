@@ -1,0 +1,18 @@
+{
+    "duplicateWhereBuilderClassName": "Espo\\Classes\\DuplicateWhereBuilders\\General",
+    "updateDuplicateCheck": true,
+    "massActions": {
+        "delete": {
+            "allowed": true
+        },
+        "update": {
+            "allowed": true
+        }
+    },
+    "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\AddressCountry\\BeforeSave"
+    ],
+    "beforeUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\AddressCountry\\BeforeSave"
+    ]
+}

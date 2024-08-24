@@ -47,7 +47,7 @@ a.btn {
     -webkit-user-drag: none;
 }
 
-.btn {
+.btn.btn-default, .btn.btn-link {
     > .caret {
         color: var(--gray-soft);
     }
@@ -207,6 +207,9 @@ a.btn {
             }
             &.text-warning {
                 color: var(--state-warning-text);
+            }
+            &.text-info {
+                color: var(--state-info-text);
             }
         }
     }
@@ -405,6 +408,26 @@ a.btn {
     }
 
     font-weight: 400;
+}
+
+.btn {
+    .caret {
+        border-top-color: var(--text-muted-color);
+    }
+
+    &:hover {
+        .caret {
+            border-top-color: var(--btn-text-color);
+        }
+    }
+}
+
+&.open {
+    .btn {
+        .caret {
+            border-top-color: var(--btn-text-color);
+        }
+    }
 }
 
 .btn-default {

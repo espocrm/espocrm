@@ -11,11 +11,11 @@
         <div class="well enabled-well" tabindex="-1">
             <header>{{translate 'Layout' scope='LayoutManager'}}</header>
             <ul class="panels">
-            {{#each panelDataList}}
-            <li data-number="{{number}}" class="panel-layout">
-            {{{var viewKey ../this}}}
-            </li>
-            {{/each}}
+                {{#each panelDataList}}
+                    <li data-number="{{number}}" class="panel-layout" data-tab-break="{{tabBreak}}">
+                        {{{var viewKey ../this}}}
+                    </li>
+                {{/each}}
             </ul>
 
             <div><a role="button" tabindex="0" data-action="addPanel">{{translate 'Add Panel' scope='Admin'}}</a></div>
@@ -26,7 +26,7 @@
             <header>{{translate 'Available Fields' scope='Admin'}}</header>
             <ul class="disabled cells clearfix">
                 {{#each disabledFields}}
-                <li class="cell" data-name="{{./this}}">
+                <li class="cell" data-name="{{./this}}" title="{{translate this scope=../scope category='fields'}}">
                     <div class="left" style="width: calc(100% - 14px);">
                         {{translate this scope=../scope category='fields'}}
                     </div>

@@ -34,18 +34,20 @@ class UserWithAvatarFieldView extends UserFieldView {
     detailTemplate = 'fields/user-with-avatar/detail'
 
     data() {
-        let o = super.data();
+        const data = super.data();
 
-        if (this.mode === this.MODE_DETAIL) {
-            o.avatar = this.getAvatarHtml();
-            o.isOwn = this.model.get(this.idName) === this.getUser().id;
+        if (this.mode === this.MODE_DETAIL || this.mode === this.MODE_LIST) {
+            data.avatar = this.getAvatarHtml();
+            data.isOwn = this.model.get(this.idName) === this.getUser().id;
         }
 
-        return o;
+        return data;
     }
 
     getAvatarHtml() {
-        return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', 14, 'avatar-link');
+        const size = this.mode === this.MODE_DETAIL ? 18: 16;
+
+        return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', size, 'avatar-link');
     }
 }
 

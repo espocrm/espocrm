@@ -26,12 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/date-format', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+export default class extends EnumFieldView {
 
-        setupOptions: function () {
-            this.params.options = this.getMetadata().get(['app', 'dateTime', 'dateFormatList']) || [];
-        },
-    });
-});
+    setupOptions() {
+        this.params.options = this.getMetadata().get(['app', 'dateTime', 'dateFormatList']) || [];
+    }
+}

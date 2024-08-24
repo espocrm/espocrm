@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Formula;
 
+use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Entities\EmailAddress;
 use Espo\Entities\PhoneNumber;
 use Espo\ORM\Entity;
@@ -109,7 +110,7 @@ class AttributeFetcher
             return;
         }
 
-        if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) {
+        if ($entity->getAttributeParam($attribute, AttributeParam::IS_LINK_MULTIPLE_ID_LIST)) {
             /** @var ?string $relationName */
             $relationName = $entity->getAttributeParam($attribute, 'relation');
 

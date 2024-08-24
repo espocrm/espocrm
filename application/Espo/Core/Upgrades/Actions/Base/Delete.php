@@ -30,15 +30,15 @@
 namespace Espo\Core\Upgrades\Actions\Base;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Upgrades\Actions\Base;
 
-class Delete extends \Espo\Core\Upgrades\Actions\Base
+class Delete extends Base
 {
     /**
      * @param array<string, mixed> $data
-     * @return void
      * @throws Error
      */
-    public function run($data)
+    public function run(mixed $data): mixed
     {
         $processId = $data['id'];
 
@@ -49,7 +49,6 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base
         }
 
         $this->initialize();
-
         $this->setProcessId($processId);
 
         if (isset($data['parentProcessId'])) {
@@ -57,27 +56,23 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base
         }
 
         $this->beforeRunAction();
-
         /* delete a package */
         $this->deletePackage();
-
         $this->afterRunAction();
-
         $this->finalize();
 
         $this->getLog()->debug('Delete package process ['.$processId.']: end run.');
+
+        return null;
     }
 
     /**
-     * @return bool
      * @throws Error
      */
-    protected function deletePackage()
+    protected function deletePackage(): bool
     {
         $packageArchivePath = $this->getPackagePath(true);
 
-        $res = $this->getFileManager()->removeFile($packageArchivePath);
-
-        return $res;
+        return $this->getFileManager()->removeFile($packageArchivePath);
     }
 }

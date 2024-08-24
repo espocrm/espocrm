@@ -26,23 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/preferences/edit', ['views/edit'], function (Dep) {
+import EditView from 'views/edit';
 
-    return Dep.extend({
+export default class extends EditView {
 
-        userName: '',
+    userName = ''
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.userName = this.model.get('name');
-        },
+        this.userName = this.model.get('name');
+    }
 
-        getHeader: function () {
-            return this.buildHeaderHtml([
-                $('<span>').text(this.translate('Preferences')),
-                $('<span>').text(this.userName),
-            ]);
-        },
-    });
-});
+    getHeader() {
+        return this.buildHeaderHtml([
+            $('<span>').text(this.translate('Preferences')),
+            $('<span>').text(this.userName),
+        ]);
+    }
+}

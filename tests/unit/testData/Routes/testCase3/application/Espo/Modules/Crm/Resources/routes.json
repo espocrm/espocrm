@@ -1,22 +1,23 @@
 [
-  {
-      "route":"/Activities/:scope/:id/:name",
-    "method":"get",
-    "params":{
-        "controller":"Activities",
-        "action":"list",
-        "scope":":scope",
-        "id":":id",
-        "name":":name"
+    {
+        "route": "/Activities/:scope/:id/:name",
+        "method": "get",
+        "params": {
+            "controller": "Activities",
+            "action": "list",
+            "scope": ":scope",
+            "id": ":id",
+            "name": ":name"
+        },
+        "noAuth": false,
+        "actionClassName": ""
+    },
+    {
+        "route": "/Activities",
+        "method": "get",
+        "params": {
+            "controller": "Activities",
+            "action": "listCalendarEvents"
+        }
     }
-  },
-
-  {
-      "route":"/Activities",
-    "method":"get",
-    "params":{
-        "controller":"Activities",
-        "action":"listCalendarEvents"
-    }
-  }
 ]

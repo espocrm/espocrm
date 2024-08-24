@@ -29,8 +29,10 @@
 
 namespace Espo\Core\ORM;
 
+use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
 
 use LogicException;
@@ -48,7 +50,7 @@ class Entity extends BaseEntity
     {
         return
             $this->hasRelation($field) &&
-            $this->getAttributeParam($field . 'Ids', 'isLinkMultipleIdList');
+            $this->getAttributeParam($field . 'Ids', AttributeParam::IS_LINK_MULTIPLE_ID_LIST);
     }
 
     /**
@@ -64,10 +66,8 @@ class Entity extends BaseEntity
      */
     public function hasLinkParentField(string $field): bool
     {
-        return
-            $this->getAttributeType($field . 'Type') == 'foreignType' &&
-            $this->hasAttribute($field . 'Id') &&
-            $this->hasRelation($field);
+        return $this->getAttributeType($field . 'Type') === AttributeType::FOREIGN_TYPE &&
+            $this->hasAttribute($field . 'Id');
     }
 
     /**
@@ -79,15 +79,25 @@ class Entity extends BaseEntity
             throw new LogicException("Called `loadParentNameField` on non-link-parent field `$field`.");
         }
 
-        $parentId = $this->get($field . 'Id');
+        $idAttribute = $field . 'Id';
+        $nameAttribute = $field . 'Name';
+
+        $parentId = $this->get($idAttribute);
         $parentType = $this->get($field . 'Type');
 
         if (!$this->entityManager) {
             throw new LogicException("No entity-manager.");
         }
 
+        $toSetFetched = !$this->isNew() && !$this->hasFetched($idAttribute);
+
         if (!$parentId || !$parentType) {
-            $this->set($field . 'Name', null);
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
+            $this->set($nameAttribute, null);
+
+            if ($toSetFetched) {
+                $this->setFetched($nameAttribute, null);
+            }
 
             return;
         }
@@ -105,13 +115,13 @@ class Entity extends BaseEntity
             ->where(['id' => $parentId])
             ->findOne();
 
-        if ($foreignEntity) {
-            $this->set($field . 'Name', $foreignEntity->get('name'));
+        $entityName = $foreignEntity ? $foreignEntity->get('name') : null;
 
-            return;
+        $this->set($nameAttribute, $entityName);
+
+        if ($toSetFetched) {
+            $this->setFetched($nameAttribute, $entityName);
         }
-
-        $this->set($field . 'Name', null);
     }
 
     /**
@@ -262,21 +272,34 @@ class Entity extends BaseEntity
         }
 
         $idsAttribute = $field . 'Ids';
+        $namesAttribute = $field . 'Names';
+        $typesAttribute = $field . 'Types';
+        $columnsAttribute = $field . 'Columns';
+
+        $toSetFetched = !$this->isNew() && !$this->hasFetched($idsAttribute);
 
         $this->set($idsAttribute, $ids);
+        $this->set($namesAttribute, $names);
 
-        if (!$this->isNew() && !$this->hasFetched($idsAttribute)) {
+        if ($toSetFetched) {
             $this->setFetched($idsAttribute, $ids);
+            $this->setFetched($namesAttribute, $names);
         }
 
-        $this->set($field . 'Names', $names);
-
         if ($hasType) {
-            $this->set($field . 'Types', $types);
+            $this->set($typesAttribute, $types);
+
+            if ($toSetFetched) {
+                $this->setFetched($typesAttribute, $types);
+            }
         }
 
         if (!empty($columns)) {
-            $this->set($field . 'Columns', $columnsData);
+            $this->set($columnsAttribute, $columnsData);
+
+            if ($toSetFetched) {
+                $this->setFetched($columnsAttribute, $columnsData);
+            }
         }
     }
 
@@ -317,13 +340,15 @@ class Entity extends BaseEntity
         }
 
         $idAttribute = $field . 'Id';
+        $nameAttribute = $field . 'Name';
 
         if (!$this->isNew() && !$this->hasFetched($idAttribute)) {
             $this->setFetched($idAttribute, $entityId);
+            $this->setFetched($nameAttribute, $entityName);
         }
 
         $this->set($idAttribute, $entityId);
-        $this->set($field . 'Name', $entityName);
+        $this->set($nameAttribute, $entityName);
     }
 
     /**

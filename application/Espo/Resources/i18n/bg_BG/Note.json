@@ -12,15 +12,18 @@
     "related": "Свързани",
     "createdByGender": "Създаден по пол",
     "data": "Данни",
-    "number": "Номер"
+    "number": "Номер",
+    "isPinned": "Закачено е"
   },
   "filters": {
     "all": "Всички",
     "posts": "Публикации",
-    "updates": "Активност"
+    "updates": "Активност",
+    "activity": "Активност"
   },
   "messages": {
-    "writeMessage": "Напишете съобщението си тук"
+    "writeMessage": "Напишете съобщението си тук",
+    "pinnedMaxCountExceeded": "Не могат да се закачат повече бележки. Максималният разрешен брой е {count}."
   },
   "options": {
     "targetType": {
@@ -31,11 +34,29 @@
       "portals": "към потребители на портал(и)"
     },
     "type": {
-      "Post": "Публикация"
+      "Post": "Публикация",
+      "Create": "Създаване",
+      "CreateRelated": "Създаване на свързан запис",
+      "Update": "Обновяване",
+      "Status": "Статус",
+      "Assign": "Назначаване",
+      "Relate": "Свързване",
+      "Unrelate": "Отсвързване",
+      "EmailReceived": "Получен имейл",
+      "EmailSent": "Изпратен имейл"
     }
   },
   "links": {
     "superParent": "Супер-майка",
-    "related": "Свързани"
+    "related": "Свързани",
+    "portals": "Портали",
+    "attachments": "Прикачени файлове"
+  },
+  "labels": {
+    "View Posts": "Преглед на коментарите",
+    "View Activity": "Преглед на активността",
+    "Pin": "Закачане",
+    "Unpin": "Откачане",
+    "Pinned": "Закачено"
   }
 }

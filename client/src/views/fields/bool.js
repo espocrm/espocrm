@@ -33,8 +33,33 @@ import Select from 'ui/select';
 
 /**
  * A boolean field (checkbox).
+ *
+ * @extends BaseFieldView<module:views/fields/bool~params>
  */
 class BoolFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/bool~options
+     * @property {
+     *     module:views/fields/bool~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/varchar~params
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/bool~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'bool'
 
@@ -46,12 +71,14 @@ class BoolFieldView extends BaseFieldView {
     validations = []
     initialSearchIsNotIdle = true
 
+    // noinspection JSCheckFunctionSignatures
     /** @inheritDoc */
     data() {
-        let data = super.data();
+        const data = super.data();
 
         data.valueIsSet = this.model.has(this.name);
 
+        // noinspection JSValidateTypes
         return data;
     }
 
@@ -68,9 +95,10 @@ class BoolFieldView extends BaseFieldView {
     }
 
     fetch() {
-        let value = this.$element.get(0).checked;
+        // noinspection JSUnresolvedReference
+        const value = this.$element.get(0).checked;
 
-        let data = {};
+        const data = {};
 
         data[this.name] = value;
 
@@ -78,7 +106,7 @@ class BoolFieldView extends BaseFieldView {
     }
 
     fetchSearch() {
-        let type = this.$element.val();
+        const type = this.$element.val();
 
         if (!type) {
             return null;

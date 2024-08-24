@@ -26,18 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/last-viewed/list', ['views/list'], function (Dep) {
+import ListView from 'views/list';
 
-    return Dep.extend({
+export default class extends ListView {
 
-        searchPanel: false,
+    searchPanel = false
+    createButton = false
 
-        createButton: false,
+    setup() {
+        super.setup();
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.collection.url = 'LastViewed';
-        },
-    });
-});
+        this.collection.url = 'LastViewed';
+    }
+}

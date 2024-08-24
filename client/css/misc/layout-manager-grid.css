@@ -11,7 +11,7 @@
 
 #layout ul.panels > li {
     padding: 5px 10px;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
     min-height: 80px;
     border: 1px solid var(--select-item-border);
     border-radius: var(--border-radius);
@@ -19,8 +19,27 @@
     list-style: none;
 }
 
+#layout ul.panels > li .panel-label {
+    margin-left: 4px;
+}
+
+#layout ul.panels > li[data-tab-break="true"] {
+    margin-top: 28px;
+}
+
+#layout ul.panels > li[data-tab-break="true"]:before {
+    content: " ";
+    display: block;
+    height: 1px;
+    background-color: var(--gray-light);
+    position: relative;
+    top: -20px;
+    width: 50%;
+    margin: 0 auto;
+}
+
 #layout ul.rows {
-    min-height: 80px;
+    min-height: 20px;
 }
 
 #layout ul.rows > li  {
@@ -159,11 +178,11 @@ ul.rows > li[data-cell-count="4"]:hover a.add-cell {
 }
 
 ul.panels > li a.edit-panel-label {
-    display: none;
+    visibility: hidden;
 }
 
 ul.panels > li:hover a.edit-panel-label {
-    display: inline-block;
+    visibility: visible;
 }
 
 div.row-actions {

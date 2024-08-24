@@ -42,8 +42,6 @@ use LogicException;
  */
 class ArrayValue extends Database
 {
-    protected $hooksDisabled = true;
-
     private const ITEM_MAX_LENGTH = 100;
 
     public function storeEntityAttribute(CoreEntity $entity, string $attribute, bool $populateMode = false): void

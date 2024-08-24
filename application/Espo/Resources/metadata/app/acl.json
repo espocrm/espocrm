@@ -61,6 +61,7 @@
             "Role": false,
             "PortalRole": false,
             "ImportError": "Import",
+            "ImportEml": "Import",
             "WorkingTimeRange": "WorkingTimeCalendar",
             "Stream": true
         },
@@ -119,7 +120,11 @@
         },
         "scopeFieldLevel": {
             "User": {
-                "gender": false
+                "gender": false,
+                "avatarColor": {
+                    "read": "yes",
+                    "edit": "no"
+                }
             }
         }
     },
@@ -149,7 +154,8 @@
                 "edit": "no",
                 "delete": "all"
             },
-            "Stream": true
+            "Stream": true,
+            "ImportEml": "Import"
         }
     },
     "valuePermissionList": [
@@ -161,7 +167,9 @@
         "exportPermission",
         "massUpdatePermission",
         "followerManagementPermission",
-        "dataPrivacyPermission"
+        "dataPrivacyPermission",
+        "auditPermission",
+        "mentionPermission"
     ],
     "valuePermissionHighestLevels": {
         "assignmentPermission": "all",
@@ -172,7 +180,9 @@
         "exportPermission": "yes",
         "massUpdatePermission": "yes",
         "followerManagementPermission": "all",
-        "dataPrivacyPermission": "yes"
+        "dataPrivacyPermission": "yes",
+        "auditPermission": "yes",
+        "mentionPermission": "yes"
     },
     "permissionsStrictDefaults": {
         "assignmentPermission": "no",
@@ -183,7 +193,9 @@
         "exportPermission": "no",
         "massUpdatePermission": "no",
         "followerManagementPermission": "no",
-        "dataPrivacyPermission": "no"
+        "dataPrivacyPermission": "no",
+        "auditPermission": "no",
+        "mentionPermission": "no"
     },
     "scopeLevelTypesStrictDefaults": {
         "boolean": false,

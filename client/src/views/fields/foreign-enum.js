@@ -35,16 +35,22 @@ class ForeignEnumFieldView extends EnumFieldView {
     setupOptions() {
         this.params.options = [];
 
-        let field = this.params.field;
-        let link = this.params.link;
+        const field = this.params.field;
+        const link = this.params.link;
 
         if (!field || !link) {
             return;
         }
 
-        let scope = this.getMetadata().get(['entityDefs', this.model.entityType, 'links', link, 'entity']);
+        const scope = this.getMetadata().get(['entityDefs', this.model.entityType, 'links', link, 'entity']);
 
         if (!scope) {
+            return;
+        }
+
+        const fieldDefs = this.getMetadata().get(['entityDefs', scope, 'fields', field]);
+
+        if (!fieldDefs) {
             return;
         }
 
@@ -55,7 +61,7 @@ class ForeignEnumFieldView extends EnumFieldView {
             isSorted,
             displayAsLabel,
             style,
-        } = this.getMetadata().get(['entityDefs', scope, 'fields', field]);
+        } = fieldDefs;
 
         options = optionsPath ? this.getMetadata().get(optionsPath) : options;
 

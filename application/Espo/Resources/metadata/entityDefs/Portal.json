@@ -103,6 +103,16 @@
         "authenticationProvider": {
             "type": "link"
         },
+        "authTokenLifetime": {
+            "type": "float",
+            "min": 0,
+            "tooltip": "Settings.authTokenMaxIdleTime"
+        },
+        "authTokenMaxIdleTime": {
+            "type": "float",
+            "min": 0,
+            "tooltip": "Settings.authTokenMaxIdleTime"
+        },
         "modifiedAt": {
             "type": "datetime",
             "readOnly": true

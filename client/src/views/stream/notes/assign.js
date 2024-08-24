@@ -41,6 +41,13 @@ class AssignNoteStreamView extends NoteStreamView {
         super.init();
     }
 
+    data() {
+        return {
+            ...super.data(),
+            iconHtml: this.getIconHtml(),
+        };
+    }
+
     setup() {
         const data = this.model.get('data');
 
@@ -48,9 +55,16 @@ class AssignNoteStreamView extends NoteStreamView {
         this.assignedUserName = data.assignedUserName || data.assignedUserId || null;
 
         this.messageData['assignee'] =
-            $('<a>')
-                .attr('href', '#User/view/' + data.assignedUserId)
-                .text(this.assignedUserName);
+            $('<span>')
+                .addClass('nowrap name-avatar')
+                .append(
+                    this.getHelper().getAvatarHtml(data.assignedUserId, 'small', 16, 'avatar-link'),
+                    $('<a>')
+                        .attr('href', `#User/view/${data.assignedUserId}`)
+                        .text(this.assignedUserName)
+                        .attr('data-scope', 'User')
+                        .attr('data-id', data.assignedUserId)
+                );
 
         if (this.isUserStream) {
             if (this.assignedUserId) {

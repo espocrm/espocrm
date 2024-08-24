@@ -5,28 +5,36 @@
                 {"name": "name"}, {"name": "isGlobal"}
             ],
             [
-                {"name": "from"}, {"name": "parent"}
+                {"name": "parent"}, false
+            ]
+        ]
+    },
+    {
+        "rows": [
+            [
+                {"name": "from"}, {"name": "to"}
             ],
             [
-                {"name": "to"}, {"name": "action"}
-            ],
-            [
-                false, {"name": "emailFolder"}
-            ],
-            [
-                false, {"name": "groupEmailFolder"}
-            ],
-            [
-                false, {"name": "markAsRead"}
-            ],
-            [
-                {"name": "subject", "fullWidth": true}
+                {"name": "subject"}
             ],
             [
                 {"name": "bodyContains"}
             ],
             [
                 {"name": "bodyContainsAll"}
+            ]
+        ]
+    },
+    {
+        "rows": [
+            [
+                {"name": "action"}, {"name": "markAsRead"}
+            ],
+            [
+                {"name": "emailFolder"}, false
+            ],
+            [
+                {"name": "groupEmailFolder"}, false
             ]
         ]
     }

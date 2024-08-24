@@ -38,7 +38,8 @@ class RecordListSettingsView extends View {
                 role="button"
                 class="btn btn-text dropdown-toggle"
                 data-toggle="dropdown"
-            ><span class="fas fa-cog fa-sm"></span></a>
+                tabindex="0"
+            ><span class="fas fa-caret-down fa-sm"></span></a>
             <ul class="dropdown-menu pull-right">
             {{#each dataList}}
                 <li>

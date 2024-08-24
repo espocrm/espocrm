@@ -2,7 +2,7 @@
 
 <div class="row">
     <div id="external-account-menu" class="col-sm-3">
-    <ul class="list-group list-group-panel">
+    <ul class="list-group list-group-panel{{#unless externalAccountListCount}} hidden{{/unless}}">
     {{#each externalAccountList}}
         <li class="list-group-item"><a
             role="button"

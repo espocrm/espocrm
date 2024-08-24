@@ -1,5 +1,6 @@
 {
-   "controller": "controllers/record",
+    "controller": "controllers/record",
+    "modelDefaultsPreparator": "crm:handlers/opportunity/defaults-preparator",
    "views":{
       "detail":"crm:views/opportunity/detail"
    },

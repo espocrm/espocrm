@@ -59,11 +59,18 @@ class GetSearch implements Action
             throw new Forbidden();
         }
 
-        if (!$this->acl->checkScope(Email::ENTITY_TYPE, Acl\Table::ACTION_CREATE)) {
-            throw new Forbidden();
+        $entityType = $request->getQueryParam('entityType');
+        $q = $request->getQueryParam('q');
+        $onlyActual = $request->getQueryParam('onlyActual') === 'true';
+        $maxSize = intval($request->getQueryParam('maxSize'));
+
+        if (!$entityType && !$this->acl->checkScope(Email::ENTITY_TYPE, Acl\Table::ACTION_CREATE)) {
+            throw new Forbidden("No 'create' access for Email.");
         }
 
-        $q = $request->getQueryParam('q');
+        if ($entityType && !$this->acl->checkScope($entityType, Acl\Table::ACTION_READ)) {
+            throw new Forbidden("No 'read' access for entity type.");
+        }
 
         if (is_string($q)) {
             $q = trim($q);
@@ -73,13 +80,15 @@ class GetSearch implements Action
             throw new BadRequest("No `q` parameter.");
         }
 
-        $maxSize = intval($request->getQueryParam('maxSize'));
-
         if (!$maxSize || $maxSize > self::ADDRESS_MAX_SIZE) {
             $maxSize = (int) $this->config->get('recordsPerPage');
         }
 
-        $onlyActual = $request->getQueryParam('onlyActual') === 'true';
+        if ($entityType) {
+            $result = $this->service->searchInEntityType($entityType, $q, $maxSize);
+
+            return ResponseComposer::json($result);
+        }
 
         $result = $this->service->searchInAddressBook($q, $maxSize, $onlyActual);
 

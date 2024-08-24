@@ -7,6 +7,8 @@
     "aclPortal": true,
     "aclPortalLevelList": ["all", "no"],
     "aclPortalActionList": ["read"],
+    "aclFieldLevelDisabled": true,
+    "aclPortalFieldLevelDisabled": true,
     "customizable": false,
     "importable": true,
     "disabled": false

@@ -50,7 +50,7 @@ class ModalView extends View {
      * @property {string} [html] HTML.
      * @property {boolean} [pullLeft=false] Deprecated. Use the `position` property.
      * @property {'left'|'right'} [position='left'] A position.
-     * @property {'default'|'danger'|'success'|'warning'} [style='default'] A style.
+     * @property {'default'|'danger'|'success'|'warning'|'info'} [style='default'] A style.
      * @property {boolean} [hidden=false] Is hidden.
      * @property {boolean} [disabled=false] Disabled.
      * @property {function(module:ui.Dialog): void} [onClick] Called on click. If not defined, then
@@ -60,6 +60,7 @@ class ModalView extends View {
      * @property {'primary'|'danger'|'success'|'warning'|'text'} [style] A style.
      * @property {string} [iconHtml] An icon HTML.
      * @property {string} [iconClass] An icon class.
+     * @property {number} [groupIndex] A group index. Only for the dropdown.
      */
 
     /**
@@ -72,7 +73,7 @@ class ModalView extends View {
      */
 
     /**
-     * @param {module:views/modal~Options | Option.<string, *>} [options] Options.
+     * @param {module:views/modal~Options | Record} [options] Options.
      */
     constructor(options) {
         super(options);
@@ -240,6 +241,12 @@ class ModalView extends View {
     isCollapsed = false
 
     /**
+     * @type {HTMLElement}
+     * @protected
+     */
+    bodyElement
+
+    /**
      * @inheritDoc
      */
     events = {
@@ -359,6 +366,11 @@ class ModalView extends View {
             });
 
             this.setElement(this.containerSelector + ' .body');
+
+            this.bodyElement = this.element;
+
+            // @todo Review that the element is set back to the container afterwards.
+            //     Force keeping set to the body?
         });
 
         this.on('after:render', () => {
@@ -494,7 +506,7 @@ class ModalView extends View {
      * Get a dropdown item list for a dialog.
      *
      * @private
-     * @return {module:ui.Dialog~Button[]}
+     * @return {Array<module:ui.Dialog~Button|false>}
      */
     getDialogDropdownItemList() {
         const dropdownItemListExt = [];
@@ -536,7 +548,33 @@ class ModalView extends View {
             dropdownItemListExt.push(o);
         });
 
-        return dropdownItemListExt;
+        /** @type {Array<module:ui.Dialog~Button[]>} */
+        const dropdownGroups = [];
+
+        dropdownItemListExt.forEach(item => {
+            // For bc.
+            if (item === false) {
+                return;
+            }
+
+            const index = (item.groupIndex === undefined ? 9999 : item.groupIndex) + 100;
+
+            if (dropdownGroups[index] === undefined) {
+                dropdownGroups[index] = [];
+            }
+
+            dropdownGroups[index].push(item);
+        });
+
+        const dropdownItemList = [];
+
+        dropdownGroups.forEach(list => {
+            list.forEach(it => dropdownItemList.push(it));
+
+            dropdownItemList.push(false);
+        });
+
+        return dropdownItemList;
     }
 
     /** @private */
@@ -569,15 +607,14 @@ class ModalView extends View {
      */
     actionCancel() {
         this.trigger('cancel');
-        this.dialog.close();
+        this.close();
     }
 
     /**
      * A `close` action.
      */
     actionClose() {
-        this.trigger('cancel');
-        this.dialog.close();
+        this.actionCancel();
     }
 
     /**
@@ -585,6 +622,16 @@ class ModalView extends View {
      */
     close() {
         this.dialog.close();
+
+        if (!this.getParentView()) {
+            return;
+        }
+
+        const key = this.getParentView().getViewKey(this);
+
+        if (key) {
+            this.getParentView().clearView(key);
+        }
     }
 
     /**
@@ -690,10 +737,7 @@ class ModalView extends View {
      */
     addDropdownItem(o, toBeginning, doNotReRender) {
         if (!o) {
-            toBeginning ?
-                this.dropdownItemList.unshift(false) :
-                this.dropdownItemList.push(false);
-
+            // For bc.
             return;
         }
 

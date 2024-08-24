@@ -1,14 +1,14 @@
 {
   "fields": {
-    "width": "Genişlik (%)",
     "link": "Bağlantı",
-    "notSortable": "Sıralanamaz ",
+    "notSortable": "Sıralanamaz",
     "align": "Hizala",
     "panelName": "Panel Adı",
     "style": "Stil",
     "sticked": "Yapışmış",
     "isLarge": "Büyük yazı boyutu",
-    "dynamicLogicVisible": "Paneli görünür kılan koşullar"
+    "dynamicLogicVisible": "Paneli görünür kılan koşullar",
+    "width": "En"
   },
   "options": {
     "align": {

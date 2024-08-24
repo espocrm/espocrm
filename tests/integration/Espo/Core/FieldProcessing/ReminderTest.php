@@ -29,20 +29,24 @@
 
 namespace tests\integration\Espo\Core\FieldProcessing;
 
-use Espo\Core\{
-    ORM\EntityManager,
-};
+use Espo\Core\Field\DateTime;
+use Espo\Core\ORM\EntityManager;
+use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Reminder;
+use tests\integration\Core\BaseTestCase;
 
-class ReminderTest extends \tests\integration\Core\BaseTestCase
+class ReminderTest extends BaseTestCase
 {
     public function testOne(): void
     {
         /* @var $entityManager EntityManager */
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
+
+        $user = $this->getContainer()->getByClass(User::class);
 
         $meeting = $entityManager->createEntity('Meeting', [
-            'dateStart' => '2021-10-10 10:00:00',
-            'usersIds' => ['1'],
+            'dateStart' => DateTime::createNow()->modify('+1 day')->toString(),
+            'usersIds' => [$user->getId()],
             'reminders' => [
                 (object) [
                     'type' => 'Popup',
@@ -56,7 +60,7 @@ class ReminderTest extends \tests\integration\Core\BaseTestCase
         ]);
 
         $reminderList = $entityManager
-            ->getRDBRepository('Reminder')
+            ->getRDBRepository(Reminder::ENTITY_TYPE)
             ->where([
                 'entityId' => $meeting->getId(),
                 'entityType' => $meeting->getEntityType(),

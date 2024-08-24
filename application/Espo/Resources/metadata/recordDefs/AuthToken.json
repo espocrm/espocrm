@@ -6,5 +6,9 @@
         "delete": {
             "allowed": true
         }
-    }
+    },
+    "actionHistoryDisabled": true,
+    "updateInputFilterClassNameList": [
+        "Espo\\Classes\\Record\\AuthToken\\UpdateInputFilter"
+    ]
 }

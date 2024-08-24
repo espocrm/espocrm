@@ -26,12 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/role/record/panels/side', ['views/record/panels/side'], function (Dep) {
+import SidePanelView from 'views/record/panels/side';
 
-    return Dep.extend({
+export default class extends SidePanelView {
 
-        template: 'role/record/panels/side',
-
-    });
-});
-
+    template = 'role/record/panels/side'
+}

@@ -12,10 +12,13 @@
     "account": "Pravno lice",
     "dateCompleted": "Datum završetka",
     "attachments": "Prilozi",
-    "reminders": "Podsetnici"
+    "reminders": "Podsetnici",
+    "contact": "Kontakt"
   },
   "links": {
-    "attachments": "Prilozi"
+    "attachments": "Prilozi",
+    "account": "Nalog",
+    "contact": "Kontakt"
   },
   "options": {
     "status": {

@@ -31,10 +31,14 @@ namespace tests\integration\Espo\Record;
 
 use Espo\Core\Application;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Record\UpdateParams;
+use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\ORM\EntityManager;
 use Espo\Tools\App\SettingsService as SettingsService;
@@ -66,8 +70,8 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
-            ->create('Account')
+            ->getByClass(ServiceContainer::class)
+            ->get('Account')
             ->create((object) [
                 'name' => null,
             ], CreateParams::create());
@@ -84,8 +88,8 @@ class FieldValidationTest extends BaseTestCase
         ]);
 
         $entity = $app->getContainer()
-            ->get('serviceFactory')
-            ->create('Account')
+            ->getByClass(ServiceContainer::class)
+            ->get('Account')
             ->create(
                 (object) [
                     'name' => 'test'
@@ -96,8 +100,8 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
-            ->create('Account')
+            ->getByClass(ServiceContainer::class)
+            ->get('Account')
             ->update(
                 $entity->id,
                 (object) [
@@ -120,8 +124,8 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
-            ->create('Account')
+            ->getByClass(ServiceContainer::class)
+            ->get('Account')
             ->create(
                 (object) [
 
@@ -141,8 +145,8 @@ class FieldValidationTest extends BaseTestCase
         ]);
 
         $app->getContainer()
-            ->get('serviceFactory')
-            ->create('Account')
+            ->getByClass(ServiceContainer::class)
+            ->get('Account')
             ->create((object) [
                 'name' => 'test',
             ], CreateParams::create());
@@ -164,8 +168,8 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
-            ->create('Account')
+            ->getByClass(ServiceContainer::class)
+            ->get('Account')
             ->create((object) [
                 'name' => '123456',
             ], CreateParams::create());
@@ -183,8 +187,8 @@ class FieldValidationTest extends BaseTestCase
         ]);
 
         $app->getContainer()
-            ->get('serviceFactory')
-            ->create('Account')
+            ->getByClass(ServiceContainer::class)
+            ->get('Account')
             ->create((object) [
                 'name' => '12345',
             ], CreateParams::create());
@@ -205,8 +209,8 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
-            ->create('Account')
+            ->getByClass(ServiceContainer::class)
+            ->get('Account')
             ->create((object) [
                 'name' => 'test',
                 'assignedUserId' => null,
@@ -245,8 +249,8 @@ class FieldValidationTest extends BaseTestCase
         ]);
 
         $app->getContainer()
-            ->get('serviceFactory')
-            ->create('Account')
+            ->getByClass(ServiceContainer::class)
+            ->get('Account')
             ->create((object) [
                 'name' => 'test',
                 'assignedUserId' => $this->getAdminUser()->getId(),
@@ -268,8 +272,8 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
-            ->create('Account')
+            ->getByClass(ServiceContainer::class)
+            ->get('Account')
             ->create((object) [
                 'name' => 'test',
                 'teamsIds' => [],
@@ -289,8 +293,8 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
-            ->create('Lead')
+            ->getByClass(ServiceContainer::class)
+            ->get('Lead')
             ->create((object) [
                 'lastName' => 'test',
                 'opportunityAmount' => null,
@@ -308,8 +312,8 @@ class FieldValidationTest extends BaseTestCase
         ]);
 
         $app->getContainer()
-            ->get('serviceFactory')
-            ->create('Lead')
+            ->getByClass(ServiceContainer::class)
+            ->get('Lead')
             ->create((object) [
                 'lastName' => 'test',
                 'opportunityAmount' => 100,
@@ -330,8 +334,8 @@ class FieldValidationTest extends BaseTestCase
         ]);
 
         $app->getContainer()
-            ->get('serviceFactory')
-            ->create('Lead')
+            ->getByClass(ServiceContainer::class)
+            ->get('Lead')
             ->create((object) [
                 'lastName' => 'test',
                 'opportunityAmount' => 100,
@@ -357,8 +361,8 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
-            ->create('Lead')
+            ->getByClass(ServiceContainer::class)
+            ->get('Lead')
             ->create((object) [
                 'lastName' => 'test',
             ], CreateParams::create());
@@ -377,8 +381,8 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
-            ->create('Lead')
+            ->getByClass(ServiceContainer::class)
+            ->get('Lead')
             ->create((object) [
                 'lastName' => 'test',
                 'status' => null,
@@ -396,8 +400,8 @@ class FieldValidationTest extends BaseTestCase
         ]);
 
         $app->getContainer()
-            ->get('serviceFactory')
-            ->create('Lead')
+            ->getByClass(ServiceContainer::class)
+            ->get('Lead')
             ->create((object) [
                 'lastName' => 'test',
                 'status' => 'New',
@@ -408,9 +412,10 @@ class FieldValidationTest extends BaseTestCase
 
     public function testSkipRequired()
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
         $this->getContainer()
-            ->get('serviceFactory')
-            ->create('Meeting')
+            ->getByClass(ServiceContainer::class)
+            ->get('Meeting')
             ->create((object) [
                 'name' => 'test',
                 'dateStart' => '2021-01-01 00:00:00',
@@ -469,5 +474,48 @@ class FieldValidationTest extends BaseTestCase
             'lastName' => 'Test Bad 1',
             'opportunityAmount' => 'bad-value',
         ], CreateParams::create());
+    }
+
+    public function testPhoneNumber(): void
+    {
+        $service = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Account::class);
+
+        $configWriter = $this->getInjectableFactory()->create(ConfigWriter::class);
+        $configWriter->set('phoneNumberExtensions', true);
+        $configWriter->save();
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->create((object)[
+            'name' => 'Test 1',
+            'phoneNumberData' => [
+                (object)[
+                    'phoneNumber' => '+38 09 044 433 22 ext. 001',
+                ],
+            ],
+        ], CreateParams::create());
+
+        $thrown = false;
+
+        try {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $service->create((object)[
+                'name' => 'Test 2',
+                'phoneNumberData' => [
+                    (object)[
+                        'phoneNumber' => '+38 09 044 433 22 ext. ABC',
+                    ],
+                    (object)[
+                        'phoneNumber' => '+38 09 044 433 33 ext. 1234567',
+                    ],
+                ],
+            ], CreateParams::create());
+        }
+        catch (BadRequest) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
     }
 }

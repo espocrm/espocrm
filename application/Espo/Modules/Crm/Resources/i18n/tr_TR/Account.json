@@ -1,7 +1,8 @@
 {
   "fields": {
-    "name": "İsim",
+    "name": "Ad",
     "emailAddress": "Eposta",
+    "website": "Web sitesi",
     "phoneNumber": "Telefon",
     "billingAddress": "Fatura Adresi",
     "shippingAddress": "Teslimat Adresi",
@@ -13,23 +14,24 @@
     "campaign": "Kampanya",
     "targetLists": "Hedef Listeler",
     "targetList": "Hedef Liste",
-    "originalLead": "Orijinal Müşteri Potansiyeli",
-    "contactIsInactive": "Inaktif"
+    "originalLead": "Orijinal Potansiyel",
+    "contactIsInactive": "Pasif"
   },
   "links": {
     "contacts": "Kişiler",
     "opportunities": "Fırsatlar",
-    "cases": "Dosyalar",
+    "cases": "Olaylar",
     "documents": "Belgeler",
     "meetingsPrimary": "Toplantılar (genişletildi)",
     "callsPrimary": "Aramalar (genişletildi)",
     "tasksPrimary": "Görevler (genişletildi)",
-    "emailsPrimary": "E-postalar (genişletildi)",
+    "emailsPrimary": "Epostalar (genişletildi)",
     "targetLists": "Hedef Listeler",
     "campaignLogRecords": "Kampanya Günlüğü",
     "campaign": "Kampanya",
     "portalUsers": "Portal Kullanıcıları",
-    "originalLead": "Orijinal Müşteri Potansiyeli"
+    "originalLead": "Orijinal Potansiyel",
+    "contactsPrimary": "Kişiler (Birincil)"
   },
   "options": {
     "type": {
@@ -47,13 +49,13 @@
       "Biotechnology": "Biyoteknoloji",
       "Building Materials & Equipment": "Yapı Malzemeleri ve Ekipmanları",
       "Chemical": "Kimyasal",
-      "Computer": "Bilgisayar",
+      "Computer": "Bilişim",
       "Education": "Eğitim",
       "Electronics": "Elektronik",
       "Energy": "Enerji",
-      "Entertainment & Leisure": "Eğlence ve Eğlence",
+      "Entertainment & Leisure": "Eğlence ve Hobi",
       "Finance": "Finans",
-      "Food & Beverage": "Yiyecek ve İçecek",
+      "Food & Beverage": "Gıda",
       "Grocery": "Bakkal",
       "Healthcare": "Sağlık Hizmeti",
       "Insurance": "Sigortacılık",
@@ -67,8 +69,8 @@
       "Technology": "Teknoloji",
       "Telecommunications": "Telekomünikasyon",
       "Television": "Televizyon!",
-      "Transportation": "Taşımacılık ",
-      "Venture Capital": "Risk Sermayesi",
+      "Transportation": "Taşımacılık",
+      "Venture Capital": "Yatırımcı",
       "Aerospace": "Havacılık",
       "Architecture": "Mimarlık",
       "Construction": "İnşaat",
@@ -81,7 +83,7 @@
       "Mass Media": "Kitle İletişim Araçları",
       "Mining": "Madencilik",
       "Music": "Müzik",
-      "Marketing": "PAZARLAMA",
+      "Marketing": "Pazarlama",
       "Petroleum": "Petrol",
       "Retail": "Perakende",
       "Shipping": "Nakliye",
@@ -93,7 +95,7 @@
     }
   },
   "labels": {
-    "Create Account": "Hesap Oluştur",
+    "Create Account": "Firma Oluştur",
     "Copy Billing": "Faturalamayı Kopyala",
     "Set Primary": "Birincil Yap"
   },

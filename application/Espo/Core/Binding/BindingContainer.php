@@ -89,11 +89,11 @@ class BindingContainer
     public function getByInterface(string $interfaceName): Binding
     {
         if (!$this->hasByInterface($interfaceName)) {
-            throw new LogicException("Binding for interface `{$interfaceName}` does not exist.");
+            throw new LogicException("Binding for interface `$interfaceName` does not exist.");
         }
 
         if (!interface_exists($interfaceName) && !class_exists($interfaceName)) {
-            throw new LogicException("Interface `{$interfaceName}` does not exist.");
+            throw new LogicException("Interface `$interfaceName` does not exist.");
         }
 
         return $this->data->getGlobal($interfaceName);

@@ -33,7 +33,7 @@ use Espo\Core\Cleanup\Cleanup;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
-use Espo\Entities\Subscription;
+use Espo\Entities\StreamSubscription;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Condition as Cond;
 
@@ -41,19 +41,11 @@ class Subscribers implements Cleanup
 {
     private const PERIOD = '2 months';
 
-    private Metadata $metadata;
-    private EntityManager $entityManager;
-    private Config $config;
-
     public function __construct(
-        Metadata $metadata,
-        EntityManager $entityManager,
-        Config $config
-    ) {
-        $this->metadata = $metadata;
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-    }
+        private Metadata $metadata,
+        private EntityManager $entityManager,
+        private Config $config
+    ) {}
 
     public function process(): void
     {
@@ -105,7 +97,7 @@ class Subscribers implements Cleanup
         $query = $this->entityManager
             ->getQueryBuilder()
             ->delete()
-            ->from(Subscription::ENTITY_TYPE, 'subscription')
+            ->from(StreamSubscription::ENTITY_TYPE, 'subscription')
             ->join(
                 $entityType,
                 'entity',

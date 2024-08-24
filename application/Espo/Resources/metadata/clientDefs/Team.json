@@ -4,16 +4,25 @@
         "edit": false,
         "editSmall": false
     },
+    "mergeDisabled": true,
+    "massUpdateDisabled": true,
     "defaultSidePanelFieldLists": {
         "detail": ["createdAt"]
     },
     "relationshipPanels": {
         "users": {
-            "create": false,
-            "rowActionsView": "views/record/row-actions/relationship-unlink-only",
+            "createDisabled": true,
+            "editDisabled": true,
+            "removeDisabled": true,
             "layout": "listForTeam",
             "selectPrimaryFilterName": "active",
-            "filterList": ["all", "active"]
+            "filterList": ["all", "active"],
+            "rowActionList": [
+                "changeTeamPosition"
+            ],
+            "selectMandatoryAttributeList": [
+                "teamRole"
+            ]
         }
     },
     "recordViews": {

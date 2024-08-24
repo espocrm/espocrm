@@ -81,7 +81,10 @@ class Formula implements BeforeSave
             $this->formulaManager->run($script, $entity, $variables);
         }
         catch (Exception $e) {
-            $this->log->error('Before-save formula script failed: ' . $e->getMessage());
+            $this->log->critical('Before-save formula script failed. {message}', [
+                'message' => $e->getMessage(),
+                'exception' => $e,
+            ]);
         }
     }
 }

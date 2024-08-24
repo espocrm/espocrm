@@ -26,12 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/portal-role/record/edit', ['views/role/record/edit'], function (Dep) {
+import RoleEditRecordView from 'views/role/record/edit';
 
-    return Dep.extend({
+export default class extends RoleEditRecordView {
 
-        tableView: 'views/portal-role/record/table',
-
-        stickButtonsContainerAllTheWay: true,
-    });
-});
+    tableView = 'views/portal-role/record/table'
+    stickButtonsContainerAllTheWay = true
+}

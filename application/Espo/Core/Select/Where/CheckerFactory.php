@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Select\Where;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Acl\Exceptions\NotAvailable;
 use Espo\Entities\User;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Acl\UserAclManagerProvider;
@@ -49,7 +49,7 @@ class CheckerFactory
                 ->get($user)
                 ->createUserAcl($user);
         }
-        catch (Error $e) {
+        catch (NotAvailable $e) {
             throw new RuntimeException($e->getMessage());
         }
 

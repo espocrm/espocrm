@@ -39,27 +39,17 @@ use Espo\Tools\AdminNotifications\LatestReleaseDataRequester;
  */
 class CheckNewVersion implements JobDataLess
 {
-    private Config $config;
-    private ConfigWriter $configWriter;
-    private LatestReleaseDataRequester $requester;
-
     public function __construct(
-        Config $config,
-        ConfigWriter $configWriter,
-        LatestReleaseDataRequester $requester
-    ) {
-        $this->config = $config;
-        $this->configWriter = $configWriter;
-        $this->requester = $requester;
-    }
+        private Config $config,
+        private ConfigWriter $configWriter,
+        private LatestReleaseDataRequester $requester
+    ) {}
 
     public function run(): void
     {
-        $config = $this->config;
-
         if (
-            !$config->get('adminNotifications') ||
-            !$config->get('adminNotificationsNewVersion')
+            !$this->config->get('adminNotifications') ||
+            !$this->config->get('adminNotificationsNewVersion')
         ) {
             return;
         }
@@ -79,20 +69,20 @@ class CheckNewVersion implements JobDataLess
             return;
         }
 
-        if ($config->get('latestVersion') != $latestRelease['version']) {
+        if ($this->config->get('latestVersion') != $latestRelease['version']) {
             $this->configWriter->set('latestVersion', $latestRelease['version']);
 
-            if (!empty($latestRelease['notes'])) {
+            /*if (!empty($latestRelease['notes'])) {
                 // @todo Create a notification.
-            }
+            }*/
 
             $this->configWriter->save();
 
             return;
         }
 
-        if (!empty($latestRelease['notes'])) {
+        /*if (!empty($latestRelease['notes'])) {
             // @todo Find and modify notification.
-        }
+        }*/
     }
 }

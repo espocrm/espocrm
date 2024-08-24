@@ -1347,6 +1347,29 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $this->createProcessor($variables)->process($item);
     }
 
+    function testClearAttribute(): void
+    {
+        $item = new Argument(self::stringToNode('
+            {
+                "type": "entity\\\\clearAttribute",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "amount"
+                    }
+                ]
+            }
+        '));
+
+        $this->entity
+            ->expects($this->once())
+            ->method('clear')
+            ->with('amount');
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->createProcessor((object) [])->process($item);
+    }
+
     function testCompareDates()
     {
         $item = new Argument(self::stringToNode('
@@ -1564,22 +1587,29 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $this->assertIsInt($actual);
     }
 
-    function testDatetime()
+    public function testDatetimeNow(): void
     {
         $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\now"
             }
         '));
+
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(date('Y-m-d H:i:s'), $actual);
+    }
 
+    public function testDatetimeToday(): void
+    {
         $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\today"
             }
         '));
+
+        /** @noinspection PhpUnhandledExceptionInspection */
         $actual = $this->createProcessor()->process($item);
+
         $this->assertEquals(date('Y-m-d'), $actual);
     }
 

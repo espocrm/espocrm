@@ -40,7 +40,7 @@ class ExpandedLayoutDashletFieldView extends BaseFieldView {
     getRowHtml(row, i) {
         row = row || [];
 
-        let list = [];
+        const list = [];
 
         row.forEach(item => {
             list.push(item.name);
@@ -65,18 +65,18 @@ class ExpandedLayoutDashletFieldView extends BaseFieldView {
 
         rowList.push([]);
 
-        let fieldDataList = this.getFieldDataList();
+        const fieldDataList = this.getFieldDataList();
 
         rowList.forEach((row, i) => {
-            let rowHtml = this.getRowHtml(row, i);
-            let $row = $(rowHtml);
+            const rowHtml = this.getRowHtml(row, i);
+            const $row = $(rowHtml);
 
             this.$container.append($row);
 
-            let $input = $row.find('input');
+            const $input = $row.find('input');
 
             /** @type {module:ui/multi-select~Options} */
-            let multiSelectOptions = {
+            const multiSelectOptions = {
                 items: fieldDataList,
                 delimiter: this.delimiter,
                 matchAnyWord: this.matchAnyWord,
@@ -152,12 +152,12 @@ class ExpandedLayoutDashletFieldView extends BaseFieldView {
     }
 
     fetch() {
-        var value = {
+        const value = {
             rows: [],
         };
 
         this.$el.find('input').each((i, el) => {
-            let row = [];
+            const row = [];
             let list = ($(el).val() || '').split(this.delimiter);
 
             if (list.length === 1 && list[0] === '') {
@@ -169,7 +169,7 @@ class ExpandedLayoutDashletFieldView extends BaseFieldView {
             }
 
             list.forEach(item => {
-                let o = {name: item};
+                const o = {name: item};
 
                 if (item === 'name') {
                     o.link = true;
@@ -181,7 +181,7 @@ class ExpandedLayoutDashletFieldView extends BaseFieldView {
             value.rows.push(row);
         });
 
-        let data = {};
+        const data = {};
 
         data[this.name] = value;
 

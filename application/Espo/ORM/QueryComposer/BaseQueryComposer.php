@@ -181,6 +181,7 @@ abstract class BaseQueryComposer implements QueryComposer
     protected int $aliasMaxLength = 256;
 
     protected bool $indexHints = true;
+    protected bool $skipForeignIfForUpdate = false;
 
     protected EntityFactory $entityFactory;
     protected PDO $pdo;
@@ -746,8 +747,20 @@ abstract class BaseQueryComposer implements QueryComposer
     /**
      * @param array<string, mixed> $params
      */
+    private function skipForeign(array $params): bool
+    {
+        return $this->skipForeignIfForUpdate && ($params['forUpdate'] ?? false);
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     */
     protected function getJoinsPart(Entity $entity, array $params, bool $includeBelongsTo = false): string
     {
+        if ($includeBelongsTo && $this->skipForeign($params)) {
+            $includeBelongsTo = false;
+        }
+
         $joinsPart = '';
 
         if ($includeBelongsTo) {
@@ -1262,7 +1275,13 @@ abstract class BaseQueryComposer implements QueryComposer
         $argument = $attribute;
 
         if (Util::isArgumentString($argument)) {
+            $isSingleQuote = $argument[0] === "'";
+
             $string = substr($argument, 1, -1);
+
+            $string = $isSingleQuote ?
+                str_replace("\\'", "'", $string) :
+                str_replace('\\"', '"', $string);
 
             return $this->quote($string);
         }
@@ -1716,7 +1735,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $selectNotSpecified = !count($itemList);
 
-        if (!$selectNotSpecified && $itemList[0] === '*' && $entity) {
+        if (!$selectNotSpecified && self::isSelectAll($itemList) && $entity) {
             array_shift($itemList);
 
             foreach (array_reverse($entity->getAttributeList()) as $item) {
@@ -1800,6 +1819,10 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if (!is_array($attribute) && !is_string($attribute)) { /** @phpstan-ignore-line */
             throw new RuntimeException("ORM Query: Bad select item.");
+        }
+
+        if (is_array($attribute) && count($attribute) === 1) {
+            $attribute = $attribute[0];
         }
 
         if (is_string($attribute) && $entity) {
@@ -1910,6 +1933,10 @@ abstract class BaseQueryComposer implements QueryComposer
             $this->getAttributeParam($entity, $attribute, 'notStorable') &&
             $attributeType !== Entity::FOREIGN
         ) {
+            return null;
+        }
+
+        if ($attributeType === Entity::FOREIGN && $this->skipForeign($params)) {
             return null;
         }
 
@@ -2111,7 +2138,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string[]|string> $select
+     * @param array<int, string[]|string> $select
      */
     protected static function isSelectAll(array $select): bool
     {
@@ -2119,7 +2146,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return true;
         }
 
-        return $select[0] === '*';
+        return $select[0] === '*' || $select[0][0] === '*';
     }
 
     /**
@@ -2865,6 +2892,10 @@ abstract class BaseQueryComposer implements QueryComposer
             }
             else if (is_array($right)) {
                 $right = $this->applyValueToCustomWhereClause($right, $value);
+            }
+
+            if (is_string($left) && str_ends_with($left, ':') && str_contains($left, '{value}')) {
+                $left = str_replace('{value}', Expression\Util::stringifyArgument($value), $left);
             }
 
             $modified[$left] = $right;

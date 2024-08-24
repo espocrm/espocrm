@@ -21,7 +21,8 @@
     "acceptanceStatusMeetings": "Статус на приемане (Срещи)",
     "acceptanceStatusCalls": "Статус на приемане (Разговори)",
     "title": "Роля при клиент",
-    "hasPortalUser": "Притежава акаунт в портала"
+    "hasPortalUser": "Притежава акаунт в портала",
+    "originalEmail": "Оригинален имейл"
   },
   "links": {
     "opportunities": "Сделки",

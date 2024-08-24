@@ -26,10 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/inbound-email/fields/test-connection', ['views/email-account/fields/test-connection'], function (Dep) {
+import TestConnectionView from 'views/email-account/fields/test-connection';
 
-    return Dep.extend({
+export default class extends TestConnectionView {
 
-        url: 'InboundEmail/action/testConnection',
-     });
-});
+    url = 'InboundEmail/action/testConnection'
+}
+

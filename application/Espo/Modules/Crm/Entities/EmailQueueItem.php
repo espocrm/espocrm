@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\ORM\Entity;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
 
 class EmailQueueItem extends Entity
 {
@@ -85,5 +86,36 @@ class EmailQueueItem extends Entity
     public function getEmailAddress(): ?string
     {
         return $this->get('emailAddress');
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->set('status', $status);
+
+        return $this;
+    }
+
+    public function setSentAtNow(): self
+    {
+        $this->set('sentAt', date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT));
+
+        return $this;
+    }
+
+    public function setEmailAddress(string $emailAddress): self
+    {
+        $this->set('emailAddress', $emailAddress);
+
+        return $this;
+    }
+
+    public function incrementAttemptCount(): self
+    {
+        $attemptCount = $this->getAttemptCount();
+        $attemptCount++;
+
+        $this->set('attemptCount', $attemptCount);
+
+        return $this;
     }
 }

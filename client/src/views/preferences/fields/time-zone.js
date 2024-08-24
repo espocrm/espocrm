@@ -26,16 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/preferences/fields/time-zone', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+export default class extends EnumFieldView {
 
-        setupOptions: function () {
-            this.params.options = Espo.Utils.clone(this.getHelper().getAppParam('timeZoneList')) || [];
-            this.params.options.unshift('');
+    setupOptions() {
+        this.params.options = Espo.Utils.clone(this.getHelper().getAppParam('timeZoneList')) || [];
+        this.params.options.unshift('');
 
-            this.translatedOptions = this.translatedOptions || {};
-            this.translatedOptions[''] = this.translate('Default') + ' (' + this.getConfig().get('timeZone') + ')';
-        },
-    });
-});
+        this.translatedOptions = this.translatedOptions || {};
+        this.translatedOptions[''] = `${this.translate('Default')} (${this.getConfig().get('timeZone')})`;
+    }
+}

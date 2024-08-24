@@ -76,7 +76,12 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             ->method('quote')
             ->will($this->returnCallback(function() {
                 $args = func_get_args();
-                return "'" . $args[0] . "'";
+
+                $s = $args[0];
+
+                $s = str_replace("'", "\'", $s);
+
+                return "'" . $s . "'";
             }));
 
         $this->entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
@@ -1882,7 +1887,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'select' => ['id', ["CONCAT:(',test',\"+\",'\"', \"'\")", 'value']]
         ]));
         $expectedSql =
-            "SELECT comment.id AS `id`, CONCAT(',test', '+', '\"', ''') AS `value` FROM `comment` " .
+            "SELECT comment.id AS `id`, CONCAT(',test', '+', '\"', '\\'') AS `value` FROM `comment` " .
             "WHERE comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
@@ -2237,6 +2242,26 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['test'], $list);
     }
 
+    public function testComplexExpressionString1(): void
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('TestWhere')
+            ->select('"test\\"test"', 'test1')
+            ->select("'test\\'test'", 'test2')
+            ->withDeleted()
+            ->build();
+
+        $sql = $this->query->composeSelect($select);
+
+        $expectedSql =
+            "SELECT 'test\"test' AS `test1`, 'test\\'test' AS `test2` ".
+            "FROM `test_where`";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testCustomWhere1()
     {
         $queryBuilder = new QueryBuilder();
@@ -2245,7 +2270,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             ->from('TestWhere')
             ->select(['id'])
             ->where([
-                'test1' => 'hello',
+                'test1' => "hello' test",
             ])
             ->build();
 
@@ -2255,7 +2280,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "SELECT test_where.id AS `id` ".
             "FROM `test_where` ".
             "JOIN `test` AS `t` ON t.id = test_where.id ".
-            "WHERE (((test_where.test = 'hello') OR (test_where.test = '1')))";
+            "WHERE (" .
+                "((test_where.test = 'hello\\' test') OR (test_where.test = '1') OR (test_where.test = LOWER('hello\\' test')))" .
+            ")";
 
         $this->assertEquals($expectedSql, $sql);
     }

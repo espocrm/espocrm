@@ -20,23 +20,23 @@
   },
   "options": {
     "action": {
-      "Sent": "gönderildi",
+      "Sent": "Gönderildi",
       "Opened": "Açılmış",
       "Opted Out": "Devre dışı bırakıldı",
       "Bounced": "Geri Döndü",
       "Clicked": "tıklandı",
-      "Lead Created": "Müşteri Potansiyeli Oluşturuldu"
+      "Lead Created": "Potansiyel Oluşturuldu"
     }
   },
   "labels": {
     "All": "Hepsi"
   },
   "presetFilters": {
-    "sent": "gönderildi",
+    "sent": "Gönderildi",
     "opened": "Açılmış",
     "optedOut": "Devre dışı bırakıldı",
     "bounced": "Geri Döndü",
     "clicked": "tıklandı",
-    "leadCreated": "Müşteri Potansiyeli Oluşturuldu"
+    "leadCreated": "Potansiyel Oluşturuldu"
   }
 }

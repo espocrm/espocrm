@@ -6,5 +6,10 @@
         "update": {
             "allowed": true
         }
+    },
+    "relationships": {
+        "log": {
+            "countDisabled": true
+        }
     }
 }

@@ -5,5 +5,8 @@
     },
     "recordViews": {
         "list": "crm:views/email-queue-item/record/list"
-    }
+    },
+    "createDisabled": true,
+    "mergeDisabled": true,
+    "massUpdateDisabled": true
 }

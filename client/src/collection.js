@@ -110,7 +110,7 @@ class Collection {
     /**
      * A where clause.
      *
-     * @type {Array.<Object>|null}
+     * @type {module:search-manager~whereItem[]|null}
      */
     where = null
 
@@ -146,6 +146,13 @@ class Collection {
      * @type {module:ajax.AjaxPromise|null}
      */
     lastSyncPromise = null
+
+    /**
+     * A parent model. To be used for own purposes. E.g. to have access to a parent from related models.
+     *
+     * @type {import('model').default}
+     */
+    parentModel
 
     /**
      * @param {Model[]|null} [models] Models.
@@ -198,6 +205,15 @@ class Collection {
         /** @type {module:model~defs} */
         this.defs = options.defs || {};
 
+        /**
+         * @type {{
+         *     primaryFilter?: string,
+         *     boolFilterList?: string[],
+         *     textFilter?: string,
+         *     select?: string,
+         *     q?: string,
+         * } | Record<string, *>}
+         */
         this.data = {};
 
         /**
@@ -214,7 +230,7 @@ class Collection {
     /**
      * Add models or a model.
      *
-     * @param {Model[]|Model} models Models ar a model.
+     * @param {Model[]|Model|Record[]|Record} models Models ar a model.
      * @param {{
      *     merge?: boolean,
      *     at?: number,
@@ -263,7 +279,7 @@ class Collection {
 
     /**
      * @protected
-     * @param {Model[]|Model} models Models ar a model.
+     * @param {Model[]|Model|Record[]} models Models ar a model.
      * @param {{
      *     silent?: boolean,
      *     at?: number,
@@ -652,28 +668,54 @@ class Collection {
     }
 
     /**
+     * Has previous page.
+     *
+     * @return {boolean}
+     */
+    hasPreviousPage() {
+        return this.offset > 0;
+    }
+
+    /**
+     * Has next page.
+     *
+     * @return {boolean}
+     */
+    hasNextPage() {
+        return this.total - this.offset > this.length || this.total === -1;
+    }
+
+    /**
      * Next page.
+     *
+     * @returns {Promise}
      */
     nextPage() {
-        this.setOffset(this.offset + this.maxSize);
+        return this.setOffset(this.offset + this.length);
     }
 
     /**
      * Previous page.
+     *
+     * @returns {Promise}
      */
     previousPage() {
-        this.setOffset(this.offset - this.maxSize);
+        return this.setOffset(Math.max(0, this.offset - this.maxSize));
     }
 
     /**
      * First page.
+     *
+     * @returns {Promise}
      */
     firstPage() {
-        this.setOffset(0);
+        return this.setOffset(0);
     }
 
     /**
      * Last page.
+     *
+     * @returns {Promise}
      */
     lastPage() {
         let offset = this.total - this.total % this.maxSize;
@@ -682,25 +724,32 @@ class Collection {
             offset = this.total - this.maxSize;
         }
 
-        this.setOffset(offset);
+        return this.setOffset(offset);
     }
 
     /**
      * Set an offset.
      *
      * @param {number} offset Offset.
+     * @returns {Promise}
      */
     setOffset(offset) {
         if (offset < 0) {
             throw new RangeError('offset can not be less than 0');
         }
 
-        if (offset > this.total && this.total !== -1 && offset > 0) {
+        if (
+            offset > this.total &&
+            this.total !== -1 &&
+            this.total !== -2 &&
+            offset > 0
+        ) {
             throw new RangeError('offset can not be larger than total count');
         }
 
         this.offset = offset;
-        this.fetch();
+
+        return this.fetch({maxSize: this.maxSize});
     }
 
     /**
@@ -709,19 +758,24 @@ class Collection {
      * @return {boolean}
      */
     hasMore() {
-        return this.total > this.length || this.total === -1;
+        return this.total > (this.length + this.offset + this.lengthCorrection) || this.total === -1;
     }
 
     /**
      * Prepare attributes.
      *
      * @protected
-     * @param {*} response A response from the backend.
+     * @param {Object.<string, *>|Record[]} response A response from the backend.
      * @param {Object.<string, *>} options Options.
      * @returns {Object.<string, *>[]}
      */
     prepareAttributes(response, options) {
         this.total = response.total;
+
+        // noinspection JSUnusedGlobalSymbols
+        /**
+         * @deprecated As of v8.4. Use 'sync' event to obtain any additional data from a response.
+         */
         this.dataAdditional = response.additionalData || null;
 
         return response.list;
@@ -741,6 +795,10 @@ class Collection {
      * @param {{
      *     remove?: boolean,
      *     more?: boolean,
+     *     offset?: number,
+     *     maxSize?: number,
+     *     orderBy?: string,
+     *     order?: 'asc'|'desc',
      * } & Object.<string, *>} [options] Options.
      * @returns {Promise}
      * @fires Collection#sync Unless `{silent: true}`.
@@ -757,20 +815,17 @@ class Collection {
 
         const length = this.length + this.lengthCorrection;
 
-        if (!('maxSize' in options)) {
-            options.data.maxSize = options.more ? this.maxSize : (
-                (length > this.maxSize) ? length : this.maxSize
-            );
+        if ('maxSize' in options) {
+            options.data.maxSize = options.maxSize;
+        } else {
+            options.data.maxSize = options.more ? this.maxSize : Math.max(length, this.maxSize);
 
             if (this.maxMaxSize && options.data.maxSize > this.maxMaxSize) {
                 options.data.maxSize = this.maxMaxSize;
             }
         }
-        else {
-            options.data.maxSize = options.maxSize;
-        }
 
-        options.data.offset = options.more ? length : this.offset;
+        options.data.offset = options.more ? (this.offset + length) : this.offset;
         options.data.orderBy = this.orderBy;
         options.data.order = this.order;
         options.data.where = this.getWhere();
@@ -807,10 +862,19 @@ class Collection {
     }
 
     /**
+     * Is being fetched.
+     *
+     * @return {boolean}
+     */
+    isBeingFetched() {
+        return this.lastSyncPromise && this.lastSyncPromise.getReadyState() < 4;
+    }
+
+    /**
      * Abort the last fetch.
      */
     abortLastFetch() {
-        if (this.lastSyncPromise && this.lastSyncPromise.getReadyState() < 4) {
+        if (this.isBeingFetched()) {
             this.lastSyncPromise.abort();
         }
     }
@@ -867,7 +931,7 @@ class Collection {
     /**
      * Clone.
      *
-     * @return {Collection}
+     * @return {import('collection').default}
      */
     clone() {
         const collection = new this.constructor(this.models, {
@@ -891,6 +955,7 @@ class Collection {
         collection.maxSize = this.maxSize;
         collection.maxMaxSize = this.maxMaxSize;
         collection.whereFunction = this.whereFunction;
+        collection.parentModel = this.parentModel;
 
         return collection;
     }

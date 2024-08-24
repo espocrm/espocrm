@@ -148,7 +148,7 @@ class Builder
             $entityDefs = EntityDefs::fromRaw($modifiedEntityDefs->toAssoc(), $entityType);
         }
 
-        $this->log->debug("Schema\Builder: Entity {$entityType}");
+        $this->log->debug("Schema\Builder: Entity $entityType");
 
         $tableName = Util::toUnderScore($entityType);
 
@@ -308,7 +308,7 @@ class Builder
 
         $tableName = Util::toUnderScore($relationshipName);
 
-        $this->log->debug("Schema\Builder: ManyMany for {$entityType}.{$relationDefs->getName()}");
+        $this->log->debug("Schema\Builder: ManyMany for $entityType.{$relationDefs->getName()}");
 
         if ($schema->hasTable($tableName)) {
             $this->log->debug('Schema\Builder: Table [' . $tableName . '] exists.');
@@ -468,6 +468,7 @@ class Builder
      * This logic can be removed in the future. Usage of table files in not recommended.
      *
      * @return array<string, array<string, mixed>>
+     * @todo Remove in v9.0.
      */
     private function getCustomTables(): array
     {
@@ -490,7 +491,7 @@ class Builder
 
         if ($customTables !== []) {
             trigger_error(
-                'Definitions in Database\\Schema\\tables are deprecated and will be remove in v8.0.',
+                'Definitions in Database\\Schema\\tables are deprecated and will be remove in v9.0.',
                 E_USER_DEPRECATED
             );
         }

@@ -5,7 +5,7 @@
   },
   "options": {
     "status": {
-      "Pending": "In corso",
+      "Pending": "In Attesa",
       "Running": "In esecuzione",
       "Success": "Successo",
       "Failed": "Fallito"

@@ -26,51 +26,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/note/fields/users', ['views/fields/link-multiple'], function (Dep) {
+import LinkMultipleFieldView from 'views/fields/link-multiple';
 
-    return Dep.extend({
+export default class extends LinkMultipleFieldView {
 
-        init: function () {
-            this.messagePermission = this.getAcl().getPermissionLevel('message');
-            this.portalPermission = this.getAcl().getPermissionLevel('portal');
+    init() {
+        this.messagePermission = this.getAcl().getPermissionLevel('message');
+        this.portalPermission = this.getAcl().getPermissionLevel('portal');
 
-            if (this.messagePermission === 'no' && this.portalPermission === 'no') {
-                this.readOnly = true;
-            }
+        if (this.messagePermission === 'no' && this.portalPermission === 'no') {
+            this.readOnly = true;
+        }
 
-            Dep.prototype.init.call(this);
-        },
+        super.init();
+    }
 
-        getSelectBoolFilterList: function () {
-            if (this.messagePermission === 'team') {
-                return ['onlyMyTeam'];
-            }
+    getSelectBoolFilterList() {
+        if (this.messagePermission === 'team') {
+            return ['onlyMyTeam'];
+        }
 
-            if (this.portalPermission === 'yes') {
-                return null;
-            }
-        },
-
-        getSelectPrimaryFilterName: function () {
-            if (this.portalPermission === 'yes' && this.messagePermission === 'no') {
-                return 'activePortal';
-            }
-
-            return 'active';
-        },
-
-        getSelectFilterList: function () {
-
-            if (this.portalPermission === 'yes') {
-                if (this.messagePermission === 'no') {
-                     return ['activePortal'];
-                }
-
-                return ['active', 'activePortal'];
-            }
-
+        if (this.portalPermission === 'yes') {
             return null;
-        },
+        }
+    }
 
-    });
-});
+    getSelectPrimaryFilterName() {
+        if (this.portalPermission === 'yes' && this.messagePermission === 'no') {
+            return 'activePortal';
+        }
+
+        return 'active';
+    }
+
+    getSelectFilterList() {
+        if (this.portalPermission === 'yes') {
+            if (this.messagePermission === 'no') {
+                 return ['activePortal'];
+            }
+
+            return ['active', 'activePortal'];
+        }
+
+        return null;
+    }
+}

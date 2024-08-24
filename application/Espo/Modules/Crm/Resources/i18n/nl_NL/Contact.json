@@ -21,7 +21,8 @@
     "acceptanceStatusMeetings": "Acceptatiestatus (vergaderingen)",
     "acceptanceStatusCalls": "Acceptatiestatus (oproepen)",
     "title": "Relatie titel",
-    "hasPortalUser": "Heeft portaal toegang"
+    "hasPortalUser": "Heeft portaal toegang",
+    "originalEmail": "Originele e-mail"
   },
   "links": {
     "opportunities": "Kansen",

@@ -39,11 +39,19 @@ class ListExpandedRecordView extends ListRecordView {
     rowActionsView = false
     _internalLayoutType = 'list-row-expanded'
     presentationType = 'expanded'
-    pagination = false
+    paginationDisabled = true
     header = false
     _internalLayout = null
     checkedList = null
     listContainerEl = '.list > ul'
+
+    init() {
+        if (this.options.forcePagination) {
+            this.paginationDisabled = false;
+        }
+
+        super.init();
+    }
 
     setup() {
         super.setup();
@@ -112,6 +120,9 @@ class ListExpandedRecordView extends ListRecordView {
                         },
                         mode: 'list',
                     },
+                    align: rowItem.align,
+                    small: rowItem.small,
+                    soft: rowItem.soft,
                 };
 
                 if (rowItem.options) {
@@ -152,10 +163,8 @@ class ListExpandedRecordView extends ListRecordView {
                 };
             }
         }
-        else {
-            if (this.rowActionsView) {
-                layout.right = this.getRowActionsDefs();
-            }
+        else if (this.rowActionsView) {
+            layout.right = this.getRowActionsDefs();
         }
 
         return layout;

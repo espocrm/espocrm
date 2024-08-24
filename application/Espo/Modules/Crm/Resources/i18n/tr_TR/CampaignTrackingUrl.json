@@ -1,13 +1,12 @@
 {
   "fields": {
-    "url": "URL  ",
-    "urlToUse": "URL yerine eklemek için kod",
+    "urlToUse": "URL yerine eklenecek kod",
     "campaign": "Kampanya"
   },
   "links": {
     "campaign": "Kampanya"
   },
   "labels": {
-    "Create CampaignTrackingUrl": "İzleme URL'si Oluştur"
+    "Create CampaignTrackingUrl": "İzleme URL'i Oluştur"
   }
 }

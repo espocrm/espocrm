@@ -30,7 +30,6 @@
 namespace Espo\Core\Select\Where;
 
 use Espo\Core\Select\Where\Item\Data;
-use Espo\Core\Select\Where\Item\Data\DateTime as DateTimeData;
 
 use InvalidArgumentException;
 use RuntimeException;
@@ -69,7 +68,7 @@ class Item
 
     /**
      * @param array<string, mixed> $params
-     * {@internal}
+     * @internal
      */
     public static function fromRaw(array $params): self
     {
@@ -85,18 +84,24 @@ class Item
         $obj->value = $params['value'] ?? null;
 
         if ($params['dateTime'] ?? false) {
-            $obj->data = DateTimeData
+            $obj->data = Data\DateTime
+                ::create()
+                ->withTimeZone($params['timeZone'] ?? null);
+        }
+        else if ($params['date'] ?? null) {
+            $obj->data = Data\Date
                 ::create()
                 ->withTimeZone($params['timeZone'] ?? null);
         }
 
         unset($params['field']);
         unset($params['dateTime']);
+        unset($params['date']);
         unset($params['timeZone']);
 
         foreach (array_keys($params) as $key) {
             if (!property_exists($obj, $key)) {
-                throw new InvalidArgumentException("Unknown parameter '{$key}'.");
+                throw new InvalidArgumentException("Unknown parameter '$key'.");
             }
         }
 
@@ -156,8 +161,10 @@ class Item
             $raw['attribute'] = $this->attribute;
         }
 
-        if ($this->data instanceof DateTimeData) {
-            $raw['dateTime'] = true;
+        if ($this->data instanceof Data\DateTime || $this->data instanceof Data\Date) {
+            if ($this->data instanceof Data\DateTime) {
+                $raw['dateTime'] = true;
+            }
 
             $timeZone = $this->data->getTimeZone();
 
@@ -204,7 +211,7 @@ class Item
     public function getItemList(): array
     {
         if (!in_array($this->type, $this->withNestedItemsTypeList)) {
-            throw new RuntimeException("Nested items not supported for '{$this->type}' type.");
+            throw new RuntimeException("Nested items not supported for '$this->type' type.");
         }
 
         $list = [];

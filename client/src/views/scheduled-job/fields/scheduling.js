@@ -26,82 +26,82 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/scheduled-job/fields/scheduling', ['views/fields/varchar'], function (Dep) {
+import VarcharFieldView from 'views/fields/varchar';
 
-    return Dep.extend({
+export default class extends VarcharFieldView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            if (this.isEditMode() || this.isDetailMode()) {
-                this.wait(
-                    Espo.loader.requirePromise('lib!cronstrue')
-                        .then(Cronstrue => {
-                            this.Cronstrue = Cronstrue;
+        if (this.isEditMode() || this.isDetailMode()) {
+            this.wait(
+                Espo.loader.requirePromise('lib!cronstrue')
+                    .then(Cronstrue => {
+                        this.Cronstrue = Cronstrue;
 
-                            this.listenTo(this.model, 'change:' + this.name, () => this.showText());
-                        })
-                );
-            }
-        },
+                        this.listenTo(this.model, 'change:' + this.name, () => this.showText());
+                    })
+            );
+        }
+    }
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
-            if (this.isEditMode() || this.isDetailMode()) {
-                let $text = this.$text = $('<div class="small text-success"/>');
+        if (this.isEditMode() || this.isDetailMode()) {
+            const $text = this.$text = $('<div class="small text-success"/>');
 
-                this.$el.append($text);
-                this.showText();
-            }
-        },
+            this.$el.append($text);
+            this.showText();
+        }
+    }
 
-        showText: function () {
-            if (!this.$text || !this.$text.length) {
-                return;
-            }
+    /**
+     * @private
+     */
+    showText() {
+        let text;
+        if (!this.$text || !this.$text.length) {
+            return;
+        }
 
-            if (!this.Cronstrue) {
-                return;
-            }
+        if (!this.Cronstrue) {
+            return;
+        }
 
-            var exp = this.model.get(this.name);
+        const exp = this.model.get(this.name);
 
-            if (!exp) {
-                this.$text.text('');
+        if (!exp) {
+            this.$text.text('');
 
-                return;
-            }
+            return;
+        }
 
-            if (exp === '* * * * *') {
-                this.$text.text(this.translate('As often as possible', 'labels', 'ScheduledJob'));
+        if (exp === '* * * * *') {
+            this.$text.text(this.translate('As often as possible', 'labels', 'ScheduledJob'));
 
-                return;
-            }
+            return;
+        }
 
-            var locale = 'en';
-            var localeList = Object.keys(this.Cronstrue.default.locales);
-            var language = this.getLanguage().name;
+        let locale = 'en';
+        const localeList = Object.keys(this.Cronstrue.default.locales);
+        const language = this.getLanguage().name;
 
-            if (~localeList.indexOf(language)) {
-                locale = language;
-            }
-            else if (~localeList.indexOf(language.split('_')[0])) {
-                locale = language.split('_')[0];
-            }
+        if (~localeList.indexOf(language)) {
+            locale = language;
+        } else if (~localeList.indexOf(language.split('_')[0])) {
+            locale = language.split('_')[0];
+        }
 
-            try {
-                var text = this.Cronstrue.toString(exp, {
-                    use24HourTimeFormat: !this.getDateTime().hasMeridian(),
-                    locale: locale,
-                });
+        try {
+            text = this.Cronstrue.toString(exp, {
+                use24HourTimeFormat: !this.getDateTime().hasMeridian(),
+                locale: locale,
+            });
+        } catch (e) {
+            text = this.translate('Not valid');
+        }
 
-            }
-            catch (e) {
-                text = this.translate('Not valid');
-            }
-
-            this.$text.text(text);
-        },
-    });
-});
+        this.$text.text(text);
+    }
+}

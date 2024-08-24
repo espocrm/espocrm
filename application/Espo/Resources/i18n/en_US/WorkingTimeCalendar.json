@@ -1,7 +1,6 @@
 {
     "labels": {
-        "Create WorkingTimeCalendar": "Create Calendar",
-        "Ranges": "Ranges"
+        "Create WorkingTimeCalendar": "Create Calendar"
     },
     "fields": {
         "timeZone": "Time Zone",
@@ -22,6 +21,6 @@
         "weekday6TimeRanges": "Sat Schedule"
     },
     "links": {
-        "ranges": "Ranges"
+        "ranges": "Exceptions"
     }
 }

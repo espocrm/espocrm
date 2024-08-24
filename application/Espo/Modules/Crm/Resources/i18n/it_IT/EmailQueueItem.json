@@ -5,11 +5,11 @@
     "sentAt": "Data invio",
     "attemptCount": "Prove",
     "emailAddress": "Indirizzo email",
-    "massEmail": "Email massiva",
+    "massEmail": "Email Massiva",
     "isTest": "È un test"
   },
   "links": {
-    "massEmail": "Email massiva"
+    "massEmail": "Email Massiva"
   },
   "options": {
     "status": {

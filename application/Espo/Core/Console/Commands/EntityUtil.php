@@ -36,14 +36,13 @@ use Espo\Core\Console\IO;
 use Espo\Tools\EntityManager\Rename\Renamer;
 use Espo\Tools\EntityManager\Rename\FailReason as RenameFailReason;
 
+/**
+ * @noinspection PhpUnused
+ */
 class EntityUtil implements Command
 {
-    private Renamer $renamer;
-
-    public function __construct(Renamer $renamer)
-    {
-        $this->renamer = $renamer;
-    }
+    public function __construct(private Renamer $renamer)
+    {}
 
     public function run(Params $params, IO $io): void
     {
@@ -57,8 +56,6 @@ class EntityUtil implements Command
 
         if ($subCommand === 'rename') {
             $this->runRename($params, $io);
-
-            return;
         }
     }
 
@@ -125,13 +122,13 @@ class EntityUtil implements Command
         }
 
         if ($failReason === RenameFailReason::DOES_NOT_EXIST) {
-            $io->writeLine("Entity type `{$entityType}` does not exist.");
+            $io->writeLine("Entity type `$entityType` does not exist.");
 
             return;
         }
 
         if ($failReason === RenameFailReason::NOT_CUSTOM) {
-            $io->writeLine("Entity type `{$entityType}` is not custom, hence can't be renamed.");
+            $io->writeLine("Entity type `$entityType` is not custom, hence can't be renamed.");
 
             return;
         }
@@ -150,8 +147,6 @@ class EntityUtil implements Command
 
         if ($failReason === RenameFailReason::ERROR) {
             $io->writeLine("Error occurred.");
-
-            return;
         }
     }
 }

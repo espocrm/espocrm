@@ -19,16 +19,22 @@
             "type": "jsonObject"
         },
         "createdAt": {
-            "type": "datetime"
+            "type": "datetime",
+            "hasSeconds": true
         },
         "status": {
             "type": "enum",
             "options": ["Pending", "Success", "Failed"],
             "default": "Pending",
-            "maxLength": 15
+            "maxLength": 7,
+            "style": {
+                "Success": "success",
+                "Failed": "danger"
+            }
         },
         "processedAt": {
-            "type": "datetime"
+            "type": "datetime",
+            "hasSeconds": true
         },
         "attempts": {
             "type": "int",
@@ -39,6 +45,9 @@
         }
     },
     "links": {
+        "target": {
+            "type": "belongsToParent"
+        },
         "webhook": {
             "type": "belongsTo",
             "entity": "Webhook",

@@ -1,0 +1,8 @@
+{
+    "massActions": {
+        "delete": {
+            "allowed": true
+        }
+    },
+    "actionHistoryDisabled": true
+}

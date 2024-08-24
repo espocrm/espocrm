@@ -33,24 +33,67 @@ import Select from 'ui/select';
 
 /**
  * A currency field.
+ *
+ * @extends IntFieldView<module:views/fields/currency~params>
  */
 class CurrencyFieldView extends FloatFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/currency~options
+     * @property {
+     *     module:views/fields/currency~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/currency~params
+     * @property {number} [min] A max value.
+     * @property {number} [max] A max value.
+     * @property {boolean} [required] Required.
+     * @property {boolean} [disableFormatting] Disable formatting.
+     * @property {number|null} [decimalPlaces] A number of decimal places. @todo
+     * @property {boolean} [onlyDefaultCurrency] Only the default currency.
+     * @property {boolean} [decimal] Stored as decimal.
+     * @property {number} [scale] Scale (for decimal).
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/currency~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'currency'
 
     editTemplate = 'fields/currency/edit'
     detailTemplate = 'fields/currency/detail'
+    // noinspection JSUnusedGlobalSymbols
     detailTemplate1 = 'fields/currency/detail-1'
+    // noinspection JSUnusedGlobalSymbols
     detailTemplate2 = 'fields/currency/detail-2'
+    // noinspection JSUnusedGlobalSymbols
     detailTemplate3 = 'fields/currency/detail-3'
     listTemplate = 'fields/currency/list'
+    // noinspection JSUnusedGlobalSymbols
     listTemplate1 = 'fields/currency/list-1'
+    // noinspection JSUnusedGlobalSymbols
     listTemplate2 = 'fields/currency/list-2'
+    // noinspection JSUnusedGlobalSymbols
     listTemplate3 = 'fields/currency/list-3'
     detailTemplateNoCurrency = 'fields/currency/detail-no-currency'
 
     maxDecimalPlaces = 3
 
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = [
         'required',
         'number',
@@ -59,17 +102,16 @@ class CurrencyFieldView extends FloatFieldView {
 
     /** @inheritDoc */
     data() {
-        let currencyValue = this.model.get(this.currencyFieldName) ||
+        const currencyValue = this.model.get(this.currencyFieldName) ||
             this.getPreferences().get('defaultCurrency') ||
             this.getConfig().get('defaultCurrency');
 
-        let multipleCurrencies = !this.isSingleCurrency || currencyValue !== this.defaultCurrency;
+        const multipleCurrencies = !this.isSingleCurrency || currencyValue !== this.defaultCurrency;
 
         return {
             ...super.data(),
             currencyFieldName: this.currencyFieldName,
             currencyValue: currencyValue,
-            currencyOptions: this.currencyOptions,
             currencyList: this.currencyList,
             currencySymbol: this.getMetadata().get(['app', 'currency', 'symbolMap', currencyValue]) || '',
             multipleCurrencies: multipleCurrencies,
@@ -92,10 +134,10 @@ class CurrencyFieldView extends FloatFieldView {
 
         this.isSingleCurrency = this.currencyList.length <= 1;
 
-        let currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) ||
+        const currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) ||
             this.defaultCurrency;
 
-        if (!~this.currencyList.indexOf(currencyValue)) {
+        if (!this.currencyList.includes(currencyValue)) {
             this.currencyList = Espo.Utils.clone(this.currencyList);
             this.currencyList.push(currencyValue);
         }
@@ -127,7 +169,7 @@ class CurrencyFieldView extends FloatFieldView {
 
     _getTemplateName() {
         if (this.mode === this.MODE_DETAIL || this.mode === this.MODE_LIST) {
-            var prop;
+            let prop;
 
             if (this.mode === this.MODE_LIST) {
                 prop = 'listTemplate' + this.getCurrencyFormat().toString();
@@ -154,7 +196,7 @@ class CurrencyFieldView extends FloatFieldView {
 
     formatNumberDetail(value) {
         if (value !== null) {
-            let currencyDecimalPlaces = this.decimalPlaces;
+            const currencyDecimalPlaces = this.decimalPlaces;
 
             if (currencyDecimalPlaces === 0) {
                 value = Math.round(value);
@@ -170,7 +212,7 @@ class CurrencyFieldView extends FloatFieldView {
                 );
             }
 
-            let parts = value.toString().split(".");
+            const parts = value.toString().split(".");
 
             parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
 
@@ -187,7 +229,7 @@ class CurrencyFieldView extends FloatFieldView {
                 }
 
                 if (currencyDecimalPlaces && decimalPartLength < currencyDecimalPlaces) {
-                    let limit = currencyDecimalPlaces - decimalPartLength;
+                    const limit = currencyDecimalPlaces - decimalPartLength;
 
                     for (let i = 0; i < limit; i++) {
                         parts[1] += '0';
@@ -233,25 +275,29 @@ class CurrencyFieldView extends FloatFieldView {
         super.afterRender();
 
         if (this.mode === this.MODE_EDIT) {
-            this.$currency = this.$el.find('[data-name="' + this.currencyFieldName + '"]');
+            this.$currency = this.$el.find(`[data-name="${this.currencyFieldName}"]`);
 
-            this.$currency.on('change', () => {
-                this.model.set(this.currencyFieldName, this.$currency.val(), {ui: true});
-            });
+            if (this.$currency.length) {
+                this.$currency.on('change', () => {
+                    this.model.set(this.currencyFieldName, this.$currency.val(), {ui: true});
+                });
 
-            Select.init(this.$currency);
+                Select.init(this.$currency);
+            }
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     validateNumber() {
         if (!this.params.decimal) {
             return this.validateFloat();
         }
 
-        let value = this.model.get(this.name);
+        const value = this.model.get(this.name);
 
         if (Number.isNaN(Number(value))) {
-            let msg = this.translate('fieldShouldBeNumber', 'messages').replace('{field}', this.getLabelText());
+            const msg = this.translate('fieldShouldBeNumber', 'messages')
+                .replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg);
 
@@ -264,7 +310,7 @@ class CurrencyFieldView extends FloatFieldView {
 
         value = this.parse(value);
 
-        let data = {};
+        const data = {};
 
         let currencyValue = this.$currency.length ?
             this.$currency.val() :

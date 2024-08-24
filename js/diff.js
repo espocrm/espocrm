@@ -866,6 +866,8 @@ class Diff
 
         const vendorPath = tempFolderPath + '/new/vendor/';
 
+        cp.execSync(`cp -r ${currentPath}/dev ${tempFolderPath}/new/dev`);
+
         fs.writeFileSync(tempFolderPath + '/new/composer.lock', composerLockNewContents);
         fs.writeFileSync(tempFolderPath + '/new/composer.json', composerNewContents);
 

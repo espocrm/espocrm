@@ -40,6 +40,11 @@ class KnowledgeBaseArticle extends Entity
     public const STATUS_PUBLISHED = 'Published';
     public const STATUS_ARCHIVED = 'Archived';
 
+    public function getStatus(): string
+    {
+        return (string) $this->get('status');
+    }
+
     public function getOrder(): ?int
     {
         return $this->get('order');

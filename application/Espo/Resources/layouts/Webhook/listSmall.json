@@ -1,0 +1,14 @@
+[
+    {
+        "name": "event",
+        "link": true
+    },
+    {
+        "name": "isActive",
+        "width": 14
+    },
+    {
+        "name": "user",
+        "width": 27
+    }
+]

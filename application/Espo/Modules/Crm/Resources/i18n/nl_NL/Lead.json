@@ -27,7 +27,8 @@
     "opportunityAmountCurrency": "Kans bedrag valuta",
     "acceptanceStatusMeetings": "Acceptatiestatus (vergaderingen)",
     "acceptanceStatusCalls": "Acceptatiestatus (oproepen)",
-    "convertedAt": "Geconverteerd op"
+    "convertedAt": "Geconverteerd op",
+    "originalEmail": "Originele e-mail"
   },
   "links": {
     "targetLists": "Doellijsten",

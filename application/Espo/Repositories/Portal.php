@@ -30,13 +30,12 @@
 namespace Espo\Repositories;
 
 use Espo\Entities\Portal as PortalEntity;
-
 use Espo\Core\Repositories\Database;
 
 use Espo\Core\Di;
 
 /**
- * @extends Database<\Espo\Entities\Portal>
+ * @extends Database<PortalEntity>
  */
 class Portal extends Database implements
 

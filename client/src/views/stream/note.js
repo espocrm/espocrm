@@ -50,20 +50,14 @@ class NoteStreamView extends View {
      */
     messageData = null
 
-    /**
-     * @protected
-     */
+    /** @protected */
     isEditable = false
-
-    /**
-     * @protected
-     */
+    /** @protected */
     isRemovable = false
-
-    /**
-     * @protected
-     */
+    /** @protected */
     isSystemAvatar = false
+
+    rowActionsView = 'views/stream/record/row-actions/default'
 
     data() {
         return {
@@ -77,6 +71,9 @@ class NoteStreamView extends View {
 
     init() {
         this.createField('createdAt', null, null, 'views/fields/datetime-short');
+
+        /** @type {string} */
+        this.listType = this.options.listType;
 
         this.isUserStream = this.options.isUserStream;
         this.isThis = !this.isUserStream;
@@ -106,7 +103,7 @@ class NoteStreamView extends View {
             this.createField('parent');
         }
 
-        let translatedEntityType = this.translateEntityType(this.model.get('parentType'));
+        const translatedEntityType = this.translateEntityType(this.model.get('parentType'));
 
         this.messageData = {
             'user': 'field:createdBy',
@@ -115,12 +112,15 @@ class NoteStreamView extends View {
         };
 
         if (!this.options.noEdit && (this.isEditable || this.isRemovable)) {
-            this.createView('right', 'views/stream/row-actions/default', {
+            this.createView('right', this.rowActionsView, {
                 selector: '.right-container',
                 acl: this.options.acl,
                 model: this.model,
                 isEditable: this.isEditable,
                 isRemovable: this.isRemovable,
+                listType: this.listType,
+                isThis: this.isThis,
+                parentModel: this.parentModel,
             });
         }
     }
@@ -130,21 +130,23 @@ class NoteStreamView extends View {
             (this.translate(entityType, 'scopeNamesPlural') || '') :
             (this.translate(entityType, 'scopeNames') || '');
 
-        string = string.toLowerCase();
-
-        let language = this.getPreferences().get('language') || this.getConfig().get('language');
-
-        if (~['de_DE', 'nl_NL'].indexOf(language)) {
-            string = Espo.Utils.upperCaseFirst(string);
+        if (!this.isToUpperCaseStringItems()) {
+            string = string.toLowerCase();
         }
 
         return string;
     }
 
+    isToUpperCaseStringItems() {
+        const language = this.getPreferences().get('language') || this.getConfig().get('language');
+
+        return ['de_DE', 'nl_NL'].includes(language);
+    }
+
     createField(name, type, params, view, options) {
         type = type || this.model.getFieldType(name) || 'base';
 
-        let o = {
+        const o = {
             model: this.model,
             defs: {
                 name: name,
@@ -155,7 +157,7 @@ class NoteStreamView extends View {
         };
 
         if (options) {
-            for (let i in options) {
+            for (const i in options) {
                 o[i] = options[i];
             }
         }
@@ -174,7 +176,7 @@ class NoteStreamView extends View {
     createMessage() {
         if (!this.messageTemplate) {
             let isTranslated = false;
-            let parentType = this.model.get('parentType') || null;
+            const parentType = this.model.get('parentType') || null;
 
             if (this.isMale()) {
                 this.messageTemplate = this.translate(this.messageName, 'streamMessagesMale', parentType) || '';
@@ -222,21 +224,38 @@ class NoteStreamView extends View {
         return this.getHelper().getAvatarHtml(id, 'small', 20);
     }
 
+    /**
+     *
+     * @param [scope]
+     * @param [id]
+     * @return {string|null}
+     */
     getIconHtml(scope, id) {
-        if (this.isThis && scope === this.parentModel.entityType) {
-            return;
+        if (!scope) {
+            if (!this.model.attributes.parentType) {
+                return null;
+            }
+
+            scope = this.model.attributes.parentType;
+            id = this.model.attributes.parentId;
         }
 
-        let iconClass = this.getMetadata().get(['clientDefs', scope, 'iconClass']);
+        if (this.isThis && this.parentModel && scope === this.parentModel.entityType) {
+            return null;
+        }
+
+        const iconClass = this.getMetadata().get(`clientDefs.${scope}.iconClass`);
+        const color = this.getMetadata().get(`clientDefs.${scope}.color`);
 
         if (!iconClass) {
-            return;
+            return null;
         }
 
         return $('<span>')
             .addClass(iconClass)
             .addClass('action text-muted icon')
             .css('cursor', 'pointer')
+            .css('color', color ? color : '')
             .attr('title', this.translate('View'))
             .attr('data-action', 'quickView')
             .attr('data-id', id)

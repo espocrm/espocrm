@@ -140,6 +140,16 @@ class TargetListCreate implements CreateHook
             ],
         ]);
 
+        $this->metadata->set('recordDefs', TargetList::ENTITY_TYPE, [
+            'relationships' => [
+                $foreignLink => [
+                    'massLink' => true,
+                    'linkRequiredForeignAccess' => 'read',
+                    'mandatoryAttributeList' => ['targetListIsOptedOut'],
+                ],
+            ],
+        ]);
+
         $targetLinkList = $this->metadata->get(['scopes', TargetList::ENTITY_TYPE, 'targetLinkList']) ?? [];
 
         if (!in_array($foreignLink, $targetLinkList)) {

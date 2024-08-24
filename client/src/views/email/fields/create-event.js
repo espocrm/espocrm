@@ -26,108 +26,115 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/create-event', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+export default class extends BaseFieldView {
 
-        detailTemplate: 'email/fields/create-event/detail',
+    detailTemplate = 'email/fields/create-event/detail'
 
-        eventEntityType: 'Meeting',
+    eventEntityType = 'Meeting'
 
-        getAttributeList: function () {
-            return [
-                'icsEventData',
-                'createdEventId',
-            ];
-        },
+    getAttributeList() {
+        return [
+            'icsEventData',
+            'createdEventId',
+        ];
+    }
 
-        events: {
-            'click [data-action="createEvent"]': function () {
-                this.createEvent();
-            },
-        },
+    setup() {
+        super.setup();
 
-        createEvent: function () {
-            let viewName = this.getMetadata().get(['clientDefs', this.eventEntityType, 'modalViews', 'edit']) ||
-                'views/modals/edit';
+        this.addActionHandler('createEvent', () => this.createEvent());
+    }
 
-            let eventData = this.model.get('icsEventData') || {};
+    createEvent() {
+        const viewName = this.getMetadata().get(['clientDefs', this.eventEntityType, 'modalViews', 'edit']) ||
+            'views/modals/edit';
 
-            let attributes = Espo.Utils.cloneDeep(eventData.valueMap || {});
+        const eventData = this.model.get('icsEventData') || {};
 
-            attributes.parentId = this.model.get('parentId');
-            attributes.parentType = this.model.get('parentType');
-            attributes.parentName = this.model.get('parentName');
+        const attributes = Espo.Utils.cloneDeep(eventData.valueMap || {});
 
-            this.addFromAddressToAttributes(attributes);
+        attributes.parentId = this.model.get('parentId');
+        attributes.parentType = this.model.get('parentType');
+        attributes.parentName = this.model.get('parentName');
 
-            this.createView('dialog', viewName, {
-                attributes: attributes,
-                scope: this.eventEntityType,
-            })
-                .then(view => {
-                    view.render();
+        this.addFromAddressToAttributes(attributes);
 
-                    this.listenToOnce(view, 'after:save', () => {
-                        this.model
-                            .fetch()
-                            .then(() =>
-                                Espo.Ui.success(this.translate('Done'))
-                            );
-                    });
+        this.createView('dialog', viewName, {
+            attributes: attributes,
+            scope: this.eventEntityType,
+        })
+            .then(view => {
+                view.render();
+
+                this.listenToOnce(view, 'after:save', () => {
+                    this.model
+                        .fetch()
+                        .then(() =>
+                            Espo.Ui.success(this.translate('Done'))
+                        );
                 });
-        },
+            });
+    }
 
-        addFromAddressToAttributes: function (attributes) {
-            let fromAddress = this.model.get('from');
-            let idHash = this.model.get('idHash') || {};
-            let typeHash = this.model.get('typeHash') || {};
-            let nameHash = this.model.get('nameHash') || {};
+    /**
+     * @private
+     * @param {Record} attributes
+     */
+    addFromAddressToAttributes(attributes) {
+        const fromAddress = this.model.get('from');
+        const idHash = this.model.get('idHash') || {};
+        const typeHash = this.model.get('typeHash') || {};
+        const nameHash = this.model.get('nameHash') || {};
 
-            let fromId = null;
-            let fromType = null;
-            let fromName = null;
+        let fromId = null;
+        let fromType = null;
+        let fromName = null;
 
-            if (!fromAddress) {
-                return;
-            }
+        if (!fromAddress) {
+            return;
+        }
 
-            fromId = idHash[fromAddress] || null;
-            fromType = typeHash[fromAddress] || null;
-            fromName = nameHash[fromAddress] || null;
+        fromId = idHash[fromAddress] || null;
+        fromType = typeHash[fromAddress] || null;
+        fromName = nameHash[fromAddress] || null;
 
-            let attendeeLink = this.getAttendeeLink(fromType);
+        const attendeeLink = this.getAttendeeLink(fromType);
 
-            if (!attendeeLink) {
-                return;
-            }
+        if (!attendeeLink) {
+            return;
+        }
 
-            attributes[attendeeLink + 'Ids'] = attributes[attendeeLink + 'Ids'] || [];
-            attributes[attendeeLink + 'Names'] = attributes[attendeeLink + 'Names'] || {};
+        attributes[attendeeLink + 'Ids'] = attributes[attendeeLink + 'Ids'] || [];
+        attributes[attendeeLink + 'Names'] = attributes[attendeeLink + 'Names'] || {};
 
-            if (~attributes[attendeeLink + 'Ids'].indexOf(fromId)) {
-                return;
-            }
+        if (~attributes[attendeeLink + 'Ids'].indexOf(fromId)) {
+            return;
+        }
 
-            attributes[attendeeLink + 'Ids'].push(fromId);
-            attributes[attendeeLink + 'Names'][fromId] = fromName;
-        },
+        attributes[attendeeLink + 'Ids'].push(fromId);
+        attributes[attendeeLink + 'Names'][fromId] = fromName;
+    }
 
-        getAttendeeLink: function (entityType) {
-            if (entityType === 'User') {
-                return 'users';
-            }
+    /**
+     * @private
+     * @param {string} entityType
+     * @return {null|string}
+     */
+    getAttendeeLink(entityType) {
+        if (entityType === 'User') {
+            return 'users';
+        }
 
-            if (entityType === 'Contact') {
-                return 'contacts';
-            }
+        if (entityType === 'Contact') {
+            return 'contacts';
+        }
 
-            if (entityType === 'Lead') {
-                return 'leads';
-            }
+        if (entityType === 'Lead') {
+            return 'leads';
+        }
 
-            return null;
-        },
-
-    });
-});
+        return null;
+    }
+}

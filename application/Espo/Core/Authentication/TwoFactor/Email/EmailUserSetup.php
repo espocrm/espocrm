@@ -40,7 +40,6 @@ use stdClass;
  */
 class EmailUserSetup implements UserSetup
 {
-
     public function __construct(private Util $util)
     {}
 

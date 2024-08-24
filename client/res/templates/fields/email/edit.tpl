@@ -4,7 +4,7 @@
     <div class="input-group email-address-block">
         <input
             type="email"
-            class="form-control email-address"
+            class="form-control email-address{{#if optOut}} text-strikethrough{{/if}}{{#if invalid}} text-danger{{/if}}"
             value="{{emailAddress}}" autocomplete="espo-{{../name}}"
             maxlength={{../itemMaxLength}}
         >

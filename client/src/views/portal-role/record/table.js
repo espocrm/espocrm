@@ -26,63 +26,61 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/portal-role/record/table', ['views/role/record/table'], function (Dep) {
+import RoleRecordTableView from 'views/role/record/table';
 
-    return Dep.extend({
+export default class extends RoleRecordTableView {
 
-        levelListMap: {
-            'recordAllAccountContactOwnNo': ['all', 'account', 'contact', 'own', 'no'],
-            'recordAllAccountOwnNo': ['all', 'account', 'own', 'no'],
-            'recordAllContactOwnNo': ['all', 'contact', 'own', 'no'],
-            'recordAllAccountNo': ['all', 'account', 'no'],
-            'recordAllContactNo': ['all', 'contact', 'no'],
-            'recordAllAccountContactNo': ['all', 'account', 'contact', 'no'],
-            'recordAllOwnNo': ['all', 'own', 'no'],
-            'recordAllNo': ['all', 'no'],
-            'record': ['all', 'own', 'no']
-        },
+    levelListMap = {
+        'recordAllAccountContactOwnNo': ['all', 'account', 'contact', 'own', 'no'],
+        'recordAllAccountOwnNo': ['all', 'account', 'own', 'no'],
+        'recordAllContactOwnNo': ['all', 'contact', 'own', 'no'],
+        'recordAllAccountNo': ['all', 'account', 'no'],
+        'recordAllContactNo': ['all', 'contact', 'no'],
+        'recordAllAccountContactNo': ['all', 'account', 'contact', 'no'],
+        'recordAllOwnNo': ['all', 'own', 'no'],
+        'recordAllNo': ['all', 'no'],
+        'record': ['all', 'own', 'no']
+    }
 
-        levelList: [
-            'all',
-            'account',
-            'contact',
-            'own',
-            'no',
-        ],
+    levelList = [
+        'all',
+        'account',
+        'contact',
+        'own',
+        'no',
+    ]
 
-        type: 'aclPortal',
+    type = 'aclPortal'
+    lowestLevelByDefault = true
 
-        lowestLevelByDefault: true,
+    setupScopeList() {
+        this.aclTypeMap = {};
+        this.scopeList = [];
 
-        setupScopeList: function () {
-            this.aclTypeMap = {};
-            this.scopeList = [];
+        const scopeListAll = this.getSortedScopeList();
 
-            var scopeListAll = Object.keys(this.getMetadata().get('scopes'))
-                .sort((v1, v2) => {
-                     return this.translate(v1, 'scopeNamesPlural')
-                         .localeCompare(this.translate(v2, 'scopeNamesPlural'));
-                });
+        scopeListAll.forEach(scope => {
+            if (
+                this.getMetadata().get(`scopes.${scope}.disabled`) ||
+                this.getMetadata().get(`scopes.${scope}.disabledPortal`)
+            ) {
+                return;
+            }
 
-            scopeListAll.forEach(scope => {
-                if (
-                    this.getMetadata().get('scopes.' + scope + '.disabled') ||
-                    this.getMetadata().get('scopes.' + scope + '.disabledPortal')
-                ) {
-                    return;
+            const acl = this.getMetadata().get(`scopes.${scope}.aclPortal`);
+
+            if (acl) {
+                this.scopeList.push(scope);
+                this.aclTypeMap[scope] = acl;
+
+                if (acl === true) {
+                    this.aclTypeMap[scope] = 'record';
                 }
+            }
+        });
+    }
 
-                var acl = this.getMetadata().get('scopes.' + scope + '.aclPortal');
-
-                if (acl) {
-                    this.scopeList.push(scope);
-                    this.aclTypeMap[scope] = acl;
-
-                    if (acl === true) {
-                        this.aclTypeMap[scope] = 'record';
-                    }
-                }
-            });
-        },
-    });
-});
+    isAclFieldLevelDisabledForScope(scope) {
+        return !!this.getMetadata().get(`scopes.${scope}.aclPortalFieldLevelDisabled`);
+    }
+}

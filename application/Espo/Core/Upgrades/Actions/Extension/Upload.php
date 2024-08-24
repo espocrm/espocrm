@@ -29,16 +29,17 @@
 
 namespace Espo\Core\Upgrades\Actions\Extension;
 
+use Espo\Core\Exceptions\Error;
+
 class Upload extends \Espo\Core\Upgrades\Actions\Base\Upload
 {
     /**
      * Check dependencies.
      *
      * @param array<string, string[]|string> $dependencyList
-     * @return bool
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      */
-    protected function checkDependencies($dependencyList)
+    protected function checkDependencies($dependencyList): bool
     {
         return $this->getHelper()->checkDependencies($dependencyList);
     }

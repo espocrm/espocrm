@@ -26,27 +26,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/quick-create-list', ['views/fields/array'], function (Dep) {
+import ArrayFieldView from 'views/fields/array';
 
-    return Dep.extend({
+export default class SettingsQuickCreateListFieldView extends ArrayFieldView {
 
-        setup: function () {
+    setup() {
+        this.params.options =  Object.keys(this.getMetadata().get('scopes'))
+            .filter(scope => {
+                if (this.getMetadata().get(`scopes.${scope}.disabled`)) {
+                    return;
+                }
 
-            this.params.options =  Object.keys(this.getMetadata().get('scopes'))
-                .filter(scope => {
-                    if (this.getMetadata().get('scopes.' + scope + '.disabled')) {
-                        return;
-                    }
+                return this.getMetadata().get(`scopes.${scope}.entity`) &&
+                    this.getMetadata().get(`scopes.${scope}.object`);
+            })
+            .sort((v1, v2) => {
+                return this.translate(v1, 'scopeNamesPlural')
+                    .localeCompare(this.translate(v2, 'scopeNamesPlural'));
+            });
 
-                    return this.getMetadata().get('scopes.' + scope + '.entity') &&
-                        this.getMetadata().get('scopes.' + scope + '.object');
-                })
-                .sort((v1, v2) => {
-                    return this.translate(v1, 'scopeNamesPlural')
-                        .localeCompare(this.translate(v2, 'scopeNamesPlural'));
-                });
-
-            Dep.prototype.setup.call(this);
-        },
-    });
-});
+        super.setup();
+    }
+}

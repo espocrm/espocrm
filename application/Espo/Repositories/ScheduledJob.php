@@ -39,8 +39,6 @@ use Espo\Core\Repositories\Database;
  */
 class ScheduledJob extends Database
 {
-    protected $hooksDisabled = true;
-
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);

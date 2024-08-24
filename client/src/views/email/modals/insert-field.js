@@ -26,20 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/modals/insert-field',
-['views/modal', 'helpers/misc/field-language'], function (Dep, FieldLanguage) {
+import ModalView from 'views/modal';
+import FieldLanguage from 'helpers/misc/field-language';
 
-    return Dep.extend({
+export default class extends ModalView {
 
-        backdrop: true,
+    backdrop = true
 
-        templateContent: `
-            {{#each viewObject.dataList}}
-                <div class="margin-bottom">
-                <h5>{{label}}: {{translate entityType category='scopeNames'}}</h5>
-                </div>
-                <ul class="list-group no-side-margin">
-                    {{#each dataList}}
+    // language=Handlebars
+    templateContent = `
+        {{#each viewObject.dataList}}
+            <div class="margin-bottom">
+            <h5>{{label}}: {{translate entityType category='scopeNames'}}</h5>
+            </div>
+            <ul class="list-group no-side-margin">
+                {{#each dataList}}
                     <li class="list-group-item clearfix">
                         <a role="button"
                             data-action="insert" class="text-bold" data-name="{{name}}" data-type="{{../type}}">
@@ -51,176 +52,179 @@ define('views/email/modals/insert-field',
                             {{valuePreview}}
                         </div>
                     </li>
-                    {{/each}}
-                </ul>
-            {{/each}}
+                {{/each}}
+            </ul>
+        {{/each}}
 
-            {{#unless viewObject.dataList.length}}
-                {{translate 'No Data'}}
-            {{/unless}}
-        `,
+        {{#unless viewObject.dataList.length}}
+            {{translate 'No Data'}}
+        {{/unless}}
+    `
 
-        events: {
-            'click [data-action="insert"]': function (e) {
-                let name = $(e.currentTarget).data('name');
-                let type = $(e.currentTarget).data('type');
+    setup() {
+        super.setup();
 
-                this.insert(type, name);
-            },
-        },
+        this.headerText = this.translate('Insert Field', 'labels', 'Email');
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        this.fieldLanguage = new FieldLanguage(this.getMetadata(), this.getLanguage());
 
-            this.headerText = this.translate('Insert Field', 'labels', 'Email');
+        this.wait(
+            Espo.Ajax
+                .getRequest('Email/insertFieldData', {
+                    parentId: this.options.parentId,
+                    parentType: this.options.parentType,
+                    to: this.options.to,
+                })
+                .then(fetchedData => {
+                    this.fetchedData = fetchedData;
+                    this.prepareData();
+                })
+        );
 
-            this.fieldLanguage = new FieldLanguage(this.getMetadata(), this.getLanguage());
+        this.addActionHandler('insert', (e, target) => {
+            const name = target.dataset.name;
+            const type = target.dataset.type;
 
-            this.wait(
-                Espo.Ajax
-                    .getRequest('Email/insertFieldData', {
-                        parentId: this.options.parentId,
-                        parentType: this.options.parentType,
-                        to: this.options.to,
-                    })
-                    .then(fetchedData => {
-                        this.fetchedData = fetchedData;
-                        this.prepareData();
-                    })
-            );
-        },
+            this.insert(type, name);
+        })
+    }
 
-        prepareData: function () {
-            this.dataList = [];
+    prepareData() {
+        this.dataList = [];
 
-            var fetchedData = this.fetchedData;
-            var typeList = ['parent', 'to'];
+        const fetchedData = this.fetchedData;
+        const typeList = ['parent', 'to'];
 
-            typeList.forEach(type => {
-                if (!fetchedData[type]) {
+        typeList.forEach(type => {
+            if (!fetchedData[type]) {
+                return;
+            }
+
+            const entityType = fetchedData[type].entityType;
+            const id = fetchedData[type].id;
+
+            for (const it of this.dataList) {
+                if (it.id === id && it.entityType === entityType) {
                     return;
                 }
+            }
 
-                let entityType = fetchedData[type].entityType;
-                let id = fetchedData[type].id;
+            const dataList = this.prepareDisplayValueList(fetchedData[type].entityType, fetchedData[type].values);
 
-                for (let it of this.dataList) {
-                    if (it.id === id && it.entityType === entityType) {
+            if (!dataList.length) {
+                return;
+            }
+
+            this.dataList.push({
+                type: type,
+                entityType: entityType,
+                id: id,
+                name: fetchedData[type].name,
+                dataList: dataList,
+                label: this.translate(type, 'fields', 'Email'),
+            });
+        });
+    }
+
+    prepareDisplayValueList(scope, values) {
+        const list = [];
+
+        let attributeList = Object.keys(values);
+        const labels = {};
+
+        attributeList.forEach(item => {
+            labels[item] = this.fieldLanguage.translateAttribute(scope, item);
+        });
+
+        attributeList = attributeList
+            .sort((v1, v2) => {
+                return labels[v1].localeCompare(labels[v2]);
+            });
+
+        const ignoreAttributeList = ['id', 'modifiedAt', 'modifiedByName'];
+
+        const fm = this.getFieldManager();
+
+        fm.getEntityTypeFieldList(scope).forEach(field => {
+            const type = this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']);
+
+            if (['link', 'linkOne', 'image', 'filed', 'linkParent'].includes(type)) {
+                ignoreAttributeList.push(field + 'Id');
+            }
+
+            if (type === 'linkParent') {
+                ignoreAttributeList.push(field + 'Type');
+            }
+        });
+
+        attributeList.forEach(item => {
+            if (~ignoreAttributeList.indexOf(item)) {
+                return;
+            }
+
+            let value = values[item];
+
+            if (value === null || value === '') {
+                return;
+            }
+
+            if (typeof value == 'boolean') {
+                return;
+            }
+
+            if (Array.isArray(value)) {
+                for (const v in value) {
+                    if (typeof v  !== 'string') {
                         return;
                     }
                 }
 
-                var dataList = this.prepareDisplayValueList(fetchedData[type].entityType, fetchedData[type].values);
+                value = value.split(', ');
+            }
 
-                if (!dataList.length) {
-                    return;
-                }
+            value = this.getHelper().sanitizeHtml(value);
 
-                this.dataList.push({
-                    type: type,
-                    entityType: entityType,
-                    id: id,
-                    name: fetchedData[type].name,
-                    dataList: dataList,
-                    label: this.translate(type, 'fields', 'Email'),
-                });
+            const valuePreview = value.replace(/<br( \/)?>/gm, ' ');
+
+            // noinspection RegExpUnnecessaryNonCapturingGroup
+            value = value.replace(/(?:\r\n|\r|\n)/g, '');
+            value = value.replace(/<br( \/)?>/gm, '\n');
+
+            list.push({
+                name: item,
+                label: labels[item],
+                value: value,
+                valuePreview: valuePreview,
             });
-        },
+        });
 
-        prepareDisplayValueList: function (scope, values) {
-            let list = [];
+        return list;
+    }
 
-            let attributeList = Object.keys(values);
-            let labels = {};
+    /**
+     * @private
+     * @param {string} type
+     * @param {string} name
+     */
+    insert(type, name) {
+        for (const g of this.dataList) {
+            if (g.type !== type) {
+                continue;
+            }
 
-            attributeList.forEach(item => {
-                labels[item] = this.fieldLanguage.translateAttribute(scope, item);
-            });
-
-            attributeList = attributeList
-                .sort((v1, v2) => {
-                    return labels[v1].localeCompare(labels[v2]);
-                });
-
-            let ignoreAttributeList = ['id', 'modifiedAt', 'modifiedByName'];
-
-            let fm = this.getFieldManager();
-
-            fm.getEntityTypeFieldList(scope).forEach(field => {
-                let type = this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']);
-
-                if (~['link', 'linkOne', 'image', 'filed', 'linkParent'].indexOf(type)) {
-                    ignoreAttributeList.push(field + 'Id');
-                }
-
-                if (type === 'linkParent') {
-                    ignoreAttributeList.push(field + 'Type');
-                }
-            });
-
-            attributeList.forEach(item => {
-                if (~ignoreAttributeList.indexOf(item)) {
-                    return;
-                }
-
-                let value = values[item];
-
-                if (value === null || value === '') {
-                    return;
-                }
-
-                if (typeof value == 'boolean') {
-                    return;
-                }
-
-                if (Array.isArray(value)) {
-                    for (let v in value) {
-                        if (typeof v  !== 'string') {
-                            return;
-                        }
-                    }
-
-                    value = value.split(', ');
-                }
-
-                value = this.getHelper().sanitizeHtml(value);
-
-                var valuePreview = value.replace(/<br( \/)?>/gm, ' ');
-
-                value = value.replace(/(?:\r\n|\r|\n)/g, '');
-                value = value.replace(/<br( \/)?>/gm, '\n');
-
-                list.push({
-                    name: item,
-                    label: labels[item],
-                    value: value,
-                    valuePreview: valuePreview,
-                });
-            });
-
-            return list;
-        },
-
-        insert: function (type, name) {
-            for (let g of this.dataList) {
-                if (g.type !== type) {
+            for (const i of g.dataList) {
+                if (i.name !== name) {
                     continue;
                 }
 
-                for (let i of g.dataList) {
-                    if (i.name !== name) {
-                        continue;
-                    }
-
-                    this.trigger('insert', i.value);
-
-                    break;
-                }
+                this.trigger('insert', i.value);
 
                 break;
             }
 
-            this.close();
-        },
-    });
-});
+            break;
+        }
+
+        this.close();
+    }
+}

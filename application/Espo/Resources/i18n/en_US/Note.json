@@ -9,6 +9,7 @@
         "type": "Type",
         "isGlobal": "Is Global",
         "isInternal": "Is Internal (for internal users)",
+        "isPinned": "Is Pinned",
         "related": "Related",
         "createdByGender": "Created By Gender",
         "data": "Data",
@@ -43,10 +44,14 @@
     },
     "labels": {
         "View Posts": "View Posts",
-        "View Activity": "View Activity"
+        "View Activity": "View Activity",
+        "Pin": "Pin",
+        "Unpin": "Unpin",
+        "Pinned": "Pinned"
     },
     "messages": {
-        "writeMessage": "Write your message here"
+        "writeMessage": "Write your message here",
+        "pinnedMaxCountExceeded": "Cannot pin more notes. Max allowed number is {count}."
     },
     "links": {
         "portals": "Portals",

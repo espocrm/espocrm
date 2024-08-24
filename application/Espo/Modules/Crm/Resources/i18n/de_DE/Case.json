@@ -9,7 +9,8 @@
     "description": "Beschreibung",
     "lead": "Interessent",
     "attachments": "Anhänge",
-    "inboundEmail": "Gruppen E-Mail Konto"
+    "inboundEmail": "Gruppen E-Mail Konto",
+    "originalEmail": "Ursprüngliche E-Mail"
   },
   "links": {
     "account": "Firma",

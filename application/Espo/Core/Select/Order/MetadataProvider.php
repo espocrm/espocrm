@@ -58,6 +58,11 @@ class MetadataProvider
         ]) ?? null;
     }
 
+    public function isFieldOrderDisabled(string $entityType, string $field): bool
+    {
+        return $this->metadata->get("entityDefs.$entityType.fields.$field.orderDisabled") ?? false;
+    }
+
     public function hasAttribute(string $entityType, string $attribute): bool
     {
         return $this->entityManager

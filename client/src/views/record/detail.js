@@ -31,6 +31,7 @@
 import BaseRecordView from 'views/record/base';
 import ViewRecordHelper from 'view-record-helper';
 import ActionItemSetup from 'helpers/action-item-setup';
+import StickyBarHelper from 'helpers/record/misc/sticky-bar';
 
 /**
  * A detail record view.
@@ -50,11 +51,11 @@ class DetailRecordView extends BaseRecordView {
      * @property {boolean} [returnAfterCreate]
      * @property {boolean} [editModeDisabled]
      * @property {boolean} [confirmLeaveDisabled]
-     * @property {boolean} [editModeDisabled]
      * @property {boolean} [isWide]
      * @property {string} [sideView]
      * @property {string} [bottomView]
      * @property {string} [inlineEditDisabled] Disable inline edit.
+     * @property {boolean} [buttonsDisabled] Disable buttons.
      * @property {string} [navigateButtonsDisabled]
      * @property {Object} [dynamicLogicDefs]
      * @property {module:view-record-helper} [recordHelper] A record helper. For a form state management.
@@ -92,12 +93,14 @@ class DetailRecordView extends BaseRecordView {
      * @property {string} [label] A translatable label.
      * @property {string} [customLabel] A custom label.
      * @property {string} [name] A name. Useful to be able to show/hide by a name.
-     * @property {'default'|'success'|'danger'|'warning'} [style] A style.
+     * @property {'default'|'success'|'danger'|'warning'|'info'} [style] A style.
      * @property {boolean} [tabBreak] Is a tab-break.
      * @property {string} [tabLabel] A tab label. If starts with `$`, a translation
      *   of the `tabs` category is used.
      * @property {module:views/record/detail~rowDefs[]} [rows] Rows.
      * @property {module:views/record/detail~rowDefs[]} [columns] Columns.
+     * @property {string} [noteText] A note text.
+     * @property {'success'|'danger'|'warning'|'info'} [noteStyle] A note style.
      */
 
     /**
@@ -200,6 +203,7 @@ class DetailRecordView extends BaseRecordView {
      * @property {string} [title] A title (not translatable).
      * @property {boolean} [disabled] Disabled.
      * @property {function()} [onClick] A click handler.
+     * @property {number} [groupIndex] A group index.
      */
 
     /**
@@ -220,12 +224,13 @@ class DetailRecordView extends BaseRecordView {
      * A dropdown item list.
      *
      * @protected
-     * @type {Array<module:views/record/detail~dropdownItem|false>}
+     * @type {Array<module:views/record/detail~dropdownItem>}
      */
     dropdownItemList = [
         {
             name: 'delete',
             label: 'Remove',
+            groupIndex: 0,
         },
     ]
 
@@ -634,7 +639,10 @@ class DetailRecordView extends BaseRecordView {
 
         const promise = this.save(data.options)
             .catch(reason => {
-                if (modeBeforeSave === this.MODE_EDIT && reason === 'error') {
+                if (
+                    modeBeforeSave === this.MODE_EDIT &&
+                    ['error', 'cancel'].includes(reason)
+                ) {
                     this.setEditMode();
                 }
 
@@ -771,8 +779,9 @@ class DetailRecordView extends BaseRecordView {
                 !this.getMetadata().get(['clientDefs', this.scope, 'duplicateDisabled'])
             ) {
                 this.addDropdownItem({
-                    'label': 'Duplicate',
-                    'name': 'duplicate',
+                    label: 'Duplicate',
+                    name: 'duplicate',
+                    groupIndex: 0,
                 });
             }
         }
@@ -784,10 +793,11 @@ class DetailRecordView extends BaseRecordView {
                 !this.getUser().isPortal()
             ) {
                 if (this.model.has('assignedUserId')) {
-                    this.dropdownItemList.push({
-                        'label': 'Self-Assign',
-                        'name': 'selfAssign',
-                        'hidden': !!this.model.get('assignedUserId')
+                    this.addDropdownItem({
+                        label: 'Self-Assign',
+                        name: 'selfAssign',
+                        hidden: !!this.model.get('assignedUserId'),
+                        groupIndex: 0,
                     });
 
                     this.listenTo(this.model, 'change:assignedUserId', () => {
@@ -813,9 +823,10 @@ class DetailRecordView extends BaseRecordView {
             }
 
             if (printPdfAction) {
-                this.dropdownItemList.push({
-                    'label': 'Print to PDF',
-                    'name': 'printPdf',
+                this.addDropdownItem({
+                    label: 'Print to PDF',
+                    name: 'printPdf',
+                    groupIndex: 6,
                 });
             }
         }
@@ -835,6 +846,7 @@ class DetailRecordView extends BaseRecordView {
                     this.addDropdownItem({
                         label: 'Convert Currency',
                         name: 'convertCurrency',
+                        groupIndex: 5,
                     });
                 }
             }
@@ -846,8 +858,9 @@ class DetailRecordView extends BaseRecordView {
         ) {
             if (this.getAcl().getPermissionLevel('dataPrivacyPermission') === 'yes') {
                 this.dropdownItemList.push({
-                    'label': 'View Personal Data',
-                    'name': 'viewPersonalData'
+                    label: 'View Personal Data',
+                    name: 'viewPersonalData',
+                    groupIndex: 4,
                 });
             }
         }
@@ -855,7 +868,8 @@ class DetailRecordView extends BaseRecordView {
         if (this.type === this.TYPE_DETAIL && this.getMetadata().get(['scopes', this.scope, 'stream'])) {
             this.addDropdownItem({
                 label: 'View Followers',
-                name: 'viewFollowers'
+                name: 'viewFollowers',
+                groupIndex: 4,
             });
         }
 
@@ -1417,102 +1431,16 @@ class DetailRecordView extends BaseRecordView {
         }
     }
 
-    /**
-     * @private
-     */
+    /** @private */
     initStickableButtonsContainer() {
-        const $containers = this.$el.find('.detail-button-container');
-        const $container = this.$el.find('.detail-button-container.record-buttons');
+        const helper = new StickyBarHelper(
+            this,
+            this.stickButtonsFormBottomSelector,
+            this.stickButtonsContainerAllTheWay,
+            this.numId
+        );
 
-        if (!$container.length) {
-            return;
-        }
-
-        const navbarHeight = this.getThemeManager().getParam('navbarHeight');
-        const screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
-
-        const isSmallScreen = $(window.document).width() < screenWidthXs;
-
-        const getOffsetTop = (/** JQuery */$element) => {
-            let element = /** @type {HTMLElement} */$element.get(0);
-
-            let value = 0;
-
-            while (element) {
-                value += !isNaN(element.offsetTop) ? element.offsetTop : 0;
-
-                element = element.offsetParent;
-            }
-
-            if (isSmallScreen) {
-                return value;
-            }
-
-            return value - navbarHeight;
-        };
-
-        let stickTop = getOffsetTop($container);
-        const blockHeight = $container.outerHeight();
-
-        stickTop -= 5; // padding;
-
-        const $block = $('<div>')
-            .css('height', blockHeight + 'px')
-            .html('&nbsp;')
-            .hide()
-            .insertAfter($container);
-
-        let $middle = this.getMiddleView().$el;
-        const $window = $(window);
-        const $navbarRight = $('#navbar .navbar-right');
-
-        if (this.stickButtonsFormBottomSelector) {
-            const $bottom = this.$el.find(this.stickButtonsFormBottomSelector);
-
-            if ($bottom.length) {
-                $middle = $bottom;
-            }
-        }
-
-        $window.off('scroll.detail-' + this.numId);
-
-        $window.on('scroll.detail-' + this.numId, () => {
-            const edge = $middle.position().top + $middle.outerHeight(false) - blockHeight;
-            const scrollTop = $window.scrollTop();
-
-            if (scrollTop >= edge && !this.stickButtonsContainerAllTheWay) {
-                $containers.hide();
-                $navbarRight.removeClass('has-sticked-bar');
-                $block.show();
-
-                return;
-            }
-
-            if (isSmallScreen && $('#navbar .navbar-body').hasClass('in')) {
-                return;
-            }
-
-            if (scrollTop > stickTop) {
-                if (!$containers.hasClass('stick-sub')) {
-                    $containers.addClass('stick-sub');
-                    $block.show();
-                }
-
-                $navbarRight.addClass('has-sticked-bar');
-
-                $containers.show();
-
-                return;
-            }
-
-            if ($containers.hasClass('stick-sub')) {
-                $containers.removeClass('stick-sub');
-                $navbarRight.removeClass('has-sticked-bar');
-                $block.hide();
-            }
-
-            $containers.show();
-        });
+        helper.init();
     }
 
     fetch() {
@@ -1575,7 +1503,7 @@ class DetailRecordView extends BaseRecordView {
             this.mode = this.MODE_EDIT;
 
             this.trigger('after:set-edit-mode');
-            this.trigger('after:mode-change');
+            this.trigger('after:mode-change', this.MODE_EDIT);
 
             Promise.all(promiseList).then(() => resolve());
         });
@@ -1615,7 +1543,7 @@ class DetailRecordView extends BaseRecordView {
             this.mode = this.MODE_DETAIL;
 
             this.trigger('after:set-detail-mode');
-            this.trigger('after:mode-change');
+            this.trigger('after:mode-change', this.MODE_DETAIL);
 
             Promise.all(promiseList).then(() => resolve());
         });
@@ -1752,19 +1680,22 @@ class DetailRecordView extends BaseRecordView {
         let nextButtonEnabled = false;
 
         if (navigateButtonsEnabled) {
-            if (this.indexOfRecord > 0) {
+            if (this.indexOfRecord > 0 || this.model.collection.offset) {
                 previousButtonEnabled = true;
             }
 
-            if (this.indexOfRecord < this.model.collection.total - 1) {
+            const total = this.model.collection.total !== undefined ?
+                this.model.collection.total : this.model.collection.length;
+
+            if (this.indexOfRecord < total - 1 - this.model.collection.offset) {
                 nextButtonEnabled = true;
             }
             else {
-                if (this.model.collection.total === -1) {
+                if (total === -1) {
                     nextButtonEnabled = true;
                 }
-                else if (this.model.collection.total === -2) {
-                    if (this.indexOfRecord < this.model.collection.length - 1) {
+                else if (total === -2) {
+                    if (this.indexOfRecord < this.model.collection.length - 1 - this.model.collection.offset) {
                         nextButtonEnabled = true;
                     }
                 }
@@ -1783,7 +1714,7 @@ class DetailRecordView extends BaseRecordView {
             entityType: this.entityType,
             buttonList: this.buttonList,
             buttonEditList: this.buttonEditList,
-            dropdownItemList: this.dropdownItemList,
+            dropdownItemList: this.getDropdownItemDataList(),
             dropdownEditItemList: this.dropdownEditItemList,
             dropdownItemListEmpty: this.isDropdownItemListEmpty(),
             dropdownEditItemListEmpty: this.isDropdownEditItemListEmpty(),
@@ -1797,6 +1728,40 @@ class DetailRecordView extends BaseRecordView {
             hasMiddleTabs: hasMiddleTabs,
             middleTabDataList: middleTabDataList,
         };
+    }
+
+    /**
+     * @private
+     * @return {Array<module:views/record/detail~dropdownItem|false>}
+     */
+    getDropdownItemDataList() {
+        /** @type {Array<module:views/record/detail~dropdownItem[]>} */
+        const dropdownGroups = [];
+
+        this.dropdownItemList.forEach(item => {
+            // For bc.
+            if (item === false) {
+                return;
+            }
+
+            const index = (item.groupIndex === undefined ? 9999 : item.groupIndex) + 100;
+
+            if (dropdownGroups[index] === undefined) {
+                dropdownGroups[index] = [];
+            }
+
+            dropdownGroups[index].push(item);
+        });
+
+        const dropdownItemList = [];
+
+        dropdownGroups.forEach(list => {
+            list.forEach(it => dropdownItemList.push(it));
+
+            dropdownItemList.push(false);
+        });
+
+        return dropdownItemList;
     }
 
     init() {
@@ -1866,7 +1831,7 @@ class DetailRecordView extends BaseRecordView {
         }
 
         this.recordHelper = this.options.recordHelper ||
-            new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
+            new ViewRecordHelper(this.defaultFieldStates, this.defaultPanelStates);
 
         this._initInlineEditSave();
 
@@ -2123,7 +2088,10 @@ class DetailRecordView extends BaseRecordView {
                         return;
                     }
 
-                    view.inlineEdit();
+                    const initialAttributes = {...view.initialAttributes};
+
+                    view.inlineEdit()
+                        .then(() => view.initialAttributes = initialAttributes);
                 }
             });
     }
@@ -2315,7 +2283,9 @@ class DetailRecordView extends BaseRecordView {
         const model = collection.at(indexOfRecord);
 
         if (!model) {
-            throw new Error("Model is not found in collection by index.");
+            console.error("Model is not found in collection by index.");
+
+            return;
         }
 
         const id = model.id;
@@ -2334,23 +2304,34 @@ class DetailRecordView extends BaseRecordView {
     actionPrevious() {
         this.model.abortLastFetch();
 
-        let collection;
-
         if (!this.model.collection) {
-            collection = this.collection;
-
-            if (!collection) {
-                return;
-            }
-
-            this.indexOfRecord--;
-
-            if (this.indexOfRecord < 0) {
-                this.indexOfRecord = 0;
-            }
+            return;
         }
 
-        if (!(this.indexOfRecord > 0)) {
+        const collection = this.model.collection;
+
+        if (this.indexOfRecord <= 0 && !collection.offset) {
+            return;
+        }
+
+        if (
+            this.indexOfRecord === 0 &&
+            collection.offset > 0 &&
+            collection.maxSize
+        ) {
+            collection.offset = Math.max(0, collection.offset - collection.maxSize);
+
+            collection.fetch()
+                .then(() => {
+                    const indexOfRecord = collection.length - 1;
+
+                    if (indexOfRecord < 0) {
+                        return;
+                    }
+
+                    this.switchToModelByIndex(indexOfRecord);
+                });
+
             return;
         }
 
@@ -2362,36 +2343,23 @@ class DetailRecordView extends BaseRecordView {
     actionNext() {
         this.model.abortLastFetch();
 
-        let collection;
-
         if (!this.model.collection) {
-            collection = this.collection;
-
-            if (!collection) {
-                return;
-            }
-
-            this.indexOfRecord--;
-
-            if (this.indexOfRecord < 0) {
-                this.indexOfRecord = 0;
-            }
-        }
-        else {
-            collection = this.model.collection;
-        }
-
-        if (!(this.indexOfRecord < collection.total - 1) && collection.total >= 0) {
             return;
         }
 
-        if (collection.total === -2 && this.indexOfRecord >= collection.length - 1) {
+        const collection = this.model.collection;
+
+        if (!(this.indexOfRecord < collection.total - 1 - collection.offset) && collection.total >= 0) {
+            return;
+        }
+
+        if (collection.total === -2 && this.indexOfRecord >= collection.length - 1 - collection.offset) {
             return;
         }
 
         const indexOfRecord = this.indexOfRecord + 1;
 
-        if (indexOfRecord <= collection.length - 1) {
+        if (indexOfRecord <= collection.length - 1 - collection.offset) {
             this.switchToModelByIndex(indexOfRecord);
 
             return;
@@ -2567,12 +2535,12 @@ class DetailRecordView extends BaseRecordView {
                             'X-Skip-Duplicate-Check': 'true',
                         }
                     }
-                }).then(() => resolve());
+                })
+                    .then(() => resolve())
+                    .catch(() => reject('error'))
             });
 
-            this.listenToOnce(view, 'cancel', () => {
-                reject();
-            });
+            this.listenToOnce(view, 'cancel', () => reject('cancel'));
         });
 
         return true;
@@ -2760,6 +2728,8 @@ class DetailRecordView extends BaseRecordView {
 
         if (editAccess === null) {
             this.listenToOnce(this.model, 'sync', () => {
+                this.model.trigger('acl-edit-ready');
+
                 this.manageAccessEdit(true);
             });
         }
@@ -2848,15 +2818,12 @@ class DetailRecordView extends BaseRecordView {
     /**
      * Add a dropdown item.
      *
-     * @param {module:views/record/detail~dropdownItem|false} o
+     * @param {module:views/record/detail~dropdownItem} o
      * @param {boolean} [toBeginning]
      */
     addDropdownItem(o, toBeginning) {
         if (!o) {
-            toBeginning ?
-                this.dropdownItemList.unshift(false) :
-                this.dropdownItemList.push(false);
-
+            // For bc.
             return;
         }
 
@@ -3001,8 +2968,26 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        if (this.isRendered()) {
-            this.$el.find('.detail-button-container .action[data-action="'+name+'"]').remove();
+        if (!this.isRendered()) {
+            return;
+        }
+
+        const $container = this.$el.find('.detail-button-container');
+
+        const $action = $container.find(`ul > li > a.action[data-action="${name}"]`);
+
+        if ($action.length) {
+            $action.parent().remove();
+
+            $container.find(`ul > .divider:last-child`).remove();
+
+            return;
+        }
+
+        const $button = $container.find(`button.action[data-action="${name}"]`);
+
+        if ($button.length) {
+            $button.remove();
         }
     }
 
@@ -3052,6 +3037,18 @@ class DetailRecordView extends BaseRecordView {
             panel.style = item.style || 'default';
             panel.rows = [];
             panel.tabNumber = tabNumber;
+            panel.noteText = item.noteText;
+            panel.noteStyle = item.noteStyle || 'info';
+
+            if (panel.noteText) {
+                if (panel.noteText.startsWith('$') && !panel.noteText.includes(' ')) {
+                    const label = panel.noteText.substring(1);
+
+                    panel.noteText = this.translate(label, 'panelNotes', this.entityType);
+                }
+
+                panel.noteText = this.getHelper().transformMarkdownText(panel.noteText);
+            }
 
             this.middlePanelDefs[panel.name] = {
                 name: panel.name,
@@ -3123,6 +3120,10 @@ class DetailRecordView extends BaseRecordView {
                     if (view && typeof view === 'object') {
                         view.model = this.model;
                         view.mode = this.fieldsMode;
+
+                        if (this.readOnly) {
+                            view.setReadOnly();
+                        }
 
                         selector = `.field[data-name="${name}"]`;
                     }

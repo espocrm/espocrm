@@ -9,23 +9,31 @@
         {{{avatar}}}
     </div>
     <div class="stream-head-text-container">
+        {{#if iconHtml}}{{{iconHtml}}}{{/if}}
         <span class="text-muted message">{{{message}}}</span>
-        {{#if fieldsArr.length}}
-        <a role="button" tabindex="0" data-action="expandDetails"><span class="fas fa-chevron-down"></span></a>
+        {{#if fieldDataList.length}}
+            <a role="button" tabindex="0" data-action="expandDetails"><span class="fas fa-chevron-down"></span></a>
         {{/if}}
     </div>
 </div>
+
+{{#if fieldDataList.length}}
+    <div class="fields stream-details-container">
+        <span class="text-muted">{{fieldsString}}</span>
+    </div>
+{{/if}}
+
 
 <div class="hidden details stream-details-container">
     <ul>
         <table class="table audited-summary-table">
             <tbody>
-            {{#each fieldsArr}}
-                <tr>
+            {{#each fieldDataList}}
+                <tr class="row" data-name="{{field}}">
                     <td style="width: 30%">
-                        <span class="text-muted">{{translate field category='fields' scope=../parentType}}</span>
+                        <span class="">{{label}}</span>
                     </td>
-                    <td style="width: 30%">
+                    <td style="width: 30%" class="cell-was">
                         {{#unless noValues}}
                             {{{var was ../this}}}
                         {{/unless}}
@@ -35,7 +43,7 @@
                             <span class="text-muted small fas fa-arrow-right"></span>
                         {{/unless}}
                     </td>
-                    <td style="width: 30%">
+                    <td style="width: 30%" class="cell-became">
                         {{#unless noValues}}
                             {{{var became ../this}}}
                         {{/unless}}

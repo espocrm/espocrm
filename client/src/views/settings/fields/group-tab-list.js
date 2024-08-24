@@ -26,12 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/group-tab-list', ['views/settings/fields/tab-list'], function (Dep) {
+import TabListFieldView from 'views/settings/fields/tab-list';
 
-    return Dep.extend({
+export default class extends TabListFieldView {
 
-        noGroups: true,
-
-        noDelimiters: true,
-    });
-});
+    noGroups = true
+    noDelimiters = true
+}

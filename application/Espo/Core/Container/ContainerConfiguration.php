@@ -40,6 +40,7 @@ class ContainerConfiguration implements Configuration
     /**
      * Log must be loaded before anything.
      * @phpstan-ignore-next-line
+     * @noinspection PhpPropertyOnlyWrittenInspection
      */
     private Log $log;
 

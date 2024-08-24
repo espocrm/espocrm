@@ -15,6 +15,16 @@
             },
             "description": "Array of hook class names. Fired before logging in before credentials are checked. Should implement Espo\\Core\\Authentication\\Hook\\BeforeLogin interface. Important: Need to have __APPEND__ item in the beginning of the array when extending."
         },
+        "onLoginHookClassNameList": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"type": "string"},
+                    {"enum": ["__APPEND__"]}
+                ]
+            },
+            "description": "Array of hook class names. Fired once logging in is about to success. Should implement Espo\\Core\\Authentication\\Hook\\OnLogin interface. As of v8.3. Important: Need to have __APPEND__ item in the beginning of the array when extending."
+        },
         "onFailHookClassNameList": {
             "type": "array",
             "items": {

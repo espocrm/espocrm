@@ -31,6 +31,7 @@ namespace Espo\Classes\MassAction\User;
 
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\MassAction\Actions\MassDelete as MassDeleteOriginal;
 use Espo\Core\MassAction\Data;
@@ -59,18 +60,19 @@ class MassDelete implements MassAction
     /**
      * @throws Forbidden
      * @throws BadRequest
+     * @throws Error
      */
     public function process(Params $params, Data $data): Result
     {
         $entityType = $params->getEntityType();
 
         if (!$this->acl->check($entityType, Acl\Table::ACTION_DELETE)) {
-            throw new Forbidden("No delete access for '{$entityType}'.");
+            throw new Forbidden("No delete access for '$entityType'.");
         }
 
         if (
             !$params->hasIds() &&
-            $this->acl->getPermissionLevel('massUpdatePermission') !== Acl\Table::LEVEL_YES
+            $this->acl->getPermissionLevel(Acl\Permission::MASS_UPDATE) !== Acl\Table::LEVEL_YES
         ) {
             throw new Forbidden("No mass-update permission.");
         }

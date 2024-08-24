@@ -5,17 +5,19 @@
     "assignmentPermission": "Permessi Assegnazione",
     "userPermission": "Permessi Utente",
     "portalPermission": "Permessi Portale",
-    "groupEmailAccountPermission": "Permesso Account Email di Gruppo",
+    "groupEmailAccountPermission": "Permessi Account Email di Gruppo",
     "exportPermission": "Permessi Esportazione",
     "dataPrivacyPermission": "Permessi Privacy Dati",
     "massUpdatePermission": "Permessi Aggiornamento di Massa",
     "followerManagementPermission": "Permessi Gestione Follower",
     "data": "Dati",
     "fieldData": "Dati Campo",
-    "messagePermission": "Permessi Messaggistica"
+    "messagePermission": "Permessi Messaggistica",
+    "auditPermission": "Permessi Revisioni"
   },
   "links": {
-    "users": "Utenti"
+    "users": "Utenti",
+    "teams": "Team"
   },
   "labels": {
     "Access": "Accesso",
@@ -31,6 +33,7 @@
     },
     "levelList": {
       "all": "Tutti",
+      "team": "Team",
       "contact": "Contatto",
       "own": "proprio",
       "no": "No",
@@ -57,6 +60,7 @@
     "portalPermission": "Accesso alle informazioni del portale, possibilità di inviare messaggi agli utenti del portale.",
     "groupEmailAccountPermission": "Accesso agli account di posta elettronica di gruppo, possibilità di inviare e-mail da SMTP di gruppo.",
     "exportPermission": "Permette di esportare i record.",
-    "massUpdatePermission": "La possibilità di eseguire l'aggiornamento di massa dei record."
+    "massUpdatePermission": "La possibilità di eseguire l'aggiornamento di massa dei record.",
+    "auditPermission": "Permette di visualizzare il registro revisioni."
   }
 }

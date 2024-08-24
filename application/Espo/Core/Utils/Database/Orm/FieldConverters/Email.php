@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils\Database\Orm\FieldConverters;
 
+use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
@@ -61,7 +62,7 @@ class Email implements FieldConverter
             ->withType(AttributeType::JSON_ARRAY)
             ->withNotStorable()
             ->withParamsMerged([
-                'notExportable' => true,
+                AttributeParam::NOT_EXPORTABLE => true,
                 'isEmailAddressData' => true,
                 'field' => $name,
             ]);
@@ -166,7 +167,7 @@ class Email implements FieldConverter
                             'whereClause' => [
                                 'deleted' => false,
                                 'entityType' => $entityType,
-                                'emailAddress.lower*' => '{value}',
+                                "LIKE:(emailAddress.lower, LOWER:({value})):" => null,
                             ],
                         ],
                     ],
@@ -189,7 +190,7 @@ class Email implements FieldConverter
                             'whereClause' => [
                                 'deleted' => false,
                                 'entityType' => $entityType,
-                                'emailAddress.lower*' => '{value}',
+                                "LIKE:(emailAddress.lower, LOWER:({value})):" => null,
                             ],
                         ],
                     ],
@@ -197,28 +198,27 @@ class Email implements FieldConverter
                 '=' => [
                     'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
                     'whereClause' => [
-                        'emailAddressesMultiple.lower=' => '{value}',
-                    ],
-                    'distinct' => true,
+                        "EQUAL:(emailAddressesMultiple.lower, LOWER:({value})):" => null,
+                    ]
                 ],
                 '<>' => [
                     'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
                     'whereClause' => [
-                        'emailAddressesMultiple.lower!=' => '{value}',
+                        "NOT_EQUAL:(emailAddressesMultiple.lower, LOWER:({value})):" => null,
                     ],
                     'distinct' => true,
                 ],
                 'IN' => [
                     'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
                     'whereClause' => [
-                        'emailAddressesMultiple.lower=' => '{value}',
+                        "EQUAL:(emailAddressesMultiple.lower, LOWER:({value})):" => null,
                     ],
                     'distinct' => true,
                 ],
                 'NOT IN' => [
                     'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
                     'whereClause' => [
-                        'emailAddressesMultiple.lower!=' => '{value}',
+                        "NOT_EQUAL:(emailAddressesMultiple.lower, LOWER:({value})):" => null,
                     ],
                     'distinct' => true,
                 ],
@@ -230,11 +230,16 @@ class Email implements FieldConverter
                     'distinct' => true,
                 ],
                 'IS NOT NULL' => [
-                    'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
                     'whereClause' => [
-                        'emailAddressesMultiple.lower!=' => null,
+                        'id=s' => [
+                            'from' => 'EntityEmailAddress',
+                            'select' => ['entityId'],
+                            'whereClause' => [
+                                'deleted' => false,
+                                'entityType' => $entityType,
+                            ],
+                        ],
                     ],
-                    'distinct' => true,
                 ],
             ],
             'order' => [

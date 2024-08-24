@@ -38,9 +38,6 @@
     "recordServiceContainer": {
         "className": "Espo\\Core\\Record\\ServiceContainer"
     },
-    "recordHookManager": {
-        "className": "Espo\\Core\\Record\\HookManager"
-    },
     "templateFileManager": {
         "className": "Espo\\Core\\Utils\\TemplateFileManager"
     },

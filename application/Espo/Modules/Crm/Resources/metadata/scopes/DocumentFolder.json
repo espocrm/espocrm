@@ -10,5 +10,7 @@
     "importable": false,
     "type": "CategoryTree",
     "stream": false,
-    "notifications": false
+    "notifications": false,
+    "categoryParentEntityType": "Document",
+    "categoryField": "folder"
 }

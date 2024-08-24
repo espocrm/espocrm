@@ -26,127 +26,207 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/entity-manager/scope', ['view'], function (Dep) {
+import View from 'view';
+import DetailRecordView from 'views/record/detail';
+import Model from 'model';
+import EntityManagerPrimaryFiltersFieldView from 'views/admin/entity-manager/fields/primary-filters';
 
-    return Dep.extend({
+class EntityManagerScopeView extends View {
 
-        template: 'admin/entity-manager/scope',
+    template = 'admin/entity-manager/scope'
 
-        scope: null,
+    scope
 
-        data: function () {
-            return {
-                scope: this.scope,
-                isEditable: this.isEditable,
-                isRemovable: this.isRemovable,
-                isCustomizable: this.isCustomizable,
-                type: this.type,
-                hasLayouts: this.hasLayouts,
-                label: this.label,
-                hasFormula: this.hasFormula,
-                hasFields: this.hasFields,
-                hasRelationships: this.hasRelationships,
-            };
+    data() {
+        return {
+            scope: this.scope,
+            isEditable: this.isEditable,
+            isRemovable: this.isRemovable,
+            isCustomizable: this.isCustomizable,
+            type: this.type,
+            hasLayouts: this.hasLayouts,
+            label: this.label,
+            hasFormula: this.hasFormula,
+            hasFields: this.hasFields,
+            hasRelationships: this.hasRelationships,
+        };
+    }
+
+    events = {
+        /** @this EntityManagerScopeView */
+        'click [data-action="editEntity"]': function () {
+            this.getRouter().navigate(`#Admin/entityManager/edit&scope=${this.scope}`, {trigger: true});
         },
-
-        events: {
-            'click [data-action="editEntity"]': function () {
-                this.getRouter().navigate('#Admin/entityManager/edit&scope=' + this.scope, {trigger: true});
-            },
-            'click [data-action="removeEntity"]': function () {
-                this.removeEntity();
-            },
-            'click [data-action="editFormula"]': function () {
-                this.editFormula();
-            },
+        /** @this EntityManagerScopeView */
+        'click [data-action="removeEntity"]': function () {
+            this.removeEntity();
         },
-
-        setup: function () {
-            this.scope = this.options.scope;
-
-            this.setupScopeData();
+        /** @this EntityManagerScopeView */
+        'click [data-action="editFormula"]': function () {
+            this.editFormula();
         },
+    }
 
-        setupScopeData: function () {
-            let scopeData = this.getMetadata().get(['scopes', this.scope]);
-            let entityManagerData = this.getMetadata().get(['scopes', this.scope, 'entityManager']) || {};
+    setup() {
+        this.scope = this.options.scope;
 
-            if (!scopeData) {
-                throw new Espo.Exceptions.NotFound();
+        this.setupScopeData();
+
+        this.model = new Model({
+            name: this.scope,
+            type: this.type,
+            label: this.label,
+            primaryFilters: this.getPrimaryFilters(),
+        });
+
+        this.model.setDefs({
+            fields: {
+                name: {
+                    type: 'varchar',
+                },
+                type: {
+                    type: 'varchar',
+                },
+                label: {
+                    type: 'varchar',
+                },
+                primaryFilters: {
+                    type: 'array',
+                },
             }
+        });
 
-            this.isRemovable = !!scopeData.isCustom;
+        this.recordView = new DetailRecordView({
+            model: this.model,
+            inlineEditDisabled: true,
+            buttonsDisabled: true,
+            readOnly: true,
+            detailLayout: [
+                {
+                    tabBreak: true,
+                    tabLabel: this.translate('General', 'labels', 'Settings'),
+                    rows: [
+                        [
+                            {
+                                name: 'name',
+                                labelText: this.translate('name', 'fields', 'EntityManager'),
+                            },
+                            {
+                                name: 'type',
+                                labelText: this.translate('type', 'fields', 'EntityManager'),
+                            }
+                        ],
+                        [
+                            {
+                                name: 'label',
+                                labelText: this.translate('label', 'fields', 'EntityManager'),
+                            },
+                            false
+                        ]
+                    ]
+                },
+                {
+                    tabBreak: true,
+                    tabLabel: this.translate('Details'),
+                    rows: [
+                        [
+                            {
+                                view: new EntityManagerPrimaryFiltersFieldView({
+                                    name: 'primaryFilters',
+                                    labelText: this.translate('primaryFilters', 'fields', 'EntityManager'),
+                                    targetEntityType: this.scope,
+                                }),
+                            },
+                            false
+                        ]
+                    ]
+                }
+            ],
+        });
 
-            if (scopeData.isNotRemovable) {
-                this.isRemovable = false;
-            }
+        this.assignView('record', this.recordView, '.record-container');
 
-            this.isCustomizable = !!scopeData.customizable;
-            this.type = scopeData.type;
-            this.isEditable = true;
-            this.hasLayouts = scopeData.layouts;
-            this.hasFormula = this.isCustomizable;
-            this.hasFields = this.isCustomizable;
-            this.hasRelationships = this.isCustomizable;
+        if (!this.type) {
+            this.recordView.hideField('type');
+        }
+    }
 
-            if (!scopeData.customizable) {
-                this.isEditable = false;
-            }
+    setupScopeData() {
+        const scopeData = /** @type {Record} */this.getMetadata().get(['scopes', this.scope]);
+        const entityManagerData = this.getMetadata().get(['scopes', this.scope, 'entityManager']) || {};
 
-            if ('edit' in entityManagerData) {
-                this.isEditable = entityManagerData.edit;
-            }
+        if (!scopeData) {
+            throw new Espo.Exceptions.NotFound();
+        }
 
-            if ('layouts' in entityManagerData) {
-                this.hasLayouts = entityManagerData.layouts;
-            }
+        this.isRemovable = !!scopeData.isCustom;
 
-            if ('formula' in entityManagerData) {
-                this.hasFormula = entityManagerData.formula;
-            }
+        if (scopeData.isNotRemovable) {
+            this.isRemovable = false;
+        }
 
-            if ('fields' in entityManagerData) {
-                this.hasFields = entityManagerData.fields;
-            }
+        this.isCustomizable = !!scopeData.customizable;
+        this.type = scopeData.type;
+        this.isEditable = true;
+        this.hasLayouts = scopeData.layouts;
+        this.hasFormula = this.isCustomizable;
+        this.hasFields = this.isCustomizable;
+        this.hasRelationships = this.isCustomizable;
 
-            if ('relationships' in entityManagerData) {
-                this.hasRelationships = entityManagerData.relationships;
-            }
+        if (!scopeData.customizable) {
+            this.isEditable = false;
+        }
 
-            this.label = this.getLanguage().translate(this.scope, 'scopeNames');
-        },
+        if ('edit' in entityManagerData) {
+            this.isEditable = entityManagerData.edit;
+        }
 
-        editFormula: function () {
-            Espo.Ui.notify(' ... ');
+        if ('layouts' in entityManagerData) {
+            this.hasLayouts = entityManagerData.layouts;
+        }
 
-            Espo.loader.requirePromise('views/admin/entity-manager/modals/select-formula')
-                .then(View => {
-                    /** @type {module:views/modal} */
-                    let view = new View({
-                        scope: this.scope,
-                    });
+        if ('formula' in entityManagerData) {
+            this.hasFormula = entityManagerData.formula;
+        }
 
-                    this.assignView('dialog', view).then(() => {
-                        Espo.Ui.notify(false);
+        if ('fields' in entityManagerData) {
+            this.hasFields = entityManagerData.fields;
+        }
 
-                        view.render();
-                    });
+        if ('relationships' in entityManagerData) {
+            this.hasRelationships = entityManagerData.relationships;
+        }
+
+        this.label = this.getLanguage().translate(this.scope, 'scopeNames');
+    }
+
+    editFormula() {
+        Espo.Ui.notify(' ... ');
+
+        Espo.loader.requirePromise('views/admin/entity-manager/modals/select-formula')
+            .then(View => {
+                /** @type {module:views/modal} */
+                const view = new View({
+                    scope: this.scope,
                 });
-        },
 
-        removeEntity: function () {
-            var scope = this.scope;
+                this.assignView('dialog', view).then(() => {
+                    Espo.Ui.notify(false);
 
-            this.confirm(this.translate('confirmRemove', 'messages', 'EntityManager'), () => {
-                Espo.Ui.notify(
-                    this.translate('pleaseWait', 'messages')
-                );
+                    view.render();
+                });
+            });
+    }
 
-                this.disableButtons();
+    removeEntity() {
+        const scope = this.scope;
 
-                Espo.Ajax.postRequest('EntityManager/action/removeEntity', {
-                    name: scope,
-                })
+        this.confirm(this.translate('confirmRemove', 'messages', 'EntityManager'), () => {
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
+            this.disableButtons();
+
+            Espo.Ajax.postRequest('EntityManager/action/removeEntity', {name: scope})
                 .then(() => {
                     this.getMetadata()
                         .loadSkipCache()
@@ -155,34 +235,53 @@ define('views/admin/entity-manager/scope', ['view'], function (Dep) {
                                 Espo.Ui.notify(false);
 
                                 this.broadcastUpdate();
-
                                 this.getRouter().navigate('#Admin/entityManager', {trigger: true});
                             });
                         });
                 })
                 .catch(() => this.enableButtons());
-            });
-        },
+        });
+    }
 
-        updatePageTitle: function () {
-            this.setPageTitle(
-                this.getLanguage().translate('Entity Manager', 'labels', 'Admin')
-            );
-        },
+    updatePageTitle() {
+        this.setPageTitle(
+            this.getLanguage().translate('Entity Manager', 'labels', 'Admin')
+        );
+    }
 
-        disableButtons: function () {
-            this.$el.find('.btn.action').addClass('disabled').attr('disabled', 'disabled');
-            this.$el.find('.item-dropdown-button').addClass('disabled').attr('disabled', 'disabled');
-        },
+    disableButtons() {
+        this.$el.find('.btn.action').addClass('disabled').attr('disabled', 'disabled');
+        this.$el.find('.item-dropdown-button').addClass('disabled').attr('disabled', 'disabled');
+    }
 
-        enableButtons: function () {
-            this.$el.find('.btn.action').removeClass('disabled').removeAttr('disabled');
-            this.$el.find('.item-dropdown-button"]').removeClass('disabled').removeAttr('disabled');
-        },
+    enableButtons() {
+        this.$el.find('.btn.action').removeClass('disabled').removeAttr('disabled');
+        this.$el.find('.item-dropdown-button"]').removeClass('disabled').removeAttr('disabled');
+    }
 
-        broadcastUpdate: function () {
-            this.getHelper().broadcastChannel.postMessage('update:metadata');
-            this.getHelper().broadcastChannel.postMessage('update:settings');
-        },
-    });
-});
+    broadcastUpdate() {
+        this.getHelper().broadcastChannel.postMessage('update:metadata');
+        this.getHelper().broadcastChannel.postMessage('update:settings');
+    }
+
+    /**
+     * @return {string[]}
+     */
+    getPrimaryFilters() {
+        const list = this.getMetadata().get(`clientDefs.${this.scope}.filterList`, []).map(item => {
+            if (typeof item === 'object' && item.name) {
+                return item.name;
+            }
+
+            return item.toString();
+        });
+
+        if (this.getMetadata().get(`scopes.${this.scope}.stars`)) {
+            list.unshift('starred');
+        }
+
+        return list;
+    }
+}
+
+export default EntityManagerScopeView;

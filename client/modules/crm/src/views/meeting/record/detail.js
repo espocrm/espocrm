@@ -26,66 +26,77 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/record/detail', ['views/record/detail'], function (Dep) {
+import DetailRecordView from 'views/record/detail';
 
-    return Dep.extend({
+class MeetingDetailRecordView extends DetailRecordView {
 
-        duplicateAction: true,
+    duplicateAction = true
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+    setupActionItems() {
+        super.setupActionItems();
 
-        setupActionItems: function () {
-            Dep.prototype.setupActionItems.call(this);
-            if (this.getAcl().checkModel(this.model, 'edit')) {
-                if (
-                    ['Held', 'Not Held'].indexOf(this.model.get('status')) === -1 &&
-                    this.getAcl().checkField(this.entityType, 'status', 'edit')
-                ) {
-                    this.dropdownItemList.push({
-                        'label': 'Set Held',
-                        'name': 'setHeld'
-                    });
+        if (!this.getAcl().checkModel(this.model, 'edit')) {
+            return;
+        }
 
-                    this.dropdownItemList.push({
-                        'label': 'Set Not Held',
-                        'name': 'setNotHeld'
-                    });
-                }
-            }
-        },
+        if (
+            ['Held', 'Not Held'].includes(this.model.get('status')) ||
+            !this.getAcl().checkField(this.entityType, 'status', 'edit')
+        ) {
+            return;
+        }
 
-        manageAccessEdit: function (second) {
-            Dep.prototype.manageAccessEdit.call(this, second);
+        const historyStatusList = this.getMetadata().get(`scopes.${this.entityType}.historyStatusList`) || [];
 
-            if (second) {
-                if (!this.getAcl().checkModel(this.model, 'edit', true)) {
-                    this.hideActionItem('setHeld');
-                    this.hideActionItem('setNotHeld');
-                }
-            }
-        },
+        if (
+            !historyStatusList.includes('Held') ||
+            !historyStatusList.includes('Not Held')
+        ) {
+            return;
+        }
 
-        actionSetHeld: function () {
-            this.model.save({status: 'Held'}, {patch: true})
-                .then(() => {
-                    Espo.Ui.success(this.translate('Saved'));
+        this.dropdownItemList.push({
+            'label': 'Set Held',
+            'name': 'setHeld',
+            onClick: () => this.actionSetHeld(),
+        });
 
-                    this.removeButton('setHeld');
-                    this.removeButton('setNotHeld');
-                });
-        },
+        this.dropdownItemList.push({
+            'label': 'Set Not Held',
+            'name': 'setNotHeld',
+            onClick: () => this.actionSetNotHeld(),
+        });
+    }
 
-        actionSetNotHeld: function () {
-            this.model.save({status: 'Not Held'}, {patch: true})
-                .then(() => {
-                    Espo.Ui.success(this.translate('Saved'));
+    manageAccessEdit(second) {
+        super.manageAccessEdit();
 
-                    this.removeButton('setHeld');
-                    this.removeButton('setNotHeld');
-                });
-        },
-    });
-});
+        if (second && !this.getAcl().checkModel(this.model, 'edit', true)) {
+            this.hideActionItem('setHeld');
+            this.hideActionItem('setNotHeld');
+        }
+    }
+
+    actionSetHeld() {
+        this.model.save({status: 'Held'}, {patch: true})
+            .then(() => {
+                Espo.Ui.success(this.translate('Saved'));
+
+                this.removeActionItem('setHeld');
+                this.removeActionItem('setNotHeld');
+            });
+    }
+
+    actionSetNotHeld() {
+        this.model.save({status: 'Not Held'}, {patch: true})
+            .then(() => {
+                Espo.Ui.success(this.translate('Saved'));
+
+                this.removeActionItem('setHeld');
+                this.removeActionItem('setNotHeld');
+            });
+    }
+}
+
+export default MeetingDetailRecordView;
 

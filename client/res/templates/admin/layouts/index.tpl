@@ -13,7 +13,7 @@
                 </div>
                 <div class="panel-collapse collapse{{#ifEqual scope ../scope}} in{{/ifEqual}}" data-scope="{{scope}}">
                     <div class="panel-body">
-                        <ul class="list-unstyled" style="overflow-x: hidden;";>
+                        <ul class="list-unstyled" style="overflow-x: hidden;">
                         {{#each typeDataList}}
                             <li>
                                 <a

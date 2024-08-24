@@ -71,10 +71,12 @@ class RangeIntFieldView extends BaseFieldView {
         if (fromValue !== null && toValue !== null) {
             return this.formatNumber(fromValue) + ' &#8211 ' + this.formatNumber(toValue);
         }
-        else if (fromValue) {
+
+        if (fromValue) {
             return '&#62;&#61; ' + this.formatNumber(fromValue);
         }
-        else if (toValue) {
+
+        if (toValue) {
             return '&#60;&#61; ' + this.formatNumber(toValue);
         }
 
@@ -85,19 +87,14 @@ class RangeIntFieldView extends BaseFieldView {
         if (this.getPreferences().has('decimalMark')) {
             this.decimalMark = this.getPreferences().get('decimalMark');
         }
-        else {
-            if (this.getConfig().has('decimalMark')) {
-                this.decimalMark = this.getConfig().get('decimalMark');
-            }
+        else if (this.getConfig().has('decimalMark')) {
+            this.decimalMark = this.getConfig().get('decimalMark');
         }
 
         if (this.getPreferences().has('thousandSeparator')) {
             this.thousandSeparator = this.getPreferences().get('thousandSeparator');
-        }
-        else {
-            if (this.getConfig().has('thousandSeparator')) {
-                this.thousandSeparator = this.getConfig().get('thousandSeparator');
-            }
+        } else if (this.getConfig().has('thousandSeparator')) {
+            this.thousandSeparator = this.getConfig().get('thousandSeparator');
         }
     }
 
@@ -111,7 +108,7 @@ class RangeIntFieldView extends BaseFieldView {
      * @protected
      */
     setupAutoNumericOptions() {
-        let separator = (!this.disableFormatting ? this.thousandSeparator : null) || '';
+        const separator = (!this.disableFormatting ? this.thousandSeparator : null) || '';
         let decimalCharacter = '.';
 
         if (separator === '.') {
@@ -154,15 +151,13 @@ class RangeIntFieldView extends BaseFieldView {
 
     validateRequired() {
         const validate = (name) => {
-            if (this.model.isRequired(name)) {
-                if (this.model.get(name) === null) {
-                    var msg = this.translate('fieldIsRequired', 'messages')
-                        .replace('{field}', this.getLabelText());
+            if (this.model.isRequired(name) && this.model.get(name) === null) {
+                const msg = this.translate('fieldIsRequired', 'messages')
+                    .replace('{field}', this.getLabelText());
 
-                    this.showValidationMessage(msg, '[data-name="' + name + '"]');
+                this.showValidationMessage(msg, '[data-name="' + name + '"]');
 
-                    return true;
-                }
+                return true;
             }
         };
 
@@ -178,7 +173,7 @@ class RangeIntFieldView extends BaseFieldView {
     validateInt() {
         const validate = (name) => {
             if (isNaN(this.model.get(name))) {
-                var msg = this.translate('fieldShouldBeInt', 'messages')
+                const msg = this.translate('fieldShouldBeInt', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg, '[data-name="' + name + '"]');
@@ -198,18 +193,18 @@ class RangeIntFieldView extends BaseFieldView {
     // noinspection JSUnusedGlobalSymbols
     validateRange() {
         const validate = (name) => {
-            var value = this.model.get(name);
+            const value = this.model.get(name);
 
             if (value === null) {
                 return false;
             }
 
-            var minValue = this.model.getFieldParam(name, 'min');
-            var maxValue = this.model.getFieldParam(name, 'max');
+            const minValue = this.model.getFieldParam(name, 'min');
+            const maxValue = this.model.getFieldParam(name, 'max');
 
             if (minValue !== null && maxValue !== null) {
                 if (value < minValue || value > maxValue) {
-                    let msg = this.translate('fieldShouldBeBetween', 'messages')
+                    const msg = this.translate('fieldShouldBeBetween', 'messages')
                         .replace('{field}', this.translate(name, 'fields', this.entityType))
                         .replace('{min}', minValue)
                         .replace('{max}', maxValue);
@@ -218,27 +213,25 @@ class RangeIntFieldView extends BaseFieldView {
 
                     return true;
                 }
-            } else {
-                if (minValue !== null) {
-                    if (value < minValue) {
-                        let msg = this.translate('fieldShouldBeLess', 'messages')
-                            .replace('{field}', this.translate(name, 'fields', this.entityType))
-                            .replace('{value}', minValue);
+            } else if (minValue !== null) {
+                if (value < minValue) {
+                    const msg = this.translate('fieldShouldBeLess', 'messages')
+                        .replace('{field}', this.translate(name, 'fields', this.entityType))
+                        .replace('{value}', minValue);
 
-                        this.showValidationMessage(msg, '[data-name="' + name + '"]');
+                    this.showValidationMessage(msg, '[data-name="' + name + '"]');
 
-                        return true;
-                    }
-                } else if (maxValue !== null) {
-                    if (value > maxValue) {
-                        let msg = this.translate('fieldShouldBeGreater', 'messages')
-                            .replace('{field}', this.translate(name, 'fields', this.entityType))
-                            .replace('{value}', maxValue);
+                    return true;
+                }
+            } else if (maxValue !== null) {
+                if (value > maxValue) {
+                    const msg = this.translate('fieldShouldBeGreater', 'messages')
+                        .replace('{field}', this.translate(name, 'fields', this.entityType))
+                        .replace('{value}', maxValue);
 
-                        this.showValidationMessage(msg, '[data-name="' + name + '"]');
+                    this.showValidationMessage(msg, '[data-name="' + name + '"]');
 
-                        return true;
-                    }
+                    return true;
                 }
             }
         };
@@ -253,19 +246,17 @@ class RangeIntFieldView extends BaseFieldView {
 
     // noinspection JSUnusedGlobalSymbols
     validateOrder() {
-        let fromValue = this.model.get(this.fromField);
-        let toValue = this.model.get(this.toField);
+        const fromValue = this.model.get(this.fromField);
+        const toValue = this.model.get(this.toField);
 
-        if (fromValue !== null && toValue !== null) {
-            if (fromValue > toValue) {
-                let msg = this.translate('fieldShouldBeGreater', 'messages')
-                    .replace('{field}', this.translate(this.toField, 'fields', this.entityType))
-                    .replace('{value}', this.translate(this.fromField, 'fields', this.entityType));
+        if (fromValue !== null && toValue !== null && fromValue > toValue) {
+            const msg = this.translate('fieldShouldBeGreater', 'messages')
+                .replace('{field}', this.translate(this.toField, 'fields', this.entityType))
+                .replace('{value}', this.translate(this.fromField, 'fields', this.entityType));
 
-                this.showValidationMessage(msg, '[data-name="'+this.fromField+'"]');
+            this.showValidationMessage(msg, '[data-name="' + this.fromField + '"]');
 
-                return true;
-            }
+            return true;
         }
     }
 
@@ -279,11 +270,15 @@ class RangeIntFieldView extends BaseFieldView {
     }
 
     formatNumber(value) {
+        if (this.params.disableFormatting) {
+            return value.toString();
+        }
+
         return IntFieldView.prototype.formatNumberDetail.call(this, value);
     }
 
     fetch() {
-        let data = {};
+        const data = {};
 
         data[this.fromField] = this.parse(this.$from.val().trim());
         data[this.toField] = this.parse(this.$to.val().trim());

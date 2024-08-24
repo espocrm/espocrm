@@ -26,15 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/layout-set/fields/edit', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+export default class extends BaseFieldView {
 
-        detailTemplateContent:
-            "<a class=\"btn btn-default\" href=\"#LayoutSet/editLayouts/id={{model.id}}\">" +
-            "{{translate 'Edit Layouts' scope='LayoutSet'}}</a>",
+    // language=Handlebars
+    detailTemplateContent =
+        `<a
+            class="btn btn-default"
+            href="#LayoutSet/editLayouts/id={{model.id}}"
+        >{{translate 'Edit Layouts' scope='LayoutSet'}}</a>`
 
-        editTemplateContent: '',
-
-    });
-});
+    editTemplateContent = ''
+}

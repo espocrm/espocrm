@@ -29,10 +29,8 @@
 
 namespace tests\unit\Espo\Core\Acl;
 
-use Espo\Core\{
-    Acl\ScopeData,
-    Acl\Table,
-};
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\Acl\Table;
 
 use InvalidArgumentException;
 use RuntimeException;

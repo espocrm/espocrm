@@ -33,8 +33,40 @@ import FileUpload from 'helpers/file-upload';
 
 /**
  * A file field.
+ *
+ * @extends LinkFieldView<module:views/fields/file~params>
  */
 class FileFieldView extends LinkFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/file~options
+     * @property {
+     *     module:views/fields/file~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/file~params
+     * @property {boolean} [required] Required.
+     * @property {boolean} [showPreview] Show preview.
+     * @property {'x-small'|'small'|'medium'|'large'} [previewSize] A preview size.
+     * @property {'x-small'|'small'|'medium'|'large'} [listPreviewSize] A list preview size.
+     * @property {string[]} [sourceList] A source list.
+     * @property {string[]} [accept] Formats to accept.
+     * @property {number} [maxFileSize] A max file size (in Mb).
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/file~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'file'
 
@@ -49,8 +81,6 @@ class FileFieldView extends LinkFieldView {
     previewSize = 'small'
     validations = ['ready', 'required']
     searchTypeList = ['isNotEmpty', 'isEmpty']
-
-    ROW_HEIGHT = 37
 
     events = {
         /** @this FileFieldView */
@@ -112,6 +142,7 @@ class FileFieldView extends LinkFieldView {
         },
     }
 
+    // noinspection JSCheckFunctionSignatures
     data() {
         const data = {
             ...super.data(),
@@ -125,6 +156,7 @@ class FileFieldView extends LinkFieldView {
 
         data.valueIsSet = this.model.has(this.idName);
 
+        // noinspection JSValidateTypes
         return data;
     }
 
@@ -341,7 +373,7 @@ class FileFieldView extends LinkFieldView {
         let maxHeight = (this.imageSizes[previewSize] || {})[1];
 
         if (this.isListMode() && !this.params.listPreviewSize) {
-            maxHeight = this.ROW_HEIGHT + 'px';
+            maxHeight =  '';
         }
 
         // noinspection HtmlRequiredAltAttribute,RequiredAttributes
@@ -525,6 +557,9 @@ class FileFieldView extends LinkFieldView {
         return maxFileSize;
     }
 
+    /**
+     * @param {File} file
+     */
     uploadFile(file) {
         let isCanceled = false;
 
@@ -629,6 +664,11 @@ class FileFieldView extends LinkFieldView {
         });
     }
 
+    /**
+     * @protected
+     * @param {File} file
+     * @return {Promise<unknown>}
+     */
     handleUploadingFile(file) {
         return new Promise(resolve => resolve(file));
     }

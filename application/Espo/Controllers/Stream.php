@@ -68,19 +68,28 @@ class Stream
             throw new BadRequest();
         }
 
-        if ($id === null && $scope !== UserEntity::ENTITY_TYPE) {
-            throw new BadRequest("No ID.");
-        }
-
         $searchParams = $this->fetchSearchParams($request);
 
-        $result = $scope === UserEntity::ENTITY_TYPE ?
-            $this->userRecordService->find($id, $searchParams) :
-            $this->service->find($scope, $id ?? '', $searchParams);
+        if ($scope === UserEntity::ENTITY_TYPE) {
+            $collection = $this->userRecordService->find($id, $searchParams);
+
+            return (object) [
+                'total' => $collection->getTotal(),
+                'list' => $collection->getValueMapList(),
+            ];
+        }
+
+        if ($id === null) {
+            throw new BadRequest();
+        }
+
+        $collection = $this->service->find($scope, $id, $searchParams);
+        $pinnedCollection = $this->service->getPinned($scope, $id);
 
         return (object) [
-            'total' => $result->getTotal(),
-            'list' => $result->getValueMapList(),
+            'total' => $collection->getTotal(),
+            'list' => $collection->getValueMapList(),
+            'pinnedList' => $pinnedCollection->getValueMapList(),
         ];
     }
 
@@ -118,6 +127,30 @@ class Stream
     /**
      * @throws BadRequest
      * @throws Forbidden
+     * @throws NotFound
+     */
+    public function getActionListUpdates(Request $request): stdClass
+    {
+        $id = $request->getRouteParam('id');
+        $scope = $request->getRouteParam('scope');
+
+        if ($scope === null || $id === null) {
+            throw new BadRequest();
+        }
+
+        $searchParams = $this->fetchSearchParams($request);
+
+        $result = $this->service->findUpdates($scope, $id, $searchParams);
+
+        return (object) [
+            'total' => $result->getTotal(),
+            'list' => $result->getValueMapList(),
+        ];
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
      */
     private function fetchSearchParams(Request $request): SearchParams
     {
@@ -144,6 +177,20 @@ class Stream
 
         if ($request->getQueryParam('skipOwn') === 'true') {
             $searchParams = $searchParams->withBoolFilterAdded('skipOwn');
+        }
+
+        $beforeNumber = $request->getQueryParam('beforeNumber');
+
+        if ($beforeNumber) {
+            $searchParams = $searchParams
+                ->withWhereAdded(
+                    WhereItem
+                        ::createBuilder()
+                        ->setAttribute('number')
+                        ->setType(WhereItem\Type::LESS_THAN)
+                        ->setValue($beforeNumber)
+                        ->build()
+                );
         }
 
         return $searchParams;

@@ -19,9 +19,9 @@
     "revenue": "Entrata",
     "revenueConverted": "Entrata (convertita)",
     "budgetConverted": "Budget (convertito)",
-    "contactsTemplate": "Modello contatti",
+    "contactsTemplate": "Modello Contatti",
     "leadsTemplate": "Modello Leads",
-    "accountsTemplate": "Modello di account",
+    "accountsTemplate": "Modello Account",
     "usersTemplate": "Modello utenti",
     "mailMergeOnlyWithAddress": "Salta record senza indirizzo",
     "optedInCount": "Iscritto",
@@ -62,7 +62,7 @@
     "Email Templates": "Modelli Email",
     "Subscribe again": "Iscriviti di nuovo",
     "Create Target List": "Crea Lista di Destinazione",
-    "Mail Merge": "Stampa unione",
+    "Mail Merge": "Unione Mail",
     "Generate Mail Merge PDF": "Genera Stampa unione pdf"
   },
   "presetFilters": {

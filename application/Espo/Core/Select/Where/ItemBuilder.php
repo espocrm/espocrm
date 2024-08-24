@@ -52,6 +52,7 @@ class ItemBuilder
      *
      * @param (Item\Type::*)|string $type
      * @return $this
+     * @noinspection PhpDocSignatureInspection
      */
     public function setType(string $type): self
     {

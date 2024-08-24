@@ -26,32 +26,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/record/panels/default-side', ['views/record/panels/default-side'], function (Dep) {
+import DefaultSidePanelView from 'views/record/panels/default-side';
 
-    return Dep.extend({
+export default class extends DefaultSidePanelView {
 
-        setupFields: function () {
-            Dep.prototype.setupFields.call(this);
+    setupFields() {
+        super.setupFields();
 
-            this.fieldList.push({
-                name: 'hasAttachment',
-                view: 'views/email/fields/has-attachment',
-                noLabel: true,
-            });
+        this.fieldList.push({
+            name: 'hasAttachment',
+            view: 'views/email/fields/has-attachment',
+            noLabel: true,
+        });
 
-            this.controlHasAttachmentField();
+        this.controlHasAttachmentField();
 
-            this.listenTo(this.model, 'change:hasAttachment', this.controlHasAttachmentField, this);
-        },
+        this.listenTo(this.model, 'change:hasAttachment', () => this.controlHasAttachmentField());
+    }
 
-        controlHasAttachmentField: function () {
-            if (this.model.get('hasAttachment')) {
-                this.recordViewObject.showField('hasAttachment');
+    /**
+     * @private
+     */
+    controlHasAttachmentField() {
+        if (this.model.get('hasAttachment')) {
+            this.recordViewObject.showField('hasAttachment');
 
-                return;
-            }
+            return;
+        }
 
-            this.recordViewObject.hideField('hasAttachment');
-        },
-    });
-});
+        this.recordViewObject.hideField('hasAttachment');
+    }
+}

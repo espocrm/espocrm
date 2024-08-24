@@ -17,6 +17,10 @@
             "description": "Defines a client model class.",
             "type": "string"
         },
+        "modelDefaultsPreparator": {
+            "description": "Default attributes preparator for a model. Should extend `handlers/model/defaults-preparator`. As of v8.4.",
+            "type": "string"
+        },
         "acl": {
             "description": "Defines a client ACL class.",
             "type": "string"
@@ -69,6 +73,23 @@
             "additionalProperties": {
                 "type": "string"
             }
+        },
+        "listViewModeList": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"type": "string"},
+                    {"enum": ["__APPEND__", "list", "kanban"]}
+                ]
+            },
+            "description": "A list view mode list."
+        },
+        "viewModeIconClassMap": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            },
+            "description": "View mode icon classes. mode => class map."
         },
         "saveErrorHandlers": {
             "description": "Save error handlers. https://docs.espocrm.com/development/frontend/save-error-handlers/",
@@ -139,6 +160,11 @@
                     "handler": {
                         "type": "string",
                         "description": "A handler. Should extend handlers/row-action."
+                    },
+                    "groupIndex": {
+                        "type": "integer",
+                        "minimum": -100,
+                        "description": "A group index."
                     }
                 }
             }
@@ -195,6 +221,10 @@
                             },
                             "accessDataList": {
                                 "$ref": "#/definitions/accessDataList"
+                            },
+                            "aux": {
+                                "type": "boolean",
+                                "description": "Makes the filter not available on the list view."
                             }
                         }
                     }
@@ -480,6 +510,86 @@
                     "syncWithModel": {
                         "type": "boolean",
                         "description": "Re-fetch records when the parent model is saved or refreshed by WebSocket."
+                    },
+                    "massSelect": {
+                        "type": "boolean",
+                        "description": "Allow mass select."
+                    },
+                    "createAttributeMap": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "description": "Attributes to carry over to a related record when creating. Mapping Parent => Related."
+                    },
+                    "buttonList": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "default": "A name."
+                            },
+                            "acl": {
+                                "description": "An ACL action access to which is required for the action.",
+                                "type": "string",
+                                "enum": [
+                                    "create",
+                                    "read",
+                                    "edit",
+                                    "delete",
+                                    "stream"
+                                ]
+                            },
+                            "label": {
+                                "type": "string",
+                                "description": "A translatable label."
+                            },
+                            "handler": {
+                                "type": "string",
+                                "description": "A frontend handler. A view is passed to the constructor."
+                            },
+                            "actionFunction": {
+                                "type": "string",
+                                "description": "An action method in the handler."
+                            }
+                        },
+                        "description": "Header buttons. As of v8.4."
+                    },
+                    "actionList": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "default": "A name."
+                                },
+                                "acl": {
+                                    "description": "An ACL action access to which is required for the action.",
+                                    "type": "string",
+                                    "enum": [
+                                        "create",
+                                        "read",
+                                        "edit",
+                                        "delete",
+                                        "stream"
+                                    ]
+                                },
+                                "label": {
+                                    "type": "string",
+                                    "description": "A translatable label."
+                                },
+                                "handler": {
+                                    "type": "string",
+                                    "description": "A frontend handler. A view is passed to the constructor."
+                                },
+                                "actionFunction": {
+                                    "type": "string",
+                                    "description": "An action method in the handler."
+                                }
+                            }
+                        },
+                        "description": "Header dropdown actions. As of v8.4."
                     }
                 }
             }
@@ -534,6 +644,11 @@
             "additionalProperties": {
                 "type": "object",
                 "properties": {
+                    "groupIndex": {
+                        "type": "integer",
+                        "description": "A group index. Groups are separated by a divider.",
+                        "minimum": -100
+                    },
                     "handler": {
                         "description": "A handler class for the mass action.",
                         "type": "string"
@@ -564,6 +679,26 @@
                             "delete",
                             "stream"
                         ]
+                    },
+                    "url": {
+                        "type": "string",
+                        "description": "An API endpoint."
+                    },
+                    "bypassConfirmation": {
+                        "type": "boolean",
+                        "description": "To skip the confirmation dialog."
+                    },
+                    "confirmationMessage": {
+                        "type": "string",
+                        "description": "A confirmation message key. The translation should be in 'messages' category."
+                    },
+                    "waitMessage": {
+                        "type": "string",
+                        "description": "A wait message key. The translation should be in 'messages' category."
+                    },
+                    "successMessage": {
+                        "type": "string",
+                        "description": "A success message key. The translation should be in 'messages' category."
                     }
                 }
             }
@@ -598,6 +733,10 @@
         },
         "color": {
             "description": "A scope color in HEX.",
+            "type": "string"
+        },
+        "listDefaultViewMode": {
+            "description": "A default list view mode. E.g. list, kanban.",
             "type": "string"
         },
         "kanbanViewMode": {
@@ -768,6 +907,10 @@
                 "configCheck": {
                     "type": "string",
                     "description": "A config path to check. Path items are separated by a dot. If a config value is not empty, then the action is allowed. The `!` prefix reverses the check."
+                },
+                "hidden": {
+                    "type": "boolean",
+                    "description": "Hidden."
                 }
             }
         },
@@ -826,7 +969,7 @@
         "dynamicLogicItem": {
             "type": "object",
             "description": "A logic node.",
-            "allOf": [
+            "anyOf": [
                 {
                     "if": {
                         "properties": {
@@ -970,7 +1113,13 @@
                 "data": {
                     "type": "object",
                     "description": "Additional data. Not used for logic.",
-                    "additionalProperties": true
+                    "additionalProperties": true,
+                    "properties": {
+                        "field": {
+                            "type": "string",
+                            "description": "A field."
+                        }
+                    }
                 }
             },
             "required": ["type"]
@@ -1020,6 +1169,11 @@
                         "delete",
                         "stream"
                     ]
+                },
+                "groupIndex": {
+                    "type": "integer",
+                    "minimum": -100,
+                    "description": "A group index"
                 }
             }
         },

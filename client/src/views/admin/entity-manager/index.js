@@ -81,24 +81,23 @@ class EntityManagerIndexView extends View {
         scopeList = scopeListSorted;
 
         scopeList.forEach(scope => {
-            let d = /** @type {Object.<string, *>} */this.getMetadata().get('scopes.' + scope);
+            const defs = /** @type {Record} */this.getMetadata().get('scopes.' + scope);
 
-            let isRemovable = !!d.isCustom;
+            let isRemovable = !!defs.isCustom;
 
-            if (d.isNotRemovable) {
+            if (defs.isNotRemovable) {
                 isRemovable = false;
             }
 
-            let hasView = d.customizable;
-
             this.scopeDataList.push({
                 name: scope,
-                isCustom: d.isCustom,
+                isCustom: defs.isCustom,
                 isRemovable: isRemovable,
-                hasView: hasView,
-                type: d.type,
+                hasView: defs.customizable,
+                type: defs.type,
                 label: this.getLanguage().translate(scope, 'scopeNames'),
-                layouts: d.layouts,
+                layouts: defs.layouts,
+                module: defs.module !== 'Crm' ? defs.module : null,
             });
         });
     }

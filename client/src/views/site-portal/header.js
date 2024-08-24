@@ -26,15 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/site-portal/header', ['views/site/header'], function (Dep) {
+import HeaderSiteView from 'views/site/header';
 
-    return Dep.extend({
+export default class extends HeaderSiteView {
 
-        template: 'site/header',
-
-        navbarView: 'views/site-portal/navbar',
-
-        customViewPath: ['clientDefs', 'App', 'portalNavbarView'],
-
-    });
-});
+    navbarView = 'views/site-portal/navbar'
+    customViewPath = ['clientDefs', 'App', 'portalNavbarView']
+}

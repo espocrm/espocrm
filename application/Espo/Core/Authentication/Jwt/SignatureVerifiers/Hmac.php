@@ -63,7 +63,7 @@ class Hmac implements SignatureVerifier
         $this->key = $key;
 
         if (!in_array($algorithm, self::SUPPORTED_ALGORITHM_LIST)) {
-            throw new RuntimeException("Unsupported algorithm {$algorithm}.");
+            throw new RuntimeException("Unsupported algorithm $algorithm.");
         }
     }
 

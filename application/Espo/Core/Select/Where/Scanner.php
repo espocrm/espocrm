@@ -34,7 +34,7 @@ use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
-use Espo\ORM\QueryComposer\BaseQueryComposer as QueryComposer;
+use Espo\ORM\QueryComposer\Util as QueryComposerUtil;
 use RuntimeException;
 
 /**
@@ -111,7 +111,7 @@ class Scanner
     ): void {
 
         if (str_contains($attribute, ':')) {
-            $argumentList = QueryComposer::getAllAttributesFromComplexExpression($attribute);
+            $argumentList = QueryComposerUtil::getAllAttributesFromComplexExpression($attribute);
 
             foreach ($argumentList as $argument) {
                 $this->applyLeftJoinsFromAttribute($queryBuilder, $argument, $entityType);
@@ -123,7 +123,7 @@ class Scanner
         $seed = $this->getSeed($entityType);
 
         if (str_contains($attribute, '.')) {
-            list($link, $attribute) = explode('.', $attribute);
+            [$link,] = explode('.', $attribute);
 
             if ($seed->hasRelation($link)) {
                 $queryBuilder->leftJoin($link);
@@ -160,6 +160,7 @@ class Scanner
 
     /**
      * @return mixed
+     * @noinspection PhpSameParameterValueInspection
      */
     private function getAttributeParam(Entity $entity, string $attribute, string $param)
     {

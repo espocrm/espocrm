@@ -30,17 +30,17 @@
 namespace Espo\Core\Upgrades\Actions\Base;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Upgrades\Actions\Base;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Json;
 
-class Uninstall extends \Espo\Core\Upgrades\Actions\Base
+class Uninstall extends Base
 {
     /**
      * @param array<string, mixed> $data
-     * @return void
      * @throws Error
      */
-    public function run($data)
+    public function run(mixed $data): mixed
     {
         $processId = $data['id'];
 
@@ -57,11 +57,8 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         }
 
         $this->initialize();
-
         $this->checkIsWritable();
-
         $this->enableMaintenanceMode();
-
         $this->beforeRunAction();
 
         /* run before uninstall script */
@@ -98,23 +95,23 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         }
 
         $this->afterRunAction();
-
         /* delete backup files */
         $this->deletePackageFiles();
-
         $this->finalize();
 
         $this->getLog()->debug('Uninstallation process ['.$processId.']: end run.');
 
         $this->clearCache();
+
+        return null;
     }
 
     /**
-     * @return int
      * @throws Error
      */
-    protected function restoreFiles()
+    protected function restoreFiles(): bool
     {
+        /** @noinspection PhpRedundantOptionalArgumentInspection */
         $packagePath = $this->getPath('packagePath');
 
         $manifestPath = Util::concatPath($packagePath, $this->manifestName);
@@ -142,34 +139,30 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         $res &= $this->getFileManager()->removeInDir($packagePath, true);
 
-        return $res;
+        return (bool) $res;
     }
 
     /**
      * @param ?string $type
      * @param string $dest
-     * @return bool
      * @throws Error
      */
-    protected function copyFiles($type = null, $dest = '')
+    protected function copyFiles($type = null, $dest = ''): bool
     {
         $backupPath = $this->getPath('backupPath');
 
         $source = Util::concatPath($backupPath, self::FILES);
 
-        $res = $this->copy($source, $dest, true);
-
-        return $res;
+        return $this->copy($source, $dest, true);
     }
 
     /**
      * Get backup path.
      *
      * @param bool $isPackage
-     * @return string
      * @throws Error
      */
-    protected function getPackagePath($isPackage = false)
+    protected function getPackagePath($isPackage = false): string
     {
         if ($isPackage) {
             return $this->getPath('packagePath', $isPackage);
@@ -179,25 +172,22 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
     }
 
     /**
-     * @return bool
      * @throws Error
      */
-    protected function deletePackageFiles()
+    protected function deletePackageFiles(): bool
     {
         $backupPath = $this->getPath('backupPath');
-        $res = $this->getFileManager()->removeInDir($backupPath, true);
 
-        return $res;
+        return $this->getFileManager()->removeInDir($backupPath, true);
     }
 
     /**
      * @param string $errorMessage
      * @param bool $deletePackage
      * @param bool $systemRebuild
-     * @return void
      * @throws Error
      */
-    public function throwErrorAndRemovePackage($errorMessage = '', $deletePackage = true, $systemRebuild = true)
+    public function throwErrorAndRemovePackage($errorMessage = '', $deletePackage = true, $systemRebuild = true): void
     {
         $this->restoreFiles();
 
@@ -208,7 +198,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
      * @return string[]
      * @throws Error
      */
-    protected function getCopyFileList()
+    protected function getCopyFileList(): array
     {
         if (!isset($this->data['fileList'])) {
             $backupPath = $this->getPath('backupPath');
@@ -221,10 +211,9 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
     }
 
     /**
-     * @return string[]
      * @throws Error
      */
-    protected function getRestoreFileList()
+    protected function getRestoreFileList(): array
     {
         if (!isset($this->data['restoreFileList'])) {
             $packagePath = $this->getPackagePath();
@@ -242,10 +231,9 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
     /**
      * @param string $type
-     * @return string[]
      * @throws Error
      */
-    protected function getDeleteList($type = 'delete')
+    protected function getDeleteList($type = 'delete'): array
     {
         if ($type == 'delete') {
             $packageFileList = $this->getRestoreFileList();

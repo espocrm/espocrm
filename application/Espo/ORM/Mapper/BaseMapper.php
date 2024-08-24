@@ -34,6 +34,7 @@ use Espo\ORM\BaseEntity;
 use Espo\ORM\Collection;
 use Espo\ORM\Query\DeleteBuilder;
 use Espo\ORM\Query\InsertBuilder;
+use Espo\ORM\Query\Part\Selection;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Executor\QueryExecutor;
 use Espo\ORM\Query\UpdateBuilder;
@@ -43,10 +44,13 @@ use Espo\ORM\CollectionFactory;
 use Espo\ORM\Metadata;
 use Espo\ORM\Query\Select;
 
+use Espo\ORM\Type\AttributeType;
 use PDO;
 use stdClass;
 use LogicException;
 use RuntimeException;
+
+use const JSON_UNESCAPED_UNICODE;
 
 /**
  * Abstraction for DB. Mapping of Entity to DB. Supposed to be used only internally. Use repositories instead.
@@ -211,7 +215,7 @@ class BaseMapper implements RDBMapper
         string $aggregationBy = 'id'
     ): Select {
 
-        $expression = "{$aggregation}:({$aggregationBy})";
+        $expression = "$aggregation:($aggregationBy)";
 
         $raw = $select->getRaw();
 
@@ -237,7 +241,7 @@ class BaseMapper implements RDBMapper
             return $selectAggregation;
         }
 
-        $expression = "{$aggregation}:(asq.{$aggregationBy})";
+        $expression = "$aggregation:(asq.$aggregationBy)";
 
         $subQueryBuilder = SelectBuilder::create()
             ->clone($selectAggregation)
@@ -282,8 +286,12 @@ class BaseMapper implements RDBMapper
 
         $params = [];
 
+        $builder = new SelectBuilder();
+
         if ($select) {
             $params = $select->getRaw();
+
+            $builder->clone($select);
         }
 
         $entityType = $entity->getEntityType();
@@ -295,13 +303,13 @@ class BaseMapper implements RDBMapper
 
         if (!$relType) {
             throw new LogicException(
-                "Missing 'type' in definition for relationship '{$relationName}' in {entityType} entity.");
+                "Missing 'type' in definition for relationship '$relationName' in {entityType} entity.");
         }
 
         if ($relType !== Entity::BELONGS_TO_PARENT) {
             if (!$relEntityType) {
                 throw new LogicException(
-                    "Missing 'entity' in definition for relationship '{$relationName}' in {entityType} entity.");
+                    "Missing 'entity' in definition for relationship '$relationName' in {entityType} entity.");
             }
 
             $relEntity = $this->entityFactory->create($relEntityType);
@@ -318,13 +326,14 @@ class BaseMapper implements RDBMapper
             case Entity::BELONGS_TO:
                 /** @var Entity $relEntity */
 
-                $params['whereClause'][] = [$foreignKey =>$entity->get($key)];
-                $params['offset'] = 0;
-                $params['limit'] = 1;
-                $params['from'] = $relEntity->getEntityType();
-                $params['fromAlias'] ??= lcfirst($relEntity->getEntityType());
+                $alias = $select?->getFromAlias() ?? lcfirst($relEntityType);
 
-                $select = Select::fromRaw($params);
+                $builder
+                    ->from($relEntityType, $alias)
+                    ->limit(0, 1)
+                    ->where([$foreignKey => $entity->get($key)]);
+
+                $select = $builder->build();
 
                 if ($returnTotalCount) {
                     $select = $this->convertSelectQueryToAggregation($select, self::FUNC_COUNT);
@@ -356,9 +365,11 @@ class BaseMapper implements RDBMapper
             case Entity::HAS_ONE:
                 /** @var Entity $relEntity */
 
-                $params['from'] = $relEntity->getEntityType();
-                $params['fromAlias'] ??= lcfirst($relEntity->getEntityType());
-                $params['whereClause'][] = [$foreignKey => $entity->get($key)];
+                $alias = $select?->getFromAlias() ?? lcfirst($relEntityType);
+
+                $builder
+                    ->from($relEntityType, $alias)
+                    ->where([$foreignKey => $entity->get($key)]);
 
                 if ($relType == Entity::HAS_CHILDREN) {
                     $foreignType = $keySet['foreignType'] ?? null;
@@ -367,21 +378,20 @@ class BaseMapper implements RDBMapper
                         throw new RuntimeException("Bad relation key.");
                     }
 
-                    $params['whereClause'][] = [$foreignType => $entity->getEntityType()];
+                    $builder->where([$foreignType => $entity->getEntityType()]);
                 }
 
                 $relConditions = $this->getRelationParam($entity, $relationName, 'conditions');
 
                 if ($relConditions) {
-                    $params['whereClause'][] = $relConditions;
+                    $builder->where($relConditions);
                 }
 
                 if ($relType == Entity::HAS_ONE) {
-                    $params['offset'] = 0;
-                    $params['limit'] = 1;
+                    $builder->limit(0, 1);
                 }
 
-                $select = Select::fromRaw($params);
+                $select = $builder->build();
 
                 if ($returnTotalCount) {
                     $select = $this->convertSelectQueryToAggregation($select, self::FUNC_COUNT);
@@ -415,17 +425,22 @@ class BaseMapper implements RDBMapper
             case Entity::MANY_MANY:
                 /** @var Entity $relEntity */
 
-                $params['from'] = $relEntity->getEntityType();
-                $params['fromAlias'] ??= lcfirst($relEntity->getEntityType());
-                $params['joins'] ??= [];
-                $params['joins'][] = $this->getManyManyJoin($entity, $relationName);
-                $params['select'] = $this->getModifiedSelectForManyToMany(
+                $alias = $select?->getFromAlias() ?? lcfirst($relEntityType);
+
+                $join = $this->getManyManyJoin($entity, $relationName);
+
+                $selections = $this->getModifiedSelectForManyToMany(
                     $entity,
                     $relationName,
-                    $params['select'] ?? []
+                    $select ? $select->getSelect() : []
                 );
 
-                $select = Select::fromRaw($params);
+                $builder
+                    ->from($relEntityType, $alias)
+                    ->join($join[0], $join[1], $join[2])
+                    ->select($selections);
+
+                $select = $builder->build();
 
                 if ($returnTotalCount) {
                     $select = $this->convertSelectQueryToAggregation($select, self::FUNC_COUNT);
@@ -456,16 +471,16 @@ class BaseMapper implements RDBMapper
                     return null;
                 }
 
-                $params['whereClause'][] = [$foreignKey => $foreignEntityId];
-                $params['offset'] = 0;
-                $params['limit'] = 1;
+                $alias = $select?->getFromAlias() ?? lcfirst($foreignEntityType);
+
+                $builder
+                    ->from($foreignEntityType, $alias)
+                    ->limit(0, 1)
+                    ->where([$foreignKey => $foreignEntityId]);
 
                 $relEntity = $this->entityFactory->create($foreignEntityType);
 
-                $params['from'] = $foreignEntityType;
-                $params['fromAlias'] ??= lcfirst($foreignEntityType);
-
-                $select = Select::fromRaw($params);
+                $select = $builder->build();
 
                 if ($returnTotalCount) {
                     $select = $this->convertSelectQueryToAggregation($select, self::FUNC_COUNT);
@@ -494,7 +509,7 @@ class BaseMapper implements RDBMapper
         }
 
         throw new LogicException(
-            "Bad type '{$relType}' in definition for relationship '{$relationName}' in '{$entityType}' entity.");
+            "Bad type '$relType' in definition for relationship '$relationName' in '$entityType' entity.");
     }
 
     /**
@@ -621,7 +636,7 @@ class BaseMapper implements RDBMapper
                 return;
         }
 
-        throw new LogicException("Relation type '{$relType}' is not supported.");
+        throw new LogicException("Relation type '$relType' is not supported.");
     }
 
     /**
@@ -724,7 +739,7 @@ class BaseMapper implements RDBMapper
 
         if (!$foreignEntityType || !$relType) {
             throw new LogicException(
-                "Not appropriate definition for relationship '{$relationName}' in '" .
+                "Not appropriate definition for relationship '$relationName' in '" .
                 $entity->getEntityType() . "' entity.");
         }
 
@@ -758,7 +773,7 @@ class BaseMapper implements RDBMapper
                 $selectColumns = [];
 
                 foreach ($valueList as $i => $value) {
-                   $selectColumns[] = ['VALUE:' . $value, 'v' . strval($i)];
+                   $selectColumns[] = ["VALUE:$value", "v$i"];
                 }
 
                 $selectColumns[] = 'id';
@@ -781,7 +796,7 @@ class BaseMapper implements RDBMapper
                 return;
         }
 
-        throw new LogicException("Relation type '{$relType}' is not supported for mass relate.");
+        throw new LogicException("Relation type '$relType' is not supported for mass relate.");
     }
 
     /**
@@ -806,7 +821,7 @@ class BaseMapper implements RDBMapper
         }
 
         if (!$entity->hasRelation($relationName)) {
-            throw new RuntimeException("Relation '{$relationName}' does not exist in '{$entityType}'.");
+            throw new RuntimeException("Relation '$relationName' does not exist in '$entityType'.");
         }
 
         $relType = $entity->getRelationType($relationName);
@@ -819,7 +834,7 @@ class BaseMapper implements RDBMapper
 
         if (!$relType || !$foreignEntityType && $relType !== Entity::BELONGS_TO_PARENT) {
             throw new LogicException(
-                "Not appropriate definition for relationship {$relationName} in '{$entityType}' entity.");
+                "Not appropriate definition for relationship $relationName in '$entityType' entity.");
         }
 
         if (is_null($relEntity)) {
@@ -839,13 +854,18 @@ class BaseMapper implements RDBMapper
                     $foreignRelationName &&
                     $this->getRelationParam($relEntity, $foreignRelationName, 'type') === Entity::HAS_ONE
                 ) {
+                    $where = [
+                        self::ATTR_ID . '!=' => $entity->getId(),
+                        $key => $id,
+                    ];
+
+                    if (self::hasDeletedAttribute($entity)) {
+                        $where[self::ATTR_DELETED] = false;
+                    }
+
                     $query0 = UpdateBuilder::create()
                         ->in($entityType)
-                        ->where([
-                            self::ATTR_ID . '!=' => $entity->getId(),
-                            $key => $id,
-                            self::ATTR_DELETED => false,
-                        ])
+                        ->where($where)
                         ->set([$key => null])
                         ->build();
 
@@ -855,12 +875,15 @@ class BaseMapper implements RDBMapper
                 $entity->set($key, $relEntity->getId());
                 $entity->setFetched($key, $relEntity->getId());
 
+                $where = [self::ATTR_ID => $entity->getId()];
+
+                if (self::hasDeletedAttribute($entity)) {
+                    $where[self::ATTR_DELETED] = false;
+                }
+
                 $query = UpdateBuilder::create()
                     ->in($entityType)
-                    ->where([
-                        self::ATTR_ID => $entity->getId(),
-                        self::ATTR_DELETED => false,
-                    ])
+                    ->where($where)
                     ->set([$key => $relEntity->getId()])
                     ->build();
 
@@ -877,12 +900,15 @@ class BaseMapper implements RDBMapper
                 $entity->setFetched($key, $relEntity->getId());
                 $entity->setFetched($typeKey, $relEntity->getEntityType());
 
+                $where = [self::ATTR_ID => $entity->getId()];
+
+                if (self::hasDeletedAttribute($entity)) {
+                    $where[self::ATTR_DELETED] = false;
+                }
+
                 $query = UpdateBuilder::create()
                     ->in($entityType)
-                    ->where([
-                        self::ATTR_ID => $entity->getId(),
-                        self::ATTR_DELETED => false,
-                    ])
+                    ->where($where)
                     ->set([
                         $key => $relEntity->getId(),
                         $typeKey => $relEntity->getEntityType(),
@@ -905,21 +931,23 @@ class BaseMapper implements RDBMapper
                     return false;
                 }
 
+                $where1 = [$foreignKey => $entity->getId()];
+                $where2 = [self::ATTR_ID => $id];
+
+                if (self::hasDeletedAttribute($relEntity)) {
+                    $where1[self::ATTR_DELETED] = false;
+                    $where2[self::ATTR_DELETED] = false;
+                }
+
                 $query1 = UpdateBuilder::create()
                     ->in($relEntity->getEntityType())
-                    ->where([
-                        $foreignKey => $entity->getId(),
-                        self::ATTR_DELETED => false,
-                    ])
+                    ->where($where1)
                     ->set([$foreignKey => null])
                     ->build();
 
                 $query2 = UpdateBuilder::create()
                     ->in($relEntity->getEntityType())
-                    ->where([
-                        self::ATTR_ID => $id,
-                        self::ATTR_DELETED => false,
-                    ])
+                    ->where($where2)
                     ->set([$foreignKey => $entity->getId()])
                     ->build();
 
@@ -953,12 +981,15 @@ class BaseMapper implements RDBMapper
                     $set[$foreignType] = $entity->getEntityType();
                 }
 
+                $where = [self::ATTR_ID => $id];
+
+                if (self::hasDeletedAttribute($relEntity)) {
+                    $where[self::ATTR_DELETED] = false;
+                }
+
                 $query = UpdateBuilder::create()
                     ->in($relEntity->getEntityType())
-                    ->where([
-                        self::ATTR_ID => $id,
-                        self::ATTR_DELETED => false,
-                    ])
+                    ->where($where)
                     ->set($set)
                     ->build();
 
@@ -984,7 +1015,7 @@ class BaseMapper implements RDBMapper
                 }
 
                 if (!$this->getRelationParam($entity, $relationName, 'relationName')) {
-                    throw new LogicException("Bad relation '{$relationName}' in '{$entityType}'.");
+                    throw new LogicException("Bad relation '$relationName' in '$entityType'.");
                 }
 
                 $middleName = ucfirst($this->getRelationParam($entity, $relationName, 'relationName'));
@@ -1054,7 +1085,7 @@ class BaseMapper implements RDBMapper
                 return true;
         }
 
-        throw new LogicException("Relation type '{$relType}' is not supported.");
+        throw new LogicException("Relation type '$relType' is not supported.");
     }
 
     private function removeRelation(
@@ -1076,7 +1107,7 @@ class BaseMapper implements RDBMapper
         }
 
         if (!$entity->hasRelation($relationName)) {
-            throw new RuntimeException("Relation '{$relationName}' does not exist in '{$entityType}'.");
+            throw new RuntimeException("Relation '$relationName' does not exist in '$entityType'.");
         }
 
         $relType = $entity->getRelationType($relationName);
@@ -1093,7 +1124,7 @@ class BaseMapper implements RDBMapper
 
         if (!$relType || !$foreignEntityType && $relType !== Entity::BELONGS_TO_PARENT) {
             throw new LogicException(
-                "Not appropriate definition for relationship {$relationName} in " .
+                "Not appropriate definition for relationship $relationName in " .
                 $entity->getEntityType() . " entity.");
         }
 
@@ -1122,6 +1153,7 @@ class BaseMapper implements RDBMapper
                     $where[$key] = $id;
                 }
 
+                /** @noinspection PhpRedundantOptionalArgumentInspection */
                 $entity->set($key, null);
                 $entity->setFetched($key, null);
 
@@ -1133,11 +1165,14 @@ class BaseMapper implements RDBMapper
                         $where[$typeKey] = $foreignEntityType;
                     }
 
+                    /** @noinspection PhpRedundantOptionalArgumentInspection */
                     $entity->set($typeKey, null);
                     $entity->setFetched($typeKey, null);
                 }
 
-                $where[self::ATTR_DELETED] = false;
+                if (self::hasDeletedAttribute($entity)) {
+                    $where[self::ATTR_DELETED] = false;
+                }
 
                 $query = UpdateBuilder::create()
                     ->in($entityType)
@@ -1177,9 +1212,11 @@ class BaseMapper implements RDBMapper
                     $update[$foreignType] = null;
                 }
 
-                $where[self::ATTR_DELETED] = false;
-
                 /** @var Entity $relEntity */
+
+                if (self::hasDeletedAttribute($relEntity)) {
+                    $where[self::ATTR_DELETED] = false;
+                }
 
                 $query = UpdateBuilder::create()
                     ->in($relEntity->getEntityType())
@@ -1200,7 +1237,7 @@ class BaseMapper implements RDBMapper
                 }
 
                 if (!$this->getRelationParam($entity, $relationName, 'relationName')) {
-                    throw new LogicException("Bad relation '{$relationName}' in '{$entityType}'.");
+                    throw new LogicException("Bad relation '$relationName' in '$entityType'.");
                 }
 
                 $middleName = ucfirst($this->getRelationParam($entity, $relationName, 'relationName'));
@@ -1227,7 +1264,7 @@ class BaseMapper implements RDBMapper
                 return;
         }
 
-        throw new LogicException("Relation type '{$relType}' is not supported for un-relate.");
+        throw new LogicException("Relation type '$relType' is not supported for un-relate.");
     }
 
     /**
@@ -1277,6 +1314,7 @@ class BaseMapper implements RDBMapper
     {
         $id = $this->pdo->lastInsertId();
 
+        /** @noinspection PhpConditionAlreadyCheckedInspection */
         if ($id === '' || $id === null) { /** @phpstan-ignore-line */
             return;
         }
@@ -1294,6 +1332,7 @@ class BaseMapper implements RDBMapper
      */
     public function massInsert(Collection $collection): void
     {
+        /** @noinspection PhpParamsInspection */
         $count = is_countable($collection) ?
             count($collection) :
             iterator_count($collection);
@@ -1419,13 +1458,16 @@ class BaseMapper implements RDBMapper
             return;
         }
 
+        $where = [self::ATTR_ID => $entity->getId()];
+
+        if (self::hasDeletedAttribute($entity)) {
+            $where[self::ATTR_DELETED] = false;
+        }
+
         $query = UpdateBuilder::create()
             ->in($entity->getEntityType())
             ->set($valueMap)
-            ->where([
-                self::ATTR_ID => $entity->getId(),
-                self::ATTR_DELETED => false,
-            ])
+            ->where($where)
             ->build();
 
         $this->queryExecutor->execute($query);
@@ -1434,10 +1476,10 @@ class BaseMapper implements RDBMapper
     private function prepareValueForInsert(?string $type, mixed $value): mixed
     {
         if ($type == Entity::JSON_ARRAY && is_array($value)) {
-            $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
+            $value = json_encode($value, JSON_UNESCAPED_UNICODE);
         }
         else if ($type == Entity::JSON_OBJECT && (is_array($value) || $value instanceof stdClass)) {
-            $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
+            $value = json_encode($value, JSON_UNESCAPED_UNICODE);
         }
         else {
             if (is_array($value) || is_object($value)) {
@@ -1494,13 +1536,19 @@ class BaseMapper implements RDBMapper
      */
     public function delete(Entity $entity): void
     {
-        $entity->set(self::ATTR_DELETED, true);
+        if (!self::hasDeletedAttribute($entity)) {
+            $this->deleteFromDb($entity->getEntityType(), $entity->getId());
 
+            return;
+        }
+
+        $entity->set(self::ATTR_DELETED, true);
         $this->update($entity);
     }
 
     /**
      * @return array<string, mixed>
+     * @noinspection PhpSameParameterValueInspection
      */
     private function toValueMap(Entity $entity, bool $onlyStorable = true): array
     {
@@ -1544,27 +1592,38 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * @param array<mixed> $select
-     * @return array<mixed>
+     * @param Selection[] $select
+     * @return array<int, Selection|array{string, string}>
      */
     private function getModifiedSelectForManyToMany(Entity $entity, string $relationName, array $select): array
     {
         $additionalSelect = $this->getManyManyAdditionalSelect($entity, $relationName);
 
-        if (!count($additionalSelect)) {
+        if ($additionalSelect === []) {
             return $select;
         }
 
-        if (empty($select)) {
-            $select = ['*'];
+        if ($select === []) {
+            $select[] = Selection::fromString('*');
         }
 
-        if ($select[0] === '*') {
+        if ($select[0]->getExpression()->getValue() === '*') {
             return array_merge($select, $additionalSelect);
         }
 
         foreach ($additionalSelect as $item) {
-            $index = array_search($item[1], $select);
+            $index = false;
+
+            foreach ($select as $i => $it) {
+                if (
+                    $it instanceof Selection &&
+                    $it->getExpression()->getValue() === $item[1]
+                ) {
+                    $index = $i;
+
+                    break;
+                }
+            }
 
             if ($index !== false) {
                 $select[$index] = $item;
@@ -1577,6 +1636,7 @@ class BaseMapper implements RDBMapper
     /**
      * @param array<string, mixed>|null $conditions
      * @return array{string, string, array<string|int, mixed>}
+     * @noinspection PhpSameParameterValueInspection
      */
     private function getManyManyJoin(Entity $entity, string $relationName, ?array $conditions = null): array
     {
@@ -1590,7 +1650,7 @@ class BaseMapper implements RDBMapper
         $distantKey = $keySet['distantKey'] ?? null;
 
         if (!$middleName) {
-            throw new RuntimeException("No 'relationName' parameter for '{$relationName}' relationship.");
+            throw new RuntimeException("No 'relationName' parameter for '$relationName' relationship.");
         }
 
         if ($nearKey === null || $distantKey === null) {
@@ -1599,14 +1659,10 @@ class BaseMapper implements RDBMapper
 
         $alias = lcfirst($middleName);
 
-        $join = [
-            ucfirst($middleName),
-            $alias,
-            [
-                "{$distantKey}:" => $foreignKey,
-                "{$nearKey}" => $entity->get($key),
-                self::ATTR_DELETED => false,
-            ],
+        $where = [
+            "$distantKey:" => $foreignKey,
+            $nearKey => $entity->get($key),
+            self::ATTR_DELETED => false, // @todo Check 'deleted' exists.
         ];
 
         $conditions = $conditions ?? [];
@@ -1617,9 +1673,9 @@ class BaseMapper implements RDBMapper
             $conditions = array_merge($conditions, $relationConditions);
         }
 
-        $join[2] = array_merge($join[2], $conditions);
+        $where = array_merge($where, $conditions);
 
-        return $join;
+        return [ucfirst($middleName), $alias, $where];
     }
 
     /**
@@ -1687,5 +1743,11 @@ class BaseMapper implements RDBMapper
         }
 
         return $entityDefs->getRelation($relation)->getParam($param);
+    }
+
+    private static function hasDeletedAttribute(Entity $entity): bool
+    {
+        return $entity->hasAttribute(self::ATTR_DELETED) &&
+            $entity->getAttributeType(self::ATTR_DELETED) === AttributeType::BOOL;
     }
 }

@@ -168,7 +168,7 @@ class Checker
         $entityType = $this->entityType;
 
         if (str_contains($attribute, '.')) {
-            list($link, $attribute) = explode('.', $attribute);
+            [$link, $attribute] = explode('.', $attribute);
 
             if (!$this->getSeed()->hasRelation($link)) {
                 // TODO allow alias

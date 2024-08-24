@@ -156,25 +156,35 @@ class EmailHelper {
         if (cc) {
             attributes.cc = model.get('cc') || '';
 
+            /** @type {string[]} */
+            const excludeFromReplyEmailAddressList = this.getUser().get('excludeFromReplyEmailAddressList') || [];
+
             (model.get('to') || '').split(';').forEach(item => {
                 item = item.trim();
 
-                if (item !== this.getUser().get('emailAddress')) {
-                    if (isReplyOnSent) {
-                        if (attributes.to) {
-                            attributes.to += ';';
-                        }
-
-                        attributes.to += item;
-                    }
-                    else {
-                        if (attributes.cc) {
-                            attributes.cc += ';';
-                        }
-
-                        attributes.cc += item;
-                    }
+                if (item === this.getUser().get('emailAddress')) {
+                    return;
                 }
+
+                if (excludeFromReplyEmailAddressList.includes(item)) {
+                    return;
+                }
+
+                if (isReplyOnSent) {
+                    if (attributes.to) {
+                        attributes.to += ';';
+                    }
+
+                    attributes.to += item;
+
+                    return;
+                }
+
+                if (attributes.cc) {
+                    attributes.cc += ';';
+                }
+
+                attributes.cc += item;
             });
 
             attributes.cc = attributes.cc.replace(/^(; )/,"");
@@ -194,16 +204,23 @@ class EmailHelper {
             attributes.to = toList.join(';');
         }
 
+        /** @type {string[]} */
+        const personalAddresses = this.getUser().get('userEmailAddressList') || [];
+        const lcPersonalAddresses = personalAddresses.map(it => it.toLowerCase());
+
         if (attributes.cc) {
-            let ccList = attributes.cc.split(';');
+            const ccList = attributes.cc.split(';')
+                .filter(item => {
+                    if (lcPersonalAddresses.includes(item.toLowerCase())) {
+                        return false;
+                    }
 
-            ccList = ccList.filter(item => {
-                if (item.indexOf(this.erasedPlaceholder) === 0) {
-                    return false;
-                }
+                    if (item.indexOf(this.erasedPlaceholder) === 0) {
+                        return false;
+                    }
 
-                return true;
-            });
+                    return true;
+                });
 
             attributes.cc = ccList.join(';');
         }
@@ -225,21 +242,19 @@ class EmailHelper {
                 attributes.teamsNames[this.user.get('defaultTeamId')] = this.user.get('defaultTeamName');
             }
 
-            attributes.teamsIds = attributes.teamsIds.filter(teamId => {
-                return this.acl.checkTeamAssignmentPermission(teamId);
-            });
+            attributes.teamsIds = attributes.teamsIds
+                .filter(teamId => this.acl.checkTeamAssignmentPermission(teamId));
         }
 
         attributes.nameHash = nameHash;
         attributes.repliedId = model.id;
         attributes.inReplyTo = model.get('messageId');
 
+        /** @type {string[]} */
+        const lcToAddresses = (model.attributes.to || '').split(';').map(it => it.toLowerCase());
 
-        const toAddressList = (model.get('to') || '').split(';');
-        const userPersonalEmailAddressList = this.getUser().get('userEmailAddressList') || [];
-
-        for (const address of userPersonalEmailAddressList) {
-            if (toAddressList.includes(address)) {
+        for (const address of personalAddresses) {
+            if (lcToAddresses.includes(address.toLowerCase())) {
                 attributes.from = address;
 
                 break;
@@ -394,17 +409,17 @@ class EmailHelper {
      * @returns {string|null}
      */
     parseNameFromStringAddress(value) {
-        if (~value.indexOf('<')) {
-            let name = value.replace(/<(.*)>/, '').trim();
-
-            if (name.charAt(0) === '"' && name.charAt(name.length - 1) === '"') {
-                name = name.slice(1, name.length - 2);
-            }
-
-            return name;
+        if (!value.includes('<')) {
+            return null;
         }
 
-        return null;
+        let name = value.replace(/<(.*)>/, '').trim();
+
+        if (name.charAt(0) === '"' && name.charAt(name.length - 1) === '"') {
+            name = name.slice(1, name.length - 2);
+        }
+
+        return name;
     }
 
     /**
@@ -438,16 +453,16 @@ class EmailHelper {
 
         const dateSent = model.get('dateSent');
 
-        let dateSentSting = null;
+        let dateSentString = null;
 
         if (dateSent) {
             const dateSentMoment = this.getDateTime().toMoment(dateSent);
 
-            dateSentSting = dateSentMoment.format(format);
+            dateSentString = dateSentMoment.format(format);
         }
 
         let replyHeadString =
-            (dateSentSting || this.getLanguage().translate('Original message', 'labels', 'Email'));
+            (dateSentString || this.getLanguage().translate('Original message', 'labels', 'Email'));
 
         let fromName = model.get('fromName');
 
@@ -462,117 +477,28 @@ class EmailHelper {
         replyHeadString += ':';
 
         if (model.get('isHtml')) {
-            let body = model.get('body');
+            const body = model.get('body');
 
-            body = '<p>&nbsp;</p><p>' +  replyHeadString + '</p><blockquote>' +  body + '</blockquote>';
+            attributes['body'] = `<p data-quote-start="true"><br></p>` +
+                `<p>${replyHeadString}</p><blockquote>${body}</blockquote>`;
 
-            attributes['body'] = body;
-        }
-        else {
-            let bodyPlain = model.get('body') || model.get('bodyPlain') || '';
-
-            let b = '\n\n';
-
-            b += replyHeadString + '\n';
-
-            bodyPlain.split('\n').forEach(line => {
-                b += '> ' + line + '\n';
-            });
-
-            bodyPlain = b;
-
-            attributes['body'] = bodyPlain;
-            attributes['bodyPlain'] = bodyPlain;
-        }
-    }
-
-    /**
-     * Compose a mailto link.
-     *
-     * @param {Object} attributes Attributes.
-     * @param {string} [bcc] BCC.
-     * @returns {string} A mailto link.
-     */
-    composeMailToLink(attributes, bcc) {
-        let link = 'mailto:';
-
-        link += (attributes.to || '').split(';').join(',');
-
-        const o = {};
-
-        if (attributes.cc) {
-            o.cc = attributes.cc.split(';').join(',');
+            return;
         }
 
-        if (attributes.bcc) {
-            if (!bcc) {
-                bcc = '';
-            } else {
-                bcc += ';';
-            }
+        let bodyPlain = model.get('body') || model.get('bodyPlain') || '';
 
-            bcc += attributes.bcc;
-        }
+        let b = '\n\n';
 
-        if (bcc) {
-            o.bcc = bcc.split(';').join(',');
-        }
+        b += replyHeadString + '\n';
 
-        if (attributes.name) {
-            o.subject = attributes.name;
-        }
+        bodyPlain.split('\n').forEach(line => {
+            b += '> ' + line + '\n';
+        });
 
-        if (attributes.body) {
-            o.body = attributes.body;
+        bodyPlain = b;
 
-            if (attributes.isHtml) {
-                o.body = this.htmlToPlain(o.body);
-            }
-        }
-
-        if (attributes.inReplyTo) {
-            o['In-Reply-To'] = attributes.inReplyTo;
-        }
-
-        let part = '';
-
-        for (const key in o) {
-            if (part !== '') {
-                part += '&';
-            }
-            else {
-                part += '?';
-            }
-
-            part += key + '=' + encodeURIComponent(o[key]);
-        }
-
-        link += part;
-
-        return link;
-    }
-
-    /**
-     * Convert an HTML to a plain text.
-     *
-     * @param {string} text A text.
-     * @returns {string}
-     */
-    htmlToPlain(text) {
-        text = text || '';
-
-        let value = text.replace(/<br\s*\/?>/mg, '\n');
-
-        value = value.replace(/<\/p\s*\/?>/mg, '\n\n');
-
-        const $div = $('<div>').html(value);
-
-        $div.find('style').remove();
-        $div.find('link[ref="stylesheet"]').remove();
-
-        value =  $div.text();
-
-        return value;
+        attributes['body'] = bodyPlain;
+        attributes['bodyPlain'] = bodyPlain;
     }
 }
 

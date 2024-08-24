@@ -47,7 +47,7 @@ class Factory
         $className = $this->metadata->get(['app', 'fileStorage', 'implementationClassNameMap', $name]);
 
         if (!$className) {
-            throw new RuntimeException("Unknown file storage '{$name}'.");
+            throw new RuntimeException("Unknown file storage '$name'.");
         }
 
         return $this->injectableFactory->create($className);

@@ -35,7 +35,7 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Select\SearchParams;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\ORM\EntityManager;
-use Espo\Entities\Subscription;
+use Espo\Entities\StreamSubscription;
 use Espo\Entities\User;
 use Espo\Entities\Note;
 use Espo\Entities\Email;
@@ -52,6 +52,7 @@ use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Tools\Stream\RecordService\Helper;
+use Espo\Tools\Stream\RecordService\NoteHelper;
 use Espo\Tools\Stream\RecordService\QueryHelper;
 
 class UserRecordService
@@ -66,7 +67,8 @@ class UserRecordService
         private UserAclManagerProvider $userAclManagerProvider,
         private NoteAccessControl $noteAccessControl,
         private Helper $helper,
-        private QueryHelper $queryHelper
+        private QueryHelper $queryHelper,
+        private NoteHelper $noteHelper
     ) {}
 
     /**
@@ -315,7 +317,7 @@ class UserRecordService
 
         $builder
             ->join(
-                Subscription::ENTITY_TYPE,
+                StreamSubscription::ENTITY_TYPE,
                 'subscription',
                 [
                     'entityType:' => 'parentType',
@@ -369,7 +371,7 @@ class UserRecordService
 
         $builder
             ->join(
-                Subscription::ENTITY_TYPE,
+                StreamSubscription::ENTITY_TYPE,
                 'subscription',
                 [
                     // Improves performance significantly.
@@ -381,7 +383,7 @@ class UserRecordService
             )
             // NOT EXISTS sub-query would perform very slow.
             ->leftJoin(
-                Subscription::ENTITY_TYPE,
+                StreamSubscription::ENTITY_TYPE,
                 'subscriptionExclude',
                 [
                     'entityType:' => 'parentType',
@@ -610,6 +612,7 @@ class UserRecordService
         foreach ($collection as $e) {
             $this->loadNoteAdditionalFields($e);
             $this->noteAccessControl->apply($e, $user);
+            $this->noteHelper->prepare($e);
         }
 
         return RecordCollection::createNoCount($collection, $maxSize);

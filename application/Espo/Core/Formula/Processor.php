@@ -94,20 +94,8 @@ class Processor
 
         $function = $this->functionFactory->create($item->getType(), $this->entity, $this->variables);
 
-        if ($function instanceof Func) {
-            $evaluatedArguments = array_map(
-                fn($item) => $this->process($item),
-                iterator_to_array($item->getArgumentList())
-            );
-
-            try {
-                return $function->process(new EvaluatedArgumentList($evaluatedArguments));
-            }
-            catch (TooFewArguments|BadArgumentType|BadArgumentValue $e) {
-                $message = sprintf('Function %s; %s', $item->getType(), $e->getLogMessage());
-
-                throw new Error($message);
-            }
+        if ($function instanceof Func || $function instanceof FuncVariablesAware) {
+            return $this->processFunc($item, $function);
         }
 
         if ($function instanceof DeprecatedBaseFunction) {
@@ -156,6 +144,7 @@ class Processor
     /**
      * @return mixed[]
      * @throws Error
+     * @throws ExecutionException
      */
     private function processList(ArgumentList $args): array
     {
@@ -166,5 +155,34 @@ class Processor
         }
 
         return $list;
+    }
+
+    /**
+     * @throws Error
+     * @throws ExecutionException
+     */
+    private function processFunc(Argument $item, Func|FuncVariablesAware $function): mixed
+    {
+        $rawEvaluatedArguments = array_map(
+            fn ($item) => $this->process($item),
+            iterator_to_array($item->getArgumentList())
+        );
+
+        try {
+            $evaluatedArguments = new EvaluatedArgumentList($rawEvaluatedArguments);
+
+            if ($function instanceof FuncVariablesAware) {
+                $variables = new Variables($this->variables ?? (object) []);
+
+                return $function->process($evaluatedArguments, $variables);
+            }
+
+            return $function->process($evaluatedArguments);
+        }
+        catch (TooFewArguments|BadArgumentType|BadArgumentValue $e) {
+            $message = sprintf('Function %s; %s', $item->getType(), $e->getLogMessage());
+
+            throw new Error($message);
+        }
     }
 }

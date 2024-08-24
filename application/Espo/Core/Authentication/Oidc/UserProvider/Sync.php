@@ -238,7 +238,7 @@ class Sync
         $username = strtolower($username);
 
         /** @var string $result */
-        $result = preg_replace("/{$regExp}/", '_', $username);
+        $result = preg_replace("/$regExp/", '_', $username);
 
         /** @var string */
         return str_replace(' ', '_', $result);

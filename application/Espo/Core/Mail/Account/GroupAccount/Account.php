@@ -30,6 +30,7 @@
 namespace Espo\Core\Mail\Account\GroupAccount;
 
 use Espo\Core\Field\Date;
+use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Mail\Exceptions\NoSmtp;
@@ -63,6 +64,13 @@ class Account implements AccountInterface
     public function updateFetchData(FetchData $fetchData): void
     {
         $this->entity->set('fetchData', $fetchData->getRaw());
+
+        $this->entityManager->saveEntity($this->entity, [SaveOption::SILENT => true]);
+    }
+
+    public function updateConnectedAt(): void
+    {
+        $this->entity->set('connectedAt', DateTime::createNow()->toString());
 
         $this->entityManager->saveEntity($this->entity, [SaveOption::SILENT => true]);
     }
@@ -302,5 +310,11 @@ class Account implements AccountInterface
             $password,
             $security
         );
+    }
+
+    public function getConnectedAt(): ?DateTime
+    {
+        /** @var DateTime */
+        return $this->entity->getValueObject('connectedAt');
     }
 }

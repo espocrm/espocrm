@@ -1,10 +1,13 @@
 {
   "labels": {
-    "Create Lead": "Müşteri Potansiyeli Oluştur",
+    "Create Lead": "Potansiyel Oluştur",
     "Create Contact": "Kişi oluştur",
     "Create Task": "Görev oluştur",
     "Create Case": "Dosya Oluştur",
     "Add to Contact": "Kişilere Ekle",
-    "Add to Lead": "Müşteri Potansiyellerine Ekle"
+    "Add to Lead": "Potansiyellere Ekle"
+  },
+  "fields": {
+    "tasks": "Görev"
   }
 }

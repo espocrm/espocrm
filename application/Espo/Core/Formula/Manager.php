@@ -46,17 +46,45 @@ class Manager
     {
         $functionClassNameMap = $metadata->get(['app', 'formula', 'functionClassNameMap'], []);
 
-        $this->evaluator = new Evaluator($injectableFactory, $functionClassNameMap);
+        $unsafeFunctionList = $this->getUnsafeFunctionList($metadata);
+
+        $this->evaluator = new Evaluator($injectableFactory, $functionClassNameMap, $unsafeFunctionList);
     }
 
     /**
      * Executes a script and returns its result.
      *
-     * @return mixed
      * @throws Exceptions\Error
      */
-    public function run(string $script, ?Entity $entity = null, ?stdClass $variables = null)
+    public function run(string $script, ?Entity $entity = null, ?stdClass $variables = null) : mixed
     {
         return $this->evaluator->process($script, $entity, $variables);
+    }
+
+    /**
+     * Executes a script in safe mode and returns its result.
+     *
+     * @throws Exceptions\Error
+     * @since 8.3.0
+     * @internal
+     */
+    public function runSafe(string $script, ?Entity $entity = null, ?stdClass $variables = null): mixed
+    {
+        return $this->evaluator->processSafe($script, $entity, $variables);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getUnsafeFunctionList(Metadata $metadata): array
+    {
+        $unsafeFunctionList = [];
+
+        foreach ($metadata->get("app.formula.functionList") ?? [] as $item) {
+            if ($item['unsafe'] ?? false) {
+                $unsafeFunctionList[] = $item['name'];
+            }
+        }
+        return $unsafeFunctionList;
     }
 }

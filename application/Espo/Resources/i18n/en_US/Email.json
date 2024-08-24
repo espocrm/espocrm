@@ -30,7 +30,9 @@
         "isReplied": "Is Replied",
         "isNotReplied": "Is Not Replied",
         "isUsers": "Is User's",
+        "isUsersSent": "Is User's Sent",
         "inTrash": "In Trash",
+        "inArchive": "In Archive",
         "folder": "Folder",
         "inboundEmails": "Group Accounts",
         "emailAccounts": "Personal Accounts",
@@ -44,6 +46,7 @@
         "messageId": "Message Id",
         "messageIdInternal": "Message Id (Internal)",
         "folderId": "Folder Id",
+        "folderString": "Folder",
         "fromName": "From Name",
         "fromString": "From String",
         "fromAddress": "From Address",
@@ -71,6 +74,7 @@
         "ccEmailAddresses": "CC EmailAddresses",
         "bccEmailAddresses": "BCC EmailAddresses",
         "replyToEmailAddresses": "Reply-To EmailAddresses",
+        "createdEvent": "Created Event",
         "groupFolder": "Group Folder"
     },
     "options": {
@@ -78,7 +82,7 @@
             "Draft": "Draft",
             "Sending": "Sending",
             "Sent": "Sent",
-            "Archived": "Archived",
+            "Archived": "Imported",
             "Received": "Received",
             "Failed": "Failed"
         }
@@ -86,6 +90,7 @@
     "labels": {
         "Create Email": "Archive Email",
         "Archive Email": "Archive Email",
+        "Import EML": "Import EML",
         "Compose": "Compose",
         "Reply": "Reply",
         "Reply to All": "Reply to All",
@@ -109,18 +114,22 @@
         "Move to Trash": "Move to Trash",
         "Retrieve from Trash": "Retrieve from Trash",
         "Move to Folder": "Move to Folder",
-        "Moving to folder": "Moving to Folder",
+        "Moved to Archive": "Moved to Archive",
         "Filters": "Filters",
         "Folders": "Folders",
         "Group Folders": "Group Folders",
         "No Subject": "No Subject",
         "View Users": "View Users",
-        "Event": "Event"
+        "Event": "Event",
+        "View Attachments": "View Attachments",
+        "Moved to Trash": "Moved to Trash",
+        "Retrieved from Trash": "Retrieved from Trash"
     },
     "strings": {
         "sendingFailed": "Email sending failed"
     },
     "messages": {
+        "alreadyImported": "The [email]({link}) already exists in the system.",
         "invalidCredentials": "Invalid credentials.",
         "unknownError": "Unknown error.",
         "recipientAddressRejected": "Recipient address rejected.",
@@ -135,11 +144,15 @@
     },
     "presetFilters": {
         "sent": "Sent",
-        "archived": "Archived",
+        "archived": "Imported",
         "inbox": "Inbox",
         "drafts": "Drafts",
         "trash": "Trash",
+        "archive": "Archive",
         "important": "Important"
+    },
+    "actions": {
+        "moveToArchive": "Archive"
     },
     "massActions": {
         "markAsRead": "Mark as Read",
@@ -148,6 +161,10 @@
         "markAsNotImportant": "Unmark Importance",
         "moveToTrash": "Move to Trash",
         "moveToFolder": "Move to Folder",
+        "moveToArchive": "Archive",
         "retrieveFromTrash": "Retrieve from Trash"
+    },
+    "otherFields": {
+        "file": "File"
     }
 }

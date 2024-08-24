@@ -29,7 +29,9 @@
 
 namespace Espo\Entities;
 
-class Role extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class Role extends Entity
 {
     public const ENTITY_TYPE = 'Role';
 }

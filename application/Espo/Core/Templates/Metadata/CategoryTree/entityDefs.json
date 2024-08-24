@@ -40,7 +40,8 @@
         "childList": {
             "type": "jsonArray",
             "notStorable": true,
-            "utility": true
+            "utility": true,
+            "orderDisabled": true
         }
     },
     "links": {

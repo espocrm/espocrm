@@ -1,0 +1,5 @@
+[
+    {"name": "name", "link": true},
+    {"name": "code", "width": 20},
+    {"name": "isPreferred", "width": 15}
+]

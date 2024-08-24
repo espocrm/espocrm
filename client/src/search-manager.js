@@ -37,7 +37,7 @@
  * @property {string} [textFilter] A text filter.
  * @property {string} [primary] A primary filter.
  * @property {Object.<string, boolean>} [bool] Bool filters.
- * @property {{string: module:search-manager~advancedFilter}} [advanced] Advanced filters (field filters).
+ * @property {Record<module:search-manager~advancedFilter>} [advanced] Advanced filters (field filters).
  * Contains data needed for both the backend and frontend. Keys are field names.
  */
 
@@ -50,7 +50,7 @@
  * @property {string} [attribute] An attribute (field).
  * @property {module:search-manager~whereItem[]|string|number|boolean|null} [value] A value.
  * @property {boolean} [dateTime] Is a date-time item.
- * @property {string} [timeZone] A time-zone (for date-time items).
+ * @property {string} [timeZone] A time-zone.
  */
 
 /**
@@ -68,6 +68,12 @@
  * A search manager.
  */
 class SearchManager {
+
+    /**
+     * @type {string|null}
+     * @private
+     */
+    timeZone
 
     /**
      * @param {module:collection} collection A collection.
@@ -144,6 +150,10 @@ class SearchManager {
             }
         }
 
+        /**
+         * @type {module:search-manager~data}
+         * @private
+         */
         this.data = Espo.Utils.clone(defaultData) || this.emptyData;
 
         this.sanitizeData();
@@ -268,14 +278,30 @@ class SearchManager {
             attribute = defs.attribute;
         }
 
-        if (defs.dateTime) {
-            return {
+        if (defs.dateTime || defs.date) {
+            const timeZone = this.timeZone !== undefined ?
+                this.timeZone :
+                this.dateTime.getTimeZone();
+
+            const data = {
                 type: type,
                 attribute: attribute,
                 value: defs.value,
-                dateTime: true,
-                timeZone: this.dateTime.timeZone || 'UTC',
             };
+
+            if (defs.dateTime) {
+                data.dateTime = true;
+            }
+
+            if (defs.date) {
+                data.date = true;
+            }
+
+            if (timeZone) {
+                data.timeZone = timeZone;
+            }
+
+            return data;
         }
 
         value = defs.value;
@@ -362,6 +388,10 @@ class SearchManager {
         }
     }
 
+    clearPreset() {
+        delete this.data.presetName;
+    }
+
     /**
      * Empty data.
      */
@@ -388,6 +418,17 @@ class SearchManager {
         if (this.storage) {
             this.storage.clear(this.type + 'Search', this.scope);
         }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Set a time zone. Null will not add a time zone.
+     *
+     * @type {string|null}
+     * @internal Is used. Do not remove.
+     */
+    setTimeZone(timeZone) {
+        this.timeZone = timeZone;
     }
 }
 

@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Mail\Account\GroupAccount\Hooks;
 
+use Laminas\Mail\Message;
+
 use Espo\Core\Mail\Account\GroupAccount\AccountFactory as GroupAccountFactory;
 use Espo\Core\Mail\SenderParams;
 use Espo\Core\Templates\Entities\Person;
@@ -39,20 +41,15 @@ use Espo\Tools\Email\Util;
 use Espo\Tools\EmailTemplate\Data as EmailTemplateData;
 use Espo\Tools\EmailTemplate\Params as EmailTemplateParams;
 use Espo\Tools\EmailTemplate\Service as EmailTemplateService;
-use Laminas\Mail\Message;
-
 use Espo\Core\Mail\Account\Account;
 use Espo\Core\Mail\Account\Hook\BeforeFetchResult;
 use Espo\Core\Mail\Account\Hook\AfterFetch as AfterFetchInterface;
 use Espo\Core\Mail\Account\GroupAccount\Account as GroupAccount;
 use Espo\Core\Mail\EmailSender;
-
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Log;
-
 use Espo\Tools\Stream\Service as StreamService;
-
 use Espo\Entities\InboundEmail;
 use Espo\Entities\Email;
 use Espo\Entities\User;
@@ -60,12 +57,9 @@ use Espo\Entities\Team;
 use Espo\Entities\EmailAddress;
 use Espo\Entities\Attachment;
 use Espo\Modules\Crm\Entities\CaseObj;
-
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Repositories\Attachment as AttachmentRepository;
-
 use Espo\ORM\EntityManager;
-
 use Espo\Modules\Crm\Tools\Case\Distribution\RoundRobin;
 use Espo\Modules\Crm\Tools\Case\Distribution\LeastBusy;
 
@@ -74,41 +68,21 @@ use DateTime;
 
 class AfterFetch implements AfterFetchInterface
 {
-    private EntityManager $entityManager;
-    private StreamService $streamService;
-    private Config $config;
-    private EmailSender $emailSender;
-    private Log $log;
-    private RoundRobin $roundRobin;
-    private LeastBusy $leastBusy;
-
     private const DEFAULT_AUTOREPLY_LIMIT = 5;
     private const DEFAULT_AUTOREPLY_SUPPRESS_PERIOD = '2 hours';
-    private GroupAccountFactory $groupAccountFactory;
-    private EmailTemplateService $emailTemplateService;
 
     public function __construct(
-        EntityManager $entityManager,
-        StreamService $streamService,
-        Config $config,
-        EmailSender $emailSender,
-        Log $log,
-        RoundRobin $roundRobin,
-        LeastBusy $leastBusy,
-        GroupAccountFactory $groupAccountFactory,
-        EmailTemplateService $emailTemplateService,
+        private EntityManager $entityManager,
+        private StreamService $streamService,
+        private Config $config,
+        private EmailSender $emailSender,
+        private Log $log,
+        private RoundRobin $roundRobin,
+        private LeastBusy $leastBusy,
+        private GroupAccountFactory $groupAccountFactory,
+        private EmailTemplateService $emailTemplateService,
         private SystemUser $systemUser
-    ) {
-        $this->entityManager = $entityManager;
-        $this->streamService = $streamService;
-        $this->config = $config;
-        $this->emailSender = $emailSender;
-        $this->log = $log;
-        $this->roundRobin = $roundRobin;
-        $this->leastBusy = $leastBusy;
-        $this->groupAccountFactory = $groupAccountFactory;
-        $this->emailTemplateService = $emailTemplateService;
-    }
+    ) {}
 
     public function process(Account $account, Email $email, BeforeFetchResult $beforeFetchResult): void
     {
@@ -277,7 +251,7 @@ class AfterFetch implements AfterFetchInterface
                     ->withEntityHash($entityHash),
                 EmailTemplateParams::create()
                     ->withApplyAcl(false)
-                    ->withCopyAttachments(true)
+                    ->withCopyAttachments()
             );
 
             $subject = $replyData->getSubject();
@@ -380,6 +354,7 @@ class AfterFetch implements AfterFetchInterface
             return;
         }
 
+        /** @noinspection RegExpRedundantEscape */
         if (preg_match('/\[#([0-9]+)[^0-9]*\]/', $email->get('name'), $m)) {
             $caseNumber = $m[1];
 
@@ -434,7 +409,6 @@ class AfterFetch implements AfterFetchInterface
         $userIdList = [];
 
         if ($case->hasLinkMultipleField('assignedUsers')) {
-            /** @var string[] $userIdList */
             $userIdList = $case->getLinkMultipleIdList('assignedUsers');
         }
         else {
@@ -449,7 +423,6 @@ class AfterFetch implements AfterFetchInterface
             $email->addLinkMultipleId('users', $userId);
         }
 
-        /** @var string[] $teamIdList */
         $teamIdList = $case->getLinkMultipleIdList('teams');
 
         foreach ($teamIdList as $teamId) {
@@ -487,7 +460,6 @@ class AfterFetch implements AfterFetchInterface
             $case->set('description', $bodyPlain);
         }
 
-        /** @var string[] $attachmentIdList */
         $attachmentIdList = $email->getLinkMultipleIdList('attachments');
 
         $copiedAttachmentIdList = [];

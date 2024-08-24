@@ -106,7 +106,7 @@ class AdminController extends Controller {
     // noinspection JSUnusedGlobalSymbols
     actionIndex(options) {
         let isReturn = options.isReturn;
-        const key = this.name + 'Index';
+        const key = 'index';
 
         if (this.getRouter().backProcessed) {
             isReturn = true;
@@ -217,6 +217,11 @@ class AdminController extends Controller {
     // noinspection JSUnusedGlobalSymbols
     actionAuthenticationProviders() {
         this.getRouter().dispatch('AuthenticationProvider', 'list', {fromAdmin: true});
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionAddressCountries() {
+        this.getRouter().dispatch('AddressCountry', 'list', {fromAdmin: true});
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -408,6 +413,29 @@ class AdminController extends Controller {
                 scope: 'Job',
                 collection: collection,
                 searchManager: searchManager,
+            });
+        });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionAppLog() {
+        this.collectionFactory.create('AppLogRecord', collection => {
+            const searchManager = new SearchManager(
+                collection,
+                'list',
+                this.getStorage(),
+                this.getDateTime()
+            );
+
+            searchManager.loadStored();
+
+            collection.where = searchManager.getWhere();
+            collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
+
+            this.main('views/list', {
+                scope: 'AppLogRecord',
+                collection: collection,
+                searchManager: searchManager
             });
         });
     }

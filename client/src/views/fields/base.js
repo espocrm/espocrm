@@ -36,6 +36,7 @@ import $ from 'jquery';
  * A base field view. Can be in different modes. Each mode uses a separate template.
  *
  * @todo Document events.
+ * @template TParams
  */
 class BaseFieldView extends View {
 
@@ -136,9 +137,12 @@ class BaseFieldView extends View {
     editTemplateContent
 
     /**
-     * A validation list. There should be a `validate{Name}` method for each item.
+     * A validation list. A function returning true if non-valid, or a name.
+     * For the latter, there should be a `validate{Name}` method in the class.
      *
-     * @type {string[]}
+     * Functions are supported as of v8.3.
+     *
+     * @type {Array<(function (): boolean)|string>}
      */
     validations = ['required']
 
@@ -184,7 +188,7 @@ class BaseFieldView extends View {
     /**
      * Field params.
      *
-     * @type {Object.<string,*>}
+     * @type {TParams & module:views/fields/base~params & Object.<string, *>}
      */
     params = null
 
@@ -693,6 +697,7 @@ class BaseFieldView extends View {
     /** @inheritDoc */
     init() {
         this.validations = Espo.Utils.clone(this.validations);
+        this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
 
         this._hasTemplateContent = !!this.templateContent;
 
@@ -868,6 +873,10 @@ class BaseFieldView extends View {
                     return;
                 }
 
+                if (options.fromField === this.name) {
+                    return;
+                }
+
                 if (options.skipReRenderInEditMode && this.isEditMode()) {
                     return;
                 }
@@ -917,6 +926,12 @@ class BaseFieldView extends View {
                 this.model.set(attributes, {ui: true});
             });
         }
+    }
+
+    highlight() {
+        const $cell = this.get$cell();
+
+        $cell.addClass('highlighted');
     }
 
     /** @inheritDoc */
@@ -1242,6 +1257,7 @@ class BaseFieldView extends View {
         if (isInvalid) {
             Espo.Ui.error(this.translate('Not valid'));
 
+            // @todo Revise.
             model.set(prev, {silent: true});
 
             return;
@@ -1262,6 +1278,7 @@ class BaseFieldView extends View {
             .catch(() => {
                 Espo.Ui.error(this.translate('Error occurred'));
 
+                // @todo Revise.
                 model.set(prev, {silent: true});
 
                 this.reRender();
@@ -1378,6 +1395,7 @@ class BaseFieldView extends View {
                     if (key === 'Control+Enter') {
                         e.stopPropagation();
 
+                        this.fetchToModel();
                         this.inlineEditSave();
 
                         setTimeout(() => {
@@ -1402,6 +1420,7 @@ class BaseFieldView extends View {
                         e.preventDefault();
                         e.stopPropagation();
 
+                        this.fetchToModel();
                         this.inlineEditSave({bypassClose: true});
                     }
                 });
@@ -1534,10 +1553,18 @@ class BaseFieldView extends View {
     validate() {
         this.lastValidationMessage = null;
 
-        for (const i in this.validations) {
-            const method = 'validate' + Espo.Utils.upperCaseFirst(this.validations[i]);
+        for (const item of this.validations) {
+            let notValid = false;
 
-            if (this[method].call(this)) {
+            if (typeof item === 'function') {
+                notValid = item();
+            } else {
+                const method = 'validate' + Espo.Utils.upperCaseFirst(item);
+
+                notValid = this[method].call(this);
+            }
+
+            if (notValid) {
                 this.trigger('invalid');
 
                 return true;
