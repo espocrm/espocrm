@@ -36,7 +36,6 @@ use Espo\Core\Select\Where\Item\Data;
 use Espo\Core\Select\Where\Item\Type;
 use Espo\Core\Select\Helpers\RandomStringGenerator;
 use Espo\Core\Select\Helpers\UserTimeZoneProvider;
-use Espo\Core\Select\Helpers\UserPreferencesProvider;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Metadata;
@@ -70,7 +69,6 @@ class ItemGeneralConverter implements ItemConverter
         private Config $config,
         private Metadata $metadata,
         private UserTimeZoneProvider $userTimeZoneProvider,
-        private UserPreferencesProvider $userPreferencesProvider,
     ) {}
 
     /**
@@ -227,23 +225,23 @@ class ItemGeneralConverter implements ItemConverter
         }
 
         if ($type === Type::CURRENT_WEEK) {
-            return WhereClause::fromRaw($this->processCurrentWeek($attribute));
+            return WhereClause::fromRaw($this->processCurrentWeek($attribute, $value, $item->getData()));
         }
 
         if ($type === Type::LAST_WEEK) {
-            return WhereClause::fromRaw($this->processLastWeek($attribute));
+            return WhereClause::fromRaw($this->processLastWeek($attribute, $value, $item->getData()));
         }
 
         if ($type === Type::LAST_X_WEEKS) {
-            return WhereClause::fromRaw($this->processLastXWeeks($attribute, $value));
+            return WhereClause::fromRaw($this->processLastXWeeks($attribute, $value, $item->getData()));
         }
 
         if ($type === Type::NEXT_WEEK) {
-            return WhereClause::fromRaw($this->processNextWeek($attribute));
+            return WhereClause::fromRaw($this->processNextWeek($attribute, $value, $item->getData()));
         }
 
         if ($type === Type::NEXT_X_WEEKS) {
-            return WhereClause::fromRaw($this->processNextXWeeks($attribute, $value));
+            return WhereClause::fromRaw($this->processNextXWeeks($attribute, $value, $item->getData()));
         }
 
         if ($type === Type::CURRENT_MONTH) {
@@ -1116,127 +1114,53 @@ class ItemGeneralConverter implements ItemConverter
 
     /**
      * @return array<string|int, mixed>
+     * @throws BadRequest
      */
-    private function processCurrentWeek(string $attribute): array
+    private function processCurrentWeek(string $attribute, mixed $value, ?Data $data): array
     {
-        $weekStart = $this->userPreferencesProvider->get("weekStart");
-        if ($weekStart === -1 || $weekStart == "")
-            $weekStart = $this->config->get("weekStart");
-
-        $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
-
-        $dtFrom = (new \DateTime("now", $timeZone))->setTime(0,0);
-        $dtFrom->setISODate(intval($dtFrom->format("Y")), intval($dtFrom->format("W")), $weekStart)
-            ->setTimezone(new DateTimeZone('UTC'));
-        $dtTo = (clone $dtFrom)->modify("+1 week -1 second");
+        $timeZone = $this->getTimeZone($data);
+        $today = DateTime::createNow()->withTimezone($timeZone);
+        $dayOfWeek = $today->getDayOfWeek();
+        $weekStart = $this->config->get("weekStart", 0);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dtFrom->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<' => $dtTo->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '>=' => $from->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
      * @return array<string|int, mixed>
+     * @throws BadRequest
      */
-    private function processLastWeek(string $attribute): array
+    private function processLastWeek(string $attribute, mixed $value, ?Data $data): array
     {
-        $weekStart = $this->userPreferencesProvider->get("weekStart");
-        if ($weekStart === -1 || $weekStart == "")
-            $weekStart = $this->config->get("weekStart");
-
-        $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
-
-        $dtFrom = (new \DateTime("now", $timeZone))->setTime(0,0)->modify("-1 week");
-        $dtFrom->setISODate(intval($dtFrom->format("Y")), intval($dtFrom->format("W")), $weekStart)
-            ->setTimezone(new DateTimeZone('UTC'));
-        $dtTo = (clone $dtFrom)->modify("+1 week -1 second");
-
-        return [
-            'AND' => [
-                $attribute . '>=' => $dtFrom->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<' => $dtTo->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-            ]
-        ];
-    }
-
-    /**
-     * @param mixed $value
-     * @return array<string|int, mixed>
-     */
-    private function processLastXWeeks(string $attribute, $value): array
-    {
-        $weekStart = $this->userPreferencesProvider->get("weekStart");
-        if ($weekStart === -1 || $weekStart == "")
-            $weekStart = $this->config->get("weekStart");
-
-        $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
-
-        $number = strval(intval($value));
-        $dtFrom = (new \DateTime("now", $timeZone))->setTime(0,0);
-        $dtFrom->setISODate(intval($dtFrom->format("Y")), intval($dtFrom->format("W")), $weekStart)
-            ->setTimezone(new DateTimeZone('UTC'));
-        $dtTo = (clone $dtFrom)->modify("-1 second");
-        $dtFrom->modify("-{$number} week");
-
-        return [
-            'AND' => [
-                $attribute . '>=' => $dtFrom->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<' => $dtTo->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-            ]
-        ];
     }
 
     /**
      * @return array<string|int, mixed>
+     * @throws BadRequest
+     */
+    private function processLastXWeeks(string $attribute, mixed $value, ?Data $data): array
+    {
+    }
+
+    /**
+     * @return array<string|int, mixed>
+     * @throws BadRequest
      */
     private function processNextWeek(string $attribute): array
     {
-        $weekStart = $this->userPreferencesProvider->get("weekStart");
-        if ($weekStart === -1 || $weekStart == "")
-            $weekStart = $this->config->get("weekStart");
-
-        $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
-
-        $dtFrom = (new \DateTime("now", $timeZone))->setTime(0,0)->modify("+1 week");
-        $dtFrom->setISODate(intval($dtFrom->format("Y")), intval($dtFrom->format("W")), $weekStart)
-            ->setTimezone(new DateTimeZone('UTC'));
-        $dtTo = (clone $dtFrom)->modify("+1 week -1 second");
-
-        return [
-            'AND' => [
-                $attribute . '>=' => $dtFrom->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<' => $dtTo->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-            ]
-        ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
+     * @throws BadRequest
      */
     private function processNextXWeeks(string $attribute, $value): array
     {
-        $weekStart = $this->userPreferencesProvider->get("weekStart");
-        if ($weekStart === -1 || $weekStart == "")
-            $weekStart = $this->config->get("weekStart");
-
-        $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
-
-        $number = strval(intval($value));
-        $dtFrom = (new \DateTime("now", $timeZone))->setTime(0,0)->modify("+1 week");
-        $dtFrom->setISODate(intval($dtFrom->format("Y")), intval($dtFrom->format("W")), $weekStart)
-            ->setTimezone(new DateTimeZone('UTC'));
-        $dtTo = (clone $dtFrom)->modify("+{$number} weeks -1 second");
-
-        return [
-            'AND' => [
-                $attribute . '>=' => $dtFrom->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<' => $dtTo->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-            ]
-        ];
     }
 
     /**

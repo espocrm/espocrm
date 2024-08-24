@@ -322,33 +322,27 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
             case Type::LAST_X_WEEKS:
             case Type::NEXT_WEEK:
             case Type::NEXT_X_WEEKS:
-                $weekStart = $this->userPreferencesProvider->get("weekStart");
-                if ($weekStart === -1 || $weekStart == "")
-                    $weekStart = $this->config->get("weekStart");
-
-                $dtFrom = $dt->setTime(0,0);
-                $dtFrom->setISODate(intval($dtFrom->format("Y")), intval($dtFrom->format("W")), $weekStart)
-                    ->setTimezone(new DateTimeZone('UTC'));
-                $dtTo = (clone $dtFrom)->modify("+1 week -1 second");
+                $weekStart = $this->config->get("weekStart", 0);
+                $dayOfWeek = intval($dt->format('w'));
 
                 if ($type == Type::LAST_WEEK) {
-                    $dtFrom->modify("-1 week");
-                    $dtTo->modify("-1 week");
+                    $from->modify("-1 week");
+                    $to->modify("-1 week");
                 } else if ($type == Type::LAST_X_WEEKS) {
                     $number = strval(intval($value));
-                    $dtFrom->modify("-{$number} week");
-                    $dtTo->modify("-1 week");
+                    $from->modify("-{$number} week");
+                    $to->modify("-1 week");
                 } else if ($type == Type::NEXT_WEEK) {
-                    $dtFrom->modify("+1 week");
-                    $dtTo->modify("+1 week");
+                    $from->modify("+1 week");
+                    $to->modify("+1 week");
                 } else if ($type == Type::NEXT_X_WEEKS) {
                     $number = strval(intval($value));
-                    $dtFrom->modify("+1 week");
-                    $dtTo->modify("+{$number} weeks");
+                    $from->modify("+1 week");
+                    $to->modify("+{$number} weeks");
                 }
 
                 $where['type'] = Type::BETWEEN;
-                $where['value'] = [$dtFrom->format($format), $dtTo->format($format)];
+                $where['value'] = [$from->format($format), $to->format($format)];
 
                 break;
 
