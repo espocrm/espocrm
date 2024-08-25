@@ -239,7 +239,7 @@
         "rebuildRequired": "Rebuild is required"
     },
     "messages": {
-        "cacheIsDisabled": "Cache is disabled, the application will run slow. Enabled cache in the [settings](#Admin/settings).",
+        "cacheIsDisabled": "Cache is disabled, the application will run slow. Enable cache in the [settings](#Admin/settings).",
         "formulaFunctions": "More functions can be found in [documentation]({documentationUrl}).",
         "rebuildRequired": "You need to run rebuild from CLI.",
         "upgradeVersion": "EspoCRM will be upgraded to version **{version}**. Please be patient as this may take a while.",
