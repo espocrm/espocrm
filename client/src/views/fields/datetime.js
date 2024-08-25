@@ -85,6 +85,7 @@ class DatetimeFieldView extends DateFieldView {
 
     searchTypeList = [
         'lastSevenDays',
+        'nextSevenDays',
         'ever',
         'isEmpty',
         'currentWeek',

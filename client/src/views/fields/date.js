@@ -88,6 +88,7 @@ class DateFieldView extends BaseFieldView {
     searchTypeList = [
         'between',
         'lastSevenDays',
+        'nextSevenDays',
         'ever',
         'isEmpty',
         'currentMonth',

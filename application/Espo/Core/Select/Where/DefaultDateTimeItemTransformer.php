@@ -150,6 +150,20 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 break;
 
+            case Type::NEXT_SEVEN_DAYS:
+                $where['type'] = Type::BETWEEN;
+
+                $dt->setTime(0, 0);
+                $dtTo = clone $dt;
+                $dtTo->modify('+7 day');
+
+                $from = $dt->format($format);
+                $to = $dtTo->format($format);
+
+                $where['value'] = [$from, $to];
+
+                break;
+
             case Type::LAST_X_DAYS:
                 $where['type'] = Type::BETWEEN;
 

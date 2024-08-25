@@ -208,6 +208,10 @@ class ItemGeneralConverter implements ItemConverter
             return WhereClause::fromRaw($this->processLastSevenDays($attribute, $item->getData()));
         }
 
+        if ($type === Type::NEXT_SEVEN_DAYS) {
+            return WhereClause::fromRaw($this->processNextSevenDays($attribute, $item->getData()));
+        }
+
         if ($type === Type::LAST_X_DAYS) {
             return WhereClause::fromRaw($this->processLastXDays($attribute, $value, $item->getData()));
         }
@@ -1030,6 +1034,25 @@ class ItemGeneralConverter implements ItemConverter
             'AND' => [
                 $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
                 $attribute . '<=' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+            ]
+        ];
+    }
+
+    /**
+     * @return array<string|int, mixed>
+     * @throws BadRequest
+     */
+    private function processNextSevenDays(string $attribute, ?Data $data): array
+    {
+        $timeZone = $this->getTimeZone($data);
+        $today = DateTime::createNow()->withTimezone($timeZone);
+
+        $to = $today->addDays(7);
+
+        return [
+            'AND' => [
+                $attribute . '>=' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<=' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }

@@ -67,6 +67,7 @@ class Type
     public const PAST = 'past';
     public const FUTURE = 'future';
     public const LAST_SEVEN_DAYS = 'lastSevenDays';
+    public const NEXT_SEVEN_DAYS = 'nextSevenDays';
     public const LAST_X_DAYS = 'lastXDays';
     public const NEXT_X_DAYS = 'nextXDays';
     public const OLDER_THAN_X_DAYS = 'olderThanXDays';
