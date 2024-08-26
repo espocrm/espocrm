@@ -43,11 +43,9 @@ export default class extends ModalView {
     }
 
     setup() {
-        this.addActionHandler('selectFolder', () => {
-            const $target = $(e.currentTarget);
-
-            const id = $target.attr('data-id');
-            const name = $target.attr('data-name');
+        this.addActionHandler('selectFolder', (e, target) => {
+            const id = target.dataset.id;
+            const name = target.dataset.name;
 
             this.trigger('select', id, name);
             this.close();
