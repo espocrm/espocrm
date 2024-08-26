@@ -31,6 +31,8 @@
 import ModalView from 'views/modal';
 import SearchManager from 'search-manager';
 import $ from 'jquery';
+import SelectRelatedHelper from 'helpers/record/select-related';
+import CreateRelatedHelper from 'helpers/record/create-related';
 
 /**
  * A related-list modal.
@@ -541,6 +543,14 @@ class RelatedListModalView extends ModalView {
     actionCreateRelated() {
         // noinspection JSUnresolvedReference
         const actionName = this.defs.createAction || 'createRelated';
+
+        if (actionName === 'createRelated') {
+            const helper = new CreateRelatedHelper(this);
+            helper.process(this.model, this.link);
+
+            return;
+        }
+
         const methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
 
         let p = this.getParentView();
@@ -567,6 +577,14 @@ class RelatedListModalView extends ModalView {
     actionSelectRelated() {
         // noinspection JSUnresolvedReference
         const actionName = this.defs.selectAction || 'selectRelated';
+
+        if (actionName === 'selectRelated') {
+            const helper = new SelectRelatedHelper(this);
+            helper.process(this.model, this.link);
+
+            return;
+        }
+
         const methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
 
         let p = this.getParentView();
