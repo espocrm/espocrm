@@ -76,9 +76,9 @@ class Main implements AdditionalApplier
             return;
         }
 
-        if ($this->checkApplyDateSentIndex($queryBuilder, $searchParams)) {
+        /*if ($this->checkApplyDateSentIndex($queryBuilder, $searchParams)) {
             $queryBuilder->useIndex('dateSent');
-        }
+        }*/
     }
 
     private function joinEmailUser(SelectBuilder $queryBuilder): void
@@ -117,7 +117,7 @@ class Main implements AdditionalApplier
         return null;
     }
 
-    private function checkApplyDateSentIndex(SelectBuilder $queryBuilder, SearchParams $searchParams): bool
+    /*private function checkApplyDateSentIndex(SelectBuilder $queryBuilder, SearchParams $searchParams): bool
     {
         if ($searchParams->getTextFilter()) {
             return false;
@@ -150,5 +150,5 @@ class Main implements AdditionalApplier
         }
 
         return true;
-    }
+    }*/
 }
