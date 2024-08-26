@@ -1,11 +1,11 @@
 {{#if collection.models.length}}
-    {{#hasStickyBar}}
+    {{#if hasStickyBar}}
         <div class="list-sticky-bar sticked-bar hidden">
             {{#if hasPagination}}
                 {{{paginationSticky}}}
             {{/if}}
         </div>
-    {{/hasStickyBar}}
+    {{/if}}
 
     {{#if topBar}}
         <div class="list-buttons-container clearfix">

@@ -122,7 +122,7 @@ class NotificationPanelView extends View {
                     view: 'views/notification/fields/read',
                     width: '10px',
                 },
-            }
+            },
         });
     }
 

@@ -991,10 +991,12 @@ class ListRecordView extends View {
             topBar = false;
         }
 
-        const displayActionsButtonGroup = this.checkboxes || this.massActionList || this.buttonList.length ||
+        const checkboxes = this.checkboxes && this.massActionList.length;
+
+        const displayActionsButtonGroup = checkboxes || this.buttonList.length ||
             this.dropdownItemList.length;
 
-        const hasStickyBar = this.forceStickyBar || displayActionsButtonGroup;
+        const hasStickyBar = this.forceStickyBar || displayActionsButtonGroup || this.pagination;
 
         const noDataDisabled = this.noDataDisabled || this._renderEmpty;
 
