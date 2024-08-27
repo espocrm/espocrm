@@ -170,7 +170,7 @@
         },
         "emailReplyForceHtml": {
             "type": "bool",
-            "default": false
+            "default": true
         },
         "isPortalUser": {
             "type": "bool",
