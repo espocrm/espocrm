@@ -311,7 +311,8 @@ class DateTime
      * Optionally set the week start (Default: 0 = Sunday).
      * Optionally pass in a date (Default: now).
      * Optionally set the timezone (Default: system).
-     * @return array<start:DateTimeField, end:DateTimeField>
+     *
+     * @return array<DateTimeField>
      */
     public function getWeekStartEnd(
         int $weekStart = 0,
