@@ -281,12 +281,7 @@ class DateTime
         ?DateTimeZone $timezone = null
     ): DateTimeField {
 
-        try {
-            $tz = $timezone ?? $this->timezone;
-        }
-        catch (Exception $e) {
-            throw new RuntimeException($e->getMessage());
-        }
+        $tz = $timezone ?? $this->timezone;
 
         if (isset($date)) {
             $dt = new DateTimeStd($date->format(self::SYSTEM_DATE_TIME_FORMAT), $tz);
@@ -316,6 +311,7 @@ class DateTime
      * Optionally set the week start (Default: 0 = Sunday).
      * Optionally pass in a date (Default: now).
      * Optionally set the timezone (Default: system).
+     * @return array<start:DateTimeField, end:DateTimeField>
      */
     public function getWeekStartEnd(
         int $weekStart = 0,
