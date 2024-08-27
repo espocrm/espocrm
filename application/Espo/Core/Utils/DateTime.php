@@ -36,6 +36,7 @@ use Espo\Core\Field\DateTime as DateTimeField;
 
 use DateTime as DateTimeStd;
 use DateTimeImmutable;
+use DateTimeInterface;
 use DateTimeZone;
 use Exception;
 use RuntimeException;
@@ -266,6 +267,69 @@ class DateTime
             ->format(self::SYSTEM_DATE_FORMAT);
 
         return Date::fromString($string);
+    }
+
+    /**
+     * Get the date-time value for the beginning of the week.
+     * Optionally set the week start (Default: 0 = Sunday).
+     * Optionally pass in a date (Default: now).
+     * Optionally set the timezone (Default: system).
+     */
+    public function getWeekStart(
+        int $weekStart = 0,
+        ?DateTimeInterface $date = null,
+        ?DateTimeZone $timezone = null
+    ): DateTimeField {
+
+        try {
+            $tz = $timezone ?? $this->timezone;
+        }
+        catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
+        }
+
+        if (isset($date)) {
+            $dt = new DateTimeStd($date->format(self::SYSTEM_DATE_TIME_FORMAT), $tz);
+        }
+        else {
+            $dt = new DateTimeStd("now", $tz);
+        }
+
+        $dt->setTime(0,0,0);
+        $dayOfWeek = intval($dt->format('w'));
+
+        $diff = 0;
+        if ($weekStart <= $dayOfWeek) {
+            $diff = $dayOfWeek - $weekStart;
+        }
+        else {
+           $diff = 7 - $weekStart + $dayOfWeek;
+        }
+
+        $dt->modify("-{$diff} days");
+
+        return DateTimeField::fromDateTime($dt);
+    }
+
+    /**
+     * Get the date-time values for the beginning and end of the week.
+     * Optionally set the week start (Default: 0 = Sunday).
+     * Optionally pass in a date (Default: now).
+     * Optionally set the timezone (Default: system).
+     */
+    public function getWeekStartEnd(
+        int $weekStart = 0,
+        ?DateTimeInterface $date = null,
+        ?DateTimeZone $timezone = null,
+    ): array {
+
+        $start = $this->getWeekStart($weekStart, $date, $timezone);
+        $end = $start->modify("+1 week -1 second");
+
+        return array(
+            "start" => $start,
+            "end" => $end
+        );
     }
 
     /**

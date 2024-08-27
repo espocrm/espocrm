@@ -212,6 +212,16 @@ class DateTime implements DateTimeable
     }
 
     /**
+     * Add weeks.
+     */
+    public function addWeeks(int $weeks): self
+    {
+        $modifier = ($weeks >= 0 ? '+' : '-') . abs($weeks) . ' weeks';
+
+        return $this->modify($modifier);
+    }
+
+    /**
      * Add months.
      */
     public function addMonths(int $months): self
