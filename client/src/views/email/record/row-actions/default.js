@@ -43,6 +43,7 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
     }
 
     getActionList() {
+        /** @type {module:views/record/list~rowAction[]} */
         let list = [{
             action: 'quickView',
             label: 'View',
@@ -78,28 +79,6 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
             ]);
         }
 
-        if (this.model.get('isUsers') && this.model.get('status') !== 'Draft') {
-            if (!this.model.get('inTrash')) {
-                list.push({
-                    action: 'moveToTrash',
-                    label: 'Move to Trash',
-                    data: {
-                        id: this.model.id
-                    },
-                    groupIndex: 1,
-                });
-            } else {
-                list.push({
-                    action: 'retrieveFromTrash',
-                    label: 'Retrieve from Trash',
-                    data: {
-                        id: this.model.id
-                    },
-                    groupIndex: 1,
-                });
-            }
-        }
-
         if (this.model.get('isUsers')) {
             if (!this.model.get('isImportant')) {
                 if (!this.model.get('inTrash')) {
@@ -124,6 +103,50 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
             }
         }
 
+        if (this.model.get('isUsers') && !this.model.get('isRead')) {
+            list.push({
+                action: 'markAsRead',
+                label: 'Mark Read',
+                data: {
+                    id: this.model.id
+                },
+                groupIndex: 1,
+            });
+        }
+
+        if (this.model.get('isUsers') && this.model.get('status') !== 'Draft') {
+            if (!this.model.get('inTrash')) {
+                list.push({
+                    action: 'moveToTrash',
+                    label: 'Move to Trash',
+                    data: {
+                        id: this.model.id
+                    },
+                    groupIndex: 2,
+                });
+            } else {
+                list.push({
+                    action: 'retrieveFromTrash',
+                    label: 'Retrieve from Trash',
+                    data: {
+                        id: this.model.id
+                    },
+                    groupIndex: 2,
+                });
+            }
+
+            if (!this.model.attributes.inArchive) {
+                list.push({
+                    action: 'moveToArchive',
+                    text: this.getLanguage().translatePath('Email.actions.moveToArchive'),
+                    data: {
+                        id: this.model.id
+                    },
+                    groupIndex: 2,
+                });
+            }
+        }
+
         if (this.model.get('isUsers') && this.model.get('status') !== 'Draft') {
             list.push({
                 action: 'moveToFolder',
@@ -131,7 +154,7 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
                 data: {
                     id: this.model.id
                 },
-                groupIndex: 1,
+                groupIndex: 2,
             });
         }
 
@@ -146,16 +169,6 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
             });
         }
 
-        if (this.model.get('isUsers') && !this.model.get('isRead')) {
-            list.push({
-                action: 'markAsRead',
-                label: 'Mark Read',
-                data: {
-                    id: this.model.id
-                },
-                groupIndex: 1,
-            });
-        }
 
         return list;
     }

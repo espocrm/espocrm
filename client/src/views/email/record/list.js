@@ -333,6 +333,21 @@ class EmailListRecordView extends ListRecordView {
         this.collection.trigger('all-marked-read');
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    actionMoveToArchive(data) {
+        const id = data.id;
+
+        Espo.Ui.notify(' ... ');
+
+        Espo.Ajax
+            .postRequest('Email/inbox/folders/archive', {id: id})
+            .then(() => {
+                Espo.Ui.info(this.translate('Moved to Archive', 'labels', 'Email'));
+
+                this.collection.trigger('moving-to-archive', id, this.collection.get(id));
+            });
+    }
+
     actionMoveToTrash(data) {
         const id = data.id;
 
