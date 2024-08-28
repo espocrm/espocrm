@@ -29,7 +29,11 @@
             "basicDay": "Day",
             "agendaDay": "Day (agenda)",
             "timeline": "Timeline"
-    	}
+    	},
+        "sortDirection": {
+            "asc": "Ascending",
+            "desc": "Descending"
+        }
     },
     "messages": {
         "selectEntityType": "Select Entity Type in dashlet options."

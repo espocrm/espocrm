@@ -35,7 +35,7 @@
                 "type": "enum",
                 "view": "views/dashlets/fields/records/sort-direction",
                 "options": ["asc", "desc"],
-                "translation": "EntityManager.options.sortDirection"
+                "translation": "DashletOptions.options.sortDirection"
             },
             "expandedLayout": {
                 "type": "base",
