@@ -260,6 +260,10 @@ class EmailBodyFieldView extends WysiwygFieldView {
         const data = super.fetch();
 
         if (this.model.attributes.isHtml && this.replyPart) {
+            if (data[this.name] == null) {
+                data[this.name] = '';
+            }
+
             data[this.name] += this.replyPart;
         }
 
