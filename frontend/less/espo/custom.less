@@ -3462,8 +3462,14 @@ a.close {
     border: var(--scroll-border-width) solid var(--scroll-bg);
 }
 
+body:has(.modal-backdrop) {
+    .collapsed-modal-bar {
+        // Otherwise, it will be overlapped.
+        z-index: 2000;
+    }
+}
+
 .collapsed-modal-bar {
-    z-index: 2000;
     position: fixed;
     bottom: 0;
     display: grid;
