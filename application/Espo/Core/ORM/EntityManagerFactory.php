@@ -131,7 +131,7 @@ class EntityManagerFactory
             $pdoProvider,
             $this->log,
             $this->configDataProvider->logSql(),
-            $this->configDataProvider->logSql()
+            $this->configDataProvider->logSqlFailed()
         );
 
         $binding = BindingContainerBuilder::create()
