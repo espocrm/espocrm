@@ -387,6 +387,7 @@ class AddressService
         }*/
 
         $queryBuilder->where([
+            'isActive' => true,
             'type!=' => [
                 User::TYPE_PORTAL,
                 User::TYPE_API,
