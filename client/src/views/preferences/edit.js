@@ -44,4 +44,14 @@ export default class extends EditView {
             $('<span>').text(this.userName),
         ]);
     }
+
+    updatePageTitle() {
+        let title = this.getLanguage().translate(this.scope, 'scopeNames');
+
+        if (this.model.id !== this.getUser().id && this.userName) {
+            title += ' · ' + this.userName;
+        }
+
+        this.setPageTitle(title);
+    }
 }
