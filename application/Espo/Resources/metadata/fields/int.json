@@ -11,11 +11,13 @@
         },
         {
             "name": "min",
-            "type": "int"
+            "type": "int",
+            "view": "views/admin/field-manager/fields/int/max"
         },
         {
             "name": "max",
-            "type": "int"
+            "type": "int",
+            "view": "views/admin/field-manager/fields/int/max"
         },
         {
             "name": "disableFormatting",

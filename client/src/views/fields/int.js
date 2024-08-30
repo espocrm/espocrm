@@ -147,6 +147,14 @@ class IntFieldView extends BaseFieldView {
             selectOnFocus: false,
             formulaMode: true,
         };
+
+        if (this.params.max != null && this.params.max > Math.pow(10, 6)) {
+            this.autoNumericOptions.maximumValue = this.params.max.toString();
+        }
+
+        if (this.params.min != null && this.params.min < - Math.pow(10, 6)) {
+            this.autoNumericOptions.minimumValue = this.params.min.toString();
+        }
     }
 
     afterRender() {
