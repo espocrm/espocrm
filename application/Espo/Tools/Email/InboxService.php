@@ -36,7 +36,9 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Select\Where\Item as WhereItem;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
+use Espo\Core\WebSocket\Submission as WebSocketSubmission;
 use Espo\Entities\Email;
 use Espo\Entities\EmailFolder;
 use Espo\Entities\GroupEmailFolder;
@@ -53,7 +55,9 @@ class InboxService
         private EntityManager $entityManager,
         private AclManager $aclManager,
         private Log $log,
-        private SelectBuilderFactory $selectBuilderFactory
+        private SelectBuilderFactory $selectBuilderFactory,
+        private WebSocketSubmission $webSocketSubmission,
+        private Config $config,
     ) {}
 
     /**
@@ -395,26 +399,40 @@ class InboxService
             ->build();
 
         $this->entityManager->getQueryExecutor()->execute($update);
+
+        $this->submitNotificationWebSocket($userId);
     }
 
     public function markNotificationAsRead(string $id, string $userId): void
     {
-        $update = $this->entityManager
-            ->getQueryBuilder()
-            ->update()
-            ->in(Notification::ENTITY_TYPE)
-            ->set(['read' => true])
+        $notification = $this->entityManager
+            ->getRDBRepositoryByClass(Notification::class)
             ->where([
-                'deleted' => false,
                 'userId' => $userId,
                 'relatedType' => Email::ENTITY_TYPE,
                 'relatedId' => $id,
                 'read' => false,
                 'type' => Notification::TYPE_EMAIL_RECEIVED,
             ])
-            ->build();
+            ->findOne();
 
-        $this->entityManager->getQueryExecutor()->execute($update);
+        if (!$notification) {
+            return;
+        }
+
+        $notification->setRead();
+        $this->entityManager->saveEntity($notification);
+
+        $this->submitNotificationWebSocket($userId);
+    }
+
+    private function submitNotificationWebSocket(string $userId): void
+    {
+        if (!$this->config->get('useWebSocket')) {
+            return;
+        }
+
+        $this->webSocketSubmission->submit('newNotification', $userId);
     }
 
     /**

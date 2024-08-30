@@ -31,9 +31,10 @@ namespace Espo\Entities;
 
 use Espo\Core\Field\LinkParent;
 
+use Espo\Core\ORM\Entity;
 use stdClass;
 
-class Notification extends \Espo\Core\ORM\Entity
+class Notification extends Entity
 {
     public const ENTITY_TYPE = 'Notification';
 
@@ -106,6 +107,18 @@ class Notification extends \Espo\Core\ORM\Entity
     public function setRelatedId(?string $relatedId): self
     {
         $this->set('relatedId', $relatedId);
+
+        return $this;
+    }
+
+    public function isRead(): bool
+    {
+        return $this->get('read');
+    }
+
+    public function setRead(bool $read = true): self
+    {
+        $this->set('read', $read);
 
         return $this;
     }
