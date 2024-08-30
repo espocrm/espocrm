@@ -35,6 +35,9 @@ use Espo\Core\Utils\Json;
 use stdClass;
 use Throwable;
 
+/**
+ * @todo Introduce a wrapper class that will skip sending if WebSocket is not enabled.
+ */
 class Submission
 {
     public function __construct(
