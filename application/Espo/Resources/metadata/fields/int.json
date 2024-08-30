@@ -40,7 +40,8 @@
         "max"
     ],
     "mandatoryValidationList": [
-        "valid"
+        "valid",
+        "rangeInternal"
     ],
     "filter": true,
     "textFilter": true,

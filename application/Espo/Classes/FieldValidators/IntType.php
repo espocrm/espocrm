@@ -29,14 +29,52 @@
 
 namespace Espo\Classes\FieldValidators;
 
+use Doctrine\DBAL\Types\Types;
+use Espo\ORM\Defs;
 use Espo\ORM\Entity;
 use stdClass;
 
 class IntType
 {
+    public function __construct(
+        private Defs $defs,
+    ) {}
+
     public function checkRequired(Entity $entity, string $field): bool
     {
         return $this->isNotEmpty($entity, $field);
+    }
+
+    /** @noinspection PhpUnused */
+    public function checkRangeInternal(Entity $entity, string $field): bool
+    {
+        $value = $entity->get($field);
+
+        if ($value === null) {
+            return true;
+        }
+
+        $dbType = $this->defs
+            ->getEntity($entity->getEntityType())
+            ->tryGetAttribute($field)
+            ?->getParam('dbType') ?? Types::INTEGER;
+
+        $ranges = [
+            Types::INTEGER => [-2147483648, 2147483647],
+            Types::SMALLINT => [-32768, 32767],
+        ];
+
+        $range = $ranges[$dbType] ?? null;
+
+        if (!$range) {
+            return true;
+        }
+
+        if ($value < $range[0] || $value > $range[1]) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
