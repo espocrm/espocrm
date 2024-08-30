@@ -54,8 +54,8 @@ class Service
     ];
     /** @var string[] */
     protected $systemFolderEndList = [
-        Folder::DRAFTS,
         Folder::ARCHIVE,
+        Folder::DRAFTS,
         Folder::TRASH,
     ];
 
