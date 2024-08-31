@@ -228,8 +228,6 @@ class DetailView extends MainView {
      * Set up modes.
      */
     setupModes() {
-        // @todo Add parameters to schema.
-
         this.defaultViewMode = this.options.defaultViewMode ||
             this.getMetadata().get(`clientDefs.${this.scope}.detailDefaultViewMode`) ||
             this.defaultViewMode;

@@ -91,6 +91,24 @@
             },
             "description": "View mode icon classes. mode => class map."
         },
+        "detailViewModeList": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"type": "string"},
+                    {"enum": ["__APPEND__", "detail"]}
+                ]
+            },
+            "description": "Detail view modes."
+        },
+        "detailDefaultViewMode": {
+            "type": "string",
+            "description": "A default detail view mode."
+        },
+        "detailViewModeIsStorable": {
+            "type": "boolean",
+            "description": "A selected detail view mode will be stored in the browser storage for a user a per record."
+        },
         "saveErrorHandlers": {
             "description": "Save error handlers. https://docs.espocrm.com/development/frontend/save-error-handlers/",
             "type": "object",
