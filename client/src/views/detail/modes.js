@@ -65,18 +65,25 @@ class DetailModesView extends View {
         this.mode = options.mode;
         /** @private */
         this.scope = options.scope;
+
+        /**
+         * @private
+         * @type {Object.<string, boolean>}
+         */
+        this.hiddenMap = {};
     }
 
     data() {
         return {
             disabled: this.disabled,
-            modeDataList: this.modeList.map(mode => {
-                return {
+            modeDataList: this.modeList
+                .filter(mode => !this.hiddenMap[mode] || mode === this.mode)
+                .map(mode => ({
                     name: mode,
                     active: mode === this.mode,
                     label: this.translate(mode, 'detailViewModes', this.scope),
-                };
-            })
+                    hidden: this.hiddenMap[mode] && mode !== this.mode,
+                }))
         };
     }
 
@@ -90,6 +97,28 @@ class DetailModesView extends View {
         this.mode = mode;
 
         return this.reRender();
+    }
+
+    /**
+     * Hide a mode.
+     *
+     * @param {string} mode
+     */
+    async hideMode(mode) {
+        this.hiddenMap[mode] = true;
+
+        await this.reRender();
+    }
+
+    /**
+     * Show a mode.
+     *
+     * @param {string} mode
+     */
+    async showMode(mode) {
+        delete this.hiddenMap[mode];
+
+        await this.reRender();
     }
 
     /**

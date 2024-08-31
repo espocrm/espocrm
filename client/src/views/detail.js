@@ -673,6 +673,36 @@ class DetailView extends MainView {
 
         this.getHeaderView().showAllActionItems();
     }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Hide a view mode.
+     *
+     * @param {string} mode
+     * @since 8.4.0
+     */
+    hideViewMode(mode) {
+        if (!this.modesView) {
+            return;
+        }
+
+        this.modesView.hideMode(mode);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Show a view mode.
+     *
+     * @param {string} mode
+     * @since 8.4.0
+     */
+    showViewMode(mode) {
+        if (!this.modesView) {
+            return;
+        }
+
+        this.modesView.showMode(mode);
+    }
 }
 
 export default DetailView;
