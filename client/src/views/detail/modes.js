@@ -82,7 +82,6 @@ class DetailModesView extends View {
                     name: mode,
                     active: mode === this.mode,
                     label: this.translate(mode, 'detailViewModes', this.scope),
-                    hidden: this.hiddenMap[mode] && mode !== this.mode,
                 }))
         };
     }
