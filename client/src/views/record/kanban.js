@@ -67,6 +67,12 @@ class KanbanRecordView extends ListRecordView {
     groupRawDataList
 
     /**
+     * @private
+     * @type {import('collection').default[]}
+     */
+    subCollectionList
+
+    /**
      * A button list.
      *
      * @protected
@@ -309,6 +315,8 @@ class KanbanRecordView extends ListRecordView {
         }
 
         this.listenTo(this.collection, 'sync', (c, response) => {
+            this.subCollectionList = undefined;
+
             // noinspection JSUnresolvedReference
             this.groupRawDataList = response.groups;
         });
@@ -815,7 +823,26 @@ class KanbanRecordView extends ListRecordView {
     }
 
     buildRows(callback) {
-        const groupList = this.groupRawDataList || [];
+        let groupList = this.groupRawDataList;
+
+        if (this.subCollectionList && groupList) {
+            this.subCollectionList.forEach((collection, i) => {
+                const group = groupList[i];
+
+                if (!group) {
+                    console.warn("No group.", collection);
+
+                    return;
+                }
+
+                group.list = collection.models.map(model => model.getClonedAttributes());
+                group.total = collection.total;
+            });
+        }
+
+        if (!groupList) {
+            groupList = [];
+        }
 
         this.collection.reset();
 
