@@ -62,6 +62,8 @@ class KanbanRecordView extends ListRecordView {
      *     list: Record[],
      *     total: number,
      *     name: string,
+     *     label?: string,
+     *     style?: string|null,
      * }[]}
      */
     groupRawDataList
@@ -466,6 +468,9 @@ class KanbanRecordView extends ListRecordView {
         });
     }
 
+    /**
+     * @private
+     */
     initStickableHeader() {
         const $container = this.$headContainer = this.$el.find('.kanban-head-container');
         const topBarHeight = this.getThemeManager().getParam('navbarHeight') || 30;
@@ -547,6 +552,9 @@ class KanbanRecordView extends ListRecordView {
         };
     }
 
+    /**
+     * @private
+     */
     initSortable() {
         const $list = this.$groupColumnList;
 
@@ -672,6 +680,7 @@ class KanbanRecordView extends ListRecordView {
     }
 
     /**
+     * @protected
      * @param {string} group
      * @param {string} [id] Prepend. To be used after save.
      * @return {Promise}
@@ -695,6 +704,7 @@ class KanbanRecordView extends ListRecordView {
     }
 
     /**
+     * @private
      * @param {string} group
      * @return {string[]}
      */
@@ -738,6 +748,9 @@ class KanbanRecordView extends ListRecordView {
         });
     }
 
+    /**
+     * @private
+     */
     rebuildGroupDataList() {
         this.groupDataList.forEach(item => {
             item.dataList = [];
@@ -751,6 +764,12 @@ class KanbanRecordView extends ListRecordView {
         });
     }
 
+    /**
+     * @private
+     * @param {import('model').default} model
+     * @param {string} groupFrom
+     * @param {string} groupTo
+     */
     moveModelBetweenGroupCollections(model, groupFrom, groupTo) {
         let collection = this.getGroupCollection(groupFrom);
 
@@ -1048,11 +1067,17 @@ class KanbanRecordView extends ListRecordView {
         }
     }
 
+    /**
+     * @protected
+     * @param {import('model').default} model A model.
+     * @param {string} value A group.
+     * @param {Record} o Options.
+     */
     onChangeGroup(model, value, o) {
         const id = model.id;
         const group = model.get(this.statusField);
 
-        this.subCollectionList.forEach((collection) => {
+        this.subCollectionList.forEach(collection => {
             if (collection.get(id)) {
                 collection.remove(id);
 
@@ -1270,6 +1295,10 @@ class KanbanRecordView extends ListRecordView {
         await view.render();
     }
 
+    /**
+     * @private
+     * @param {MouseEvent} e
+     */
     initBackDrag(e) {
         this.backDragStarted = true;
 
@@ -1283,7 +1312,7 @@ class KanbanRecordView extends ListRecordView {
         const startLeft = containerEl.scrollLeft;
         const startX = e.clientX;
 
-        $document.on('mousemove.' + this.cid, (e) => {
+        $document.on(`mousemove.${this.cid}`, e => {
             // noinspection JSUnresolvedReference
             const dx = e.originalEvent.clientX - startX;
 
