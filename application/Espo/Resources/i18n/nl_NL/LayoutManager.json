@@ -12,7 +12,8 @@
     "noLabel": "Geen label",
     "width": "Breedte",
     "noteText": "Noot tekst",
-    "noteStyle": "Noot stijl"
+    "noteStyle": "Noot stijl",
+    "isMuted": "Gedempte kleur"
   },
   "options": {
     "align": {

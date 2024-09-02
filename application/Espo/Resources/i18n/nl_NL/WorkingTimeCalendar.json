@@ -19,5 +19,8 @@
     "weekday4TimeRanges": "Do Schema",
     "weekday5TimeRanges": "Vr Schema",
     "weekday6TimeRanges": "Zat Schema"
+  },
+  "links": {
+    "ranges": "Uitzonderingen"
   }
 }

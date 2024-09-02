@@ -19,7 +19,8 @@
     "smtpPassword": "Password SMTP",
     "useImap": "Scarica email",
     "smtpAuthMechanism": "Meccanismo di Autenticazione SMTP",
-    "security": "Sicurezza"
+    "security": "Sicurezza",
+    "connectedAt": "Connesso Alle"
   },
   "links": {
     "filters": "Filtri",
@@ -39,12 +40,16 @@
   },
   "messages": {
     "couldNotConnectToImap": "Impossibile connettersi al server IMAP",
-    "connectionIsOk": "La Connessione è Ok"
+    "connectionIsOk": "La Connessione è Ok",
+    "imapNotConnected": "Impossibile connettersi a [account IMAP](#EmailAccount/view/{id})."
   },
   "tooltips": {
     "monitoredFolders": "Cartelle multiple devono essere separate dalla virgola.\n\nÈ possibile aggiungere una cartella \"Inviata\" per sincronizzare le email inviate da un client di posta elettronica esterno.",
     "storeSentEmails": "Le e-mail inviate verranno archiviate sul server IMAP. Il campo Indirizzo e-mail deve corrispondere all'indirizzo da cui verranno inviate le e-mail.",
     "useSmtp": "La possibilità di inviare email.",
     "emailAddress": "Il record utente (utente assegnato) deve avere lo stesso indirizzo email per poter utilizzare questo account di posta elettronica per l'invio."
+  },
+  "presetFilters": {
+    "active": "Attivo"
   }
 }

@@ -35,7 +35,10 @@
     "keepFetchedEmailsUnread": "Mantieni le email non lette",
     "smtpAuthMechanism": "Meccanismo di autenticazione SMTP",
     "security": "Sicurezza",
-    "groupEmailFolder": "Cartella Email di Gruppo"
+    "groupEmailFolder": "Cartella Email di Gruppo",
+    "connectedAt": "Connesso Alle",
+    "excludeFromReply": "Escludi dalla Risposta",
+    "isSystem": "Sistema"
   },
   "tooltips": {
     "reply": "Notifica ai mittenti che le loro email sono state ricevute.\n\nVerrà inviata una sola email per destinatario, in un determinato periodo di tempo, per evitare loops.",
@@ -52,7 +55,9 @@
     "smtpIsForMassEmail": "Se selezionato, SMTP sarà disponibile per l'e-mail di massa.",
     "storeSentEmails": "Le email inviate saranno memorizzate sul server IMAP",
     "useSmtp": "La possibilità di inviare email.",
-    "groupEmailFolder": "Metti le email in arrivo in una cartella di gruppo."
+    "groupEmailFolder": "Metti le email in arrivo in una cartella di gruppo.",
+    "excludeFromReply": "Quando si risponde alle e-mail inviate all'indirizzo e-mail di questo account, il suo indirizzo e-mail non verrà aggiunto in CC.\n\nAbilitando questo parametro, l'indirizzo e-mail di questo account sarà esposto agli utenti che hanno accesso all'invio di e-mail.",
+    "isSystem": "È l'account di posta elettronica del sistema."
   },
   "links": {
     "filters": "Filtri",
@@ -77,6 +82,7 @@
     "Main": "Principale"
   },
   "messages": {
-    "couldNotConnectToImap": "Impossibile connettersi al server IMAP"
+    "couldNotConnectToImap": "Impossibile connettersi al server IMAP",
+    "imapNotConnected": "Impossibile connettersi al gruppo [account IMAP](#InboundEmail/view/{id})."
   }
 }

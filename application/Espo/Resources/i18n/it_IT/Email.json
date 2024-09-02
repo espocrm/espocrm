@@ -28,6 +28,7 @@
     "isReplied": "Risposto",
     "isNotReplied": "Non risposto",
     "folder": "Cartella",
+    "folderString": "Cartella",
     "inboundEmails": "Gruppo di Account",
     "emailAccounts": "Account Personali",
     "hasAttachment": "Ha Allegato",
@@ -53,7 +54,9 @@
     "createdEvent": "Evento Creato",
     "event": "Evento",
     "icsEventDateStart": "Data Inizio Evento ICS",
-    "groupFolder": "Cartella di Gruppo"
+    "groupFolder": "Cartella di Gruppo",
+    "isUsersSent": "Inviata da un utente",
+    "inArchive": "In Archivio"
   },
   "links": {
     "replied": "Risposto",
@@ -68,16 +71,17 @@
     "ccEmailAddresses": "CC Indirizzi Email",
     "bccEmailAddresses": "CCN Indirizzi email",
     "replyToEmailAddresses": "Rispondi A (IndirizzI Email)",
-    "groupFolder": "Cartella di Gruppo"
+    "groupFolder": "Cartella di Gruppo",
+    "createdEvent": "Evento Creato"
   },
   "options": {
     "status": {
       "Draft": "Bozza",
       "Sending": "Invio",
       "Sent": "Inviata",
-      "Archived": "Archiviata",
       "Received": "Ricevuto",
-      "Failed": "Fallito"
+      "Failed": "Fallito",
+      "Archived": "Importata"
     }
   },
   "labels": {
@@ -111,9 +115,12 @@
     "No Subject": "Nessun Oggetto",
     "Insert Field": "Inserisci Campo",
     "Event": "Evento",
-    "Moving to folder": "Sposta in una Cartella",
     "Group Folders": "Cartelle di Gruppo",
-    "View Attachments": "Vedi Allegati"
+    "View Attachments": "Vedi Allegati",
+    "Import EML": "Importa EML",
+    "Moved to Archive": "Spostato in Archivio",
+    "Moved to Trash": "Spostata nel Cestino",
+    "Retrieved from Trash": "Recuperata dal Cestino"
   },
   "messages": {
     "testEmailSent": "L'email di prova è stata inviata",
@@ -126,15 +133,17 @@
     "removeRecordConfirmation": "Sei sicuro di voler rimuovere la mail selezionata?\n\nSarà rimossa anche per gli altri utenti.",
     "invalidCredentials": "Credenziali non valide.",
     "unknownError": "Errore sconosciuto.",
-    "recipientAddressRejected": "Indirizzo del destinatario respinto."
+    "recipientAddressRejected": "Indirizzo del destinatario respinto.",
+    "alreadyImported": "L'[email]({link}) esiste già nel sistema."
   },
   "presetFilters": {
     "sent": "Inviata",
-    "archived": "Archivio",
     "inbox": "Posta in Arrivo",
     "drafts": "Bozze",
     "trash": "Cestino",
-    "important": "Importante"
+    "important": "Importante",
+    "archived": "Importata",
+    "archive": "Archiviata"
   },
   "massActions": {
     "markAsRead": "Segna Come Letto",
@@ -143,9 +152,13 @@
     "markAsNotImportant": "Rimuovi Importante",
     "moveToTrash": "Sposta nel Cestino",
     "moveToFolder": "Sposta nella Cartella",
-    "retrieveFromTrash": "Recupera dal Cestino"
+    "retrieveFromTrash": "Recupera dal Cestino",
+    "moveToArchive": "Archivia"
   },
   "strings": {
     "sendingFailed": "Invio email fallito"
+  },
+  "actions": {
+    "moveToArchive": "Archivia"
   }
 }

@@ -21,7 +21,8 @@
     "activity": "Attività"
   },
   "messages": {
-    "writeMessage": "Scrivi il tuo messaggio qui"
+    "writeMessage": "Scrivi il tuo messaggio qui",
+    "pinnedMaxCountExceeded": "Non è possibile fissare altre note. Il numero massimo consentito è {count}."
   },
   "options": {
     "targetType": {

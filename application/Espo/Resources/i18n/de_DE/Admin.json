@@ -76,7 +76,7 @@
     "Group Email Folders": "E-Mail Gruppenordner",
     "Authentication Providers": "Authentifizierungsanbieter",
     "Setup": "Einrichtung",
-    "Address Countries": "Adresse Länder"
+    "Address Countries": "Länderliste"
   },
   "layouts": {
     "list": "Liste",
@@ -232,8 +232,8 @@
     "newVersionIsAvailable": "Es ist eine neue EspoCRM-Version {latestVersion} verfügbar. Bitte folgen Sie den [Instruktionen](https://www.espocrm.com/documentation/administration/upgrading/), um Ihre Instanz zu aktualisieren.",
     "formulaFunctions": "Weitere Funktionen finden Sie in [documentation]({documentationUrl}).",
     "rebuildRequired": "Sie müssen Rebuild aus CLI ausführen.",
-    "cacheIsDisabled": "Wenn der Cache deaktiviert ist, wird die Anwendung langsam laufen. Aktivieren Sie den Cache in den [settings](#Admin/settings).",
-    "cronIsDisabled": "Cron ist deaktiviert, die Anwendung ist nicht voll funktionsfähig. Aktivieren Sie Cron in den [settings](#Admin/settings)."
+    "cronIsDisabled": "Cron ist deaktiviert, die Anwendung ist nicht voll funktionsfähig. Aktivieren Sie Cron in den [settings](#Admin/settings).",
+    "cacheIsDisabled": "Wenn der Cache deaktiviert ist, wird die Anwendung langsam laufen. Aktivieren Sie den Cache in den [settings](#Administration/Einstellungen)."
   },
   "descriptions": {
     "settings": "Systemeinstellungen der Applikation.",

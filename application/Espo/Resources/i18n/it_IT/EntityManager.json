@@ -42,7 +42,8 @@
     "module": "Modulo",
     "version": "Versione",
     "selectFilter": "Filtro Selezione",
-    "primaryFilters": "Filtri Primari"
+    "primaryFilters": "Filtri Primari",
+    "stars": "Preferiti"
   },
   "options": {
     "type": {
@@ -95,6 +96,7 @@
     "optimisticConcurrencyControl": "Previene i conflitti.",
     "duplicateCheckFieldList": "Quali campi controllare quando viene eseguito il controllo duplicati.",
     "updateDuplicateCheck": "Esegui il controllo duplicati quando un record viene aggiornato.",
-    "linkSelectFilter": "Un filtro primario da applicare di default quando si seleziona un record."
+    "linkSelectFilter": "Un filtro primario da applicare di default quando si seleziona un record.",
+    "stars": "La possibilità di aggiungere record ai preferiti. I preferiti possono essere utilizzati dagli utenti per salvare i record."
   }
 }

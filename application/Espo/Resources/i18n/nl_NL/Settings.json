@@ -38,7 +38,7 @@
     "ldapUserLoginFilter": "Gebruiker login filter",
     "ldapAccountDomainNameShort": "Korte gebruikers domein naam",
     "ldapOptReferrals": "Opt Referentie",
-    "exportDisabled": "Exporteren Uitschakelen (Uitsluitend toegestaan voor beheerder)",
+    "exportDisabled": "Exporteren uitschakelen (Uitsluitend toegestaan voor beheerder)",
     "avatarsDisabled": "Avatar uitschakelen",
     "displayListViewRecordCount": "Totaal aantal tonen (in lijstweergave)",
     "theme": "Thema",
@@ -74,7 +74,7 @@
     "calendarEntityList": "Kalender entiteits lijst",
     "mentionEmailNotifications": "Stuur e-mailmeldingen over vermeldingen in berichten",
     "massEmailDisableMandatoryOptOutLink": "Schakel de verplichte afmeldlink uit",
-    "activitiesEntityList": "Activiteiten Entiteitenlijst",
+    "activitiesEntityList": "Activiteiten entiteitenlijst",
     "historyEntityList": "Geschiedenis-entiteitenlijst",
     "currencyFormat": "Valuta-indeling",
     "currencyDecimalPlaces": "Valuta-decimale plaatsen",
@@ -156,7 +156,13 @@
     "phoneNumberInternational": "Internationale telefoonnummers",
     "phoneNumberPreferredCountryList": "Voorkeur telefoon landcodes",
     "jobForceUtc": "UTC-tijdzone afdwingen",
-    "emailAddressSelectEntityTypeList": "Bereik voor selecteren e-mailadres"
+    "emailAddressSelectEntityTypeList": "Bereik voor selecteren e-mailadres",
+    "phoneNumberExtensions": "Nummer extensie",
+    "oidcAuthorizationPrompt": "OIDC autorisatieprompt",
+    "quickSearchFullTextAppendWildcard": "Wildcard toevoegen aan snel zoeken",
+    "authIpAddressCheck": "Toegang beperken op IP-adres",
+    "authIpAddressWhitelist": "Whitelist IP-adres",
+    "authIpAddressCheckExcludedUsers": "Users uitgezonderd van controle"
   },
   "tooltips": {
     "recordsPerPage": "Aantal zichtbare records in lijsten.",
@@ -191,7 +197,7 @@
     "aclStrictMode": "Ingeschakeld: toegang tot scopes is verboden als dit niet is opgegeven in functie.\n\nUitgeschakeld: toegang tot scopes is toegestaan ​​als dit niet is opgegeven in functie.",
     "outboundEmailIsShared": "Sta gebruikers toe om e-mails van dit adres te verzenden.",
     "aclAllowDeleteCreated": "Gebruikers zullen in staat zijn om de records die ze hebben gecreëerd te verwijderen, zelfs als ze geen verwijderbare toegang hebben.",
-    "textFilterUseContainsForVarchar": "Indien niet aangevinkt, dan wordt de 'begint met'-operator gebruikt. U kunt het jokerteken '%' gebruiken.",
+    "textFilterUseContainsForVarchar": "Indien niet aangevinkt, dan wordt de 'begint met'-operator gebruikt. U kunt het wildcard '%' gebruiken.",
     "streamEmailNotificationsEntityList": "E-mailnotificaties over stream-updates van gevolgde records. Gebruikers ontvangen alleen e-mailberichten voor specifieke typen entiteiten.",
     "authTokenPreventConcurrent": "Gebruikers kunnen niet op meerdere apparaten tegelijk worden ingelogd.",
     "cleanupDeletedRecords": "Verwijderde records worden na een tijdje uit de database verwijderd.",
@@ -239,7 +245,12 @@
     "oidcLogoutUrl": "Een URL waarnaar de browser zal doorverwijzen na het afmelden bij Espo. Bedoeld voor het wissen van de sessiegegevens in de browser en het afmelden aan de providerzijde. Meestal bevat de URL een redirect-URL parameter, om terug te keren naar Espo.\n\nBeschikbare plaatshouders:\n* `{siteUrl}`\n* `{clientId}`",
     "recordsPerPageKanban": "Aantal records dat aanvankelijk in kanban-kolommen wordt weergegeven.",
     "jobForceUtc": "Gebruik de UTC-tijdzone voor geplande taken. Anders wordt de tijdzone gebruikt die is ingesteld in de instellingen.",
-    "emailAddressSelectEntityTypeList": "Beschikbare entiteittypes bij het zoeken naar een e-mailadres vanuit een formulier."
+    "emailAddressSelectEntityTypeList": "Beschikbare entiteittypes bij het zoeken naar een e-mailadres vanuit een formulier.",
+    "authIpAddressCheckExcludedUsers": "Gebruikers die kunnen inloggen ongeacht of hun IP-adres in de whitelist staat.",
+    "authIpAddressWhitelist": "Een lijst van IP-adressen of reeksen in CIDR-notatie.\n\nPortalen worden niet beïnvloed door de beperking.",
+    "emailAddressIsOptedOutByDefault": "Bij het aanmaken van een nieuw record wordt het e-mailadres als afgemeld gemarkeerd.",
+    "oidcGroupClaim": "Een bewering om te gebruiken voor het in kaart brengen van teams.",
+    "quickSearchFullTextAppendWildcard": "Voeg een wildcard toe aan een autocomplete zoekopdracht wanneer zoeken op volledige tekst is ingeschakeld. Vermindert de zoekprestaties."
   },
   "labels": {
     "System": "Systeem",
@@ -264,7 +275,10 @@
     "Divider": "Scheider",
     "General": "Algemeen",
     "Navbar": "Navigatiebalk",
-    "Phone Numbers": "Telefoonnummers"
+    "Phone Numbers": "Telefoonnummers",
+    "Access": "Toegang",
+    "Strength": "Sterkte",
+    "Recovery": "Herstel"
   },
   "messages": {
     "ldapTestConnection": "De verbinding is succesvol tot stand gebracht."

@@ -55,7 +55,10 @@
     "GroupEmailFolder": "Cartella Email di Gruppo",
     "AuthenticationProvider": "Provider di Autenticazione",
     "GlobalStream": "Flusso Attività Globale",
-    "WebhookQueueItem": "Elemento Coda Webhook"
+    "WebhookQueueItem": "Elemento Coda Webhook",
+    "AppLogRecord": "Recordo Log Applicazione",
+    "WorkingTimeRange": "Eccezione Lavorativa",
+    "AddressCountry": "Indirizzo Paese"
   },
   "scopeNamesPlural": {
     "Email": "Email",
@@ -104,7 +107,10 @@
     "GroupEmailFolder": "Cartelle Email di Gruppo",
     "AuthenticationProvider": "Provider di Autenticazione",
     "GlobalStream": "Flusso Attività Globale",
-    "WebhookQueueItem": "Elementi Coda Webhook"
+    "WebhookQueueItem": "Elementi Coda Webhook",
+    "AppLogRecord": "Log Applicazione",
+    "WorkingTimeRange": "Eccezioni Lavorative",
+    "AddressCountry": "Indirizzi Paesi"
   },
   "labels": {
     "Misc": "Varie",
@@ -277,7 +283,12 @@
     "Next Page": "Prossima Pagina",
     "First Page": "Prima Pagina",
     "Last Page": "Ultima Pagina",
-    "Page": "Pagina"
+    "Page": "Pagina",
+    "Star": "Aggiungi",
+    "Unstar": "Rimuovi",
+    "Starred": "Preferiti",
+    "Remove Filter": "Rimuovi Filtro",
+    "Ready": "Pronto"
   },
   "messages": {
     "pleaseWait": "Attendere...",
@@ -380,7 +391,15 @@
     "noLinkAccess": "Impossibile relazionarsi con il record {foreignEntityType} attraverso il link '{link}'. Nessun accesso.",
     "attemptIntervalFailure": "L'operazione non è consentita durante un intervallo di tempo specifico. Attendere qualche istante prima del prossimo tentativo.",
     "confirmRestoreFromAudit": "I valori precedenti verranno memorizzati in un modulo. Successivamente, è possibile salvare il record per ripristinare i valori precedenti.",
-    "pageNumberIsOutOfBound": "Il numero della pagina è fuori dal limite"
+    "pageNumberIsOutOfBound": "Il numero della pagina è fuori dal limite",
+    "fieldPhoneExtensionTooLong": "L'estensione non deve essere più lunga di {maxLength}",
+    "cannotLinkAlreadyLinked": "Impossibile collegare un record già collegato.",
+    "starsLimitExceeded": "Il numero di preferiti ha superato il limite.",
+    "select2OrMoreRecords": "Seleziona 2 o più record",
+    "selectNotMoreThanNumberRecords": "Seleziona non più di {number} record",
+    "selectAtLeastOneRecord": "Seleziona almeno un record",
+    "fieldNotMatchingPattern$phoneNumberLoose": "{field} contiene caratteri non permessi in un numero di telefono",
+    "duplicateConflict": "Esiste già un record."
   },
   "boolFilters": {
     "onlyMy": "Solo i miei",
@@ -389,7 +408,8 @@
   },
   "presetFilters": {
     "followed": "Seguito",
-    "all": "Tutti"
+    "all": "Tutti",
+    "starred": "Preferiti"
   },
   "massActions": {
     "remove": "Rimuovi",
@@ -810,18 +830,22 @@
     "multiEnum_valid": "Valore multi-enum non valido. I valori devono rientrare tra le opzioni di campo stabilite.",
     "int_valid": "Valore numerico intero non valido.",
     "float_valid": "Valore numerico non valido.",
-    "valid": "Valore non valido."
+    "valid": "Valore non valido.",
+    "maxLength": "La lunghezza del valore supera il valore massimo.",
+    "phone_valid": "Il numero di telefono non è valido. Potrebbe essere causato da un prefisso internazionale errato o vuoto."
   },
   "navbarTabs": {
     "Support": "Supporto",
     "Activities": "Attività"
   },
   "wysiwygLabels": {
+    "cell": "Celle",
     "align": "Allinea",
     "width": "Larghezza",
     "height": "Altezza",
     "borderWidth": "Larghezza Bordo",
     "borderColor": "Colore Bordo",
+    "cellPadding": "Padding Celle",
     "backgroundColor": "Colore Sfondo",
     "verticalAlign": "Allineamento Verticale"
   },
@@ -836,5 +860,8 @@
       "middle": "Medio",
       "bottom": "Inferiore"
     }
+  },
+  "detailViewModes": {
+    "detail": "Dettaglio"
   }
 }

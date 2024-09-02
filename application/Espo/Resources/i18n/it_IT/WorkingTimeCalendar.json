@@ -19,5 +19,8 @@
     "weekday4TimeRanges": "Orario Gio",
     "weekday5TimeRanges": "Orario Ven",
     "weekday6TimeRanges": "Orario Sab"
+  },
+  "links": {
+    "ranges": "Eccezioni"
   }
 }

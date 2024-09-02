@@ -1,6 +1,7 @@
 {
   "labels": {
-    "Calendars": "Kalenders"
+    "Calendars": "Kalenders",
+    "Create WorkingTimeRange": "Uitzondering maken"
   },
   "fields": {
     "timeRanges": "Schema",

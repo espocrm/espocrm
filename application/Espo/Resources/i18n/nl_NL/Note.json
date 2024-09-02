@@ -8,7 +8,8 @@
     "isInternal": "Is intern (voor interne gebruikers)",
     "related": "Verwant",
     "createdByGender": "Gemaakt door geslacht",
-    "number": "Nummer"
+    "number": "Nummer",
+    "isPinned": "Is vastgemaakt"
   },
   "filters": {
     "all": "Alle",
@@ -16,7 +17,8 @@
     "activity": "Activiteit"
   },
   "messages": {
-    "writeMessage": "Schrijf je bericht hier"
+    "writeMessage": "Schrijf je bericht hier",
+    "pinnedMaxCountExceeded": "Kan geen notities meer vastpinnen. Het maximaal toegestane aantal is {count}."
   },
   "options": {
     "targetType": {
@@ -44,6 +46,8 @@
   },
   "labels": {
     "View Posts": "Posts bekijken",
-    "View Activity": "Activiteit bekijken"
+    "View Activity": "Activiteit bekijken",
+    "Unpin": "Ontpin",
+    "Pinned": "Vastgezet"
   }
 }

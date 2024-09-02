@@ -54,7 +54,10 @@
     "GroupEmailFolder": "Groep e-mail map",
     "AuthenticationProvider": "Authenticatie aanbieder",
     "GlobalStream": "Globale stroming",
-    "WebhookQueueItem": "Webhook wachtrij item"
+    "WebhookQueueItem": "Webhook wachtrij item",
+    "AppLogRecord": "App Log regel",
+    "WorkingTimeRange": "Werktijd uitzondering",
+    "AddressCountry": "Adres Land"
   },
   "scopeNamesPlural": {
     "Email": "E-mails",
@@ -100,7 +103,9 @@
     "GroupEmailFolder": "Groep e-mailmappen",
     "AuthenticationProvider": "Authenticatie aanbieders",
     "GlobalStream": "Globale stroming",
-    "WebhookQueueItem": "Webhook wachtrij items"
+    "WebhookQueueItem": "Webhook wachtrij items",
+    "WorkingTimeRange": "Werktijd uitzonderingen",
+    "AddressCountry": "Adres Landen"
   },
   "labels": {
     "Misc": "Overig",
@@ -265,7 +270,10 @@
     "Next Page": "Volgende pagina",
     "First Page": "Eerste pagina",
     "Last Page": "Laatste pagina",
-    "Page": "Pagina"
+    "Page": "Pagina",
+    "Star": "Ster",
+    "Unstar": "Ontster",
+    "Starred": "Sterren"
   },
   "messages": {
     "pleaseWait": "Even geduld...",
@@ -368,7 +376,14 @@
     "noLinkAccess": "Kan geen relatie leggen met {foreignEntityType} record via de link '{link}'. Geen toegang.",
     "attemptIntervalFailure": "De bewerking is niet toegestaan tijdens een bepaald tijdsinterval. Wacht enige tijd voor de volgende poging.",
     "confirmRestoreFromAudit": "De vorige waarden worden ingesteld in een formulier. Daarna kun je het record opslaan om de vorige waarden te herstellen.",
-    "pageNumberIsOutOfBound": "Paginanummer buiten limiet"
+    "pageNumberIsOutOfBound": "Paginanummer buiten limiet",
+    "fieldPhoneExtensionTooLong": "Extensie mag niet langer zijn dan {maxLength}",
+    "cannotLinkAlreadyLinked": "Kan een gekoppeld record niet koppelen.",
+    "starsLimitExceeded": "Het aantal sterren is hoger dan de limiet.",
+    "select2OrMoreRecords": "Selecteer 2 of meer records",
+    "selectNotMoreThanNumberRecords": "Selecteer niet meer dan {number} records",
+    "selectAtLeastOneRecord": "Selecteer ten minste één record",
+    "fieldNotMatchingPattern$phoneNumberLoose": "{field} bevat tekens die niet zijn toegestaan in telefoonnummer"
   },
   "boolFilters": {
     "onlyMy": "Alleen mijn",
@@ -377,7 +392,8 @@
   },
   "presetFilters": {
     "followed": "Gevolgd",
-    "all": "Alle"
+    "all": "Alle",
+    "starred": "Sterren"
   },
   "massActions": {
     "remove": "Verwijderen",
@@ -778,7 +794,8 @@
     "arrayOfString": "Reeks tekens",
     "noEmptyString": "Geen lege string",
     "max": "Max. waarde",
-    "min": "Min. waarde"
+    "min": "Min. waarde",
+    "valid": "Geldigheid"
   },
   "fieldValidationExplanations": {
     "url_valid": "Ongeldige URL-waarde.",
@@ -793,10 +810,36 @@
     "enum_valid": "Ongeldige enum waarde. De waarde moet één van de gedefinieerde enum opties zijn. Een lege waarde is alleen toegestaan als het veld een lege optie heeft.",
     "multiEnum_valid": "Ongeldige multi-enum waarde. De waarde moet een van de gedefinieerde veldopties zijn.",
     "int_valid": "Ongeldige integer getalswaarde.",
-    "float_valid": "Ongeldige getalswaarde."
+    "float_valid": "Ongeldige getalswaarde.",
+    "valid": "Ongeldige waarde.",
+    "maxLength": "Lengte waarde overschrijdt maximum.",
+    "phone_valid": "Telefoonnummer is ongeldig. Kan worden veroorzaakt door een verkeerde of lege landcode."
   },
   "navbarTabs": {
     "Business": "Zakelijk",
     "Activities": "Activiteiten"
+  },
+  "wysiwygLabels": {
+    "cell": "Cel",
+    "align": "Uitlijnen",
+    "width": "Breedte",
+    "height": "Hoogte",
+    "borderWidth": "Breedte border",
+    "borderColor": "Kleur rand",
+    "cellPadding": "Cel opvulling",
+    "backgroundColor": "Achtergrondkleur",
+    "verticalAlign": "Verticaal uitlijnen"
+  },
+  "wysiwygOptions": {
+    "align": {
+      "left": "Links",
+      "center": "Centrum",
+      "right": "Rechts"
+    },
+    "verticalAlign": {
+      "top": "Boven",
+      "middle": "Midden",
+      "bottom": "Onder"
+    }
   }
 }

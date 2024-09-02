@@ -81,7 +81,9 @@
     "Working Time Calendars": "Calendari Lavorativi",
     "Group Email Folders": "Cartelle Email di Gruppo",
     "Authentication Providers": "Provider di Autenticazione",
-    "Setup": "Configurazione"
+    "Setup": "Configurazione",
+    "App Log": "Log Applicazione",
+    "Address Countries": "Indirizzo Paesi"
   },
   "layouts": {
     "list": "Lista",
@@ -204,7 +206,9 @@
     "autocompleteOnEmpty": "Autocompletamento su input vuoto",
     "relateOnImport": "Collegare all'importazione",
     "aclScope": "Entità ACL",
-    "onlyAdmin": "Solo Admin"
+    "onlyAdmin": "Solo Admin",
+    "activeOptions": "Opzioni Attive",
+    "labelType": "Tipo Etichetta"
   },
   "messages": {
     "selectEntityType": "Scegli il tipo di entità dal menu di sinistra.",
@@ -226,7 +230,9 @@
     "upgradeRecommendation": "Questo metodo di aggiornamento non è consigliato. È meglio eseguire l'aggiornamento dalla CLI.",
     "newVersionIsAvailable": "È disponibile la nuova versione di EspoCRM {latestVersion}. Segui le [istruzioni](https://www.espocrm.com/documentation/administration/upgrading/) per aggiornare l'istanza.",
     "formulaFunctions": "Più funzioni possono essere trovate nella [documentazione]({documentationUrl}).",
-    "rebuildRequired": "È necessario eseguire la ricostruzione da CLI."
+    "rebuildRequired": "È necessario eseguire la ricostruzione da CLI.",
+    "cronIsDisabled": "Cron è disabilitato, l'applicazione non è completamente funzionante. Abilitare Cron nelle [impostazioni](#Admin/settings).",
+    "cacheIsDisabled": "La cache è disabilitata, l'applicazione funzionerà lentamente. Attivare la cache nelle [impostazioni](#Admin/settings)."
   },
   "descriptions": {
     "settings": "Impostazioni di sistema dell'applicazione.",
@@ -276,7 +282,9 @@
     "formulaSandbox": "Scrivi e testa gli script delle formule.",
     "workingTimeCalendars": "Orario lavorativo.",
     "groupEmailFolders": "Cartelle email condivise per i team.",
-    "authenticationProviders": "Provider di autenticazione aggiuntivi per i portali."
+    "authenticationProviders": "Provider di autenticazione aggiuntivi per i portali.",
+    "appLog": "Log applicazione.",
+    "addressCountries": "Paesi disponibili per i campi indirizzo."
   },
   "logicalOperators": {
     "and": "And"

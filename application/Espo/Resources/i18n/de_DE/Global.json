@@ -275,7 +275,9 @@
     "Page": "Seite",
     "Star": "Stern setzen",
     "Unstar": "Stern entfernen",
-    "Starred": "Mit Stern markiert"
+    "Starred": "Mit Stern markiert",
+    "Remove Filter": "Entferne Filter",
+    "Ready": "Bereit"
   },
   "messages": {
     "pleaseWait": "Bitte warten...",
@@ -384,7 +386,9 @@
     "starsLimitExceeded": "Die Anzahl der Sterne hat das Limit überschritten.",
     "select2OrMoreRecords": "Wählen Sie 2 oder mehr Datensätze",
     "selectNotMoreThanNumberRecords": "Wählen Sie nicht mehr als {number} Datensätze aus",
-    "selectAtLeastOneRecord": "Wählen Sie mindestens einen Datensatz aus"
+    "selectAtLeastOneRecord": "Wählen Sie mindestens einen Datensatz aus",
+    "fieldNotMatchingPattern$phoneNumberLoose": "{field} enthält Zeichen, die in einer Telefonnummer nicht erlaubt sind",
+    "duplicateConflict": "Ein Datensatz existiert bereits."
   },
   "boolFilters": {
     "onlyMy": "Nur meine",

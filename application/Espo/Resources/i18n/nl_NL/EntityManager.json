@@ -41,7 +41,8 @@
     "author": "Auteur",
     "version": "Versie",
     "selectFilter": "Select filter",
-    "primaryFilters": "Primaire filters"
+    "primaryFilters": "Primaire filters",
+    "stars": "Sterren"
   },
   "options": {
     "type": {
@@ -96,6 +97,7 @@
     "optimisticConcurrencyControl": "Voorkomt schrijfconflicten.",
     "duplicateCheckFieldList": "Welke velden te controleren bij het controleren op duplicaten.",
     "updateDuplicateCheck": "Controleren op duplicaten bij het bijwerken van een record.",
-    "linkSelectFilter": "Een primair filter dat standaard wordt toegepast bij het selecteren van een record."
+    "linkSelectFilter": "Een primair filter dat standaard wordt toegepast bij het selecteren van een record.",
+    "stars": "De optie om records te voorzien van sterren. Gebruikers kunnen sterren gebruiken om een bladwijzer voor records te maken."
   }
 }

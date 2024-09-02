@@ -122,7 +122,7 @@
     "auth2FA": "2-Faktor-Authentifizierung aktivieren",
     "auth2FAMethodList": "Verfügbare 2FA-Methoden",
     "personNameFormat": "Format des Personennamens",
-    "newNotificationCountInTitle": "Neue Benachrichtigungsnummer im Seitentitel anzeigen\n",
+    "newNotificationCountInTitle": "Neue Benachrichtigungsnummer im Seitentitel anzeigen",
     "massEmailVerp": "VERP verwenden",
     "emailAddressLookupEntityTypeList": "Suchbereiche für E-Mail-Adressen",
     "busyRangesEntityList": "Liste der Frei/Gebucht-Einheiten",

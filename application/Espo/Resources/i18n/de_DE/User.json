@@ -131,7 +131,8 @@
     "defaultTeamIsNotUsers": "Das Standardteam sollte eines der Teams des Benutzers sein"
   },
   "boolFilters": {
-    "onlyMyTeam": "Nur mein Team"
+    "onlyMyTeam": "Nur mein Team",
+    "onlyMe": "Nur ich"
   },
   "presetFilters": {
     "active": "Aktiv",
@@ -150,5 +151,8 @@
     "authMethod": {
       "ApiKey": "API Schlüssel"
     }
+  },
+  "actions": {
+    "changePosition": "Position ändern"
   }
 }

@@ -26,6 +26,7 @@
     "isReplied": "Beantwortet",
     "isNotReplied": "Nicht beantwortet",
     "folder": "Ordner",
+    "folderString": "Ordner",
     "inboundEmails": "Gruppenkonten",
     "emailAccounts": "Persönliche Konten",
     "hasAttachment": "Anhang vorhanden",
@@ -50,7 +51,9 @@
     "icsEventData": "ICS Event Daten",
     "createdEvent": "Erstelltes Event",
     "icsEventDateStart": "ICS Event Startdatum",
-    "groupFolder": "Gruppenordner"
+    "groupFolder": "Gruppenordner",
+    "isUsersSent": "Ist Benutzer gesendet",
+    "inArchive": "Im Archiv"
   },
   "links": {
     "replied": "Beantwortet",
@@ -65,16 +68,17 @@
     "ccEmailAddresses": "CC E-Mail Adressen",
     "bccEmailAddresses": "BCC E-Mail Adressen",
     "replyToEmailAddresses": "Antwort-an E-Mail Adressen",
-    "groupFolder": "Gruppenordner"
+    "groupFolder": "Gruppenordner",
+    "createdEvent": "Erstelltes Event"
   },
   "options": {
     "status": {
       "Draft": "Entwurf",
       "Sending": "Wird gesendet",
       "Sent": "Gesendet",
-      "Archived": "Archiviert",
       "Received": "Empfangen",
-      "Failed": "Fehlgeschlagen"
+      "Failed": "Fehlgeschlagen",
+      "Archived": "Importiert"
     }
   },
   "labels": {
@@ -107,9 +111,12 @@
     "View Users": "Benutzer anzeigen",
     "No Subject": "Kein Betreff",
     "Insert Field": "Feld einfügen",
-    "Moving to folder": "Verschiebe in Ordner",
     "Group Folders": "Gruppenordner",
-    "View Attachments": "Anhänge anzeigen"
+    "View Attachments": "Anhänge anzeigen",
+    "Import EML": "EML importieren",
+    "Moved to Archive": "Ins Archiv verschoben",
+    "Moved to Trash": "In Papierkorb verschoben",
+    "Retrieved from Trash": "Aus dem Papierkorb geholt"
   },
   "messages": {
     "testEmailSent": "Eine Test E-Mail wurde gesendet",
@@ -122,15 +129,17 @@
     "removeRecordConfirmation": "Sind Sie sicher, dass Sie die E-Mail entfernen möchten?\n\nSie wird auch für andere Benutzer entfernt.",
     "invalidCredentials": "Ungültige Zugangsdaten.",
     "unknownError": "Unbekannter Fehler.",
-    "recipientAddressRejected": "Empfängeradresse wurde abgelehnt."
+    "recipientAddressRejected": "Empfängeradresse wurde abgelehnt.",
+    "alreadyImported": "Die [email]({link}) existiert bereits im System."
   },
   "presetFilters": {
     "sent": "Gesendet",
-    "archived": "Archiviert",
     "inbox": "Posteingang",
     "drafts": "Entwürfe",
     "trash": "Papierkorb",
-    "important": "Wichtig"
+    "important": "Wichtig",
+    "archived": "Importiert",
+    "archive": "Archiv"
   },
   "massActions": {
     "markAsRead": "Als gelesen markieren",
@@ -139,9 +148,16 @@
     "markAsNotImportant": "Wichtig Markierung entfernen",
     "moveToTrash": "In den Papierkorb verschieben",
     "moveToFolder": "In Ordner verschieben",
-    "retrieveFromTrash": "Aus dem Papierkorb holen"
+    "retrieveFromTrash": "Aus dem Papierkorb holen",
+    "moveToArchive": "Archiv"
   },
   "strings": {
     "sendingFailed": "E-Mail-Versand fehlgeschlagen"
+  },
+  "actions": {
+    "moveToArchive": "Archiv"
+  },
+  "otherFields": {
+    "file": "Datei"
   }
 }

@@ -13,7 +13,8 @@
     "data": "Dati",
     "fieldData": "Dati Campo",
     "messagePermission": "Permessi Messaggistica",
-    "auditPermission": "Permessi Revisioni"
+    "auditPermission": "Permessi Revisioni",
+    "mentionPermission": "Permessi Menzione"
   },
   "links": {
     "users": "Utenti",
@@ -61,6 +62,7 @@
     "groupEmailAccountPermission": "Accesso agli account di posta elettronica di gruppo, possibilità di inviare e-mail da SMTP di gruppo.",
     "exportPermission": "Permette di esportare i record.",
     "massUpdatePermission": "La possibilità di eseguire l'aggiornamento di massa dei record.",
-    "auditPermission": "Permette di visualizzare il registro revisioni."
+    "auditPermission": "Permette di visualizzare il registro revisioni.",
+    "mentionPermission": "Consente di menzionare altri utenti nello Stream.\n\n* tutti - può menzionare tutti\n* team - può menzionare solo i membri del proprio team\n* no - non può menzionare"
   }
 }

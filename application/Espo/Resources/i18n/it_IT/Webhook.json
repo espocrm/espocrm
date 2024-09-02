@@ -4,7 +4,7 @@
   },
   "fields": {
     "event": "Evento",
-    "isActive": "È attivo",
+    "isActive": "Attivo",
     "user": "Utente API",
     "entityType": "Tipo di Entità",
     "field": "Campo",

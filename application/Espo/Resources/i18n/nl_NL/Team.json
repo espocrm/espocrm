@@ -4,7 +4,8 @@
     "roles": "Functies",
     "positionList": "Overzichtslijst",
     "layoutSet": "Lay-out set",
-    "workingTimeCalendar": "Werktijd Kalender"
+    "workingTimeCalendar": "Werktijd Kalender",
+    "userRole": "Rol gebruiker"
   },
   "links": {
     "users": "Gebruikers",

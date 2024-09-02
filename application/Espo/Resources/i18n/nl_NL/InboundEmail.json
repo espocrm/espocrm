@@ -35,7 +35,9 @@
     "keepFetchedEmailsUnread": "Laat opgehaalde E-mails als ongelezen staan",
     "smtpAuthMechanism": "SMTP Auth Mechanisme",
     "security": "Beveiliging",
-    "groupEmailFolder": "Groep e-mail map"
+    "groupEmailFolder": "Groep e-mail map",
+    "connectedAt": "Verbonden op",
+    "excludeFromReply": "Uitsluiten van beantwoorden"
   },
   "tooltips": {
     "reply": "E-mail afzenders melden dat hun e-mails zijn ontvangen.\n\nEr wordt gedurende een bepaalde periode slechts één e-mail naar een bepaalde ontvanger gestuurd om looping te voorkomen.",
@@ -52,7 +54,8 @@
     "smtpIsForMassEmail": "Indien ingeschakeld, is SMTP beschikbaar voor verzamel e-mail.",
     "storeSentEmails": "Verzonden e-mails worden opgeslagen op de IMAP-server.",
     "useSmtp": "De mogelijkheid om e-mails te verzenden.",
-    "groupEmailFolder": "Zet inkomende e-mails in een groepsmap."
+    "groupEmailFolder": "Zet inkomende e-mails in een groepsmap.",
+    "excludeFromReply": "Bij het beantwoorden van e-mails die naar het e-mailadres van dit account zijn verzonden, wordt het e-mailadres niet toegevoegd aan CC.\n\nMerk op dat door deze parameter in te schakelen, het e-mailadres van deze account zichtbaar wordt voor gebruikers die toegang hebben tot het verzenden van e-mails."
   },
   "options": {
     "status": {
@@ -76,7 +79,8 @@
     "Main": "Hoofd"
   },
   "messages": {
-    "couldNotConnectToImap": "Kan geen verbinding maken met IMAP server"
+    "couldNotConnectToImap": "Kan geen verbinding maken met IMAP server",
+    "imapNotConnected": "Kan geen verbinding maken met groeps [IMAP-account](#InboundEmail/view/{id})."
   },
   "links": {
     "emails": "E-mails",

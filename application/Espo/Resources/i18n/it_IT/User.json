@@ -14,7 +14,7 @@
     "passwordConfirm": "Conferma password",
     "newPassword": "Nuova password",
     "newPasswordConfirm": "Conferma la nuova password",
-    "isActive": "È attivo",
+    "isActive": "Attivo",
     "isPortalUser": "È il portale per l'utente",
     "contact": "Contatto",
     "accounts": "Account",
@@ -53,7 +53,8 @@
     "dashboardTemplate": "Modello Dashboard",
     "userData": "Dati Utente",
     "workingTimeCalendar": "Calendario Lavorativo",
-    "layoutSet": "Layout"
+    "layoutSet": "Layout",
+    "workingTimeRanges": "Eccezioni Lavorative"
   },
   "labels": {
     "Create User": "Crea Utente",
@@ -129,10 +130,12 @@
     "loginAs": "Apri il link di accesso in una finestra in incognito per preservare la sessione corrente. Per accedere, utilizza le tue credenziali di amministratore.",
     "failedToLogIn": "Accesso non riuscito",
     "2faMethodNotConfigured": "Il metodo 2FA non è stato configurato interamente nel sistema.",
-    "loginError": "Si è verificato un errore"
+    "loginError": "Si è verificato un errore",
+    "defaultTeamIsNotUsers": "Il team predefinito deve essere uno dei team dell'utente"
   },
   "boolFilters": {
-    "onlyMyTeam": "Solo il mio Team"
+    "onlyMyTeam": "Solo il mio Team",
+    "onlyMe": "Solo Io"
   },
   "presetFilters": {
     "active": "Attivo",
@@ -156,5 +159,8 @@
     "authMethod": {
       "ApiKey": "Chiave API"
     }
+  },
+  "actions": {
+    "changePosition": "Cambia Posizione"
   }
 }

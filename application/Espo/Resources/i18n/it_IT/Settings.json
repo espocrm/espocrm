@@ -84,7 +84,7 @@
     "massEmailMaxPerHourCount": "Numero massimo di messaggi di posta elettronica inviati per ora.",
     "maxEmailAccountCount": "Numero massimo di account email personali per utente",
     "streamEmailNotificationsTypeList": "Cosa notificare",
-    "authTokenPreventConcurrent": "Solo un token auth per utente",
+    "authTokenPreventConcurrent": "Solo un token di autenticazione per utente",
     "scopeColorsDisabled": "Disabilita colori entità",
     "tabColorsDisabled": "Disabilita colori schede",
     "tabIconsDisabled": "Disabilita icone schede",
@@ -145,7 +145,12 @@
     "phoneNumberInternational": "Numeri di telefono internazionali",
     "phoneNumberPreferredCountryList": "Prefissi telefonici preferiti",
     "jobForceUtc": "Forza Fuso Orario UTC",
-    "emailAddressSelectEntityTypeList": "Entità Selezione Indirizzi Email"
+    "emailAddressSelectEntityTypeList": "Entità Selezione Indirizzi Email",
+    "phoneNumberExtensions": "Estensioni Telefono",
+    "quickSearchFullTextAppendWildcard": "Aggiungi la wildcard nella ricerca rapida",
+    "authIpAddressCheck": "Restringi l'accesso per indirizzo IP",
+    "authIpAddressWhitelist": "Whitelist Indirizzi IP",
+    "authIpAddressCheckExcludedUsers": "Utenti esclusi dal controllo"
   },
   "tooltips": {
     "recordsPerPage": "Numero di record inizialmente mostrati in vista lista.",
@@ -227,7 +232,12 @@
     "oidcLogoutUrl": "Un URL a cui il browser reindirizzerà dopo il logout da Espo. È progettato per cancellare le informazioni della sessione nel browser e per effettuare il logout lato provider. Di solito l'URL contiene un parametro Redirect-URL, per tornare a Espo.\n\nSegnaposti disponibili:\n* `{siteUrl}`\n* `{clientId}`",
     "recordsPerPageKanban": "Numero di record inizialmente visualizzati nelle colonne kanban.",
     "jobForceUtc": "Utilizza il fuso orario UTC per i lavori pianificati. Altrimenti, verrà utilizzato il fuso orario impostato nelle impostazioni.",
-    "emailAddressSelectEntityTypeList": "Entità disponibili quando si cerca un indirizzo email da un pannello."
+    "emailAddressSelectEntityTypeList": "Entità disponibili quando si cerca un indirizzo email da un pannello.",
+    "authIpAddressCheckExcludedUsers": "Utenti che potranno accedere indipendentemente dal fatto che il loro indirizzo IP sia presente nella whitelist.",
+    "authIpAddressWhitelist": "Un elenco di indirizzi o intervalli IP in notazione CIDR.\n\nI portali non sono interessati dalla restrizione.",
+    "emailAddressIsOptedOutByDefault": "Quando si crea un nuovo record, l'indirizzo e-mail viene contrassegnato come opt-out.",
+    "oidcGroupClaim": "Un claim da utilizzare per il mapping dei team.",
+    "quickSearchFullTextAppendWildcard": "Aggiunge una wildcard a una query di ricerca con completamento automatico quando è abilitata la ricerca a tutto testo. Riduce le prestazioni della ricerca."
   },
   "labels": {
     "System": "Sistema",
@@ -244,13 +254,17 @@
     "Admin Notifications": "Notifiche Admin",
     "Search": "Ricerca",
     "Misc": "Varie",
+    "Passwords": "Password",
     "2-Factor Authentication": "Autenticazione a 2 fattori",
     "Group Tab": "Gruppo Schede",
     "Attachments": "Allegati",
     "IdP Group": "Gruppo IDP",
     "Divider": "Divisore",
     "General": "Generale",
-    "Phone Numbers": "Numeri di Telefono"
+    "Phone Numbers": "Numeri di Telefono",
+    "Access": "Accesso",
+    "Strength": "Robustezza",
+    "Recovery": "Recupero"
   },
   "messages": {
     "ldapTestConnection": "La connessione è stata stabilita con successo"

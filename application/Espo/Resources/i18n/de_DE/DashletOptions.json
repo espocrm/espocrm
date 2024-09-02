@@ -26,6 +26,10 @@
       "basicDay": "Tag",
       "agendaDay": "Tag (Agenda)",
       "timeline": "Zeitachse"
+    },
+    "sortDirection": {
+      "asc": "Aufsteigend",
+      "desc": "Absteigend"
     }
   },
   "messages": {

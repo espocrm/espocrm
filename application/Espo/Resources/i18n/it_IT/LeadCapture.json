@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nome",
     "campaign": "MailChimp: ID campagna",
-    "isActive": "È attivo",
+    "isActive": "Attivo",
     "subscribeToTargetList": "Iscrivi alla Lista di Destinazione",
     "subscribeContactToTargetList": "Iscrivi Contatto se Esiste",
     "targetList": "Lista di Destinazione",
