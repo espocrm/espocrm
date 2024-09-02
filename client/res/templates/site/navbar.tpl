@@ -7,7 +7,7 @@
             ><a
                 class="navbar-brand nav-link"
                 href="#"
-            ><img src="{{logoSrc}}" class="logo" alt="logo"></span></a></div>
+            ><img src="{{logoSrc}}" class="logo" alt="logo"></a></div>
         <a role="button" class="side-menu-button"><span class="fas fa-bars"></span></a>
     </div>
 
@@ -47,7 +47,7 @@
                     {{#if html}}{{{html}}}{{/if}}
 
                     {{#if isGroup}}
-                    <span class="fas fa-caret-right group-caret"><span>
+                    <span class="fas fa-caret-right group-caret"></span>
                     {{/if}}
                 </a>
                 {{/unless}}
@@ -132,7 +132,7 @@
                             {{#if html}}{{{html}}}{{/if}}
 
                             {{#if isGroup}}
-                            <span class="fas fa-caret-right group-caret"><span>
+                            <span class="fas fa-caret-right group-caret"></span>
                             {{/if}}
                         </a>
                         {{/unless}}
