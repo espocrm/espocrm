@@ -7,7 +7,7 @@
             ><a
                 class="navbar-brand nav-link"
                 href="#"
-            ><img src="{{logoSrc}}" class="logo" alt="logo"</span></a></div>
+            ><img src="{{logoSrc}}" class="logo" alt="logo"></a></div>
         <a role="button" class="side-menu-button"><span class="fas fa-bars"></span></a>
     </div>
 
