@@ -160,7 +160,9 @@ class Manager
 
         fwrite($resource, $contents);
 
-        $path = stream_get_meta_data($resource)['uri'] ?? null;
+        // PhpStan's bug. Check later, remove 'ignore' if fixed.
+        /** @phpstan-ignore-next-line */
+        $path = stream_get_meta_data($resource)['uri'];
 
         if (!$path) {
             throw new RuntimeException("No uri.");
