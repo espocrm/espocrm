@@ -40,7 +40,7 @@
         "robthree/twofactorauth": "^1.6",
         "nesbot/carbon": "^2.62",
         "zbateson/mail-mime-parser": "^3.0.2",
-        "phpoffice/phpspreadsheet": "^1.16",
+        "phpoffice/phpspreadsheet": "^2.2",
         "doctrine/dbal": "^3.5.3",
         "league/flysystem-async-aws-s3": "^3.0",
         "johngrogg/ics-parser": "^3.0",
