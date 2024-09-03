@@ -160,7 +160,11 @@ class Manager
 
         fwrite($resource, $contents);
 
-        $path = stream_get_meta_data($resource)['uri'];
+        $path = stream_get_meta_data($resource)['uri'] ?? null;
+
+        if (!$path) {
+            throw new RuntimeException("No uri.");
+        }
 
         // To prevent deleting.
         $this->resourceMap[$path] = $resource;

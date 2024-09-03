@@ -294,7 +294,7 @@ class Metadata
                 $unsetList = $unsets;
 
                 foreach ($unsetList as $unsetItem) {
-                    if (preg_match('/fields\.([^.]+)/', $unsetItem, $matches) && isset($matches[1])) {
+                    if (preg_match('/fields\.([^.]+)/', $unsetItem, $matches)) {
                         $fieldName = $matches[1];
                         $fieldPath = [$key1, $key2, 'fields', $fieldName];
 

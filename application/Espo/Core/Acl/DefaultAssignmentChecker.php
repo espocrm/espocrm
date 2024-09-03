@@ -277,8 +277,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
             if ($entity->isAttributeChanged(self::ATTR_ASSIGNED_USERS_IDS)) {
                 $toProcess = true;
             }
-        }
-        else {
+        } else {
             $toProcess = true;
         }
 
@@ -304,6 +303,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
             return $this->isPermittedAssignedUsersLevelTeam($user, $entity);
         }
 
+        /** @phpstan-ignore-next-line */
         return true;
     }
 
