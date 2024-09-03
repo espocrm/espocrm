@@ -73,8 +73,8 @@ class CountryDataProvider
             $list = $this->dataCache->get(self::CACHE_KEY);
 
             if (
-                is_array($list) ||
-                is_array($list['list'] ?? null) ||
+                is_array($list) &&
+                is_array($list['list'] ?? null) &&
                 is_array($list['preferredList'] ?? null)
             ) {
                 /** @var array{list: string[], preferredList: string[]} */
