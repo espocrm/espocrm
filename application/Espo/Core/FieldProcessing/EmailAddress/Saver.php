@@ -149,8 +149,7 @@ class Saver implements SaverInterface
                 $entity->isNew() ||
                 (
                     $entity->hasFetched(self::ATTR_EMAIL_ADDRESS_IS_OPTED_OUT) &&
-                    $entity->get(self::ATTR_EMAIL_ADDRESS_IS_OPTED_OUT) !==
-                        $entity->getFetched(self::ATTR_EMAIL_ADDRESS_IS_OPTED_OUT)
+                    $entity->isAttributeChanged(self::ATTR_EMAIL_ADDRESS_IS_OPTED_OUT)
                 )
             ) &&
             $emailAddressValue
@@ -168,8 +167,7 @@ class Saver implements SaverInterface
                 $entity->isNew() ||
                 (
                     $entity->hasFetched(self::ATTR_EMAIL_ADDRESS_IS_INVALID) &&
-                    $entity->get(self::ATTR_EMAIL_ADDRESS_IS_INVALID) !==
-                        $entity->getFetched(self::ATTR_EMAIL_ADDRESS_IS_INVALID)
+                    $entity->isAttributeChanged(self::ATTR_EMAIL_ADDRESS_IS_INVALID)
                 )
             ) &&
             $emailAddressValue
@@ -423,7 +421,6 @@ class Saver implements SaverInterface
 
             if ($emailAddressOld) {
                 $this->entityManager
-                    ->getRDBRepository($entity->getEntityType())
                     ->getRelation($entity, 'emailAddresses')
                     ->unrelate($emailAddressOld, [SaveOption::SKIP_HOOKS => true]);
             }
@@ -439,8 +436,7 @@ class Saver implements SaverInterface
                     $entity->isNew() ||
                     (
                         $entity->hasFetched(self::ATTR_EMAIL_ADDRESS_IS_OPTED_OUT) &&
-                        $entity->get(self::ATTR_EMAIL_ADDRESS_IS_OPTED_OUT) !==
-                        $entity->getFetched(self::ATTR_EMAIL_ADDRESS_IS_OPTED_OUT)
+                        $entity->isAttributeChanged(self::ATTR_EMAIL_ADDRESS_IS_OPTED_OUT)
                     )
                 )
             ) {
@@ -454,8 +450,7 @@ class Saver implements SaverInterface
                     $entity->isNew() ||
                     (
                         $entity->hasFetched(self::ATTR_EMAIL_ADDRESS_IS_INVALID) &&
-                        $entity->get(self::ATTR_EMAIL_ADDRESS_IS_INVALID) !==
-                            $entity->getFetched(self::ATTR_EMAIL_ADDRESS_IS_INVALID)
+                        $entity->isAttributeChanged(self::ATTR_EMAIL_ADDRESS_IS_INVALID)
                     )
                 )
             ) {
@@ -475,12 +470,13 @@ class Saver implements SaverInterface
             ->findOne();
 
         if (!$emailAddressNew) {
+            /** @var EmailAddress $emailAddressNew */
             $emailAddressNew = $this->entityManager->getNewEntity(EmailAddress::ENTITY_TYPE);
 
             $emailAddressNew->set('name', $emailAddressValue);
 
             if ($entity->has(self::ATTR_EMAIL_ADDRESS_IS_OPTED_OUT)) {
-                $emailAddressNew->set('optOut', (bool) $entity->get(self::ATTR_EMAIL_ADDRESS_IS_OPTED_OUT));
+                $emailAddressNew->setOptedOut((bool) $entity->get(self::ATTR_EMAIL_ADDRESS_IS_OPTED_OUT));
             }
 
             if ($entity->has(self::ATTR_EMAIL_ADDRESS_IS_INVALID)) {

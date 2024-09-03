@@ -153,8 +153,7 @@ class Saver implements SaverInterface
                 $entity->isNew() ||
                 (
                     $entity->hasFetched(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT) &&
-                    $entity->get(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT) !==
-                        $entity->getFetched(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT)
+                    $entity->isAttributeChanged(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT)
                 )
             ) &&
             $phoneNumberValue
@@ -171,8 +170,7 @@ class Saver implements SaverInterface
                 $entity->isNew() ||
                 (
                     $entity->hasFetched(self::ATTR_PHONE_NUMBER_IS_INVALID) &&
-                    $entity->get(self::ATTR_PHONE_NUMBER_IS_INVALID) !==
-                        $entity->getFetched(self::ATTR_PHONE_NUMBER_IS_INVALID)
+                    $entity->isAttributeChanged(self::ATTR_PHONE_NUMBER_IS_INVALID)
                 )
             ) &&
             $phoneNumberValue
@@ -307,8 +305,7 @@ class Saver implements SaverInterface
                 ]);
 
                 $this->entityManager->saveEntity($phoneNumber);
-            }
-            else {
+            } else {
                 $skipSave = $this->checkChangeIsForbidden($phoneNumber, $entity);
 
                 if (!$skipSave) {
@@ -428,8 +425,7 @@ class Saver implements SaverInterface
                     $entity->isNew() ||
                     (
                         $entity->hasFetched(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT) &&
-                        $entity->get(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT) !==
-                            $entity->getFetched(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT)
+                        $entity->isAttributeChanged(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT)
                     )
                 )
             ) {
@@ -442,7 +438,7 @@ class Saver implements SaverInterface
                     $entity->isNew() ||
                     (
                         $entity->hasFetched(self::ATTR_PHONE_NUMBER_IS_INVALID) &&
-                        $entity->get(self::ATTR_PHONE_NUMBER_IS_INVALID) !== $entity->getFetched(self::ATTR_PHONE_NUMBER_IS_INVALID)
+                        $entity->isAttributeChanged(self::ATTR_PHONE_NUMBER_IS_INVALID)
                     )
                 )
             ) {
@@ -514,6 +510,7 @@ class Saver implements SaverInterface
             ->findOne();
 
         if (!$phoneNumberNew) {
+            /** @var PhoneNumber $phoneNumberNew */
             $phoneNumberNew = $this->entityManager->getNewEntity(PhoneNumber::ENTITY_TYPE);
 
             $phoneNumberNew->set('name', $phoneNumberValue);
