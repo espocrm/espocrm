@@ -573,7 +573,7 @@ class Diff
 
         const resolveBundledItemDest = item => {
             if (item.amdId) {
-                return `'client/lib/original/${item.amdId}.js`;
+                return `client/lib/original/${item.amdId}.js`;
             }
 
             return 'client/lib/original/' + item.src.split('/').pop();
