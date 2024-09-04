@@ -571,7 +571,8 @@
         },
         "massEmailMaxPerHourCount": {
             "type": "int",
-            "min": 1
+            "min": 1,
+            "required": true
         },
         "massEmailMaxPerBatchCount": {
             "type": "int",
