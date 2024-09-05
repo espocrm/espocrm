@@ -863,7 +863,7 @@ abstract class Base
         }
         catch (Throwable $e) {
             try {
-                $this->getLog()->error("Database rebuild failure, details: {$e->getMessage()}.");
+                $this->getLog()->error("Database rebuild failure, details: {$e->getMessage()}.", ['exception' => $e]);
             } catch (Throwable) {}
         }
 
