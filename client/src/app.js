@@ -829,13 +829,28 @@ class App {
     }
 
     /**
+     * @typedef {Record} module:app~LoginData
+     * @property {Record} user
+     * @property {Record} preferences
+     * @property {Record} acl
+     * @property {Record} settings
+     * @property {Record} appParams
+     * @property {string} language
+     * @property {{
+     *    userName: string,
+     *    token: string,
+     *    anotherUser?: string,
+     * }} auth
+     */
+
+    /**
      * @public
      */
     initAuth() {
         this.auth = this.storage.get('user', 'auth') || null;
         this.anotherUser = this.storage.get('user', 'anotherUser') || null;
 
-        this.baseController.on('login', data => {
+        this.baseController.on('login', /** module:app~LoginData */ data => {
             const userId = data.user.id;
             const userName = data.auth.userName;
             const token = data.auth.token;
@@ -856,7 +871,6 @@ class App {
             this.storage.set('user', 'anotherUser', this.anotherUser);
 
             this.setCookieAuth(userName, token);
-
             this.initUserData(data, () => this.onAuth(true));
         });
 
