@@ -52,9 +52,14 @@ interface Relations
      */
     public function set(string $relation, Entity|EntityCollection|null $related): void;
 
+    /**
+     * Is a relation set (updated).
+     */
     public function isSet(string $relation): bool;
 
     /**
+     * Get set (updated) record or records.
+     *
      * @return Entity|EntityCollection<Entity>|null
      */
     public function getSet(string $relation): Entity|EntityCollection|null;
