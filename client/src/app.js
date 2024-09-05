@@ -58,6 +58,7 @@ import NumberUtil from 'number-util';
 import PageTitle from 'page-title';
 import BroadcastChannel from 'broadcast-channel';
 import uiAppInit from 'ui/app-init';
+import AppParams from 'app-params';
 
 /**
  * A main application class.
@@ -252,6 +253,14 @@ class App {
     viewFactory = null
 
     /**
+     * App params.
+     *
+     * @private
+     * @type {import('app-params').default}
+     */
+    appParams
+
+    /**
      * @type {function(string, function(View))}
      * @private
      */
@@ -368,8 +377,8 @@ class App {
      * @param {function} [callback]
      */
     init(options, callback) {
-        /** @type {Object.<string, *>} */
-        this.appParams = {};
+        this.appParams = new AppParams();
+
         this.controllers = {};
 
         /**
@@ -889,7 +898,7 @@ class App {
             const arr = Base64.decode(this.auth).split(':');
 
             if (arr.length > 1) {
-                logoutWait = this.appParams.logoutWait || false;
+                logoutWait = this.appParams.get('logoutWait') || false;
 
                 Ajax.postRequest('App/destroyAuthToken', {token: arr[1]}, {resolveWithXhr: true})
                     .then(/** XMLHttpRequest */xhr => {
@@ -1048,10 +1057,7 @@ class App {
                 this.preferences.set(preferencesData);
                 this.settings.set(settingData);
                 this.acl.set(aclData);
-
-                for (const param in data.appParams) {
-                    this.appParams[param] = data.appParams[param];
-                }
+                this.appParams.setAll(data.appParams);
 
                 if (!this.auth) {
                     return;
@@ -1416,6 +1422,12 @@ class App {
 
             if (event.data === 'update:layout') {
                 this.viewHelper.layoutManager.clearLoadedData();
+
+                return;
+            }
+
+            if (event.data === 'update:appParams') {
+                this.appParams.load();
 
                 return;
             }

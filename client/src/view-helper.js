@@ -247,7 +247,7 @@ class ViewHelper {
     /**
      * Application parameters.
      *
-     * @type {Object}
+     * @type {import('app-params').default|null}
      */
     appParams = null
 
@@ -630,7 +630,11 @@ class ViewHelper {
      * @returns {*}
      */
     getAppParam(name) {
-        return (this.appParams || {})[name];
+        if (!this.appParams) {
+            return undefined;
+        }
+
+        return this.appParams.get(name);
     }
 
     /**
