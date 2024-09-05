@@ -103,6 +103,10 @@ class RDBRelations implements Relations
      */
     public function set(string $relation, Entity|EntityCollection|null $related): void
     {
+        if (!$this->entity) {
+            throw new LogicException("No entity set.");
+        }
+
         $type = $this->getRelationType($relation);
 
         if (!$type) {
@@ -122,6 +126,38 @@ class RDBRelations implements Relations
         ) {
             throw new LogicException("Relation type '$type' is not supported for setting.");
         }
+
+        if ($related instanceof EntityCollection) {
+            throw new InvalidArgumentException();
+        }
+
+        if ($related) {
+            $nameAttribute = $this->entityManager
+                ->getDefs()
+                ->getEntity($this->entity->getEntityType())
+                ->getRelation($relation)
+                ->getParam('nameAttribute') ?? 'name';
+
+            $valueMap = [
+                $relation . 'Id' => $related->getId(),
+                $relation . 'Name' => $related->get($nameAttribute),
+            ];
+
+            if ($type === RelationType::BELONGS_TO_PARENT) {
+                $valueMap[$relation . 'Type'] = $related->getEntityType();
+            }
+        } else {
+            $valueMap = [
+                $relation . 'Id' => null,
+                $relation . 'Name' => null,
+            ];
+
+            if ($type === RelationType::BELONGS_TO_PARENT) {
+                $valueMap[$relation . 'Type'] = null;
+            }
+        }
+
+        $this->entity->setMultiple($valueMap);
 
         $this->setData[$relation] = $related;
     }
