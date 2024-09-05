@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Entities;
 
-class CategoryTreeItem extends \Espo\Core\ORM\Entity
-{
+use Espo\Core\ORM\Entity;
 
-}
+class CategoryTreeItem extends Entity
+{}
