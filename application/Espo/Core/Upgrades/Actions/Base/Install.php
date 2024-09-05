@@ -32,6 +32,7 @@ namespace Espo\Core\Upgrades\Actions\Base;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Upgrades\Actions\Base;
 use Espo\Core\Utils\Util;
+use Throwable;
 
 class Install extends Base
 {
@@ -324,15 +325,17 @@ class Install extends Base
     }
 
     /**
-     * @param string $errorMessage
-     * @param bool $deletePackage
-     * @param bool $systemRebuild
      * @throws Error
      */
-    public function throwErrorAndRemovePackage($errorMessage = '', $deletePackage = true, $systemRebuild = true): void
-    {
+    public function throwErrorAndRemovePackage(
+        string $errorMessage = '',
+        bool $deletePackage = true,
+        bool $systemRebuild = true,
+        ?Throwable $exception = null
+    ): void {
+
         $this->restoreFiles();
 
-        parent::throwErrorAndRemovePackage($errorMessage, $deletePackage, $systemRebuild);
+        parent::throwErrorAndRemovePackage($errorMessage, $deletePackage, $systemRebuild, $exception);
     }
 }

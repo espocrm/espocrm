@@ -159,7 +159,8 @@ abstract class Base
     public function throwErrorAndRemovePackage(
         string $errorMessage = '',
         bool $deletePackage = true,
-        bool $systemRebuild = true
+        bool $systemRebuild = true,
+        ?Throwable $exception = null
     ): void {
 
         if ($deletePackage) {
@@ -173,7 +174,11 @@ abstract class Base
             $this->systemRebuild();
         }
 
-        throw new Error($errorMessage);
+        if ($exception && !$errorMessage) {
+            $errorMessage = $exception->getMessage();
+        }
+
+        throw new Error($errorMessage, 0, $exception);
     }
 
     abstract public function run(mixed $data): mixed;
@@ -393,7 +398,7 @@ abstract class Base
             $script->run($this->getContainer(), $this->scriptParams);
         }
         catch (Throwable $e) {
-            $this->throwErrorAndRemovePackage($e->getMessage());
+            $this->throwErrorAndRemovePackage(exception: $e);
         }
     }
 
@@ -411,7 +416,7 @@ abstract class Base
             return null;
         }
 
-        $beforeInstallScript = Util::concatPath(array($packagePath, self::SCRIPTS, $scriptName)) . '.php';
+        $beforeInstallScript = Util::concatPath([$packagePath, self::SCRIPTS, $scriptName]) . '.php';
 
         if (file_exists($beforeInstallScript)) {
             return $beforeInstallScript;
@@ -623,7 +628,7 @@ abstract class Base
             return $this->getFileManager()->copy($sourcePath, $destPath, $recursively, $fileList, $copyOnlyFiles);
         }
         catch (Throwable $e) {
-            $this->throwErrorAndRemovePackage($e->getMessage());
+            $this->throwErrorAndRemovePackage(exception: $e);
         }
 
         return false;
@@ -749,7 +754,7 @@ abstract class Base
             $manifestPath = Util::concatPath($packagePath, $this->manifestName);
 
             if (!file_exists($manifestPath)) {
-                $this->throwErrorAndRemovePackage('It\'s not an Installation package.');
+                $this->throwErrorAndRemovePackage("It's not an Installation package.");
             }
 
             $manifestJson = $this->getFileManager()->getContents($manifestPath);
@@ -818,7 +823,7 @@ abstract class Base
         $res = $this->getZipUtil()->unzip($packageArchivePath, $packagePath);
 
         if ($res === false) {
-            $this->throwErrorAndRemovePackage('Unable to unzip the file - '.$packagePath.'.', false, false);
+            $this->throwErrorAndRemovePackage("Unable to unzip the file $packagePath.", false, false);
         }
     }
 
@@ -858,9 +863,8 @@ abstract class Base
         }
         catch (Throwable $e) {
             try {
-                $this->getLog()->error('Database rebuild failure, details: '. $e->getMessage() .'.');
-            }
-            catch (Throwable) {}
+                $this->getLog()->error("Database rebuild failure, details: {$e->getMessage()}.");
+            } catch (Throwable) {}
         }
 
         return false;

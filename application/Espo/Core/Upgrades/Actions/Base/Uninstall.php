@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Upgrades\Actions\Base;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Json;
+use Throwable;
 
 class Uninstall extends Base
 {
@@ -182,16 +183,18 @@ class Uninstall extends Base
     }
 
     /**
-     * @param string $errorMessage
-     * @param bool $deletePackage
-     * @param bool $systemRebuild
      * @throws Error
      */
-    public function throwErrorAndRemovePackage($errorMessage = '', $deletePackage = true, $systemRebuild = true): void
-    {
+    public function throwErrorAndRemovePackage(
+        string $errorMessage = '',
+        bool $deletePackage = true,
+        bool $systemRebuild = true,
+        ?Throwable $exception = null
+    ): void {
+
         $this->restoreFiles();
 
-        parent::throwErrorAndRemovePackage($errorMessage, false, $systemRebuild);
+        parent::throwErrorAndRemovePackage($errorMessage, false, $systemRebuild, $exception);
     }
 
     /**
