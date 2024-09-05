@@ -100,56 +100,56 @@ class Saver implements SaverInterface
     private function processHasOneItem(Entity $entity, string $name): void
     {
         $entityType = $entity->getEntityType();
-
         $idAttribute = $name . 'Id';
 
-        if (!$entity->has($idAttribute)) {
+        if (!$entity->has($idAttribute) || !$entity->isAttributeChanged($idAttribute)) {
             return;
         }
 
-        if (!$entity->isAttributeChanged($idAttribute)) {
-            return;
-        }
-
+        /** @var ?string $id */
         $id = $entity->get($idAttribute);
 
         $defs = $this->entityManager->getDefs()->getEntity($entityType);
-
         $relationDefs = $defs->getRelation($name);
 
         $foreignKey = $relationDefs->getForeignKey();
         $foreignEntityType = $relationDefs->getForeignEntityType();
 
-        $previousForeignEntity = $this->entityManager
+        $previous = $this->entityManager
             ->getRDBRepository($foreignEntityType)
             ->select(['id'])
-            ->where([
-                $foreignKey => $entity->getId(),
-            ])
+            ->where([$foreignKey => $entity->getId()])
             ->findOne();
 
-        if ($previousForeignEntity) {
-            if (!$entity->isNew()) {
-                $entity->setFetched($idAttribute, $previousForeignEntity->getId());
-            }
+        if (!$entity->isNew() && !$entity->hasFetched($idAttribute)) {
+            $entity->setFetched($idAttribute, $previous ? $previous->getId() : null);
+        }
 
+        if ($previous) {
             if (!$id) {
-                $previousForeignEntity->set($foreignKey, null);
+                $this->entityManager
+                    ->getRelation($entity, $name)
+                    ->unrelate($previous);
 
-                $this->entityManager->saveEntity($previousForeignEntity, [
-                    SaveOption::SKIP_ALL => true,
-                ]);
+                /** @noinspection PhpRedundantOptionalArgumentInspection */
+                $previous->set($foreignKey, null);
+                $this->entityManager->saveEntity($previous, [SaveOption::SKIP_ALL => true]);
+
+                return;
+            }
+
+            if ($previous->getId() === $id) {
+                return;
             }
         }
-        else if (!$entity->isNew()) {
-            $entity->setFetched($idAttribute, null);
+
+        if (!$id) {
+            return;
         }
 
-        if ($id) {
-            $this->entityManager
-                ->getRelation($entity, $name)
-                ->relateById($id);
-        }
+        $this->entityManager
+            ->getRelation($entity, $name)
+            ->relateById($id);
     }
 
     private function processBelongsToHasOne(Entity $entity): void
@@ -188,6 +188,7 @@ class Saver implements SaverInterface
             return;
         }
 
+        /** @noinspection PhpRedundantOptionalArgumentInspection */
         $anotherEntity->set($idAttribute, null);
 
         $this->entityManager->saveEntity($anotherEntity, [
