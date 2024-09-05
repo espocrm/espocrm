@@ -41,6 +41,7 @@ class RecordListSettingsView extends View {
                 tabindex="0"
             ><span class="fas fa-caret-down fa-sm"></span></a>
             <ul class="dropdown-menu pull-right">
+                <li class="dropdown-header">{{fieldsLabel}}</li>
             {{#each dataList}}
                 <li>
                     <a
@@ -74,6 +75,7 @@ class RecordListSettingsView extends View {
             dataList: dataList,
             toDisplay: dataList.length > 0,
             isNotDefault: isNotDefault,
+            fieldsLabel: this.translate('Fields'),
         };
     }
 
