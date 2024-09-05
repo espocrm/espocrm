@@ -865,6 +865,8 @@ class App {
 
     /**
      * @private
+     * @param {boolean} [afterFail]
+     * @param {boolean} [silent]
      */
     logout(afterFail, silent) {
         let logoutWait = false;
@@ -960,67 +962,81 @@ class App {
 
     /**
      * @private
+     * @param {string} username
+     * @param {string} token
      */
     setCookieAuth(username, token) {
         const date = new Date();
 
         date.setTime(date.getTime() + (1000 * 24 * 60 * 60 * 1000));
 
-        document.cookie = 'auth-token=' + token + '; SameSite=Lax; expires=' + date.toUTCString() + '; path=/';
+        document.cookie = `auth-token=${token}; SameSite=Lax; expires=${date.toUTCString()}; path=/`;
     }
 
     /**
      * @private
      */
     unsetCookieAuth() {
-        document.cookie = 'auth-token' + '=; SameSite=Lax; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
+        document.cookie = `auth-token=; SameSite=Lax; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/`;
     }
 
     /**
-     * @private
+     * User data.
+     *
+     * @typedef {Object} module:app~UserData
+     * @property {Record} user
+     * @property {Record} preferences
+     * @property {Record} acl
+     * @property {Record} settings
+     * @property {Record} appParams
+     * @property {string} language
      */
-    initUserData(options, callback) {
-        options = options || {};
+
+    /**
+     * @private
+     * @param {module:app~UserData|null} data
+     * @param {function} callback
+     */
+    initUserData(data, callback) {
+        data = data || {};
 
         if (this.auth === null) {
             return;
         }
 
         new Promise(resolve => {
-            if (options.user) {
-                resolve(options);
+            if (data.user) {
+                resolve(data);
 
                 return;
             }
 
-            this.requestUserData(data => {
-                options = data;
+            this.requestUserData(userData => {
+                data = userData;
 
-                resolve(options);
+                resolve(data);
             });
         })
-            .then(options => {
-                this.language.name = options.language;
+            .then(data => {
+                this.language.name = data.language;
 
                 return this.language.load();
             })
             .then(() => {
                 this.dateTime.setLanguage(this.language);
 
-                const userData = options.user || null;
-                const preferencesData = options.preferences || null;
-                const aclData = options.acl || null;
-
-                const settingData = options.settings || {};
+                const userData = data.user || null;
+                const preferencesData = data.preferences || null;
+                const aclData = data.acl || null;
+                const settingData = data.settings || {};
 
                 this.user.set(userData);
                 this.preferences.set(preferencesData);
-
                 this.settings.set(settingData);
                 this.acl.set(aclData);
 
-                for (const param in options.appParams) {
-                    this.appParams[param] = options.appParams[param];
+                for (const param in data.appParams) {
+                    this.appParams[param] = data.appParams[param];
                 }
 
                 if (!this.auth) {
@@ -1052,6 +1068,7 @@ class App {
 
     /**
      * @private
+     * @param {function} callback
      */
     requestUserData(callback) {
         Ajax.getRequest('App/user', {}, {appStart: true})
@@ -1263,6 +1280,9 @@ class App {
 
     /**
      * @private
+     * @param {XMLHttpRequest} xhr
+     * @param {string|null} label
+     * @param {boolean} [noDetail]
      */
     _processErrorAlert(xhr, label, noDetail) {
         let msg = this.language.translate('Error') + ' ' + xhr.status;
