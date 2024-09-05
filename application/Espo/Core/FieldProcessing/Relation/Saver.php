@@ -147,7 +147,6 @@ class Saver implements SaverInterface
 
         if ($id) {
             $this->entityManager
-                ->getRDBRepository($entityType)
                 ->getRelation($entity, $name)
                 ->relateById($id);
         }
