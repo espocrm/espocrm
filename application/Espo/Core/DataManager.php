@@ -127,7 +127,7 @@ class DataManager
             $result = false;
 
             $this->log->error(
-                "Failed to rebuild database schema. {$e->getMessage()} at {$e->getFile()}:{$e->getLine()}",
+                "Failed to rebuild database schema. {$e->getMessage()}; {$e->getFile()}:{$e->getLine()}",
                 ['exception' => $e]
             );
         }
