@@ -501,15 +501,6 @@
             "utility": true,
             "notStorable": true,
             "readOnly": true
-        },
-        "deleteId": {
-            "type": "varchar",
-            "maxLength": 17,
-            "readOnly": true,
-            "notNull": true,
-            "default": "0",
-            "utility": true,
-            "customizationDisabled": true
         }
     },
     "links": {
