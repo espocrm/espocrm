@@ -208,7 +208,7 @@ class Install extends Base
 
         if (!isset($data['skipSystemRebuild']) || !$data['skipSystemRebuild']) {
             if (!$this->systemRebuild()) {
-                $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild. Please see the log for more detail.');
+                $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild. More detail in the log.');
             }
         }
 
