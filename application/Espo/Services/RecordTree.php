@@ -313,6 +313,33 @@ class RecordTree extends Record
         }
     }
 
+    /**
+     * @throws Forbidden
+     * @throws BadRequest
+     */
+    protected function beforeDeleteEntity(Entity $entity)
+    {
+        parent::beforeDeleteEntity($entity);
+
+        $childCategory = $this->entityManager
+            ->getRelation($entity, 'children')
+            ->findOne();
+
+        if ($childCategory) {
+            throw Forbidden::createWithBody(
+                'cannotRemoveCategoryWithChildCategory',
+                Error\Body::create()->withMessageTranslation('cannotRemoveCategoryWithChildCategory')
+            );
+        }
+
+        if (!$this->checkItemIsEmpty($entity)) {
+            throw Forbidden::createWithBody(
+                'cannotRemoveNotEmptyCategory',
+                Error\Body::create()->withMessageTranslation('cannotRemoveNotEmptyCategory')
+            );
+        }
+    }
+
     public function update(string $id, stdClass $data, UpdateParams $params): Entity
     {
         if (!empty($data->parentId) && $data->parentId === $id) {
