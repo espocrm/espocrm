@@ -632,9 +632,15 @@ class Email extends Entity
         return $this->getValueObject('parent');
     }
 
-    public function setParent(?LinkParent $parent): self
+    public function setParent(LinkParent|Entity|null $parent): self
     {
-        $this->setValueObject('parent', $parent);
+        if ($parent instanceof LinkParent) {
+            $this->setValueObject('parent', $parent);
+
+            return $this;
+        }
+
+        $this->relations->set('parent', $parent);
 
         return $this;
     }

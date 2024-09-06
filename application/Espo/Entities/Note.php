@@ -224,24 +224,42 @@ class Note extends Entity
         return $this;
     }
 
-    public function setParent(LinkParent $parent): self
+    public function setParent(LinkParent|Entity $parent): self
     {
-        $this->setValueObject('parent', $parent);
+        if ($parent instanceof LinkParent) {
+            $this->setValueObject('parent', $parent);
+
+            return $this;
+        }
+
+        $this->relations->set('parent', $parent);
 
         return $this;
     }
 
-    public function setRelated(LinkParent $related): self
+    public function setRelated(LinkParent|Entity $related): self
     {
-        $this->setValueObject('related', $related);
+        if ($related instanceof LinkParent) {
+            $this->setValueObject('related', $related);
+
+            return $this;
+        }
+
+        $this->relations->set('related', $related);
 
         return $this;
     }
 
-    public function setSuperParent(LinkParent $superParent): self
+    public function setSuperParent(LinkParent|Entity $superParent): self
     {
-        $this->set('superParentId', $superParent->getId());
-        $this->set('superParentType', $superParent->getEntityType());
+        if ($superParent instanceof LinkParent) {
+            $this->set('superParentId', $superParent->getId());
+            $this->set('superParentType', $superParent->getEntityType());
+
+            return $this;
+        }
+
+        $this->relations->set('superParent', $superParent);
 
         return $this;
     }

@@ -207,7 +207,7 @@ class RelationsTest extends BaseTestCase
         $this->assertEquals($account->getId(), $lead2->get('createdAccountId'));
 
         $em->refreshEntity($lead1);
-        
+
         $this->assertEquals(null, $lead1->get('createdAccountId'));
 
         $account->setRelatedOriginalLead(null);
