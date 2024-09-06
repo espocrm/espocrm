@@ -84,6 +84,8 @@ return [
         'maxFileNumber' => 30,
         'printTrace' => false,
         'databaseHandler' => false,
+        'sql' => false,
+        'sqlFailed' => false,
     ],
     'authenticationMethod' => 'Espo',
     'globalSearchEntityList' => [

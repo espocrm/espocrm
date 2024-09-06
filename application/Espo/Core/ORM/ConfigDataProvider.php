@@ -40,4 +40,9 @@ class ConfigDataProvider
     {
         return (bool) $this->config->get('logger.sql');
     }
+
+    public function logSqlFailed(): bool
+    {
+        return (bool) $this->config->get('logger.sqlFailed');
+    }
 }
