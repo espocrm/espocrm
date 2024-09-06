@@ -107,9 +107,7 @@ class RDBRepository implements Repository
             ->getQueryBuilder()
             ->select()
             ->from($this->entityType)
-            ->where([
-                'id' => $id,
-            ])
+            ->where(['id' => $id])
             ->build();
 
         /** @var ?TEntity $entity */
@@ -149,8 +147,7 @@ class RDBRepository implements Repository
 
         if ($entity->isNew() && !$isSaved) {
             $this->getMapper()->insert($entity);
-        }
-        else {
+        } else {
             $this->getMapper()->update($entity);
         }
 
@@ -171,11 +168,8 @@ class RDBRepository implements Repository
 
                 $entity->updateFetchedValues();
             }
-        }
-        else {
-            if (empty($options[SaveOption::KEEP_DIRTY])) {
-                $entity->updateFetchedValues();
-            }
+        } else if (empty($options[SaveOption::KEEP_DIRTY])) {
+            $entity->updateFetchedValues();
         }
 
         if ($entity instanceof BaseEntity) {
