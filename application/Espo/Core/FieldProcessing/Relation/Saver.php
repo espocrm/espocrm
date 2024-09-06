@@ -131,10 +131,6 @@ class Saver implements SaverInterface
                     ->getRelation($entity, $name)
                     ->unrelate($previous);
 
-                /** @noinspection PhpRedundantOptionalArgumentInspection */
-                $previous->set($foreignKey, null);
-                $this->entityManager->saveEntity($previous, [SaveOption::SKIP_ALL => true]);
-
                 return;
             }
 

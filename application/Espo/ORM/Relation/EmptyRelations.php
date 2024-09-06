@@ -36,7 +36,7 @@ use RuntimeException as RuntimeExceptionAlias;
 
 class EmptyRelations implements Relations
 {
-    /** @var array<string, Entity|EntityCollection<Entity>|null> */
+    /** @var array<string, Entity|null> */
     private array $setData = [];
 
     public function __construct() {}
@@ -65,9 +65,9 @@ class EmptyRelations implements Relations
     }
 
     /**
-     * @return Entity|EntityCollection<Entity>|null
+     * @return Entity|null
      */
-    public function getSet(string $relation): Entity|EntityCollection|null
+    public function getSet(string $relation): Entity|null
     {
         if (!array_key_exists($relation, $this->setData)) {
             throw new RuntimeExceptionAlias("Relation '$relation' is not set.");

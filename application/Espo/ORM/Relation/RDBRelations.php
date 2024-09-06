@@ -34,7 +34,6 @@ use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Type\RelationType;
-//use InvalidArgumentException;
 use LogicException;
 use RuntimeException;
 
@@ -45,7 +44,7 @@ class RDBRelations implements Relations
 {
     /** @var array<string, Entity|EntityCollection<Entity>|null> */
     private array $data = [];
-    /** @var array<string, Entity|EntityCollection<Entity>|null> */
+    /** @var array<string, Entity|null> */
     private array $setData = [];
     private ?Entity $entity = null;
 
@@ -87,9 +86,9 @@ class RDBRelations implements Relations
     }
 
     /**
-     * @return Entity|EntityCollection<Entity>|null
+     * @return Entity|null
      */
-    public function getSet(string $relation): Entity|EntityCollection|null
+    public function getSet(string $relation): Entity|null
     {
         if (!array_key_exists($relation, $this->setData)) {
             throw new RuntimeException("Relation '$relation' is not set.");
@@ -113,10 +112,6 @@ class RDBRelations implements Relations
             throw new LogicException("Relation '$relation' does not exist.");
         }
 
-        /*if (in_array($type, $this->manyTypeList) && !$related instanceof EntityCollection) {
-            throw new InvalidArgumentException("Non-collection passed for relation '$relation'.");
-        }*/
-
         if (
             !in_array($type, [
                 RelationType::BELONGS_TO,
@@ -126,10 +121,6 @@ class RDBRelations implements Relations
         ) {
             throw new LogicException("Relation type '$type' is not supported for setting.");
         }
-
-        /*if ($related instanceof EntityCollection) {
-            throw new InvalidArgumentException();
-        }*/
 
         if ($related) {
             $nameAttribute = $this->entityManager

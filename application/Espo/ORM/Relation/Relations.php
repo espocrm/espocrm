@@ -60,9 +60,9 @@ interface Relations
     /**
      * Get set (updated) record or records.
      *
-     * @return Entity|EntityCollection<Entity>|null
+     * @return Entity|null
      */
-    public function getSet(string $relation): Entity|EntityCollection|null;
+    public function getSet(string $relation): Entity|null;
 
     /**
      * Get one related record. For has-one, belongs-to.
