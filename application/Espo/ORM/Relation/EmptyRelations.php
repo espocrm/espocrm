@@ -52,9 +52,9 @@ class EmptyRelations implements Relations
     }
 
     /**
-     * @param Entity|EntityCollection<Entity>|null $related
+     * @param Entity|null $related
      */
-    public function set(string $relation, Entity|EntityCollection|null $related): void
+    public function set(string $relation, Entity|null $related): void
     {
         $this->setData[$relation] = $related;
     }

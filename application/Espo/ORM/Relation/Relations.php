@@ -48,9 +48,9 @@ interface Relations
     public function resetAll(): void;
 
     /**
-     * @param Entity|EntityCollection<Entity>|null $related
+     * @param Entity|null $related
      */
-    public function set(string $relation, Entity|EntityCollection|null $related): void;
+    public function set(string $relation, Entity|null $related): void;
 
     /**
      * Is a relation set (updated).

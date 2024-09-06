@@ -34,7 +34,7 @@ use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Type\RelationType;
-use InvalidArgumentException;
+//use InvalidArgumentException;
 use LogicException;
 use RuntimeException;
 
@@ -99,9 +99,9 @@ class RDBRelations implements Relations
     }
 
     /**
-     * @param Entity|EntityCollection<Entity>|null $related
+     * @param Entity|null $related
      */
-    public function set(string $relation, Entity|EntityCollection|null $related): void
+    public function set(string $relation, Entity|null $related): void
     {
         if (!$this->entity) {
             throw new LogicException("No entity set.");
@@ -113,9 +113,9 @@ class RDBRelations implements Relations
             throw new LogicException("Relation '$relation' does not exist.");
         }
 
-        if (in_array($type, $this->manyTypeList) && !$related instanceof EntityCollection) {
+        /*if (in_array($type, $this->manyTypeList) && !$related instanceof EntityCollection) {
             throw new InvalidArgumentException("Non-collection passed for relation '$relation'.");
-        }
+        }*/
 
         if (
             !in_array($type, [
@@ -127,9 +127,9 @@ class RDBRelations implements Relations
             throw new LogicException("Relation type '$type' is not supported for setting.");
         }
 
-        if ($related instanceof EntityCollection) {
+        /*if ($related instanceof EntityCollection) {
             throw new InvalidArgumentException();
-        }
+        }*/
 
         if ($related) {
             $nameAttribute = $this->entityManager
