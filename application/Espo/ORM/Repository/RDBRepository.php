@@ -641,6 +641,7 @@ class RDBRepository implements Repository
 
         $foreignKey = $defs->getForeignKey();
         $foreignEntityType = $defs->getForeignEntityType();
+        $foreign = $defs->tryGetForeignRelationName();
 
         $previous = $this->entityManager
             ->getRDBRepository($foreignEntityType)
@@ -668,6 +669,11 @@ class RDBRepository implements Repository
         }
 
         $this->getRelation($entity, $name)->relate($related);
+
+        $related->set($foreignKey, $entity->getId());
+        $related->setFetched($foreignKey, $entity->getId());
+
+        $related->clear($foreign . 'Name');
     }
 
     /**
