@@ -29,6 +29,7 @@
 
 namespace tests\integration\testClasses\Entities;
 
+use Espo\Modules\Crm\Entities\Lead;
 use Espo\ORM\EntityCollection;
 
 class Account extends \Espo\Modules\Crm\Entities\Account
@@ -36,5 +37,10 @@ class Account extends \Espo\Modules\Crm\Entities\Account
     public function getRelatedOpportunities(): EntityCollection
     {
         return $this->relations->getMany('opportunities');
+    }
+
+    public function setRelatedOriginalLead(?Lead $lead): void
+    {
+        $this->relations->set('originalLead', $lead);
     }
 }

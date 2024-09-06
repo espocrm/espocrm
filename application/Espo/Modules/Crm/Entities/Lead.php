@@ -143,4 +143,11 @@ class Lead extends \Espo\Core\Entities\Person
 
         return $this;
     }
+
+    public function setCreatedAccount(Account|null $createdAccount): self
+    {
+        $this->relations->set('createdAccount', $createdAccount);
+
+        return $this;
+    }
 }

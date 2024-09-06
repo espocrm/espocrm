@@ -137,4 +137,17 @@ class Opportunity extends Entity
         /** @var LinkMultiple */
         return $this->getValueObject('teams');
     }
+
+    public function setAccount(Account|Link|null $account): self
+    {
+        if ($account instanceof Link) {
+            $this->setValueObject('account', $account);
+
+            return $this;
+        }
+
+        $this->relations->set('account', $account);
+
+        return $this;
+    }
 }

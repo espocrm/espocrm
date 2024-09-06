@@ -29,9 +29,12 @@
 
 namespace tests\integration\Espo\ORM;
 
+use Espo\Modules\Crm\Entities\Lead;
+use Espo\Modules\Crm\Entities\Task;
 use Espo\ORM\EntityCollection;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Opportunity;
+use Espo\ORM\Repository\Option\SaveOption;
 use tests\integration\Core\BaseTestCase;
 use tests\integration\testClasses\Entities\Account as AccountExtended;
 use tests\integration\testClasses\Entities\Opportunity as OpportunityExtended;
@@ -112,5 +115,81 @@ class RelationsTest extends BaseTestCase
         $items = iterator_to_array($collection);
 
         $this->assertCount(2, $items);
+    }
+
+    public function testSet(): void
+    {
+        $metadata = $this->getMetadata();
+        $metadata->set('entityDefs', Account::ENTITY_TYPE, [
+            'entityClassName' => AccountExtended::class,
+        ]);
+        $metadata->save();
+
+        $this->reCreateApplication();
+
+        $em = $this->getEntityManager();
+
+        /** @var Account $account */
+        $account = $em->createEntity(Account::ENTITY_TYPE);
+
+        // belongsTo
+
+        $opp = $em->getRDBRepositoryByClass(Opportunity::class)->getNew();
+        $opp->setAccount($account);
+        $em->saveEntity($opp, [SaveOption::SKIP_ALL => true]);
+        $em->refreshEntity($opp);
+
+        $this->assertEquals($account->getId(), $opp->getAccount()->getId());
+
+        $opp->setAccount(null);
+        $em->saveEntity($opp, [SaveOption::SKIP_ALL => true]);
+        $em->refreshEntity($opp);
+
+        $this->assertNull($opp->getAccount());
+
+        // belongsToParent
+
+        $task = $em->getRDBRepositoryByClass(Task::class)->getNew();
+        $task->setParent($account);
+        $em->saveEntity($task, [SaveOption::SKIP_ALL => true]);
+        $em->refreshEntity($task);
+
+        $this->assertEquals($account->getId(), $task->get('parentId'));
+        $this->assertEquals($account->getEntityType(), $task->get('parentType'));
+
+        $task = $em->getRDBRepositoryByClass(Task::class)->getNew();
+        $task->setParent(null);
+        $em->saveEntity($task, [SaveOption::SKIP_ALL => true]);
+        $em->refreshEntity($task);
+
+        $this->assertNull($task->get('parentId'));
+        $this->assertNull($task->get('parentType'));
+
+        // belongsTo hasOne
+
+        $lead1 = $em->getRDBRepositoryByClass(Lead::class)->getNew();
+        $lead1->setCreatedAccount($account);
+        $em->saveEntity($lead1, [SaveOption::SKIP_ALL => true]);
+        $em->refreshEntity($lead1);
+
+        $this->assertEquals($account->getId(), $lead1->get('createdAccountId'));
+
+        $lead2 = $em->getRDBRepositoryByClass(Lead::class)->getNew();
+        $lead2->setCreatedAccount($account);
+        $em->saveEntity($lead2, [SaveOption::SKIP_ALL => true]);
+        $em->refreshEntity($lead2);
+
+        $this->assertEquals($account->getId(), $lead2->get('createdAccountId'));
+
+        $em->refreshEntity($lead1);
+
+        $this->assertEquals(null, $lead1->get('createdAccountId'));
+
+        $lead2->setCreatedAccount(null);
+        $em->saveEntity($lead2);
+
+        // hasOne
+
+
     }
 }

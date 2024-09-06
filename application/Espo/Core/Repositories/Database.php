@@ -33,6 +33,7 @@ use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\SystemUser;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Entity;
+use Espo\ORM\Relation\RelationsMap;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\Core\ORM\EntityFactory;
 use Espo\Core\ORM\EntityManager;
@@ -84,7 +85,8 @@ class Database extends RDBRepository
         HookManager $hookManager,
         ApplicationState $applicationState,
         RecordIdGenerator $recordIdGenerator,
-        private SystemUser $systemUser
+        private SystemUser $systemUser,
+        ?RelationsMap $relationsMap,
     ) {
         $this->metadata = $metadata;
         $this->hookManager = $hookManager;
@@ -99,7 +101,7 @@ class Database extends RDBRepository
             $hookMediator = new HookMediator($hookManager);
         }
 
-        parent::__construct($entityType, $entityManager, $entityFactory, $hookMediator);
+        parent::__construct($entityType, $entityManager, $entityFactory, $hookMediator, $relationsMap);
     }
 
     /**

@@ -32,6 +32,7 @@ namespace Espo\Modules\Crm\Entities;
 use Espo\Core\Field\DateTimeOptional;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Entity;
 
 class Task extends Entity
@@ -90,5 +91,18 @@ class Task extends Entity
     {
         /** @var string[] */
         return $this->getLinkMultipleIdList('attachments');
+    }
+
+    public function setParent(Entity|LinkParent|null $parent): self
+    {
+        if ($parent instanceof LinkParent) {
+            $this->setValueObject('parent', $parent);
+
+            return $this;
+        }
+
+        $this->relations->set('parent', $parent);
+
+        return $this;
     }
 }
