@@ -190,6 +190,30 @@ class RelationsTest extends BaseTestCase
 
         // hasOne
 
+        $em->refreshEntity($account);
 
+        $this->assertInstanceOf(AccountExtended::class, $account);
+
+        $account->setRelatedOriginalLead($lead1);
+        $em->saveEntity($account, [SaveOption::SKIP_ALL => true]);
+        $em->refreshEntity($lead1);
+
+        $this->assertEquals($account->getId(), $lead1->get('createdAccountId'));
+
+        $account->setRelatedOriginalLead($lead2);
+        $em->saveEntity($account, [SaveOption::SKIP_ALL => true]);
+        $em->refreshEntity($lead2);
+
+        $this->assertEquals($account->getId(), $lead2->get('createdAccountId'));
+
+        $em->refreshEntity($lead1);
+        
+        $this->assertEquals(null, $lead1->get('createdAccountId'));
+
+        $account->setRelatedOriginalLead(null);
+        $em->saveEntity($account, [SaveOption::SKIP_ALL => true]);
+        $em->refreshEntity($lead2);
+
+        $this->assertEquals(null, $lead2->get('createdAccountId'));
     }
 }
