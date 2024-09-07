@@ -243,14 +243,12 @@ class LinkManager
             }
         }
 
-        if ($this->metadata->get('entityDefs.' . $entity . '.links.' . $link)) {
+        if ($this->metadata->get("entityDefs.$entity.links.$link")) {
             throw new Conflict("Link $entity::$link already exists.");
         }
 
-        if ($entityForeign) {
-            if ($this->metadata->get('entityDefs.' . $entityForeign . '.links.' . $linkForeign)) {
-                throw new Conflict("Link $entityForeign::$linkForeign already exists.");
-            }
+        if ($entityForeign && $this->metadata->get("entityDefs.$entityForeign.links.$linkForeign")) {
+            throw new Conflict("Link $entityForeign::$linkForeign already exists.");
         }
 
         if ($entity === $entityForeign) {
@@ -875,7 +873,7 @@ class LinkManager
 
         if ($linkType === Entity::HAS_CHILDREN) {
             $this->metadata->delete('entityDefs', $entity, [
-                'links.' . $link,
+                "links.$link",
             ]);
 
             $this->metadata->save();
@@ -888,8 +886,8 @@ class LinkManager
 
         if ($linkType === Entity::BELONGS_TO_PARENT) {
             $this->metadata->delete('entityDefs', $entity, [
-                'fields.' . $link,
-                'links.' . $link,
+                "fields.$link",
+                "links.$link",
             ]);
 
             $this->metadata->delete('clientDefs', $entity, ["dynamicLogic.fields.$link"]);
@@ -952,17 +950,17 @@ class LinkManager
         $this->metadata->delete('clientDefs', $entityForeign, ["dynamicLogic.fields.$linkForeign"]);
 
         $this->metadata->delete('entityDefs', $entity, [
-            'fields.' . $link,
-            'links.' . $link,
+            "fields.$link",
+            "links.$link",
         ]);
 
         $this->metadata->delete('entityDefs', $entityForeign, [
-            'fields.' . $linkForeign,
-            'links.' . $linkForeign,
+            "fields.$linkForeign",
+            "links.$linkForeign",
         ]);
 
-        $this->metadata->delete('clientDefs', $entity, ['relationshipPanels.' . $link]);
-        $this->metadata->delete('clientDefs', $entityForeign, ['relationshipPanels.' . $linkForeign]);
+        $this->metadata->delete('clientDefs', $entity, ["relationshipPanels.$link"]);
+        $this->metadata->delete('clientDefs', $entityForeign, ["relationshipPanels.$linkForeign"]);
 
         $this->metadata->save();
 
