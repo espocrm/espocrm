@@ -251,6 +251,14 @@ class LinkManager
             throw new Conflict("Link $entityForeign::$linkForeign already exists.");
         }
 
+        if ($this->metadata->get("entityDefs.$entity.fields.$link")) {
+            throw new Conflict("Field $entity::$link already exists.");
+        }
+
+        if ($entityForeign && $this->metadata->get("entityDefs.$entityForeign.fields.$linkForeign")) {
+            throw new Conflict("Field $entityForeign::$linkForeign already exists.");
+        }
+
         if ($entity === $entityForeign) {
             if (
                 $link === lcfirst($entity) ||
