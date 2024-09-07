@@ -145,9 +145,7 @@ class FieldManager
             );
         }
 
-        $existingField = $this->getFieldDefs($scope, $name);
-
-        if (isset($existingField)) {
+        if ($this->metadata->get("entityDefs.$scope.fields.$name")) {
             throw Conflict::createWithBody(
                 "Field '$name' already exists in '$scope'.",
                 Error\Body::create()
@@ -159,7 +157,7 @@ class FieldManager
             );
         }
 
-        if ($this->metadata->get(['entityDefs', $scope, 'links', $name])) {
+        if ($this->metadata->get("entityDefs.$scope.links.$name")) {
             throw Conflict::createWithBody(
                 "Link with name '$name' already exists in '$scope'.",
                 Error\Body::create()
