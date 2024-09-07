@@ -258,4 +258,14 @@ class NameUtil
 
         return $prefix . ucfirst($name);
     }
+
+    public function fieldExists(string $entityType, string $name): bool
+    {
+        return (bool) $this->metadata->get("entityDefs.$entityType.fields.$name");
+    }
+
+    public function linkExists(string $entityType, string $name): bool
+    {
+        return (bool) $this->metadata->get("entityDefs.$entityType.links.$name");
+    }
 }

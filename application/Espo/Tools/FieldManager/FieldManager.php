@@ -145,7 +145,7 @@ class FieldManager
             );
         }
 
-        if ($this->metadata->get("entityDefs.$scope.fields.$name")) {
+        if ($this->nameUtil->fieldExists($scope, $name)) {
             throw Conflict::createWithBody(
                 "Field '$name' already exists in '$scope'.",
                 Error\Body::create()
@@ -157,13 +157,30 @@ class FieldManager
             );
         }
 
-        if ($this->metadata->get("entityDefs.$scope.links.$name")) {
+        if ($this->nameUtil->linkExists($scope, $name)) {
             throw Conflict::createWithBody(
                 "Link with name '$name' already exists in '$scope'.",
                 Error\Body::create()
                     ->withMessageTranslation('linkWithSameNameAlreadyExists', 'FieldManager', [
                         'field' => $name,
                         'entityType' => $scope,
+                    ])
+                    ->encode()
+            );
+        }
+
+        if (
+            str_ends_with($name, 'Id') && $this->nameUtil->linkExists($scope, substr($name, 0, -2)) ||
+            str_ends_with($name, 'Name') && $this->nameUtil->linkExists($scope, substr($name, 0, -4)) ||
+            str_ends_with($name, 'Ids') && $this->nameUtil->linkExists($scope, substr($name, 0, -3)) ||
+            str_ends_with($name, 'Names') && $this->nameUtil->linkExists($scope, substr($name, 0, -5)) ||
+            str_ends_with($name, 'Type') && $this->nameUtil->linkExists($scope, substr($name, 0, -4))
+        ) {
+            throw Conflict::createWithBody(
+                "namingFieldLinkConflict",
+                Error\Body::create()
+                    ->withMessageTranslation('namingFieldLinkConflict', 'FieldManager', [
+                        'field' => $name,
                     ])
                     ->encode()
             );
