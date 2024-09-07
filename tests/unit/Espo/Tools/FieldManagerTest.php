@@ -40,6 +40,7 @@ use PHPUnit\Framework\TestCase;
 class FieldManagerTest extends TestCase
 {
     private ?FieldManager $fieldManager = null;
+    private ?NameUtil $nameUtil = null;
 
     protected function setUp() : void
     {
@@ -48,9 +49,9 @@ class FieldManagerTest extends TestCase
         $this->baseLanguage = $this->createMock(Language::class);
         $this->defaultLanguage = $this->createMock(Language::class);
         $this->metadataHelper = $this->createMock(Metadata\Helper::class);
-        $nameUtil = $this->createMock(NameUtil::class);
+        $this->nameUtil = $this->createMock(NameUtil::class);
 
-        $nameUtil->expects($this->any())
+        $this->nameUtil->expects($this->any())
             ->method('addCustomPrefix')
             ->willReturnCallback(fn ($it) => $it);
 
@@ -60,7 +61,7 @@ class FieldManagerTest extends TestCase
             $this->language,
             $this->baseLanguage,
             $this->metadataHelper,
-            $nameUtil
+            $this->nameUtil
         );
     }
 
@@ -73,10 +74,10 @@ class FieldManagerTest extends TestCase
             "maxLength" => "50",
         ];
 
-        $this->metadata
+        $this->nameUtil
             ->expects($this->once())
-            ->method('getObjects')
-            ->will($this->returnValue($data));
+            ->method('fieldExists')
+            ->willReturn(true);
 
         $this->metadata
             ->expects($this->any())
