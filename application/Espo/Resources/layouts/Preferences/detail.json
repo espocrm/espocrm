@@ -43,7 +43,7 @@
     },
     {
         "tabBreak": true,
-        "tabLabel": "$label:Misc",
+        "tabLabel": "$label:General",
         "rows": [
             [
                 {"name": "emailReplyToAllByDefault"},

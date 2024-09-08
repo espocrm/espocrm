@@ -10,7 +10,6 @@
         ]
     },
     {
-        "label": "Misc",
         "rows": [
             [{"name": "exportDelimiter"}, false]
         ]

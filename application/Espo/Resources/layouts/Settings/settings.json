@@ -44,7 +44,7 @@
     },
     {
         "tabBreak": true,
-        "tabLabel": "$label:Misc",
+        "tabLabel": "$label:General",
         "rows": [
             [{"name": "followCreatedEntities"}, {"name": "emailAddressIsOptedOutByDefault"}],
             [{"name": "aclAllowDeleteCreated"}, {"name": "cleanupDeletedRecords"}],
