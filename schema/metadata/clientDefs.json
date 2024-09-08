@@ -555,6 +555,7 @@
                                     "read",
                                     "edit",
                                     "delete",
+                                    "admin",
                                     "stream"
                                 ]
                             },
@@ -860,6 +861,7 @@
                         "read",
                         "edit",
                         "delete",
+                        "admin",
                         "stream"
                     ],
                     "description": "An action to check access to. If no access, the item is not displayed."
