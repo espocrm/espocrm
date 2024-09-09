@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Hooks\CaseObj;
 
+use Espo\Core\FieldProcessing\Stream\FollowersLoader;
 use Espo\Core\Hook\Hook\AfterSave;
 use Espo\Core\InjectableFactory;
 use Espo\Entities\User;
@@ -48,7 +49,8 @@ class Contacts implements AfterSave
 
     public function __construct(
         private EntityManager $entityManager,
-        private InjectableFactory $injectableFactory
+        private InjectableFactory $injectableFactory,
+        private FollowersLoader $followersLoader,
     ) {}
 
     /**
@@ -82,6 +84,8 @@ class Contacts implements AfterSave
 
             if ($previousPortalUser) {
                 $this->getStreamService()->unfollowEntity($entity, $previousPortalUser->getId());
+
+                $this->followersLoader->processFollowers($entity);
             }
         }
 
@@ -108,6 +112,10 @@ class Contacts implements AfterSave
         if ($portalUser) {
             // @todo Solve ACL check issue when a user is in multiple portals.
             $this->getStreamService()->followEntity($entity, $portalUser->getId());
+
+            if (!$entity->isNew()) {
+                $this->followersLoader->processFollowers($entity);
+            }
         }
 
         if (in_array($contactId, $contactIdList)) {
