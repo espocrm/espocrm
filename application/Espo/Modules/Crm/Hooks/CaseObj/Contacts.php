@@ -106,7 +106,8 @@ class Contacts implements AfterSave
             ->findOne();
 
         if ($portalUser) {
-            $this->getStreamService()->followEntity($entity, $portalUser->getId(), true);
+            // @todo Solve ACL check issue when a user is in multiple portals.
+            $this->getStreamService()->followEntity($entity, $portalUser->getId());
         }
 
         if (in_array($contactId, $contactIdList)) {
