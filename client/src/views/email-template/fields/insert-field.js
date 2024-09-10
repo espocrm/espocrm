@@ -290,7 +290,7 @@ export default class extends BaseFieldView {
         }
 
         if (isForeign) {
-            label = this.translate(link, 'links', entityType) + '.' + label;
+            label = this.translate(link, 'links', entityType) + ' . ' + label;
         }
 
         return label;
