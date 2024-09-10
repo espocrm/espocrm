@@ -514,9 +514,10 @@ class EmailListView extends ListView {
 
     /**
      * @protected
-     * @return {module:views/email-folder/list-side}
+     * @return {import('views/email-folder/list-side').default}
      */
     getFoldersView() {
+        // noinspection JSValidateTypes
         return this.getView('folders')
     }
 
