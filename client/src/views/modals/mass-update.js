@@ -42,6 +42,11 @@ class MassUpdateModalView extends ModalView {
     //ACTION_ADD = 'add'
     //ACTION_REMOVE = 'remove'
 
+    /**
+     * @type {string[]}
+     */
+    fieldList
+
     data() {
         return {
             scope: this.scope,
@@ -50,26 +55,17 @@ class MassUpdateModalView extends ModalView {
         };
     }
 
-    events = {
-        /** @this MassUpdateModalView */
-        'click a[data-action="add-field"]': function (e) {
-            const field = $(e.currentTarget).data('name');
-
-            this.addField(field);
-        },
-        /** @this MassUpdateModalView */
-        'click button[data-action="reset"]': function () {
-            this.reset();
-        }
-    }
-
     setup() {
+        this.addActionHandler('addField', (e, target) => this.addField(target.dataset.name));
+        this.addActionHandler('reset', () => this.reset());
+
         this.buttonList = [
             {
                 name: 'update',
                 label: 'Update',
                 style: 'danger',
                 disabled: true,
+                onClick: () => this.actionUpdate(),
             },
             {
                 name: 'cancel',
@@ -93,46 +89,47 @@ class MassUpdateModalView extends ModalView {
 
         this.idle = this.byWhere && this.helper.checkIsIdle(totalCount);
 
-        this.$header = $('<span>')
-            .append(
-                $('<span>').text(this.translate(this.scope, 'scopeNamesPlural')),
-                ' <span class="chevron-right"></span> ',
-                $('<span>').text(this.translate('Mass Update'))
-            )
+        this.headerText = this.translate('Mass Update') + ' · ' + this.translate(this.scope, 'scopeNamesPlural');
+
+        this.wait(this.load());
+
+        /** @type {string[]} */
+        this.addedFieldList = [];
+    }
+
+    async load() {
+        this.model = await this.getModelFactory().create(this.entityType);
 
         const forbiddenList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit') || [];
 
-        this.wait(true);
-
-        this.getModelFactory().create(this.entityType, (model) => {
-            this.model = model;
-
-            this.getHelper().layoutManager.get(this.entityType, this.layoutName, (layout) => {
+        return new Promise(resolve => {
+            this.getHelper().layoutManager.get(this.entityType, this.layoutName, layout => {
                 layout = layout || [];
 
                 this.fieldList = [];
 
-                layout.forEach((field) => {
-                    if (~forbiddenList.indexOf(field)) {
+                layout.forEach(field => {
+                    if (forbiddenList.includes(field)) {
                         return;
                     }
 
-                    if (model.hasField(field)) {
+                    if (this.model.hasField(field)) {
                         this.fieldList.push(field);
                     }
                 });
 
-                this.wait(false);
+                resolve();
             });
         });
-
-        this.addedFieldList = [];
     }
 
+    /**
+     * @param {string} name
+     */
     addField(name) {
         this.$el.find('[data-action="reset"]').removeClass('hidden');
 
-        this.$el.find('ul.filter-list li[data-name="'+name+'"]').addClass('hidden');
+        this.$el.find(`ul.filter-list li[data-name="${name}"]`).addClass('hidden');
 
         if (this.$el.find('ul.filter-list li:not(.hidden)').length === 0) {
             this.$el.find('button.select-field').addClass('disabled').attr('disabled', 'disabled');
@@ -140,9 +137,7 @@ class MassUpdateModalView extends ModalView {
 
         this.addedFieldList.push(name);
 
-        const label = this.getHelper().escapeString(
-            this.translate(name, 'fields', this.entityType)
-        );
+        const label = this.getHelper().escapeString(this.translate(name, 'fields', this.entityType));
 
         const $cell =
             $('<div>')
@@ -238,7 +233,6 @@ class MassUpdateModalView extends ModalView {
         return this.getView(field);
     }
 
-    // noinspection JSUnusedGlobalSymbols
     actionUpdate() {
         this.disableButton('update');
 
@@ -326,12 +320,17 @@ class MassUpdateModalView extends ModalView {
             });
     }
 
+
+    /**
+     * @param {string} name
+     * @return {string}
+     */
     fetchAction(name) {
         if (!this.hasActionMap[name]) {
             return this.ACTION_UPDATE;
         }
 
-        const $dropdown = this.$el.find('select.item-action[data-name="' + name + '"]');
+        const $dropdown = this.$el.find(`select.item-action[data-name="${name}"]`);
 
         return $dropdown.val() || this.ACTION_UPDATE;
     }
@@ -340,7 +339,7 @@ class MassUpdateModalView extends ModalView {
         this.addedFieldList.forEach(field => {
             this.clearView(field);
 
-            this.$el.find('.item[data-name="'+field+'"]').remove();
+            this.$el.find(`.item[data-name="${field}"]`).remove();
         });
 
         this.addedFieldList = [];
