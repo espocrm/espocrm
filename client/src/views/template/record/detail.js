@@ -26,25 +26,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/template/record/detail', ['views/record/detail'], function (Dep) {
+import DetailRecordView from 'views/record/detail';
 
-    return Dep.extend({
+export default class extends DetailRecordView {
 
-        saveAndContinueEditingAction: true,
+    saveAndContinueEditingAction = true
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.hideField('variables');
+        this.hideField('variables');
 
-            this.on('after:set-edit-mode', function () {
-                this.showField('variables');
-            }, this);
-
-            this.on('after:set-detail-mode', function () {
-                this.hideField('variables');
-            }, this);
-        },
-
-    });
-});
+        this.on('after:set-edit-mode', () => this.showField('variables'));
+        this.on('after:set-detail-mode', () => this.hideField('variables'));
+    }
+}
