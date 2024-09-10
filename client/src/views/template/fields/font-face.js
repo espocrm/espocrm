@@ -26,22 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/template/fields/font-face', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+// noinspection JSUnusedGlobalSymbols
+export default class extends EnumFieldView {
 
-        setupOptions: function () {
-            var engine = this.getConfig().get('pdfEngine') || 'Dompdf';
+    setupOptions() {
+        const engine = this.getConfig().get('pdfEngine') || 'Dompdf';
 
-            var fontFaceList = this.getMetadata().get([
-                'app', 'pdfEngines', engine, 'fontFaceList',
-            ]) || [];
+        let fontFaceList = this.getMetadata().get(['app', 'pdfEngines', engine, 'fontFaceList']) || [];
 
-            fontFaceList = Espo.Utils.clone(fontFaceList);
+        fontFaceList = Espo.Utils.clone(fontFaceList);
+        fontFaceList.unshift('');
 
-            fontFaceList.unshift('');
-
-            this.params.options = fontFaceList;
-        },
-    });
-});
+        this.params.options = fontFaceList;
+    }
+}

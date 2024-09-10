@@ -26,11 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/team/modals/detail', ['views/modals/detail'], function (Dep) {
+import DetailModalView from 'views/modals/detail';
 
-    return Dep.extend({
+export default class extends DetailModalView {
 
-        editDisabled: true,
-
-    });
-});
+    editDisabled = true;
+}

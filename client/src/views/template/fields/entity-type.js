@@ -26,20 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/template/fields/entity-type', ['views/fields/entity-type'], function (Dep) {
+import EntityTypeFieldView from 'views/fields/entity-type';
 
-    return Dep.extend({
+export default class extends EntityTypeFieldView {
 
-        checkAvailability: function (entityType) {
-            var defs = this.scopesMetadataDefs[entityType] || {};
+    checkAvailability(entityType) {
+        const defs = this.scopesMetadataDefs[entityType] || {};
 
-            if (defs.pdfTemplate) {
-                return true;
-            }
+        if (defs.pdfTemplate) {
+            return true;
+        }
 
-            if (defs.entity && defs.object) {
-                return true;
-            }
-        },
-    });
-});
+        if (defs.entity && defs.object) {
+            return true;
+        }
+
+        return false;
+    }
+}
