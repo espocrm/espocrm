@@ -258,7 +258,7 @@ export default class extends BaseFieldView {
 
             attributeList.forEach((item) => {
                 if (~originalAttributeList.indexOf(item)) {
-                    this.attributeList.push(link + '.' + item);
+                    this.attributeList.push(`${link}.${item}`);
                 } else {
                     this.attributeList.push(item);
                 }
@@ -310,7 +310,7 @@ export default class extends BaseFieldView {
 
                 this.translatedOptions[value] = this.translate(field, 'fields', entityType);
                 if (link) {
-                    this.translatedOptions[value] = this.translate(link, 'links', superEntityType) + '.' +
+                    this.translatedOptions[value] = this.translate(link, 'links', superEntityType) + ' . ' +
                         this.translatedOptions[value];
                 }
             } else if (fieldType === 'barcode') {
@@ -323,7 +323,7 @@ export default class extends BaseFieldView {
 
                 this.translatedOptions[value] = this.translate(field, 'fields', entityType);
                 if (link) {
-                    this.translatedOptions[value] = this.translate(link, 'links', superEntityType) + '.' +
+                    this.translatedOptions[value] = this.translate(link, 'links', superEntityType) + ' . ' +
                         this.translatedOptions[value];
                 }
             }
@@ -413,7 +413,7 @@ export default class extends BaseFieldView {
             }
 
             if (isForeign) {
-                this.translatedOptions[item] =  this.translate(link, 'links', entityType) + '.' +
+                this.translatedOptions[item] =  this.translate(link, 'links', entityType) + ' . ' +
                     this.translatedOptions[item];
             }
         });
