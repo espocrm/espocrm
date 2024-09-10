@@ -201,10 +201,10 @@ export default class extends BaseFieldView {
 
             fieldList.forEach(field => {
                 const aclDefs = /** @type {Record} */
-                    this.getMetadata().get(['entityAcl', entityType, 'fields', field]) || {};
+                    this.getMetadata().get(['entityAcl', scope, 'fields', field]) || {};
 
                 const fieldDefs = /** @type {Record} */
-                    this.getMetadata().get(['entityDefs', entityType, 'fields', field]) || {};
+                    this.getMetadata().get(['entityDefs', scope, 'fields', field]) || {};
 
                 if (
                     aclDefs.onlyAdmin ||
