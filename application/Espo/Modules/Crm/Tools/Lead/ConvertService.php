@@ -78,6 +78,7 @@ class ConvertService
      * @throws Forbidden
      * @throws Conflict
      * @throws NotFound
+     * @throws BadRequest
      */
     public function convert(string $id, Values $records, Params $params): Lead
     {
@@ -281,6 +282,8 @@ class ConvertService
     /**
      * @param Entity[] $duplicateList
      * @throws Forbidden
+     * @throws BadRequest
+     * @throws Conflict
      */
     private function processAccount(
         Lead $lead,
@@ -321,12 +324,8 @@ class ConvertService
             return null;
         }
 
-        try {
-            $account = $service->create($values, CreateParams::create()->withSkipDuplicateCheck());
-        }
-        catch (BadRequest|Conflict $e) {
-            throw new RuntimeException($e->getMessage());
-        }
+
+        $account = $service->create($values, CreateParams::create()->withSkipDuplicateCheck());
 
         $lead->set('createdAccountId', $account->getId());
 
@@ -336,6 +335,8 @@ class ConvertService
     /**
      * @param Entity[] $duplicateList
      * @throws Forbidden
+     * @throws BadRequest
+     * @throws Conflict
      */
     private function processContact(
         Lead $lead,
@@ -381,12 +382,7 @@ class ConvertService
             return null;
         }
 
-        try {
-            $contact = $service->create($values, CreateParams::create()->withSkipDuplicateCheck());
-        }
-        catch (BadRequest|Conflict $e) {
-            throw new RuntimeException($e->getMessage());
-        }
+        $contact = $service->create($values, CreateParams::create()->withSkipDuplicateCheck());
 
         $lead->set('createdContactId', $contact->getId());
 
@@ -396,6 +392,8 @@ class ConvertService
     /**
      * @param Entity[] $duplicateList
      * @throws Forbidden
+     * @throws BadRequest
+     * @throws Conflict
      */
     private function processOpportunity(
         Lead $lead,
