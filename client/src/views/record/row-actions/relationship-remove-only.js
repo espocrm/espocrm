@@ -42,6 +42,8 @@ class RelationshipRemoveOnlyActionsView extends RelationshipActionsView {
                 },
             ];
         }
+
+        return [];
     }
 }
 
