@@ -26,12 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/working-time-range/fields/users', ['views/fields/link-multiple'], function (Dep) {
+import LinkMultipleFieldView from 'views/fields/link-multiple';
 
-    return Dep.extend({
+export default class extends LinkMultipleFieldView {
 
-        getSelectPrimaryFilterName: function () {
-            return 'active';
-        },
-    });
-});
+    getSelectPrimaryFilterName() {
+        return 'active';
+    }
+}

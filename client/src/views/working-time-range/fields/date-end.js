@@ -26,36 +26,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/working-time-range/fields/date-end', ['views/fields/date'], function (Dep) {
+import DateFieldView from 'views/fields/date';
+import moment from 'moment';
 
+export default class extends DateFieldView {
 
-    return Dep.extend({
+    setup() {
+        super.setup();
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        this.validations.push(() => this.validateAfterOrSame());
+    }
 
-            this.validations.push('afterOrSame');
-        },
+    validateAfterOrSame() {
+        const field = 'dateStart';
 
-        validateAfterOrSame: function () {
-            let field = 'dateStart';
+        const value = this.model.get(this.name);
+        const otherValue = this.model.get(field);
 
-            let value = this.model.get(this.name);
-            let otherValue = this.model.get(field);
+        if (value && otherValue) {
+            if (moment(value).unix() < moment(otherValue).unix()) {
+                const msg = this.translate('fieldShouldAfter', 'messages')
+                    .replace('{field}', this.getLabelText())
+                    .replace('{otherField}', this.translate(field, 'fields', this.model.entityType));
 
-            if (value && otherValue) {
-                if (moment(value).unix() < moment(otherValue).unix()) {
-                    let msg = this.translate('fieldShouldAfter', 'messages')
-                        .replace('{field}', this.getLabelText())
-                        .replace('{otherField}', this.translate(field, 'fields', this.model.entityType));
+                this.showValidationMessage(msg);
 
-                    this.showValidationMessage(msg);
-
-                    return true;
-                }
+                return true;
             }
+        }
 
-            return false;
-        },
-    });
-});
+        return false;
+    }
+}
