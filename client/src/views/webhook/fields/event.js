@@ -26,26 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/webhook/fields/event', ['views/fields/varchar'], function (Dep) {
+import VarcharFieldView from 'views/fields/varchar';
 
-    return Dep.extend({
+export default class extends VarcharFieldView {
 
-        setupOptions: function () {
-            var itemList = [];
+    setupOptions() {
+        const itemList = [];
 
-            var scopeList = this.getMetadata().getScopeObjectList();
+        const scopeList = this.getMetadata().getScopeObjectList()
+            .sort((v1, v2) => v1.localeCompare(v2));
 
-            scopeList = scopeList.sort(function (v1, v2) {
-                return v1.localeCompare(v2);
-            }.bind(this));
+        scopeList.forEach(scope => {
+            itemList.push(`${scope}.create`);
+            itemList.push(`${scope}.update`);
+            itemList.push(`${scope}.delete`);
+        });
 
-            scopeList.forEach(function (scope) {
-                itemList.push(scope + '.' + 'create');
-                itemList.push(scope + '.' + 'update');
-                itemList.push(scope + '.' + 'delete');
-            }, this);
-
-            this.params.options = itemList;
-        },
-    });
-});
+        this.params.options = itemList;
+    }
+}
