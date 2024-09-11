@@ -26,61 +26,60 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/fields/user-name', ['views/fields/varchar'], function (Dep) {
+import VarcharFieldView from 'views/fields/varchar';
 
-    return Dep.extend({
+export default class extends VarcharFieldView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.validations.push('userName');
-        },
+        this.validations.push(() => this.validateUserName());
+    }
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
-            let userNameRegularExpression = this.getUserNameRegularExpression();
+        const userNameRegularExpression = this.getUserNameRegularExpression();
 
-            if (this.isEditMode()) {
-                this.$element.on('change', () => {
-                    let value = this.$element.val();
-                    let re = new RegExp(userNameRegularExpression, 'gi');
+        if (this.isEditMode()) {
+            this.$element.on('change', () => {
+                let value = this.$element.val();
+                const re = new RegExp(userNameRegularExpression, 'gi');
 
-                    value = value
-                        .replace(re, '')
-                        .replace(/[\s]/g, '_')
-                        .toLowerCase();
+                value = value
+                    .replace(re, '')
+                    .replace(/[\s]/g, '_')
+                    .toLowerCase();
 
-                    this.$element.val(value);
-                    this.trigger('change');
-                });
-            }
-        },
+                this.$element.val(value);
+                this.trigger('change');
+            });
+        }
+    }
 
-        getUserNameRegularExpression: function () {
-            return this.getConfig().get('userNameRegularExpression') || '[^a-z0-9\-@_\.\s]';
-        },
+    getUserNameRegularExpression() {
+        return this.getConfig().get('userNameRegularExpression') || '[^a-z0-9\-@_\.\s]';
+    }
 
-        validateUserName: function () {
-            let value = this.model.get(this.name);
+    validateUserName() {
+        const value = this.model.get(this.name);
 
-            if (!value) {
-                return;
-            }
+        if (!value) {
+            return;
+        }
 
-            let userNameRegularExpression = this.getUserNameRegularExpression();
+        const userNameRegularExpression = this.getUserNameRegularExpression();
 
-            let re = new RegExp(userNameRegularExpression, 'gi');
+        const re = new RegExp(userNameRegularExpression, 'gi');
 
-            if (!re.test(value)) {
-                return;
-            }
+        if (!re.test(value)) {
+            return;
+        }
 
-            let msg = this.translate('fieldInvalid', 'messages').replace('{field}', this.getLabelText());
+        const msg = this.translate('fieldInvalid', 'messages').replace('{field}', this.getLabelText());
 
-            this.showValidationMessage(msg);
+        this.showValidationMessage(msg);
 
-            return true;
-        },
-    });
-});
+        return true;
+    }
+}

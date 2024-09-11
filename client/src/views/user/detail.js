@@ -26,99 +26,103 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/detail', ['views/detail'], function (Dep) {
+import DetailView from 'views/detail';
 
-    return Dep.extend({
+export default class extends DetailView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            if (this.getUser().isPortal()) {
-                this.rootLinkDisabled = true;
+        if (this.getUser().isPortal()) {
+            this.rootLinkDisabled = true;
+        }
+
+        if (this.model.id === this.getUser().id || this.getUser().isAdmin()) {
+            if (this.getUserModel().isRegular() || this.getUserModel().isAdmin() || this.getUserModel().isPortal()) {
+                this.addMenuItem('dropdown', {
+                    name: 'preferences',
+                    label: 'Preferences',
+                    action: 'preferences',
+                    link: `#Preferences/edit/${this.getUser().id}`,
+                    onClick: () => this.actionPreferences(),
+                });
             }
 
-            if (this.model.id === this.getUser().id || this.getUser().isAdmin()) {
-
-                if (this.model.isRegular() || this.model.isAdmin() || this.model.isPortal()) {
+            if (this.getUserModel().isRegular() || this.getUserModel().isAdmin()) {
+                if (
+                    (this.getAcl().check('EmailAccountScope') && this.model.id === this.getUser().id) ||
+                    this.getUser().isAdmin()
+                ) {
                     this.addMenuItem('dropdown', {
-                        name: 'preferences',
-                        label: 'Preferences',
-                        style: 'default',
-                        action: "preferences",
-                        link: '#Preferences/edit/' + this.getUser().id
+                        name: 'emailAccounts',
+                        label: "Email Accounts",
+                        action: 'emailAccounts',
+                        link: `#EmailAccount/list/userId=${this.model.id}` +
+                            `&userName=${encodeURIComponent(this.model.attributes.name)}`,
+                        onClick: () => this.actionEmailAccounts(),
                     });
                 }
 
-                if (this.model.isRegular() || this.model.isAdmin()) {
-                    if (
-                        (this.getAcl().check('EmailAccountScope') && this.model.id === this.getUser().id) ||
-                        this.getUser().isAdmin()
-                    ) {
-                        this.addMenuItem('dropdown', {
-                            name: 'emailAccounts',
-                            label: "Email Accounts",
-                            style: 'default',
-                            action: "emailAccounts",
-                            link: '#EmailAccount/list/userId=' +
-                                this.model.id + '&userName=' + encodeURIComponent(this.model.get('name'))
-                        });
-                    }
-
-                    if (this.model.id === this.getUser().id && this.getAcl().checkScope('ExternalAccount')) {
-                        this.menu.buttons.push({
-                            name: 'externalAccounts',
-                            label: 'External Accounts',
-                            style: 'default',
-                            action: "externalAccounts",
-                            link: '#ExternalAccount'
-                        });
-                    }
+                if (this.model.id === this.getUser().id && this.getAcl().checkScope('ExternalAccount')) {
+                    this.addMenuItem('buttons', {
+                        name: 'externalAccounts',
+                        label: 'External Accounts',
+                        action: 'externalAccounts',
+                        link: '#ExternalAccount',
+                        onClick: () => this.actionExternalAccounts(),
+                    });
                 }
             }
+        }
 
-            if (this.getAcl().checkScope('Calendar') && (this.model.isRegular() || this.model.isAdmin())) {
-                var showActivities = this.getAcl().checkUserPermission(this.model);
+        if (
+            this.getAcl().checkScope('Calendar') &&
+            (this.getUserModel().isRegular() || this.getUserModel().isAdmin())
+        ) {
+            const showActivities = this.getAcl().checkUserPermission(this.getUserModel());
 
-                if (!showActivities) {
-                    if (this.getAcl().get('userPermission') === 'team') {
-                        if (!this.model.has('teamsIds')) {
-                            this.listenToOnce(this.model, 'sync', function () {
-                                if (this.getAcl().checkUserPermission(this.model)) {
-                                    this.showHeaderActionItem('calendar');
-                                }
-                            }, this);
-                        }
+            if (
+                !showActivities &&
+                this.getAcl().getPermissionLevel('userPermission') === 'team' &&
+                !this.model.has('teamsIds')
+            ) {
+                this.listenToOnce(this.model, 'sync', () => {
+                    if (this.getAcl().checkUserPermission(this.getUserModel())) {
+                        this.showHeaderActionItem('calendar');
                     }
-                }
-
-                this.menu.buttons.push({
-                    name: 'calendar',
-                    iconHtml: '<span class="far fa-calendar-alt"></span>',
-                    text: this.translate('Calendar', 'scopeNames'),
-                    style: 'default',
-                    link: '#Calendar/show/userId=' +
-                        this.model.id + '&userName=' + encodeURIComponent(this.model.get('name')),
-                    hidden: !showActivities
                 });
             }
-        },
 
-        actionPreferences: function () {
-            this.getRouter().navigate('#Preferences/edit/' + this.model.id, {trigger: true});
-        },
+            this.addMenuItem('buttons', {
+                name: 'calendar',
+                iconHtml: '<span class="far fa-calendar-alt"></span>',
+                text: this.translate('Calendar', 'scopeNames'),
+                link: `#Calendar/show/userId=${this.model.id}` +
+                    `&userName=${encodeURIComponent(this.model.attributes.name)}`,
+                hidden: !showActivities,
+            })
+        }
+    }
 
-        actionEmailAccounts: function () {
-            this.getRouter()
-                .navigate(
-                    '#EmailAccount/list/userId=' + this.model.id +
-                    '&userName=' + encodeURIComponent(this.model.get('name')),
-                    {trigger: true}
-                );
-        },
+    /**
+     * @type {import('models/user').default}
+     */
+    getUserModel() {
+        return /** @type {import('models/user').default} */this.model;
+    }
 
-        actionExternalAccounts: function () {
-            this.getRouter().navigate('#ExternalAccount', {trigger: true});
-        },
+    actionPreferences() {
+        this.getRouter().navigate(`#Preferences/edit/${this.model.id}`, {trigger: true});
+    }
 
-    });
-});
+    actionEmailAccounts() {
+        this.getRouter().navigate(
+            `#EmailAccount/list/userId=${this.model.id}&userName=${encodeURIComponent(this.model.attributes.name)}`,
+            {trigger: true}
+        );
+    }
+
+    actionExternalAccounts() {
+        this.getRouter().navigate('#ExternalAccount', {trigger: true});
+    }
+}

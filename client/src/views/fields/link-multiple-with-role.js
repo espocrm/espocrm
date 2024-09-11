@@ -71,6 +71,12 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
     /** @const */
     ROLE_TYPE_VARCHAR = 'varchar'
 
+    /**
+     * @type {Record}
+     * @protected
+     */
+    columns
+
     setup() {
         super.setup();
 
