@@ -402,6 +402,12 @@
         },
         {
             "fileMatch": [
+                "*/Resources/metadata/app/record.json"
+            ],
+            "url": "./schema/metadata/app/record.json"
+        },
+        {
+            "fileMatch": [
                 "*/Resources/metadata/app/recordId.json"
             ],
             "url": "./schema/metadata/app/recordId.json"

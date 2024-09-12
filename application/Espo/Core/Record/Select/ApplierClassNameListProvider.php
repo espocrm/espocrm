@@ -42,6 +42,9 @@ class ApplierClassNameListProvider
      */
     public function get(string $entityType): array
     {
-        return $this->metadata->get(['recordDefs', $entityType, 'selectApplierClassNameList']) ?? [];
+        return [
+            ...$this->metadata->get("app.record.selectApplierClassNameList", []),
+            ...$this->metadata->get("recordDefs.$entityType.selectApplierClassNameList", []),
+        ];
     }
 }

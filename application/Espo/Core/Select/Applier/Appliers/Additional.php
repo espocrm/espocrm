@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\Applier\Appliers;
 
+use Espo\Core\Binding\ContextualBinder;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\InjectableFactory;
@@ -39,8 +40,11 @@ use Espo\Entities\User;
 
 class Additional
 {
-    public function __construct(private User $user, private InjectableFactory $injectableFactory)
-    {}
+    public function __construct(
+        private User $user,
+        private InjectableFactory $injectableFactory,
+        private string $entityType,
+    ) {}
 
     /**
      * @param class-string<AdditionalApplier>[] $classNameList
@@ -63,6 +67,9 @@ class Additional
             $className,
             BindingContainerBuilder::create()
                 ->bindInstance(User::class, $this->user)
+                ->inContext($className, function (ContextualBinder $binder) {
+                    $binder->bindValue('$entityType', $this->entityType);
+                })
                 ->build()
         );
     }
