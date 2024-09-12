@@ -1000,6 +1000,16 @@ class ListRecordView extends View {
 
         const noDataDisabled = this.noDataDisabled || this._renderEmpty;
 
+        const rowDataList = this.rowList ?
+            this.rowList.map(id => {
+                return {
+                    id: id,
+                    isStarred: this.hasStars && this.collection.get(id) ?
+                        this.collection.get(id).attributes.isStarred :
+                        false,
+                };
+            }) : [];
+
         return {
             scope: this.scope,
             collectionLength: this.collection.models.length,
@@ -1013,7 +1023,8 @@ class ListRecordView extends View {
             moreCount: moreCount,
             checkboxes: this.checkboxes,
             massActionDataList: this.getMassActionDataList(),
-            rowList: this.rowList,
+            rowList: this.rowList, // For bc.
+            rowDataList: rowDataList,
             topBar: topBar,
             checkAllResultDisabled: checkAllResultDisabled,
             buttonList: this.buttonList,
@@ -2019,6 +2030,12 @@ class ListRecordView extends View {
             this.checkboxes = false;
         }
 
+        /**
+         * @private
+         * @type {boolean}
+         */
+        this.hasStars = this.getMetadata().get(`scopes.${this.entityType}.stars`) || false;
+
         if (
             this.getUser().isPortal() &&
             !this.portalLayoutDisabled &&
@@ -2951,6 +2968,11 @@ class ListRecordView extends View {
     buildRows(callback) {
         this.checkedList = [];
 
+        /**
+         * @internal
+         * @type {string[]}
+         * @private
+         */
         this.rowList = [];
 
         if (this.collection.length <= 0) {

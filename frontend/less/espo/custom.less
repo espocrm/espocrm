@@ -1247,6 +1247,32 @@ section {
     }
 }
 
+.list > {
+    table > tbody {
+        > tr.list-row.starred {
+            td {
+                //background-color: var(--warning-bg);
+            }
+
+            .cell[data-name="name"] {
+                &:has(> a.link) {
+                    &::before {
+                        font-family: 'Font Awesome 5 Free';
+                        font-weight: 900;
+                        content: "\f005";
+                        font-size: 10px;
+                        padding-right: 4px;
+                        top: 3px;
+                        position: relative;
+                        color: var(--state-warning-text);
+                        float: left;
+                    }
+                }
+            }
+        }
+    }
+}
+
 .panel.dashlet > .panel-body > .list-container > .list > .list-group {
     > li.list-group-item:last-child {
         border-bottom-width: 1px;

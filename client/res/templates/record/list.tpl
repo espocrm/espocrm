@@ -211,10 +211,11 @@
             </thead>
             {{/if}}
             <tbody>
-            {{#each rowList}}
-                <tr data-id="{{./this}}" class="list-row">
-                {{{var this ../this}}}
-                </tr>
+            {{#each rowDataList}}
+                <tr
+                    data-id="{{id}}"
+                    class="list-row{{#if isStarred}} starred{{/if}}"
+                >{{{var id ../this}}}</tr>
             {{/each}}
             </tbody>
         </table>

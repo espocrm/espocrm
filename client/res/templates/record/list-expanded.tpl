@@ -51,10 +51,11 @@
 
     <div class="list list-expanded">
         <ul class="list-group">
-        {{#each rowList}}
-            <li data-id="{{./this}}" class="list-group-item list-row">
-            {{{var this ../this}}}
-            </li>
+        {{#each rowDataList}}
+            <li
+                data-id="{{id}}"
+                class="list-group-item list-row"
+            >{{{var id ../this}}}</li>
         {{/each}}
         </ul>
 

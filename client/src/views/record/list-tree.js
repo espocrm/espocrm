@@ -84,7 +84,7 @@ class ListTreeRecordView extends ListRecordView {
             data.showRootMenu = false;
         }
 
-        data.noData = data.createDisabled && !data.rowList.length && !data.showRoot;
+        data.noData = data.createDisabled && !data.rowDataList.length && !data.showRoot;
 
         return data;
     }
