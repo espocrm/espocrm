@@ -31,10 +31,14 @@ namespace Espo\Core\Select\Where;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Select\Where\Item\Type;
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\Part\Expression as Expr;
+use Espo\ORM\Query\Part\Where\Comparison;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\WhereItem;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * Converts a search where (passed from front-end) to a where clause (for ORM).
@@ -49,15 +53,18 @@ class Converter
     /**
      * @throws BadRequest
      */
-    public function convert(QueryBuilder $queryBuilder, Item $item): WhereItem
+    public function convert(QueryBuilder $queryBuilder, Item $item, ?Converter\Params $params = null): WhereItem
     {
+        if ($params && $params->useSubQueryIfMany() && $this->hasRelatedMany($queryBuilder, $item)) {
+            return $this->convertSubQuery($queryBuilder, $item);
+        }
+
         $whereClause = [];
 
         foreach ($this->itemToList($item) as $subItemRaw) {
             try {
                 $subItem = Item::fromRaw($subItemRaw);
-            }
-            catch (InvalidArgumentException $e) {
+            } catch (InvalidArgumentException $e) {
                 throw new BadRequest($e->getMessage());
             }
 
@@ -73,6 +80,17 @@ class Converter
         $this->scanner->apply($queryBuilder, $item);
 
         return WhereClause::fromRaw($whereClause);
+    }
+
+    private function hasRelatedMany(QueryBuilder $queryBuilder, Item $item): bool
+    {
+        $entityType = $queryBuilder->build()->getFrom();
+
+        if (!$entityType) {
+            throw new RuntimeException("No 'from' in queryBuilder.");
+        }
+
+        return $this->scanner->hasRelatedMany($entityType, $item);
     }
 
     /**
@@ -103,5 +121,26 @@ class Converter
     private function processItem(QueryBuilder $queryBuilder, Item $item): array
     {
         return $this->itemConverter->convert($queryBuilder, $item)->getRaw();
+    }
+
+    /**
+     * @throws BadRequest
+     */
+    private function convertSubQuery(QueryBuilder $queryBuilder, Item $item): Comparison
+    {
+        $entityType = $queryBuilder->build()->getFrom() ?? throw new RuntimeException();
+
+        $subQueryBuilder = QueryBuilder::create()
+            ->from($entityType)
+            ->select('id');
+
+        $subQueryBuilder->where(
+            $this->convert($subQueryBuilder, $item)
+        );
+
+        return Cond::in(
+            Expr::column('id'),
+            $subQueryBuilder->build()
+        );
     }
 }

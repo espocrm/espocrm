@@ -27,48 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Where;
+namespace Espo\Core\Select\Where\Converter;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Select\Where\Item as WhereItem;
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
-use Espo\Entities\User;
-
-class Applier
+/**
+ * Where converter parameters.
+ *
+ * @immutable
+ * @since 8.5.0
+ */
+class Params
 {
+    /**
+     * @param bool $useSubQueryIfMany To use a sub-query if at least one has-many relation appears in a where clause.
+     */
     public function __construct(
-        private string $entityType,
-        private User $user,
-        private ConverterFactory $converterFactory,
-        private CheckerFactory $checkerFactory
+        readonly private bool $useSubQueryIfMany = false,
     ) {}
 
     /**
-     * @throws BadRequest
-     * @throws Forbidden
+     * To use a sub-query if at least one has-many relation appears in a where clause.
      */
-    public function apply(QueryBuilder $queryBuilder, WhereItem $whereItem, Params $params): void
+    public function useSubQueryIfMany(): bool
     {
-        $this->check($whereItem, $params);
-
-        $converter = $this->converterFactory->create($this->entityType, $this->user);
-
-        $convertedParams = new Converter\Params(useSubQueryIfMany: true);
-
-        $queryBuilder->where(
-            $converter->convert($queryBuilder, $whereItem, $convertedParams)
-        );
-    }
-
-    /**
-     * @throws BadRequest
-     * @throws Forbidden
-     */
-    private function check(Item $whereItem, Params $params): void
-    {
-        $checker = $this->checkerFactory->create($this->entityType, $this->user);
-
-        $checker->check($whereItem, $params);
+        return $this->useSubQueryIfMany;
     }
 }
