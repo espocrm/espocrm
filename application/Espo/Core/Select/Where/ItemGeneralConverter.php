@@ -49,6 +49,7 @@ use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
+use Espo\ORM\Type\RelationType;
 use Exception;
 use RuntimeException;
 
@@ -519,28 +520,30 @@ class ItemGeneralConverter implements ItemConverter
 
         if ($isForeign) {
             if ($isForeignType) {
-                $arrayAttributeLink = $entityDefs->getAttribute($attribute)->getParam('relation');
+                $arrayLink = $entityDefs->getAttribute($attribute)->getParam('relation');
                 $arrayAttribute = $entityDefs->getAttribute($attribute)->getParam('foreign');
-            }
-            else {
-                [$arrayAttributeLink, $arrayAttribute] = explode('.', $attribute);
+            } else {
+                [$arrayLink, $arrayAttribute] = explode('.', $attribute);
             }
 
-            if (!$arrayAttributeLink || !$arrayAttribute) {
+            if (!$arrayLink || !$arrayAttribute) {
                 throw new BadRequest("Bad where item.");
             }
 
-            $arrayEntityType = $entityDefs->getRelation($arrayAttributeLink)->getForeignEntityType();
-            $arrayLinkAlias = $arrayAttributeLink . 'ArrayFilter' . $this->randomStringGenerator->generate();
-            $idPart = $arrayLinkAlias . '.id';
+            $arrayEntityType = $entityDefs->getRelation($arrayLink)->getForeignEntityType();
+            $arrayAlias = "{$arrayLink}ArrayFilter{$this->randomStringGenerator->generate()}";
+            $idPart = "$arrayAlias.id";
 
-            $queryBuilder->leftJoin($arrayAttributeLink, $arrayLinkAlias);
+            $queryBuilder->leftJoin($arrayLink, $arrayAlias);
 
-            $relationType = $entityDefs->getRelation($arrayAttributeLink)->getType();
+            $relationType = $entityDefs->getRelation($arrayLink)->getType();
 
             if (
-                $relationType === Entity::MANY_MANY ||
-                $relationType === Entity::HAS_MANY
+                in_array($relationType, [
+                    RelationType::MANY_MANY,
+                    RelationType::HAS_MANY,
+                    RelationType::HAS_CHILDREN,
+                ])
             ) {
                 $queryBuilder->distinct();
             }
