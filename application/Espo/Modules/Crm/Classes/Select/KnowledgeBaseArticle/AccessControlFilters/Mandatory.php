@@ -31,9 +31,11 @@ namespace Espo\Modules\Crm\Classes\Select\KnowledgeBaseArticle\AccessControlFilt
 
 use Espo\Core\Select\AccessControl\Filter;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\Portal;
 use Espo\Modules\Crm\Entities\KnowledgeBaseArticle;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\SelectBuilder;
-
 use Espo\Entities\User;
 
 class Mandatory implements Filter
@@ -54,10 +56,15 @@ class Mandatory implements Filter
 
         $queryBuilder
             ->where(['status' => $statusList])
-            ->distinct()
-            ->leftJoin('portals', 'portalsAccess')
-            ->where([
-                'portalsAccess.id' => $this->user->getPortalId(),
-            ]);
+            ->where(
+                Condition::in(
+                    Expression::column('id'),
+                    SelectBuilder::create()
+                        ->select('knowledgeBaseArticleId')
+                        ->from(KnowledgeBaseArticle::ENTITY_TYPE . Portal::ENTITY_TYPE)
+                        ->where(['portalId' => $this->user->getPortalId()])
+                        ->build()
+                )
+            );
     }
 }
