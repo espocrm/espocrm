@@ -49,17 +49,13 @@ class EmailAddressEquals implements ItemConverter
         $value = $item->getValue();
 
         if (!$value) {
-            return WhereClause::fromRaw([
-                'id' => null,
-            ]);
+            return WhereClause::fromRaw(['id' => null]);
         }
 
         $emailAddressId = $this->emailAddressHelper->getEmailAddressIdByValue($value);
 
         if (!$emailAddressId) {
-            return WhereClause::fromRaw([
-                'id' => null,
-            ]);
+            return WhereClause::fromRaw(['id' => null]);
         }
 
         $queryBuilder->distinct();

@@ -39,6 +39,8 @@ use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class ToEquals implements ItemConverter
 {
+    protected string $addressType = 'to';
+
     public function __construct(
         private EmailAddressHelper $emailAddressHelper,
         private RandomStringGenerator $randomStringGenerator
@@ -49,17 +51,13 @@ class ToEquals implements ItemConverter
         $value = $item->getValue();
 
         if (!$value) {
-            return WhereClause::fromRaw([
-                'id' => null,
-            ]);
+            return WhereClause::fromRaw(['id' => null]);
         }
 
         $emailAddressId = $this->emailAddressHelper->getEmailAddressIdByValue($value);
 
         if (!$emailAddressId) {
-            return WhereClause::fromRaw([
-                'id' => null,
-            ]);
+            return WhereClause::fromRaw(['id' => null]);
         }
 
         $queryBuilder->distinct();
@@ -77,7 +75,7 @@ class ToEquals implements ItemConverter
 
         return WhereClause::fromRaw([
             $alias . '.emailAddressId' => $emailAddressId,
-            $alias . '.addressType' => 'to',
+            $alias . '.addressType' => $this->addressType,
         ]);
     }
 }
