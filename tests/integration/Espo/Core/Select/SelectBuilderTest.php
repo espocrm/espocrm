@@ -35,10 +35,18 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Classes\Select\Email\AdditionalAppliers\Main as EmailAdditionalApplier;
+use Espo\Core\Select\Where\Item\Type;
+use Espo\Core\Select\Where\ItemBuilder;
 use Espo\Entities\User;
 use Espo\Entities\Email;
+use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Select;
+use Espo\ORM\Query\SelectBuilder;
 use tests\integration\Core\BaseTestCase;
 
 class SelectBuilderTest extends BaseTestCase
@@ -863,6 +871,61 @@ class SelectBuilderTest extends BaseTestCase
         ];
 
         $this->assertEquals($expectedWhereClause, $raw['whereClause']);
+    }
+
+    public function testWhereMany(): void
+    {
+        $em = $this->getEntityManager();
+
+        $account1 = $em->createEntity(Account::ENTITY_TYPE);
+        $account2 = $em->createEntity(Account::ENTITY_TYPE);
+
+        $em->createEntity(Opportunity::ENTITY_TYPE, [
+            'accountId' => $account1->getId(),
+            'stage' => Opportunity::STAGE_CLOSED_WON,
+        ]);
+
+        $em->createEntity(Opportunity::ENTITY_TYPE, [
+            'accountId' => $account1->getId(),
+            'stage' => Opportunity::STAGE_CLOSED_WON,
+        ]);
+
+        $em->createEntity(Opportunity::ENTITY_TYPE, [
+            'accountId' => $account1->getId(),
+            'stage' => Opportunity::STAGE_CLOSED_LOST,
+        ]);
+
+        $em->createEntity(Opportunity::ENTITY_TYPE, [
+            'accountId' => $account2->getId(),
+            'stage' => Opportunity::STAGE_CLOSED_LOST,
+        ]);
+
+        $factory = $this->getInjectableFactory()->create(SelectBuilderFactory::class);
+
+        $builder = $factory->create();
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $query = $builder
+            ->from(Account::ENTITY_TYPE)
+            ->withWhere(
+                ItemBuilder::create()
+                    ->setAttribute('opportunities.stage')
+                    ->setType(Type::EQUALS)
+                    ->setValue(Opportunity::STAGE_CLOSED_WON)
+                    ->build()
+            )
+            ->build();
+
+        $this->assertFalse($query->isDistinct());
+        $this->assertFalse(in_array('opportunities', $query->getLeftJoins()));
+        $this->assertArrayHasKey('id=s', $query->getWhere()->getRaw());
+
+        $accounts = $em->getRDBRepositoryByClass(Account::class)
+            ->clone($query)
+            ->find();
+
+        $this->assertCount(1, $accounts);
+        $this->assertEquals($account1->getId(), $accounts[0]->getId());
     }
 
     protected function createUserEmailAddress(Container $container) : string
