@@ -48,6 +48,10 @@ class SelectBuilderTest extends BaseTestCase
      */
     private $factory;
 
+    private $user;
+    private $contact;
+    private $account;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -57,7 +61,7 @@ class SelectBuilderTest extends BaseTestCase
         $this->factory = $injectableFactory->create(SelectBuilderFactory::class);
     }
 
-    protected function initTest(array $aclData = [], bool $skipLogin = false, bool $isPortal = false) : Application
+    protected function initTest(array $aclData = [], bool $skipLogin = false) : Application
     {
         $this->createUser('tester', [
             'data' => $aclData,
@@ -86,14 +90,14 @@ class SelectBuilderTest extends BaseTestCase
 
         $this->contact = $em->createEntity('Contact', []);
         $this->account = $em->createEntity('Account', []);
-        $this->portal = $em->createEntity('Portal', [
+        $portal = $em->createEntity('Portal', [
             'name' => 'Portal',
         ]);
 
         $this->createUser(
             [
                 'userName' => 'tester',
-                'portalsIds' => [$this->portal->getId()],
+                'portalsIds' => [$portal->getId()],
                 'contactId' => $this->contact->getId(),
                 'accountsIds' => [$this->account->getId()],
             ],
@@ -104,7 +108,7 @@ class SelectBuilderTest extends BaseTestCase
         );
 
         if (!$skipLogin) {
-            $this->auth('tester', null, $this->portal->getId());
+            $this->auth('tester', null, $portal->getId());
         }
 
         $app = $this->createApplication();
@@ -156,6 +160,7 @@ class SelectBuilderTest extends BaseTestCase
             ],
         ]);
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $query = $builder
             ->from('Account')
             ->withStrictAccessControl()
@@ -233,6 +238,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $builder = $this->factory->create();
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $query = $builder
             ->from('Meeting')
             ->withStrictAccessControl()
@@ -315,6 +321,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $builder = $this->factory->create();
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $query = $builder
             ->from('Email')
             ->withStrictAccessControl()
@@ -363,6 +370,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $builder = $this->factory->create();
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $query = $builder
             ->from('Email')
             ->withStrictAccessControl()
@@ -433,6 +441,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $builder = $this->factory->create();
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $query = $builder
             ->from('Email')
             ->withStrictAccessControl()
@@ -440,6 +449,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $raw = $query->getRaw();
 
+        /** @noinspection PhpArrayWriteIsNotUsedInspection */
         $expected = [
             'from' => 'Email',
             'joins' => [],
@@ -482,6 +492,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $builder = $this->factory->create();
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $query = $builder
             ->from('Email')
             ->withStrictAccessControl()
@@ -489,6 +500,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $raw = $query->getRaw();
 
+        /** @noinspection PhpArrayWriteIsNotUsedInspection */
         $expected = [
             'from' => 'Email',
             'joins' => [],
@@ -520,14 +532,13 @@ class SelectBuilderTest extends BaseTestCase
 
     public function testBuildDefaultOrder()
     {
-        $this->initTest(
-            []
-        );
+        $this->initTest();
 
         $searchParams = SearchParams::fromRaw([]);
 
         $builder = $this->factory->create();
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $query = $builder
             ->from('Meeting')
             ->withSearchParams($searchParams)
@@ -545,9 +556,7 @@ class SelectBuilderTest extends BaseTestCase
 
     public function testBuildMeetingDateTime()
     {
-        $this->initTest(
-            []
-        );
+        $this->initTest();
 
         $searchParams = SearchParams::fromRaw([
             'where' => [
@@ -562,6 +571,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $builder = $this->factory->create();
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $query = $builder
             ->from('Meeting')
             ->withSearchParams($searchParams)
@@ -595,9 +605,7 @@ class SelectBuilderTest extends BaseTestCase
 
     public function testEmailInbox()
     {
-        $app = $this->initTest(
-            []
-        );
+        $app = $this->initTest();
 
         $container = $app->getContainer();
 
@@ -617,6 +625,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $builder = $this->factory->create();
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $query = $builder
             ->from('Email')
             ->withSearchParams($searchParams)
@@ -676,9 +685,7 @@ class SelectBuilderTest extends BaseTestCase
 
     public function testEmailSent()
     {
-        $app = $this->initTest(
-            []
-        );
+        $app = $this->initTest();
 
         $container = $app->getContainer();
 
@@ -698,6 +705,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $builder = $this->factory->create();
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $query = $builder
             ->from('Email')
             ->withSearchParams($searchParams)
@@ -737,9 +745,7 @@ class SelectBuilderTest extends BaseTestCase
 
     public function testEmailEmailAddressEquals()
     {
-        $app = $this->initTest(
-            []
-        );
+        $app = $this->initTest();
 
         $em = $app->getContainer()->getByClass(EntityManager::class);
 
@@ -759,6 +765,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $builder = $this->factory->create();
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $query = $builder
             ->from('Email')
             ->withSearchParams($searchParams)
@@ -791,6 +798,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $builder = $this->factory->create();
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $query = $builder
             ->from('Email')
             ->withSearchParams($searchParams)
@@ -811,6 +819,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $builder = $this->factory->create();
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $query = $builder
             ->from('Email')
             ->withBoolFilter('onlyMy')
@@ -837,6 +846,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $builder = $this->factory->create();
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $query = $builder
             ->from('Email')
             ->withTextFilter('test@test.com')
