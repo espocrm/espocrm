@@ -33,8 +33,12 @@ use Espo\Core\Select\AccessControl\Filter;
 use Espo\Classes\Select\Email\Helpers\JoinHelper;
 use Espo\Entities\Email;
 use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
+/**
+ * @noinspection PhpUnused
+ */
 class PortalOnlyContact implements Filter
 {
     public function __construct(private User $user, private JoinHelper $joinHelper)
@@ -44,23 +48,19 @@ class PortalOnlyContact implements Filter
     {
         $this->joinHelper->joinEmailUser($queryBuilder, $this->user->getId());
 
-        $queryBuilder->distinct();
-
         $orGroup = [
             Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
         ];
 
-        $contactId = $this->user->get('contactId');
+        $contactId = $this->user->getContactId();
 
         if ($contactId) {
             $orGroup[] = [
                 'parentId' => $contactId,
-                'parentType' => 'Contact',
+                'parentType' => Contact::ENTITY_TYPE,
             ];
         }
 
-        $queryBuilder->where([
-            'OR' => $orGroup,
-        ]);
+        $queryBuilder->where(['OR' => $orGroup]);
     }
 }
