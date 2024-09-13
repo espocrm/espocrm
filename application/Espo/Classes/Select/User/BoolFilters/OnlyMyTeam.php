@@ -29,48 +29,44 @@
 
 namespace Espo\Classes\Select\User\BoolFilters;
 
+use Espo\Entities\Team;
 use Espo\Entities\User;
-
 use Espo\Core\Select\Bool\Filter;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Where\OrGroupBuilder;
+use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Query\SelectBuilder;
 
-use Espo\ORM\Query\{
-    SelectBuilder,
-    Part\Where\OrGroupBuilder,
-    Part\WhereClause,
-};
-
+/**
+ * @noinspection PhpUnused
+ */
 class OnlyMyTeam implements Filter
 {
-    private $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
+    public function __construct(private User $user)
+    {}
 
     public function apply(SelectBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
     {
-        /** @var string[] $teamIdList */
-        $teamIdList = $this->user->getLinkMultipleIdList('teams');
+        $teamIdList = $this->user->getTeamIdList();
 
         if (count($teamIdList) === 0) {
             $orGroupBuilder->add(
-                WhereClause::fromRaw([
-                    'id' => null,
-                ])
+                WhereClause::fromRaw(['id' => null])
             );
 
             return;
         }
 
-        $queryBuilder
-            ->leftJoin('teams', 'teamsOnlyMyFilter')
-            ->distinct();
-
         $orGroupBuilder->add(
-            WhereClause::fromRaw([
-                'teamsOnlyMyFilter.id' => $teamIdList
-            ])
+            Condition::in(
+                Expression::column('id'),
+                SelectBuilder::create()
+                    ->from(Team::RELATIONSHIP_TEAM_USER)
+                    ->select('userId')
+                    ->where(['teamId' => $teamIdList])
+                    ->build()
+            )
         );
     }
 }
