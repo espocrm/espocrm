@@ -202,25 +202,73 @@ class Email implements FieldConverter
                     ]
                 ],
                 '<>' => [
-                    'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
                     'whereClause' => [
-                        "NOT_EQUAL:(emailAddressesMultiple.lower, LOWER:({value})):" => null,
+                        'id!=s' => [
+                            'from' => 'EntityEmailAddress',
+                            'select' => ['entityId'],
+                            'joins' => [
+                                [
+                                    'emailAddress',
+                                    'emailAddress',
+                                    [
+                                        'emailAddress.id:' => 'emailAddressId',
+                                        'emailAddress.deleted' => false,
+                                    ],
+                                ]
+                            ],
+                            'whereClause' => [
+                                'deleted' => false,
+                                'entityType' => $entityType,
+                                "EQUAL:(emailAddress.lower, LOWER:({value})):" => null,
+                            ],
+                        ],
                     ],
-                    'distinct' => true,
                 ],
                 'IN' => [
-                    'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
                     'whereClause' => [
-                        "EQUAL:(emailAddressesMultiple.lower, LOWER:({value})):" => null,
+                        'id=s' => [
+                            'from' => 'EntityEmailAddress',
+                            'select' => ['entityId'],
+                            'joins' => [
+                                [
+                                    'emailAddress',
+                                    'emailAddress',
+                                    [
+                                        'emailAddress.id:' => 'emailAddressId',
+                                        'emailAddress.deleted' => false,
+                                    ],
+                                ]
+                            ],
+                            'whereClause' => [
+                                'deleted' => false,
+                                'entityType' => $entityType,
+                                "emailAddress.lower" => '{value}',
+                            ],
+                        ],
                     ],
-                    'distinct' => true,
                 ],
                 'NOT IN' => [
-                    'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
                     'whereClause' => [
-                        "NOT_EQUAL:(emailAddressesMultiple.lower, LOWER:({value})):" => null,
+                        'id!=s' => [
+                            'from' => 'EntityEmailAddress',
+                            'select' => ['entityId'],
+                            'joins' => [
+                                [
+                                    'emailAddress',
+                                    'emailAddress',
+                                    [
+                                        'emailAddress.id:' => 'emailAddressId',
+                                        'emailAddress.deleted' => false,
+                                    ],
+                                ]
+                            ],
+                            'whereClause' => [
+                                'deleted' => false,
+                                'entityType' => $entityType,
+                                "emailAddress.lower" => '{value}',
+                            ],
+                        ],
                     ],
-                    'distinct' => true,
                 ],
                 'IS NULL' => [
                     'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
