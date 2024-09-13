@@ -274,8 +274,7 @@ class Email implements FieldConverter
                     'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
                     'whereClause' => [
                         'emailAddressesMultiple.lower=' => null,
-                    ],
-                    'distinct' => true,
+                    ]
                 ],
                 'IS NOT NULL' => [
                     'whereClause' => [

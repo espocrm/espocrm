@@ -286,8 +286,7 @@ class Phone implements FieldConverter
                     'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
                         'phoneNumbersMultiple.name=' => null,
-                    ],
-                    'distinct' => true,
+                    ]
                 ],
                 'IS NOT NULL' => [
                     'whereClause' => [
@@ -582,8 +581,7 @@ class Phone implements FieldConverter
                     'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
                         'phoneNumbersMultiple.numeric=' => null,
-                    ],
-                    'distinct' => true,
+                    ]
                 ],
                 'IS NOT NULL' => [
                     'whereClause' => [
