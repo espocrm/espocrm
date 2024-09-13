@@ -34,14 +34,15 @@ use Espo\Core\Select\Text\Filter\Data;
 use Espo\Core\Select\Text\DefaultFilter;
 use Espo\Core\Select\Text\ConfigProvider;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\Query\Part\Where\OrGroup;
-use Espo\ORM\Query\Part\Where\Comparison as Cmp;
 use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\Entities\EmailAddress;
 
 /**
- * @implements Filter
+ * @noinspection PhpUnused
  */
 class TextFilter implements Filter
 {
@@ -70,13 +71,13 @@ class TextFilter implements Filter
 
         $orGroupBuilder = OrGroup::createBuilder();
 
-        if ($ftWhereItem) {
+        if ($ftWhereItem && !$emailAddressId) {
             $orGroupBuilder->add($ftWhereItem);
         }
 
         if (!$emailAddressId) {
             $orGroupBuilder->add(
-                Cmp::equal(Expr::column('id'), null)
+                Cond::equal(Expr::column('id'), null)
             );
 
             $queryBuilder->where($orGroupBuilder->build());
@@ -84,40 +85,29 @@ class TextFilter implements Filter
             return;
         }
 
-        $this->leftJoinEmailAddress($queryBuilder);
-
         $orGroupBuilder
             ->add(
-                Cmp::equal(
+                Cond::equal(
                     Expr::column('fromEmailAddressId'),
                     $emailAddressId
                 )
             )
             ->add(
-                Cmp::equal(
-                    Expr::column('emailEmailAddress.emailAddressId'),
-                    $emailAddressId
+                Cond::exists(
+                    SelectBuilder::create()
+                        ->from('EmailEmailAddress', 'sq')
+                        ->where(['emailAddressId' => $emailAddressId])
+                        ->where(
+                            Cond::equal(
+                                Expr::column('sq.emailId'),
+                                Expr::column('email.id')
+                            )
+                        )
+                        ->build()
                 )
             );
 
         $queryBuilder->where($orGroupBuilder->build());
-    }
-
-    private function leftJoinEmailAddress(QueryBuilder $queryBuilder): void
-    {
-        if ($queryBuilder->hasLeftJoinAlias('emailEmailAddress')) {
-            return;
-        }
-
-        $queryBuilder->distinct();
-        $queryBuilder->leftJoin(
-            'EmailEmailAddress',
-            'emailEmailAddress',
-            [
-                'emailId:' => 'id',
-                'deleted' => false,
-            ]
-        );
     }
 
     private function getEmailAddressIdByValue(string $value): ?string
