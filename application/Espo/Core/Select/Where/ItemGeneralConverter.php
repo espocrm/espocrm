@@ -49,7 +49,6 @@ use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
-use Espo\ORM\Type\RelationType;
 use Exception;
 use RuntimeException;
 
@@ -536,17 +535,20 @@ class ItemGeneralConverter implements ItemConverter
 
             $queryBuilder->leftJoin($arrayLink, $arrayAlias);
 
+            // A sub-query is supposed to be used.
+            /*
             $relationType = $entityDefs->getRelation($arrayLink)->getType();
 
             if (
                 in_array($relationType, [
-                    RelationType::MANY_MANY,
-                    RelationType::HAS_MANY,
-                    RelationType::HAS_CHILDREN,
+                    Entity::MANY_MANY,
+                    Entity::HAS_MANY,
+                    Entity::HAS_CHILDREN,
                 ])
             ) {
                 $queryBuilder->distinct();
             }
+            */
         }
 
         if ($type === Type::ARRAY_ANY_OF) {
