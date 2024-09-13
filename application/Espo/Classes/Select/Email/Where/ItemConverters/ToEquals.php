@@ -29,12 +29,14 @@
 
 namespace Espo\Classes\Select\Email\Where\ItemConverters;
 
-use Espo\Core\Select\Helpers\RandomStringGenerator;
 use Espo\Core\Select\Where\Item;
 use Espo\Core\Select\Where\ItemConverter;
 use Espo\Classes\Select\Email\Helpers\EmailAddressHelper;
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class ToEquals implements ItemConverter
@@ -43,7 +45,6 @@ class ToEquals implements ItemConverter
 
     public function __construct(
         private EmailAddressHelper $emailAddressHelper,
-        private RandomStringGenerator $randomStringGenerator
     ) {}
 
     public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
@@ -60,22 +61,20 @@ class ToEquals implements ItemConverter
             return WhereClause::fromRaw(['id' => null]);
         }
 
-        $queryBuilder->distinct();
-
-        $alias = 'emailEmailAddress' . $this->randomStringGenerator->generate();
-
-        $queryBuilder->leftJoin(
-            'EmailEmailAddress',
-            $alias,
-            [
-                'emailId:' => 'id',
-                'deleted' => false,
-            ]
+        return Cond::exists(
+            SelectBuilder::create()
+                ->from('EmailEmailAddress', 'sq')
+                ->where([
+                    'emailAddressId' => $emailAddressId,
+                    'addressType' => $this->addressType,
+                ])
+                ->where(
+                    Cond::equal(
+                        Expr::column('sq.emailId'),
+                        Expr::column('email.id')
+                    )
+                )
+                ->build()
         );
-
-        return WhereClause::fromRaw([
-            $alias . '.emailAddressId' => $emailAddressId,
-            $alias . '.addressType' => $this->addressType,
-        ]);
     }
 }
