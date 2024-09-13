@@ -29,14 +29,20 @@
 
 namespace Espo\Classes\Select\User\AccessControlFilters;
 
+use Espo\Core\Acl\Permission;
+use Espo\Entities\Team;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\SelectBuilder;
-
 use Espo\Core\Acl\Table;
 use Espo\Core\AclManager;
 use Espo\Core\Select\AccessControl\Filter;
-
 use Espo\Entities\User;
 
+/**
+ * @noinspection PhpUnused
+ */
 class OnlyTeam implements Filter
 {
     public function __construct(
@@ -46,20 +52,36 @@ class OnlyTeam implements Filter
 
     public function apply(SelectBuilder $queryBuilder): void
     {
-        $orGroup = [
-            'teamsAccess.id' => $this->user->getLinkMultipleIdList('teams'),
-            'id' => $this->user->getId(),
-        ];
+        $orGroupBuilder = OrGroup::createBuilder();
 
-        if ($this->aclManager->getPermissionLevel($this->user, 'portal') === Table::LEVEL_YES) {
-            $orGroup['type'] = User::TYPE_PORTAL;
+        $orGroupBuilder
+            ->add(
+                Condition::equal(
+                    Expression::column('id'),
+                    $this->user->getId()
+                )
+            )
+            ->add(
+                Condition::in(
+                    Expression::column('id'),
+                    SelectBuilder::create()
+                        ->from(Team::RELATIONSHIP_TEAM_USER)
+                        ->select('userId')
+                        ->where(['teamId' => $this->user->getTeamIdList()])
+                        ->build()
+                )
+            );
+
+
+        if ($this->aclManager->getPermissionLevel($this->user, Permission::PORTAL) === Table::LEVEL_YES) {
+            $orGroupBuilder->add(
+                Condition::equal(
+                    Expression::column('type'),
+                    User::TYPE_PORTAL
+                )
+            );
         }
 
-        $queryBuilder
-            ->distinct()
-            ->leftJoin('teams', 'teamsAccess')
-            ->where([
-               'OR' => $orGroup,
-            ]);
+        $queryBuilder->where($orGroupBuilder->build());
     }
 }
