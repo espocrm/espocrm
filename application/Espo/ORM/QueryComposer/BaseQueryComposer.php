@@ -2888,7 +2888,9 @@ abstract class BaseQueryComposer implements QueryComposer
                 $right = $value;
             }
             else if (is_string($right)) {
-                $right = str_replace('{value}', (string) $value, $right);
+                if (!is_array($value)) {
+                    $right = str_replace('{value}', (string) $value, $right);
+                }
             }
             else if (is_array($right)) {
                 $right = $this->applyValueToCustomWhereClause($right, $value);

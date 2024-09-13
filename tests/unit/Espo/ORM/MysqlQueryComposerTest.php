@@ -2332,6 +2332,29 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testCustomWhere4()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('TestWhere')
+            ->select(['id'])
+            ->where([
+                'test1!=' => ['hello', 'test'],
+            ])
+            ->build();
+
+        $sql = $this->query->composeSelect($select);
+
+        $expectedSql =
+            "SELECT test_where.id AS `id` ".
+            "FROM `test_where` ".
+            "WHERE (test_where.id NOT IN ".
+            "(SELECT test_where.id AS `id` FROM `test_where` WHERE test_where.test NOT IN ('hello','test')))";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testCustomOrder1()
     {
         $queryBuilder = new QueryBuilder();

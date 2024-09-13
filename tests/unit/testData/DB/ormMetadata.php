@@ -486,6 +486,17 @@ return [
                          'whereClause' => [
                              'test' => '{value}'
                          ],
+                     ],
+                     "NOT IN" => [
+                        'whereClause' => [
+                            'id!=s' => [
+                                'from' => 'TestWhere',
+                                'select' => ['id'],
+                                'whereClause' => [
+                                    'test!=' => '{value}',
+                                ],
+                            ],
+                        ],
                      ]
                 ],
                 'order' => [
