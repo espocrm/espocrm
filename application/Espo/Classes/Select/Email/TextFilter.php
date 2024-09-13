@@ -29,20 +29,20 @@
 
 namespace Espo\Classes\Select\Email;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Select\Text\Filter;
 use Espo\Core\Select\Text\Filter\Data;
 use Espo\Core\Select\Text\DefaultFilter;
 use Espo\Core\Select\Text\ConfigProvider;
-
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Part\Where\Comparison as Cmp;
 use Espo\ORM\Query\Part\Expression as Expr;
-
 use Espo\Entities\EmailAddress;
 
+/**
+ * @implements Filter
+ */
 class TextFilter implements Filter
 {
     public function __construct(
@@ -51,9 +51,6 @@ class TextFilter implements Filter
         private EntityManager $entityManager
     ) {}
 
-    /**
-     * @throws Error
-     */
     public function apply(QueryBuilder $queryBuilder, Data $data): void
     {
         $filter = $data->getFilter();
@@ -128,9 +125,7 @@ class TextFilter implements Filter
         $emailAddress = $this->entityManager
             ->getRDBRepository(EmailAddress::ENTITY_TYPE)
             ->select('id')
-            ->where([
-                'lower' => strtolower($value),
-            ])
+            ->where(['lower' => strtolower($value)])
             ->findOne();
 
         if (!$emailAddress) {
