@@ -42,7 +42,7 @@ use RuntimeException;
 
 class Finder
 {
-    private const LIMIT = 10;
+    private const LIMIT = 5;
 
     /** @var array<string, ?WhereBuilder<Entity>> */
     private array $whereBuilderMap = [];
