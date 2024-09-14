@@ -50,7 +50,7 @@ class PortalOnlyContact implements Filter
     {
         $orBuilder = OrGroup::createBuilder();
 
-        $contactId = $this->user->get('contactId');
+        $contactId = $this->user->getContactId();
 
         if ($contactId) {
             if ($this->fieldHelper->hasContactField()) {

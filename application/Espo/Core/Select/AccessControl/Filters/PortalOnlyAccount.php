@@ -51,8 +51,8 @@ class PortalOnlyAccount implements Filter
     {
         $orBuilder = OrGroup::createBuilder();
 
-        $accountIdList = $this->user->getLinkMultipleIdList('accounts');
-        $contactId = $this->user->get('contactId');
+        $accountIdList = $this->user->getAccounts()->getIdList();
+        $contactId = $this->user->getContactId();
 
         if (count($accountIdList)) {
             if ($this->fieldHelper->hasAccountField()) {
