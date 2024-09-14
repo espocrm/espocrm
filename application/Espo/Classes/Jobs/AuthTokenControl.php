@@ -51,8 +51,8 @@ class AuthTokenControl implements JobDataLess
 
     public function run(): void
     {
-        $lifetime = (int) $this->config->get('authTokenLifetime', 0) * 60;
-        $maxIdleTime = (int) $this->config->get('authTokenMaxIdleTime', 0) * 60;
+        $lifetime = (int) ($this->config->get('authTokenLifetime', 0) * 60);
+        $maxIdleTime = (int) ($this->config->get('authTokenMaxIdleTime', 0) * 60);
 
         $portalIds = [];
 
@@ -69,11 +69,11 @@ class AuthTokenControl implements JobDataLess
 
         foreach ($portals as $portal) {
             $itemLifetime = $portal->get('authTokenLifetime') !== null ?
-                (int) $portal->get('authTokenLifetime') * 60 :
+                (int) ($portal->get('authTokenLifetime') * 60) :
                 $lifetime;
 
             $itemMaxIdleTime = $portal->get('authTokenMaxIdleTime') !== null ?
-                (int) $portal->get('authTokenMaxIdleTime') * 60 :
+                (int) ($portal->get('authTokenMaxIdleTime') * 60) :
                 $maxIdleTime;
 
             $this->process($portal->getId(), $itemLifetime, $itemMaxIdleTime);
