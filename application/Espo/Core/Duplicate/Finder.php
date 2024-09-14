@@ -30,7 +30,6 @@
 namespace Espo\Core\Duplicate;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Select\SelectBuilderFactory;
 
@@ -140,7 +139,7 @@ class Finder
                 ->limit(0, self::LIMIT)
                 ->build();
         }
-        catch (Error|Forbidden|BadRequest $e) {
+        catch (Forbidden|BadRequest $e) {
             throw new RuntimeException($e->getMessage(), 0, $e);
         }
 
