@@ -781,7 +781,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $raw = $query->getRaw();
 
-        $this->assertEquals($emailAddress->getId(), $raw['whereClause']['OR']['fromEmailAddressId']);
+        $this->assertEquals($emailAddress->getId(), $raw['whereClause']['OR'][0]['fromEmailAddressId=']);
     }
 
     public function testEmailFromEquals()
@@ -864,9 +864,19 @@ class SelectBuilderTest extends BaseTestCase
 
         $expectedWhereClause = [
             'OR' => [
-                ['NOT_EQUAL:(MATCH_NATURAL_LANGUAGE:(name, bodyPlain, body, \'test@test.com\'), 0):' => null],
-                ['fromEmailAddressId=' => $emailAddressId],
-                ['emailEmailAddress.emailAddressId=' => $emailAddressId],
+                [
+                    'fromEmailAddressId=' => $emailAddressId,
+                ],
+                [
+                    'EXISTS' => Select::fromRaw([
+                        'from' => 'EmailEmailAddress',
+                        'fromAlias' => 'sq',
+                        'whereClause' => [
+                            'sq.emailId=:' => 'email.id',
+                            'emailAddressId' => $emailAddressId,
+                        ],
+                    ]),
+                ],
             ],
         ];
 
