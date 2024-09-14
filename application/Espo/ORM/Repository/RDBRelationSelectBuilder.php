@@ -219,7 +219,19 @@ class RDBRelationSelectBuilder
      */
     public function findOne(): ?Entity
     {
-        $collection = $this->sth()->limit(0, 1)->find();
+        $queryTemp = $this->builder->build();
+
+        $returnSthCollection = $this->returnSthCollection;
+        $offset = $queryTemp->getOffset();
+        $limit = $queryTemp->getLimit();
+
+        $collection = $this
+            ->sth()
+            ->limit(0, 1)
+            ->find();
+
+        $this->returnSthCollection = $returnSthCollection;
+        $this->limit($offset, $limit);
 
         foreach ($collection as $entity) {
             return $entity;
