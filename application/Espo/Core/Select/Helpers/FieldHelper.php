@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\Helpers;
 
+use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 use Espo\ORM\BaseEntity;
@@ -123,6 +124,14 @@ class FieldHelper
         return
             $this->getSeed()->hasRelation('accounts') &&
             $this->getRelationParam($this->getSeed(), 'accounts', 'entity') === 'Account';
+    }
+
+    public function getRelationDefs(string $name): RelationDefs
+    {
+        return $this->entityManager
+            ->getDefs()
+            ->getEntity($this->entityType)
+            ->getRelation($name);
     }
 
     /**
