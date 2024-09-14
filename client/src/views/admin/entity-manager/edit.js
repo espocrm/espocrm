@@ -168,7 +168,7 @@ class EntityManagerEditView extends View {
                         .get(['entityDefs', scope, 'links', link, 'entity']);
 
                     this.textFilterFieldsTranslation[item] =
-                        this.translate(link, 'links', scope) + '.' +
+                        this.translate(link, 'links', scope) + ' . ' +
                         this.translate(foreignField, 'fields', foreignEntityType);
 
                     return;
@@ -829,7 +829,7 @@ class EntityManagerEditView extends View {
                     return true;
                 })
                 .forEach((item) => {
-                    filtersOptionList.push(link + '.' + item);
+                    filtersOptionList.push(`${link}.${item}`);
                 });
         });
 
