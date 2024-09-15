@@ -304,8 +304,7 @@ class SendingProcessor
                 ->withMessage($message)
                 ->withAttachments($attachmentList)
                 ->send($email);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->processException($queueItem, $e);
 
             return;

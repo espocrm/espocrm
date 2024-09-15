@@ -130,8 +130,7 @@ class Auth
 
         try {
             $result = $this->authentication->login($data, $request, $response);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->handleException($response, $e);
 
             return AuthResult::createNotResolved();
@@ -155,8 +154,7 @@ class Auth
 
         try {
             $result = $this->authentication->login($data, $request, $response);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->handleException($response, $e);
 
             return AuthResult::createNotResolved();

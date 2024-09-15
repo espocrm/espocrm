@@ -163,8 +163,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 
         try {
             $entityManager->saveEntity($extensionEntity);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $msg = "Error while saving the extension entity. The error occurred in an existing hook. " .
                 "{$e->getMessage()} at {$e->getFile()}:{$e->getLine()}";
 

@@ -68,8 +68,7 @@ class EmailLogin implements Login
         if (!$code) {
             try {
                 $this->util->sendCode($user);
-            }
-            catch (Forbidden|SendingError $e) {
+            } catch (Forbidden|SendingError $e) {
                 $this->log->error("Could not send 2FA code for user {$user->getUserName()}. " . $e->getMessage());
 
                 return Result::fail(FailReason::ERROR);

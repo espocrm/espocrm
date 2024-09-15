@@ -276,8 +276,7 @@ abstract class OAuth2Abstract implements IClient
             $this->request($url);
 
             return true;
-        }
-        catch (Exception) {
+        } catch (Exception) {
             return false;
         }
     }
@@ -294,8 +293,7 @@ abstract class OAuth2Abstract implements IClient
 
         try {
             $dt = new DateTime($this->getParam('expiresAt'));
-        }
-        catch (Exception) {
+        } catch (Exception) {
             $this->log->debug("Oauth: Bad expires-at parameter stored for client $this->clientId.");
 
             return;
@@ -438,8 +436,7 @@ abstract class OAuth2Abstract implements IClient
 
         try {
             $response = $this->client->request($url, $params, $httpMethod, $httpHeaders);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new Error($e->getMessage(), 0, $e);
         }
 
@@ -500,8 +497,7 @@ abstract class OAuth2Abstract implements IClient
                 Client::GRANT_TYPE_REFRESH_TOKEN,
                 ['refresh_token' => $this->refreshToken]
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->unlock();
             $this->controlRefreshTokenAttempts();
 

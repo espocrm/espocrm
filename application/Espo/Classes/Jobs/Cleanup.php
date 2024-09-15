@@ -135,8 +135,7 @@ class Cleanup implements JobDataLess
                 $obj = $injectableFactory->create($className);
 
                 $obj->process();
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $this->log->error("Cleanup: {$name}: " . $e->getMessage());
             }
         }
@@ -651,8 +650,7 @@ class Cleanup implements JobDataLess
                     ->build();
 
                 $this->entityManager->getQueryExecutor()->execute($delete);
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 $this->log->error("Cleanup: " . $e->getMessage());
             }
         }
@@ -793,8 +791,7 @@ class Cleanup implements JobDataLess
                 if (method_exists($service, 'cleanup')) {
                     try {
                         $service->cleanup($entity->getId());
-                    }
-                    catch (Throwable $e) {
+                    } catch (Throwable $e) {
                         $this->log->error("Cleanup job: Cleanup scope {$scope}: " . $e->getMessage());
                     }
                 }

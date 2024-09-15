@@ -178,8 +178,7 @@ class Processor
             }
 
             return $function->process($evaluatedArguments);
-        }
-        catch (TooFewArguments|BadArgumentType|BadArgumentValue $e) {
+        } catch (TooFewArguments|BadArgumentType|BadArgumentValue $e) {
             $message = sprintf('Function %s; %s', $item->getType(), $e->getLogMessage());
 
             throw new Error($message);

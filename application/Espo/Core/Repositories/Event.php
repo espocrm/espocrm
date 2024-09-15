@@ -134,8 +134,7 @@ class Event extends Database implements
 
         try {
             $tz = new DateTimeZone($timeZone);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
 

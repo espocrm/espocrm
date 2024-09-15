@@ -143,8 +143,7 @@ class Payload
 
         try {
             $parsed = Json::decode($raw);
-        }
-        catch (JsonException) {}
+        } catch (JsonException) {}
 
         if (!$parsed instanceof stdClass) {
             throw new RuntimeException();

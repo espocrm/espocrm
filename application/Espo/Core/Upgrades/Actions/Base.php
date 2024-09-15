@@ -307,8 +307,7 @@ abstract class Base
 
             try {
                 $isInRange = Semver::satisfies($currentVersion, $version);
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $this->getLog()->error("SemVer: Version identification error: {$e->getMessage()}.");
             }
 
@@ -396,8 +395,7 @@ abstract class Base
             assert(method_exists($script, 'run'));
 
             $script->run($this->getContainer(), $this->scriptParams);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->throwErrorAndRemovePackage(exception: $e);
         }
     }
@@ -626,8 +624,7 @@ abstract class Base
 
         try {
             return $this->getFileManager()->copy($sourcePath, $destPath, $recursively, $fileList, $copyOnlyFiles);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->throwErrorAndRemovePackage(exception: $e);
         }
 
@@ -860,8 +857,7 @@ abstract class Base
             $dataManager->updateAppTimestamp();
 
             return true;
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             try {
                 $this->getLog()->error("Database rebuild failure, details: {$e->getMessage()}.", ['exception' => $e]);
             } catch (Throwable) {}

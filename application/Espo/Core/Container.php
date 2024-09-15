@@ -177,8 +177,7 @@ class Container implements ContainerInterface
         if ($this->isSet($id)) {
             try {
                 $object = $this->get($id);
-            }
-            catch (NotFoundExceptionInterface) {
+            } catch (NotFoundExceptionInterface) {
                 throw new LogicException();
             }
 

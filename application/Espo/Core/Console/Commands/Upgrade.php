@@ -161,8 +161,7 @@ class Upgrade implements Command
 
         try {
             $this->runUpgradeProcess($upgradeId, $upgradeParams);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->displayStep('revert');
             $errorMessage = $e->getMessage();
         }
@@ -294,8 +293,7 @@ class Upgrade implements Command
             $fileData = 'data:application/zip;base64,' . base64_encode($fileData);
 
             $upgradeId = $this->getUpgradeManager()->upload($fileData);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             die("Error: " . $e->getMessage() . "\n");
         }
 
@@ -341,12 +339,10 @@ class Upgrade implements Command
 
                 $upgradeManager->runInstallStep($stepName, ['id' => $upgradeId]);
             }
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             try {
                 $this->log->error('Upgrade Error: ' . $e->getMessage());
-            }
-            catch (Throwable) {}
+            } catch (Throwable) {}
 
             throw new Error($e->getMessage());
         }
@@ -372,8 +368,7 @@ class Upgrade implements Command
             if ($shellResult !== 'true') {
                 try {
                     $this->log->error('Upgrade Error: ' . $shellResult);
-                }
-                catch (Throwable) {}
+                } catch (Throwable) {}
 
                 throw new Error($shellResult ?: 'Unknown error on shell_exec.');
             }
@@ -449,8 +444,7 @@ class Upgrade implements Command
 
         try {
             $data = json_decode($result); /** @phpstan-ignore-line */
-        }
-        catch (Exception) { /** @phpstan-ignore-line */
+        } catch (Exception) { /** @phpstan-ignore-line */
             echo "Could not parse info about next version.\n";
 
             return null;

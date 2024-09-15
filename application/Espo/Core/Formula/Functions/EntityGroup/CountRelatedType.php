@@ -90,8 +90,7 @@ class CountRelatedType extends \Espo\Core\Formula\Functions\Base implements
 
         try {
             $query = $builder->build();
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new Error($e->getMessage());
         }
 

@@ -60,8 +60,7 @@ class FilterResolverFactory
             $acl = $this->userAclManagerProvider
                 ->get($user)
                 ->createUserAcl($user);
-        }
-        catch (Error $e) {
+        } catch (Error $e) {
             throw new RuntimeException($e->getMessage());
         }
 

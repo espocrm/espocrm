@@ -243,8 +243,7 @@ class InjectableFactory
                 $dependencyClassName = $type->getName();
 
                 $dependencyClass = new ReflectionClass($dependencyClassName);
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $badClassName = $type->getName();
 
                 // This trick allows to log syntax errors.
@@ -326,8 +325,7 @@ class InjectableFactory
         if ($type === Binding::CONTAINER_SERVICE) {
             try {
                 return $this->container->get($value);
-            }
-            catch (NotFoundExceptionInterface $e) {
+            } catch (NotFoundExceptionInterface $e) {
                 throw new RuntimeException($e->getMessage());
             }
         }

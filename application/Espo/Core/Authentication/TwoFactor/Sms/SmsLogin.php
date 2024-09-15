@@ -73,8 +73,7 @@ class SmsLogin implements Login
 
             try {
                 $this->util->sendCode($user);
-            }
-            catch (Forbidden $e) {
+            } catch (Forbidden $e) {
                 $this->log->error("Could not send 2FA code for user {$user->getUserName()}. " . $e->getMessage());
 
                 return Result::fail(FailReason::ERROR);

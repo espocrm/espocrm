@@ -48,8 +48,7 @@ class Rebuild implements Runner
     {
         try {
             $this->dataManager->rebuild();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             echo "Error: " . $e->getMessage() . "\n";
 
             $this->log->error('Rebuild: ' . $e->getMessage(), [

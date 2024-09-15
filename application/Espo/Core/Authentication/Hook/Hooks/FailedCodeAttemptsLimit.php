@@ -108,8 +108,7 @@ class FailedCodeAttemptsLimit implements BeforeLogin
 
         try {
             $requestTimeFrom = (new DateTime('@' . $requestTime))->modify('-' . $failedAttemptsPeriod);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
 

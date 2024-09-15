@@ -79,8 +79,7 @@ class DatabaseHandler implements HandlerInterface
             $this->setRequest($record, $logRecord);
 
             $this->entityManager->saveEntity($logRecord);
-        }
-        catch (Throwable) {
+        } catch (Throwable) {
             // Nowhere to log.
         }
 

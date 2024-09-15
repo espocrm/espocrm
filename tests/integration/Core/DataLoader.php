@@ -100,8 +100,7 @@ class DataLoader
             $fileManager = $this->getContainer()->getByClass(FileManager::class);
 
             $fileManager->copy($path, '.', true);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new Exception('Error loadFiles: ' . $e->getMessage());
         }
     }
@@ -128,8 +127,7 @@ class DataLoader
 
                 try {
                     $entityManager->saveEntity($entity);
-                }
-                catch (Exception $e) {
+                } catch (Exception $e) {
                     throw new Exception('Error loadEntities: ' . $e->getMessage() . ', ' . print_r($entityData, true));
                 }
             }
@@ -147,8 +145,7 @@ class DataLoader
 
         try {
             $config->save();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new Exception('Error loadConfig: ' . $e->getMessage());
         }
     }
@@ -165,8 +162,7 @@ class DataLoader
 
             try {
                 $entityManager->saveEntity($preferences);
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 throw new Exception('Error loadPreferences: ' . $e->getMessage());
             }
         }
@@ -187,8 +183,7 @@ class DataLoader
         foreach ($data as $sql) {
             try {
                 $pdo->query($sql);
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 throw new Exception('Error loadSql: ' . $e->getMessage() . ', sql: ' . $sql);
             }
         }

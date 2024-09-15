@@ -64,8 +64,7 @@ class JobTask extends AsyncTask
 
         try {
             $app->run(JobRunner::class, $params);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $log = $app->getContainer()->getByClass(Log::class);
 
             $log->error("JobTask: Failed to run job '$this->jobId'. Error: " . $e->getMessage());

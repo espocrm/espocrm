@@ -382,8 +382,7 @@ class Service implements Crud,
                 ->buildQueryBuilder()
                 ->order([])
                 ->build();
-        }
-        catch (BadRequest $e) {
+        } catch (BadRequest $e) {
             throw new RuntimeException($e->getMessage());
         }
 

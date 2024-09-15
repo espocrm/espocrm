@@ -124,8 +124,7 @@ class Extension implements Command
 
         try {
             $id = $manager->upload($fileDataEncoded);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $io->writeLine($e->getMessage());
             $io->setExitStatus(1);
 
@@ -148,8 +147,7 @@ class Extension implements Command
 
         try {
             $manager->install(['id' => $id]);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $io->writeLine("");
             $io->writeLine($e->getMessage());
             $io->setExitStatus(1);
@@ -216,8 +214,7 @@ class Extension implements Command
 
         try {
             $manager->uninstall(['id' => $id]);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $io->writeLine("");
             $io->writeLine($e->getMessage());
             $io->setExitStatus(1);
@@ -236,8 +233,7 @@ class Extension implements Command
 
         try {
             $manager->delete(['id' => $id]);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $io->writeLine($e->getMessage());
             $io->writeLine("Extension '$name' is uninstalled but could not be deleted.");
 

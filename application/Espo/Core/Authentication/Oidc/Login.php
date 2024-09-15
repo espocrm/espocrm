@@ -111,8 +111,7 @@ class Login implements LoginInterface
 
         try {
             $token = Token::create($rawToken);
-        }
-        catch (RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $message = self::composeLogMessage('JWT parsing error.');
 
             if ($e->getMessage()) {
@@ -129,8 +128,7 @@ class Login implements LoginInterface
 
         try {
             $this->validateToken($token);
-        }
-        catch (Invalid $e) {
+        } catch (Invalid $e) {
             $this->log->error("OIDC: " . $e->getMessage());
 
             return Result::fail(FailReason::DENIED);
@@ -259,8 +257,7 @@ class Login implements LoginInterface
 
         try {
             $parsedResponse = Json::decode($response);
-        }
-        catch (JsonException) {}
+        } catch (JsonException) {}
 
         if (!$parsedResponse instanceof stdClass) {
             $this->log->error(self::composeLogMessage('Bad token response.', $status, $response));

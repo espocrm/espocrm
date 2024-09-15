@@ -58,8 +58,7 @@ class JobRunner
     {
         try {
             $this->runInternal($jobEntity);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             throw new LogicException($e->getMessage());
         }
     }

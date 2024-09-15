@@ -75,8 +75,7 @@ class Import implements Command
                 $countUpdated = $result->getCountUpdated();
                 $countError = $result->getCountError();
                 $countDuplicate = $result->getCountDuplicate();
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $io->writeLine("Error occurred: " . $e->getMessage());
 
                 return;
@@ -97,8 +96,7 @@ class Import implements Command
 
             try {
                 $this->service->revert($id);
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $io->writeLine("Error occurred: " . $e->getMessage());
 
                 return;
@@ -114,8 +112,7 @@ class Import implements Command
 
             try {
                 $result = $this->service->importById($id, true, $forceResume);
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $io->writeLine("Error occurred: " . $e->getMessage());
 
                 return;

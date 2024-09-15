@@ -57,8 +57,7 @@ class RebuildCategoryPaths implements Command
 
         try {
             $this->rebuildPaths->run($entityType);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $io->setExitStatus(1);
             $io->writeLine("Error: " . $e->getMessage());
 

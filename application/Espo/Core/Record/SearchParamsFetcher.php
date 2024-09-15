@@ -59,8 +59,7 @@ class SearchParamsFetcher
     {
         try {
             return SearchParams::fromRaw($this->fetchRaw($request));
-        }
-        catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             throw new BadRequest($e->getMessage());
         }
     }
@@ -89,8 +88,7 @@ class SearchParamsFetcher
     {
         try {
             return Json::decode($request->getQueryParam('searchParams') ?? '', true);
-        }
-        catch (JsonException) {
+        } catch (JsonException) {
             throw new BadRequest("Invalid search params JSON.");
         }
     }

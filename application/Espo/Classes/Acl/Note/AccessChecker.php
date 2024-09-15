@@ -184,8 +184,7 @@ class AccessChecker implements AccessEntityCREDChecker
             if ($dt->format('U') > (new DateTime($createdAt))->format('U')) {
                 return false;
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 
@@ -226,8 +225,7 @@ class AccessChecker implements AccessEntityCREDChecker
             if ($dt->format('U') > (new DateTime($createdAt))->format('U')) {
                 return false;
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 

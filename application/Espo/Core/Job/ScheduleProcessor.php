@@ -79,8 +79,7 @@ class ScheduleProcessor
                 $isRunning = in_array($scheduledJob->getId(), $runningScheduledJobIdList);
 
                 $this->createJobsFromScheduledJob($scheduledJob, $isRunning);
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $id = $scheduledJob->getId();
 
                 $this->log->error("Scheduled Job '$id': " . $e->getMessage());
@@ -165,8 +164,7 @@ class ScheduleProcessor
 
         try {
             $cronExpression = CronExpression::factory($scheduling);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log->error(
                 "Scheduled Job '$id': Scheduling expression error: " .
                 $e->getMessage() . '.');
@@ -179,8 +177,7 @@ class ScheduleProcessor
         try {
             $next = $cronExpression->getNextRunDate(timeZone: $timeZone)
                 ->setTimezone(new DateTimeZone('UTC'));
-        }
-        catch (Exception) {
+        } catch (Exception) {
             $this->log->error("Scheduled Job '$id': Unsupported scheduling expression '$scheduling'.");
 
             return null;

@@ -168,8 +168,7 @@ class AppService
                 $obj = $this->injectableFactory->create($className);
 
                 $itemParams = $obj->get();
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $this->log->error("AppParam $paramKey: " . $e->getMessage(), ['exception' => $e]);
 
                 continue;

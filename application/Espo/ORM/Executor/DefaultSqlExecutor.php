@@ -75,8 +75,7 @@ class DefaultSqlExecutor implements SqlExecutor
 
         try {
             $sth = $this->pdo->query($sql);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $counter--;
 
             if ($counter === 0 || !$this->isExceptionIsDeadlock($e)) {

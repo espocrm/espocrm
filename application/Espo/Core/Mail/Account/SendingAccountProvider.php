@@ -118,8 +118,7 @@ class SendingAccountProvider
 
         try {
             return $this->groupAccountFactory->create($entity->getId());
-        }
-        catch (Error $e) {
+        } catch (Error $e) {
             throw new RuntimeException();
         }
     }
@@ -150,8 +149,7 @@ class SendingAccountProvider
 
         try {
             return $this->groupAccountFactory->create($entity->getId());
-        }
-        catch (Error $e) {
+        } catch (Error $e) {
             throw new RuntimeException();
         }
     }
@@ -193,8 +191,7 @@ class SendingAccountProvider
 
         try {
             return $this->personalAccountFactory->create($entity->getId());
-        }
-        catch (Error $e) {
+        } catch (Error $e) {
             throw new RuntimeException();
         }
     }
@@ -249,8 +246,7 @@ class SendingAccountProvider
 
         try {
             $this->system = $this->groupAccountFactory->create($entity->getId());
-        }
-        catch (Error $e) {
+        } catch (Error $e) {
             throw new RuntimeException();
         }
     }

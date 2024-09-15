@@ -83,8 +83,7 @@ class SendEmailReminders implements JobDataLess
         foreach ($collection as $entity) {
             try {
                 $emailReminder->send($entity);
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $this->log->error("Email reminder '{$entity->getId()}': " . $e->getMessage());
             }
 

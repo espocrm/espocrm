@@ -66,8 +66,7 @@ class Service
 
         try {
             $this->fetcher->fetch($account);
-        }
-        catch (ImapError $e) {
+        } catch (ImapError $e) {
             $this->notificationHelper->processImapError($account);
 
             throw $e;
@@ -112,8 +111,7 @@ class Service
         try {
             $storage = $this->storageFactory->createWithParams($params);
             $storage->getFolderNames();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log->warning("IMAP test connection failed; {message}", [
                 'exception' => $e,
                 'message' => $e->getMessage(),

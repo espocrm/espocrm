@@ -320,8 +320,7 @@ class AfterFetch implements AfterFetchInterface
                 ->send($reply);
 
             $this->entityManager->saveEntity($reply);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->error("Inbound Email: Auto-reply error: " . $e->getMessage());
         }
     }

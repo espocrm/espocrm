@@ -110,8 +110,7 @@ class Runner
 
         try {
             $this->stepRunner->runPrepare($step);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $io->writeLine(" FAIL");
 
             throw new RuntimeException($e->getMessage());

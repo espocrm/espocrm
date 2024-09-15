@@ -66,8 +66,7 @@ class DateTime
 
         try {
             $this->timezone = new DateTimeZone($timeZone ?? 'UTC');
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
     }
@@ -143,8 +142,7 @@ class DateTime
 
         try {
             $tz = $timezone ? new DateTimeZone($timezone) : $this->timezone;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -166,8 +164,7 @@ class DateTime
     {
         try {
             $tz = $timezone ? new DateTimeZone($timezone) : $this->timezone;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -190,8 +187,7 @@ class DateTime
     {
         try {
             $tz = $timezone ? new DateTimeZone($timezone) : $this->timezone;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
 

@@ -53,8 +53,7 @@ class AfterUpgradeRunner
 
         try {
             $this->dataManager->rebuild();
-        }
-        catch (Error $e) {
+        } catch (Error $e) {
             throw new RuntimeException("Error while rebuild: " . $e->getMessage());
         }
 
@@ -64,8 +63,7 @@ class AfterUpgradeRunner
 
         try {
             $this->dataManager->rebuild();
-        }
-        catch (Error $e) {
+        } catch (Error $e) {
             throw new RuntimeException("Error while rebuild: " . $e->getMessage());
         }
     }

@@ -122,8 +122,7 @@ class DataManager
 
         try {
             $result = $schemaManager->rebuild($entityTypeList, $mode);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $result = false;
 
             $this->log->error(

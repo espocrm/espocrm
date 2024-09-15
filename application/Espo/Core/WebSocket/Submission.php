@@ -64,8 +64,7 @@ class Submission
 
         try {
             $this->sender->send($message);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->error("WebSocketSubmission: " . $e->getMessage());
         }
     }

@@ -315,8 +315,7 @@ class AclTest extends BaseTestCase
                 'contactId' => $contactNotOwn->getId(),
                 'contactsIds' => [$contactNotOwn->getId()],
             ], CreateParams::create());
-        }
-        catch (Forbidden) {
+        } catch (Forbidden) {
             $isThrown = true;
         }
 

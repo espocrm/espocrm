@@ -165,8 +165,7 @@ class RecordTree extends Record
             if (!$this->acl->checkScope($this->getSubjectEntityType(), Table::ACTION_CREATE)) {
                 return true;
             }
-        }
-        catch (NotImplemented) {
+        } catch (NotImplemented) {
             return false;
         }
 

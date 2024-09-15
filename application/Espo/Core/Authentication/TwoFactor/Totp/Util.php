@@ -48,8 +48,7 @@ class Util
 
         try {
             return $impl->createSecret();
-        }
-        catch (TwoFactorAuthException $e) {
+        } catch (TwoFactorAuthException $e) {
             throw new RuntimeException($e->getMessage());
         }
     }

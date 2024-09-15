@@ -222,8 +222,7 @@ class PhoneType
 
         try {
             $numberObj = PhoneNumber::parse($number);
-        }
-        catch (PhoneNumberParseException) {
+        } catch (PhoneNumberParseException) {
             return false;
         }
 

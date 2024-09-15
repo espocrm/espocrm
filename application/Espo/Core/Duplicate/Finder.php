@@ -138,8 +138,7 @@ class Finder
                 ->select(['id'])
                 ->limit(0, self::LIMIT)
                 ->build();
-        }
-        catch (Forbidden|BadRequest $e) {
+        } catch (Forbidden|BadRequest $e) {
             throw new RuntimeException($e->getMessage(), 0, $e);
         }
 

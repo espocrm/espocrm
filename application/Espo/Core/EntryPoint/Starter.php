@@ -100,8 +100,7 @@ class Starter
 
         try {
             $authRequired = $this->entryPointManager->checkAuthRequired($entryPoint);
-        }
-        catch (NotFound $exception) {
+        } catch (NotFound $exception) {
             $this->errorOutput->processWithBodyPrinting($requestWrapped, $responseWrapped, $exception);
 
             (new ResponseEmitter())->emit($responseWrapped->toPsr7());
@@ -143,8 +142,7 @@ class Starter
                 $responseWrapped,
                 $authRequired
             );
-        }
-        catch (Exception $exception) {
+        } catch (Exception $exception) {
             $this->errorOutput->processWithBodyPrinting($requestWrapped, $responseWrapped, $exception);
         }
     }

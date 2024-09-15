@@ -90,8 +90,7 @@ class Processor
     {
         try {
             $this->formulaManager->run($script, $entity, $variables);
-        }
-        catch (FormulaError $e) {
+        } catch (FormulaError $e) {
             throw new RuntimeException('Formula script error.', 500, $e);
         }
     }

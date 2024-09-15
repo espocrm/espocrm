@@ -55,8 +55,7 @@ class TodayType implements Func
         try {
             $today = DateTime::createNow()
                 ->withTimezone(new DateTimeZone($timezone));
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
 

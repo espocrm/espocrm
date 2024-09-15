@@ -55,8 +55,7 @@ class Datetime implements Sanitizer
             DateTimeValue::fromString($value);
 
             return;
-        }
-        catch (Exception) {}
+        } catch (Exception) {}
 
         $dateTime = DateTimeImmutable::createFromFormat(DateTimeInterface::ATOM, $value);
 

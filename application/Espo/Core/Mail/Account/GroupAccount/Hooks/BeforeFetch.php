@@ -68,8 +68,7 @@ class BeforeFetch implements BeforeFetchInterface
         if ($this->bouncedRecognizer->isBounced($message)) {
             try {
                 $toSkip = $this->processBounced($message);
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $this->log->error(
                     'InboundEmail ' . $account->getId() . ' ' .
                     'Process Bounced Message; ' . $e->getCode() . ' ' . $e->getMessage()

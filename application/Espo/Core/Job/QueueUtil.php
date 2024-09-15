@@ -181,8 +181,7 @@ class QueueUtil
     {
         try {
             $dateObj = new DateTime($time);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new LogicException($e->getMessage());
         }
 

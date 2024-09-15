@@ -114,8 +114,7 @@ class Fetcher
 
         try {
             $storage->selectFolder($folderOriginal);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->error(
                 "{$account->getEntityType()} {$account->getId()}, " .
                 "could not select folder '$folder'; [{$e->getCode()}] {$e->getMessage()}"
@@ -316,8 +315,7 @@ class Fetcher
             ) {
                 $storage->setFlags($id, self::flagsWithoutRecent($flags));
             }
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->error(
                 "{$account->getEntityType()} {$account->getId()}, get message; " .
                 "{$e->getCode()} {$e->getMessage()}"
@@ -338,8 +336,7 @@ class Fetcher
                 $email,
                 $hookResult ?? BeforeFetchHookResult::create()
             );
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->error(
                 "{$account->getEntityType()} {$account->getId()}, after-fetch hook; " .
                 "{$e->getCode()} {$e->getMessage()}"
@@ -355,8 +352,7 @@ class Fetcher
 
         try {
             return $this->beforeFetchHook->process($account, $message);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->error(
                 "{$account->getEntityType()} {$account->getId()}, before-fetch hook; " .
                 "{$e->getCode()} {$e->getMessage()}"
@@ -417,8 +413,7 @@ class Fetcher
 
         try {
             $size = $storage->getSize($id);
-        }
-        catch (Throwable) {
+        } catch (Throwable) {
             return false;
         }
 
@@ -437,8 +432,7 @@ class Fetcher
 
         try {
             return $this->importer->import($message, $data);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->error(
                 "{$account->getEntityType()} {$account->getId()}, import message; " .
                 "{$e->getCode()} {$e->getMessage()}"

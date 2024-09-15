@@ -74,8 +74,7 @@ class ClientManager
     {
         try {
             $account = $this->getClientRecord($client);
-        }
-        catch (Error) {
+        } catch (Error) {
             // @todo Revise.
             return;
         }

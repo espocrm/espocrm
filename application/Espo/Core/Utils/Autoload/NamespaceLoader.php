@@ -209,8 +209,7 @@ class NamespaceLoader
 
                 try {
                     $this->classLoader->$methodName($prefix, $path);
-                }
-                catch (Throwable $e) {
+                } catch (Throwable $e) {
                     $this->log->error("Could not add '{$prefix}' to autoload: " . $e->getMessage());
 
                     continue;

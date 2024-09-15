@@ -70,8 +70,7 @@ class Sanitizer
 
         try {
             $number = PhoneNumber::parse($value, $countryCode);
-        }
-        catch (PhoneNumberParseException) {
+        } catch (PhoneNumberParseException) {
             return $value;
         }
 

@@ -52,8 +52,7 @@ class Preload implements Runner
 
         try {
             $preload->process();
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->processException($e);
 
             throw $e;

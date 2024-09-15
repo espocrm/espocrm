@@ -120,8 +120,7 @@ class Evaluator
 
         try {
             $result = $processor->process($item);
-        }
-        catch (ExecutionException $e) {
+        } catch (ExecutionException $e) {
             throw new LogicException('Unexpected ExecutionException.', 0, $e);
         }
 

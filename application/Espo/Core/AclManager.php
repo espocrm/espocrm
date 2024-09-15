@@ -279,8 +279,7 @@ class AclManager
     {
         try {
             return $this->check($user, $subject, $action);
-        }
-        catch (NotImplemented) {
+        } catch (NotImplemented) {
             return false;
         }
     }

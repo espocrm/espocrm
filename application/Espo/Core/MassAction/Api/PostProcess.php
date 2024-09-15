@@ -69,8 +69,7 @@ class PostProcess implements Action
 
         try {
             $massActionParams = Params::fromRaw($rawParams, $entityType);
-        }
-        catch (RuntimeException $e) {
+        } catch (RuntimeException $e) {
             throw new BadRequest($e->getMessage());
         }
 

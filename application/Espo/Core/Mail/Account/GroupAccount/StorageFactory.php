@@ -97,8 +97,7 @@ class StorageFactory implements StorageFactoryInterface
         if ($handlerClassName && !empty($rawParams['id'])) {
             try {
                 $handler = $this->injectableFactory->create($handlerClassName);
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $this->log->error("InboundEmail: Could not create Imap Handler. Error: " . $e->getMessage());
             }
 
@@ -126,8 +125,7 @@ class StorageFactory implements StorageFactoryInterface
 
         try {
             $storage = new Imap($imapParams);
-        }
-        catch (RuntimeException|InvalidArgumentException|ProtocolRuntimeException $e) {
+        } catch (RuntimeException|InvalidArgumentException|ProtocolRuntimeException $e) {
             throw new ImapError($e->getMessage(), 0, $e);
         }
 

@@ -211,8 +211,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         try {
             $processor->process('User', 'update', $request, $response);
-        }
-        catch (Exception $e) {};
+        } catch (Exception $e) {};
 
         $params = [
             'id' => $user1->getId(),

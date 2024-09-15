@@ -209,8 +209,7 @@ class DefaultImporter implements Importer
                 $dateSent = new DateTime($dateHeaderValue);
 
                 $email->setDateSent(DateTimeField::fromDateTime($dateSent));
-            }
-            catch (Exception) {}
+            } catch (Exception) {}
         }
 
         $duplicate = $this->findDuplicate($email, $message);
@@ -246,8 +245,7 @@ class DefaultImporter implements Importer
                     ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
                 $email->set('deliveryDate', $deliveryDate);
-            }
-            catch (Exception) {}
+            } catch (Exception) {}
         }
 
         $inlineAttachmentList = [];

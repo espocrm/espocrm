@@ -60,8 +60,7 @@ class Todays implements Filter
             $whereItem = $this->converterFactory
                 ->create($this->entityType, $this->user)
                 ->convert($queryBuilder, $item);
-        }
-        catch (Error $e) {
+        } catch (Error $e) {
             throw new LogicException($e->getMessage());
         }
 

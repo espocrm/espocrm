@@ -99,8 +99,7 @@ class MoveToFolder implements MassAction
 
         try {
             $query = $this->queryBuilder->build($params);
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -116,8 +115,7 @@ class MoveToFolder implements MassAction
         foreach ($collection as $email) {
             try {
                 $this->service->moveToFolder($email->getId(), $folderId, $this->user->getId());
-            }
-            catch (Exception) {
+            } catch (Exception) {
                 continue;
             }
 

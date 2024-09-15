@@ -138,8 +138,7 @@ class SchemaManager
 
         try {
             $this->processPreRebuildActions($fromSchema, $schema);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->alert('Rebuild database pre-rebuild error: '. $e->getMessage());
 
             return false;
@@ -175,8 +174,7 @@ class SchemaManager
 
         try {
             $this->processPostRebuildActions($fromSchema, $schema);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->alert('Rebuild database post-rebuild error: ' . $e->getMessage());
 
             return false;
@@ -200,8 +198,7 @@ class SchemaManager
 
             try {
                 $connection->executeQuery($sql);
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $this->log->alert('Rebuild database error: ' . $e->getMessage());
 
                 $result = false;

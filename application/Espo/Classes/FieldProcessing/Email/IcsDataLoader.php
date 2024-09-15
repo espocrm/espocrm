@@ -104,8 +104,7 @@ class IcsDataLoader implements Loader
                 $valueMap->dateStartDate = $espoEvent->getDateStart();
                 $valueMap->dateEndDate = $espoEvent->getDateEnd();
             }
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->warning("Error while converting ICS event '" . $entity->getId() . "': " . $e->getMessage());
 
             return;

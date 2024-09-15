@@ -1663,8 +1663,7 @@ class ItemGeneralConverter implements ItemConverter
 
         try {
             return new DateTimeZone($timeZone);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
     }
@@ -1682,8 +1681,7 @@ class ItemGeneralConverter implements ItemConverter
 
         try {
             return new DateTimeZone($timeZone);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new BadRequest($e->getMessage());
         }
     }

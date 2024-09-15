@@ -81,8 +81,7 @@ class RouteProcessor
                 $requestWrapped,
                 $responseWrapped
             );
-        }
-        catch (Exception $exception) {
+        } catch (Exception $exception) {
             $this->handleException(
                 $exception,
                 $requestWrapped,
@@ -242,8 +241,7 @@ class RouteProcessor
 
         try {
             $this->errorOutput->process($request, $response, $exception, $route);
-        }
-        catch (Throwable $exceptionAnother) {
+        } catch (Throwable $exceptionAnother) {
             $this->log->error($exceptionAnother->getMessage());
 
             $response->setStatus(500);

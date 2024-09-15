@@ -504,8 +504,7 @@ class Htmlizer
 
             try {
                 $query = $selectBuilder->build();
-            }
-            catch (BadRequest|Forbidden $e) {
+            } catch (BadRequest|Forbidden $e) {
                 throw new RuntimeException($e->getMessage(), 0, $e);
             }
 
@@ -960,8 +959,7 @@ class Htmlizer
                 }
 
                 $wrapperElement->setAttribute('v', $element->getAttribute($attribute));
-            }
-            catch (DOMException $e) {
+            } catch (DOMException $e) {
                 throw new LogicException($e->getMessage());
             }
 

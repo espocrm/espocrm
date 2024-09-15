@@ -1202,7 +1202,6 @@ class Manager
 
         try {
             opcache_invalidate($filepath, $force);
-        }
-        catch (Throwable $e) {}
+        } catch (Throwable $e) {}
     }
 }

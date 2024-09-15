@@ -267,8 +267,7 @@ class Queue
     {
         try {
             $code = $this->sender->send($webhook, $dataList);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->failQueueItemList($itemList, true);
 
             $this->log->error("Webhook Queue: Webhook '{$webhook->getId()}' sending failed. Error: {$e->getMessage()}");

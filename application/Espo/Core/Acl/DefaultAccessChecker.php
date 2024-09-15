@@ -215,8 +215,7 @@ class DefaultAccessChecker implements
     {
         try {
             $dt = new DateTime($value);
-        }
-        catch (Exception) {
+        } catch (Exception) {
             return false;
         }
 

@@ -51,8 +51,7 @@ class CheckEmailAccounts implements Job
 
         try {
             $this->service->fetch($targetId);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             throw new RuntimeException("CheckInboundEmails job failed, $targetId; {$e->getMessage()}", 0, $e);
         }
     }

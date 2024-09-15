@@ -589,8 +589,7 @@ class Sender
 
             $email->setStatus(Email::STATUS_SENT);
             $email->set('dateSent', DateTime::createNow()->toString());
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             /** @noinspection PhpDeprecationInspection */
             $this->resetParams();
             /** @noinspection PhpDeprecationInspection */

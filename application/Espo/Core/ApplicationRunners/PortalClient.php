@@ -87,8 +87,7 @@ class PortalClient implements RunnerParameterized
             }
 
             $application = new PortalApplication($id);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->processError($requestWrapped, $responseWrapped, $e);
 
             return;
