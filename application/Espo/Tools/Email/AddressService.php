@@ -33,6 +33,7 @@ use Espo\Core\Acl;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Select\Text\MetadataProvider as TextMetadataProvider;
 use Espo\Core\Templates\Entities\Company;
@@ -53,6 +54,8 @@ use RuntimeException;
 class AddressService
 {
     private const ERASED_PREFIX = 'ERASED:';
+
+    private const ATTR_EMAIL_ADDRESS = 'emailAddress';
 
     public function __construct(
         private Config $config,
@@ -249,9 +252,7 @@ class AddressService
         ];
 
         if (
-            $this->metadata->get(
-                ['entityDefs', $entityType, 'fields', 'name', 'type']
-            ) === 'personName'
+            $this->metadata->get(['entityDefs', $entityType, 'fields', 'name', 'type']) === FieldType::PERSON_NAME
         ) {
             $select[] = 'firstName';
             $select[] = 'lastName';
@@ -265,7 +266,7 @@ class AddressService
             ->find();
 
         foreach ($collection as $entity) {
-            $emailAddress = $entity->get('emailAddress');
+            $emailAddress = $entity->get(self::ATTR_EMAIL_ADDRESS);
 
             $emailAddressData = $this->getEmailAddressRepository()->getEmailAddressData($entity);
 
