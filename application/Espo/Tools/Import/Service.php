@@ -234,8 +234,7 @@ class Service
 
             try {
                 $createdAtDt = new DateTime($createdAt);
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 throw new RuntimeException($e->getMessage());
             }
 

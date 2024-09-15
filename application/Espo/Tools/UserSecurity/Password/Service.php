@@ -284,8 +284,7 @@ class Service
 
         try {
             $this->sender->sendPassword($user, $password);
-        }
-        catch (SendingError) {
+        } catch (SendingError) {
             throw new Error("Email sending error.");
         }
 

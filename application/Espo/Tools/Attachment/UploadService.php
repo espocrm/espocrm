@@ -144,8 +144,7 @@ class UploadService
         if ($this->detailsObtainer->getFieldType($attachment) === FieldType::IMAGE) {
             try {
                 $this->checker->checkTypeImage($attachment, $filePath);
-            }
-            catch (Forbidden $e) {
+            } catch (Forbidden $e) {
                 $this->entityManager->removeEntity($attachment);
 
                 throw new ForbiddenSilent($e->getMessage());

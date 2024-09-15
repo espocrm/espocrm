@@ -73,8 +73,7 @@ class PrepareForFulltextIndex implements RebuildAction
                     try {
                         /** @var array{Type: string, Collation: string} $row */
                         $row = $connection->fetchAssociative($sql);
-                    }
-                    catch (Exception) {
+                    } catch (Exception) {
                         continue;
                     }
 

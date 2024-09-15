@@ -174,8 +174,7 @@ class Processor
 
         try {
             $service->processValidation($entity, $values);
-        }
-        catch (Exception) {
+        } catch (Exception) {
             return false;
         }
 
@@ -185,8 +184,7 @@ class Processor
 
         try {
             $this->linkCheck->processFields($entity);
-        }
-        catch (Forbidden) {
+        } catch (Forbidden) {
             return false;
         }
 

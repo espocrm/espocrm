@@ -135,8 +135,7 @@ class ScheduledJob
         try {
             $r1From = new DateTime('-' . $this->checkingCronPeriod);
             $r1To = new DateTime('+' . $this->checkingCronPeriod);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException();
         }
 

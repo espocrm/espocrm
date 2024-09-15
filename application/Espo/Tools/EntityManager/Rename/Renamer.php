@@ -374,8 +374,7 @@ class Renamer
 
         try {
             $this->entityManager->getSqlExecutor()->execute($sql);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $msg = $e->getMessage();
 
             $this->log->error("Entity-rename: Rename relationship column failed: {$msg}.");
@@ -608,8 +607,7 @@ class Renamer
 
         try {
             $this->entityManager->getQueryExecutor()->execute($query);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $msg = $e->getMessage();
 
             $this->log->error("Entity-rename: Update values in link-parent field {$entityType}.{$field}: {$msg}.");

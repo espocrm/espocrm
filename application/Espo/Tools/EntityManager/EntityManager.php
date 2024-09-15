@@ -542,8 +542,7 @@ class EntityManager
         foreach ($this->metadata->get(['entityDefs', $name, 'links'], []) as $link => $item) {
             try {
                 $this->linkManager->delete(['entity' => $name, 'link' => $link]);
-            }
-            catch (Exception) {}
+            } catch (Exception) {}
         }
 
         $this->fileManager->removeFile("custom/Espo/Custom/Resources/metadata/entityDefs/$name.json");
@@ -582,8 +581,7 @@ class EntityManager
 
             $this->baseLanguage->delete('Global', 'scopeNames', $name);
             $this->baseLanguage->delete('Global', 'scopeNamesPlural', $name);
-        }
-        catch (Exception) {}
+        } catch (Exception) {}
 
         $this->metadata->save();
         $this->language->save();

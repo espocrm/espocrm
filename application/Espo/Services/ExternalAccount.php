@@ -96,8 +96,7 @@ class ExternalAccount extends Record implements Di\HookManagerAware
                 /** @var @bool */
                 return $client->ping();
             }
-        }
-        catch (Exception) {}
+        } catch (Exception) {}
 
         return false;
     }

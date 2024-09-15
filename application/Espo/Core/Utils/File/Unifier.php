@@ -235,8 +235,7 @@ class Unifier
 
         try {
             return Json::decode($fileContent, !$this->useObjects);
-        }
-        catch (JsonException) {
+        } catch (JsonException) {
             throw new JsonException("JSON syntax error in '$path'.");
         }
     }

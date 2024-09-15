@@ -137,8 +137,7 @@ class AfterUpgrade implements Script
         if ($schemaManager->tablesExist('stream_subscription')) {
             try {
                 $schemaManager->dropTable('stream_subscription');
-            }
-            catch (DbalException) {
+            } catch (DbalException) {
                 $schemaManager->renameTable('stream_subscription', 'stream_subscription_waste');
             }
         }

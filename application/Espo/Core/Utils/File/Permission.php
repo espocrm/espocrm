@@ -519,8 +519,7 @@ class Permission
 
             try {
                 $this->chmod($path, $this->writablePermissions, $options['recursive']);
-            }
-            catch (Throwable) {}
+            } catch (Throwable) {}
 
             /** check is writable */
             $res = is_writable($path);
@@ -532,8 +531,7 @@ class Permission
                     $res &= $this->fileManager->putContents($path . '/' . $name, 'test');
 
                     $res &= $this->fileManager->removeFile($name, $path);
-                }
-                catch (Throwable) {
+                } catch (Throwable) {
                     $res = false;
                 }
             }

@@ -253,8 +253,7 @@ class Installer
                 }
 
                 $this->language = $language;
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 echo "Error: " . $e->getMessage();
 
                 $GLOBALS['log']->error($e->getMessage());
@@ -328,8 +327,7 @@ class Installer
 
         try {
             $this->databaseHelper->createPDO($params);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             if (!$createDatabase) {
                 throw $e;
             }
@@ -431,8 +429,7 @@ class Installer
     {
         try {
             $this->app->getContainer()->getByClass(DataManager::class)->rebuild();
-        }
-        catch (Exception) {
+        } catch (Exception) {
             $this->auth();
 
             $this->app->getContainer()->getByClass(DataManager::class)->rebuild();

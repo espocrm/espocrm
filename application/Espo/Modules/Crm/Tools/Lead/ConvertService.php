@@ -446,8 +446,7 @@ class ConvertService
 
         try {
             $opportunity = $service->create($values, CreateParams::create()->withSkipDuplicateCheck());
-        }
-        catch (BadRequest|Conflict $e) {
+        } catch (BadRequest|Conflict $e) {
             throw new RuntimeException($e->getMessage());
         }
 

@@ -72,8 +72,7 @@ class ProcessMassEmail implements JobDataLess
         foreach ($pendingMassEmailList as $massEmail) {
             try {
                 $this->queue->create($massEmail);
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $this->log->error(
                     'Job ProcessMassEmail#createQueue ' . $massEmail->getId() . ': [' . $e->getCode() . '] ' .
                     $e->getMessage()
@@ -91,8 +90,7 @@ class ProcessMassEmail implements JobDataLess
         foreach ($massEmailList as $massEmail) {
             try {
                 $this->processor->process($massEmail);
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $this->log->error(
                     'Job ProcessMassEmail#processSending '. $massEmail->getId() . ': [' . $e->getCode() . '] ' .
                     $e->getMessage()

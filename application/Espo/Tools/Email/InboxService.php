@@ -68,8 +68,7 @@ class InboxService
         foreach ($idList as $id) {
             try {
                 $this->moveToFolder($id, $folderId, $userId);
-            }
-            catch (Exception) {}
+            } catch (Exception) {}
         }
     }
 
@@ -110,8 +109,7 @@ class InboxService
         if ($folderId && str_starts_with($folderId, 'group:')) {
             try {
                 $this->moveToGroupFolder($email, substr($folderId, 6), $user);
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 $this->log->debug("Could not move email to group folder. " . $e->getMessage());
 
                 throw $e;
@@ -504,8 +502,7 @@ class InboxService
                     ->getRDBRepository(Email::ENTITY_TYPE)
                     ->clone($itemSelectBuilder->build())
                     ->count();
-            }
-            catch (BadRequest|Forbidden $e) {
+            } catch (BadRequest|Forbidden $e) {
                 throw new RuntimeException($e->getMessage());
             }
         }

@@ -147,8 +147,7 @@ class SalesByMonth
 
             try {
                 $dt = new DateTime($key . '-01');
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 throw new LogicException();
             }
 

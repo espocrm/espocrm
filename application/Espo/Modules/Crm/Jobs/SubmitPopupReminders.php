@@ -154,8 +154,7 @@ class SubmitPopupReminders implements JobDataLess
             try {
                 $this->webSocketSubmission
                     ->submit('popupNotifications.event', $userId, (object) ['list' => $list]);
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $this->log->error('Job SubmitPopupReminders: [' . $e->getCode() . '] ' .$e->getMessage());
             }
         }

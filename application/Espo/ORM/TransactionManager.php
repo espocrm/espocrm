@@ -73,8 +73,7 @@ class TransactionManager
             $result = $function();
 
             $this->commit();
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->rollback();
 
             /**

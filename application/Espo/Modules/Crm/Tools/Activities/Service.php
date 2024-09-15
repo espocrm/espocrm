@@ -211,8 +211,7 @@ class Service
                         'usersLeftMiddle.callId:' => 'call.id',
                     ]
                 );
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -288,8 +287,7 @@ class Service
                 ->where([
                     'usersLeftMiddle.userId' => $entity->getId(),
                 ]);
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -352,8 +350,7 @@ class Service
                     'createdAt',
                     ['false', 'hasAttachment'],
                 ]);
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -481,8 +478,7 @@ class Service
                     'createdAt',
                     'hasAttachment',
                 ]);
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -1079,8 +1075,7 @@ class Service
                     'createdAt',
                     ['false', 'hasAttachment'],
                 ]);
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 

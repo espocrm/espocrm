@@ -232,8 +232,7 @@ class SendService
                 ->withParams($params)
                 ->withMessage($message)
                 ->send($entity);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $entity->setStatus(Email::STATUS_DRAFT);
 
             $this->entityManager->saveEntity($entity, [SaveOption::SILENT => true]);
@@ -309,8 +308,7 @@ class SendService
 
             try {
                 $this->groupAccountService->storeSentMessage($id, $message);
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 $this->log->error(
                     "Email sending: Could not store sent email (Group Email Account {$groupAccount->getId()}): " .
                     $e->getMessage() . "."
@@ -327,8 +325,7 @@ class SendService
 
             try {
                 $this->personalAccountService->storeSentMessage($id, $message);
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 $this->log->error(
                     "Email sending: Could not store sent email (Email Account {$personalAccount->getId()}): " .
                     $e->getMessage() . "."
@@ -474,8 +471,7 @@ class SendService
             $this->emailSender
                 ->withSmtpParams($params)
                 ->send($email);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log->warning("Email sending:" . $e->getMessage() . "; " . $e->getCode());
 
             if ($e instanceof SendingError) {
@@ -607,8 +603,7 @@ class SendService
 
         try {
             $handler = $this->injectableFactory->create($handlerClassName);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->error(
                 "Email sending: Could not create Smtp Handler for $emailAddress. Error: " .
                 $e->getMessage() . "."

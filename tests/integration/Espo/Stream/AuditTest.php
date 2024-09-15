@@ -133,8 +133,7 @@ class AuditTest extends BaseTestCase
             $service = $this->getInjectableFactory()->create(RecordService::class);
             /** @noinspection PhpUnhandledExceptionInspection */
             $service->findUpdates(KnowledgeBaseArticle::ENTITY_TYPE, $article->getId(), $searchParams);
-        }
-        catch (Forbidden) {
+        } catch (Forbidden) {
             $isThrown = true;
         }
 
@@ -149,8 +148,7 @@ class AuditTest extends BaseTestCase
             $service = $this->getInjectableFactory()->create(RecordService::class);
             /** @noinspection PhpUnhandledExceptionInspection */
             $service->findUpdates(KnowledgeBaseArticle::ENTITY_TYPE, $article->getId(), $searchParams);
-        }
-        catch (Forbidden) {
+        } catch (Forbidden) {
             $isThrown = true;
         }
 

@@ -309,8 +309,7 @@ class Service
                         ],
                     ],
                 ]);
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -389,8 +388,7 @@ class Service
                     ],
                 ])
                 ->build();
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
     }
@@ -455,8 +453,7 @@ class Service
                     ],
                 ])
                 ->build();
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
     }
@@ -519,8 +516,7 @@ class Service
                         ],
                     ],
                 ]);
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -576,8 +572,7 @@ class Service
                     $fetchParams->withScopeList($brScopeList),
                     array_filter($eventList, fn (Item $item) => $item instanceof Event)
                 );
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 if ($e instanceof Forbidden) {
                     continue;
                 }
@@ -739,8 +734,7 @@ class Service
         foreach ($userIdList as $userId) {
             try {
                 $userItemList = $this->fetch($userId, $fetchParams);
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 if ($e instanceof Forbidden) {
                     continue;
                 }
@@ -858,8 +852,7 @@ class Service
                 ];
 
                 $rangeList[] = $busyItem;
-            }
-            catch (Exception) {}
+            } catch (Exception) {}
         }
 
         return array_map(
@@ -958,8 +951,7 @@ class Service
             if ($diff->days > $this->config->get('busyRangesMaxRange', self::BUSY_RANGES_MAX_RANGE_DAYS)) {
                 $toReturn = false;
             }
-        }
-        catch (Exception) {
+        } catch (Exception) {
             throw new Error("BusyRanges: Bad date range.");
         }
 
@@ -1005,8 +997,7 @@ class Service
                 $busyRangeList = $toReturn ?
                     $this->fetchBusyRanges($userId, $fetchParams, $ignoreList) :
                     [];
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 if ($e instanceof Forbidden) {
                     continue;
                 }

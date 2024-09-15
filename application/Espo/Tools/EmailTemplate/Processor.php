@@ -347,8 +347,7 @@ class Processor
 
             try {
                 $hasAccess = $this->aclManager->checkEntityRead($user, $relatedEntity);
-            }
-            catch (Exception) {
+            } catch (Exception) {
                 continue;
             }
 

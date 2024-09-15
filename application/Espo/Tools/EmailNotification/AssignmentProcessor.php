@@ -182,8 +182,7 @@ class AssignmentProcessor
 
         try {
             $this->emailSender->send($email);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log->error('EmailNotification: [' . $e->getCode() . '] ' . $e->getMessage());
         }
     }

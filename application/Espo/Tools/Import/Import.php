@@ -367,8 +367,7 @@ class Import
                     'isDuplicate' => $rowResult['isDuplicate'] ?? false,
                 ]);
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log->error('Import: ' . $e->getMessage());
 
             $import->set('status', ImportEntity::STATUS_FAILED);
@@ -516,8 +515,7 @@ class Import
 
             try {
                 $this->processRowItem($entity, $attribute, $value, $valueMap);
-            }
-            catch (ValidationError $e) {
+            } catch (ValidationError $e) {
                 $failureList[] = $e->getFailure();
             }
         }
@@ -593,8 +591,7 @@ class Import
             } else {
                 $result['isUpdated'] = true;
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $errorType = null;
 
             if ((int) $e->getCode() === 23000 && $e instanceof PDOException) {

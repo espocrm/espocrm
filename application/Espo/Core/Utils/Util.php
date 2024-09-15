@@ -633,8 +633,7 @@ class Util
             $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
 
             $hex = bin2hex($data);
-        }
-        catch (Exception) {
+        } catch (Exception) {
             throw new RuntimeException("Could not generate UUID.");
         }
 

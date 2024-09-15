@@ -511,8 +511,7 @@ class FieldValidationTest extends BaseTestCase
                     ],
                 ],
             ], CreateParams::create());
-        }
-        catch (BadRequest) {
+        } catch (BadRequest) {
             $thrown = true;
         }
 

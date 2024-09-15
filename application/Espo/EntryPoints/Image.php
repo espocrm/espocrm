@@ -332,8 +332,7 @@ class Image implements EntryPoint
             case 'image/webp':
                 try {
                     $sourceImage = imagecreatefromwebp($filePath);
-                }
-                catch (Throwable) {
+                } catch (Throwable) {
                     return null;
                 }
 

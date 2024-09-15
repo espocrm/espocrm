@@ -97,8 +97,7 @@ class ExternalAccount extends Integration
 
         try {
             return DateTime::fromString($raw);
-        }
-        catch (RuntimeException) {
+        } catch (RuntimeException) {
             return null;
         }
     }

@@ -106,8 +106,7 @@ class FieldManager
 
         try {
             $this->rebuild($scope);
-        }
-        catch (Error $e) {
+        } catch (Error $e) {
             $fieldManagerTool->delete($scope, $name);
 
             throw new Error($e->getMessage());

@@ -369,8 +369,7 @@ class Processor
             $this->emailSender
                 ->withParams($senderParams)
                 ->send($email);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }
@@ -583,8 +582,7 @@ class Processor
             $this->emailSender
                 ->withParams($senderParams)
                 ->send($email);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }
@@ -739,8 +737,7 @@ class Processor
             $this->emailSender
                 ->withParams($senderParams)
                 ->send($email);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }
@@ -880,8 +877,7 @@ class Processor
             $this->emailSender
                 ->withParams($senderParams)
                 ->send($email);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }

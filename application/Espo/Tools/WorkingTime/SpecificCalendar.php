@@ -64,8 +64,7 @@ class SpecificCalendar implements Calendar
     ) {
         try {
             $this->timezone = new DateTimeZone($config->get('timeZone'));
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
 

@@ -204,8 +204,7 @@ class UserRecordService
     {
         try {
             return $this->userAclManagerProvider->get($user);
-        }
-        catch (Acl\Exceptions\NotAvailable) {
+        } catch (Acl\Exceptions\NotAvailable) {
             return null;
         }
     }

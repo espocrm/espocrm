@@ -95,8 +95,7 @@ class Process implements Job
             $result = $export
                 ->setParams($entity->getParams())
                 ->run();
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->setFailed($entity);
 
             throw new Error("Export job error: " . $e->getMessage());

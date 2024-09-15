@@ -234,8 +234,7 @@ class AddressService
                 ->where($whereClause)
                 ->order('name')
                 ->limit(0, $limit);
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 

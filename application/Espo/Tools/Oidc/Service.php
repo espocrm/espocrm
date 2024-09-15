@@ -119,8 +119,7 @@ class Service
 
         try {
             $this->backchannelLogout->logout($rawToken);
-        }
-        catch (Invalid $e) {
+        } catch (Invalid $e) {
             throw new Forbidden("OIDC logout: Invalid JWT. " . $e->getMessage());
         }
     }

@@ -221,8 +221,7 @@ class Service
 
                 try {
                     $hasAccess = $this->aclManager->checkEntityStream($user, $entity);
-                }
-                catch (AclNotImplemented) {
+                } catch (AclNotImplemented) {
                     $hasAccess = false;
                 }
 
@@ -1103,8 +1102,7 @@ class Service
     {
         try {
             return $this->userAclManagerProvider->get($user);
-        }
-        catch (NotAvailable) {
+        } catch (NotAvailable) {
             return null;
         }
     }

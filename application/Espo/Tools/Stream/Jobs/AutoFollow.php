@@ -95,8 +95,7 @@ class AutoFollow implements Job
 
             try {
                 $hasAccess = $this->aclManager->checkEntityStream($user, $entity);
-            }
-            catch (AclNotImplemented $e) {
+            } catch (AclNotImplemented $e) {
                 $hasAccess = false;
             }
 

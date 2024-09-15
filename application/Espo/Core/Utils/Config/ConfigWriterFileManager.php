@@ -108,8 +108,7 @@ class ConfigWriterFileManager
     {
         try {
             $data = $this->fileManager->getPhpContents($path);
-        }
-        catch (RuntimeException) {
+        } catch (RuntimeException) {
             return false;
         }
 

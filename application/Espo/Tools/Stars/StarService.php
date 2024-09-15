@@ -88,8 +88,7 @@ class StarService
                 'userId' => $user->getId(),
                 'createdAt' => DateTime::getSystemNowString(),
             ]);
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             if ((int) $e->getCode() === 23000) {
                 // Duplicate.
                 return;
