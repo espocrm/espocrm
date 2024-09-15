@@ -26,10 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import Base from 'views/admin/dynamic-logic/conditions/field-types/base';
+import DynamicLogicConditionFieldTypeBaseView from 'views/admin/dynamic-logic/conditions/field-types/base';
 import Model from 'model';
 
-export default class extends Base {
+export default class extends DynamicLogicConditionFieldTypeBaseView {
 
     getValueViewName() {
         return 'views/fields/user';
@@ -69,6 +69,7 @@ export default class extends Base {
     }
 
     fetch() {
+        /** @type {import('views/fields/base').default} */
         const valueView = this.getView('value');
 
         valueView.fetchToModel();
@@ -85,4 +86,3 @@ export default class extends Base {
         };
     }
 }
-

@@ -29,9 +29,36 @@
 import View from 'view';
 import Select from 'ui/select';
 
-export default class extends View {
+export default class DynamicLogicConditionFieldTypeBaseView extends View {
 
     template = 'admin/dynamic-logic/conditions/field-types/base'
+
+    /**
+     * @protected
+     * @type {Record}
+     */
+    itemData
+
+    /**
+     * @protected
+     * @type {Record}
+     */
+    additionalData
+
+    /**
+     * @type {string}
+     */
+    type
+
+    /**
+     * @type {string}
+     */
+    field
+
+    /**
+     * @type {string}
+     */
+    scope
 
     events = {
         'click > div > div > [data-action="remove"]': function (e) {

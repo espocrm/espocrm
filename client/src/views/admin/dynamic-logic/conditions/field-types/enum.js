@@ -26,35 +26,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/conditions/field-types/enum',
-['views/admin/dynamic-logic/conditions/field-types/base'], function (Dep) {
+import DynamicLogicConditionFieldTypeBaseView from 'views/admin/dynamic-logic/conditions/field-types/base';
 
-    return Dep.extend({
+export default class extends DynamicLogicConditionFieldTypeBaseView {
 
-        fetch: function () {
-            var valueView = this.getView('value');
+    fetch() {
+        /** @type {import('views/fields/base').default} */
+        const valueView = this.getView('value');
 
-            var item = {
-                type: this.type,
-                attribute: this.field,
-            };
+        const item = {
+            type: this.type,
+            attribute: this.field,
+        };
 
-            if (valueView) {
-                valueView.fetchToModel();
-                item.value = this.model.get(this.field);
-            }
+        if (valueView) {
+            valueView.fetchToModel();
+            item.value = this.model.get(this.field);
+        }
 
-            return item;
-        },
+        return item;
+    }
 
-        getValueViewName: function () {
-            var viewName = Dep.prototype.getValueViewName.call(this);
+    getValueViewName() {
+        let viewName = super.getValueViewName();
 
-            if (~['in', 'notIn'].indexOf(this.type)) {
-                viewName = 'views/fields/multi-enum';
-            }
+        if (['in', 'notIn'].includes(this.type)) {
+            viewName = 'views/fields/multi-enum';
+        }
 
-            return viewName;
-        },
-    });
-});
+        return viewName;
+    }
+}
