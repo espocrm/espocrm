@@ -27,41 +27,54 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\AccessControl\Filters;
+namespace Espo\Core\Select\Helpers;
 
-use Espo\Core\Select\AccessControl\Filter;
-use Espo\Core\Select\Helpers\RelationQueryHelper;
-use Espo\Core\Select\Helpers\FieldHelper;
-use Espo\Entities\User;
+use Espo\ORM\Defs;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\WhereItem;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
-class OnlyOwn implements Filter
+/**
+ * @since 8.5.0
+ */
+class RelationQueryHelper
 {
     public function __construct(
-        private User $user,
-        private FieldHelper $fieldHelper,
-        private string $entityType,
-        private RelationQueryHelper $relationQueryHelper,
+        private Defs $defs,
     ) {}
 
-    public function apply(QueryBuilder $queryBuilder): void
+    /**
+     * @param string|string[] $id
+     */
+    public function prepareMiddleWhere(string $entityType, string $link, string|array $id): WhereItem
     {
-        if ($this->fieldHelper->hasAssignedUsersField()) {
-            $queryBuilder->where(
-                $this->relationQueryHelper->prepareAssignedUsersWhere($this->entityType, $this->user->getId())
-            );
+        $relationDefs = $this->defs
+            ->getEntity($entityType)
+            ->getRelation($link);
 
-            return;
-        }
+        $middleEntityType = ucfirst($relationDefs->getRelationshipName());
+        $key1 = $relationDefs->getMidKey();
+        $key2 = $relationDefs->getForeignMidKey();
 
-        if ($this->fieldHelper->hasAssignedUserField()) {
-            $queryBuilder->where(['assignedUserId' => $this->user->getId()]);
+        $subQuery = QueryBuilder::create()
+            ->select('id')
+            ->from($entityType)
+            ->leftJoin($middleEntityType, 'm', [
+                "m.$key1:" => 'id',
+                'm.deleted' => false,
+            ])
+            ->where(["m.$key2" => $id])
+            ->build();
 
-            return;
-        }
+        return Condition::in(
+            Expression::column('id'),
+            $subQuery
+        );
+    }
 
-        if ($this->fieldHelper->hasCreatedByField()) {
-            $queryBuilder->where(['createdById' => $this->user->getId()]);
-        }
+    public function prepareAssignedUsersWhere(string $entityType, string $userId): WhereItem
+    {
+        return $this->prepareMiddleWhere($entityType, 'assignedUsers', $userId);
     }
 }

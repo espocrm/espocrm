@@ -37,6 +37,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Field\DateTime as DateTimeField;
+use Espo\Core\Select\Helpers\RelationQueryHelper;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
@@ -76,7 +77,8 @@ class Service
         private Metadata $metadata,
         private SelectBuilderFactory $selectBuilderFactory,
         private User $user,
-        private ServiceFactory $serviceFactory
+        private ServiceFactory $serviceFactory,
+        private RelationQueryHelper $relationQueryHelper,
     ) {}
 
     /**
@@ -524,12 +526,9 @@ class Service
             $this->metadata->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'type']) === 'linkMultiple' &&
             !$this->metadata->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'disabled'])
         ) {
-            $queryBuilder
-                ->distinct()
-                ->leftJoin('assignedUsers', 'assignedUsers')
-                ->where([
-                    'assignedUsers.id' => $userId,
-                ]);
+            $queryBuilder->where(
+                $this->relationQueryHelper->prepareAssignedUsersWhere(Task::ENTITY_TYPE, $userId)
+            );
         } else {
             $queryBuilder->where([
                 'assignedUserId' => $userId,
