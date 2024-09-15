@@ -329,8 +329,7 @@ class LinkManager
                             ],
                         ],
                     ];
-                }
-                else {
+                } else {
                     $dataLeft = [
                         'fields' => [
                             $link => [
@@ -924,17 +923,13 @@ class LinkManager
 
         if ($linkType === Entity::HAS_MANY && $foreignLinkType === Entity::HAS_MANY) {
             $type = LinkType::MANY_TO_MANY;
-        }
-        else if ($linkType === Entity::HAS_MANY && $foreignLinkType === Entity::BELONGS_TO) {
+        } else if ($linkType === Entity::HAS_MANY && $foreignLinkType === Entity::BELONGS_TO) {
             $type = LinkType::ONE_TO_MANY;
-        }
-        else if ($linkType === Entity::BELONGS_TO && $foreignLinkType === Entity::HAS_MANY) {
+        } else if ($linkType === Entity::BELONGS_TO && $foreignLinkType === Entity::HAS_MANY) {
             $type = LinkType::MANY_TO_ONE;
-        }
-        else if ($linkType === Entity::HAS_ONE && $foreignLinkType === Entity::BELONGS_TO) {
+        } else if ($linkType === Entity::HAS_ONE && $foreignLinkType === Entity::BELONGS_TO) {
             $type = LinkType::ONE_TO_ONE_LEFT;
-        }
-        else if ($linkType === Entity::BELONGS_TO && $foreignLinkType === Entity::HAS_ONE) {
+        } else if ($linkType === Entity::BELONGS_TO && $foreignLinkType === Entity::HAS_ONE) {
             $type = LinkType::ONE_TO_ONE_RIGHT;
         }
 

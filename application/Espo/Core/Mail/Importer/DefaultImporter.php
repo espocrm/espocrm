@@ -266,8 +266,7 @@ class DefaultImporter implements Importer
 
                 $email->setGroupFolderId($groupEmailFolderId);
             }
-        }
-        else {
+        } else {
             $email->setBody('Not fetched. The email size exceeds the limit.');
             $email->setIsHtml(false);
         }

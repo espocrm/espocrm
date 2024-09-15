@@ -115,23 +115,18 @@ class JobRunner
         try {
             if ($jobEntity->getScheduledJobId()) {
                 $this->runScheduledJob($jobEntity);
-            }
-            else if ($jobEntity->getJob()) {
+            } else if ($jobEntity->getJob()) {
                 $this->runJobNamed($jobEntity);
-            }
-            else if ($jobEntity->getClassName()) {
+            } else if ($jobEntity->getClassName()) {
                 $this->runJobWithClassName($jobEntity);
-            }
-            else if ($jobEntity->getServiceName()) {
+            } else if ($jobEntity->getServiceName()) {
                 $this->runService($jobEntity);
-            }
-            else {
+            } else {
                 $id = $jobEntity->getId();
 
                 throw new RuntimeException("Not runnable job '$id'.");
             }
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $isSuccess = false;
 
             $jobId = $jobEntity->hasId() ? $jobEntity->getId() : null;

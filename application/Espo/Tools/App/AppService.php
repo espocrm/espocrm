@@ -209,8 +209,7 @@ class AppService
                 if (in_array($attribute, ['contactId', 'contactName', 'accountId', 'accountsIds'])) {
                     continue;
                 }
-            }
-            else {
+            } else {
                 if (in_array($attribute, ['teamsIds', 'defaultTeamId', 'defaultTeamName'])) {
                     continue;
                 }

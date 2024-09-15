@@ -362,8 +362,7 @@ class LdapLogin implements Login
             $userFields = $this->loadFields('portalUser');
 
             $userFields['type'] = 'portal';
-        }
-        else {
+        } else {
             $userFields = $this->loadFields('user');
         }
 

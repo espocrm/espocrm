@@ -1225,8 +1225,7 @@ class Service implements Crud,
 
         if (!$skipAcl) {
             $selectBuilder->withStrictAccessControl();
-        }
-        else {
+        } else {
             $selectBuilder->withComplexExpressionsForbidden();
             $selectBuilder->withWherePermissionCheck();
         }

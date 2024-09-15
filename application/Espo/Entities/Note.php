@@ -317,8 +317,7 @@ class Note extends Entity
             ) {
                 if (!$targetType || $targetType === self::TARGET_TEAMS) {
                     $this->loadLinkMultipleField('teams');
-                }
-                else if ($targetType === self::TARGET_PORTALS) {
+                } else if ($targetType === self::TARGET_PORTALS) {
                     $this->loadLinkMultipleField('portals');
                 }
             }

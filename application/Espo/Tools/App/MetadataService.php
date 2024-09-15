@@ -253,13 +253,11 @@ class MetadataService
                         $k = $row[$j];
 
                         unset($o->$k);
-                    }
-                    else {
+                    } else {
                         break;
                     }
                 }
-            }
-            else {
+            } else {
                 $p = &$p->$item;
                 $path[] = &$p;
             }

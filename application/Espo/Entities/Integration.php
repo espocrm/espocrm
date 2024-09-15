@@ -50,8 +50,7 @@ class Integration extends Entity
         } else {
             if ($this->get('data')) {
                 $data = $this->get('data');
-            }
-            else {
+            } else {
                 $data = new stdClass();
             }
 
@@ -105,8 +104,7 @@ class Integration extends Entity
 
         if ($this->hasAttribute($name)) {
             $this->setInContainer($name, $value);
-        }
-        else {
+        } else {
             $data = $this->get('data') ?? (object) [];
 
             $data->$name = $value;

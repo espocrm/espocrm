@@ -140,12 +140,10 @@ class Manager
                         $filter,
                         $onlyFileType
                     );
-                }
-                else if (!isset($onlyFileType) || !$onlyFileType) { /* save only directories */
+                } else if (!isset($onlyFileType) || !$onlyFileType) { /* save only directories */
                     $add = true;
                 }
-            }
-            else if (!isset($onlyFileType) || $onlyFileType) { /* save only files */
+            } else if (!isset($onlyFileType) || $onlyFileType) { /* save only files */
                 $add = true;
             }
 
@@ -203,8 +201,7 @@ class Manager
                 $singleFileList = array_merge(
                     $singleFileList, $this->getSingleFileList($fileName, $onlyFileType, $basePath, $currentDir)
                 );
-            }
-            else {
+            } else {
                 $currentFileName = Util::concatPath($parentDirName, $fileName);
 
                 if (
@@ -238,8 +235,7 @@ class Manager
             );
 
             $path = $this->concatPaths($path);
-        }
-        else if (!is_string($path)) {
+        } else if (!is_string($path)) {
             throw new InvalidArgumentException();
         }
 
@@ -625,8 +621,7 @@ class Manager
 
             if ($this->checkCreateFile($destFile) === false) {
                 $permissionDeniedList[] = $destFile;
-            }
-            else if (!$isFileExists) {
+            } else if (!$isFileExists) {
                 $this->removeFile($destFile);
             }
         }
@@ -811,8 +806,7 @@ class Manager
 
                 if (is_dir($fullPath)) {
                     $result &= $this->removeInDir($fullPath, true);
-                }
-                else if (file_exists($fullPath)) {
+                } else if (file_exists($fullPath)) {
                     $this->opcacheInvalidate($fullPath, true);
 
                     $result &= unlink($fullPath);
@@ -855,8 +849,7 @@ class Manager
 
             if (!is_writable($item)) {
                 $permissionDeniedList[] = $item;
-            }
-            else if (!is_writable(dirname($item))) {
+            } else if (!is_writable(dirname($item))) {
                 $permissionDeniedList[] = dirname($item);
             }
         }
@@ -872,8 +865,7 @@ class Manager
         foreach ($removeList as $item) {
             if (is_dir($item)) {
                 $result &= $this->removeInDir($item, true);
-            }
-            else {
+            } else {
                 $result &= $this->removeFile($item);
             }
 
@@ -996,8 +988,7 @@ class Manager
             }
 
             $fileName = substr($fileName, 0, $dotIndex);
-        }
-        else {
+        } else {
             if (substr($extension, 0, 1) != '.') {
                 $extension = '.' . $extension;
             }

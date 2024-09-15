@@ -210,8 +210,7 @@ class RecordService
             if ($parent) {
                 $note->set('parentName', $parent->get('name'));
             }
-        }
-        else if (!$note->isGlobal()) {
+        } else if (!$note->isGlobal()) {
             $targetType = $note->getTargetType();
 
             if (!$targetType || $targetType === Note::TARGET_USERS) {
@@ -221,8 +220,7 @@ class RecordService
             if ($targetType !== Note::TARGET_USERS) {
                 if (!$targetType || $targetType === Note::TARGET_TEAMS) {
                     $note->loadLinkMultipleField('teams');
-                }
-                else if ($targetType === Note::TARGET_PORTALS) {
+                } else if ($targetType === Note::TARGET_PORTALS) {
                     $note->loadLinkMultipleField('portals');
                 }
             }

@@ -304,14 +304,12 @@ class Htmlizer
                     $data[$attribute . '_RAW'] = $data[$attribute];
                     $data[$attribute] = $this->dateTime->convertSystemDateTime($data[$attribute]);
                 }
-            }
-            else if ($type == Entity::DATE) {
+            } else if ($type == Entity::DATE) {
                 if (!empty($data[$attribute])) {
                     $data[$attribute . '_RAW'] = $data[$attribute];
                     $data[$attribute] = $this->dateTime->convertSystemDate($data[$attribute]);
                 }
-            }
-            else if ($type == Entity::JSON_ARRAY) {
+            } else if ($type == Entity::JSON_ARRAY) {
                 if (!empty($data[$attribute])) {
                     $list = $data[$attribute];
 
@@ -339,8 +337,7 @@ class Htmlizer
                     }
                     $data[$attribute] = $newList;
                 }
-            }
-            else if ($type == Entity::JSON_OBJECT) {
+            } else if ($type == Entity::JSON_OBJECT) {
                 if (!empty($data[$attribute])) {
                     $value = $data[$attribute];
 
@@ -358,8 +355,7 @@ class Htmlizer
                         $data[$attribute][$k] = $this->format($data[$attribute][$k]);
                     }
                 }
-            }
-            else if ($type === Entity::PASSWORD) {
+            } else if ($type === Entity::PASSWORD) {
                 unset($data[$attribute]);
             }
 
@@ -619,8 +615,7 @@ class Htmlizer
 
                 if ($field) {
                     $id = $context['_this'][$field . 'Id'] ?? null;
-                }
-                else if (count($args) > 1) {
+                } else if (count($args) > 1) {
                     $id = $args[0];
                 }
 

@@ -56,8 +56,7 @@ class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamCheck
             ) {
                 return true;
             }
-        }
-        else if ($entity->hasAttribute(self::ATTR_CREATED_BY_ID)) {
+        } else if ($entity->hasAttribute(self::ATTR_CREATED_BY_ID)) {
             if (
                 $entity->has(self::ATTR_CREATED_BY_ID) &&
                 $user->getId() === $entity->get(self::ATTR_CREATED_BY_ID)

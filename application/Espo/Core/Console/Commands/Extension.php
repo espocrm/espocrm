@@ -184,8 +184,7 @@ class Extension implements Command
             }
 
             $name = $record->get('name');
-        }
-        else {
+        } else {
             if (!$name) {
                 $io->writeLine("Can't uninstall. No --name or --id specified.");
                 $io->setExitStatus(1);

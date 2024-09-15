@@ -182,12 +182,10 @@ class DefaultAccessChecker implements
 
         if (!$entity->has(self::ATTR_ASSIGNED_USER_ID)) {
             $isDeletedAllowed = true;
-        }
-        else {
+        } else {
             if (!$entity->get(self::ATTR_ASSIGNED_USER_ID)) {
                 $isDeletedAllowed = true;
-            }
-            else if ($entity->get(self::ATTR_ASSIGNED_USER_ID) === $entity->get(self::ATTR_CREATED_BY_ID)) {
+            } else if ($entity->get(self::ATTR_ASSIGNED_USER_ID) === $entity->get(self::ATTR_CREATED_BY_ID)) {
                 $isDeletedAllowed = true;
             }
         }

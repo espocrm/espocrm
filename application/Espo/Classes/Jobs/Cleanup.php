@@ -772,8 +772,7 @@ class Cleanup implements JobDataLess
 
             if ($this->metadata->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) {
                 $whereClause['modifiedAt<'] = $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
-            }
-            else if ($this->metadata->get(['entityDefs', $scope, 'fields', 'createdAt'])) {
+            } else if ($this->metadata->get(['entityDefs', $scope, 'fields', 'createdAt'])) {
                 $whereClause['createdAt<'] = $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
             }
 

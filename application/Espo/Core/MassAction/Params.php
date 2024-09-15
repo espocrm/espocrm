@@ -150,15 +150,13 @@ class Params
             if ($ids !== null) {
                 throw new RuntimeException("Can't combine 'ids' and search params.");
             }
-        }
-        else if ($ids !== null) {
+        } else if ($ids !== null) {
             if (!is_array($ids)) {
                 throw new RuntimeException("Bad 'ids'.");
             }
 
             $obj->ids = $ids;
-        }
-        else {
+        } else {
             throw new RuntimeException("Bad mass action params.");
         }
 

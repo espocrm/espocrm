@@ -82,8 +82,7 @@ class FieldHelper
 
             $link = $fieldDefs->getParam('link');
             $field = $fieldDefs->getParam('field');
-        }
-        else if (str_contains($name, '_')) {
+        } else if (str_contains($name, '_')) {
             [$link, $field] = explode('_', $name);
         }
 

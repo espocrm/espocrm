@@ -57,8 +57,7 @@ class Portal extends Database implements
         if ($entity->getId() === $this->config->get('defaultPortalId')) {
             $entity->set('isDefault', true);
             $entity->setFetched('isDefault', true);
-        }
-        else {
+        } else {
             if ($entity->get('customId')) {
                 $url .= $entity->get('customId') . '/';
             } else {

@@ -64,8 +64,7 @@ class MessageWrapper implements Message
 
             if (str_contains($this->fullRawContent, "\r\n\r\n")) {
                 [$rawHeader, $rawBody] = explode("\r\n\r\n", $this->fullRawContent, 2);
-            }
-            else if (str_contains($this->fullRawContent, "\n\n")) {
+            } else if (str_contains($this->fullRawContent, "\n\n")) {
                 [$rawHeader, $rawBody] = explode("\n\n", $this->fullRawContent, 2);
             }
 

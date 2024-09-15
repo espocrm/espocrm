@@ -89,8 +89,7 @@ class Helper
             if (preg_match('/{(.*?)}/', $paramValue, $matches)) {
                 if (in_array($matches[1], array_keys($defs))) {
                     $value = $defs[$matches[1]];
-                }
-                else if (strtolower($matches[1]) == 'entity') {
+                } else if (strtolower($matches[1]) == 'entity') {
                     $value = $entityType;
                 }
 

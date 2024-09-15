@@ -82,8 +82,7 @@ class CurrencyConverted implements Di\MetadataAware, Di\ConfigAware
 
             if ($defaultCurrency === $currency) {
                 $targetValue = $value;
-            }
-            else {
+            } else {
                 $targetValue = $value;
                 $targetValue = $targetValue / (isset($rates[$baseCurrency]) ? $rates[$baseCurrency] : 1.0);
                 $targetValue = $targetValue * (isset($rates[$currency]) ? $rates[$currency] : 1.0);

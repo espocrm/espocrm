@@ -883,8 +883,7 @@ class BaseEntity implements Entity
 
                 return true;
             }
-        }
-        else if ($type === self::JSON_OBJECT) {
+        } else if ($type === self::JSON_OBJECT) {
             if (is_object($v1) && is_object($v2)) {
                 if ($v1 != $v2) {
                     return false;

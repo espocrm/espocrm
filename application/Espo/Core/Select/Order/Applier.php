@@ -106,11 +106,9 @@ class Applier
 
             if ($order && strtolower($order) === 'desc') {
                 $order = SearchParams::ORDER_DESC;
-            }
-            else if ($order && strtolower($order) === 'asc') {
+            } else if ($order && strtolower($order) === 'asc') {
                 $order = SearchParams::ORDER_ASC;
-            }
-            else if ($order !== null) {
+            } else if ($order !== null) {
                 throw new RuntimeException("Bad default order.");
             }
         }
@@ -165,14 +163,11 @@ class Applier
                     OrderItem::create($orderBy, $order)
                 )
             );
-        }
-        else if (in_array($type, ['link', 'file', 'image', 'linkOne'])) {
+        } else if (in_array($type, ['link', 'file', 'image', 'linkOne'])) {
             $resultOrderBy .= 'Name';
-        }
-        else if ($type === 'linkParent') {
+        } else if ($type === 'linkParent') {
             $resultOrderBy .= 'Type';
-        }
-        else if (
+        } else if (
             /*!str_contains($orderBy, '.') &&
             !str_contains($orderBy, ':') &&*/
             !$this->metadataProvider->hasAttribute($this->entityType, $orderBy)

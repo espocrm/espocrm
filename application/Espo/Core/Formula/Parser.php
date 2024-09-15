@@ -180,18 +180,15 @@ class Parser
                         $isString = true;
                         $isStringStart = true;
                         $isSingleQuote = true;
-                    }
-                    else if ($isSingleQuote) {
+                    } else if ($isSingleQuote) {
                         $isString = false;
                     }
-                }
-                else if ($string[$i] === "\"" && self::isNotAfterBackslash($string, $i)) {
+                } else if ($string[$i] === "\"" && self::isNotAfterBackslash($string, $i)) {
                     if (!$isString) {
                         $isString = true;
                         $isStringStart = true;
                         $isSingleQuote = false;
-                    }
-                    else if (!$isSingleQuote) {
+                    } else if (!$isSingleQuote) {
                         $isString = false;
                     }
                 }
@@ -200,8 +197,7 @@ class Parser
             if ($isString) {
                 if (in_array($char, ['(', ')', '{', '}'])) {
                     $modifiedString[$i] = '_';
-                }
-                else if (!$isStringStart) {
+                } else if (!$isStringStart) {
                     $modifiedString[$i] = ' ';
                 }
 
@@ -809,14 +805,11 @@ class Parser
 
             if ($value === '(') {
                 $parenthesisCounter++;
-            }
-            else if ($value === ')') {
+            } else if ($value === ')') {
                 $parenthesisCounter--;
-            }
-            else if ($value === '{') {
+            } else if ($value === '{') {
                 $braceCounter++;
-            }
-            else if ($value === '}') {
+            } else if ($value === '}') {
                 $braceCounter--;
             }
 
@@ -1115,8 +1108,7 @@ class Parser
                 $part = self::sliceByStartEnd($expression, $start, $end);
 
                 $parsedPart = $this->split($part);
-            }
-            else if ($statement instanceof IfRef) {
+            } else if ($statement instanceof IfRef) {
                 if (!$isRoot || !$statement->isReady()) {
                     throw SyntaxError::create(
                         'Incorrect if statement usage in expression ' . $expression . '.',
@@ -1155,8 +1147,7 @@ class Parser
                         $this->split($conditionPart),
                         $this->split($thenPart, true)
                     ]);
-            }
-            else if ($statement instanceof WhileRef) {
+            } else if ($statement instanceof WhileRef) {
                 if (!$isRoot || !$statement->isReady()) {
                     throw SyntaxError::create(
                         'Incorrect while statement usage in expression ' . $expression . '.',
@@ -1237,19 +1228,16 @@ class Parser
                 if (!$isString) {
                     $isString = true;
                     $isSingleQuote = true;
-                }
-                else {
+                } else {
                     if ($isSingleQuote) {
                         $isString = false;
                     }
                 }
-            }
-            else if ($functionContent[$i] === "\"" && self::isNotAfterBackslash($functionContent, $i)) {
+            } else if ($functionContent[$i] === "\"" && self::isNotAfterBackslash($functionContent, $i)) {
                 if (!$isString) {
                     $isString = true;
                     $isSingleQuote = false;
-                }
-                else {
+                } else {
                     if (!$isSingleQuote) {
                         $isString = false;
                     }
@@ -1259,8 +1247,7 @@ class Parser
             if (!$isString) {
                 if ($functionContent[$i] === '(') {
                     $braceCounter++;
-                }
-                else if ($functionContent[$i] === ')') {
+                } else if ($functionContent[$i] === ')') {
                     $braceCounter--;
                 }
             }
@@ -1277,8 +1264,7 @@ class Parser
         for ($i = 0; $i < count($commaIndexList); $i++) {
             if ($i > 0) {
                 $previousCommaIndex = $commaIndexList[$i - 1] + 1;
-            }
-            else {
+            } else {
                 $previousCommaIndex = 0;
             }
 

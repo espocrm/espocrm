@@ -85,8 +85,7 @@ class NoteMentionHookProcessor
 
         if ($mentionCount) {
             $data->mentions = $mentionData;
-        }
-        else {
+        } else {
             unset($data->mentions);
         }
 

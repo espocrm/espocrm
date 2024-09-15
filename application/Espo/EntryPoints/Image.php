@@ -239,8 +239,7 @@ class Image implements EntryPoint
         if ($originalWidth <= $width && $originalHeight <= $height) {
             $targetWidth = $originalWidth;
             $targetHeight = $originalHeight;
-        }
-        else {
+        } else {
             if ($originalWidth > $originalHeight) {
                 $targetWidth = $width;
                 $targetHeight = (int) ($originalHeight / ($originalWidth / $width));

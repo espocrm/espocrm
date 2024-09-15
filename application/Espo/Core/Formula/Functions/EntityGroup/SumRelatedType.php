@@ -118,8 +118,7 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
                 ->where([
                     $foreignLink . 'Type'  => $entity->getEntityType(),
                 ]);
-        }
-        else {
+        } else {
             $queryBuilder->join($foreignLink, $foreignLinkAlias);
         }
 

@@ -59,15 +59,13 @@ class Fields implements AdditionalBuilder
 
                 if (isset($collectionItem->orderBy)) {
                     $collectionItem->sortBy = $collectionItem->orderBy;
-                }
-                else if (isset($collectionItem->sortBy)) {
+                } else if (isset($collectionItem->sortBy)) {
                     $collectionItem->orderBy = $collectionItem->sortBy;
                 }
 
                 if (isset($collectionItem->order)) {
                     $collectionItem->asc = $collectionItem->order === 'asc';
-                }
-                else if (isset($collectionItem->asc)) {
+                } else if (isset($collectionItem->asc)) {
                     $collectionItem->order = $collectionItem->asc === true ? 'asc' : 'desc';
                 }
             }

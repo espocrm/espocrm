@@ -579,8 +579,7 @@ class AclManager
 
         if (is_object($target)) {
             $userId = $target->getId();
-        }
-        else {
+        } else {
             $userId = $target;
         }
 

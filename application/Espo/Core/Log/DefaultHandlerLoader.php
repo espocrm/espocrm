@@ -129,8 +129,7 @@ class DefaultHandlerLoader
 
             if (array_key_exists($name, $params)) {
                 $value = $params[$name];
-            }
-            else if ($parameter->isDefaultValueAvailable()) {
+            } else if ($parameter->isDefaultValueAvailable()) {
                 $value = $parameter->getDefaultValue();
             } else {
                 continue;

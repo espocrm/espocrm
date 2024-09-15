@@ -103,8 +103,7 @@ class LeastBusy
             if ($min === false) {
                 $min = $count;
                 $foundUserId = $userId;
-            }
-            else {
+            } else {
                 if ($count < $min) {
                     $min = $count;
                     $foundUserId = $userId;

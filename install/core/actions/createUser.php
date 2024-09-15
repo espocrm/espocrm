@@ -36,13 +36,11 @@ if (!empty($_SESSION['install']['user-name']) && !empty($_SESSION['install']['us
 
     if (!empty($userId)) {
         $result['success'] = true;
-    }
-    else {
+    } else {
         $result['success'] = false;
         $result['errorMsg'] = 'Cannot create user';
     }
-}
-else {
+} else {
     $result['success'] = false;
     $result['errorMsg'] = 'Cannot create user';
 }

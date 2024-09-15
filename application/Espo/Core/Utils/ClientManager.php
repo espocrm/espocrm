@@ -162,8 +162,7 @@ class ClientManager
         if ($this->isDeveloperMode()) {
             $useCache = $this->useCacheInDeveloperMode();
             $loaderCacheTimestamp = null;
-        }
-        else {
+        } else {
             $useCache = $this->useCache();
             $loaderCacheTimestamp = $appTimestamp;
         }

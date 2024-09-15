@@ -75,8 +75,7 @@ class AccessChecker implements AccessEntityCREDChecker
 
         if ($parentId && $parentType) {
             $parent = $this->entityManager->getEntityById($parentType, $parentId);
-        }
-        else if ($relatedId && $relatedType) {
+        } else if ($relatedId && $relatedType) {
             $parent = $this->entityManager->getEntityById($relatedType, $relatedId);
         }
 
@@ -95,8 +94,7 @@ class AccessChecker implements AccessEntityCREDChecker
             if ($result !== null) {
                 return $result;
             }
-        }
-        else if ($this->aclManager->checkEntity($user, $parent)) {
+        } else if ($this->aclManager->checkEntity($user, $parent)) {
             if (
                 $entity->getTargetField() &&
                 !$this->aclManager->checkField($user, $parent->getEntityType(), $entity->getTargetField())

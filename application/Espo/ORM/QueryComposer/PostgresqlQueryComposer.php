@@ -520,8 +520,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                 $column = $this->toDb($this->sanitize($attribute));
 
                 $left = $this->quoteColumn("{$alias}.{$column}");
-            }
-            else {
+            } else {
                 $column = $this->toDb($this->sanitize($attribute));
 
                 $left = $this->quoteColumn("{$column}"); // Diff.

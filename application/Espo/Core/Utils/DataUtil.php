@@ -48,19 +48,16 @@ class DataUtil
 
         if (is_string($unsetList)) {
             $unsetList = [$unsetList];
-        }
-        else if (!is_array($unsetList)) {
+        } else if (!is_array($unsetList)) {
             throw new InvalidArgumentException();
         }
 
         foreach ($unsetList as $unsetItem) {
             if (is_array($unsetItem)) {
                 $arr = $unsetItem;
-            }
-            else if (is_string($unsetItem)) {
+            } else if (is_string($unsetItem)) {
                 $arr = explode('.', $unsetItem);
-            }
-            else {
+            } else {
                 throw new LogicException('Bad unset parameter');
             }
 
@@ -107,8 +104,7 @@ class DataUtil
 
                 if (is_array($pointer)) {
                     $pointer = &$pointer[$key];
-                }
-                else if (is_object($pointer)) {
+                } else if (is_object($pointer)) {
                     $pointer = &$pointer->$key;
                 }
 
@@ -134,8 +130,7 @@ class DataUtil
                     unset($data->$key);
                 }
             }
-        }
-        else if (is_array($data)) {
+        } else if (is_array($data)) {
             $doReindex = false;
 
             foreach ($data as $key => $value) {
@@ -184,8 +179,7 @@ class DataUtil
             foreach (get_object_vars($overrideData) as $key => $value) {
                 if (isset($data->$key)) {
                     $data->$key = self::merge($data->$key, $overrideData->$key);
-                }
-                else {
+                } else {
                     $data->$key = $overrideData->$key;
                     self::unsetByValue($data->$key, $appendIdentifier);
                 }

@@ -226,8 +226,7 @@ class EmailAddress extends Database implements
                     ->select($select)
                     ->where(['id' => $itemEntityId])
                     ->findOne();
-            }
-            else {
+            } else {
                 $entity = $this->entityManager->getEntity($itemEntityType, $itemEntityId);
             }
 
@@ -295,8 +294,7 @@ class EmailAddress extends Database implements
                     ->select($select)
                     ->where(['id' => $itemEntityId])
                     ->findOne();
-            }
-            else {
+            } else {
                 $entity = $this->entityManager->getEntity($itemEntityType, $itemEntityId);
             }
 

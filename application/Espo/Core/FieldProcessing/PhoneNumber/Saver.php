@@ -280,8 +280,7 @@ class Saver implements SaverInterface
                     ]);
 
                     $this->entityManager->saveEntity($phoneNumber);
-                }
-                else {
+                } else {
                     $revertData[$number] = [
                         'type' => $phoneNumber->get('type'),
                         'optOut' => $phoneNumber->get('optOut'),
@@ -322,8 +321,7 @@ class Saver implements SaverInterface
 
                         $this->entityManager->saveEntity($phoneNumber);
                     }
-                }
-                else {
+                } else {
                     $revertData[$number] = [
                         'type' => $phoneNumber->getType(),
                         'optOut' => $phoneNumber->isOptedOut(),

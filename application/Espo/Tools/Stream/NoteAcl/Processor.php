@@ -89,11 +89,9 @@ class Processor
 
             if ($fieldDefs->getType() === FieldType::LINK_MULTIPLE) {
                 $ownerUserIdAttribute = $ownerUserField . 'Ids';
-            }
-            else if ($fieldDefs->getType() === FieldType::LINK) {
+            } else if ($fieldDefs->getType() === FieldType::LINK) {
                 $ownerUserIdAttribute = $ownerUserField . 'Id';
-            }
-            else {
+            } else {
                 throw new LogicException("Bad read-owner user field type.");
             }
 
@@ -104,8 +102,7 @@ class Processor
             if ($usersAttributeIsChanged || $notify) {
                 if ($fieldDefs->getType() === FieldType::LINK_MULTIPLE) {
                     $userIdList = $entity->getLinkMultipleIdList($ownerUserField);
-                }
-                else {
+                } else {
                     $userId = $entity->get($ownerUserIdAttribute);
 
                     $userIdList = $userId ? [$userId] : [];

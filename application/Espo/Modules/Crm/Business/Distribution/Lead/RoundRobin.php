@@ -92,8 +92,7 @@ class RoundRobin
 
         if (empty($lead)) {
             $num = 0;
-        }
-        else {
+        } else {
             $num = array_search($lead->get('assignedUserId'), $userIdList);
 
             if ($num === false || $num == count($userIdList) - 1) {

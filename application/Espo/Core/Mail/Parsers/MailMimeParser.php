@@ -275,8 +275,7 @@ class MailMimeParser implements Parser
             if ($bodyPlain) {
                 $email->setBodyPlain($bodyPlain);
             }
-        }
-        else {
+        } else {
             $email->setIsHtml(false);
             $email->setBody($bodyPlain);
             $email->setBodyPlain($bodyPlain);
@@ -334,8 +333,7 @@ class MailMimeParser implements Parser
             if ($disposition === self::DISPOSITION_INLINE) {
                 $attachment->setRole(Attachment::ROLE_INLINE_ATTACHMENT);
                 $attachment->setTargetField(self::FIELD_BODY);
-            }
-            else {
+            } else {
                 $attachment->setRole(Attachment::ROLE_ATTACHMENT);
                 $attachment->setTargetField(self::FIELD_ATTACHMENTS);
             }

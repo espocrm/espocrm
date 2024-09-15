@@ -65,8 +65,7 @@ class LogLoader
             $level = $this->config->get('logger.level');
 
             $handlerList = $this->handlerListLoader->load($handlerDataList, $level);
-        }
-        else {
+        } else {
             $handlerList = [$this->createDefaultHandler()];
         }
 
@@ -98,8 +97,7 @@ class LogLoader
             $maxFileNumber = $this->config->get('logger.maxFileNumber') ?? self::MAX_FILE_NUMBER;
 
             $handler = new EspoRotatingFileHandler($this->config, $path, $maxFileNumber, $levelCode, true);
-        }
-        else {
+        } else {
             $handler = new EspoFileHandler($this->config, $path, $levelCode, true);
         }
 

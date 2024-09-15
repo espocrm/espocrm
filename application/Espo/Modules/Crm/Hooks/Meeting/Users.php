@@ -66,8 +66,7 @@ class Users implements BeforeSave
                         $entity->getLinkMultipleName('assignedUsers', $assignedUserId)
                     );
                 }
-            }
-            else {
+            } else {
                 $assignedUserId = $entity->get('assignedUserId');
 
                 if ($assignedUserId) {

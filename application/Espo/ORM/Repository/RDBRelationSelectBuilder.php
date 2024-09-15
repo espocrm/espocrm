@@ -72,8 +72,7 @@ class RDBRelationSelectBuilder
 
         if ($entity instanceof BaseEntity) {
             $this->foreignEntityType = $entity->getRelationParam($relationName, 'entity');
-        }
-        else {
+        } else {
             $this->foreignEntityType = $this->entityManager
                 ->getDefs()
                 ->getEntity($entityType)
@@ -323,11 +322,9 @@ class RDBRelationSelectBuilder
         if ($this->isManyMany()) {
             if ($clause instanceof WhereItem) {
                 $clause = $this->applyRelationAliasToWhereClause($clause->getRaw());
-            }
-            else if (is_string($clause)) {
+            } else if (is_string($clause)) {
                 $clause = $this->applyRelationAliasToWhereClauseKey($clause);
-            }
-            else if (is_array($clause)) {
+            } else if (is_array($clause)) {
                 $clause = $this->applyRelationAliasToWhereClause($clause);
             }
         }

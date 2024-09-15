@@ -137,8 +137,7 @@ class SelectBuilder
 
         if ($this->sourceQuery) {
             $this->queryBuilder->clone($this->sourceQuery);
-        }
-        else {
+        } else {
             $this->queryBuilder->from($this->entityType);
         }
 

@@ -86,8 +86,7 @@ class SelectManagerFactory
 
         if ($user) {
             $acl = $this->aclManagerProvider->get($user)->createUserAcl($user);
-        }
-        else {
+        } else {
             $acl = $this->acl;
             $user = $this->user;
         }

@@ -889,8 +889,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
                 $array[] = var_export($key, true) . " => " . $this->varExport($value, $level + 1);
             }
             $result = "[\n" . $tab . implode(",\n" . $tab, $array) . "\n" . $prevTab . "]";
-        }
-        else {
+        } else {
             $result = var_export($variable, true);
         }
 

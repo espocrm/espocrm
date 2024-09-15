@@ -473,8 +473,7 @@ class Upgrade implements Command
 
         if (is_file($url)) {
             copy($url, $localFilePath);
-        }
-        else {
+        } else {
             $options = [
                 CURLOPT_FILE => fopen($localFilePath, 'w'),
                 CURLOPT_TIMEOUT => 3600,

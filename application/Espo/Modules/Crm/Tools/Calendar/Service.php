@@ -534,8 +534,7 @@ class Service
                 ->where([
                     'assignedUsers.id' => $userId,
                 ]);
-        }
-        else {
+        } else {
             $queryBuilder->where([
                 'assignedUserId' => $userId,
             ]);

@@ -62,8 +62,7 @@ class Webhook
 
         if ($entity->isNew()) {
             $this->webhookManager->processCreate($entity);
-        }
-        else {
+        } else {
             $this->webhookManager->processUpdate($entity);
         }
     }

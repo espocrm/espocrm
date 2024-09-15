@@ -66,8 +66,7 @@ class FunctionFactory
 
         if ($this->classNameMap && array_key_exists($name, $this->classNameMap)) {
             $className = $this->classNameMap[$name];
-        }
-        else {
+        } else {
             $arr = explode('\\', $name);
 
             foreach ($arr as $i => $part) {

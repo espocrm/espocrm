@@ -65,11 +65,9 @@ class GetListTyped implements Action
 
         if ($type === 'activities') {
             $isHistory = false;
-        }
-        else  if ($type === 'history') {
+        } else if ($type === 'history') {
             $isHistory = true;
-        }
-        else {
+        } else {
             throw new BadRequest("Bad type.");
         }
 

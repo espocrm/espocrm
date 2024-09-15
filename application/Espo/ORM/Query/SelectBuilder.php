@@ -158,8 +158,7 @@ class SelectBuilder implements Builder
 
         if ($select instanceof Expression) {
             $select = $select->getValue();
-        }
-        else if ($select instanceof Selection) {
+        } else if ($select instanceof Selection) {
             $alias = $alias ?? $select->getAlias();
             $select = $select->getExpression()->getValue();
         }

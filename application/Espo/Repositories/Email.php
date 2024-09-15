@@ -462,8 +462,7 @@ class Email extends Database implements
 
             if ($filter->getAction() === EmailFilter::ACTION_SKIP) {
                 $entity->setLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IN_TRASH, $userId, true);
-            }
-            else if ($filter->getAction() === EmailFilter::ACTION_MOVE_TO_FOLDER) {
+            } else if ($filter->getAction() === EmailFilter::ACTION_MOVE_TO_FOLDER) {
                 $folderId = $filter->getEmailFolderId();
 
                 if ($folderId) {

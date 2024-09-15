@@ -69,8 +69,7 @@ class LinkMultipleSaver
 
         if ($entity->has($idListAttribute)) {
             $specifiedIdList = $entity->get($idListAttribute);
-        }
-        else if ($entity->has($columnsAttribute)) {
+        } else if ($entity->has($columnsAttribute)) {
             $skipRemove = true;
 
             $specifiedIdList = array_keys(
@@ -78,8 +77,7 @@ class LinkMultipleSaver
                     $entity->get($columnsAttribute) ?? (object) []
                 )
             );
-        }
-        else {
+        } else {
             return;
         }
 

@@ -82,14 +82,12 @@ class RoundRobin
 
         if (empty($case)) {
             $num = 0;
-        }
-        else {
+        } else {
             $num = array_search($case->getAssignedUser()?->getId(), $userIdList);
 
             if ($num === false || $num == count($userIdList) - 1) {
                 $num = 0;
-            }
-            else {
+            } else {
                 $num++;
             }
         }

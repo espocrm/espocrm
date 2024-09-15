@@ -326,8 +326,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 if ($type == Type::LAST_MONTH) {
                     $dtFrom->modify('-1 month');
-                }
-                else if ($type == Type::NEXT_MONTH) {
+                } else if ($type == Type::NEXT_MONTH) {
                     $dtFrom->modify('+1 month');
                 }
 

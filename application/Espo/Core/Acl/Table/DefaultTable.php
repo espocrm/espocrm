@@ -374,8 +374,7 @@ class DefaultTable implements Table
 
                     if ($f === true) {
                         $level = self::LEVEL_YES;
-                    }
-                    else {
+                    } else {
                         if (is_array($f) && isset($f[$action])) {
                             $level = $f[$action];
                         }
@@ -471,8 +470,7 @@ class DefaultTable implements Table
 
                     if ($item === true) {
                         $level = self::LEVEL_YES;
-                    }
-                    else {
+                    } else {
                         if (is_array($item) && isset($item[$action])) {
                             $level = $item[$action];
                         }
@@ -654,8 +652,7 @@ class DefaultTable implements Table
 
                 if (!isset($data->$scope->$action)) {
                     $data->$scope->$action = $level;
-                }
-                else if (
+                } else if (
                     array_search($data->$scope->$action, $this->levelList) >
                     array_search($level, $this->levelList)
                 ) {
@@ -674,8 +671,7 @@ class DefaultTable implements Table
 
             if (in_array($action, $this->booleanActionList)) {
                 $data->$scope->$action = self::LEVEL_YES;
-            }
-            else if ($action === self::ACTION_STREAM && isset($data->$scope->$previousAction)) {
+            } else if ($action === self::ACTION_STREAM && isset($data->$scope->$previousAction)) {
                 $data->$scope->$action = $data->$scope->$previousAction;
             }
         }
@@ -728,8 +724,7 @@ class DefaultTable implements Table
 
                         if (!isset($data->$scope->$field->$action)) {
                             $data->$scope->$field->$action = $level;
-                        }
-                        else {
+                        } else {
                             if (
                                 array_search(
                                     $data->$scope->$field->$action,

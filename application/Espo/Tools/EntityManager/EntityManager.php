@@ -786,8 +786,7 @@ class EntityManager
             // @todo Remove.
             /** @var array<string, array<string, mixed>> $params */
             $params = array_merge($map1, $map2, $map3);
-        }
-        else {
+        } else {
             /** @var array<string, array<string, mixed>> $params */
             $params = [...$map1, ...$map2, ...$map3];
         }

@@ -278,17 +278,13 @@ class Queue
 
         if ($code >= 200 && $code < 400) {
             $this->succeedQueueItemList($itemList);
-        }
-        else if ($code === 410) {
+        } else if ($code === 410) {
             $this->dropWebhook($webhook);
-        }
-        else if (in_array($code, [0, 401, 403, 404, 405, 408, 500, 503])) {
+        } else if (in_array($code, [0, 401, 403, 404, 405, 408, 500, 503])) {
             $this->failQueueItemList($itemList);
-        }
-        else if ($code >= 400 && $code < 500) {
+        } else if ($code >= 400 && $code < 500) {
             $this->failQueueItemList($itemList, true);
-        }
-        else {
+        } else {
             $this->failQueueItemList($itemList, true);
         }
 

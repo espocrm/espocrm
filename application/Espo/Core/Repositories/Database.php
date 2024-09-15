@@ -389,8 +389,7 @@ class Database extends RDBRepository
 
             if ($modifiedById) {
                 $entity->set(self::ATTR_MODIFIED_BY_ID, $modifiedById);
-            }
-            else if ($this->applicationState->hasUser()) {
+            } else if ($this->applicationState->hasUser()) {
                 $user = $this->applicationState->getUser();
 
                 $entity->set(self::ATTR_MODIFIED_BY_ID, $user->getId());
@@ -428,8 +427,7 @@ class Database extends RDBRepository
                 }
 
                 $entity->set(self::ATTR_CREATED_BY_ID, $createdById);
-            }
-            else if (
+            } else if (
                 empty($options[SaveOption::SKIP_CREATED_BY]) &&
                 (empty($options[SaveOption::IMPORT]) || !$entity->has(self::ATTR_CREATED_BY_ID)) &&
                 $this->applicationState->hasUser()

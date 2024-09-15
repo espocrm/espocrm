@@ -85,11 +85,9 @@ class CampaignUrl implements EntryPoint
 
         if ($emailAddress && $hash) {
             $this->processWithHash($trackingUrl, $emailAddress, $hash);
-        }
-        else if ($uid && $hash) {
+        } else if ($uid && $hash) {
             $this->processWithUniqueId($trackingUrl, $uid, $hash);
-        }
-        else {
+        } else {
             if (!$queueItemId || !is_string($queueItemId)) {
                 throw new BadRequest("No item ID.");
             }

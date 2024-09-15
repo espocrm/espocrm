@@ -206,8 +206,7 @@ class LabelManager implements
                     foreach ($categoryItem as $subKey => $subItem) {
                         $finalData[$category][$category .'[.]' . $key .'[.]' . $subKey] = $subItem;
                     }
-                }
-                else {
+                } else {
                     $finalData[$category][$category .'[.]' . $key] = $categoryItem;
                 }
             }
@@ -245,8 +244,7 @@ class LabelManager implements
                 if ($value !== '') {
                     $languageObj->set($scope, $category, $name, $value);
                     $setValue = $value;
-                }
-                else {
+                } else {
                     $setValue = $languageOriginalObj->get(implode('.', [$scope, $category, $name]));
                     if (is_null($setValue) && $scope !== 'Global') {
                         $setValue = $languageOriginalObj->get(implode('.', ['Global', $category, $name]));
@@ -254,8 +252,7 @@ class LabelManager implements
 
                     $languageObj->delete($scope, $category, $name);
                 }
-            }
-            else if (count($arr) == 3) {
+            } else if (count($arr) == 3) {
                 $name = $arr[1];
                 $attribute = $arr[2];
 
@@ -267,8 +264,7 @@ class LabelManager implements
                     if ($value !== '') {
                         $data[$attribute] = $value;
                         $setValue = $value;
-                    }
-                    else {
+                    } else {
                         $dataOriginal = $languageOriginalObj->get($scope . '.' . $category . '.' . $name);
 
                         if (is_array($dataOriginal) && isset($dataOriginal[$attribute])) {

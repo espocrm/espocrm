@@ -114,8 +114,7 @@ class FilterResolverFactoryTest extends \PHPUnit\Framework\TestCase
 
         if (!$this->user->isPortal()) {
             $defaultClassName = DefaultFilterResolver::class;
-        }
-        else {
+        } else {
             $defaultClassName = DefaultPortalFilterResolver::class;
         }
 

@@ -113,8 +113,7 @@ class Sender
     {
         if ($params instanceof SenderParams) {
             $params = $params->toArray();
-        }
-        else if (!is_array($params)) {
+        } else if (!is_array($params)) {
             throw new InvalidArgumentException();
         }
 
@@ -145,8 +144,7 @@ class Sender
     {
         if ($params instanceof SmtpParams) {
             $params = $params->toArray();
-        }
-        else if (!is_array($params)) {
+        } else if (!is_array($params)) {
             throw new InvalidArgumentException();
         }
 
@@ -260,12 +258,10 @@ class Sender
                 /** @noinspection SpellCheckingInspection */
                 if (in_array($authMechanism, ['login', 'crammd5', 'plain'])) {
                     $options['connectionClass'] = $authMechanism;
-                }
-                else {
+                } else {
                     $options['connectionClass'] = 'login';
                 }
-            }
-            else {
+            } else {
                 $options['connectionClass'] = 'login';
             }
 
@@ -373,8 +369,7 @@ class Sender
 
         if ($fromAddress) {
             $fromAddress = trim($fromAddress);
-        }
-        else {
+        } else {
             if (empty($params['fromAddress']) && !$config->get('outboundEmailFromAddress')) {
                 throw new NoSmtp('outboundEmailFromAddress is not specified in config.');
             }
@@ -531,14 +526,12 @@ class Sender
             foreach ($attachmentPartList as $attachmentPart) {
                 $body->addPart($attachmentPart);
             }
-        }
-        else {
+        } else {
             if ($email->isHtml()) {
                 $body->setParts([$textPart, $htmlPart]);
 
                 $messageType = 'multipart/alternative';
-            }
-            else {
+            } else {
                 $body = $email->getBodyPlainForSending();
 
                 $messageType = 'text/plain';
@@ -553,8 +546,7 @@ class Sender
             }
 
             $message->getHeaders()->addHeaderLine('Content-Type', 'text/plain; charset=UTF-8');
-        }
-        else {
+        } else {
             if (!$message->getHeaders()->has('content-type')) {
                 $contentTypeHeader = new ContentTypeHeader();
 
@@ -583,8 +575,7 @@ class Sender
                 if ($email->hasId()) {
                     $this->entityManager->saveEntity($email, [SaveOption::SILENT => true]);
                 }
-            }
-            else {
+            } else {
                 $messageId = substr($messageId, 1, strlen($messageId) - 2);
             }
 

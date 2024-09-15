@@ -139,8 +139,7 @@ class Service
                         'usersLeftMiddle.meetingId:' => 'meeting.id',
                     ]
                 );
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -157,8 +156,7 @@ class Service
                 ->where([
                     'OR' => $where,
                 ]);
-        }
-        else {
+        } else {
             $builder->where($where);
         }
 
@@ -231,8 +229,7 @@ class Service
                 ->where([
                     'OR' => $where,
                 ]);
-        }
-        else {
+        } else {
             $builder->where($where);
         }
 
@@ -380,8 +377,7 @@ class Service
                     ],
                 ],
             ]);
-        }
-        else if ($entityType === Lead::ENTITY_TYPE && $entity->get('createdAccountId')) {
+        } else if ($entityType === Lead::ENTITY_TYPE && $entity->get('createdAccountId')) {
             $builder->where([
                 'OR' => [
                     [
@@ -393,8 +389,7 @@ class Service
                     ],
                 ],
             ]);
-        }
-        else {
+        } else {
             $builder->where([
                 'parentId' => $id,
                 'parentType' => $entityType,
@@ -511,8 +506,7 @@ class Service
                     ],
                 ],
             ]);
-        }
-        else if ($entityType == Lead::ENTITY_TYPE && $entity->get('createdAccountId')) {
+        } else if ($entityType == Lead::ENTITY_TYPE && $entity->get('createdAccountId')) {
             $builder->where([
                 'OR' => [
                     [
@@ -524,14 +518,12 @@ class Service
                     ],
                 ],
             ]);
-        }
-        else {
+        } else {
             $builder->where([
                'parentId' => $id,
                'parentType' => $entityType,
             ]);
         }
-
 
         if (!$this->isPerson($entityType) && !$this->isCompany($entityType)) {
             return $builder->build();
@@ -794,8 +786,7 @@ class Service
         if (!$isHistory) {
             $statusList = $this->metadata->get(['scopes', $entityType, 'activityStatusList']) ??
                 [Meeting::STATUS_PLANNED];
-        }
-        else {
+        } else {
             $statusList = $this->metadata->get(['scopes', $entityType, 'historyStatusList']) ??
                 [Meeting::STATUS_HELD, Meeting::STATUS_NOT_HELD];
         }
@@ -1097,8 +1088,7 @@ class Service
             $builder->where([
                 'assignedUserId' => $entity->getId(),
             ]);
-        }
-        else {
+        } else {
             $builder->where([
                 'parentId' => $entity->getId(),
                 'parentType' => $entity->getEntityType(),

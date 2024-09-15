@@ -211,8 +211,7 @@ class CaptureService
             if (!$lead) {
                 throw new NotFound("Lead '$leadId' not found.");
             }
-        }
-        else {
+        } else {
             $lead = $this->getLeadWithPopulatedData($leadCapture, $data);
         }
 
@@ -292,8 +291,7 @@ class CaptureService
             if (!$isAlreadyOptedIn) {
                 if ($targetLead->isNew()) {
                     $toRelateLead = true;
-                }
-                else {
+                } else {
                     $isAlreadyOptedIn = $this->isTargetOptedIn($targetLead, $targetListId);
 
                     if (!$isAlreadyOptedIn) {

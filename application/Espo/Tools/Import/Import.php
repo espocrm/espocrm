@@ -242,8 +242,7 @@ class Import
             }
 
             $import->set('status', ImportEntity::STATUS_IN_PROCESS);
-        }
-        else {
+        } else {
             /** @var ImportEntity $import */
             $import = $this->entityManager->getNewEntity(ImportEntity::ENTITY_TYPE);
 
@@ -258,8 +257,7 @@ class Import
                 $params = $params->withIdleMode(false);
 
                 $import->set('status', ImportEntity::STATUS_STANDBY);
-            }
-            else if ($params->isIdleMode()) {
+            } else if ($params->isIdleMode()) {
                 $import->set('status', ImportEntity::STATUS_PENDING);
             }
 
@@ -489,8 +487,7 @@ class Import
                     $entity->set('id', $whereClause['id']);
                 }
             }
-        }
-        else {
+        } else {
             $entity = $this->entityManager->getNewEntity($this->entityType);
         }
 

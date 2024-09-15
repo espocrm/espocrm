@@ -46,17 +46,13 @@ class PrintType extends BaseFunction
 
         if (is_int($value) || is_float($value)) {
             $value = strval($value);
-        }
-        else if (is_bool($value)) {
+        } else if (is_bool($value)) {
             $value = $value ? 'true' : 'false';
-        }
-        else if (is_array($value)) {
+        } else if (is_array($value)) {
             $value = json_encode($value);
-        }
-        else if ($value instanceof stdClass) {
+        } else if ($value instanceof stdClass) {
             $value = json_encode($value);
-        }
-        else if ($value === null) {
+        } else if ($value === null) {
             $value = 'null';
         }
 

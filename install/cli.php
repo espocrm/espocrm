@@ -82,8 +82,7 @@ if (session_status() != \PHP_SESSION_ACTIVE) {
 
         $installerConfig->set('cliSessionId', session_id());
         $installerConfig->save();
-    }
-    else {
+    } else {
         session_id($installerConfig->get('cliSessionId'));
     }
 }
@@ -92,8 +91,7 @@ ob_start();
 
 try {
     require('entry.php');
-}
-catch (\Throwable $e) {
+} catch (\Throwable $e) {
     fwrite(\STDOUT, "Error: ". $e->getMessage() .".\n");
 
     exit;

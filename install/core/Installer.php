@@ -658,8 +658,7 @@ class Installer
                         !isset($paramDefs['options'])
                     ) {
                         $normalizedParams[$name] = $value;
-                    }
-                    else if (array_key_exists('default', $paramDefs)) {
+                    } else if (array_key_exists('default', $paramDefs)) {
                         $normalizedParams[$name] = $paramDefs['default'];
 
                         $GLOBALS['log']->warning(

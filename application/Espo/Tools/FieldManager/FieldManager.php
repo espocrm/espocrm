@@ -300,8 +300,7 @@ class FieldManager
                         if ($this->metadata->get(['fields', $type, 'fields', 'naming']) === 'prefix') {
                             $subFieldName = $partField . ucfirst($name);
                             $subFieldLabel = $partLabel . ' ' . $fieldDefs['label'];
-                        }
-                        else {
+                        } else {
                             $subFieldName = $name . ucfirst($partField);
                             $subFieldLabel = $fieldDefs['label'] . ' ' . $partLabel;
                         }
@@ -336,8 +335,7 @@ class FieldManager
                 $clientDefs['dynamicLogic']['fields'][$name]['visible'] = $fieldDefs['dynamicLogicVisible'];
 
                 $clientDefsToBeSet = true;
-            }
-            else {
+            } else {
                 if (
                     $this->metadata->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'visible'])
                 ) {
@@ -355,8 +353,7 @@ class FieldManager
 
                 $clientDefs['dynamicLogic']['fields'][$name]['readOnly'] = $fieldDefs['dynamicLogicReadOnly'];
                 $clientDefsToBeSet = true;
-            }
-            else {
+            } else {
                 if (
                     $this->metadata->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'readOnly'])
                 ) {
@@ -395,8 +392,7 @@ class FieldManager
                 $clientDefs['dynamicLogic']['options'][$name] = $fieldDefs['dynamicLogicOptions'];
 
                 $clientDefsToBeSet = true;
-            }
-            else {
+            } else {
                 if ($this->metadata->get(['clientDefs', $scope, 'dynamicLogic', 'options', $name])) {
                     $this->prepareClientDefsOptionsDynamicLogic($clientDefs, $name);
 
@@ -413,8 +409,7 @@ class FieldManager
 
                 $clientDefs['dynamicLogic']['fields'][$name]['invalid'] = $fieldDefs['dynamicLogicInvalid'];
                 $clientDefsToBeSet = true;
-            }
-            else {
+            } else {
                 if (
                     $this->metadata->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'invalid'])
                 ) {
@@ -632,8 +627,7 @@ class FieldManager
         if ($value && $value !== '') {
             $this->language->set($scope, 'tooltips', $name, $value);
             $this->baseLanguage->set($scope, 'tooltips', $name, $value);
-        }
-        else {
+        } else {
             $this->language->delete($scope, 'tooltips', $name);
             $this->baseLanguage->delete($scope, 'tooltips', $name);
         }

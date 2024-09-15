@@ -73,8 +73,7 @@ class FindOneType extends BaseFunction implements
             if ($filter) {
                 $builder->withPrimaryFilter($filter);
             }
-        }
-        else {
+        } else {
             $i = 3;
 
             while ($i < count($args) - 1) {
@@ -89,8 +88,7 @@ class FindOneType extends BaseFunction implements
 
         try {
             $queryBuilder = $builder->buildQueryBuilder();
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new FormulaError($e->getMessage(), $e->getCode(), $e);
         }
 

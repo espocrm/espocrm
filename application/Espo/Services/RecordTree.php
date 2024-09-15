@@ -262,8 +262,7 @@ class RecordTree extends Record
                 $parentId = $parent->get('parentId');
 
                 array_unshift($arr, $parent->getId());
-            }
-            else {
+            } else {
                 $parentId = null;
             }
         }

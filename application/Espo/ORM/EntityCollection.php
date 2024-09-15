@@ -320,8 +320,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
                     if ($value['id'] == $v['id']) {
                         return $index;
                     }
-                }
-                else if ($v instanceof Entity) {
+                } else if ($v instanceof Entity) {
                     if ($value['id'] == $v->getId()) {
                         return $index;
                     }
@@ -329,15 +328,13 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
                 $index ++;
             }
-        }
-        else if ($value instanceof Entity) {
+        } else if ($value instanceof Entity) {
             foreach ($this->dataList as $v) {
                 if (is_array($v)) {
                     if ($value->getId() == $v['id']) {
                         return $index;
                     }
-                }
-                else if ($v instanceof Entity) {
+                } else if ($v instanceof Entity) {
                     if ($value === $v) {
                         return $index;
                     }

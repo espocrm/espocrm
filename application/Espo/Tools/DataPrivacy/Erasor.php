@@ -121,8 +121,7 @@ class Erasor implements
                 $entity->clear($field . 'Data');
 
                 continue;
-            }
-            else if ($type === 'phone') {
+            } else if ($type === 'phone') {
                 $phoneNumberList = $entity->get('phoneNumbers');
 
                 foreach ($phoneNumberList as $phoneNumber) {
@@ -140,8 +139,7 @@ class Erasor implements
                 $entity->clear($field . 'Data');
 
                 continue;
-            }
-            else if ($type === 'file' || $type === 'image') {
+            } else if ($type === 'file' || $type === 'image') {
                 $attachmentId = $entity->get($field . 'Id');
 
                 if ($attachmentId) {
@@ -151,8 +149,7 @@ class Erasor implements
                         $this->entityManager->removeEntity($attachment);
                     }
                 }
-            }
-            else if ($type === 'attachmentMultiple') {
+            } else if ($type === 'attachmentMultiple') {
                 $attachmentList = $entity->get($field);
 
                 foreach ($attachmentList as $attachment) {
@@ -166,8 +163,7 @@ class Erasor implements
                     $entity->get($attribute)
                 ) {
                     $entity->set($attribute, null);
-                }
-                else {
+                } else {
                     $entity->set($attribute, null);
                 }
             }

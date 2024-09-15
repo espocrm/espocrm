@@ -114,8 +114,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
             if ($entity->isAttributeChanged(self::ATTR_ASSIGNED_USER_ID)) {
                 $toProcess = true;
             }
-        }
-        else {
+        } else {
             $toProcess = true;
         }
 
@@ -135,8 +134,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
             if ($user->getId() !== $assignedUserId) {
                 return false;
             }
-        }
-        else if ($assignmentPermission === Table::LEVEL_TEAM) {
+        } else if ($assignmentPermission === Table::LEVEL_TEAM) {
             $teamIdList = $user->getTeamIdList();
 
             if (
@@ -197,8 +195,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
                     $newIdList[] = $id;
                 }
             }
-        }
-        else {
+        } else {
             $newIdList = $teamIdList;
         }
 
@@ -231,8 +228,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
             if (empty($assignedUserIdList)) {
                 return false;
             }
-        }
-        else if ($entity->hasAttribute(self::ATTR_ASSIGNED_USER_ID)) {
+        } else if ($entity->hasAttribute(self::ATTR_ASSIGNED_USER_ID)) {
             if (!$entity->get(self::ATTR_ASSIGNED_USER_ID)) {
                 return false;
             }

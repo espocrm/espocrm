@@ -218,8 +218,7 @@ class Converter
 
             if (array_key_exists('orderByColumn', $collectionDefs)) {
                 $ormMetadata[$entityType]['collection']['orderBy'] = $collectionDefs['orderByColumn'];
-            }
-            else if (array_key_exists('orderBy', $collectionDefs)) {
+            } else if (array_key_exists('orderBy', $collectionDefs)) {
                 if (array_key_exists($collectionDefs['orderBy'], $ormMetadata[$entityType]['attributes'])) {
                     $ormMetadata[$entityType]['collection']['orderBy'] = $collectionDefs['orderBy'];
                 }
@@ -401,8 +400,7 @@ class Converter
             if ($fieldDefs !== false) {
                 if (isset($output[$attribute]) && !in_array($attribute, $unmergedFields)) {
                     $output[$attribute] = array_merge($output[$attribute], $fieldDefs);
-                }
-                else {
+                } else {
                     $output[$attribute] = $fieldDefs;
                 }
 
@@ -718,14 +716,12 @@ class Converter
                     foreach ($partList as $part) {
                         $fullTextSearchColumnList[] = $part . ucfirst($field);
                     }
-                }
-                else {
+                } else {
                     foreach ($partList as $part) {
                         $fullTextSearchColumnList[] = $field . ucfirst($part);
                     }
                 }
-            }
-            else {
+            } else {
                 $fullTextSearchColumnList[] = $field;
             }
         }
@@ -983,8 +979,7 @@ class Converter
             if ($keyValue === true) {
                 $indexList[$indexName]['type'] = $indexType;
                 $indexList[$indexName]['columns'] = [$attributeName];
-            }
-            else if (is_string($keyValue)) {
+            } else if (is_string($keyValue)) {
                 $indexList[$indexName]['type'] = $indexType;
                 $indexList[$indexName]['columns'][] = $attributeName;
             }

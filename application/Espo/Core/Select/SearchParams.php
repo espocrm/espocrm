@@ -515,13 +515,11 @@ class SearchParams
                 $params['boolFilterList'] = $value;
 
                 unset($where[$i]);
-            }
-            else if ($type === 'textFilter') {
+            } else if ($type === 'textFilter') {
                 $params['textFilter'] = $value;
 
                 unset($where[$i]);
-            }
-            else if ($type == 'primary' && $value) {
+            } else if ($type == 'primary' && $value) {
                 $params['primaryFilter'] = $value;
 
                 unset($where[$i]);

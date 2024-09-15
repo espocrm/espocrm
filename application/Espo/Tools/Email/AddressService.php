@@ -215,8 +215,7 @@ class AddressService
             $whereClause = [
                 'emailAddress*' => $filter . '%',
             ];
-        }
-        else {
+        } else {
             $textFilter = $filter;
         }
 

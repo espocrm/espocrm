@@ -140,11 +140,9 @@ class Tester
 
         if (file_exists($this->configPath)) {
             $data = include($this->configPath);
-        }
-        else if (getenv('TEST_DATABASE_NAME')) {
+        } else if (getenv('TEST_DATABASE_NAME')) {
             $data = include($this->envConfigPath);
-        }
-        else {
+        } else {
             die('Config for integration tests ['. $this->configPath .'] is not found');
         }
 
@@ -224,8 +222,7 @@ class Tester
                     ->withMethod($this->authenticationMethod);
 
                 $auth->login($authenticationData, $request, $response);
-            }
-            else {
+            } else {
                 $this->application->setupSystemUser();
             }
         }

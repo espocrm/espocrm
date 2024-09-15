@@ -411,30 +411,27 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
 
         if (is_string($value)) {
             $sheet->setCellValueExplicit($coordinate, $value, DataType::TYPE_STRING);
-        }
-        else if (is_int($value) || is_float($value)) {
+        } else if (is_int($value) || is_float($value)) {
             $sheet->setCellValueExplicit($coordinate, $value, DataType::TYPE_NUMERIC);
         }
+
         if (is_bool($value)) {
             $sheet->setCellValueExplicit($coordinate, $value, DataType::TYPE_BOOL);
-        }
-        else if ($value instanceof Date) {
+        } else if ($value instanceof Date) {
             $sheet->setCellValue(
                 $coordinate,
                 SharedDate::PHPToExcel(
                     strtotime($value->toString())
                 )
             );
-        }
-        else if ($value instanceof DateTimeValue) {
+        } else if ($value instanceof DateTimeValue) {
             $sheet->setCellValue(
                 $coordinate,
                 SharedDate::PHPToExcel(
                     strtotime($value->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT))
                 )
             );
-        }
-        else if ($value instanceof Currency) {
+        } else if ($value instanceof Currency) {
             $sheet->setCellValue($coordinate, $value->getAmount());
 
             $sheet->getStyle($coordinate)
@@ -518,22 +515,19 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
             if ($entity->hasId()) {
                 $link = $siteUrl . '/#' . $entityType . '/view/' . $entity->getId();
             }
-        }
-        else if ($type === 'url') {
+        } else if ($type === 'url') {
             $value = $entity->get($name);
 
             if ($value && filter_var($value, FILTER_VALIDATE_URL)) {
                 $link = $value;
             }
-        }
-        else if ($type === 'link') {
+        } else if ($type === 'link') {
             $idValue = $entity->get($name . 'Id');
 
             if ($idValue && $foreignField) {
                 if (!$foreignLink) {
                     $foreignEntity = $this->metadata->get(['entityDefs', $entityType, 'links', $name, 'entity']);
-                }
-                else {
+                } else {
                     $foreignEntity1 = $this->metadata
                         ->get(['entityDefs', $entityType, 'links', $foreignLink, 'entity']);
 
@@ -545,31 +539,26 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
                     $link = $siteUrl . '/#' . $foreignEntity . '/view/' . $idValue;
                 }
             }
-        }
-        else if ($type === 'file') {
+        } else if ($type === 'file') {
             $idValue = $entity->get($name . 'Id');
 
             if ($idValue) {
                 $link = $siteUrl . '/?entryPoint=download&id=' . $idValue;
             }
-        }
-        else if ($type === 'linkParent') {
+        } else if ($type === 'linkParent') {
             $idValue = $entity->get($name . 'Id');
             $typeValue = $entity->get($name . 'Type');;
 
             if ($idValue && $typeValue) {
                 $link = $siteUrl . '/#' . $typeValue . '/view/' . $idValue;
             }
-        }
-        else if ($type === 'phone') {
+        } else if ($type === 'phone') {
             $value = $entity->get($name);
 
             if ($value) {
                 $link = 'tel:' . $value;
             }
-        }
-
-        else if ($type === 'email') {
+        } else if ($type === 'email') {
             $value = $entity->get($name);
 
             if ($value) {

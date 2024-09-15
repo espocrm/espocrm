@@ -123,8 +123,7 @@ class Applier
             $queryBuilder->order([
                 OrderExpr::create($expression)->withDesc()
             ]);
-        }
-        else if ($orderType === self::FT_ORDER_COMBINED) {
+        } else if ($orderType === self::FT_ORDER_COMBINED) {
             $orderExpression =
                 Expr::round(
                     Expr::divide($expression, $this->fullTextOrderRelevanceDivider)

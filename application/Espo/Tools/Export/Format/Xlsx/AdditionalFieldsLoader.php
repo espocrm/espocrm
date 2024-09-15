@@ -57,8 +57,7 @@ class AdditionalFieldsLoader implements AdditionalFieldsLoaderInterface
                 if (!$entity->get($link . 'Name')) {
                     $entity->loadParentNameField($link);
                 }
-            }
-            else if (
+            } else if (
                 (
                     (
                         $entity->getRelationType($link) === Entity::BELONGS_TO &&

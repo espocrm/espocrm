@@ -278,8 +278,7 @@ class Saver implements SaverInterface
                     ]);
 
                     $this->entityManager->saveEntity($emailAddress);
-                }
-                else {
+                } else {
                     $revertData[$address] = [
                         'optOut' => $emailAddress->get('optOut'),
                         'invalid' => $emailAddress->get('invalid'),
@@ -301,8 +300,7 @@ class Saver implements SaverInterface
                 ]);
 
                 $this->entityManager->saveEntity($emailAddress);
-            }
-            else {
+            } else {
                 $skipSave = $this->checkChangeIsForbidden($emailAddress, $entity);
 
                 if (!$skipSave) {
@@ -319,8 +317,7 @@ class Saver implements SaverInterface
 
                         $this->entityManager->saveEntity($emailAddress);
                     }
-                }
-                else {
+                } else {
                     $revertData[$address] = [
                         'optOut' => $emailAddress->isOptedOut(),
                         'invalid' => $emailAddress->isInvalid(),

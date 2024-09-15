@@ -311,11 +311,9 @@ trait RDBRepositoryDeprecationTrait
             }
 
             $id = $foreign->getId();
-        }
-        else if (is_string($foreign)) {
+        } else if (is_string($foreign)) {
             $id = $foreign;
-        }
-        else {
+        } else {
             throw new \RuntimeException("Bad 'foreign' value.");
         }
 
@@ -376,8 +374,7 @@ trait RDBRepositoryDeprecationTrait
 
         if (method_exists($this, $methodName)) {
             $result = $this->$methodName($entity, $foreign, $columnData, $options);
-        }
-        else {
+        } else {
             $data = $columnData;
 
             if ($columnData instanceof \stdClass) {
@@ -386,8 +383,7 @@ trait RDBRepositoryDeprecationTrait
 
             if ($foreign instanceof Entity) {
                 $result = $this->getMapper()->relate($entity, $relationName, $foreign, $data);
-            }
-            else {
+            } else {
                 $id = $foreign;
 
                 $result = $this->getMapper()->relateById($entity, $relationName, $id, $data);
@@ -440,12 +436,10 @@ trait RDBRepositoryDeprecationTrait
 
         if (method_exists($this, $methodName)) {
             $this->$methodName($entity, $foreign);
-        }
-        else {
+        } else {
             if ($foreign instanceof Entity) {
                 $this->getMapper()->unrelate($entity, $relationName, $foreign);
-            }
-            else {
+            } else {
                 $id = $foreign;
 
                 $this->getMapper()->unrelateById($entity, $relationName, $id);

@@ -52,8 +52,7 @@ if (!empty($_SESSION['install'])) {
     $res = $installer->savePreferences($preferences);
     if (!empty($res)) {
         $result['success'] = true;
-    }
-    else {
+    } else {
         $result['success'] = false;
         $result['errorMsg'] = 'Cannot save preferences';
     }

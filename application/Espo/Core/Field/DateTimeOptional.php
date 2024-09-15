@@ -54,8 +54,7 @@ class DateTimeOptional implements DateTimeable
     {
         if (self::isStringDateTime($value)) {
             $this->dateTimeValue = new DateTime($value);
-        }
-        else {
+        } else {
             $this->dateValue = new Date($value);
         }
     }

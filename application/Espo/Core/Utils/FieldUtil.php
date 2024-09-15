@@ -86,14 +86,12 @@ class FieldUtil
                         $fieldList[] = $f . ucfirst($name);
                     }
                 }
-            }
-            else {
+            } else {
                 foreach ($list as $f) {
                     $fieldList[] = $name . ucfirst($f);
                 }
             }
-        }
-        else {
+        } else {
             if ($type == 'actual') {
                 $fieldList[] = $name;
             }

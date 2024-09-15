@@ -103,8 +103,7 @@ class AfterFetch implements AfterFetchInterface
 
             if ($email->isFetched()) {
                 $emailToProcess = $this->entityManager->getEntity(Email::ENTITY_TYPE, $email->getId());
-            }
-            else {
+            } else {
                 $emailToProcess->updateFetchedValues();
             }
 
@@ -410,8 +409,7 @@ class AfterFetch implements AfterFetchInterface
 
         if ($case->hasLinkMultipleField('assignedUsers')) {
             $userIdList = $case->getLinkMultipleIdList('assignedUsers');
-        }
-        else {
+        } else {
             $assignedUserLink = $case->getAssignedUser();
 
             if ($assignedUserLink) {
@@ -569,8 +567,7 @@ class AfterFetch implements AfterFetchInterface
 
         if ($contact) {
             $case->set('contactId', $contact->getId());
-        }
-        else {
+        } else {
             if (!$case->get('accountId')) {
                 $lead = $this->entityManager
                     ->getRDBRepository(Lead::ENTITY_TYPE)

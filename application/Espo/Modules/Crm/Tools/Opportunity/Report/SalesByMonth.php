@@ -121,8 +121,7 @@ class SalesByMonth
             $dtTo = $dtTo
                 ->addDays(1 - $dtTo->getDay()) // First day of month.
                 ->addMonths(1);
-        }
-        else {
+        } else {
             $dtTo = $dtTo->addDays(1 - $dtTo->getDay());
         }
 

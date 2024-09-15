@@ -176,11 +176,9 @@ class Processor
             try {
                 if ($type === Notification::TYPE_NOTE) {
                     $this->processNotificationNote($notification);
-                }
-                else if ($type === Notification::TYPE_MENTION_IN_POST) {
+                } else if ($type === Notification::TYPE_MENTION_IN_POST) {
                     $this->processNotificationMentionInPost($notification);
-                }
-                else {
+                } else {
                     // For bc.
                     $methodName = 'processNotification' . ucfirst($type ?? 'Dummy');
 
@@ -188,8 +186,7 @@ class Processor
                         $this->$methodName($notification);
                     }
                 }
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $this->log->error("Email Notification: " . $e->getMessage());
             }
 
@@ -229,8 +226,7 @@ class Processor
             $builder->where([
                 'relatedParentType' => null,
             ]);
-        }
-        else {
+        } else {
             $builder->where([
                 'OR' => [
                     [
@@ -250,8 +246,7 @@ class Processor
             $builder->where([
                 'user.type!=' => User::TYPE_PORTAL,
             ]);
-        }
-        else if (!$forInternal && $forPortal) {
+        } else if (!$forInternal && $forPortal) {
             $builder->where([
                 'user.type' => User::TYPE_PORTAL,
             ]);
@@ -320,8 +315,7 @@ class Processor
             $data['parentName'] = $parent->get('name');
             $data['parentType'] = $parentType;
             $data['parentId'] = $parentId;
-        }
-        else {
+        } else {
             $data['url'] = $this->getSiteUrl($user) . '/#Notification';
         }
 
@@ -543,8 +537,7 @@ class Processor
                 $data,
                 true
             );
-        }
-        else {
+        } else {
             $data['url'] = $this->getSiteUrl($user) . '/#Notification';
 
             $subjectTpl = $this->templateFileManager->getTemplate('notePostNoParent', 'subject');
@@ -615,8 +608,7 @@ class Processor
 
             if (in_array($defaultPortalId, $portalIdList)) {
                 $portalId = $defaultPortalId;
-            }
-            else if (count($portalIdList)) {
+            } else if (count($portalIdList)) {
                 $portalId = $portalIdList[0];
             }
 
@@ -630,8 +622,7 @@ class Processor
 
                 $this->userIdPortalCacheMap[$user->getId()] = $portal;
             }
-        }
-        else {
+        } else {
             $portal = $this->userIdPortalCacheMap[$user->getId()];
         }
 
@@ -809,8 +800,7 @@ class Processor
 
         if (isset($noteData->personEntityName)) {
             $data['fromName'] = $noteData->personEntityName;
-        }
-        else if (isset($noteData->fromString)) {
+        } else if (isset($noteData->fromString)) {
             $data['fromName'] = $noteData->fromString;
         }
 

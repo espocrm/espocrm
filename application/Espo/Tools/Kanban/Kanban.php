@@ -208,8 +208,7 @@ class Kanban
 
             if (!$this->countDisabled) {
                 $totalSub = $repository->clone($itemQuery)->count();
-            }
-            else {
+            } else {
                 $recordCollection = Collection::createNoCount($collectionSub, $maxSize);
 
                 $collectionSub = $recordCollection->getCollection();

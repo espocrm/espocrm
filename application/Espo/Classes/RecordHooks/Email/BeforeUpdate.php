@@ -66,8 +66,7 @@ class BeforeUpdate implements SaveHook
 
         if ($this->isEmailManuallyArchived($entity)) {
             $skipFilter = true;
-        }
-        else if ($entity->isAttributeChanged('dateSent')) {
+        } else if ($entity->isAttributeChanged('dateSent')) {
             $entity->set('dateSent', $entity->getFetched('dateSent'));
         }
 

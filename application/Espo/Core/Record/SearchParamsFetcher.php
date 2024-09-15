@@ -129,16 +129,14 @@ class SearchParamsFetcher
 
         if ($request->getQueryParam('orderBy')) {
             $params['orderBy'] = $request->getQueryParam('orderBy');
-        }
-        else if ($request->getQueryParam('sortBy')) {
+        } else if ($request->getQueryParam('sortBy')) {
             // legacy
             $params['orderBy'] = $request->getQueryParam('sortBy');
         }
 
         if ($request->getQueryParam('order')) {
             $params['order'] = strtoupper($request->getQueryParam('order'));
-        }
-        else if ($request->getQueryParam('asc')) {
+        } else if ($request->getQueryParam('asc')) {
             // legacy
             $params['order'] = $request->getQueryParam('asc') === 'true' ?
                 SearchParams::ORDER_ASC : SearchParams::ORDER_DESC;

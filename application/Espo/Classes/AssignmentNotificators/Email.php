@@ -96,8 +96,7 @@ class Email implements AssignmentNotificator
 
         if ($params->getOption('isJustSent')) {
             $previousUserIdList = [];
-        }
-        else {
+        } else {
             $previousUserIdList = $entity->getFetched('usersIds');
 
             if (!is_array($previousUserIdList)) {

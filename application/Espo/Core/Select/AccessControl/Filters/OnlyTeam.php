@@ -80,11 +80,9 @@ class OnlyTeam implements Filter
             ]);
 
             $orGroup["assignedUsersMiddle.$key2"] = $this->user->getId();
-        }
-        else if ($this->fieldHelper->hasAssignedUserField()) {
+        } else if ($this->fieldHelper->hasAssignedUserField()) {
             $orGroup['assignedUserId'] = $this->user->getId();
-        }
-        else if ($this->fieldHelper->hasCreatedByField()) {
+        } else if ($this->fieldHelper->hasCreatedByField()) {
             $orGroup['createdById'] = $this->user->getId();
         }
 
