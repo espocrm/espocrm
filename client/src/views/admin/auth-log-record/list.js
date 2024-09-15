@@ -26,26 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/auth-log-record/list', ['views/list'], function (Dep) {
+import ListView from 'views/list';
 
-    return Dep.extend({
+export default class extends ListView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+    getHeader() {
+        return this.buildHeaderHtml([
+            $('<a>')
+                .attr('href', '#Admin')
+                .text(this.translate('Administration')),
+            $('<span>')
+                .text(this.getLanguage().translate('Auth Log', 'labels', 'Admin')),
+        ]);
+    }
 
-        getHeader: function () {
-            return this.buildHeaderHtml([
-                $('<a>')
-                    .attr('href', '#Admin')
-                    .text(this.translate('Administration')),
-                $('<span>')
-                    .text(this.getLanguage().translate('Auth Log', 'labels', 'Admin')),
-            ]);
-        },
-
-        updatePageTitle: function () {
-            this.setPageTitle(this.getLanguage().translate('Auth Log', 'labels', 'Admin'));
-        },
-    });
-});
+    updatePageTitle() {
+        this.setPageTitle(this.getLanguage().translate('Auth Log', 'labels', 'Admin'));
+    }
+}

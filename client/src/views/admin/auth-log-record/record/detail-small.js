@@ -26,14 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/auth-log-record/record/detail-small', ['views/record/detail-small'], function (Dep) {
+import DetailSmallRecordView from 'views/record/detail-small';
 
-    return Dep.extend({
+export default class extends DetailSmallRecordView {
 
-        sideDisabled: true,
-
-        isWide: true,
-
-        bottomView: 'views/record/detail-bottom',
-    });
-});
+    sideDisabled = true
+    isWide = true
+    bottomView = 'views/record/detail-bottom'
+}

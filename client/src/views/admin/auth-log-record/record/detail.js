@@ -26,12 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/auth-log-record/record/detail', ['views/record/detail'], function (Dep) {
+import DetailRecordView from 'views/record/detail';
 
-    return Dep.extend({
+export default class extends DetailRecordView {
 
-        sideDisabled: true,
+    sideDisabled = true
+    readOnly = true
+}
 
-        readOnly: true,
-    });
-});

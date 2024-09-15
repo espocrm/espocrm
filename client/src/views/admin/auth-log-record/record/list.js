@@ -26,14 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/auth-log-record/record/list', ['views/record/list'], function (Dep) {
+import ListRecordView from 'views/record/list';
 
-    return Dep.extend({
+export default class extends ListRecordView {
 
-        rowActionsView: 'views/record/row-actions/view-and-remove',
+    rowActionsView = 'views/record/row-actions/view-and-remove'
 
-        massActionList: ['remove'],
-        checkAllResultMassActionList: ['remove'],
-        forceSettings: true,
-    });
-});
+    massActionList = ['remove']
+    checkAllResultMassActionList = ['remove']
+    forceSettings = true
+}
