@@ -61,7 +61,7 @@ class Todays implements Filter
             $whereItem = $this->converterFactory
                 ->create(Meeting::ENTITY_TYPE, $this->user)
                 ->convert($queryBuilder, $item);
-        }  catch (BadRequest $e) {
+        } catch (BadRequest $e) {
             throw new LogicException($e->getMessage());
         }
 
