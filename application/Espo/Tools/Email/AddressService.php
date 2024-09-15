@@ -238,12 +238,6 @@ class AddressService
             throw new RuntimeException($e->getMessage());
         }
 
-        if ($textFilter) {
-            $builder
-                ->join('emailAddresses', 'emailAddressesJoin')
-                ->distinct();
-        }
-
         if ($entityType === User::ENTITY_TYPE) {
             $this->handleQueryBuilderUser($builder);
         }
