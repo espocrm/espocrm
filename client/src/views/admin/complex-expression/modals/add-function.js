@@ -26,41 +26,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/complex-expression/modals/add-function', ['views/modal', 'model'], function (Dep, Model) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+export default class ComplexExpressionAddFunctionModalView extends ModalView {
 
-        template: 'admin/formula/modals/add-function',
+    template = 'admin/formula/modals/add-function'
+    backdrop = true
 
-        fitHeight: true,
+    data() {
+        let text = this.translate('formulaFunctions', 'messages', 'Admin')
+            .replace('{documentationUrl}', this.documentationUrl);
 
-        backdrop: true,
+        text = this.getHelper().transformMarkdownText(text, {linksInNewTab: true}).toString();
 
-        events: {
-            'click [data-action="add"]': function (e) {
-                this.trigger('add', $(e.currentTarget).data('value'));
-            }
-        },
+        return {
+            functionDataList: this.functionDataList,
+            text: text,
+        };
+    }
 
-        data: function () {
-            var text = this.translate('formulaFunctions', 'messages', 'Admin')
-                .replace('{documentationUrl}', this.documentationUrl);
-            text = this.getHelper().transformMarkdownText(text, {linksInNewTab: true}).toString();
+    setup() {
+        this.addActionHandler('add', (e, target) => {
+            this.trigger('add', target.dataset.value);
+        });
 
-            return {
-                functionDataList: this.functionDataList,
-                text: text,
-            };
-        },
+        this.headerText = this.translate('Function');
+        this.documentationUrl = 'https://docs.espocrm.com/user-guide/complex-expressions/';
 
-        setup: function () {
-            this.header = this.translate('Function');
-
-            this.documentationUrl = 'https://docs.espocrm.com/user-guide/complex-expressions/';
-
-            this.functionDataList = this.options.functionDataList ||
-                this.getMetadata().get('app.complexExpression.functionList') || [];
-        },
-
-    });
-});
+        this.functionDataList = this.options.functionDataList ||
+            this.getMetadata().get('app.complexExpression.functionList') || [];
+    }
+}
