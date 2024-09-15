@@ -184,12 +184,6 @@ class Scanner
 
             if ($seed->hasRelation($link)) {
                 $queryBuilder->leftJoin($link);
-
-                /*if (
-                    in_array($seed->getRelationType($link), [Entity::HAS_MANY, Entity::MANY_MANY])
-                ) {
-                    $queryBuilder->distinct();
-                }*/
             }
 
             return;
