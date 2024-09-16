@@ -27,46 +27,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\AppSecret;
+namespace tests\integration\Espo\Tools\AppSecret;
 
 use Espo\Core\Utils\Crypt;
 use Espo\Entities\AppSecret;
-use Espo\ORM\EntityManager;
-use Espo\ORM\Query\Part\Condition;
-use Espo\ORM\Query\Part\Expression;
+use Espo\Tools\AppSecret\SecretProvider;
+use tests\integration\Core\BaseTestCase;
 
-/**
- * @since 8.5.0
- * @noinspection PhpUnused
- */
-class SecretProvider
+class SecretProviderTest extends BaseTestCase
 {
-    public function __construct(
-        private Crypt $crypt,
-        private EntityManager $entityManager,
-    ) {}
-
-    /**
-     * Get an app secret value.
-     *
-     * @param string $name A secret name.
-     */
-    public function get(string $name): ?string
+    public function testGet(): void
     {
-        $secret = $this->entityManager
-            ->getRDBRepositoryByClass(AppSecret::class)
-            ->where(
-                Condition::equal(
-                    Expression::binary(Expression::column('name')),
-                    $name
-                )
-            )
-            ->findOne();
+        $em = $this->getEntityManager();
 
-        if (!$secret) {
-            return null;
-        }
+        $provider = $this->getInjectableFactory()->create(SecretProvider::class);
 
-        return $this->crypt->decrypt($secret->getValue());
+        $secret = $em->getRDBRepositoryByClass(AppSecret::class)->getNew();
+        $crypt = $this->getInjectableFactory()->create(Crypt::class);
+
+        $value = 'hello';
+
+        $secret
+            ->setName('test')
+            ->setSecretValue($crypt->encrypt($value));
+
+        $em->saveEntity($secret);
+
+        $this->assertEquals(
+            $value,
+            $provider->get('test')
+        );
+
+        $this->assertNull($provider->get('Test'));
     }
 }
