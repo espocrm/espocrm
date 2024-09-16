@@ -68,10 +68,9 @@ class RelationConverter
      * @param string $name
      * @param array<string, mixed> $params
      * @param string $entityType
-     * @param array<string, mixed> $ormMetadata
      * @return ?array<string, mixed>
      */
-    public function process(string $name, array $params, string $entityType, array $ormMetadata): ?array
+    public function process(string $name, array $params, string $entityType): ?array
     {
         $foreignEntityType = $params['entity'] ?? null;
         $foreignLinkName = $params['foreign'] ?? null;
@@ -93,7 +92,7 @@ class RelationConverter
         $foreignLinkType = $foreignParams ? $foreignParams['type'] : null;
 
         if (!$linkType) {
-            $this->log->warning("Link {$entityType}.{$name} has no type.");
+            $this->log->warning("Link $entityType.$name has no type.");
 
             return null;
         }
@@ -162,7 +161,7 @@ class RelationConverter
             return BelongsToParent::class;
         }
 
-        throw new RuntimeException("Unsupported link type '{$type}'.");
+        throw new RuntimeException("Unsupported link type '$type'.");
     }
 
     /**

@@ -628,7 +628,7 @@ class Converter
                 continue;
             }
 
-            $convertedLink = $this->relationConverter->process($linkName, $linkParams, $entityType, $ormMetadata);
+            $convertedLink = $this->relationConverter->process($linkName, $linkParams, $entityType);
 
             if ($convertedLink) {
                 /** @var array<string, mixed> $relationships */
