@@ -30,6 +30,7 @@ import BaseFieldView from 'views/fields/base';
 
 export default class extends BaseFieldView {
 
+    // language=Handlebars
     detailTemplateContent = `
         <a href="#User/view/{{id}}">{{name}}</a>
     `
@@ -38,6 +39,6 @@ export default class extends BaseFieldView {
         return {
             id: this.model.get('$user.id'),
             name: this.model.get('name'),
-        }
+        };
     }
 }

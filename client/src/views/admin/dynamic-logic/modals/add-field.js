@@ -26,44 +26,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/modals/add-field', ['views/modal', 'model'], function (Dep, Model) {
+import ModalView from 'views/modal';
+import Model from 'model';
 
-    return Dep.extend({
+export default class extends ModalView {
 
-        templateContent: `<div class="field" data-name="field">{{{field}}}</div>`,
+    templateContent = `<div class="field" data-name="field">{{{field}}}</div>`
 
-        events: {
-            'click a[data-action="addField"]': function (e) {
-                this.trigger('add-field', $(e.currentTarget).data().name);
+
+    setup() {
+        this.addActionHandler('addField', (e, target) => {
+            this.trigger('add-field', target.dataset.name);
+        })
+
+        this.headerText = this.translate('Add Field');
+        this.scope = this.options.scope;
+
+        const model = new Model();
+
+        this.createView('field', 'views/admin/dynamic-logic/fields/field', {
+            selector: '[data-name="field"]',
+            model: model,
+            mode: 'edit',
+            scope: this.scope,
+            defs: {
+                name: 'field',
+                params: {},
             },
-        },
+        }, view => {
+            this.listenTo(view, 'change', () => {
+                const list = model.get('field') || [];
 
-        setup: function () {
-            this.header = this.translate('Add Field');
-            this.scope = this.options.scope;
+                if (!list.length) {
+                    return;
+                }
 
-            const model = new Model();
-
-            this.createView('field', 'views/admin/dynamic-logic/fields/field', {
-                selector: '[data-name="field"]',
-                model: model,
-                mode: 'edit',
-                scope: this.scope,
-                defs: {
-                    name: 'field',
-                    params: {},
-                },
-            }, (view) => {
-                this.listenTo(view, 'change', () => {
-                    const list = model.get('field') || [];
-
-                    if (!list.length) {
-                        return;
-                    }
-
-                    this.trigger('add-field', list[0]);
-                });
+                this.trigger('add-field', list[0]);
             });
-        },
-    });
-});
+        });
+    }
+}

@@ -26,57 +26,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/modals/edit', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+export default class extends ModalView {
 
-        template: 'admin/dynamic-logic/modals/edit',
+    template = 'admin/dynamic-logic/modals/edit'
 
-        className: 'dialog dialog-record',
+    className = 'dialog dialog-record'
 
-        data: function () {
-            return {
-            };
-        },
+    data() {
+        return {};
+    }
 
-        events: {
+    setup() {
+        this.conditionGroup = Espo.Utils.cloneDeep(this.options.conditionGroup || []);
+        this.scope = this.options.scope;
 
-        },
-
-        buttonList: [
+        this.buttonList = [
             {
                 name: 'apply',
                 label: 'Apply',
-                style: 'primary'
+                style: 'primary',
+                onClick: () => this.actionApply(),
             },
             {
                 name: 'cancel',
-                label: 'Cancel'
+                label: 'Cancel',
             }
-        ],
+        ];
 
-        setup: function () {
-            this.conditionGroup = Espo.Utils.cloneDeep(this.options.conditionGroup || []);
-            this.scope = this.options.scope;
+        this.createView('conditionGroup', 'views/admin/dynamic-logic/conditions/and', {
+            selector: '.top-group-container',
+            itemData: {
+                value: this.conditionGroup,
+            },
+            scope: this.options.scope,
+        });
+    }
 
-            this.createView('conditionGroup', 'views/admin/dynamic-logic/conditions/and', {
-                selector: '.top-group-container',
-                itemData: {
-                    value: this.conditionGroup
-                },
-                scope: this.options.scope
-            });
-        },
+    actionApply() {
+        const conditionGroupView = /** @type {import('../conditions/and').default} */
+            this.getView('conditionGroup');
 
-        actionApply: function () {
-            var data = this.getView('conditionGroup').fetch();
+        const data = conditionGroupView.fetch();
 
-            var conditionGroup = data.value;
+        const conditionGroup = data.value;
 
-            this.trigger('apply', conditionGroup);
-            this.close();
-        },
-    });
-});
-
-
+        this.trigger('apply', conditionGroup);
+        this.close();
+    }
+}

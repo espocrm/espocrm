@@ -26,67 +26,66 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/fields/field', ['views/fields/multi-enum', 'ui/multi-select'],
-function (Dep, /** module:ui/multi-select */MultiSelect) {
+import MultiEnumFieldView from 'views/fields/multi-enum';
+import MultiSelect from 'ui/multi-select';
 
-    return Dep.extend({
+export default class extends MultiEnumFieldView {
 
-        getFieldList: function () {
-            let fields = this.getMetadata().get('entityDefs.' + this.options.scope + '.fields');
+    getFieldList() {
+        /** @type {Record<string, Record>} */
+        const fields = this.getMetadata().get(`entityDefs.${this.options.scope}.fields`);
 
-            let filterList = Object.keys(fields).filter(field => {
-                let fieldType = fields[field].type || null;
+        const filterList = Object.keys(fields).filter(field => {
+            const fieldType = fields[field].type || null;
 
-                if (
-                    fields[field].disabled ||
-                    fields[field].utility
-                ) {
-                    return;
-                }
-
-                if (!fieldType) {
-                    return;
-                }
-
-                if (!this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType])) {
-                    return;
-                }
-
-                return true;
-            });
-
-            filterList.push('id');
-
-            filterList.sort((v1, v2) => {
-                return this.translate(v1, 'fields', this.options.scope)
-                    .localeCompare(this.translate(v2, 'fields', this.options.scope));
-            });
-
-            return filterList;
-        },
-
-        setupTranslatedOptions: function () {
-            this.translatedOptions = {};
-
-            this.params.options.forEach(item => {
-                this.translatedOptions[item] = this.translate(item, 'fields', this.options.scope);
-            });
-        },
-
-        setupOptions: function () {
-            Dep.prototype.setupOptions.call(this);
-
-            this.params.options = this.getFieldList();
-            this.setupTranslatedOptions();
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.$element) {
-                MultiSelect.focus(this.$element);
+            if (
+                fields[field].disabled ||
+                fields[field].utility
+            ) {
+                return;
             }
-        },
-    });
-});
 
+            if (!fieldType) {
+                return;
+            }
+
+            if (!this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType])) {
+                return;
+            }
+
+            return true;
+        });
+
+        filterList.push('id');
+
+        filterList.sort((v1, v2) => {
+            return this.translate(v1, 'fields', this.options.scope)
+                .localeCompare(this.translate(v2, 'fields', this.options.scope));
+        });
+
+        return filterList;
+    }
+
+    setupTranslatedOptions() {
+        this.translatedOptions = {};
+
+        this.params.options.forEach(item => {
+            this.translatedOptions[item] = this.translate(item, 'fields', this.options.scope);
+        });
+    }
+
+    setupOptions() {
+        super.setupOptions();
+
+        this.params.options = this.getFieldList();
+        this.setupTranslatedOptions();
+    }
+
+    afterRender() {
+        super.afterRender();
+
+        if (this.$element) {
+            MultiSelect.focus(this.$element);
+        }
+    }
+}
