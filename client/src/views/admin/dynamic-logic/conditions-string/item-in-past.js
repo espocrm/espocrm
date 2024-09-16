@@ -26,11 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/conditions-string/item-in-past',
-['views/admin/dynamic-logic/conditions-string/item-operator-only-date'], function (Dep) {
+import ItemOperatorOnlyDate from 'views/admin/dynamic-logic/conditions-string/item-operator-only-date';
 
-    return Dep.extend({
+export default class extends ItemOperatorOnlyDate {
 
-        dateValue: 'past',
-    });
-});
+    dateValue = 'past'
+}

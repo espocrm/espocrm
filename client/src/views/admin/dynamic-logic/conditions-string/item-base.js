@@ -26,103 +26,147 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/conditions-string/item-base', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+export default class DynamicLogicConditionsStringItemBaseView extends View {
 
-        template: 'admin/dynamic-logic/conditions-string/item-base',
+    template = 'admin/dynamic-logic/conditions-string/item-base'
 
-        data: function () {
-            return {
-                valueViewKey: this.getValueViewKey(),
-                scope: this.scope,
-                operator: this.operator,
-                operatorString: this.operatorString,
-                field: this.field,
-                leftString: this.getLeftPartString(),
-            };
-        },
+    /**
+     * @type {number}
+     */
+    level
 
-        setup: function () {
-            this.itemData = this.options.itemData;
+    /**
+     * @type {string}
+     */
+    scope
 
-            this.level = this.options.level || 0;
-            this.number = this.options.number || 0;
-            this.scope = this.options.scope;
+    /**
+     * @type {number}
+     */
+    number
 
-            this.operator = this.options.operator || this.operator;
-            this.operatorString = this.options.operatorString || this.operatorString;
+    /**
+     * @type {string}
+     */
+    operator
 
-            this.additionalData = (this.itemData.data || {});
+    /**
+     * @type {string}
+     */
+    operatorString
 
-            this.field = (this.itemData.data || {}).field || this.itemData.attribute;
+    /**
+     * @type {
+     *     Record &
+     *     {
+     *         data: {field?: string},
+     *         attribute?: string,
+     *     }
+     * }
+     */
+    itemData
 
-            this.wait(true);
 
-            this.isCurrentUser = this.itemData.attribute && this.itemData.attribute.startsWith('$user.');
+    /**
+     * @type {Record}
+     */
+    additionalData
 
-            if (this.isCurrentUser) {
-                this.scope = 'User'
-            }
+    /**
+     * @type {string}
+     */
+    field
 
-            this.getModelFactory().create(this.scope, (model) => {
-                this.model = model;
+    data() {
+        return {
+            valueViewKey: this.getValueViewKey(),
+            scope: this.scope,
+            operator: this.operator,
+            operatorString: this.operatorString,
+            field: this.field,
+            leftString: this.getLeftPartString(),
+        };
+    }
 
-                this.populateValues();
-                this.createValueFieldView();
+    setup() {
+        this.itemData = this.options.itemData;
 
-                this.wait(false);
-            });
-        },
+        this.level = this.options.level || 0;
+        this.number = this.options.number || 0;
+        this.scope = this.options.scope;
+        this.operator = this.options.operator || this.operator;
+        this.operatorString = this.options.operatorString || this.operatorString;
+        this.additionalData = (this.itemData.data || {});
 
-        getLeftPartString: function () {
-            if (this.itemData.attribute === '$user.id') {
-                return '$' + this.translate('User', 'scopeNames');
-            }
+        this.field = (this.itemData.data || {}).field || this.itemData.attribute;
 
-            let label = this.translate(this.field, 'fields', this.scope);
+        this.wait(true);
 
-            if (this.isCurrentUser) {
-                label = '$' + this.translate('User', 'scopeNames') + '.' + label;
-            }
+        this.isCurrentUser = this.itemData.attribute && this.itemData.attribute.startsWith('$user.');
 
-            return label;
-        },
+        if (this.isCurrentUser) {
+            this.scope = 'User'
+        }
 
-        populateValues: function () {
-            if (this.itemData.attribute) {
-                this.model.set(this.itemData.attribute, this.itemData.value);
-            }
+        this.getModelFactory().create(this.scope, model => {
+            this.model = model;
 
-            this.model.set(this.additionalData.values || {});
-        },
+            this.populateValues();
+            this.createValueFieldView();
 
-        getValueViewKey: function () {
-            return 'view-' + this.level.toString() + '-' + this.number.toString() + '-0';
-        },
+            this.wait(false);
+        });
+    }
 
-        getFieldValueView: function () {
-            if (this.itemData.attribute === '$user.id') {
-                return 'views/admin/dynamic-logic/fields/user-id';
-            }
+    getLeftPartString() {
+        if (this.itemData.attribute === '$user.id') {
+            return '$' + this.translate('User', 'scopeNames');
+        }
 
-            const fieldType = this.getMetadata()
-                .get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
+        let label = this.translate(this.field, 'fields', this.scope);
 
-            return this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) ||
-                this.getFieldManager().getViewName(fieldType);
-        },
+        if (this.isCurrentUser) {
+            label = '$' + this.translate('User', 'scopeNames') + '.' + label;
+        }
 
-        createValueFieldView: function () {
-            const key = this.getValueViewKey();
+        return label;
+    }
 
-            const viewName = this.getFieldValueView();
+    populateValues() {
+        if (this.itemData.attribute) {
+            this.model.set(this.itemData.attribute, this.itemData.value);
+        }
 
-            this.createView('value', viewName, {
-                model: this.model,
-                name: this.field,
-                selector: '[data-view-key="' + key + '"]',
-            });
-        },
-    });
-});
+        this.model.set(this.additionalData.values || {});
+    }
+
+    getValueViewKey() {
+        return `view-${this.level.toString()}-${this.number.toString()}-0`;
+    }
+
+    getFieldValueView() {
+        if (this.itemData.attribute === '$user.id') {
+            return 'views/admin/dynamic-logic/fields/user-id';
+        }
+
+        const fieldType = this.getMetadata()
+            .get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
+
+        return this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) ||
+            this.getFieldManager().getViewName(fieldType);
+    }
+
+    createValueFieldView() {
+        const key = this.getValueViewKey();
+
+        const viewName = this.getFieldValueView();
+
+        this.createView('value', viewName, {
+            model: this.model,
+            name: this.field,
+            selector: `[data-view-key="${key}"]`,
+        });
+    }
+}

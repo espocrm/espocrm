@@ -26,14 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/conditions-string/item-operator-only-base',
-['views/admin/dynamic-logic/conditions-string/item-base'], function (Dep) {
+import DynamicLogicConditionsStringItemBaseView from 'views/admin/dynamic-logic/conditions-string/item-base';
 
-    return Dep.extend({
+export default class extends DynamicLogicConditionsStringItemBaseView {
 
-        template: 'admin/dynamic-logic/conditions-string/item-operator-only-base',
+    template = 'admin/dynamic-logic/conditions-string/item-operator-only-base'
 
-        createValueFieldView: function () {},
-
-    });
-});
+    createValueFieldView() {}
+}

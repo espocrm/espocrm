@@ -26,23 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/conditions-string/item-value-varchar',
-['views/admin/dynamic-logic/conditions-string/item-base'], function (Dep) {
+import DynamicLogicConditionsStringItemBaseView from 'views/admin/dynamic-logic/conditions-string/item-base';
 
-    return Dep.extend({
+export default class extends DynamicLogicConditionsStringItemBaseView {
 
-        template: 'admin/dynamic-logic/conditions-string/item-base',
+    template = 'admin/dynamic-logic/conditions-string/item-base'
 
-        createValueFieldView: function () {
-            var key = this.getValueViewKey();
+    createValueFieldView() {
+        const key = this.getValueViewKey();
 
-            var viewName = 'views/fields/varchar';
+        const viewName = 'views/fields/varchar';
 
-            this.createView('value', viewName, {
-                model: this.model,
-                name: this.field,
-                selector: '[data-view-key="'+key+'"]',
-            });
-        },
-    });
-});
+        this.createView('value', viewName, {
+            model: this.model,
+            name: this.field,
+            selector: `[data-view-key="${key}"]`,
+        });
+    }
+}
