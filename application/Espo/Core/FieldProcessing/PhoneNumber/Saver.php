@@ -199,7 +199,7 @@ class Saver implements SaverInterface
             $keyPreviousList[] = $key;
         }
 
-        $primary = false;
+        $primary = null;
 
         $toCreateList = [];
         $toUpdateList = [];
@@ -227,7 +227,7 @@ class Saver implements SaverInterface
                     $hash->{$key}['primary'] &&
                     $hash->{$key}['primary'] === $hashPrevious->{$key}['primary']
                 ) {
-                    $primary = false;
+                    $primary = null;
                 }
             }
 
