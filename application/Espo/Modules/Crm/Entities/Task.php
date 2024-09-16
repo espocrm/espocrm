@@ -34,6 +34,8 @@ use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Entity;
+use Espo\Entities\Attachment;
+use Espo\ORM\Collection;
 
 class Task extends Entity
 {
@@ -104,5 +106,14 @@ class Task extends Entity
         $this->relations->set('parent', $parent);
 
         return $this;
+    }
+
+    /**
+     * @return iterable<Attachment>
+     */
+    public function getAttachments(): iterable
+    {
+        /** @var Collection<Attachment> */
+        return $this->relations->getMany('attachments');
     }
 }

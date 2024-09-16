@@ -34,6 +34,7 @@ use Espo\Core\ORM\Entity;
 
 use Espo\Core\Field\DateTime;
 
+use Espo\ORM\Collection;
 use RuntimeException;
 use stdClass;
 
@@ -354,5 +355,14 @@ class Note extends Entity
         $this->set('isPinned', $isPinned);
 
         return $this;
+    }
+
+    /**
+     * @return iterable<Attachment>
+     */
+    public function getAttachments(): iterable
+    {
+        /** @var Collection<Attachment> */
+        return $this->relations->getMany('attachments');
     }
 }

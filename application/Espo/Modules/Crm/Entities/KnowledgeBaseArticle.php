@@ -32,6 +32,8 @@ namespace Espo\Modules\Crm\Entities;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\ORM\Entity;
+use Espo\Entities\Attachment;
+use Espo\ORM\Collection;
 
 class KnowledgeBaseArticle extends Entity
 {
@@ -69,5 +71,14 @@ class KnowledgeBaseArticle extends Entity
     {
         /** @var string[] */
         return $this->getLinkMultipleIdList('attachments');
+    }
+
+    /**
+     * @return iterable<Attachment>
+     */
+    public function getAttachments(): iterable
+    {
+        /** @var Collection<Attachment> */
+        return $this->relations->getMany('attachments');
     }
 }

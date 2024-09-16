@@ -31,6 +31,8 @@ namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
+use Espo\Entities\Attachment;
+use Espo\ORM\Collection;
 
 class CaseObj extends \Espo\Core\ORM\Entity
 {
@@ -106,5 +108,14 @@ class CaseObj extends \Espo\Core\ORM\Entity
     {
         /** @var string[] */
         return $this->getLinkMultipleIdList('attachments');
+    }
+
+    /**
+     * @return iterable<Attachment>
+     */
+    public function getAttachments(): iterable
+    {
+        /** @var Collection<Attachment> */
+        return $this->relations->getMany('attachments');
     }
 }
