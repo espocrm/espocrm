@@ -45,7 +45,8 @@ class SecretProvider
     ) {}
 
     /**
-     * Get an app secret value
+     * Get an app secret value.
+     *
      * @param string $name A secret name.
      */
     public function get(string $name): ?string
