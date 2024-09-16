@@ -498,7 +498,10 @@ class BaseFieldView extends View {
         $cell.removeClass('hidden-cell');
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     * @return {Record<string, *>}
+     */
     data() {
         const data = {
             scope: this.model.entityType || this.model.name,
