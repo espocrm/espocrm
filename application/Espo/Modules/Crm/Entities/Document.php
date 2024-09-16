@@ -32,6 +32,8 @@ namespace Espo\Modules\Crm\Entities;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\ORM\Entity;
+use Espo\Entities\Attachment;
+use RuntimeException;
 
 class Document extends Entity
 {
@@ -48,6 +50,17 @@ class Document extends Entity
     public function getFileId(): ?string
     {
         return $this->get('fileId');
+    }
+
+    public function getFile(): ?Attachment
+    {
+        $file = $this->relations->getOne('file');
+
+        if ($file && !$file instanceof Attachment) {
+            throw new RuntimeException();
+        }
+
+        return $file;
     }
 
     public function getAssignedUser(): ?Link
