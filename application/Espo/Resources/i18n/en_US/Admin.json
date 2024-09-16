@@ -38,6 +38,7 @@
         "Auth Tokens": "Auth Tokens",
         "Auth Log": "Auth Log",
         "App Log": "App Log",
+        "App Secrets": "App Secrets",
         "Authentication": "Authentication",
         "Currency": "Currency",
         "Integrations": "Integrations",
@@ -297,6 +298,7 @@
         "templateManager": "Customize message templates.",
         "authLog": "Login history.",
         "appLog": "Application log.",
+        "appSecrets": "Store sensitive information like API keys, passwords, and other secrets.",
         "leadCapture": "API entry points for Web-to-Lead.",
         "attachments": "All file attachments stored in the system.",
         "systemRequirements": "System Requirements for EspoCRM.",
@@ -325,7 +327,8 @@
         "entityManager": "fields,relations,relationships",
         "templateManager": "notifications",
         "jobs": "cron",
-        "labelManager": "language,translation"
+        "labelManager": "language,translation",
+        "appSecrets": "key,keys,password"
     },
     "options": {
         "previewSize": {

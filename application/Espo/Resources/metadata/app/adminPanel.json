@@ -339,6 +339,12 @@
                 "description": "phoneNumbers"
             },
             {
+                "url": "#Admin/appSecrets",
+                "label": "App Secrets",
+                "iconClass": "fas fa-key",
+                "description": "appSecrets"
+            },
+            {
                 "url": "#Admin/appLog",
                 "label": "App Log",
                 "iconClass": "fas fa-list",

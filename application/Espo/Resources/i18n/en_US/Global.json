@@ -63,7 +63,8 @@
         "WorkingTimeRange": "Working Time Exception",
         "AuthenticationProvider": "Authentication Provider",
         "GlobalStream": "Global Stream",
-        "AddressCountry": "Address Country"
+        "AddressCountry": "Address Country",
+        "AppSecret": "App Secret"
     },
     "scopeNamesPlural": {
         "Note": "Notes",
@@ -117,7 +118,8 @@
         "WorkingTimeRange": "Working Time Exceptions",
         "AuthenticationProvider": "Authentication Providers",
         "GlobalStream": "Global Stream",
-        "AddressCountry": "Address Countries"
+        "AddressCountry": "Address Countries",
+        "AppSecret": "App Secrets"
     },
     "labels": {
         "Previous Page": "Previous Page",

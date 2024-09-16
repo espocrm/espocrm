@@ -395,6 +395,11 @@ class AdminController extends Controller {
     }
 
     // noinspection JSUnusedGlobalSymbols
+    actionAppSecrets() {
+        this.getRouter().dispatch('AppSecret', 'list', {fromAdmin: true});
+    }
+
+    // noinspection JSUnusedGlobalSymbols
     actionJobs() {
         this.collectionFactory.create('Job', collection => {
             const searchManager = new SearchManager(
