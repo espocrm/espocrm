@@ -346,6 +346,8 @@ class Saver implements SaverInterface
         if ($primary) {
             $emailAddress = $this->getByAddress($primary);
 
+            $entity->set(self::ATTR_EMAIL_ADDRESS, $primary);
+
             if ($emailAddress) {
                 $update1 = $this->entityManager
                     ->getQueryBuilder()

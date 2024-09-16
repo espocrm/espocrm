@@ -352,6 +352,8 @@ class Saver implements SaverInterface
         if ($primary) {
             $phoneNumber = $this->getByNumber($primary);
 
+            $entity->set(self::ATTR_PHONE_NUMBER, $primary);
+
             if ($phoneNumber) {
                 $update1 = $this->entityManager
                     ->getQueryBuilder()
