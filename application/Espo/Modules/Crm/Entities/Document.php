@@ -47,6 +47,13 @@ class Document extends Entity
         return $this->get('name');
     }
 
+    public function setFile(?Attachment $file): self
+    {
+        $this->relations->set('file', $file);
+
+        return $this;
+    }
+
     public function getFileId(): ?string
     {
         return $this->get('fileId');
