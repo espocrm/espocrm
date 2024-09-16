@@ -104,7 +104,7 @@ class LanguageService
             unset($data['Campaign']['options']);
             unset($data['Campaign']['tooltips']);
             unset($data['Campaign']['presetFilters']);
-        } else {
+        } else if (!$this->user->isAdmin()) {
             /** @var string[] $scopeList */
             $scopeList = array_keys($this->metadata->get(['scopes'], []));
 
