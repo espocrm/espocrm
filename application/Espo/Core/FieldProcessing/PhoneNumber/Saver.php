@@ -511,20 +511,20 @@ class Saver implements SaverInterface
             /** @var PhoneNumber $phoneNumberNew */
             $phoneNumberNew = $this->entityManager->getNewEntity(PhoneNumber::ENTITY_TYPE);
 
-            $phoneNumberNew->set('name', $phoneNumberValue);
+            $phoneNumberNew->setNumber($phoneNumberValue);
 
             if ($entity->has(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT)) {
-                $phoneNumberNew->set('optOut', (bool)$entity->get(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT));
+                $phoneNumberNew->setOptedOut((bool)$entity->get(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT));
             }
 
             if ($entity->has(self::ATTR_PHONE_NUMBER_IS_INVALID)) {
-                $phoneNumberNew->set('invalid', (bool)$entity->get(self::ATTR_PHONE_NUMBER_IS_INVALID));
+                $phoneNumberNew->setInvalid((bool)$entity->get(self::ATTR_PHONE_NUMBER_IS_INVALID));
             }
 
             $defaultType = $this->metadata
                 ->get("entityDefs.{$entity->getEntityType()}.fields.phoneNumber.defaultType");
 
-            $phoneNumberNew->set('type', $defaultType);
+            $phoneNumberNew->setType($defaultType);
 
             $this->entityManager->saveEntity($phoneNumberNew);
         }

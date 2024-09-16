@@ -80,4 +80,18 @@ class EmailAddress extends Entity
 
         return $this;
     }
+
+    public function setInvalid(bool $invalid): self
+    {
+        $this->set('invalid', $invalid);
+
+        return $this;
+    }
+
+    public function setAddress(string $address): self
+    {
+        $this->set('name', $address);
+
+        return $this;
+    }
 }

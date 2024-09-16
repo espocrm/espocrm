@@ -280,8 +280,8 @@ class Saver implements SaverInterface
                     $this->entityManager->saveEntity($emailAddress);
                 } else {
                     $revertData[$address] = [
-                        'optOut' => $emailAddress->get('optOut'),
-                        'invalid' => $emailAddress->get('invalid'),
+                        'optOut' => $emailAddress->isOptedOut(),
+                        'invalid' => $emailAddress->isInvalid(),
                     ];
                 }
             }
@@ -470,14 +470,14 @@ class Saver implements SaverInterface
             /** @var EmailAddress $emailAddressNew */
             $emailAddressNew = $this->entityManager->getNewEntity(EmailAddress::ENTITY_TYPE);
 
-            $emailAddressNew->set('name', $emailAddressValue);
+            $emailAddressNew->setAddress($emailAddressValue);
 
             if ($entity->has(self::ATTR_EMAIL_ADDRESS_IS_OPTED_OUT)) {
                 $emailAddressNew->setOptedOut((bool) $entity->get(self::ATTR_EMAIL_ADDRESS_IS_OPTED_OUT));
             }
 
             if ($entity->has(self::ATTR_EMAIL_ADDRESS_IS_INVALID)) {
-                $emailAddressNew->set('invalid', (bool) $entity->get(self::ATTR_EMAIL_ADDRESS_IS_INVALID));
+                $emailAddressNew->setInvalid((bool) $entity->get(self::ATTR_EMAIL_ADDRESS_IS_INVALID));
             }
 
             $this->entityManager->saveEntity($emailAddressNew);
