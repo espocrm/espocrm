@@ -39,8 +39,8 @@ class DateUpcoming implements Orderer
     {
         $queryBuilder
             ->select('IS_NULL:(dateEnd)')
-            ->order('IS_NULL:(dateEnd)')
-            ->order('dateEnd')
-            ->order('dateStart');
+            ->order('IS_NULL:(dateEnd)', $item->getOrder())
+            ->order('dateEnd', $item->getOrder())
+            ->order('dateStart', $item->getOrder());
     }
 }
