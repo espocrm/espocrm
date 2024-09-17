@@ -122,6 +122,9 @@ module.exports = grunt => {
         },
 
         clean: {
+            tanspiled: [
+                'client/lib/transpiled/**',
+            ],
             start: [
                 'build/EspoCRM-*',
                 'client/lib/*',
@@ -502,6 +505,7 @@ module.exports = grunt => {
         'less',
         'cssmin',
         'prepare-lib-original',
+        'clean:tanspiled',
         'transpile',
         'bundle',
         'bundle-templates',
