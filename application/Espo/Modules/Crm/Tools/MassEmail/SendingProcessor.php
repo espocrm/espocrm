@@ -613,6 +613,7 @@ class SendingProcessor
 
         $body = str_replace('{optOutUrl}', $optOutUrl, $body);
         $body = str_replace('{optOutLink}', $optOutLink, $body);
+        $body = str_replace('{queueItemId}', $queueItem->getId(), $body);
 
         foreach ($trackingUrlList as $trackingUrl) {
             $url = $this->getTrackUrl($trackingUrl, $queueItem);
