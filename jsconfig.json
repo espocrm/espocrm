@@ -8,5 +8,9 @@
         },
         "module": "ES6",
         "target": "ES2018"
-    }
+    },
+    "include": [
+        "client/src",
+        "client/modules/crm/src"
+    ]
 }
