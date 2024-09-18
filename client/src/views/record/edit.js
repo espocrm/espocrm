@@ -44,7 +44,11 @@ class EditRecordView extends DetailRecordView {
     fieldsMode = 'edit'
     /** @inheritDoc */
     mode = 'edit'
-    /** @inheritDoc */
+
+    /**
+     * @inheritDoc
+     * @type {module:views/record/detail~button[]}
+     */
     buttonList = [
         {
             name: 'save',

@@ -54,7 +54,8 @@ class EntityManagerExportModalView extends ModalView {
             },
         ];
 
-        let manifest = this.getConfig().get('customExportManifest') || {};
+        /** @type {Record} */
+        const manifest = this.getConfig().get('customExportManifest') || {};
 
         this.model = new Model({
             name: manifest.name ?? null,

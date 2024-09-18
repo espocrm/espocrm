@@ -26,57 +26,50 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/entity-manager/modals/select-formula', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    /**
-     * @class
-     * @name Class
-     * @extends module:views/modal
-     * @memberOf module:views/admin/entity-manager/modals/select-formula
-     */
-    return Dep.extend(/** @lends module:views/admin/entity-manager/modals/select-formula.Class# */{
+export default class extends ModalView {
 
-        // language=Handlebars
-        templateContent: `
-            <div class="panel no-side-margin">
-                <table class="table table-bordered">
-                    {{#each typeList}}
-                    <tr>
-                        <td style="width: 40%">
-                            <a
-                                class="btn btn-default btn-lg btn-full-wide"
-                                href="#Admin/entityManager/formula&scope={{../scope}}&type={{this}}"
-                            >
-                            {{translate this category='fields' scope='EntityManager'}}
-                            </a>
-                        </td>
-                        <td style="width: 60%">
-                            <div class="complex-text">{{complexText (translate this category='messages' scope='EntityManager')}}
-                        </td>
-                    </tr>
-                    {{/each}}
-                </table>
-            </div>
-        `,
+    // language=Handlebars
+    templateContent = `
+        <div class="panel no-side-margin">
+            <table class="table table-bordered">
+                {{#each typeList}}
+                <tr>
+                    <td style="width: 40%">
+                        <a
+                            class="btn btn-default btn-lg btn-full-wide"
+                            href="#Admin/entityManager/formula&scope={{../scope}}&type={{this}}"
+                        >
+                        {{translate this category='fields' scope='EntityManager'}}
+                        </a>
+                    </td>
+                    <td style="width: 60%">
+                        <div class="complex-text">{{complexText (translate this category='messages' scope='EntityManager')}}
+                    </td>
+                </tr>
+                {{/each}}
+            </table>
+        </div>
+    `
 
-        backdrop: true,
+    backdrop = true
 
-        data: function () {
-            return {
-                typeList: this.typeList,
-                scope: this.scope,
-            };
-        },
+    data() {
+        return {
+            typeList: this.typeList,
+            scope: this.scope,
+        };
+    }
 
-        setup: function () {
-            this.scope = this.options.scope;
+    setup() {
+        this.scope = this.options.scope;
 
-            this.typeList = [
-                'beforeSaveCustomScript',
-                'beforeSaveApiScript',
-            ];
+        this.typeList = [
+            'beforeSaveCustomScript',
+            'beforeSaveApiScript',
+        ];
 
-            this.headerText = this.translate('Formula', 'labels', 'EntityManager')
-        },
-    });
-});
+        this.headerText = this.translate('Formula', 'labels', 'EntityManager')
+    }
+}
