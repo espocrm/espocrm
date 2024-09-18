@@ -718,7 +718,9 @@ class Import
 
         if ($attribute === 'id') {
             if ($action === Params::ACTION_CREATE) {
-                $entity->set('id', $value);
+                if ($value !== '') {
+                    $entity->set('id', $value);
+                }
             }
 
             return;
