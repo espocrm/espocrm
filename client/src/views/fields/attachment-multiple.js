@@ -805,16 +805,6 @@ class AttachmentMultipleFieldView extends BaseFieldView {
                 );
             }
 
-            let containerClassName = null;
-
-            if (this.previewSize === 'large') {
-                containerClassName = 'attachment-block-container-large';
-            }
-
-            if (this.previewSize === 'small') {
-                containerClassName = 'attachment-block-container-small';
-            }
-
             if (names.length === 0 && previews.length === 0) {
                 return '';
             }
@@ -822,8 +812,7 @@ class AttachmentMultipleFieldView extends BaseFieldView {
             const $container = $('<div>')
                 .append(
                     $('<div>')
-                        .addClass('attachment-block-container')
-                        .addClass(containerClassName)
+                        .addClass(`attachment-block-container attachment-block-container-${this.previewSize}`)
                         .append(previews)
                 )
                 .append(names);

@@ -452,18 +452,8 @@ class FileFieldView extends LinkFieldView {
                     this.getDetailPreview(name, type, id)
                 );
 
-            let containerClassName = 'attachment-block-container';
-
-            if (this.previewSize === 'large') {
-                containerClassName += ' attachment-block-container-large';
-            }
-
-            if (this.previewSize === 'small') {
-                containerClassName += ' attachment-block-container-small';
-            }
-
             return $('<div>')
-                .addClass(containerClassName)
+                .addClass(`attachment-block-container attachment-block-container-${this.previewSize}`)
                 .append(
                     $('<div>')
                         .addClass('attachment-block')
