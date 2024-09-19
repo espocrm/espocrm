@@ -28,6 +28,8 @@
 
 import NoteStreamView from 'views/stream/note';
 
+/** @module views/stream/notes/assign */
+
 class AssignNoteStreamView extends NoteStreamView {
 
     template = 'stream/notes/assign'
@@ -48,11 +50,33 @@ class AssignNoteStreamView extends NoteStreamView {
         };
     }
 
+    /**
+     * @typedef {{
+     *    assignedUserId?: string,
+     *     assignedUserName?: string,
+     *     addedAssignedUsers?: {id: string, name: string|null}[],
+     *     removedAssignedUsers?: {id: string, name: string|null}[],
+     * }} module:views/stream/notes/assign~data
+     */
+
     setup() {
-        const data = this.model.get('data');
+        this.setupData();
+
+        this.createMessage();
+    }
+
+    setupData() {
+        /** @type {module:views/stream/notes/assign~data} */
+        const data = this.model.get('data') || {};
 
         this.assignedUserId = data.assignedUserId || null;
         this.assignedUserName = data.assignedUserName || data.assignedUserId || null;
+
+        if (data.addedAssignedUsers) {
+            this.setupDataMulti(data);
+
+            return;
+        }
 
         this.messageData['assignee'] =
             $('<span>')
@@ -78,17 +102,78 @@ class AssignNoteStreamView extends NoteStreamView {
             } else {
                 this.messageName += 'Void';
             }
-        } else {
-            if (this.assignedUserId) {
-                if (this.assignedUserId === this.model.get('createdById')) {
-                    this.messageName += 'Self';
-                }
-            } else {
-                this.messageName += 'Void';
-            }
+
+            return;
         }
 
-        this.createMessage();
+        if (this.assignedUserId) {
+            if (this.assignedUserId === this.model.get('createdById')) {
+                this.messageName += 'Self';
+            }
+
+            return;
+        }
+
+        this.messageName += 'Void';
+    }
+
+    /**
+     * @private
+     * @param {module:views/stream/notes/assign~data} data
+     */
+    setupDataMulti(data) {
+        this.messageName = 'assignMultiAdd';
+
+        const added = data.addedAssignedUsers;
+        const removed = data.removedAssignedUsers;
+
+        if (!added || !removed) {
+            return;
+        }
+
+        if (added.length && removed.length) {
+            this.messageName = 'assignMultiAddRemove';
+        } else if (removed.length) {
+            this.messageName = 'assignMultiRemove';
+        }
+
+        if (added.length) {
+            this.messageData['assignee'] = this.createUsersElement(added);
+        }
+
+        if (removed.length) {
+            this.messageData['removedAssignee'] = this.createUsersElement(removed);
+        }
+    }
+
+    /**
+     * @private
+     * @param {{id: string, name: ?string}[]} users
+     * @return {HTMLElement}
+     */
+    createUsersElement(users) {
+        const wrapper = document.createElement('span');
+
+        users.forEach((it, i) => {
+            const a = document.createElement('a');
+            a.href = `#User/view/${it.id}`;
+            a.text = it.name || it.id;
+            a.dataset.id = it.id;
+            a.dataset.scope = 'User';
+
+            const span = document.createElement('span');
+            span.className = 'nowrap name-avatar';
+            span.innerHTML = this.getHelper().getAvatarHtml(it.id, 'small', 16, 'avatar-link');
+            span.appendChild(a);
+
+            wrapper.appendChild(span);
+
+            if (i < users.length - 1) {
+                wrapper.appendChild(document.createTextNode(', '));
+            }
+        });
+
+        return wrapper;
     }
 }
 

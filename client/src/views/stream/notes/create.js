@@ -28,6 +28,8 @@
 
 import NoteStreamView from 'views/stream/note';
 
+/** @module views/stream/notes/create */
+
 class CreateNoteStreamView extends NoteStreamView {
 
     template = 'stream/notes/create'
@@ -52,17 +54,56 @@ class CreateNoteStreamView extends NoteStreamView {
         this.createMessage();
     }
 
+    /**
+     * @typedef {{
+     *    assignedUserId?: string,
+     *     assignedUserName?: string,
+     *     assignedUsers?: {id: string, name: string|null}[],
+     *     statusField?: string,
+     *     statusValue?: string|null,
+     *     statusStyle?: string|null,
+     * }} module:views/stream/notes/create~data
+     */
+
     setupData() {
-        const data = /** @type {Object.<string, *>} */this.model.get('data');
+        /** @type {module:views/stream/notes/create~data} */
+        const data = this.model.get('data') || {};
+
+        this.setupUsersData();
+
+        if (data.statusField) {
+            const statusField = this.statusField = data.statusField;
+            const statusValue = data.statusValue;
+
+            this.statusStyle = data.statusStyle || 'default';
+            this.statusText = this.getLanguage()
+                .translateOption(statusValue, statusField, this.model.attributes.parentType);
+        }
+    }
+
+    setupUsersData() {
+        /** @type {module:views/stream/notes/create~data} */
+        const data = this.model.get('data') || {};
 
         this.assignedUserId = data.assignedUserId || null;
         this.assignedUserName = data.assignedUserName || data.assignedUserId || null;
+
+        if (data.assignedUsers) {
+            if (data.assignedUsers.length === 1) {
+                this.assignedUserId = data.assignedUsers[0].id;
+                this.assignedUserName = data.assignedUsers[0].name;
+            } else if (data.assignedUsers.length > 1) {
+                this.setupUsersDataMulti();
+
+                return;
+            }
+        }
 
         this.messageData['assignee'] =
             $('<span>')
                 .addClass('nowrap name-avatar')
                 .append(
-                    this.getHelper().getAvatarHtml(data.assignedUserId, 'small', 16, 'avatar-link'),
+                    this.getHelper().getAvatarHtml(this.assignedUserId, 'small', 16, 'avatar-link'),
                     $('<a>')
                         .attr('href', `#User/view/${this.assignedUserId}`)
                         .text(this.assignedUserName)
@@ -84,27 +125,56 @@ class CreateNoteStreamView extends NoteStreamView {
             if (this.isThis) {
                 this.messageName += 'This';
 
-                if (this.assignedUserId === this.model.get('createdById')) {
+                if (this.assignedUserId === this.model.attributes.createdById) {
                     this.messageName += 'Self';
                 }
             } else {
-                if (this.assignedUserId === this.model.get('createdById')) {
+                if (this.assignedUserId === this.model.attributes.createdById) {
                     this.messageName += 'Self';
-                }
-                else if (isYou) {
+                } else if (isYou) {
                     this.messageName += 'You';
                 }
             }
         }
+    }
 
-        if (data.statusField) {
-            const statusField = this.statusField = data.statusField;
-            const statusValue = data.statusValue;
+    setupUsersDataMulti() {
+        this.messageName = 'createAssigned';
 
-            this.statusStyle = data.statusStyle || 'default';
-            this.statusText = this.getLanguage()
-                .translateOption(statusValue, statusField, this.model.get('parentType'));
-        }
+        /** @type {module:views/stream/notes/create~data} */
+        const data = this.model.get('data') || {};
+
+        this.messageData['assignee'] = this.createUsersElement(data.assignedUsers);
+    }
+
+    /**
+     * @private
+     * @param {{id: string, name: ?string}[]} users
+     * @return {HTMLElement}
+     */
+    createUsersElement(users) {
+        const wrapper = document.createElement('span');
+
+        users.forEach((it, i) => {
+            const a = document.createElement('a');
+            a.href = `#User/view/${it.id}`;
+            a.text = it.name || it.id;
+            a.dataset.id = it.id;
+            a.dataset.scope = 'User';
+
+            const span = document.createElement('span');
+            span.className = 'nowrap name-avatar';
+            span.innerHTML = this.getHelper().getAvatarHtml(it.id, 'small', 16, 'avatar-link');
+            span.appendChild(a);
+
+            wrapper.appendChild(span);
+
+            if (i < users.length - 1) {
+                wrapper.appendChild(document.createTextNode(', '));
+            }
+        });
+
+        return wrapper;
     }
 }
 

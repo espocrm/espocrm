@@ -62,6 +62,8 @@ class HookProcessor
     /** @var ?array<string, ?string> */
     private $statusFields = null;
 
+    private const FIELD_ASSIGNED_USERS = 'assignedUsers';
+
     public function __construct(
         private Metadata $metadata,
         private EntityManager $entityManager,
@@ -425,6 +427,11 @@ class HookProcessor
 
         if ($entity->isAttributeChanged('assignedUserId')) {
             $this->afterSaveStreamNotNewAssignedUserIdChanged($entity, $options);
+        } else if (
+            $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS) &&
+            $entity->isAttributeChanged(self::FIELD_ASSIGNED_USERS . 'Ids')
+        ) {
+            $this->afterSaveStreamNotNewAssignedUsersIdsChanged($entity, $options);
         }
 
         $this->service->handleAudited($entity, $options);
@@ -479,6 +486,27 @@ class HookProcessor
         $this->service->noteAssign($entity, $options);
 
         if ($this->user->getId() === $assignedUserId) {
+            $entity->set('isFollowed', true);
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     */
+    private function afterSaveStreamNotNewAssignedUsersIdsChanged(CoreEntity $entity, array $options): void
+    {
+        $userIds = $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS);
+
+        /** @var string[] $prevUserIds */
+        $prevUserIds = $entity->getFetched(self::FIELD_ASSIGNED_USERS . 'Ids') ?? [];
+
+        foreach (array_diff($userIds, $prevUserIds) as $userId) {
+            $this->service->followEntity($entity, $userId);
+        }
+
+        $this->service->noteAssign($entity, $options);
+
+        if (in_array($this->user->getId(), $userIds)) {
             $entity->set('isFollowed', true);
         }
     }

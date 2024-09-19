@@ -565,6 +565,14 @@
         "assignThisSelf": "{user} self-assigned this {entityType}",
         "assignSelf": "{user} self-assigned {entityType} {entity}",
 
+        "assignMultiAdd": "{user} assigned {entity} to {assignee}",
+        "assignMultiRemove": "{user} unassigned {entity} from {removedAssignee}",
+        "assignMultiAddRemove": "{user} assigned {entity} to {assignee} and unassigned from {removedAssignee}",
+
+        "assignMultiAddThis": "{user} assigned this {entityType} to {assignee}",
+        "assignMultiRemoveThis": "{user} unassigned this {entityType} from {removedAssignee}",
+        "assignMultiAddRemoveThis": "{user} assigned this {entityType} to {assignee} and unassigned from {removedAssignee}",
+
         "postThis": "{user} posted",
         "attachThis": "{user} attached",
         "statusThis": "{user} updated {field}",

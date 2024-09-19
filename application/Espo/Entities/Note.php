@@ -272,7 +272,10 @@ class Note extends Entity
         return $this;
     }
 
-    public function setData(stdClass $data): self
+    /**
+     * @param stdClass|array<string, mixed> $data
+     */
+    public function setData(stdClass|array $data): self
     {
         $this->set('data', $data);
 

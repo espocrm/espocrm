@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Stream;
 
+use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
@@ -86,6 +87,8 @@ class Service
     private $dangerDefaultStyleList = [
         'Closed Lost',
     ];
+
+    private const FIELD_ASSIGNED_USERS = 'assignedUsers';
 
     /**
      * @var array<
@@ -581,6 +584,20 @@ class Service
 
             $data['assignedUserId'] = $entity->get('assignedUserId');
             $data['assignedUserName'] = $entity->get('assignedUserName');
+        } else if (
+            $entity instanceof CoreEntity &&
+            $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS) &&
+            $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS) !== []
+        ) {
+            /** @var LinkMultiple $users */
+            $users = $entity->getValueObject(self::FIELD_ASSIGNED_USERS);
+
+            $data['assignedUsers'] = array_map(function ($it) {
+                return [
+                    'id' => $it->getId(),
+                    'name' => $it->getName(),
+                ];
+            }, $users->getList());
         }
 
         $field = $this->getStatusField($entityType);
@@ -754,19 +771,7 @@ class Service
         $note->setParent(LinkParent::createFromEntity($entity));
 
         $this->setSuperParent($entity, $note, true);
-
-        if ($entity->get('assignedUserId')) {
-            $this->loadAssignedUserName($entity);
-
-            $note->set('data', [
-                'assignedUserId' => $entity->get('assignedUserId'),
-                'assignedUserName' => $entity->get('assignedUserName'),
-            ]);
-        } else {
-            $note->set('data', [
-                'assignedUserId' => null
-            ]);
-        }
+        $this->setAssignData($entity, $note);
 
         $noteOptions = [];
 
@@ -1184,5 +1189,59 @@ class Service
     {
         /** @var Note */
         return $this->entityManager->getNewEntity(Note::ENTITY_TYPE);
+    }
+
+    private function setAssignData(Entity $entity, Note $note): void
+    {
+        if (
+            $entity instanceof CoreEntity &&
+            $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS)
+        ) {
+            $data = [];
+
+            $newIds = $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS);
+            /** @var array<string, ?string> $newNames */
+            $newNames = get_object_vars($entity->get(self::FIELD_ASSIGNED_USERS . 'Names') ?? (object) []);
+
+            /** @var string[] $prevIds */
+            $prevIds = $entity->getFetched(self::FIELD_ASSIGNED_USERS . 'Ids') ?? [];
+            /** @var array<string, ?string> $prevNames */
+            $prevNames = get_object_vars($entity->getFetched(self::FIELD_ASSIGNED_USERS . 'Names') ?? (object) []);
+
+            $addedIds = array_values(array_diff($newIds, $prevIds));
+            $removedIds = array_values(array_diff($prevIds, $newIds));
+            $names = array_merge($prevNames, $newNames);
+
+            $data['addedAssignedUsers'] = array_map(function ($id) use ($names) {
+                return [
+                    'id' => $id,
+                    'name' => $names[$id] ?? null,
+                ];
+            }, $addedIds);
+
+            $data['removedAssignedUsers'] = array_map(function ($id) use ($names) {
+                return [
+                    'id' => $id,
+                    'name' => $names[$id] ?? null,
+                ];
+            }, $removedIds);
+
+            $note->setData($data);
+
+            return;
+        }
+
+        if ($entity->get('assignedUserId')) {
+            $this->loadAssignedUserName($entity);
+
+            $note->setData([
+                'assignedUserId' => $entity->get('assignedUserId'),
+                'assignedUserName' => $entity->get('assignedUserName'),
+            ]);
+
+            return;
+        }
+
+        $note->setData(['assignedUserId' => null]);
     }
 }
