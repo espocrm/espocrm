@@ -73,6 +73,9 @@ class NameUtil
         'true',
         'layout',
         'system',
+        'teams',
+        'assignedUser',
+        'assignedUsers',
     ];
 
     /**

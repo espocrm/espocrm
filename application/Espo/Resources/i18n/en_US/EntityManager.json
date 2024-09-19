@@ -49,7 +49,8 @@
         "author": "Author",
         "module": "Module",
         "version": "Version",
-        "primaryFilters": "Primary Filters"
+        "primaryFilters": "Primary Filters",
+        "assignedUsers": "Multiple Assigned Users"
     },
     "options": {
         "type": {
@@ -92,6 +93,7 @@
         "beforeSaveApiScript": "A script called on create and update API requests before an entity is saved. Use for custom validation and duplicate checking."
     },
     "tooltips": {
+        "assignedUsers": "The ability to assign multiple users to a record.\n\nNote that after enabling the parameter, existing assigned users won't be transferred to the new *Assigned Users* field.",
         "duplicateCheckFieldList": "Which fields to check when performing checking for duplicates.",
         "updateDuplicateCheck": "Perform checking for duplicates when updating a record.",
         "optimisticConcurrencyControl": "Prevents writing conflicts.",

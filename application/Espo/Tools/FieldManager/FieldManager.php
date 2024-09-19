@@ -63,6 +63,9 @@ class FieldManager
         'null',
         'false',
         'true',
+        'teams',
+        'assignedUser',
+        'assignedUsers',
     ];
 
     /** @var string[] */

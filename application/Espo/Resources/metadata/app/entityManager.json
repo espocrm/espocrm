@@ -8,5 +8,7 @@
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\EventDeleteHook",
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\DeleteHasChildrenLinks"
     ],
-    "updateHookClassNameList": []
+    "updateHookClassNameList": [
+        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\AssignedUsersUpdateHook"
+    ]
 }

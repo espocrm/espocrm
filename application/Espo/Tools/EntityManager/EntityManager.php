@@ -537,6 +537,7 @@ class EntityManager
         $this->metadata->delete('clientDefs', $name);
         $this->metadata->delete('recordDefs', $name);
         $this->metadata->delete('selectDefs', $name);
+        $this->metadata->delete('entityAcl', $name);
         $this->metadata->delete('scopes', $name);
 
         foreach ($this->metadata->get(['entityDefs', $name, 'links'], []) as $link => $item) {

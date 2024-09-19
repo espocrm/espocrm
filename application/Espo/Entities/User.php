@@ -58,6 +58,8 @@ class User extends Person
     public const TYPE_API = 'api';
     public const TYPE_SUPER_ADMIN = 'super-admin';
 
+    public const RELATIONSHIP_ENTITY_USER = 'EntityUser';
+
     public function isActive(): bool
     {
         return (bool) $this->get('isActive');

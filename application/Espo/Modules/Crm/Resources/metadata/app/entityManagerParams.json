@@ -14,6 +14,13 @@
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
             }
+        },
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "Contact": {
@@ -31,6 +38,13 @@
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
             }
+        },
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "Lead": {
@@ -47,6 +61,49 @@
                 "type": "bool",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
+            }
+        },
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        }
+    },
+    "Opportunity": {
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        }
+    },
+    "Document": {
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        }
+    },
+    "Case": {
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        }
+    },
+    "KnowledgeBaseArticle": {
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
             }
         }
     },
@@ -144,6 +201,13 @@
                 "tooltip": true,
                 "view": "crm:views/admin/entity-manager/fields/status-list"
             }
+        },
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "@Event": {
@@ -181,6 +245,13 @@
                 "required": true,
                 "tooltip": true,
                 "view": "crm:views/admin/entity-manager/fields/status-list"
+            }
+        },
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
             }
         }
     }

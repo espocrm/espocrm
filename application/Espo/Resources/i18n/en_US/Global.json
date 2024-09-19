@@ -489,6 +489,7 @@
     },
     "links": {
         "assignedUser": "Assigned User",
+        "assignedUsers": "Assigned Users",
         "createdBy": "Created By",
         "modifiedBy": "Modified By",
         "team": "Team",

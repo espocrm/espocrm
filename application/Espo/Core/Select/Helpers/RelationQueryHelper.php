@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\Helpers;
 
+use Espo\Entities\User;
 use Espo\ORM\Defs;
 use Espo\ORM\Query\Part\Condition;
 use Espo\ORM\Query\Part\Expression;
@@ -44,37 +45,35 @@ class RelationQueryHelper
         private Defs $defs,
     ) {}
 
-    /**
-     * @param string|string[] $id
-     */
-    public function prepareMiddleWhere(string $entityType, string $link, string|array $id): WhereItem
+    public function prepareAssignedUsersWhere(string $entityType, string $userId): WhereItem
     {
         $relationDefs = $this->defs
             ->getEntity($entityType)
-            ->getRelation($link);
+            ->getRelation('assignedUsers');
 
         $middleEntityType = ucfirst($relationDefs->getRelationshipName());
         $key1 = $relationDefs->getMidKey();
         $key2 = $relationDefs->getForeignMidKey();
 
+        $joinWhere = [
+            "m.$key1:" => 'id',
+            'm.deleted' => false,
+        ];
+
+        if ($middleEntityType === User::RELATIONSHIP_ENTITY_USER) {
+            $joinWhere['m.entityType'] = $entityType;
+        }
+
         $subQuery = QueryBuilder::create()
             ->select('id')
             ->from($entityType)
-            ->leftJoin($middleEntityType, 'm', [
-                "m.$key1:" => 'id',
-                'm.deleted' => false,
-            ])
-            ->where(["m.$key2" => $id])
+            ->leftJoin($middleEntityType, 'm', $joinWhere)
+            ->where(["m.$key2" => $userId])
             ->build();
 
         return Condition::in(
             Expression::column('id'),
             $subQuery
         );
-    }
-
-    public function prepareAssignedUsersWhere(string $entityType, string $userId): WhereItem
-    {
-        return $this->prepareMiddleWhere($entityType, 'assignedUsers', $userId);
     }
 }

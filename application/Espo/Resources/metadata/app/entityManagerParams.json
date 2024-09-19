@@ -30,6 +30,13 @@
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
             }
+        },
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "@Person": {
@@ -46,6 +53,13 @@
                 "type": "multiEnum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
+            }
+        },
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
             }
         }
     },
@@ -64,6 +78,13 @@
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
             }
+        },
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "@BasePlus": {
@@ -80,6 +101,13 @@
                 "type": "multiEnum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
+            }
+        },
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
             }
         }
     }
