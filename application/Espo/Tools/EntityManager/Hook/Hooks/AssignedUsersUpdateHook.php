@@ -30,6 +30,7 @@
 namespace Espo\Tools\EntityManager\Hook\Hooks;
 
 use Espo\Core\ORM\Type\FieldType;
+use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\ORM\Type\RelationType;
@@ -48,6 +49,7 @@ class AssignedUsersUpdateHook implements UpdateHook
 
     public function __construct(
         private Metadata $metadata,
+        private Log $log,
     ) {}
 
     public function process(Params $params, Params $previousParams): void
@@ -61,6 +63,12 @@ class AssignedUsersUpdateHook implements UpdateHook
 
     private function add(string $entityType): void
     {
+        if ($this->metadata->get("entityDefs.$entityType.links." . self::FIELD . ".isCustom")) {
+            $this->log->warning("Cannot enable multiple assigned users for $entityType as the link already exists.");
+
+            return;
+        }
+
         $this->metadata->set('entityDefs', $entityType, [
             'fields' => [
                 self::FIELD => [
@@ -106,6 +114,15 @@ class AssignedUsersUpdateHook implements UpdateHook
 
     private function remove(string $entityType): void
     {
+        $field = self::FIELD;
+
+        if (
+            $this->metadata->get("entityDefs.$entityType.links.$field.isCustom") &&
+            $this->metadata->get("entityDefs.$entityType.links.$field.relationName") !== self::RELATION_NAME
+        ) {
+            return;
+        }
+
         $this->metadata->delete('entityDefs', $entityType, [
             'fields.' . self::FIELD,
             'links.' . self::FIELD,
