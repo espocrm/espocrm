@@ -1,7 +1,6 @@
 {
     "createHookClassNameList": [
-        "Espo\\Tools\\LinkManager\\Hook\\Hooks\\TargetListCreate",
-        "Espo\\Tools\\LinkManager\\Hook\\Hooks\\AssignedUsersCreate"
+        "Espo\\Tools\\LinkManager\\Hook\\Hooks\\TargetListCreate"
     ],
     "deleteHookClassNameList": [
         "Espo\\Tools\\LinkManager\\Hook\\Hooks\\TargetListDelete",
