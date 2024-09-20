@@ -62,6 +62,24 @@ class AssignedUsersFieldView extends LinkMultipleFieldView {
 
         return avatarHtml + ' ' + html;
     }
+
+    /** @inheritDoc */
+    getOnEmptyAutocomplete() {
+        if (this.params.autocompleteOnEmpty) {
+            return undefined;
+        }
+
+        if (this.ids && this.ids.includes(this.getUser().id)) {
+            return Promise.resolve([]);
+        }
+
+        return Promise.resolve([
+            {
+                id: this.getUser().id,
+                name: this.getUser().get('name'),
+            },
+        ]);
+    }
 }
 
 export default AssignedUsersFieldView;
