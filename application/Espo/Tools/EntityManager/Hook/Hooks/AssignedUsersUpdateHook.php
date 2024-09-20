@@ -94,7 +94,7 @@ class AssignedUsersUpdateHook implements UpdateHook
             ],
         ]);
 
-        if ($this->metadata->get("entityDefs.$entityType.'fields.assignedUser")) {
+        if ($this->metadata->get("entityDefs.$entityType.fields.assignedUser")) {
             $this->metadata->set('entityDefs', $entityType, [
                 'fields' => [
                     self::FIELD_ASSIGNED_USER => [
