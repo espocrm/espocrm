@@ -26,135 +26,128 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/modals/add-field', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+export default class extends ModalView {
 
-        backdrop: true,
+    backdrop = true
 
-        template: 'admin/field-manager/modals/add-field',
+    template = 'admin/field-manager/modals/add-field'
 
-        events: {
-            'click a[data-action="addField"]': function (e) {
-                let type = $(e.currentTarget).data('type');
+    data() {
+        return {
+            typeList: this.typeList,
+        };
+    }
 
-                this.addField(type);
-            },
-            'keyup input[data-name="quick-search"]': function (e) {
-                this.processQuickSearch(e.currentTarget.value);
-            },
-        },
+    setup() {
+        this.addActionHandler('addField', (e, target) => this.addField(target.dataset.type));
 
-        data: function () {
+        this.addHandler('keyup', 'input[data-name="quick-search"]', (e, /** HTMLInputElement */target) => {
+            this.processQuickSearch(target.value);
+        });
+
+        this.headerText = this.translate('Add Field', 'labels', 'Admin');
+
+        this.typeList = [];
+
+        /** @type {Record<string, Record>} */
+        const fieldDefs = this.getMetadata().get('fields');
+
+        Object.keys(this.getMetadata().get('fields')).forEach(type => {
+            if (type in fieldDefs && !fieldDefs[type].notCreatable) {
+                this.typeList.push(type);
+            }
+        });
+
+        this.typeDataList = this.typeList.map(type => {
             return {
-                typeList: this.typeList,
+                type: type,
+                label: this.translate(type, 'fieldTypes', 'Admin'),
             };
-        },
+        });
 
-        setup: function () {
-            this.headerText = this.translate('Add Field', 'labels', 'Admin');
+        this.typeList.sort((v1, v2) => {
+            return this.translate(v1, 'fieldTypes', 'Admin')
+                .localeCompare(this.translate(v2, 'fieldTypes', 'Admin'));
+        });
+    }
 
-            this.typeList = [];
+    addField(type) {
+        this.trigger('add-field', type);
+        this.remove();
+    }
 
-            let fieldDefs = this.getMetadata().get('fields');
+    afterRender() {
+        this.$noData = this.$el.find('.no-data');
 
-            Object.keys(this.getMetadata().get('fields')).forEach(type => {
-                if (type in fieldDefs) {
-                    if (!fieldDefs[type].notCreatable) {
-                        this.typeList.push(type);
-                    }
-                }
-            });
+        this.typeList.forEach(type => {
+            let text = this.translate(type, 'fieldInfo', 'FieldManager');
 
-            this.typeDataList = this.typeList.map(type => {
-                return {
-                    type: type,
-                    label: this.translate(type, 'fieldTypes', 'Admin'),
-                };
-            });
+            const $el = this.$el.find('a.info[data-name="' + type + '"]');
 
-            this.typeList.sort((v1, v2) => {
-                return this.translate(v1, 'fieldTypes', 'Admin')
-                    .localeCompare(this.translate(v2, 'fieldTypes', 'Admin'));
-            });
-        },
-
-        addField: function (type) {
-            this.trigger('add-field', type);
-            this.remove();
-        },
-
-        afterRender: function () {
-            this.$noData = this.$el.find('.no-data');
-
-            this.typeList.forEach(type => {
-                let text = this.translate(type, 'fieldInfo', 'FieldManager');
-
-                let $el = this.$el.find('a.info[data-name="'+type+'"]');
-
-                if (text === type) {
-                    $el.addClass('hidden');
-
-                    return;
-                }
-
-                text = this.getHelper().transformMarkdownText(text, {linksInNewTab: true}).toString();
-
-                Espo.Ui.popover($el, {
-                    content: text,
-                    placement: 'left',
-                }, this);
-            });
-
-            setTimeout(() => this.$el.find('input[data-name="quick-search"]').focus(), 50);
-        },
-
-        processQuickSearch: function (text) {
-            text = text.trim();
-
-            let $noData = this.$noData;
-
-            $noData.addClass('hidden');
-
-            if (!text) {
-                this.$el.find('ul .list-group-item').removeClass('hidden');
+            if (text === type) {
+                $el.addClass('hidden');
 
                 return;
             }
 
-            let matchedList = [];
+            text = this.getHelper().transformMarkdownText(text, {linksInNewTab: true}).toString();
 
-            let lowerCaseText = text.toLowerCase();
+            Espo.Ui.popover($el, {
+                content: text,
+                placement: 'left',
+            }, this);
+        });
 
-            this.typeDataList.forEach(item => {
-                let matched =
-                    item.label.toLowerCase().indexOf(lowerCaseText) === 0 ||
-                    item.type.toLowerCase().indexOf(lowerCaseText) === 0;
+        setTimeout(() => this.$el.find('input[data-name="quick-search"]').focus(), 50);
+    }
 
-                if (matched) {
-                    matchedList.push(item.type);
-                }
-            });
+    processQuickSearch(text) {
+        text = text.trim();
 
-            if (matchedList.length === 0) {
-                this.$el.find('ul .list-group-item').addClass('hidden');
+        const $noData = this.$noData;
 
-                $noData.removeClass('hidden');
+        $noData.addClass('hidden');
+
+        if (!text) {
+            this.$el.find('ul .list-group-item').removeClass('hidden');
+
+            return;
+        }
+
+        const matchedList = [];
+
+        const lowerCaseText = text.toLowerCase();
+
+        this.typeDataList.forEach(item => {
+            const matched =
+                item.label.toLowerCase().indexOf(lowerCaseText) === 0 ||
+                item.type.toLowerCase().indexOf(lowerCaseText) === 0;
+
+            if (matched) {
+                matchedList.push(item.type);
+            }
+        });
+
+        if (matchedList.length === 0) {
+            this.$el.find('ul .list-group-item').addClass('hidden');
+
+            $noData.removeClass('hidden');
+
+            return;
+        }
+
+        this.typeDataList.forEach(item => {
+            const $row = this.$el.find(`ul .list-group-item[data-name="${item.type}"]`);
+
+            if (!~matchedList.indexOf(item.type)) {
+                $row.addClass('hidden');
 
                 return;
             }
 
-            this.typeDataList.forEach(item => {
-                let $row = this.$el.find(`ul .list-group-item[data-name="${item.type}"]`);
-
-                if (!~matchedList.indexOf(item.type)) {
-                    $row.addClass('hidden');
-
-                    return;
-                }
-
-                $row.removeClass('hidden');
-            });
-        },
-    });
-});
+            $row.removeClass('hidden');
+        });
+    }
+}
