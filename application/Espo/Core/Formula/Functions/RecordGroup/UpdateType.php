@@ -29,13 +29,17 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Exceptions\BadArgumentType;
+use Espo\Core\Formula\Functions\BaseFunction;
 
 use Espo\Core\Di;
+use RuntimeException;
+use stdClass;
 
+/**
+ * @noinspection PhpUnused
+ */
 class UpdateType extends BaseFunction implements
     Di\EntityManagerAware
 {
@@ -49,6 +53,10 @@ class UpdateType extends BaseFunction implements
 
         $args = $this->evaluate($args);
 
+        if (!is_array($args)) {
+            throw new RuntimeException();
+        }
+
         $entityType = $args[0];
         $id = $args[1];
 
@@ -58,6 +66,32 @@ class UpdateType extends BaseFunction implements
 
         if (!is_string($id)) {
             $this->throwBadArgumentType(2, 'string');
+        }
+
+        $data = $this->getData($args, $entityType);
+
+        $entity = $this->entityManager->getEntityById($entityType, $id);
+
+        if (!$entity) {
+            return false;
+        }
+
+        $entity->set($data);
+
+        $this->entityManager->saveEntity($entity);
+
+        return true;
+    }
+
+    /**
+     * @param array<int, mixed> $args
+     * @return array<string, mixed>
+     * @throws BadArgumentType
+     */
+    private function getData(array $args, mixed $entityType): array
+    {
+        if (count($args) >= 3 && $args[2] instanceof stdClass) {
+            return get_object_vars($args[2]);
         }
 
         $data = [];
@@ -80,17 +114,6 @@ class UpdateType extends BaseFunction implements
             $i = $i + 2;
         }
 
-        $em = $this->entityManager;
-
-        $entity = $em->getEntity($entityType, $id);
-
-        if (!$entity) {
-            return false;
-        }
-
-        $entity->set($data);
-        $em->saveEntity($entity);
-
-        return true;
+        return $data;
     }
 }

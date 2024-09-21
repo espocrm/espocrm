@@ -31,6 +31,7 @@ namespace tests\integration\Espo\Core\Formula;
 
 use Espo\Core\Acl\Table;
 use Espo\Core\Field\DateTimeOptional;
+use Espo\Core\Formula\Exceptions\Error;
 use Espo\Core\Formula\Exceptions\UnsafeFunction;
 use Espo\Core\Formula\Manager;
 use Espo\Entities\User;
@@ -464,26 +465,67 @@ class FormulaTest extends BaseTestCase
         $this->assertEquals('1', $result);
     }
 
+    /**
+     * @throws Error
+     */
     public function testRecordCreateUpdate()
     {
-        $em = $this->getContainer()->get('entityManager');
-        $fm = $this->getContainer()->get('formulaManager');
+        $em = $this->getEntityManager();
+        $fm = $this->getContainer()->getByClass(Manager::class);
 
         $script = "record\\create('Meeting', 'name', 'test', 'assignedUserId', '1')";
         $id = $fm->run($script);
 
         $this->assertIsString('string', $id);
 
-        $m = $em->getEntity('Meeting', $id);
+        $meeting = $em->getEntityById(Meeting::ENTITY_TYPE, $id);
 
-        $this->assertNotNull($m);
-        $this->assertEquals('1', $m->get('assignedUserId'));
+        $this->assertNotNull($meeting);
+        $this->assertEquals('1', $meeting->get('assignedUserId'));
 
-        $script = "record\\update('Meeting', '{$id}', 'name', 'test-chanhed', 'assignedUserId', '2')";
+        //
+
+        $script = "record\\update('Meeting', '$id', 'name', 'test-changed', 'assignedUserId', '2')";
         $fm->run($script);
 
-        $m = $em->getEntity('Meeting', $id);
-        $this->assertEquals('2', $m->get('assignedUserId'));
+        $meeting = $em->getEntityById(Meeting::ENTITY_TYPE, $id);
+        $this->assertEquals('2', $meeting->get('assignedUserId'));
+
+        //
+
+        $script = "
+            \$data = object\\create();
+            object\\set(\$data, 'name', 'test-1');
+
+            \$id = record\\create('Meeting', \$data);
+        ";
+
+        $vars = (object) [];
+
+        $fm->run($script, null, $vars);
+
+        $id2 = $vars->id;
+
+        $this->assertIsString('string', $id2);
+
+        $meeting = $em->getEntityById(Meeting::ENTITY_TYPE, $id2);
+
+        $this->assertNotNull($meeting);
+        $this->assertEquals('test-1', $meeting->get('name'));
+
+        //
+
+        $script = "
+            \$data = object\\create();
+            object\\set(\$data, 'name', 'test-updated');
+
+            record\\update('Meeting', '$id2', \$data);
+        ";
+
+        $fm->run($script);
+
+        $meeting = $em->getEntityById(Meeting::ENTITY_TYPE, $id2);
+        $this->assertEquals('test-updated', $meeting->get('name'));
     }
 
     public function testRecordDelete(): void

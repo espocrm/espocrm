@@ -29,13 +29,17 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Exceptions\BadArgumentType;
+use Espo\Core\Formula\Functions\BaseFunction;
 
 use Espo\Core\Di;
+use RuntimeException;
+use stdClass;
 
+/**
+ * @noinspection PhpUnused
+ */
 class CreateType extends BaseFunction implements
     Di\EntityManagerAware
 {
@@ -49,10 +53,32 @@ class CreateType extends BaseFunction implements
 
         $args = $this->evaluate($args);
 
+        if (!is_array($args)) {
+            throw new RuntimeException();
+        }
+
         $entityType = $args[0];
 
         if (!is_string($entityType)) {
             $this->throwBadArgumentType(1, 'string');
+        }
+
+        $data = $this->getData($args, $entityType);
+
+        $entity = $this->entityManager->createEntity($entityType, $data);
+
+        return $entity->getId();
+    }
+
+    /**
+     * @param array<int, mixed> $args
+     * @return array<string, mixed>
+     * @throws BadArgumentType
+     */
+    private function getData(array $args, mixed $entityType): array
+    {
+        if (count($args) >= 2 && $args[1] instanceof stdClass) {
+            return get_object_vars($args[1]);
         }
 
         $data = [];
@@ -75,8 +101,6 @@ class CreateType extends BaseFunction implements
             $i = $i + 2;
         }
 
-        $entity = $this->entityManager->createEntity($entityType, $data);
-
-        return $entity->getId();
+        return $data;
     }
 }
