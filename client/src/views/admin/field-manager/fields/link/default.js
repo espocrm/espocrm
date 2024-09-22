@@ -26,44 +26,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/fields/link/default', ['views/fields/link'], function (Dep) {
+import LinkFieldView from 'views/fields/link';
 
-    return Dep.extend({
+export default class extends LinkFieldView {
 
-        data: function () {
-            var defaultAttributes = this.model.get('defaultAttributes') || {};
-            var nameValue = defaultAttributes[this.options.field + 'Name'] || null;
-            var idValue = defaultAttributes[this.options.field + 'Id'] || null;
+    data() {
+        const defaultAttributes = this.model.get('defaultAttributes') || {};
+        const nameValue = defaultAttributes[this.options.field + 'Name'] || null;
+        const idValue = defaultAttributes[this.options.field + 'Id'] || null;
 
-            var data = Dep.prototype.data.call(this);
+        const data = super.data();
 
-            data.nameValue = nameValue;
-            data.idValue = idValue;
+        data.nameValue = nameValue;
+        data.idValue = idValue;
 
-            return data;
-        },
+        return data;
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.foreignScope = this.getMetadata()
-                .get(['entityDefs', this.options.scope, 'links', this.options.field, 'entity']);
-        },
+        this.foreignScope = this.getMetadata()
+            .get(['entityDefs', this.options.scope, 'links', this.options.field, 'entity']);
+    }
 
-        fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
+    fetch() {
+        const data = super.fetch();
 
-            var defaultAttributes = {};
-            defaultAttributes[this.options.field + 'Id'] = data[this.idName];
-            defaultAttributes[this.options.field + 'Name'] = data[this.nameName];
+        let defaultAttributes = {};
+        defaultAttributes[this.options.field + 'Id'] = data[this.idName];
+        defaultAttributes[this.options.field + 'Name'] = data[this.nameName];
 
-            if (data[this.idName] === null) {
-                defaultAttributes = null;
-            }
+        if (data[this.idName] === null) {
+            defaultAttributes = null;
+        }
 
-            return {
-                defaultAttributes: defaultAttributes
-            };
-        },
-    });
-});
+        return {
+            defaultAttributes: defaultAttributes
+        };
+    }
+}

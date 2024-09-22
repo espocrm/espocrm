@@ -26,119 +26,119 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/fields/foreign/field', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+export default class extends EnumFieldView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            if (!this.model.isNew()) {
-                this.setReadOnly(true);
-            }
+        if (!this.model.isNew()) {
+            this.setReadOnly(true);
+        }
 
-            this.listenTo(this.model, 'change:field', () => {
-                this.manageField();
-            });
+        this.listenTo(this.model, 'change:field', () => {
+            this.manageField();
+        });
 
-            this.viewValue = this.model.get('view');
-        },
+        this.viewValue = this.model.get('view');
+    }
 
-        setupOptions: function () {
-            this.listenTo(this.model, 'change:link', () => {
-                this.setupOptionsByLink();
-                this.reRender();
-            });
-
+    setupOptions() {
+        this.listenTo(this.model, 'change:link', () => {
             this.setupOptionsByLink();
-        },
+            this.reRender();
+        });
 
-        setupOptionsByLink: function () {
-            this.typeList = this.getMetadata().get(['fields', 'foreign', 'fieldTypeList']);
+        this.setupOptionsByLink();
+    }
 
-            var link = this.model.get('link');
+    setupOptionsByLink() {
+        this.typeList = this.getMetadata().get(['fields', 'foreign', 'fieldTypeList']);
 
-            if (!link) {
-                this.params.options = [''];
+        const link = this.model.get('link');
 
+        if (!link) {
+            this.params.options = [''];
+
+            return;
+        }
+
+        const scope = this.getMetadata().get(['entityDefs', this.options.scope, 'links', link, 'entity']);
+
+        if (!scope) {
+            this.params.options = [''];
+
+            return;
+        }
+
+        /** @type {Record<string, Record>} */
+        const fields = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
+
+        this.params.options = Object.keys(Espo.Utils.clone(fields)).filter(item => {
+            const type = fields[item].type;
+
+            if (!~this.typeList.indexOf(type)) {
                 return;
             }
 
-            var scope = this.getMetadata().get(['entityDefs', this.options.scope, 'links', link, 'entity']);
-
-            if (!scope) {
-                this.params.options = [''];
-
+            if (
+                fields[item].disabled ||
+                fields[item].utility ||
+                fields[item].directAccessDisabled ||
+                fields[item].notStorable
+            ) {
                 return;
             }
 
-            var fields = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
+            return true;
+        });
 
-            this.params.options = Object.keys(Espo.Utils.clone(fields)).filter(item => {
-                var type = fields[item].type;
+        this.translatedOptions = {};
 
-                if (!~this.typeList.indexOf(type)) {
-                    return;
-                }
+        this.params.options.forEach(item => {
+            this.translatedOptions[item] = this.translate(item, 'fields', scope);
+        });
 
-                if (
-                    fields[item].disabled ||
-                    fields[item].utility ||
-                    fields[item].directAccessDisabled ||
-                    fields[item].notStorable
-                ) {
-                    return;
-                }
+        this.params.options = this.params.options.sort((v1, v2) => {
+            return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
+        });
 
-                return true;
-            });
+        this.params.options.unshift('');
+    }
 
-            this.translatedOptions = {};
+    manageField() {
+        if (!this.model.isNew()) {
+            return;
+        }
 
-            this.params.options.forEach(item => {
-                this.translatedOptions[item] = this.translate(item, 'fields', scope);
-            });
+        const link = this.model.get('link');
+        const field = this.model.get('field');
 
-            this.params.options = this.params.options.sort((v1, v2) => {
-                return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
-            });
+        if (!link || !field) {
+            return;
+        }
 
-            this.params.options.unshift('');
-        },
+        const scope = this.getMetadata().get(['entityDefs', this.options.scope, 'links', link, 'entity']);
 
-        manageField: function () {
-            if (!this.model.isNew()) {
-                return;
+        if (!scope) {
+            return;
+        }
+
+        const type = this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']);
+
+        this.viewValue = this.getMetadata().get(['fields', 'foreign', 'fieldTypeViewMap', type]);
+    }
+
+    fetch() {
+        const data = super.fetch();
+
+        if (this.model.isNew()) {
+            if (this.viewValue) {
+                data['view'] = this.viewValue;
             }
+        }
 
-            var link = this.model.get('link');
-            var field = this.model.get('field');
-
-            if (!link || !field) {
-                return;
-            }
-
-            var scope = this.getMetadata().get(['entityDefs', this.options.scope, 'links', link, 'entity']);
-
-            if (!scope) {
-                return;
-            }
-
-            var type = this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']);
-
-            this.viewValue = this.getMetadata().get(['fields', 'foreign', 'fieldTypeViewMap', type]);
-        },
-
-        fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
-
-            if (this.model.isNew()) {
-                if (this.viewValue) {
-                    data['view'] = this.viewValue;
-                }
-            }
-
-            return data;
-        },
-    });
-});
+        return data;
+    }
+}

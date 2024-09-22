@@ -26,32 +26,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/fields/date/after-before', ['views/fields/varchar'], function (Dep) {
+import VarcharFieldView from 'views/fields/varchar';
 
-    return Dep.extend({
+export default class extends VarcharFieldView {
 
-        setupOptions: function () {
-            Dep.prototype.setupOptions.call(this);
+    setupOptions() {
+        super.setupOptions();
 
-            if (!this.model.scope) {
-                return;
+        if (!this.model.scope) {
+            return;
+        }
+
+        let list = this.getFieldManager().getEntityTypeFieldList(
+            this.model.scope,
+            {
+                typeList: ['date', 'datetime', 'datetimeOptional'],
             }
+        );
 
-            var list = this.getFieldManager().getEntityTypeFieldList(
-                this.model.scope,
-                {
-                    typeList: ['date', 'datetime', 'datetimeOptional'],
-                }
-            );
+        if (this.model.get('name')) {
+            list = list.filter(item => {
+                return item !== this.model.get('name');
+            });
+        }
 
-            if (this.model.get('name')) {
-                list = list.filter(function (item) {
-                    return item !== this.model.get('name');
-                }, this);
-            }
-
-            this.params.options = list;
-        },
-
-    });
-});
+        this.params.options = list;
+    }
+}

@@ -26,28 +26,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/fields/date/default', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+export default class extends EnumFieldView {
 
-        fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
+   fetch() {
+       const data = super.data();
 
-            if (data[this.name] === '') {
-                data[this.name] = null;
-            }
+       if (data[this.name] === '') {
+            data[this.name] = null;
+        }
 
-            return data;
-        },
+        return data;
+    }
 
-        setupOptions: function () {
-            Dep.prototype.setupOptions.call(this);
+    setupOptions() {
+        super.setupOptions();
 
-            var value = this.model.get(this.name);
+        const value = this.model.get(this.name);
 
-            if (this.params.options && value && !~(this.params.options).indexOf(value)) {
-                this.params.options.push(value);
-            }
-        },
-    });
-});
+        if (this.params.options && value && !~(this.params.options).indexOf(value)) {
+            this.params.options.push(value);
+        }
+    }
+}

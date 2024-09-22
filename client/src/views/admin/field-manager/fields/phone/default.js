@@ -26,18 +26,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/fields/phone/default', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+export default class extends EnumFieldView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
+        this.setOptionList(this.model.get('typeList') || ['']);
+
+        this.listenTo(this.model, 'change:typeList', () => {
             this.setOptionList(this.model.get('typeList') || ['']);
+        });
+    }
+}
 
-            this.listenTo(this.model, 'change:typeList', () => {
-                this.setOptionList(this.model.get('typeList') || ['']);
-            });
-        }
-    });
-});
