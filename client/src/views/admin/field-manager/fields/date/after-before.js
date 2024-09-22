@@ -33,12 +33,12 @@ export default class extends VarcharFieldView {
     setupOptions() {
         super.setupOptions();
 
-        if (!this.model.scope) {
+        if (!this.options.scope) {
             return;
         }
 
         let list = this.getFieldManager().getEntityTypeFieldList(
-            this.model.scope,
+            this.options.scope,
             {
                 typeList: ['date', 'datetime', 'datetimeOptional'],
             }
