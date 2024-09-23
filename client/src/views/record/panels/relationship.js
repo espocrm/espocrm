@@ -136,10 +136,10 @@ class RelationshipPanelView extends BottomPanelView {
         // noinspection JSDeprecatedSymbols
         this.scope = this.entityType;
 
-        const linkReadOnly = this.getMetadata()
-            .get(['entityDefs', this.model.entityType, 'links', this.link, 'readOnly']) || false;
+        /** @type {Record} */
+        const linkDefs = this.getMetadata().get(`entityDefs.${this.model.entityType}.links.${this.link}`) || {};
 
-        const url = this.url = this.url || this.model.entityType + '/' + this.model.id + '/' + this.link;
+        const url = this.url = this.url || `${this.model.entityType}/${this.model.id}/${this.link}`;
 
         if (!('create' in this.defs)) {
             this.defs.create = true;
@@ -153,8 +153,30 @@ class RelationshipPanelView extends BottomPanelView {
             this.defs.view = true;
         }
 
-        if (linkReadOnly) {
-            this.defs.create = false;
+        if (linkDefs.readOnly) {
+            let hasCreate = false;
+
+            if (this.entityType && linkDefs.foreign) {
+                const foreign = linkDefs.foreign;
+
+                /** @type {Record} */
+                const foreignLinkDefs =
+                    this.getMetadata().get(`entityDefs.${this.entityType}.links.${foreign}`) || {};
+
+                if (foreignLinkDefs.type === 'belongsTo') {
+                    hasCreate = true;
+                } else if (
+                    foreignLinkDefs.type === 'hasMany' &&
+                    this.getMetadata().get(`entityDefs.${this.entityType}.fields.${foreign}.type`) === 'linkMultiple'
+                ) {
+                    hasCreate = true;
+                }
+            }
+
+            if (!hasCreate) {
+                this.defs.create = false;
+            }
+
             this.defs.select = false;
         }
 
