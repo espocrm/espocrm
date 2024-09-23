@@ -35,6 +35,9 @@ use Espo\Core\FieldProcessing\Saver\Params;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 
+/**
+ * Saves a link-multiple field or has-many relation set in a link stub attribute.
+ */
 class LinkMultipleSaver
 {
     public function __construct(private EntityManager $entityManager)
