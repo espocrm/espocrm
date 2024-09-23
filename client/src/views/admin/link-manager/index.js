@@ -150,8 +150,6 @@ class LinkManagerIndexView extends View {
 
             let type;
 
-            const linkForeign = defs.foreign;
-
             if (defs.type === 'belongsToParent') {
                 type = 'childrenToParent';
             } else {
@@ -159,31 +157,27 @@ class LinkManagerIndexView extends View {
                     return;
                 }
 
-                if (!linkForeign) {
-                    return;
+                if (defs.foreign) {
+                    const foreignType = this.getMetadata().get(`entityDefs.${defs.entity}.links.${defs.foreign}.type`);
+
+                    type = this.computeRelationshipType(defs.type, foreignType);
                 }
-
-                const foreignType = this.getMetadata()
-                    .get(`entityDefs.${defs.entity}.links.${defs.foreign}.type`);
-
-                type = this.computeRelationshipType(defs.type, foreignType);
             }
 
-            if (!type) {
-                return;
-            }
+            const labelEntityForeign = defs.entity ?
+                this.getLanguage().translate(defs.entity, 'scopeNames') : undefined;
 
             this.linkDataList.push({
                 link: link,
                 isCustom: defs.isCustom,
                 isRemovable: defs.isCustom,
                 customizable: defs.customizable,
-                isEditable: this.isCustomizable,
+                isEditable: this.isCustomizable && type,
                 type: type,
                 entityForeign: defs.entity,
                 entity: this.scope,
-                labelEntityForeign: this.getLanguage().translate(defs.entity, 'scopeNames'),
-                linkForeign: linkForeign,
+                labelEntityForeign: labelEntityForeign,
+                linkForeign: defs.foreign,
                 label: this.getLanguage().translate(link, 'links', this.scope),
                 labelForeign: this.getLanguage().translate(defs.foreign, 'links', defs.entity),
             });
