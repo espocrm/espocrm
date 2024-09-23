@@ -34,7 +34,10 @@ class LinkManagerIndexView extends View {
 
     template = 'admin/link-manager/index'
 
-    scope = null
+    /**
+     * @type {string}
+     */
+    scope
 
     data() {
         return {
@@ -72,44 +75,54 @@ class LinkManagerIndexView extends View {
         },
     }
 
+    /**
+     *
+     * @param {string} type
+     * @param {string} foreignType
+     * @return {undefined|string}
+     */
     computeRelationshipType(type, foreignType) {
         if (type === 'hasMany') {
             if (foreignType === 'hasMany') {
                 return 'manyToMany';
             }
-            else if (foreignType === 'belongsTo') {
+
+            if (foreignType === 'belongsTo') {
                 return 'oneToMany';
             }
-            else {
-                return undefined;
-            }
+
+            return undefined;
         }
-        else if (type === 'belongsTo') {
+
+        if (type === 'belongsTo') {
             if (foreignType === 'hasMany') {
                 return 'manyToOne';
             }
-            else if (foreignType === 'hasOne') {
+
+            if (foreignType === 'hasOne') {
                 return 'oneToOneRight';
             }
-            else {
-                return undefined;
-            }
+
+            return undefined;
         }
-        else if (type === 'belongsToParent') {
+
+        if (type === 'belongsToParent') {
             if (foreignType === 'hasChildren') {
                 return 'childrenToParent'
             }
 
             return undefined;
         }
-        else if (type === 'hasChildren') {
+
+        if (type === 'hasChildren') {
             if (foreignType === 'belongsToParent') {
                 return 'parentToChildren'
             }
 
             return undefined;
         }
-        else if (type === 'hasOne') {
+
+        if (type === 'hasOne') {
             if (foreignType === 'belongsTo') {
                 return 'oneToOneLeft';
             }
@@ -125,25 +138,24 @@ class LinkManagerIndexView extends View {
             !!this.getMetadata().get(`scopes.${this.scope}.customizable`) &&
             this.getMetadata().get(`scopes.${this.scope}.entityManager.relationships`) !== false;
 
-        const links = /** @type {Object.<string, Record>}*/
-            this.getMetadata().get('entityDefs.' + this.scope + '.links');
+        const links = /** @type {Object.<string, Record>} */
+            this.getMetadata().get(`entityDefs.${this.scope}.links`);
 
         const linkList = Object.keys(links).sort((v1, v2) => {
             return v1.localeCompare(v2);
         });
 
         linkList.forEach(link => {
-            const d = links[link];
+            const defs = links[link];
 
             let type;
 
-            const linkForeign = d.foreign;
+            const linkForeign = defs.foreign;
 
-            if (d.type === 'belongsToParent') {
+            if (defs.type === 'belongsToParent') {
                 type = 'childrenToParent';
-            }
-            else {
-                if (!d.entity) {
+            } else {
+                if (!defs.entity) {
                     return;
                 }
 
@@ -152,9 +164,9 @@ class LinkManagerIndexView extends View {
                 }
 
                 const foreignType = this.getMetadata()
-                    .get('entityDefs.' + d.entity + '.links.' + d.foreign + '.type');
+                    .get(`entityDefs.${defs.entity}.links.${defs.foreign}.type`);
 
-                type = this.computeRelationshipType(d.type, foreignType);
+                type = this.computeRelationshipType(defs.type, foreignType);
             }
 
             if (!type) {
@@ -163,17 +175,17 @@ class LinkManagerIndexView extends View {
 
             this.linkDataList.push({
                 link: link,
-                isCustom: d.isCustom,
-                isRemovable: d.isCustom,
-                customizable: d.customizable,
+                isCustom: defs.isCustom,
+                isRemovable: defs.isCustom,
+                customizable: defs.customizable,
                 isEditable: this.isCustomizable,
                 type: type,
-                entityForeign: d.entity,
+                entityForeign: defs.entity,
                 entity: this.scope,
-                labelEntityForeign: this.getLanguage().translate(d.entity, 'scopeNames'),
+                labelEntityForeign: this.getLanguage().translate(defs.entity, 'scopeNames'),
                 linkForeign: linkForeign,
                 label: this.getLanguage().translate(link, 'links', this.scope),
-                labelForeign: this.getLanguage().translate(d.foreign, 'links', d.entity),
+                labelForeign: this.getLanguage().translate(defs.foreign, 'links', defs.entity),
             });
         });
     }
@@ -240,7 +252,7 @@ class LinkManagerIndexView extends View {
                 link: link,
             })
             .then(() => {
-                this.$el.find('table tr[data-link="'+link+'"]').remove();
+                this.$el.find(`table tr[data-link="${link}"]`).remove();
 
                 this.getMetadata().loadSkipCache().then(() => {
                     this.setupLinkData();
@@ -340,12 +352,12 @@ class LinkManagerIndexView extends View {
             .map(item => item.link)
             .forEach(scope => {
                 if (!~matchedList.indexOf(scope)) {
-                    this.$el.find('table tr.link-row[data-link="'+scope+'"]').addClass('hidden');
+                    this.$el.find(`table tr.link-row[data-link="${scope}"]`).addClass('hidden');
 
                     return;
                 }
 
-                this.$el.find('table tr.link-row[data-link="'+scope+'"]').removeClass('hidden');
+                this.$el.find(`table tr.link-row[data-link="${scope}"]`).removeClass('hidden');
             });
     }
 }
