@@ -42,15 +42,14 @@
     {{else}}
     <thead>
         <tr>
-            <th style="width: 15%; text-align: left">{{translate 'entity' category='fields' scope='EntityManager'}}</th>
-            <th style="width: 15%; text-align: left">{{translate 'linkForeign' category='fields' scope='EntityManager'}}</th>
-            <th style="width: 10%; text-align: center">
+            <th style="width: 20%;">{{translate 'linkForeign' category='fields' scope='EntityManager'}}</th>
+            <th style="width: 20%;">
                 {{translate 'linkType' category='fields' scope='EntityManager'}}
             </th>
-            <th style="width: 15%; text-align: right">
+            <th style="width: 20%;">
                 {{translate 'link' category='fields' scope='EntityManager'}}
             </th>
-            <th style="width: 15%; text-align: right">
+            <th style="width: 20%;">
                 {{translate 'entityForeign' category='fields' scope='EntityManager'}}
             </th>
             <th style="width: 10%"></th>
@@ -60,35 +59,32 @@
     {{/unless}}
     {{#each linkDataList}}
     <tr data-link="{{link}}" class="link-row">
-        <td style="width: 15%; text-align: left">
-            {{translate entity category='scopeNames'}}
-        </td>
-        <td style="width: 15%; text-align: left">
+        <td style="">
             <span title="{{translate linkForeign category='links' scope=entityForeign}}">
                 {{linkForeign}}
             </span>
         </td>
-        <td style="width: 10%; text-align: center">
+        <td>
             <strong>
             {{translateOption type field='linkType' scope='EntityManager'}}
             </strong>
         </td>
-        <td style="width: 15%; text-align: right">
+        <td>
             <span title="{{translate link category='links' scope=entity}}">
                 {{link}}
             </span>
         </td>
-        <td style="width: 15%; text-align: right">
+        <td>
             {{translate entityForeign category='scopeNames'}}
         </td>
-        <td style="width: 10%; text-align: right">
+        <td>
             {{#if isEditable}}
                 <a role="button" tabindex="0" data-action="editLink" data-link="{{link}}">
                     {{translate 'Edit'}}
                 </a>
             {{/if}}
         </td>
-        <td style="width: 10%; ; text-align: right" class="">
+        <td style="text-align: right">
             {{#if isRemovable}}
                 <div class="btn-group row-dropdown-group">
                     <button
