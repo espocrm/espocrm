@@ -33,6 +33,7 @@ use Espo\Core\DataManager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Route;
@@ -302,7 +303,7 @@ class LinkManager
                     $dataLeft = [
                         'fields' => [
                             $link => [
-                                'type' => 'linkOne',
+                                'type' => FieldType::LINK_ONE,
                             ],
                         ],
                         'links' => [
@@ -318,7 +319,7 @@ class LinkManager
                     $dataRight = [
                         'fields' => [
                             $linkForeign => [
-                                'type' => 'link',
+                                'type' => FieldType::LINK,
                             ],
                         ],
                         'links' => [
@@ -334,8 +335,7 @@ class LinkManager
                     $dataLeft = [
                         'fields' => [
                             $link => [
-                                'type' => 'link',
-                                'isCustom' => true,
+                                'type' => FieldType::LINK,
                             ],
                         ],
                         'links' => [
@@ -351,8 +351,7 @@ class LinkManager
                     $dataRight = [
                         'fields' => [
                             $linkForeign => [
-                                'type' => 'linkOne',
-                                'isCustom' => true,
+                                'type' => FieldType::LINK_ONE,
                             ],
                         ],
                         'links' => [
@@ -379,19 +378,6 @@ class LinkManager
                 }
 
                 $dataLeft = [
-                    'fields' => [
-                        $link => [
-                            'type' => 'linkMultiple',
-                            'layoutDetailDisabled' => !$linkMultipleField,
-                            'layoutMassUpdateDisabled'  => !$linkMultipleField,
-                            'layoutListDisabled' => !$linkMultipleField,
-                            'noLoad' => !$linkMultipleField,
-                            'importDisabled' => !$linkMultipleField,
-                            'exportDisabled' => !$linkMultipleField,
-                            'customizationDisabled' => !$linkMultipleField,
-                            'isCustom' => true,
-                        ],
-                    ],
                     'links' => [
                         $link => [
                             'type' => Entity::HAS_MANY,
@@ -403,10 +389,18 @@ class LinkManager
                     ],
                 ];
 
+                if ($linkMultipleField) {
+                    $dataLeft['fields'] = [
+                        $link => [
+                            'type' => FieldType::LINK_MULTIPLE,
+                        ],
+                    ];
+                }
+
                 $dataRight = [
                     'fields' => [
                         $linkForeign => [
-                            'type' => 'link',
+                            'type' => FieldType::LINK,
                         ],
                     ],
                     'links' => [
@@ -435,7 +429,7 @@ class LinkManager
                 $dataLeft = [
                     'fields' => [
                         $link => [
-                            'type' => 'link',
+                            'type' => FieldType::LINK,
                         ],
                     ],
                     'links' => [
@@ -450,19 +444,6 @@ class LinkManager
                 ];
 
                 $dataRight = [
-                    'fields' => [
-                        $linkForeign => [
-                            'type' => 'linkMultiple',
-                            'layoutDetailDisabled' => !$linkMultipleFieldForeign,
-                            'layoutMassUpdateDisabled' => !$linkMultipleFieldForeign,
-                            'layoutListDisabled' => !$linkMultipleFieldForeign,
-                            'noLoad' => !$linkMultipleFieldForeign,
-                            'importDisabled' => !$linkMultipleFieldForeign,
-                            'exportDisabled' => !$linkMultipleFieldForeign,
-                            'customizationDisabled' => !$linkMultipleField,
-                            'isCustom' => true,
-                        ]
-                    ],
                     'links' => [
                         $linkForeign => [
                             'type' => Entity::HAS_MANY,
@@ -474,23 +455,18 @@ class LinkManager
                     ],
                 ];
 
+                if ($linkMultipleFieldForeign) {
+                    $dataRight['fields'] = [
+                        $linkForeign => [
+                            'type' => FieldType::LINK_MULTIPLE,
+                        ],
+                    ];
+                }
+
                 break;
 
             case self::MANY_TO_MANY:
                 $dataLeft = [
-                    'fields' => [
-                        $link => [
-                            'type' => 'linkMultiple',
-                            'layoutDetailDisabled' => !$linkMultipleField,
-                            'layoutMassUpdateDisabled' => !$linkMultipleField,
-                            'layoutListDisabled' => !$linkMultipleField,
-                            'noLoad' => !$linkMultipleField,
-                            'importDisabled' => !$linkMultipleField,
-                            'exportDisabled' => !$linkMultipleField,
-                            'customizationDisabled' => !$linkMultipleField,
-                            'isCustom' => true,
-                        ]
-                    ],
                     'links' => [
                         $link => [
                             'type' => Entity::HAS_MANY,
@@ -503,20 +479,15 @@ class LinkManager
                     ],
                 ];
 
+                if ($linkMultipleField) {
+                    $dataLeft['fields'] = [
+                        $link => [
+                            'type' => FieldType::LINK_MULTIPLE,
+                        ],
+                    ];
+                }
+
                 $dataRight = [
-                    'fields' => [
-                        $linkForeign => [
-                            'type' => 'linkMultiple',
-                            'layoutDetailDisabled' => !$linkMultipleFieldForeign,
-                            'layoutMassUpdateDisabled' => !$linkMultipleFieldForeign,
-                            'layoutListDisabled' => !$linkMultipleFieldForeign,
-                            'noLoad'  => !$linkMultipleFieldForeign,
-                            'importDisabled' => !$linkMultipleFieldForeign,
-                            'exportDisabled' => !$linkMultipleFieldForeign,
-                            'customizationDisabled' => !$linkMultipleField,
-                            'isCustom' => true,
-                        ]
-                    ],
                     'links' => [
                         $linkForeign => [
                             'type' => Entity::HAS_MANY,
@@ -529,9 +500,16 @@ class LinkManager
                     ]
                 ];
 
+                if ($linkMultipleFieldForeign) {
+                    $dataRight['fields'] = [
+                        $linkForeign => [
+                            'type' => FieldType::LINK_MULTIPLE,
+                        ],
+                    ];
+                }
+
                 if ($entityForeign == $entity) {
                     $dataLeft['links'][$link]['midKeys'] = ['leftId', 'rightId'];
-
                     $dataRight['links'][$linkForeign]['midKeys'] = ['rightId', 'leftId'];
                 }
 
@@ -541,7 +519,7 @@ class LinkManager
                 $dataLeft = [
                     'fields' => [
                         $link => [
-                            'type' => 'linkParent',
+                            'type' => FieldType::LINK_PARENT,
                             'entityList' => $params['parentEntityTypeList'] ?? null,
                         ],
                     ],
@@ -664,27 +642,7 @@ class LinkManager
             $this->metadata->get("entityDefs.$entity.links.$link.isCustom")
         ) {
             if (array_key_exists('linkMultipleField', $params)) {
-                $linkMultipleField = $params['linkMultipleField'];
-
-                $dataLeft = [
-                    'fields' => [
-                        $link => [
-                            'type' => 'linkMultiple',
-                            'layoutDetailDisabled' => !$linkMultipleField,
-                            'layoutMassUpdateDisabled' => !$linkMultipleField,
-                            'layoutListDisabled' => !$linkMultipleField,
-                            'noLoad' => !$linkMultipleField,
-                            'importDisabled' => !$linkMultipleField,
-                            'exportDisabled' => !$linkMultipleField,
-                            'customizationDisabled' => !$linkMultipleField,
-                            'isCustom' => true,
-                        ]
-                    ]
-                ];
-
-                $this->metadata->set('entityDefs', $entity, $dataLeft);
-
-                $this->metadata->save();
+                $this->updateLinkMultiple($params['linkMultipleField'], $entity, $link);
             }
         }
 
@@ -693,28 +651,10 @@ class LinkManager
             $this->metadata->get("entityDefs.$entityForeign.links.$linkForeign.isCustom")
         ) {
             /** @var string $entityForeign */
+            /** @var string $linkForeign */
 
             if (array_key_exists('linkMultipleFieldForeign', $params)) {
-                $linkMultipleFieldForeign = $params['linkMultipleFieldForeign'];
-
-                $dataRight = [
-                    'fields' => [
-                        $linkForeign => [
-                            'type' => 'linkMultiple',
-                            'layoutDetailDisabled' => !$linkMultipleFieldForeign,
-                            'layoutMassUpdateDisabled' => !$linkMultipleFieldForeign,
-                            'layoutListDisabled' => !$linkMultipleFieldForeign,
-                            'noLoad' => !$linkMultipleFieldForeign,
-                            'importDisabled' => !$linkMultipleFieldForeign,
-                            'exportDisabled' => !$linkMultipleFieldForeign,
-                            'customizationDisabled' => !$linkMultipleFieldForeign,
-                            'isCustom' => true,
-                        ]
-                    ]
-                ];
-
-                $this->metadata->set('entityDefs', $entityForeign, $dataRight);
-                $this->metadata->save();
+                $this->updateLinkMultiple($params['linkMultipleFieldForeign'], $entityForeign, $linkForeign);
             }
         }
 
@@ -1219,5 +1159,24 @@ class LinkManager
 
         $this->metadata->save();
         $this->dataManager->clearCache();
+    }
+
+    private function updateLinkMultiple(bool $has, string $entityType, string $link): void
+    {
+        if ($has) {
+            $dataRight = [];
+
+            $dataRight['fields'] = [
+                $link => [
+                    'type' => FieldType::LINK_MULTIPLE,
+                ],
+            ];
+
+            $this->metadata->set('entityDefs', $entityType, $dataRight);
+        } else {
+            $this->metadata->delete('entityDefs', $entityType, "fields.$link");
+        }
+
+        $this->metadata->save();
     }
 }
