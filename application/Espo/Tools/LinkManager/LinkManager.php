@@ -1164,15 +1164,15 @@ class LinkManager
     private function updateLinkMultiple(bool $has, string $entityType, string $link): void
     {
         if ($has) {
-            $dataRight = [];
+            $data = [];
 
-            $dataRight['fields'] = [
+            $data['fields'] = [
                 $link => [
                     'type' => FieldType::LINK_MULTIPLE,
                 ],
             ];
 
-            $this->metadata->set('entityDefs', $entityType, $dataRight);
+            $this->metadata->set('entityDefs', $entityType, $data);
         } else {
             $this->metadata->delete('entityDefs', $entityType, "fields.$link");
         }
