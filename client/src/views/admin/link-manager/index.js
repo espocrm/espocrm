@@ -150,6 +150,8 @@ class LinkManagerIndexView extends View {
 
             let type;
 
+            let isEditable = this.isCustomizable;
+
             if (defs.type === 'belongsToParent') {
                 type = 'childrenToParent';
             } else {
@@ -161,6 +163,14 @@ class LinkManagerIndexView extends View {
                     const foreignType = this.getMetadata().get(`entityDefs.${defs.entity}.links.${defs.foreign}.type`);
 
                     type = this.computeRelationshipType(defs.type, foreignType);
+                } else {
+                    isEditable = false;
+
+                    if (defs.relationName) {
+                        type = 'manyToMany';
+                    } else if (defs.type === 'belongsTo') {
+                        type = 'manyToOne'
+                    }
                 }
             }
 
@@ -172,7 +182,7 @@ class LinkManagerIndexView extends View {
                 isCustom: defs.isCustom,
                 isRemovable: defs.isCustom,
                 customizable: defs.customizable,
-                isEditable: this.isCustomizable && type,
+                isEditable: isEditable,
                 type: type,
                 entityForeign: defs.entity,
                 entity: this.scope,
