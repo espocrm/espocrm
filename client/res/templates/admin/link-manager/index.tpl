@@ -65,9 +65,9 @@
             </span>
         </td>
         <td>
-            <strong>
+            <span style="color: var(--gray-soft); font-weight: 600;">
             {{translateOption type field='linkType' scope='EntityManager'}}
-            </strong>
+            </span>
         </td>
         <td>
             <span title="{{translate link category='links' scope=entity}}">
