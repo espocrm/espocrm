@@ -431,6 +431,7 @@ class EntityManager
 
     /**
      * @throws BadRequest
+     * @throws Error
      */
     public function postActionUpdateLinkParams(Request $request): bool
     {
@@ -456,6 +457,7 @@ class EntityManager
 
     /**
      * @throws BadRequest
+     * @throws Error
      */
     public function postActionResetLinkParamsToDefault(Request $request): bool
     {

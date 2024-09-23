@@ -1183,6 +1183,7 @@ class LinkManager
 
     /**
      * @param array{readOnly?: bool} $params
+     * @throws Error
      */
     public function updateParams(string $entityType, string $link, array $params): void
     {
@@ -1204,8 +1205,12 @@ class LinkManager
         ]);
 
         $this->metadata->save();
+        $this->dataManager->clearCache();
     }
 
+    /**
+     * @throws Error
+     */
     public function resetToDefault(string $entityType, string $link): void
     {
         $this->metadata->delete('entityDefs', $entityType, [
@@ -1213,5 +1218,6 @@ class LinkManager
         ]);
 
         $this->metadata->save();
+        $this->dataManager->clearCache();
     }
 }
