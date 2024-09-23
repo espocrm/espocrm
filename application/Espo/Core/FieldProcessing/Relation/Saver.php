@@ -220,9 +220,15 @@ class Saver implements SaverInterface
 
             $idsAttribute = $name . 'Ids';
 
+            if (!$defs->hasAttribute($idsAttribute)) {
+                continue;
+            }
+
+            $attributeDefs = $defs->getAttribute($idsAttribute);
+
             if (
-                !$defs->hasAttribute($idsAttribute) ||
-                !$defs->getAttribute($idsAttribute)->getParam(AttributeParam::IS_LINK_MULTIPLE_ID_LIST)
+                !$attributeDefs->getParam(AttributeParam::IS_LINK_MULTIPLE_ID_LIST) &&
+                !$attributeDefs->getParam(AttributeParam::IS_LINK_STUB)
             ) {
                 continue;
             }

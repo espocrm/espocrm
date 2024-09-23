@@ -37,4 +37,7 @@ class AttributeParam
     public const IS_LINK_MULTIPLE_ID_LIST = 'isLinkMultipleIdList';
     /** @internal */
     public const NOT_EXPORTABLE = 'notExportable';
+    /** @internal */
+    public const IS_LINK_STUB = 'isLinkStub';
+
 }
