@@ -47,6 +47,8 @@ class AssignedUsersUpdateHook implements UpdateHook
     private const RELATION_NAME = 'entityUser';
     private const FIELD_ASSIGNED_USER = 'assignedUser';
 
+    private const DEFAULT_MAX_COUNT = 10;
+
     public function __construct(
         private Metadata $metadata,
         private Log $log,
@@ -74,6 +76,7 @@ class AssignedUsersUpdateHook implements UpdateHook
                 self::FIELD => [
                     'type' => FieldType::LINK_MULTIPLE,
                     'view' => 'views/fields/assigned-users',
+                    'maxCount' => self::DEFAULT_MAX_COUNT,
                 ],
             ],
             'links' => [
