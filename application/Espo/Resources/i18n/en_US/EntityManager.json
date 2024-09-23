@@ -109,6 +109,6 @@
         "entityType": "Base Plus - has Activities, History and Tasks panels.\n\nEvent - available in Calendar and Activities panel.",
         "countDisabled": "Total number won't be displayed on the list view. Can decrease loading time when the DB table is big.",
         "fullTextSearch": "Running rebuild is required.",
-        "linkParamReadOnly": "A read-only link cannot be edited via the *link* and *unlink* API requests. It won't be possible to manipulate related records via the relationship panel. It still possible to edit the link via the link-multiple field."
+        "linkParamReadOnly": "A read-only link cannot be edited via the *link* and *unlink* API requests. It won't be possible to relate and unrelate records via the relationship panel. It still possible to edit read-only links via link and link-multiple fields."
     }
 }

@@ -1128,7 +1128,7 @@
                 },
                 "readOnly": {
                     "type": "boolean",
-                    "description": "Read-only links cannot be edited via link and unlink requests. But they can be edited via the link-multiple field."
+                    "description": "Read-only links cannot be edited via link and unlink requests. But they can be edited via link and link-multiple fields."
                 },
                 "layoutRelationshipsDisabled": {
                     "type": "boolean",
