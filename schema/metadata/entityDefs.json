@@ -1126,6 +1126,10 @@
                     "type": "boolean",
                     "description": "Linking and unlinking will be logged in the Stream. Available for hasMany."
                 },
+                "readOnly": {
+                    "type": "boolean",
+                    "description": "Read-only links cannot be edited via link and unlink requests. But they can be edited via the link-multiple field."
+                },
                 "layoutRelationshipsDisabled": {
                     "type": "boolean",
                     "description": "Makes the link not available in the Bottom Panels layout (in the Layout Manager tool). Available for hasMany"
