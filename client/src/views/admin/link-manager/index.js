@@ -177,12 +177,15 @@ class LinkManagerIndexView extends View {
             const labelEntityForeign = defs.entity ?
                 this.getLanguage().translate(defs.entity, 'scopeNames') : undefined;
 
+            const isRemovable = defs.isCustom;
+
             this.linkDataList.push({
                 link: link,
                 isCustom: defs.isCustom,
-                isRemovable: defs.isCustom,
+                isRemovable: isRemovable,
                 customizable: defs.customizable,
                 isEditable: isEditable,
+                hasDropdown: isEditable || isRemovable,
                 type: type,
                 entityForeign: defs.entity,
                 entity: this.scope,

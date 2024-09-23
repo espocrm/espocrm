@@ -53,7 +53,6 @@
                 {{translate 'entityForeign' category='fields' scope='EntityManager'}}
             </th>
             <th style="width: 10%"></th>
-            <th style="width: 10%"></th>
         </tr>
     </thead>
     {{/unless}}
@@ -77,21 +76,25 @@
         <td>
             {{translate entityForeign category='scopeNames'}}
         </td>
-        <td>
-            {{#if isEditable}}
-                <a role="button" tabindex="0" data-action="editLink" data-link="{{link}}">
-                    {{translate 'Edit'}}
-                </a>
-            {{/if}}
-        </td>
         <td style="text-align: right">
-            {{#if isRemovable}}
+            {{#if hasDropdown}}
                 <div class="btn-group row-dropdown-group">
                     <button
                         class="btn btn-link btn-sm dropdown-toggle"
                         data-toggle="dropdown"
                     ><span class="caret"></span></button>
                     <ul class="dropdown-menu pull-right">
+                        {{#if isEditable}}
+                            <li>
+                                <a
+                                    role="button"
+                                    tabindex="0"
+                                    data-action="editLink"
+                                    data-link="{{link}}"
+                                >{{translate 'Edit'}}</a>
+                            </li>
+                        {{/if}}
+                        {{#if isRemovable}}
                         <li>
                             <a
                                 role="button"
@@ -100,6 +103,7 @@
                                 data-link="{{link}}"
                             >{{translate 'Remove'}}</a>
                         </li>
+                        {{/if}}
                     </ul>
                 </div>
             {{/if}}
