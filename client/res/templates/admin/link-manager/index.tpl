@@ -94,6 +94,16 @@
                                 >{{translate 'Edit'}}</a>
                             </li>
                         {{/if}}
+                        {{#if hasEditParams}}
+                            <li>
+                                <a
+                                    role="button"
+                                    tabindex="0"
+                                    data-action="editParams"
+                                    data-link="{{link}}"
+                                >{{translate 'Parameters' scope='EntityManager'}}</a>
+                            </li>
+                        {{/if}}
                         {{#if isRemovable}}
                         <li>
                             <a

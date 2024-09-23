@@ -29,6 +29,7 @@
 /** @module views/admin/link-manager/index */
 
 import View from 'view';
+import LinkManagerEditParamsModalView from 'views/admin/link-manager/modals/edit-params';
 
 class LinkManagerIndexView extends View {
 
@@ -179,13 +180,16 @@ class LinkManagerIndexView extends View {
 
             const isRemovable = defs.isCustom;
 
+            const hasEditParams = defs.type === 'hasMany' || defs.type === 'hasChildren';
+
             this.linkDataList.push({
                 link: link,
                 isCustom: defs.isCustom,
                 isRemovable: isRemovable,
                 customizable: defs.customizable,
                 isEditable: isEditable,
-                hasDropdown: isEditable || isRemovable,
+                hasDropdown: isEditable || isRemovable || hasEditParams,
+                hasEditParams: hasEditParams,
                 type: type,
                 entityForeign: defs.entity,
                 entity: this.scope,
@@ -198,6 +202,8 @@ class LinkManagerIndexView extends View {
     }
 
     setup() {
+        this.addActionHandler('editParams', (e, target) => this.actionEditParams(target.dataset.link));
+
         this.scope = this.options.scope || null;
 
         this.setupLinkData();
@@ -366,6 +372,20 @@ class LinkManagerIndexView extends View {
 
                 this.$el.find(`table tr.link-row[data-link="${scope}"]`).removeClass('hidden');
             });
+    }
+
+    /**
+     * @private
+     * @param {string} link
+     */
+    async actionEditParams(link) {
+        const view = new LinkManagerEditParamsModalView({
+            entityType: this.scope,
+            link: link,
+        });
+
+        await this.assignView('dialog', view);
+        await view.render();
     }
 }
 

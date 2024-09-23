@@ -428,6 +428,49 @@ class EntityManager
         return true;
     }
 
+
+    /**
+     * @throws BadRequest
+     */
+    public function postActionUpdateLinkParams(Request $request): bool
+    {
+        $entityType = $request->getParsedBody()->entityType ?? throw new BadRequest("No entityType.");
+        $link = $request->getParsedBody()->link ?? throw new BadRequest("No link.");
+        $rawParams = $request->getParsedBody()->params ?? throw new BadRequest("No params.");
+
+        if (!is_string($entityType) || !is_string($link) || !$rawParams instanceof stdClass) {
+            throw new BadRequest();
+        }
+
+        /** @var array{readOnly?: bool} $params */
+        $params = [];
+
+        if (property_exists($rawParams, 'readOnly')) {
+            $params['readOnly'] = (bool) $rawParams->readOnly;
+        }
+
+        $this->linkManager->updateParams($entityType, $link, $params);
+
+        return true;
+    }
+
+    /**
+     * @throws BadRequest
+     */
+    public function postActionResetLinkParamsToDefault(Request $request): bool
+    {
+        $entityType = $request->getParsedBody()->entityType ?? throw new BadRequest("No entityType.");
+        $link = $request->getParsedBody()->link ?? throw new BadRequest("No link.");
+
+        if (!is_string($entityType) || !is_string($link)) {
+            throw new BadRequest();
+        }
+
+        $this->linkManager->resetToDefault($entityType, $link);
+
+        return true;
+    }
+
     /**
      * @throws BadRequest
      * @throws Error

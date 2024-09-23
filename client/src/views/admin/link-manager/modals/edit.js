@@ -82,13 +82,13 @@ class LinkManagerEditModalView extends ModalView {
 
         const isNew = this.isNew = (false === link);
 
-        let header = 'Create Link';
+        this.headerText = this.translate('Create Link', 'labels', 'Admin');
 
         if (!isNew) {
-            header = 'Edit Link';
+            this.headerText = this.translate('Edit Link', 'labels', 'Admin') + ' · ' +
+                this.translate(scope, 'scopeNames') + ' · ' +
+                this.translate(link, 'links', scope);
         }
-
-        this.headerText = this.translate(header, 'labels', 'Admin');
 
         const model = this.model = new Model();
         model.name = 'EntityManager';

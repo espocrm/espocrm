@@ -38,6 +38,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Route;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\Type\RelationType;
 use Espo\Tools\LinkManager\Hook\HookProcessor as LinkHookProcessor;
 use Espo\Tools\LinkManager\Params as LinkParams;
 use Espo\Tools\LinkManager\Type as LinkType;
@@ -1178,5 +1179,39 @@ class LinkManager
         }
 
         return true;
+    }
+
+    /**
+     * @param array{readOnly?: bool} $params
+     */
+    public function updateParams(string $entityType, string $link, array $params): void
+    {
+        $type = $this->metadata->get("entityDefs.$entityType.links.$link.type");
+
+        $defs = [];
+
+        if (
+            in_array($type, [RelationType::HAS_MANY, RelationType::HAS_CHILDREN]) &&
+            array_key_exists('readOnly', $params)
+        ) {
+            $defs['readOnly'] = $params['readOnly'];
+        }
+
+        $this->metadata->set('entityDefs', $entityType, [
+            'links' => [
+                $link => $defs,
+            ],
+        ]);
+
+        $this->metadata->save();
+    }
+
+    public function resetToDefault(string $entityType, string $link): void
+    {
+        $this->metadata->delete('entityDefs', $entityType, [
+            "links.$link.readOnly",
+        ]);
+
+        $this->metadata->save();
     }
 }
