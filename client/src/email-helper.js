@@ -459,6 +459,10 @@ class EmailHelper {
             const dateSentMoment = this.getDateTime().toMoment(dateSent);
 
             dateSentString = dateSentMoment.format(format);
+
+            if (dateSentMoment.year() !== this.getDateTime().getNowMoment().year()) {
+                dateSentString += ', ' + dateSentMoment.year();
+            }
         }
 
         let replyHeadString =
