@@ -27,8 +27,6 @@
  ************************************************************************/
 
 import RelationshipPanelView from 'views/record/panels/relationship';
-// noinspection ES6UnusedImports
-import Textcomplete from 'jquery-textcomplete';
 import _ from 'underscore';
 import NotePostFieldView from 'views/note/fields/post';
 
