@@ -406,6 +406,7 @@ class ListWithCategories extends ListView {
                 collection.url = collection.entityType + '/action/listTree';
                 collection.setOrder(null, null);
 
+                // @todo Revise. To remove?
                 this.collection.treeCollection = collection;
 
                 collection.fetch()
