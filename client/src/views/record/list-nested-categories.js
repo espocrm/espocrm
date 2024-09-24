@@ -42,6 +42,18 @@ class ListNestedCategoriesRecordView extends View {
         },
     }
 
+    /**
+     * @type {import('collections/tree').default}
+     */
+    collection
+
+    constructor(options) {
+        super(options);
+
+        this.collection = options.collection;
+    }
+
+
     data() {
         const data = {};
 
