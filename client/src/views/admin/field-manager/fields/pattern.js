@@ -26,26 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/fields/pattern', ['views/fields/varchar'], function (Dep) {
+import VarcharFieldView from 'views/fields/varchar';
 
-    /**
-     * @class
-     * @name Class
-     * @memberOf module:views/admin/field-manager/fields/pattern
-     * @extends module:views/fields/varchar
-     */
-    return Dep.extend(/** @lends module:views/admin/field-manager/fields/pattern.Class# */{
+export default class extends VarcharFieldView {
 
-        noSpellCheck: true,
+    noSpellCheck = true
 
-        setupOptions: function () {
-            let patterns = this.getMetadata().get(['app', 'regExpPatterns']) || {};
+    setupOptions() {
+        const patterns = this.getMetadata().get(['app', 'regExpPatterns']) || {};
 
-            let patternList = Object.keys(patterns)
-                .filter(item => !patterns[item].isSystem)
-                .map(item => '$' + item);
+        const patternList = Object.keys(patterns)
+            .filter(item => !patterns[item].isSystem)
+            .map(item => '$' + item);
 
-            this.setOptionList(patternList);
-        },
-    })
-});
+        this.setOptionList(patternList);
+    }
+}

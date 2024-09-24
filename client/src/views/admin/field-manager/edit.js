@@ -631,7 +631,7 @@ class FieldManagerEditView extends View {
 
         const o = {
             model: this.model,
-            selector: '.field[data-name="' + name + '"]',
+            selector: `.field[data-name="${name}"]`,
             defs: {
                 name: name,
                 params: params

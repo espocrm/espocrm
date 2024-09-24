@@ -35,8 +35,8 @@ class NotActualOptionsFieldView extends MultiEnumFieldView {
 
         this.params.options = Espo.Utils.clone(this.model.get('options')) || [];
 
-        this.listenTo(this.model, 'change:options', (m) => {
-            this.params.options = Espo.Utils.clone(m.get('options')) || [];
+        this.listenTo(this.model, 'change:options', (/** import('model').default */model) => {
+            this.params.options = Espo.Utils.clone(model.get('options')) || [];
 
             this.reRender();
         });

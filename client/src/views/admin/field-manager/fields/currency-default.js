@@ -26,18 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/fields/currency-default', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+export default class extends EnumFieldView {
 
-        fetchEmptyValueAsNull: true,
+    fetchEmptyValueAsNull = true
 
-        setupOptions: function () {
-            this.params.options = [''];
+    setupOptions() {
+        this.params.options = [''];
 
-            (this.getConfig().get('currencyList') || []).forEach(item => {
-                this.params.options.push(item);
-            });
-        },
-    });
-});
+        (this.getConfig().get('currencyList') || []).forEach(item => {
+            this.params.options.push(item);
+        });
+    }
+}
