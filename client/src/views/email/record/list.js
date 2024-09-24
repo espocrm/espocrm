@@ -71,7 +71,7 @@ class EmailListRecordView extends ListRecordView {
                 model.set('inTrash', true);
             }
 
-            if (this.collection.selectedFolderId !== 'trash' && this.collection.selectedFolderId !== 'all') {
+            if (this.rootData.selectedFolderId !== 'trash' && this.rootData.selectedFolderId !== 'all') {
                 this.removeRecordFromList(id);
             }
         });
@@ -83,7 +83,7 @@ class EmailListRecordView extends ListRecordView {
                 model.set('inTrash', false);
             }
 
-            if (this.collection.selectedFolderId === 'trash') {
+            if (this.rootData.selectedFolderId === 'trash') {
                 this.removeRecordFromList(id);
             }
         });
@@ -95,7 +95,7 @@ class EmailListRecordView extends ListRecordView {
                 model.set('inArchive', true);
             }
 
-            if (this.collection.selectedFolderId !== 'archive') {
+            if (this.rootData.selectedFolderId !== 'archive') {
                 this.removeRecordFromList(id);
             }
         });
@@ -189,7 +189,7 @@ class EmailListRecordView extends ListRecordView {
                 Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
             });
 
-        if (this.collection.selectedFolderId === 'trash') {
+        if (this.rootData.selectedFolderId === 'trash') {
             return;
         }
 
@@ -214,7 +214,7 @@ class EmailListRecordView extends ListRecordView {
                 Espo.Ui.success(this.translate('Done'));
             });
 
-        if (this.collection.selectedFolderId !== 'trash') {
+        if (this.rootData.selectedFolderId !== 'trash') {
             return;
         }
 
@@ -520,7 +520,7 @@ class EmailListRecordView extends ListRecordView {
                 .then(() => {
                     Espo.Ui.success(this.translate('emailSent', 'messages', 'Email'));
 
-                    if (this.collection.selectedFolderId === 'drafts') {
+                    if (this.rootData.selectedFolderId === 'drafts') {
                         this.removeRecordFromList(id);
                         this.uncheckRecord(id, null, true);
                         this.collection.trigger('draft-sent');
@@ -550,14 +550,14 @@ class EmailListRecordView extends ListRecordView {
      */
     controlEmailMassActionsVisibility() {
         const moveToArchive =
-            this.collection.selectedFolderId !== 'trash' &&
-            this.collection.selectedFolderId !== 'archive'
+            this.rootData.selectedFolderId !== 'trash' &&
+            this.rootData.selectedFolderId !== 'archive'
 
         moveToArchive ?
             this.showMassAction('moveToArchive') :
             this.hideMassAction('moveToArchive');
 
-        if (this.collection.selectedFolderId === 'trash') {
+        if (this.rootData.selectedFolderId === 'trash') {
             this.hideMassAction('moveToTrash');
             this.showMassAction('retrieveFromTrash');
         } else {
@@ -565,7 +565,7 @@ class EmailListRecordView extends ListRecordView {
             this.hideMassAction('retrieveFromTrash');
         }
 
-        if (this.collection.selectedFolderId === 'important') {
+        if (this.rootData.selectedFolderId === 'important') {
             this.hideMassAction('markAsImportant');
         } else {
             this.showMassAction('markAsImportant');

@@ -154,6 +154,15 @@ class ListView extends MainView {
     /** @const */
     MODE_KANBAN = 'kanban'
 
+    /**
+     * Root data. To be passed to the detail record view when following to a record.
+     *
+     * @protected
+     * @type {Object.<string, *>}
+     * @since 8.5.0
+     */
+    rootData
+
     /** @inheritDoc */
     shortcutKeys = {
         /** @this ListView */
@@ -188,6 +197,8 @@ class ListView extends MainView {
 
         this.collectionUrl = this.collection.url;
         this.collectionMaxSize = this.collection.maxSize;
+
+        this.rootData = {};
 
         /**
          * @type {string}
@@ -604,6 +615,7 @@ class ListView extends MainView {
     /**
      * Prepare record view options. Options can be modified in an extended method.
      *
+     * @protected
      * @param {Object} options Options
      */
     prepareRecordViewOptions(options) {}
@@ -645,6 +657,8 @@ class ListView extends MainView {
         ) {
             o.pagination = true;
         }
+
+        o.rootData = this.rootData;
 
         this.prepareRecordViewOptions(o);
 

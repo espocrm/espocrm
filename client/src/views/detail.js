@@ -308,6 +308,10 @@ class DetailView extends MainView {
             o.rootUrl = this.options.params.rootUrl;
         }
 
+        if (this.options.params && this.options.params.rootData) {
+            o.rootData = this.options.params.rootData;
+        }
+
         if (this.model.get('deleted')) {
             o.readOnly = true;
         }

@@ -92,6 +92,7 @@ class ListRecordView extends View {
      * @property {boolean} [settingsEnabled] Enable settings dropdown.
      * @property {import('helpers/list/settings').default} [settingsHelper] A settings helper.
      * @property {boolean} [displayTotalCount] Display total count.
+     * @property {Record} [rootData] Root data.
      */
 
     /**
@@ -569,44 +570,20 @@ class ListRecordView extends View {
      */
     massActionDefs
 
+    /**
+     * Data to pass to record views.
+     *
+     * @protected
+     * @type {Object.<string, *>}
+     * @since 8.5.0
+     */
+    rootData
+
     /** @private */
     _additionalRowActionList
 
     /** @inheritDoc */
     events = {
-        /**
-         * @param {JQueryKeyEventObject} e
-         * @this ListRecordView
-         */
-        'click a.link': function (e) {
-            if (e.ctrlKey || e.metaKey || e.shiftKey) {
-                return;
-            }
-
-            e.stopPropagation();
-
-            if (!this.scope || this.selectable) {
-                return;
-            }
-
-            e.preventDefault();
-
-            const id = $(e.currentTarget).attr('data-id');
-            const model = this.collection.get(id);
-            const scope = this.getModelScope(id);
-
-            const options = {
-                id: id,
-                model: model,
-            };
-
-            if (this.options.keepCurrentRootUrl) {
-                options.rootUrl = this.getRouter().getCurrentUrl();
-            }
-
-            this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
-            this.getRouter().dispatch(scope, 'view', options);
-        },
         /**
          * @param {JQueryMouseEventObject} e
          * @this ListRecordView
@@ -1093,6 +1070,8 @@ class ListRecordView extends View {
         if ('checkAllResultDisabled' in this.options) {
             this.checkAllResultDisabled = this.options.checkAllResultDisabled;
         }
+
+        this.rootData = this.options.rootData || {};
     }
 
     /**
@@ -1973,6 +1952,22 @@ class ListRecordView extends View {
 
     /** @inheritDoc */
     setup() {
+        this.addHandler('click', 'a.link', (/** KeyboardEvent */e, target) => {
+            if (e.ctrlKey || e.metaKey || e.shiftKey) {
+                return;
+            }
+
+            e.stopPropagation();
+
+            if (!this.scope || this.selectable) {
+                return;
+            }
+
+            e.preventDefault();
+
+            this.processLinkClick(target.dataset.id);
+        });
+
         if (typeof this.collection === 'undefined') {
             throw new Error('Collection has not been injected into views/record/list view.');
         }
@@ -2130,6 +2125,29 @@ class ListRecordView extends View {
         }
 
         this._renderEmpty = this.options.skipBuildRows;
+    }
+
+    /**
+     * @private
+     * @param {string} id
+     */
+    processLinkClick(id) {
+        const model = this.collection.get(id);
+        const scope = this.getModelScope(id);
+
+        const options = {
+            id: id,
+            model: model,
+        };
+
+        if (this.options.keepCurrentRootUrl) {
+            options.rootUrl = this.getRouter().getCurrentUrl();
+        }
+
+        options.rootData = this.rootData;
+
+        this.getRouter().navigate(`#${scope}/view/${id}`, {trigger: false});
+        this.getRouter().dispatch(scope, 'view', options);
     }
 
     /**

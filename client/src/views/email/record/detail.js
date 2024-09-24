@@ -435,8 +435,8 @@ class EmailDetailRecordView extends DetailRecordView {
 
     // noinspection JSUnusedGlobalSymbols
     exitAfterDelete() {
-        let folderId = this.collection && this.collection.selectedFolderId ?
-            this.collection.selectedFolderId : null;
+        let folderId = this.rootData.selectedFolderId ?
+            this.rootData.selectedFolderId : null;
 
         if (folderId === 'inbox') {
             folderId = null;

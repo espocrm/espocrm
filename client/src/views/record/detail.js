@@ -63,6 +63,7 @@ class DetailRecordView extends BaseRecordView {
      * @property {module:views/record/detail~button[]} [buttonList] Buttons.
      * @property {module:views/record/detail~dropdownItem[]} [dropdownItemList] Dropdown items.
      * @property {Object.<string, *>} [dataObject] Additional data.
+     * @property {Record} [rootData] Data from the root view.
      */
 
     /**
@@ -521,6 +522,24 @@ class DetailRecordView extends BaseRecordView {
      * @type {?string}
      */
     shortcutKeyCtrlEnterAction = 'save'
+
+    /**
+     * Additional data. Passed to sub-views and fields.
+     *
+     * @protected
+     * @type {Object.<string, *>}
+     * @since 8.5.0
+     */
+    dataObject
+
+    /**
+     * Data from the root view.
+     *
+     * @protected
+     * @type {Record}
+     * @since 8.5.0
+     */
+    rootData
 
     /**
      * A shortcut-key => action map.
@@ -1943,6 +1962,9 @@ class DetailRecordView extends BaseRecordView {
 
         this.accessControlDisabled = this.options.accessControlDisabled || this.accessControlDisabled;
 
+        this.dataObject = this.options.dataObject || {};
+        this.rootData = this.options.rootData || {};
+
         this.setupActionItems();
         this.setupBeforeFinal();
 
@@ -3196,7 +3218,7 @@ class DetailRecordView extends BaseRecordView {
                     o.validateCallback = () => this.validateField(name);
 
                     o.recordHelper = this.recordHelper;
-                    o.dataObject = this.options.dataObject || {};
+                    o.dataObject = this.dataObject;
 
                     if (cellDefs.options) {
                         for (const optionName in cellDefs.options) {
@@ -3326,7 +3348,7 @@ class DetailRecordView extends BaseRecordView {
             recordHelper: this.recordHelper,
             recordViewObject: this,
             isReturn: this.options.isReturn,
-            dataObject: this.options.dataObject,
+            dataObject: this.dataObject,
         });
     }
 
@@ -3384,7 +3406,7 @@ class DetailRecordView extends BaseRecordView {
             recordViewObject: this,
             portalLayoutDisabled: this.portalLayoutDisabled,
             isReturn: this.options.isReturn,
-            dataObject: this.options.dataObject,
+            dataObject: this.dataObject,
         });
     }
 
