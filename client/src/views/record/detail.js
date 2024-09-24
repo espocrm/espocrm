@@ -803,8 +803,7 @@ class DetailRecordView extends BaseRecordView {
                     this.listenTo(this.model, 'change:assignedUserId', () => {
                         if (!this.model.get('assignedUserId')) {
                             this.showActionItem('selfAssign');
-                        }
-                        else {
+                        } else {
                             this.hideActionItem('selfAssign');
                         }
                     });
@@ -1689,12 +1688,10 @@ class DetailRecordView extends BaseRecordView {
 
             if (this.indexOfRecord < total - 1 - this.model.collection.offset) {
                 nextButtonEnabled = true;
-            }
-            else {
+            } else {
                 if (total === -1) {
                     nextButtonEnabled = true;
-                }
-                else if (total === -2) {
+                } else if (total === -2) {
                     if (this.indexOfRecord < this.model.collection.length - 1 - this.model.collection.offset) {
                         nextButtonEnabled = true;
                     }
@@ -2467,8 +2464,7 @@ class DetailRecordView extends BaseRecordView {
     afterSave() {
         if (this.isNew) {
             Espo.Ui.success(this.translate('Created'));
-        }
-        else {
+        } else {
             Espo.Ui.success(this.translate('Saved'));
         }
 
@@ -2716,8 +2712,7 @@ class DetailRecordView extends BaseRecordView {
                 if (this.readOnly && second) {
                     if (this.isReady) {
                         this.setNotReadOnly(true);
-                    }
-                    else {
+                    } else {
                         this.on('ready', () => this.setNotReadOnly(true));
                     }
                 }
@@ -3461,8 +3456,7 @@ class DetailRecordView extends BaseRecordView {
 
         if (this.returnUrl) {
             url = this.returnUrl;
-        }
-        else {
+        } else {
             if (after === 'delete') {
                 url = this.options.rootUrl || '#' + this.scope;
 
@@ -3473,7 +3467,7 @@ class DetailRecordView extends BaseRecordView {
             }
 
             if (this.model.id) {
-                url = '#' + this.scope + '/view/' + this.model.id;
+                url = `#${this.scope}/view/${this.model.id}`;
 
                 if (!this.returnDispatchParams) {
                     this.getRouter().navigate(url, {trigger: false});
@@ -3489,8 +3483,7 @@ class DetailRecordView extends BaseRecordView {
 
                     this.getRouter().dispatch(this.scope, 'view', options);
                 }
-            }
-            else {
+            } else {
                 url = this.options.rootUrl || '#' + this.scope;
             }
         }
