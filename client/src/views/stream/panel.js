@@ -30,6 +30,7 @@ import RelationshipPanelView from 'views/record/panels/relationship';
 // noinspection ES6UnusedImports
 import Textcomplete from 'jquery-textcomplete';
 import _ from 'underscore';
+import NotePostFieldView from 'views/note/fields/post';
 
 class PanelStreamView extends RelationshipPanelView {
 
@@ -48,6 +49,12 @@ class PanelStreamView extends RelationshipPanelView {
 
     /** @type {import('collections/note').default} */
     pinnedCollection
+
+    /**
+     * @private
+     * @type {import('model').default}
+     */
+    seed
 
     additionalEvents = {
         /** @this PanelStreamView */
@@ -92,7 +99,7 @@ class PanelStreamView extends RelationshipPanelView {
         /** @this PanelStreamView */
         'input textarea[data-name="post"]': function () {
             this.controlPreviewButton();
-            this.controlPostButtonAvailability(this.$textarea.val());
+            this.controlPostButtonAvailability(this.postFieldView.getTextAreaElement().value);
         },
         /** @this PanelStreamView */
         'click .action[data-action="preview"]': function () {
@@ -114,19 +121,23 @@ class PanelStreamView extends RelationshipPanelView {
     controlPreviewButton() {
         this.$previewButton = this.$previewButton || this.$el.find('.stream-post-preview');
 
-        if (this.$textarea.val() === '') {
+        if (this.postFieldView.getTextAreaElement().value === '') {
             this.$previewButton.addClass('hidden');
         } else {
             this.$previewButton.removeClass('hidden');
         }
     }
 
+    /**
+     * @private
+     * @param {boolean} [byFocus]
+     */
     enablePostingMode(byFocus) {
         this.$el.find('.buttons-panel').removeClass('hide');
 
         if (!this.postingMode) {
-            if (this.$textarea.val() && this.$textarea.val().length) {
-                this.getPostFieldView().controlTextareaHeight();
+            if (this.postFieldView.getTextAreaElement().value) {
+                this.postFieldView.controlTextareaHeight();
             }
 
             let isClicked = false;
@@ -148,7 +159,7 @@ class PanelStreamView extends RelationshipPanelView {
                     return;
                 }
 
-                if (this.$textarea.val() !== '') {
+                if (this.postFieldView.getTextAreaElement().value !== '') {
                     return;
                 }
 
@@ -178,7 +189,7 @@ class PanelStreamView extends RelationshipPanelView {
     disablePostingMode() {
         this.postingMode = false;
 
-        this.$textarea.val('');
+        this.setPostText(null);
 
         if (this.getAttachmentsFieldView()) {
             this.getAttachmentsFieldView().empty();
@@ -188,7 +199,7 @@ class PanelStreamView extends RelationshipPanelView {
 
         $('body').off('click.stream-panel');
 
-        this.$textarea.prop('rows', 1);
+        this.postFieldView.getTextAreaElement().rows = 1;
     }
 
     setup() {
@@ -259,8 +270,7 @@ class PanelStreamView extends RelationshipPanelView {
                 this.seed.set('isInternal', true);
             }
 
-            this.createView('postField', 'views/note/fields/post', {
-                selector: '.textarea-container',
+            this.postFieldView = new NotePostFieldView({
                 name: 'post',
                 mode: 'edit',
                 params: {
@@ -270,7 +280,9 @@ class PanelStreamView extends RelationshipPanelView {
                 model: this.seed,
                 placeholderText: this.placeholderText,
                 noResize: true,
-            }, view => {
+            });
+
+            this.assignView('postField', this.postFieldView, '.textarea-container').then(view => {
                 this.initPostEvents(view);
             });
 
@@ -353,21 +365,21 @@ class PanelStreamView extends RelationshipPanelView {
         }
     }
 
+    /**
+     * @private
+     */
     storeControl() {
         let isNotEmpty = false;
 
-        if (this.$textarea && this.$textarea.length) {
-            const text = this.$textarea.val();
+        if (this.isRendered()) {
+            const text = /** @type {string} */this.seed.attributes.post;
 
-            if (text.length) {
+            if (text && text.length) {
                 this.getSessionStorage().set(this.storageTextKey, text);
 
                 isNotEmpty = true;
-            }
-            else {
-                if (this.hasStoredText) {
-                    this.getSessionStorage().clear(this.storageTextKey);
-                }
+            } else if (this.hasStoredText) {
+                this.getSessionStorage().clear(this.storageTextKey);
             }
         }
 
@@ -421,8 +433,16 @@ class PanelStreamView extends RelationshipPanelView {
         });
     }
 
+    /**
+     * @private
+     * @param {string|null} text
+     */
+    setPostText(text) {
+        this.seed.set('post', text, {silent: true});
+        this.postFieldView.getTextAreaElement().value = text || '';
+    }
+
     afterRender() {
-        this.$textarea = this.$el.find('textarea[data-name="post"]');
         this.$attachments = this.$el.find('div.attachments');
         this.$postContainer = this.$el.find('.post-container');
         this.$postButton = this.$el.find('button.post');
@@ -431,7 +451,8 @@ class PanelStreamView extends RelationshipPanelView {
 
         if (storedText && storedText.length) {
             this.hasStoredText = true;
-            this.$textarea.val(storedText);
+
+            this.setPostText(storedText);
         }
 
         this.controlPostButtonAvailability(storedText);
@@ -460,6 +481,8 @@ class PanelStreamView extends RelationshipPanelView {
                         this.collection.remove(model.id);
                         this.collection.trigger('update-sync');
                     });
+
+                    this.listenTo(view, 'quote-reply', /** import('model').default */model => this.quoteReply(model));
                 });
             }
 
@@ -479,6 +502,8 @@ class PanelStreamView extends RelationshipPanelView {
                     this.listenTo(view, 'after:save', /** import('model').default */model => {
                         this.syncPinnedModel(model, true);
                     });
+
+                    this.listenTo(view, 'quote-reply', /** import('model').default */model => this.quoteReply(model));
                 }
             });
 
@@ -505,47 +530,6 @@ class PanelStreamView extends RelationshipPanelView {
         } else {
             this.once('show', () => {
                 this.collection.fetch().then(() => onSync());
-            });
-        }
-
-        const mentionPermission = this.getAcl().getPermissionLevel('mention');
-
-        const buildUserListUrl = term => {
-            let url = `User?orderBy=name&limit=7&q=${term}&${$.param({'primaryFilter': 'active'})}`;
-
-            if (mentionPermission === 'team') {
-                url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
-            }
-
-            return url;
-        };
-
-        if (mentionPermission !== 'no') {
-            this.$textarea.textcomplete([{
-                match: /(^|\s)@(\w[\w@.-]*)$/,
-                index: 2,
-                search: (term, callback) => {
-                    if (term.length === 0) {
-                        callback([]);
-
-                        return;
-                    }
-
-                    Espo.Ajax.getRequest(buildUserListUrl(term))
-                        .then(data => callback(data.list));
-                },
-                template: (mention) => {
-                    return this.getHelper().escapeString(mention.name) +
-                        ' <span class="text-muted">@' +
-                        this.getHelper().escapeString(mention.userName) + '</span>';
-                },
-                replace: (o) => '$1@' + o.userName + '',
-            }]);
-
-            this.once('remove', () => {
-                if (this.$textarea.length) {
-                    this.$textarea.textcomplete('destroy');
-                }
             });
         }
 
@@ -624,34 +608,37 @@ class PanelStreamView extends RelationshipPanelView {
         });
     }
 
-    afterPost() {
-        this.$el.find('textarea.note').prop('rows', 1);
-    }
-
     /**
-     * @return {import('views/fields/text').default}
+     * @private
      */
-    getPostFieldView() {
-        return this.getView('postField');
+    afterPost() {
+        this.postFieldView.getTextAreaElement().rows = 1;
+        //this.$el.find('textarea.note').prop('rows', 1);
     }
 
     /**
+     * @private
      * @return {import('views/fields/attachment-multiple').default}
      */
     getAttachmentsFieldView() {
         return this.getView('attachments');
     }
 
+    /**
+     * @private
+     */
     post() {
-        const message = this.$textarea.val();
+        const message = /** @type {string} */this.seed.attributes.post || '';
 
         this.disablePostButton();
-        this.$textarea.prop('disabled', true);
+
+        const textAreaElement = this.postFieldView.getTextAreaElement();
+
+        textAreaElement.disabled = true;
 
         this.getModelFactory().create('Note', model => {
-
             if (this.getAttachmentsFieldView().validateReady()) {
-                this.$textarea.prop('disabled', false);
+                textAreaElement.disabled = false;
                 this.enablePostButton();
 
                 return;
@@ -660,10 +647,10 @@ class PanelStreamView extends RelationshipPanelView {
             if (message.trim() === '' && (this.seed.get('attachmentsIds') || []).length === 0) {
                 Espo.Ui.error(this.translate('Post cannot be empty'))
 
-                this.$textarea.prop('disabled', false);
+                textAreaElement.disabled = false;
                 this.controlPostButtonAvailability();
 
-                this.$textarea.focus();
+                textAreaElement.focus();
 
                 return;
             }
@@ -686,7 +673,8 @@ class PanelStreamView extends RelationshipPanelView {
 
                     this.collection.fetchNew();
 
-                    this.$textarea.prop('disabled', false);
+                    textAreaElement.disabled = false;
+
                     this.disablePostingMode();
                     this.afterPost();
 
@@ -699,7 +687,7 @@ class PanelStreamView extends RelationshipPanelView {
                     this.getSessionStorage().clear(this.storageIsInernalKey);
                 })
                 .catch(() => {
-                    this.$textarea.prop('disabled', false);
+                    this.postFieldView.getTextAreaElement().disabled = false;
                     this.controlPostButtonAvailability();
                 });
         });
@@ -831,7 +819,7 @@ class PanelStreamView extends RelationshipPanelView {
         this.createView('dialog', 'views/modal', {
             templateContent:
                 `<div class="complex-text">{{complexText viewObject.options.text linksInNewTab=true}}</div>`,
-            text: this.$textarea.val(),
+            text: this.seed.attributes.post || '',
             headerText: this.translate('Preview'),
             backdrop: true,
         }, view => {
@@ -839,6 +827,10 @@ class PanelStreamView extends RelationshipPanelView {
         });
     }
 
+    /**
+     * @private
+     * @param {string} [postEntered]
+     */
     controlPostButtonAvailability(postEntered) {
         const attachmentsIdList = this.seed.get('attachmentsIds') || [];
         let post = this.seed.get('post');
@@ -866,14 +858,23 @@ class PanelStreamView extends RelationshipPanelView {
         this.enablePostButton();
     }
 
+    /**
+     * @private
+     */
     disablePostButton() {
         this.$postButton.addClass('disabled').attr('disabled', 'disabled');
     }
 
+    /**
+     * @private
+     */
     enablePostButton() {
         this.$postButton.removeClass('disabled').removeAttr('disabled');
     }
 
+    /**
+     * @private
+     */
     setupPinned() {
         if (!this.hasPinned) {
             return;
@@ -928,6 +929,36 @@ class PanelStreamView extends RelationshipPanelView {
             });
 
         this.wait(promise);
+    }
+
+    /**
+     * @private
+     * @param {import('model').default} model
+     */
+    quoteReply(model) {
+        /** @type {string} */
+        const quoted = model.attributes.post;
+
+        if (!quoted) {
+            return;
+        }
+
+        const quote = '> ' + quoted.split(/\r?\n|\r|\n/g).join('\n> ');
+
+        let post = this.seed.attributes.post || '';
+
+        if (post !== '') {
+            post += '\n';
+        }
+
+        post += quote + '\n';
+
+        this.setPostText(post);
+
+        this.controlPreviewButton();
+        this.controlPostButtonAvailability();
+        this.postFieldView.controlTextareaHeight();
+        this.enablePostingMode();
     }
 }
 

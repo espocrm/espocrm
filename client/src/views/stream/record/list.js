@@ -30,12 +30,6 @@
 
 import ListExpandedRecordView from 'views/record/list-expanded';
 
-/**
- * @property collection
- * @memberOf ListStreamRecordView#
- * @type module:collections/note
- */
-
 class ListStreamRecordView extends ListExpandedRecordView {
 
     type = 'listStream'
@@ -197,7 +191,10 @@ class ListStreamRecordView extends ListExpandedRecordView {
      * @return {Promise}
      */
     showNewRecords() {
-        return this.collection.fetchNew();
+        const collection = /** @type {import('collections/note').default} */
+            this.collection;
+
+        return collection.fetchNew();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -252,6 +249,21 @@ class ListStreamRecordView extends ListExpandedRecordView {
 
             collection.trigger('unpin', model.id);
         });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @private
+     * @param {{id: string}} data
+     */
+    actionQuoteReply(data) {
+        const model = this.collection.get(data.id);
+
+        if (!model) {
+            return;
+        }
+
+        this.trigger('quote-reply', model);
     }
 }
 

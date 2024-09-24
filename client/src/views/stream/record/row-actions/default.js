@@ -84,7 +84,7 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
                     data: {
                         id: this.model.id,
                     },
-                    groupIndex: 1,
+                    groupIndex: 2,
                 });
             } else if (this.pinnedMaxCount > 0) {
                 list.push({
@@ -93,9 +93,20 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
                     data: {
                         id: this.model.id,
                     },
-                    groupIndex: 1,
+                    groupIndex: 2,
                 });
             }
+        }
+
+        if (this.options.isThis && this.model.attributes.type === 'Post') {
+            list.push({
+                action: 'quoteReply',
+                label: 'Quote Reply',
+                data: {
+                    id: this.model.id,
+                },
+                groupIndex: 1,
+            });
         }
 
         return list;

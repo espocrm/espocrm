@@ -40,6 +40,13 @@ class NotePostFieldView extends TextFieldView {
         this.insertedImagesData = {};
     }
 
+    /**
+     * @return {HTMLTextAreaElement}
+     */
+    getTextAreaElement() {
+        return this.$textarea.get(0);
+    }
+
     handlePaste(e) {
         if (!e.originalEvent.clipboardData) {
             return;
@@ -124,17 +131,22 @@ class NotePostFieldView extends TextFieldView {
     initMentions() {
         const mentionPermissionLevel = this.getAcl().getPermissionLevel('mention');
 
-        if (mentionPermissionLevel === 'no' || this.model.isNew()) {
+        if (mentionPermissionLevel === 'no' /*|| this.model.isNew()*/) {
             return;
         }
 
+        const maxSize = this.getConfig().get('recordsPerPage');
+
         const buildUserListUrl = term => {
-            let url = 'User?q=' + term + '&' + $.param({'primaryFilter': 'active'}) +
-                '&orderBy=name&maxSize=' + this.getConfig().get('recordsPerPage') +
-                '&select=id,name,userName';
+            let url = `User?` +
+                `${$.param({q: term})}` +
+                `&${$.param({primaryFilter: 'active'})}` +
+                `&orderBy=name` +
+                `&maxSize=${maxSize}` +
+                `&select=id,name,userName`;
 
             if (mentionPermissionLevel === 'team') {
-                url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
+                url += '&' + $.param({boolFilterList: ['onlyMyTeam']})
             }
 
             return url;
@@ -143,6 +155,7 @@ class NotePostFieldView extends TextFieldView {
         // noinspection JSUnresolvedReference
         this.$element.textcomplete([{
             match: /(^|\s)@(\w[\w@.-]*)$/,
+            index: 2, // @todo Revise.
             search: (term, callback) => {
                 if (term.length === 0) {
                     callback([]);
@@ -150,11 +163,8 @@ class NotePostFieldView extends TextFieldView {
                     return;
                 }
 
-                Espo.Ajax
-                    .getRequest(buildUserListUrl(term))
-                    .then(data => {
-                        callback(data.list)
-                    });
+                Espo.Ajax.getRequest(buildUserListUrl(term))
+                    .then(data => callback(data.list));
             },
             template: mention => {
                 return this.getHelper().escapeString(mention.name) +

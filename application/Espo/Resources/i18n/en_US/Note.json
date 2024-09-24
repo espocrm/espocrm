@@ -47,7 +47,8 @@
         "View Activity": "View Activity",
         "Pin": "Pin",
         "Unpin": "Unpin",
-        "Pinned": "Pinned"
+        "Pinned": "Pinned",
+        "Quote Reply": "Quote Reply"
     },
     "messages": {
         "writeMessage": "Write your message here",
