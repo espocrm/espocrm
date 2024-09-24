@@ -62,6 +62,7 @@ class RecordListPagination extends View {
             next: next,
             last: last,
             noTotal: noTotal,
+            noData: to === 0,
         };
     }
 

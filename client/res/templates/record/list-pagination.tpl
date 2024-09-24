@@ -6,7 +6,7 @@
             tabindex="0"
             data-toggle="dropdown"
             {{#unless noTotal}}title="{{translate 'Total'}}: {{total}}"{{/unless}}
-        >{{from}}–{{to}}{{#unless noTotal}} / {{total}}{{/unless}}</a>
+        >{{#unless noData}}{{from}}–{{/unless}}{{to}}{{#unless noTotal}} / {{total}}{{/unless}}</a>
         <ul class="dropdown-menu pull-right">
             <li>
                 <a

@@ -951,14 +951,14 @@ class ListRecordView extends View {
 
         const displayTotalCount = this.displayTotalCount && this.collection.total > 0 && !this.pagination;
 
-        let topBar = this.collection.length && (
-            this.pagination ||
-            this.checkboxes ||
-            (this.buttonList.length && !this.buttonsDisabled) ||
-            (this.dropdownItemList.length && !this.buttonsDisabled) ||
-            this.forceDisplayTopBar ||
-            displayTotalCount
-        );
+        let topBar = this.forceDisplayTopBar ||
+            this.collection.length && (
+                this.pagination ||
+                this.checkboxes ||
+                (this.buttonList.length && !this.buttonsDisabled) ||
+                (this.dropdownItemList.length && !this.buttonsDisabled) ||
+                displayTotalCount
+            );
 
         if (!topBar && this.pagination && !this.collection.length && this.collection.offset > 0) {
             topBar = true;
