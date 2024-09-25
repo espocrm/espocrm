@@ -279,17 +279,19 @@ class ListStreamRecordView extends ListExpandedRecordView {
                     contents += div.innerHTML;
                 }
 
-                Espo.loader.requirePromise('turndown')
-                    .then(/** typeof import('turndown').default */TurndownService => {
-                        const turndownService = (new TurndownService());
+                if (contents) {
+                    Espo.loader.requirePromise('turndown')
+                        .then(/** typeof import('turndown').default */TurndownService => {
+                            const turndownService = (new TurndownService());
 
-                        // noinspection JSValidateTypes
-                        const code = turndownService.turndown(contents);
+                            // noinspection JSValidateTypes
+                            const code = turndownService.turndown(contents);
 
-                        this.trigger('quote-reply', code);
-                    });
+                            this.trigger('quote-reply', code);
+                        });
 
-                return;
+                    return;
+                }
             }
         }
 
