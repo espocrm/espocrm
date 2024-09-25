@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\App\Metadata;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\Metadata;
@@ -114,32 +115,11 @@ class AclDependencyProvider
             }
 
             foreach ($entityDefs->getFieldList() as $fieldDefs) {
-                if (!in_array($fieldDefs->getType(), $this->enumFieldTypeList)) {
-                    continue;
+                $item = $this->getDataFromField($entityDefs->getName(), $fieldDefs);
+
+                if ($item) {
+                    $data[] = $item;
                 }
-
-                $optionsPath = $fieldDefs->getParam('optionsPath');
-                $optionsReference = $fieldDefs->getParam('optionsReference');
-
-                if (
-                    !$optionsPath &&
-                    $optionsReference &&
-                    str_contains($optionsReference, '.')
-                ) {
-                    [$refEntityType, $refField] = explode('.', $optionsReference);
-
-                    $optionsPath = "entityDefs.{$refEntityType}.fields.{$refField}.options";
-                }
-
-                if (!$optionsPath) {
-                    continue;
-                }
-
-                $data[] = [
-                    'target' => $optionsPath,
-                    'scope' => $entityDefs->getName(),
-                    'field' => $fieldDefs->getName(),
-                ];
             }
         }
 
@@ -148,6 +128,60 @@ class AclDependencyProvider
         }
 
         return $this->buildFromRaw($data);
+    }
+
+    /**
+     * @return ?array<string, mixed>
+     */
+    private function getDataFromField(string $entityType, Defs\FieldDefs $fieldDefs): ?array
+    {
+        if ($fieldDefs->getType() === FieldType::FOREIGN) {
+            $refEntityType = $fieldDefs->getParam('link') ?
+                $this->ormDefs
+                    ->getEntity($entityType)
+                    ->tryGetRelation($fieldDefs->getParam('link'))
+                    ?->tryGetForeignEntityType() :
+                    null;
+
+            $refField = $fieldDefs->getParam('field');
+
+            if (!$refEntityType || !$refField) {
+                return null;
+            }
+
+            return [
+                'target' => "entityDefs.$refEntityType.fields.$refField",
+                'scope' => $entityType,
+                'field' => $fieldDefs->getName(),
+            ];
+        }
+
+        if (!in_array($fieldDefs->getType(), $this->enumFieldTypeList)) {
+            return null;
+        }
+
+        $optionsPath = $fieldDefs->getParam('optionsPath');
+        $optionsReference = $fieldDefs->getParam('optionsReference');
+
+        if (
+            !$optionsPath &&
+            $optionsReference &&
+            str_contains($optionsReference, '.')
+        ) {
+            [$refEntityType, $refField] = explode('.', $optionsReference);
+
+            $optionsPath = "entityDefs.$refEntityType.fields.$refField.options";
+        }
+
+        if (!$optionsPath) {
+            return null;
+        }
+
+        return [
+            'target' => $optionsPath,
+            'scope' => $entityType,
+            'field' => $fieldDefs->getName(),
+        ];
     }
 
     /**
