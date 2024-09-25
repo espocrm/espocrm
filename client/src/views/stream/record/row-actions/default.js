@@ -98,7 +98,11 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
             }
         }
 
-        if (this.options.isThis && this.model.attributes.type === 'Post') {
+        if (
+            this.options.isThis &&
+            this.model.attributes.type === 'Post' &&
+            this.model.attributes.post
+        ) {
             list.push({
                 action: 'quoteReply',
                 label: 'Quote Reply',
