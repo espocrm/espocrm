@@ -173,6 +173,11 @@
         "amdId": "qrcodejs"
     },
     {
+        "src": "node_modules/turndown/lib/turndown.browser.umd.js",
+        "amdId": "turndown",
+        "minify": true
+    },
+    {
         "name": "ace-builds",
         "files": [
             {

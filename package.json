@@ -75,6 +75,7 @@
     "set-value": ">=4.0.1",
     "summernote": "^0.8.20",
     "timepicker": "^1.11.15",
+    "turndown": "^7.2.0",
     "underscore": "^1.13.1",
     "vis-data": "^7.1.6",
     "vis-timeline": "^7.7.2"

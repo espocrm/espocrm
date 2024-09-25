@@ -480,7 +480,7 @@ class PanelStreamView extends RelationshipPanelView {
                         this.collection.trigger('update-sync');
                     });
 
-                    this.listenTo(view, 'quote-reply', /** import('model').default */model => this.quoteReply(model));
+                    this.listenTo(view, 'quote-reply', /** string */quoted => this.quoteReply(quoted));
                 });
             }
 
@@ -501,7 +501,7 @@ class PanelStreamView extends RelationshipPanelView {
                         this.syncPinnedModel(model, true);
                     });
 
-                    this.listenTo(view, 'quote-reply', /** import('model').default */model => this.quoteReply(model));
+                    this.listenTo(view, 'quote-reply', /** string */quoted => this.quoteReply(quoted));
                 }
             });
 
@@ -931,16 +931,9 @@ class PanelStreamView extends RelationshipPanelView {
 
     /**
      * @private
-     * @param {import('model').default} model
+     * @param {string} quoted
      */
-    quoteReply(model) {
-        /** @type {string} */
-        const quoted = model.attributes.post;
-
-        if (!quoted) {
-            return;
-        }
-
+    quoteReply(quoted) {
         const quote = '> ' + quoted.split(/\r?\n|\r|\n/g).join('\n> ');
 
         let post = this.seed.attributes.post || '';
