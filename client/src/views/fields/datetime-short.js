@@ -65,6 +65,17 @@ class DatetimeShortFieldView extends DatetimeFieldView {
 
         const m = this.getDateTime().toMoment(value);
         const now = moment().tz(this.getDateTime().timeZone || 'UTC');
+        const dt = now.clone().startOf('day');
+
+        const ranges = {
+            'today': [dt.unix(), dt.add(1, 'days').unix()],
+            'tomorrow': [dt.unix(), dt.add(1, 'days').unix()],
+            'yesterday': [dt.add(-3, 'days').unix(), dt.add(1, 'days').unix()]
+        };
+
+        if (m.unix() > ranges['yesterday'][0] && m.unix() < ranges['yesterday'][1]) {
+            return this.translate('Yesterday') + ' ' + m.format(timeFormat);
+        }
 
         if (
             m.unix() > now.clone().startOf('day').unix() &&
