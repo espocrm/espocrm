@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\EmailNotification;
 
+use Espo\Core\Field\LinkParent;
 use Espo\Core\Notification\EmailNotificationHandler;
 use Espo\Core\Mail\SenderParams;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
@@ -59,7 +60,6 @@ use Michelf\Markdown;
 
 use Exception;
 use DateTime;
-use stdClass;
 use Throwable;
 
 class Processor
@@ -187,7 +187,7 @@ class Processor
                     }
                 }
             } catch (Throwable $e) {
-                $this->log->error("Email Notification: " . $e->getMessage());
+                $this->log->error("Email notification: {$e->getMessage()}", ['exception' => $e]);
             }
 
             $this->entityManager->saveEntity($notification);
@@ -338,19 +338,17 @@ class Processor
         /** @var Email $email */
         $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
-        $email->set([
-            'subject' => $subject,
-            'body' => $body,
-            'isHtml' => true,
-            'to' => $emailAddress,
-            'isSystem' => true,
-        ]);
+        $email
+            ->setSubject($subject)
+            ->setBody($body)
+            ->setIsHtml()
+            ->addToAddress($emailAddress);
+        $email->set('isSystem', true);
+
+
 
         if ($parentId && $parentType) {
-            $email->set([
-                'parentId' => $parentId,
-                'parentType' => $parentType,
-            ]);
+            $email->setParent(LinkParent::create($parentType, $parentId));
         }
 
         $senderParams = SenderParams::create();
@@ -370,7 +368,7 @@ class Processor
                 ->withParams($senderParams)
                 ->send($email);
         } catch (Exception $e) {
-            $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+            $this->log->error("Email notification: {$e->getMessage()}", ['exception' => $e]);
         }
     }
 
@@ -478,10 +476,10 @@ class Processor
 
     protected function processNotificationNotePost(Note $note, User $user): void
     {
-        $parentId = $note->get('parentId');
+        $parentId = $note->getParentId();
         $parentType = $note->getParentType();
 
-        $emailAddress = $user->get('emailAddress');
+        $emailAddress = $user->getEmailAddress();
 
         if (!$emailAddress) {
             return;
@@ -491,9 +489,7 @@ class Processor
 
         $data['userName'] = $note->get('createdByName');
 
-        $post = Markdown::defaultTransform(
-            $note->get('post') ?? ''
-        );
+        $post = Markdown::defaultTransform($note->getPost() ?? '');
 
         $data['post'] = $post;
 
@@ -506,7 +502,7 @@ class Processor
                 return;
             }
 
-            $data['url'] = $this->getSiteUrl($user) . '/#' . $parentType . '/view/' . $parentId;
+            $data['url'] = "{$this->getSiteUrl($user)}/#$parentType/view/$parentId";
             $data['parentName'] = $parent->get('name');
             $data['parentType'] = $parentType;
             $data['parentId'] = $parentId;
@@ -537,7 +533,7 @@ class Processor
                 true
             );
         } else {
-            $data['url'] = $this->getSiteUrl($user) . '/#Notification';
+            $data['url'] = "{$this->getSiteUrl($user)}/#Notification";
 
             $subjectTpl = $this->templateFileManager->getTemplate('notePostNoParent', 'subject');
             $bodyTpl = $this->templateFileManager->getTemplate('notePostNoParent', 'body');
@@ -551,19 +547,16 @@ class Processor
         /** @var Email $email */
         $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
-        $email->set([
-            'subject' => $subject,
-            'body' => $body,
-            'isHtml' => true,
-            'to' => $emailAddress,
-            'isSystem' => true,
-        ]);
+        $email
+            ->setSubject($subject)
+            ->setBody($body)
+            ->setIsHtml()
+            ->addToAddress($emailAddress);
+
+        $email->set('isSystem', true);
 
         if ($parentId && $parentType) {
-            $email->set([
-                'parentId' => $parentId,
-                'parentType' => $parentType,
-            ]);
+            $email->setParent(LinkParent::create($parentType, $parentId));
         }
 
         $senderParams = SenderParams::create();
@@ -583,7 +576,7 @@ class Processor
                 ->withParams($senderParams)
                 ->send($email);
         } catch (Exception $e) {
-            $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+            $this->log->error("Email notification: {$e->getMessage()}", ['exception' => $e]);
         }
     }
 
@@ -635,10 +628,10 @@ class Processor
     {
         $this->noteAccessControl->apply($note, $user);
 
-        $parentId = $note->get('parentId');
+        $parentId = $note->getParentId();
         $parentType = $note->getParentType();
 
-        $emailAddress = $user->get('emailAddress');
+        $emailAddress = $user->getEmailAddress();
 
         if (!$emailAddress) {
             return;
@@ -656,23 +649,17 @@ class Processor
             return;
         }
 
-        $data['url'] = $this->getSiteUrl($user) . '/#' . $parentType . '/view/' . $parentId;
+        $data['url'] = "{$this->getSiteUrl($user)}/#$parentType/view/$parentId";
         $data['parentName'] = $parent->get('name');
         $data['parentType'] = $parentType;
         $data['parentId'] = $parentId;
-
         $data['name'] = $data['parentName'];
-
         $data['entityType'] = $this->language->translateLabel($parentType, 'scopeNames');
         $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
 
-        $noteData = $note->get('data');
+        $noteData = $note->getData();
 
-        if (empty($noteData)) {
-            return;
-        }
-
-        if ($noteData->value === null) {
+        if (!isset($noteData->value) || !isset($note->field)) {
             return;
         }
 
@@ -713,15 +700,14 @@ class Processor
         /** @var Email $email */
         $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
-        $email->set([
-            'subject' => $subject,
-            'body' => $body,
-            'isHtml' => true,
-            'to' => $emailAddress,
-            'isSystem' => true,
-            'parentId' => $parentId,
-            'parentType' => $parentType,
-        ]);
+        $email
+            ->setSubject($subject)
+            ->setBody($body)
+            ->setIsHtml()
+            ->addToAddress($emailAddress)
+            ->setParent(LinkParent::create($parentType, $parentId));
+
+        $email->set('isSystem', true);
 
         $senderParams = SenderParams::create();
 
@@ -738,7 +724,7 @@ class Processor
                 ->withParams($senderParams)
                 ->send($email);
         } catch (Exception $e) {
-            $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+            $this->log->error("Email notification: {$e->getMessage()}", ['exception' => $e]);
         }
     }
 
@@ -756,17 +742,13 @@ class Processor
             return;
         }
 
-        $emailAddress = $user->get('emailAddress');
+        $emailAddress = $user->getEmailAddress();
 
         if (!$emailAddress) {
             return;
         }
 
-        $noteData = $note->get('data');
-
-        if (!($noteData instanceof stdClass)) {
-            return;
-        }
+        $noteData = $note->getData();
 
         if (!isset($noteData->emailId)) {
             return;
@@ -778,14 +760,14 @@ class Processor
             return;
         }
 
-        $emailRepository = $this->entityManager->getRDBRepository(Email::ENTITY_TYPE);
+        $emailAddresses = $this->entityManager
+            ->getRelation($user, 'emailAddresses')
+            ->find();
 
-        $eaList = $user->get('emailAddresses');
-
-        foreach ($eaList as $ea) {
+        foreach ($emailAddresses as $ea) {
             if (
-                $emailRepository->getRelation($emailSubject, 'toEmailAddresses')->isRelated($ea) ||
-                $emailRepository->getRelation($emailSubject, 'ccEmailAddresses')->isRelated($ea)
+                $this->entityManager->getRelation($emailSubject, 'toEmailAddresses')->isRelated($ea) ||
+                $this->entityManager->getRelation($emailSubject, 'ccEmailAddresses')->isRelated($ea)
             ) {
                 return;
             }
@@ -813,13 +795,13 @@ class Processor
             return;
         }
 
-        $parent = $this->entityManager->getEntity($parentType, $parentId);
+        $parent = $this->entityManager->getEntityById($parentType, $parentId);
 
         if (!$parent) {
             return;
         }
 
-        $data['url'] = $this->getSiteUrl($user) . '/#' . $parentType . '/view/' . $parentId;
+        $data['url'] = "{$this->getSiteUrl($user)}/#$parentType/view/$parentId";
         $data['parentName'] = $parent->get('name');
         $data['parentType'] = $parentType;
         $data['parentId'] = $parentId;
@@ -853,15 +835,14 @@ class Processor
         /** @var Email $email */
         $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
-        $email->set([
-            'subject' => $subject,
-            'body' => $body,
-            'isHtml' => true,
-            'to' => $emailAddress,
-            'isSystem' => true,
-            'parentId' => $parentId,
-            'parentType' => $parentType,
-        ]);
+        $email
+            ->setSubject($subject)
+            ->setBody($body)
+            ->setIsHtml()
+            ->addToAddress($emailAddress)
+            ->setParent(LinkParent::create($parentType, $parentId));
+
+        $email->set('isSystem', true);
 
         $senderParams = SenderParams::create();
 
@@ -878,7 +859,7 @@ class Processor
                 ->withParams($senderParams)
                 ->send($email);
         } catch (Exception $e) {
-            $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+            $this->log->error("Email notification: {$e->getMessage()}", ['exception' => $e]);
         }
     }
 
