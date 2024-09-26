@@ -215,7 +215,7 @@ class EmailComposeRecordView extends EditRecordView {
     }
 
     afterSave() {
-        super.afterRender();
+        super.afterSave();
 
         if (this.isSending && this.model.get('status') === 'Sent') {
             Espo.Ui.success(this.translate('emailSent', 'messages', 'Email'));
