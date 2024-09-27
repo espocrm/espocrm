@@ -88,7 +88,7 @@ class Table extends BaseTable
         }
     }
 
-    protected function applyDisabled(stdClass &$table, stdClass &$fieldTable): void
+    protected function applyDisabled(stdClass $table, stdClass $fieldTable): void
     {
         foreach ($this->getScopeList() as $scope) {
             $item = $this->metadata->get(['scopes', $scope]) ?? [];
@@ -99,9 +99,5 @@ class Table extends BaseTable
                 unset($fieldTable->$scope);
             }
         }
-    }
-
-    protected function applyAdditional(stdClass &$table, stdClass &$fieldTable, stdClass &$valuePermissionLists): void
-    {
     }
 }

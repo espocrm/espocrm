@@ -209,14 +209,13 @@ class DefaultTable implements Table
             $this->applyDefault($aclTable, $fieldTable);
             $this->applyDisabled($aclTable, $fieldTable);
             $this->applyMandatory($aclTable, $fieldTable);
-            $this->applyAdditional($aclTable, $fieldTable, $valuePermissionLists);
         }
 
         if ($this->user->isAdmin()) {
             $aclTable = (object) [];
             $fieldTable = (object) [];
 
-            $this->applyHighest($aclTable, $fieldTable);
+            $this->applyHighest($aclTable);
             $this->applyDisabled($aclTable, $fieldTable);
             $this->applyAdminMandatory($aclTable, $fieldTable);
         }
@@ -273,17 +272,17 @@ class DefaultTable implements Table
     {
         $permission = $permissionKey;
 
-        if (substr($permissionKey, -10) === 'Permission') {
+        if (str_ends_with($permissionKey, 'Permission')) {
             $permission = substr($permissionKey, 0, -10);
         }
 
         return $permission;
     }
 
-    protected function applyHighest(stdClass &$table, stdClass &$fieldTable): void
+    private function applyHighest(stdClass $table): void
     {
         foreach ($this->getScopeList() as $scope) {
-            if ($this->metadata->get(['scopes', $scope, $this->type]) === 'boolean') {
+            if ($this->metadata->get(['scopes', $scope, $this->type]) === ScopeDataType::BOOLEAN) {
                 $table->$scope = true;
 
                 continue;
@@ -309,7 +308,7 @@ class DefaultTable implements Table
                 $table->$scope->$action = $highest;
 
                 if (in_array($action, $this->booleanActionList)) {
-                    $table->$scope->$action = 'yes';
+                    $table->$scope->$action = self::LEVEL_YES;
                 }
             }
         }
@@ -424,7 +423,7 @@ class DefaultTable implements Table
         }
     }
 
-    protected function applyMandatoryInternal(stdClass $table, stdClass $fieldTable, string $type): void
+    private function applyMandatoryInternal(stdClass $table, stdClass $fieldTable, string $type): void
     {
         $data = $this->metadata->get(['app', $this->type, $type, 'scopeLevel']) ?? [];
 
@@ -492,31 +491,13 @@ class DefaultTable implements Table
         $this->applyMandatoryInternal($table, $fieldTable, 'adminMandatory');
     }
 
-    protected function applyDisabled(stdClass &$table, stdClass &$fieldTable): void
+    protected function applyDisabled(stdClass $table, stdClass $fieldTable): void
     {
         foreach ($this->getScopeList() as $scope) {
             if ($this->metadata->get(['scopes', $scope, 'disabled'])) {
                 $table->$scope = false;
 
                 unset($fieldTable->$scope);
-            }
-        }
-    }
-
-    /**
-     * @todo Revise usage of this method.
-     */
-    protected function applyAdditional(stdClass &$table, stdClass &$fieldTable, stdClass &$valuePermissionLists): void
-    {
-        if ($this->user->isPortal()) {
-            foreach ($this->getScopeList() as $scope) {
-                $table->$scope = false;
-
-                unset($fieldTable->$scope);
-            }
-
-            foreach ($this->valuePermissionList as $permission) {
-                $valuePermissionLists->{$permission}[] = self::LEVEL_NO;
             }
         }
     }
@@ -715,7 +696,7 @@ class DefaultTable implements Table
                         $data->$scope->$field = (object) [];
                     }
 
-                    foreach ($this->fieldActionList as $i => $action) {
+                    foreach ($this->fieldActionList as $action) {
                         if (!isset($row->$action)) {
                             continue;
                         }
