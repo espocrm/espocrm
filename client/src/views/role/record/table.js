@@ -38,7 +38,7 @@ class RoleRecordTableView extends View {
     type = 'acl'
     /** @type {'detail'|'string'} */
     mode = 'detail'
-    lowestLevelByDefault = false
+    lowestLevelByDefault = true
 
     actionList = ['create', 'read', 'edit', 'delete', 'stream']
     accessList = ['not-set', 'enabled', 'disabled']
