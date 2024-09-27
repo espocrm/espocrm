@@ -706,6 +706,7 @@ class AclManager
 
     /**
      * @deprecated As of v7.0. Use `checkOwnershipOwn`.
+     * @todo Remove in v9.0.
      */
     public function checkIsOwner(User $user, Entity $entity): bool
     {
@@ -714,6 +715,7 @@ class AclManager
 
     /**
      * @deprecated As of v7.0. Use `checkOwnershipTeam`.
+     * @todo Remove in v9.0.
      */
     public function checkInTeam(User $user, Entity $entity): bool
     {
@@ -722,6 +724,7 @@ class AclManager
 
     /**
      * @deprecated As of v7.0. Access checkers not to be exposed.
+     * @todo Remove in v9.0.
      * @noinspection PhpUnused
      */
     public function getImplementation(string $scope): object

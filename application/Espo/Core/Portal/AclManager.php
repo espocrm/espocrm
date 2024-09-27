@@ -332,6 +332,7 @@ class AclManager extends InternalAclManager
 
     /**
      * @deprecated As of v7.0. Use `checkOwnershipOwn`.
+     * @todo Remove in v9.0.
      */
     public function checkIsOwner(User $user, Entity $entity): bool
     {
@@ -340,6 +341,7 @@ class AclManager extends InternalAclManager
 
     /**
      * @deprecated As of v7.0. Use `checkOwnershipTeam`.
+     * @todo Remove in v9.0.
      */
     public function checkInTeam(User $user, Entity $entity): bool
     {
@@ -348,6 +350,7 @@ class AclManager extends InternalAclManager
 
     /**
      * @deprecated As of v7.0. Use `checkOwnershipAccount`.
+     * @todo Remove in v9.0.
      */
     public function checkInAccount(User $user, Entity $entity): bool
     {
@@ -356,6 +359,7 @@ class AclManager extends InternalAclManager
 
     /**
      * @deprecated As of v7.0. Use `checkOwnershipContact`.
+     * @todo Remove in v9.0.
      */
     public function checkIsOwnContact(User $user, Entity $entity): bool
     {
