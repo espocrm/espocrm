@@ -374,6 +374,10 @@ class EmailListView extends ListView {
         this.applyRoutingParams(params);
         this.initDroppable();
         this.initStickableFolders();
+
+        const recordView = /** @type {import('views/email/record/list').default} */this.getRecordView();
+
+        recordView.removeQueuedRecord();
     }
 
     /**
