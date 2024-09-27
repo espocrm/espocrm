@@ -34,7 +34,7 @@ use Espo\Entities\User;
 interface AccessChecker
 {
     /**
-     * Check access to scope. Should return TRUE if at least one action is allowed.
+     * Check access to a scope.
      */
     public function check(User $user, ScopeData $data): bool;
 }

@@ -51,11 +51,7 @@ class ScopeChecker
         }
 
         if ($action === null) {
-            if ($data->hasNotNo()) {
-                return true;
-            }
-
-            return false;
+            return true;
         }
 
         $level = $data->get($action);
