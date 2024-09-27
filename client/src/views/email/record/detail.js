@@ -300,7 +300,7 @@ class EmailDetailRecordView extends DetailRecordView {
         this.model.set('inTrash', true);
 
         if (this.model.collection) {
-            this.model.collection.trigger('moving-to-trash', this.model.id);
+            this.model.collection.trigger('moving-to-trash', this.model.id, true);
         }
     }
 
@@ -313,7 +313,7 @@ class EmailDetailRecordView extends DetailRecordView {
         this.model.set('inTrash', false);
 
         if (this.model.collection) {
-            this.model.collection.trigger('retrieving-from-trash', this.model.id);
+            this.model.collection.trigger('retrieving-from-trash', this.model.id, true);
         }
     }
 
@@ -352,7 +352,7 @@ class EmailDetailRecordView extends DetailRecordView {
                 Espo.Ui.info(this.translate('Moved to Archive', 'labels', 'Email'));
 
                 if (this.model.collection) {
-                    this.model.collection.trigger('moving-to-archive', this.model.id);
+                    this.model.collection.trigger('moving-to-archive', this.model.id, true);
                 }
             });
     }
