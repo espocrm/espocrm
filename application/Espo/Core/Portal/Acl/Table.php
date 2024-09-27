@@ -39,7 +39,6 @@ class Table extends BaseTable
     public const LEVEL_CONTACT = 'contact';
 
     protected string $type = 'aclPortal';
-    protected string $defaultAclType = 'recordAllOwnNo';
 
     /**
      * @var string[]

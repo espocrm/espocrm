@@ -40,32 +40,6 @@
                 "$ref": "#/definitions/levelsAll"
             },
             "description": "Default permissions. Not to be modified."
-        },
-        "scopeLevelTypesStrictDefaults": {
-            "type": "object",
-            "description": "Defaults by type. Not to be modified.",
-            "properties": {
-                "boolean": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/levelsBoolean"
-                        },
-                        {
-                            "type": "boolean"
-                        }
-                    ]
-                },
-                "record": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/levels"
-                        },
-                        {
-                            "type": "boolean"
-                        }
-                    ]
-                }
-            }
         }
     },
     "definitions": {

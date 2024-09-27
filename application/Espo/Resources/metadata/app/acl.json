@@ -196,9 +196,5 @@
         "dataPrivacyPermission": "no",
         "auditPermission": "no",
         "mentionPermission": "no"
-    },
-    "scopeLevelTypesStrictDefaults": {
-        "boolean": false,
-        "record": false
     }
 }

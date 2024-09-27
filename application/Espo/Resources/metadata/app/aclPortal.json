@@ -141,9 +141,5 @@
     "permissionsStrictDefaults": {
         "exportPermission": "no",
         "massUpdatePermission": "no"
-    },
-    "scopeLevelTypesStrictDefaults": {
-        "boolean": false,
-        "record": false
     }
 }

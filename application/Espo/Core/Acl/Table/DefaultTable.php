@@ -50,7 +50,6 @@ class DefaultTable implements Table
     private const LEVEL_NOT_SET = 'not-set';
 
     protected string $type = 'acl';
-    protected string $defaultAclType = 'recordAllTeamOwnNo';
 
     /** @var string[] */
     private $actionList = [
@@ -391,35 +390,11 @@ class DefaultTable implements Table
 
             $aclType = $this->metadata->get(['scopes', $scope, $this->type]);
 
-            if ($aclType === true) {
-                $aclType = $this->defaultAclType;
-            }
-
             if (empty($aclType)) {
                 continue;
             }
 
-            $defaultValue =
-                $this->metadata->get(['app', $this->type, 'scopeLevelTypesStrictDefaults', $aclType]) ??
-                $this->metadata->get(['app', $this->type, 'scopeLevelTypesStrictDefaults', 'record']);
-
-            if (is_array($defaultValue)) {
-                $defaultValue = (object) $defaultValue;
-            }
-
-            $table->$scope = $defaultValue;
-
-            if (is_object($table->$scope)) {
-                $actionList = $this->metadata->get(['scopes', $scope, $this->type . 'ActionList']);
-
-                if ($actionList) {
-                    foreach (get_object_vars($table->$scope) as $action => $level) {
-                        if (!in_array($action, $actionList)) {
-                            unset($table->$scope->$action);
-                        }
-                    }
-                }
-            }
+            $table->$scope = false;
         }
     }
 
