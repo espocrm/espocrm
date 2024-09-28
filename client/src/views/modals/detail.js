@@ -685,6 +685,8 @@ class DetailModalView extends ModalView {
                 .then(() => {
                     this.trigger('after:destroy', model);
                     this.dialog.close();
+
+                    Espo.Ui.success(this.translate('Removed'));
                 })
                 .catch(() => {
                     $buttons.removeClass('disabled').removeAttr('disabled');

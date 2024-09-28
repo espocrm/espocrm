@@ -3183,6 +3183,8 @@ class ListRecordView extends View {
                 this.listenTo(view, 'after:save', model => {
                     this.trigger('after:save', model);
                 });
+
+                this.listenTo(view, 'after:destroy', model => this.removeRecordFromList(model.id));
             });
     }
 
