@@ -440,6 +440,73 @@ class PanelStreamView extends RelationshipPanelView {
         this.postFieldView.getTextAreaElement().value = text || '';
     }
 
+    /**
+     * @private
+     */
+    onSync() {
+        if (this.hasPinned) {
+            this.pinnedCollection.add(this.collection.pinnedList);
+
+            this.createView('pinnedList', 'views/stream/record/list', {
+                selector: '> .list-container[data-role="pinned"]',
+                collection: this.pinnedCollection,
+                model: this.model,
+                noDataDisabled: true,
+            }, view => {
+                view.render();
+
+                this.listenTo(view, 'after:save', /** import('model').default */model => {
+                    this.syncPinnedModel(model, false);
+                });
+
+                this.listenTo(view, 'after:delete', /** import('model').default */model => {
+                    this.collection.remove(model.id);
+                    this.collection.trigger('update-sync');
+                });
+
+                this.listenTo(view, 'quote-reply', /** string */quoted => this.quoteReply(quoted));
+            });
+        }
+
+        this.createView('list', 'views/stream/record/list', {
+            selector: '> .list-container[data-role="stream"]',
+            collection: this.collection,
+            model: this.model,
+        }, view => {
+            view.render();
+
+            if (this.pinnedCollection) {
+                this.listenTo(view, 'after:delete', /** import('model').default */model => {
+                    this.pinnedCollection.remove(model.id);
+                    this.pinnedCollection.trigger('update-sync');
+                });
+
+                this.listenTo(view, 'after:save', /** import('model').default */model => {
+                    this.syncPinnedModel(model, true);
+                });
+
+                this.listenTo(view, 'quote-reply', /** string */quoted => this.quoteReply(quoted));
+            }
+        });
+
+        this.stopListening(this.model, 'all');
+        this.stopListening(this.model, 'destroy');
+
+        setTimeout(() => {
+            this.listenTo(this.model, 'all', event => {
+                if (!['sync', 'after:relate'].includes(event)) {
+                    return;
+                }
+
+                this.collection.fetchNew();
+            });
+
+            this.listenTo(this.model, 'destroy', () => {
+                this.stopListening(this.model, 'all');
+            });
+        }, 500);
+    }
+
     afterRender() {
         this.$attachments = this.$el.find('div.attachments');
         this.$postContainer = this.$el.find('.post-container');
@@ -459,75 +526,11 @@ class PanelStreamView extends RelationshipPanelView {
             this.$el.find('.action[data-action="switchInternalMode"]').addClass('enabled');
         }
 
-        const onSync = () => {
-            if (this.hasPinned) {
-                this.pinnedCollection.add(this.collection.pinnedList);
-
-                this.createView('pinnedList', 'views/stream/record/list', {
-                    selector: '> .list-container[data-role="pinned"]',
-                    collection: this.pinnedCollection,
-                    model: this.model,
-                    noDataDisabled: true,
-                }, view => {
-                    view.render();
-
-                    this.listenTo(view, 'after:save', /** import('model').default */model => {
-                        this.syncPinnedModel(model, false);
-                    });
-
-                    this.listenTo(view, 'after:delete', /** import('model').default */model => {
-                        this.collection.remove(model.id);
-                        this.collection.trigger('update-sync');
-                    });
-
-                    this.listenTo(view, 'quote-reply', /** string */quoted => this.quoteReply(quoted));
-                });
-            }
-
-            this.createView('list', 'views/stream/record/list', {
-                selector: '> .list-container[data-role="stream"]',
-                collection: this.collection,
-                model: this.model,
-            }, view => {
-                view.render();
-
-                if (this.pinnedCollection) {
-                    this.listenTo(view, 'after:delete', /** import('model').default */model => {
-                        this.pinnedCollection.remove(model.id);
-                        this.pinnedCollection.trigger('update-sync');
-                    });
-
-                    this.listenTo(view, 'after:save', /** import('model').default */model => {
-                        this.syncPinnedModel(model, true);
-                    });
-
-                    this.listenTo(view, 'quote-reply', /** string */quoted => this.quoteReply(quoted));
-                }
-            });
-
-            this.stopListening(this.model, 'all');
-            this.stopListening(this.model, 'destroy');
-
-            setTimeout(() => {
-                this.listenTo(this.model, 'all', event => {
-                    if (!['sync', 'after:relate'].includes(event)) {
-                        return;
-                    }
-
-                    this.collection.fetchNew();
-                });
-
-                this.listenTo(this.model, 'destroy', () => {
-                    this.stopListening(this.model, 'all');
-                });
-            }, 500);
-        };
-
         if (!this.defs.hidden) {
-            this.collection.fetch().then(() => onSync());
+            this.collection.fetch().then(() => this.onSync());
         } else {
             this.once('show', () => {
-                this.collection.fetch().then(() => onSync());
+                this.collection.fetch().then(() => this.onSync());
             });
         }
 
