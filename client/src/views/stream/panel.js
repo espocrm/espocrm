@@ -60,23 +60,6 @@ class PanelStreamView extends RelationshipPanelView {
             this.enablePostingMode(true);
         },
         /** @this PanelStreamView */
-        'click button.post': function () {
-            this.post();
-        },
-        /** @this PanelStreamView */
-        'click .action[data-action="switchInternalMode"]': function (e) {
-            this.isInternalNoteMode = !this.isInternalNoteMode;
-
-            const $a = $(e.currentTarget);
-
-            if (this.isInternalNoteMode) {
-                $a.addClass('enabled');
-            } else {
-                $a.removeClass('enabled');
-            }
-
-        },
-        /** @this PanelStreamView */
         'keydown textarea[data-name="post"]': function (e) {
             if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
                 e.stopPropagation();
@@ -98,10 +81,6 @@ class PanelStreamView extends RelationshipPanelView {
         'input textarea[data-name="post"]': function () {
             this.controlPreviewButton();
             this.controlPostButtonAvailability(this.postFieldView.getTextAreaElement().value);
-        },
-        /** @this PanelStreamView */
-        'click .action[data-action="preview"]': function () {
-            this.preview();
         },
     }
 
@@ -206,6 +185,10 @@ class PanelStreamView extends RelationshipPanelView {
             ...this.events,
         };
 
+        this.addHandler('click', 'button.post', () => this.post());
+        this.addActionHandler('switchInternalMode', () => this.switchInternalMode());
+        this.addActionHandler('preview', () => this.preview());
+
         this.entityType = this.model.entityType;
         this.filter = this.getStoredFilter();
 
@@ -222,9 +205,9 @@ class PanelStreamView extends RelationshipPanelView {
 
         this.isInternalNoteMode = false;
 
-        this.storageTextKey = 'stream-post-' + this.model.entityType + '-' + this.model.id;
-        this.storageAttachmentsKey = 'stream-post-attachments-' + this.model.entityType + '-' + this.model.id;
-        this.storageIsInernalKey = 'stream-post-is-internal-' + this.model.entityType + '-' + this.model.id;
+        this.storageTextKey = `stream-post-${this.model.entityType}-${this.model.id}`;
+        this.storageAttachmentsKey = `stream-post-attachments-${this.model.entityType}-${this.model.id}`;
+        this.storageIsInernalKey = `stream-post-is-internal-${this.model.entityType}-${this.model.id}`;
 
         this.on('remove', () => {
             this.storeControl();
@@ -232,9 +215,9 @@ class PanelStreamView extends RelationshipPanelView {
             $(window).off('beforeunload.stream-'+ this.cid);
         });
 
-        $(window).off('beforeunload.stream-'+ this.cid);
+        $(window).off(`beforeunload.stream-${this.cid}`);
 
-        $(window).on('beforeunload.stream-'+ this.cid, () => {
+        $(window).on(`beforeunload.stream-${this.cid}`, () => {
             this.storeControl();
         });
 
@@ -313,6 +296,16 @@ class PanelStreamView extends RelationshipPanelView {
         });
     }
 
+    switchInternalMode() {
+        this.isInternalNoteMode = !this.isInternalNoteMode;
+
+        if (this.internalModeButtonElement) {
+            this.isInternalNoteMode ?
+                this.internalModeButtonElement.classList.add('enabled') :
+                this.internalModeButtonElement.classList.remove('enabled');
+        }
+    }
+
     subscribeToWebSocket() {
         if (!this.getHelper().webSocketManager) {
             return;
@@ -322,7 +315,7 @@ class PanelStreamView extends RelationshipPanelView {
             return;
         }
 
-        const topic = 'streamUpdate.' + this.model.entityType + '.' + this.model.id;
+        const topic = `streamUpdate.${this.model.entityType}.${this.model.id}`;
         this.streamUpdateWebSocketTopic = topic;
 
         this.isSubscribedToWebSocket = true;
@@ -522,8 +515,14 @@ class PanelStreamView extends RelationshipPanelView {
 
         this.controlPostButtonAvailability(storedText);
 
+        if (this.allowInternalNotes) {
+            this.internalModeButtonElement =
+                /** @type {HTMLAnchorElement} */
+                this.element.querySelector('.action[data-action="switchInternalMode"]');
+        }
+
         if (this.isInternalNoteMode) {
-            this.$el.find('.action[data-action="switchInternalMode"]').addClass('enabled');
+            this.internalModeButtonElement.classList.add('enabled');
         }
 
         if (!this.defs.hidden) {
@@ -574,9 +573,7 @@ class PanelStreamView extends RelationshipPanelView {
             model: this.seed,
             mode: 'edit',
             selector: 'div.attachments-container',
-            defs: {
-                name: 'attachments',
-            },
+            name: 'attachments',
         }, view => {
             view.render();
         });
@@ -614,7 +611,6 @@ class PanelStreamView extends RelationshipPanelView {
      */
     afterPost() {
         this.postFieldView.getTextAreaElement().rows = 1;
-        //this.$el.find('textarea.note').prop('rows', 1);
     }
 
     /**
