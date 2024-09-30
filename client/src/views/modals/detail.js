@@ -659,6 +659,9 @@ class DetailModalView extends ModalView {
                     this.controlRecordButtonsVisibility();
 
                     this.trigger('model-sync');
+
+                    // Triggers stream panel update.
+                    this.model.trigger('sync');
                 });
 
                 view.render()
