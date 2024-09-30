@@ -319,6 +319,10 @@ class RelationshipPanelView extends BottomPanelView {
 
             this.listenTo(this.model, `update-related:${this.link} update-all`, () => collection.fetch());
 
+            this.listenTo(this.collection, 'change', () => {
+                this.model.trigger(`after:related-change:${this.link}`);
+            });
+
             if (this.defs.syncWithModel) {
                 this.listenTo(this.model, 'sync', (m, a, o) => {
                     if (!o.patch && !o.highlight) {
