@@ -128,6 +128,10 @@ class DateFieldView extends BaseFieldView {
 
         if (this.params.after) {
             this.listenTo(this.model, `change:${this.params.after}`, async () => {
+                if (!this.isEditMode()) {
+                    return;
+                }
+
                 await this.whenRendered();
 
                 // noinspection JSUnresolvedReference
