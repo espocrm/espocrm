@@ -49,6 +49,14 @@ class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamCheck
 
     public function checkOwn(User $user, Entity $entity): bool
     {
+        if ($entity instanceof CoreEntity && $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS)) {
+            if ($entity->hasLinkMultipleId(self::FIELD_ASSIGNED_USERS, $user->getId())) {
+                return true;
+            }
+
+            return false;
+        }
+
         if ($entity->hasAttribute(self::ATTR_ASSIGNED_USER_ID)) {
             if (
                 $entity->has(self::ATTR_ASSIGNED_USER_ID) &&
@@ -56,17 +64,15 @@ class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamCheck
             ) {
                 return true;
             }
-        } else if ($entity->hasAttribute(self::ATTR_CREATED_BY_ID)) {
+
+            return false;
+        }
+
+        if ($entity->hasAttribute(self::ATTR_CREATED_BY_ID)) {
             if (
                 $entity->has(self::ATTR_CREATED_BY_ID) &&
                 $user->getId() === $entity->get(self::ATTR_CREATED_BY_ID)
             ) {
-                return true;
-            }
-        }
-
-        if ($entity instanceof CoreEntity && $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS)) {
-            if ($entity->hasLinkMultipleId(self::FIELD_ASSIGNED_USERS, $user->getId())) {
                 return true;
             }
         }
