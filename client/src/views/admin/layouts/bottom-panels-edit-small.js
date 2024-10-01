@@ -28,8 +28,8 @@
 
 import LayoutBottomPanelsEdit from 'views/admin/layouts/bottom-panels-edit';
 
+// noinspection JSUnusedGlobalSymbols
 export default class extends LayoutBottomPanelsEdit {
 
     viewType = 'editSmall'
 }
-
