@@ -573,6 +573,7 @@ class ListRelatedView extends MainView {
             additionalRowActionList: this.panelDefs.rowActionList,
             ...o,
             settingsEnabled: true,
+            removeDisabled: this.panelDefs.removeDisabled,
         };
 
         if (this.getHelper().isXsScreen()) {
