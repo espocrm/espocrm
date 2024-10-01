@@ -444,6 +444,7 @@ class RelatedListModalView extends ModalView {
                 editDisabled: this.defs.editDisabled,
                 removeDisabled: this.defs.removeDisabled,
             },
+            removeDisabled: this.defs.removeDisabled,
             forcePagination: this.options.forcePagination,
             pagination: this.getConfig().get('listPagination') ||
                 this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) ||
