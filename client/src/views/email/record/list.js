@@ -584,24 +584,40 @@ class EmailListRecordView extends ListRecordView {
     controlEmailMassActionsVisibility() {
         const moveToArchive =
             this.rootData.selectedFolderId !== 'trash' &&
-            this.rootData.selectedFolderId !== 'archive'
+            this.rootData.selectedFolderId !== 'archive' &&
+            this.rootData.selectedFolderId !== 'all';
+
+        const moveToTrash =
+            this.rootData.selectedFolderId !== 'trash' &&
+            this.rootData.selectedFolderId !== 'all';
+
+        const markAsImportant =
+            this.rootData.selectedFolderId !== 'important' &&
+            this.rootData.selectedFolderId !== 'all';
+
+        const markAsNotRead =
+            this.rootData.selectedFolderId !== 'all';
 
         moveToArchive ?
             this.showMassAction('moveToArchive') :
             this.hideMassAction('moveToArchive');
 
-        if (this.rootData.selectedFolderId === 'trash') {
+        moveToTrash ?
+            this.showMassAction('moveToTrash') :
             this.hideMassAction('moveToTrash');
+
+        markAsImportant ?
+            this.showMassAction('markAsImportant') :
+            this.hideMassAction('markAsImportant');
+
+        markAsNotRead ?
+            this.showMassAction('markAsNotRead') :
+            this.hideMassAction('markAsNotRead');
+
+        if (this.rootData.selectedFolderId === 'trash') {
             this.showMassAction('retrieveFromTrash');
         } else {
-            this.showMassAction('moveToTrash');
             this.hideMassAction('retrieveFromTrash');
-        }
-
-        if (this.rootData.selectedFolderId === 'important') {
-            this.hideMassAction('markAsImportant');
-        } else {
-            this.showMassAction('markAsImportant');
         }
     }
 }
