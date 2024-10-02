@@ -949,6 +949,8 @@ class PanelStreamView extends RelationshipPanelView {
         this.controlPostButtonAvailability();
         this.postFieldView.controlTextareaHeight();
         this.enablePostingMode();
+
+        this.postFieldView.getTextAreaElement().focus();
     }
 }
 
