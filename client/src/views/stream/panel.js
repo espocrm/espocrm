@@ -950,7 +950,12 @@ class PanelStreamView extends RelationshipPanelView {
         this.postFieldView.controlTextareaHeight();
         this.enablePostingMode();
 
-        this.postFieldView.getTextAreaElement().focus();
+        setTimeout(() => {
+            const textArea = this.postFieldView.getTextAreaElement();
+
+            textArea.focus();
+            textArea.setSelectionRange(textArea.value.length, textArea.value.length);
+        }, 1);
     }
 }
 
