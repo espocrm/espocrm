@@ -649,10 +649,15 @@ class Processor
             return;
         }
 
+        $note->loadParentNameField('superParent');
+
         $data['url'] = "{$this->getSiteUrl($user)}/#$parentType/view/$parentId";
         $data['parentName'] = $parent->get('name');
         $data['parentType'] = $parentType;
         $data['parentId'] = $parentId;
+        $data['superParentName'] = $note->get('superParentName');
+        $data['superParentType'] = $note->getSuperParentType();
+        $data['superParentId'] = $note->getSuperParentId();
         $data['name'] = $data['parentName'];
         $data['entityType'] = $this->language->translateLabel($parentType, 'scopeNames');
         $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
