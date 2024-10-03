@@ -425,7 +425,7 @@ module.exports = grunt => {
         });
 
         cp.execSync(
-            `find bin -type f -exec chmod 754 {} +`,
+            `find bin -type f -exec chmod 755 {} +`,
             {
                 cwd: dirPath,
             }
