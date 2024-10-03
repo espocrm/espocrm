@@ -1610,4 +1610,14 @@ class EvaluatorTest extends TestCase
 
         $this->assertTrue($vars->a);
     }
+
+    public function testMarkdownTransform(): void
+    {
+        $expression = "ext\\markdown\\transform('**test**')";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals("<p><strong>test</strong></p>\n", $result);
+    }
 }

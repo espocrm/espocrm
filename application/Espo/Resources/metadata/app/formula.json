@@ -546,6 +546,12 @@
             "unsafe": true
         },
         {
+            "name": "ext\\markdown\\transform",
+            "insertText": "ext\\markdown\\transform(STRING)",
+            "returnType": "string",
+            "unsafe": true
+        },
+        {
             "name": "ext\\pdf\\generate",
             "insertText": "ext\\pdf\\generate(ENTITY_TYPE, ENTITY_ID, TEMPLATE_ID, FILENAME)",
             "returnType": "string",
