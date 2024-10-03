@@ -295,18 +295,28 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         this.$el.find('.attach-file-label').focus();
     }
 
+    /**
+     * @protected
+     */
     empty() {
         this.clearIds();
 
         this.$attachments.empty();
     }
 
+    /**
+     * @private
+     */
     handleResize() {
         const width = this.$el.width();
 
         this.$el.find('img.image-preview').css('maxWidth', width + 'px');
     }
 
+    /**
+     * @protected
+     * @param {string} id
+     */
     deleteAttachment(id) {
         this.removeId(id);
 
@@ -318,8 +328,14 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         }
     }
 
+    /**
+     * @protected
+     * @param {string} id
+     * @param {string} [size]
+     * @return {string}
+     */
     getImageUrl(id, size) {
-        let url = this.getBasePath() + '?entryPoint=image&id=' + id;
+        let url = `${this.getBasePath()}?entryPoint=image&id=${id}`;
 
         if (size) {
             url += '&size=' + size;
@@ -332,8 +348,13 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         return url;
     }
 
+    /**
+     * @protected
+     * @param {string} id
+     * @return {string}
+     */
     getDownloadUrl(id) {
-        let url = this.getBasePath() + '?entryPoint=download&id=' + id;
+        let url = `${this.getBasePath()}?entryPoint=download&id=${id}`;
 
         if (this.getUser().get('portalId')) {
             url += '&portalId=' + this.getUser().get('portalId');
@@ -342,6 +363,10 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         return url;
     }
 
+    /**
+     * @protected
+     * @param {string} id
+     */
     removeId(id) {
         const arr = _.clone(this.model.get(this.idsName) || []);
         const i = arr.indexOf(id);
@@ -361,6 +386,10 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         this.model.set(this.typeHashName, typeHash);
     }
 
+    /**
+     * @protected
+     * @param {boolean} [silent]
+     */
     clearIds(silent) {
         silent = silent || false;
 
@@ -369,6 +398,12 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         this.model.set(this.typeHashName, {}, {silent: silent})
     }
 
+    /**
+     * @protected
+     * @param {import('model').default} attachment
+     * @param {string|null} [link]
+     * @param {boolean} [ui]
+     */
     pushAttachment(attachment, link, ui) {
         const arr = _.clone(this.model.get(this.idsName) || []);
 
@@ -389,6 +424,13 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         this.model.set(this.nameHashName, nameHash, {ui: ui});
     }
 
+    /**
+     * @protected
+     * @param {string} name
+     * @param {string} type
+     * @param {string} id
+     * @return {string|null}
+     */
     getEditPreview(name, type, id) {
         if (!~this.previewTypeList.indexOf(type)) {
             return null;
