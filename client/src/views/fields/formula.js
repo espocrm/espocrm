@@ -239,6 +239,14 @@ class FormulaFieldView extends TextFieldView {
         });
     }
 
+    /**
+     * @private
+     * @return {{
+     *     name: string,
+     *     insertText?: string,
+     *     returnType?: string,
+     * }[]}
+     */
     getFunctionDataList() {
         let list = [...this.getMetadata().get(['app', 'formula', 'functionList'], [])]
             .filter(item => item.insertText);
@@ -296,8 +304,8 @@ class FormulaFieldView extends TextFieldView {
 
             getCompletions: function (editor, session, pos, prefix, callback) {
                 const matchedFunctionItemList = functionItemList
-                    .filter((originalItem) => {
-                        const text = originalItem.name;
+                    .filter(originalItem => {
+                        const text = originalItem.name.toString().toLowerCase();
 
                         if (text.indexOf(prefix) === 0) {
                             return true;
@@ -306,6 +314,10 @@ class FormulaFieldView extends TextFieldView {
                         const parts = text.split('\\');
 
                         if (parts[parts.length - 1].indexOf(prefix) === 0) {
+                            return true;
+                        }
+
+                        if (parts.length > 2 && parts[parts.length - 2].indexOf(prefix) === 0) {
                             return true;
                         }
 
@@ -344,7 +356,7 @@ class FormulaFieldView extends TextFieldView {
                 });
 
                 const matchedAttributeList = attributeList
-                    .filter((item) => {
+                    .filter(item => {
                         if (item.indexOf(prefix) === 0) {
                             return true;
                         }
@@ -360,6 +372,7 @@ class FormulaFieldView extends TextFieldView {
                     };
                 });
 
+                // noinspection JSCheckFunctionSignatures
                 itemList = itemList.concat(itemAttributeList);
 
                 callback(null, itemList);
