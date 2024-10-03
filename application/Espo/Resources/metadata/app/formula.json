@@ -548,8 +548,7 @@
         {
             "name": "ext\\markdown\\transform",
             "insertText": "ext\\markdown\\transform(STRING)",
-            "returnType": "string",
-            "unsafe": true
+            "returnType": "string"
         },
         {
             "name": "ext\\pdf\\generate",
