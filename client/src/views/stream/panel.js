@@ -941,7 +941,7 @@ class PanelStreamView extends RelationshipPanelView {
             post += '\n';
         }
 
-        post += quote + '\n';
+        post += quote + '\n\n';
 
         this.setPostText(post);
 
