@@ -443,8 +443,8 @@ class AttachmentMultipleFieldView extends BaseFieldView {
             .attr('alt', name)
             .attr('draggable', 'false')
             .css({
-                maxWidth: (this.imageSizes[this.previewSize] || {})[0],
-                maxHeight: (this.imageSizes[this.previewSize] || {})[1],
+                maxWidth: (this.imageSizes['small'] || {})[0],
+                maxHeight: (this.imageSizes['small'] || {})[1],
             })
             .get(0)
             .outerHTML;
