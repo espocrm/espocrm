@@ -180,7 +180,8 @@
         "email": {
             "type": "belongsTo",
             "entity": "Email",
-            "foreign": "tasks"
+            "foreign": "tasks",
+            "noForeignName": true
         }
     },
     "collection": {
