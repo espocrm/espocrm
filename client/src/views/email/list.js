@@ -359,6 +359,19 @@ class EmailListView extends ListView {
 
             this.getEmailRecordView().massActionMoveToFolder();
         };
+
+        this.shortcutKeys['Control+KeyQ'] = e => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (this.hasSelectedRecords()) {
+                this.getEmailRecordView().massActionMarkAsRead();
+
+                return;
+            }
+
+            this.getEmailRecordView().actionMarkAllAsRead();
+        };
     }
 
     hasSelectedRecords() {

@@ -355,7 +355,6 @@ class EmailListRecordView extends ListRecordView {
         }
     }
 
-    // noinspection JSUnusedGlobalSymbols
     actionMarkAllAsRead() {
         Espo.Ajax.postRequest('Email/inbox/read', {all: true});
 
