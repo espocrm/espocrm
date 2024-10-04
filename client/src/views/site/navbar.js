@@ -28,11 +28,16 @@
 
 import View from 'view';
 import $ from 'jquery';
+import TabsHelper from 'helpers/site/tabs';
 
 class NavbarSiteView extends View {
 
     template = 'site/navbar'
 
+    /**
+     * @private
+     * @type {string|false|null}
+     */
     currentTab = null
 
     events = {
@@ -337,18 +342,7 @@ class NavbarSiteView extends View {
      * @return {(Object|string)[]}
      */
     getTabList() {
-        let tabList = this.getPreferences().get('useCustomTabList') && !this.getPreferences().get('addCustomTabs') ?
-            this.getPreferences().get('tabList') :
-            this.getConfig().get('tabList');
-
-        if (this.getPreferences().get('useCustomTabList') && this.getPreferences().get('addCustomTabs')) {
-            tabList = [
-                ...tabList,
-                ...(this.getPreferences().get('tabList') || []),
-            ];
-        }
-
-        tabList = Espo.Utils.cloneDeep(tabList || []);
+        const tabList = this.tabsHelper.getTabList();
 
         if (this.isSide()) {
             tabList.unshift('Home');
@@ -385,6 +379,15 @@ class NavbarSiteView extends View {
 
             this.selectTab(false);
         });
+
+        /** @private */
+        this.tabsHelper = new TabsHelper(
+            this.getConfig(),
+            this.getPreferences(),
+            this.getUser(),
+            this.getAcl(),
+            this.getMetadata()
+        );
 
         const itemDefs = this.getMetadata().get('app.clientNavbar.items') || {};
 
@@ -500,52 +503,8 @@ class NavbarSiteView extends View {
     }
 
     /**
-     * @param {Record|string} item
-     * @return {boolean}
+     * @private
      */
-    filterTabItem(item) {
-        if (typeof item === 'object' && item.type === 'url') {
-            if (item.onlyAdmin && !this.getUser().isAdmin()) {
-                return false;
-            }
-
-            if (!item.aclScope) {
-                return true;
-            }
-
-            return this.getAcl().check(item.aclScope);
-        }
-
-        if (['Home', '_delimiter_', '_delimiter-ext_'].includes(item)) {
-            return true;
-        }
-
-        const scopes = this.getMetadata().get('scopes') || {};
-
-        if (!scopes[item]) {
-            return false;
-        }
-
-        const defs = /** @type {{disabled?: boolean, acl?: boolean, tabAclPermission?: string}} */
-            scopes[item] || {};
-
-        if (defs.disabled) {
-            return false;
-        }
-
-        if (defs.acl) {
-            return this.getAcl().check(item);
-        }
-
-        if (defs.tabAclPermission) {
-            const level = this.getAcl().getPermissionLevel(defs.tabAclPermission);
-
-            return level && level !== 'no';
-        }
-
-        return true;
-    }
-
     setupGlobalSearch() {
         let isAvailable = false;
 
@@ -567,6 +526,9 @@ class NavbarSiteView extends View {
         this.itemList = this.itemList.filter(it => it !== 'globalSearch');
     }
 
+    /**
+     * @private
+     */
     adjustTop() {
         const smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
         const navbarHeight = this.getNavbarHeight();
@@ -852,6 +814,9 @@ class NavbarSiteView extends View {
         this.$body.css('minHeight', minHeight + 'px');
     }
 
+    /**
+     * @private
+     */
     adjustBodyMinHeightTop() {
         let minHeight = this.getNavbarHeight();
 
@@ -1026,19 +991,10 @@ class NavbarSiteView extends View {
             });
     }
 
+    /**
+     * @private
+     */
     setupTabDefsList() {
-        function isMoreDelimiter(item) {
-            return item === '_delimiter_' || item === '_delimiter-ext_';
-        }
-
-        function isDivider(item) {
-            return typeof item === 'object' && item.type === 'divider';
-        }
-
-        function isUrl(item) {
-            return typeof item === 'object' && item.type === 'url';
-        }
-
         /** @type {{url: string, name: string}[]} */
         this.urlList = [];
 
@@ -1050,10 +1006,10 @@ class NavbarSiteView extends View {
             }
 
             if (typeof item !== 'object') {
-                return this.filterTabItem(item);
+                return this.tabsHelper.checkTabAccess(item);
             }
 
-            if (isDivider(item)) {
+            if (this.tabsHelper.isTabDivider(item)) {
                 if (!this.isSide()) {
                     return false;
                 }
@@ -1065,21 +1021,21 @@ class NavbarSiteView extends View {
                 return true;
             }
 
-            if (isUrl(item)) {
-                return this.filterTabItem(item);
+            if (this.tabsHelper.isTabUrl(item)) {
+                return this.tabsHelper.checkTabAccess(item);
             }
 
             /** @type {(Record|string)[]} */
-            let itemList = (item.itemList || []).filter((item) => {
-                if (isDivider(item)) {
+            let itemList = (item.itemList || []).filter(item => {
+                if (this.tabsHelper.isTabDivider(item)) {
                     return true;
                 }
 
-                return this.filterTabItem(item);
+                return this.tabsHelper.checkTabAccess(item);
             });
 
             itemList = itemList.filter((item, i) => {
-                if (!isDivider(item)) {
+                if (!this.tabsHelper.isTabDivider(item)) {
                     return true;
                 }
 
@@ -1089,7 +1045,7 @@ class NavbarSiteView extends View {
                     return true;
                 }
 
-                if (isDivider(nextItem)) {
+                if (this.tabsHelper.isTabDivider(nextItem)) {
                     return false;
                 }
 
@@ -1097,7 +1053,7 @@ class NavbarSiteView extends View {
             });
 
             itemList = itemList.filter((item, i) => {
-                if (!isDivider(item)) {
+                if (!this.tabsHelper.isTabDivider(item)) {
                     return true;
                 }
 
@@ -1119,11 +1075,11 @@ class NavbarSiteView extends View {
             const nextItem = this.tabList[i + 1];
             const prevItem = this.tabList[i - 1];
 
-            if (isMoreDelimiter(item)) {
+            if (this.tabsHelper.isTabMoreDelimiter(item)) {
                 moreIsMet = true;
             }
 
-            if (!isDivider(item)) {
+            if (!this.tabsHelper.isTabDivider(item)) {
                 return true;
             }
 
@@ -1131,11 +1087,11 @@ class NavbarSiteView extends View {
                 return true;
             }
 
-            if (isDivider(nextItem)) {
+            if (this.tabsHelper.isTabDivider(nextItem)) {
                 return false;
             }
 
-            if (isDivider(prevItem) && isMoreDelimiter(nextItem) && moreIsMet) {
+            if (this.tabsHelper.isTabDivider(prevItem) && this.tabsHelper.isTabMoreDelimiter(nextItem) && moreIsMet) {
                 return false;
             }
 
@@ -1161,7 +1117,7 @@ class NavbarSiteView extends View {
         };
 
         this.tabList.forEach((tab, i) => {
-            if (isMoreDelimiter(tab)) {
+            if (this.tabsHelper.isTabMoreDelimiter(tab)) {
                 if (!vars.moreIsMet) {
                     vars.moreIsMet = true;
 
@@ -1192,6 +1148,29 @@ class NavbarSiteView extends View {
         this.tabDefsList = tabDefsList;
     }
 
+    /**
+     * @private
+     * @param {{
+     *     colorsDisabled: boolean,
+     *     tabIconsDisabled: boolean,
+     * }} params
+     * @param {Object|string} tab
+     * @param {number} i
+     * @param {Object} vars
+     * @return {{
+     *     isAfterShowMore: boolean,
+     *     isDivider: boolean,
+     *     color: null,
+     *     link: string,
+     *     name: string,
+     *     isInMore: boolean,
+     *     shortLabel: string,
+     *     label: string,
+     *     isGroup: boolean,
+     *     aClassName: string,
+     *     iconClass: null
+     * }}
+     */
     prepareTabItemDefs(params, tab, i, vars) {
         let label;
         let link;
@@ -1215,8 +1194,7 @@ class NavbarSiteView extends View {
         if (tab === 'Home') {
             label = this.getLanguage().translate(tab);
             link = '#';
-        }
-        else if (typeof tab === 'object' && tab.type === 'divider') {
+        } else if (typeof tab === 'object' && tab.type === 'divider') {
             isDivider = true;
             label = tab.text;
             aClassName = 'nav-divider-text';
@@ -1225,8 +1203,7 @@ class NavbarSiteView extends View {
             if (label) {
                 label = translateLabel(label);
             }
-        }
-        else if (typeof tab === 'object' && tab.type === 'url') {
+        } else if (typeof tab === 'object' && tab.type === 'url') {
             isUrl = true;
             label = tab.text || '#';
             name = 'url-' + i;
@@ -1239,8 +1216,7 @@ class NavbarSiteView extends View {
             }
 
             this.urlList.push({name: name, url: link});
-        }
-        else if (typeof tab === 'object') {
+        } else if (typeof tab === 'object') {
             isGroup = true;
 
             label = tab.text || '';
@@ -1256,8 +1232,7 @@ class NavbarSiteView extends View {
             if (label) {
                 label = translateLabel(label);
             }
-        }
-        else {
+        } else {
             label = this.getLanguage().translate(tab, 'scopeNamesPlural');
             link = '#' + tab;
         }
@@ -1315,7 +1290,9 @@ class NavbarSiteView extends View {
      * @property {true} [divider]
      */
 
-
+    /**
+     * @private
+     */
     setupMenu() {
         let avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 20, 'avatar-link');
 
