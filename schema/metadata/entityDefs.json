@@ -1114,10 +1114,6 @@
                     "type": "string",
                     "description": "A foreign link name."
                 },
-                "noJoin": {
-                    "type": "boolean",
-                    "description": "Prevents joining a foreign table when fetching a record. Available for belongsTo, hasOne."
-                },
                 "foreignName": {
                     "type": "string",
                     "description": "A field to be used as a name of a foreign record. Needed when a foreign entity type does not have the field name."
@@ -1214,6 +1210,34 @@
                                     "type": "string"
                                 },
                                 "description": "Entity types."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "belongsTo"},
+                                    {"const": "hasOne"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "noJoin": {
+                                "type": "boolean",
+                                "description": "Prevents joining a foreign table when fetching a record. Available for belongsTo, hasOne."
+                            },
+                            "noForeignName": {
+                                "type": "boolean",
+                                "description": "Do not create a foreign name attribute."
+                            },
+                            "noIndex": {
+                                "type": "boolean",
+                                "description": "Do not create an index for an ID attribute."
                             }
                         }
                     }
