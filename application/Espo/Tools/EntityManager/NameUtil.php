@@ -93,6 +93,7 @@ class NameUtil
         'True',
         'Base',
         'Layout',
+        'Home',
     ];
 
     public function __construct(
