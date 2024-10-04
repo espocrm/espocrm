@@ -511,6 +511,10 @@ class ViewHelper {
         });
 
         Handlebars.registerHelper('complexText', (text, options) => {
+            if (typeof text !== 'string' && !(text instanceof String)) {
+                return '';
+            }
+
             return this.transformMarkdownText(text, options.hash);
         });
 
