@@ -52,6 +52,9 @@ class BaseDashletView extends View {
     disabledForReadOnlyActionList = ['options', 'remove']
     disabledForLockedActionList = ['remove']
 
+    /**
+     * @type {boolean}
+     */
     noPadding = false
 
     /**
@@ -85,7 +88,6 @@ class BaseDashletView extends View {
     /**
      * Buttons.
      *
-     * @protected
      * @type {Array<module:views/dashlets/abstract/base~button>}
      */
     buttonList = []
@@ -93,7 +95,6 @@ class BaseDashletView extends View {
     /**
      * Dropdown actions.
      *
-     * @protected
      * @type {Array<module:views/dashlets/abstract/base~action>}
      */
     actionList = [
