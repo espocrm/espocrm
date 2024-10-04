@@ -1,6 +1,6 @@
 [
-    {"name":"personStringData", "width":18, "notSortable": true, "customLabel": ""},
-    {"name":"subject", "link":true, "notSortable": true},
-    {"name":"parent", "notSortable": true, "width": 21},
-    {"name":"dateSent", "view": "views/fields/datetime-short", "notSortable": true, "width": 10, "align": "right"}
+    {"name": "personStringData", "width":18, "notSortable": true, "noLabel": true},
+    {"name": "subject", "link": true, "notSortable": true},
+    {"name": "parent", "notSortable": true, "width": 21},
+    {"name": "dateSent", "view": "views/fields/datetime-short", "notSortable": true, "width": 10, "align": "right"}
 ]
