@@ -32,6 +32,12 @@ class GlobalSearchView extends View {
 
     template = 'global-search/global-search'
 
+    /**
+     * @private
+     * @type {HTMLElement}
+     */
+    containerElement
+
     setup() {
         this.addHandler('keydown', 'input.global-search-input', 'onKeydown');
         this.addHandler('focus', 'input.global-search-input', 'onFocus');
@@ -45,6 +51,9 @@ class GlobalSearchView extends View {
         this.wait(promise);
 
         this.closeNavbarOnShow = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+        this.onMouseUpBind = this.onMouseUp.bind(this);
+        this.onClickBind = this.onClick.bind(this);
     }
 
     /**
@@ -99,6 +108,44 @@ class GlobalSearchView extends View {
     }
 
     /**
+     * @param {MouseEvent} e
+     * @private
+     */
+    onMouseUp(e) {
+        if (e.button !== 0) {
+            return;
+        }
+
+        if (
+            this.containerElement !== e.target &&
+            !this.containerElement.contains(e.target)
+        ) {
+            return this.closePanel();
+        }
+    }
+
+    /**
+     * @param {MouseEvent} e
+     * @private
+     */
+    onClick(e) {
+        const target = e.target;
+
+        if (!(target instanceof HTMLAnchorElement)) {
+            return;
+        }
+
+        if (
+            target.dataset.action === 'showMore' ||
+            target.classList.contains('global-search-button')
+        ) {
+            return;
+        }
+
+        setTimeout(() => this.closePanel(), 100);
+    }
+
+    /**
      * @private
      */
     showPanel() {
@@ -108,7 +155,9 @@ class GlobalSearchView extends View {
             this.$el.closest('.navbar-body').removeClass('in');
         }
 
-        const $container = $('<div>').attr('id', 'global-search-panel');
+        const $container = this.$container = $('<div>').attr('id', 'global-search-panel');
+
+        this.containerElement = this.$container.get(0);
 
         $container.appendTo(this.$el.find('.global-search-panel-container'));
 
@@ -121,27 +170,8 @@ class GlobalSearchView extends View {
             this.listenToOnce(view, 'close', this.closePanel);
         });
 
-        const $document = $(document);
-
-        $document.on('mouseup.global-search', (e) => {
-            if (e.which !== 1) {
-                return;
-            }
-
-            if (!$container.is(e.target) && $container.has(e.target).length === 0) {
-                this.closePanel();
-            }
-        });
-
-        $document.on('click.global-search', (e) => {
-            if (
-                e.target.tagName === 'A' &&
-                $(e.target).data('action') !== 'showMore' &&
-                !$(e.target).hasClass('global-search-button')
-            ) {
-                setTimeout(() => this.closePanel(), 100);
-            }
-        });
+        document.addEventListener('mouseup', this.onMouseUpBind);
+        document.addEventListener('click', this.onClickBind);
     }
 
     /**
@@ -152,14 +182,12 @@ class GlobalSearchView extends View {
 
         $container.remove();
 
-        const $document = $(document);
-
         if (this.hasView('panel')) {
             this.getView('panel').remove();
         }
 
-        $document.off('mouseup.global-search');
-        $document.off('click.global-search');
+        document.removeEventListener('mouseup', this.onMouseUpBind);
+        document.removeEventListener('click', this.onClickBind);
     }
 }
 
