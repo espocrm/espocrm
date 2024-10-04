@@ -33,27 +33,25 @@ define('crm:views/task/record/list', ['views/record/list'], function (Dep) {
         rowActionsView: 'crm:views/task/record/row-actions/default',
 
         actionSetCompleted: function (data) {
-            var id = data.id;
+            const id = data.id;
 
             if (!id) {
                 return;
             }
 
-            var model = this.collection.get(id);
+            const model = this.collection.get(id);
 
             if (!model) {
                 return;
             }
 
-            model.set('status', 'Completed');
+            Espo.Ui.notify(this.translate('saving', 'messages'));
 
-            this.listenToOnce(model, 'sync', () => {
-                Espo.Ui.notify(false);
+            model.save({status: 'Completed'}, {patch: true}).then(() => {
+                Espo.Ui.success(this.translate('Saved'));
+
                 this.collection.fetch();
             });
-
-            Espo.Ui.notify(this.translate('saving', 'messages'));
-            model.save();
         },
     });
 });
