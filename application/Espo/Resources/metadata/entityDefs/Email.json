@@ -509,7 +509,8 @@
             "type": "linkMultiple",
             "layoutListDisabled": true,
             "readOnly": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "view": "views/fields/assigned-users"
         },
         "inboundEmails": {
             "type": "linkMultiple",
