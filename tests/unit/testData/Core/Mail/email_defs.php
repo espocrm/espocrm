@@ -128,17 +128,17 @@ return [
         ],
         'nameHash' =>
         [
-        'type' => 'text',
+        'type' => 'jsonObject',
         'notStorable' => true,
         ],
         'typeHash' =>
         [
-        'type' => 'text',
+        'type' => 'jsonObject',
         'notStorable' => true,
         ],
         'idHash' =>
         [
-        'type' => 'text',
+        'type' => 'jsonObject',
         'notStorable' => true,
         ],
         'messageId' =>
@@ -406,47 +406,47 @@ return [
         ],
         'usersIds' =>
         [
-        'type' => 'varchar',
+        'type' => 'jsonArray',
         'notStorable' => true,
         ],
         'usersNames' =>
         [
-        'type' => 'varchar',
+        'type' => 'jsonObject',
         'notStorable' => true,
         ],
         'usersColumns' =>
         [
-        'type' => 'varchar',
+        'type' => 'jsonObject',
         'notStorable' => true,
         ],
         'assignedUsersIds' =>
         [
-        'type' => 'varchar',
+        'type' => 'jsonArray',
         'notStorable' => true,
         ],
         'assignedUsersNames' =>
         [
-        'type' => 'varchar',
+        'type' => 'jsonObject',
         'notStorable' => true,
         ],
         'inboundEmailsIds' =>
         [
-        'type' => 'varchar',
+        'type' => 'jsonArray',
         'notStorable' => true,
         ],
         'inboundEmailsNames' =>
         [
-        'type' => 'varchar',
+        'type' => 'jsonObject',
         'notStorable' => true,
         ],
         'emailAccountsIds' =>
         [
-        'type' => 'varchar',
+        'type' => 'jsonArray',
         'notStorable' => true,
         ],
         'emailAccountsNames' =>
         [
-        'type' => 'varchar',
+        'type' => 'jsonObject',
         'notStorable' => true,
         ],
         'accountId' =>
