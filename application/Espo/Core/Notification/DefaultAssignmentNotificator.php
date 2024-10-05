@@ -41,6 +41,11 @@ use Espo\Core\Notification\AssignmentNotificator\Params;
  */
 class DefaultAssignmentNotificator implements AssignmentNotificator
 {
+    public const OPTION_FORCE_ASSIGNED_USER = 'forceAssignedUser';
+
+    private const FIELD_ASSIGNED_USERS = 'assignedUsers';
+    private const ATTR_ASSIGNED_USER_ID = 'assignedUserId';
+
     public function __construct(
         protected User $user,
         protected EntityManager $entityManager,
@@ -53,13 +58,16 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
             return;
         }
 
-        if ($entity->hasLinkMultipleField('assignedUsers')) {
-            $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
-            /** @var string[] $fetchedAssignedUserIdList */
-            $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds') ?? [];
+        if (
+            $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS) &&
+            !$params->getOption(self::OPTION_FORCE_ASSIGNED_USER)
+        ) {
+            $userIds = $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS);
+            /** @var string[] $fetchedIds */
+            $fetchedIds = $entity->getFetched(self:: FIELD_ASSIGNED_USERS . 'Ids') ?? [];
 
-            foreach ($userIdList as $userId) {
-                if (in_array($userId, $fetchedAssignedUserIdList)) {
+            foreach ($userIds as $userId) {
+                if (in_array($userId, $fetchedIds)) {
                     continue;
                 }
 
@@ -69,15 +77,15 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
             return;
         }
 
-        if (!$entity->get('assignedUserId')) {
+        if (!$entity->get(self::ATTR_ASSIGNED_USER_ID)) {
             return;
         }
 
-        if (!$entity->isAttributeChanged('assignedUserId')) {
+        if (!$entity->isAttributeChanged(self::ATTR_ASSIGNED_USER_ID)) {
             return;
         }
 
-        $assignedUserId = $entity->get('assignedUserId');
+        $assignedUserId = $entity->get(self::ATTR_ASSIGNED_USER_ID);
 
         $this->processForUser($entity, $assignedUserId);
     }

@@ -30,6 +30,7 @@
 namespace Espo\Classes\AssignmentNotificators;
 
 use Espo\Core\Field\DateTime;
+use Espo\Core\Notification\DefaultAssignmentNotificator;
 use Espo\Entities\EmailAddress;
 use Espo\Entities\EmailFolder;
 use Espo\Modules\Crm\Entities\Account;
@@ -56,25 +57,14 @@ class Email implements AssignmentNotificator
 {
     private const DAYS_THRESHOLD = 2;
 
-    private User $user;
-    private EntityManager $entityManager;
-    private UserEnabledChecker $userChecker;
-    private AclManager $aclManager;
-    private StreamService $streamService;
-
     public function __construct(
-        User $user,
-        EntityManager $entityManager,
-        UserEnabledChecker $userChecker,
-        AclManager $aclManager,
-        StreamService $streamService
-    ) {
-        $this->user = $user;
-        $this->entityManager = $entityManager;
-        $this->userChecker = $userChecker;
-        $this->aclManager = $aclManager;
-        $this->streamService = $streamService;
-    }
+        private User $user,
+        private EntityManager $entityManager,
+        private UserEnabledChecker $userChecker,
+        private AclManager $aclManager,
+        private StreamService $streamService,
+        private DefaultAssignmentNotificator $defaultAssignmentNotificator,
+    ) {}
 
     /**
      * @param EmailEntity $entity
@@ -92,6 +82,14 @@ class Email implements AssignmentNotificator
             )
         ) {
             return;
+        }
+
+        if ($entity->getStatus() !== EmailEntity::STATUS_BEING_IMPORTED) {
+            // @todo Find out whether it may happen
+            $this->defaultAssignmentNotificator->process(
+                $entity,
+                $params->withOption(DefaultAssignmentNotificator::OPTION_FORCE_ASSIGNED_USER, true)
+            );
         }
 
         if ($params->getOption('isJustSent')) {
