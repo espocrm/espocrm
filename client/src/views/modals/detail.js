@@ -105,6 +105,7 @@ class DetailModalView extends ModalView {
      * @property {boolean} [fullFormDisabled] Disable full-form.
      * @property {boolean} [quickEditDisabled] Disable quick edit.
      * @property {string} [rootUrl] A root URL.
+     * @property {string} [fullFormUrl] A full-form URL. As of v8.5.
      */
 
     /**
@@ -357,7 +358,7 @@ class DetailModalView extends ModalView {
         }
 
         if (!this.fullFormDisabled) {
-            const url = '#' + scope + '/view/' + this.id;
+            const url = this.options.fullFormUrl || `#${scope}/view/${this.id}`;
 
             this.headerHtml =
                 $('<a>')

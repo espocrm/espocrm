@@ -129,6 +129,7 @@ class EditModalView extends ModalView {
      * @property {string} [rootUrl] A root URL.
      * @property {string} [returnUrl] A return URL.
      * @property {Record} [returnDispatchParams] Return dispatch params.
+     * @property {string} [fullFormUrl] A full-form URL. As of v8.5.
      */
 
     /**
@@ -383,7 +384,7 @@ class EditModalView extends ModalView {
         let options;
 
         if (!this.id) {
-            url = '#' + this.scope + '/create';
+            url = this.options.fullFormUrl || `#${this.scope}/create`;
 
             attributes = this.getRecordView().fetch();
             model = this.getRecordView().model;
@@ -407,7 +408,7 @@ class EditModalView extends ModalView {
             }, 10);
         }
         else {
-            url = '#' + this.scope + '/edit/' + this.id;
+            url = this.options.fullFormUrl || `#${this.scope}/edit/${this.id}`;
 
             attributes = this.getRecordView().fetch();
             model = this.getRecordView().model;
