@@ -305,7 +305,6 @@ class RecordController extends Controller {
      *     relate?: model:model~setRelateItem | model:model~setRelateItem[],
      *     returnUrl?: string,
      *     returnDispatchParams?: Record,
-     *     options?: Record,
      *     attributes?: Record,
      * } | Record} [options]
      */
