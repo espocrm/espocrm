@@ -501,6 +501,12 @@ class BaseEntity implements Entity
         switch ($attributeType) {
             case self::VARCHAR:
             case self::TEXT:
+                if (is_object($value)) {
+                    // Prevents an error.
+                    // @todo Remove in v10.0.
+                    return 'Object';
+                }
+
                 return strval($value);
 
             case self::BOOL:
