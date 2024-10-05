@@ -370,8 +370,8 @@ class EmailDetailView extends DetailView {
 
         const subject = this.model.get('name');
 
-        attributes.description = '[' + this.translate('Email', 'scopeNames') + ': ' + subject +']' +
-            '(#Email/view/' + this.model.id + ')\n';
+        attributes.description =
+            `[${this.translate('Email', 'scopeNames')}: ${subject}](#Email/view/${this.model.id})\n`;
 
         const viewName = this.getMetadata().get('clientDefs.Task.modalViews.edit') || 'views/modals/edit';
 
@@ -380,6 +380,7 @@ class EmailDetailView extends DetailView {
         this.createView('quickCreate', viewName, {
             scope: 'Task',
             attributes: attributes,
+            fullFormUrl: `#Task/create?emailId=${attributes.emailId}`,
         }, view => {
             const recordView = view.getRecordView();
 
