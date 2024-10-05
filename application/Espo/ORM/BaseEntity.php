@@ -507,6 +507,12 @@ class BaseEntity implements Entity
                     return 'Object';
                 }
 
+                if (is_array($value)) {
+                    // Prevents an error.
+                    // @todo Remove in v10.0.
+                    return 'Array';
+                }
+
                 return strval($value);
 
             case self::BOOL:
