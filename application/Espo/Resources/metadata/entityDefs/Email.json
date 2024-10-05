@@ -257,7 +257,7 @@
             ]
         },
         "nameHash": {
-            "type": "text",
+            "type": "jsonObject",
             "notStorable": true,
             "orderDisabled": true,
             "readOnly": true,
@@ -265,14 +265,14 @@
             "customizationDisabled": true
         },
         "typeHash": {
-            "type": "text",
+            "type": "jsonObject",
             "notStorable": true,
             "readOnly": true,
             "utility": true,
             "customizationDisabled": true
         },
         "idHash": {
-            "type": "text",
+            "type": "jsonObject",
             "notStorable": true,
             "orderDisabled": true,
             "readOnly": true,
