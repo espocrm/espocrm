@@ -32,6 +32,7 @@ namespace Espo\Core\Upgrades\Actions;
 use Espo\Core\DataManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\System;
 use Espo\Core\Utils\Json;
@@ -192,7 +193,9 @@ abstract class Base
             throw new Error('Another installation process is currently running.');
         }
 
-        $this->processId = Util::generateId();
+        $recordIdGenerator = $this->getInjectableFactory()->createResolved(RecordIdGenerator::class);
+
+        $this->processId = $recordIdGenerator->generate();
 
         return $this->processId;
     }
