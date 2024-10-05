@@ -29,6 +29,7 @@
 
 namespace tests\unit\Espo\Core\Upgrades\Actions;
 
+use Espo\Core\Utils\Id\RecordIdGenerator;
 use PHPUnit\Framework\TestCase;
 use tests\unit\ReflectionHelper;
 use Espo\Core\Utils\Util;
@@ -78,6 +79,19 @@ class BaseTest extends TestCase
             [InjectableFactory::class, $this->injectableFactory],
             [Log::class, $this->log],
         ];
+
+        $idGenerator = $this->createMock(RecordIdGenerator::class);
+        $idGenerator
+            ->expects($this->any())
+            ->method('generate')
+            ->willReturn(Util::generateId());
+
+        $this->injectableFactory
+            ->expects($this->any())
+            ->method('createResolved')
+            ->willReturnMap([
+                [RecordIdGenerator::class, null, $idGenerator]
+            ]);
 
         $this->injectableFactory
             ->expects($this->any())
