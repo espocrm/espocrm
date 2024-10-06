@@ -39,7 +39,14 @@ class EmailSubjectFieldView extends VarcharFieldView {
         data.isImportant = this.model.has('isImportant') && this.model.get('isImportant');
         data.hasAttachment = this.model.has('hasAttachment') && this.model.get('hasAttachment');
         data.isReplied = this.model.has('isReplied') && this.model.get('isReplied');
-        data.inTrash = this.model.has('inTrash') && this.model.get('inTrash');
+
+        data.inTrash = this.model.attributes.groupFolderId ?
+            this.model.attributes.groupStatusFolder === 'Trash' :
+            this.model.attributes.inTrash;
+
+        data.inArchive = this.model.attributes.groupFolderId ?
+            this.model.attributes.groupStatusFolder === 'Archive' :
+            this.model.attributes.inArchive;
 
         if (!data.isRead && !this.model.has('isRead')) {
             data.isRead = true;
@@ -63,7 +70,15 @@ class EmailSubjectFieldView extends VarcharFieldView {
     }
 
     getAttributeList() {
-        return ['name', 'subject', 'isRead', 'isImportant', 'hasAttachment', 'inTrash'];
+        return [
+            'name',
+            'subject',
+            'isRead',
+            'isImportant',
+            'hasAttachment',
+            'inTrash',
+            'groupStatusFolder',
+        ];
     }
 
     setup() {
@@ -75,11 +90,9 @@ class EmailSubjectFieldView extends VarcharFieldView {
             this.showAttachments();
         }
 
-        this.listenTo(this.model, 'change', () => {
+        this.listenTo(this.model, 'change:isRead change:isImportant change:groupStatusFolder', () => {
             if (this.mode === this.MODE_LIST || this.mode === this.MODE_LIST_LINK) {
-                if (this.model.hasChanged('isRead') || this.model.hasChanged('isImportant')) {
-                    this.reRender();
-                }
+                this.reRender();
             }
         });
     }

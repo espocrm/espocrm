@@ -127,7 +127,7 @@ class EmailDetailRecordView extends DetailRecordView {
             });
         }
 
-        if (this.model.get('isUsers')) {
+        if (this.model.attributes.isUsers) {
             this.addDropdownItem({
                 label: 'Mark as Important',
                 name: 'markAsImportant',
@@ -145,14 +145,14 @@ class EmailDetailRecordView extends DetailRecordView {
             this.addDropdownItem({
                 label: 'Move to Trash',
                 name: 'moveToTrash',
-                hidden: this.model.get('inTrash'),
+                hidden: this.isInTrash(),
                 groupIndex: 2,
             });
 
             this.addDropdownItem({
                 label: 'Retrieve from Trash',
                 name: 'retrieveFromTrash',
-                hidden: !this.model.get('inTrash'),
+                hidden: !this.isInTrash(),
                 groupIndex: 2,
             });
 
@@ -160,10 +160,45 @@ class EmailDetailRecordView extends DetailRecordView {
                 labelTranslation: 'Email.actions.moveToArchive',
                 name: 'moveToArchive',
                 groupIndex: 2,
-                hidden: this.model.get('inArchive'),
+                hidden: this.isInArchive(),
                 onClick: () => this.actionMoveToArchive(),
             });
 
+            this.addDropdownItem({
+                label: 'Move to Folder',
+                name: 'moveToFolder',
+                groupIndex: 2,
+            });
+        } else if (this.model.attributes.groupFolderId) {
+            this.addDropdownItem({
+                label: 'Move to Trash',
+                name: 'moveToTrash',
+                hidden: this.isInTrash(),
+                groupIndex: 2,
+            });
+
+            this.addDropdownItem({
+                label: 'Retrieve from Trash',
+                name: 'retrieveFromTrash',
+                hidden: !this.isInTrash(),
+                groupIndex: 2,
+            });
+
+            this.addDropdownItem({
+                labelTranslation: 'Email.actions.moveToArchive',
+                name: 'moveToArchive',
+                groupIndex: 2,
+                hidden: this.isInArchive() || this.isInTrash(),
+                onClick: () => this.actionMoveToArchive(),
+            });
+
+            this.addDropdownItem({
+                label: 'Move to Folder',
+                name: 'moveToFolder',
+                groupIndex: 2,
+                hidden: this.isInTrash(),
+            });
+        } else {
             this.addDropdownItem({
                 label: 'Move to Folder',
                 name: 'moveToFolder',
@@ -194,8 +229,8 @@ class EmailDetailRecordView extends DetailRecordView {
             }
         });
 
-        this.listenTo(this.model, 'change:inTrash', () => {
-            if (this.model.get('inTrash')) {
+        this.listenTo(this.model, 'change:inTrash change:groupStatusFolder', () => {
+            if (this.isInTrash()) {
                 this.hideActionItem('moveToTrash');
                 this.showActionItem('retrieveFromTrash');
             } else {
@@ -204,8 +239,8 @@ class EmailDetailRecordView extends DetailRecordView {
             }
         });
 
-        this.listenTo(this.model, 'change:inArchive', () => {
-            if (this.model.get('inArchive')) {
+        this.listenTo(this.model, 'change:inArchive change:groupStatusFolder', () => {
+            if (this.isInArchive()) {
                 this.hideActionItem('moveToArchive');
             } else {
                 this.showActionItem('moveToArchive');
@@ -297,7 +332,11 @@ class EmailDetailRecordView extends DetailRecordView {
             Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
         });
 
-        this.model.set('inTrash', true);
+        if (this.model.attributes.groupFolderId) {
+            this.model.set('groupStatusFolder', 'Trash');
+        } else {
+            this.model.set('inTrash', true);
+        }
 
         if (this.model.collection) {
             this.model.collection.trigger('moving-to-trash', this.model.id, true);
@@ -312,6 +351,10 @@ class EmailDetailRecordView extends DetailRecordView {
 
         this.model.set('inTrash', false);
 
+        if (this.model.attributes.groupFolderId) {
+            this.model.set('groupStatusFolder', null);
+        }
+
         if (this.model.collection) {
             this.model.collection.trigger('retrieving-from-trash', this.model.id, true);
         }
@@ -320,21 +363,38 @@ class EmailDetailRecordView extends DetailRecordView {
     actionMoveToFolder() {
         this.createView('dialog', 'views/email-folder/modals/select-folder', {
             headerText: this.translate('Move to Folder', 'labels', 'Email'),
-        }, (view) => {
+            isGroup: !!this.model.attributes.groupFolderId || !this.model.attributes.isUsers,
+            noArchive: !this.model.attributes.groupFolderId && !this.model.attributes.isUsers,
+        }, view => {
             view.render();
 
-            this.listenToOnce(view, 'select', folderId => {
+            this.listenToOnce(view, 'select', /** string|null */folderId => {
                 this.clearView('dialog');
 
                 Espo.Ajax.postRequest(`Email/inbox/folders/${folderId}`, {id: this.model.id})
                     .then(() => {
-                        this.model.set('inArchive', folderId === 'archive');
+                        if (this.model.attributes.groupFolderId) {
+                            if (folderId === 'archive') {
+                                this.model.set('groupStatusFolder', 'Archive');
+                            } else {
+                                this.model.set('groupStatusFolder', null);
+                            }
+                        } else {
+                            this.model.set('inArchive', folderId === 'archive');
+                        }
 
                         if (folderId === 'inbox' || folderId === 'archive') {
                             folderId = null;
                         }
 
+                        if (!folderId) {
+                            this.model.set('groupFolderId', null);
+                            this.model.set('groupFolderName', null);
+                        }
+
                         this.model.set('folderId', folderId);
+
+                        this.model.fetch();
 
                         Espo.Ui.success(this.translate('Done'));
                     });
@@ -347,7 +407,9 @@ class EmailDetailRecordView extends DetailRecordView {
 
         Espo.Ajax.postRequest(`Email/inbox/folders/archive`, {id: this.model.id})
             .then(() => {
-                this.model.set('inArchive', true);
+                this.model.attributes.groupFolderId ?
+                    this.model.set('groupStatusFolder', 'Archive') :
+                    this.model.set('inArchive', true);
 
                 Espo.Ui.info(this.translate('Moved to Archive', 'labels', 'Email'));
 
@@ -618,6 +680,26 @@ class EmailDetailRecordView extends DetailRecordView {
         }
 
         this.actionSaveAndContinueEditing();
+    }
+
+    /**
+     * @private
+     * @return {boolean}
+     */
+    isInTrash() {
+        return this.model.attributes.groupFolderId ?
+            this.model.attributes.groupStatusFolder === 'Trash' :
+            this.model.attributes.inTrash;
+    }
+
+    /**
+     * @private
+     * @return {boolean}
+     */
+    isInArchive() {
+        return this.model.attributes.groupFolderId ?
+            this.model.attributes.groupStatusFolder === 'Archive' :
+            this.model.attributes.inArchive;
     }
 }
 

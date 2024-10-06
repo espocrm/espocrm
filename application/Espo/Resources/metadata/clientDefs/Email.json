@@ -150,13 +150,28 @@
                 "visible": {
                     "conditionGroup": [
                         {
-                            "type": "isTrue",
-                            "attribute": "isUsers"
-                        },
-                        {
-                            "type": "isFalse",
-                            "attribute": "isUsersSent"
+                            "type": "or",
+                            "value": [
+                                {
+                                    "type": "and",
+                                    "value": [
+                                        {
+                                            "type": "isTrue",
+                                            "attribute": "isUsers"
+                                        },
+                                        {
+                                            "type": "isFalse",
+                                            "attribute": "isUsersSent"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "isNotEmpty",
+                                    "attribute": "groupFolderId"
+                                }
+                            ]
                         }
+
                     ]
                 }
             }

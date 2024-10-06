@@ -33,12 +33,8 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
     setup() {
         super.setup();
 
-        this.listenTo(this.model, 'change', (model) => {
-            if (model.hasChanged('isImportant') || model.hasChanged('inTrash')) {
-                setTimeout(() => {
-                    this.reRender();
-                }, 10);
-            }
+        this.listenTo(this.model, 'change:isImportant change:inTrash change:groupStatusFolder', () => {
+            setTimeout(() => this.reRender(), 10);
         });
     }
 
@@ -55,7 +51,7 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
 
         if (
             this.model.get('createdById') === this.getUser().id && this.model.get('status') === 'Draft' &&
-            !this.model.get('inTrash')
+            !this.model.attributes.inTrash
         ) {
             list.push({
                 action: 'send',
@@ -103,7 +99,7 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
             }
         }
 
-        if (this.model.get('isUsers') && !this.model.get('isRead')) {
+        if (this.model.attributes.isUsers && !this.model.attributes.isRead) {
             list.push({
                 action: 'markAsRead',
                 label: 'Mark Read',
@@ -114,8 +110,19 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
             });
         }
 
-        if (this.model.get('isUsers') && this.model.get('status') !== 'Draft') {
-            if (!this.model.get('inTrash')) {
+        if (
+            (this.model.attributes.isUsers && this.model.attributes.status !== 'Draft') ||
+            this.model.attributes.groupFolderId
+        ) {
+            const inTrash = this.model.attributes.groupFolderId ?
+                this.model.attributes.groupStatusFolder === 'Trash' :
+                this.model.attributes.inTrash;
+
+            const inArchive = this.model.attributes.groupFolderId ?
+                this.model.attributes.groupStatusFolder === 'Archive' :
+                this.model.attributes.inArchive;
+
+            if (!inTrash) {
                 list.push({
                     action: 'moveToTrash',
                     label: 'Move to Trash',
@@ -135,7 +142,7 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
                 });
             }
 
-            if (!this.model.attributes.inArchive) {
+            if (!inArchive) {
                 list.push({
                     action: 'moveToArchive',
                     text: this.getLanguage().translatePath('Email.actions.moveToArchive'),
@@ -145,9 +152,20 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
                     groupIndex: 2,
                 });
             }
-        }
 
-        if (this.model.get('isUsers') && this.model.get('status') !== 'Draft') {
+            list.push({
+                action: 'moveToFolder',
+                label: 'Move to Folder',
+                data: {
+                    id: this.model.id
+                },
+                groupIndex: 2,
+            });
+        } else if (
+            !this.model.attributes.isUsers &&
+            !this.model.attributes.groupFolderId &&
+            this.model.attributes.status === 'Archived'
+        ) {
             list.push({
                 action: 'moveToFolder',
                 label: 'Move to Folder',

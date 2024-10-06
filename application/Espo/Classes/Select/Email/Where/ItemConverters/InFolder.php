@@ -141,8 +141,16 @@ class InFolder implements ItemConverter
         $this->joinEmailUser($queryBuilder);
 
         return WhereClause::fromRaw([
-            Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
-            Email::ALIAS_INBOX . '.inTrash' => true,
+            'OR' => [
+                [
+                    Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
+                    Email::ALIAS_INBOX . '.inTrash' => true,
+                ],
+                [
+                    'groupFolderId!=' => null,
+                    'groupStatusFolder' => Email::GROUP_STATUS_FOLDER_TRASH,
+                ],
+            ]
         ]);
     }
 
@@ -151,8 +159,16 @@ class InFolder implements ItemConverter
         $this->joinEmailUser($queryBuilder);
 
         return WhereClause::fromRaw([
-            Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
-            Email::ALIAS_INBOX . '.inArchive' => true,
+            'OR' => [
+                [
+                    Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
+                    Email::ALIAS_INBOX . '.inArchive' => true,
+                ],
+                [
+                    'groupFolderId!=' => null,
+                    'groupStatusFolder' => Email::GROUP_STATUS_FOLDER_ARCHIVE,
+                ],
+            ]
         ]);
     }
 
@@ -177,11 +193,7 @@ class InFolder implements ItemConverter
 
             return WhereClause::fromRaw([
                 'groupFolderId' => $groupFolderId,
-                'OR' => [
-                    Email::ALIAS_INBOX . '.id' => null,
-                    Email::ALIAS_INBOX . '.inTrash' => false,
-                    Email::ALIAS_INBOX . '.inArchive' => false,
-                ]
+                'groupStatusFolder' => null,
             ]);
         }
 

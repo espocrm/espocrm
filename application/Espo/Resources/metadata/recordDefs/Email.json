@@ -35,7 +35,8 @@
         "sentById",
         "replyToString",
         "hasAttachment",
-        "groupFolderId"
+        "groupFolderId",
+        "groupStatusFolder"
     ],
     "beforeReadHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\Email\\MarkAsRead"

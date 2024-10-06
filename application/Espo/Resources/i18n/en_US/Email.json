@@ -59,7 +59,8 @@
         "createdEvent": "Created Event",
         "event": "Event",
         "icsEventDateStart": "ICS Event Date Start",
-        "groupFolder": "Group Folder"
+        "groupFolder": "Group Folder",
+        "groupStatusFolder": "Group Status Folder"
     },
     "links": {
         "replied": "Replied",
@@ -85,6 +86,10 @@
             "Archived": "Imported",
             "Received": "Received",
             "Failed": "Failed"
+        },
+        "groupStatusFolder": {
+            "Archive": "Archive",
+            "Trash": "Trash"
         }
     },
     "labels": {
@@ -126,7 +131,8 @@
         "Retrieved from Trash": "Retrieved from Trash"
     },
     "strings": {
-        "sendingFailed": "Email sending failed"
+        "sendingFailed": "Email sending failed",
+        "group": "Group"
     },
     "messages": {
         "alreadyImported": "The [email]({link}) already exists in the system.",

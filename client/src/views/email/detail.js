@@ -112,16 +112,8 @@ class EmailDetailView extends DetailView {
             }
         }
 
-        this.listenTo(this.model, 'change', () => {
+        this.listenTo(this.model, 'change:isImportant change:inTrash change:inArchive change:groupStatusFolder', () => {
             if (!this.isRendered()) {
-                return;
-            }
-
-            if (
-                !this.model.hasChanged('isImportant') &&
-                !this.model.hasChanged('inTrash') &&
-                !this.model.hasChanged('inArchive')
-            ) {
                 return;
             }
 
@@ -559,9 +551,15 @@ class EmailDetailView extends DetailView {
     getHeader() {
         const name = this.model.get('name');
 
-        const isImportant = this.model.get('isImportant');
-        const inTrash = this.model.get('inTrash');
-        const inArchive = this.model.get('inArchive');
+        const isImportant = this.model.attributes.isImportant;
+
+        const inTrash = this.model.attributes.groupFolderId ?
+            this.model.attributes.groupStatusFolder === 'Trash' :
+            this.model.attributes.inTrash;
+
+        const inArchive = this.model.attributes.groupFolderId ?
+            this.model.attributes.groupStatusFolder === 'Archive' :
+            this.model.attributes.inArchive;
 
         const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
 

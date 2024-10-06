@@ -45,6 +45,7 @@ class EmailFolderStringFieldView extends BaseFieldView {
 
     // noinspection JSCheckFunctionSignatures
     data() {
+        console.log(this.getFolderString());
         if (!this.model.has('folderId')) {
             return {valueIsSet: false};
         }
@@ -57,6 +58,7 @@ class EmailFolderStringFieldView extends BaseFieldView {
 
     getAttributeList() {
         return [
+            'isUsers',
             'folderId',
             'folderName',
             'groupFolderId',
@@ -64,6 +66,7 @@ class EmailFolderStringFieldView extends BaseFieldView {
             'inArchive',
             'inTrash',
             'isUsersSent',
+            'groupStatusFolder',
         ];
     }
 
@@ -83,12 +86,20 @@ class EmailFolderStringFieldView extends BaseFieldView {
             return this.translate('archive', 'presetFilters', 'Email');
         }
 
-        if (this.model.get('folderName')) {
-            return this.model.get('folderName');
+        if (this.model.attributes.folderName && this.model.attributes.folderId) {
+            return this.model.attributes.folderName;
         }
 
         if (this.model.get('groupFolderName')) {
-            return this.model.get('groupFolderName');
+            let string = this.translate('group', 'strings', 'Email') + ' · ' + this.model.get('groupFolderName');
+
+            if (this.model.attributes.groupStatusFolder === 'Archive') {
+                string += ' · ' + this.translate('archive', 'presetFilters', 'Email');
+            } else if (this.model.attributes.groupStatusFolder === 'Trash') {
+                string += ' · ' + this.translate('trash', 'presetFilters', 'Email');
+            }
+
+            return string;
         }
 
         if (this.model.get('isUsers')) {

@@ -585,6 +585,18 @@
         "groupFolder": {
             "type": "link",
             "massUpdateDisabled": true
+        },
+        "groupStatusFolder": {
+            "type": "enum",
+            "options": [
+                "",
+                "Archive",
+                "Trash"
+            ],
+            "maxLength": 7,
+            "readOnly": true,
+            "customizationDisabled": true,
+            "index": true
         }
     },
     "links": {

@@ -60,6 +60,9 @@ class Email extends Entity
     public const USERS_COLUMN_FOLDER_ID = 'folderId';
     public const USERS_COLUMN_IS_IMPORTANT = 'isImportant';
 
+    public const GROUP_STATUS_FOLDER_ARCHIVE = 'Archive';
+    public const GROUP_STATUS_FOLDER_TRASH = 'Trash';
+
     /** @noinspection PhpUnused */
     protected function _getSubject(): ?string
     {
@@ -723,6 +726,18 @@ class Email extends Entity
     public function setGroupFolderId(?string $groupFolderId): self
     {
         $this->set('groupFolderId', $groupFolderId);
+
+        return $this;
+    }
+
+    public function getGroupStatusFolder(): ?string
+    {
+        return $this->get('groupStatusFolder');
+    }
+
+    public function setGroupStatusFolder(?string $groupStatusFolder): self
+    {
+        $this->set('groupStatusFolder', $groupStatusFolder);
 
         return $this;
     }

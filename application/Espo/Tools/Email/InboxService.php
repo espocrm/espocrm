@@ -84,33 +84,20 @@ class InboxService
             $folderId = null;
         }
 
-        $email = $this->entityManager->getRDBRepositoryByClass(Email::class)->getById($id);
+        $email = $this->getEmail($id);
+        $user = $this->getUser($userId);
 
-        if (!$email) {
-            throw new NotFound();
-        }
+        $prevGroupFolderLink = $email->getGroupFolder();
 
-        $user = $userId === $this->user->getId() ?
-            $this->user :
-            $this->entityManager
-                ->getRDBRepositoryByClass(User::class)
-                ->getById($userId);
-
-        if (!$user) {
-            throw new NotFound("User not found.");
-        }
-
-        $previousFolderLink = $email->getGroupFolder();
-
-        if ($previousFolderLink) {
-            $this->checkCurrentGroupFolder($previousFolderLink->getId(), $user);
+        if ($prevGroupFolderLink) {
+            $this->checkCurrentGroupFolder($prevGroupFolderLink->getId(), $user);
         }
 
         if ($folderId && str_starts_with($folderId, 'group:')) {
             try {
                 $this->moveToGroupFolder($email, substr($folderId, 6), $user);
             } catch (Exception $e) {
-                $this->log->debug("Could not move email to group folder. " . $e->getMessage());
+                $this->log->debug("Could not move email to group folder. {message}", ['message' => $e->getMessage()]);
 
                 throw $e;
             }
@@ -124,12 +111,14 @@ class InboxService
             return;
         }
 
-        if ($previousFolderLink) {
-            $email->setGroupFolderId(null);
-
-            if (!$this->aclManager->checkEntityRead($user, $email)) {
-                throw new Forbidden("No read access to email to unset group folder.");
+        if ($prevGroupFolderLink) {
+            if (!$this->aclManager->checkEntityEdit($user, $email)) {
+                throw new Forbidden("Cannot unset group folder. No edit access to email.");
             }
+
+            $email
+                ->setGroupFolderId(null)
+                ->setGroupStatusFolder(null);
 
             $this->entityManager->saveEntity($email);
         }
@@ -159,25 +148,31 @@ class InboxService
      */
     private function moveToGroupFolder(Email $email, string $folderId, User $user): void
     {
-        $folder = $this->entityManager->getEntityById(GroupEmailFolder::ENTITY_TYPE, $folderId);
-
-        if (!$folder) {
-            throw new NotFound("Group folder not found.");
-        }
+        $folder = $this->getGroupFolder($folderId);
 
         if (!$this->aclManager->checkEntityRead($user, $folder)) {
-            throw new Forbidden("No access to folder.");
+            throw new Forbidden("Cannot move to group folder. No access to folder.");
         }
 
         if (!$this->aclManager->checkEntityRead($user, $email)) {
-            throw new Forbidden("No read access to email to unset group folder.");
+            throw new Forbidden("Cannot move to group folder. No read access to email.");
         }
 
         if (!$this->aclManager->checkField($user, Email::ENTITY_TYPE, 'groupFolder', Table::ACTION_EDIT)) {
-            throw new Forbidden("No access to `groupFolder` field.");
+            throw new Forbidden("Cannot move to group folder. No edit access to `groupFolder` field.");
         }
 
-        $email->setGroupFolderId($folderId);
+        if (
+            !$email->getGroupFolder() &&
+            !$this->aclManager->checkEntityEdit($user, $email)
+        ) {
+            throw new Forbidden("Cannot move to group folder from All folder. No edit access to email.");
+        }
+
+        $email
+            ->setGroupFolderId($folderId)
+            ->setGroupStatusFolder(null);
+
         $this->entityManager->saveEntity($email);
 
         $this->retrieveFromArchive($email, $user);
@@ -189,7 +184,9 @@ class InboxService
     public function moveToTrashIdList(array $idList, ?string $userId = null): bool
     {
         foreach ($idList as $id) {
-            $this->moveToTrash($id, $userId);
+            try {
+                $this->moveToTrash($id, $userId);
+            } catch (Exception) {}
         }
 
         return true;
@@ -201,13 +198,40 @@ class InboxService
     public function retrieveFromTrashIdList(array $idList, ?string $userId = null): void
     {
         foreach ($idList as $id) {
-            $this->retrieveFromTrash($id, $userId);
+            try {
+                $this->retrieveFromTrash($id, $userId);
+            } catch (Exception) {}
         }
     }
 
+    /**
+     * @throws NotFound
+     * @throws Forbidden
+     */
     public function moveToTrash(string $id, ?string $userId = null): void
     {
         $userId = $userId ?? $this->user->getId();
+
+        $email = $this->getEmail($id);
+        $user = $this->getUser($userId);
+
+        if ($email->getGroupFolder()) {
+            $folder = $this->getGroupFolder($email->getGroupFolder()->getId());
+
+            if (!$this->aclManager->checkEntityRead($user, $email)) {
+                throw new Forbidden("Cannot move email from group folder to trash. No access to email.");
+            }
+
+            if (!$this->aclManager->checkEntityRead($user, $folder)) {
+                throw new Forbidden("Cannot move email from group folder to trash. No access to group folder.");
+            }
+
+            $email->setGroupStatusFolder(Email::GROUP_STATUS_FOLDER_TRASH);
+
+            $this->entityManager->saveEntity($email);
+
+            return;
+        }
 
         $update = $this->entityManager
             ->getQueryBuilder()
@@ -226,9 +250,34 @@ class InboxService
         $this->markNotificationAsRead($id, $userId);
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function retrieveFromTrash(string $id, ?string $userId = null): void
     {
         $userId = $userId ?? $this->user->getId();
+
+        $email = $this->getEmail($id);
+        $user = $this->getUser($userId);
+
+        if ($email->getGroupFolder()) {
+            $folder = $this->getGroupFolder($email->getGroupFolder()->getId());
+
+            if (!$this->aclManager->checkEntityRead($user, $email)) {
+                throw new Forbidden("Cannot retrieve group folder email from trash. No access to email.");
+            }
+
+            if (!$this->aclManager->checkEntityRead($user, $folder)) {
+                throw new Forbidden("Cannot retrieve group folder email from trash. No access to group folder.");
+            }
+
+            $email->setGroupStatusFolder(null);
+
+            $this->entityManager->saveEntity($email);
+
+            return;
+        }
 
         $update = $this->entityManager
             ->getQueryBuilder()
@@ -519,6 +568,14 @@ class InboxService
             throw new Forbidden("No 'read' access");
         }
 
+        if ($email->getGroupFolder()) {
+            $email->setGroupStatusFolder(Email::GROUP_STATUS_FOLDER_ARCHIVE);
+
+            $this->entityManager->saveEntity($email);
+
+            return;
+        }
+
         $update = $this->entityManager
             ->getQueryBuilder()
             ->update()
@@ -572,5 +629,49 @@ class InboxService
         if (!$this->aclManager->checkField($user, Email::ENTITY_TYPE, 'groupFolder', Table::ACTION_EDIT)) {
             throw new Forbidden("No access to `groupFolder` field.");
         }
+    }
+
+    /**
+     * @throws NotFound
+     */
+    private function getUser(string $userId): User
+    {
+        $user = $userId === $this->user->getId() ?
+            $this->user :
+            $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
+
+        if (!$user) {
+            throw new NotFound("User not found.");
+        }
+
+        return $user;
+    }
+
+    /**
+     * @throws NotFound
+     */
+    private function getEmail(string $id): Email
+    {
+        $email = $this->entityManager->getRDBRepositoryByClass(Email::class)->getById($id);
+
+        if (!$email) {
+            throw new NotFound();
+        }
+
+        return $email;
+    }
+
+    /**
+     * @throws NotFound
+     */
+    private function getGroupFolder(string $folderId): GroupEmailFolder
+    {
+        $folder = $this->entityManager->getRDBRepositoryByClass(GroupEmailFolder::class)->getById($folderId);
+
+        if (!$folder) {
+            throw new NotFound("Group folder not found.");
+        }
+
+        return $folder;
     }
 }

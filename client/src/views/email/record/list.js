@@ -74,7 +74,9 @@ class EmailListRecordView extends ListRecordView {
             const model = this.collection.get(id);
 
             if (model) {
-                model.set('inTrash', true);
+                model.attributes.groupFolderId ?
+                    model.set('groupFolderStatus', 'Trash') :
+                    model.set('inTrash', true);
             }
 
             if (this.rootData.selectedFolderId !== 'trash' && this.rootData.selectedFolderId !== 'all') {
@@ -92,7 +94,9 @@ class EmailListRecordView extends ListRecordView {
             const model = this.collection.get(id);
 
             if (model) {
-                model.set('inTrash', false);
+                model.attributes.groupFolderId ?
+                    model.set('groupFolderStatus', null) :
+                    model.set('inTrash', false);
             }
 
             if (this.rootData.selectedFolderId === 'trash') {
@@ -110,7 +114,9 @@ class EmailListRecordView extends ListRecordView {
             const model = this.collection.get(id);
 
             if (model) {
-                model.set('inArchive', true);
+                model.attributes.groupFolderId ?
+                    model.set('groupFolderStatus', 'Archive') :
+                    model.set('inArchive', true);
             }
 
             if (this.rootData.selectedFolderId !== 'archive') {
@@ -307,10 +313,22 @@ class EmailListRecordView extends ListRecordView {
             });
     }
 
+    /**
+     * @private
+     * @return {string|null|undefined}
+     */
+    getSelectedFolderId() {
+        return this.rootData.selectedFolderId;
+    }
+
     // noinspection JSUnusedGlobalSymbols
     massActionMoveToFolder() {
+        const selectedFolderId = this.getSelectedFolderId();
+
         this.createView('dialog', 'views/email-folder/modals/select-folder', {
             headerText: this.translate('Move to Folder', 'labels', 'Email'),
+            isGroup: selectedFolderId && (selectedFolderId.startsWith('group:') || selectedFolderId === 'all'),
+            noArchive: selectedFolderId === 'all',
         }, view => {
             view.render();
 
@@ -492,8 +510,16 @@ class EmailListRecordView extends ListRecordView {
             return;
         }
 
+        const model = this.collection.get(id);
+
+        if (!model) {
+            return;
+        }
+
         this.createView('dialog', 'views/email-folder/modals/select-folder', {
             headerText: this.translate('Move to Folder', 'labels', 'Email'),
+            isGroup: !!model.attributes.groupFolderId || !model.attributes.isUsers,
+            noArchive: !model.attributes.groupFolderId && !model.attributes.isUsers,
         }, view => {
             view.render();
 

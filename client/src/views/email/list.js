@@ -236,6 +236,17 @@ class EmailListView extends ListView {
             return true;
         }
 
+        if (this.selectedFolderId.indexOf('group:') === 0) {
+            if (
+                [this.FOLDER_ALL, this.FOLDER_ARCHIVE, this.FOLDER_TRASH].includes(folderId) ||
+                folderId.startsWith('group:')
+            ) {
+                return true;
+            }
+
+            return false;
+        }
+
         return true;
     }
 

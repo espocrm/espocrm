@@ -33,7 +33,6 @@ export default class extends ModalView {
     template = 'email-folder/modals/select-folder'
 
     cssName = 'select-folder'
-    fitHeight = true
     backdrop = true
 
     data() {
@@ -52,6 +51,8 @@ export default class extends ModalView {
         });
 
         this.headerText = this.options.headerText || '';
+        this.isGroup = this.options.isGroup || false;
+        this.noArchive = this.options.noArchive || false;
 
         if (this.headerText === '') {
             this.buttonList.push({
@@ -64,19 +65,25 @@ export default class extends ModalView {
 
         this.wait(
             Espo.Ajax.getRequest('EmailFolder/action/listAll')
-                .then(data => {
+                .then(/** {list: {id: string, name: string}[]} */data => {
                     Espo.Ui.notify(false);
+
+                    const builtInFolders = [
+                        'inbox',
+                        'important',
+                        'sent',
+                        'drafts',
+                        'trash',
+                        'archive',
+                    ];
 
                     this.folderDataList = data.list
                         .filter(item => {
-                            return [
-                                'inbox',
-                                'important',
-                                'sent',
-                                'drafts',
-                                'trash',
-                                'archive',
-                            ].indexOf(item.id) === -1;
+                            if (this.isGroup && !item.id.startsWith('group:')) {
+                                return false;
+                            }
+
+                            return !builtInFolders.includes(item.id);
                         })
                         .map(item => {
                             return {
@@ -88,13 +95,18 @@ export default class extends ModalView {
 
                     this.folderDataList.unshift({
                         id: 'inbox',
-                        name: this.translate('inbox', 'presetFilters', 'Email'),
+                        name: this.isGroup ?
+                            this.translate('all', 'presetFilters', 'Email') :
+                            this.translate('inbox', 'presetFilters', 'Email'),
                     });
 
-                    this.folderDataList.push({
-                        id: 'archive',
-                        name: this.translate('archive', 'presetFilters', 'Email'),
-                    });
+
+                    if (!this.noArchive) {
+                        this.folderDataList.push({
+                            id: 'archive',
+                            name: this.translate('archive', 'presetFilters', 'Email'),
+                        });
+                    }
                 })
         );
     }
