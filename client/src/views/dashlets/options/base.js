@@ -66,7 +66,7 @@ class BaseDashletOptionsModalView extends ModalView {
             e.stopPropagation();
             e.preventDefault();
 
-            let focusedFieldView = this.getRecordView().getFocusedFieldView();
+            const focusedFieldView = this.getRecordView().getFocusedFieldView();
 
             if (focusedFieldView) {
                 this.model.set(focusedFieldView.fetch(), {skipReRender: true});
@@ -101,7 +101,7 @@ class BaseDashletOptionsModalView extends ModalView {
         let i = 0;
         let row = [];
 
-        for (let field in this.fields) {
+        for (const field in this.fields) {
             if (!(i % 2)) {
                 row = [];
 
@@ -128,8 +128,7 @@ class BaseDashletOptionsModalView extends ModalView {
     setup() {
         this.id = 'dashlet-options';
 
-        /** @var {module:model} */
-        let model = this.model = new Model();
+        const model = this.model = new Model();
 
         model.name = 'DashletOptions';
         model.setDefs({fields: this.fields});
@@ -186,7 +185,7 @@ class BaseDashletOptionsModalView extends ModalView {
      * @return {Object|null}
      */
     fetchAttributes() {
-        let attributes = this.getRecordView().fetch();
+        const attributes = this.getRecordView().fetch();
 
         if (this.getRecordView().validate()) {
             return null;
@@ -196,7 +195,7 @@ class BaseDashletOptionsModalView extends ModalView {
     }
 
     actionSave() {
-        let attributes = this.fetchAttributes();
+        const attributes = this.fetchAttributes();
 
         if (attributes == null) {
             return;
@@ -239,4 +238,3 @@ class BaseDashletOptionsModalView extends ModalView {
 }
 
 export default BaseDashletOptionsModalView;
-
