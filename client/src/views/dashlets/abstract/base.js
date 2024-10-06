@@ -83,6 +83,7 @@ class BaseDashletView extends View {
      * @property {string} [iconHtml] An icon HTML.
      * @property {string} [url] A link URL.
      * @property {function()} [onClick] A click handler.
+     * @property {number} [groupIndex] A group index.
      */
 
     /**
@@ -102,16 +103,19 @@ class BaseDashletView extends View {
             name: 'refresh',
             label: 'Refresh',
             iconHtml: '<span class="fas fa-sync-alt"></span>',
+            groupIndex: 10000,
         },
         {
             name: 'options',
             label: 'Options',
             iconHtml: '<span class="fas fa-pencil-alt"></span>',
+            groupIndex: 10000,
         },
         {
             name: 'remove',
             label: 'Remove',
             iconHtml: '<span class="fas fa-times"></span>',
+            groupIndex: 10000,
         },
     ]
 
@@ -288,6 +292,44 @@ class BaseDashletView extends View {
             actionItems: [...this.buttonList, ...this.actionList],
             className: 'dashlet-action',
         });
+    }
+
+    /**
+     * @internal
+     * @return {Array<module:views/dashlets/abstract/base~action|false>}
+     */
+    getActionItemDataList() {
+        /** @type {Array<module:views/dashlets/abstract/base~action[]>} */
+        const groups = [];
+
+        this.actionList.forEach(item => {
+            // For bc.
+            if (item === false) {
+                return;
+            }
+
+            const index = (item.groupIndex === undefined ? 9999 : item.groupIndex) + 100;
+
+            if (groups[index] === undefined) {
+                groups[index] = [];
+            }
+
+            groups[index].push(item);
+        });
+
+        const itemList = [];
+
+        groups.forEach(list => {
+            list.forEach(it => itemList.push(it));
+
+            itemList.push(false);
+        });
+
+        if (itemList.at(itemList.length - 1) === false) {
+            itemList.pop();
+        }
+
+        return itemList;
     }
 }
 

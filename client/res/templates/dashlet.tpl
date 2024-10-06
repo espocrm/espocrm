@@ -20,26 +20,30 @@
               data-toggle="dropdown"
             ><span class="fas fa-ellipsis-h"></span></button>
             <ul class="dropdown-menu dropdown-menu-with-icons" role="menu">
-              {{#each actionList}}
-                <li>
-                    <a
-                      data-action="{{name}}"
-                      data-name="{{name}}"
-                      class="action dashlet-action"
-                      {{#if url}}href="{{url}}"{{else}}role="button"{{/if}}
-                      tabindex="0"
-                      {{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}}
-                    >
-                        {{#if iconHtml}}{{{iconHtml}}}
-                        {{else}}
-                        <span class="empty-icon">&nbsp;</span>
-                        {{/if}}
-                        <span class="item-text">{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label}}{{/if}}{{/if}}</span>
-                    </a>
-                </li>
-              {{/each}}
-              </ul>
-          </div>
+            {{#each actionList}}
+                {{#if this}}
+                    <li>
+                        <a
+                          data-action="{{name}}"
+                          data-name="{{name}}"
+                          class="action dashlet-action"
+                          {{#if url}}href="{{url}}"{{else}}role="button"{{/if}}
+                          tabindex="0"
+                          {{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}}
+                        >
+                            {{#if iconHtml}}{{{iconHtml}}}
+                            {{else}}
+                            <span class="empty-icon">&nbsp;</span>
+                            {{/if}}
+                            <span class="item-text">{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label}}{{/if}}{{/if}}</span>
+                        </a>
+                    </li>
+                {{else}}
+                    <li class="divider"></li>
+                {{/if}}
+            {{/each}}
+            </ul>
+        </div>
         <h4 class="panel-title">
             <span
                 data-action="refresh"

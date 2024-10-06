@@ -68,7 +68,7 @@ class DashletView extends View {
             name: this.name,
             id: this.id,
             title: this.getTitle(),
-            actionList: bodyView ? bodyView.actionList : [],
+            actionList: bodyView ? bodyView.getActionItemDataList() : [],
             buttonList: bodyView ? bodyView.buttonList : [],
             noPadding: bodyView ? bodyView.noPadding : false,
         };
