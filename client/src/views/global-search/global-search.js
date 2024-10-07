@@ -27,6 +27,10 @@
  ************************************************************************/
 
 import View from 'view';
+import Autocomplete from 'ui/autocomplete';
+import TabsHelper from 'helpers/site/tabs';
+
+/** @module views/global-search/global-search */
 
 class GlobalSearchView extends View {
 
@@ -37,6 +41,48 @@ class GlobalSearchView extends View {
      * @type {HTMLElement}
      */
     containerElement
+
+    /**
+     * @private
+     * @type {HTMLInputElement}
+     */
+    inputElement
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    tabQuickSearch
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    hasGlobalSearch
+
+    /**
+     * @private
+     * @type {TabsHelper}
+     */
+    tabsHelper
+
+    /**
+     * @private
+     * @type {Autocomplete}
+     */
+    autocomplete
+
+    /**
+     * @private
+     * @type {module:views/global-search/global-search~tabData[]}
+     */
+    tabDataList
+
+    data() {
+        return {
+            hasSearchButton: this.hasGlobalSearch,
+        };
+    }
 
     setup() {
         this.addHandler('keydown', 'input.global-search-input', 'onKeydown');
@@ -54,10 +100,25 @@ class GlobalSearchView extends View {
 
         this.onMouseUpBind = this.onMouseUp.bind(this);
         this.onClickBind = this.onClick.bind(this);
+
+        this.tabQuickSearch = this.getConfig().get('tabQuickSearch') || false;
+        this.hasGlobalSearch = (this.getConfig().get('globalSearchEntityList') || []).length > 0;
+
+        this.tabsHelper = new TabsHelper(
+            this.getConfig(),
+            this.getPreferences(),
+            this.getUser(),
+            this.getAcl(),
+            this.getMetadata(),
+            this.getLanguage()
+        );
+
+        this.tabDataList = this.getTabDataList();
     }
 
     /**
      * @param {MouseEvent} e
+     * @private
      */
     onFocus(e) {
         const inputElement = /** @type {HTMLInputElement} */e.target;
@@ -67,8 +128,13 @@ class GlobalSearchView extends View {
 
     /**
      * @param {KeyboardEvent} e
+     * @private
      */
     onKeydown(e) {
+        if (!this.hasGlobalSearch) {
+            return;
+        }
+
         const key = Espo.Utils.getKeyFromKeyEvent(e);
 
         if (e.code === 'Enter' || key === 'Enter' || key === 'Control+Enter') {
@@ -84,6 +150,53 @@ class GlobalSearchView extends View {
 
     afterRender() {
         this.$input = this.$el.find('input.global-search-input');
+
+        this.inputElement = this.$input.get(0);
+
+        if (this.tabQuickSearch) {
+            this.autocomplete = new Autocomplete(this.inputElement, {
+                minChars: 1,
+                lookupFunction: async query => {
+                    const lower = query.toLowerCase();
+
+                    return this.tabDataList
+                        .filter(it => {
+                            if (it.words.find(word => word.startsWith(lower))) {
+                                return true;
+                            }
+
+                            if (it.lowerLabel.toLowerCase().startsWith(lower)) {
+                                return true;
+                            }
+
+                            return false;
+                        })
+                        .map(it => ({
+                            value: it.label,
+                            url: it.url,
+                        }));
+                },
+                formatResult: /** {value: string, url: string} */item => {
+                    const a = document.createElement('a');
+
+                    a.text = item.value;
+                    a.href = item.url;
+                    a.classList.add('text-default');
+
+                    return a.outerHTML;
+                },
+                onSelect: /** {value: string, url: string} */item => {
+                    window.location.href =item.url;
+
+                    this.inputElement.value = '';
+                },
+            });
+
+            this.once('render remove', () => {
+                this.autocomplete.dispose();
+                this.autocomplete = undefined;
+            });
+        }
     }
 
     /**
@@ -151,6 +264,10 @@ class GlobalSearchView extends View {
     showPanel() {
         this.closePanel();
 
+        if (this.autocomplete) {
+            this.autocomplete.hide();
+        }
+
         if (this.closeNavbarOnShow) {
             this.$el.closest('.navbar-body').removeClass('in');
         }
@@ -188,6 +305,97 @@ class GlobalSearchView extends View {
 
         document.removeEventListener('mouseup', this.onMouseUpBind);
         document.removeEventListener('click', this.onClickBind);
+    }
+
+    /**
+     * @typedef {Object} module:views/global-search/global-search~tabData
+     * @property {string} url
+     * @property {string} label
+     * @property {string} lowerLabel
+     * @property {string[]} words
+     */
+
+    /**
+     * @private
+     * @return {module:views/global-search/global-search~tabData[]}
+     */
+    getTabDataList() {
+        /** @type {module:views/global-search/global-search~tabData[]}*/
+        const list = [];
+
+        /**
+         *
+         * @param {string|TabsHelper~item} item
+         * @return {module:views/global-search/global-search~tabData}
+         */
+        const toData = (item) => {
+            const label = this.tabsHelper.getTranslatedTabLabel(item);
+
+            const url = this.tabsHelper.isTabScope(item) ? `#${item}` : item.url;
+
+            return {
+                url: url,
+                label: label,
+                words: label.split(' ').map(it => it.toLowerCase()),
+                lowerLabel: label.toLowerCase(),
+            };
+        };
+
+        const checkTab = (item) => {
+            return (this.tabsHelper.isTabScope(item) || this.tabsHelper.isTabUrl(item)) &&
+                this.tabsHelper.checkTabAccess(item)
+        }
+
+        for (const item of this.tabsHelper.getTabList()) {
+            if (checkTab(item)) {
+                list.push(toData(item));
+
+                continue;
+            }
+
+            if (this.tabsHelper.isTabGroup(item)) {
+                for (const subItem of item.itemList) {
+                    if (checkTab(subItem)) {
+                        list.push(toData(subItem));
+                    }
+                }
+            }
+        }
+
+        if (this.getUser().isAdmin()) {
+            /** @type {
+             *     Record<string, {
+             *         order?: number,
+             *         itemList: {
+             *             url: string,
+             *             tabQuickSearch: boolean,
+             *             label: string,
+             *         }[]
+             *     }>
+             * } panels */
+            const panels = this.getMetadata().get(`app.adminPanel`) || {};
+
+            Object.entries(panels)
+                .map(it => it[1])
+                .sort((a, b) => a.order - b.order)
+                .forEach(it => {
+                    it.itemList
+                        .filter(it => it.tabQuickSearch && it.label)
+                        .forEach(it => {
+                            const label = this.translate(it.label, 'labels', 'Admin');
+
+                            list.push({
+                                label: this.translate(it.label, 'labels', 'Admin'),
+                                url: it.url,
+                                lowerLabel: label.toLowerCase(),
+                                words: label.split(' ').map(it => it.toLowerCase()),
+                            });
+                        });
+                });
+
+        }
+
+        return list.filter((item, index) => list.findIndex(it => it.lowerLabel === item.lowerLabel) === index)
     }
 }
 

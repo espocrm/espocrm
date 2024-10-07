@@ -34,8 +34,9 @@ export default class TabsHelper {
      * @param {import('models/user').default} user
      * @param {import('acl-manager').default} acl
      * @param {import('metadata').default} metadata
+     * @param {import('language').default} language
      */
-    constructor(config, preferences, user, acl, metadata) {
+    constructor(config, preferences, user, acl, metadata, language) {
         /** @private */
         this.config = config;
         /** @private */
@@ -46,12 +47,22 @@ export default class TabsHelper {
         this.acl = acl;
         /** @private */
         this.metadata = metadata;
+        /** @private */
+        this.language = language;
     }
+
+    /**
+     * @typedef {Object} TabsHelper~item
+     * @property {string} [url]
+     * @property {string} [text]
+     * @property {'url'|'divider'} [type]
+     * @property {(TabsHelper~item|string)[]} [itemList]
+     */
 
     /**
      * Get the tab list.
      *
-     * @return {(Object|string)[]}
+     * @return {(TabsHelper~item|string)[]}
      */
     getTabList() {
         let tabList = this.preferences.get('useCustomTabList') && !this.preferences.get('addCustomTabs') ?
@@ -96,6 +107,67 @@ export default class TabsHelper {
     }
 
     /**
+     * Is a tab a group.
+     *
+     * @param {string|{type?: string}} item
+     */
+    isTabGroup(item) {
+        if (!this.isTabDivider(item) && !this.isTabUrl(item) && typeof item === 'object') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Is a tab a scope.
+     *
+     * @param {string|{type?: string}} item
+     */
+    isTabScope(item) {
+        if (typeof item === 'object' || this.isTabMoreDelimiter(item) || item === 'Home') {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get a translated tab label.
+     *
+     * @param {{text?: string}|string} item
+     */
+    getTranslatedTabLabel(item) {
+        const translateLabel = label => {
+            if (label.indexOf('$') === 0) {
+                return this.language.translate(label.slice(1), 'navbarTabs');
+            }
+
+            return label;
+        };
+
+        if (this.isTabDivider(item) || this.isTabUrl(item) || this.isTabUrl(item) || this.isTabGroup(item)) {
+            if (item.text) {
+                return translateLabel(item.text);
+            }
+
+            return ''
+        }
+
+        if (item === 'Home') {
+            return this.language.translate('Home');
+        }
+
+        if (typeof item === 'object') {
+            return '';
+        }
+
+        return this.language.translate(item, 'scopeNamesPlural');
+    }
+
+    /**
+     * Check tab access.
+     *
      * @param {Record|string} item
      * @return {boolean}
      */

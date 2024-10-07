@@ -44,6 +44,10 @@
                                 "recordView": {
                                     "type": "string",
                                     "description": "A record view. Optional. Needed if you defined the URL like #Admin/{myName}. The record view displays settings fields. https://docs.espocrm.com/development/custom-config-parameters/"
+                                },
+                                "tabQuickSearch": {
+                                    "type": "boolean",
+                                    "description": "Makes available in the navbar tab quick search. As if v8.5."
                                 }
                             }
                         }

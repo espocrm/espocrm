@@ -386,7 +386,8 @@ class NavbarSiteView extends View {
             this.getPreferences(),
             this.getUser(),
             this.getAcl(),
-            this.getMetadata()
+            this.getMetadata(),
+            this.getLanguage()
         );
 
         const itemDefs = this.getMetadata().get('app.clientNavbar.items') || {};
@@ -506,6 +507,10 @@ class NavbarSiteView extends View {
      * @private
      */
     setupGlobalSearch() {
+        if (this.getConfig().get('tabQuickSearch')) {
+            return;
+        }
+
         let isAvailable = false;
 
         /** @type {string[]} */
@@ -1154,7 +1159,7 @@ class NavbarSiteView extends View {
      *     colorsDisabled: boolean,
      *     tabIconsDisabled: boolean,
      * }} params
-     * @param {Object|string} tab
+     * @param {Record|string} tab
      * @param {number} i
      * @param {Object} vars
      * @return {{
@@ -1172,7 +1177,6 @@ class NavbarSiteView extends View {
      * }}
      */
     prepareTabItemDefs(params, tab, i, vars) {
-        let label;
         let link;
 
         let iconClass = null;
@@ -1183,61 +1187,38 @@ class NavbarSiteView extends View {
         let name = tab;
         let aClassName = 'nav-link';
 
-        const translateLabel = label => {
-            if (label.indexOf('$') === 0) {
-                return this.translate(label.slice(1), 'navbarTabs');
-            }
-
-            return label;
-        };
+        const label = this.tabsHelper.getTranslatedTabLabel(tab);
 
         if (tab === 'Home') {
-            label = this.getLanguage().translate(tab);
             link = '#';
-        } else if (typeof tab === 'object' && tab.type === 'divider') {
+        } else if (this.tabsHelper.isTabDivider(tab)) {
             isDivider = true;
-            label = tab.text;
-            aClassName = 'nav-divider-text';
-            name = 'divider-' + i;
 
-            if (label) {
-                label = translateLabel(label);
-            }
-        } else if (typeof tab === 'object' && tab.type === 'url') {
+            aClassName = 'nav-divider-text';
+            name = `divider-${i}`;
+        } else if (this.tabsHelper.isTabUrl(tab)) {
             isUrl = true;
-            label = tab.text || '#';
-            name = 'url-' + i;
+
+            name = `url-${i}`;
             link = tab.url || '#';
             color = tab.color;
             iconClass = tab.iconClass;
 
-            if (label) {
-                label = translateLabel(label);
-            }
-
             this.urlList.push({name: name, url: link});
-        } else if (typeof tab === 'object') {
+        } else if (this.tabsHelper.isTabGroup(tab)) {
             isGroup = true;
 
-            label = tab.text || '';
             color = tab.color;
             iconClass = tab.iconClass;
 
-            name = 'group-' + i;
+            name = `group-${i}`;
 
             link = null;
 
             aClassName = 'nav-link-group';
-
-            if (label) {
-                label = translateLabel(label);
-            }
         } else {
-            label = this.getLanguage().translate(tab, 'scopeNamesPlural');
             link = '#' + tab;
         }
-
-        label = label || '';
 
         const shortLabel = label.substring(0, 2);
 

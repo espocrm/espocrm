@@ -88,6 +88,7 @@ return [
         'sqlFailed' => false,
     ],
     'authenticationMethod' => 'Espo',
+    'tabQuickSearch' => true,
     'globalSearchEntityList' => [
         'Account',
         'Contact',
