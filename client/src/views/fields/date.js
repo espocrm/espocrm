@@ -165,6 +165,10 @@ class DateFieldView extends BaseFieldView {
             }
         }
 
+        if (this.isListMode()) {
+            data.titleDateValue = data.dateValue;
+        }
+
         // noinspection JSValidateTypes
         return data;
     }

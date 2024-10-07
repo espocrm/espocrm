@@ -33,21 +33,39 @@ import moment from 'moment';
 
 class DatetimeShortFieldView extends DatetimeFieldView {
 
-    listTemplate = 'fields/datetime-short/list'
-    detailTemplate = 'fields/datetime-short/detail'
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    shortInListMode = true
+
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    shortInDetailMode = true
 
     data() {
         const data = super.data();
 
-        if (this.mode === this.MODE_LIST || this.mode === this.MODE_DETAIL) {
-            data.fullDateValue = super.getDateStringValue();
+        if (this.toApplyShort()) {
+            data.titleDateValue = super.getDateStringValue();
         }
 
         return data;
     }
 
+    /**
+     * @private
+     * @return {boolean}
+     */
+    toApplyShort() {
+        return this.shortInListMode && this.mode === this.MODE_LIST ||
+            this.shortInDetailMode && this.mode === this.MODE_DETAIL;
+    }
+
     getDateStringValue() {
-        if (!(this.mode === this.MODE_LIST || this.mode === this.MODE_DETAIL)) {
+        if (!this.toApplyShort()) {
             return super.getDateStringValue();
         }
 

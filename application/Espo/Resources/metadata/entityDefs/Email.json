@@ -404,7 +404,8 @@
             "type": "datetime",
             "customizationDisabled": true,
             "layoutDefaultSidePanelDisabled": true,
-            "massUpdateDisabled": true
+            "massUpdateDisabled": true,
+            "view": "views/email/fields/date-sent"
         },
         "deliveryDate": {
             "type": "datetime",
