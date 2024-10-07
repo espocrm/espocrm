@@ -973,5 +973,8 @@
     },
     "detailViewModes": {
         "detail": "Detail"
+    },
+    "strings": {
+        "yesterdayShort": "Yest."
     }
 }

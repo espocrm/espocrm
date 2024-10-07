@@ -74,7 +74,7 @@ class DatetimeShortFieldView extends DatetimeFieldView {
         };
 
         if (m.unix() > ranges['yesterday'][0] && m.unix() < ranges['yesterday'][1]) {
-            return this.translate('Yesterday') + ' ' + m.format(timeFormat);
+            return this.translate('yesterdayShort', 'strings') + ' ' + m.format(timeFormat);
         }
 
         if (
