@@ -73,7 +73,11 @@ class DatetimeShortFieldView extends DatetimeFieldView {
             'yesterday': [dt.add(-3, 'days').unix(), dt.add(1, 'days').unix()]
         };
 
-        if (m.unix() > ranges['yesterday'][0] && m.unix() < ranges['yesterday'][1]) {
+        if (
+            m.unix() > ranges['yesterday'][0] &&
+            m.unix() < ranges['yesterday'][1] &&
+            this.getLanguage().has('yesterdayShort', 'strings', 'Global')
+        ) {
             return this.translate('yesterdayShort', 'strings') + ' ' + m.format(timeFormat);
         }
 
