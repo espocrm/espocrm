@@ -95,13 +95,14 @@ class Email extends Database implements
         bool $addAssignedUser = false
     ): void {
 
-        $userList = $this->getEmailAddressRepository()
+        /** @var UserEntity[] $users */
+        $users = $this->getEmailAddressRepository()
             ->getEntityListByAddressId($emailAddressId, null, UserEntity::ENTITY_TYPE, true);
 
-        foreach ($userList as $user) {
+        foreach ($users as $user) {
             $entity->addLinkMultipleId('users', $user->getId());
 
-            if ($addAssignedUser) {
+            if ($addAssignedUser && !$user->isPortal()) {
                 $entity->addLinkMultipleId('assignedUsers', $user->getId());
             }
         }

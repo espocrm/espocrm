@@ -144,6 +144,7 @@ class ListStreamRecordView extends ListExpandedRecordView {
             selector: 'li[data-id="' + model.id + '"]',
             setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
             listType: this.type,
+            rowActionsView: this.options.rowActionsView,
         }, callback);
     }
 

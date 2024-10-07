@@ -32,6 +32,8 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
 
     pinnedMaxCount
 
+    isDetached = false
+
     setup() {
         super.setup();
 
@@ -73,11 +75,12 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
 
         if (
             this.options.isThis &&
-            ['Post', 'EmailReceived', 'EmailSent'].includes(this.model.get('type')) &&
+            ['Post', 'EmailReceived', 'EmailSent'].includes(this.model.attributes.type) &&
             this.parentModel &&
-            this.getAcl().checkModel(this.parentModel, 'edit')
+            this.getAcl().checkModel(this.parentModel, 'edit') &&
+            !this.isDetached
         ) {
-            if (this.model.get('isPinned')) {
+            if (this.model.attributes.isPinned) {
                 list.push({
                     action: 'unpin',
                     label: 'Unpin',
@@ -101,7 +104,8 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
         if (
             this.options.isThis &&
             this.model.attributes.type === 'Post' &&
-            this.model.attributes.post
+            this.model.attributes.post &&
+            !this.isDetached
         ) {
             list.push({
                 action: 'quoteReply',

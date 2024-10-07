@@ -34,6 +34,8 @@ class PanelStreamView extends RelationshipPanelView {
 
     template = 'stream/panel'
 
+    rowActionsView = 'views/stream/record/row-actions/default'
+
     postingMode = false
     postDisabled = false
     relatedListFiltersDisabled = true
@@ -754,6 +756,7 @@ class PanelStreamView extends RelationshipPanelView {
                 title: `${this.translate('Stream')} @right ${this.translate('posts', 'filters', 'Note')}`,
                 forceSelectAllAttributes: true,
                 forcePagination: true,
+                rowActionsView: 'views/stream/record/row-actions/detached',
             },
         };
 
@@ -771,6 +774,7 @@ class PanelStreamView extends RelationshipPanelView {
                 forceSelectAllAttributes: true,
                 filtersLayoutName: 'filtersGlobal',
                 forcePagination: true,
+                rowActionsView: 'views/stream/record/row-actions/detached',
             },
         };
 

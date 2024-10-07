@@ -111,8 +111,10 @@ class NoteStreamView extends View {
             'entityType': translatedEntityType,
         };
 
+        const rowActionsView = this.options.rowActionsView || this.rowActionsView;
+
         if (!this.options.noEdit && (this.isEditable || this.isRemovable)) {
-            this.createView('right', this.rowActionsView, {
+            this.createView('right', rowActionsView, {
                 selector: '.right-container',
                 acl: this.options.acl,
                 model: this.model,
