@@ -621,17 +621,23 @@ class RelationshipPanelView extends BottomPanelView {
      * A `view-related-list` action.
      *
      * @protected
+     * @param {{
+     *     scope?: string,
+     *     entityType: string,
+     *     title?: string,
+     *     url?: string,
+     *     viewOptions?: Record,
+     * }} data
      */
     actionViewRelatedList(data) {
+        const entityType = data.scope || data.entityType || this.entityType;
+
         const viewName =
-            this.getMetadata().get(
-                ['clientDefs', this.model.entityType, 'relationshipPanels', this.name, 'viewModalView']
-            ) ||
-            this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'relatedList']) ||
+            this.getMetadata()
+                .get(`clientDefs.${this.model.entityType}.relationshipPanels.${this.name}.viewModalView`) ||
+            this.getMetadata().get(`clientDefs.${entityType}.modalViews.relatedList`) ||
             this.viewModalView ||
             'views/modals/related-list';
-
-        const scope = data.scope || this.entityType;
 
         let filter = this.filter;
 
@@ -643,7 +649,7 @@ class RelationshipPanelView extends BottomPanelView {
             model: this.model,
             panelName: this.panelName,
             link: this.link,
-            scope: scope,
+            entityType: entityType,
             defs: this.defs,
             title: data.title || this.title,
             filterList: this.filterList,
@@ -653,8 +659,8 @@ class RelationshipPanelView extends BottomPanelView {
             defaultOrderBy: this.defaultOrderBy,
             url: data.url || this.url,
             listViewName: this.listViewName,
-            createDisabled: !this.isCreateAvailable(scope),
-            selectDisabled: !this.isSelectAvailable(scope),
+            createDisabled: !this.isCreateAvailable(entityType),
+            selectDisabled: !this.isSelectAvailable(entityType),
             rowActionsView: this.rowActionsView,
             panelCollection: this.collection,
             filtersDisabled: this.relatedListFiltersDisabled,

@@ -748,11 +748,10 @@ class PanelStreamView extends RelationshipPanelView {
         const url = this.model.entityType + '/' + this.model.id + '/posts';
 
         const data = {
-            scope: 'Note',
+            entityType: 'Note',
             viewOptions: {
                 url: url,
-                title: this.translate('Stream') +
-                    ' @right ' + this.translate('posts', 'filters', 'Note'),
+                title: `${this.translate('Stream')} @right ${this.translate('posts', 'filters', 'Note')}`,
                 forceSelectAllAttributes: true,
                 forcePagination: true,
             },
@@ -765,7 +764,7 @@ class PanelStreamView extends RelationshipPanelView {
         const url = `User/${this.model.id}/stream/own`;
 
         const data = {
-            scope: 'Note',
+            entityType: 'Note',
             viewOptions: {
                 url: url,
                 title: this.translate('Stream') + ' @right ' + this.translate('activity', 'filters', 'Note'),
