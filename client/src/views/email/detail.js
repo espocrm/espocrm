@@ -303,7 +303,6 @@ class EmailDetailView extends DetailView {
             }
         }
 
-        attributes.emailsIds = [this.model.id];
         attributes.originalEmailId = this.model.id;
         attributes.name = this.model.get('name');
         attributes.description = this.model.get('bodyPlain') || '';
