@@ -72,9 +72,9 @@ class Cleanup implements JobDataLess
     private string $cleanupAuthLogPeriod = '2 months';
     private string $cleanupNotificationsPeriod = '2 months';
     private string $cleanupAttachmentsPeriod = '15 days';
-    private string $cleanupAttachmentsFromPeriod = '3 months';
+    private string $cleanupAttachmentsFromPeriod = '6 months';
     private string $cleanupBackupPeriod = '2 month';
-    private string $cleanupDeletedRecordsPeriod = '3 months';
+    private string $cleanupDeletedRecordsPeriod = '2 months';
 
     private Config $config;
     private EntityManager $entityManager;
