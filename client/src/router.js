@@ -421,7 +421,9 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
      * }} [options] Options.
      */
     navigate: function (fragment, options) {
-        this.history.push(fragment);
+        if (!options.trigger) {
+            this.history.push(fragment);
+        }
 
         if (options && options.isReturn) {
             this._isReturn = true;
