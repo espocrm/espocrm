@@ -26,13 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import View from 'view';
 import Autocomplete from 'ui/autocomplete';
 import TabsHelper from 'helpers/site/tabs';
+import SiteNavbarItemView from 'views/site/navbar/item';
 
 /** @module views/global-search/global-search */
 
-class GlobalSearchView extends View {
+class GlobalSearchView extends SiteNavbarItemView {
 
     template = 'global-search/global-search'
 
@@ -410,6 +410,27 @@ class GlobalSearchView extends View {
             });
 
         return list.filter((item, index) => list.findIndex(it => it.lowerLabel === item.lowerLabel) === index);
+    }
+
+    isAvailable() {
+        if (this.tabQuickSearch && !this.getUser().isPortal()) {
+            return true;
+        }
+
+        let isAvailable = false;
+
+        /** @type {string[]} */
+        const entityTypeList = this.getConfig().get('globalSearchEntityList') || [];
+
+        for (const it of entityTypeList) {
+            if (this.getAcl().checkScope(it)) {
+                isAvailable = true;
+
+                break;
+            }
+        }
+
+        return isAvailable;
     }
 }
 

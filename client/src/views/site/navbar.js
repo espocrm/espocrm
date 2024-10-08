@@ -402,8 +402,6 @@ class NavbarSiteView extends View {
                 return order1 - order2;
             });
 
-        this.setupGlobalSearch();
-
         const setup = () => {
             this.setupTabDefsList();
 
@@ -501,34 +499,6 @@ class NavbarSiteView extends View {
         const key = name + 'Item';
 
         return this.createView(key, defs.view, {selector: `[data-item="${name}"]`});
-    }
-
-    /**
-     * @private
-     */
-    setupGlobalSearch() {
-        if (this.getConfig().get('tabQuickSearch')) {
-            return;
-        }
-
-        let isAvailable = false;
-
-        /** @type {string[]} */
-        const entityTypeList = this.getConfig().get('globalSearchEntityList') || [];
-
-        for (const it of entityTypeList) {
-            if (this.getAcl().checkScope(it)) {
-                isAvailable = true;
-
-                break;
-            }
-        }
-
-        if (isAvailable) {
-            return;
-        }
-
-        this.itemList = this.itemList.filter(it => it !== 'globalSearch');
     }
 
     /**
