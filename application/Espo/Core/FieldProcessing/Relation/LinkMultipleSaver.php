@@ -29,6 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\Relation;
 
+use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\ORM\Entity;
 
 use Espo\Core\FieldProcessing\Saver\Params;
@@ -37,6 +38,7 @@ use Espo\Core\ORM\Repository\Option\SaveOption;
 
 /**
  * Saves a link-multiple field or has-many relation set in a link stub attribute.
+ * In case of a stab attribute, only processed for a new record.
  */
 class LinkMultipleSaver
 {
@@ -45,12 +47,18 @@ class LinkMultipleSaver
 
     public function process(Entity $entity, string $name, Params $params): void
     {
-        $entityType = $entity->getEntityType();
-
-        $repository = $this->entityManager->getRDBRepository($entityType);
-
         $idListAttribute = $name . 'Ids';
         $columnsAttribute = $name . 'Columns';
+
+        if (
+            !$entity->isNew() &&
+            $entity instanceof CoreEntity &&
+            !$entity->hasLinkMultipleField($name)
+        ) {
+            $entity->clear($idListAttribute);
+
+            return;
+        }
 
         $isChanged = $entity->isAttributeChanged($idListAttribute) || $entity->isAttributeChanged($columnsAttribute);
 
@@ -58,7 +66,7 @@ class LinkMultipleSaver
             return;
         }
 
-        $defs = $this->entityManager->getDefs()->getEntity($entityType);
+        $defs = $this->entityManager->getDefs()->getEntity($entity->getEntityType());
 
         $skipCreate = $params->getOption('skipLinkMultipleCreate') ?? false;
         $skipRemove = $params->getOption('skipLinkMultipleRemove') ?? false;
@@ -112,6 +120,8 @@ class LinkMultipleSaver
                 }
             }
         }
+
+        $repository = $this->entityManager->getRDBRepository($entity->getEntityType());
 
         $columnData = !empty($columns) ?
             $entity->get($columnsAttribute) :
