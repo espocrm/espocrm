@@ -62,7 +62,7 @@ class LayoutProvider
             throw new RuntimeException("Bad parameters.");
         }
 
-        $path = 'layouts/' . $scope . '/' . $name . '.json';
+        $path = "layouts/$scope/$name.json";
 
         $params = FileReaderParams::create()->withScope($scope);
 
@@ -97,7 +97,7 @@ class LayoutProvider
 
     private function getLayoutLocationModule(string $scope, string $name): ?string
     {
-        return $this->metadata->get("app.layouts.{$scope}.{$name}.module");
+        return $this->metadata->get("app.layouts.$scope.$name.module");
     }
 
     private function getDefault(string $scope, string $name): ?string
@@ -121,7 +121,7 @@ class LayoutProvider
             return Json::encode($data);
         }
 
-        $filePath = $this->defaultPath . '/' . $name . '.json';
+        $filePath = "$this->defaultPath/$name.json";
 
         if (!$this->fileManager->isFile($filePath)) {
             return null;
