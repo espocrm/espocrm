@@ -420,7 +420,7 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
      *     isReturn?: boolean,
      * }} [options] Options.
      */
-    navigate: function (fragment, options) {
+    navigate: function (fragment, options = {}) {
         if (!options.trigger) {
             this.history.push(fragment);
         }
