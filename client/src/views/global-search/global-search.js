@@ -392,10 +392,24 @@ class GlobalSearchView extends View {
                             });
                         });
                 });
-
         }
 
-        return list.filter((item, index) => list.findIndex(it => it.lowerLabel === item.lowerLabel) === index)
+        /** @type {Record<string, {tab: boolean}>} */
+        const scopes = this.getMetadata().get('scopes') || {};
+
+        Object.entries(scopes)
+            .filter(([scope, it]) => it.tab && checkTab(scope))
+            .forEach(([scope]) => {
+                const data = toData(scope);
+
+                if (list.find(it => it.lowerLabel === data.lowerLabel)) {
+                    return;
+                }
+
+                list.push(data);
+            });
+
+        return list.filter((item, index) => list.findIndex(it => it.lowerLabel === item.lowerLabel) === index);
     }
 }
 
