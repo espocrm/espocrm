@@ -236,7 +236,7 @@ class LinkMultipleSaver
                 }
             }
 
-            $repository->getRelation($entity, $name)->updateColumnsById($id, (array) $data);
+            $repository->getRelation($entity, $name)->updateColumnsById($id, $data);
         }
     }
 }
