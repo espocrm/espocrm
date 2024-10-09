@@ -692,6 +692,15 @@ input.global-search-input {
             border-bottom-right-radius: var(--border-radius);
             border-bottom-width: 1px;
         }
+
+        > a {
+            > .item-icon-container {
+                display: inline-block;
+                width: 20px;
+                margin-right: 8px;
+                color: var(--gray-soft);
+            }
+        }
     }
 
     > .list-group-item {
@@ -2548,6 +2557,10 @@ table.table td.cell .html-container {
 
         &.selected {
             border-color: var(--brand-danger);
+
+            .item-icon-container {
+                color: var(--brand-danger);
+            }
 
             .cell {
                 padding: 2px 0;

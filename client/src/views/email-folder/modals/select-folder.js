@@ -35,6 +35,21 @@ export default class extends ModalView {
     cssName = 'select-folder'
     backdrop = true
 
+    /** @const */
+    FOLDER_ALL = 'all'
+    /** @const */
+    FOLDER_INBOX = 'inbox'
+    /** @const */
+    FOLDER_IMPORTANT = 'important'
+    /** @const */
+    FOLDER_SENT = 'sent'
+    /** @const */
+    FOLDER_DRAFTS = 'drafts'
+    /** @const */
+    FOLDER_TRASH = 'trash'
+    /** @const */
+    FOLDER_ARCHIVE = 'archive'
+
     data() {
         return {
             folderDataList: this.folderDataList,
@@ -69,13 +84,20 @@ export default class extends ModalView {
                     Espo.Ui.notify(false);
 
                     const builtInFolders = [
-                        'inbox',
-                        'important',
-                        'sent',
-                        'drafts',
-                        'trash',
-                        'archive',
+                        this.FOLDER_INBOX,
+                        this.FOLDER_IMPORTANT,
+                        this.FOLDER_SENT,
+                        this.FOLDER_DRAFTS,
+                        this.FOLDER_TRASH,
+                        this.FOLDER_ARCHIVE,
                     ];
+
+                    const iconMap = {
+                        [this.FOLDER_TRASH]: 'far fa-trash-alt',
+                        [this.FOLDER_SENT]: 'far fa-paper-plane',
+                        [this.FOLDER_INBOX]: 'fas fa-inbox',
+                        [this.FOLDER_ARCHIVE]: 'far fa-caret-square-down',
+                    };
 
                     this.folderDataList = data.list
                         .filter(item => {
@@ -86,10 +108,13 @@ export default class extends ModalView {
                             return !builtInFolders.includes(item.id);
                         })
                         .map(item => {
+                            const isGroup = item.id.startsWith('group:');
+
                             return {
                                 id: item.id,
                                 name: item.name,
-                                isGroup: item.id.indexOf('group:') === 0,
+                                isGroup: isGroup,
+                                iconClass: isGroup ? 'far fa-circle' : 'far fa-folder',
                             };
                         });
 
@@ -98,13 +123,16 @@ export default class extends ModalView {
                         name: this.isGroup ?
                             this.translate('all', 'presetFilters', 'Email') :
                             this.translate('inbox', 'presetFilters', 'Email'),
+                        iconClass: this.isGroup ?
+                            iconMap[this.FOLDER_ALL] :
+                            iconMap[this.FOLDER_INBOX],
                     });
-
 
                     if (!this.noArchive) {
                         this.folderDataList.push({
-                            id: 'archive',
+                            id: this.FOLDER_ARCHIVE,
                             name: this.translate('archive', 'presetFilters', 'Email'),
+                            iconClass: iconMap[this.FOLDER_ARCHIVE],
                         });
                     }
                 })

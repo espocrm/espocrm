@@ -7,11 +7,8 @@
             data-action="selectFolder"
             data-id="{{id}}"
             data-name="{{name}}"
-            class="side-link"
-        >{{name}}</a>
-        {{#if isGroup}}
-        <div class="pull-right"><span class="text-muted fas fa-users"></span></div>
-        {{/if}}
+            class="side-link text-bold"
+        ><span class="item-icon-container"><span class="{{iconClass}}"></span></span><span class="text-default">{{name}}</span></a>
     </li>
     {{/each}}
 </ul>
