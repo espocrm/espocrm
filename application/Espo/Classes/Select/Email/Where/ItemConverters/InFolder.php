@@ -194,6 +194,11 @@ class InFolder implements ItemConverter
             return WhereClause::fromRaw([
                 'groupFolderId' => $groupFolderId,
                 'groupStatusFolder' => null,
+                'fromEmailAddressId!=' => $this->getEmailAddressIdList(),
+                'status' => [
+                    Email::STATUS_ARCHIVED,
+                    Email::STATUS_SENT,
+                ],
             ]);
         }
 
@@ -202,6 +207,10 @@ class InFolder implements ItemConverter
             Email::ALIAS_INBOX . '.inArchive' => false,
             Email::ALIAS_INBOX . '.folderId' => $folderId,
             'groupFolderId' => null,
+            'status' => [
+                Email::STATUS_ARCHIVED,
+                Email::STATUS_SENT,
+            ],
         ]);
     }
 
