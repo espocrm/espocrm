@@ -167,7 +167,7 @@ class DefaultImporter implements Importer
         $email->set('addressNameMap', $addressNameMap);
 
         foreach ($folderData as $uId => $folderId) {
-            $email->setLinkMultipleColumn('users', Email::USERS_COLUMN_FOLDER_ID, $uId, $folderId);
+            $email->setUserColumnFolderId($uId, $folderId);
         }
 
         $matchedFilter = $this->filtersMatcher->findMatch($email, $filterList, true);
@@ -501,7 +501,7 @@ class DefaultImporter implements Importer
 
         foreach ($folderData as $uId => $folderId) {
             if (!in_array($uId, $fetchedUserIdList)) {
-                $duplicate->setLinkMultipleColumn('users', Email::USERS_COLUMN_FOLDER_ID, $uId, $folderId);
+                $duplicate->setUserColumnFolderId($uId, $folderId);
 
                 continue;
             }

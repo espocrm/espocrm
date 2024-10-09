@@ -636,6 +636,13 @@ class Email extends Entity
         return $this->getValueObject('parent');
     }
 
+    public function setAccount(?Link $account): self
+    {
+        $this->setValueObject('account', $account);
+
+        return $this;
+    }
+
     public function setParent(LinkParent|Entity|null $parent): self
     {
         if ($parent instanceof LinkParent) {
@@ -664,6 +671,18 @@ class Email extends Entity
     {
         /** @var LinkMultiple */
         return $this->getValueObject('teams');
+    }
+
+    public function getUsers(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('users');
+    }
+
+    public function getAssignedUser(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('assignedUser');
     }
 
     public function getCreatedBy(): ?Link
@@ -766,6 +785,27 @@ class Email extends Entity
     public function addUserId(string $userId): self
     {
         $this->addLinkMultipleId('users', $userId);
+
+        return $this;
+    }
+
+    public function setUserColumnFolderId(string $userId, ?string $folderId): self
+    {
+        $this->setLinkMultipleColumn('users', self::USERS_COLUMN_FOLDER_ID, $userId, $folderId);
+
+        return $this;
+    }
+
+    public function setUserColumnIsRead(string $userId, bool $isRead): self
+    {
+        $this->setLinkMultipleColumn('users', self::USERS_COLUMN_IS_READ, $userId, $isRead);
+
+        return $this;
+    }
+
+    public function setUserColumnInTrash(string $userId, bool $inTrash): self
+    {
+        $this->setLinkMultipleColumn('users', self::USERS_COLUMN_IN_TRASH, $userId, $inTrash);
 
         return $this;
     }
