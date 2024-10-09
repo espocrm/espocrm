@@ -220,12 +220,7 @@ class SendService
 
         $message = new Message();
 
-        $repliedMessageId = $this->getRepliedEmailMessageId($entity);
-
-        if ($repliedMessageId) {
-            $message->getHeaders()->addHeaderLine('In-Reply-To', $repliedMessageId);
-            $message->getHeaders()->addHeaderLine('References', $repliedMessageId);
-        }
+        $this->applyReplied($entity, $message);
 
         try {
             $emailSender
@@ -558,24 +553,6 @@ class SendService
             ->withFromAddress($address);
     }
 
-    private function getRepliedEmailMessageId(Email $email): ?string
-    {
-        $repliedLink = $email->getReplied();
-
-        if (!$repliedLink) {
-            return null;
-        }
-
-        /** @var ?Email $replied */
-        $replied = $this->entityManager
-            ->getRDBRepositoryByClass(Email::class)
-            ->select(['messageId'])
-            ->where(['id' => $repliedLink->getId()])
-            ->findOne();
-
-        return $replied?->getMessageId();
-    }
-
     /**
      * @internal For bc.
      * @param array<string, mixed> $params
@@ -674,5 +651,32 @@ class SendService
     {
         /** @var UserDataRepository */
         return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
+    }
+
+    private function applyReplied(Email $entity, Message $message): void
+    {
+        $replied = $this->getRepliedEmail($entity);
+
+        if ($replied && $replied->getMessageId()) {
+            $message->getHeaders()->addHeaderLine('In-Reply-To', $replied->getMessageId());
+            $message->getHeaders()->addHeaderLine('References', $replied->getMessageId());
+        }
+
+        if ($replied && $replied->getGroupFolder()) {
+            $entity->setGroupFolderId($replied->getGroupFolder()->getId());
+        }
+    }
+
+    private function getRepliedEmail(Email $email): ?Email
+    {
+        if (!$email->getReplied()) {
+            return null;
+        }
+
+        return $this->entityManager
+            ->getRDBRepositoryByClass(Email::class)
+            ->select(['id', 'groupFolderId', 'messageId'])
+            ->where(['id' => $email->getReplied()->getId()])
+            ->findOne();
     }
 }
