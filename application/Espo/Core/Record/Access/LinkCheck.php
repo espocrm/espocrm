@@ -148,7 +148,7 @@ class LinkCheck
                 continue;
             }
 
-            $this->processCheckLinkWithoutField($entityDefs, $name, $this->manyFieldTypeList);
+            $this->processCheckLinkWithoutField($entityDefs, $name, $this->manyFieldTypeList, $setIds);
 
             $names = $this->prepareNames($entity, $namesAttribute, $setIds);
 
@@ -172,14 +172,22 @@ class LinkCheck
      * @param string[] $fieldTypes
      * @throws Forbidden
      */
-    private function processCheckLinkWithoutField(EntityDefs $entityDefs, string $name, array $fieldTypes): void
-    {
+    private function processCheckLinkWithoutField(
+        EntityDefs $entityDefs,
+        string $name,
+        array $fieldTypes,
+        ?array $ids = null
+    ): void {
         $hasField =
             $entityDefs->hasField($name) &&
             in_array($entityDefs->getField($name)->getType(), $fieldTypes);
 
         if ($hasField) {
             return;
+        }
+
+        if ($ids !== null && count($ids) > 1) {
+            throw new ForbiddenSilent("Cannot set multiple IDs for link '$name' as there's no link-multiple field");
         }
 
         $forbiddenLinkList = $this->acl->getScopeForbiddenLinkList($entityDefs->getName(), AclTable::ACTION_EDIT);
