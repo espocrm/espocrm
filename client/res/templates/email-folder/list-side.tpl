@@ -8,7 +8,7 @@
             data-action="selectFolder"
             data-id="all"
             class="side-link"
-        >{{translate 'all' category='presetFilters' scope='Email'}}</a>
+        ><span class="item-icon-container"></span><span>{{translate 'all' category='presetFilters' scope='Email'}}</span></a>
     </li>
     {{#each collection.models}}
     <li
