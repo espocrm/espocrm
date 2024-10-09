@@ -185,7 +185,7 @@ class Service
      */
     public function followEntityMass(Entity $entity, array $sourceUserIdList, bool $skipAclCheck = false): void
     {
-        if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'stream'])) {
+        if (!$this->checkIsEnabled($entity->getEntityType())) {
             return;
         }
 
@@ -275,7 +275,7 @@ class Service
             return false;
         }
 
-        if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'stream'])) {
+        if (!$this->checkIsEnabled($entity->getEntityType())) {
             return false;
         }
 
@@ -318,7 +318,7 @@ class Service
 
     public function unfollowEntity(Entity $entity, string $userId): bool
     {
-        if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'stream'])) {
+        if (!$this->checkIsEnabled($entity->getEntityType())) {
             return false;
         }
 
@@ -1117,7 +1117,7 @@ class Service
      */
     public function getSubscriberList(string $parentType, string $parentId, bool $isInternal = false): Collection
     {
-        if (!$this->metadata->get(['scopes', $parentType, 'stream'])) {
+        if (!$this->checkIsEnabled($parentType)) {
             /** @var Collection<User> */
             return $this->entityManager->getCollectionFactory()->create(User::ENTITY_TYPE);
         }
@@ -1243,5 +1243,13 @@ class Service
         }
 
         $note->setData(['assignedUserId' => null]);
+    }
+
+    /**
+     * Whether the Stream is enabled for an entity type.
+     */
+    public function checkIsEnabled(string $entityType): bool
+    {
+        return (bool) $this->metadata->get("scopes.$entityType.stream");
     }
 }

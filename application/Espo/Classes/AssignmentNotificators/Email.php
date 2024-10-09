@@ -84,8 +84,10 @@ class Email implements AssignmentNotificator
             return;
         }
 
-        if ($entity->getStatus() !== EmailEntity::STATUS_BEING_IMPORTED) {
-            // @todo Find out whether it may happen
+        if (
+            $entity->getStatus() !== EmailEntity::STATUS_BEING_IMPORTED &&
+            !$this->streamService->checkIsEnabled(EmailEntity::ENTITY_TYPE)
+        ) {
             $this->defaultAssignmentNotificator->process(
                 $entity,
                 $params->withOption(DefaultAssignmentNotificator::OPTION_FORCE_ASSIGNED_USER, true)
