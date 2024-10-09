@@ -170,6 +170,7 @@ class LinkCheck
 
     /**
      * @param string[] $fieldTypes
+     * @param ?string[] $ids
      * @throws Forbidden
      */
     private function processCheckLinkWithoutField(
