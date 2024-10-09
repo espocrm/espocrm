@@ -84,7 +84,7 @@ class EmailFolderStringFieldView extends BaseFieldView {
      */
     getFolderString() {
         if (this.model.attributes.groupFolderName) {
-            let string = this.translate('group', 'strings', 'Email') + ' · ' + this.model.get('groupFolderName');
+            let string = this.translate('group', 'strings', 'Email') + ' · ' + this.model.attributes.groupFolderName;
 
             if (this.model.attributes.groupStatusFolder === 'Archive') {
                 string += ' · ' + this.translate('archive', 'presetFilters', 'Email');
@@ -119,7 +119,7 @@ class EmailFolderStringFieldView extends BaseFieldView {
             return this.translate('sent', 'presetFilters', 'Email');
         }
 
-        if (this.model.get('isUsers')) {
+        if (this.model.attributes.isUsers) {
             return this.translate('inbox', 'presetFilters', 'Email');
         }
 
