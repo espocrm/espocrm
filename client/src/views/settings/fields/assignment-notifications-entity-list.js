@@ -38,8 +38,8 @@ export default class extends MultiEnumFieldView {
                 }
 
                 if (
-                    this.getMetadata().get(['scopes', scope, 'stream']) &&
-                    !this.getMetadata().get(['entityDefs', scope, 'fields', 'assignedUsers'])
+                    this.getMetadata().get(`scopes.${scope}.stream`) &&
+                    !this.getMetadata().get(`notificationDefs.${scope}.forceAssignmentNotificator`)
                 ) {
                     return;
                 }
