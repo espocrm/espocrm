@@ -27,7 +27,7 @@
             data-id="{{get this 'id'}}"
             class="side-link"
             {{#if title}}title="{{title}}"{{/if}}
-        >{{get this 'name'}}</a>
+        ><span class="item-icon-container"><span class="{{iconClass}}"></span></span><span>{{get this 'name'}}</span></a>
     </li>
     {{/each}}
 </ul>

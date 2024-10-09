@@ -466,17 +466,29 @@ class EmailListView extends ListView {
             this.FOLDER_ARCHIVE,
         ];
 
+        const iconMap = {
+            [this.FOLDER_TRASH]: 'far fa-trash-alt',
+            [this.FOLDER_SENT]: 'far fa-paper-plane',
+            [this.FOLDER_INBOX]: 'fas fa-inbox',
+            [this.FOLDER_ARCHIVE]: 'far fa-caret-square-down',
+            [this.FOLDER_DRAFTS]: 'far fa-file',
+            [this.FOLDER_IMPORTANT]: 'far fa-star',
+        }
+
         this.getFolderCollection(collection => {
             collection.forEach(model => {
                 if (this.noDropFolderIdList.indexOf(model.id) === -1) {
                     model.droppable = true;
                 }
 
+                model.iconClass = iconMap[model.id];
+
                 if (model.id.indexOf('group:') === 0) {
                     model.title = this.translate('groupFolder', 'fields', 'Email');
-                }
-                else if (auxFolderList.indexOf(model.id) === -1) {
+                    model.iconClass = 'far fa-circle';
+                } else if (auxFolderList.indexOf(model.id) === -1) {
                     model.title = this.translate('folder', 'fields', 'Email');
+                    model.iconClass = 'far fa-folder';
                 }
             });
 
