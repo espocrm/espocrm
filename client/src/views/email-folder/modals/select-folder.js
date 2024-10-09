@@ -93,6 +93,7 @@ export default class extends ModalView {
                     ];
 
                     const iconMap = {
+                        [this.FOLDER_ALL]: 'far fa-hdd',
                         [this.FOLDER_TRASH]: 'far fa-trash-alt',
                         [this.FOLDER_SENT]: 'far fa-paper-plane',
                         [this.FOLDER_INBOX]: 'fas fa-inbox',
