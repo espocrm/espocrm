@@ -320,7 +320,7 @@ class LinkTest extends BaseTestCase
             'assignedUserId' => $user->getId(),
             'leadId' => $lead->getId(),
             'accountId' => $account->getId(),
-            'emailsIds' => [$email->getId()]
+            'originalEmailId' => $email->getId(),
         ], CreateParams::create());
 
         //
@@ -357,7 +357,7 @@ class LinkTest extends BaseTestCase
             'name' => '1',
             'assignedUserId' => $user->getId(),
             'accountId' => $account->getId(),
-            'emailsIds' => [$email->getId()]
+            'originalEmailId' => $email->getId(),
         ], CreateParams::create());
 
         //
@@ -399,8 +399,30 @@ class LinkTest extends BaseTestCase
             'accountId' => $account->getId(),
             'contactId' => $contact->getId(),
             'contactsIds' => [$contact->getId()],
-            'emailsIds' => [$email->getId()]
+            'originalEmailId' => $email->getId(),
         ], CreateParams::create());
+
+        // Should not allow more than 1 ID.
+
+        $contactAnother = $this->getEntityManager()->createEntity(Contact::ENTITY_TYPE);
+
+        $isThrown = false;
+
+        try {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $caseService->create((object) [
+                'name' => '1',
+                'assignedUserId' => $user->getId(),
+                'contactId' => $contact->getId(),
+                'contactsIds' => [$contact->getId(), $contactAnother->getId()],
+                'originalEmailId' => $email->getId(),
+            ], CreateParams::create());
+        }
+        catch (Forbidden) {
+            $isThrown = true;
+        }
+
+        $this->assertTrue($isThrown);
     }
 
     public function testLoadNames(): void

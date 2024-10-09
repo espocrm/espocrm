@@ -59,15 +59,13 @@ class AccountLinkChecker implements LinkChecker
             return false;
         }
 
-        $emailIds = $entity->getLinkMultipleIdList('emails');
+        $emailId = $entity->get('originalEmailId');
 
-        if (count($emailIds) === 0 || count($emailIds) > 1) {
+        if (!$emailId) {
             return false;
         }
 
-        $email = $this->entityManager
-            ->getRepositoryByClass(Email::class)
-            ->getById($emailIds[0]);
+        $email = $this->entityManager->getRepositoryByClass(Email::class)->getById($emailId);
 
         if (!$email) {
             return false;
