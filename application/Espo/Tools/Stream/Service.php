@@ -587,7 +587,9 @@ class Service
         } else if (
             $entity instanceof CoreEntity &&
             $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS) &&
-            $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS) !== []
+            $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS) !== [] &&
+            // Exclude for Email as the assignedUsers serves not for direct assignment.
+            $entity->getEntityType() !== Email::ENTITY_TYPE
         ) {
             /** @var LinkMultiple $users */
             $users = $entity->getValueObject(self::FIELD_ASSIGNED_USERS);
@@ -1195,7 +1197,9 @@ class Service
     {
         if (
             $entity instanceof CoreEntity &&
-            $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS)
+            $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS) &&
+            // Exclude for Email as the assignedUsers serves not for direct assignment.
+            $entity->getEntityType() !== Email::ENTITY_TYPE
         ) {
             $data = [];
 
