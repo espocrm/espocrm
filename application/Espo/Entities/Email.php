@@ -748,6 +748,19 @@ class Email extends Entity
         return $this;
     }
 
+    public function setGroupFolder(Link|GroupEmailFolder|null $groupFolder): self
+    {
+        if ($groupFolder instanceof GroupEmailFolder) {
+            $this->relations->set('groupFolder', $groupFolder);
+
+            return $this;
+        }
+
+        $this->setValueObject('groupFolder', $groupFolder);
+
+        return $this;
+    }
+
     public function setGroupFolderId(?string $groupFolderId): self
     {
         $this->set('groupFolderId', $groupFolderId);

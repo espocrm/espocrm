@@ -589,7 +589,8 @@
             "readOnly": true,
             "fieldManagerParamList": [
                 "audited"
-            ]
+            ],
+            "audited": true
         },
         "groupStatusFolder": {
             "type": "enum",

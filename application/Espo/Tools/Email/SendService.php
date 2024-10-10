@@ -663,7 +663,7 @@ class SendService
         }
 
         if ($replied && $replied->getGroupFolder()) {
-            $entity->setGroupFolderId($replied->getGroupFolder()->getId());
+            $entity->setGroupFolder($replied->getGroupFolder());
         }
     }
 

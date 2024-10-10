@@ -118,7 +118,7 @@ class InboxService
             }
 
             $email
-                ->setGroupFolderId(null)
+                ->setGroupFolder(null)
                 ->setGroupStatusFolder(null);
 
             $this->entityManager->saveEntity($email);
@@ -163,7 +163,7 @@ class InboxService
         }
 
         $email
-            ->setGroupFolderId($folderId)
+            ->setGroupFolder($folder)
             ->setGroupStatusFolder(null);
 
         $this->entityManager->saveEntity($email);
