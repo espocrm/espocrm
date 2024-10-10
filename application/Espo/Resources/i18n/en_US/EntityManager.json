@@ -103,7 +103,7 @@
         "stars": "The ability to star records. Stars can be used by users to bookmark records.",
         "statusField": "Updates of this field are logged in stream.",
         "textFilterFields": "Fields used by text search.",
-        "stream": "Whether entity has a Stream.",
+        "stream": "Whether the entity has the Stream.",
         "disabled": "Check if you don't need this entity in your system.",
         "linkAudited": "Creating related record and linking with existing record will be logged in Stream.",
         "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records.",
