@@ -31,9 +31,7 @@ namespace Espo\Classes\Acl\Email;
 
 use Espo\Entities\User;
 use Espo\Entities\Email;
-
 use Espo\ORM\Entity;
-
 use Espo\Core\Acl\DefaultOwnershipChecker;
 use Espo\Core\Acl\OwnershipOwnChecker;
 use Espo\Core\Acl\OwnershipTeamChecker;
@@ -44,26 +42,20 @@ use Espo\Core\Acl\OwnershipTeamChecker;
  */
 class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
 {
-    private $defaultOwnershipChecker;
-
-    public function __construct(DefaultOwnershipChecker $defaultOwnershipChecker)
-    {
-        $this->defaultOwnershipChecker = $defaultOwnershipChecker;
-    }
+    public function __construct(private DefaultOwnershipChecker $defaultOwnershipChecker)
+    {}
 
     public function checkOwn(User $user, Entity $entity): bool
     {
-        /** @var Email $entity */
-
-        if ($user->getId() === $entity->get('assignedUserId')) {
+        if ($user->getId() === $entity->getAssignedUser()?->getId()) {
             return true;
         }
 
-        if ($user->getId() === $entity->get('createdById')) {
+        if ($user->getId() === $entity->getCreatedBy()?->getId()) {
             return true;
         }
 
-        if ($entity->hasLinkMultipleId('assignedUsers', $user->getId())) {
+        if ($entity->getAssignedUsers()->hasId($user->getId())) {
             return true;
         }
 

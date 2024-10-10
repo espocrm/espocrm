@@ -679,6 +679,12 @@ class Email extends Entity
         return $this->getValueObject('users');
     }
 
+    public function getAssignedUsers(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('assignedUsers');
+    }
+
     public function getAssignedUser(): ?Link
     {
         /** @var ?Link */
