@@ -13,6 +13,13 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "preserveAuditLog": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "@Company": {
