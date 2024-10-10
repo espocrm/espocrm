@@ -585,7 +585,11 @@
         },
         "groupFolder": {
             "type": "link",
-            "massUpdateDisabled": true
+            "massUpdateDisabled": true,
+            "readOnly": true,
+            "fieldManagerParamList": [
+                "audited"
+            ]
         },
         "groupStatusFolder": {
             "type": "enum",
