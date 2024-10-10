@@ -99,7 +99,7 @@
         "duplicateCheckFieldList": "Which fields to check when performing checking for duplicates.",
         "updateDuplicateCheck": "Perform checking for duplicates when updating a record.",
         "optimisticConcurrencyControl": "Prevents writing conflicts.",
-        "preserveAuditLog": "Disables cleanup of the audit log. This parameter is applicable only if Stream is disabled. If Stream is enabled, audit log records are not being deleted.",
+        "preserveAuditLog": "Disables cleanup of the audit log. This parameter is applicable only if Stream is disabled. As if Stream is enabled, audit log records are not being deleted.",
         "stars": "The ability to star records. Stars can be used by users to bookmark records.",
         "statusField": "Updates of this field are logged in stream.",
         "textFilterFields": "Fields used by text search.",
