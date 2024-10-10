@@ -87,8 +87,9 @@ class Audit implements Cleanup
         $scopeList = array_keys($this->metadata->get(['scopes']) ?? []);
 
         $scopeList = array_filter($scopeList, function ($item) {
-            return $this->metadata->get(['scopes', $item, 'entity']) &&
-                !$this->metadata->get(['scopes', $item, 'stream']);
+            return $this->metadata->get("scopes.$item.entity") &&
+                !$this->metadata->get("scopes.$item.preserveAuditLog") &&
+                !$this->metadata->get("scopes.$item.stream");
         });
 
         return array_values($scopeList);

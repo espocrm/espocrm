@@ -286,6 +286,10 @@
             "description": "Whether the entity may contain personal data.",
             "type": "boolean"
         },
+        "preserveAuditLog": {
+            "description": "Disables audit log cleanup. As of v8.5.",
+            "type": "boolean"
+        },
         "exportFormatList": {
             "description": "A list of allowed export formats. E.g. csv, xlsx.",
             "type": "array",
