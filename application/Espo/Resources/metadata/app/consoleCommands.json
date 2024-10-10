@@ -10,7 +10,10 @@
     "rebuild": {
         "listed": true,
         "noSystemUser": true,
-        "allowedFlags": ["hard"]
+        "allowedFlags": [
+            "hard",
+            "y"
+        ]
     },
     "updateAppTimestamp": {
         "listed": true,

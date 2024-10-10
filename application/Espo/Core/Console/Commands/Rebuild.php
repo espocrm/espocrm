@@ -52,16 +52,18 @@ class Rebuild implements Command
         $this->dataManager->rebuild();
 
         if ($params->hasFlag('hard')) {
-            $message =
-                "Are you sure you want to run a hard DB rebuild? It will drop unused columns, " .
-                "decrease exceeding column lengths. It may take some time to process.\nType [Y] to proceed.";
+            if (!$params->hasFlag('y')) {
+                $message =
+                    "Are you sure you want to run a hard DB rebuild? It will drop unused columns, " .
+                    "decrease exceeding column lengths. It may take some time to process.\nType [Y] to proceed.";
 
-            $io->writeLine($message);
+                $io->writeLine($message);
 
-            $input = $io->readLine();
+                $input = $io->readLine();
 
-            if (strtolower($input) !== 'y') {
-                return;
+                if (strtolower($input) !== 'y') {
+                    return;
+                }
             }
 
             $this->dataManager->rebuildDatabase(null, RebuildMode::HARD);
