@@ -124,6 +124,7 @@ class KanbanRecordView extends ListRecordView {
      * @property {boolean} [topBarDisabled] Disable the top bar.
      * @property {function(string, string[]): Promise} [onGroupOrder] On group order function.
      * @property {function(string): Promise<Record>} [getCreateAttributes] Get create attributes function.
+     * @property {function(import('model').default): Promise} [groupChangeSaveHandler] Handles record saving after drop.
      * @property {function(string)} [createActionHandler] A create handler.
      * @property {string} [statusField] A status field.
      * @property {boolean} [canChangeGroup] Can change group.
@@ -144,6 +145,8 @@ class KanbanRecordView extends ListRecordView {
         this.getCreateAttributes = options.getCreateAttributes;
         /** @private */
         this.createActionHandler = options.createActionHandler;
+        /** @private */
+        this.groupChangeSaveHandler = options.groupChangeSaveHandler;
     }
 
     events = {
@@ -636,11 +639,20 @@ class KanbanRecordView extends ListRecordView {
 
                     $list.sortable('disable');
 
-                    model
-                        .save(attributes, {
+                    const processSave = async () =>{
+                        if (this.groupChangeSaveHandler) {
+                            model.set(attributes, {isDrop: true});
+
+                            return this.groupChangeSaveHandler(model);
+                        }
+
+                        return model.save(attributes, {
                             patch: true,
                             isDrop: true,
-                        })
+                        });
+                    };
+
+                    processSave()
                         .then(() => {
                             Espo.Ui.success(this.translate('Saved'));
 
