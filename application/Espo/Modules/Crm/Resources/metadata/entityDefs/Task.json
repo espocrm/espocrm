@@ -105,6 +105,14 @@
             "readOnly": true,
             "customizationReadOnlyDisabled": true
         },
+        "originalEmail": {
+            "type": "link",
+            "notStorable": true,
+            "entity": "Email",
+            "utility": true,
+            "orderDisabled": true,
+            "directAccessDisabled": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true,

@@ -148,7 +148,7 @@ class LinkCheck
                 continue;
             }
 
-            $this->processCheckLinkWithoutField($entityDefs, $name, $this->manyFieldTypeList, $setIds);
+            $this->processCheckLinkWithoutField($entityDefs, $name, false, $setIds);
 
             $names = $this->prepareNames($entity, $namesAttribute, $setIds);
 
@@ -169,22 +169,28 @@ class LinkCheck
     }
 
     /**
-     * @param string[] $fieldTypes
      * @param ?string[] $ids
      * @throws Forbidden
      */
     private function processCheckLinkWithoutField(
         EntityDefs $entityDefs,
         string $name,
-        array $fieldTypes,
+        bool $isOne,
         ?array $ids = null
     ): void {
+
+        $fieldTypes = $isOne ? $this->oneFieldTypeList : $this->manyFieldTypeList;
+
         $hasField =
             $entityDefs->hasField($name) &&
             in_array($entityDefs->getField($name)->getType(), $fieldTypes);
 
         if ($hasField) {
             return;
+        }
+
+        if ($isOne) {
+            throw new ForbiddenSilent("Cannot set ID attribute for link '$name' as there's no link field.");
         }
 
         if ($ids !== null && count($ids) > 1) {
@@ -595,7 +601,7 @@ class LinkCheck
                 continue;
             }
 
-            $this->processCheckLinkWithoutField($entityDefs, $name, $this->oneFieldTypeList);
+            $this->processCheckLinkWithoutField($entityDefs, $name, true);
 
             $id = $entity->get($attribute);
 
