@@ -188,7 +188,7 @@ class LinkCheck
         }
 
         if ($ids !== null && count($ids) > 1) {
-            throw new ForbiddenSilent("Cannot set multiple IDs for link '$name' as there's no link-multiple field");
+            throw new ForbiddenSilent("Cannot set multiple IDs for link '$name' as there's no link-multiple field.");
         }
 
         $forbiddenLinkList = $this->acl->getScopeForbiddenLinkList($entityDefs->getName(), AclTable::ACTION_EDIT);
