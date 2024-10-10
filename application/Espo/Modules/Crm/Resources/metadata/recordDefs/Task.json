@@ -4,5 +4,8 @@
     ],
     "saverClassNameList": [
         "Espo\\Core\\FieldProcessing\\Reminder\\Saver"
+    ],
+    "beforeCreateHookClassNameList": [
+        "Espo\\Modules\\Crm\\Classes\\RecordHooks\\Task\\BeforeCreate"
     ]
 }

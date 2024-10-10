@@ -357,7 +357,7 @@ class EmailDetailView extends DetailView {
         attributes.parentId = this.model.get('parentId');
         attributes.parentName = this.model.get('parentName');
         attributes.parentType = this.model.get('parentType');
-        attributes.emailId = this.model.id;
+        attributes.originalEmailId = this.model.id;
 
         const subject = this.model.get('name');
 
