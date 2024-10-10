@@ -135,6 +135,12 @@
         "group": "Group"
     },
     "messages": {
+        "notEditAccess": "No edit access to email.",
+        "groupFolderNoAccess": "No access to group folder.",
+        "groupMoveOutNoEditAccess": "Cannot move out from group folder. No edit access to email.",
+        "groupMoveToNoEditAccess": "Cannot move to group folder. No edit access to email.",
+        "groupMoveToTrashNoEditAccess": "Cannot move email from group folder to trash. No edit access to email.",
+        "groupMoveToArchiveNoEditAccess": "Cannot move from group folder to Archive. No edit access to email.",
         "alreadyImported": "The [email]({link}) already exists in the system.",
         "invalidCredentials": "Invalid credentials.",
         "unknownError": "Unknown error.",

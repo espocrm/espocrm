@@ -31,6 +31,7 @@ namespace Espo\Tools\Email;
 
 use Espo\Core\AclManager;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error\Body;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Select\SelectBuilderFactory;
@@ -86,10 +87,8 @@ class InboxService
         $email = $this->getEmail($id);
         $user = $this->getUser($userId);
 
-        $prevGroupFolderLink = $email->getGroupFolder();
-
-        if ($prevGroupFolderLink) {
-            $this->checkCurrentGroupFolder($prevGroupFolderLink->getId(), $user);
+        if ($email->getGroupFolder()) {
+            $this->checkCurrentGroupFolder($email->getGroupFolder()->getId(), $user);
         }
 
         if ($folderId && str_starts_with($folderId, 'group:')) {
@@ -110,9 +109,12 @@ class InboxService
             return;
         }
 
-        if ($prevGroupFolderLink) {
+        if ($email->getGroupFolder()) {
             if (!$this->aclManager->checkEntityEdit($user, $email)) {
-                throw new Forbidden("Cannot unset group folder. No edit access to email.");
+                throw Forbidden::createWithBody(
+                    "Cannot move out from group folder. No edit access to email.",
+                    Body::create()->withMessageTranslation('groupMoveOutNoEditAccess', 'Email')
+                );
             }
 
             $email
@@ -154,13 +156,10 @@ class InboxService
         }
 
         if (!$this->aclManager->checkEntityEdit($user, $email)) {
-            if (!$email->getGroupFolder()) {
-                // @todo Make translatable.
-                throw new Forbidden("Cannot move to group folder from All folder. No edit access to email.");
-            }
-
-            // @todo Make translatable.
-            throw new Forbidden("Cannot move to group folder. No edit access to email.");
+            throw Forbidden::createWithBody(
+                "Cannot move to group folder. No edit access to email.",
+                Body::create()->withMessageTranslation('groupMoveToNoEditAccess', 'Email')
+            );
         }
 
         $email
@@ -212,13 +211,18 @@ class InboxService
         if ($email->getGroupFolder()) {
             $folder = $this->getGroupFolder($email->getGroupFolder()->getId());
 
-            if (!$this->aclManager->checkEntityEdit($user, $email)) {
-                // @todo Make translatable.
-                throw new Forbidden("Cannot move email from group folder to trash. No edit access to email.");
+            if (!$this->aclManager->checkEntityRead($user, $folder)) {
+                throw Forbidden::createWithBody(
+                    "Cannot move email from group folder to trash. No access to group folder.",
+                    Body::create()->withMessageTranslation('groupFolderNoAccess', 'Email')
+                );
             }
 
-            if (!$this->aclManager->checkEntityRead($user, $folder)) {
-                throw new Forbidden("Cannot move email from group folder to trash. No access to group folder.");
+            if (!$this->aclManager->checkEntityEdit($user, $email)) {
+                throw Forbidden::createWithBody(
+                    "Cannot move email from group folder to trash.",
+                    Body::create()->withMessageTranslation('groupMoveToTrashNoEditAccess', 'Email')
+                );
             }
 
             $email->setGroupStatusFolder(Email::GROUP_STATUS_FOLDER_TRASH);
@@ -258,12 +262,18 @@ class InboxService
         if ($email->getGroupFolder()) {
             $folder = $this->getGroupFolder($email->getGroupFolder()->getId());
 
-            if (!$this->aclManager->checkEntityRead($user, $email)) {
-                throw new Forbidden("Cannot retrieve group folder email from trash. No access to email.");
+            if (!$this->aclManager->checkEntityEdit($user, $email)) {
+                throw Forbidden::createWithBody(
+                    "Cannot retrieve group folder email from trash. No edit to email.",
+                    Body::create()->withMessageTranslation('notEditAccess', 'Email')
+                );
             }
 
             if (!$this->aclManager->checkEntityRead($user, $folder)) {
-                throw new Forbidden("Cannot retrieve group folder email from trash. No access to group folder.");
+                throw Forbidden::createWithBody(
+                    "Cannot retrieve group folder email from trash. No access to group folder.",
+                    Body::create()->withMessageTranslation('groupFolderNoAccess', 'Email')
+                );
             }
 
             $email->setGroupStatusFolder(null);
@@ -564,8 +574,10 @@ class InboxService
 
         if ($email->getGroupFolder()) {
             if (!$this->aclManager->checkEntityEdit($user, $email)) {
-                // @todo Make translatable.
-                throw new Forbidden("Cannot move from group folder to Archive. No edit access to email.");
+                throw Forbidden::createWithBody(
+                    "Cannot move from group folder to Archive. No edit access to email.",
+                    Body::create()->withMessageTranslation('groupMoveToArchiveNoEditAccess', 'Email')
+                );
             }
 
             $email->setGroupStatusFolder(Email::GROUP_STATUS_FOLDER_ARCHIVE);
