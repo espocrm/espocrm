@@ -161,6 +161,9 @@ class TextFieldView extends BaseFieldView {
 
             this.addActionHandler('previewText', () => this.preview());
         }
+
+        /** @private */
+        this.controlSeeMoreBind = this.controlSeeMore.bind(this);
     }
 
     setupSearch() {
@@ -352,6 +355,14 @@ class TextFieldView extends BaseFieldView {
                 $(window).on('resize.see-more-' + this.cid, () => {
                     this.controlSeeMore();
                 });
+
+                // Can be hidden.
+                // @todo Revise stream post with empty text.
+                if (this.element) {
+                    this.element.querySelectorAll('img').forEach(image => {
+                        image.addEventListener('load', this.controlSeeMoreBind);
+                    });
+                }
             }
         }
 
