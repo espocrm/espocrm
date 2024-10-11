@@ -35,11 +35,11 @@ class NotePostFieldView extends TextFieldView {
     setup() {
         super.setup();
 
-        this.events['paste textarea'] = e => this.handlePaste(e);
-
         this.insertedImagesData = {};
 
         this.onPasteBind = this.onPaste.bind(this);
+
+        this.addHandler('paste', 'textarea', (/** ClipboardEvent */event) => this.handlePaste(event));
     }
 
     /**
@@ -49,12 +49,16 @@ class NotePostFieldView extends TextFieldView {
         return this.$textarea.get(0);
     }
 
-    handlePaste(e) {
-        if (!e.originalEvent.clipboardData) {
+    /**
+     * @private
+     * @param {ClipboardEvent} event
+     */
+    handlePaste(event) {
+        if (!event.clipboardData) {
             return;
         }
 
-        let text = e.originalEvent.clipboardData.getData('text/plain');
+        let text = event.clipboardData.getData('text/plain');
 
         if (!text) {
             return;
@@ -207,11 +211,17 @@ class NotePostFieldView extends TextFieldView {
         return super.validateRequired();
     }
 
+    /**
+     * @private
+     * @param {string} text
+     */
     handlePastedText(text) {
         // noinspection RegExpRedundantEscape,RegExpSimplifiable
         if (!(/^http(s){0,1}\:\/\//.test(text))) {
             return;
         }
+
+        const field = 'attachments';
 
         const imageExtensionList = ['jpg', 'jpeg', 'png', 'gif'];
         const regExpString = '.+\\.(' + imageExtensionList.join('|') + ')(/?.*){0,1}$';
@@ -219,38 +229,36 @@ class NotePostFieldView extends TextFieldView {
         let url = text;
         const siteUrl = this.getConfig().get('siteUrl').replace(/\/$/, '');
 
-        const attachmentIdList = this.model.get('attachmentsIds') || [];
+        const setIds = /** @type {string[]} */this.model.attributes[`${field}Ids`] || [];
 
         if (regExp.test(text)) {
             const insertedId = this.insertedImagesData[url];
 
-            if (insertedId) {
-                if (~attachmentIdList.indexOf(insertedId)) {
-                    return;
-                }
+            if (insertedId && setIds.includes(insertedId)) {
+                return;
             }
 
             Espo.Ajax
                 .postRequest('Attachment/fromImageUrl', {
                     url: url,
-                    parentType: 'Note',
-                    field: 'attachments',
+                    parentType: this.model.entityType,
+                    field: field,
                 })
-                .then(attachment => {
-                    const attachmentIdList = Espo.Utils.clone(this.model.get('attachmentsIds') || []);
-                    const attachmentNames = Espo.Utils.clone(this.model.get('attachmentsNames') || {});
-                    const attachmentTypes = Espo.Utils.clone(this.model.get('attachmentsTypes') || {});
+                .then(/** {id: string, name: string, type: string} */result => {
+                    const ids = [...(this.model.attributes[`${field}Ids`] || [])];
+                    const names = {...this.model.attributes[`${field}Names`]};
+                    const types = {...this.model.attributes[`${field}Types`]};
 
-                    attachmentIdList.push(attachment.id);
-                    attachmentNames[attachment.id] = attachment.name;
-                    attachmentTypes[attachment.id] = attachment.type;
+                    ids.push(result.id);
+                    names[result.id] = result.name;
+                    types[result.id] = result.type;
 
-                    this.insertedImagesData[url] = attachment.id;
+                    this.insertedImagesData[url] = result.id;
 
                     this.model.set({
-                        attachmentsIds: attachmentIdList,
-                        attachmentsNames: attachmentNames,
-                        attachmentsTypes: attachmentTypes,
+                        [`${field}Ids`]: ids,
+                        [`${field}Names`]: names,
+                        [`${field}Types`]: types,
                     });
                 })
                 .catch(xhr => {
@@ -274,38 +282,36 @@ class NotePostFieldView extends TextFieldView {
 
             const id = match[1];
 
-            if (~attachmentIdList.indexOf(id)) {
+            if (setIds.includes(id)) {
                 return;
             }
 
             const insertedId = this.insertedImagesData[id];
 
-            if (insertedId) {
-                if (~attachmentIdList.indexOf(insertedId)) {
-                    return;
-                }
+            if (insertedId && setIds.includes(insertedId)) {
+                return;
             }
 
             Espo.Ajax
-                .postRequest('Attachment/copy/' + id, {
-                    parentType: 'Note',
-                    field: 'attachments',
+                .postRequest(`Attachment/copy/${id}`, {
+                    parentType: this.model.entityType,
+                    field: field,
                 })
-                .then(attachment => {
-                    const attachmentIdList = Espo.Utils.clone(this.model.get('attachmentsIds') || []);
-                    const attachmentNames = Espo.Utils.clone(this.model.get('attachmentsNames') || {});
-                    const attachmentTypes = Espo.Utils.clone(this.model.get('attachmentsTypes') || {});
+                .then(/** {id: string, name: string, type: string} */result => {
+                    const ids = [...(this.model.attributes[`${field}Ids`] || [])];
+                    const names = {...this.model.attributes[`${field}Names`]};
+                    const types = {...this.model.attributes[`${field}Types`]};
 
-                    attachmentIdList.push(attachment.id);
-                    attachmentNames[attachment.id] = attachment.name;
-                    attachmentTypes[attachment.id] = attachment.type;
+                    ids.push(result.id);
+                    names[result.id] = result.name;
+                    types[result.id] = result.type;
 
-                    this.insertedImagesData[id] = attachment.id;
+                    this.insertedImagesData[id] = result.id;
 
                     this.model.set({
-                        attachmentsIds: attachmentIdList,
-                        attachmentsNames: attachmentNames,
-                        attachmentsTypes: attachmentTypes,
+                        [`${field}Ids`]: ids,
+                        [`${field}Names`]: names,
+                        [`${field}Types`]: types,
                     });
                 })
                 .catch(xhr => {
