@@ -89,7 +89,8 @@
             ]
         },
         "description": {
-            "type": "text"
+            "type": "text",
+            "preview": true
         },
         "parent": {
             "type": "linkParent",

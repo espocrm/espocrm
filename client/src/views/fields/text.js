@@ -30,6 +30,7 @@
 
 import BaseFieldView from 'views/fields/base';
 import MailtoHelper from 'helpers/misc/mailto';
+import Modal from 'views/modal';
 
 /**
  * A text field.
@@ -58,6 +59,7 @@ class TextFieldView extends BaseFieldView {
      * @property {boolean} [autoHeightDisabled] Disable auto-height.
      * @property {number} [cutHeight] A height of cut in pixels.
      * @property {boolean} [displayRawText] Display raw text.
+     * @property {boolean} [preview] Display the preview button.
      */
 
     /**
@@ -117,6 +119,12 @@ class TextFieldView extends BaseFieldView {
     /** @private */
     maxRows
 
+    /**
+     * @private
+     * @type {HTMLElement}
+     */
+    previewButtonElement
+
     setup() {
         super.setup();
 
@@ -139,6 +147,20 @@ class TextFieldView extends BaseFieldView {
         this.on('remove', () => {
             $(window).off('resize.see-more-' + this.cid);
         });
+
+        if (this.params.preview) {
+            this.addHandler('input', 'textarea', (e, /** HTMLTextAreaElement */target) => {
+                const text = target.value;
+
+                if (text) {
+                    this.previewButtonElement.classList.remove('hidden');
+                } else {
+                    this.previewButtonElement.classList.add('hidden');
+                }
+            });
+
+            this.addActionHandler('previewText', () => this.preview());
+        }
     }
 
     setupSearch() {
@@ -186,6 +208,7 @@ class TextFieldView extends BaseFieldView {
         }
 
         data.noResize = this.noResize || (!this.autoHeightDisabled && !this.params.rows);
+        data.preview = this.params.preview && !this.params.displayRawText;
 
         // noinspection JSValidateTypes
         return data;
@@ -338,6 +361,8 @@ class TextFieldView extends BaseFieldView {
             if (text) {
                 this.$element.val(text);
             }
+
+            this.previewButtonElement = this.element.querySelector('a[data-action="previewText"]');
         }
 
         if (this.mode === this.MODE_SEARCH) {
@@ -474,6 +499,25 @@ class TextFieldView extends BaseFieldView {
 
             Espo.Ui.notify(false);
         });
+    }
+
+    /**
+     * Show the preview modal.
+     *
+     * @since 8.5.0
+     * @return {Promise<void>}
+     */
+    async preview() {
+        const view = new Modal({
+            templateContent:
+                `<div class="complex-text">{{complexText viewObject.options.text linksInNewTab=true}}</div>`,
+            text: this.model.attributes[this.name] || '',
+            headerText: this.translate('Preview'),
+            backdrop: true,
+        });
+
+        await this.assignView('dialog', view);
+        await view.render();
     }
 }
 

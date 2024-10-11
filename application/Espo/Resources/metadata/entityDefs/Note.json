@@ -4,6 +4,7 @@
             "type": "text",
             "rows": 100000,
             "view": "views/note/fields/post",
+            "preview": true,
             "customizationDefaultDisabled": true,
             "customizationRequiredDisabled": true,
             "customizationInlineEditDisabledDisabled": true,

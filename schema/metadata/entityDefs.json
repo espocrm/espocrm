@@ -294,6 +294,43 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {"const": "text"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "preview": {
+                                "type": "boolean",
+                                "description": "Show the preview button. Applicable only if Markdown is enabled. As of v8.5."
+                            },
+                            "displayRawText": {
+                                "type": "boolean",
+                                "description": "Display raw text. Disables Markdown support."
+                            },
+                            "rows": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "description": "Max number of rows."
+                            },
+                            "seeMoreDisabled": {
+                                "type": "boolean",
+                                "description": "If not true, then long texts will be shortened."
+                            },
+                            "cutHeight": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "description": "A text higher then a specified value will be cut with a 'show more' button displayed."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
                                     {"const": "enum"},
                                     {"const": "multiEnum"},
                                     {"const": "array"}

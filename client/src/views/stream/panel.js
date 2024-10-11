@@ -259,6 +259,7 @@ class PanelStreamView extends RelationshipPanelView {
                 params: {
                     required: true,
                     rowsMin: 1,
+                    preview: false,
                 },
                 model: this.seed,
                 placeholderText: this.placeholderText,
@@ -816,15 +817,7 @@ class PanelStreamView extends RelationshipPanelView {
     }
 
     preview() {
-        this.createView('dialog', 'views/modal', {
-            templateContent:
-                `<div class="complex-text">{{complexText viewObject.options.text linksInNewTab=true}}</div>`,
-            text: this.seed.attributes.post || '',
-            headerText: this.translate('Preview'),
-            backdrop: true,
-        }, view => {
-            view.render();
-        });
+        this.postFieldView.preview();
     }
 
     /**

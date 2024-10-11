@@ -49,7 +49,8 @@
             "customizationOptionsReferenceDisabled": true
         },
         "description": {
-            "type": "text"
+            "type": "text",
+            "preview": true
         },
         "account": {
             "type": "link"

@@ -206,6 +206,7 @@
         "activeOptions": "Active Options",
         "readOnly": "Read-only",
         "readOnlyAfterCreate": "Read-only After Create",
+        "preview": "Preview",
         "maxFileSize": "Max File Size (Mb)",
         "isPersonalData": "Is Personal Data",
         "useIframe": "Use Iframe",
