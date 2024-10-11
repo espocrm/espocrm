@@ -139,12 +139,14 @@
         "createdBy": {
             "type": "link",
             "readOnly": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "view": "views/fields/user"
         },
         "modifiedBy": {
             "type": "link",
             "readOnly": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "view": "views/fields/user"
         }
     },
     "links": {
