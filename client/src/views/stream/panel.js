@@ -549,6 +549,7 @@ class PanelStreamView extends RelationshipPanelView {
             ['deletedText', '~~{text}~~'],
             ['blockquote', '> {text}'],
             ['link', '[{text}](url)'],
+            ['image', '![{text}](url)'],
         ];
 
         const messageItemList = [];
