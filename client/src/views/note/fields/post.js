@@ -38,6 +38,8 @@ class NotePostFieldView extends TextFieldView {
         this.events['paste textarea'] = e => this.handlePaste(e);
 
         this.insertedImagesData = {};
+
+        this.onPasteBind = this.onPaste.bind(this);
     }
 
     /**
@@ -67,6 +69,28 @@ class NotePostFieldView extends TextFieldView {
         this.handlePastedText(text);
     }
 
+    /**
+     * @private
+     * @param {ClipboardEvent} event
+     */
+    onPaste(event) {
+        const items = event.clipboardData.items;
+
+        if (!items) {
+            return;
+        }
+
+        for (let i = 0; i < items.length; i++) {
+            if (!items[i].type.startsWith('image')) {
+                continue;
+            }
+
+            const blob = items[i].getAsFile();
+
+            this.trigger('add-files', [blob]);
+        }
+    }
+
     afterRenderEdit() {
         const placeholderText = this.options.placeholderText ||
             this.translate('writeMessage', 'messages', 'Note');
@@ -77,26 +101,16 @@ class NotePostFieldView extends TextFieldView {
 
         const $textarea = this.$textarea;
 
+        const textAreaElement = /** @type {HTMLTextAreaElement} */this.$textarea.get(0);
+
         $textarea.off('drop');
         $textarea.off('dragover');
         $textarea.off('dragleave');
-        $textarea.off('paste');
 
-        $textarea.on('paste', (e) => {
-            const items = e.originalEvent.clipboardData.items;
-
-            if (items) {
-                for (let i = 0; i < items.length; i++) {
-                    if (!~items[i].type.indexOf('image')) {
-                        continue;
-                    }
-
-                    const blob = items[i].getAsFile();
-
-                    this.trigger('add-files', [blob]);
-                }
-            }
-        });
+        if (textAreaElement) {
+            textAreaElement.removeEventListener('paste', this.onPasteBind);
+            textAreaElement.addEventListener('paste', this.onPasteBind);
+        }
 
         this.$textarea.on('drop', (e) => {
             e.preventDefault();
