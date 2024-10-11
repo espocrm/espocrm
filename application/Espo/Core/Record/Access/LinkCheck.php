@@ -65,6 +65,7 @@ class LinkCheck
     /** @var string[] */
     private array $oneFieldTypeList = [
         FieldType::LINK,
+        FieldType::LINK_PARENT,
         FieldType::LINK_ONE,
         FieldType::FILE,
         FieldType::IMAGE,
