@@ -11,7 +11,6 @@
         "emphasizedText": "emphasized text",
         "deletedText": "deleted text",
         "blockquote": "blockquote",
-        "link": "link text",
-        "image": "image text"
+        "link": "link text"
     }
 }
