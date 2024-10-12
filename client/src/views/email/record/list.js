@@ -99,6 +99,10 @@ class EmailListRecordView extends ListRecordView {
                     model.set('inTrash', false);
             }
 
+            if (this.rootData.selectedFolderId === 'all') {
+                return;
+            }
+
             if (this.rootData.selectedFolderId === 'trash') {
                 if (keep) {
                     this.toRemoveIdList.push(id);
@@ -119,7 +123,7 @@ class EmailListRecordView extends ListRecordView {
                     model.set('inArchive', true);
             }
 
-            if (this.rootData.selectedFolderId === 'sent') {
+            if (this.rootData.selectedFolderId === 'sent' || this.rootData.selectedFolderId === 'all') {
                 return;
             }
 
