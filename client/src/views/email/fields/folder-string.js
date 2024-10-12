@@ -102,17 +102,25 @@ class EmailFolderStringFieldView extends BaseFieldView {
             return string;
         }
 
+        let string;
+
         if (this.model.attributes.inTrash) {
-            return this.translate('trash', 'presetFilters', 'Email');
+            string = this.translate('trash', 'presetFilters', 'Email');
         }
 
         if (this.model.attributes.inArchive) {
-            return this.translate('archive', 'presetFilters', 'Email');
+            string = this.translate('archive', 'presetFilters', 'Email');
         }
 
-
         if (this.model.attributes.folderName && this.model.attributes.folderId) {
-            return this.model.attributes.folderName;
+            string = this.model.attributes.folderName;
+        }
+
+        if (string && this.model.attributes.isUsersSent) {
+            return [
+                string,
+                this.translate('sent', 'presetFilters', 'Email'),
+            ];
         }
 
         if (this.model.attributes.isUsersSent) {

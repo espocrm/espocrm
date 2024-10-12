@@ -158,10 +158,6 @@
                                         {
                                             "type": "isTrue",
                                             "attribute": "isUsers"
-                                        },
-                                        {
-                                            "type": "isFalse",
-                                            "attribute": "isUsersSent"
                                         }
                                     ]
                                 },

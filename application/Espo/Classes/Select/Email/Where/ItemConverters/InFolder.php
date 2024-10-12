@@ -123,6 +123,12 @@ class InFolder implements ItemConverter
                 'status!=' => Email::STATUS_DRAFT,
             ],
             Email::ALIAS_INBOX . '.inTrash' => false,
+            [
+                'OR' => [
+                    'groupFolderId' => null,
+                    'groupFolderId!=' => Email::GROUP_STATUS_FOLDER_TRASH,
+                ]
+            ]
         ]);
     }
 

@@ -119,6 +119,10 @@ class EmailListRecordView extends ListRecordView {
                     model.set('inArchive', true);
             }
 
+            if (this.rootData.selectedFolderId === 'sent') {
+                return;
+            }
+
             if (this.rootData.selectedFolderId !== 'archive') {
                 if (keep) {
                     this.toRemoveIdList.push(id);
