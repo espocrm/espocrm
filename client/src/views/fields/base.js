@@ -49,6 +49,7 @@ class BaseFieldView extends View {
      * @property {boolean} [readOnly] Read-only.
      * @property {string} [labelText] A custom label text.
      * @property {'detail'|'edit'|'list'|'search'} [mode] A mode.
+     * @property {import('view-record-helper').default} [recordHelper] A record helper.
      */
 
     /**

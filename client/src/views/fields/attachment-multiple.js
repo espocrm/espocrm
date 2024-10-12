@@ -277,6 +277,16 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         this.on('inline-edit-off', () => {
             this.isUploading = false;
         });
+
+        if (this.recordHelper) {
+            this.listenTo(this.recordHelper, `upload-files:${this.name}`, /** File[] */files => {
+                if (!this.isEditMode()) {
+                    return;
+                }
+
+                this.uploadFiles(files);
+            });
+        }
     }
 
     setupSearch() {
@@ -558,6 +568,11 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         return maxFileSize;
     }
 
+    /**
+     * Upload files.
+     *
+     * @param {FileList|File[]} files
+     */
     uploadFiles(files) {
         let uploadedCount = 0;
         let totalCount = 0;

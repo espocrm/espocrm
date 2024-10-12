@@ -37,8 +37,6 @@ class NotePostFieldView extends TextFieldView {
 
         this.insertedImagesData = {};
 
-        this.onPasteBind = this.onPaste.bind(this);
-
         this.addHandler('paste', 'textarea', (/** ClipboardEvent */event) => this.handlePaste(event));
     }
 
@@ -73,28 +71,6 @@ class NotePostFieldView extends TextFieldView {
         this.handlePastedText(text);
     }
 
-    /**
-     * @private
-     * @param {ClipboardEvent} event
-     */
-    onPaste(event) {
-        const items = event.clipboardData.items;
-
-        if (!items) {
-            return;
-        }
-
-        for (let i = 0; i < items.length; i++) {
-            if (!items[i].type.startsWith('image')) {
-                continue;
-            }
-
-            const blob = items[i].getAsFile();
-
-            this.trigger('add-files', [blob]);
-        }
-    }
-
     afterRenderEdit() {
         const placeholderText = this.options.placeholderText ||
             this.translate('writeMessage', 'messages', 'Note');
@@ -105,16 +81,9 @@ class NotePostFieldView extends TextFieldView {
 
         const $textarea = this.$textarea;
 
-        const textAreaElement = /** @type {HTMLTextAreaElement} */this.$textarea.get(0);
-
         $textarea.off('drop');
         $textarea.off('dragover');
         $textarea.off('dragleave');
-
-        if (textAreaElement) {
-            textAreaElement.removeEventListener('paste', this.onPasteBind);
-            textAreaElement.addEventListener('paste', this.onPasteBind);
-        }
 
         this.$textarea.on('drop', (e) => {
             e.preventDefault();

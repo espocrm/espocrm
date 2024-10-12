@@ -5,6 +5,7 @@
             "rows": 100000,
             "view": "views/note/fields/post",
             "preview": true,
+            "attachmentField": "attachments",
             "customizationDefaultDisabled": true,
             "customizationRequiredDisabled": true,
             "customizationInlineEditDisabledDisabled": true,

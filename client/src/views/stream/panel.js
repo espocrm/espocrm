@@ -29,6 +29,7 @@
 import RelationshipPanelView from 'views/record/panels/relationship';
 import _ from 'underscore';
 import NotePostFieldView from 'views/note/fields/post';
+import ViewRecordHelper from 'view-record-helper';
 
 class PanelStreamView extends RelationshipPanelView {
 
@@ -223,6 +224,9 @@ class PanelStreamView extends RelationshipPanelView {
             this.storeControl();
         });
 
+        /** @private */
+        this.formRecordHelper = new ViewRecordHelper();
+
         const storedAttachments = this.getSessionStorage().get(this.storageAttachmentsKey);
 
         this.setupActions();
@@ -260,10 +264,12 @@ class PanelStreamView extends RelationshipPanelView {
                     required: true,
                     rowsMin: 1,
                     preview: false,
+                    attachmentField: 'attachments',
                 },
                 model: this.seed,
                 placeholderText: this.placeholderText,
                 noResize: true,
+                recordHelper: this.formRecordHelper,
             });
 
             this.assignView('postField', this.postFieldView, '.textarea-container').then(view => {
@@ -418,6 +424,12 @@ class PanelStreamView extends RelationshipPanelView {
 
     /** @private */
     initPostEvents(view) {
+        this.listenTo(this.formRecordHelper, 'upload-files:attachments', () => {
+            if (!this.postingMode) {
+                this.enablePostingMode();
+            }
+        });
+
         this.listenTo(view, 'add-files', (files) => {
             this.getAttachmentsFieldView().uploadFiles(files);
 
@@ -577,6 +589,7 @@ class PanelStreamView extends RelationshipPanelView {
             mode: 'edit',
             selector: 'div.attachments-container',
             name: 'attachments',
+            recordHelper: this.formRecordHelper,
         }, view => {
             view.render();
         });

@@ -322,6 +322,10 @@
                                 "type": "integer",
                                 "minimum": 1,
                                 "description": "A text higher then a specified value will be cut with a 'show more' button displayed."
+                            },
+                            "attachmentField": {
+                                "type": "string",
+                                "description": "An attachment-multiple field to connect with. As of v8.5."
                             }
                         }
                     }

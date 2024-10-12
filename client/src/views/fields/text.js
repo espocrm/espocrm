@@ -60,6 +60,7 @@ class TextFieldView extends BaseFieldView {
      * @property {number} [cutHeight] A height of cut in pixels.
      * @property {boolean} [displayRawText] Display raw text.
      * @property {boolean} [preview] Display the preview button.
+     * @property {string} [attachmentField] An attachment-multiple field to connect with.
      */
 
     /**
@@ -164,6 +165,8 @@ class TextFieldView extends BaseFieldView {
 
         /** @private */
         this.controlSeeMoreBind = this.controlSeeMore.bind(this);
+        /** @private */
+        this.onPasteBind = this.onPaste.bind(this);
     }
 
     setupSearch() {
@@ -374,6 +377,13 @@ class TextFieldView extends BaseFieldView {
             }
 
             this.previewButtonElement = this.element.querySelector('a[data-action="previewText"]');
+
+            const textAreaElement = /** @type {HTMLTextAreaElement} */this.$element.get(0);
+
+            if (this.params.attachmentField && textAreaElement) {
+                textAreaElement.removeEventListener('paste', this.onPasteBind);
+                textAreaElement.addEventListener('paste', this.onPasteBind);
+            }
         }
 
         if (this.mode === this.MODE_SEARCH) {
@@ -529,6 +539,28 @@ class TextFieldView extends BaseFieldView {
 
         await this.assignView('dialog', view);
         await view.render();
+    }
+
+    /**
+     * @protected
+     * @param {ClipboardEvent} event
+     */
+    onPaste(event) {
+        const items = event.clipboardData.items;
+
+        if (!items) {
+            return;
+        }
+
+        for (let i = 0; i < items.length; i++) {
+            if (!items[i].type.startsWith('image')) {
+                continue;
+            }
+
+            const blob = items[i].getAsFile();
+
+            this.recordHelper.trigger('upload-files:' + this.params.attachmentField, [blob]);
+        }
     }
 }
 

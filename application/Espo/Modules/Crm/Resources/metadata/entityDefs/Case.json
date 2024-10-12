@@ -50,7 +50,8 @@
         },
         "description": {
             "type": "text",
-            "preview": true
+            "preview": true,
+            "attachmentField": "attachments"
         },
         "account": {
             "type": "link"

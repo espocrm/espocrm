@@ -47,6 +47,11 @@
             "tooltip": true
         },
         {
+            "name": "attachmentField",
+            "type": "varchar",
+            "view": "views/admin/field-manager/fields/text/attachment-field"
+        },
+        {
             "name": "readOnly",
             "type": "bool"
         },
