@@ -13,7 +13,7 @@
 {{/if}}
 <a
     href="#{{scope}}/view/{{model.id}}"
-    class="link{{#if isImportant}} text-warning{{/if}}{{#if inTrash}} text-muted{{/if}}{{#unless isRead}} text-bold{{/unless}}"
+    class="link {{#if style}}text-{{style}}{{/if}} {{#unless isRead}} text-bold {{/unless}}"
     data-id="{{model.id}}"
     title="{{value}}"
 >{{value}}</a>

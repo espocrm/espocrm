@@ -48,6 +48,16 @@ class EmailSubjectFieldView extends VarcharFieldView {
             this.model.attributes.groupStatusFolder === 'Archive' :
             this.model.attributes.inArchive;
 
+        data.style = null;
+
+        if (data.isImportant) {
+            data.style = 'warning';
+        } else if (data.inTrash) {
+            data.style = 'muted';
+        } else if (data.inArchive) {
+            data.style = 'info';
+        }
+
         if (!data.isRead && !this.model.has('isRead')) {
             data.isRead = true;
         }
