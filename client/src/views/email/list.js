@@ -440,6 +440,10 @@ class EmailListView extends ListView {
         }
     }
 
+    /**
+     * @private
+     * @param {function(import('collection').default)} callback
+     */
     getFolderCollection(callback) {
         this.getCollectionFactory().create(this.folderScope, (collection) => {
             collection.url = 'EmailFolder/action/listAll';
@@ -476,9 +480,23 @@ class EmailListView extends ListView {
         }
 
         this.getFolderCollection(collection => {
-            collection.forEach(model => {
+            collection.forEach((model, i) => {
                 if (this.noDropFolderIdList.indexOf(model.id) === -1) {
                     model.droppable = true;
+                }
+
+                if (model.id === this.FOLDER_INBOX) {
+                    model.groupStart = true;
+                } else if (
+                    model.id === this.FOLDER_ARCHIVE ||
+                    model.id === this.FOLDER_TRASH && !collection.models.find(m => m.id === this.FOLDER_ARCHIVE)
+                ) {
+                    model.groupStart = true;
+                } else if (
+                    model.id.indexOf('group:') === 0 &&
+                    collection.models.findIndex(m => m.id.indexOf('group:') === 0) === i
+                ) {
+                    model.groupStart = true;
                 }
 
                 model.iconClass = iconMap[model.id];

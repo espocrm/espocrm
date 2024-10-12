@@ -13,7 +13,7 @@
     {{#each collection.models}}
     <li
         data-id="{{get this 'id'}}"
-        class="list-group-item{{#ifAttrEquals this 'id' ../selectedFolderId}} selected{{/ifAttrEquals}}{{#if droppable}} droppable{{/if}}"
+        class="list-group-item {{#ifAttrEquals this 'id' ../selectedFolderId}} selected {{/ifAttrEquals}}{{#if droppable}} droppable {{/if}}{{#if groupStart}} group-start {{/if}}"
     >
         <a
             href="#Email/list/folder={{get this 'id'}}"
