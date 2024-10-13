@@ -283,7 +283,16 @@ class EntityManager
 
         $this->relationsMap->get($entity)?->resetAll();
 
-        $entity->set($fetchedEntity->getValueMap());
+        $prevMap = get_object_vars($entity->getValueMap());
+        $fetchedMap = get_object_vars($fetchedEntity->getValueMap());
+
+        foreach (array_keys($prevMap) as $attribute) {
+            if (!array_key_exists($attribute, $fetchedMap)) {
+                $entity->clear($attribute);
+            }
+        }
+
+        $entity->set($fetchedMap);
         $entity->setAsFetched();
     }
 
