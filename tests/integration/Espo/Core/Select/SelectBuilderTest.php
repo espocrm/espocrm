@@ -725,14 +725,20 @@ class SelectBuilderTest extends BaseTestCase
             'OR' => [
                 'fromEmailAddressId' => [$emailAddressId],
                 [
-                    'status' => 'Sent',
+                    'status' => Email::STATUS_SENT,
                     'createdById' => $userId,
                 ]
             ],
             [
-                'status!=' => 'Draft',
+                'status!=' => Email::STATUS_DRAFT,
             ],
             Email::ALIAS_INBOX . '.inTrash' => false,
+            [
+                'OR' => [
+                    'groupFolderId' => null,
+                    'groupFolderId!=' => Email::GROUP_STATUS_FOLDER_TRASH,
+                ]
+            ]
         ];
 
         $expectedLeftJoins = [
