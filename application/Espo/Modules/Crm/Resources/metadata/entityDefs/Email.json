@@ -14,7 +14,7 @@
             "columns": {
                 "status": "status"
             },
-            "view": "views/fields/link-multiple-with-status",
+            "view": "crm:views/task/fields/tasks",
             "customizationDefaultDisabled": true
         }
     },
