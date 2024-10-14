@@ -103,7 +103,6 @@ class BaseRecordView extends View {
     /**
      * A record-helper.
      *
-     * @protected
      * @type {module:view-record-helper}
      */
     recordHelper = null
