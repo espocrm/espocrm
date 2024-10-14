@@ -21,6 +21,8 @@
                 "Rejected": "info"
             },
             "audited": true,
+            "displayAsLabel": true,
+            "labelType": "state",
             "fieldManagerAdditionalParamList": [
                 {
                     "name": "notActualOptions",

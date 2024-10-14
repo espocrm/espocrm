@@ -179,6 +179,8 @@
                 "Closed Won": "success",
                 "Closed Lost": "info"
             },
+            "displayAsLabel": true,
+            "labelType": "state",
             "fieldManagerAdditionalParamList": [
                 {
                     "name": "probabilityMap",

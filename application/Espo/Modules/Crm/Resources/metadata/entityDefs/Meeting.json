@@ -13,6 +13,8 @@
                 "Held": "success",
                 "Not Held": "info"
             },
+            "displayAsLabel": true,
+            "labelType": "state",
             "audited": true,
             "customizationOptionsReferenceDisabled": true
         },

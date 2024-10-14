@@ -20,6 +20,8 @@
                 "Canceled": "info"
             },
             "default": "Not Started",
+            "displayAsLabel": true,
+            "labelType": "state",
             "audited": true,
             "fieldManagerAdditionalParamList": [
                 {

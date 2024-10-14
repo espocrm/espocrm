@@ -43,6 +43,8 @@
                 "Recycled": "info",
                 "Dead": "info"
             },
+            "displayAsLabel": true,
+            "labelType": "state",
             "audited": true,
             "fieldManagerAdditionalParamList": [
                 {
