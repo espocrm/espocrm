@@ -72,7 +72,7 @@ class LinkMultipleWithStatusFieldView extends LinkMultipleFieldView {
 
         const style = this.styleMap[status];
 
-        const targetStyleList = ['success', 'info'];
+        const targetStyleList = ['success', 'info', 'danger', 'warning'];
 
         if (!style || !~targetStyleList.indexOf(style)) {
             return super.getDetailLinkHtml(id, name);
