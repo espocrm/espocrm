@@ -84,7 +84,7 @@ class FetchType implements Func
         foreach ($fieldDefsList as $fieldDefs) {
             $field = $fieldDefs->getName();
 
-            if ($fieldDefs->getType() === 'linkMultiple') {
+            if ($fieldDefs->getType() === 'linkMultiple' && $entity->hasLinkMultipleField($field)) {
                 $entity->loadLinkMultipleField($field);
             }
         }
