@@ -111,9 +111,12 @@ class Saver implements SaverInterface
         $start = DateTime::fromString($startString);
 
         foreach ($userIdList as $userId) {
-            $reminderList = $userId === $this->user->getId() ?
-                $this->getReminderList($entity, $typeList) :
-                $this->getPreferencesReminderList($typeList, $userId, $entityType);
+            $usePreferences = $userId !== $this->user->getId() ||
+                !$entity->has('reminders') && $entity->isNew();
+
+            $reminderList = $usePreferences ?
+                $this->getPreferencesReminderList($typeList, $userId, $entityType) :
+                $this->getReminderList($entity, $typeList);
 
             foreach ($reminderList as $item) {
                 $this->createReminder($entity, $userId, $start, $item);
