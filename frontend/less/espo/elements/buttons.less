@@ -23,11 +23,29 @@
 .btn {
     height: @input-height-base;
 }
+
 .btn-lg {
     height: @input-height-large;
 }
+
 .btn-sm {
     height: @input-height-small;
+}
+
+.btn {
+    .fas, .far {
+        line-height: 22px;
+
+        &.fa-sm {
+            line-height: 18px;
+        }
+    }
+}
+
+.btn-sm {
+    .fas, .far {
+        line-height: 18px;
+    }
 }
 
 .btn.btn-link {
@@ -108,9 +126,7 @@ a.btn {
         width: 16px;
         text-align: center;
     }
-    .fa-sm {
-        top: -1px;
-    }
+
 }
 
 .btn-icon.btn-sm {
@@ -125,6 +141,7 @@ a.btn {
     .fa, .fas {
         font-size: 12px;
         width: 12px;
+        line-height: 18px;
     }
 }
 

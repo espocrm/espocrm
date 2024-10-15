@@ -456,6 +456,11 @@ input.global-search-input {
 
 .global-search-button {
     border: 0;
+    padding: 5px 10px;
+
+    > span.icon {
+        line-height: 21px;
+    }
 }
 
 .progress.pre-loading {
@@ -1040,9 +1045,28 @@ input.global-search-input {
     border-bottom-color: var(--text-muted-color);
 }
 
+.filter {
+    a.remove-filter {
+        display: none;
+
+        .fas, .far {
+            line-height: 21px;
+            position: relative;
+            top: 1px;
+        }
+    }
+
+    &:hover {
+        a.remove-filter {
+            display: block;
+        }
+    }
+}
+
 .filter a.remove-filter {
     display: none;
 }
+
 .filter:hover a.remove-filter {
     display: block;
 }
@@ -1266,7 +1290,7 @@ section {
             .cell[data-name="name"] {
                 &:has(> a.link) {
                     &::before {
-                        font-family: 'Font Awesome 5 Free';
+                        font-family: 'Font Awesome 6 Free';
                         font-weight: 900;
                         content: "\f005";
                         font-size: 10px;
@@ -2960,7 +2984,6 @@ table.table-admin-panel {
             > .icon {
                 position: absolute;
                 color: var(--text-muted-color);
-                top: 2px;
             }
             > a {
                 padding-left: 28px;
@@ -3338,6 +3361,7 @@ a.field-info > span.fa-info-circle {
 
 .fas, .far, .fa {
     font-size: 16px;
+    line-height: 21px;
 }
 
 .fas.fa-sm,
@@ -3349,6 +3373,14 @@ a.field-info > span.fa-info-circle {
 .fas.small,
 .far.small {
     font-size: 12px;
+    line-height: 18px;
+}
+
+.btn-sm {
+    > .fa-ellipsis-h,
+    > .fa-plus {
+        font-size: 14px;
+    }
 }
 
 .icon-is-replied {
@@ -3360,30 +3392,6 @@ a.field-info > span.fa-info-circle {
     &::before {
         content: "\f064";
     }
-}
-
-.btn > .fa-ellipsis-v {
-    position: relative;
-    top: 1px;
-}
-
-.btn-icon > .fa-chevron-left {
-    left: -1px;
-}
-
-.btn-default > .fa-sm.fa-rss {
-    position: relative;
-    top: -1px;
-}
-
-.btn:not(.btn-icon) > .fa-plus.fa-sm:first-child {
-    position: relative;
-    top: -1px;
-}
-
-.btn:not(.btn-icon) > .fa-star.fa-sm:first-child {
-    position: relative;
-    top: -1px;
 }
 
 .btn:not(.btn-icon) > .far:first-child:has(+ span),
