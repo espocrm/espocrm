@@ -3725,7 +3725,10 @@ body > .autocomplete-suggestions.text-search-suggestions {
 }
 
 .input-group-item > .iti {
-    top: 3px;
+    //top: 3px;
+    position: unset;
+    display: block;
+
     margin-left: -1px;
     width: ~"calc(100% + 1px)";
 
@@ -3774,6 +3777,8 @@ body > .autocomplete-suggestions.text-search-suggestions {
     }
 
     .iti__selected-flag {
+        margin-left: -1px;
+        
         z-index: 4;
         padding: 0 8px 0 8px;
         color: var(--gray-soft);
