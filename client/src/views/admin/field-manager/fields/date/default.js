@@ -31,7 +31,7 @@ import EnumFieldView from 'views/fields/enum';
 export default class extends EnumFieldView {
 
    fetch() {
-       const data = super.data();
+       const data = super.fetch();
 
        if (data[this.name] === '') {
             data[this.name] = null;
