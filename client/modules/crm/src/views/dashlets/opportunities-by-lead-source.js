@@ -88,7 +88,7 @@ define('crm:views/dashlets/opportunities-by-lead-source', ['crm:views/dashlets/a
                             return '';
                         }
 
-                        return '<span class="small" style="font-size: 0.8em;color:'+this.textColor+'">' +
+                        return '<span class="small numeric-text" style="font-size: 0.8em;color:'+this.textColor+'">' +
                             percentage.toString() +'%' + '</span>';
                     },
                 },
@@ -111,10 +111,12 @@ define('crm:views/dashlets/opportunities-by-lead-source', ['crm:views/dashlets/a
                     relative: true,
                     lineColor: this.hoverColor,
                     trackFormatter: (obj) => {
-                        const value = this.currencySymbol + this.formatNumber(obj.y, true);
+                        const value = this.currencySymbol +
+                            '<span class="numeric-text">' + this.formatNumber(obj.y, true) + '</span>';
 
                         const fraction = obj.fraction || 0;
-                        const percentage = (100 * fraction).toFixed(2).toString();
+                        const percentage = '<span class="numeric-text">' +
+                            (100 * fraction).toFixed(2).toString() +'</span>';
 
                         const label = this.getHelper().escapeString(obj.series.label || this.translate('None'));
 

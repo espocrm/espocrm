@@ -1,1 +1,4 @@
-<span title="{{value}}">{{value}}</span>
+<span
+    title="{{value}}"
+    {{#if textClass}}class="{{textClass}}"{{/if}}
+>{{value}}</span>

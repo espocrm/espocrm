@@ -252,6 +252,7 @@ class VarcharFieldView extends BaseFieldView {
 
         data.noSpellCheck = this.noSpellCheck;
         data.copyToClipboard = this.params.copyToClipboard;
+        data.textClass = null;
 
         return data;
     }

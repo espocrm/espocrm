@@ -2,7 +2,7 @@
     <span class="input-group-item">
         <input
             type="text"
-            class="main-element form-control radius-left"
+            class="main-element form-control radius-left numeric-text"
             data-name="{{name}}"
             value="{{value}}"
             autocomplete="espo-{{name}}"

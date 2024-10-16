@@ -108,6 +108,7 @@ function (Dep) {
                 'opacity:0.7;background-color:#000;color:#fff;position:absolute;'+
                 'padding:2px 8px;-moz-border-radius:4px;border-radius:4px;white-space:nowrap;'
 
+            // noinspection JSUnusedGlobalSymbols
             new EspoFunnel.Funnel(
                 this.$container.get(0),
                 {
@@ -118,7 +119,10 @@ function (Dep) {
                             let value = this.chartData[i].value;
 
                             return this.chartData[i].stageTranslated +
-                                '<br>' + this.currencySymbol + this.formatNumber(value, true)
+                                '<br>' + this.currencySymbol +
+                                '<span class="numeric-text">' +
+                                this.formatNumber(value, true) +
+                                '</span>';
                         },
                     },
                     tooltipClassName: 'flotr-mouse-value',

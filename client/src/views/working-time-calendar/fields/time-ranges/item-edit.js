@@ -37,7 +37,7 @@ export default class extends View  {
         <div class="row">
             <div class="start-container col-xs-5">
                 <input
-                    class="form-control"
+                    class="form-control numeric-text"
                     type="text"
                     data-name="start"
                     value="{{start}}"
@@ -50,7 +50,7 @@ export default class extends View  {
             </div>
             <div class="end-container col-xs-5">
                 <input
-                    class="form-control"
+                    class="form-control numeric-text"
                     type="text"
                     data-name="end"
                     value="{{end}}"

@@ -11,6 +11,10 @@ html {
     height: 100%;
 }
 
+body {
+    //font-feature-settings: "tnum";
+}
+
 .list-container > .list,
 .panel,
 .dashlet-container,
@@ -152,6 +156,7 @@ img.image-preview {
     > h3 {
         margin-bottom: 7px;
         font-size: 22px;
+        font-weight: 400;
     }
 
     @media screen and (max-width: (@screen-sm-min - 1px)) {
@@ -410,6 +415,26 @@ div.list-expanded > ul > li > div.expanded-row > .cell {
 
 .cell .none-value {
     color: var(--text-gray-color);
+}
+
+table .numeric-text {
+    font-variant-numeric: tabular-nums;
+}
+
+input.numeric-text {
+    font-variant-numeric: tabular-nums;
+}
+
+.field .numeric-text {
+    font-variant-numeric: tabular-nums;
+}
+
+.chart-container .numeric-text {
+    font-variant-numeric: tabular-nums;
+}
+
+.ui-timepicker-list {
+    font-variant-numeric: tabular-nums;
 }
 
 .filter .selectize-input {
@@ -3778,7 +3803,7 @@ body > .autocomplete-suggestions.text-search-suggestions {
 
     .iti__selected-flag {
         margin-left: -1px;
-        
+
         z-index: 4;
         padding: 0 8px 0 8px;
         color: var(--gray-soft);

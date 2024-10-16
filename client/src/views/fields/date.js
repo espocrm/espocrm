@@ -138,6 +138,9 @@ class DateFieldView extends BaseFieldView {
                 this.$element.datepicker('setStartDate', this.getStartDateForDatePicker());
             });
         }
+
+        /** @protected */
+        this.useNumericFormat = this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat;
     }
 
     // noinspection JSCheckFunctionSignatures
@@ -167,6 +170,10 @@ class DateFieldView extends BaseFieldView {
 
         if (this.isListMode()) {
             data.titleDateValue = data.dateValue;
+        }
+
+        if (this.useNumericFormat) {
+            data.useNumericFormat = true;
         }
 
         // noinspection JSValidateTypes
@@ -205,7 +212,7 @@ class DateFieldView extends BaseFieldView {
     }
 
     convertDateValueForDetail(value) {
-        if (this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat) {
+        if (this.useNumericFormat) {
             return this.getDateTime().toDisplayDate(value);
         }
 
