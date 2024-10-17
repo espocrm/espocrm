@@ -509,7 +509,8 @@
     "notificationMessages": {
         "assign": "{entityType} {entity} has been assigned to you",
         "emailReceived": "Email received from {from}",
-        "entityRemoved": "{user} removed {entityType} {entity}"
+        "entityRemoved": "{user} removed {entityType} {entity}",
+        "emailInbox": "{user} added email {entity} to your inbox"
     },
     "streamMessages": {
         "post": "{user} posted on {entityType} {entity}",

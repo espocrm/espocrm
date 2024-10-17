@@ -96,6 +96,7 @@ class HookProcessor
         $notificator = $this->getNotificator($entityType);
 
         if (!$notificator instanceof AssignmentNotificator) {
+            // @todo Remove in v9.0.
             // For backward compatibility.
             $notificator->process($entity, $options);
 

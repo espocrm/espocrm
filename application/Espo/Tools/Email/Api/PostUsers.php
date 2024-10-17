@@ -37,8 +37,11 @@ use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Field\LinkParent;
+use Espo\Core\Notification\UserEnabledChecker;
 use Espo\Core\Record\EntityProvider;
 use Espo\Entities\Email;
+use Espo\Entities\Notification;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use RuntimeException;
@@ -52,6 +55,8 @@ class PostUsers implements Action
         private EntityProvider $entityProvider,
         private Acl $acl,
         private EntityManager $entityManager,
+        private UserEnabledChecker $userEnabledChecker,
+        private User $user,
     ) {}
 
     public function process(Request $request): Response
@@ -87,6 +92,8 @@ class PostUsers implements Action
             }
 
             $relation->relate($user);
+
+            $this->processNotify($email, $user);
         }
 
         return ResponseComposer::json(true);
@@ -136,5 +143,26 @@ class PostUsers implements Action
         }
 
         return $users;
+    }
+
+    private function processNotify(Email $email, User $user): void
+    {
+        if (!$this->userEnabledChecker->checkAssignment(Email::ENTITY_TYPE, $user->getId())) {
+            return;
+        }
+
+        $notification = $this->entityManager->getRDBRepositoryByClass(Notification::class)->getNew();
+
+        $notification
+            ->setType('EmailInbox')
+            ->setRelated(LinkParent::createFromEntity($email))
+            ->setUserId($user->getId())
+            ->setData([
+                'emailName' => $email->getSubject(),
+                'userId' => $this->user->getId(),
+                'userName' => $this->user->getName(),
+            ]);
+
+        $this->entityManager->saveEntity($notification);
     }
 }
