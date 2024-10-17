@@ -761,6 +761,12 @@ class ListWithCategories extends ListView {
 
         this.loadNestedCategories();
     }
+
+    prepareRecordViewOptions(options) {
+        super.prepareRecordViewOptions(options);
+
+        options.forceDisplayTopBar = false;
+    }
 }
 
 export default ListWithCategories;
