@@ -297,7 +297,7 @@ class ListWithCategories extends ListView {
     navigateToCurrentCategory() {
         let url = '#' + this.scope;
 
-        if (!this.isExpanded && this.currentCategoryId) {
+        if (this.currentCategoryId) {
             url += '/list/categoryId=' + this.currentCategoryId;
 
             if (this._primaryFilter) {
@@ -549,6 +549,7 @@ class ListWithCategories extends ListView {
                         .then(() => Espo.Ui.notify(false));
 
                     this.openCategory(this.currentCategoryId, this.currentCategoryName);
+                    this.navigateToCurrentCategory();
                 });
             });
         });

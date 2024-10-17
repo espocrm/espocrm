@@ -2582,6 +2582,35 @@ table.table td.cell .html-container {
     }
 }
 
+.categories-container {
+    .root-item {
+        a {
+            &,
+            &:hover {
+                color: var(--btn-text-color);
+            }
+
+            &.text-bold {
+                color: var(--brand-danger);
+            }
+        }
+    }
+    .list-group-tree {
+        .list-group-item {
+            a {
+                &,
+                &:hover {
+                    color: var(--btn-text-color);
+                }
+
+                &.text-bold {
+                    color: var(--brand-danger);
+                }
+            }
+        }
+    }
+}
+
 @media screen and (max-width: (@screen-sm-min - 1px)) {
     .folders-container {
         margin-left: -(@container-padding);
