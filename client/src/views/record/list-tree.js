@@ -59,10 +59,8 @@ class ListTreeRecordView extends ListRecordView {
         data.showRoot = this.showRoot;
 
         if (data.showRoot) {
-            data.rootName = this.rootName || this.translate('Root');
+            data.rootName = this.rootName || this.translate('Top Level');
         }
-
-        data.showEditLink = this.showEditLink;
 
         if (this.level === 0 && this.selectable && (this.selectedData || {}).id === null) {
             data.rootIsSelected = true;
@@ -76,7 +74,7 @@ class ListTreeRecordView extends ListRecordView {
             data.isExpanded = this.isExpanded;
         }
 
-        if (data.hasExpandedToggler || this.showEditLink) {
+        if (data.hasExpandedToggler) {
             data.showRootMenu = true;
         }
 
@@ -104,10 +102,6 @@ class ListTreeRecordView extends ListRecordView {
             if ('rootName' in this.options) {
                 this.rootName = this.options.rootName;
             }
-        }
-
-        if ('showRoot' in this.options) {
-            this.showEditLink = this.options.showEditLink;
         }
 
         if ('level' in this.options) {

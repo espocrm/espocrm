@@ -496,7 +496,7 @@ class ListWithCategories extends ListView {
                 selector: '.categories-container',
                 selectable: true,
                 showRoot: true,
-                rootName: this.translate(this.scope, 'scopeNamesPlural'),
+                //rootName: this.translate(this.scope, 'scopeNamesPlural'),
                 buttonsDisabled: true,
                 checkboxes: false,
                 showEditLink: this.showEditLink,

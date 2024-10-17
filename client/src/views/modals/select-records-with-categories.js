@@ -86,7 +86,7 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
             selectable: true,
             readOnly: true,
             showRoot: true,
-            rootName: this.translate(this.scope, 'scopeNamesPlural'),
+            //rootName: this.translate(this.scope, 'scopeNamesPlural'),
             buttonsDisabled: true,
             checkboxes: false,
             isExpanded: this.isExpanded,
