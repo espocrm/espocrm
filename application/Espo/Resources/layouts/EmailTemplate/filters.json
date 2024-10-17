@@ -3,5 +3,6 @@
     "teams",
     "createdAt",
     "createdBy",
-    "modifiedAt"
+    "modifiedAt",
+    "body"
 ]
