@@ -148,7 +148,7 @@ class DurationFieldView extends EnumFieldView {
                 return;
             }
 
-            this.seconds = moment(end).unix() - moment(start).unix();
+            this.seconds = moment.utc(end).unix() - moment.utc(start).unix();
 
             if (o.updatedByDuration) {
                 return;
