@@ -548,12 +548,6 @@ class ListWithCategories extends ListView {
                     this.applyCategoryToCollection();
                     this.collection.abortLastFetch();
 
-                    Espo.Ui.notify(' ... ');
-
-                    this.collection
-                        .fetch()
-                        .then(() => Espo.Ui.notify(false));
-
                     this.openCategory(this.currentCategoryId, this.currentCategoryName);
                     this.navigateToCurrentCategory();
                 });
