@@ -366,7 +366,8 @@ class LdapLogin implements Login
             $data[$fieldName] = $fieldValue;
         }
 
-        $user = $this->entityManager->getNewEntity('User');
+        /** @var User $user */
+        $user = $this->entityManager->getNewEntity(User::ENTITY_TYPE);
 
         $user->set($data);
 

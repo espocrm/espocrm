@@ -30,7 +30,6 @@
 namespace Espo\Core\FieldProcessing\Relation;
 
 use Espo\Core\ORM\Entity as CoreEntity;
-use Espo\ORM\Entity;
 
 use Espo\Core\FieldProcessing\Saver\Params;
 use Espo\Core\ORM\EntityManager;
@@ -42,17 +41,18 @@ use Espo\Core\ORM\Repository\Option\SaveOption;
  */
 class LinkMultipleSaver
 {
+    private const RELATE_OPTION = 'linkMultiple';
+
     public function __construct(private EntityManager $entityManager)
     {}
 
-    public function process(Entity $entity, string $name, Params $params): void
+    public function process(CoreEntity $entity, string $name, Params $params): void
     {
         $idListAttribute = $name . 'Ids';
         $columnsAttribute = $name . 'Columns';
 
         if (
             !$entity->isNew() &&
-            $entity instanceof CoreEntity &&
             !$entity->hasLinkMultipleField($name)
         ) {
             $entity->clear($idListAttribute);
@@ -216,12 +216,14 @@ class LinkMultipleSaver
 
             $repository->getRelation($entity, $name)->relateById($id, $data, [
                 SaveOption::SKIP_HOOKS => $skipHooks,
+                self::RELATE_OPTION => $entity->hasLinkMultipleField($name),
             ]);
         }
 
         foreach ($toRemoveIdList as $id) {
             $repository->getRelation($entity, $name)->unrelateById($id, [
                 SaveOption::SKIP_HOOKS => $skipHooks,
+                self::RELATE_OPTION => $entity->hasLinkMultipleField($name),
             ]);
         }
 

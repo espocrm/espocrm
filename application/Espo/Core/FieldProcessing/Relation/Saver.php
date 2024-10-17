@@ -30,6 +30,7 @@
 namespace Espo\Core\FieldProcessing\Relation;
 
 use Espo\Core\ORM\Defs\AttributeParam;
+use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\ORM\Entity;
 
 use Espo\Core\FieldProcessing\Saver as SaverInterface;
@@ -82,6 +83,10 @@ class Saver implements SaverInterface
         $columnsAttribute = $name . 'Columns';
 
         if (!$entity->has($idsAttribute) && !$entity->has($columnsAttribute)) {
+            return;
+        }
+
+        if (!$entity instanceof CoreEntity) {
             return;
         }
 
