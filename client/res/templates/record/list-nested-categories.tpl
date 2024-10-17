@@ -49,11 +49,10 @@
                             class="navigation-toggle-link action"
                             data-action="toggleNavigationPanel"
                         >
-                            {{#if hasNavigationPanel}}
-                                <span class="fas fa-arrow-left fa-sm"></span><span class="item-text">{{translate 'Hide Navigation Panel'}}</span>
-                            {{else}}
-                                <span class="fas fa-arrow-right fa-sm"></span><span class="item-text">{{translate 'Show Navigation Panel'}}</span>
-                            {{/if}}
+                            <span class="fas fa-check check-icon pull-right {{#unless hasNavigationPanel}} hidden {{/unless}}"></span>
+                            <div>
+                                <span class="fas"></span><span class="item-text">{{translate 'Navigation Panel'}}</span>
+                            </div>
                         </a>
                     </li>
                 {{/unless}}
