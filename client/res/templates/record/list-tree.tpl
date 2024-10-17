@@ -12,45 +12,6 @@
 {{/if}}
 
 <div class="list list-expanded list-tree{{#if noData}} hidden{{/if}}">
-    {{#if showRootMenu}}
-    <div class="btn-group pull-right">
-        <a role="button" tabindex="0" class="small dropdown-toggle btn-link" data-toggle="dropdown">
-            <span class="fas fa-ellipsis-h"></span>
-        </a>
-        <ul class="dropdown-menu">
-            {{#if showEditLink}}
-            <li>
-                <a
-                    href="#{{scope}}"
-                    class="action manage-categories-link"
-                    data-action="manageCategories"
-                >{{translate 'Manage Categories' scope=scope}}</a>
-            </li>
-            <li class="divider"></li>
-            {{/if}}
-
-            {{#if hasExpandedToggler}}
-            <li class="{{#unless isExpanded}}hidden{{/unless}}">
-                <a
-                    role="button"
-                    tabindex="0"
-                    class="category-expanded-toggle-link action"
-                    data-action="collapse"
-                >{{translate 'Collapse'}}</a>
-            </li>
-            <li class="{{#if isExpanded}}hidden{{/if}}">
-                <a
-                    role="button"
-                    tabindex="0"
-                    class="category-expanded-toggle-link action"
-                    data-action="expand"
-                >{{translate 'Expand'}}</a>
-            </li>
-            {{/if}}
-        </ul>
-    </div>
-    {{/if}}
-
     {{#if showRoot}}
     <div class="root-item">
     <a

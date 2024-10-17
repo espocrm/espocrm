@@ -322,6 +322,10 @@ class ListWithCategories extends ListView {
         }
     }
 
+    /**
+     * @param {string|null} id
+     * @param {string|null} [name]
+     */
     openCategory(id, name) {
         this.getNestedCategoriesView().isLoading = true;
         this.getNestedCategoriesView().reRender();
@@ -400,10 +404,14 @@ class ListWithCategories extends ListView {
         this.$nestedCategoriesContainer.removeClass('hidden');
     }
 
+    /**
+     * @private
+     * @param {function(import('collection').default)} callback
+     */
     getTreeCollection(callback) {
         this.getCollectionFactory().create(this.categoryScope)
             .then(collection => {
-                collection.url = collection.entityType + '/action/listTree';
+                collection.url = `${collection.entityType}/action/listTree`;
                 collection.setOrder(null, null);
 
                 // @todo Revise. To remove?
@@ -496,13 +504,11 @@ class ListWithCategories extends ListView {
                 selector: '.categories-container',
                 selectable: true,
                 showRoot: true,
-                //rootName: this.translate(this.scope, 'scopeNamesPlural'),
                 buttonsDisabled: true,
                 checkboxes: false,
                 showEditLink: this.showEditLink,
                 isExpanded: this.isExpanded,
                 hasExpandedToggler: this.hasExpandedToggler,
-                menuDisabled: true, //!this.isExpanded && this.hasNavigationPanel,
                 readOnly: true,
             }, view => {
                 if (this.currentCategoryId) {

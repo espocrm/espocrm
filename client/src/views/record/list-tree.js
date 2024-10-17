@@ -66,20 +66,8 @@ class ListTreeRecordView extends ListRecordView {
             data.rootIsSelected = true;
         }
 
-        if (this.level === 0 && this.options.hasExpandedToggler) {
-            data.hasExpandedToggler = true;
-        }
-
         if (this.level === 0) {
             data.isExpanded = this.isExpanded;
-        }
-
-        if (data.hasExpandedToggler) {
-            data.showRootMenu = true;
-        }
-
-        if (this.options.menuDisabled) {
-            data.showRootMenu = false;
         }
 
         data.noData = data.createDisabled && !data.rowDataList.length && !data.showRoot;
