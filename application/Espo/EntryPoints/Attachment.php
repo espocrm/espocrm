@@ -93,7 +93,6 @@ class Attachment implements EntryPoint
         $size = $stream->getSize() ?? $this->fileStorageManager->getSize($attachment);
 
         $response
-            ->setHeader('Pragma', 'public')
             ->setHeader('Content-Length', (string) $size)
             ->setHeader('Content-Security-Policy', "default-src 'self'")
             ->setBody($stream);

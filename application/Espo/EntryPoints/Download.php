@@ -102,7 +102,6 @@ class Download implements EntryPoint
             ->setHeader('Content-Disposition', $disposition . ";filename=\"" . $outputFileName . "\"")
             ->setHeader('Expires', '0')
             ->setHeader('Cache-Control', 'must-revalidate')
-            ->setHeader('Pragma', 'public')
             ->setHeader('Content-Length', (string) $size)
             ->setBody($stream);
     }

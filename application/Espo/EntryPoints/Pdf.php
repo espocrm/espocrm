@@ -81,7 +81,6 @@ class Pdf implements EntryPoint
         $response
             ->setHeader('Content-Type', 'application/pdf')
             ->setHeader('Cache-Control', 'private, must-revalidate, post-check=0, pre-check=0, max-age=1')
-            ->setHeader('Pragma', 'public')
             ->setHeader('Expires', 'Sat, 26 Jul 1997 05:00:00 GMT')
             ->setHeader('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT')
             ->setHeader('Content-Disposition', 'inline; filename="' . basename($fileName) . '"');
