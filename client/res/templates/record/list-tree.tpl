@@ -57,7 +57,10 @@
         href="#{{scope}}"
         class="action link{{#if rootIsSelected}} text-bold{{/if}}"
         data-action="selectRoot"
-    >{{rootName}}{{#if isExpanded}} <span class="fas fa-level-down-alt fa-sm"></span>{{/if}}</a>
+    >{{rootName}}</a>
+    {{#if isExpanded}}
+        <span class="fas fa-level-down-alt fa-sm text-soft" title="{{translate 'Expanded'}}"></span>
+    {{/if}}
     </div>
     {{/if}}
 

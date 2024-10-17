@@ -105,8 +105,7 @@ class ListWithCategories extends ListView {
             this.isExpanded = true;
             this.hasExpandedToggler = false;
             this.hasNavigationPanel = false;
-        }
-        else if (!this.expandedTogglerDisabled) {
+        } else if (!this.expandedTogglerDisabled) {
             if (!this.getUser().isPortal()) {
                 if (this.hasIsExpandedStoredValue()) {
                     this.isExpanded = this.getIsExpandedStoredValue();
@@ -237,7 +236,7 @@ class ListWithCategories extends ListView {
             this.loadCategories();
         }
 
-        if (!this.isExpanded && !this.hasView('nestedCategories')) {
+        if (!this.hasView('nestedCategories')) {
             this.loadNestedCategories();
         }
 
@@ -275,6 +274,7 @@ class ListWithCategories extends ListView {
         this.applyCategoryToCollection();
         this.applyCategoryToNestedCategoriesCollection();
 
+        this.clearView('nestedCategories');
         this.clearView('categories');
 
         this.navigateToCurrentCategory();
@@ -502,7 +502,7 @@ class ListWithCategories extends ListView {
                 showEditLink: this.showEditLink,
                 isExpanded: this.isExpanded,
                 hasExpandedToggler: this.hasExpandedToggler,
-                menuDisabled: !this.isExpanded && this.hasNavigationPanel,
+                menuDisabled: true, //!this.isExpanded && this.hasNavigationPanel,
                 readOnly: true,
             }, view => {
                 if (this.currentCategoryId) {
@@ -511,14 +511,14 @@ class ListWithCategories extends ListView {
 
                 view.render();
 
-                this.listenTo(view, 'select', model => {
+                this.listenTo(view, 'select', /** import('model').default */model => {
                     if (!this.isExpanded) {
                         let id = null;
                         let name = null;
 
                         if (model && model.id) {
                             id = model.id;
-                            name = model.get('name');
+                            name = model.attributes.name;
                         }
 
                         this.openCategory(id, name);
@@ -532,7 +532,7 @@ class ListWithCategories extends ListView {
 
                     if (model && model.id) {
                         this.currentCategoryId = model.id;
-                        this.currentCategoryName = model.get('name');
+                        this.currentCategoryName = model.attributes.name;
                     }
 
                     this.collection.offset = 0;
@@ -547,9 +547,10 @@ class ListWithCategories extends ListView {
                     this.collection
                         .fetch()
                         .then(() => Espo.Ui.notify(false));
+
+                    this.openCategory(this.currentCategoryId, this.currentCategoryName);
                 });
             });
-
         });
     }
 

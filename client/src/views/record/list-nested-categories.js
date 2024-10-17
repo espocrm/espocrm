@@ -62,6 +62,7 @@ class ListNestedCategoriesRecordView extends View {
         }
 
         data.scope = this.collection.entityType;
+        data.isExpanded = this.isExpanded;
         data.isLoading = this.isLoading;
         data.currentId = this.collection.currentCategoryId;
         data.currentName = this.collection.currentCategoryName;
@@ -82,8 +83,7 @@ class ListNestedCategoriesRecordView extends View {
 
             if (categoryData.upperId) {
                 data.upperLink += '&' + part;
-            }
-            else {
+            } else {
                 data.upperLink += '/list/' + part;
             }
         }
@@ -119,6 +119,9 @@ class ListNestedCategoriesRecordView extends View {
         this.listenTo(this.collection, 'sync', () => {
             this.reRender();
         });
+
+        /** @type {boolean} */
+        this.isExpanded = this.options.isExpanded;
 
         this.subjectEntityType = this.options.subjectEntityType;
     }

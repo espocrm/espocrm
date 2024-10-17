@@ -1,50 +1,62 @@
 {{#unless isLoading}}
 <div class="list-nested-categories">
-
     <div class="clearfix">
         <div class="btn-group pull-right">
             <a role="button" tabindex="0" class="dropdown-toggle btn btn-text" data-toggle="dropdown">
                 <span class="fas fa-ellipsis-h"></span>
             </a>
 
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu dropdown-menu-with-icons">
                 {{#if showEditLink}}
                 <li>
                     <a
                         href="#{{scope}}"
                         class="action manage-categories-link"
                         data-action="manageCategories"
-                    >{{translate 'Manage Categories' scope=scope}}</a>
+                    >
+                        <span class="fas fa-folder-tree fa-sm"></span><span class="item-text">{{translate 'Manage Categories' scope=scope}}</span>
+                    </a>
                 </li>
                 <li class="divider"></li>
                 {{/if}}
 
                 {{#if hasExpandedToggler}}
-                <li class="{{#if isExpanded}}hidden{{/if}}">
-                    <a
-                        role="button"
-                        tabindex="0"
-                        class="category-expanded-toggle-link action"
-                        data-action="expand"
-                    >{{translate 'Expand'}}</a>
-                </li>
+                    {{#if isExpanded}}
+                        <li>
+                            <a
+                                role="button"
+                                tabindex="0"
+                                class="category-expanded-toggle-link action"
+                                data-action="collapse"
+                            ><span class="fas fa-level-up-alt fa-sm fa-flip-horizontal"></span><span class="item-text">{{translate 'Collapse'}}</span></a>
+                        </li>
+                    {{else}}
+                        <li>
+                            <a
+                                role="button"
+                                tabindex="0"
+                                class="category-expanded-toggle-link action"
+                                data-action="expand"
+                            ><span class="fas fa-level-down-alt fa-sm"></span><span class="item-text">{{translate 'Expand'}}</span></a>
+                        </li>
+                    {{/if}}
                 {{/if}}
-
-                <li>
-                    <a
-                        role="button"
-                        tabindex="0"
-                        class="navigation-toggle-link action"
-                        data-action="toggleNavigationPanel"
-                    >
-                        {{#if hasNavigationPanel}}
-                            {{translate 'Hide Navigation Panel'}}
-                        {{else}}
-                            {{translate 'Show Navigation Panel'}}
-                        {{/if}}
-                    </a>
-                </li>
-
+                {{#unless isExpanded}}
+                    <li>
+                        <a
+                            role="button"
+                            tabindex="0"
+                            class="navigation-toggle-link action"
+                            data-action="toggleNavigationPanel"
+                        >
+                            {{#if hasNavigationPanel}}
+                                <span class="fas fa-arrow-left fa-sm"></span><span class="item-text">{{translate 'Hide Navigation Panel'}}</span>
+                            {{else}}
+                                <span class="fas fa-arrow-right fa-sm"></span><span class="item-text">{{translate 'Show Navigation Panel'}}</span>
+                            {{/if}}
+                        </a>
+                    </li>
+                {{/unless}}
             </ul>
         </div>
         {{#if currentId}}
