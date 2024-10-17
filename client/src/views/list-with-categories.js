@@ -748,11 +748,12 @@ class ListWithCategories extends ListView {
 
         this.hasNavigationPanel = has;
 
-        if (has && this.getNestedCategoriesView()) {
+        // Needed if folders are hidden with navigation panel.
+        /*if (has && this.getNestedCategoriesView()) {
             this.getNestedCategoriesView().hasNavigationPanel = true;
 
             await this.getNestedCategoriesView().reRender();
-        }
+        }*/
 
         this.setNavigationPanelStoredValue(has);
 

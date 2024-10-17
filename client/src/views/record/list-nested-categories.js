@@ -72,7 +72,7 @@ class ListNestedCategoriesRecordView extends View {
         data.currentName = this.collection.currentCategoryName;
         data.categoryData = this.collection.categoryData;
 
-        data.showFolders = !this.isExpanded && !this.hasNavigationPanel;
+        data.showFolders = !this.isExpanded;// && !this.hasNavigationPanel;
 
         data.hasExpandedToggler = this.options.hasExpandedToggler;
         data.showEditLink = this.options.showEditLink;
