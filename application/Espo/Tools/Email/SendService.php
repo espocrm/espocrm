@@ -258,7 +258,7 @@ class SendService
             }
         }
 
-        $this->entityManager->saveEntity($entity, ['isJustSent' => true]);
+        $this->entityManager->saveEntity($entity, [Email::SAVE_OPTION_IS_JUST_SENT => true]);
 
         $this->store($message, $groupAccount, $personalAccount);
 

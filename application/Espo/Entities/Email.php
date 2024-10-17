@@ -63,6 +63,9 @@ class Email extends Entity
     public const GROUP_STATUS_FOLDER_ARCHIVE = 'Archive';
     public const GROUP_STATUS_FOLDER_TRASH = 'Trash';
 
+    public const SAVE_OPTION_IS_BEING_IMPORTED = 'isBeingImported';
+    public const SAVE_OPTION_IS_JUST_SENT = 'isJustSent';
+
     /** @noinspection PhpUnused */
     protected function _getSubject(): ?string
     {
@@ -806,6 +809,21 @@ class Email extends Entity
         $this->addLinkMultipleId('users', $userId);
 
         return $this;
+    }
+
+    public function getUserIdColumnIsRead(string $userId): ?bool
+    {
+        return $this->getLinkMultipleColumn('users', self::USERS_COLUMN_IS_READ, $userId);
+    }
+
+    public function getUserIdColumnInTrash(string $userId): ?bool
+    {
+        return $this->getLinkMultipleColumn('users', self::USERS_COLUMN_IN_TRASH, $userId);
+    }
+
+    public function getUserIdColumnFolderId(string $userId): ?string
+    {
+        return $this->getLinkMultipleColumn('users', self::USERS_COLUMN_FOLDER_ID, $userId);
     }
 
     public function setUserColumnFolderId(string $userId, ?string $folderId): self

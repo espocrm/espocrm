@@ -94,7 +94,7 @@ class Email implements AssignmentNotificator
             );
         }
 
-        if ($params->getOption('isJustSent')) {
+        if ($params->getOption(EmailEntity::SAVE_OPTION_IS_JUST_SENT)) {
             $previousUserIdList = [];
         } else {
             $previousUserIdList = $entity->getFetched('usersIds');
@@ -182,37 +182,23 @@ class Email implements AssignmentNotificator
             }
         }
 
-        $parent = null;
+        $parent = $entity->getParent() ?
+            $this->entityManager->getEntityById($entity->getParent()->getEntityType(), $entity->getParent()->getId()) :
+            null;
 
-        $parentId = $entity->getParentId();
-        $parentType = $entity->getParentType();
-
-        if ($parentType && $parentId) {
-            $parent = $this->entityManager->getEntityById($parentType, $parentId);
-        }
-
-        $account = null;
-
-        $accountLink = $entity->getAccount();
-
-        if ($accountLink) {
-            $account = $this->entityManager->getEntityById(Account::ENTITY_TYPE, $accountLink->getId());
-        }
+        $account = $entity->getAccount() ?
+            $this->entityManager->getEntityById(Account::ENTITY_TYPE, $entity->getAccount()->getId()) :
+            null;
 
         foreach ($userIdList as $userId) {
-            if (!$userId) {
-                continue;
-            }
-
             if ($userIdFrom === $userId) {
                 continue;
             }
 
-            if ($entity->getLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IN_TRASH, $userId)) {
-                continue;
-            }
-
-            if ($entity->getLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IS_READ, $userId)) {
+            if (
+                $entity->getUserIdColumnInTrash($userId) ||
+                $entity->getUserIdColumnIsRead($userId)
+            ) {
                 continue;
             }
 
@@ -221,10 +207,10 @@ class Email implements AssignmentNotificator
             }
 
             if (
-                $params->getOption('isBeingImported') ||
-                $params->getOption('isJustSent')
+                $params->getOption(EmailEntity::SAVE_OPTION_IS_BEING_IMPORTED) ||
+                $params->getOption(EmailEntity::SAVE_OPTION_IS_JUST_SENT)
             ) {
-                $folderId = $entity->getLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_FOLDER_ID, $userId);
+                $folderId = $entity->getUserIdColumnFolderId($userId);
 
                 if (
                     $folderId &&
@@ -240,8 +226,7 @@ class Email implements AssignmentNotificator
                 }
             }
 
-            /** @var ?User $user */
-            $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
+            $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
 
             if (!$user) {
                 continue;
@@ -257,7 +242,7 @@ class Email implements AssignmentNotificator
 
             $isArchivedOrBeingImported =
                 $entity->getStatus() === EmailEntity::STATUS_ARCHIVED ||
-                $params->getOption('isBeingImported');
+                $params->getOption(EmailEntity::SAVE_OPTION_IS_BEING_IMPORTED);
 
             if (
                 $isArchivedOrBeingImported &&

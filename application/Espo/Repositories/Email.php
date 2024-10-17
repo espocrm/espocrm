@@ -383,7 +383,10 @@ class Email extends Database implements
             $this->fillAccount($entity);
         }
 
-        if (!empty($options['isBeingImported']) || !empty($options['isJustSent'])) {
+        if (
+            !empty($options[EmailEntity::SAVE_OPTION_IS_BEING_IMPORTED]) ||
+            !empty($options[EmailEntity::SAVE_OPTION_IS_JUST_SENT])
+        ) {
             if (!$entity->has('from')) {
                 $this->loadFromField($entity);
             }

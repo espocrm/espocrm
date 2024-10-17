@@ -377,7 +377,7 @@ class DefaultImporter implements Importer
             ->where(['id' => $email->getId()])
             ->findOne();
 
-        $this->entityManager->saveEntity($email, ['isBeingImported' => true]);
+        $this->entityManager->saveEntity($email, [Email::SAVE_OPTION_IS_BEING_IMPORTED => true]);
 
         $this->entityManager->getTransactionManager()->commit();
 
@@ -528,7 +528,8 @@ class DefaultImporter implements Importer
         if ($this->emailNotificationsEnabled()) {
             $this->notificator->process(
                 $duplicate,
-                AssignmentNotificatorParams::create()->withRawOptions(['isBeingImported' => true])
+                AssignmentNotificatorParams::create()
+                    ->withRawOptions([Email::SAVE_OPTION_IS_BEING_IMPORTED => true])
             );
         }
 
