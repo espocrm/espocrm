@@ -140,6 +140,10 @@ class PostUsers implements Action
             if (!$this->acl->checkEntityRead($user)) {
                 throw new Forbidden("No access to user.");
             }
+
+            if (!$user->isRegular() && !$user->isAdmin()) {
+                throw new Forbidden("Only regular and admin users allowed.");
+            }
         }
 
         return $users;
