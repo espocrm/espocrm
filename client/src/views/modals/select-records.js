@@ -99,6 +99,7 @@ class SelectRecordsModalView extends ModalView {
      * @property {string[]} [mandatorySelectAttributeList] Mandatory attributes to select.
      * @property {function(): Promise<Record>} [createAttributesProvider] Create-attributes provider.
      * @property {Record} [createAttributes] Create-attributes.
+     * @property {function(import('model').default[])} [onSelect] On record select. As of 8.5.
      */
 
     /**
@@ -107,6 +108,11 @@ class SelectRecordsModalView extends ModalView {
      */
     constructor(options) {
         super(options);
+
+        if (options.onSelect) {
+            /** @private */
+            this.onSelect = options.onSelect;
+        }
     }
 
     data() {
@@ -312,6 +318,10 @@ class SelectRecordsModalView extends ModalView {
             this.listenToOnce(view, 'select', model => {
                 this.trigger('select', model);
 
+                if (this.onSelect) {
+                    this.onSelect([model]);
+                }
+
                 this.close();
             });
 
@@ -449,6 +459,10 @@ class SelectRecordsModalView extends ModalView {
 
         if (list.length) {
             this.trigger('select', list);
+
+            if (this.onSelect) {
+                this.onSelect(list);
+            }
         }
 
         this.close();

@@ -250,7 +250,7 @@ class EmailDetailRecordView extends DetailRecordView {
         this.handleTasksField();
         this.listenTo(this.model, 'change:tasksIds', () => this.handleTasksField());
 
-        if (this.getUser().isAdmin()) {
+        if (this.getAcl().checkScope('User')) {
             this.addDropdownItem({
                 label: 'View Users',
                 name: 'viewUsers'
@@ -527,19 +527,21 @@ class EmailDetailRecordView extends DetailRecordView {
     // noinspection JSUnusedGlobalSymbols
     actionViewUsers(data) {
         const viewName =
-            this.getMetadata()
-                .get(['clientDefs', this.model.entityType, 'relationshipPanels', 'users', 'viewModalView']) ||
-            this.getMetadata().get(['clientDefs', 'User', 'modalViews', 'relatedList']) ||
+            this.getMetadata().get(`clientDefs.${this.model.entityType}.relationshipPanels.users.viewModalView`) ||
+            this.getMetadata().get(`clientDefs.User.modalViews.relatedList`) ||
             'views/modals/related-list';
 
         const options = {
             model: this.model,
             link: 'users',
             scope: 'User',
+            url: `${this.model.entityType}/${this.model.id}/users`,
             filtersDisabled: true,
-            url: this.model.entityType + '/' + this.model.id + '/users',
             createDisabled: true,
-            selectDisabled: !this.getUser().isAdmin(),
+            selectDisabled: !this.getAcl().checkModel(this.model, 'edit') ||
+                this.getAcl().getPermissionLevel('assignment') === 'no',
+            unlinkDisabled: !this.getUser().isAdmin(),
+            removeDisabled: true,
             rowActionsView: 'views/record/row-actions/relationship-view-and-unlink',
         };
 

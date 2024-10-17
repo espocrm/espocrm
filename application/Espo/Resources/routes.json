@@ -390,6 +390,11 @@
         "actionClassName": "Espo\\Tools\\Email\\Api\\GetInsertFieldData"
     },
     {
+        "route": "/Email/:id/users",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Email\\Api\\PostUsers"
+    },
+    {
         "route": "/EmailAddress/search",
         "method": "get",
         "actionClassName": "Espo\\Tools\\EmailAddress\\Api\\GetSearch"

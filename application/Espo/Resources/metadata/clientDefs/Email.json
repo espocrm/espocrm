@@ -118,6 +118,11 @@
             ]
         }
     },
+    "relationshipPanels": {
+        "users": {
+            "selectHandler": "handlers/email/select-user"
+        }
+    },
     "dynamicLogic":{
         "fields": {
             "replied": {
