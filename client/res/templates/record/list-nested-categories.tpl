@@ -72,25 +72,26 @@
         {{/if}}
     </div>
 
-    <div class="grid-auto-fill-xs">
-        {{#each list}}
-        <div class="category-cell">
-            <div class="category-item" data-id="{{id}}">
-                <a
-                    href="{{link}}"
-                    class="action link-gray"
-                    data-action="openCategory"
-                    data-id="{{id}}"
-                    data-name="{{name}}"
-                    title="{{name}}"
-                ><span class="folder-icon far fa-folder text-soft"></span> <span class="category-item-name">{{name}}</span></a>
-            </div>
-        </div>
-        {{/each}}
+    {{#if showFolders}}
+        <div class="grid-auto-fill-xs">
+            {{#each list}}
+                <div class="category-cell">
+                    <div class="category-item" data-id="{{id}}">
+                        <a
+                            href="{{link}}"
+                            class="action link-gray"
+                            data-action="openCategory"
+                            data-id="{{id}}"
+                            data-name="{{name}}"
+                            title="{{name}}"
+                        ><span class="folder-icon far fa-folder text-soft"></span> <span class="category-item-name">{{name}}</span></a>
+                    </div>
+                </div>
+            {{/each}}
 
-        {{#if showMoreIsActive}}
-        <div class="category-cell">
-            <div class="category-item show-more">
+            {{#if showMoreIsActive}}
+                <div class="category-cell">
+                    <div class="category-item show-more">
                 <span class="category-item-name">
                     <a
                         role="button"
@@ -100,9 +101,11 @@
                         title="{{translate 'Show more'}}"
                     >...</a>
                 </span>
-            </div>
+                    </div>
+                </div>
+            {{/if}}
         </div>
-        {{/if}}
-    </div>
+    {{/if}}
+
 </div>
 {{/unless}}

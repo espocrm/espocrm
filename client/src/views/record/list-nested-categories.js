@@ -53,6 +53,10 @@ class ListNestedCategoriesRecordView extends View {
         this.collection = options.collection;
     }
 
+    /**
+     * @type {boolean}
+     */
+    hasNavigationPanel
 
     data() {
         const data = {};
@@ -68,9 +72,11 @@ class ListNestedCategoriesRecordView extends View {
         data.currentName = this.collection.currentCategoryName;
         data.categoryData = this.collection.categoryData;
 
+        data.showFolders = !this.isExpanded && !this.hasNavigationPanel;
+
         data.hasExpandedToggler = this.options.hasExpandedToggler;
         data.showEditLink = this.options.showEditLink;
-        data.hasNavigationPanel = this.options.hasNavigationPanel;
+        data.hasNavigationPanel = this.hasNavigationPanel;
 
         const categoryData = this.collection.categoryData || {};
 
@@ -124,6 +130,8 @@ class ListNestedCategoriesRecordView extends View {
         this.isExpanded = this.options.isExpanded;
 
         this.subjectEntityType = this.options.subjectEntityType;
+
+        this.hasNavigationPanel = this.options.hasNavigationPanel;
     }
 
     // noinspection JSUnusedGlobalSymbols

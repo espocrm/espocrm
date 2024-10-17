@@ -743,16 +743,22 @@ class ListWithCategories extends ListView {
     }
 
     // noinspection JSUnusedGlobalSymbols
-    actionToggleNavigationPanel() {
-        const value = !this.hasNavigationPanel;
+    async actionToggleNavigationPanel() {
+        const has = !this.hasNavigationPanel;
 
-        this.hasNavigationPanel = value;
+        this.hasNavigationPanel = has;
 
-        this.setNavigationPanelStoredValue(value);
+        if (has && this.getNestedCategoriesView()) {
+            this.getNestedCategoriesView().hasNavigationPanel = true;
 
-        this.reRender().then(() => {
-            this.loadNestedCategories();
-        });
+            await this.getNestedCategoriesView().reRender();
+        }
+
+        this.setNavigationPanelStoredValue(has);
+
+        await this.reRender();
+
+        this.loadNestedCategories();
     }
 }
 
