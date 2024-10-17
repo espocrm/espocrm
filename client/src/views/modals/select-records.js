@@ -82,6 +82,33 @@ class SelectRecordsModalView extends ModalView {
         },
     }
 
+    /**
+     * @typedef {Object} module:views/modals/select-records~Options
+     * @property {string} entityType An entity type.
+     * @property {Object.<string, module:search-manager~advancedFilter>} [filters] Filters.
+     * @property {string[]} [boolFilterList] Bool filters.
+     * @property {string} [primaryFilterName] A primary filter.
+     * @property {string} [filterList] A filter list.
+     * @property {string} [layoutName] A layout name.
+     * @property {boolean} [multiple] Allow select multiple.
+     * @property {boolean} [createButton] A create button.
+     * @property {boolean} [massRelateEnabled] Mass-relate.
+     * @property {string} [orderBy] An order-by.
+     * @property {'asc'|'desc'} [orderDirection] An order direction.
+     * @property {boolean} [forceSelectAllAttributes] Force select all attributes.
+     * @property {string[]} [mandatorySelectAttributeList] Mandatory attributes to select.
+     * @property {function(): Promise<Record>} [createAttributesProvider] Create-attributes provider.
+     * @property {Record} [createAttributes] Create-attributes.
+     */
+
+    /**
+     *
+     * @param {module:views/modals/select-records~Options & module:views/modal~Options} options
+     */
+    constructor(options) {
+        super(options);
+    }
+
     data() {
         return {
             createButton: this.createButton,
@@ -429,7 +456,7 @@ class SelectRecordsModalView extends ModalView {
 
     /**
      * @protected
-     * @return {?module:views/record/search}
+     * @return {import('views/record/search').default}
      */
     getSearchView() {
         return this.getView('search');
