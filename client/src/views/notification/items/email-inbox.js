@@ -39,6 +39,14 @@ class EmailInboxNotificationItemView extends BaseNotificationItemView {
         <div class="stream-head-container">
             <div class="pull-left">{{{avatar}}}</div>
             <div class="stream-head-text-container">
+                <span
+                    class="fas fa-envelope text-muted action"
+                    style="cursor: pointer;"
+                    title="{{translate 'View'}}"
+                    data-action="quickView"
+                    data-id="{{model.attributes.relatedId}}"
+                    data-scope="Email"
+                ></span>
                 <span class="text-muted message">{{{message}}}</span>
             </div>
         </div>
