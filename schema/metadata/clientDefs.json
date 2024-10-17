@@ -411,6 +411,10 @@
                         "description": "A row-actions view class.",
                         "type": "string"
                     },
+                    "viewModalView": {
+                        "description": "A modal view for viewing relationships in a modal dialog.",
+                        "type": "string"
+                    },
                     "label": {
                         "description": "A translatable label.",
                         "type": "string"
