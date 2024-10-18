@@ -62,10 +62,15 @@ class LayoutWidthComplexFieldView extends BaseFieldView {
             },
         });
 
-        const valueView = new FloatFieldView({
+        const valueView = this.valueView = new FloatFieldView({
             name: 'value',
             mode: 'edit',
             model: this.auxModel,
+            params: {
+                min: this.getMinValue(),
+                max: this.getMaxValue(),
+            },
+            labelText: this.translate('Value'),
         });
 
         this.assignView('unit', unitView, '[data-name="unit"]');
@@ -76,27 +81,42 @@ class LayoutWidthComplexFieldView extends BaseFieldView {
                 return;
             }
 
+            this.valueView.params.max = this.getMaxValue();
+            this.valueView.params.min = this.getMinValue();
+
             this.model.set(this.fetch(), {ui: true});
         });
     }
 
+    getMinValue() {
+        return this.auxModel.attributes.unit === 'px' ? 16 : 5;
+    }
+
+    getMaxValue() {
+        return this.auxModel.attributes.unit === 'px' ? 768 : 95;
+    }
+
+    validate() {
+        return this.valueView.validate();
+    }
+
     fetch() {
-        if (this.auxModel.get('unit') === 'px') {
+        if (this.auxModel.attributes.unit === 'px') {
             return {
                 width: null,
-                widthPx: this.auxModel.get('value'),
+                widthPx: this.auxModel.attributes.value,
             }
         }
 
         return {
-            width: this.auxModel.get('value'),
+            width: this.auxModel.attributes.value,
             widthPx: null,
         };
     }
 
     syncAuxModel() {
-        const width = this.model.get('width');
-        const widthPx = this.model.get('widthPx');
+        const width = this.model.attributes.width;
+        const widthPx = this.model.attributes.widthPx;
 
         const unit = width || !widthPx ? '%' : 'px';
 
