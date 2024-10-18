@@ -125,21 +125,20 @@ class LayoutListView extends LayoutRowsView {
     setup() {
         super.setup();
 
-        this.wait(true);
-
-        this.loadLayout(() => {
-            this.wait(false);
-        });
+        this.wait(
+            new Promise(resolve => this.loadLayout(() => resolve()))
+        );
     }
 
+    /**
+     * @inheritDoc
+     */
     loadLayout(callback) {
-        this.getModelFactory().create(Espo.Utils.hyphenToUpperCamelCase(this.scope), (model) => {
-            this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, (layout) => {
+        this.getModelFactory().create(Espo.Utils.hyphenToUpperCamelCase(this.scope), model => {
+            this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, layout => {
                 this.readDataFromLayout(model, layout);
 
-                if (callback) {
-                    callback();
-                }
+                callback();
             });
         });
     }

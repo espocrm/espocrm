@@ -260,6 +260,13 @@ class LayoutBaseView extends View {
         });
     }
 
+    /**
+     * @abstract
+     * @protected
+     * @param {function} callback
+     */
+    loadLayout(callback) {}
+
     // noinspection JSUnusedLocalSymbols
     validate(layout) {
         return true;
