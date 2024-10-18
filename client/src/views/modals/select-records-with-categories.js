@@ -27,7 +27,6 @@
  ************************************************************************/
 
 import SelectRecordsModal from 'views/modals/select-records';
-import ListWithCategories from 'views/list-with-categories';
 
 class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
 
@@ -39,6 +38,12 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
     categoryFilterType = 'inCategory'
     categoryScope = ''
     isExpanded = true
+
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    isCategoryMultiple
 
     data() {
         return {
@@ -52,11 +57,16 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
         this.categoryScope = this.categoryScope || this.scope + 'Category';
         this.categoryField = this.getMetadata().get(`scopes.${this.categoryScope}.categoryField`) || this.categoryField;
 
+        this.isCategoryMultiple = this.getMetadata()
+            .get(`entityDefs.${this.scope}.fields.${this.categoryField}.type`) === 'linkMultiple';
+
         this.categoriesDisabled = this.categoriesDisabled ||
            this.getMetadata().get(['scopes',  this.categoryScope, 'disabled']) ||
            !this.getAcl().checkScope(this.categoryScope);
 
         super.setup();
+
+        this.addActionHandler('toggleExpandedFromNavigation', () => this.actionToggleExpandedFromNavigation());
     }
 
     setupList() {
@@ -77,6 +87,14 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
             collection.fetch()
                 .then(() => this.createCategoriesView());
         });
+    }
+
+    /**
+     * @protected
+     * @return {import('views/record/list-tree').default}
+     */
+    getCategoriesView() {
+        return this.getView('categories');
     }
 
     createCategoriesView() {
@@ -115,13 +133,102 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
         });
     }
 
-    applyCategoryToCollection() {
-        ListWithCategories.prototype.applyCategoryToCollection.call(this);
+    /**
+     * @private
+     */
+    async actionToggleExpandedFromNavigation() {
+        this.isExpanded = !this.isExpanded;
+
+        /** @type {HTMLAnchorElement} */
+        const a = this.element.querySelector('a[data-role="expandButtonContainer"]');
+
+        if (a) {
+            a.classList.add('disabled');
+        }
+
+        this.applyCategoryToCollection();
+        this.getCategoriesView().isExpanded = this.isExpanded;
+
+        Espo.Ui.notify(' ... ');
+
+        await this.collection.fetch();
+
+        this.getCategoriesView().reRender().then(() => {});
+
+        if (this.isExpanded) {
+            Espo.Ui.warning(this.translate('Expanded'));
+        } else {
+            Espo.Ui.warning(this.translate('Collapsed'));
+        }
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    isCategoryMultiple() {
-        ListWithCategories.prototype.isCategoryMultiple.call(this);
+    /**
+     * @private
+     * @todo Move to helper. Together with list view.
+     */
+    applyCategoryToCollection() {
+        this.collection.whereFunction = () => {
+            let filter;
+            const isExpanded = this.isExpanded;
+
+            if (!isExpanded && !this.hasTextFilter()) {
+                if (this.isCategoryMultiple) {
+                    if (this.currentCategoryId) {
+                        filter = {
+                            attribute: this.categoryField,
+                            type: 'linkedWith',
+                            value: [this.currentCategoryId]
+                        };
+                    }
+                    else {
+                        filter = {
+                            attribute: this.categoryField,
+                            type: 'isNotLinked'
+                        };
+                    }
+                }
+                else {
+                    if (this.currentCategoryId) {
+                        filter = {
+                            attribute: this.categoryField + 'Id',
+                            type: 'equals',
+                            value: this.currentCategoryId
+                        };
+                    }
+                    else {
+                        filter = {
+                            attribute: this.categoryField + 'Id',
+                            type: 'isNull'
+                        };
+                    }
+                }
+            }
+            else {
+                if (this.currentCategoryId) {
+                    filter = {
+                        attribute: this.categoryField,
+                        type: this.categoryFilterType,
+                        value: this.currentCategoryId,
+                    };
+                }
+            }
+
+            if (filter) {
+                return [filter];
+            }
+        };
+    }
+
+    /**
+     * @private
+     * @return {boolean}
+     */
+    hasTextFilter() {
+        return !!this.collection.data.textFilter ||
+            (
+                this.collection.where &&
+                this.collection.where.find(it => it.type === 'textFilter')
+            );
     }
 }
 

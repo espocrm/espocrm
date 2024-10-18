@@ -19,9 +19,18 @@
         class="action link{{#if rootIsSelected}} text-bold{{/if}}"
         data-action="selectRoot"
     >{{rootName}}</a>
-    {{#if isExpanded}}
-        <span class="fas fa-level-down-alt fa-sm text-soft" title="{{translate 'Expanded'}}"></span>
-    {{/if}}
+        <a
+            role="button"
+            data-role="expandButtonContainer"
+            title="{{#if isExpanded}}{{translate 'Expanded'}}{{else}}{{translate 'Collapsed'}}{{/if}}"
+            data-action="toggleExpandedFromNavigation"
+        >
+            {{#if isExpanded}}
+                <span class="fas fa-level-down-alt fa-sm text-soft"></span>
+            {{else}}
+                <span class="fas fa-level-down-alt fa-rotate-270 fa-sm text-soft"></span>
+            {{/if}}
+        </a>
     </div>
     {{/if}}
 

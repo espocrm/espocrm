@@ -57,6 +57,12 @@ class ListWithCategories extends ListView {
      */
     nestedCategoriesCollection
 
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    isCategoryMultiple
+
     data() {
         const data = {};
 
@@ -70,6 +76,8 @@ class ListWithCategories extends ListView {
     setup() {
         super.setup();
 
+        this.addActionHandler('toggleExpandedFromNavigation', () => this.actionToggleExpandedFromNavigation());
+
         this.defaultMaxSize = this.collection.maxSize;
 
         if (!this.categoryScope) {
@@ -77,6 +85,9 @@ class ListWithCategories extends ListView {
         }
 
         this.categoryField = this.getMetadata().get(`scopes.${this.categoryScope}.categoryField`) || this.categoryField;
+
+        this.isCategoryMultiple = this.getMetadata()
+            .get(`entityDefs.${this.scope}.fields.${this.categoryField}.type`) === 'linkMultiple';
 
         this.showEditLink =
             this.getAcl().check(this.categoryScope, 'edit') ||
@@ -177,19 +188,11 @@ class ListWithCategories extends ListView {
      * @return {boolean}
      */
     hasTextFilter() {
-        if (this.collection.where) {
-            for (let i = 0; i < this.collection.where.length; i++) {
-                if (this.collection.where[i].type === 'textFilter') {
-                    return true;
-                }
-            }
-        }
-
-        if (this.collection.data && this.collection.data.textFilter) {
-            return true;
-        }
-
-        return false;
+        return !!this.collection.data.textFilter ||
+            (
+                this.collection.where &&
+                this.collection.where.find(it => it.type === 'textFilter')
+            );
     }
 
     hasNavigationPanelStoredValue() {
@@ -250,7 +253,7 @@ class ListWithCategories extends ListView {
     }
 
     // noinspection JSUnusedGlobalSymbols
-    actionExpand() {
+    async actionExpand() {
         this.isExpanded = true;
 
         this.setIsExpandedStoredValue(true);
@@ -265,15 +268,15 @@ class ListWithCategories extends ListView {
 
         this.nestedCategoriesCollection = null;
 
-        this.reRender();
+        this.reRender().then(() => {});
 
         this.$listContainer.empty();
 
-        this.collection.fetch();
+        await this.collection.fetch();
     }
 
     // noinspection JSUnusedGlobalSymbols
-    actionCollapse() {
+    async actionCollapse() {
         this.isExpanded = false;
         this.setIsExpandedStoredValue(false);
 
@@ -285,11 +288,11 @@ class ListWithCategories extends ListView {
 
         this.navigateToCurrentCategory();
 
-        this.reRender();
+        this.reRender().then(() => {});
 
         this.$listContainer.empty();
 
-        this.collection.fetch();
+        await this.collection.fetch();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -577,13 +580,17 @@ class ListWithCategories extends ListView {
         });
     }
 
+    /**
+     * @private
+     * @todo Move to helper. Together with select-records view.
+     */
     applyCategoryToCollection() {
         this.collection.whereFunction = () => {
             let filter;
             const isExpanded = this.isExpanded;
 
             if (!isExpanded && !this.hasTextFilter()) {
-                if (this.isCategoryMultiple()) {
+                if (this.isCategoryMultiple) {
                     if (this.currentCategoryId) {
                         filter = {
                             attribute: this.categoryField,
@@ -630,15 +637,11 @@ class ListWithCategories extends ListView {
         };
     }
 
-    isCategoryMultiple() {
-        return this.getMetadata()
-            .get(['entityDefs', this.scope, 'fields', this.categoryField, 'type']) === 'linkMultiple';
-    }
 
     getCreateAttributes() {
         let data;
 
-        if (this.isCategoryMultiple()) {
+        if (this.isCategoryMultiple) {
             if (this.currentCategoryId) {
                 const names = {};
 
@@ -766,11 +769,9 @@ class ListWithCategories extends ListView {
 
     // noinspection JSUnusedGlobalSymbols
     async actionToggleNavigationPanel() {
-        const has = !this.hasNavigationPanel;
+        this.hasNavigationPanel = !this.hasNavigationPanel;
 
-        this.hasNavigationPanel = has;
-
-        this.setNavigationPanelStoredValue(has);
+        this.setNavigationPanelStoredValue(this.hasNavigationPanel);
 
         await this.reRender();
 
@@ -781,6 +782,35 @@ class ListWithCategories extends ListView {
         super.prepareRecordViewOptions(options);
 
         options.forceDisplayTopBar = false;
+    }
+
+    /**
+     * @private
+     */
+    async actionToggleExpandedFromNavigation() {
+        this.isExpanded = !this.isExpanded;
+
+        this.hasNavigationPanel = true;
+        this.setNavigationPanelStoredValue(this.hasNavigationPanel);
+
+        /** @type {HTMLAnchorElement} */
+        const a = this.element.querySelector('a[data-role="expandButtonContainer"]');
+
+        if (a) {
+            a.classList.add('disabled');
+        }
+
+        Espo.Ui.notify(' ... ');
+
+        if (this.isExpanded) {
+            await this.actionExpand();
+
+            Espo.Ui.warning(this.translate('Expanded'));
+        } else {
+            await this.actionCollapse();
+
+            Espo.Ui.warning(this.translate('Collapsed'));
+        }
     }
 }
 
