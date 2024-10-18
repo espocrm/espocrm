@@ -58,6 +58,11 @@
                 {{/unless}}
             </ul>
         </div>
+        {{#if isExpandedResult}}
+            <div class="input-text-block pull-right" style="user-select: none;">
+                <span class="label label-default">{{translate 'Expanded'}}</span>
+            </div>
+        {{/if}}
         {{#if currentId}}
         <div class="category-item">
             <a

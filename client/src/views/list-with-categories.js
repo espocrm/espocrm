@@ -484,6 +484,7 @@ class ListWithCategories extends ListView {
         this.getNestedCategoriesCollection(collection => {
             this.createView('nestedCategories', 'views/record/list-nested-categories', {
                 collection: collection,
+                itemCollection: this.collection,
                 selector: '.nested-categories-container',
                 showEditLink: this.showEditLink,
                 isExpanded: this.isExpanded,
