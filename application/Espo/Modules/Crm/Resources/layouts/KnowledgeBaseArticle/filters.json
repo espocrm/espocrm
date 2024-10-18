@@ -7,5 +7,7 @@
     "type",
     "status",
     "portals",
-    "publishDate"
+    "publishDate",
+    "assignedUser",
+    "teams"
 ]
