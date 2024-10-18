@@ -61,7 +61,7 @@ class ListWithCategories extends ListView {
         const data = {};
 
         data.hasTree = (this.isExpanded || this.hasNavigationPanel) && !this.categoriesDisabled;
-        data.hasNestedCategories = !this.isExpanded;
+        data.hasNestedCategories = !this.categoriesDisabled;
         data.fallback = !data.hasTree && !data.hasNestedCategories;
 
         return data;
@@ -242,7 +242,7 @@ class ListWithCategories extends ListView {
             this.loadCategories();
         }
 
-        if (!this.hasView('nestedCategories')) {
+        if (!this.hasView('nestedCategories') && !this.categoriesDisabled) {
             this.loadNestedCategories();
         }
 
