@@ -73,7 +73,7 @@ class ListWithCategories extends ListView {
         this.defaultMaxSize = this.collection.maxSize;
 
         if (!this.categoryScope) {
-            this.categoryScope = this.scope + 'Category';
+            this.categoryScope = `${this.scope}Category`;
         }
 
         this.categoryField = this.getMetadata().get(`scopes.${this.categoryScope}.categoryField`) || this.categoryField;
@@ -106,10 +106,8 @@ class ListWithCategories extends ListView {
             this.hasExpandedToggler = false;
             this.hasNavigationPanel = false;
         } else if (!this.expandedTogglerDisabled) {
-            if (!this.getUser().isPortal()) {
-                if (this.hasIsExpandedStoredValue()) {
-                    this.isExpanded = this.getIsExpandedStoredValue();
-                }
+            if (!this.getUser().isPortal() && this.hasIsExpandedStoredValue()) {
+                this.isExpanded = this.getIsExpandedStoredValue();
             }
 
             if (this.getUser().isPortal()) {
@@ -143,6 +141,9 @@ class ListWithCategories extends ListView {
         });
     }
 
+    /**
+     * @inheritDoc
+     */
     prepareCreateReturnDispatchParams(params) {
         if (this.currentCategoryId) {
             params.options.categoryId = this.currentCategoryId;
@@ -157,18 +158,24 @@ class ListWithCategories extends ListView {
         this.applyRoutingParams(params);
     }
 
+    /**
+     * @private
+     * @param {Record} params
+     */
     applyRoutingParams(params) {
-        if (!this.isExpanded) {
-            if ('categoryId' in params) {
-                if (params.categoryId !== this.currentCategoryId) {
-                    this.openCategory(params.categoryId, params.categoryName);
-                }
+        if ('categoryId' in params) {
+            if (params.categoryId !== this.currentCategoryId) {
+                this.openCategory(params.categoryId, params.categoryName);
             }
-
-            this.selectCurrentCategory();
         }
+
+        this.selectCurrentCategory();
     }
 
+    /**
+     * @private
+     * @return {boolean}
+     */
     hasTextFilter() {
         if (this.collection.where) {
             for (let i = 0; i < this.collection.where.length; i++) {
@@ -186,31 +193,31 @@ class ListWithCategories extends ListView {
     }
 
     hasNavigationPanelStoredValue() {
-        return this.getStorage().has('state', 'categories-navigation-panel-' + this.scope);
+        return this.getStorage().has('state', `categories-navigation-panel-${this.scope}`);
     }
 
     getNavigationPanelStoredValue() {
-        const value = this.getStorage().get('state', 'categories-navigation-panel-' + this.scope);
+        const value = this.getStorage().get('state', `categories-navigation-panel-${this.scope}`);
 
         return value === 'true' || value === true;
     }
 
     setNavigationPanelStoredValue(value) {
-        return this.getStorage().set('state', 'categories-navigation-panel-' + this.scope, value);
+        return this.getStorage().set('state', `categories-navigation-panel-${this.scope}`, value);
     }
 
     hasIsExpandedStoredValue() {
-        return this.getStorage().has('state', 'categories-expanded-' + this.scope);
+        return this.getStorage().has('state', `categories-expanded-${this.scope}`);
     }
 
     getIsExpandedStoredValue() {
-        const value = this.getStorage().get('state', 'categories-expanded-' + this.scope);
+        const value = this.getStorage().get('state', `categories-expanded-${this.scope}`);
 
         return value === 'true' || value === true ;
     }
 
     setIsExpandedStoredValue(value) {
-        return this.getStorage().set('state', 'categories-expanded-' + this.scope, value);
+        return this.getStorage().set('state', `categories-expanded-${this.scope}`, value);
     }
 
     afterRender() {
@@ -223,8 +230,7 @@ class ListWithCategories extends ListView {
             }
 
             this.loadList();
-        }
-        else {
+        } else {
             this.controlListVisibility();
         }
 
@@ -295,17 +301,17 @@ class ListWithCategories extends ListView {
     }
 
     navigateToCurrentCategory() {
-        let url = '#' + this.scope;
+        let url = `#${this.scope}`;
 
         if (this.currentCategoryId) {
-            url += '/list/categoryId=' + this.currentCategoryId;
+            url += `/list/categoryId=${this.currentCategoryId}`;
 
             if (this._primaryFilter) {
-                url += '&primaryFilter=' + this.getHelper().escapeString(this._primaryFilter);
+                url += `&primaryFilter=${this.getHelper().escapeString(this._primaryFilter)}`;
             }
         } else {
             if (this._primaryFilter) {
-                url += '/list/primaryFilter=' + this.getHelper().escapeString(this._primaryFilter);
+                url += `/list/primaryFilter=${this.getHelper().escapeString(this._primaryFilter)}`;
             }
         }
 
@@ -357,7 +363,7 @@ class ListWithCategories extends ListView {
             Promise
                 .all([
                     this.nestedCategoriesCollection.fetch().then(() => this.updateHeader()),
-                    this.collection.fetch({openCategory: true})
+                    this.collection.fetch({openCategory: true}),
                 ])
                 .then(() => {
                     Espo.Ui.notify(false);
@@ -375,6 +381,9 @@ class ListWithCategories extends ListView {
             });
     }
 
+    /**
+     * @private
+     */
     controlListVisibility() {
         if (this.isExpanded) {
             this.showListContainer();
@@ -400,6 +409,9 @@ class ListWithCategories extends ListView {
         this.showListContainer();
     }
 
+    /**
+     * @private
+     */
     controlNestedCategoriesVisibility() {
         this.$nestedCategoriesContainer.removeClass('hidden');
     }
@@ -433,13 +445,16 @@ class ListWithCategories extends ListView {
         this.nestedCategoriesCollection.where = [];
     }
 
+    /**
+     * @private
+     * @param {function(import('collection').default)} callback
+     */
     getNestedCategoriesCollection(callback) {
-        this.getCollectionFactory().create(this.categoryScope, collection => {
+        this.getCollectionFactory().create(this.categoryScope, async collection => {
             this.nestedCategoriesCollection = collection;
 
             collection.setOrder(null, null);
-
-            collection.url = collection.entityType + '/action/listTree';
+            collection.url = `${collection.entityType}/action/listTree`;
             collection.maxDepth = null;
             collection.data.checkIfEmpty = true;
 
@@ -451,18 +466,16 @@ class ListWithCategories extends ListView {
 
             this.nestedCollectionIsBeingFetched = true;
 
-            collection
-                .fetch()
-                .then(() => {
-                    this.nestedCollectionIsBeingFetched = false;
+            await collection.fetch();
 
-                    this.controlNestedCategoriesVisibility();
-                    this.controlListVisibility();
+            this.nestedCollectionIsBeingFetched = false;
 
-                    this.updateHeader();
+            this.controlNestedCategoriesVisibility();
+            this.controlListVisibility();
 
-                    callback.call(this, collection);
-                });
+            this.updateHeader();
+
+            callback.call(this, collection);
         });
     }
 
@@ -480,6 +493,9 @@ class ListWithCategories extends ListView {
         return /** @type module:views/record/list-tree */this.getView('categories');
     }
 
+    /**
+     * @private
+     */
     loadNestedCategories() {
         this.getNestedCategoriesCollection(collection => {
             this.createView('nestedCategories', 'views/record/list-nested-categories', {
@@ -498,6 +514,9 @@ class ListWithCategories extends ListView {
         });
     }
 
+    /**
+     * @private
+     */
     loadCategories() {
         this.getTreeCollection(collection => {
             this.createView('categories', 'views/record/list-tree', {
