@@ -64,7 +64,7 @@
             </div>
         {{/if}}
         {{#if currentId}}
-        <div class="category-item">
+        <div class="category-item category-item-move-up">
             <a
                 href="{{upperLink}}"
                 class="action folder-icon btn-text"
