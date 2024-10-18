@@ -360,11 +360,12 @@ class ListWithCategories extends ListView {
 
             Espo.Ui.notify(' ... ');
 
-            Promise
-                .all([
-                    this.nestedCategoriesCollection.fetch().then(() => this.updateHeader()),
-                    this.collection.fetch({openCategory: true}),
-                ])
+            const promises = [
+                this.nestedCategoriesCollection.fetch().then(() => this.updateHeader()),
+                this.collection.fetch({openCategory: true})
+            ];
+
+            Promise.all(promises)
                 .then(() => {
                     Espo.Ui.notify(false);
 
@@ -466,6 +467,7 @@ class ListWithCategories extends ListView {
 
             this.nestedCollectionIsBeingFetched = true;
 
+            // Needed even in expanded mode to display the header path.
             await collection.fetch();
 
             this.nestedCollectionIsBeingFetched = false;
@@ -767,13 +769,6 @@ class ListWithCategories extends ListView {
         const has = !this.hasNavigationPanel;
 
         this.hasNavigationPanel = has;
-
-        // Needed if folders are hidden with navigation panel.
-        /*if (has && this.getNestedCategoriesView()) {
-            this.getNestedCategoriesView().hasNavigationPanel = true;
-
-            await this.getNestedCategoriesView().reRender();
-        }*/
 
         this.setNavigationPanelStoredValue(has);
 
