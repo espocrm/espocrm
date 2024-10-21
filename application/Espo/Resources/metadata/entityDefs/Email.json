@@ -478,6 +478,7 @@
         "isJustSent": {
             "type": "bool",
             "default": false,
+            "readOnly": true,
             "utility": true,
             "notStorable": true,
             "customizationDisabled": true,
@@ -485,6 +486,7 @@
         },
         "isBeingImported": {
             "type": "bool",
+            "readOnly": true,
             "utility": true,
             "notStorable": true,
             "customizationDisabled": true,
