@@ -65,6 +65,11 @@ class EmailFilter extends Entity
         return (bool) $this->get('markAsRead');
     }
 
+    public function skipNotification(): bool
+    {
+        return (bool) $this->get('skipNotification');
+    }
+
     public function isGlobal(): bool
     {
         return (bool) $this->get('isGlobal');

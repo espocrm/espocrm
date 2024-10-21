@@ -468,6 +468,10 @@ class Email extends Database implements
             if ($filter->markAsRead()) {
                 $entity->setUserColumnIsRead($userId, true);
             }
+
+            if ($filter->skipNotification()) {
+                $entity->setUserSkipNotification($userId);
+            }
         }
     }
 

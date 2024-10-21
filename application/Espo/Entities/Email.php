@@ -40,6 +40,7 @@ use Espo\Repositories\Email as EmailRepository;
 use Espo\Tools\Email\Util as EmailUtil;
 
 use RuntimeException;
+use stdClass;
 
 class Email extends Entity
 {
@@ -843,6 +844,24 @@ class Email extends Entity
     public function setUserColumnInTrash(string $userId, bool $inTrash): self
     {
         $this->setLinkMultipleColumn('users', self::USERS_COLUMN_IN_TRASH, $userId, $inTrash);
+
+        return $this;
+    }
+
+    public function getUserSkipNotification(string $userId): bool
+    {
+        /** @var stdClass $map */
+        $map = $this->get('skipNotificationMap') ?? (object) [];
+
+        return $map->$userId ?? false;
+    }
+
+    public function setUserSkipNotification(string $userId): self
+    {
+        /** @var stdClass $map */
+        $map = $this->get('skipNotificationMap') ?? (object) [];
+        $map->$userId = true;
+        $this->set('skipNotificationMap', $map);
 
         return $this;
     }

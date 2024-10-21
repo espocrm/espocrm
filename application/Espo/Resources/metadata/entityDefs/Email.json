@@ -490,6 +490,12 @@
             "customizationDisabled": true,
             "massUpdateDisabled": true
         },
+        "skipNotificationMap": {
+            "type": "jsonObject",
+            "utility": true,
+            "readOnly": true,
+            "notStorable": true
+        },
         "teams": {
             "type": "linkMultiple",
             "view": "views/fields/teams"

@@ -197,7 +197,8 @@ class Email implements AssignmentNotificator
 
             if (
                 $entity->getUserIdColumnInTrash($userId) ||
-                $entity->getUserIdColumnIsRead($userId)
+                $entity->getUserIdColumnIsRead($userId) ||
+                $entity->getUserSkipNotification($userId)
             ) {
                 continue;
             }

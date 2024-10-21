@@ -39,7 +39,7 @@
                 {"name": "groupEmailFolder"}
             ],
             [
-                {"name": "markAsRead"}
+                {"name": "markAsRead"}, {"name": "skipNotification"}
             ]
         ]
     }

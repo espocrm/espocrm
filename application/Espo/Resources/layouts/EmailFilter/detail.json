@@ -31,7 +31,7 @@
                 {"name": "action"}, {"name": "markAsRead"}
             ],
             [
-                {"name": "emailFolder"}, false
+                {"name": "emailFolder"}, {"name": "skipNotification"}
             ],
             [
                 {"name": "groupEmailFolder"}, false

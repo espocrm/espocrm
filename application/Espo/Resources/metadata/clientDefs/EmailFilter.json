@@ -94,6 +94,17 @@
                         }
                     ]
                 }
+            },
+            "skipNotification": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "attribute": "parentType",
+                            "type": "equals",
+                            "value": "User"
+                        }
+                    ]
+                }
             }
         },
         "options": {
