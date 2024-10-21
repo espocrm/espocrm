@@ -1036,19 +1036,34 @@ input.global-search-input {
                 > .column-resizer {
                     display: none;
                     position: absolute;
-                    width: 3px;
+                    width: 4px;
                     height: 37px;
                     top: 0;
                     user-select: none;
 
+                    &:after {
+                        content: "";
+                        display: block;
+                        height: 37px;
+                        width: 0;
+                        position: absolute;
+                    }
+
                     &:not(.column-resizer-right) {
                         left: 0;
-                        border-left: 1px solid var(--default-border-color);
+
+                        &:after {
+                            border-left: 1px solid var(--default-border-color);
+                            left: 1px;
+                        }
                     }
 
                     &.column-resizer-right {
                         right: 0;
-                        border-right: 1px solid var(--default-border-color);
+                        &:after {
+                            border-right: 1px solid var(--default-border-color);
+                            right: 1px;
+                        }
                     }
 
                     &:hover {
@@ -1067,7 +1082,29 @@ input.global-search-input {
                     position: relative;
 
                     &.being-resized {
-                        background-color: var(--default-heading-bg-color);
+                        &:after {
+                            content: '';
+                            display: block;
+                            position: absolute;
+                            height: 4px;
+                            background-color: var(--default-heading-bg-color);
+                            bottom: 0;
+                            left: 6px;
+                            right: 6px;
+                            border-radius: var(--border-radius-small);
+                        }
+
+                        &:has(.column-resizer-right) {
+                            &:after {
+                                right: 9px;
+                            }
+
+                        }
+                        &:not(:has(.column-resizer-right)) {
+                            &:after {
+                                left: 9px;
+                            }
+                        }
                     }
                 }
             }
