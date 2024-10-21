@@ -32,11 +32,28 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
 
     template = 'modals/select-records-with-categories'
 
-    // Used in applyCategoryToCollection.
+    /**
+     * @private
+     * @type {string}
+     */
     categoryField = 'category'
-    // noinspection JSUnusedGlobalSymbols
+
+    /**
+     * @private
+     * @type {string}
+     */
     categoryFilterType = 'inCategory'
-    categoryScope = ''
+
+    /**
+     * @private
+     * @type {string}
+     */
+    categoryScope
+
+    /**
+     * @private
+     * @type {boolean}
+     */
     isExpanded = true
 
     /**

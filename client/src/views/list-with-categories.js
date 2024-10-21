@@ -252,45 +252,49 @@ class ListWithCategories extends ListView {
         this.$el.focus();
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    async actionExpand() {
-        this.isExpanded = true;
-
-        this.setIsExpandedStoredValue(true);
-
-        this.applyCategoryToCollection();
-
+    /**
+     * @private
+     */
+    clearCategoryViews() {
         this.clearView('nestedCategories');
         this.clearView('categories');
+    }
 
-        this.getRouter().navigate('#' + this.scope);
-        this.updateLastUrl();
-
-        this.nestedCategoriesCollection = null;
-
-        this.reRender().then(() => {});
-
+    /**
+     * @private
+     */
+    emptyListContainer() {
         this.$listContainer.empty();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @private
+     */
+    async actionExpand() {
+        this.isExpanded = true;
+        this.setIsExpandedStoredValue(true);
+        this.applyCategoryToCollection();
+        this.clearCategoryViews();
+        //this.nestedCategoriesCollection = null;
+        this.reRender().then(() => {});
+        this.emptyListContainer();
 
         await this.collection.fetch();
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /**
+     * @private
+     */
     async actionCollapse() {
         this.isExpanded = false;
         this.setIsExpandedStoredValue(false);
-
         this.applyCategoryToCollection();
         this.applyCategoryToNestedCategoriesCollection();
-
-        this.clearView('nestedCategories');
-        this.clearView('categories');
-
-        this.navigateToCurrentCategory();
-
+        this.clearCategoryViews();
         this.reRender().then(() => {});
-
-        this.$listContainer.empty();
+        this.emptyListContainer();
 
         await this.collection.fetch();
     }
@@ -345,7 +349,7 @@ class ListWithCategories extends ListView {
         this.collection.offset = 0;
         this.collection.maxSize = this.defaultMaxSize;
 
-        this.$listContainer.empty();
+        this.emptyListContainer();
 
         this.currentCategoryId = id;
         this.currentCategoryName = name || id;
@@ -637,7 +641,9 @@ class ListWithCategories extends ListView {
         };
     }
 
-
+    /**
+     * @inheritDoc
+     */
     getCreateAttributes() {
         let data;
 
@@ -672,6 +678,10 @@ class ListWithCategories extends ListView {
         return data;
     }
 
+    /**
+     * @private
+     * @return {string|null}
+     */
     getCurrentCategoryName() {
         if (this.currentCategoryName) {
             return this.currentCategoryName;
@@ -689,13 +699,18 @@ class ListWithCategories extends ListView {
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /**
+     * @private
+     */
     actionManageCategories() {
-        this.clearView('categories');
-        this.clearView('nestedCategories');
+        this.clearCategoryViews();
 
         this.getRouter().navigate('#' + this.categoryScope, {trigger: true});
     }
 
+    /**
+     * @inheritDoc
+     */
     getHeader() {
         if (!this.nestedCategoriesCollection) {
             return super.getHeader();
@@ -755,19 +770,32 @@ class ListWithCategories extends ListView {
         return this.buildHeaderHtml(list);
     }
 
+    /**
+     * @protected
+     */
     updateHeader() {
         this.getView('header').reRender();
     }
 
+    /**
+     * @protected
+     */
     hideListContainer() {
         this.$listContainer.addClass('hidden');
     }
 
+    /**
+     * @protected
+     */
     showListContainer() {
         this.$listContainer.removeClass('hidden');
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /**
+     * @private
+     * @return {Promise}
+     */
     async actionToggleNavigationPanel() {
         this.hasNavigationPanel = !this.hasNavigationPanel;
 
@@ -778,6 +806,9 @@ class ListWithCategories extends ListView {
         this.loadNestedCategories();
     }
 
+    /**
+     * @inheritDoc
+     */
     prepareRecordViewOptions(options) {
         super.prepareRecordViewOptions(options);
 
