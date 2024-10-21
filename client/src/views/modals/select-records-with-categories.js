@@ -155,11 +155,7 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
 
         this.getCategoriesView().reRender().then(() => {});
 
-        if (this.isExpanded) {
-            Espo.Ui.warning(this.translate('Expanded'));
-        } else {
-            Espo.Ui.warning(this.translate('Collapsed'));
-        }
+        Espo.Ui.notify();
     }
 
     /**

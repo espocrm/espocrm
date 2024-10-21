@@ -804,13 +804,11 @@ class ListWithCategories extends ListView {
 
         if (this.isExpanded) {
             await this.actionExpand();
-
-            Espo.Ui.warning(this.translate('Expanded'));
         } else {
             await this.actionCollapse();
-
-            Espo.Ui.warning(this.translate('Collapsed'));
         }
+
+        Espo.Ui.notify();
     }
 }
 
