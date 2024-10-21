@@ -36,6 +36,8 @@ import SelectProvider from 'helpers/list/select-provider';
 import RecordListSettingsView from 'views/record/list/settings';
 import ListSettingsHelper from 'helpers/list/settings';
 import StickyBarHelper from 'helpers/list/misc/sticky-bar';
+import ListColumnResizeHelper from 'helpers/record/list/column-resize';
+import ListColumnWidthControlHelper from 'helpers/record/list/column-width-control';
 
 /**
  * A record-list view. Renders and processes list items, actions.
@@ -93,6 +95,7 @@ class ListRecordView extends View {
      * @property {import('helpers/list/settings').default} [settingsHelper] A settings helper.
      * @property {boolean} [displayTotalCount] Display total count.
      * @property {Record} [rootData] Root data.
+     * @property {boolean} [columnResize] Column resize. Actual only if the settings is enabled.
      */
 
     /**
@@ -322,6 +325,15 @@ class ListRecordView extends View {
      * @protected
      */
     showMore = true
+
+    /**
+     * Column resize.
+     *
+     * @protected
+     * @type {boolean}
+     * @since 8.5.0
+     */
+    columnResize = true
 
     /**
      * A mass-action list.
@@ -581,6 +593,12 @@ class ListRecordView extends View {
 
     /** @private */
     _additionalRowActionList
+
+    /**
+     * @private
+     * @type {import('helpers/record/list/column-resize').default}
+     */
+    _columnResizeHelper
 
     /** @inheritDoc */
     events = {
@@ -992,6 +1010,7 @@ class ListRecordView extends View {
             collectionLength: this.collection.models.length,
             entityType: this.entityType,
             header: this.header,
+            hasColumnResize: this._hasColumnResize(),
             headerDefs: this._getHeaderDefs(),
             hasPagination: this.hasPagination(),
             showMoreActive: this.collection.hasMore(),
@@ -1036,6 +1055,10 @@ class ListRecordView extends View {
 
         if (this.paginationDisabled) {
             this.pagination = false;
+        }
+
+        if (this.options.columnResize !== undefined) {
+            this.columnResize = this.options.columnResize;
         }
 
         this.checkboxes = _.isUndefined(this.options.checkboxes) ? this.checkboxes :
@@ -2125,6 +2148,10 @@ class ListRecordView extends View {
         }
 
         this._renderEmpty = this.options.skipBuildRows;
+
+        if (this.columnResize && this._listSettingsHelper) {
+            this._columnResizeHelper = new ListColumnResizeHelper(this, this._listSettingsHelper);
+        }
     }
 
     /**
@@ -2544,29 +2571,57 @@ class ListRecordView extends View {
         return selectProvider.getFromLayout(this.entityType, this.listLayout);
     }
 
+    /**
+     * @private
+     */
+    _hasColumnResize() {
+        return this._listSettingsHelper ? this._listSettingsHelper.getColumnResize() : false;
+    }
+
     /** @protected */
     _getHeaderDefs() {
         const defs = [];
 
-        const hiddenMap = this._listSettingsHelper ?
-            this._listSettingsHelper.getHiddenColumnMap() : {};
+        const resize = this._hasColumnResize();
+
+        const widthMap = this._listSettingsHelper ? this._listSettingsHelper.getColumnWidthMap() : {};
 
         // noinspection JSIncompatibleTypesComparison
         if (!this.listLayout || !Array.isArray(this.listLayout)) {
             return [];
         }
 
-        for (const col of this.listLayout) {
+        let emptyWidthMet = false;
+
+        const visibleColumns = this.listLayout.filter(it => {
+            if (!this._listSettingsHelper) {
+                return true;
+            }
+
+            if (it.name && this._listSettingsHelper.isColumnHidden(it.name, it.hidden)) {
+                return false;
+            }
+
+            return true;
+        })
+
+        for (const col of visibleColumns) {
             let width = false;
 
-            if ('width' in col && col.width !== null) {
+            const itemName = col.name;
+
+            if (itemName && (itemName in widthMap)) {
+                const widthItem = widthMap[itemName];
+
+                width = widthItem.value + widthItem.unit;
+            } else if ('width' in col && col.width !== null) {
                 width = col.width + '%';
-            }
-            else if ('widthPx' in col) {
+            } else if ('widthPx' in col) {
                 width = col.widthPx + 'px';
+            } else {
+                emptyWidthMet = true;
             }
 
-            const itemName = col.name;
             const label = col.label || itemName;
 
             const item = {
@@ -2574,6 +2629,8 @@ class ListRecordView extends View {
                 isSortable: !(col.notSortable || false),
                 width: width,
                 align: ('align' in col) ? col.align : false,
+                resizable: resize && width && visibleColumns.length > 1,
+                resizeOnRight: resize && width && !emptyWidthMet,
             };
 
             if ('customLabel' in col) {
@@ -2594,20 +2651,6 @@ class ListRecordView extends View {
 
                 if (item.isSorted) {
                     item.isDesc = this.collection.order === 'desc' ;
-                }
-            }
-
-            if (itemName && hiddenMap[itemName]) {
-                continue;
-            }
-
-            if (itemName) {
-                if (hiddenMap[itemName]) {
-                    continue;
-                }
-
-                if (col.hidden && !(itemName in hiddenMap)) {
-                    continue;
                 }
             }
 
@@ -2658,9 +2701,6 @@ class ListRecordView extends View {
             });
         }
 
-        const hiddenMap = this._listSettingsHelper ?
-            this._listSettingsHelper.getHiddenColumnMap() : {};
-
         for (const col of listLayout) {
             const type = col.type || model.getFieldType(col.name) || 'base';
 
@@ -2708,12 +2748,8 @@ class ListRecordView extends View {
                 }
             }
 
-            if (col.name) {
-                if (hiddenMap[col.name]) {
-                    continue;
-                }
-
-                if (col.hidden && !(col.name in hiddenMap)) {
+            if (col.name && this._listSettingsHelper) {
+                if (this._listSettingsHelper.isColumnHidden(col.name, col.hidden)) {
                     continue;
                 }
             }
@@ -3585,22 +3621,45 @@ class ListRecordView extends View {
             layoutProvider: () => this.listLayout,
             helper: this._listSettingsHelper,
             entityType: this.entityType,
-            onChange: () => {
-                this._internalLayout = null;
-
-                this.afterSettingsChange();
-            },
+            columnResize: this.columnResize,
+            onChange: (options) => this.afterSettingsChange(options),
         });
 
         this.assignView('settings', view, '.settings-container');
     }
 
-    /** @protected */
-    afterSettingsChange() {
+    /**
+     * @protected
+     * @param {RecordListSettingsView~onChangeOptions} options
+     */
+    async afterSettingsChange(options) {
+        if (options.action === 'toggleColumnResize') {
+            await this.reRender();
+
+            return;
+        }
+
+        if (
+            options.action === 'toggleColumn' &&
+            !this._listSettingsHelper.getHiddenColumnMap()[options.column] &&
+            this._columnResizeHelper
+        ) {
+            const helper = new ListColumnWidthControlHelper({
+                view: this,
+                helper: this._listSettingsHelper,
+                layoutProvider: () => this.listLayout,
+            });
+
+            helper.adjust();
+        }
+
+        this._internalLayout = null;
+
         Espo.Ui.notify(' ... ');
 
-        this.collection.fetch()
-            .then(() => Espo.Ui.notify(false));
+        await this.collection.fetch();
+
+        Espo.Ui.notify(false);
     }
 
     /**

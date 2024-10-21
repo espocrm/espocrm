@@ -178,6 +178,10 @@ ul.dropdown-menu-with-icons {
 }
 
 ul.dropdown-menu {
+    > li.divider:first-child {
+        display: none;
+    }
+
     > li.divider + li.divider {
         display: none;
     }

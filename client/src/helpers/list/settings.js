@@ -29,6 +29,12 @@
 class ListSettingsHelper {
 
     /**
+     * @typedef {Object} ListSettingsHelper~columnWidth
+     * @property {number} value A value.
+     * @property {'px'|'%'} unit A unit.
+     */
+
+    /**
      * @param {string} entityType
      * @param {string} type
      * @param {string} userId
@@ -38,8 +44,32 @@ class ListSettingsHelper {
         /** @private */
         this.storage = storage;
 
+        /** @private */
         this.layoutColumnsKey = `${type}-${entityType}-${userId}`;
-        this.hiddenColumnMapCache = {};
+
+        /**
+         * @private
+         * @type {Object.<string, boolean>}
+         */
+        this.hiddenColumnMapCache = undefined;
+
+        /**
+         * @private
+         * @type {Object.<string, ListSettingsHelper~columnWidth>}
+         */
+        this.columnWidthMapCache = undefined;
+
+        /**
+         * @private
+         * @type {boolean|undefined}
+         */
+        this.columnResize = undefined;
+
+        /**
+         * @private
+         * @type {function()[]}
+         */
+        this.columnWidthChangeFunctions = [];
     }
 
     /**
@@ -48,11 +78,74 @@ class ListSettingsHelper {
      * @return {Object.<string, boolean>}
      */
     getHiddenColumnMap() {
-        if (this.hiddenColumnMapCache[this.layoutColumnsKey]) {
-            return this.hiddenColumnMapCache[this.layoutColumnsKey];
+        if (this.hiddenColumnMapCache) {
+            return this.hiddenColumnMapCache;
         }
 
-        return this.storage.get('listHiddenColumns', this.layoutColumnsKey) || {};
+        this.hiddenColumnMapCache = this.storage.get('listHiddenColumns', this.layoutColumnsKey) || {};
+
+        return this.hiddenColumnMapCache;
+    }
+
+    /**
+     * Is a column hidden.
+     *
+     * @param {string} name A name.
+     * @param {boolean} [hidden] Is hidden by default.
+     * @return {boolean}
+     * @since 8.5.0
+     */
+    isColumnHidden(name, hidden) {
+        const hiddenMap = this.getHiddenColumnMap();
+
+        if (hiddenMap[name]) {
+            return true;
+        }
+
+        if (!hidden) {
+            return false;
+        }
+
+        if (!(name in hiddenMap)) {
+            return true;
+        }
+
+        return hiddenMap[name];
+    }
+
+    /**
+     * Is column resize enabled.
+     *
+     * @return {boolean}
+     * @since 8.5.0
+     */
+    getColumnResize() {
+        if (this.columnResize === undefined) {
+            this.columnResize = this.storage.get('listColumnResize', this.layoutColumnsKey) || false;
+        }
+
+        return this.columnResize;
+    }
+
+    /**
+     * Store column width editable.
+     *
+     * @param {boolean} columnResize
+     */
+    storeColumnResize(columnResize) {
+        this.columnResize = columnResize;
+
+        this.storage.set('listColumnResize', this.layoutColumnsKey, columnResize);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Clear column width editable.
+     */
+    clearColumnResize() {
+        this.columnResize = undefined;
+
+        this.storage.clear('listColumnResize', this.layoutColumnsKey);
     }
 
     /**
@@ -61,7 +154,7 @@ class ListSettingsHelper {
      * @param {Object.<string, boolean>} map
      */
     storeHiddenColumnMap(map) {
-        delete this.hiddenColumnMapCache[this.layoutColumnsKey];
+        this.hiddenColumnMapCache = undefined;
 
         this.storage.set('listHiddenColumns', this.layoutColumnsKey, map);
     }
@@ -70,9 +163,88 @@ class ListSettingsHelper {
      * Clear a hidden column map in the storage.
      */
     clearHiddenColumnMap() {
-        delete this.hiddenColumnMapCache[this.layoutColumnsKey];
+        this.hiddenColumnMapCache = undefined;
 
         this.storage.clear('listHiddenColumns', this.layoutColumnsKey);
+    }
+
+    /**
+     * Get a stored column width map.
+     *
+     * @return {Object.<string, ListSettingsHelper~columnWidth>}
+     */
+    getColumnWidthMap() {
+        if (this.columnWidthMapCache) {
+            return this.columnWidthMapCache;
+        }
+
+        this.columnWidthMapCache = this.storage.get('listColumnsWidths', this.layoutColumnsKey) || {};
+
+        return this.columnWidthMapCache;
+    }
+
+    /**
+     * Store a column width map.
+     *
+     * @param {Object.<string, ListSettingsHelper~columnWidth>} map
+     */
+    storeColumnWidthMap(map) {
+        this.columnWidthMapCache = undefined;
+
+        this.storage.set('listColumnsWidths', this.layoutColumnsKey, map);
+    }
+
+    /**
+     * Clear a column width map in the storage.
+     */
+    clearColumnWidthMap() {
+        this.columnWidthMapCache = undefined;
+
+        this.storage.clear('listColumnsWidths', this.layoutColumnsKey);
+    }
+
+    /**
+     * Set a column width.
+     *
+     * @param {string} name A column name.
+     * @param {ListSettingsHelper~columnWidth} width Width data.
+     */
+    storeColumnWidth(name, width) {
+        if (!this.columnWidthMapCache) {
+            this.columnWidthMapCache = {};
+        }
+
+        this.columnWidthMapCache[name] = width;
+
+        this.storeColumnWidthMap(this.columnWidthMapCache);
+
+        for (const handler of this.columnWidthChangeFunctions) {
+            handler();
+        }
+    }
+
+    /**
+     * Subscribe to a column width change.
+     *
+     * @param {function()} handler A handler.
+     */
+    subscribeToColumnWidthChange(handler) {
+        this.columnWidthChangeFunctions.push(handler);
+    }
+
+    /**
+     * Unsubscribe from a column width change.
+     *
+     * @param {function()} handler A handler.
+     */
+    unsubscribeFromColumnWidthChange(handler) {
+        const index = this.columnWidthChangeFunctions.findIndex(it => handler === it);
+
+        if (!~index) {
+            return;
+        }
+
+        this.columnWidthChangeFunctions.splice(index, 1);
     }
 }
 

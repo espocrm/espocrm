@@ -142,7 +142,10 @@
         data-scope="{{scope}}"
         tabindex="-1"
     >
-        <table class="table"{{#if tableMinWidth}} style="min-width: {{tableMinWidth}}px;"{{/if}}>
+        <table
+            class="table {{#if hasColumnResize~}} column-resizable {{~/if}}"
+            {{#if tableMinWidth}} style="min-width: {{tableMinWidth}}px;"{{/if}}
+        >
             {{#if header}}
             <thead>
                 <tr>
@@ -150,6 +153,7 @@
                     <th
                         style="width: {{checkboxColumnWidth}}"
                         data-name="r-checkbox"
+                        class="checkbox-cell"
                     >
                         <span
                             class="select-all-container"
@@ -180,7 +184,7 @@
                     {{#each headerDefs}}
                     <th
                         style="{{#if width}}width: {{width}};{{/if}}{{#if align}} text-align: {{align}};{{/if}}"
-                        {{#if className}}class="{{className}}"{{/if}}
+                        class="{{#if className~}} {{className}} {{~/if}} field-header-cell"
                         {{#if name}}data-name="{{name}}"{{/if}}
                     >
                         {{#if this.isSortable}}
@@ -204,6 +208,10 @@
                             {{else}}
                             {{label}}
                             {{/if}}
+                        {{/if}}
+
+                        {{#if resizable}}
+                            <div class="column-resizer {{#if resizeOnRight}} column-resizer-right {{/if}}"></div>
                         {{/if}}
                     </th>
                     {{/each}}

@@ -89,7 +89,7 @@ class LayoutWidthComplexFieldView extends BaseFieldView {
     }
 
     getMinValue() {
-        return this.auxModel.attributes.unit === 'px' ? 16 : 5;
+        return this.auxModel.attributes.unit === 'px' ? 30 : 5;
     }
 
     getMaxValue() {

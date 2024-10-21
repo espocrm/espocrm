@@ -44,6 +44,7 @@ class ListExpandedRecordView extends ListRecordView {
     _internalLayout = null
     checkedList = null
     listContainerEl = '.list > ul'
+    columnResize = false
 
     init() {
         if (this.options.forcePagination) {
