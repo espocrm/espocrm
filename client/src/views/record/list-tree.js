@@ -50,6 +50,8 @@ class ListTreeRecordView extends ListRecordView {
     level = 0
     itemViewName = 'views/record/list-tree-item'
 
+    expandToggleInactive = false;
+
     // noinspection JSCheckFunctionSignatures
     data() {
         const data = super.data();
@@ -71,6 +73,7 @@ class ListTreeRecordView extends ListRecordView {
         }
 
         data.noData = data.createDisabled && !data.rowDataList.length && !data.showRoot;
+        data.expandToggleInactive = this.expandToggleInactive;
 
         return data;
     }

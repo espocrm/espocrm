@@ -19,11 +19,12 @@
         class="action link{{#if rootIsSelected}} text-bold{{/if}}"
         data-action="selectRoot"
     >{{rootName}}</a>
-        <a
+         <a
             role="button"
             data-role="expandButtonContainer"
             title="{{#if isExpanded}}{{translate 'Expanded'}}{{else}}{{translate 'Collapsed'}}{{/if}}"
             data-action="toggleExpandedFromNavigation"
+            class="{{#if expandToggleInactive}} disabled {{/if}}"
         >
             {{#if isExpanded}}
                 <span class="fas fa-level-down-alt fa-sm text-soft"></span>

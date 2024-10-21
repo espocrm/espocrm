@@ -256,8 +256,22 @@ class ListWithCategories extends ListView {
      * @private
      */
     clearCategoryViews() {
-        this.clearView('nestedCategories');
+        this.clearNestedCategoriesView();
+        this.clearCategoriesView();
+    }
+
+    /**
+     * @private
+     */
+    clearCategoriesView() {
         this.clearView('categories');
+    }
+
+    /**
+     * @private
+     */
+    clearNestedCategoriesView() {
+        this.clearView('nestedCategories');
     }
 
     /**
@@ -275,12 +289,23 @@ class ListWithCategories extends ListView {
         this.isExpanded = true;
         this.setIsExpandedStoredValue(true);
         this.applyCategoryToCollection();
-        this.clearCategoryViews();
-        //this.nestedCategoriesCollection = null;
+        this.clearNestedCategoriesView();
+
+        if (this.getCategoriesView()) {
+            this.getCategoriesView().isExpanded = true;
+            this.getCategoriesView().expandToggleInactive = true;
+        }
+
         this.reRender().then(() => {});
+
         this.emptyListContainer();
 
         await this.collection.fetch();
+
+        if (this.getCategoriesView()) {
+            this.getCategoriesView().expandToggleInactive = false;
+            await this.getCategoriesView().reRender();
+        }
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -292,11 +317,23 @@ class ListWithCategories extends ListView {
         this.setIsExpandedStoredValue(false);
         this.applyCategoryToCollection();
         this.applyCategoryToNestedCategoriesCollection();
-        this.clearCategoryViews();
+        this.clearNestedCategoriesView();
+
+        if (this.getCategoriesView()) {
+            this.getCategoriesView().isExpanded = false;
+            this.getCategoriesView().expandToggleInactive = true;
+        }
+
         this.reRender().then(() => {});
+
         this.emptyListContainer();
 
         await this.collection.fetch();
+
+        if (this.getCategoriesView()) {
+            this.getCategoriesView().expandToggleInactive = false;
+            await this.getCategoriesView().reRender();
+        }
     }
 
     // noinspection JSUnusedGlobalSymbols
