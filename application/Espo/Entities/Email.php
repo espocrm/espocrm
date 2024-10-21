@@ -812,17 +812,17 @@ class Email extends Entity
         return $this;
     }
 
-    public function getUserIdColumnIsRead(string $userId): ?bool
+    public function getUserColumnIsRead(string $userId): ?bool
     {
         return $this->getLinkMultipleColumn('users', self::USERS_COLUMN_IS_READ, $userId);
     }
 
-    public function getUserIdColumnInTrash(string $userId): ?bool
+    public function getUserColumnInTrash(string $userId): ?bool
     {
         return $this->getLinkMultipleColumn('users', self::USERS_COLUMN_IN_TRASH, $userId);
     }
 
-    public function getUserIdColumnFolderId(string $userId): ?string
+    public function getUserColumnFolderId(string $userId): ?string
     {
         return $this->getLinkMultipleColumn('users', self::USERS_COLUMN_FOLDER_ID, $userId);
     }

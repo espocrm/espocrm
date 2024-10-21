@@ -196,8 +196,8 @@ class Email implements AssignmentNotificator
             }
 
             if (
-                $entity->getUserIdColumnInTrash($userId) ||
-                $entity->getUserIdColumnIsRead($userId) ||
+                $entity->getUserColumnInTrash($userId) ||
+                $entity->getUserColumnIsRead($userId) ||
                 $entity->getUserSkipNotification($userId)
             ) {
                 continue;
@@ -211,7 +211,7 @@ class Email implements AssignmentNotificator
                 $params->getOption(EmailEntity::SAVE_OPTION_IS_BEING_IMPORTED) ||
                 $params->getOption(EmailEntity::SAVE_OPTION_IS_JUST_SENT)
             ) {
-                $folderId = $entity->getUserIdColumnFolderId($userId);
+                $folderId = $entity->getUserColumnFolderId($userId);
 
                 if (
                     $folderId &&
