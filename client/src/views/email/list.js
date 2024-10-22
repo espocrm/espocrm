@@ -182,7 +182,7 @@ class EmailListView extends ListView {
                     top: 0,
                     left: 0,
                 },
-                drag: (e) => {
+                drag: () => {
                     if (recordView.allResultIsChecked) {
                         return false;
                     }

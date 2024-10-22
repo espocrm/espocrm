@@ -273,7 +273,6 @@ class EmailListRecordView extends ListRecordView {
     }
 
     /**
-     * @private
      * @param {string} folderId
      */
     async massMoveToFolder(folderId) {
