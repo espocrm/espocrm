@@ -83,14 +83,6 @@ class KnowledgeBaseRecordDetailView extends DetailRecordView {
             });
         });
     }
-
-    afterRender() {
-        super.afterRender();
-
-        if (this.getUser().isPortal()) {
-            this.$el.find('.field[data-name="body"]').css('minHeight', '400px');
-        }
-    }
 }
 
 export default KnowledgeBaseRecordDetailView;
