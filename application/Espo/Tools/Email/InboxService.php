@@ -43,8 +43,12 @@ use Espo\Entities\Email;
 use Espo\Entities\EmailFolder;
 use Espo\Entities\GroupEmailFolder;
 use Espo\Entities\Notification;
+use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\SelectBuilder;
 use Exception;
 use RuntimeException;
 
@@ -165,6 +169,8 @@ class InboxService
         $email
             ->setGroupFolder($folder)
             ->setGroupStatusFolder(null);
+
+        $this->applyGroupFolder($email, $folder);
 
         $this->entityManager->saveEntity($email);
 
@@ -679,5 +685,39 @@ class InboxService
         }
 
         return $folder;
+    }
+
+    private function applyGroupFolder(Email $email, GroupEmailFolder $folder): void
+    {
+        if (!$folder->getTeams()->getCount()) {
+            return;
+        }
+
+        foreach ($folder->getTeams()->getIdList() as $teamId) {
+            $email->addTeamId($teamId);
+        }
+
+        $users = $this->entityManager
+            ->getRDBRepositoryByClass(User::class)
+            ->select(['id'])
+            ->where([
+                'type' => [User::TYPE_REGULAR, User::TYPE_ADMIN],
+                'isActive' => true,
+            ])
+            ->where(
+                Condition::in(
+                    Expression::column('id'),
+                    SelectBuilder::create()
+                        ->from(Team::RELATIONSHIP_TEAM_USER)
+                        ->select('userId')
+                        ->where(['teamId' => $folder->getTeams()->getIdList()])
+                        ->build()
+                )
+            )
+            ->find();
+
+        foreach ($users as $user) {
+            $email->addUserId($user->getId());
+        }
     }
 }
