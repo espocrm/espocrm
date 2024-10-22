@@ -13,6 +13,8 @@ Consider creating a topic on our [forum](https://forum.espocrm.com/forum/general
 The issue tracker is for the benefit of the EspoCRM project. The project maintainers are going to handle issues in the project's best interest.
 The maintainers have right to close issues without explanation.
 
+As we reference GitHub issues in release notes, we strive to keep them free of off-topic comments.
+
 ## Pull Requests
 
 We are open for contributions that are bug fixes and small improvements. If you would like to contribute something that is not a small fix, please reach out to maintainers before submitting your PR (by creating a GitHub issue).
