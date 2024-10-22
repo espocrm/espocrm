@@ -40,6 +40,10 @@ export default class extends TabListFieldView {
                 return true;
             }
 
+            if (tab === 'Stream') {
+                return true;
+            }
+
             return !!this.getMetadata().get(`scopes.${tab}.aclPortal`);
         });
     }
