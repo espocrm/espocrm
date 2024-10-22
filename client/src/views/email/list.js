@@ -145,7 +145,7 @@ class EmailListView extends ListView {
         this.collection.models.slice(fromIndex).forEach(m => {
             const $row = $container.find(`.list-row[data-id="${m.id}"]`).first();
 
-            // noinspection JSUnresolvedReference
+            // noinspection JSUnresolvedReference,JSUnusedGlobalSymbols
             $row.draggable({
                 cancel: 'input,textarea,button,select,option,.dropdown-menu',
                 helper: () => {
@@ -182,7 +182,16 @@ class EmailListView extends ListView {
                     top: 0,
                     left: 0,
                 },
+                drag: (e) => {
+                    if (recordView.allResultIsChecked) {
+                        return false;
+                    }
+                },
                 start: (e) => {
+                    if (recordView.allResultIsChecked) {
+                        return;
+                    }
+
                     const $target = $(e.target);
 
                     $target.closest('tr').addClass('active');
