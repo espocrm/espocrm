@@ -52,6 +52,12 @@ use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 use Espo\Entities\EmailFilter;
+use Espo\Entities\GroupEmailFolder;
+use Espo\Entities\Team;
+use Espo\Entities\User;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\Repositories\Email as EmailRepository;
 use Espo\ORM\EntityManager;
 use Espo\Tools\Stream\Jobs\ProcessNoteAcl;
@@ -280,7 +286,7 @@ class DefaultImporter implements Importer
         return $this->duplicateFinder->find($email, $message);
     }
 
-    private function processDuplicate(Email $duplicate, Data $data, ?string $groupEmailFolderId): void
+    private function processDuplicate(Email $duplicate, Data $data, ?string $groupFolderId): void
     {
         $assignedUserId = $data->getAssignedUserId();
 
@@ -290,14 +296,14 @@ class DefaultImporter implements Importer
         }
 
         $duplicate->loadLinkMultipleField('users');
-        $fetchedUserIdList = $duplicate->getLinkMultipleIdList('users');
+        $fetchedUserIds = $duplicate->getLinkMultipleIdList('users');
 
         $duplicate->setLinkMultipleIdList('users', []);
 
         $processNoteAcl = false;
 
         if ($assignedUserId) {
-            if (!in_array($assignedUserId, $fetchedUserIdList)) {
+            if (!in_array($assignedUserId, $fetchedUserIds)) {
                 $processNoteAcl = true;
 
                 $duplicate->addUserId($assignedUserId);
@@ -307,7 +313,7 @@ class DefaultImporter implements Importer
         }
 
         foreach ($data->getUserIdList() as $uId) {
-            if (!in_array($uId, $fetchedUserIdList)) {
+            if (!in_array($uId, $fetchedUserIds)) {
                 $processNoteAcl = true;
 
                 $duplicate->addUserId($uId);
@@ -315,7 +321,7 @@ class DefaultImporter implements Importer
         }
 
         foreach ($data->getFolderData() as $uId => $folderId) {
-            if (!in_array($uId, $fetchedUserIdList)) {
+            if (!in_array($uId, $fetchedUserIds)) {
                 $duplicate->setUserColumnFolderId($uId, $folderId);
 
                 continue;
@@ -330,6 +336,16 @@ class DefaultImporter implements Importer
         $duplicate->set('isBeingImported', true);
 
         $this->getEmailRepository()->applyUsersFilters($duplicate);
+
+        if ($groupFolderId && !$duplicate->getGroupFolder()) {
+            $this->relateWithGroupFolder($duplicate, $groupFolderId);
+
+            $usersAddedFromFolder = $this->addUsersFromGroupFolder($duplicate, $groupFolderId, $fetchedUserIds);
+
+            if ($usersAddedFromFolder) {
+                $processNoteAcl = true;
+            }
+        }
 
         $saverParams = SaverParams::create()->withRawOptions([
             'skipLinkMultipleRemove' => true,
@@ -356,12 +372,6 @@ class DefaultImporter implements Importer
                     ->getRelation($duplicate, 'teams')
                     ->relateById($teamId);
             }
-        }
-
-        if ($groupEmailFolderId && !$duplicate->getGroupFolder()) {
-            $this->entityManager
-                ->getRelation($duplicate, 'groupFolder')
-                ->relateById($groupEmailFolderId);
         }
 
         if ($duplicate->getParentType() && $processNoteAcl) {
@@ -571,8 +581,13 @@ class DefaultImporter implements Importer
             return true;
         }
 
-        if ($matchedFilter->getAction() === EmailFilter::ACTION_MOVE_TO_GROUP_FOLDER) {
+        if (
+            $matchedFilter->getAction() === EmailFilter::ACTION_MOVE_TO_GROUP_FOLDER &&
+            $matchedFilter->getGroupEmailFolderId()
+        ) {
             $email->setGroupFolderId($matchedFilter->getGroupEmailFolderId());
+
+            $this->addUsersFromGroupFolder($email, $matchedFilter->getGroupEmailFolderId());
         }
 
         return false;
@@ -617,5 +632,56 @@ class DefaultImporter implements Importer
     {
         /** @var EmailRepository */
         return $this->entityManager->getRDBRepositoryByClass(Email::class);
+    }
+
+    private function relateWithGroupFolder(Email $email, string $groupFolderId): void
+    {
+        $this->entityManager
+            ->getRelation($email, 'groupFolder')
+            ->relateById($groupFolderId);
+    }
+
+    /**
+     * @param string[] $fetchedUserIds
+     */
+    private function addUsersFromGroupFolder(Email $email, string $groupFolderId, array $fetchedUserIds = []): bool
+    {
+        $groupFolder = $this->entityManager
+            ->getRDBRepositoryByClass(GroupEmailFolder::class)
+            ->getById($groupFolderId);
+
+        if (!$groupFolder || !$groupFolder->getTeams()->getCount()) {
+            return false;
+        }
+
+        $users = $this->entityManager
+            ->getRDBRepositoryByClass(User::class)
+            ->select(['id'])
+            ->where([
+                'type' => [User::TYPE_REGULAR, User::TYPE_ADMIN],
+                'isActive' => true,
+                'id!=' => $fetchedUserIds,
+            ])
+            ->where(
+                Condition::in(
+                    Expression::column('id'),
+                    SelectBuilder::create()
+                        ->from(Team::RELATIONSHIP_TEAM_USER)
+                        ->select('userId')
+                        ->where(['teamId' => $groupFolder->getTeams()->getIdList()])
+                        ->build()
+                )
+            )
+            ->find();
+
+        $added = false;
+
+        foreach ($users as $user) {
+            $added = true;
+
+            $email->addUserId($user->getId());
+        }
+
+        return $added;
     }
 }
