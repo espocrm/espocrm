@@ -88,7 +88,7 @@ class PutStar implements Action
             throw new Forbidden();
         }
 
-        if (!$this->user->isRegular() && !$this->user->isAdmin()) {
+        if (!$this->user->isRegular() && !$this->user->isAdmin() && !$this->user->isPortal()) {
             throw new Forbidden("Not allowed for non-internal users.");
         }
 

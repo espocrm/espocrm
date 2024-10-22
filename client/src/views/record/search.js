@@ -286,10 +286,7 @@ class SearchView extends View {
             return true;
         });
 
-        if (
-            this.getMetadata().get(`scopes.${this.scope}.stars`) &&
-            !this.getUser().isPortal()
-        ) {
+        if (this.getMetadata().get(`scopes.${this.scope}.stars`)) {
             this.presetFilterList.unshift({
                 name: 'starred',
             });
