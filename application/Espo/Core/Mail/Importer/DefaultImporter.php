@@ -616,6 +616,6 @@ class DefaultImporter implements Importer
     private function getEmailRepository(): EmailRepository
     {
         /** @var EmailRepository */
-        return $this->entityManager->getRDBRepository(Email::ENTITY_TYPE);
+        return $this->entityManager->getRDBRepositoryByClass(Email::class);
     }
 }

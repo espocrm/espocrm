@@ -48,12 +48,15 @@ use Espo\Core\ORM\EntityManager;
 use Espo\Core\Repositories\Database;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
-
 use Espo\ORM\Repository\RDBSelectBuilder;
 
-class ImporterTest extends \PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class ImporterTest extends TestCase
 {
-    function setUp(): void
+    protected $emailRepository;
+
+    protected function setUp(): void
     {
         $entityManager = $this->entityManager = $this->createMock(EntityManager::class);
 
@@ -108,11 +111,13 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
             ->method('where')
             ->will($this->returnValue($selectBuilder));
 
+        $this->emailRepository = $emailRepository;
+
         $this->repositoryMap = [
-             ['Email', $emailRepository],
-             ['Account', $emptyRepository],
-             ['Contact', $emptyRepository],
-             ['Lead', $emptyRepository],
+             [Email::class, $this->emailRepository],
+             //['Account', $emptyRepository],
+             //['Contact', $emptyRepository],
+             //['Lead', $emptyRepository],
         ];
 
         $valueAccessor = $this->createMock(ValueAccessor::class);
@@ -146,7 +151,7 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
         $this->jobSchedulerFactory = $this->createMock(JobSchedulerFactory::class);
     }
 
-    function testImport1()
+    public function testImport1(): void
     {
         $entityManager = $this->entityManager;
         $config = $this->config;
@@ -154,7 +159,7 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
 
         $entityManager
             ->expects($this->any())
-            ->method('getRepository')
+            ->method('getRDBRepositoryByClass')
             ->will($this->returnValueMap($this->repositoryMap));
 
         $entityManager
@@ -165,10 +170,9 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
                 $entity->set('id', 'test-id');
             });
 
-        $entityManager
-            ->expects($this->any())
-            ->method('getNewEntity')
-            ->with($this->equalTo('Email'))
+        $this->emailRepository
+            ->expects($this->once())
+            ->method('getNew')
             ->will($this->returnValue($email));
 
         $config
