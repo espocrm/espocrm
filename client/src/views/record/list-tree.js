@@ -74,6 +74,7 @@ class ListTreeRecordView extends ListRecordView {
 
         data.noData = data.createDisabled && !data.rowDataList.length && !data.showRoot;
         data.expandToggleInactive = this.expandToggleInactive;
+        data.hasExpandToggle = !this.getUser().isPortal();
 
         return data;
     }

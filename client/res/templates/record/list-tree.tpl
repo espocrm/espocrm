@@ -19,6 +19,7 @@
         class="action link{{#if rootIsSelected}} text-bold{{/if}}"
         data-action="selectRoot"
     >{{rootName}}</a>
+        {{#if hasExpandToggle}}
          <a
             role="button"
             data-role="expandButtonContainer"
@@ -32,6 +33,7 @@
                 <span class="fas fa-level-down-alt fa-rotate-270 fa-sm text-soft"></span>
             {{/if}}
         </a>
+        {{/if}}
     </div>
     {{/if}}
 
