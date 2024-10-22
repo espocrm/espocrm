@@ -286,19 +286,22 @@ class DefaultImporter implements Importer
         return $this->duplicateFinder->find($email, $message);
     }
 
-    private function processDuplicate(Email $duplicate, Data $data, ?string $groupFolderId): void
+    private function processDuplicate(Email $email, Data $data, ?string $groupFolderId): void
     {
         $assignedUserId = $data->getAssignedUserId();
 
-        if ($duplicate->getStatus() === Email::STATUS_ARCHIVED) {
-            $this->getEmailRepository()->loadFromField($duplicate);
-            $this->getEmailRepository()->loadToField($duplicate);
+        if ($email->getStatus() === Email::STATUS_ARCHIVED) {
+            $this->getEmailRepository()->loadFromField($email);
+            $this->getEmailRepository()->loadToField($email);
         }
 
-        $duplicate->loadLinkMultipleField('users');
-        $fetchedUserIds = $duplicate->getLinkMultipleIdList('users');
+        $fetchedTeamIds = $email->getTeams()->getIdList();
+        $fetchedUserIds = $email->getUsers()->getIdList();
+        $fetchedAssignedUserIds = $email->getAssignedUsers()->getIdList();
 
-        $duplicate->setLinkMultipleIdList('users', []);
+        $email->setLinkMultipleIdList('users', []);
+        $email->setLinkMultipleIdList('teams', []);
+        $email->setLinkMultipleIdList('assignedUsers', []);
 
         $processNoteAcl = false;
 
@@ -306,44 +309,59 @@ class DefaultImporter implements Importer
             if (!in_array($assignedUserId, $fetchedUserIds)) {
                 $processNoteAcl = true;
 
-                $duplicate->addUserId($assignedUserId);
+                $email->addUserId($assignedUserId);
             }
 
-            $duplicate->addAssignedUserId($assignedUserId);
+            if (!in_array($assignedUserId, $fetchedAssignedUserIds)) {
+                $email->addAssignedUserId($assignedUserId);
+            }
         }
 
         foreach ($data->getUserIdList() as $uId) {
             if (!in_array($uId, $fetchedUserIds)) {
                 $processNoteAcl = true;
 
-                $duplicate->addUserId($uId);
+                $email->addUserId($uId);
             }
         }
 
         foreach ($data->getFolderData() as $uId => $folderId) {
             if (!in_array($uId, $fetchedUserIds)) {
-                $duplicate->setUserColumnFolderId($uId, $folderId);
+                $email->setUserColumnFolderId($uId, $folderId);
 
                 continue;
             }
 
+            // Can cause skip-notification bypass. @todo Revise.
             $this->entityManager
-                ->getRelation($duplicate, 'users')
-                // Can cause skip-notification bypass.
+                ->getRelation($email, 'users')
                 ->updateColumnsById($uId, [Email::USERS_COLUMN_FOLDER_ID => $folderId]);
         }
 
-        $duplicate->set('isBeingImported', true);
+        $email->set('isBeingImported', true);
 
-        $this->getEmailRepository()->applyUsersFilters($duplicate);
+        $this->getEmailRepository()->applyUsersFilters($email);
 
-        if ($groupFolderId && !$duplicate->getGroupFolder()) {
-            $this->relateWithGroupFolder($duplicate, $groupFolderId);
+        if ($groupFolderId && !$email->getGroupFolder()) {
+            $this->relateWithGroupFolder($email, $groupFolderId);
 
-            $usersAddedFromFolder = $this->addUsersFromGroupFolder($duplicate, $groupFolderId, $fetchedUserIds);
+            $addedFromFolder = $this->applyGroupFolder(
+                $email,
+                $groupFolderId,
+                $fetchedUserIds,
+                $fetchedTeamIds
+            );
 
-            if ($usersAddedFromFolder) {
+            if ($addedFromFolder) {
                 $processNoteAcl = true;
+            }
+        }
+
+        foreach ($data->getTeamIdList() as $teamId) {
+            if (!in_array($teamId, $fetchedTeamIds)) {
+                $processNoteAcl = true;
+
+                $email->addTeamId($teamId);
             }
         }
 
@@ -352,51 +370,30 @@ class DefaultImporter implements Importer
             'skipLinkMultipleUpdate' => true,
         ]);
 
-        $this->linkMultipleSaver->process($duplicate, 'users', $saverParams);
-        $this->linkMultipleSaver->process($duplicate, 'assignedUsers', $saverParams);
+        $this->linkMultipleSaver->process($email, 'users', $saverParams);
+        $this->linkMultipleSaver->process($email, 'assignedUsers', $saverParams);
+        $this->linkMultipleSaver->process($email, 'teams', $saverParams);
 
-        if ($this->emailNotificationsEnabled()) {
+        if ($this->notificationsEnabled()) {
             $notificatorParams = AssignmentNotificatorParams::create()
                 ->withRawOptions([Email::SAVE_OPTION_IS_BEING_IMPORTED => true]);
 
-            $this->notificator->process($duplicate, $notificatorParams);
+            $this->notificator->process($email, $notificatorParams);
         }
 
-        $fetchedTeamIdList = $duplicate->getLinkMultipleIdList('teams');
+        $email->set('isBeingImported', false);
+        $email->clear('teamsIds');
+        $email->clear('usersIds');
+        $email->clear('assignedUsersIds');
 
-        foreach ($data->getTeamIdList() as $teamId) {
-            if (!in_array($teamId, $fetchedTeamIdList)) {
-                $processNoteAcl = true;
+        $email->setAsFetched();
 
-                $this->entityManager
-                    ->getRelation($duplicate, 'teams')
-                    ->relateById($teamId);
-            }
-        }
-
-        if ($duplicate->getParentType() && $processNoteAcl) {
-            // Need to update acl fields (users and teams)
-            // of notes related to the duplicate email.
-            // To grant access to the user who received the email.
-
-            $dt = new DateTime();
-            $dt->modify('+' . self::PROCESS_ACL_DELAY_PERIOD);
-
-            $this->jobSchedulerFactory
-                ->create()
-                ->setClassName(ProcessNoteAcl::class)
-                ->setData(
-                    JobData::create(['notify' => true])
-                        ->withTargetId($duplicate->getId())
-                        ->withTargetType(Email::ENTITY_TYPE)
-                )
-                ->setQueue(QueueName::Q1)
-                ->setTime($dt)
-                ->schedule();
+        if ($email->getParentType() && $processNoteAcl) {
+            $this->scheduleAclJob($email);
         }
     }
 
-    private function emailNotificationsEnabled(): bool
+    private function notificationsEnabled(): bool
     {
         return in_array(
             Email::ENTITY_TYPE,
@@ -585,9 +582,7 @@ class DefaultImporter implements Importer
             $matchedFilter->getAction() === EmailFilter::ACTION_MOVE_TO_GROUP_FOLDER &&
             $matchedFilter->getGroupEmailFolderId()
         ) {
-            $email->setGroupFolderId($matchedFilter->getGroupEmailFolderId());
-
-            $this->addUsersFromGroupFolder($email, $matchedFilter->getGroupEmailFolderId());
+            $this->applyGroupFolder($email, $matchedFilter->getGroupEmailFolderId());
         }
 
         return false;
@@ -643,15 +638,33 @@ class DefaultImporter implements Importer
 
     /**
      * @param string[] $fetchedUserIds
+     * @param string[] $fetchedTeamIds
      */
-    private function addUsersFromGroupFolder(Email $email, string $groupFolderId, array $fetchedUserIds = []): bool
-    {
+    private function applyGroupFolder(
+        Email $email,
+        string $groupFolderId,
+        array $fetchedUserIds = [],
+        array $fetchedTeamIds = [],
+    ): bool {
+
+        $email->setGroupFolderId($groupFolderId);
+
         $groupFolder = $this->entityManager
             ->getRDBRepositoryByClass(GroupEmailFolder::class)
             ->getById($groupFolderId);
 
         if (!$groupFolder || !$groupFolder->getTeams()->getCount()) {
             return false;
+        }
+
+        $added = false;
+
+        foreach ($groupFolder->getTeams()->getIdList() as $teamId) {
+            if (!in_array($teamId, $fetchedTeamIds)) {
+                $added = true;
+
+                $email->addTeamId($teamId);
+            }
         }
 
         $users = $this->entityManager
@@ -674,8 +687,6 @@ class DefaultImporter implements Importer
             )
             ->find();
 
-        $added = false;
-
         foreach ($users as $user) {
             $added = true;
 
@@ -683,5 +694,27 @@ class DefaultImporter implements Importer
         }
 
         return $added;
+    }
+
+    private function scheduleAclJob(Email $email): void
+    {
+        // Need to update acl fields (users and teams)
+        // of notes related to the duplicate email.
+        // To grant access to the user who received the email.
+
+        $dt = new DateTime();
+        $dt->modify('+' . self::PROCESS_ACL_DELAY_PERIOD);
+
+        $this->jobSchedulerFactory
+            ->create()
+            ->setClassName(ProcessNoteAcl::class)
+            ->setData(
+                JobData::create(['notify' => true])
+                    ->withTargetId($email->getId())
+                    ->withTargetType(Email::ENTITY_TYPE)
+            )
+            ->setQueue(QueueName::Q1)
+            ->setTime($dt)
+            ->schedule();
     }
 }
