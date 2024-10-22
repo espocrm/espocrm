@@ -272,53 +272,55 @@ class EmailListRecordView extends ListRecordView {
         });
     }
 
-    massMoveToFolder(folderId) {
+    /**
+     * @private
+     * @param {string} folderId
+     */
+    async massMoveToFolder(folderId) {
         const params = this.getMassActionSelectionPostData();
         const helper = new MassActionHelper(this);
         const idle = !!params.searchParams && helper.checkIsIdle();
 
         Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-        Espo.Ajax
-            .postRequest('MassAction', {
-                entityType: this.entityType,
-                action: 'moveToFolder',
-                params: params,
-                idle: idle,
-                data: {
-                    folderId: folderId,
-                },
-            })
-            .then(result => {
-                Espo.Ui.notify(false);
+        /** @type {{id?: string}} */
+        const result = await Espo.Ajax.postRequest('MassAction', {
+            entityType: this.entityType,
+            action: 'moveToFolder',
+            params: params,
+            idle: idle,
+            data: {folderId: folderId},
+        });
 
-                if (result.id) {
-                    helper.process(result.id, 'moveToFolder')
-                        .then(view => {
-                            this.listenToOnce(view, 'close:success', () => {
-                                this.collection.fetch()
-                                    .then(() => Espo.Ui.success(this.translate('Done')));
-                            });
-                        });
+        Espo.Ui.notify();
 
-                    return;
-                }
+        if (result.id) {
+            const view = await helper.process(result.id, 'moveToFolder')
 
-                if (folderId === 'archive') {
-                    [...this.checkedList].forEach(id => {
-                        this.collection.trigger('moving-to-archive', id);
+            this.listenToOnce(view, 'close:success', async () => {
+                await this.collection.fetch();
 
-                        this.uncheckRecord(id, null, true);
-                    });
-
-                    Espo.Ui.info(this.translate('Moved to Archive', 'labels', 'Email'));
-
-                    return;
-                }
-
-                this.collection.fetch()
-                    .then(() => Espo.Ui.success(this.translate('Done')));
+                Espo.Ui.success(this.translate('Done'));
             });
+
+            return;
+        }
+
+        if (folderId === 'archive') {
+            [...this.checkedList].forEach(id => {
+                this.collection.trigger('moving-to-archive', id);
+
+                this.uncheckRecord(id, null, true);
+            });
+
+            Espo.Ui.info(this.translate('Moved to Archive', 'labels', 'Email'));
+
+            return;
+        }
+
+        await this.collection.fetch()
+
+        Espo.Ui.success(this.translate('Done'));
     }
 
     /**
