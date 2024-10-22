@@ -47,6 +47,7 @@ use Espo\Core\Utils\Log;
 use Espo\Core\Field\DateTime as DateTimeField;
 use Espo\Entities\EmailFilter;
 use Espo\Entities\Email;
+use Espo\Entities\GroupEmailFolder;
 use Espo\Entities\InboundEmail;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;

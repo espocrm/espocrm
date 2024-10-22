@@ -40,6 +40,7 @@ use Espo\Core\Mail\SmtpParams;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Crypt;
+use Espo\Entities\GroupEmailFolder;
 use Espo\Entities\InboundEmail;
 use Espo\Entities\User;
 use Espo\Entities\Email;
@@ -52,6 +53,10 @@ use RuntimeException;
 class Account implements AccountInterface
 {
     private const PORTION_LIMIT = 20;
+
+    private ?LinkMultiple $users = null;
+    private ?LinkMultiple $teams = null;
+    private ?GroupEmailFolder $groupEmailFolder = null;
 
     public function __construct(
         private InboundEmail $entity,
@@ -105,28 +110,68 @@ class Account implements AccountInterface
 
     public function getUsers(): LinkMultiple
     {
-        if (!$this->entity->addAllTeamUsers()) {
+        if (!$this->users) {
+            $this->users = $this->loadUsers();
+        }
+
+        return $this->users;
+    }
+
+    private function getGroupEmailFolderEntity(): ?GroupEmailFolder
+    {
+        if ($this->groupEmailFolder) {
+            return $this->groupEmailFolder;
+        }
+
+        if ($this->entity->getGroupEmailFolder()) {
+            $this->groupEmailFolder = $this->entityManager
+                ->getRDBRepositoryByClass(GroupEmailFolder::class)
+                ->getById($this->entity->getGroupEmailFolder()->getId());
+
+            return $this->groupEmailFolder;
+        }
+
+        return null;
+    }
+
+    private function loadUsers(): LinkMultiple
+    {
+        $teamIds = [];
+
+        if ($this->entity->getGroupEmailFolder()) {
+            $groupEmailFolder = $this->getGroupEmailFolderEntity();
+
+            if ($groupEmailFolder) {
+                $teamIds = $groupEmailFolder->getTeams()->getIdList();
+            }
+        }
+
+        if ($this->entity->addAllTeamUsers()) {
+            $teamIds = array_merge($teamIds, $this->entity->getTeams()->getIdList());
+        }
+
+        $teamIds = array_unique($teamIds);
+        $teamIds = array_values($teamIds);
+
+        if ($teamIds === []) {
             return LinkMultiple::create();
         }
 
-        if (!$this->entity->getTeams()->getCount()) {
-            return LinkMultiple::create();
-        }
-
-        $userList = $this->entityManager
-            ->getRDBRepository(User::ENTITY_TYPE)
+        $users = $this->entityManager
+            ->getRDBRepositoryByClass(User::class)
             ->select(['id'])
             ->distinct()
             ->join('teams')
             ->where([
+                'type' => [User::TYPE_REGULAR, User::TYPE_ADMIN],
                 'isActive' => true,
-                'teamsMiddle.teamId' => $this->entity->getTeams()->getIdList(),
+                'teamsMiddle.teamId' => $teamIds,
             ])
             ->find();
 
         $linkMultiple = LinkMultiple::create();
 
-        foreach ($userList as $user) {
+        foreach ($users as $user) {
             $linkMultiple = $linkMultiple->withAddedId($user->getId());
         }
 
@@ -145,13 +190,30 @@ class Account implements AccountInterface
 
     public function getTeams(): LinkMultiple
     {
-        $value = $this->entity->getTeams();
-
-        if ($this->entity->getTeam()) {
-            $value = $value->withAddedId($this->entity->getTeam()->getId());
+        if (!$this->teams) {
+            $this->teams = $this->loadTeams();
         }
 
-        return $value;
+        return $this->teams;
+    }
+
+    private function loadTeams(): LinkMultiple
+    {
+        $teams = $this->entity->getTeams();
+
+        if ($this->entity->getTeam()) {
+            $teams = $teams->withAddedId($this->entity->getTeam()->getId());
+        }
+
+        if ($this->getGroupEmailFolder()) {
+            $groupEmailFolder = $this->getGroupEmailFolderEntity();
+
+            if ($groupEmailFolder) {
+                $teams = $teams->withAddedIdList($groupEmailFolder->getTeams()->getIdList());
+            }
+        }
+
+        return $teams;
     }
 
     public function keepFetchedEmailsUnread(): bool
