@@ -358,6 +358,12 @@ class Email extends Entity
         return $this->getValueObject('dateSent');
     }
 
+    public function getDeliveryDate(): ?DateTime
+    {
+        /** @var ?DateTime */
+        return $this->getValueObject('deliveryDate');
+    }
+
     public function getSubject(): ?string
     {
         return $this->get('subject');
@@ -787,6 +793,13 @@ class Email extends Entity
     public function setDateSent(?DateTime $dateSent): self
     {
         $this->setValueObject('dateSent', $dateSent);
+
+        return $this;
+    }
+
+    public function setDeliveryDate(?DateTime $deliveryDate): self
+    {
+        $this->setValueObject('deliveryDate', $deliveryDate);
 
         return $this;
     }
