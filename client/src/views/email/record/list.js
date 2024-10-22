@@ -282,7 +282,7 @@ class EmailListRecordView extends ListRecordView {
 
         Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-        /** @type {{id?: string}} */
+        /** @type {{id?: string, count?: number}} */
         const result = await Espo.Ajax.postRequest('MassAction', {
             entityType: this.entityType,
             action: 'moveToFolder',
@@ -301,6 +301,12 @@ class EmailListRecordView extends ListRecordView {
 
                 Espo.Ui.success(this.translate('Done'));
             });
+
+            return;
+        }
+
+        if (result.count === 0) {
+            Espo.Ui.warning(this.translate('No Records Moved', 'labels', 'Email'));
 
             return;
         }
