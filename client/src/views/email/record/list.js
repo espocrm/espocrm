@@ -348,10 +348,14 @@ class EmailListRecordView extends ListRecordView {
         }, view => {
             view.render();
 
-            this.listenToOnce(view, 'select', folderId => {
+            this.listenToOnce(view, 'select', async folderId => {
                 this.clearView('dialog');
 
-                this.massMoveToFolder(folderId);
+                if (this.allResultIsChecked) {
+                    await this.confirm(this.translate('confirmation', 'messages'));
+                }
+
+                await this.massMoveToFolder(folderId);
             });
         });
     }
