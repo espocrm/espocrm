@@ -56,6 +56,12 @@ export default class extends ModalView {
         };
     }
 
+    /**
+     * @private
+     * @type {string|undefined}
+     */
+    currentFolderId
+
     setup() {
         this.addActionHandler('selectFolder', (e, target) => {
             const id = target.dataset.id;
@@ -68,6 +74,7 @@ export default class extends ModalView {
         this.headerText = this.options.headerText || '';
         this.isGroup = this.options.isGroup || false;
         this.noArchive = this.options.noArchive || false;
+        this.currentFolderId = this.options.currentFolderId;
 
         if (this.headerText === '') {
             this.buttonList.push({
@@ -112,6 +119,7 @@ export default class extends ModalView {
                             const isGroup = item.id.startsWith('group:');
 
                             return {
+                                disabled: item.id === this.currentFolderId,
                                 id: item.id,
                                 name: item.name,
                                 isGroup: isGroup,
@@ -134,6 +142,7 @@ export default class extends ModalView {
                             id: this.FOLDER_ARCHIVE,
                             name: this.translate('archive', 'presetFilters', 'Email'),
                             iconClass: iconMap[this.FOLDER_ARCHIVE],
+                            disabled: this.currentFolderId === this.FOLDER_ARCHIVE,
                         });
                     }
                 })

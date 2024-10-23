@@ -361,10 +361,23 @@ class EmailDetailRecordView extends DetailRecordView {
     }
 
     actionMoveToFolder() {
+        let currentFolderId = undefined;
+
+        if (!this.isInArchive() && !this.isInTrash()) {
+            if (this.model.attributes.groupFolderId) {
+                currentFolderId = 'group:' + this.model.attributes.groupFolderId;
+            } else if (this.model.attributes.folderId) {
+                currentFolderId = this.model.attributes.folderId;
+            }
+        } else if (this.isInArchive()) {
+            currentFolderId = 'archive';
+        }
+
         this.createView('dialog', 'views/email-folder/modals/select-folder', {
             headerText: this.translate('Move to Folder', 'labels', 'Email'),
             isGroup: !!this.model.attributes.groupFolderId || !this.model.attributes.isUsers,
             noArchive: !this.model.attributes.groupFolderId && !this.model.attributes.isUsers,
+            currentFolderId: currentFolderId,
         }, view => {
             view.render();
 

@@ -344,6 +344,7 @@ class EmailListRecordView extends ListRecordView {
             headerText: this.translate('Move to Folder', 'labels', 'Email'),
             isGroup: selectedFolderId && (selectedFolderId.startsWith('group:') || selectedFolderId === 'all'),
             noArchive: selectedFolderId === 'all',
+            currentFolderId: this.rootData.selectedFolderId,
         }, view => {
             view.render();
 
@@ -531,10 +532,13 @@ class EmailListRecordView extends ListRecordView {
             return;
         }
 
+        const currentFolderId = this.rootData.selectedFolderId;
+
         this.createView('dialog', 'views/email-folder/modals/select-folder', {
             headerText: this.translate('Move to Folder', 'labels', 'Email'),
             isGroup: !!model.attributes.groupFolderId || !model.attributes.isUsers,
             noArchive: !model.attributes.groupFolderId && !model.attributes.isUsers,
+            currentFolderId: currentFolderId,
         }, view => {
             view.render();
 

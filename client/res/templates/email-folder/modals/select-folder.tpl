@@ -7,7 +7,7 @@
             data-action="selectFolder"
             data-id="{{id}}"
             data-name="{{name}}"
-            class="side-link text-bold"
+            class="side-link text-bold {{#if disabled}} disabled text-muted {{/if}}"
         ><span class="item-icon-container"><span class="{{iconClass}}"></span></span><span class="text-default">{{name}}</span></a>
     </li>
     {{/each}}
