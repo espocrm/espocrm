@@ -1237,8 +1237,6 @@ class ListRecordView extends View {
                             throw new Error("No attachment-id.");
                         }
 
-                        window.location = this.getBasePath() + '?entryPoint=download&id=' + response.id;
-
                         proceedDownload(response.id);
                     });
             });
