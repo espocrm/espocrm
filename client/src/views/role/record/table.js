@@ -630,7 +630,7 @@ class RoleRecordTableView extends View {
     }
 
     controlSelect(scope, action, limitValue, dontChange) {
-        const $select = this.$el.find(`select[name="${scope}-${action}"]`);
+        let $select = this.$el.find(`select[name="${scope}-${action}"]`);
 
         if (!$select.length) {
             return;
@@ -648,8 +648,8 @@ class RoleRecordTableView extends View {
         const options = this.getLevelList(scope, action)
             .filter(item => {
                 return this.levelList.indexOf(item) >= this.levelList.indexOf(limitValue);
-            }).
-            map(item => {
+            })
+            .map(item => {
                 return {
                     value: item,
                     text: this.getLanguage().translateOption(item, 'levelList', 'Role'),
@@ -659,6 +659,13 @@ class RoleRecordTableView extends View {
         if (!dontChange) {
             // Prevents issues.
             Select.destroy($select);
+
+            const $selectCloned = $select.clone();
+            const $parent = $select.parent();
+            $select.remove();
+            $select = $selectCloned;
+            $parent.append($select);
+
             Select.init($select);
         }
 

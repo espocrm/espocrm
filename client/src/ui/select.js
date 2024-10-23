@@ -239,7 +239,7 @@ const Select = {
 
     /**
      * Set options.
-     * @todo Side effects may occur if called multiple times. Workaround is to re-initialize. To be fixed.
+     * @todo Side effects may occur if called multiple times. Workaround is to clone and re-initialize. To be fixed.
      *
      * @param {Element|JQuery} element An element.
      * @param {{value: string, text: string}[]} options Options.
