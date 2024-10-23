@@ -189,6 +189,10 @@ class ListRelatedView extends MainView {
         this.collectionUrl = this.collection.url;
         this.collectionMaxSize = this.collection.maxSize;
 
+        if (this.panelDefs.primaryFilter) {
+            this.collection.data.primaryFilter = this.panelDefs.primaryFilter;
+        }
+
         this.foreignScope = this.collection.entityType;
 
         this.setupModes();
@@ -439,6 +443,10 @@ class ListRelatedView extends MainView {
             null
         );
 
+        if (this.panelDefs.primaryFilter) {
+            searchManager.setPrimary(this.panelDefs.primaryFilter);
+        }
+
         searchManager.scope = this.foreignScope;
 
         collection.where = searchManager.getWhere();
@@ -476,7 +484,7 @@ class ListRelatedView extends MainView {
         if (this.viewMode === this.MODE_LIST) {
             return this.panelDefs.recordListView ||
                 this.getMetadata().get(['clientDefs', this.foreignScope, 'recordViews', this.MODE_LIST]) ||
-                    this.recordView;
+                this.recordView;
         }
 
         const propertyName = 'record' + Espo.Utils.upperCaseFirst(this.viewMode) + 'View';
