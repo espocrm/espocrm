@@ -75,6 +75,10 @@ class AssignNoteStreamView extends NoteStreamView {
         if (data.addedAssignedUsers) {
             this.setupDataMulti(data);
 
+            if (this.isThis) {
+                this.messageName += 'This';
+            }
+
             return;
         }
 

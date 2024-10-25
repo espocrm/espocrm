@@ -95,6 +95,10 @@ class CreateNoteStreamView extends NoteStreamView {
             } else if (data.assignedUsers.length > 1) {
                 this.setupUsersDataMulti();
 
+                if (this.isThis) {
+                    this.messageName += 'This';
+                }
+
                 return;
             }
         }
