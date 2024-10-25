@@ -109,12 +109,7 @@ class LinkMultipleFactory implements ValueFactory
 
     private function loadLinkMultipleField(CoreEntity $entity, string $field): void
     {
-        $columns = $this->ormDefs
-            ->getEntity($entity->getEntityType())
-            ->getField($field)
-            ->getParam('columns');
-
-        $entity->loadLinkMultipleField($field, $columns);
+        $entity->loadLinkMultipleField($field);
     }
 
     private function loadColumnData(Entity $entity, string $field): stdClass

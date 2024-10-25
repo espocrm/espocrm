@@ -101,12 +101,7 @@ class ValueMapPreparator
             ) {
                 $field = $entity->getAttributeParam($attribute, 'relation');
 
-                $columns = $this->ormDefs
-                    ->getEntity($entity->getEntityType())
-                    ->getField($field)
-                    ->getParam('columns');
-
-                $entity->loadLinkMultipleField($field, $columns);
+                $entity->loadLinkMultipleField($field);
             }
         }
     }

@@ -109,8 +109,6 @@ class SubmitPopupReminders implements JobDataLess
                 $entity->hasLinkMultipleField('users') &&
                 $entity->hasAttribute('usersColumns')
             ) {
-                $entity->loadLinkMultipleField('users', ['status' => 'acceptanceStatus']);
-
                 $status = $entity->getLinkMultipleColumn('users', 'status', $userId);
 
                 if ($status === Meeting::ATTENDEE_STATUS_DECLINED) {

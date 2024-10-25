@@ -69,16 +69,11 @@ class ListLoader implements LoaderInterface
                 continue;
             }
 
-            $columns = $this->ormDefs
-                ->getEntity($entityType)
-                ->getField($field)
-                ->getParam('columns');
-
             if ($entity->has($field . 'Ids') && $entity->has($field . 'Names')) {
                 continue;
             }
 
-            $entity->loadLinkMultipleField($field, $columns);
+            $entity->loadLinkMultipleField($field);
         }
     }
 

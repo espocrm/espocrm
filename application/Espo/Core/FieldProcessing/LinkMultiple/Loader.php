@@ -55,12 +55,7 @@ class Loader implements LoaderInterface
         $entityType = $entity->getEntityType();
 
         foreach ($this->getFieldList($entityType) as $field) {
-            $columns = $this->ormDefs
-                ->getEntity($entityType)
-                ->getField($field)
-                ->getParam('columns');
-
-            $entity->loadLinkMultipleField($field, $columns);
+            $entity->loadLinkMultipleField($field);
         }
     }
 

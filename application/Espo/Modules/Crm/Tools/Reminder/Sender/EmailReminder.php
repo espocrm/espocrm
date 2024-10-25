@@ -83,7 +83,6 @@ class EmailReminder
             $entity->hasLinkMultipleField('users') &&
             $entity->hasAttribute('usersColumns')
         ) {
-            $entity->loadLinkMultipleField('users', ['status' => 'acceptanceStatus']);
             $status = $entity->getLinkMultipleColumn('users', 'status', $user->getId());
 
             if ($status === Meeting::ATTENDEE_STATUS_DECLINED) {
