@@ -66,6 +66,7 @@ class FieldManager
         'teams',
         'assignedUser',
         'assignedUsers',
+        'collaborators',
     ];
 
     /** @var string[] */

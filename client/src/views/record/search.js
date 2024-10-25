@@ -206,6 +206,10 @@ class SearchView extends View {
             this.boolFilterList.push('followed');
         }
 
+        if (this.getMetadata().get(`scopes.${this.entityType}.collaborators`) && !this.getUser().isPortal()) {
+            this.boolFilterList.push('shared');
+        }
+
         this.loadSearchData();
 
         if (this.hasAdvancedFilter()) {

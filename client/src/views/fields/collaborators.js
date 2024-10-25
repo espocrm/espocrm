@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,38 +26,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Acl\AccessChecker;
+import LinkMultipleFieldView from 'views/fields/link-multiple';
 
-use Closure;
+export default class CollaboratorsFieldView extends LinkMultipleFieldView {
 
-/**
- * Scope checker data.
- */
-class ScopeCheckerData
-{
-    public function __construct(
-        private Closure $isOwnChecker,
-        private Closure $inTeamChecker,
-        private Closure $isSharedChecker,
-    ) {}
+    init() {
+        this.assignmentPermission = this.getAcl().getPermissionLevel('assignmentPermission');
 
-    public function isOwn(): bool
-    {
-        return ($this->isOwnChecker)();
+        if (this.assignmentPermission === 'no') {
+            this.readOnly = true;
+        }
+
+        super.init();
     }
 
-    public function inTeam(): bool
-    {
-        return ($this->inTeamChecker)();
+    getSelectBoolFilterList() {
+        if (this.assignmentPermission === 'team') {
+            return ['onlyMyTeam'];
+        }
     }
 
-    public function isShared(): bool
-    {
-        return ($this->isSharedChecker)();
+    getSelectPrimaryFilterName() {
+        return 'active';
     }
 
-    public static function createBuilder(): ScopeCheckerDataBuilder
-    {
-        return new ScopeCheckerDataBuilder();
+    getDetailLinkHtml(id, name) {
+        const html = super.getDetailLinkHtml(id);
+
+        const avatarHtml = this.isDetailMode() ?
+            this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link') : '';
+
+        if (!avatarHtml) {
+            return html;
+        }
+
+        return `${avatarHtml} ${html}`;
+    }
+
+    /** @inheritDoc */
+    getOnEmptyAutocomplete() {
+        if (this.params.autocompleteOnEmpty) {
+            return undefined;
+        }
+
+        if (this.ids && this.ids.includes(this.getUser().id)) {
+            return Promise.resolve([]);
+        }
+
+        return Promise.resolve([]);
     }
 }

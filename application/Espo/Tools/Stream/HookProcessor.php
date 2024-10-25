@@ -524,7 +524,8 @@ class HookProcessor
                     // @todo Introduce a metadata parameter.
                     $entity->isAttributeChanged('assignedUserId') ||
                     $entity->isAttributeChanged('teamsIds') ||
-                    $entity->isAttributeChanged('assignedUsersIds')
+                    $entity->isAttributeChanged('assignedUsersIds') ||
+                    $entity->isAttributeChanged('collaboratorsIds')
                 )
             )
         ) {

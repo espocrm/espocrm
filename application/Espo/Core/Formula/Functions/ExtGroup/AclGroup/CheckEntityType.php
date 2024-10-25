@@ -57,6 +57,8 @@ class CheckEntityType implements Func
         $userId = $arguments[0];
         $entityType = $arguments[1];
         $id = $arguments[2];
+
+        /** @var Table::ACTION_*|null $action */
         $action = $arguments[3] ?? Table::ACTION_READ;
 
         if (!is_string($userId)) {

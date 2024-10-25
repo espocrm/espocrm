@@ -1,14 +1,15 @@
 [
     "assignedUser",
     "teams",
-    "createdAt",
-    "createdBy",
-    "modifiedAt",
+    "collaborators",
+    "status",
+    "priority",
     "account",
     "contact",
     "number",
+    "createdAt",
+    "createdBy",
     "modifiedAt",
-    "status",
-    "priority",
+    "modifiedAt",
     "description"
 ]

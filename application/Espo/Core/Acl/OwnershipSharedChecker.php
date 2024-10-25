@@ -27,38 +27,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Acl\AccessChecker;
+namespace Espo\Core\Acl;
 
-use Closure;
+use Espo\ORM\Entity;
+use Espo\Entities\User;
 
 /**
- * Scope checker data.
+ * @template TEntity of Entity
  */
-class ScopeCheckerData
+interface OwnershipSharedChecker extends OwnershipChecker
 {
-    public function __construct(
-        private Closure $isOwnChecker,
-        private Closure $inTeamChecker,
-        private Closure $isSharedChecker,
-    ) {}
-
-    public function isOwn(): bool
-    {
-        return ($this->isOwnChecker)();
-    }
-
-    public function inTeam(): bool
-    {
-        return ($this->inTeamChecker)();
-    }
-
-    public function isShared(): bool
-    {
-        return ($this->isSharedChecker)();
-    }
-
-    public static function createBuilder(): ScopeCheckerDataBuilder
-    {
-        return new ScopeCheckerDataBuilder();
-    }
+    /**
+     * Check whether an entity is shared with a user.
+     *
+     * @param TEntity $entity
+     * @param Table::ACTION_* $action
+     * @noinspection PhpDocSignatureInspection
+     */
+    public function checkShared(User $user, Entity $entity, string $action): bool;
 }

@@ -39,6 +39,7 @@ class RoleRecordTableView extends View {
     /** @type {'detail'|'string'} */
     mode = 'detail'
     lowestLevelByDefault = true
+    collaborators = true
 
     actionList = ['create', 'read', 'edit', 'delete', 'stream']
     accessList = ['not-set', 'enabled', 'disabled']
@@ -211,6 +212,14 @@ class RoleRecordTableView extends View {
                         }
                     }
 
+                    if (level && !levelList.includes(level)) {
+                        levelList.push(level);
+
+                        levelList.sort((a, b) => {
+                            return this.levelList.findIndex(it => it === a) - this.levelList.findIndex(it => it === b);
+                        });
+                    }
+
                     list.push({
                         level: level,
                         name: scope + '-' + action,
@@ -231,17 +240,28 @@ class RoleRecordTableView extends View {
         return aclDataList;
     }
 
+    /**
+     * @private
+     * @param {string} scope
+     * @param {'create'|'read'|'edit'|'delete'|'stream'} action
+     * @return {string[]}
+     */
     getLevelList(scope, action) {
         if (this.booleanActionList.includes(action)) {
             return this.booleanLevelList;
         }
 
+        const specifiedLevelList =
+            this.getMetadata().get(`scopes.${scope}.${this.type}ActionLevelListMap.${action}`) ||
+            this.getMetadata().get(`scopes.${scope}.${this.type}LevelList`);
+
+        if (specifiedLevelList) {
+            return specifiedLevelList;
+        }
+
         const type = this.aclTypeMap[scope];
 
-        return this.getMetadata().get(['scopes', scope, this.type + 'ActionLevelListMap', action]) ||
-            this.getMetadata().get(['scopes', scope, this.type + 'LevelList']) ||
-            this.levelListMap[type] ||
-            [];
+        return this.levelListMap[type] || [];
     }
 
     setup() {

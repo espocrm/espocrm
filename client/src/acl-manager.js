@@ -157,7 +157,7 @@ class AclManager {
      *
      * @param {string} scope A scope.
      * @param {module:acl-manager~action} action An action.
-     * @returns {'yes'|'all'|'team'|'no'|null}
+     * @returns {'yes'|'all'|'team'|'own'|'no'|null}
      */
     getLevel(scope, action) {
         if (!(scope in this.data.table)) {
@@ -299,6 +299,17 @@ class AclManager {
      */
     checkInTeam(model) {
         return this.getImplementation(model.entityType).checkInTeam(model);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Check if a record is shared with the user.
+     *
+     * @param {module:model} model A model.
+     * @returns {boolean|null} True if shared, null if not clear.
+     */
+    checkIsShared(model) {
+        return this.getImplementation(model.entityType).checkIsShared(model);
     }
 
     // noinspection JSUnusedGlobalSymbols

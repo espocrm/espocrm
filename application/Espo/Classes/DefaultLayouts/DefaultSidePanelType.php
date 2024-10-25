@@ -29,19 +29,18 @@
 
 namespace Espo\Classes\DefaultLayouts;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\User;
+use stdClass;
 
 class DefaultSidePanelType
 {
-    private $metadata;
-
-    public function __construct(Metadata $metadata)
-    {
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Metadata $metadata)
+    {}
 
     /**
-     * @return \stdClass[]
+     * @return stdClass[]
      */
     public function get(string $scope): array
     {
@@ -62,6 +61,13 @@ class DefaultSidePanelType
             $this->metadata->get(['entityDefs', $scope, 'links', 'teams', 'entity']) === 'Team'
         ) {
             $list[] = (object) ['name' => 'teams'];
+        }
+
+        if (
+            $this->metadata->get("entityDefs.$scope.fields.collaborators.type") === FieldType::LINK_MULTIPLE &&
+            $this->metadata->get("entityDefs.$scope.links.collaborators.entity") === User::ENTITY_TYPE
+        ) {
+            $list[] = (object) ['name' => 'collaborators'];
         }
 
         return $list;

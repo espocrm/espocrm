@@ -250,7 +250,7 @@ class FieldManagerEditView extends View {
 
                     if (
                         item === 'createButton' &&
-                        ['assignedUser', 'assignedUsers', 'teams'].includes(this.field)
+                        ['assignedUser', 'assignedUsers', 'teams', 'collaborators'].includes(this.field)
                     ) {
                         return;
                     }

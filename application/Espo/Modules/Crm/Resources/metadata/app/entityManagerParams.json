@@ -15,6 +15,13 @@
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
             }
         },
+        "collaborators": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
         "assignedUsers": {
             "location": "scopes",
             "fieldDefs": {
@@ -37,6 +44,13 @@
                 "type": "multiEnum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
+            }
+        },
+        "collaborators": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
             }
         },
         "assignedUsers": {
@@ -63,6 +77,13 @@
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
             }
         },
+        "collaborators": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
         "assignedUsers": {
             "location": "scopes",
             "fieldDefs": {
@@ -72,6 +93,13 @@
         }
     },
     "Opportunity": {
+        "collaborators": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
         "assignedUsers": {
             "location": "scopes",
             "fieldDefs": {
@@ -81,6 +109,13 @@
         }
     },
     "Document": {
+        "collaborators": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
         "assignedUsers": {
             "location": "scopes",
             "fieldDefs": {
@@ -90,6 +125,13 @@
         }
     },
     "Case": {
+        "collaborators": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
         "assignedUsers": {
             "location": "scopes",
             "fieldDefs": {
@@ -99,6 +141,13 @@
         }
     },
     "KnowledgeBaseArticle": {
+        "collaborators": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
         "assignedUsers": {
             "location": "scopes",
             "fieldDefs": {
@@ -202,7 +251,23 @@
                 "view": "crm:views/admin/entity-manager/fields/status-list"
             }
         },
+        "collaborators": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
         "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        }
+    },
+    "TargetList": {
+        "collaborators": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
@@ -245,6 +310,13 @@
                 "required": true,
                 "tooltip": true,
                 "view": "crm:views/admin/entity-manager/fields/status-list"
+            }
+        },
+        "collaborators": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
             }
         },
         "assignedUsers": {

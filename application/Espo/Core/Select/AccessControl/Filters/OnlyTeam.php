@@ -86,6 +86,23 @@ class OnlyTeam implements Filter
             $orGroup['createdById'] = $this->user->getId();
         }
 
+        if ($this->fieldHelper->hasCollaboratorsField()) {
+            $relationDefs = $this->defs
+                ->getEntity($this->entityType)
+                ->getRelation('collaborators');
+
+            $middleEntityType = ucfirst($relationDefs->getRelationshipName());
+            $key1 = $relationDefs->getMidKey();
+            $key2 = $relationDefs->getForeignMidKey();
+
+            $subQueryBuilder->leftJoin($middleEntityType, 'collaboratorsMiddle', [
+                "collaboratorsMiddle.$key1:" => 'id',
+                'collaboratorsMiddle.deleted' => false,
+            ]);
+
+            $orGroup["collaboratorsMiddle.$key2"] = $this->user->getId();
+        }
+
         $subQuery = $subQueryBuilder
             ->where(['OR' => $orGroup])
             ->build();

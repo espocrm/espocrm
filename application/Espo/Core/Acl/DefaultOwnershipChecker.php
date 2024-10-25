@@ -38,14 +38,16 @@ use Espo\Entities\User;
  *
  * @implements OwnershipOwnChecker<CoreEntity>
  * @implements OwnershipTeamChecker<CoreEntity>
+ * @implements OwnershipSharedChecker<CoreEntity>
  */
-class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
+class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker, OwnershipSharedChecker
 {
     private const ATTR_CREATED_BY_ID = 'createdById';
     private const ATTR_ASSIGNED_USER_ID = 'assignedUserId';
     private const ATTR_ASSIGNED_TEAMS_IDS = 'teamsIds';
     private const FIELD_TEAMS = 'teams';
     private const FIELD_ASSIGNED_USERS = 'assignedUsers';
+    private const FIELD_COLLABORATORS = 'collaborators';
 
     public function checkOwn(User $user, Entity $entity): bool
     {
@@ -108,5 +110,25 @@ class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamCheck
         }
 
         return false;
+    }
+
+    public function checkShared(User $user, Entity $entity, string $action): bool
+    {
+        if (!$entity instanceof CoreEntity) {
+            return false;
+        }
+
+        if ($action !== Table::ACTION_READ && $action !== Table::ACTION_STREAM) {
+            return false;
+        }
+
+        if (
+            !$entity->hasRelation(self::FIELD_COLLABORATORS) ||
+            !$entity->hasLinkMultipleField(self::FIELD_COLLABORATORS)
+        ) {
+            return false;
+        }
+
+        return in_array($user->getId(), $entity->getLinkMultipleIdList(self::FIELD_COLLABORATORS));
     }
 }

@@ -59,6 +59,7 @@ class User extends Person
     public const TYPE_SUPER_ADMIN = 'super-admin';
 
     public const RELATIONSHIP_ENTITY_USER = 'EntityUser';
+    public const RELATIONSHIP_ENTITY_COLLABORATOR = 'EntityCollaborator';
 
     public function isActive(): bool
     {

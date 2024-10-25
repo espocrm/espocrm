@@ -76,6 +76,10 @@ export default class extends MultiEnumFieldView {
             this.params.options.push('followed');
         }
 
+        if (this.getMetadata().get(`scopes.${entityType}.collaborators`)) {
+            this.params.options.push('shared');
+        }
+
         this.translatedOptions = {};
 
         this.params.options.forEach(item => {

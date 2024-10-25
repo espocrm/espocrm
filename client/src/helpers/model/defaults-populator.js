@@ -137,6 +137,15 @@ class DefaultsPopulator {
                 defaultHash['teamsNames'][defaultTeamId] = this.user.get('defaultTeamName');
             }
         }
+
+        const hasCollaborators = model.hasField('collaborators') &&
+            model.getLinkParam('collaborators', 'entity') === 'User' &&
+            this.metadata.get(`scopes.${model.entityType}.collaborators`);
+
+        if (hasCollaborators) {
+            defaultHash.collaboratorsIds = [this.user.id];
+            defaultHash.collaboratorsNames = {[this.user.id]: this.user.attributes.name};
+        }
     }
 
     /**

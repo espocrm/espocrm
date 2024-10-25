@@ -25,6 +25,10 @@
             "description": "Enables stars.",
             "type": "boolean"
         },
+        "collaborators": {
+            "description": "Enables collaborators.",
+            "type": "boolean"
+        },
         "importable": {
             "description": "Whether the entity is available in the Import tool.",
             "type": "boolean"

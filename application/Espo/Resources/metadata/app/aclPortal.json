@@ -126,6 +126,7 @@
                 "read": "yes",
                 "edit": "no"
             },
+            "collaborators": false,
             "teams": false
         },
         "scopeFieldLevel": {

@@ -27,78 +27,59 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Helpers;
+namespace Espo\Core\Select\Bool\Filters;
 
+use Espo\Core\Select\Bool\Filter;
+use Espo\Core\Select\Helpers\FieldHelper;
 use Espo\Entities\User;
 use Espo\ORM\Defs;
-use Espo\ORM\Query\Part\Condition;
-use Espo\ORM\Query\Part\Expression;
-use Espo\ORM\Query\Part\WhereItem;
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\Part\Where\OrGroupBuilder;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 /**
- * @since 8.5.0
+ * @noinspection PhpUnused
  */
-class RelationQueryHelper
+class Shared implements Filter
 {
+    public const NAME = 'shared';
+
     public function __construct(
-        private Defs $defs,
+        private string $entityType,
+        private User $user,
+        private FieldHelper $fieldHelper,
+        private Defs $defs
     ) {}
 
-    public function prepareAssignedUsersWhere(string $entityType, string $userId): WhereItem
+    public function apply(QueryBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
     {
-        return $this->prepareRelatedUsersWhere(
-            $entityType,
-            $userId,
-            'assignedUsers',
-            User::RELATIONSHIP_ENTITY_USER
-        );
-    }
-
-    public function prepareCollaboratorsWhere(string $entityType, string $userId): WhereItem
-    {
-        return $this->prepareRelatedUsersWhere(
-            $entityType,
-            $userId,
-            'collaborators',
-            User::RELATIONSHIP_ENTITY_COLLABORATOR
-        );
-    }
-
-    private function prepareRelatedUsersWhere(
-        string $entityType,
-        string $userId,
-        string $field,
-        string $relationship
-    ): WhereItem {
+        if (!$this->fieldHelper->hasCollaboratorsField()) {
+            return;
+        }
 
         $relationDefs = $this->defs
-            ->getEntity($entityType)
-            ->getRelation($field);
+            ->getEntity($this->entityType)
+            ->getRelation('collaborators');
 
         $middleEntityType = ucfirst($relationDefs->getRelationshipName());
         $key1 = $relationDefs->getMidKey();
         $key2 = $relationDefs->getForeignMidKey();
 
-        $joinWhere = [
-            "m.$key1:" => 'id',
-            'm.deleted' => false,
-        ];
-
-        if ($middleEntityType === $relationship) {
-            $joinWhere['m.entityType'] = $entityType;
-        }
-
         $subQuery = QueryBuilder::create()
             ->select('id')
-            ->from($entityType)
-            ->leftJoin($middleEntityType, 'm', $joinWhere)
-            ->where(["m.$key2" => $userId])
+            ->from($this->entityType)
+            ->leftJoin($middleEntityType, 'collaboratorsMiddle', [
+                "collaboratorsMiddle.$key1:" => 'id',
+                'collaboratorsMiddle.deleted' => false,
+            ])
+            ->where(["collaboratorsMiddle.$key2" => $this->user->getId()])
             ->build();
 
-        return Condition::in(
-            Expression::column('id'),
-            $subQuery
+        $orGroupBuilder->add(
+            Cond::in(
+                Cond::column('id'),
+                $subQuery
+            )
         );
     }
 }

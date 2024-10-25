@@ -29,17 +29,22 @@
 
 namespace tests\integration\Espo\User;
 
+use Espo\Core\Acl\Table;
+use Espo\Core\AclManager;
 use Espo\Core\Api\ControllerActionProcessor;
 use Espo\Core\Api\ResponseWrapper;
+use Espo\Core\DataManager;
 use Espo\Core\Field\Date;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Record\UpdateParams;
 use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Select\Where\Item as WhereItem;
 
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\CaseObj;
@@ -47,6 +52,8 @@ use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Opportunity;
+use Espo\Modules\Crm\Entities\Task;
+use Espo\Tools\EntityManager\EntityManager as EntityManagerTool;
 use Exception;
 
 class AclTest extends \tests\integration\Core\BaseTestCase
@@ -704,5 +711,157 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'closeDate' => Date::createToday()->toString(),
             'assignedUserId' => $userId,
         ], CreateParams::create());
+    }
+
+    /** @noinspection PhpUnhandledExceptionInspection */
+    public function testShared(): void
+    {
+        $entityManagerTool = $this->getInjectableFactory()->create(EntityManagerTool::class);
+        $dataManager = $this->getContainer()->getByClass(DataManager::class);
+
+        /** @noinspection PhpArrayKeyDoesNotMatchArrayShapeInspection */
+        $entityManagerTool->update(Task::ENTITY_TYPE, ['collaborators' => true]);
+        $dataManager->rebuild();
+
+        $user1 = $this->createUser('test-1', [
+            'data' => [
+                Task::ENTITY_TYPE => [
+                    Table::ACTION_READ => Table::LEVEL_OWN,
+                    Table::ACTION_EDIT => Table::LEVEL_OWN,
+                    Table::ACTION_STREAM => Table::LEVEL_OWN,
+                ]
+            ]
+        ]);
+
+        $user2 = $this->createUser('test-2', [
+            'data' => [
+                Task::ENTITY_TYPE => [
+                    Table::ACTION_READ => Table::LEVEL_OWN,
+                    Table::ACTION_EDIT => Table::LEVEL_OWN,
+                    Table::ACTION_STREAM => Table::LEVEL_NO,
+                ]
+            ]
+        ]);
+
+        $user3 = $this->createUser('test-3', [
+            'data' => [
+                Task::ENTITY_TYPE => [
+                    Table::ACTION_READ => Table::LEVEL_TEAM,
+                    Table::ACTION_EDIT => Table::LEVEL_TEAM,
+                    Table::ACTION_STREAM => Table::LEVEL_TEAM,
+                ]
+            ]
+        ]);
+
+        $user4 = $this->createUser('test-4', [
+            'data' => [
+                Task::ENTITY_TYPE => [
+                    Table::ACTION_READ => Table::LEVEL_NO,
+                    Table::ACTION_EDIT => Table::LEVEL_NO,
+                    Table::ACTION_STREAM => Table::LEVEL_NO,
+                ]
+            ]
+        ]);
+
+        $em = $this->getEntityManager();
+        $aclManager = $this->getContainer()->getByClass(AclManager::class);
+
+        $team = $em->createEntity(Team::ENTITY_TYPE);
+
+        $em->getRelation($user3, 'teams')->relate($team);
+
+        $em->refreshEntity($user1);
+        $em->refreshEntity($user2);
+        $em->refreshEntity($user3);
+        $em->refreshEntity($user4);
+
+        $entity1 = $em->createEntity(Task::ENTITY_TYPE, [
+            'collaboratorsIds' => [$user1->getId(), $user3->getId()]
+        ]);
+
+        $entity2 = $em->createEntity(Task::ENTITY_TYPE, [
+            'teamsIds' => [$team->getId()]
+        ]);
+
+        $entity3 = $em->createEntity(Task::ENTITY_TYPE, [
+            'collaboratorsIds' => [$user3->getId()]
+        ]);
+
+        $entity4 = $em->createEntity(Task::ENTITY_TYPE, [
+            'collaboratorsIds' => [$user2->getId(), $user4->getId()]
+        ]);
+
+        $this->assertTrue($aclManager->checkEntityRead($user1, $entity1));
+        $this->assertFalse($aclManager->checkEntityEdit($user1, $entity1));
+        $this->assertTrue($aclManager->checkEntityStream($user1, $entity1));
+
+        $this->assertFalse($aclManager->checkEntityRead($user2, $entity1));
+        $this->assertFalse($aclManager->checkEntityEdit($user2, $entity1));
+        $this->assertFalse($aclManager->checkEntityStream($user2, $entity1));
+
+        $this->assertTrue($aclManager->checkEntityRead($user3, $entity1));
+        $this->assertFalse($aclManager->checkEntityEdit($user3, $entity1));
+        $this->assertTrue($aclManager->checkEntityStream($user3, $entity1));
+
+        $this->assertTrue($aclManager->checkEntityRead($user2, $entity4));
+        $this->assertFalse($aclManager->checkEntityStream($user2, $entity4));
+
+        $this->assertFalse($aclManager->checkEntityRead($user4, $entity4));
+        $this->assertFalse($aclManager->checkEntityStream($user4, $entity4));
+
+        $selectBuilderFactory = $this->getInjectableFactory()->create(SelectBuilderFactory::class);
+
+        // user1
+
+        $query = $selectBuilderFactory
+            ->create()
+            ->forUser($user1)
+            ->from(Task::ENTITY_TYPE)
+            ->withAccessControlFilter()
+            ->build();
+
+        $entity1Found = $em->getRDBRepositoryByClass(Task::class)
+        ->clone($query)
+        ->where(['id' => $entity1->getId()])
+        ->findOne();
+
+        $this->assertNotNull($entity1Found);
+
+        $entity2Found = $em->getRDBRepositoryByClass(Task::class)
+            ->clone($query)
+            ->where(['id' => $entity2->getId()])
+            ->findOne();
+
+        $this->assertNull($entity2Found);
+
+        // user3
+
+        $query = $selectBuilderFactory
+            ->create()
+            ->forUser($user3)
+            ->from(Task::ENTITY_TYPE)
+            ->withAccessControlFilter()
+            ->build();
+
+        $entity1Found = $em->getRDBRepositoryByClass(Task::class)
+            ->clone($query)
+            ->where(['id' => $entity1->getId()])
+            ->findOne();
+
+        $this->assertNotNull($entity1Found);
+
+        $entity2Found = $em->getRDBRepositoryByClass(Task::class)
+            ->clone($query)
+            ->where(['id' => $entity2->getId()])
+            ->findOne();
+
+        $this->assertNotNull($entity2Found);
+
+        $entity3Found = $em->getRDBRepositoryByClass(Task::class)
+            ->clone($query)
+            ->where(['id' => $entity3->getId()])
+            ->findOne();
+
+        $this->assertNotNull($entity3Found);
     }
 }

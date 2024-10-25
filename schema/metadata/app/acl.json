@@ -47,10 +47,10 @@
             "enum": ["yes", "no"]
         },
         "levelsAll": {
-            "enum": ["yes", "all", "team", "own", "no"]
+            "enum": ["yes", "all", "team", "shared", "own", "no"]
         },
         "levels": {
-            "enum": ["all", "team", "own", "no"]
+            "enum": ["all", "team", "shared", "own", "no"]
         },
         "group": {
             "type": "object",

@@ -74,6 +74,12 @@ class ScopeChecker
             }
         }
 
+        if ($level === Table::LEVEL_OWN || $level === Table::LEVEL_TEAM) {
+            if ($checkerData->isShared()) {
+                return true;
+            }
+        }
+
         if ($level === Table::LEVEL_TEAM) {
             if ($checkerData->inTeam()) {
                 return true;

@@ -76,6 +76,7 @@ class NameUtil
         'teams',
         'assignedUser',
         'assignedUsers',
+        'collaborators',
     ];
 
     /**

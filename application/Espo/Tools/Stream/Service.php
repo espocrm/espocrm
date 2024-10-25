@@ -374,7 +374,7 @@ class Service
      * Notes having `related` or `superParent` are subjects to access control
      * through `users` and `teams` fields.
      *
-     * When users or teams of `related` or `parent` record are changed
+     * When users or teams of `related` or `parent` record are changed,
      * the note record will be changed too.
      */
     private function processNoteTeamsUsers(Note $note, Entity $entity): void
@@ -384,26 +384,37 @@ class Service
         }
 
         $note->setAclIsProcessed();
-
         $note->setTeamsIds([]);
-        $note->setUsersIds([]);
 
         if ($entity->hasLinkMultipleField('teams')) {
-            $teamIdList = $entity->getLinkMultipleIdList('teams');
-
-            $note->setTeamsIds($teamIdList);
+            $note->setTeamsIds($entity->getLinkMultipleIdList('teams'));
         }
 
+        $userIds = array_merge(
+            $this->getAssignedUserIds($entity),
+            $this->getCollaboratorIds($entity)
+        );
+
+        $userIds = array_values(array_unique($userIds));
+
+        $note->setUsersIds($userIds);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getAssignedUserIds(CoreEntity $entity): array
+    {
         $ownerUserField = $this->aclManager->getReadOwnerUserField($entity->getEntityType());
 
         if (!$ownerUserField) {
-            return;
+            return [];
         }
 
         $defs = $this->entityManager->getDefs()->getEntity($entity->getEntityType());
 
         if (!$defs->hasField($ownerUserField)) {
-            return;
+            return [];
         }
 
         $fieldDefs = $defs->getField($ownerUserField);
@@ -413,26 +424,42 @@ class Service
         } else if ($fieldDefs->getType() === FieldType::LINK) {
             $ownerUserIdAttribute = $ownerUserField . 'Id';
         } else {
-            return;
+            return [];
         }
 
         if (!$entity->has($ownerUserIdAttribute)) {
-            return;
+            return [];
         }
 
         if ($fieldDefs->getType() === FieldType::LINK_MULTIPLE) {
-            $userIdList = $entity->getLinkMultipleIdList($ownerUserField);
-        } else {
-            $userId = $entity->get($ownerUserIdAttribute);
-
-            if (!$userId) {
-                return;
-            }
-
-            $userIdList = [$userId];
+            return $entity->getLinkMultipleIdList($ownerUserField);
         }
 
-        $note->setUsersIds($userIdList);
+        $userId = $entity->get($ownerUserIdAttribute);
+
+        if ($userId) {
+            return [$userId];
+        }
+
+        return [];
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getCollaboratorIds(CoreEntity $entity): array
+    {
+        if (!$this->metadata->get("scopes.{$entity->getEntityType()}.collaborators")) {
+            return [];
+        }
+
+        $field = 'collaborators';
+
+        if (!$entity->hasLinkMultipleField($field)) {
+            return [];
+        }
+
+        return $entity->getLinkMultipleIdList($field);
     }
 
     public function noteEmailReceived(Entity $entity, Email $email, bool $isInitial = false): void
