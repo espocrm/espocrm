@@ -309,31 +309,36 @@
             "textFilterDisabled": true,
             "customizationDisabled": true,
             "layoutAvailabilityList": [],
-            "massUpdateDisabled": true
+            "massUpdateDisabled": true,
+            "readOnly": true
         },
         "toEmailAddresses": {
             "type": "linkMultiple",
             "customizationDisabled": true,
             "layoutAvailabilityList": [],
-            "massUpdateDisabled": true
+            "massUpdateDisabled": true,
+            "readOnly": true
         },
         "ccEmailAddresses": {
             "type": "linkMultiple",
             "customizationDisabled": true,
             "layoutAvailabilityList": [],
-            "massUpdateDisabled": true
+            "massUpdateDisabled": true,
+            "readOnly": true
         },
         "bccEmailAddresses": {
             "type": "linkMultiple",
             "customizationDisabled": true,
             "layoutAvailabilityList": [],
-            "massUpdateDisabled": true
+            "massUpdateDisabled": true,
+            "readOnly": true
         },
         "replyToEmailAddresses": {
             "type": "linkMultiple",
             "customizationDisabled": true,
             "layoutAvailabilityList": [],
-            "massUpdateDisabled": true
+            "massUpdateDisabled": true,
+            "readOnly": true
         },
         "bodyPlain": {
             "type": "text",
