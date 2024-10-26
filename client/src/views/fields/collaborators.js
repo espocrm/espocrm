@@ -75,4 +75,21 @@ export default class CollaboratorsFieldView extends LinkMultipleFieldView {
 
         return Promise.resolve([]);
     }
+
+    /**
+     * @inheritDoc
+     */
+    prepareEditItemElement(id, name) {
+        const itemElement = super.prepareEditItemElement(id, name);
+
+        const avatarHtml = this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
+
+        if (avatarHtml) {
+            const img = new DOMParser().parseFromString(avatarHtml, 'text/html').body.childNodes[0];
+
+            itemElement.prepend(img);
+        }
+
+        return itemElement;
+    }
 }

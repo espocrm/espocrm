@@ -739,11 +739,27 @@ class LinkMultipleFieldView extends BaseFieldView {
      * @return {JQuery|null}
      */
     addLinkHtml(id, name) {
-        // Do not use the `html` method to avoid XSS.
+        // Beware of XSS.
 
         name = name || id;
 
         const $container = this.$el.find('.link-container');
+
+        const itemElement = this.prepareEditItemElement(id, name);
+
+        $container.append(itemElement);
+
+        return $(itemElement);
+    }
+
+    /**
+     * @protected
+     * @param {string} id An ID.
+     * @param {string} name A name.
+     * @return {HTMLElement}
+     */
+    prepareEditItemElement(id, name) {
+        // Beware of XSS.
 
         const $el = $('<div>')
             .addClass('link-' + id)
@@ -764,9 +780,7 @@ class LinkMultipleFieldView extends BaseFieldView {
                 )
         );
 
-        $container.append($el);
-
-        return $el;
+        return $el.get(0);
     }
 
     // noinspection JSUnusedLocalSymbols
