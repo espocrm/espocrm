@@ -1125,7 +1125,13 @@ class LinkMultipleFieldView extends BaseFieldView {
 
     /**
      * @private
-     * @return {Promise<{bool?: string[], advanced?: Object, primary?: string}>}
+     * @return {Promise<{
+     *     bool?: string[],
+     *     advanced?: Object,
+     *     primary?: string,
+     *     orderBy?: string,
+     *     order?: 'asc'|'desc',
+     * }>}
      */
     _getSelectFilters() {
         const handler = this.panelDefs.selectHandler;
