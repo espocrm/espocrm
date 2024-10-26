@@ -2324,6 +2324,21 @@ img.avatar.avatar-link {
     }
 }
 
+div:has(.avatar-in-input) {
+    > .input-group > input {
+        padding-left: 33px;
+    }
+
+    > .avatar-in-input {
+        position: absolute;
+        top: 32px;
+        left: 18px;
+        z-index: 3;
+        user-select: none;
+        pointer-events: none;
+    }
+}
+
 div[data-scope="User"],
 div[data-scope="PortalUser"],
 div[data-scope="ApiUser"] {

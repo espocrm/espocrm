@@ -49,6 +49,60 @@ class UserWithAvatarFieldView extends UserFieldView {
 
         return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', size, 'avatar-link');
     }
+
+    afterRender() {
+        super.afterRender();
+
+        if (this.isEditMode()) {
+            this.appendEditModeAvatar();
+        }
+    }
+
+    setup() {
+        super.setup();
+
+        this.on('change', () => {
+            if (!this.isEditMode()) {
+                return;
+            }
+
+            const img = this.element.querySelector('img.avatar');
+
+            if (img) {
+                img.parentNode.removeChild(img);
+            }
+
+            this.appendEditModeAvatar();
+        });
+    }
+
+    /**
+     * @private
+     */
+    appendEditModeAvatar() {
+        const userId = this.model.attributes[this.idName];
+
+        if (!userId) {
+            return;
+        }
+
+        const avatarHtml = this.getHelper().getAvatarHtml(userId, 'small', 18, 'avatar-link');
+
+        if (!avatarHtml) {
+            return;
+        }
+
+        const img = new DOMParser().parseFromString(avatarHtml, 'text/html').body.childNodes[0];
+
+        if (!(img instanceof HTMLImageElement)) {
+            return;
+        }
+
+        img.classList.add('avatar-in-input')
+        img.draggable = false;
+
+        this.element.append(img);
+    }
 }
 
 export default UserWithAvatarFieldView;
