@@ -490,23 +490,30 @@ class FieldManager
         $this->processHook('beforeRemove', $type, $scope, $name);
 
         $unsets = [
-            'fields.' . $name,
-            'links.' . $name,
+            "fields.$name",
+            "links.$name",
         ];
 
-        if (
-            !$this->isScopeCustom($scope) &&
-            $this->metadata->get("entityDefs.$scope.collection.orderBy") === $name
-        ) {
+        if ($this->metadata->get("entityDefs.$scope.collection.orderBy") === $name) {
             $unsets[] = "entityDefs.$scope.collection.orderBy";
             $unsets[] = "entityDefs.$scope.collection.order";
+        }
+
+        $textFilterFields = $this->metadata->get("entityDefs.$scope.collection.textFilterFields");
+
+        if (is_array($textFilterFields) && in_array($name, $textFilterFields)) {
+            $textFilterFields = array_values(array_diff($textFilterFields, [$name]));
+
+            $this->metadata->set('entityDefs', $scope, [
+                'collection' => ['textFilterFields' => $textFilterFields]
+            ]);
         }
 
         $this->metadata->delete('entityDefs', $scope, $unsets);
 
         $this->metadata->delete('clientDefs', $scope, [
-            'dynamicLogic.fields.' . $name,
-            'dynamicLogic.options.' . $name,
+            "dynamicLogic.fields.$name",
+            "dynamicLogic.options.$name",
         ]);
 
         $this->metadata->save();
