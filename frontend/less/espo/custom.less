@@ -2324,18 +2324,25 @@ img.avatar.avatar-link {
     }
 }
 
-div:has(.avatar-in-input) {
+div:has(.avatar-in-input):not(:has(.being-typed)) {
     > .input-group > input {
         padding-left: 33px;
     }
 
     > .avatar-in-input {
+        display: inline-block;
         position: absolute;
         top: 32px;
         left: 18px;
         z-index: 3;
         user-select: none;
         pointer-events: none;
+    }
+}
+
+div:has(.avatar-in-input) {
+    > .avatar-in-input {
+        display: none;
     }
 }
 

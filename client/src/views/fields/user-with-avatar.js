@@ -54,12 +54,20 @@ class UserWithAvatarFieldView extends UserFieldView {
         super.afterRender();
 
         if (this.isEditMode()) {
-            this.appendEditModeAvatar();
+            this.controlEditModeAvatar();
         }
     }
 
     setup() {
         super.setup();
+
+        this.addHandler('keydown', `input[data-name="${this.nameName}"]`, (e, target) => {
+            target.classList.add('being-typed');
+        });
+
+        this.addHandler('change', `input[data-name="${this.nameName}"]`, (e, target) => {
+            setTimeout(() => target.classList.remove('being-typed'), 200);
+        });
 
         this.on('change', () => {
             if (!this.isEditMode()) {
@@ -72,14 +80,17 @@ class UserWithAvatarFieldView extends UserFieldView {
                 img.parentNode.removeChild(img);
             }
 
-            this.appendEditModeAvatar();
+            this.controlEditModeAvatar();
         });
     }
 
     /**
      * @private
      */
-    appendEditModeAvatar() {
+    controlEditModeAvatar() {
+        const nameElement = this.element.querySelector(`input[data-name="${this.nameName}"]`);
+        nameElement.classList.remove('being-typed');
+
         const userId = this.model.attributes[this.idName];
 
         if (!userId) {
