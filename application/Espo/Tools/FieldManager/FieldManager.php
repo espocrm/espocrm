@@ -51,34 +51,6 @@ class FieldManager
 {
     private bool $isChanged = false;
 
-    /** @var string[] */
-    private $forbiddenFieldNameList = [
-        'id',
-        'deleted',
-        'deleteId',
-        'skipDuplicateCheck',
-        'isFollowed',
-        'isStarred',
-        'versionNumber',
-        'null',
-        'false',
-        'true',
-        'teams',
-        'assignedUser',
-        'assignedUsers',
-        'collaborators',
-    ];
-
-    /** @var string[] */
-    private $forbiddenAnyCaseFieldNameList = [
-        'id',
-        'deleted',
-        'null',
-        'false',
-        'true',
-        'system',
-    ];
-
     // 64 - margin (for attribute name suffixes and prefixes)
     private const MAX_NAME_LENGTH = 50;
 
@@ -191,8 +163,8 @@ class FieldManager
         }
 
         if (
-            in_array($name, $this->forbiddenFieldNameList) ||
-            in_array(strtolower($name), $this->forbiddenAnyCaseFieldNameList)
+            in_array($name, NameUtil::FIELD_FORBIDDEN_NAME_LIST) ||
+            in_array(strtolower($name), NameUtil::FIELD_FORBIDDEN_NAME_LIST)
         ) {
             throw Conflict::createWithBody(
                 "Field '$name' is not allowed.",
