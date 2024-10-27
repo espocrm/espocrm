@@ -456,12 +456,26 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
         }
     }
 
+    /**
+     * @private
+     * @param {string} address
+     * @param {string} name
+     */
     addAddressHtml(address, name) {
         const $container = this.$el.find('.link-container');
+
+        const type = this.typeHash[address];
+        const id = this.idHash[address];
+
+        let avatarHtml = '';
 
         const $text = $('<span>');
 
         if (name) {
+            if (type === 'User' && id) {
+                avatarHtml = this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
+            }
+
             $text.append(
                 $('<span>').text(name),
                 ' ',
@@ -478,6 +492,7 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
             .attr('data-address', address)
             .addClass('list-group-item')
             .append(
+                avatarHtml,
                 $('<a>')
                     .attr('data-address', address)
                     .attr('role', 'button')
@@ -554,10 +569,17 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
         const id = this.idHash[address] || null;
 
         if (id) {
-            return $('<div>')
+            let avatarHtml = '';
+
+            if (entityType === 'User') {
+                avatarHtml = this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
+            }
+
+            return $('<div class="email-address-detail-item">')
                 .append(
+                    avatarHtml,
                     $('<a>')
-                        .attr('href', '#' + entityType + '/view/' + id)
+                        .attr('href', `#${entityType}/view/${id}`)
                         .attr('data-scope', entityType)
                         .attr('data-id', id)
                         .text(name),

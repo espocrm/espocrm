@@ -173,6 +173,11 @@ class EmailFromAddressVarchar extends BaseFieldView {
         return super.getValueForDisplay();
     }
 
+    /**
+     * @protected
+     * @param {string} address
+     * @return {string}
+     */
     getDetailAddressHtml(address) {
         if (!address) {
             return '';
@@ -186,8 +191,15 @@ class EmailFromAddressVarchar extends BaseFieldView {
         const id = this.idHash[address] || null;
 
         if (id) {
-            return $('<div>')
+            let avatarHtml = '';
+
+            if (entityType === 'User') {
+                avatarHtml = this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
+            }
+
+            return $('<div class="email-address-detail-item">')
                 .append(
+                    avatarHtml,
                     $('<a>')
                         .attr('href', `#${entityType}/view/${id}`)
                         .attr('data-scope', entityType)
