@@ -683,6 +683,7 @@ class ViewHelper {
             .attr('alt', 'avatar')
             .addClass(className)
             .attr('width', width.toString())
+            .attr('draggable', 'false')
             .get(0).outerHTML;
     }
 
