@@ -100,6 +100,8 @@ class EmailHelper {
         const replyToAddressString = model.get('replyTo') || null;
         const replyToString = model.get('replyToString') || null;
         const userEmailAddressList = this.getUser().get('emailAddressList') || [];
+        const idHash = model.attributes.idHash || {};
+        const typeHash = model.attributes.typeHash || {};
 
         if (replyToAddressString) {
             const replyToAddressList = replyToAddressString.split(';');
@@ -247,6 +249,8 @@ class EmailHelper {
         }
 
         attributes.nameHash = nameHash;
+        attributes.typeHash = typeHash;
+        attributes.idHash = idHash;
         attributes.repliedId = model.id;
         attributes.inReplyTo = model.get('messageId');
 
