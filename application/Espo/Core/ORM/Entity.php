@@ -197,11 +197,10 @@ class Entity extends BaseEntity
     }
 
     /**
-     * Load a link-multiple field. If a value is already set, it will set only a fetched value.
-     * Should be used wisely. Consider using `getLinkMultipleIdList` instead.
-     * Can be used to load a database value (fetched value) after the field was already written.
+     * Load a link-multiple field. Should be used wisely. Consider using `getLinkMultipleIdList` instead.
      *
      * @param ?array<string, string> $columns Deprecated as of v9.0.
+     * @todo Add a method to load and set only fetched values?
      */
     public function loadLinkMultipleField(string $field, ?array $columns = null): void
     {
@@ -297,10 +296,8 @@ class Entity extends BaseEntity
 
         $toSetFetched = !$this->isNew() && !$this->hasFetched($idsAttribute);
 
-        if (!$this->has($idsAttribute)) {
-            $this->set($idsAttribute, $ids);
-            $this->set($namesAttribute, $names);
-        }
+        $this->set($idsAttribute, $ids);
+        $this->set($namesAttribute, $names);
 
         if ($toSetFetched) {
             $this->setFetched($idsAttribute, $ids);
@@ -308,9 +305,7 @@ class Entity extends BaseEntity
         }
 
         if ($hasType) {
-            if (!$this->has($typesAttribute)) {
-                $this->set($typesAttribute, $types);
-            }
+            $this->set($typesAttribute, $types);
 
             if ($toSetFetched) {
                 $this->setFetched($typesAttribute, $types);
@@ -318,9 +313,7 @@ class Entity extends BaseEntity
         }
 
         if ($columns) {
-            if (!$this->has($columnsAttribute)) {
-                $this->set($columnsAttribute, $columnsData);
-            }
+            $this->set($columnsAttribute, $columnsData);
 
             if ($toSetFetched) {
                 $this->setFetched($columnsAttribute, $columnsData);

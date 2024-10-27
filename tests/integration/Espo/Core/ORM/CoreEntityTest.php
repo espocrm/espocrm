@@ -66,10 +66,10 @@ class CoreEntityTest extends BaseTestCase
         $this->assertTrue($opp->hasLinkMultipleId('contacts', $contact2->getId()));
         $this->assertEquals('Decision Maker', $opp->getLinkMultipleColumn('contacts', 'role', $contact2->getId()));
 
+        // Rewrites set values.
         $opp->loadLinkMultipleField('contacts');
 
-        $this->assertTrue($opp->hasLinkMultipleId('contacts', $contact2->getId()));
-        $this->assertEquals('Decision Maker', $opp->getLinkMultipleColumn('contacts', 'role', $contact2->getId()));
+        $this->assertFalse($opp->hasLinkMultipleId('contacts', $contact2->getId()));
 
         $this->assertTrue(in_array($contact1->getId(), $opp->getFetched('contactsIds')));
         $this->assertFalse(in_array($contact2->getId(), $opp->getFetched('contactsIds')));
