@@ -44,7 +44,7 @@ table {
 }
 
 .table-bordered {
-    border: 1px solid @default-border-color;
+    border: var(--1px) solid @default-border-color;
 }
 
 .table-bordered>thead>tr>th,
@@ -53,7 +53,7 @@ table {
 .table-bordered>thead>tr>td,
 .table-bordered>tbody>tr>td,
 .table-bordered>tfoot>tr>td {
-    border: 1px solid @default-border-color;
+    border: var(--1px) solid @default-border-color;
 }
 
 .table>thead>tr>th,
@@ -65,12 +65,12 @@ table {
     padding: var(--table-cell-padding);
     line-height: var(--line-height-base);
     vertical-align: top;
-    border-top: 1px solid @default-border-color;
+    border-top: var(--1px) solid @default-border-color;
 }
 
 pre {
     display: block;
-    padding: calc((var(--line-height-computed) - 1px) / 2);
+    padding: calc((var(--line-height-computed) - var(--1px)) / 2);
     margin: 0 0 var(--line-height-computed-half);
     font-size: calc(var(--font-size-base) - var(--1px));
     line-height: var(--line-height-base);
@@ -78,7 +78,7 @@ pre {
     word-wrap: break-word;
     color: var(--code-color);
     background-color: var(--code-bg);
-    border: 1px solid var(--code-border-color);
+    border: var(--1px) solid var(--code-border-color);
 
     code {
         padding: 0;

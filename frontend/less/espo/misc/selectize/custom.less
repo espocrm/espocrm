@@ -3,14 +3,14 @@
     &.multi {
         .selectize-input {
             font-size: var(--font-size-small);
-            padding: 2px 7px 0;
+            padding: var(--2px) var(--7px) 0;
 
             > .item {
-                margin: 0 3px 2px 0;
+                margin: 0 var(--3px) var(--2px) 0;
             }
 
             > input {
-                padding-top: 1px !important;
+                padding-top: var(--1px) !important;
             }
         }
     }
@@ -18,7 +18,7 @@
     &.single {
         .selectize-input {
             font-size: var(--font-size-small);
-            padding: 3px 19px 3px 10px;
+            padding: var(--3px) var(--19px) var(--3px) var(--10px);
             min-height: var(--input-height-small);
         }
 
@@ -26,19 +26,19 @@
     }
 
     .selectize-dropdown-content {
-        max-height: 226px;
+        max-height: calc(var(--220px) + var(--6px));
     }
 }
 
 .selectize-dropdown {
-    min-width: 80px;
+    min-width: var(--80px);
 
     .selectize-dropdown-content {
         > .option {
             cursor: default;
         }
 
-        max-height: 253px;
+        max-height: calc(var(--256px) - var(--3px));
     }
 
     margin-top: 0;
@@ -81,7 +81,7 @@
     }
 
     .selectize-input {
-        padding-right: 19px;
+        padding-right: var(--19px);
 
         &.dropdown-active:after,
         &:after {
