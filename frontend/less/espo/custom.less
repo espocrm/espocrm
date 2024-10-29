@@ -1762,11 +1762,11 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 
 .dashlets.fallback {
     > div {
-        margin-bottom: 20px;
+        margin-bottom: var(--20px);
 
         > .dashlet-container > .panel {
             > .panel-body {
-                height: ~"calc(100% - 29px)";
+                height: calc(100% - var(--29px));
             }
         }
     }
@@ -1831,14 +1831,12 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 }
 
 .list-expanded > li > .right > .btn-group {
-    top: -7px;
-    right: -11px;
+    top: var(--minus-7px);
+    right: var(--minus-11px);
 }
 
-
-
 .list > table thead > th {
-    border-top-width: 1px !important;
+    border-top-width: var(--1px) !important;
 }
 
 .show-more > .btn-block {
@@ -1848,7 +1846,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 
 label.attach-file-label {
     overflow: hidden;
-    width: 50px;
+    width: calc(var(--5px) * 10);
     cursor: pointer;
     margin-bottom: 0;
 
@@ -1859,7 +1857,7 @@ label.attach-file-label {
 
     > input.file {
         opacity: 0;
-        width: 1px;
+        width: var(--1px);
     }
 }
 
@@ -1869,18 +1867,18 @@ label.attach-file-label {
     }
 
     > .attachments > div:first-child {
-        margin-top: 2px;
+        margin-top: var(--2px);
     }
 }
 
 .gray-box {
     background-color: var(--select-item-bg);
-    margin: 0 5px 3px 0;
-    padding: 2px 3px 2px 5px;
+    margin: 0 var(--5px) var(--3px) 0;
+    padding: var(--2px) var(--3px) var(--2px) var(--5px);
 
     display: inline-block;
     width: 100%;
-    max-width: 300px;
+    max-width: calc(var(--30px) * 10);
 
     &.preview {
         a {
@@ -1893,8 +1891,8 @@ label.attach-file-label {
     a.remove-attachment {
         > .fas {
             position: relative;
-            top: 1px;
-            padding-right: 1px;
+            top: var(--1px);
+            padding-right: var(--1px);
         }
     }
 }
@@ -1910,27 +1908,27 @@ label.attach-file-label {
 
 .attachment-block-container {
     display: grid;
-    grid-column-gap: 6px;
-    grid-template-columns: repeat(auto-fill, minmax(50px, 256px));
+    grid-column-gap: var(--6px);
+    grid-template-columns: repeat(auto-fill, minmax(var(--50px), var(--256px)));
 }
 
 .attachment-block-container.attachment-block-container-large {
-    grid-template-columns: repeat(auto-fill, minmax(50px, 512px));
+    grid-template-columns: repeat(auto-fill, minmax(var(--50px), var(--512px)));
 }
 
 .attachment-block-container.attachment-block-container-small {
-    grid-template-columns: repeat(auto-fill, minmax(50px, 128px));
+    grid-template-columns: repeat(auto-fill, minmax(var(--50px), var(--128px)));
 }
 
 .attachment-preview {
     vertical-align: top;
-    margin: 3px 0 3px 0;
+    margin: var(--3px) 0 var(--3px) 0;
 
     > a[data-action="showImagePreview"] {
         display: inline-block;
 
         &:focus-visible {
-            outline-offset: 1px;
+            outline-offset: var(--1px);
         }
     }
 }
@@ -1942,7 +1940,7 @@ label.attach-file-label {
 .attachment-block {
     display: block;
     vertical-align: top;
-    margin-bottom: 2px;
+    margin-bottom: var(--2px);
 }
 
 .attachment-block:last-child {
@@ -2019,16 +2017,16 @@ label.attach-file-label {
 
 .link-multiple-item {
     .link-multiple-item-icon {
-        margin-right: 4px;
+        margin-right: var(--4px);
     }
 }
 
 .link-field-icon {
-    margin-right: 4px;
+    margin-right: var(--4px);
 }
 
 .field-row-text-item {
-    margin-top: 7px;
+    margin-top: var(--7px);
     display: inline-block;
 }
 
@@ -2098,15 +2096,15 @@ textarea.auto-height {
 }
 
 .modal-title-text span.color-icon {
-    margin-right: 2px;
+    margin-right: var(--2px);
 }
 
 .header-breadcrumbs {
     .color-icon {
         font-size: 50%;
         left: 0;
-        margin-right: 2px;
-        top: -4px;
+        margin-right: var(--4px);
+        top: var(--minus-4px);
         position: relative;
     }
 
@@ -2120,9 +2118,9 @@ textarea.auto-height {
 span.color-icon {
     font-size: 50%;
     line-height: var(--15px);
-    top: -2px;
-    left: 1px;
-    margin-right: 1px;
+    top: var(--minus-2px);
+    left: var(--1px);
+    margin-right: var(--1px);
     display: inline;
     position: relative;
 }
@@ -2137,7 +2135,7 @@ td > span.color-icon {
 }
 
 #global-search-panel .panel-body .cell > .color-icon {
-    margin-right: 5px;
+    margin-right: var(--5px);
 }
 
 @media screen and (max-width: (@screen-sm-min - 1px)) {
@@ -2163,11 +2161,11 @@ td > span.color-icon {
     #main > .list-container > .list > table {
         td:first-child,
         th:first-child {
-            padding-left: 10px;
+            padding-left: var(--10px);
         }
         td:last-child,
         th:last-child {
-            padding-right: 10px;
+            padding-right: var(--10px);
         }
     }
 }
@@ -2175,13 +2173,13 @@ td > span.color-icon {
 .expanded-row {
     span.label {
         position: relative;
-        top: -1px;
+        top: var(--minus-1px);
 
         &.label-md {
-            padding: .09em 6px .2em;
+            padding: .09em var(--6px) .2em;
             font-size: 75%;
             font-weight: 600;
-            top: -1px;
+            top: var(--minus-1px);
         }
     }
 }
@@ -2189,13 +2187,13 @@ td > span.color-icon {
 .stream-head-text-container {
     span.label {
         position: relative;
-        top: -1px;
+        top: var(--minus-1px);
     }
 
-    padding-left: 29px;
+    padding-left: var(--29px);
 
     > .icon:first-child {
-        margin-right: 3px;
+        margin-right: var(--3px);
     }
 }
 
@@ -2204,8 +2202,8 @@ td > span.color-icon {
 .stream-details-container,
 .stream-subject-container
 {
-    padding: 2px 0 2px 29px;
-    margin-bottom: 2px;
+    padding: var(--2px) 0 var(--2px) var(--29px);
+    margin-bottom: var(--2px);
 }
 
 .stream-date-container {
@@ -2213,19 +2211,19 @@ td > span.color-icon {
         display: inline-block;
         float: right;
         position: relative;
-        top: 5px;
+        top: var(--5px);
         color: var(--text-muted-color);
     }
 }
 
 .stream-head-container {
-    margin-bottom: 4px;
+    margin-bottom: var(--4px);
 }
 
 .stream-head-container .internal-badge {
     position: absolute;
-    top: 35px;
-    left: 19px;
+    top: var(--35px);
+    left: var(--19px);
 }
 
 .stream-head-container .internal-badge > span {
@@ -2234,9 +2232,9 @@ td > span.color-icon {
 
 .stream-head-container > img.avatar {
     display: inline-block;
-    margin-top: -3px;
-    margin-right: 3px;
-    margin-bottom: -2px;
+    margin-top: var(--minus-3px);
+    margin-right: var(--3px);
+    margin-bottom: var(--minus-2px);
 }
 
 
@@ -2247,7 +2245,7 @@ td > span.color-icon {
 
 .stream-details-container {
     table.audited-summary-table {
-        margin-top: 8px;
+        margin-top: var(--8px);
         background-color: transparent;
         table-layout: fixed;
 
@@ -2277,7 +2275,7 @@ td > span.color-icon {
 
 
     > li {
-        margin-bottom: 4px;
+        margin-bottom: var(--4px);
     }
 
     > li:last-child {
@@ -2297,13 +2295,13 @@ img.avatar {
 img.avatar.avatar-link {
     display: inline-block;
     margin-top: 0;
-    margin-right: 3px;
+    margin-right: var(--3px);
     position: relative;
     vertical-align: top;
-    top: 1px;
+    top: var(--1px);
 
     &[data-width="16"] {
-        top: 3px;
+        top: var(--3px);
         vertical-align: baseline;
     }
 
@@ -2314,8 +2312,8 @@ img.avatar.avatar-link {
 
 .name-avatar {
     > .avatar {
-        margin-left: 1px;
-        margin-right: 2px;
+        margin-left: var(--1px);
+        margin-right: var(--2px);
     }
 }
 
@@ -2452,7 +2450,7 @@ div[data-scope="ApiUser"] {
         &::before {
             content: " ";
             width: 100%;
-            height: 50px;
+            height: var(--50px);
             position: absolute;
             bottom: 0;
             left: 0;
@@ -2501,7 +2499,7 @@ div[data-scope="ApiUser"] {
 
     img {
         max-width: 100%;
-        max-height: 500px;
+        max-height: var(--500px);
     }
 }
 
@@ -2536,10 +2534,10 @@ table.table td.cell .html-container {
 .field > .complex-text-container > .complex-text {
     > h1:first-child,
     > h2:first-child {
-        margin-top: 8px !important;
+        margin-top: var(--8px) !important;
     }
     > h3:first-child {
-        margin-top: 4px !important;
+        margin-top: var(--4px) !important;
     }
 }
 
@@ -2617,7 +2615,7 @@ table.table td.cell .html-container {
     }
 
     ul, ol {
-        padding-left: 30px;
+        padding-left: var(--30px);
     }
 }
 
@@ -2640,7 +2638,7 @@ table.table td.cell .html-container {
 
     ul,
     ol {
-        padding-left: 30px;
+        padding-left: var(--30px);
         margin-bottom: var(--line-height-computed-half);
     }
 
@@ -2675,17 +2673,17 @@ table.table td.cell .html-container {
 }
 
 .list-group-tree > li .cell {
-    padding: 3px 0;
+    padding: var(--3px) 0;
 
     .remove-link {
-        margin-left: 4px;
-        margin-right: 4px;
+        margin-left: var(--4px);
+        margin-right: var(--4px);
     }
 }
 
 .categories-container {
     .root-item {
-        padding-bottom: 3px;
+        padding-bottom: var(--3px);
 
         a, a:hover, a:active {
             text-decoration: none;
@@ -2698,7 +2696,7 @@ table.table td.cell .html-container {
     .fa-chevron-right,
     .empty-icon {
         display: inline-block;
-        width: 12px;
+        width: var(--12px);
     }
 }
 
@@ -2741,7 +2739,7 @@ table.table td.cell .html-container {
 @media screen and (min-width: @screen-sm-min) {
     .folders-container {
         margin-left: calc(var(--container-padding) * -1);
-        margin-right: -1px; // Fix 1px shift on sticked.
+        margin-right: var(--minus-1px); // Fix 1px shift on sticked.
     }
 
     .folders-container.sticked {
@@ -2761,14 +2759,14 @@ table.table td.cell .html-container {
 
     > li {
         border: 0;
-        padding: 5px 4px 5px calc(var(--container-padding) - var(--3px));
-        border-left: 3px solid transparent;
+        padding: var(--5px) var(--4px) var(--5px) calc(var(--container-padding) - var(--3px));
+        border-left: var(--3px) solid transparent;
         border-top-right-radius: var(--border-radius);
         border-bottom-right-radius: var(--border-radius);
 
         @media screen and (min-width: @screen-sm-min) {
             &.group-start {
-                margin-top: 10px;
+                margin-top: var(--10px);
             }
         }
 
@@ -2780,7 +2778,7 @@ table.table td.cell .html-container {
             }
 
             .cell {
-                padding: 2px 0;
+                padding: var(--2px) 0;
             }
 
             a {
@@ -2817,15 +2815,15 @@ table.table td.cell .html-container {
 
         .item-icon-container {
             display: inline-block;
-            width: 18px;
-            margin-left: -2px;
-            margin-right: 8px;
+            width: var(--18px);
+            margin-left: var(--minus-2px);
+            margin-right: var(--8px);
             text-align: center;
 
             > span {
                 font-size: var(--12px);
                 position: relative;
-                top: -1px;
+                top: var(--minus-1px);
             }
         }
     }
@@ -2840,8 +2838,8 @@ table.table td.cell .html-container {
 
 .email-address-create-dropdown .btn {
     position: relative;
-    top: -2px;
-    padding: 0 4px;
+    top: var(--minus-2px);
+    padding: 0 var(--4px);
     //noinspection CssReplaceWithShorthandSafely
     margin: 0;
     //noinspection CssOverwrittenProperties,CssReplaceWithShorthandSafely
@@ -2852,29 +2850,22 @@ table.table td.cell .html-container {
 
 .email-address-create-dropdown + .email-address-line {
     display: block;
-    width: ~"calc(100% - 17px)";
+    width: calc(100% - var(--17px));
 }
 
 #main > .calendar-container {
-    margin-top: 10px;
+    margin-top: var(--10px);
 
     > .button-container {
         user-select: none;
     }
 
     .calendar-type-button-group {
-        margin-left: 6px;
+        margin-left: var(--6px);
     }
 
     .calendar {
         border-radius: var(--panel-border-radius);
-
-        /*.fc-view-container {
-            .fc-view > table {
-                border-collapse: collapse;
-                border-style: hidden;
-            }
-        }*/
     }
 
     .timeline {
@@ -2886,12 +2877,7 @@ table.table td.cell .html-container {
 .dashlet-body {
     .fc-daygrid,
     .fc-timegrid {
-        border-top: 1px solid var(--calendar-border);
-
-        /*table {
-            border-collapse: collapse;
-            border-style: hidden;
-        }*/
+        border-top: var(--1px) solid var(--calendar-border);
     }
 }
 
@@ -2940,10 +2926,10 @@ table.table td.cell .html-container {
 .post-container {
     .internal-mode-switcher {
         color: var(--text-muted-color);
-        margin-left: 10px;
+        margin-left: var(--10px);
         display: inline-block;
         position: relative;
-        top: 2px;
+        top: var(--2px);
     }
 
     .internal-mode-switcher.enabled {
@@ -2954,17 +2940,16 @@ table.table td.cell .html-container {
     }
 
     .stream-post-preview {
-        margin-right: 10px;
+        margin-right: var(--10px);
     }
 }
 
 .post-control .attachments {
-    width: 270px;
+    width: calc(var(--27px) * 10);
 }
 
-
 .inline-cancel-link {
-    margin-left: 8px;
+    margin-left: var(--8px);
 }
 
 .panel .item-container.ui-sortable-helper {
@@ -2984,10 +2969,10 @@ table.table td.cell .html-container {
     }
 
     div.item-list {
-        margin-left: 30px;
+        margin-left: var(--30px);
 
         > div {
-            margin: 0 0 10px 0;
+            margin: 0 0 var(--10px) 0;
 
             &:not(.group-operator) {
                 border-top-left-radius: var(--border-radius-small);
@@ -2998,12 +2983,12 @@ table.table td.cell .html-container {
                 }
 
                 &:not(:empty) {
-                    outline: var(--default-border-color) 1px solid;
-                    outline-offset: 4px;
+                    outline: var(--default-border-color) var(--1px) solid;
+                    outline-offset: var(--4px);
                 }
 
                 &:hover:not(:has(div.item-list > div:hover)) {
-                    outline: var(--default-border-color) 1px solid;
+                    outline: var(--default-border-color) var(--1px) solid;
 
                     > .group-head > a[data-action="remove"] {
                         visibility: visible;
@@ -3021,21 +3006,21 @@ table.table td.cell .html-container {
         line-height: var(--input-height-base);
 
         a[data-action="remove"] {
-            margin-right: 5px;
+            margin-right: var(--5px);
             position: relative;
-            top: -4px
+            top: var(--minus-4px);
         }
     }
 
     .dynamic-logic-edit-item-row {
         > div:first-child,
         > div:last-child {
-            padding-top: 7px;
+            padding-top: var(--7px);
         }
 
         a[data-action="remove"] {
-            margin-right: 5px;
-            margin-top: 1px;
+            margin-right: var(--5px);
+            margin-top: var(--1px);
         }
     }
 
@@ -3053,7 +3038,7 @@ table.table td.cell .html-container {
     }
 
     .group-bottom {
-        margin-left: 30px;
+        margin-left: var(--30px);
     }
 }
 
@@ -3063,7 +3048,7 @@ table.table td.cell .html-container {
         line-height: var(--input-height-base);
     }
     .option-list-item-header {
-        margin-top: -10px;
+        margin-top: var(--minus-10px);
     }
 
     .dynamic-logic-options-list-container {
@@ -3072,7 +3057,7 @@ table.table td.cell .html-container {
 }
 
 .field > a[data-action="copyToClipboard"] {
-    margin-left: 6px;
+    margin-left: var(--6px);
 }
 
 .list-container-panel > div {
@@ -3160,7 +3145,7 @@ table.table-admin-panel {
     }
 
     tr > td:first-child {
-        width: 230px;
+        width: var(--232px);
 
         > div {
             position: relative;
@@ -3170,7 +3155,7 @@ table.table-admin-panel {
                 color: var(--text-muted-color);
             }
             > a {
-                padding-left: 28px;
+                padding-left: var(--28px);
                 position: static;
                 display: inline-block;
             }
@@ -3184,7 +3169,7 @@ table.table-admin-panel {
 }
 
 .admin-tables-container > div {
-    margin-bottom: 20px;
+    margin-bottom: var(--20px);
     .table-admin-panel {
         margin-bottom: 0;
     }
@@ -3221,13 +3206,13 @@ table.table-admin-panel {
         user-select: none;
 
         &.category-item-move-up {
-            padding-top: 7px;
-            padding-bottom: 7px;
+            padding-top: var(--7px);
+            padding-bottom: var(--7px);
         }
 
         .folder-icon {
-            margin-right: 3px;
-            left: 1px;
+            margin-right: var(--3px);
+            left: var(--1px);
             position: relative;
         }
 
@@ -3258,9 +3243,9 @@ table.table-admin-panel {
 
     a[data-role="expandButtonContainer"] {
         display: inline-block;
-        width: 18px;
+        width: var(--18px);
         float: right;
-        margin-right: 12px;
+        margin-right: var(--12px);
         text-align: center;
     }
 }
@@ -3285,7 +3270,7 @@ table.table-admin-panel {
 }
 
 .admin-search-container {
-    margin-bottom: 20px;
+    margin-bottom: var(--20px);
 }
 
 .admin-panel-iframe-container {
@@ -3293,21 +3278,21 @@ table.table-admin-panel {
 
     > h4 {
         padding: var(--padding-base-vertical) var(--padding-base-horizontal);
-        padding-bottom: 7px;
+        padding-bottom: var(--7px);
         margin-bottom: 0;
         margin-top: 0;
     }
 
     > div {
-      margin-bottom: 10px;
+      margin-bottom: var(--10px);
     }
 
     > div > .section {
         padding-left: var(--padding-base-horizontal);
         padding-right: var(--padding-base-horizontal);
-        padding-top: 10px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid @panel-default-border;
+        padding-top: var(--10px);
+        padding-bottom: var(--10px);
+        border-bottom: var(--1px) solid @panel-default-border;
 
         > p:last-child {
             padding-bottom: 0;
@@ -3337,7 +3322,7 @@ table.table-admin-panel {
 
 .sections-container {
     > .section {
-        margin-bottom: 30px;
+        margin-bottom: var(--30px);
         > h5 {
             margin-top: 0;
         }
@@ -3349,9 +3334,9 @@ table.table-admin-panel {
 
 .array-add-list-group > li {
     input[type="checkbox"] {
-        margin-right: 12px;
+        margin-right: var(--12px);
         position: relative;
-        top: 8px;
+        top: var(--8px);
         float: left;
     }
 
@@ -3365,11 +3350,11 @@ table.table-admin-panel {
 
 .search-row {
     .input-group button.search {
-        margin-left: -2px;
+        margin-left: var(--minus-2px);
     }
 
     ul.filter-list {
-        right: 54px;
+        right: var(--54px);
 
         li.search-hidden {
             height: 0;
@@ -3380,13 +3365,13 @@ table.table-admin-panel {
     input.field-filter-quick-search-input {
         border-left: 0;
         border-right: 0;
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-left: var(--20px);
+        padding-right: var(--20px);
     }
 }
 
 .advanced-filters-apply-container {
-    margin-bottom: 12px;
+    margin-bottom: var(--12px);
 }
 
 @media screen and (min-width: @screen-md-min) {
@@ -3458,16 +3443,12 @@ table.table-admin-panel {
 
     .search-row {
         .btn.btn-icon-x-wide {
-            width: 54px;
+            width: var(--54px);
         }
     }
 
     .categories-container > .list {
         margin: var(--panel-padding) 0;
-    }
-
-    .panel-body > div:first-child > .list:first-child {
-        //margin-top: 0;
     }
 
     .list > .table {
@@ -3530,14 +3511,14 @@ table.table-admin-panel {
     }
 
     #nav-menu-dropdown {
-        width: 39px;
+        width: var(--39px);
         text-align: center;
     }
 
     .folders-container > .list-group {
         @supports (display: grid) {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(var(--150px), 1fr));
 
             > li {
                 padding-right: var(--10px);
@@ -3590,7 +3571,7 @@ a.field-info > span.fa-info-circle {
 
 .btn:not(.btn-icon) > .far:first-child:has(+ span),
 .btn:not(.btn-icon) > .fas:first-child:has(+ span) {
-    padding-right: 1px;
+    padding-right: var(--1px);
 }
 
 .transform-flip,
@@ -3637,7 +3618,7 @@ a.link-gray {
 
         .fa-times, .fa-minus {
             position: relative;
-            top: 1px;
+            top: var(--1px);
         }
     }
 }
@@ -3645,8 +3626,8 @@ a.link-gray {
 
 #layouts-menu {
     .panel > .panel-heading {
-        padding-top: 6px;
-        padding-bottom: 6px;
+        padding-top: var(--6px);
+        padding-bottom: var(--6px);
     }
 }
 
@@ -3664,7 +3645,7 @@ a.link-gray {
     z-index: 1040;
     background-color: @body-bg;
     text-align: center;
-    padding-top: 80px;
+    padding-top: calc(var(--8px) * 10);
     font-size: 200%;
 
     .fas,
@@ -3738,8 +3719,8 @@ body:has(.modal-backdrop) {
     position: fixed;
     bottom: 0;
     display: grid;
-    grid-gap: 10px;
-    width: ~"calc(100% - 100px)";
+    grid-gap: var(--10px);
+    width: calc(100% - var(--100px));
     justify-content: end;
 
     @media screen and (max-width: (@screen-sm-min - 1px)) {
@@ -3748,22 +3729,22 @@ body:has(.modal-backdrop) {
 
     > .collapsed-modal {
         grid-row: 1;
-        width: 200px;
+        width: var(--200px);
         overflow: hidden;
         z-index: 1009;
-        height: 26px;
-        padding: 3px 8px;
+        height: var(--26px);
+        padding: var(--3px) var(--8px);
         border-top-left-radius: var(--border-radius);
         border-top-right-radius: var(--border-radius);
 
         background-color: var(--collapsed-modal-bg);
 
         .title-container {
-            width: ~"calc(100% - var(--18px))";
+            width: calc(100% - var(--18px));
             text-overflow: ellipsis;
             overflow: hidden;
             float: left;
-            height: 20px;
+            height: var(--20px);
             white-space: nowrap;
         }
 
@@ -3818,7 +3799,7 @@ body:has(.modal-backdrop) {
     }
 
     > .input-group-btn {
-        width: calc(35px * 2);
+        width: calc(var(--35px) * 2);
     }
 }
 
@@ -3836,7 +3817,7 @@ body:has(.modal-backdrop) {
                 z-index: unset;
             }
 
-            width: calc(35px * 2 + 1px);
+            width: calc(var(--35px) * 2 + var(--1px));
         }
     }
 
@@ -3860,8 +3841,8 @@ body:has(.modal-backdrop) {
     > .input-group-item:last-child {
         flex-grow: 1;
         display: block;
-        min-width: 70px;
-        max-width: 80px;
+        min-width: var(--70px);
+        max-width: var(--80px);
     }
 
     > .input-group-addon:last-child {
@@ -3881,20 +3862,20 @@ body > .autocomplete-suggestions.text-search-suggestions {
             text-overflow: ellipsis;
             overflow: hidden;
             display: inline-block;
-            width: ~"calc(100% - 20px)";
-            height: 24px;
-            padding-top: 4px;
-            padding-bottom: 4px;
+            width: calc(100% - var(--20px));
+            height: var(--24px);
+            padding-top: var(--4px);
+            padding-bottom: var(--4px);
         }
 
         > a {
-            margin-top: 3px;
+            margin-top: var(--3px);
         }
     }
 }
 
 .popover {
-    max-width: 300px;
+    max-width: var(--300px);
 
     .popover-title {
         line-height: 1.5;
@@ -3906,8 +3887,8 @@ body > .autocomplete-suggestions.text-search-suggestions {
     position: unset;
     display: block;
 
-    margin-left: -1px;
-    width: ~"calc(100% + 1px)";
+    margin-left: var(--minus-1px);
+    width: calc(100% + var(--1px));
 
     .iti__flag-container {
         user-select: none;
@@ -3924,9 +3905,9 @@ body > .autocomplete-suggestions.text-search-suggestions {
         }
 
         .iti__country-list {
-            margin-top: 1px; // To match positioning of other dropdowns.
+            margin-top: var(--1px); // To match positioning of other dropdowns.
             z-index: 5;
-            max-height: 300px;
+            max-height: var(--300px);
             background-color: var(--dropdown-bg);
             border: var(--dropdown-border) solid var(--dropdown-border-width);
             border-radius: var(--dropdown-border-radius);
@@ -3938,7 +3919,7 @@ body > .autocomplete-suggestions.text-search-suggestions {
 
             .iti__country {
                 color: var(--dropdown-link-color);
-                padding: 4px 10px;
+                padding: var(--4px) var(--10px);
 
                 &.iti__highlight {
                     background-color: var(--dropdown-link-hover-bg);
@@ -3949,7 +3930,7 @@ body > .autocomplete-suggestions.text-search-suggestions {
                 border-bottom-color: var(--dropdown-divider-bg);
             }
 
-            padding: 5px 0;
+            padding: var(--5px) 0;
         }
     }
 
@@ -3957,7 +3938,7 @@ body > .autocomplete-suggestions.text-search-suggestions {
         margin-left: -1px;
 
         z-index: 4;
-        padding: 0 8px 0 8px;
+        padding: 0 var(--8px) 0 var(--8px);
         color: var(--gray-soft);
 
         > .iti__arrow {
@@ -3972,13 +3953,13 @@ body > .autocomplete-suggestions.text-search-suggestions {
             display: none;
             width: 0;
             height: 0;
-            top: 15px;
-            right: 8px;
-            margin-left: 2px;
+            top: var(--15px);
+            right: var(--8px);
+            margin-left: var(--2px);
             vertical-align: middle;
-            border-top: 4px dashed;
-            border-right: 4px solid transparent;
-            border-left: 4px solid transparent;
+            border-top: var(--4px) dashed;
+            border-right: var(--4px) solid transparent;
+            border-left: var(--4px) solid transparent;
             position: absolute;
         }
     }
@@ -3991,17 +3972,17 @@ body > .autocomplete-suggestions.text-search-suggestions {
 
 .colorpicker {
     .colorpicker-saturation {
-        width: 200px;
-        height: 200px;
+        width: var(--200px);
+        height: var(--200px);
     }
 
     .colorpicker-hue,
     .colorpicker-alpha {
-        height: 200px;
+        height: var(--200px);
     }
 
     .colorpicker-color {
-        width: 200px;
+        width: var(--200px);
     }
 }
 
@@ -4020,7 +4001,7 @@ body > .autocomplete-suggestions.text-search-suggestions {
             }
 
             &:first-child {
-                border-top-width: 1px;
+                border-top-width: var(--1px);
                 border-top-color: var(--default-border-color);
             }
         }
@@ -4028,7 +4009,7 @@ body > .autocomplete-suggestions.text-search-suggestions {
 }
 
 .avatar-field-color {
-    margin-top: 3px;
+    margin-top: var(--3px);
 }
 
 @import "misc/kanban.less";
