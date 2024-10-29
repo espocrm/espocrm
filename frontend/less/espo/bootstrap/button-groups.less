@@ -27,13 +27,13 @@
   .btn + .btn-group,
   .btn-group + .btn,
   .btn-group + .btn-group {
-    margin-left: -1px;
+    margin-left: var(--minus-1px);
   }
 }
 
 // Optional: Group multiple button groups together for a toolbar
 .btn-toolbar {
-  margin-left: -5px; // Offset the first child's margin
+  margin-left: var(--minus-5px); // Offset the first child's margin
   &:extend(.clearfix all);
 
   .btn,
@@ -103,12 +103,12 @@
 
 // Give the line between buttons some depth
 .btn-group > .btn + .dropdown-toggle {
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-left: var(--8px);
+  padding-right: var(--8px);
 }
 .btn-group > .btn-lg + .dropdown-toggle {
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: var(--12px);
+  padding-right: var(--12px);
 }
 
 // The clickable button for toggling the menu
@@ -130,7 +130,8 @@
 // Carets in other button sizes
 .btn-lg .caret {
   border-width: @caret-width-large @caret-width-large 0;
-  border-bottom-width: 0;
+    //noinspection CssOverwrittenProperties
+    border-bottom-width: 0;
 }
 // Upside down carets for .dropup
 .dropup .btn-lg .caret {
@@ -163,7 +164,7 @@
   > .btn + .btn-group,
   > .btn-group + .btn,
   > .btn-group + .btn-group {
-    margin-top: -1px;
+    margin-top: var(--minus-1px);
     margin-left: 0;
   }
 }

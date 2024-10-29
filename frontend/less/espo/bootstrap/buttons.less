@@ -7,7 +7,7 @@
   touch-action: manipulation;
   cursor: pointer;
   background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
-  border: 1px solid transparent;
+  border: var(--1px) solid transparent;
   white-space: nowrap;
   .button-size(var(--padding-base-vertical); var(--padding-base-horizontal); var(--font-size-base); var(--line-height-base));
   .user-select(none);
@@ -93,7 +93,7 @@
 
 // Vertically space out multiple block buttons
 .btn-block + .btn-block {
-  margin-top: 5px;
+  margin-top: var(--5px);
 }
 
 // Specificity overrides
