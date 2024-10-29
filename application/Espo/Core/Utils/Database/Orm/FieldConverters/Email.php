@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils\Database\Orm\FieldConverters;
 
 use Espo\Core\ORM\Defs\AttributeParam;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
@@ -147,7 +148,7 @@ class Email implements FieldConverter
                     ]
                 ],
             ],
-            'fieldType' => 'email',
+            'fieldType' => FieldType::EMAIL,
             'where' => [
                 'LIKE' => [
                     'whereClause' => [

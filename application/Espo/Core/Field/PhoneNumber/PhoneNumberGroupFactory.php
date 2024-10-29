@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Field\PhoneNumber;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\PhoneNumber as PhoneNumberEntity;
 use Espo\Repositories\PhoneNumber as Repository;
 
@@ -64,7 +65,7 @@ class PhoneNumberGroupFactory implements ValueFactory
     {
         $type = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
 
-        if ($type !== 'phone') {
+        if ($type !== FieldType::PHONE) {
             return false;
         }
 

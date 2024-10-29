@@ -29,6 +29,8 @@
 
 namespace Espo\Core\FieldProcessing\PhoneNumber;
 
+use Espo\Core\ORM\Type\FieldType;
+use Espo\Entities\PhoneNumber;
 use Espo\ORM\Entity;
 use Espo\Repositories\PhoneNumber as Repository;
 use Espo\Core\FieldProcessing\Loader as LoaderInterface;
@@ -53,12 +55,12 @@ class Loader implements LoaderInterface
             return;
         }
 
-        if ($entityDefs->getField('phoneNumber')->getType() !== 'phone') {
+        if ($entityDefs->getField('phoneNumber')->getType() !== FieldType::PHONE) {
             return;
         }
 
         /** @var Repository $repository */
-        $repository = $this->entityManager->getRepository('PhoneNumber');
+        $repository = $this->entityManager->getRepository(PhoneNumber::ENTITY_TYPE);
 
         $phoneNumberData = $repository->getPhoneNumberData($entity);
 

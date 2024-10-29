@@ -32,6 +32,7 @@ namespace Espo\Core\Utils\Database\Orm;
 use Doctrine\DBAL\Types\Types;
 use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\Defs\AttributeParam;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Database\ConfigDataProvider;
 use Espo\Core\Utils\Database\MetadataProvider;
 use Espo\Core\Utils\Util;
@@ -603,7 +604,7 @@ class Converter
     {
         $type = $fieldParams['type'] ?? null;
 
-        if ($type === 'enum') {
+        if ($type === FieldType::ENUM) {
             if (($fieldParams['default'] ?? null) === '') {
                 $fieldParams['default'] = null;
             }

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Field\EmailAddress;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\EmailAddress as EmailAddressEntity;
 use Espo\Repositories\EmailAddress as Repository;
 
@@ -64,7 +65,7 @@ class EmailAddressGroupFactory implements ValueFactory
     {
         $type = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
 
-        if ($type !== 'email') {
+        if ($type !== FieldType::EMAIL) {
             return false;
         }
 

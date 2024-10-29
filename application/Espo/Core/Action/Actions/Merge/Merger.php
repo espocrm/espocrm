@@ -95,11 +95,11 @@ class Merger
 
         $hasPhoneNumber =
             $entityDefs->hasField('phoneNumber') &&
-            $entityDefs->getField('phoneNumber')->getType() === 'phone';
+            $entityDefs->getField('phoneNumber')->getType() === FieldType::PHONE;
 
         $hasEmailAddress =
             $entityDefs->hasField('emailAddress') &&
-            $entityDefs->getField('emailAddress')->getType() === 'email';
+            $entityDefs->getField('emailAddress')->getType() === FieldType::EMAIL;
 
         if ($hasPhoneNumber) {
             $phoneNumberToRelateList = $this->fetchEntityPhoneNumberList($entity);

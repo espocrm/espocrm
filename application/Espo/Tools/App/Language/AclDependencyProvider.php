@@ -41,10 +41,10 @@ class AclDependencyProvider
 
     /** @var string[] */
     private array $enumFieldTypeList = [
-        'enum',
-        'multiEnum',
-        'array',
-        'checklist',
+        FieldType::ENUM,
+        FieldType::MULTI_ENUM,
+        FieldType::ARRAY,
+        FieldType::CHECKLIST,
     ];
 
     /** @var ?AclDependencyItem[] */

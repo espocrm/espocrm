@@ -29,8 +29,10 @@
 
 namespace Espo\Tools\LinkManager\Hook\Hooks;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Templates\Entities\Company;
 use Espo\Core\Templates\Entities\Person;
+use Espo\ORM\Type\AttributeType;
 use Espo\Tools\LinkManager\Hook\CreateHook;
 use Espo\Tools\LinkManager\Params;
 use Espo\Tools\LinkManager\Type;
@@ -91,7 +93,7 @@ class TargetListCreate implements CreateHook
                 $foreignLink => [
                     'additionalColumns' => [
                         'optedOut' => [
-                            'type' => 'bool',
+                            'type' => AttributeType::BOOL,
                         ]
                     ],
                     'columnAttributeMap' => [
@@ -111,7 +113,7 @@ class TargetListCreate implements CreateHook
             ],
             'fields' => [
                 'targetListIsOptedOut' => [
-                    'type' => 'bool',
+                    'type' => FieldType::BOOL,
                     'notStorable' => true,
                     'readOnly' => true,
                     'disabled' => true,

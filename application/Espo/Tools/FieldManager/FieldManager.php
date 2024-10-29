@@ -40,6 +40,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
 use Espo\Core\Utils\Util;
 
+use Espo\ORM\Type\AttributeType;
 use Espo\Tools\EntityManager\NameUtil;
 use RuntimeException;
 use stdClass;
@@ -695,26 +696,26 @@ class FieldManager
     {
         $additionalParamList = [
             'type' => [
-                'type' => 'varchar',
+                'type' => AttributeType::VARCHAR,
             ],
             'isCustom' => [
-                'type' => 'bool',
+                'type' => AttributeType::BOOL,
                 'default' => false,
             ],
             'isPersonalData' => [
-                'type' => 'bool',
+                'type' => AttributeType::BOOL,
                 'default' => false,
             ],
             'tooltip' => [
-                'type' => 'bool',
+                'type' => AttributeType::BOOL,
                 'default' => false,
             ],
             'inlineEditDisabled' => [
-                'type' => 'bool',
+                'type' => AttributeType::BOOL,
                 'default' => false,
             ],
             'defaultAttributes' => [
-                'type' => 'jsonObject',
+                'type' => AttributeType::JSON_OBJECT,
             ],
         ];
 

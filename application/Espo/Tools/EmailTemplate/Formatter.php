@@ -59,7 +59,7 @@ class Formatter
 
         $attributeType = $entity->getAttributeType($attribute);
 
-        if ($fieldType === 'enum') {
+        if ($fieldType === FieldType::ENUM) {
             if ($value === null) {
                 return '';
             }

@@ -33,6 +33,7 @@ use Espo\Core\Duplicate\WhereBuilder;
 use Espo\Core\Field\EmailAddressGroup;
 use Espo\Core\Field\PhoneNumberGroup;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Defs;
@@ -92,15 +93,15 @@ class General implements WhereBuilder
             ->tryGetField($field)
             ?->getType();
 
-        if ($type === 'personName') {
+        if ($type === FieldType::PERSON_NAME) {
             return $this->applyFieldPersonName($field, $entity, $orBuilder);
         }
 
-        if ($type === 'email') {
+        if ($type === FieldType::EMAIL) {
             return $this->applyFieldEmail($field, $entity, $orBuilder);
         }
 
-        if ($type === 'phone') {
+        if ($type === FieldType::PHONE) {
             return $this->applyFieldPhone($field, $entity, $orBuilder);
         }
 

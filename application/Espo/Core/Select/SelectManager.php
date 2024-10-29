@@ -2618,11 +2618,11 @@ class SelectManager
                     mb_strlen($textFilter) >= $textFilterContainsMinLength
                     &&
                     (
-                        $attributeType == 'text'
+                        $attributeType == AttributeType::TEXT
                         ||
                         in_array($field, $this->textFilterUseContainsAttributeList)
                         ||
-                        $attributeType == 'varchar' && $this->getConfig()->get('textFilterUseContainsForVarchar')
+                        $attributeType == AttributeType::VARCHAR && $this->getConfig()->get('textFilterUseContainsForVarchar')
                     )
                 ) {
                     $expression = '%' . $textFilter . '%';

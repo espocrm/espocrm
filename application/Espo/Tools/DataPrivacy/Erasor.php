@@ -105,7 +105,7 @@ class Erasor implements
 
             $attributeList = $fieldUtil->getActualAttributeList($entityType, $field);
 
-            if ($type === 'email') {
+            if ($type === FieldType::EMAIL) {
                 $emailAddressList = $entity->get('emailAddresses');
 
                 foreach ($emailAddressList as $emailAddress) {
@@ -123,7 +123,7 @@ class Erasor implements
                 $entity->clear($field . 'Data');
 
                 continue;
-            } else if ($type === 'phone') {
+            } else if ($type === FieldType::PHONE) {
                 $phoneNumberList = $entity->get('phoneNumbers');
 
                 foreach ($phoneNumberList as $phoneNumber) {
