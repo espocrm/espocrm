@@ -72,7 +72,7 @@
 
 .selectize-control.multi .selectize-input > div {
     border-radius: var(--border-radius);
-    padding: 1px 4px;
+    padding: var(--1px) var(--4px);
 }
 
 .selectize-control.single {
@@ -89,19 +89,19 @@
             display: inline-block;
             width: 0;
             height: 0;
-            top: 15px;
-            right: 8px;
-            margin-left: 2px;
+            top: var(--15px);
+            right: var(--8px);
+            margin-left: var(--2px);
             vertical-align: middle;
-            border-top: 4px dashed;
-            border-right: 4px solid transparent;
-            border-left: 4px solid transparent;
+            border-top: var(--4px) dashed;
+            border-right: var(--4px) solid transparent;
+            border-left: var(--4px) solid transparent;
             position: absolute;
         }
 
         > .item + input {
             caret-color: transparent;
-            margin-right: -4px !important; // Prevent select changing width on focus.
+            margin-right: var(--minus-4px) !important; // Prevent select changing width on focus.
         }
     }
 
@@ -109,7 +109,7 @@
         .selectize-input {
             &.dropdown-active:after,
             &:after {
-                top: 12px;
+                top: var(--12px);
             }
         }
     }

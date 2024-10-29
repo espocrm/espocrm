@@ -55,8 +55,8 @@ input[type=checkbox]:focus-visible,
 input[type=file]:focus-visible,
 label.attach-file-label:focus-visible,
 .iti__selected-flag:focus-visible {
-    outline: 1px solid var(--input-border-focus-rgba);
-    outline-offset: -1px;
+    outline: var(--1px) solid var(--input-border-focus-rgba);
+    outline-offset: var(--minus-1px);
 }
 
 .no-focus-outline:focus-visible {
@@ -65,7 +65,7 @@ label.attach-file-label:focus-visible,
 
 input[type=checkbox]:focus-visible,
 input[type=radio]:focus-visible{
-    outline-offset: 3px;
+    outline-offset: var(--3px);
 }
 
 .block-center {
@@ -112,7 +112,7 @@ img.image-preview {
 }
 
 .preset > div{
-    padding-right: 26px;
+    padding-right: var(--26px);
 }
 
 .form-group.hidden-cell {
@@ -202,7 +202,7 @@ img.image-preview {
         > div {
             float: left;
             position: relative;
-            min-height: 1px;
+            min-height: var(--1px);
             padding-left: var(--grid-gutter-width-half);
             padding-right: var(--grid-gutter-width-half);
         }
@@ -2420,7 +2420,7 @@ div[data-scope="ApiUser"] {
 
     .flotr-legend-color-box > div {
         position: relative;
-        top: 1px;
+        top: var(--1px);
 
         > div {
             border-radius: var(--border-radius-small);
@@ -3766,7 +3766,7 @@ body:has(.modal-backdrop) {
 .draggable-helper {
     border-radius: var(--border-radius);
     background-color: var(--state-info-bg);
-    border: 1px solid var(--state-info-bg-10);
+    border: var(--1px) solid var(--state-info-bg-10);
     color: var(--state-info-text);
     padding: var(--padding-base-vertical) var(--20px);
     font-weight: 600;

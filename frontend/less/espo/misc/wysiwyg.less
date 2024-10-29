@@ -20,14 +20,13 @@
 
     &.panel > .panel-heading {
         .btn {
-            //border-bottom-width: 1px;
-            padding-top: 4px;
-            padding-bottom: 4px;
+            padding-top: var(--4px);
+            padding-bottom: var(--4px);
         }
 
         .dropdown-menu .btn-group > .btn {
             > i {
-                top: 1px;
+                top: var(--1px);
                 position: relative;
             }
         }
@@ -58,7 +57,7 @@
         background-color: transparent;
 
         > .btn-group {
-            margin-bottom: 5px;
+            margin-bottom: var(--5px);
             .btn {
                 margin-bottom: 0;
             }
@@ -73,7 +72,7 @@
     }
 
     .panel-heading {
-        padding: 5px 5px 0 5px;
+        padding: var(--5px) var(--5px) 0 var(--5px);
         min-height: calc(var(--30px)+ var(--10px));
     }
 
@@ -82,7 +81,7 @@
 
         table.bordered {
             &, th, td {
-                border: 1px solid;
+                border: var(--1px) solid;
             }
         }
     }
@@ -122,7 +121,7 @@ body .note-editor {
                 > i,
                 > span {
                     position: relative;
-                    top: 1px;
+                    top: var(--1px);
                 }
             }
 
@@ -131,7 +130,7 @@ body .note-editor {
                     > i,
                     > span {
                         position: relative;
-                        top: 1px;
+                        top: var(--1px);
                     }
                 }
             }
@@ -140,7 +139,7 @@ body .note-editor {
 
     &.codeview {
         textarea.note-codable {
-            min-height: 400px;
+            min-height: var(--400px);
         }
     }
 
