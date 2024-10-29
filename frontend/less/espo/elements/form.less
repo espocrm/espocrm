@@ -68,20 +68,20 @@
     + .input-group-item {
         > .selectize-control {
             > .selectize-input {
-                margin-left: -1px;
+                margin-left: var(--minus-1px);
             }
         }
     }
 
     + input.form-control {
-        margin-left: -1px;
+        margin-left: var(--minus-1px);
     }
 
     &.input-group-item-middle {
         > input {
-            margin-left: -2px;
-            right: -1px;
-            width: calc(100% + 1px);
+            margin-left: var(--minus-2px);
+            right: var(--minus-1px);
+            width: calc(100% + var(--1px));
         }
     }
 }
@@ -146,12 +146,12 @@
     display: inline-block;
     width: auto;
     vertical-align: middle;
-    margin-right: -1px;
+    margin-right: var(--minus-1px)
 }
 
 .input-group-btn:last-child > select.form-control {
     margin-right: 0;
-    margin-left: -1px;
+    margin-left: var(--minus-1px);
 }
 
 .input-group > .middle-element {
@@ -173,14 +173,13 @@
 }
 
 .input-group-container-2 {
-    width: ~"calc(100% + 1px)";
+    width: calc(100% + var(--1px));
 
     > div {
         width: 50%;
         float: left;
 
         &:first-child:not(:has(+ div > .hidden)) {
-            //padding-right: 3px;
             > .input-group-btn:last-child > {
                 > .btn {
                     border-top-right-radius: 0;
@@ -195,8 +194,7 @@
                 border-bottom-left-radius: 0;
             }
 
-            //padding-left: 3px;
-            margin-left: -1px;
+            margin-left: var(--minus-1px);
         }
     }
 
@@ -212,13 +210,13 @@
 
     input.form-control {
         display: inline-block;
-        width: calc(50% - 35px);
+        width: calc(50% - var(--35px));
         float: left;
     }
 
     .input-group-btn {
         display: inline-block;
-        width: 36px;
+        width: var(--36px);
         float: left;
     }
 
@@ -230,7 +228,7 @@
 }
 
 .input-group .input-group-btn .btn-sm {
-    height: 30px;
+    height: var(--30px);
 }
 
 .input-group-addon {
@@ -245,7 +243,7 @@
 .input-group-addon:not(:first-child):not(:last-child),
 .input-group-btn:not(:first-child):not(:last-child),
 .input-group .form-control:not(:first-child):not(:last-child):not(.no-margin-shifting) {
-    margin-left: -1px;
+    margin-left: var(--minus-1px);
 }
 
 .input-group > .input-group-btn > .btn:hover,
@@ -255,27 +253,27 @@
 }
 
 .form-group.col-sm-12 > .field .input-group > .input-group-btn > select {
-    max-width: 400px;
+    max-width: var(--400px);
 }
 
 .form-group > .field .input-group > .input-group-btn > select {
-    max-width: 240px;
+    max-width: var(--240px);
 }
 
 .form-group.col-sm-12 > .field .input-group-link-parent.input-group > .input-group-btn > select {
-    max-width: 220px;
+    max-width: var(--220px);
 }
 
 .form-group.col-sm-3 > .field .input-group-link-parent.input-group > .input-group-btn > select {
-    max-width: 100px;
+    max-width: var(--100px);
 }
 
 .form-group.col-sm-4 > .field .input-group-link-parent.input-group > .input-group-btn > select {
-    max-width: 120px;
+    max-width: var(--120px);
 }
 
 .form-group > .field .input-group-link-parent.input-group > .input-group-btn > select {
-    max-width: 180px;
+    max-width: var(--180px);
 }
 
 .list-group + .form-control {
@@ -283,7 +281,7 @@
 }
 
 select[multiple].input-sm {
-    height: 90px !important;
+    height: var(--90px) !important;
 }
 
 .form-control[disabled],
@@ -304,12 +302,12 @@ fieldset[disabled] .form-control {
 label {
     > input[type="checkbox"].form-checkbox {
         float: left;
-        margin-right: 7px;
+        margin-right: var(--7px);
     }
 
     &.text-large {
         > input[type="checkbox"].form-checkbox {
-            margin-top: 3px;
+            margin-top: var(--3px);
         }
     }
 }
@@ -319,12 +317,13 @@ input[type="checkbox"].form-checkbox {
     background-color: var(--input-bg);
     margin: 0;
     border-radius: var(--border-radius);
-    border: 1px solid var(--input-border);
+    border: var(--1px) solid var(--input-border);
     height: var(--line-height-computed);
     width: var(--line-height-computed);
     display: grid;
     place-content: center;
     cursor: pointer;
+    //noinspection CssNoGenericFontName
     font-family: 'Font Awesome 6 Free';
     font-weight: 900;
     font-size: var(--15px);
@@ -377,10 +376,10 @@ input[type="checkbox"].form-checkbox {
 
 label > input[type="radio"].form-radio {
     float: left;
-    margin-right: 6px;
+    margin-right: var(--6px);
 
     &.form-radio-small {
-        margin-right: 5px;
+        margin-right: var(--5px);
     }
 }
 
@@ -389,7 +388,7 @@ input[type="radio"].form-radio {
     background-color: var(--input-bg);
     margin: 0;
     border-radius: 50%;
-    border: 1px solid var(--input-border);
+    border: var(--1px) solid var(--input-border);
     height: var(--line-height-computed);
     width: var(--line-height-computed);
     display: grid;
@@ -403,19 +402,19 @@ input[type="radio"].form-radio {
         &::before {
             background-color: var(--btn-primary-color);
             content: "";
-            width: 9px;
-            height: 9px;
+            width: var(--9px);
+            height: var(--9px);
             border-radius: 50%;
         }
     }
 
     &.form-radio-small {
-        height: 15px;
-        width: 15px;
+        height: var(--15px);
+        width: var(--15px);
 
         &::before {
-            width: 7px;
-            height: 7px;
+            width: var(--7px);
+            height: var(--7px);
         }
     }
 
@@ -432,13 +431,13 @@ input[type="radio"].form-radio {
 }
 
 .input-text-block {
-    padding: 6px 10px;
+    padding: var(--6px) var(--10px);
     line-height: 1.5;
     display: block;
 }
 
 .input-group-addon {
-    padding: 6px 10px;
+    padding: var(--6px) var(--10px);
     line-height: 1.5;
 
     &.radius-left {

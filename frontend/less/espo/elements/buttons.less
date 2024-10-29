@@ -117,13 +117,13 @@ a.btn {
 }
 
 .btn-icon {
-    width: 36px;
+    width: var(--36px);
     padding-left: 0;
     padding-right: 0;
 
     .fa, .fas {
         position: relative;
-        width: 16px;
+        width: var(--16px);
         text-align: center;
     }
 
@@ -166,15 +166,15 @@ a.btn {
 }
 
 .btn.btn-icon-wide  {
-    width: 54px;
+    width: var(--54px);
 }
 
 .btn.btn-icon-x-wide  {
-    width: 76px;
+    width: var(--76px);
 }
 
 .btn.btn-icon-xx-wide  {
-    width: 100px;
+    width: var(--100px);
 }
 
 .btn.btn-full-wide {
@@ -251,14 +251,14 @@ a.btn {
 
         &:after {
             position: absolute;
-            bottom: -2px;
+            bottom: var(--minus-2px);
             right: calc(50%);
             width: calc(100%);
             content: "";
             border-radius: var(--border-radius);
             transform: translate(50%, -50%);
             background-color: var(--gray-light);
-            height: 1px;
+            height: var(--1px);
             display: block;
         }
     }
@@ -268,14 +268,13 @@ a.btn {
     > .fas,
     > .far {
         &:first-child + span {
-            padding-left: 2px;
+            padding-left: var(--2px);
         }
     }
 }
 
 .btn-text {
     color: var(--btn-text-color);
-    //border-radius: 0;
 
     &.btn-default {
         color: var(--btn-text-color);
