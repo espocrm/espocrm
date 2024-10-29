@@ -29,6 +29,7 @@
 
 namespace Espo\Hooks\Common;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\ORM\Entity;
 use Espo\Core\Di;
 
@@ -44,7 +45,7 @@ class CurrencyConverted implements Di\MetadataAware, Di\ConfigAware
         $fieldDefs = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
 
         foreach ($fieldDefs as $fieldName => $defs) {
-            if (empty($defs['type']) || $defs['type'] !== 'currencyConverted') {
+            if (empty($defs['type']) || $defs['type'] !== FieldType::CURRENCY_CONVERTED) {
                 continue;
             }
 
@@ -84,8 +85,8 @@ class CurrencyConverted implements Di\MetadataAware, Di\ConfigAware
                 $targetValue = $value;
             } else {
                 $targetValue = $value;
-                $targetValue = $targetValue / (isset($rates[$baseCurrency]) ? $rates[$baseCurrency] : 1.0);
-                $targetValue = $targetValue * (isset($rates[$currency]) ? $rates[$currency] : 1.0);
+                $targetValue = $targetValue / ($rates[$baseCurrency] ?? 1.0);
+                $targetValue = $targetValue * ($rates[$currency] ?? 1.0);
 
                 $targetValue = round($targetValue, 2);
             }

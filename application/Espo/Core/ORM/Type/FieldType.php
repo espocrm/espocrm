@@ -44,6 +44,7 @@ class FieldType
     public const ARRAY = 'array';
     public const CHECKLIST = 'checklist';
     public const CURRENCY = 'currency';
+    public const CURRENCY_CONVERTED = 'currencyConverted';
     public const PERSON_NAME = 'personName';
     public const ADDRESS = 'address';
     public const EMAIL = 'email';

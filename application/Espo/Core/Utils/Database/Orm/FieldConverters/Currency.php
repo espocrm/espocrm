@@ -31,6 +31,7 @@ namespace Espo\Core\Utils\Database\Orm\FieldConverters;
 
 use Doctrine\DBAL\Types\Types;
 use Espo\Core\Currency\ConfigDataProvider;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
@@ -57,14 +58,14 @@ class Currency implements FieldConverter
             ->withType(AttributeType::FLOAT)
             ->withParamsMerged([
                 'attributeRole' => 'value',
-                'fieldType' => 'currency',
+                'fieldType' => FieldType::CURRENCY,
             ]);
 
         $currencyDefs = AttributeDefs::create($name . 'Currency')
             ->withType(AttributeType::VARCHAR)
             ->withParamsMerged([
                 'attributeRole' => 'currency',
-                'fieldType' => 'currency',
+                'fieldType' => FieldType::CURRENCY,
             ]);
 
         $convertedDefs = null;
@@ -198,7 +199,7 @@ class Currency implements FieldConverter
                     ],
                 ],
                 'attributeRole' => 'valueConverted',
-                'fieldType' => 'currency',
+                'fieldType' => FieldType::CURRENCY,
             ]);
 
         return [$amountDefs, $convertedDefs];
@@ -331,7 +332,7 @@ class Currency implements FieldConverter
                     'additionalSelect' => ["{$alias}.rate"],
                 ],
                 'attributeRole' => 'valueConverted',
-                'fieldType' => 'currency',
+                'fieldType' => FieldType::CURRENCY,
             ]);
 
         return [$amountDefs, $convertedDefs];

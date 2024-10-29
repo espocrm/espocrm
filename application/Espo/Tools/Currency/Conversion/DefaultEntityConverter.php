@@ -35,6 +35,7 @@ use Espo\Core\Currency\Converter;
 use Espo\Core\Currency\Rates;
 use Espo\Core\Field\Currency;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -109,7 +110,7 @@ class DefaultEntityConverter implements EntityConverter
             $field = $fieldDefs->getName();
             $type = $fieldDefs->getType();
 
-            if ($type !== 'currency') {
+            if ($type !== FieldType::CURRENCY) {
                 continue;
             }
 

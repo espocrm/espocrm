@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Export\Format\Xlsx;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\Tools\Export\Params;
@@ -122,7 +123,7 @@ class ParamsHandler implements ProcessorParamsHandler
         foreach ($fieldList as $field) {
             $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
 
-            if ($type === 'currencyConverted') {
+            if ($type === FieldType::CURRENCY_CONVERTED) {
                 if (!in_array($field, $attributeList)) {
                     $attributeList[] = $field;
                 }
