@@ -24,7 +24,7 @@ body[data-navbar="side"] {
 
                     .group-caret {
                         right: auto;
-                        left: 13px;
+                        left: var(--13px);
                         transform: rotate(180deg);
                     }
                 }
@@ -173,7 +173,7 @@ body[data-navbar="side"] {
             }
 
             #content {
-                padding-left: 15px;
+                padding-left: var(--15px);
                 padding-right: calc(var(--navbar-minimized-width) + var(--container-padding));
             }
 
@@ -189,7 +189,7 @@ body[data-navbar="side"] {
         }
 
         &.has-navbar > .content {
-            padding-left: 15px;
+            padding-left: var(--15px);
             padding-right: calc(var(--navbar-width) + var(--container-padding));
         }
 
