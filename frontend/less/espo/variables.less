@@ -1,14 +1,7 @@
 // Side navbar.
-@tob-bar-height: 30px;
 @navbar-width: 232px;
-@navbar-header-height: 65px;
-@navbar-logo-height: 39px;
-@navbar-header-vertical-padding: ((@navbar-header-height - @navbar-logo-height) / 2);
+
 @navbar-minimized-width: 48px;
-@navbar-tab-text-left-padding: 36px;
-@navbar-tab-left-padding: 15px;
-@navbar-tab-right-padding: 20px;
-@navbar-tab-vertical-padding: 9px;
 @navbar-tabs-margin-top: 0;
 @navbar-dropdown-min-width: 180px;
 
@@ -61,80 +54,35 @@
 
 @list-group-active-text-color: var(--main-gray-lighten-40);
 
-@input-height-small: 29px;
-
 @input-color: var(--input-color);
 @input-bg: var(--input-bg);
 @input-border: var(--input-border);
 @input-border-focus: var(--input-border-focus);
 @input-bg-disabled: var(--input-bg-disabled);
 
-@line-height-base: 1.5;
-@line-height-computed: floor(@font-size-base * @line-height-base);
 @headings-line-height: 1;
 
 @font-family-sans-serif: Inter, sans-serif;
 @font-family-base: @font-family-sans-serif;
-@headings-font-family: @font-family-base;
 
 @icon-font-path: "../../fonts/";
-
-@border-radius-base: 0;
-@border-radius-large: 0;
-@border-radius-small: 0;
-
-@container-tablet: none;
-@container-desktop: none;
-@container-large-desktop: none;
-
-@container-lg: @container-large-desktop;
-
-@panel-padding: 14px;
-@panel-heading-padding: 6px 10px;
-
-@container-padding: 15px;
-@grid-gutter-width: 16px;
-
-@modal-inner-padding: @panel-padding;
 
 @modal-header-border-color: var(--modal-header-border-color);
 @modal-header-bg: var(--modal-header-bg);
 @modal-footer-bg: var(--modal-footer-bg);
 @modal-content-bg: var(--modal-content-bg);
 
+// @todo Move.
 .container-fixed() {
     margin-right: auto;
     margin-left: auto;
-    padding-left: @container-padding;
-    padding-right: @container-padding;
+    padding-left: var(--container-padding);
+    padding-right: var(--container-padding);
+
     .clearfix();
 }
 
-//@line-height-small-computed: floor((@font-size-base * @line-height-small));
-@line-height-small-computed: 20px;
-
-@font-size-smaller: 13px;
-
-@table-cell-padding: 8px;
-
-@table-cell-less-padding: 3px;
-
-@button-radius: 0px;
-
-@modal-title-padding: 10px;
 @modal-backdrop-bg: var(--modal-backdrop-bg);
-
-@padding-base-vertical: 6px;
-@padding-base-horizontal: 10px;
-
-@padding-large-vertical: 10px;
-@padding-large-horizontal:  16px;
-
-@padding-small-vertical: 5px;
-@padding-small-horizontal: 10px;
-
-@navbar-height: 39px;
-@navbar-padding-vertical: ((@navbar-height - @line-height-computed) / 2);
 
 @state-success-bg: var(--state-success-bg);
 @state-success-text: var(--state-success-text);
@@ -231,7 +179,6 @@
 @list-group-border: @default-border-color;
 @panel-inner-border: @default-border-color;
 
-@thumbnail-border: @default-border-color;
 @table-border-color: @default-border-color;
 
 @navbar-default-toggle-hover-bg: @default-border-color;
@@ -251,44 +198,21 @@
 @zindex-tooltip: 2600;
 @navbar-collapse-max-height: none;
 
-@navbar-height-xsmall: 39px;
-@navbar-logo-height-xsmall: 39px;
-
 @login-panel-heading-bg: var(--login-panel-heading-bg);
 
 @login-logo-width: 181px;
 @login-logo-height: 43px;
 
-@logo-width: 164px;
-@logo-height: @navbar-height;
-
-@dashlet-unit-height: 155px;
-
-@navbar-panel-body-max-height: 600px;
-
-@form-group-margin-bottom: 12px;
-
-@modal-title-line-height: floor(@font-size-h4 * @line-height-base);
-
-@navbar-color-border-width: 0;
-
 @container-max-width: 1440px;
-
-@grid-column-width-xxsmall: 100px;
-@grid-column-width-xsmall: 190px;
-@grid-column-width-small: 246px;
-@grid-column-width-medium: 340px;
 
 @navbar-inverse-toggle-border-color: transparent;
 
 @label-padding-small: .09em .5em .2em;
-@label-padding-medium: 1px 7px 2px;
 
-@list-table-sm-screen-min-width: 500px;
-@notifications-panel-width: 640px;
-@global-search-panel-width: 600px;
-
-@well-padding: 14px;
+@list-table-sm-screen-min-width: var(--500px);
+@navbar-panel-body-max-height: var(--600px);
+@notifications-panel-width: ~"min(var(--640px), 80vw)";
+@global-search-panel-width: ~"min(var(--600px), 80vw)";
 
 @dropdown-bg: var(--dropdown-bg);
 @dropdown-link-hover-color: var(--dropdown-link-hover-color);

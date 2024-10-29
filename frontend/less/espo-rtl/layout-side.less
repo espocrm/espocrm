@@ -18,8 +18,8 @@ body[data-navbar="side"] {
 
                 .nav li.tab-group {
                     span.full-label {
-                        padding-left: 8px;
-                        padding-right: @navbar-tab-text-left-padding;
+                        padding-left: var(--8px);
+                        padding-right: var(--navbar-tab-text-left-padding);
                     }
 
                     .group-caret {
@@ -30,7 +30,7 @@ body[data-navbar="side"] {
                 }
 
                 a.minimizer {
-                    margin-right: @navbar-tab-left-padding + 3px;
+                    margin-right: calc(var(--navbar-tab-left-padding) + var(--3px));
                     margin-left: 0;
                 }
 
@@ -66,13 +66,13 @@ body[data-navbar="side"] {
                     }
 
                     li > a {
-                        padding-right: @navbar-tab-left-padding;
-                        padding-left: @navbar-tab-right-padding;
+                        padding-right: var(--navbar-tab-left-padding);
+                        padding-left: var(--navbar-tab-right-padding);
                     }
 
                     li.tab > a {
-                        padding-right: @navbar-tab-left-padding - @navbar-color-border-width;
-                        padding-left: @navbar-tab-right-padding;
+                        padding-right: var(--navbar-tab-left-padding);
+                        padding-left: var(--navbar-tab-right-padding);
                     }
                 }
             }
@@ -103,12 +103,12 @@ body[data-navbar="side"] {
         ul.tabs {
             > li.more > ul > li > a > span.full-label {
                 padding-left: 0;
-                padding-right: @navbar-tab-text-left-padding;
+                padding-right: var(--navbar-tab-text-left-padding);
             }
 
             > li a > span.full-label {
                 padding-left: 0;
-                padding-right: @navbar-tab-text-left-padding;
+                padding-right: var(--navbar-tab-text-left-padding);
             }
         }
 
@@ -120,7 +120,7 @@ body[data-navbar="side"] {
         }
 
         .navbar li.tab > a {
-            border-right-width: @navbar-color-border-width;
+            border-right-width: 0;
             border-right-style: solid;
         }
     }
@@ -144,12 +144,12 @@ body[data-navbar="side"] {
 
                 ul.tabs {
                     > li > a {
-                        padding-right: @navbar-tab-left-padding;
+                        padding-right: var(--navbar-tab-left-padding);
                         padding-left: 0;
                     }
 
                     > li.tab > a {
-                        padding-right: @navbar-tab-left-padding - @navbar-color-border-width;
+                        padding-right: var(--navbar-tab-left-padding);
                         padding-left: 0;
                     }
 
@@ -174,7 +174,7 @@ body[data-navbar="side"] {
 
             #content {
                 padding-left: 15px;
-                padding-right: @navbar-minimized-width + @container-padding;
+                padding-right: ~"calc(" @navbar-minimized-width ~" + var(--container-padding))";
             }
 
             #footer {
@@ -190,7 +190,7 @@ body[data-navbar="side"] {
 
         &.has-navbar > .content {
             padding-left: 15px;
-            padding-right: @navbar-width + @container-padding;
+            padding-right: ~"calc(" @navbar-width ~" + var(--container-padding))";
         }
 
         > footer {

@@ -37,7 +37,7 @@
 }
 
 #layout ul > li .width {
-    font-size: small;
+    font-size: var(--font-size-small);
 }
 
 #layout ul.disabled > li .width {

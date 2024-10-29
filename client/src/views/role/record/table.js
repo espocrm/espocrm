@@ -788,6 +788,9 @@ class RoleRecordTableView extends View {
             return;
         }
 
+        const navbarHeight = this.getThemeManager().getParam('navbarHeight') *
+            this.getThemeManager().getFontSizeFactor();
+
         const handle = () => {
             if ($(window.document).width() < screenWidthXs) {
                 $sticky.addClass('hidden');
@@ -802,7 +805,7 @@ class RoleRecordTableView extends View {
 
             topEdge -= $buttonContainer.height();
             topEdge += $table.find('tr > th').height();
-            topEdge -= this.getThemeManager().getParam('navbarHeight');
+            topEdge -= navbarHeight;
 
             const bottomEdge = topEdge + $table.outerHeight(true) - $buttonContainer.height();
             const scrollTop = $window.scrollTop();

@@ -7,8 +7,8 @@ table {
   //background-color: @table-bg;
 }
 caption {
-  padding-top: @table-cell-padding;
-  padding-bottom: @table-cell-padding;
+  padding-top: var(--table-cell-padding);
+  padding-bottom: var(--table-cell-padding);
   color: @text-muted;
   text-align: left;
 }
@@ -22,7 +22,7 @@ th {
 .table {
   width: 100%;
   max-width: 100%;
-  margin-bottom: @line-height-computed;
+  margin-bottom: var(--line-height-computed);
   // Cells
   > thead,
   > tbody,
@@ -30,8 +30,8 @@ th {
     > tr {
       > th,
       > td {
-        padding: @table-cell-padding;
-        line-height: @line-height-base;
+        padding: var(--table-cell-padding);
+        line-height: var(--line-height-base);
         vertical-align: top;
         border-top: 1px solid @table-border-color;
       }
@@ -63,23 +63,6 @@ th {
     background-color: @body-bg;
   }
 }
-
-
-// Condensed table w/ half padding
-
-.table-condensed {
-  > thead,
-  > tbody,
-  > tfoot {
-    > tr {
-      > th,
-      > td {
-        padding: @table-condensed-cell-padding;
-      }
-    }
-  }
-}
-
 
 // Bordered version
 //
@@ -175,7 +158,7 @@ table {
 
   @media screen and (max-width: @screen-xs-max) {
     width: 100%;
-    margin-bottom: (@line-height-computed * 0.75);
+    margin-bottom: calc(var(--line-height-computed) * 0.75);
     overflow-y: hidden;
     -ms-overflow-style: -ms-autohiding-scrollbar;
     border: 1px solid @table-border-color;

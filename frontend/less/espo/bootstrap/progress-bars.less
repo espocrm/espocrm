@@ -25,10 +25,9 @@
 // Outer container
 .progress {
   overflow: hidden;
-  height: @line-height-computed;
-  margin-bottom: @line-height-computed;
+  height: var(--line-height-computed);
+  margin-bottom: var(--line-height-computed);
   background-color: @progress-bg;
-  border-radius: @progress-border-radius;
   .box-shadow(inset 0 1px 2px rgba(0,0,0,.1));
 }
 
@@ -37,8 +36,8 @@
   float: left;
   width: 0%;
   height: 100%;
-  font-size: @font-size-small;
-  line-height: @line-height-computed;
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-computed);
   color: @progress-bar-color;
   text-align: center;
   background-color: @progress-bar-bg;

@@ -12,39 +12,39 @@
     }
 
     &.margin-right {
-        margin-right: @padding-base-horizontal;
+        margin-right: var(--padding-base-horizontal);
     }
 
     &.margin-left {
-        margin-left: @padding-base-horizontal;
+        margin-left: var(--padding-base-horizontal);
     }
 }
 
 .btn {
-    height: @input-height-base;
+    height: var(--input-height-base);
 }
 
 .btn-lg {
-    height: @input-height-large;
+    height: var(--input-height-large);
 }
 
 .btn-sm {
-    height: @input-height-small;
+    height: var(--input-height-small);
 }
 
 .btn {
     .fas, .far {
-        line-height: 22px;
+        line-height: var(--22px);
 
         &.fa-sm {
-            line-height: 18px;
+            line-height: var(--18px);
         }
     }
 }
 
 .btn-sm {
     .fas, .far {
-        line-height: 18px;
+        line-height: var(--18px);
     }
 }
 
@@ -78,27 +78,27 @@ a.btn {
 .input-group {
     .input-group-btn > {
         .btn {
-            height: @input-height-base;
+            height: var(--input-height-base);
         }
     }
 
     &.input-group-sm {
         .input-group-btn > {
             .btn {
-                height: @input-height-small;
+                height: var(--input-height-small);
             }
         }
     }
     &.input-group-lg {
         .input-group-btn > {
             .btn {
-                height: @input-height-large;
+                height: var(--input-height-large);
             }
         }
     }
 
     .input-group-btn .btn.btn-sm {
-        height: @input-height-small;
+        height: var(--input-height-small);
     }
 }
 
@@ -136,12 +136,12 @@ a.btn {
 }
 
 .btn-icon.btn-sm {
-    width: 34px;
+    width: var(--34px);
 
     .fa, .fas {
-        font-size: 12px;
-        width: 12px;
-        line-height: 18px;
+        font-size: var(--12px);
+        width: var(--12px);
+        line-height: var(--18px);
     }
 }
 

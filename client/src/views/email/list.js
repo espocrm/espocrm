@@ -670,8 +670,10 @@ class EmailListView extends ListView {
         const screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
         const isSmallScreen = $(window.document).width() < screenWidthXs;
 
-        const offset = this.getThemeManager().getParam('navbarHeight') +
-            (this.getThemeManager().getParam('buttonsContainerHeight') || 47);
+        const factor = this.getThemeManager().getFontSizeFactor();
+
+        const offset = this.getThemeManager().getParam('navbarHeight') * factor +
+            (this.getThemeManager().getParam('buttonsContainerHeight') || 47) * factor;
 
         const bottomSpaceHeight = parseInt(window.getComputedStyle($('#content').get(0)).paddingBottom, 10);
 

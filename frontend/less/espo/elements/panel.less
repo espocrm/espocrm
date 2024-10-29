@@ -6,7 +6,7 @@
 }
 
 .panel-body {
-    padding: @panel-padding;
+    padding: var(--panel-padding);
     .clearfix();
 }
 
@@ -27,10 +27,10 @@
 }
 
 .panel > .panel-body.panel-body-form {
-    padding-bottom: @panel-padding - @form-group-margin-bottom;
+    padding-bottom: calc(var(--panel-padding) - var(--form-group-margin-bottom));
 
     > .alert {
-        margin-bottom: @form-group-margin-bottom;
+        margin-bottom: var(--form-group-margin-bottom);
     }
 
     > .button-container {
@@ -39,16 +39,16 @@
 }
 
 .panel-body > .no-margin {
-    margin: -@panel-padding;
+    margin: calc(0rem - var(--panel-padding));
 }
 
 .panel-body > .no-side-margin .revert-margin {
-    margin-left: @panel-padding;
-    margin-right: @panel-padding;
+    margin-left: var(--panel-padding);
+    margin-right: var(--panel-padding);
 }
 
 .panel-body > .no-margin .revert-margin {
-    margin: @panel-padding;
+    margin: var(--panel-padding);
 }
 
 .panel-body.no-padding {
@@ -142,17 +142,17 @@
 }
 
 .panel-body .no-side-margin {
-    margin-left: -@panel-padding;
-    margin-right: -@panel-padding;
+    margin-left: calc(0rem - var(--panel-padding));
+    margin-right: calc(0rem - var(--panel-padding));
 
     > table td:first-child,
     > table th:first-child {
-        padding-left: @panel-padding;
+        padding-left: var(--panel-padding);
     }
 
     > table td:last-child,
     > table th:last-child {
-        padding-right: @panel-padding;
+        padding-right: var(--panel-padding);
     }
 
     > .list-group-item {
@@ -177,7 +177,7 @@
 }
 
 .panel-body .no-bottom-margin {
-    margin-bottom: -@panel-padding !important;
+    margin-bottom: calc(0rem - var(--panel-padding)) !important;
 }
 
 .panel {
@@ -256,8 +256,8 @@
         }
 
         > .btn-group > .btn + .dropdown-toggle {
-            padding-left: @padding-small-horizontal;
-            padding-right: @padding-small-horizontal;
+            padding-left: var(--padding-small-horizontal);
+            padding-right: var(--padding-small-horizontal);
         }
     }
 }
@@ -469,8 +469,8 @@ body {
 }
 
 .panel.sticked {
-    margin-top: ~"calc(-1 * var(--vertical-gap))";
-    border-top-width: ~"max(var(--panel-border-width), 1px)";
+    margin-top: calc(-1 * var(--vertical-gap));
+    border-top-width: max(var(--panel-border-width), 1px);
 }
 
 .panel {
@@ -729,14 +729,14 @@ body {
 
 .panel > .panel-heading {
     .panel-actions-container-left {
-        margin-left: -10px;
+        margin-left: calc(var(--10px) * -1);
     }
 
     .panel-actions-container {
         > span {
             display: inline-block;
-            padding: 4px 10px;
-            font-size: 14px;
+            padding: var(--4px) var(--10px);
+            font-size: var(--14px);
             line-height: 1.5;
             float: left;
         }

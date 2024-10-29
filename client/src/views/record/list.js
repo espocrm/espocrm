@@ -1005,6 +1005,8 @@ class ListRecordView extends View {
                 };
             }) : [];
 
+        const checkboxColumnWidth = (this.checkboxColumnWidth * this._fontSizeFactor).toString() + 'px';
+
         return {
             scope: this.scope,
             collectionLength: this.collection.models.length,
@@ -1029,7 +1031,7 @@ class ListRecordView extends View {
             displayActionsButtonGroup: displayActionsButtonGroup,
             totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
             moreCountFormatted: this.getNumberUtil().formatInt(moreCount),
-            checkboxColumnWidth: this.checkboxColumnWidth + 'px',
+            checkboxColumnWidth: checkboxColumnWidth,
             noDataDisabled: noDataDisabled,
             hasStickyBar: hasStickyBar,
         };
@@ -1095,6 +1097,8 @@ class ListRecordView extends View {
         }
 
         this.rootData = this.options.rootData || {};
+
+        this._fontSizeFactor = this.getThemeManager().getFontSizeFactor();
     }
 
     /**
@@ -2615,7 +2619,7 @@ class ListRecordView extends View {
             } else if ('width' in col && col.width !== null) {
                 width = col.width + '%';
             } else if ('widthPx' in col) {
-                width = col.widthPx + 'px';
+                width = (col.widthPx * this._fontSizeFactor).toString() + 'px';
             } else {
                 emptyWidthMet = true;
             }
@@ -2675,8 +2679,10 @@ class ListRecordView extends View {
                         .get(0).outerHTML
             }
 
+            const width = (this._fontSizeFactor * this.rowActionsColumnWidth).toString() + 'px';
+
             defs.push({
-                width: this.rowActionsColumnWidth + 'px',
+                width: width,
                 html: html,
                 className: 'action-cell',
             });
@@ -3485,6 +3491,8 @@ class ListRecordView extends View {
             return;
         }
 
+        const factor = this._fontSizeFactor;
+
         let totalWidth = 0;
         let totalWidthPx = 0;
         let emptyCount = 0;
@@ -3518,11 +3526,11 @@ class ListRecordView extends View {
 
         let minWidth;
 
-        if (totalWidth >= 100) {
-            minWidth = columnCount * this.minColumnWidth;
+        if (totalWidth >= 100 * factor) {
+            minWidth = columnCount * this.minColumnWidth * factor;
         }
         else {
-            minWidth = (totalWidthPx + this.minColumnWidth * emptyCount) / (1 - totalWidth / 100);
+            minWidth = (totalWidthPx + this.minColumnWidth * emptyCount * factor) / (1 - totalWidth / 100);
             minWidth = Math.round(minWidth);
         }
 

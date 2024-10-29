@@ -8,10 +8,10 @@
   display: inline-block;
   width: 0;
   height: 0;
-  margin-left: 2px;
+  margin-left: var(--2px);
   vertical-align: middle;
-  border-top:   @caret-width-base dashed;
-  border-top:   @caret-width-base solid ~"\9"; // IE8
+  border-top: @caret-width-base dashed;
+  //border-top:   @caret-width-base solid ~"\9"; // IE8
   border-right: @caret-width-base solid transparent;
   border-left:  @caret-width-base solid transparent;
 }
@@ -39,12 +39,10 @@
   padding: 5px 0;
   margin: 2px 0 0; // override default ul
   list-style: none;
-  font-size: @font-size-base;
+  font-size: var(--font-size-base);
   text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
   background-color: @dropdown-bg;
-  border: 1px solid @dropdown-fallback-border; // IE8 fallback
   border: 1px solid @dropdown-border;
-  border-radius: @border-radius-base;
   .box-shadow(0 6px 12px rgba(0,0,0,.175));
   background-clip: padding-box;
 
@@ -67,7 +65,7 @@
     padding: 3px 20px;
     clear: both;
     font-weight: normal;
-    line-height: @line-height-base;
+    line-height: var(--line-height-base);
     color: @dropdown-link-color;
     white-space: nowrap; // prevent links from randomly breaking onto new lines
   }
@@ -153,8 +151,8 @@
 .dropdown-header {
   display: block;
   padding: 3px 20px;
-  font-size: @font-size-smaller;
-  line-height: @line-height-base;
+  font-size: calc(var(--font-size-small) + var(--1px));
+  line-height: var(--line-height-base);
   color: @dropdown-header-color;
   white-space: nowrap; // as with > li > a
 }
@@ -180,8 +178,7 @@
 // Just add .dropup after the standard .dropdown class and you're set, bro.
 // TODO: abstract this so that the navbar fixed styles are not placed here?
 
-.dropup,
-.navbar-fixed-bottom .dropdown {
+.dropup {
   // Reverse the caret
   .caret {
     border-top: 0;

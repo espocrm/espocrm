@@ -1,4 +1,124 @@
 :root {
+
+    --1px: 0.0625rem;
+    --2px: 0.125rem;
+    --3px: 0.1875rem;
+    --4px: 0.25rem;
+    --5px: 0.3125rem;
+    --6px: 0.375rem;
+    --7px: 0.4375rem;
+    --8px: 0.5rem;
+    --9px: 0.5625rem;
+    --10px: 0.625rem;
+    --11px: 0.688rem;
+    --12px: 0.75rem;
+    --13px: 0.8125rem;
+    --14px: 0.875rem;
+    --15px: 0.9375rem;
+    --16px: 1rem;
+    --17px: 1.0625rem;
+    --18px: 1.125rem;
+    --19px: 1.1875rem;
+    --20px: 1.25rem;
+    --21px: 1.3125rem;
+    --22px: 1.375rem;
+    --23px: 1,4375rem;
+    --24px: 1.5rem;
+    --25px: 1.5625rem;
+    --26px: 1.625rem;
+    --27px: 1.6875rem;
+    --28px: 1.75rem;
+    --29px: 1.8125rem;
+    --30px: 1.875rem;
+    --31px: 1.9375rem;
+    --32px: 2rem;
+    --33px: 2.0625rem;
+    --34px: 2.125rem;
+    --35px: 2.1875rem;
+    --36px: 2.25rem;
+
+    --38px: 2.375rem;
+    --39px: 2.4375rem;
+    --42px: 2.625rem;
+    --43px: 2.6875rem;
+    --46px: 2.875.rem;
+    --65px: 4.0625rem;
+    --94px: 5.875rem;
+    --95px: 5.9375rem;
+    --100px: 6.25rem;
+    --164px: 10.25rem;
+    --190px: 11.875rem;
+    --246px: 15.375rem;
+    --260px: 16.25rem;
+    --340px: 21.25rem;
+    --500px: 31.25rem;
+    --550px: 34.375rem;
+    --600px: 37.5rem;
+    --640px: 40rem;
+    --740px: 46.25rem;
+    --900px: 56.25rem;
+
+    --font-size-base: var(--14px);
+    --font-size-large: var(--18px);
+    --font-size-small: var(--12px);
+
+    --line-height-base: 1.5;
+    --line-height-large: 1.3333333;
+    --line-height-small: 1.5;
+
+    --line-height-computed: var(--21px);
+
+    --table-cell-padding: var(--8px);
+    --table-cell-less-padding: var(--3px);
+
+    --navbar-height: var(--39px);
+    --navbar-header-height: var(--65px);
+    --navbar-tab-vertical-padding: var(--9px);
+    --navbar-tab-left-padding: var(--15px);
+    --navbar-tab-right-padding: var(--20px);
+    --navbar-tab-text-left-padding: var(--36px);
+
+    --top-bar-height: var(--30px);
+    --logo-width: var(--164px);
+
+    --grid-gutter-width: var(--16px);
+
+    --container-padding: var(--15px);
+
+    --panel-padding: var(--14px);
+
+    --form-group-margin-bottom: var(--12px);
+
+    --padding-base-vertical: var(--6px);
+    --padding-base-horizontal: var(--10px);
+    --padding-small-vertical: var(--5px);
+    --padding-small-horizontal: var(--10px);
+    --padding-large-vertical: var(--10px);
+    --padding-large-horizontal: var(--16px);
+
+    --modal-inner-padding: var(--panel-padding);
+    --modal-title-padding: var(--padding-base-horizontal);
+    --modal-title-line-height: var(--27px);
+
+    // @todo Compute by adding font-size, two vertical paddings and two borders?
+    --input-height-base: var(--35px);
+    --input-height-small: var(--29px);
+    --input-height-large: var(--46px);
+
+    --grid-column-width-xxsmall: var(--100px);
+    --grid-column-width-xsmall: var(--190px);
+    --grid-column-width-small: var(--246px);
+    --grid-column-width-medium: var(--340px);
+
+    // computed
+
+    --navbar-padding-vertical: calc((var(--navbar-height) - var(--line-height-computed)) / 2);
+    --line-height-computed-half: calc(var(--line-height-computed) / 2);
+    --table-cell-padding-half: calc(var(--table-cell-padding) / 2);
+    --grid-gutter-width-half: calc(var(--grid-gutter-width) / 2);
+
+    // color and style
+
     --body-bg: @body-bg-value;
     --panel-bg: @panel-bg-value;
     --main-gray: @main-gray-value;

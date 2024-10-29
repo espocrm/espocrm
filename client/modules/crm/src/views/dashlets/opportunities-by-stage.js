@@ -118,7 +118,7 @@ define('crm:views/dashlets/opportunities-by-stage', ['crm:views/dashlets/abstrac
                     show: true,
                     horizontal: true,
                     shadowSize: 0,
-                    lineWidth: 1,
+                    lineWidth: 1 * this.fontSizeFactor,
                     fillOpacity: 1,
                     barWidth: 0.5,
                 },

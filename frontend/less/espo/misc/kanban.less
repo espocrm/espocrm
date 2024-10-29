@@ -40,11 +40,10 @@ div.list-kanban > div > table {
         }
 
         > div {
-            padding-left: @table-cell-padding;
+            padding-left: var(--table-cell-padding);
             position: relative;
-            line-height: 28px;
+            line-height: var(--28px);
             height: 100%;
-            //width: ~"calc(100% - 7px)";
             background-color: var(--label-default-bg);
 
             .create-button {
@@ -164,7 +163,7 @@ div.list-kanban > div > table {
     td.group-column {
         vertical-align: top;
 
-        padding-top: @padding-base-horizontal;
+        padding-top: var(--padding-base-horizontal);
 
         > div {
             height: 100%;
@@ -207,11 +206,11 @@ div.list-kanban > div > table {
                 .field {
                     overflow-wrap: break-word;
                     word-wrap: break-word;
-                    font-size: @font-size-base;
+                    font-size: var(--font-size-base);
                     overflow: hidden;
 
                     &.field-large {
-                        font-size: @font-size-large;
+                        font-size: var(--font-size-large);
                         color: var(--gray);
 
                         &.text-muted {
@@ -232,7 +231,7 @@ div.list-kanban > div > table {
             }
 
             .panel-body {
-                padding: @table-cell-padding;
+                padding: var(--table-cell-padding);
             }
 
             .item-menu-container {
@@ -251,7 +250,7 @@ div.list-kanban > div > table {
             }
         }
 
-        margin-bottom: @padding-base-horizontal;
+        margin-bottom: var(--padding-base-horizontal);
 
         &.ui-sortable-helper {
             cursor: grabbing;
@@ -274,11 +273,11 @@ div.list-kanban > div > table {
     //padding-right: 3px;
 
     > .kanban-columns-container {
-        margin-left: -@padding-base-horizontal;
-        margin-right: -@padding-base-horizontal;
+        margin-left: calc(0rem - var(--padding-base-horizontal));
+        margin-right: calc(0rem - var(--padding-base-horizontal));
         > table {
             border-collapse: separate;
-            border-spacing: @padding-base-horizontal 0;
+            border-spacing: var(--padding-base-horizontal) 0;
         }
     }
 
@@ -316,7 +315,7 @@ div.list-kanban > div > table {
                         display: block !important;
                     }
                     display: grid !important;
-                    grid-column-gap: @padding-base-horizontal;
+                    grid-column-gap: var(--padding-base-horizontal);
                     grid-auto-columns: 1fr;
                     > td, th {
                         grid-row: 1;

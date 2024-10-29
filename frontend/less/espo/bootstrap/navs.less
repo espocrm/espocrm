@@ -83,9 +83,8 @@
     // Actual tabs (as links)
     > a {
       margin-right: 2px;
-      line-height: @line-height-base;
+      line-height: var(--line-height-base);
       border: 1px solid transparent;
-      border-radius: @border-radius-base @border-radius-base 0 0;
       &:hover {
         border-color: @nav-tabs-link-hover-border-color @nav-tabs-link-hover-border-color @nav-tabs-border-color;
       }
@@ -118,10 +117,6 @@
   > li {
     float: left;
 
-    // Links rendered as pills
-    > a {
-      border-radius: @nav-pills-border-radius;
-    }
     + li {
       margin-left: 2px;
     }
@@ -193,7 +188,6 @@
   > li > a {
     // Override margin from .nav-tabs
     margin-right: 0;
-    border-radius: @border-radius-base;
   }
 
   > .active > a,
@@ -205,7 +199,6 @@
   @media (min-width: @screen-sm-min) {
     > li > a {
       border-bottom: 1px solid @nav-tabs-justified-link-border-color;
-      border-radius: @border-radius-base @border-radius-base 0 0;
     }
     > .active > a,
     > .active > a:hover,

@@ -132,7 +132,7 @@ span.ok {
 }
 
 .likes p {
-	font-size: 15px;
+	font-size: var(--15px);
 }
 
 .main-header.panel-heading {

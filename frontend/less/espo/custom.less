@@ -150,19 +150,19 @@ img.image-preview {
     margin: 15px 0;
     border-bottom: 0;
     padding-bottom: 0;
-    min-height: @input-height-base;
+    min-height: var(--input-height-base);
 
     .header-title,
     > h3 {
-        margin-bottom: 7px;
-        font-size: 22px;
+        margin-bottom: var(--7px);
+        font-size: var(--22px);
         font-weight: 400;
     }
 
     @media screen and (max-width: (@screen-sm-min - 1px)) {
         .header-title,
         > h3 {
-            font-size: 21px;
+            font-size: var(--21px);
         }
 
         .header-buttons {
@@ -191,15 +191,15 @@ img.image-preview {
     }
 
     .page-header-row {
-        margin-left: ceil((@grid-gutter-width / -2));
-        margin-right: floor((@grid-gutter-width / -2));
+        margin-left: calc(var(--grid-gutter-width-half) * -1);
+        margin-right: calc(var(--grid-gutter-width-half) * -1);
         &:extend(.clearfix all);
         > div {
             float: left;
             position: relative;
             min-height: 1px;
-            padding-left: ceil((@grid-gutter-width / 2));
-            padding-right: floor((@grid-gutter-width / 2));
+            padding-left: var(--grid-gutter-width-half);
+            padding-right: var(--grid-gutter-width-half);
         }
 
         .page-header-column-1 {
@@ -246,7 +246,7 @@ img.image-preview {
     }
 
     h3 {
-        margin-top: 0px;
+        margin-top: 0;
         margin-bottom: 4px;
     }
 
@@ -297,7 +297,7 @@ img.image-preview {
 }
 
 .page-header > .row {
-    min-height: @input-height-base;
+    min-height: var(--input-height-base);
 }
 
 .form-group {
@@ -442,7 +442,7 @@ input.numeric-text {
 }
 
 .filter .selectize-input {
-    min-height: @input-height-small;
+    min-height: var(--input-height-small);
 }
 
 .btn.active {
@@ -480,15 +480,15 @@ input.numeric-text {
 }
 
 input.global-search-input {
-    padding-right: 10px;
+    padding-right: var(--10px);
 }
 
 .global-search-button {
     border: 0;
-    padding: 5px 10px;
+    padding: var(--5px) var(--10px);
 
     > span.icon {
-        line-height: 21px;
+        line-height: var(--21px);
     }
 }
 
@@ -531,7 +531,7 @@ input.global-search-input {
 }
 
 .list-container .list-buttons-container {
-    margin-bottom: @padding-large-vertical;
+    margin-bottom: var(--padding-large-vertical);
     min-height: 35px;
 }
 
@@ -539,13 +539,13 @@ input.global-search-input {
     position: fixed;
     background-color: var(--navbar-bg);
     z-index: 1000;
-    padding-top: @padding-small-vertical;
-    padding-bottom: @padding-small-vertical;
+    padding-top: var(--padding-small-vertical);
+    padding-bottom: var(--padding-small-vertical);
     padding-right: 15px;
 }
 
 .list-buttons-container > .actions {
-    min-height: @input-height-base;
+    min-height: var(--input-height-base);
 }
 
 .list-buttons-container > div.total-count {
@@ -613,11 +613,11 @@ input.global-search-input {
 .radio-container {
     > div {
         > label {
-            margin-right: 10px;
+            margin-right: var(--10px);
             margin-bottom: 0;
             font-weight: normal;
-            font-size: 15px;
-            height: 20px;
+            font-size: var(--15px);
+            height: var(--20px);
             cursor: pointer;
 
             input[type="radio"] {
@@ -636,7 +636,7 @@ input.global-search-input {
 
 .floated-row > div  {
     float: left;
-    margin-right: @panel-padding;
+    margin-right: var(--panel-padding);
 }
 
 .cell > .field {
@@ -868,7 +868,7 @@ input.global-search-input {
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        padding-bottom: 4px;
+        padding-bottom: var(--4px);
 
         &:last-child {
             padding-bottom: 1px;
@@ -888,24 +888,24 @@ input.global-search-input {
 
 .filter > .form-group .field {
     .link-container {
-        font-size: @font-size-small;
+        font-size: var(--font-size-small);
         .fa-times {
-            font-size: 12px;
+            font-size: var(--12px);
         }
         > .list-group-item {
-            padding-top: 4px;
-            padding-bottom: 4px;
-            line-height: @line-height-small-computed;
+            padding-top: var(--4px);
+            padding-bottom: var(--4px);
+            line-height: var(--20px);
         }
     }
     .input-group {
         input {
-            font-size: @font-size-small;
-            height: @input-height-small;
+            font-size: var(--font-size-small);
+            height: var(--input-height-small);
         }
         button.btn {
-            font-size: @font-size-small;
-            height: @input-height-small;
+            font-size: var(--font-size-small);
+            height: var(--input-height-small);
         }
     }
 }
@@ -922,36 +922,36 @@ input.global-search-input {
         }
 
         > a.pull-right {
-            margin-left: 4px;
+            margin-left: var(--4px);
         }
 
         > img.avatar {
-            margin-right: 7px;
-            top: 2px;
+            margin-right: var(--7px);
+            top: var(--2px);
         }
 
         .link-item-name {
             > img.avatar {
-                margin-right: 7px;
-                top: 2px;
+                margin-right: var(--7px);
+                top: var(--2px);
             }
         }
     }
 }
 
 .filter .field .link-container .list-group-item a[role="button"] {
-    margin-top: 1px;
-    margin-left: 2px;
+    margin-top: var(--1px);
+    margin-left: var(--2px);
 }
 
 .field .link-container .list-group-item a[role="button"] {
-    margin-top: 1px;
-    margin-left: 2px;
+    margin-top: var(--1px);
+    margin-left: var(--2px);
 }
 
 .field .link-container > .list-group-item.link-with-role > a[role="button"],
 .field .link-container > .list-group-item.link-with-role > div > a[role="button"] {
-    margin-top: 7px;
+    margin-top: var(--7px);
 }
 
 .field .link-container > .list-group-item.link-group-item-with-columns,
@@ -997,7 +997,7 @@ input.global-search-input {
 
 .list-container.list-container-panel {
     > .no-data {
-        padding: @panel-padding;
+        padding: var(--panel-padding);
     }
 }
 
@@ -1032,7 +1032,7 @@ input.global-search-input {
 }
 
 .list-expanded .list-group > .list-group-item .list-row-buttons button {
-    margin-top: 3px;
+    margin-top: var(--3px);
 }
 
 .list {
@@ -1176,7 +1176,7 @@ input.global-search-input {
         display: none;
 
         .fas, .far {
-            line-height: 21px;
+            line-height: var(--21px);
             position: relative;
             top: 1px;
         }
@@ -1221,8 +1221,8 @@ section {
 }
 
 .panel-body > div > .list-expanded {
-    margin-left: -@panel-padding;
-    margin-right: -@panel-padding;
+    margin-left: calc(0rem - var(--panel-padding));
+    margin-right: calc(0rem - var(--panel-padding));
 
     > .list-group-item {
         border-left-width: 0;
@@ -1230,29 +1230,29 @@ section {
     }
 }
 .panel-body > div > .list {
-    margin-left: -@panel-padding;
-    margin-right: -@panel-padding;
+    margin-left: calc(0rem - var(--panel-padding));
+    margin-right: calc(0rem - var(--panel-padding));
 }
 .panel-body > div > .list > table td:first-child,
 .panel-body > div > .list > table th:first-child {
-    padding-left: @panel-padding;
+    padding-left: var(--panel-padding);
 }
 .panel-body > div > .list > table td:last-child,
 .panel-body > div > .list > table th:last-child {
-    padding-right: @panel-padding;
+    padding-right: var(--panel-padding);
 }
 
 .modal-body > div > .list {
-    margin-left: -@panel-padding;
-    margin-right: -@panel-padding;
+    margin-left: calc(0rem - var(--panel-padding));
+    margin-right: calc(0rem - var(--panel-padding));
 }
 .modal-body > div > .list > table td:first-child,
 .modal-body > div > .list > table th:first-child {
-     padding-left: @panel-padding;
+     padding-left: var(--panel-padding);
 }
 .modal-body > div > .list > table td:last-child,
 .modal-body > div > .list > table th:last-child {
-    padding-right: @panel-padding;
+    padding-right: var(--panel-padding);
 }
 
 .modal-body > div > .list-expanded > ul > li {
@@ -1261,8 +1261,8 @@ section {
 }
 
 #main > .list-container > .list {
-    margin-left: -@container-padding;
-    margin-right: -@container-padding;
+    margin-left: calc(var(--container-padding) * -1);
+    margin-right: calc(var(--container-padding) * -1);
 }
 
 #main > .list-container,
@@ -1313,8 +1313,8 @@ section {
 
 #main > .list-container > .list-tree > ul,
 .modal-body > .list-container > .list-tree > ul {
-    padding-top: @table-cell-padding;
-    padding-bottom: @table-cell-padding;
+    padding-top: var(--table-cell-padding);
+    padding-bottom: var(--table-cell-padding);
 }
 
 .modal-body > ul.no-side-margin > li {
@@ -1326,11 +1326,11 @@ section {
     #main > .list-container > .list {
         > table td:first-child,
         > table th:first-child {
-            padding-left: @container-padding;
+            padding-left: var(--container-padding);
         }
         > table td:last-child,
         > table th:last-child {
-            padding-right: @container-padding;
+            padding-right: var(--container-padding);
         }
     }
 
@@ -1338,7 +1338,7 @@ section {
     .list-categories-column + .list-main-column .list-container,
     .left-container + .list-container {
         .list {
-            margin-right: -@container-padding;
+            margin-right: calc(var(--container-padding) * -1);
             border-top-left-radius: var(--panel-border-radius);
             border-bottom-left-radius: var(--panel-border-radius);
 
@@ -1347,7 +1347,7 @@ section {
                 border-bottom-left-radius: var(--panel-border-radius);
 
                 td:last-child, th:last-child {
-                    padding-right: @container-padding;
+                    padding-right: var(--container-padding);
                 }
 
                 td.cell[data-name="buttons"] > .btn-group {
@@ -1376,11 +1376,11 @@ section {
 
     .modal-body .categories-container + .list-container {
         > .list {
-            margin-right: -@modal-inner-padding;
+            margin-right: calc(0rem - var(--modal-inner-padding));
 
             > table {
                 td:last-child, th:last-child {
-                    padding-right: @modal-inner-padding;
+                    padding-right: var(--modal-inner-padding);
                 }
             }
         }
@@ -1388,19 +1388,19 @@ section {
 
     .list-main-column:first-child > .nested-categories-container:not(.hidden) + .list-container {
         .list {
-            margin-right: -@container-padding;
-            margin-left: -@container-padding;
+            margin-right: calc(var(--container-padding) * -1);
+            margin-left: calc(var(--container-padding) * -1);
 
             border-left-width: 0;
             border-right-width: 0;
 
             > table td:first-child,
             > table th:first-child {
-                padding-left: @container-padding;
+                padding-left: var(--container-padding);
             }
             > table td:last-child,
             > table th:last-child {
-                padding-right: @container-padding;
+                padding-right: var(--container-padding);
             }
         }
     }
@@ -1416,12 +1416,13 @@ section {
             .cell[data-name="name"] {
                 &:has(> a.link) {
                     &::before {
+                        //noinspection CssNoGenericFontName
                         font-family: 'Font Awesome 6 Free';
                         font-weight: 900;
                         content: "\f005";
-                        font-size: 10px;
-                        padding-right: 4px;
-                        top: 3px;
+                        font-size: var(--10px);
+                        padding-right: var(--4px);
+                        top: var(--3px);
                         position: relative;
                         color: var(--state-warning-text);
                         float: left;
@@ -1524,17 +1525,17 @@ section {
 }
 
 .panel-body > div:first-child > .list-expanded:first-child {
-    margin-top: -@panel-padding;
+    margin-top: calc(0rem - var(--panel-padding));
 }
 .panel-body > div:last-child > .list-expanded:last-child {
-    margin-bottom: -@panel-padding;
+    margin-bottom: calc(0rem - var(--panel-padding));
 }
 
 .panel-body > div:first-child > .list:first-child {
-    margin-top: -@panel-padding;
+    margin-top: calc(0rem - var(--panel-padding));
 }
 .panel-body > div:last-child > .list:last-child {
-    margin-bottom: -@panel-padding;
+    margin-bottom: calc(0rem - var(--panel-padding));
 }
 
 .expanded-row {
@@ -1631,25 +1632,25 @@ section {
     overflow: visible;
     white-space: nowrap;
     .select-all-container {
-        line-height: @line-height-computed;
-        height: @line-height-computed;
+        line-height: var(--line-height-computed);
+        height: var(--line-height-computed);
         float: left;
     }
 }
 
 .list .checkbox-dropdown {
-    margin-left: 2px;
-    top: -2px;
+    margin-left: var(--2px);
+    top: calc(var(--2px) * -1);
 }
 
 .list .checkbox-dropdown > a {
     padding: 0;
     line-height: 1;
-    height: 14px;
+    height: var(--14px);
 }
 
 .list .record-checkbox-container {
-    height: @line-height-computed;
+    height: var(--line-height-computed);
     display: block;
 }
 
@@ -1709,8 +1710,8 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 }
 
 .panel.dashlet > .panel-heading > .btn-group > .btn + .dropdown-toggle {
-    padding-left: @padding-small-horizontal;
-    padding-right: @padding-small-horizontal;
+    padding-left: var(--padding-small-horizontal);
+    padding-right: var(--padding-small-horizontal);
 }
 
 .panel.dashlet > .panel-heading {
@@ -1718,7 +1719,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
         .fas,
         .far,
         .fa {
-            font-size: 12px;
+            font-size: var(--12px);
         }
     }
 }
@@ -1779,6 +1780,8 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 .panel.dashlet > .panel-body {
     overflow-y: auto;
     overflow-x: hidden;
+
+    width: 100%;
 }
 
 .dashlets.grid-stack {
@@ -1839,7 +1842,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 
 .show-more > .btn-block {
     text-align: left;
-    padding: 7px 10px 7px @panel-padding;
+    padding: var(--7px) var(--10px) var(--7px) var(--panel-padding);
 }
 
 label.attach-file-label {
@@ -1947,14 +1950,14 @@ label.attach-file-label {
 
 .list-row > .cell {
     > .attachment-block-container > .attachment-block > .attachment-preview {
-        margin-bottom: -@table-cell-padding + 2px;
-        margin-top: -@table-cell-padding + 2px;
+        margin-bottom: calc(var(--2px) - var(--table-cell-padding));
+        margin-top: calc(var(--2px) - var(--table-cell-padding));
 
         &:not(.no-shrink) {
-            max-height: @line-height-computed + @table-cell-padding + @table-cell-padding - 4px;
+            max-height: calc(var(--line-height-computed) + var(--table-cell-padding) * 2 - var(--4px));
 
             img {
-                max-height: @line-height-computed + @table-cell-padding + @table-cell-padding - 4px;
+                max-height: calc(var(--line-height-computed) + var(--table-cell-padding) * 2 - var(--4px));
                 vertical-align: top;
             }
         }
@@ -1971,7 +1974,7 @@ label.attach-file-label {
 
 .stick-sub.button-container {
     background-color: var(--navbar-bg);
-    padding: @padding-small-vertical @container-padding @padding-small-vertical @container-padding;
+    padding: var(--padding-small-vertical) var(--container-padding) var(--padding-small-vertical) var(--container-padding);
     width: 100%;
 }
 
@@ -1984,11 +1987,11 @@ label.attach-file-label {
 .notifications-badge-container > .notifications-button > .number-badge {
     position: absolute;
     z-index: 10;
-    font-size: 9px;
-    padding: 2px 5px;
+    font-size: var(--9px);
+    padding: var(--2px) var(--5px);
     display: inline-block;
-    top: 7px;
-    left: 27px;
+    top: var(--7px);
+    left: var(--27px);
     background-color: var(--brand-danger);
     color: @white-color;
 }
@@ -2002,25 +2005,14 @@ label.attach-file-label {
 }
 
 .icon-rotate-180 {
-    -webkit-transform: rotate(180deg);
-    -moz-transform: rotate(180deg);
-    -ms-transform: rotate(180deg);
-    -o-transform: rotate(180deg);
     transform: rotate(180deg);
 }
 
 .icon-rotate-90 {
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    -ms-transform: rotate(90deg);
-    -o-transform: rotate(90deg);
     transform: rotate(90deg);
 }
 
 .icon-flip-horizontal {
-   -moz-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    -o-transform: scaleX(-1);
     transform: scaleX(-1);
 }
 
@@ -2055,7 +2047,7 @@ textarea.auto-height {
             max-height: @navbar-panel-body-max-height;
             overflow-y: auto;
             overflow-x: hidden;
-            padding-bottom: @panel-padding;
+            padding-bottom: var(--panel-padding);
         }
     }
 }
@@ -2126,6 +2118,7 @@ textarea.auto-height {
 
 span.color-icon {
     font-size: 50%;
+    line-height: var(--15px);
     top: -2px;
     left: 1px;
     margin-right: 1px;
@@ -2308,12 +2301,12 @@ img.avatar.avatar-link {
     vertical-align: top;
     top: 1px;
 
-    &[width="16"] {
+    &[data-width="16"] {
         top: 3px;
         vertical-align: baseline;
     }
 
-    &[width="20"] {
+    &[data-width="20"] {
         top: 0;
     }
 }
@@ -2327,14 +2320,14 @@ img.avatar.avatar-link {
 
 div:has(.avatar-in-input):not(:has(.being-typed)) {
     > .input-group > input {
-        padding-left: 33px;
+        padding-left: var(--33px);
     }
 
     > .avatar-in-input {
         display: inline-block;
         position: absolute;
-        top: 32px;
-        left: 18px;
+        top: var(--32px);
+        left: var(--18px);
         z-index: 3;
         user-select: none;
         pointer-events: none;
@@ -2349,7 +2342,7 @@ div:has(.avatar-in-input) {
 
 .email-address-detail-item {
     > img.avatar {
-        margin-right: 5px;
+        margin-right: var(--5px);
     }
 }
 
@@ -2365,8 +2358,8 @@ div[data-scope="ApiUser"] {
 }
 
 .link-container .list-group-item {
-    padding: @padding-base-vertical @padding-base-horizontal;
-    line-height: @line-height-computed;
+    padding: var(--padding-base-vertical) var(--padding-base-horizontal);
+    line-height: var(--line-height-computed);
 }
 
 .flotr-labels {
@@ -2375,7 +2368,7 @@ div[data-scope="ApiUser"] {
 
 .flotr-mouse-value {
     cursor: default;
-    font-size: 13px;
+    font-size: var(--13px);
     text-align: center;
     user-select: none;
 }
@@ -2393,21 +2386,21 @@ div[data-scope="ApiUser"] {
     max-height: 1.2em;
     line-height: 1.1em;
     overflow: hidden;
-    padding: 0 1px 1px;
+    padding: 0 var(--1px) var(--1px);
     user-select: none;
 }
 
 .legend-container {
     overflow-x: hidden;
     overflow-y: hidden;
-    padding-top: 7px;
+    padding-top: var(--7px);
 
     > table {
         margin: 0 auto;
     }
 
     table td {
-        padding: 2px 2px;
+        padding: var(--2px) var(--2px);
         line-height: 1em;
     }
 
@@ -2423,7 +2416,7 @@ div[data-scope="ApiUser"] {
         text-overflow: ellipsis;
         overflow: hidden;
         line-height: 1.3em;
-        max-height: 15px;
+        max-height: var(--15px);
     }
 
     .flotr-legend-color-box > div {
@@ -2435,10 +2428,10 @@ div[data-scope="ApiUser"] {
 
             > div {
                 position: relative;
-                top: -1px;
+                top: calc(var(--1px) * -1);
                 left: 0;
                 border-radius: var(--border-radius-small);
-                margin: -1px;
+                margin: calc(var(--1px) * -1);
             }
         }
     }
@@ -2519,23 +2512,23 @@ table.table td.cell .html-container {
 
 .complex-text.complex-text-memo {
     h1 {
-        font-size: floor(@font-size-base * 1.8);
+        font-size: calc(var(--font-size-base) * 1.8);
         font-weight: 500;
-        margin-top: (@line-height-computed / 2) * 2;
-        margin-bottom: (@line-height-computed / 2) * 1.3;
+        margin-top: var(--line-height-computed);
+        margin-bottom: calc(var(--line-height-computed-half) * 1.3);
     }
 
     h2 {
-        font-size: floor(@font-size-base * 1.5);
+        font-size: calc(var(--font-size-base) * 1.5);
         font-weight: 500;
-        margin-top: (@line-height-computed / 2) * 1.4;
-        margin-bottom: (@line-height-computed / 2) * 1.2;
+        margin-top: calc(var(--line-height-computed-half) * 1.4);
+        margin-bottom: calc(var(--line-height-computed-half) * 1.2);
     }
 
     h3, h4, h5, h6 {
-        font-size: floor(@font-size-base * 1.1);
-        margin-top: (@line-height-computed / 2) * 1.2;
-        margin-bottom: (@line-height-computed / 2);
+        font-size: calc(var(--font-size-base) * 1.1);
+        margin-top: calc(var(--line-height-computed-half) * 1.2);
+        margin-bottom: var(--line-height-computed-half);
     }
 }
 
@@ -2569,27 +2562,27 @@ table.table td.cell .html-container {
     }
     h1 {
         font-weight: 600;
-        margin-top: @line-height-computed;
-        margin-bottom: (@line-height-computed / 2);
+        margin-top: var(--line-height-computed);
+        margin-bottom: calc(var(--line-height-computed) / 2);
     }
     h2, h3 {
         font-weight: 600;
-        margin-top: (@line-height-computed / 2) * 1.2;
-        margin-bottom: (@line-height-computed / 2);
+        margin-top: calc(var(--line-height-computed) / 2 * 1.2);
+        margin-bottom: calc(var(--line-height-computed) / 2);
     }
     h4, h5, h6 {
         font-weight: normal;
-        margin-top: (@line-height-computed / 2);
-        margin-bottom: (@line-height-computed / 2);
+        margin-top: calc(var(--line-height-computed) / 2);
+        margin-bottom: calc(var(--line-height-computed) / 2);
     }
     h1 {
-        font-size: floor(@font-size-base * 1.2);
+        font-size: calc(var(--font-size-base) * 1.2);
     }
     h2 {
-        font-size: floor(@font-size-base * 1.1);
+        font-size: calc(var(--font-size-base) * 1.1);
     }
     h3, h4, h5, h6 {
-        font-size: floor(@font-size-base);
+        font-size: var(--font-size-base);
     }
 
     p,
@@ -2597,7 +2590,7 @@ table.table td.cell .html-container {
     ol,
     pre,
     blockquote {
-        margin-top: (@line-height-computed / 2);
+        margin-top: var(--line-height-computed-half);
     }
 
     p:last-child,
@@ -2647,7 +2640,7 @@ table.table td.cell .html-container {
     ul,
     ol {
         padding-left: 30px;
-        margin-bottom: (@line-height-computed / 2);
+        margin-bottom: var(--line-height-computed-half);
     }
 
     > p:last-child,
@@ -2668,7 +2661,7 @@ table.table td.cell .html-container {
     ol,
     pre,
     blockquote {
-        margin-top: (@line-height-computed / 2);
+        margin-top: var(--line-height-computed-half);
     }
 }
 
@@ -2677,7 +2670,7 @@ table.table td.cell .html-container {
 }
 .list-group-tree > li {
     border: 0;
-    padding: 0 0 0 @panel-padding;
+    padding: 0 0 0 var(--panel-padding);
 }
 
 .list-group-tree > li .cell {
@@ -2739,20 +2732,20 @@ table.table td.cell .html-container {
 
 @media screen and (max-width: (@screen-sm-min - 1px)) {
     .folders-container {
-        margin-left: -(@container-padding);
-        margin-right: -(@container-padding);
+        margin-left: calc(var(--container-padding) * -1);
+        margin-right: calc(var(--container-padding) * -1);
     }
 }
 
 @media screen and (min-width: @screen-sm-min) {
     .folders-container {
-        margin-left: -(@container-padding);
+        margin-left: calc(var(--container-padding) * -1);
         margin-right: -1px; // Fix 1px shift on sticked.
     }
 
     .folders-container.sticked {
         position: fixed;
-        margin-left: -(@container-padding);
+        margin-left: calc(var(--container-padding) * -1);
 
         .list-group-side {
             margin-bottom: 0;
@@ -2767,7 +2760,7 @@ table.table td.cell .html-container {
 
     > li {
         border: 0;
-        padding: 5px 4px 5px (@container-padding - 3px);
+        padding: 5px 4px 5px calc(var(--container-padding) - var(--3px));
         border-left: 3px solid transparent;
         border-top-right-radius: var(--border-radius);
         border-bottom-right-radius: var(--border-radius);
@@ -2829,7 +2822,7 @@ table.table td.cell .html-container {
             text-align: center;
 
             > span {
-                font-size: 12px;
+                font-size: var(--12px);
                 position: relative;
                 top: -1px;
             }
@@ -2848,7 +2841,9 @@ table.table td.cell .html-container {
     position: relative;
     top: -2px;
     padding: 0 4px;
+    //noinspection CssReplaceWithShorthandSafely
     margin: 0;
+    //noinspection CssOverwrittenProperties,CssReplaceWithShorthandSafely
     margin-bottom: 0;
     border: 0;
     line-height: 1.3;
@@ -3022,7 +3017,7 @@ table.table td.cell .html-container {
     }
 
     div.group-head {
-        line-height: @input-height-base;
+        line-height: var(--input-height-base);
 
         a[data-action="remove"] {
             margin-right: 5px;
@@ -3064,7 +3059,7 @@ table.table td.cell .html-container {
 .dynamic-logic-options {
     a.remove-option-list,
     a.add-option-list {
-        line-height: @input-height-base;
+        line-height: var(--input-height-base);
     }
     .option-list-item-header {
         margin-top: -10px;
@@ -3216,9 +3211,9 @@ table.table-admin-panel {
 }
 
 .list-nested-categories {
-    margin-bottom: @padding-base-horizontal;
+    margin-bottom: var(--padding-base-horizontal);
     .category-item {
-        padding: @padding-base-horizontal @padding-base-horizontal @padding-base-horizontal 0;
+        padding: var(--padding-base-horizontal) var(--padding-base-horizontal) var(--padding-base-horizontal) 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -3296,7 +3291,7 @@ table.table-admin-panel {
     border: var(--panel-border-width) solid var(--default-border-color);
 
     > h4 {
-        padding: @padding-base-vertical @padding-base-horizontal;
+        padding: var(--padding-base-vertical) var(--padding-base-horizontal);
         padding-bottom: 7px;
         margin-bottom: 0;
         margin-top: 0;
@@ -3307,8 +3302,8 @@ table.table-admin-panel {
     }
 
     > div > .section {
-        padding-left: @padding-base-horizontal;
-        padding-right: @padding-base-horizontal;
+        padding-left: var(--padding-base-horizontal);
+        padding-right: var(--padding-base-horizontal);
         padding-top: 10px;
         padding-bottom: 10px;
         border-bottom: 1px solid @panel-default-border;
@@ -3320,16 +3315,16 @@ table.table-admin-panel {
     }
 
     > div > .section.extension > p:first-child {
-        font-size: 16px;
+        font-size: var(--16px);
     }
 
     > div > .section.extension > p:last-child {
         > .btn {
-            margin-top: 4px;
+            margin-top: var(--4px);
         }
         .price {
-            margin-top: -3px;
-            font-size: 16px;
+            margin-top: calc(var(--3px) * -1);
+            font-size: var(--16px);
         }
         > a.text-danger {
             font-weight: 600;
@@ -3360,11 +3355,11 @@ table.table-admin-panel {
     }
 
     vertical-align: middle;
-    line-height: 32px;
+    line-height: var(--32px);
 }
 
 .search-container {
-    margin-bottom: @padding-base-vertical;
+    margin-bottom: var(--padding-base-vertical);
 }
 
 .search-row {
@@ -3467,7 +3462,7 @@ table.table-admin-panel {
     }
 
     .categories-container > .list {
-        margin: @panel-padding 0;
+        margin: var(--panel-padding) 0;
     }
 
     .panel-body > div:first-child > .list:first-child {
@@ -3485,16 +3480,16 @@ table.table-admin-panel {
 
     .list-categories-column + .list-main-column {
         .list-container > .list {
-            margin-left: -@container-padding;
-            margin-right: -@container-padding;
+            margin-left: calc(var(--container-padding) * -1);
+            margin-right: calc(var(--container-padding) * -1);
         }
     }
 
     .list-main-column {
         > .nested-categories-container + .list-container {
             > .list {
-                margin-left: -@container-padding;
-                margin-right: -@container-padding;
+                margin-left: calc(var(--container-padding) * -1);
+                margin-right: calc(var(--container-padding) * -1);
                 border-left: 0;
                 border-right: 0;
             }
@@ -3504,29 +3499,29 @@ table.table-admin-panel {
     .modal-body {
         .categories-container + .list-container {
             .list {
-                margin-left: -@modal-inner-padding;
-                margin-right: -@modal-inner-padding;
+                margin-left: calc(0rem - var(--modal-inner-padding));
+                margin-right: calc(0rem - var(--modal-inner-padding));
             }
         }
     }
 
     .left-container + .list-container {
         .list {
-            margin-left: -@container-padding;
-            margin-right: -@container-padding;
+            margin-left: calc(var(--container-padding) * -1);
+            margin-right: calc(var(--container-padding) * -1);
         }
     }
 
     .calendar-container {
         .button-container > div:first-child{
-            margin-bottom: 10px;
+            margin-bottom: var(--10px);
         }
         .date-title {
-            margin-bottom: 10px;
-            margin-top: 6px;
+            margin-bottom: var(--10px);
+            margin-top: var(--6px);
             h4 {
                 margin-top: 0;
-                font-size: 15px;
+                font-size: var(--15px);
             }
             white-space: nowrap;
             overflow: hidden;
@@ -3544,25 +3539,25 @@ table.table-admin-panel {
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 
             > li {
-                padding-right: 10px;
+                padding-right: var(--10px);
             }
         }
     }
 
     .page-header {
-        margin: 10px 0;
+        margin: var(--10px) 0;
     }
 }
 
 a.field-info > span.fa-info-circle {
-    font-size: 12px;
+    font-size: var(--12px);
     position: relative;
-    top: -1px;
+    top: calc(var(--1px) * -1);
 }
 
 .fas, .far, .fa {
-    font-size: 16px;
-    line-height: 21px;
+    font-size: var(--16px);
+    line-height: var(--21px);
 }
 
 .fas.fa-sm,
@@ -3573,21 +3568,18 @@ a.field-info > span.fa-info-circle {
 .small .fas,
 .fas.small,
 .far.small {
-    font-size: 12px;
-    line-height: 18px;
+    font-size: var(--12px);
+    line-height: var(--18px);
 }
 
 .btn-sm {
     > .fa-ellipsis-h,
     > .fa-plus {
-        font-size: 14px;
+        font-size: var(--14px);
     }
 }
 
 .icon-is-replied {
-    -moz-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    -o-transform: scaleX(-1);
     transform: scaleX(-1);
 
     &::before {
@@ -3602,36 +3594,22 @@ a.field-info > span.fa-info-circle {
 
 .transform-flip,
 .transform-flip-x {
-    -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
 }
 
 .transform-flip-y {
-    -webkit-transform: scaleY(-1);
     transform: scaleY(-1);
 }
 
 .transform-rotate-90 {
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    -o-transform: rotate(90deg);
-    -ms-transform: rotate(90deg);
     transform: rotate(90deg);
 }
 
 .transform-rotate-180 {
-    -webkit-transform: rotate(180deg);
-    -moz-transform: rotate(180deg);
-    -o-transform: rotate(180deg);
-    -ms-transform: rotate(180deg);
     transform: rotate(180deg);
 }
 
 .transform-rotate-270 {
-    -webkit-transform: rotate(270deg);
-    -moz-transform: rotate(270deg);
-    -o-transform: rotate(270deg);
-    -ms-transform: rotate(270deg);
     transform: rotate(270deg);
 }
 
@@ -3799,9 +3777,6 @@ body:has(.modal-backdrop) {
 
         -webkit-touch-callout: none;
         -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
         user-select: none;
     }
 }
@@ -3811,7 +3786,7 @@ body:has(.modal-backdrop) {
     background-color: var(--state-info-bg);
     border: 1px solid var(--state-info-bg-10);
     color: var(--state-info-text);
-    padding: @padding-base-vertical 20px;
+    padding: var(--padding-base-vertical) var(--20px);
     font-weight: 600;
     opacity: 1;
     position: absolute;

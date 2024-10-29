@@ -586,7 +586,7 @@ class NavbarSiteView extends View {
             $navbar.css('overflow', 'visible');
         }
 
-        const navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 555;
+        const navbarBaseWidth = this.getFontSizeFactor() * (this.getThemeManager().getParam('navbarBaseWidth') || 550);
 
         const tabCount = this.tabList.length;
 
@@ -732,7 +732,7 @@ class NavbarSiteView extends View {
     }
 
     getNavbarHeight() {
-        return this.getThemeManager().getParam('navbarHeight') || 43;
+        return this.getFontSizeFactor() * (this.getThemeManager().getParam('navbarHeight') || 43);
     }
 
     isSide() {
@@ -740,7 +740,14 @@ class NavbarSiteView extends View {
     }
 
     getStaticItemsHeight() {
-        return this.getThemeManager().getParam('navbarStaticItemsHeight') || 97;
+        return this.getFontSizeFactor() * (this.getThemeManager().getParam('navbarStaticItemsHeight') || 97);
+    }
+
+    /**
+     * @private
+     */
+    getFontSizeFactor() {
+        return this.getThemeManager().getFontSizeFactor();
     }
 
     adjustBodyMinHeight() {

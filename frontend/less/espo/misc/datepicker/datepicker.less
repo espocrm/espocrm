@@ -15,7 +15,6 @@
 }
 
 .datepicker {
-  border-radius: @border-radius-base;
   &-inline {
     width: 220px;
   }
@@ -69,18 +68,13 @@
   }
   table {
     margin: 0;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
     tr {
       td, th {
         text-align: center;
         width: 30px;
         height: 30px;
-        border-radius: 4px;
+        border-radius: var(--border-radius-small);
         border: none;
       }
     }
@@ -246,8 +240,8 @@
     span {
       display: block;
       width: 23%;
-      height: 54px;
-      line-height: 54px;
+      height: calc(var(--32px) + var(--22px));
+      line-height: calc(var(--32px) + var(--22px));
       float: left;
       margin: 1%;
       cursor: pointer;
@@ -306,9 +300,9 @@
 
   // Basic styling for calendar-week cells
   .cw {
-    font-size: 10px;
-    width: 12px;
-    padding: 0 2px 0 5px;
+    font-size: var(--10px);
+    width: var(--12px);
+    padding: 0 var(--2px)0 var(--5px);
     vertical-align: middle;
   }
 }
@@ -328,11 +322,11 @@
   }
   .input-group-addon {
     width: auto;
-    min-width: 16px;
-    padding: 4px 5px;
-    line-height: @line-height-base;
+    min-width: var(--16px);
+    padding: var(--4px) var(--5px);
+    line-height: var(--line-height-base);
     border-width: 1px 0;
-    margin-left: -5px;
-    margin-right: -5px;
+    margin-left: calc(var(--5px) * -1);
+    margin-right: calc(var(--5px) * -1);
   }
 }

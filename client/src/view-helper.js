@@ -682,7 +682,8 @@ class ViewHelper {
             .attr('src', `${basePath}?entryPoint=avatar&size=${size}&id=${id}&t=${t}`)
             .attr('alt', 'avatar')
             .addClass(className)
-            .attr('width', width.toString())
+            .attr('data-width', width.toString())
+            .css('width', `var(--${width.toString()}px)`)
             .attr('draggable', 'false')
             .get(0).outerHTML;
     }

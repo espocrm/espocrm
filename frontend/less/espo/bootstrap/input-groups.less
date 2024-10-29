@@ -75,26 +75,23 @@
 // Text input groups
 // -------------------------
 .input-group-addon {
-  padding: @padding-base-vertical @padding-base-horizontal;
-  font-size: @font-size-base;
+  padding: var(--padding-base-vertical) var(--padding-base-horizontal);
+  font-size: var(--font-size-base);
   font-weight: normal;
   line-height: 1;
   color: @input-color;
   text-align: center;
   background-color: @input-group-addon-bg;
   border: 1px solid @input-group-addon-border-color;
-  border-radius: @input-border-radius;
 
   // Sizing
   &.input-sm {
-    padding: @padding-small-vertical @padding-small-horizontal;
-    font-size: @font-size-small;
-    border-radius: @input-border-radius-small;
+    padding: var(--padding-small-vertical) var(--padding-small-horizontal);
+    font-size: var(--font-size-small);
   }
   &.input-lg {
-    padding: @padding-large-vertical @padding-large-horizontal;
-    font-size: @font-size-large;
-    border-radius: @input-border-radius-large;
+    padding: var(--padding-large-vertical) var(--padding-large-horizontal);
+    font-size: var(--font-size-large);
   }
 
   // Nuke default margins from checkboxes and radios to vertically center within.

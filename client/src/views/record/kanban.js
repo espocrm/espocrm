@@ -477,7 +477,8 @@ class KanbanRecordView extends ListRecordView {
      */
     initStickableHeader() {
         const $container = this.$headContainer = this.$el.find('.kanban-head-container');
-        const topBarHeight = this.getThemeManager().getParam('navbarHeight') || 30;
+        const topBarHeight = (this.getThemeManager().getParam('navbarHeight') || 30) *
+            this.getThemeManager().getFontSizeFactor();
 
         const screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 

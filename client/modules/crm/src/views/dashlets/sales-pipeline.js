@@ -152,9 +152,9 @@ function (Dep) {
 
                 let stageTranslated = this.getHelper().escapeString(item.stageTranslated);
 
-                let box = '<div style="border:1px solid transparent;padding:1px">'+
-                    '<div style="width:13px;height:9px;border:1px solid ' + item.color + '">'+
-                    '<div style="width:14px;height:10px;background-color:' + item.color + ';"></div></div></div>';
+                let box = '<div style="border: var(--1px) solid transparent; padding: var(--1px)">'+
+                    '<div style="width: var(--13px); height: var(--9px); border: var(--1px) solid ' + item.color + '">'+
+                    '<div style="width: var(--14px); height: var(--10px); background-color:' + item.color + ';"></div></div></div>';
 
                 html += '<td class="flotr-legend-color-box">' + box + '</td>';
 

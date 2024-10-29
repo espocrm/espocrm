@@ -58,7 +58,7 @@ class StickyBarHelper {
             return;
         }
 
-        const navbarHeight = this.themeManager.getParam('navbarHeight');
+        const navbarHeight = this.themeManager.getParam('navbarHeight') * this.themeManager.getFontSizeFactor();
         const screenWidthXs = this.themeManager.getParam('screenWidthXs');
 
         const isSmallScreen = $(window.document).width() < screenWidthXs;

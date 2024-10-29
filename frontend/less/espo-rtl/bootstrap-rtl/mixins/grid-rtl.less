@@ -3,7 +3,7 @@
 // Generate semantic rtl grid columns with these mixins.
 
 // Generate the extra small columns
-.make-xs-column(@columns; @gutter: @grid-gutter-width) {
+.make-xs-column(@columns) {
   float: right;
 }
 .make-xs-column-offset(@columns) {
@@ -20,7 +20,7 @@
 }
 
 // Generate the small columns
-.make-sm-column(@columns; @gutter: @grid-gutter-width) {
+.make-sm-column(@columns) {
 
   @media (min-width: @screen-sm-min) {
     float: right;
@@ -46,7 +46,7 @@
 }
 
 // Generate the medium columns
-.make-md-column(@columns; @gutter: @grid-gutter-width) {
+.make-md-column(@columns) {
 
   @media (min-width: @screen-md-min) {
     float: right;
@@ -72,7 +72,7 @@
 }
 
 // Generate the large columns
-.make-lg-column(@columns; @gutter: @grid-gutter-width) {
+.make-lg-column(@columns) {
 
   @media (min-width: @screen-lg-min) {
     float: right;

@@ -66,6 +66,12 @@ export default class ListColumnResizeHelper {
         /** @private */
         this.helper = helper;
 
+        /**
+         * @private
+         * @type {number}
+         */
+        this.fontSizeFactor = view.getThemeManager().getFontSizeFactor();
+
         this.onMouseUpBind = this.onMouseUp.bind(this);
         this.onMouseMoveBind = this.onMouseMove.bind(this);
 
@@ -112,7 +118,7 @@ export default class ListColumnResizeHelper {
      * @param {number} width
      */
     isWidthOk(width) {
-        if (width < this.minWidth) {
+        if (width < this.minWidth * this.fontSizeFactor) {
             return false;
         }
 
@@ -121,7 +127,7 @@ export default class ListColumnResizeHelper {
                 continue;
             }
 
-            if (th.clientWidth < this.minWidth) {
+            if (th.clientWidth < this.minWidth * this.fontSizeFactor) {
                 return false;
             }
         }
@@ -193,6 +199,10 @@ export default class ListColumnResizeHelper {
 
             unit = '%';
             value = widthPercentsRounded;
+        }
+
+        if (this.item.inPx) {
+            value = value / this.fontSizeFactor;
         }
 
         this.helper.storeColumnWidth(this.item.name, {value: value, unit: unit});

@@ -4,7 +4,6 @@
 	border-bottom: 1px solid @selectize-color-border;
 	//background: mix(@selectize-color-dropdown, @selectize-color-border, 85%);
 	background: @selectize-color-dropdown;
-	.selectize-border-radius(@selectize-border-radius @selectize-border-radius 0 0);
 }
 .selectize-dropdown-header-close {
 	position: absolute;
@@ -12,9 +11,9 @@
 	top: 50%;
 	color: @selectize-color-text;
 	opacity: 0.4;
-	margin-top: -12px;
-	line-height: 20px;
-	font-size: 20px !important;
+	margin-top: calc(var(--12px) * -1);
+	line-height: var(--20px);
+	font-size: var(--20px) !important;
 }
 .selectize-dropdown-header-close:hover {
 	color: var(--gray-dark-25);

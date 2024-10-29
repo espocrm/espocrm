@@ -8,7 +8,7 @@
 }
 
 .note-editable blockquote {
-    font-size: @font-size-base;
+    font-size: var(--font-size-base);
 }
 
 .note-editor {
@@ -36,8 +36,8 @@
     .note-editing-area {
         ul,
         ol {
-            margin-top: (@line-height-computed / 2);
-            margin-bottom: (@line-height-computed / 2);
+            margin-top: var(--line-height-computed-half);
+            margin-bottom: var(--line-height-computed-half);
 
             &:first-child {
                 margin-top: 0;
@@ -74,11 +74,11 @@
 
     .panel-heading {
         padding: 5px 5px 0 5px;
-        min-height: calc(30px + 10px);
+        min-height: calc(var(--30px)+ var(--10px));
     }
 
     .note-editable {
-        min-height: 39px;
+        min-height: var(--39px);
 
         table.bordered {
             &, th, td {
@@ -103,7 +103,7 @@
             background-color: var(--input-bg);
             border-bottom-left-radius: var(--border-radius);
             border-bottom-right-radius: var(--border-radius);
-            height: 8px;
+            height: var(--8px);
         }
 
         output.note-status-output {
@@ -154,18 +154,18 @@ body .note-editor {
 .note-editor,
 .wysiwyg-iframe-container {
     + .show-quote-button {
-        padding: 1px 4px;
-        height: 14px;
-        line-height: 4px;
-        width: 26px;
+        padding: var(--1px) var(--4px);
+        height: var(--14px);
+        line-height: var(--4px);
+        width: var(--26px);
     }
 }
 
 .note-editor {
     + .show-quote-button {
         position: relative;
-        top: -27px;
-        left: 10px;
+        top: calc(var(--27px) * -1);
+        left: var(--10px);
     }
 
     &.codeview {
@@ -176,7 +176,7 @@ body .note-editor {
 
     &:has(+ .show-quote-button):not(.codeview) {
         .note-editable {
-           padding-bottom: 26px;
+           padding-bottom: var(--26px);
         }
     }
 }

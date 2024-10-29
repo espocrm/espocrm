@@ -78,7 +78,7 @@ define('crm:views/dashlets/opportunities-by-lead-source', ['crm:views/dashlets/a
                 pie: {
                     show: true,
                     explode: 0,
-                    lineWidth: 1,
+                    lineWidth: 1 * this.fontSizeFactor,
                     fillOpacity: 1,
                     sizeRatio: 0.8,
                     labelFormatter: (total, value) => {

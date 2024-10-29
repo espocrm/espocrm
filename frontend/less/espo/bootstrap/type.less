@@ -8,7 +8,6 @@
 
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: @headings-font-family;
   font-weight: @headings-font-weight;
   line-height: @headings-line-height;
   color: @headings-color;
@@ -24,8 +23,8 @@ h1, h2, h3, h4, h5, h6,
 h1, .h1,
 h2, .h2,
 h3, .h3 {
-  margin-top: @line-height-computed;
-  margin-bottom: (@line-height-computed / 2);
+  margin-top: var(--line-height-computed);
+  margin-bottom: calc(var(--line-height-computed) / 2);
 
   small,
   .small {
@@ -35,8 +34,8 @@ h3, .h3 {
 h4, .h4,
 h5, .h5,
 h6, .h6 {
-  margin-top: (@line-height-computed / 2);
-  margin-bottom: (@line-height-computed / 2);
+  margin-top: calc(var(--line-height-computed) / 2);
+  margin-bottom: calc(var(--line-height-computed) / 2);
 
   small,
   .small {
@@ -44,40 +43,12 @@ h6, .h6 {
   }
 }
 
-h1, .h1 { font-size: @font-size-h1; }
-h2, .h2 { font-size: @font-size-h2; }
-h3, .h3 { font-size: @font-size-h3; }
-h4, .h4 { font-size: @font-size-h4; }
-h5, .h5 { font-size: @font-size-h5; }
-h6, .h6 { font-size: @font-size-h6; }
-
 
 // Body text
 // -------------------------
 
 p {
-  margin: 0 0 (@line-height-computed / 2);
-}
-
-.lead {
-  margin-bottom: @line-height-computed;
-  font-size: floor((@font-size-base * 1.15));
-  font-weight: 300;
-  line-height: 1.4;
-
-  @media (min-width: @screen-sm-min) {
-    font-size: (@font-size-base * 1.5);
-  }
-}
-
-
-// Emphasis & misc
-// -------------------------
-
-// Ex: (12px small font / 14px base font) * 100% = about 85%
-small,
-.small {
-  font-size: floor((100% * @font-size-small / @font-size-base));
+  margin: 0 0 var(--line-height-computed-half);
 }
 
 mark,
@@ -108,8 +79,8 @@ mark,
 // -------------------------
 
 .page-header {
-  padding-bottom: ((@line-height-computed / 2) - 1);
-  margin: (@line-height-computed * 2) 0 @line-height-computed;
+  padding-bottom: calc(var(--line-height-computed-half) - 1px);
+  margin: calc(var(--line-height-computed) * 2) 0 var(--line-height-computed);
   border-bottom: 1px solid @page-header-border-color;
 }
 
@@ -121,7 +92,7 @@ mark,
 ul,
 ol {
   margin-top: 0;
-  margin-bottom: (@line-height-computed / 2);
+  margin-bottom: var(--line-height-computed-half);
   ul,
   ol {
     margin-bottom: 0;
@@ -151,11 +122,11 @@ ol {
 // Description Lists
 dl {
   margin-top: 0; // Remove browser default
-  margin-bottom: @line-height-computed;
+  margin-bottom: var(--line-height-computed);
 }
 dt,
 dd {
-  line-height: @line-height-base;
+  line-height: var(--line-height-base);
 }
 dt {
   font-weight: bold;
@@ -206,9 +177,9 @@ abbr[data-original-title] {
 
 // Blockquotes
 blockquote {
-  padding: (@line-height-computed / 2) @line-height-computed;
-  margin: 0 0 @line-height-computed;
-  font-size: @blockquote-font-size;
+  padding: var(--line-height-computed-half) var(--line-height-computed);
+  margin: 0 0 var(--line-height-computed);
+  font-size: calc(var(--font-size-base) * 1.25);
   border-left: 5px solid @blockquote-border-color;
 
   p,
@@ -226,7 +197,7 @@ blockquote {
   .small {
     display: block;
     font-size: 80%; // back to default font-size
-    line-height: @line-height-base;
+    line-height: var(--line-height-base);
     color: @blockquote-small-color;
 
     &:before {
@@ -259,7 +230,7 @@ blockquote.pull-right {
 
 // Addresses
 address {
-  margin-bottom: @line-height-computed;
+  margin-bottom: var(--line-height-computed);
   font-style: normal;
-  line-height: @line-height-base;
+  line-height: var(--line-height-base);
 }

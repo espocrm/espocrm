@@ -48,26 +48,8 @@
 @font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
 @font-family-base:        @font-family-sans-serif;
 
-@font-size-base:          14px;
-@font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
-@font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
-
-@font-size-h1:            floor((@font-size-base * 2.6)); // ~36px
-@font-size-h2:            floor((@font-size-base * 2.15)); // ~30px
-@font-size-h3:            ceil((@font-size-base * 1.7)); // ~24px
-@font-size-h4:            ceil((@font-size-base * 1.25)); // ~18px
-@font-size-h5:            @font-size-base;
-@font-size-h6:            ceil((@font-size-base * 0.85)); // ~12px
-
-//** Unit-less `line-height` for use in components like buttons.
-@line-height-base:        1.428571429; // 20/14
-//** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
-@line-height-computed:    floor((@font-size-base * @line-height-base)); // ~20px
-
 //** By default, this inherits from the `<body>`.
-@headings-font-family:    inherit;
 @headings-font-weight:    500;
-@headings-line-height:    1.1;
 @headings-color:          inherit;
 
 
@@ -83,48 +65,20 @@
 @icon-font-svg-id:        "glyphicons_halflingsregular";
 
 
-//== Components
-//
-//## Define common padding and border radius sizes and more. Values based on 14px text and 1.428 line-height (~20px to start).
-
-@padding-base-vertical:     6px;
-@padding-base-horizontal:   12px;
-
-@padding-large-vertical:    10px;
-@padding-large-horizontal:  16px;
-
-@padding-small-vertical:    5px;
-@padding-small-horizontal:  10px;
-
-@padding-xs-vertical:       1px;
-@padding-xs-horizontal:     5px;
-
-@line-height-large:         1.3333333; // extra decimals for Win 8.1 Chrome
-@line-height-small:         1.5;
-
-@border-radius-base:        4px;
-@border-radius-large:       6px;
-@border-radius-small:       3px;
-
 //** Global color for active items (e.g., navs or dropdowns).
 @component-active-color:    #fff;
 //** Global background color for active items (e.g., navs or dropdowns).
 @component-active-bg:       @brand-primary;
 
 //** Width of the `border` for generating carets that indicate dropdowns.
-@caret-width-base:          4px;
+@caret-width-base: var(--4px);
 //** Carets increase slightly in size for larger components.
-@caret-width-large:         5px;
+@caret-width-large: var(--5px);
 
 
 //== Tables
 //
 //## Customizes the `.table` component with basic values, each used across all table variations.
-
-//** Padding for `<th>`s and `<td>`s.
-@table-cell-padding:            8px;
-//** Padding for cells in `.table-condensed`.
-@table-condensed-cell-padding:  5px;
 
 //** Default background color used for all tables.
 @table-bg:                      transparent;
@@ -170,12 +124,6 @@
 
 @btn-link-disabled-color:        @gray-light;
 
-// Allows for customizing button radius independently from global border radius
-@btn-border-radius-base:         @border-radius-base;
-@btn-border-radius-large:        @border-radius-large;
-@btn-border-radius-small:        @border-radius-small;
-
-
 //== Forms
 //
 //##
@@ -190,30 +138,11 @@
 //** `<input>` border color
 @input-border:                   #ccc;
 
-// TODO: Rename `@input-border-radius` to `@input-border-radius-base` in v4
-//** Default `.form-control` border radius
-// This has no effect on `<select>`s in some browsers, due to the limited stylability of `<select>`s in CSS.
-@input-border-radius:            @border-radius-base;
-//** Large `.form-control` border radius
-@input-border-radius-large:      @border-radius-large;
-//** Small `.form-control` border radius
-@input-border-radius-small:      @border-radius-small;
-
 //** Border color for inputs on focus
 @input-border-focus:             #66afe9;
 
 //** Placeholder text color
 @input-color-placeholder:        #999;
-
-//** Default `.form-control` height
-@input-height-base:              (@line-height-computed + (@padding-base-vertical * 2) + 2);
-//** Large `.form-control` height
-@input-height-large:             (ceil(@font-size-large * @line-height-large) + (@padding-large-vertical * 2) + 2);
-//** Small `.form-control` height
-@input-height-small:             (floor(@font-size-small * @line-height-small) + (@padding-small-vertical * 2) + 2);
-
-//** `.form-group` margin
-@form-group-margin-bottom:       15px;
 
 @legend-color:                   @gray-dark;
 @legend-border-color:            #e5e5e5;
@@ -317,51 +246,19 @@
 @screen-md-max:              (@screen-lg-min - 1);
 
 
-//== Grid system
-//
-//## Define your custom responsive grid.
+@grid-columns: 12;
 
-//** Number of columns in the grid.
-@grid-columns:              12;
-//** Padding between columns. Gets divided in half for the left and right.
-@grid-gutter-width:         30px;
-// Navbar collapse
 //** Point at which the navbar becomes uncollapsed.
 @grid-float-breakpoint:     @screen-sm-min;
 //** Point at which the navbar begins collapsing.
 @grid-float-breakpoint-max: (@grid-float-breakpoint - 1);
 
 
-//== Container sizes
-//
-//## Define the maximum width of `.container` for different screen sizes.
-
-// Small screen / tablet
-@container-tablet:             (720px + @grid-gutter-width);
-//** For `@screen-sm-min` and up.
-@container-sm:                 @container-tablet;
-
-// Medium screen / desktop
-@container-desktop:            (940px + @grid-gutter-width);
-//** For `@screen-md-min` and up.
-@container-md:                 @container-desktop;
-
-// Large screen / wide desktop
-@container-large-desktop:      (1140px + @grid-gutter-width);
-//** For `@screen-lg-min` and up.
-@container-lg:                 @container-large-desktop;
-
 
 //== Navbar
 //
 //##
 
-// Basics of a navbar
-@navbar-height:                    50px;
-@navbar-margin-bottom:             @line-height-computed;
-@navbar-border-radius:             @border-radius-base;
-@navbar-padding-horizontal:        floor((@grid-gutter-width / 2));
-@navbar-padding-vertical:          ((@navbar-height - @line-height-computed) / 2);
 @navbar-collapse-max-height:       340px;
 
 @navbar-default-color:             #777;
@@ -438,7 +335,6 @@
 @nav-tabs-justified-active-link-border-color:     @body-bg;
 
 //== Pills
-@nav-pills-border-radius:                   @border-radius-base;
 @nav-pills-active-link-hover-bg:            @component-active-bg;
 @nav-pills-active-link-hover-color:         @component-active-color;
 
@@ -471,25 +367,10 @@
 @pager-bg:                             @pagination-bg;
 @pager-border:                         @pagination-border;
 @pager-border-radius:                  15px;
-
 @pager-hover-bg:                       @pagination-hover-bg;
-
 @pager-active-bg:                      @pagination-active-bg;
 @pager-active-color:                   @pagination-active-color;
-
 @pager-disabled-color:                 @pagination-disabled-color;
-
-
-//== Jumbotron
-//
-//##
-
-@jumbotron-padding:              30px;
-@jumbotron-color:                inherit;
-@jumbotron-bg:                   @gray-lighter;
-@jumbotron-heading-color:        inherit;
-@jumbotron-font-size:            ceil((@font-size-base * 1.5));
-@jumbotron-heading-font-size:    ceil((@font-size-base * 4.5));
 
 
 //== Form states and alerts
@@ -587,13 +468,6 @@
 //
 //##
 
-//** Padding applied to the modal body
-@modal-inner-padding:         15px;
-
-//** Padding applied to the modal title
-@modal-title-padding:         15px;
-//** Modal title line-height
-@modal-title-line-height:     @line-height-base;
 
 //** Background color of modal content area
 @modal-content-bg:                             #fff;
@@ -621,7 +495,6 @@
 //## Define alert colors, border radius, and padding.
 
 @alert-padding:               15px;
-@alert-border-radius:         @border-radius-base;
 @alert-link-font-weight:      bold;
 
 @alert-success-bg:            @state-success-bg;
@@ -649,8 +522,6 @@
 @progress-bg:                 #f5f5f5;
 //** Progress bar text color
 @progress-bar-color:          #fff;
-//** Variable for setting rounded corners on progress bar.
-@progress-border-radius:      @border-radius-base;
 
 //** Default progress bar color
 @progress-bar-bg:             @brand-primary;
@@ -672,8 +543,6 @@
 @list-group-bg:                 #fff;
 //** `.list-group-item` border color
 @list-group-border:             #ddd;
-//** List group border radius
-@list-group-border-radius:      @border-radius-base;
 
 //** Background color of single list items on hover
 @list-group-hover-bg:           #f5f5f5;
@@ -703,10 +572,6 @@
 //##
 
 @panel-bg:                    #fff;
-@panel-body-padding:          15px;
-@panel-heading-padding:       10px 15px;
-@panel-footer-padding:        @panel-heading-padding;
-//@panel-border-radius:         @border-radius-base;
 
 //** Border color for elements within panels
 @panel-inner-border:          #ddd;
@@ -735,25 +600,6 @@
 @panel-danger-text:           @state-danger-text;
 @panel-danger-border:         @state-danger-border;
 @panel-danger-heading-bg:     @state-danger-bg;
-
-
-//== Thumbnails
-//
-//##
-
-//** Padding around the thumbnail image
-@thumbnail-padding:           4px;
-//** Thumbnail background color
-@thumbnail-bg:                @body-bg;
-//** Thumbnail border color
-@thumbnail-border:            #ddd;
-//** Thumbnail border radius
-@thumbnail-border-radius:     @border-radius-base;
-
-//** Custom text color for thumbnail captions
-@thumbnail-caption-color:     @text-color;
-//** Padding around the thumbnail caption
-@thumbnail-caption-padding:   9px;
 
 
 //== Wells
@@ -855,8 +701,6 @@
 @headings-small-color:        @gray-light;
 //** Blockquote small color
 @blockquote-small-color:      @gray-light;
-//** Blockquote font size
-@blockquote-font-size:        (@font-size-base * 1.25);
 //** Blockquote border color
 @blockquote-border-color:     @gray-lighter;
 //** Page header border color

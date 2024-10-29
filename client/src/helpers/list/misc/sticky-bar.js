@@ -55,7 +55,14 @@ class StickyBarHelper {
      */
     constructor(view, options = {}) {
         this.view = view;
+
+        /**
+         * @private
+         * @type {import('theme-manager').default}
+         */
+
         this.themeManager = this.view.getThemeManager();
+
         this.$el = view.$el;
 
         /** @private */
@@ -170,7 +177,7 @@ class StickyBarHelper {
      * @param {HTMLElement} element
      */
     _getOffsetTop(element) {
-        const navbarHeight = this.themeManager.getParam('navbarHeight');
+        const navbarHeight = this.themeManager.getParam('navbarHeight') * this.themeManager.getFontSizeFactor();
         const withHeader = !this.isSmallWindow && !this.isModal;
 
         let offsetTop = 0;

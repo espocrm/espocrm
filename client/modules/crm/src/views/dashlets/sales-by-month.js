@@ -110,7 +110,7 @@ define('crm:views/dashlets/sales-by-month', ['crm:views/dashlets/abstract/chart'
         getTickNumber: function () {
             var containerWidth = this.$container.width();
 
-            return Math.floor(containerWidth / this.columnWidth);
+            return Math.floor(containerWidth / this.columnWidth * this.fontSizeFactor);
         },
 
         draw: function () {
@@ -122,7 +122,7 @@ define('crm:views/dashlets/sales-by-month', ['crm:views/dashlets/abstract/chart'
                     show: true,
                     horizontal: false,
                     shadowSize: 0,
-                    lineWidth: 1,
+                    lineWidth: 1 * this.fontSizeFactor,
                     fillOpacity: 1,
                     barWidth: 0.5,
                 },

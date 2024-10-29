@@ -2,7 +2,7 @@
 .selectize-control.input-sm.form-control {
     &.multi {
         .selectize-input {
-            font-size: @font-size-small;
+            font-size: var(--font-size-small);
             padding: 2px 7px 0;
 
             > .item {
@@ -17,12 +17,12 @@
 
     &.single {
         .selectize-input {
-            font-size: @font-size-small;
+            font-size: var(--font-size-small);
             padding: 3px 19px 3px 10px;
-            min-height: @input-height-small;
+            min-height: var(--input-height-small);
         }
 
-        height: @input-height-small;
+        height: var(--input-height-small);
     }
 
     .selectize-dropdown-content {
@@ -46,7 +46,7 @@
 }
 
 .form-control.selectize-control.single {
-    height: @input-height-base;
+    height: var(--input-height-base);
 }
 
 .selectize-control {
@@ -54,7 +54,7 @@
         > .selectize-input {
             > .item {
                 width: 100%;
-                height: @line-height-computed;
+                height: var(--line-height-computed);
                 overflow: hidden;
                 vertical-align: top;
                 text-overflow: ellipsis;

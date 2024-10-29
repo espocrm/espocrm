@@ -64,12 +64,8 @@
   .background-clip(padding-box);
 }
 .opacity(@opacity: 0.5) {
-  -webkit-opacity: @opacity;
-  -khtml-opacity: @opacity;
-  -moz-opacity: @opacity;
   opacity: @opacity;
   @opperc: @opacity * 100;
-  -ms-filter: ~"progid:DXImageTransform.Microsoft.Alpha(opacity=@{opperc})";
   filter: ~"alpha(opacity=@{opperc})";
 }
 .transition-duration(@duration: 0.2s) {
@@ -79,10 +75,6 @@
   transition-duration: @duration;
 }
 .transform(...) {
-  -webkit-transform: @arguments;
-  -moz-transform: @arguments;
-  -o-transform: @arguments;
-  -ms-transform: @arguments;
   transform: @arguments;
 }
 .rotation(@deg:5deg){
@@ -108,9 +100,6 @@
   box-shadow: @arguments;
 }
 .box-sizing(@sizing: border-box) {
-  -ms-box-sizing: @sizing;
-  -moz-box-sizing: @sizing;
-  -webkit-box-sizing: @sizing;
   box-sizing: @sizing;
 }
 .user-select(@argument: none) {

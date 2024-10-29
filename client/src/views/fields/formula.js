@@ -145,7 +145,7 @@ class FormulaFieldView extends TextFieldView {
                 this.mode === this.MODE_LIST
             )
         ) {
-            this.$editor.css('fontSize', '14px');
+            this.$editor.css('fontSize', 'var(--font-size-base)');
 
             if (this.mode === this.MODE_EDIT) {
                 this.$editor.css('minHeight', this.height + 'px');

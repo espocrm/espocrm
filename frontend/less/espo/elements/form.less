@@ -320,26 +320,26 @@ input[type="checkbox"].form-checkbox {
     margin: 0;
     border-radius: var(--border-radius);
     border: 1px solid var(--input-border);
-    height: @line-height-computed;
-    width: @line-height-computed;
+    height: var(--line-height-computed);
+    width: var(--line-height-computed);
     display: grid;
     place-content: center;
     cursor: pointer;
     font-family: 'Font Awesome 6 Free';
     font-weight: 900;
-    font-size: 15px;
+    font-size: var(--15px);
 
     &.form-checkbox-simple {
         border-width: 0;
     }
 
     &.form-checkbox-small {
-        height: 15px;
-        width: 15px;
+        height: var(--15px);
+        width: var(--15px);
         border-radius: var(--border-radius-small);
 
         &::before {
-            font-size: 12px;
+            font-size: var(--12px);
         }
     }
 
@@ -390,8 +390,8 @@ input[type="radio"].form-radio {
     margin: 0;
     border-radius: 50%;
     border: 1px solid var(--input-border);
-    height: @line-height-computed;
-    width: @line-height-computed;
+    height: var(--line-height-computed);
+    width: var(--line-height-computed);
     display: grid;
     place-content: center;
     cursor: pointer;

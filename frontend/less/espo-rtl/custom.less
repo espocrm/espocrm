@@ -21,7 +21,7 @@
 
 .list-buttons-container > div {
     float: right;
-    margin-left: @panel-padding;
+    margin-left: var(--panel-padding);
     margin-right: 0;
 }
 
@@ -51,41 +51,41 @@ ul.dropdown-menu > li.checkbox {
 
 .modal-body > div > .list > table td:first-child,
 .modal-body > div > .list > table th:first-child {
-     padding-right: @panel-padding;
-     padding-left: @table-cell-padding / 2;
+     padding-right: var(--panel-padding);
+     padding-left: var(--table-cell-padding-half);
 }
 .modal-body > div > .list > table td:last-child,
 .modal-body > div > .list > table th:last-child {
-    padding-left: @panel-padding;
-    padding-right: @table-cell-padding / 2;
+    padding-left: var(--panel-padding);
+    padding-right: var(--table-cell-padding-half);
 }
 
 #main > .list-container > .list {
-    margin-left: -@container-padding;
-    margin-right: -@container-padding;
+    margin-left: calc(var(--container-padding) * -1);
+    margin-right: calc(var(--container-padding) * -1);
 }
 #main > .list-container > .list > table td:first-child,
 #main > .list-container > .list > table th:first-child {
-     padding-right: @panel-padding;
-     padding-left: @table-cell-padding / 2;
+     padding-right: var(--panel-padding);
+     padding-left: var(--table-cell-padding-half);
 }
 #main > .list-container > .list > table td:last-child,
 #main > .list-container > .list > table th:last-child {
-    padding-left: @panel-padding;
-    padding-right: @table-cell-padding / 2;
+    padding-left: var(--panel-padding);
+    padding-right: var(--table-cell-padding-half);
 }
 
 .panel-body .no-side-margin {
     > table td:first-child,
     > table th:first-child {
-        padding-right: @panel-padding;
-        padding-left: @table-cell-padding / 2;
+        padding-right: var(--panel-padding);
+        padding-left: var(--table-cell-padding-half);
     }
 
     > table td:last-child,
     > table th:last-child {
-        padding-left: @panel-padding;
-        padding-right: @table-cell-padding / 2;
+        padding-left: var(--panel-padding);
+        padding-right: var(--table-cell-padding-half);
     }
 }
 
@@ -435,12 +435,12 @@ table.table-admin-panel tr > td:first-child > div > a {
     }
 
     &.margin-right {
-        margin-left: @padding-base-horizontal;
+        margin-left: var(--padding-base-horizontal);
         margin-right: 0;
     }
 
     &.margin-left {
-        margin-right: @padding-base-horizontal;
+        margin-right: var(--padding-base-horizontal);
         margin-left: 0;
     }
 }
@@ -451,19 +451,19 @@ table.table-admin-panel tr > td:first-child > div > a {
         > tr {
         > th:first-child,
         > td:first-child {
-            padding-right: @padding-base-horizontal;
+            padding-right: var(--padding-base-horizontal);
 
             @media screen and (max-width: (@screen-sm-min - 1px)) {
-                padding-right: @table-cell-padding;
+                padding-right: var(--table-cell-padding);
             }
         }
 
         > th:last-child,
         > td:last-child {
-            padding-left: @padding-base-horizontal;
+            padding-left: var(--padding-base-horizontal);
 
                 @media screen and (max-width: (@screen-sm-min - 1px)) {
-                    padding-left: @table-cell-padding;
+                    padding-left: var(--table-cell-padding);
                 }
             }
         }
