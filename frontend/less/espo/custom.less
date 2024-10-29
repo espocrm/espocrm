@@ -69,27 +69,27 @@ input[type=radio]:focus-visible{
 }
 
 .block-center {
-    max-width: 800px;
+    max-width: calc(var(--8px) * 100);
     margin-left: auto;
     margin-right: auto;
 }
 
 .block-center-sm {
-    max-width: 400px;
+    max-width: calc(var(--4px) * 100);
     margin-left: auto;
     margin-right: auto;
 }
 
 .block-center-md {
-    max-width: 600px;
+    max-width: calc(var(--6px) * 100);
     margin-left: auto;
     margin-right: auto;
 }
 
 .container-centering {
-    height: calc(100vh - 100px);
+    height: calc(100vh - var(--100px));
     position: relative;
-    top: -50px;
+    top: calc(var(--5px) * -10);
     > div {
         position: relative;
         top: 20%;
@@ -152,7 +152,7 @@ img.image-preview {
 }
 
 .page-header {
-    margin: 15px 0;
+    margin: var(--15px) 0;
     border-bottom: 0;
     padding-bottom: 0;
     min-height: var(--input-height-base);
@@ -172,20 +172,20 @@ img.image-preview {
 
         .header-buttons {
             > .btn {
-                max-width: 280px;
+                max-width: calc(var(--28px) * 10);
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
 
             &:has(:nth-child(3)) {
                 > .btn {
-                    max-width: 240px;
+                    max-width: calc(var(--24px) * 10);
                 }
             }
 
             &:has(:nth-child(4)) {
                 > .btn {
-                    max-width: 170px;
+                    max-width: calc(var(--17px) * 10);
                 }
             }
 
@@ -252,7 +252,7 @@ img.image-preview {
 
     h3 {
         margin-top: 0;
-        margin-bottom: 4px;
+        margin-bottom: var(--4px);
     }
 
     .page-header-column-1 {
@@ -280,7 +280,7 @@ img.image-preview {
                     display: inline-block;
                 }
 
-                margin-right: 30px;
+                margin-right: var(--30px);
                 @media screen and (max-width: (@screen-sm-min - 1px)) {
                     margin-right: 0;
                 }
@@ -293,8 +293,8 @@ img.image-preview {
                     position: absolute;
                     right: 0;
                     background: linear-gradient(to right, transparent, @body-bg);
-                    height: 30px;
-                    width: 80px;
+                    height: var(--30px);
+                    width: calc(var(--8px) * 10);
                 }
             }
         }
@@ -326,37 +326,37 @@ img.image-preview {
 }
 
 div.list-expanded > ul > li > div.expanded-row > .cell {
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: var(--5px);
+    padding-right: var(--5px);
 
     &.small.pull-right {
         position: relative;
-        top: 2px;
+        top: var(--2px);
     }
 
     &:first-child {
         padding-left: 0;
         > .fas {
-            width: 18px;
+            width: var(--18px);
         }
     }
 }
 
 .list > table.table td > span.list-icon-container.pull-right {
-    margin-left: 5px;
+    margin-left: var(--5px);
 }
 
 .list > table.table td > span.list-icon-container.pull-left {
-    margin-right: 5px;
+    margin-right: var(--5px);
 }
 
 .cell span + span.list-icon-container {
-    margin-left: 3px;
+    margin-left: var(--3px);
 }
 
 .list > ul.list-group > li.list-row .cell > span.glyphicon.pull-right {
-    margin-left: 5px;
-    margin-top: 4px;
+    margin-left: var(--5px);
+    margin-top: var(--4px);
 }
 
 .list.scrollable {
@@ -391,7 +391,7 @@ div.list-expanded > ul > li > div.expanded-row > .cell {
 
 .cell > label,
 .filter label {
-    margin-bottom: 2px;
+    margin-bottom: var(--2px);
 }
 
 .cell.highlighted {
@@ -463,7 +463,7 @@ input.numeric-text {
     .fallback-shown,
     .another-user {
         .cell[data-name="sign-in"] {
-            margin-bottom: 12px;
+            margin-bottom: var(--12px);
         }
     }
 }
@@ -501,7 +501,7 @@ input.global-search-input {
     position: fixed;
     top: 0;
     width: 100%;
-    height: 2px;
+    height: var(--2px);
 }
 
 .edit form {
@@ -537,7 +537,7 @@ input.global-search-input {
 
 .list-container .list-buttons-container {
     margin-bottom: var(--padding-large-vertical);
-    min-height: 35px;
+    min-height: var(--35px);
 }
 
 .list-sticky-bar {
@@ -546,7 +546,7 @@ input.global-search-input {
     z-index: 1000;
     padding-top: var(--padding-small-vertical);
     padding-bottom: var(--padding-small-vertical);
-    padding-right: 15px;
+    padding-right: var(--15px);
 }
 
 .list-buttons-container > .actions {
@@ -556,7 +556,7 @@ input.global-search-input {
 .list-buttons-container > div.total-count {
     margin-right: 0;
     float: right;
-    padding: 7px 0;
+    padding: var(--7px) 0;
     user-select: none;
 
     > .total-count-span {
@@ -568,7 +568,7 @@ input.global-search-input {
     .settings-container {
         .btn > span.fa-cog.fa-sm {
             position: relative;
-            top: -1px;
+            top: calc(var(--1px) * -1);
         }
     }
 }
@@ -579,12 +579,12 @@ input.global-search-input {
     margin: 0;
 
     a.pagination-btn {
-        min-width: 40px;
+        min-width: var(--40px);
         text-align: center;
     }
 
     a.pagination-btn-middle {
-        min-width: 70px;
+        min-width: calc(var(--7px) * 10);
         text-align: right;
     }
 
@@ -594,7 +594,7 @@ input.global-search-input {
                 border-left: 0;
                 border-top-left-radius: 0;
                 border-bottom-left-radius: 0;
-                min-width: 70px;
+                min-width: calc(var(--7px) * 10);
 
                 user-select: none;
             }
@@ -605,7 +605,7 @@ input.global-search-input {
                 border-bottom-right-radius: 0;
 
                 width: 100%;
-                min-width: 80px;
+                min-width: calc(var(--8px) * 10);
             }
         }
     }
@@ -635,7 +635,7 @@ input.global-search-input {
         min-width: var(--btn-s-wide-width);
     }
 
-    margin-bottom: 10px;
+    margin-bottom: var(--10px);
     user-select: none;
 }
 
@@ -650,19 +650,19 @@ input.global-search-input {
 }
 
 .field .row {
-    margin-left: -3px !important;
-    margin-right: -3px !important;
+    margin-left: calc(var(--3px) * -1) !important;
+    margin-right: calc(var(--3px) * -1) !important;
 }
 
 .field .row > div {
-    padding-left: 3px !important;
-    padding-right: 3px !important;
+    padding-left: var(--3px) !important;
+    padding-right: var(--3px) !important;
     float: left;
 }
 
 .field .form-control,
 .field .btn {
-    margin-bottom: 3px;
+    margin-bottom: var(--3px);
 }
 
 .field .input-group .form-control,
@@ -671,7 +671,7 @@ input.global-search-input {
 }
 
 .field .input-group {
-    margin-bottom: 3px;
+    margin-bottom: var(--3px);
 }
 
 .field .link-container {
@@ -729,14 +729,14 @@ input.global-search-input {
         &:last-child {
             border-bottom-left-radius: var(--border-radius);
             border-bottom-right-radius: var(--border-radius);
-            border-bottom-width: 1px;
+            border-bottom-width: var(--1px);
         }
 
         > a {
             > .item-icon-container {
                 display: inline-block;
-                width: 20px;
-                margin-right: 8px;
+                width: var(--20px);
+                margin-right: var(--8px);
                 color: var(--gray-soft);
             }
         }
@@ -776,14 +776,14 @@ input.global-search-input {
     background-color: transparent;
 
     &:first-child {
-        border-top-width: 1px;
+        border-top-width: var(--1px);
     }
 
     &.ui-sortable-helper {
-        border-top-width: 1px !important;
-        border-bottom-width: 1px !important;
-        border-left-width: 1px !important;
-        border-right-width: 1px !important;
+        border-top-width: var(--1px) !important;
+        border-bottom-width: var(--1px) !important;
+        border-left-width: var(--1px) !important;
+        border-right-width: var(--1px) !important;
     }
 }
 
@@ -824,16 +824,16 @@ input.global-search-input {
 }
 
 .field .link-container .list-group-item > div {
-    margin: -6px 0 -6px;
+    margin: calc(var(--6px) * -1) 0 calc(var(--6px) * -1);
 }
 
 .field .link-container .list-group-item > div > div {
-    margin: 6px 0;
+    margin: var(--6px) 0;
 }
 
 .field .link-container .list-group-item .form-control,
 .field .link-container .list-group-item .btn {
-    margin-top: 2px;
+    margin-top: var(--2px);
     margin-bottom: 0;
 }
 
@@ -849,11 +849,11 @@ input.global-search-input {
     .checklist-label {
         color: @text-color;
         margin-bottom: 0;
-        padding-left: 7px;
+        padding-left: var(--7px);
     }
 
     .checklist-item-container {
-        margin-bottom: 2px;
+        margin-bottom: var(--2px);
         &:last-child {
             margin-bottom: 0;
         }
@@ -876,7 +876,7 @@ input.global-search-input {
         padding-bottom: var(--4px);
 
         &:last-child {
-            padding-bottom: 1px;
+            padding-bottom: var(--1px);
         }
 
         .label-md {
@@ -971,7 +971,7 @@ input.global-search-input {
     }
     > div:nth-child(2) {
         display: inline-block;
-        width: 23px;
+        width: var(--23px);
         float: right;
         vertical-align: top;
     }
@@ -979,19 +979,19 @@ input.global-search-input {
 
 #main > .list-container {
     > .no-data {
-        margin-top: 40px;
+        margin-top: calc(var(--4px) * 10);
     }
 }
 
 #main > div > .left-container + .list-container {
     > .no-data {
-        margin-top: 15px;
+        margin-top: var(--15px);
     }
 }
 
 #main > div > .list-main-column > .nested-categories-container:not(.hidden) + .list-container {
     > .no-data {
-        margin-top: 10px;
+        margin-top: var(--10px);
     }
 }
 
@@ -1028,7 +1028,7 @@ input.global-search-input {
 }
 
 .detail-field-container {
-    padding: 7px 0;
+    padding: var(--7px) 0;
 }
 
 #login.panel > .panel-heading {
@@ -1053,15 +1053,15 @@ input.global-search-input {
                 > .column-resizer {
                     display: none;
                     position: absolute;
-                    width: 4px;
-                    height: 37px;
+                    width: var(--4px);
+                    height: var(--37px);
                     top: 0;
                     user-select: none;
 
                     &:after {
                         content: "";
                         display: block;
-                        height: 37px;
+                        height: var(--37px);
                         width: 0;
                         position: absolute;
                     }
@@ -1070,16 +1070,16 @@ input.global-search-input {
                         left: 0;
 
                         &:after {
-                            border-left: 1px solid var(--default-border-color);
-                            left: 1px;
+                            border-left: var(--1px) solid var(--default-border-color);
+                            left: var(--1px);
                         }
                     }
 
                     &.column-resizer-right {
                         right: 0;
                         &:after {
-                            border-right: 1px solid var(--default-border-color);
-                            right: 1px;
+                            border-right: var(--1px) solid var(--default-border-color);
+                            right: var(--1px);
                         }
                     }
 
@@ -1103,23 +1103,23 @@ input.global-search-input {
                             content: '';
                             display: block;
                             position: absolute;
-                            height: 4px;
+                            height: var(--4px);
                             background-color: var(--default-heading-bg-color);
                             bottom: 0;
-                            left: 6px;
-                            right: 6px;
+                            left: var(--6px);
+                            right: var(--6px);
                             border-radius: var(--border-radius-small);
                         }
 
                         &:has(.column-resizer-right) {
                             &:after {
-                                right: 9px;
+                                right: var(--9px);
                             }
 
                         }
                         &:not(:has(.column-resizer-right)) {
                             &:after {
-                                left: 9px;
+                                left: var(--9px);
                             }
                         }
                     }
@@ -1150,8 +1150,8 @@ input.global-search-input {
         overflow: hidden;
         vertical-align: top;
         // Fix the label making the list row higher.
-        margin-top: -1px;
-        margin-bottom: -1px;
+        margin-top: calc(var(--1px) * -1);
+        margin-bottom: calc(var(--1px) * -1);
     }
 }
 
@@ -1160,12 +1160,12 @@ input.global-search-input {
         input.form-checkbox-small[type="checkbox"] {
             margin: 0;
             position: relative;
-            top: 3px;
+            top: var(--3px);
         }
     }
 
     th.field-header-cell {
-        min-width: 10px;
+        min-width: var(--10px);
     }
 }
 
@@ -1183,7 +1183,7 @@ input.global-search-input {
         .fas, .far {
             line-height: var(--21px);
             position: relative;
-            top: 1px;
+            top: var(--1px);
         }
     }
 
@@ -1356,7 +1356,7 @@ section {
                 }
 
                 td.cell[data-name="buttons"] > .btn-group {
-                    margin-right: -11px;
+                    margin-right: calc(var(--11px) * -1);
                 }
             }
 
@@ -1436,8 +1436,8 @@ section {
 
                 > a.link {
                     position: relative;
-                    left: -14px;
-                    padding-left: 14px;
+                    left: var(--minus-14px);
+                    padding-left: var(--14px);
                 }
             }
         }
@@ -1446,30 +1446,30 @@ section {
 
 .panel.dashlet > .panel-body > .list-container > .list > .list-group {
     > li.list-group-item:last-child {
-        border-bottom-width: 1px;
+        border-bottom-width: var(--1px);
         border-bottom-left-radius: 0 !important;
         border-bottom-right-radius: 0 !important;
     }
 }
 
 .field .grid-stack-item-content {
-    border: 1px solid var(--default-border-color);
+    border: var(--1px) solid var(--default-border-color);
 }
 
 .list-expanded > .show-more {
     padding: 0;
-    margin-top: -1px;
+    margin-top: var(--minus-1px);
 }
 
 .list-expanded > li.show-more > .btn {
-    margin-left: -1px;
-    margin-right: -4px;
+    margin-left: var(--minus-1px);
+    margin-right: var(--minus-4px);
 }
 
 .list-expanded > ul > li .list-row-buttons {
-    margin-right: -12px;
-    margin-top: -10px;
-    margin-bottom: -5px;
+    margin-right: var(--minus-12px);
+    margin-top: var(--minus-10px);
+    margin-bottom: var(--minus-5px);
 }
 
 .show-more > .btn {
@@ -1490,12 +1490,8 @@ section {
 
         > .dashlet-body {
             .calendar-container > .calendar {
-                margin-left: -1px;
-                margin-right: -1px;
-            }
-
-            .chart-container {
-                //overflow: hidden;
+                margin-left: var(--minus-1px);
+                margin-right: -var(--minus-1px);
             }
 
             border-bottom-left-radius: var(--panel-border-radius);
@@ -1547,14 +1543,14 @@ section {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-bottom: 2px;
+    margin-bottom: var(--2px);
 
     &:last-child {
         margin-bottom: 0;
     }
 
     &:empty {
-        margin-bottom: -2px;
+        margin-bottom: var(--minus-2px);
     }
 }
 
@@ -1573,8 +1569,8 @@ section {
     padding-right: 0;
 
     > .right-container {
-        width: 7px;
-        height: 10px;
+        width: var(--7px);
+        height: var(--10px);
     }
 }
 
@@ -1587,19 +1583,19 @@ section {
 }
 
 #notifications-panel .right {
-    padding-top: 5px;
+    padding-top: var(--5px);
 }
 
 .caret-up {
     display: inline-block;
     width: 0;
     height: 0;
-    margin-left: 2px;
+    margin-left: var(--2px);
     vertical-align: middle;
-    border-bottom: 4px solid #000;
-    border-right: 4px solid transparent;
+    border-bottom: var(--4px) solid #000;
+    border-right: var(--4px) solid transparent;
     border-top: 0 dotted;
-    border-left: 4px solid transparent;
+    border-left: var(--4px) solid transparent;
     content: "";
 }
 
@@ -1671,8 +1667,8 @@ section {
 .list > table th.action-cell {
     a {
         position: relative;
-        right: 9px;
-        padding: 4px 3px;
+        right: var(--9px);
+        padding: var(--4px) var(--3px);
 
         &:hover {
             color: var(--btn-text-color);
@@ -1682,32 +1678,32 @@ section {
 
 #main > .list-container > .list > table th.action-cell {
     a {
-        right: 8px;
+        right: var(--8px);
 
         @media screen and (max-width: (@screen-sm-min - 1px)) {
-            right: 3px;
+            right: var(--3px);
         }
     }
 }
 
 td.cell[data-name="buttons"] > .btn-group {
-    margin-top: -8px;
-    margin-bottom: -8px;
-    margin-right: -8px;
+    margin-top: var(--minus-8px);
+    margin-bottom: var(--minus-8px);
+    margin-right: var(--minus-8px);
 }
 
 #main > .list-container > .list > table {
     td.cell[data-name="buttons"] > .btn-group {
-        margin-right: -10px;
+        margin-right: var(--minus-10px);
     }
 }
 
 table.less-padding td.cell[data-name="buttons"] > .btn-group {
-    margin-right: -13px;
+    margin-right: var(--minus-13px);
 }
 
 .dashboard-header .dashboard-buttons {
-    margin-left: 10px;
+    margin-left: var(--10px);
 }
 
 .panel.dashlet > .panel-heading > .panel-title {
@@ -1738,7 +1734,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
         overflow-y: hidden;
     }
 
-    margin: -8px;
+    margin: var(--minus-8px);
 
     @media screen and (max-width: (@screen-sm-min - 1px)) {
         margin-top: 0;
