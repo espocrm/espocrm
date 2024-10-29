@@ -9,10 +9,15 @@
 
 html {
     height: 100%;
-}
 
-body {
-    //font-feature-settings: "tnum";
+    &:not(:has(> body > .container > .container-centering)) {
+        scrollbar-gutter: stable;
+        overflow-y: scroll;
+    }
+
+    &:has(> body > .container > #main > .no-window-scroll) {
+        overflow-y: unset;
+    }
 }
 
 .list-container > .list,
@@ -1308,7 +1313,7 @@ section {
 
 #main > .list-container > .list {
     border-left-width: 0;
-    border-right-width: 0;
+    //border-right-width: 0;
 }
 
 #main > .list-container > .list-tree > ul,
