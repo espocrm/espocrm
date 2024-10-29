@@ -1,6 +1,6 @@
 #layout ul {
     width: 100%;
-    min-height: 100px;
+    min-height: var(--100px);
     padding: 0;
     list-style-type: none;
     margin: 0;
@@ -8,10 +8,10 @@
 
 #layout ul li {
     list-style: none;
-    border: 1px solid var(--select-item-border);
-    margin: 5px 0;
-    padding: 5px;
-    height: 34px;
+    border: var(--1px) solid var(--select-item-border);
+    margin: var(--5px) 0;
+    padding: var(--5px);
+    height: var(--34px);
 }
 
 #layout header {

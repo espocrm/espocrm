@@ -10,84 +10,86 @@
 }
 
 #layout ul.panels > li {
-    padding: 5px 10px;
-    margin-bottom: 14px;
-    min-height: 80px;
-    border: 1px solid var(--select-item-border);
+    padding: var(--5px) var(--10px);
+    margin-bottom: var(--14px);
+    min-height: var(--80px);
+    border: var(--1px) solid var(--select-item-border);
     border-radius: var(--border-radius);
     background-color: var(--panel-bg);
     list-style: none;
 }
 
 #layout ul.panels > li .panel-label {
-    margin-left: 4px;
+    margin-left: var(--4px);
 }
 
 #layout ul.panels > li[data-tab-break="true"] {
-    margin-top: 28px;
+    margin-top: var(--28px);
 }
 
 #layout ul.panels > li[data-tab-break="true"]:before {
     content: " ";
     display: block;
-    height: 1px;
+    height: var(--1px);
     background-color: var(--gray-light);
     position: relative;
-    top: -20px;
+    top: calc(var(--20px) * -1);
     width: 50%;
     margin: 0 auto;
 }
 
 #layout ul.rows {
-    min-height: 20px;
+    min-height: var(--20px);
 }
 
 #layout ul.rows > li  {
     list-style: none;
-    border: 1px solid var(--select-item-border);
+    border: var(--1px) solid var(--select-item-border);
     background-color: var(--panel-bg);
     border-radius: var(--border-radius);
-    margin: 8px 0;
-    padding: 5px;
-    height: 72px;
+    margin: var(--8px) 0;
+    padding: var(--5px);
+    height: calc(var(--70px) + var(--2px));
 }
 
 #layout ul.cells  {
-    min-height: 30px;
-    margin-top: 12px;
+    min-height: var(--30px);
+    margin-top: var(--12px);
+
+    width: calc(100% - var(--20px));
 }
 
 #layout ul.panels ul.cells > li {
-    width: 46%;
+    width: calc(50% - var(--10px));
     float: left;
 }
 
 #layout ul.panels ul.cells > li[data-full-width="true"] {
-    width: 94%;
+    width: calc(100% - var(--10px));
 }
 
 #layout ul.panels ul.cells[data-cell-count="1"] > li {
-    width: 94%;
+    width: calc(100% - var(--10px));
 }
 
 #layout ul.panels ul.cells[data-cell-count="2"] > li {
-    width: 46%;
+    width: calc(50% - var(--10px));
 }
 
 #layout ul.panels ul.cells[data-cell-count="3"] > li {
-    width: 30%;
+    width: calc(33.3% - var(--10px));
 }
 
 #layout ul.panels ul.cells[data-cell-count="4"] > li {
-    width: 22%;
+    width: calc(25% - var(--10px));
 }
 
 #layout ul.cells > li {
     list-style: none;
-    border: 1px solid var(--select-item-border);
-    margin: 5px;
-    padding: 5px;
-    height: 34px;
+    border: var(--1px) solid var(--select-item-border);
+    margin: var(--5px);
+    padding: var(--5px);
+    height: var(--34px);
 }
 
 #layout ul.cells > li.ui-state-hover {
@@ -95,7 +97,7 @@
 }
 
 #layout  ul.cells.disabled > li {
-    margin: 5px 0;
+    margin: var(--5px) 0;
 }
 
 #layout ul.rows > li > div {
@@ -103,7 +105,7 @@
 }
 
 #layout ul.disabled {
-    min-height: 200px;
+    min-height: var(--200px);
     width: 100%;
 }
 
@@ -113,7 +115,7 @@
 
 #layout header {
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: var(--10px);
 }
 
 #layout ul.panels > li label {
@@ -127,7 +129,7 @@
 #layout ul.panels > li > div {
     width: auto;
     text-align: left;
-    margin-left: 5px;
+    margin-left: var(--5px);
 }
 
 ul.cells li.cell a.remove-field {
@@ -152,8 +154,8 @@ ul.panels > li:hover a.remove-panel {
 
 ul.rows > li a.remove-row {
     display: none;
-    width: 5px;
-    height: 5px;
+    width: var(--5px);
+    height: var(--5px);
 }
 
 ul.rows > li:hover a.remove-row {
@@ -163,10 +165,10 @@ ul.rows > li:hover a.remove-row {
 ul.rows > li a.add-cell {
     display: none;
     position: relative;
-    width: 5px;
-    height: 5px;
-    top: 19px;
-    right: 7px;
+    width: var(--5px);
+    height: var(--5px);
+    top: var(--19px);
+    right: var(--7px);
 }
 
 ul.rows > li:hover a.add-cell {
@@ -187,8 +189,8 @@ ul.panels > li:hover a.edit-panel-label {
 
 div.row-actions {
     float: right;
-    height: 50px;
-    width: 12px;
+    height: var(--50px);
+    width: var(--12px);
 }
 
 .cell.ui-draggable-dragging {
