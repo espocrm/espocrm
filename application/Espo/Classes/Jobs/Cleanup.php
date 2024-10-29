@@ -32,6 +32,7 @@ namespace Espo\Classes\Jobs;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Job\Job\Status as JobStatus;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Entities\ActionHistoryRecord;
@@ -376,7 +377,7 @@ class Cleanup implements JobDataLess
 
             $hasAttachmentField = false;
 
-            if ($scope === 'Note') {
+            if ($scope === Note::ENTITY_TYPE) {
                 $hasAttachmentField = true;
             }
 
@@ -386,7 +387,13 @@ class Cleanup implements JobDataLess
                         continue;
                     }
 
-                    if (in_array($defs['type'], ['file', 'image', 'attachmentMultiple'])) {
+                    if (
+                        in_array($defs['type'], [
+                            FieldType::FILE,
+                            FieldType::IMAGE,
+                            FieldType::ATTACHMENT_MULTIPLE,
+                        ])
+                    ) {
                         $hasAttachmentField = true;
 
                         break;

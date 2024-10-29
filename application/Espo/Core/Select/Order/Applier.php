@@ -30,6 +30,7 @@
 namespace Espo\Core\Select\Order;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\ORM\Query\Part\OrderList;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Select\Order\Item as OrderItem;
@@ -163,13 +164,11 @@ class Applier
                     OrderItem::create($orderBy, $order)
                 )
             );
-        } else if (in_array($type, ['link', 'file', 'image', 'linkOne'])) {
+        } else if (in_array($type, [FieldType::LINK, FieldType::FILE, FieldType::IMAGE, FieldType::LINK_ONE])) {
             $resultOrderBy .= 'Name';
-        } else if ($type === 'linkParent') {
+        } else if ($type === FieldType::LINK_PARENT) {
             $resultOrderBy .= 'Type';
         } else if (
-            /*!str_contains($orderBy, '.') &&
-            !str_contains($orderBy, ':') &&*/
             !$this->metadataProvider->hasAttribute($this->entityType, $orderBy)
         ) {
             throw new BadRequest("Order by non-existing field '$orderBy'.");

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Upgrades\Migrations\V7_4;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Upgrades\Migration\Script;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Templates\Entities\Event;
@@ -69,7 +70,7 @@ class AfterUpgrade implements Script
                 }
 
                 if (
-                    ($fieldDefs['type'] ?? null) === 'linkParent' &&
+                    ($fieldDefs['type'] ?? null) === FieldType::LINK_PARENT &&
                     ($fieldDefs['notStorable'] ?? false)
                 ) {
                     if ($custom->fields?->$field?->notStorable) {

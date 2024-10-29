@@ -35,6 +35,7 @@ use Espo\Core\Action\Params;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\ActionHistory\Action;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Metadata;
@@ -377,7 +378,7 @@ class Merger
         foreach ($fieldDefsList as $fieldDefs) {
             $field = $fieldDefs->getName();
 
-            if ($fieldDefs->getType() === 'link' && $entity->isAttributeChanged($field . 'Id')) {
+            if ($fieldDefs->getType() === FieldType::LINK && $entity->isAttributeChanged($field . 'Id')) {
                 $entity->clear($field . 'Name');
             }
         }

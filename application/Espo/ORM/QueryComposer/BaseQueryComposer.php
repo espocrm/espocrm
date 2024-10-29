@@ -29,6 +29,7 @@
 
 namespace Espo\ORM\QueryComposer;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\BaseEntity;
@@ -45,6 +46,7 @@ use Espo\ORM\Query\Delete;
 use Espo\ORM\Query\Union;
 use Espo\ORM\QueryComposer\Part\FunctionConverterFactory;
 
+use Espo\ORM\Type\AttributeType;
 use PDO;
 use RuntimeException;
 use LogicException;
@@ -2060,12 +2062,12 @@ abstract class BaseQueryComposer implements QueryComposer
                 /** @var string $field */
 
                 if (
-                    $entity->getAttributeType($field) == 'foreign' &&
+                    $entity->getAttributeType($field) == AttributeType::FOREIGN &&
                     $this->getAttributeParam($entity, $field, 'relation')
                 ) {
                     $relationsToJoin[] = $this->getAttributeParam($entity, $field, 'relation');
                 } else if (
-                    $this->getAttributeParam($entity, $field, 'fieldType') == 'linkOne' &&
+                    $this->getAttributeParam($entity, $field, 'fieldType') == FieldType::LINK_ONE &&
                     $this->getAttributeParam($entity, $field, 'relation')
                 ) {
                     $relationsToJoin[] = $this->getAttributeParam($entity, $field, 'relation');

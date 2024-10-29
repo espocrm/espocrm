@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils\Database\Orm\FieldConverters;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\FieldConverter;
@@ -52,7 +53,7 @@ class LinkParent implements FieldConverter
             ->withParamsMerged([
                 'index' => $name,
                 'attributeRole' => 'id',
-                'fieldType' => 'linkParent',
+                'fieldType' => FieldType::LINK_PARENT,
             ]);
 
         $typeDefs = AttributeDefs::create($typeName)
@@ -62,7 +63,7 @@ class LinkParent implements FieldConverter
             ->withLength(self::TYPE_LENGTH)
             ->withParamsMerged([
                 'attributeRole' => 'type',
-                'fieldType' => 'linkParent',
+                'fieldType' => FieldType::LINK_PARENT,
             ]);
 
         $nameDefs = AttributeDefs::create($nameName)
@@ -72,7 +73,7 @@ class LinkParent implements FieldConverter
                 'relation' => $name,
                 'isParentName' => true,
                 'attributeRole' => 'name',
-                'fieldType' => 'linkParent',
+                'fieldType' => FieldType::LINK_PARENT,
             ]);
 
         if ($fieldDefs->isNotStorable()) {

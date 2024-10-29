@@ -29,6 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\Link;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\FieldProcessing\Loader as LoaderInterface;
@@ -82,7 +83,7 @@ class HasOneLoader implements LoaderInterface
         $entityDefs = $this->ormDefs->getEntity($entityType);
 
         foreach ($entityDefs->getFieldList() as $fieldDefs) {
-            if ($fieldDefs->getType() !== 'link') {
+            if ($fieldDefs->getType() !== FieldType::LINK) {
                 continue;
             }
 

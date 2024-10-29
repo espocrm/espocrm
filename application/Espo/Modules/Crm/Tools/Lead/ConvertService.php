@@ -195,7 +195,7 @@ class ConvertService
             foreach ($fieldMap as $field => $leadField) {
                 $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
 
-                if (in_array($type, ['file', 'image'])) {
+                if (in_array($type, [FieldType::FILE, FieldType::IMAGE])) {
                     $attachment = $lead->get($leadField);
 
                     if ($attachment) {

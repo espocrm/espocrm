@@ -30,6 +30,7 @@
 namespace Espo\Tools\EntityManager\Rename;
 
 use Espo\Core\Console\IO;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Util;
@@ -498,10 +499,8 @@ class Renamer
             ->getEntity($entityType)
             ->getField($field);
 
-        if ($defs->getType() === 'linkParent') {
+        if ($defs->getType() === FieldType::LINK_PARENT) {
             $this->renameInLinkParentField($entityType, $defs->getName(), $from, $to);
-
-            return;
         }
     }
 
@@ -581,10 +580,8 @@ class Renamer
             ->getEntity($entityType)
             ->getField($field);
 
-        if ($defs->getType() === 'linkParent') {
+        if ($defs->getType() === FieldType::LINK_PARENT) {
             $this->changeValuesInDbFieldsFieldLinkParent($entityType, $defs->getName(), $from, $to);
-
-            return;
         }
     }
 

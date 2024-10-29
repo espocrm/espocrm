@@ -36,6 +36,7 @@ use Espo\Core\Acl;
 use Espo\Core\AclManager;
 use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Metadata;
@@ -51,6 +52,7 @@ use DateTime;
 use DateTimeZone;
 use DateInterval;
 
+use Espo\ORM\Type\AttributeType;
 use ReflectionMethod;
 
 /**
@@ -203,28 +205,33 @@ class SelectManager
         if ($sortBy) {
             $result['orderBy'] = $sortBy;
             $type = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'type']);
-            if (in_array($type, ['link', 'file', 'image', 'linkOne'])) {
+
+            if (in_array($type, [FieldType::LINK, FieldType::FILE, FieldType::IMAGE, FieldType::LINK_ONE])) {
                 $result['orderBy'] .= 'Name';
-            } else if ($type === 'linkParent') {
+            } else if ($type === FieldType::LINK_PARENT) {
                 $result['orderBy'] .= 'Type';
-            } else if ($type === 'address') {
+            } else if ($type === FieldType::ADDRESS) {
                 $result['orderBy'] = [
                     [$sortBy . 'Country', $desc],
                     [$sortBy . 'City', $desc],
                     [$sortBy . 'Street', $desc],
                 ];
-            } else if ($type === 'enum') {
+            } else if ($type === FieldType::ENUM) {
                 $list = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'options']);
+
                 if ($list && is_array($list) && count($list)) {
                     if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'isSorted'])) {
                         asort($list);
                     }
+
                     if ($desc) {
                         $list = array_reverse($list);
                     }
+
                     foreach ($list as $i => $listItem) {
                         $list[$i] = str_replace(',', '_COMMA_', $listItem);
                     }
+
                     $result['orderBy'] = [['LIST:' . $sortBy . ':' . implode(',', $list)]];
                 }
             } else {
@@ -1821,15 +1828,15 @@ class SelectManager
             case 'arrayAllOf':
                 if (!$result) break;
 
-                $arrayValueAlias = 'arrayFilter' . strval(rand(10000, 99999));
+                $arrayValueAlias = 'arrayFilter' . rand(10000, 99999);
                 $arrayAttribute = $attribute;
                 $arrayEntityType = $this->getEntityType();
                 $idPart = 'id';
 
                 $seed = $this->getSeed();
 
-                if (strpos($attribute, '.') > 0 || $seed->getAttributeType($attribute) === 'foreign') {
-                    if ($seed->getAttributeType($attribute) === 'foreign') {
+                if (strpos($attribute, '.') > 0 || $seed->getAttributeType($attribute) === AttributeType::FOREIGN) {
+                    if ($seed->getAttributeType($attribute) === AttributeType::FOREIGN) {
                         $arrayAttributeLink = $seed->getAttributeParam($attribute, 'relation');
                         $arrayAttribute = $seed->getAttributeParam($attribute, 'foreign');
                     } else {
@@ -1838,7 +1845,7 @@ class SelectManager
 
                     $arrayEntityType = $seed->getRelationParam($arrayAttributeLink, 'entity');
 
-                    $arrayLinkAlias = $arrayAttributeLink . 'Filter' . strval(rand(10000, 99999));
+                    $arrayLinkAlias = $arrayAttributeLink . 'Filter' . rand(10000, 99999);
                     $idPart = $arrayLinkAlias . '.id';
 
                     $this->addLeftJoin([$arrayAttributeLink, $arrayLinkAlias], $result);
@@ -2589,7 +2596,7 @@ class SelectManager
             } else {
                 $attributeType = $seed->getAttributeType($field);
 
-                if ($attributeType === 'foreign') {
+                if ($attributeType === AttributeType::FOREIGN) {
                     $link = $seed->getAttributeParam($field, 'relation');
 
                     if ($link) {
@@ -2906,7 +2913,7 @@ class SelectManager
         }
 
         $attributeType = $this->getSeed()->getAttributeType($attribute);
-        if ($attributeType === 'foreign') {
+        if ($attributeType === AttributeType::FOREIGN) {
             $relation = $this->getSeed()->getAttributeParam($attribute, 'relation');
             if ($relation) {
                 $this->addLeftJoin($relation, $result);

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils\Database\Orm\FieldConverters;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\FieldConverter;
@@ -48,7 +49,7 @@ class LinkOne implements FieldConverter
                     ->withNotStorable()
                     ->withParamsMerged([
                         'attributeRole' => 'id',
-                        'fieldType' => 'linkOne',
+                        'fieldType' => FieldType::LINK_ONE,
                     ])
             )
             ->withAttribute(
@@ -57,7 +58,7 @@ class LinkOne implements FieldConverter
                     ->withNotStorable()
                     ->withParamsMerged([
                         'attributeRole' => 'name',
-                        'fieldType' => 'linkOne',
+                        'fieldType' => FieldType::LINK_ONE,
                     ])
             );
     }

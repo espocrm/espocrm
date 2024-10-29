@@ -176,7 +176,7 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
             $sheet->getColumnDimension($col)->setAutoSize(true);
 
             $linkTypeList = $params->getParam(self::PARAM_RECORD_LINKS) ?
-                ['url', 'phone', 'email', 'link', 'linkParent'] :
+                [FieldType::URL, FieldType::PHONE, FieldType::EMAIL, FieldType::LINK, FieldType::LINK_PARENT] :
                 ['url'];
 
             if (
@@ -396,7 +396,7 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
 
         $value = $preparator->prepare($entity, $name);
 
-        if ($type === 'image') {
+        if ($type === FieldType::IMAGE) {
             $this->applyImage(
                 $entity,
                 $coordinate,
