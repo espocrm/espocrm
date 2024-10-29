@@ -10,20 +10,20 @@
 }
 
 .popup-notification {
-    width: 400px;
+    width: var(--400px);
     padding: var(--panel-padding);
     background-color: @panel-bg;
-    border: 2px solid @main-gray;
-    margin-top: 10px;
-    margin-right: 5px;
+    border: var(--2px) solid @main-gray;
+    margin-top: var(--10px);
+    margin-right: var(--5px);
     border-radius: var(--panel-border-radius);
 
     &:last-child {
-        margin-bottom: 5px;
+        margin-bottom: var(--5px);
     }
 
     .cell {
-        margin-bottom: 5px;
+        margin-bottom: var(--5px);
         &:last-child {
             margin-bottom: 0;
         }
@@ -34,8 +34,8 @@
     }
 
     a.close {
-        margin-top: -8px;
-        margin-right: -3px;
+        margin-top: var(--minus-8px);
+        margin-right: var(--minus-3px);
     }
 }
 

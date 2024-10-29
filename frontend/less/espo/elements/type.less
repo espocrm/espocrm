@@ -99,7 +99,7 @@ hr {
 
 blockquote {
     font-size: var(--font-size-base);
-    border-left: 3px solid var(--blockquote-border-color);
+    border-left: var(--3px) solid var(--blockquote-border-color);
 }
 
 .well > p:last-child {
@@ -141,7 +141,7 @@ label {
 .label {
     padding: .09em .5em .2em;
     position: relative;
-    top: -1px;
+    top: var(--minus-1px);
     font-weight: 600;
     border-radius: var(--border-radius-small);
 }
@@ -203,7 +203,7 @@ small,
 .label-lg.small {
     font-size: 75%;
     padding: @label-padding-small;
-    top: -1px;
+    top: var(--minus-1px);
 }
 
 a[role="button"],

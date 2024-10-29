@@ -14,7 +14,7 @@
 
     .navbar-right {
         @media screen and (max-width: (@screen-sm-min - 1px)) {
-            margin-right: -2px;
+            margin-right: var(--minus-2px);
         }
 
         > li > a {
@@ -131,12 +131,12 @@
         }
 
         .navbar-form.global-search-container {
-            padding-left: 8px;
-            padding-right: 8px;
+            padding-left: var(--8px);
+            padding-right: var(--8px);
         }
 
         .navbar-form.global-search-container > .input-group {
-            margin-left: 14px;
+            margin-left: var(--14px);
         }
 
         .navbar-right {
@@ -152,7 +152,7 @@
 
         .notifications-badge-container > .notifications-button > .number-badge {
             left: unset;
-            right: 4px;
+            right: var(--4px);
         }
 
         .navbar-body {
@@ -179,8 +179,8 @@
                         li > a {
                             padding-top: var(--navbar-tab-vertical-padding);
                             padding-bottom: var(--navbar-tab-vertical-padding);
-                            padding-left: 15px;
-                            padding-right: 15px;
+                            padding-left: var(--15px);
+                            padding-right: var(--15px);
                         }
                     }
                 }
@@ -209,7 +209,7 @@
                 }
 
                 > a > .full-label {
-                    padding-right: 8px;
+                    padding-right: var(--8px);
                 }
             }
 
@@ -222,7 +222,7 @@
         @supports (display: grid) {
             ul.tabs {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(var(--200px), 1fr));
 
                 &::before {
                     content: none;
@@ -240,7 +240,7 @@
                     &.open {
                         > ul {
                             display: grid;
-                            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                            grid-template-columns: repeat(auto-fill, minmax(var(--200px), 1fr));
                         }
                     }
                 }
