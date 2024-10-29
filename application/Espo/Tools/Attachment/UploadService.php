@@ -45,6 +45,7 @@ use Espo\Entities\Attachment;
 use Espo\ORM\EntityManager;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Tools\Attachment\Jobs\MoveToStorage;
+use Espo\Core\ORM\Type\FieldType;
 
 class UploadService
 {

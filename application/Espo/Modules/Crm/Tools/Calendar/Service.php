@@ -37,6 +37,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Field\DateTime as DateTimeField;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Select\Helpers\RelationQueryHelper;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Config;
@@ -523,7 +524,8 @@ class Service
         }
 
         if (
-            $this->metadata->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'type']) === 'linkMultiple' &&
+            $this->metadata->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'type']) ===
+                FieldType::LINK_MULTIPLE &&
             !$this->metadata->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'disabled'])
         ) {
             $queryBuilder->where(

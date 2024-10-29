@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Defs\IndexDefs;
 
@@ -127,7 +128,7 @@ class Utils
     ) {
 
         $permittedFieldTypeList = [
-            'varchar',
+            FieldType::VARCHAR,
         ];
 
         $fields = [];
@@ -203,7 +204,6 @@ class Utils
         $type = self::getDbFieldType($ormFieldDefs);
 
         $length = $defaultLength[$type] ?? $length;
-        //$length = isset($ormFieldDefs['len']) ? $ormFieldDefs['len'] : $length;
 
         switch ($type) {
             case 'varchar':

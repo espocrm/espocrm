@@ -55,7 +55,7 @@ class LinkMultiple implements FieldConverter
                 'relation' => $name,
                 'isUnordered' => true,
                 'attributeRole' => 'idList',
-                'fieldType' => 'linkMultiple',
+                'fieldType' => FieldType::LINK_MULTIPLE,
             ]);
 
         /** @var array<string, mixed> $defaults */

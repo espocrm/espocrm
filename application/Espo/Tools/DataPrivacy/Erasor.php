@@ -35,9 +35,11 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\FieldProcessing\EmailAddress\AccessChecker as EmailAddressAccessChecker;
 use Espo\Core\FieldProcessing\PhoneNumber\AccessChecker as PhoneNumberAccessChecker;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
 use Espo\Core\Di;
+use Espo\Entities\Attachment;
 
 class Erasor implements
 
@@ -139,17 +141,17 @@ class Erasor implements
                 $entity->clear($field . 'Data');
 
                 continue;
-            } else if ($type === 'file' || $type === 'image') {
+            } else if ($type === FieldType::FILE || $type === FieldType::IMAGE) {
                 $attachmentId = $entity->get($field . 'Id');
 
                 if ($attachmentId) {
-                    $attachment = $this->entityManager->getEntityById('Attachment', $attachmentId);
+                    $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $attachmentId);
 
                     if ($attachment) {
                         $this->entityManager->removeEntity($attachment);
                     }
                 }
-            } else if ($type === 'attachmentMultiple') {
+            } else if ($type === FieldType::ATTACHMENT_MULTIPLE) {
                 $attachmentList = $entity->get($field);
 
                 foreach ($attachmentList as $attachment) {

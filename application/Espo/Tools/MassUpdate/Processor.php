@@ -50,8 +50,8 @@ use Espo\ORM\Entity;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Entities\User;
 use Espo\Entities\Attachment;
+use Espo\Core\ORM\Type\FieldType;
 
-use Espo\Tools\Attachment\FieldType;
 use Exception;
 use RuntimeException;
 use stdClass;

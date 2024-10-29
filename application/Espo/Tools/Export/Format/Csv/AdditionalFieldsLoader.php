@@ -30,6 +30,7 @@
 namespace Espo\Tools\Export\Format\Csv;
 
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\Tools\Export\AdditionalFieldsLoader as AdditionalFieldsLoaderInterface;
@@ -52,8 +53,8 @@ class AdditionalFieldsLoader implements AdditionalFieldsLoaderInterface
                 ->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
 
             if (
-                $fieldType === 'linkMultiple' ||
-                $fieldType === 'attachmentMultiple'
+                $fieldType === FieldType::LINK_MULTIPLE ||
+                $fieldType === FieldType::ATTACHMENT_MULTIPLE
             ) {
                 if (!$entity->has($field . 'Ids') && $entity->hasLinkMultipleField($field)) {
                     $entity->loadLinkMultipleField($field);

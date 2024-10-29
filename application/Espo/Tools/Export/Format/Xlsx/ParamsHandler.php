@@ -71,7 +71,7 @@ class ParamsHandler implements ProcessorParamsHandler
             foreach ($fieldList as $i => $field) {
                 $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
 
-                if (in_array($type, ['linkMultiple', 'attachmentMultiple'])) {
+                if (in_array($type, [FieldType::LINK_MULTIPLE, FieldType::ATTACHMENT_MULTIPLE])) {
                     unset($fieldList[$i]);
                 }
             }

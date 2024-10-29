@@ -31,6 +31,7 @@ namespace Espo\Classes\DefaultLayouts;
 
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\Team;
 use Espo\Entities\User;
 use stdClass;
 
@@ -47,18 +48,18 @@ class DefaultSidePanelType
         $list = [];
 
         if (
-            $this->metadata->get(['entityDefs', $scope, 'fields', 'assignedUser', 'type']) === 'link' &&
-            $this->metadata->get(['entityDefs', $scope, 'links', 'assignedUser', 'entity']) === 'User'
+            $this->metadata->get(['entityDefs', $scope, 'fields', 'assignedUser', 'type']) === FieldType::LINK &&
+            $this->metadata->get(['entityDefs', $scope, 'links', 'assignedUser', 'entity']) === User::ENTITY_TYPE
             ||
-            $this->metadata->get(['entityDefs', $scope, 'fields', 'assignedUsers', 'type']) === 'linkMultiple' &&
-            $this->metadata->get(['entityDefs', $scope, 'links', 'assignedUsers', 'entity']) === 'User'
+            $this->metadata->get(['entityDefs', $scope, 'fields', 'assignedUsers', 'type']) === FieldType::LINK_MULTIPLE &&
+            $this->metadata->get(['entityDefs', $scope, 'links', 'assignedUsers', 'entity']) === User::ENTITY_TYPE
         ) {
             $list[] = (object) ['name' => ':assignedUser'];
         }
 
         if (
-            $this->metadata->get(['entityDefs', $scope, 'fields', 'teams', 'type']) === 'linkMultiple' &&
-            $this->metadata->get(['entityDefs', $scope, 'links', 'teams', 'entity']) === 'Team'
+            $this->metadata->get(['entityDefs', $scope, 'fields', 'teams', 'type']) === FieldType::LINK_MULTIPLE &&
+            $this->metadata->get(['entityDefs', $scope, 'links', 'teams', 'entity']) === Team::ENTITY_TYPE
         ) {
             $list[] = (object) ['name' => 'teams'];
         }

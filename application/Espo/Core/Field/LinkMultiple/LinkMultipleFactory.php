@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Field\LinkMultiple;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\ORM\Defs;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -57,7 +58,7 @@ class LinkMultipleFactory implements ValueFactory
             return false;
         }
 
-        return $entityDefs->getField($field)->getType() === 'linkMultiple';
+        return $entityDefs->getField($field)->getType() === FieldType::LINK_MULTIPLE;
     }
 
     public function createFromEntity(Entity $entity, string $field): LinkMultiple
