@@ -132,7 +132,7 @@ img.image-preview {
 }
 
 .inline-edit-link + .control-label {
-    max-width: calc(100% - 15px);
+    max-width: calc(100% - var(--15px));
 }
 
 .chevron-right {
@@ -1143,7 +1143,7 @@ input.global-search-input {
     }
 
     > .label-md {
-        max-width: calc(100%);
+        max-width: ~"calc(100%)";
         display: inline-block;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -3743,7 +3743,7 @@ body:has(.modal-backdrop) {
     bottom: 0;
     display: grid;
     grid-gap: 10px;
-    width: calc(100% - 100px);
+    width: ~"calc(100% - 100px)";
     justify-content: end;
 
     @media screen and (max-width: (@screen-sm-min - 1px)) {
@@ -3763,7 +3763,7 @@ body:has(.modal-backdrop) {
         background-color: var(--collapsed-modal-bg);
 
         .title-container {
-            width: calc(100% - 18px);
+            width: ~"calc(100% - var(--18px))";
             text-overflow: ellipsis;
             overflow: hidden;
             float: left;

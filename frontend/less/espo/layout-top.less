@@ -59,7 +59,7 @@ body:not([data-navbar="side"]) {
 
             display: flex;
             flex-wrap: nowrap;
-            width: calc(100vw);
+            width: ~"calc(100vw)";
 
             > .navbar-header {
                 display: flex;
@@ -319,7 +319,7 @@ body:not([data-navbar="side"]) {
 
     @media (min-width: @screen-lg-min) {
         .container {
-            max-width: @container-max-width;
+            max-width: var(--container-max-width);
         }
     }
 

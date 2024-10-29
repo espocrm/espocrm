@@ -43,7 +43,7 @@ body[data-navbar="side"] {
         &,
         &.minimized.side-menu-opened {
             #header {
-                width: @navbar-width;
+                width: var(--navbar-width);
             }
 
             #navbar .navbar {
@@ -60,7 +60,7 @@ body[data-navbar="side"] {
                 .nav > li.more > .dropdown-menu > li.tab-group > ul.dropdown-menu,
                 .nav > li.tab-group > .dropdown-menu {
                     top: 0;
-                    left: @navbar-width;
+                    left: var(--navbar-width);
                     padding-top: 0;
                     padding-bottom: 0;
                     position: fixed;
@@ -70,7 +70,7 @@ body[data-navbar="side"] {
                 .nav > li.more > .dropdown-menu,
                 .nav > li.tab-group > .dropdown-menu {
                     border-left-width: 0;
-                    min-width: @navbar-dropdown-min-width;
+                    min-width: var(--180px);
                 }
 
                 .nav > li.tab-group > .dropdown-menu {
@@ -94,7 +94,7 @@ body[data-navbar="side"] {
                 }
 
                 ul.tabs {
-                    width: @navbar-width;
+                    width: var(--navbar-width);
                     margin-left: 0;
                     overflow-y: hidden;
 
@@ -180,7 +180,7 @@ body[data-navbar="side"] {
                 }
 
                 a.side-menu-button {
-                    width: @navbar-minimized-width;
+                    width: var(--navbar-minimized-width);
                     padding-top: var(--navbar-tab-vertical-padding);
                     padding-bottom: var(--navbar-tab-vertical-padding);
                     text-align: center;
@@ -202,7 +202,7 @@ body[data-navbar="side"] {
                     left: 0;
                     height: var(--top-bar-height);
                     width: 100%;
-                    margin-left: @navbar-width;
+                    margin-left: var(--navbar-width);
                 }
             }
 
@@ -213,24 +213,24 @@ body[data-navbar="side"] {
 
                     position: fixed;
                     z-index: @zindex-navbar-fixed;
-                    width: @navbar-width;
+                    width: var(--navbar-width);
                     margin-bottom: 0;
                     height: 100%;
                 }
 
                 .navbar-brand img {
-                    max-width: @navbar-width - @navbar-minimized-width;
+                    max-width: calc(var(--navbar-width) - var(--navbar-minimized-width));
                     height: var(--navbar-height);
                 }
 
                 a.navbar-brand {
-                    max-width: @navbar-width - @navbar-minimized-width;
+                    max-width: calc(var(--navbar-width) - var(--navbar-minimized-width));
                     height: var(--navbar-height);
                     margin-left: 0;
                 }
 
                 .navbar-header {
-                    width: @navbar-width;
+                    width: var(--navbar-width);
                     height: var(--navbar-header-height);
                     display: block;
                     padding-bottom: calc((var(--navbar-header-height) - var(--navbar-height)) / 2);
@@ -261,8 +261,8 @@ body[data-navbar="side"] {
                     height: var(--top-bar-height);
                     width: calc(100vw - var(--18px));
                     background-color: var(--navbar-bg);
-                    margin-left: @navbar-width;
-                    padding-right: @navbar-width;
+                    margin-left: var(--navbar-width);
+                    padding-right: var(--navbar-width);
 
                     > li {
                         float: none;
@@ -322,7 +322,7 @@ body[data-navbar="side"] {
                 }
 
                 ul.tabs {
-                    margin-top: @navbar-tabs-margin-top;
+                    margin-top: 0;
 
                     li {
                         float: none;
@@ -363,7 +363,7 @@ body[data-navbar="side"] {
         &.minimized.side-menu-opened {
             #navbar > .navbar {
                 .navbar-logo-container {
-                    width: ~"calc(100% - " @navbar-minimized-width ~")";
+                    width: ~"calc(100% - var(--navbar-minimized-width))";
                     float: right;
                     display: flex;
                 }
@@ -519,13 +519,13 @@ body[data-navbar="side"] {
     @media screen and (min-width: @screen-sm-min) {
         &.minimized {
             #header {
-                width: @navbar-minimized-width;
+                width: var(--navbar-minimized-width);
             }
 
             #navbar {
                 .nav > li.more > ul.dropdown-menu,
                 .nav > li.tab-group > .dropdown-menu {
-                    left: @navbar-minimized-width;
+                    left: var(--navbar-minimized-width);
                 }
 
                 .navbar-logo-container {
@@ -543,7 +543,7 @@ body[data-navbar="side"] {
                 }
 
                 .navbar-header {
-                    width: @navbar-minimized-width;
+                    width: var(--navbar-minimized-width);
                     height: var(--navbar-header-height);
                 }
 
@@ -556,11 +556,11 @@ body[data-navbar="side"] {
                 }
 
                 .navbar {
-                    width: @navbar-minimized-width;
+                    width: var(--navbar-minimized-width);
                 }
 
                 ul.tabs {
-                    width: @navbar-minimized-width;
+                    width: var(--navbar-minimized-width);
 
                     > li > a {
                         padding-left: var(--navbar-tab-left-padding);
@@ -594,18 +594,18 @@ body[data-navbar="side"] {
                 }
 
                 .navbar-right {
-                    margin-left: @navbar-minimized-width;
-                    padding-right: @navbar-minimized-width;
+                    margin-left: var(--navbar-minimized-width);
+                    padding-right: var(--navbar-minimized-width);
                 }
             }
 
             #content {
-                padding-left: ~"calc(" @navbar-minimized-width ~" + var(--container-padding))";
-                max-width: @container-max-width + @navbar-minimized-width;
+                padding-left: calc(var(--navbar-minimized-width) + var(--container-padding));
+                max-width: calc(var(--container-max-width) + var(--navbar-minimized-width));
             }
 
             #footer {
-                margin-left: @navbar-minimized-width;
+                margin-left: var(--navbar-minimized-width);
             }
 
             > .side-menu-backdrop {
@@ -615,7 +615,7 @@ body[data-navbar="side"] {
                 left: 0;
                 z-index: 2140;
                 height: 100%;
-                margin-left: @navbar-width;
+                margin-left: var(--navbar-width);
             }
         }
 
@@ -652,8 +652,8 @@ body[data-navbar="side"] {
         }
 
         &.has-navbar > .content {
-            padding-left: ~"calc(" @navbar-width ~" + var(--container-padding))";
-            max-width: @container-max-width + @navbar-width;
+            padding-left: calc(var(--navbar-width) + var(--container-padding));
+            max-width: calc(var(--container-max-width) + var(--navbar-width));
         }
 
         padding-top: var(--top-bar-height);
@@ -671,7 +671,7 @@ body[data-navbar="side"] {
             position: relative;
             height: var(--26px);
             margin-top: calc(var(--26px) * -1);
-            margin-left: @navbar-width;
+            margin-left: var(--navbar-width);
 
             p {
                 padding: var(--4px) var(--panel-padding);
@@ -686,39 +686,39 @@ body[data-navbar="side"] {
 
     @media (min-width: @screen-lg-min) {
         .container {
-            max-width: @container-max-width;
+            max-width: var(--container-max-width);
         }
     }
 
 
     @media (min-width: @screen-sm-min) {
         .stick-sub.button-container {
-            width: calc(~"100% - " @navbar-width);
+            width: ~"calc(100% - var(--navbar-width))";
         }
 
         &.minimized .stick-sub.button-container {
-            width: calc(~"100% - " @navbar-minimized-width);
+            width: ~"calc(100% - var(--navbar-width))";
         }
     }
 
     .stick-sub {
-        left: @navbar-width;
+        left: var(--navbar-width);
     }
 
     &.minimized .stick-sub {
-        left: @navbar-minimized-width;
+        left: var(--navbar-minimized-width);
     }
 
     .list-sticky-bar {
-        width: calc(~"100% - " @navbar-width);
-        left: @navbar-width;
+        width: ~"calc(100% - var(--navbar-width))";
+        left: var(--navbar-width);
         top: var(--top-bar-height);
         padding-left: var(--container-padding);
     }
 
     &.minimized .list-sticky-bar {
-        width: calc(~"100% - " @navbar-minimized-width);
-        left: @navbar-minimized-width;
+        width: ~"calc(100% - var(--navbar-minimized-width))";
+        left: var(--navbar-minimized-width);
     }
 
     @media screen and (max-width: (@screen-sm-min - 1px)) {
