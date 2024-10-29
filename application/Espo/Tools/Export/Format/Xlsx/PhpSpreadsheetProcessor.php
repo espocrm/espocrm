@@ -518,8 +518,8 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
         } else if ($type === 'url') {
             $value = $entity->get($name);
 
-            if ($value && filter_var($value, FILTER_VALIDATE_URL)) {
-                $link = $value;
+            if ($value) {
+                $link = $this->sanitizeUrl($value);
             }
         } else if ($type === 'link') {
             $idValue = $entity->get($name . 'Id');
@@ -635,5 +635,20 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
         }
 
         return $value;
+    }
+
+    private function sanitizeUrl(string $value): ?string
+    {
+        $link = $value;
+
+        if (!preg_match("/[a-z]+:\/\//", $link)) {
+            $link = 'https://' . $link;
+        }
+
+        if (filter_var($link, FILTER_VALIDATE_URL)) {
+            return $link;
+        }
+
+        return null;
     }
 }
