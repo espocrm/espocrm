@@ -8,7 +8,7 @@
 
 body[data-navbar="side"].minimized.side-menu-opened {
     #navbar > .navbar {
-        border-right: 1px solid var(--panel-default-border);
+        border-right: var(--1px) solid var(--panel-default-border);
         backdrop-filter: @backdrop-filter-2;
 
         .navbar-body {
@@ -120,7 +120,7 @@ body {
     .stick-sub,
     .sticked-bar{
         backdrop-filter: @backdrop-filter !important;
-        border-bottom: 1px solid var(--panel-default-border);
+        border-bottom: var(--1px) solid var(--panel-default-border);
     }
 
     .list {
@@ -162,7 +162,7 @@ body {
 }
 
 .complex-text-container.cut > .complex-text::before {
-    height: 20px;
+    height: var(--20px);
     background: none;
     backdrop-filter: blur(1px);
 }
@@ -196,14 +196,8 @@ select.form-control > option {
     }
 }
 
-/*.calendar {
-    td.fc-day-top.fc-today {
-        background-color: transparent !important;
-    }
-}*/
-
 .popup-notification {
-    border-width: 1px;
+    border-width: var(--1px);
     backdrop-filter: @backdrop-filter;
 }
 
