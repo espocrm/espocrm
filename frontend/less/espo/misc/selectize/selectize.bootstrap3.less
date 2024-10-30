@@ -24,29 +24,29 @@
 
 
 @selectize-color-highlight: rgba(255,237,40,0.4);
-@selectize-color-input: @input-bg;
-@selectize-color-input-full: @input-bg;
+@selectize-color-input: var(--input-bg);
+@selectize-color-input-full: var(--input-bg);
 @selectize-color-input-error: @state-danger-text;
 
 @selectize-color-input-error-focus: var(--state-success-text-10);
-@selectize-color-disabled: @input-bg;
+@selectize-color-disabled: var(--input-bg);
 
 @selectize-color-item-border: rgba(0,0,0,0);
 @selectize-color-item-active-border: rgba(0,0,0,0);
-@selectize-color-optgroup: @dropdown-bg;
-@selectize-color-optgroup-text: @dropdown-header-color;
-@selectize-color-optgroup-border: @dropdown-divider-bg;
-@selectize-color-dropdown: @dropdown-bg;
-@selectize-color-dropdown-border-top: @input-border;
-@selectize-color-dropdown-item-active: @dropdown-link-hover-bg;
-@selectize-color-dropdown-item-active-text: @dropdown-link-hover-color;
-@selectize-color-dropdown-item-create-active-text: @dropdown-link-hover-color;
+@selectize-color-optgroup: var(--dropdown-bg);
+@selectize-color-optgroup-text: var(--gray-light);
+@selectize-color-optgroup-border: var(--dropdown-divider-bg);
+@selectize-color-dropdown: var(--dropdown-bg);
+@selectize-color-dropdown-border-top: var(--input-border);
+@selectize-color-dropdown-item-active: var(--dropdown-link-hover-bg);
+@selectize-color-dropdown-item-active-text: var(--dropdown-link-hover-color);
+@selectize-color-dropdown-item-create-active-text: var(--dropdown-link-hover-color);
 @selectize-opacity-disabled: 0.5;
 @selectize-shadow-input: none;
 @selectize-shadow-input-focus: inset 0 1px 2px rgba(0,0,0,0.15);
 @selectize-shadow-input-error: inset 0 1px 1px rgba(0, 0, 0, .075);
 
-@selectize-border: var(--1px) solid @input-border;
+@selectize-border: var(--1px) solid var(--input-border);
 
 @selectize-width-item-border: 0;
 @selectize-padding-x: var(--padding-base-horizontal);
@@ -69,7 +69,7 @@
 	margin: var(--2px) 0 0 0;
 	z-index: @zindex-dropdown;
 	background: @selectize-color-dropdown;
-	border: var(--1px) solid @dropdown-border;
+	border: var(--1px) solid var(--dropdown-border);
 	.selectize-box-shadow(0 6px 12px rgba(0,0,0,.175));
 }
 

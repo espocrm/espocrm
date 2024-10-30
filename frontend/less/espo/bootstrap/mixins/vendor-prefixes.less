@@ -17,36 +17,27 @@
 
 // Animations
 .animation(@animation) {
-  -webkit-animation: @animation;
-       -o-animation: @animation;
           animation: @animation;
 }
 .animation-name(@name) {
-  -webkit-animation-name: @name;
           animation-name: @name;
 }
 .animation-duration(@duration) {
-  -webkit-animation-duration: @duration;
           animation-duration: @duration;
 }
 .animation-timing-function(@timing-function) {
-  -webkit-animation-timing-function: @timing-function;
           animation-timing-function: @timing-function;
 }
 .animation-delay(@delay) {
-  -webkit-animation-delay: @delay;
           animation-delay: @delay;
 }
 .animation-iteration-count(@iteration-count) {
-  -webkit-animation-iteration-count: @iteration-count;
           animation-iteration-count: @iteration-count;
 }
 .animation-direction(@direction) {
-  -webkit-animation-direction: @direction;
           animation-direction: @direction;
 }
 .animation-fill-mode(@fill-mode) {
-  -webkit-animation-fill-mode: @fill-mode;
           animation-fill-mode: @fill-mode;
 }
 
@@ -78,7 +69,6 @@
   hyphens: @mode;
 }
 
-// Placeholder text
 .placeholder(@color: @input-color-placeholder) {
   // Firefox
   &::-moz-placeholder {
@@ -89,7 +79,6 @@
   &::-webkit-input-placeholder  { color: @color; } // Safari and Chrome
 }
 
-// Transformations
 .scale(@ratio) {
           transform: scale(@ratio);
 }
@@ -131,8 +120,6 @@
 }
 
 
-// Transitions
-
 .transition(@transition) {
           transition: @transition;
 }
@@ -153,9 +140,6 @@
 }
 
 
-// User select
-// For selecting text on the page
-
 .user-select(@select) {
-          user-select: @select;
+    user-select: @select;
 }

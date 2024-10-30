@@ -38,8 +38,8 @@
   list-style: none;
   font-size: var(--font-size-base);
   text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
-  background-color: @dropdown-bg;
-  border: var(--1px) solid @dropdown-border;
+  background-color: var(--dropdown-bg);
+  border: var(--1px) solid var(--dropdown-border);
   background-clip: padding-box;
 
   // Aligns the dropdown menu to right
@@ -52,7 +52,7 @@
 
   // Dividers (basically an hr) within the dropdown
   .divider {
-    .nav-divider(@dropdown-divider-bg);
+    .nav-divider(var(--dropdown-divider-bg));
   }
 
   // Links within the dropdown menu
@@ -62,7 +62,7 @@
     clear: both;
     font-weight: normal;
     line-height: var(--line-height-base);
-    color: @dropdown-link-color;
+    color: var(--dropdown-link-color);
     white-space: nowrap; // prevent links from randomly breaking onto new lines
   }
 }
@@ -72,8 +72,8 @@
   &:hover,
   &:focus {
     text-decoration: none;
-    color: @dropdown-link-hover-color;
-    background-color: @dropdown-link-hover-bg;
+    color: var(--dropdown-link-hover-color);
+    background-color: var(--dropdown-link-hover-bg);
   }
 }
 
@@ -95,7 +95,7 @@
   &,
   &:hover,
   &:focus {
-    color: @dropdown-link-disabled-color;
+    color: var(--gray-light);
   }
 
   // Nuke hover/focus effects
@@ -147,7 +147,7 @@
   padding: var(--3px) var(--20px);
   font-size: calc(var(--font-size-small) + var(--1px));
   line-height: var(--line-height-base);
-  color: @dropdown-header-color;
+  color: var(--gray-light);
   white-space: nowrap; // as with > li > a
 }
 
