@@ -1,10 +1,4 @@
-//
 // Navs
-// --------------------------------------------------
-
-
-// Base class
-// --------------------------------------------------
 
 .nav {
   margin-bottom: 0;
@@ -78,7 +72,7 @@
   > li {
     float: left;
     // Make the list-items overlay the bottom border
-    margin-bottom: -1px;
+    margin-bottom: var(--minus-1px);
 
     // Actual tabs (as links)
     > a {
@@ -97,7 +91,7 @@
       &:focus {
         color: @nav-tabs-active-link-hover-color;
         background-color: @nav-tabs-active-link-hover-bg;
-        border: 1px solid @nav-tabs-active-link-hover-border-color;
+        border: var(--1px) solid @nav-tabs-active-link-hover-border-color;
         border-bottom-color: transparent;
         cursor: default;
       }
@@ -116,7 +110,7 @@
   > li {
     float: none;
     + li {
-      margin-top: 2px;
+      margin-top: var(--2px);
       margin-left: 0; // no need for this gap between nav items
     }
   }
@@ -136,7 +130,7 @@
     float: none;
     > a {
       text-align: center;
-      margin-bottom: 5px;
+      margin-bottom: var(--5px);
     }
   }
 
@@ -170,12 +164,12 @@
   > .active > a,
   > .active > a:hover,
   > .active > a:focus {
-    border: 1px solid @nav-tabs-justified-link-border-color;
+    border: var(--1px)solid @nav-tabs-justified-link-border-color;
   }
 
   @media (min-width: @screen-sm-min) {
     > li > a {
-      border-bottom: 1px solid @nav-tabs-justified-link-border-color;
+      border-bottom: var(--1px) solid @nav-tabs-justified-link-border-color;
     }
     > .active > a,
     > .active > a:hover,
@@ -184,7 +178,6 @@
     }
   }
 }
-
 
 // Tabbable tabs
 // -------------------------
@@ -206,7 +199,7 @@
 // Specific dropdowns
 .nav-tabs .dropdown-menu {
   // make dropdown border overlap tab border
-  margin-top: -1px;
+  margin-top: var(--minus-1px);
   // Remove the top rounded corners here since there is a hard edge above the menu
   .border-top-radius(0);
 }

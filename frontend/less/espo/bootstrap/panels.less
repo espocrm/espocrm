@@ -3,7 +3,7 @@
 .panel {
   margin-bottom: var(--line-height-computed);
   background-color: @panel-bg;
-  border: 1px solid transparent;
+  border: var(--1px) solid transparent;
 }
 
 // Panel contents
@@ -177,7 +177,6 @@
     }
   }
 }
-
 
 .panel-default {
   .panel-variant(@panel-default-border; @panel-default-text; @panel-default-border);
