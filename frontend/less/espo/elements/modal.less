@@ -224,6 +224,11 @@
     > .modal-dialog > .modal-content {
         border-radius: var(--panel-border-radius);
 
+        @media screen and (max-width: @screen-xs-max) {
+            // Already applied for wider screens.
+            box-shadow: var(--modal-box-shadow);
+        }
+
         > .modal-header {
             border-top-left-radius: var(--panel-border-radius);
             border-top-right-radius: var(--panel-border-radius);
@@ -240,6 +245,8 @@
             }
         }
     }
+
+
 }
 
 .modal-body > .no-side-margin {
