@@ -5,7 +5,6 @@
 @headings-font-weight: 500;
 @headings-color: inherit;
 
-@icon-font-path: "../fonts/";
 @icon-font-name: "glyphicons-halflings-regular";
 @icon-font-svg-id: "glyphicons_halflingsregular";
 
@@ -20,12 +19,8 @@
 
 @cursor-disabled:  not-allowed;
 
-//-- Z-index master list
-//
 // Warning: Avoid customizing these values. They're used for a bird's eye view
 // of components dependent on the z-axis and are designed to all work together.
-//
-// Note: These variables are not generated into the Customizer.
 
 @zindex-navbar:            1000;
 @zindex-dropdown:          1000;
@@ -39,30 +34,27 @@
 @screen-md-min: 992px;
 @screen-lg-min: 1200px;
 
-@screen-xs-max: (@screen-sm-min - 1);
-@screen-sm-max: (@screen-md-min - 1);
-@screen-md-max: (@screen-lg-min - 1);
+@screen-xs-max: (@screen-sm-min - 1px);
+@screen-sm-max: (@screen-md-min - 1px);
+@screen-md-max: (@screen-lg-min - 1px);
 
 @grid-columns: 12;
 
-//** Point at which the navbar becomes uncollapsed.
 @grid-float-breakpoint: @screen-sm-min;
-//** Point at which the navbar begins collapsing.
 @grid-float-breakpoint-max: (@grid-float-breakpoint - 1);
 
+@navbar-inverse-brand-color:  @navbar-inverse-link-color;
+@navbar-inverse-brand-hover-bg: transparent;
 
-@navbar-inverse-brand-color:                @navbar-inverse-link-color;
-@navbar-inverse-brand-hover-bg:             transparent;
+@nav-link-padding: var(--10px) var(--15px);
+@nav-link-hover-bg: @gray-lighter;
 
-@nav-link-padding:                          var(--10px) var(--15px);
-@nav-link-hover-bg:                         @gray-lighter;
+@nav-disabled-link-color: @gray-light;
+@nav-disabled-link-hover-color:  @gray-light;
 
-@nav-disabled-link-color:                   @gray-light;
-@nav-disabled-link-hover-color:             @gray-light;
-
-@nav-tabs-link-hover-border-color:          @gray-lighter;
-@nav-tabs-active-link-hover-bg:             @body-bg;
-@nav-tabs-active-link-hover-color:          @gray;
+@nav-tabs-link-hover-border-color: @gray-lighter;
+@nav-tabs-active-link-hover-bg: @body-bg;
+@nav-tabs-active-link-hover-color: @gray;
 @nav-tabs-justified-active-link-border-color:     @body-bg;
 
 @tooltip-opacity: .9;
@@ -72,21 +64,21 @@
 
 @modal-backdrop-opacity: .5;
 
-@alert-success-bg:            @state-success-bg;
-@alert-success-text:          @state-success-text;
-@alert-success-border:        @state-success-border;
+@alert-success-bg:  @state-success-bg;
+@alert-success-text: @state-success-text;
+@alert-success-border: @state-success-border;
 
-@alert-info-bg:               @state-info-bg;
-@alert-info-text:             @state-info-text;
-@alert-info-border:           @state-info-border;
+@alert-info-bg: @state-info-bg;
+@alert-info-text: @state-info-text;
+@alert-info-border: @state-info-border;
 
-@alert-warning-bg:            @state-warning-bg;
-@alert-warning-text:          @state-warning-text;
-@alert-warning-border:        @state-warning-border;
+@alert-warning-bg: @state-warning-bg;
+@alert-warning-text: @state-warning-text;
+@alert-warning-border: @state-warning-border;
 
-@alert-danger-bg:             @state-danger-bg;
-@alert-danger-text:           @state-danger-text;
-@alert-danger-border:         @state-danger-border;
+@alert-danger-bg: @state-danger-bg;
+@alert-danger-text: @state-danger-text;
+@alert-danger-border: @state-danger-border;
 
 @list-group-disabled-color: @gray-light;
 @list-group-disabled-bg: @gray-lighter;
@@ -96,5 +88,5 @@
 @headings-small-color: @gray-light;
 @blockquote-small-color: @gray-light;
 @blockquote-border-color: @gray-lighter;
-@page-header-border-color:  @gray-lighter;
-@hr-border:  @gray-lighter;
+@page-header-border-color: @gray-lighter;
+@hr-border: @gray-lighter;

@@ -417,7 +417,7 @@ body[data-navbar="side"] {
         }
     }
 
-    @media screen and (max-width: (@screen-sm-min - 1px)) {
+    @media screen and (max-width: @screen-xs-max) {
         #navbar {
             a.minimizer {
                 display: none;
@@ -721,7 +721,7 @@ body[data-navbar="side"] {
         left: var(--navbar-minimized-width);
     }
 
-    @media screen and (max-width: (@screen-sm-min - 1px)) {
+    @media screen and (max-width: @screen-xs-max) {
         .stick-sub,
         &.minimized .stick-sub {
             left: 0;
@@ -858,7 +858,7 @@ body[data-navbar="side"] {
     .stick-sub {
         margin-top: var(--top-bar-height);
 
-        @media screen and (max-width: (@screen-sm-min - 1px)) {
+        @media screen and (max-width: @screen-xs-max) {
             margin-top: 0;
         }
     }

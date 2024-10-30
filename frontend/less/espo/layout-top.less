@@ -19,7 +19,7 @@ body:not([data-navbar="side"]) {
         }
     }
 
-    @media screen and (max-width: (@screen-sm-min - 1px)) {
+    @media screen and (max-width: @screen-xs-max) {
         padding-top: 0;
 
         > .content {
@@ -211,7 +211,7 @@ body:not([data-navbar="side"]) {
         }
     }
 
-    @media screen and (max-width: (@screen-sm-min - 1px)) {
+    @media screen and (max-width: @screen-xs-max) {
         #navbar .navbar {
             position: static;
 
@@ -334,7 +334,7 @@ body:not([data-navbar="side"]) {
         padding-left: var(--container-padding);
     }
 
-    @media screen and (max-width: (@screen-sm-min - 1px)) {
+    @media screen and (max-width: @screen-xs-max) {
         .list-sticky-bar,
         &.minimized .list-sticky-bar {
             width: 100%;
@@ -391,7 +391,7 @@ body:not([data-navbar="side"]) {
     .stick-sub {
         margin-top: var(--navbar-height);
 
-        @media screen and (max-width: (@screen-sm-min - 1px)) {
+        @media screen and (max-width: @screen-xs-max) {
             margin-top: 0;
         }
     }
