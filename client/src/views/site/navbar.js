@@ -708,7 +708,6 @@ class NavbarSiteView extends View {
      */
     adjustSide() {
         const smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
-        const navbarStaticItemsHeight = this.getStaticItemsHeight();
 
         const $window = $(window);
         const $tabs = this.$tabs;
@@ -757,6 +756,9 @@ class NavbarSiteView extends View {
             const windowHeight = window.innerHeight;
             const windowWidth = window.innerWidth;
 
+            const t = new Date().getMilliseconds();
+            const navbarStaticItemsHeight = this.getStaticItemsHeight();
+
             this.$minimizer.removeClass('hidden');
 
             if (windowWidth < smallScreenWidth) {
@@ -785,14 +787,26 @@ class NavbarSiteView extends View {
         this.adjustBodyMinHeight();
     }
 
+    /**
+     * @private
+     * @return {number}
+     */
     getNavbarHeight() {
         return this.getFontSizeFactor() * (this.getThemeManager().getParam('navbarHeight') || 43);
     }
 
+    /**
+     * @private
+     * @return {boolean}
+     */
     isSide() {
         return this.getThemeManager().getParam('navbar') === 'side';
     }
 
+    /**
+     * @private
+     * @return {number}
+     */
     getStaticItemsHeight() {
         return this.getFontSizeFactor() * (this.getThemeManager().getParam('navbarStaticItemsHeight') || 97);
     }
