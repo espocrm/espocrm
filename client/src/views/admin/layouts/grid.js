@@ -28,6 +28,9 @@
 
 import LayoutBaseView from 'views/admin/layouts/base';
 
+/**
+ * @abstract
+ */
 class LayoutGridView extends LayoutBaseView {
 
     template = 'admin/layouts/grid'
