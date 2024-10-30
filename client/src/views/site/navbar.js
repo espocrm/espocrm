@@ -664,6 +664,9 @@ class NavbarSiteView extends View {
         processUpdateWidth();
     }
 
+    /**
+     * @private
+     */
     adjustSide() {
         const smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
         const navbarStaticItemsHeight = this.getStaticItemsHeight();
@@ -671,6 +674,12 @@ class NavbarSiteView extends View {
         const $window = $(window);
         const $tabs = this.$tabs;
         const $more = this.$more;
+
+        /** @type {HTMLElement} */
+        const tabsElement = this.$tabs.get(0);
+
+        /** @type {HTMLElement} */
+        const moreElement = this.$more.get(0);
 
         this.adjustBodyMinHeightMethodName = 'adjustBodyMinHeightSide';
 
@@ -712,14 +721,20 @@ class NavbarSiteView extends View {
             this.$minimizer.removeClass('hidden');
 
             if (windowWidth < smallScreenWidth) {
-                $tabs.css('height', 'auto');
-                $more.css('max-height', '');
+                tabsElement.style.height = 'auto';
+
+                if (moreElement) {
+                    moreElement.style.maxHeight = '';
+                }
 
                 return;
             }
 
-            $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
-            $more.css('max-height', windowHeight + 'px');
+            tabsElement.style.height = (windowHeight - navbarStaticItemsHeight) + 'px';
+
+            if (moreElement) {
+                moreElement.style.maxHeight = windowHeight + 'px';
+            }
         };
 
         $window.on('resize.navbar', () => {
@@ -750,6 +765,9 @@ class NavbarSiteView extends View {
         return this.getThemeManager().getFontSizeFactor();
     }
 
+    /**
+     * @private
+     */
     adjustBodyMinHeight() {
         if (!this.adjustBodyMinHeightMethodName) {
             return;
@@ -758,6 +776,9 @@ class NavbarSiteView extends View {
         this[this.adjustBodyMinHeightMethodName]();
     }
 
+    /**
+     * @private
+     */
     adjustBodyMinHeightSide() {
         let minHeight = this.$tabs.get(0).scrollHeight + this.getStaticItemsHeight();
 
@@ -908,6 +929,9 @@ class NavbarSiteView extends View {
         this.adjustAfterRender();
     }
 
+    /**
+     * @private
+     */
     adjustAfterRender() {
         if (this.isSide()) {
             const processSide = () => {
