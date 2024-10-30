@@ -5,14 +5,14 @@
   min-width: var(--10px);
   padding: var(--3px) var(--7px);
   font-size: var(--font-size-small);
-  font-weight: @badge-font-weight;
-  color: @badge-color;
-  line-height: @badge-line-height;
+  font-weight: 600;
+  color: var(--white-color);
+  line-height: 1;
   vertical-align: middle;
   white-space: nowrap;
   text-align: center;
-  background-color: @badge-bg;
-  border-radius: @badge-border-radius;
+  background-color: var(--gray-light);
+  border-radius: var(--badge-border-radius-value);
 
   // Empty badges collapse automatically (not available in IE8)
   &:empty {
@@ -35,7 +35,7 @@
   a& {
     &:hover,
     &:focus {
-      color: @badge-link-hover-color;
+      color: var(--white-color);
       text-decoration: none;
       cursor: pointer;
     }
@@ -44,8 +44,8 @@
   // Account for badges in navs
   .list-group-item.active > &,
   .nav-pills > .active > a > & {
-    color: @badge-active-color;
-    background-color: @badge-active-bg;
+    color: var(--link-color);
+    background-color: var(--white-color);
   }
 
   .list-group-item > & {
