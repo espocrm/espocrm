@@ -1,8 +1,8 @@
 .ui-timepicker-wrapper {
 	overflow-y: auto;
-	height: 164px; // Espo
+	height: var(--164px); // Espo
 	width: 6.5em;
-	box-shadow:0 5px 10px rgba(0,0,0,0.2);
+	box-shadow: 0 var(--5px) var(--10px) rgba(0,0,0,0.2);
 	outline: none;
 	z-index: 10001;
 	margin: 0;
@@ -22,14 +22,14 @@
 }
 
 .ui-timepicker-duration {
-	margin-left: 5px;
+	margin-left: var(--5px);
 }
 
 .ui-timepicker-list:hover .ui-timepicker-duration {
 }
 
 .ui-timepicker-list li {
-	padding: 3px 0 3px 5px;
+	padding: var(--3px) 0 var(--3px) var(--5px);
 	cursor: pointer;
 	white-space: nowrap;
 	list-style: none;
