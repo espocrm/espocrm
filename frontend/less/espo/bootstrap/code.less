@@ -1,7 +1,4 @@
-//
 // Code (inline and block)
-// --------------------------------------------------
-
 
 // Inline and block code styles
 code,
@@ -13,19 +10,18 @@ samp {
 
 // Inline code
 code {
-  padding: 2px 4px;
+  padding: var(--2px) var(--4px);
   font-size: 90%;
-  color: @code-color;
-  background-color: @code-bg;
+  color:var(--code-color);
+  background-color: var(--code-bg);
 }
 
 // User input typically entered via keyboard
 kbd {
-  padding: 2px 4px;
+  padding: var(--2px) var(--4px);
   font-size: 90%;
-  color: @kbd-color;
-  background-color: @kbd-bg;
-  box-shadow: inset 0 -1px 0 rgba(0,0,0,.25);
+  color: var(--code-color);
+  background-color: var(--code-bg);
 
   kbd {
     padding: 0;
@@ -38,15 +34,16 @@ kbd {
 // Blocks of code
 pre {
   display: block;
-  padding: calc((var(--line-height-computed) - 1px) / 2);
+  padding: calc((var(--line-height-computed) - var(--1px)) / 2);
   margin: 0 0 var(--line-height-computed-half);
   font-size: calc(var(--font-size-base) - var(--1px));
   line-height: var(--line-height-base);
   word-break: break-all;
   word-wrap: break-word;
-  color: @pre-color;
-  background-color: @pre-bg;
-  border: 1px solid @pre-border-color;
+  color: var(--code-color);
+  background-color: var(--code-bg);
+  border: var(--1px) solid var(--code-border-color);
+  border-radius: var(--border-radius-small);
 
   // Account for some code outputs that place code tags in pre tags
   code {
