@@ -48,9 +48,6 @@
             "translation": "Global.scopeNames",
             "view": "views/portal/fields/quick-create-list"
         },
-        "applicationName": {
-            "type": "varchar"
-        },
         "companyLogo": {
             "type": "image"
         },
