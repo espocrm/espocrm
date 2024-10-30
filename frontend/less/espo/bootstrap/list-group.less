@@ -24,8 +24,7 @@
   padding: 10px 15px;
   // Place the border on the list items and negative margin up for better styling
   margin-bottom: -1px;
-  background-color: @list-group-bg;
-  border: 1px solid @list-group-border;
+  border: 1px solid var(--default-border-color);
 
   // Round the first and last items
   &:first-child {
@@ -43,17 +42,10 @@
 
 a.list-group-item,
 button.list-group-item {
-  color: @list-group-link-color;
-
-  .list-group-item-heading {
-    color: @list-group-link-heading-color;
-  }
-
   // Hover state
   &:hover,
   &:focus {
     text-decoration: none;
-    color: @list-group-link-hover-color;
     background-color: @list-group-hover-bg;
   }
 }
