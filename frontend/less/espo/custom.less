@@ -3905,7 +3905,7 @@ body > .autocomplete-suggestions.text-search-suggestions {
         .iti__country-list {
             margin-top: var(--1px); // To match positioning of other dropdowns.
             z-index: 5;
-            max-height: var(--300px);
+            max-height: calc(var(--300px) + var(--5px));
             background-color: var(--dropdown-bg);
             border: var(--dropdown-border) solid var(--dropdown-border-width);
             border-radius: var(--dropdown-border-radius);
@@ -3926,6 +3926,7 @@ body > .autocomplete-suggestions.text-search-suggestions {
 
             .iti__divider {
                 border-bottom-color: var(--dropdown-divider-bg);
+                margin-bottom: var(--5px);
             }
 
             padding: var(--5px) 0;

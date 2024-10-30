@@ -13,29 +13,10 @@ div.list-kanban > div > table {
         margin: 0;
         overflow: hidden;
 
-        /*&:first-child {
-            > div {
-                border-top-left-radius: var(--border-radius);
-                border-bottom-left-radius: var(--border-radius);
-            }
-        }*/
 
         &:last-child {
             > div {
                 width: 100%;
-
-                /*&:before,
-                &:after {
-                    display: none;
-                    content: "";
-                }*/
-
-                /*.create-button {
-                    right: 14px;
-                }*/
-
-                /*border-top-right-radius: var(--border-radius);
-                border-bottom-right-radius: var(--border-radius);*/
             }
         }
 
@@ -59,104 +40,37 @@ div.list-kanban > div > table {
 
             border-radius: var(--border-radius);
         }
-
-        /*> div:before,
-        > div:after {
-            content: " ";
-            display: inline-block;
-            width: 0;
-            height: 0;
-            border-top-width: 14px;
-            border-left-width: 15px;
-            border-bottom-width: 14px;
-            border-right-width: 0;
-            border-color: var(--label-default-bg);
-            border-style: solid;
-            position: absolute;
-        }
-
-        > div:before {
-            left: ~"calc(100%)";
-            z-index: 2;
-            border-top-color: transparent;
-            border-bottom-color: transparent;
-        }
-
-        > div:after {
-            border-left-color: transparent;
-            left: ~"calc(100% + 2px)";
-        }*/
     }
 
     th.group-header {
         &.group-header-success {
             > div {
                 background-color: var(--brand-success);
-                /*&:before {
-                    border-left-color: var(--brand-success);
-                }*/
             }
         }
-        /*&.group-header-before-success {
-            > div:after {
-                border-color: var(--brand-success) var(--brand-success) var(--brand-success) transparent;
-            }
-        }*/
 
         &.group-header-danger {
             > div {
                 background-color: var(--brand-danger);
-                /*&:before {
-                    border-left-color: var(--brand-danger);
-                }*/
             }
-        }
-        &.group-header-before-danger {
-            /*> div:after {
-                border-color: var(--brand-danger) var(--brand-danger) var(--brand-danger) transparent;
-            }*/
         }
 
         &.group-header-warning {
             > div {
                 background-color: var(--brand-warning);
-                /*&:before {
-                    border-left-color: var(--brand-warning);
-                }*/
             }
-        }
-        &.group-header-before-warning {
-            /*> div:after {
-                border-color: var(--brand-warning) var(--brand-warning) var(--brand-warning) transparent;
-            }*/
         }
 
         &.group-header-primary {
             > div {
                 background-color: var(--brand-primary);
-                /*&:before {
-                    border-left-color: var(--brand-primary);
-                }*/
             }
-        }
-        &.group-header-before-primary {
-            /*> div:after {
-                border-color: var(--brand-primary) var(--brand-primary) var(--brand-primary) transparent;
-            }*/
         }
 
         &.group-header-info {
             > div {
                 background-color: var(--brand-info);
-                /*&:before {
-                    border-left-color: var(--brand-info);
-                }*/
             }
-        }
-        &.group-header-before-info {
-            /*> div:after {
-                border-color: var(--brand-info) var(--brand-info) var(--brand-info) transparent;
-            }*/
         }
     }
 
@@ -170,19 +84,19 @@ div.list-kanban > div > table {
         }
 
         .show-more a {
-            margin: 0 auto 8px;
+            margin: 0 auto var(--8px);
             display: block;
-            height: 20px;
+            height: var(--20px);
 
             > span {
-                top: -4px;
+                top: var(--minus-4px);
                 color: @text-muted;
                 position: relative;
             }
         }
 
         .group-column-list {
-            min-height: 100px;
+            min-height: var(--100px);
         }
 
         .group-column-list.drop-active {
@@ -190,14 +104,14 @@ div.list-kanban > div > table {
         }
 
         .group-column-list.drop-hover {
-            border-top: 2px solid @gray-light;
+            border-top: var(--2px) solid @gray-light;
         }
     }
 
     .item {
         .panel {
             .form-group {
-                margin-bottom: 3px;
+                margin-bottom: var(--3px);
 
                 .field-right-align {
                     text-align: right;
@@ -235,8 +149,8 @@ div.list-kanban > div > table {
             }
 
             .item-menu-container {
-                margin-top: -10px;
-                margin-right: -10px;
+                margin-top: var(--minus-10px);
+                margin-right: var(--minus-10px);
 
                 .dropdown-toggle:focus:focus-visible {
                     outline: none;
@@ -282,11 +196,7 @@ div.list-kanban > div > table {
     }
 
     .kanban-head-placeholder {
-        height: 28px;
-    }
-
-    .kanban-head-container {
-        //box-shadow: var(--default-box-shadow);
+        height: var(--28px);
     }
 
     .kanban-head-container.sticked {
@@ -336,10 +246,10 @@ div.list-kanban > div > table {
                     > th {
                         overflow: visible;
                         min-width: 0;
-                        max-height: 28px;
+                        max-height: var(--28px);
                         .kanban-group-label {
                             display: inline-block;
-                            max-width: ~"calc(100% - 15px)";
+                            max-width: ~"calc(100% - var(--15px))";
                             overflow: hidden;
                             text-overflow: ellipsis;
                             white-space: nowrap;
@@ -347,7 +257,7 @@ div.list-kanban > div > table {
 
                         &:hover {
                             .kanban-group-label {
-                                max-width: ~"calc(100% - 30px)";
+                                max-width: ~"calc(100% - var(--30px))";
                             }
                         }
 

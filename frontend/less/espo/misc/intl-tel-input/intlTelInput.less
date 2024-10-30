@@ -18,7 +18,7 @@
   z-index: 0;
   margin-top: 0 !important;
   margin-bottom: 0 !important;
-  padding-right: 36px;
+  padding-right: var(--36px);
   margin-right: 0;
 }
 .iti__flag-container {
@@ -34,42 +34,43 @@
   display: flex;
   align-items: center;
   height: 100%;
-  padding: 0 6px 0 8px;
+  padding: 0 var(--6px) 0 var(--8px);
 }
 .iti__arrow {
-  margin-left: 6px;
+  margin-left: var(--6px);
   width: 0;
   height: 0;
-  border-left: 3px solid transparent;
-  border-right: 3px solid transparent;
-  border-top: 4px solid #555;
+  border-left: var(--3px) solid transparent;
+  border-right: var(--3px) solid transparent;
+  border-top: var(--4px) solid #555;
 }
 [dir=rtl] .iti__arrow {
-  margin-right: 6px;
+  margin-right: var(--6px);
   margin-left: 0;
 }
 .iti__arrow--up {
   border-top: none;
-  border-bottom: 4px solid #555;
+  border-bottom: var(--4px) solid #555;
 }
 .iti__country-list {
   position: absolute;
   z-index: 2;
   list-style: none;
   padding: 0;
-  margin: 0 0 0 -1px;
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  margin: 0 0 0 var(--minus-1px);
+  box-shadow: var(--1px) var(--1px) var(--4px) rgba(0, 0, 0, 0.2);
   background-color: white;
   border: 1px solid #ccc;
   white-space: nowrap;
-  max-height: 200px;
+  max-height: var(--200px);
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
 .iti__country-list--dropup {
   bottom: 100%;
-  margin-bottom: -1px;
+  margin-bottom: var(--minus-1px);
 }
+
 @media (max-width: 500px) {
   .iti__country-list {
     white-space: normal;
@@ -77,17 +78,17 @@
 }
 .iti__flag-box {
   display: inline-block;
-  width: 20px;
+  width: var(--20px);
 }
 .iti__divider {
-  padding-bottom: 5px;
-  margin-bottom: 5px;
-  border-bottom: 1px solid #ccc;
+  padding-bottom: var(--5px);
+  margin-bottom: var(--5px);
+  border-bottom: var(--1px) solid #ccc;
 }
 .iti__country {
   display: flex;
   align-items: center;
-  padding: 5px 10px;
+  padding: var(--5px) var(--10px);
   outline: none;
 }
 .iti__dial-code {
@@ -97,19 +98,19 @@
   background-color: rgba(0, 0, 0, 0.05);
 }
 .iti__flag-box, .iti__country-name {
-  margin-right: 6px;
+  margin-right: var(--6px);
 }
 [dir=rtl] .iti__flag-box, [dir=rtl] .iti__country-name {
   margin-right: 0;
-  margin-left: 6px;
+  margin-left: var(--6px);
 }
 .iti--allow-dropdown input,
 .iti--allow-dropdown input[type=text],
 .iti--allow-dropdown input[type=tel], .iti--separate-dial-code input,
 .iti--separate-dial-code input[type=text],
 .iti--separate-dial-code input[type=tel] {
-  padding-right: 6px;
-  padding-left: 52px;
+  padding-right: var(--6px);
+  padding-left: var(--50px);
   margin-left: 0;
 }
 [dir=rtl] .iti--allow-dropdown input,
@@ -117,8 +118,8 @@
 [dir=rtl] .iti--allow-dropdown input[type=tel], [dir=rtl] .iti--separate-dial-code input,
 [dir=rtl] .iti--separate-dial-code input[type=text],
 [dir=rtl] .iti--separate-dial-code input[type=tel] {
-  padding-right: 52px;
-  padding-left: 6px;
+  padding-right: var(--50px);
+  padding-left: var(--6px);
   margin-right: 0;
 }
 .iti--allow-dropdown .iti__flag-container, .iti--separate-dial-code .iti__flag-container {
@@ -147,11 +148,11 @@
   background-color: rgba(0, 0, 0, 0.05);
 }
 .iti--separate-dial-code.iti--show-flags .iti__selected-dial-code {
-  margin-left: 6px;
+  margin-left: var(--6px);
 }
 [dir=rtl] .iti--separate-dial-code.iti--show-flags .iti__selected-dial-code {
   margin-left: 0;
-  margin-right: 6px;
+  margin-right: var(--6px);
 }
 .iti--container {
   position: absolute;
@@ -165,10 +166,10 @@
 }
 
 .iti-mobile .iti--container {
-  top: 30px;
-  bottom: 30px;
-  left: 30px;
-  right: 30px;
+  top: var(--30px);
+  bottom: var(--30px);
+  left: var(--30px);
+  right: var(--30px);
   position: fixed;
 }
 .iti-mobile .iti__country-list {
@@ -1260,12 +1261,12 @@
 }
 
 .iti__flag {
-  height: 15px;
+  height: var(--15px);
   box-shadow: 0px 0px 1px 0px #888;
   background-image: url("../img/flags.png?1");
   background-repeat: no-repeat;
   background-color: #dbdbdb;
-  background-position: 20px 0;
+  background-position: var(--20px) 0;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .iti__flag {
