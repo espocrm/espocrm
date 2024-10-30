@@ -19,6 +19,7 @@
     {
         "label": "User Interface",
         "rows": [
+            [{"name": "applicationName"}, false],
             [{"name": "companyLogo"}, {"name": "theme"}],
             [{"name": "layoutSet"}, false],
             [{"name": "tabList"}, {"name": "quickCreateList"}],
