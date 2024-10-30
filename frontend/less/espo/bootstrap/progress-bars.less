@@ -1,84 +1,54 @@
-//
 // Progress bars
-// --------------------------------------------------
 
 
-// Bar animations
-// -------------------------
-
-// WebKit
-@-webkit-keyframes progress-bar-stripes {
-  from  { background-position: 40px 0; }
-  to    { background-position: 0 0; }
-}
-
-// Spec and IE10+
 @keyframes progress-bar-stripes {
-  from  { background-position: 40px 0; }
+  from  { background-position: var(--40px) 0; }
   to    { background-position: 0 0; }
 }
 
-
-// Bar itself
-// -------------------------
-
-// Outer container
 .progress {
   overflow: hidden;
   height: var(--line-height-computed);
   margin-bottom: var(--line-height-computed);
-  background-color: @progress-bg;
+  background-color: var(--default-heading-bg-color);
 }
 
 // Bar of progress
 .progress-bar {
   float: left;
-  width: 0%;
+  width: 0;
   height: 100%;
   font-size: var(--font-size-small);
   line-height: var(--line-height-computed);
-  color: @progress-bar-color;
+  color: var(--white-color);
   text-align: center;
-  background-color: @progress-bar-bg;
+  background-color: var(--brand-primary);
   .transition(width .6s ease);
 }
 
-// Striped bars
-//
-// `.progress-striped .progress-bar` is deprecated as of v3.2.0 in favor of the
-// `.progress-bar-striped` class, which you just add to an existing
-// `.progress-bar`.
 .progress-striped .progress-bar,
 .progress-bar-striped {
   #gradient > .striped();
-  background-size: 40px 40px;
+  background-size: var(--40px) var(--40px);
 }
 
-// Call animation for the active one
-//
-// `.progress.active .progress-bar` is deprecated as of v3.2.0 in favor of the
-// `.progress-bar.active` approach.
 .progress.active .progress-bar,
 .progress-bar.active {
   .animation(progress-bar-stripes 2s linear infinite);
 }
 
-
-// Variations
-// -------------------------
-
 .progress-bar-success {
-  .progress-bar-variant(@progress-bar-success-bg);
+  .progress-bar-variant(var(--brand-success));
 }
 
 .progress-bar-info {
-  .progress-bar-variant(@progress-bar-info-bg);
+  .progress-bar-variant(var(--brand-info));
 }
 
 .progress-bar-warning {
-  .progress-bar-variant(@progress-bar-warning-bg);
+  .progress-bar-variant(var(--brand-warning));
 }
 
 .progress-bar-danger {
-  .progress-bar-variant(@progress-bar-danger-bg);
+  .progress-bar-variant(var(--brand-danger));
 }
