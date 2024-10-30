@@ -27,7 +27,7 @@
     {
         "rows": [
             [{"name": "companyLogo"}, {"name": "theme"}],
-            [{"name": "layoutSet"}, false],
+            [{"name": "layoutSet"}, {"name": "applicationName"}],
             [{"name": "tabList"}, {"name": "quickCreateList"}],
             [{"name": "dashboardLayout", "fullWidth": true}]
         ],

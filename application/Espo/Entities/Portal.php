@@ -40,6 +40,7 @@ class Portal extends \Espo\Core\ORM\Entity
      * @var string[]
      */
     protected $settingsAttributeList = [
+        'applicationName',
         'companyLogoId',
         'tabList',
         'quickCreateList',
