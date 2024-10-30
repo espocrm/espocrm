@@ -185,9 +185,6 @@ class ListRecordView extends View {
     /** @protected */
     checkboxColumnWidth = 40
 
-    /** @protected */
-    minColumnWidth = 100
-
     /**
      * A button. Handled by a class method `action{Name}` or a handler.
      *
@@ -3483,58 +3480,6 @@ class ListRecordView extends View {
      */
     isIdChecked(id) {
         return this.checkedList.indexOf(id) !== -1;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    getTableMinWidth() {
-        if (!this.listLayout) {
-            return;
-        }
-
-        const factor = this._fontSizeFactor;
-
-        let totalWidth = 0;
-        let totalWidthPx = 0;
-        let emptyCount = 0;
-        let columnCount = 0;
-
-        this.listLayout.forEach((item) => {
-            columnCount ++;
-
-            if (item.widthPx) {
-                totalWidthPx += item.widthPx;
-
-                return;
-            }
-
-            if (item.width) {
-                totalWidth += item.width;
-
-                return;
-            }
-
-            emptyCount ++;
-        });
-
-        if (this.rowActionsView && !this.rowActionsDisabled) {
-            totalWidthPx += this.rowActionsColumnWidth;
-        }
-
-        if (this.checkboxes) {
-            totalWidthPx += this.checkboxColumnWidth;
-        }
-
-        let minWidth;
-
-        if (totalWidth >= 100 * factor) {
-            minWidth = columnCount * this.minColumnWidth * factor;
-        }
-        else {
-            minWidth = (totalWidthPx + this.minColumnWidth * emptyCount * factor) / (1 - totalWidth / 100);
-            minWidth = Math.round(minWidth);
-        }
-
-        return minWidth;
     }
 
     setupRowActionDefs() {
