@@ -1,15 +1,9 @@
-//
 // Panels
-// --------------------------------------------------
 
-
-// Base class
 .panel {
   margin-bottom: var(--line-height-computed);
   background-color: @panel-bg;
   border: 1px solid transparent;
-  //border-radius: @panel-border-radius;
-  .box-shadow(0 1px 1px rgba(0,0,0,.05));
 }
 
 // Panel contents
@@ -20,8 +14,7 @@
 // Optional heading
 .panel-heading {
   padding: var(--6px) var(--10px);
-  border-bottom: 1px solid transparent;
-  //.border-top-radius((@panel-border-radius));
+  border-bottom: var(--1px) solid transparent;
 
   > .dropdown .dropdown-toggle {
     color: inherit;
@@ -47,15 +40,11 @@
 .panel-footer {
   padding: var(--6px) var(--10px);
   background-color: @panel-footer-bg;
-  border-top: 1px solid @panel-inner-border;
-  //.border-bottom-radius((@panel-border-radius - 1));
+  border-top: var(--1px) solid @panel-inner-border;
 }
 
 
 // List groups in panels
-//
-// By default, space out list group content from panel headings to account for
-// any kind of custom content between the two.
 
 .panel {
   > .list-group,
@@ -71,7 +60,6 @@
     &:first-child {
       .list-group-item:first-child {
         border-top: 0;
-        //.border-top-radius((@panel-border-radius - 1));
       }
     }
 
@@ -79,7 +67,6 @@
     &:last-child {
       .list-group-item:last-child {
         border-bottom: 0;
-        //.border-bottom-radius((@panel-border-radius - 1));
       }
     }
   }
@@ -100,9 +87,6 @@
 }
 
 // Tables in panels
-//
-// Place a non-bordered `.table` within a panel (not within a `.panel-body`) and
-// watch it go full width.
 
 .panel {
   > .table,
@@ -115,7 +99,7 @@
   > .panel-body + .table-responsive,
   > .table + .panel-body,
   > .table-responsive + .panel-body {
-    border-top: 1px solid @table-border-color;
+    border-top: var(--1px) solid @table-border-color;
   }
   > .table > tbody:first-child > tr:first-child th,
   > .table > tbody:first-child > tr:first-child td {
@@ -164,21 +148,16 @@
 }
 
 
-// Collapsible panels (aka, accordion)
-//
-// Wrap a series of panels in `.panel-group` to turn them into an accordion with
-// the help of our collapse JavaScript plugin.
+// Accordion
 
 .panel-group {
   margin-bottom: var(--line-height-computed);
 
-  // Tighten up margin so it's only between panels
   .panel {
     margin-bottom: 0;
-    //border-radius: @panel-border-radius;
 
     + .panel {
-      margin-top: 5px;
+      margin-top: var(--5px);
     }
   }
 
@@ -187,20 +166,19 @@
 
     + .panel-collapse > .panel-body,
     + .panel-collapse > .list-group {
-      border-top: 1px solid @panel-inner-border;
+      border-top: var(--1px) solid @panel-inner-border;
     }
   }
 
   .panel-footer {
     border-top: 0;
     + .panel-collapse .panel-body {
-      border-bottom: 1px solid @panel-inner-border;
+      border-bottom: var(--1px) solid @panel-inner-border;
     }
   }
 }
 
 
-// Contextual variations
 .panel-default {
   .panel-variant(@panel-default-border; @panel-default-text; @panel-default-border);
 }
