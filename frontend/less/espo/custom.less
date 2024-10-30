@@ -10,7 +10,7 @@
 html {
     height: 100%;
 
-    &:not(:has(> body > .container > .container-centering)) {
+    &:not(:has(> body > .container > .container-centering)):not(:has(.modal-backdrop)) {
         scrollbar-gutter: stable;
         overflow-y: scroll;
     }
