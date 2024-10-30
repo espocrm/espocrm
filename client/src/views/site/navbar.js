@@ -99,6 +99,9 @@ class NavbarSiteView extends View {
         };
     }
 
+    /**
+     * @private
+     */
     handleGroupDropdownClick(e) {
         const $target = $(e.currentTarget).parent();
 
@@ -123,6 +126,9 @@ class NavbarSiteView extends View {
         this.handleGroupDropdownOpen($target);
     }
 
+    /**
+     * @private
+     */
     handleGroupMenuPosition($menu, $target) {
         if (this.navbarAdjustmentHandler && this.navbarAdjustmentHandler.handleGroupMenuPosition()) {
             this.handleGroupMenuPosition($menu, $target);
@@ -172,6 +178,9 @@ class NavbarSiteView extends View {
         this.handleGroupMenuScrolling($menu, $target, maxHeight);
     }
 
+    /**
+     * @private
+     */
     handleGroupMenuScrolling($menu, $target, maxHeight) {
         $menu.css({
             maxHeight: maxHeight + 'px',
@@ -194,6 +203,9 @@ class NavbarSiteView extends View {
         });
     }
 
+    /**
+     * @private
+     */
     handleGroupDropdownOpen($target) {
         const $menu = $target.find('.dropdown-menu');
 
@@ -210,6 +222,9 @@ class NavbarSiteView extends View {
         });
     }
 
+    /**
+     * @private
+     */
     handleGroupDropdownInMoreOpen($target) {
         this.$el.find('.tab-group.tab.dropdown').removeClass('open');
 
@@ -240,10 +255,16 @@ class NavbarSiteView extends View {
         }
     }
 
+    /**
+     * @private
+     */
     isCollapsableVisible() {
         return this.$el.find('.navbar-body').hasClass('in');
     }
 
+    /**
+     * @private
+     */
     toggleCollapsable() {
         if (this.isCollapsableVisible()) {
             this.hideCollapsable();
@@ -252,20 +273,33 @@ class NavbarSiteView extends View {
         }
     }
 
+    /**
+     * @private
+     */
     hideCollapsable() {
         this.$el.find('.navbar-body').removeClass('in');
     }
 
+    /**
+     * @private
+     */
     showCollapsable() {
         this.$el.find('.navbar-body').addClass('in');
     }
 
+    /**
+     * @private
+     */
     xsCollapse() {
         this.hideCollapsable();
     }
 
+    /**
+     * @private
+     * @return {boolean}
+     */
     isMinimized() {
-        return this.$body.hasClass('minimized');
+        return document.body.classList.contains('minimized');
     }
 
     switchSideMenu() {
@@ -281,13 +315,13 @@ class NavbarSiteView extends View {
     openSideMenu() {
         this.isSideMenuOpened = true;
 
-        this.$body.addClass('side-menu-opened');
+        document.body.classList.add('side-menu-opened');
 
         this.$sideMenuBackdrop =
             $('<div>')
                 .addClass('side-menu-backdrop')
                 .click(() => this.closeSideMenu())
-                .appendTo(this.$body);
+                .appendTo(document.body);
 
         this.$sideMenuBackdrop2 =
             $('<div>')
@@ -296,27 +330,32 @@ class NavbarSiteView extends View {
                 .appendTo(this.$navbarRightContainer);
     }
 
+    /**
+     * @private
+     */
     closeSideMenu() {
         this.isSideMenuOpened = false;
-        this.$body.removeClass('side-menu-opened');
+
+        document.body.classList.remove('side-menu-opened')
+
         this.$sideMenuBackdrop.remove();
         this.$sideMenuBackdrop2.remove();
     }
 
+    /**
+     * @private
+     */
     switchMinimizer() {
-        const $body = this.$body;
-
         if (this.isMinimized()) {
             if (this.isSideMenuOpened) {
                 this.closeSideMenu();
             }
 
-            $body.removeClass('minimized');
+            document.body.classList.remove('minimized');
 
             this.getStorage().set('state', 'siteLayoutState', 'expanded');
-        }
-        else {
-            $body.addClass('minimized');
+        }  else {
+            document.body.classList.add('minimized');
 
             this.getStorage().set('state', 'siteLayoutState', 'collapsed');
         }
@@ -438,7 +477,7 @@ class NavbarSiteView extends View {
             $(window).off('scroll.navbar');
             $(window).off('scroll.navbar-tab-group');
 
-            this.$body.removeClass('has-navbar');
+            document.body.classList.remove('has-navbar');
         });
 
         this.setupMenu();
@@ -814,7 +853,7 @@ class NavbarSiteView extends View {
             }
         });
 
-        this.$body.css('minHeight', minHeight + 'px');
+        document.body.style.minHeight = minHeight + 'px';
     }
 
     /**
@@ -862,16 +901,15 @@ class NavbarSiteView extends View {
             }
         });
 
-        this.$body.css('minHeight', minHeight + 'px');
+        document.body.style.minHeight = minHeight + 'px';
     }
 
     afterRender() {
-        this.$body = $('body');
-        this.$tabs = this.$el.find('ul.tabs');
+         this.$tabs = this.$el.find('ul.tabs');
         this.$more = this.$tabs.find('li.more > ul');
         this.$minimizer = this.$el.find('a.minimizer');
 
-        this.$body.addClass('has-navbar');
+        document.body.classList.add('has-navbar');
 
         const $moreDd = this.$moreDropdown = this.$tabs.find('li.more');
 
@@ -901,7 +939,7 @@ class NavbarSiteView extends View {
         }
 
         if (layoutMinimized) {
-            this.$body.addClass('minimized');
+            document.body.classList.add('minimized');
         }
 
         this.$navbar = this.$el.find('> .navbar');
