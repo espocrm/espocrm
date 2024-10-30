@@ -135,30 +135,6 @@ dd {
   margin-left: 0; // Undo browser default
 }
 
-// Horizontal description lists
-//
-// Defaults to being stacked without any of the below styles applied, until the
-// grid breakpoint is reached (default of ~768px).
-
-.dl-horizontal {
-  dd {
-    &:extend(.clearfix all); // Clear the floated `dt` if an empty `dd` is present
-  }
-
-  @media (min-width: @dl-horizontal-breakpoint) {
-    dt {
-      float: left;
-      width: (@dl-horizontal-offset - 20);
-      clear: left;
-      text-align: right;
-      .text-overflow();
-    }
-    dd {
-      margin-left: @dl-horizontal-offset;
-    }
-  }
-}
-
 
 // Misc
 // -------------------------
@@ -168,7 +144,7 @@ abbr[title],
 // Add data-* attribute to help out our tooltip plugin, per https://github.com/twbs/bootstrap/issues/5257
 abbr[data-original-title] {
   cursor: help;
-  border-bottom: 1px dotted @abbr-border-color;
+  border-bottom: var(--1px) dotted @abbr-border-color;
 }
 .initialism {
   font-size: 90%;

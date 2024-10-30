@@ -26,31 +26,6 @@ dd {
   margin-left: initial;
 }
 
-// Horizontal description lists
-//
-// Defaults to being stacked without any of the below styles applied, until the
-// grid breakpoint is reached (default of ~768px).
-
-.dl-horizontal {
-
-  @media (min-width: @grid-float-breakpoint) {
-    dt {
-      float: right;
-      clear: right;
-      text-align: left;
-    }
-    dd {
-      margin-right: @component-offset-horizontal;
-      margin-left: 0;
-    }
-  }
-  @media (max-width: @grid-float-breakpoint) {
-    dt {
-      text-align: right;
-    }
-  }
-}
-
 // Blockquotes
 blockquote {
   border-right: 5px solid @blockquote-border-color;

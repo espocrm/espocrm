@@ -1,6 +1,4 @@
-//
 // Input groups
-// --------------------------------------------------
 
 // Base styles
 // -------------------------
@@ -72,17 +70,15 @@
   vertical-align: middle; // Match the inputs
 }
 
-// Text input groups
-// -------------------------
 .input-group-addon {
   padding: var(--padding-base-vertical) var(--padding-base-horizontal);
   font-size: var(--font-size-base);
   font-weight: normal;
   line-height: 1;
-  color: @input-color;
+  color: var(--input-color);
   text-align: center;
-  background-color: @input-group-addon-bg;
-  border: 1px solid @input-group-addon-border-color;
+  background-color: var(--gray-lighter);
+  border: var(--1px) solid var(--input-border);
 
   // Sizing
   &.input-sm {
@@ -141,7 +137,7 @@
   > .btn {
     position: relative;
     + .btn {
-      margin-left: -1px;
+      margin-left: var(--minus-1px);
     }
     // Bring the "active" button to the front
     &:hover,
@@ -155,14 +151,14 @@
   &:first-child {
     > .btn,
     > .btn-group {
-      margin-right: -1px;
+      margin-right: var(--minus-1px);
     }
   }
   &:last-child {
     > .btn,
     > .btn-group {
       z-index: 2;
-      margin-left: -1px;
+      margin-left: var(--minus-1px);
     }
   }
 }
