@@ -127,6 +127,8 @@
     --modal-title-padding: var(--padding-base-horizontal);
     --modal-title-line-height: var(--27px);
 
+    --popover-arrow-width: var(--10px);
+
     // @todo Compute by adding font-size, two vertical paddings and two borders?
     --input-height-base: var(--35px);
     --input-height-small: var(--29px);
@@ -140,6 +142,9 @@
     --record-grid-max-width: var(--1300px);
 
     // computed
+    --popover-arrow-width-negative: calc(var(--popover-arrow-width) * -1);
+    --popover-arrow-outer-width: calc(var(--popover-arrow-width) + var(--1px));
+    --popover-arrow-outer-width-negative: calc(var(--popover-arrow-outer-width) * -1);
 
     --navbar-padding-vertical: calc((var(--navbar-height) - var(--line-height-computed)) / 2);
     --line-height-computed-half: calc(var(--line-height-computed) / 2);

@@ -1,8 +1,3 @@
-//
-// Popovers
-// --------------------------------------------------
-
-
 .popover {
   left: auto;
   text-align: right;
@@ -12,22 +7,21 @@
   &.top > .arrow {
     right: 50%;
     left: auto;
-    margin-right: -@popover-arrow-outer-width;
+    margin-right: var(--popover-arrow-outer-width-negative);
     margin-left: auto;
     &:after {
-      margin-right: -@popover-arrow-width;
+      margin-right: var(--popover-arrow-width-negative);
       margin-left: auto;
     }
   }
   &.bottom > .arrow {
     right: 50%;
     left: auto;
-    margin-right: -@popover-arrow-outer-width;
+    margin-right: var(--popover-arrow-outer-width-negative);
     margin-left: auto;
     &:after {
-      margin-right: -@popover-arrow-width;
+      margin-right: var(--popover-arrow-width-negative);
       margin-left: auto;
     }
   }
-
 }

@@ -6,22 +6,19 @@
   left: 0;
   z-index: @zindex-popover;
   display: none;
-  max-width: @popover-max-width;
   padding: var(--1px);
   // Our parent element can be arbitrary since popovers are by default inserted as a sibling of their target element.
   // So reset our font and text properties to avoid inheriting weird values.
   .reset-text();
   font-size: var(--font-size-base);
 
-  background-color: @popover-bg;
+  background-color: var(--popover-bg);
   background-clip: padding-box;
-  border: var(--1px) solid @popover-border-color;
 
-  // Offset the popover to account for the popover arrow
-  &.top     { margin-top: -@popover-arrow-width; }
-  &.right   { margin-left: @popover-arrow-width; }
-  &.bottom  { margin-top: @popover-arrow-width; }
-  &.left    { margin-left: -@popover-arrow-width; }
+  &.top     { margin-top: var(--popover-arrow-width-negative); }
+  &.right   { margin-left: var(--popover-arrow-width); }
+  &.bottom  { margin-top: var(--popover-arrow-width); }
+  &.left    { margin-left: var(--popover-arrow-width-negative); }
 }
 
 .popover-title {
@@ -46,69 +43,69 @@
   }
 }
 .popover > .arrow {
-  border-width: @popover-arrow-outer-width;
+  border-width: var(--popover-arrow-outer-width);
 }
 .popover > .arrow:after {
-  border-width: @popover-arrow-width;
+  border-width: var(--popover-arrow-width);
   content: "";
 }
 
 .popover {
   &.top > .arrow {
     left: 50%;
-    margin-left: -@popover-arrow-outer-width;
+    margin-left: var(--popover-arrow-outer-width-negative);
     border-bottom-width: 0;
-    border-top-color: @popover-arrow-outer-color;
-    bottom: -@popover-arrow-outer-width;
+    border-top-color: var(--dropdown-border);
+    bottom: var(--popover-arrow-outer-width-negative);
     &:after {
       content: " ";
       bottom: var(--1px);
-      margin-left: -@popover-arrow-width;
+      margin-left: var(--popover-arrow-width-negative);
       border-bottom-width: 0;
-      border-top-color: @popover-arrow-color;
+      border-top-color: var(--dropdown-bg);
     }
   }
   &.right > .arrow {
     top: 50%;
-    left: -@popover-arrow-outer-width;
-    margin-top: -@popover-arrow-outer-width;
+    left: var(--popover-arrow-outer-width-negative);
+    margin-top: var(--popover-arrow-outer-width-negative);
     border-left-width: 0;
-    border-right-color: @popover-arrow-outer-color;
+    border-right-color: var(--dropdown-border);
     &:after {
       content: " ";
-      left: 1px;
-      bottom: -@popover-arrow-width;
+      left: var(--1px);
+      bottom: var(--popover-arrow-width-negative);
       border-left-width: 0;
-      border-right-color: @popover-arrow-color;
+      border-right-color: var(--dropdown-bg);
     }
   }
   &.bottom > .arrow {
     left: 50%;
-    margin-left: -@popover-arrow-outer-width;
+    margin-left: var(--popover-arrow-outer-width-negative);
     border-top-width: 0;
-    border-bottom-color: @popover-arrow-outer-color;
-    top: -@popover-arrow-outer-width;
+    border-bottom-color: var(--dropdown-border);
+    top: var(--popover-arrow-outer-width-negative);
     &:after {
       content: " ";
       top: var(--1px);
-      margin-left: -@popover-arrow-width;
+      margin-left: var(--popover-arrow-width-negative);
       border-top-width: 0;
-      border-bottom-color: @popover-arrow-color;
+      border-bottom-color: var(--dropdown-bg);
     }
   }
 
   &.left > .arrow {
     top: 50%;
-    right: -@popover-arrow-outer-width;
-    margin-top: -@popover-arrow-outer-width;
+    right: var(--popover-arrow-outer-width-negative);
+    margin-top: var(--popover-arrow-outer-width-negative);
     border-right-width: 0;
-    border-left-color: @popover-arrow-outer-color;
+    border-left-color: var(--dropdown-border);
     &:after {
       content: " ";
       right: var(--1px);
       border-right-width: 0;
-      border-left-color: @popover-arrow-color;
-      bottom: -@popover-arrow-width;
+      border-left-color: var(--dropdown-bg);
+      bottom: var(--popover-arrow-width-negative);
     }
   }
 }
