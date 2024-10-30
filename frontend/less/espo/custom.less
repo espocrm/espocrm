@@ -12,11 +12,12 @@ html {
 
     &:not(:has(> body > .container > .container-centering)):not(:has(.modal-backdrop)) {
         scrollbar-gutter: stable;
-        overflow-y: scroll;
+        // Issue with sortable. Commented.
+        //overflow-y: scroll;
     }
 
     &:has(> body > .container > #main > .no-window-scroll) {
-        overflow-y: unset;
+        //overflow-y: unset;
     }
 }
 
