@@ -1,11 +1,5 @@
-//
 // Tables
-// --------------------------------------------------
 
-
-table {
-  //background-color: @table-bg;
-}
 caption {
   padding-top: var(--table-cell-padding);
   padding-bottom: var(--table-cell-padding);
@@ -15,9 +9,6 @@ caption {
 th {
   text-align: left;
 }
-
-
-// Baseline styles
 
 .table {
   width: 100%;
@@ -33,14 +24,14 @@ th {
         padding: var(--table-cell-padding);
         line-height: var(--line-height-base);
         vertical-align: top;
-        border-top: 1px solid @table-border-color;
+        border-top: var(--1px) solid @table-border-color;
       }
     }
   }
   // Bottom align for column headings
   > thead > tr > th {
     vertical-align: bottom;
-    border-bottom: 2px solid @table-border-color;
+    border-bottom: var(--2px) solid @table-border-color;
   }
   // Remove top border from thead by default
   > caption + thead,
@@ -55,7 +46,7 @@ th {
   }
   // Account for multiple tbody instances
   > tbody + tbody {
-    border-top: 2px solid @table-border-color;
+    border-top: var(--2px) solid @table-border-color;
   }
 
   // Nesting
@@ -64,52 +55,39 @@ th {
   }
 }
 
-// Bordered version
-//
-// Add borders all around the table and between all the columns.
 
 .table-bordered {
-  border: 1px solid @table-border-color;
+  border: var(--1px) solid @table-border-color;
   > thead,
   > tbody,
   > tfoot {
     > tr {
       > th,
       > td {
-        border: 1px solid @table-border-color;
+        border:  var(--1px) solid @table-border-color;
       }
     }
   }
   > thead > tr {
     > th,
     > td {
-      border-bottom-width: 2px;
+      border-bottom-width:  var(--2px);
     }
   }
 }
 
 
-// Zebra-striping
-//
-// Default zebra-stripe styles (alternating gray and transparent backgrounds)
-
 .table-striped {
   > tbody > tr:nth-of-type(odd) {
-    background-color: @table-bg-accent;
+    background-color: var(--table-bg-accent);
   }
 }
-
-
-// Hover effect
-//
-// Placed here since it has to come after the potential zebra striping
 
 .table-hover {
   > tbody > tr:hover {
     background-color: @table-bg-hover;
   }
 }
-
 
 // Table cell sizing
 //
@@ -137,9 +115,7 @@ table {
 // Exact selectors below required to override `.table-striped` and prevent
 // inheritance to nested tables.
 
-// Generate the contextual variants
 .table-row-variant-espo(active; @table-bg-active; @table-bg-active-5);
-
 .table-row-variant-espo(success; @state-success-bg; @state-success-bg-5);
 .table-row-variant-espo(info; @state-info-bg; @state-info-bg-5);
 .table-row-variant-espo(warning; @state-warning-bg; var(--state-warning-bg-5));
@@ -161,7 +137,7 @@ table {
     margin-bottom: calc(var(--line-height-computed) * 0.75);
     overflow-y: hidden;
     -ms-overflow-style: -ms-autohiding-scrollbar;
-    border: 1px solid @table-border-color;
+    border:  var(--1px) solid @table-border-color;
 
     // Tighten up spacing
     > .table {
