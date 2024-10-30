@@ -18,7 +18,7 @@
                         {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}
                         title="{{labelText}}"
                     >
-                        <div class="left" style="width: calc(100% - 17px);">
+                        <div class="left" style="width: calc(100% - var(--17px));">
                             <span>{{labelText}}</span>
                         </div>
                         {{#if ../editable}}
@@ -47,7 +47,7 @@
                         {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}
                         title="{{labelText}}"
                     >
-                        <div class="left" style="width: calc(100% - 17px);">
+                        <div class="left" style="width: calc(100% - var(--17px));">
                             <span>{{labelText}}</span>
                         </div>
                         {{#if ../editable}}
