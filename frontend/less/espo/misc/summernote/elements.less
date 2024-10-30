@@ -33,10 +33,10 @@
   filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",rgb(@stop,@stop,@stop),rgb(@start,@start,@start)));
 }
 .bordered(@top-color: #EEE, @right-color: #EEE, @bottom-color: #EEE, @left-color: #EEE) {
-  border-top: solid 1px @top-color;
-  border-left: solid 1px @left-color;
-  border-right: solid 1px @right-color;
-  border-bottom: solid 1px @bottom-color;
+  border-top: solid var(--1px) @top-color;
+  border-left: solid var(--1px) @left-color;
+  border-right: solid var(--1px) @right-color;
+  border-bottom: solid var(--1px) @bottom-color;
 }
 .drop-shadow(@x-axis: 0, @y-axis: 1px, @blur: 2px, @alpha: 0.1) {
   box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
@@ -77,7 +77,7 @@
 .user-select(@argument: none) {
   user-select: @argument;
 }
-.columns(@colwidth: 250px, @colcount: 0, @colgap: 50px, @columnRuleColor: #EEE, @columnRuleStyle: solid, @columnRuleWidth: 1px) {
+.columns(@colwidth: var(--256px), @colcount: 0, @colgap: var(--50px), @columnRuleColor: #EEE, @columnRuleStyle: solid, @columnRuleWidth: var(--1px)) {
   column-width: @colwidth;
   column-count: @colcount;
   column-gap: @colgap;
