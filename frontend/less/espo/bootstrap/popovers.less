@@ -1,7 +1,4 @@
-//
 // Popovers
-// --------------------------------------------------
-
 
 .popover {
   position: absolute;
@@ -10,7 +7,7 @@
   z-index: @zindex-popover;
   display: none;
   max-width: @popover-max-width;
-  padding: 1px;
+  padding: var(--1px);
   // Our parent element can be arbitrary since popovers are by default inserted as a sibling of their target element.
   // So reset our font and text properties to avoid inheriting weird values.
   .reset-text();
@@ -18,8 +15,7 @@
 
   background-color: @popover-bg;
   background-clip: padding-box;
-  border: 1px solid @popover-border-color;
-  .box-shadow(0 5px 10px rgba(0,0,0,.2));
+  border: var(--1px) solid @popover-border-color;
 
   // Offset the popover to account for the popover arrow
   &.top     { margin-top: -@popover-arrow-width; }
@@ -29,18 +25,14 @@
 }
 
 .popover-title {
-  margin: 0; // reset heading margin
-  padding: 8px 14px;
+  margin: 0;
+  padding: var(--9px) var(--14px);
   font-size: var(--font-size-base);
 }
 
 .popover-content {
-  padding: 9px 14px;
+  padding: var(--9px) var(--14px);
 }
-
-// Arrows
-//
-// .arrow is outer, .arrow:after is inner
 
 .popover > .arrow {
   &,
@@ -66,12 +58,11 @@
     left: 50%;
     margin-left: -@popover-arrow-outer-width;
     border-bottom-width: 0;
-    border-top-color: @popover-arrow-outer-fallback-color; // IE8 fallback
     border-top-color: @popover-arrow-outer-color;
     bottom: -@popover-arrow-outer-width;
     &:after {
       content: " ";
-      bottom: 1px;
+      bottom: var(--1px);
       margin-left: -@popover-arrow-width;
       border-bottom-width: 0;
       border-top-color: @popover-arrow-color;
@@ -82,7 +73,6 @@
     left: -@popover-arrow-outer-width;
     margin-top: -@popover-arrow-outer-width;
     border-left-width: 0;
-    border-right-color: @popover-arrow-outer-fallback-color; // IE8 fallback
     border-right-color: @popover-arrow-outer-color;
     &:after {
       content: " ";
@@ -96,12 +86,11 @@
     left: 50%;
     margin-left: -@popover-arrow-outer-width;
     border-top-width: 0;
-    border-bottom-color: @popover-arrow-outer-fallback-color; // IE8 fallback
     border-bottom-color: @popover-arrow-outer-color;
     top: -@popover-arrow-outer-width;
     &:after {
       content: " ";
-      top: 1px;
+      top: var(--1px);
       margin-left: -@popover-arrow-width;
       border-top-width: 0;
       border-bottom-color: @popover-arrow-color;
@@ -113,11 +102,10 @@
     right: -@popover-arrow-outer-width;
     margin-top: -@popover-arrow-outer-width;
     border-right-width: 0;
-    border-left-color: @popover-arrow-outer-fallback-color; // IE8 fallback
     border-left-color: @popover-arrow-outer-color;
     &:after {
       content: " ";
-      right: 1px;
+      right: var(--1px);
       border-right-width: 0;
       border-left-color: @popover-arrow-color;
       bottom: -@popover-arrow-width;
