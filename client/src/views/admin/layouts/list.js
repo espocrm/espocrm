@@ -286,7 +286,7 @@ class LayoutListView extends LayoutRowsView {
 
         const layoutIgnoreList = model.getFieldParam(name, 'layoutIgnoreList') || [];
 
-        if (layoutIgnoreList.includes(realType)) {
+        if (layoutIgnoreList.includes(realType) || layoutIgnoreList.includes(this.type)) {
             return false;
         }
 
