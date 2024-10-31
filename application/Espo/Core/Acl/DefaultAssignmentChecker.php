@@ -297,26 +297,15 @@ class DefaultAssignmentChecker implements AssignmentChecker
             return true;
         }
 
-        $toProcess = false;
-
-        if (!$entity->isNew()) {
-            // Might be on purpose.
-            $entity->getLinkMultipleIdList($field);
-
-            if ($entity->isAttributeChanged($idsAttr)) {
-                $toProcess = true;
-            }
-        } else {
-            $toProcess = true;
-        }
-
-        $userIdList = $entity->getLinkMultipleIdList($field);
+        $toProcess = $entity->isNew() || $entity->isAttributeChanged($idsAttr);
 
         if (!$toProcess) {
             return true;
         }
 
-        if ($userIdList === []) {
+        $userIds = $entity->getLinkMultipleIdList($field);
+
+        if ($userIds === []) {
             if ($assignmentPermission === Table::LEVEL_NO && !$user->isApi()) {
                 return false;
             }
@@ -332,22 +321,14 @@ class DefaultAssignmentChecker implements AssignmentChecker
             return $this->isPermittedUsersLevelTeam($user, $entity, $field);
         }
 
-        /** @phpstan-ignore-next-line */
-        return true;
+        return false;
     }
 
     private function isPermittedUsersLevelNo(User $user, CoreEntity $entity, string $field): bool
     {
-        $idsAttr = $field . 'Ids';
+        $userIds = $this->getAddedLinkMultipleIds($entity, $field);
 
-        $userIdList = $entity->getLinkMultipleIdList($field);
-        $fetchedAssignedUserIdList = $entity->getFetched($idsAttr);
-
-        foreach ($userIdList as $userId) {
-            if (!$entity->isNew() && in_array($userId, $fetchedAssignedUserIdList)) {
-                continue;
-            }
-
+        foreach ($userIds as $userId) {
             if ($user->getId() !== $userId) {
                 return false;
             }
@@ -358,20 +339,11 @@ class DefaultAssignmentChecker implements AssignmentChecker
 
     private function isPermittedUsersLevelTeam(User $user, CoreEntity $entity, string $field): bool
     {
-        $idsAttr = $field . 'Ids';
+        $teamIds = $user->getLinkMultipleIdList(self::FIELD_TEAMS);
+        $userIds = $this->getAddedLinkMultipleIds($entity, $field);
 
-        $userIdList = $entity->getLinkMultipleIdList($field);
-        $fetchedAssignedUserIdList = $entity->getFetched($idsAttr);
-        $teamIdList = $user->getLinkMultipleIdList(self::FIELD_TEAMS);
-
-        foreach ($userIdList as $userId) {
-            if (!$entity->isNew() && in_array($userId, $fetchedAssignedUserIdList)) {
-                continue;
-            }
-
-            if (
-                !$this->getUserRepository()->checkBelongsToAnyOfTeams($userId, $teamIdList)
-            ) {
+        foreach ($userIds as $userId) {
+            if (!$this->getUserRepository()->checkBelongsToAnyOfTeams($userId, $teamIds)) {
                 return false;
             }
         }
@@ -381,7 +353,8 @@ class DefaultAssignmentChecker implements AssignmentChecker
 
     private function hasOnlyInternalUsers(User $user, CoreEntity $entity, string $field): bool
     {
-        $ids = array_values(array_diff($entity->getLinkMultipleIdList($field), [$user->getId()]));
+        $ids = array_diff($this->getAddedLinkMultipleIds($entity, $field), [$user->getId()]);
+        $ids = array_values($ids);
 
         $count = $this->entityManager
             ->getRDBRepositoryByClass(User::class)
@@ -395,5 +368,16 @@ class DefaultAssignmentChecker implements AssignmentChecker
             ->count();
 
         return $count === 0;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getAddedLinkMultipleIds(CoreEntity $entity, string $field): array
+    {
+        /** @var string[] $previousIds */
+        $previousIds = $entity->getFetched(self::FIELD_COLLABORATORS . 'Ids') ?? [];
+
+        return array_values(array_diff($entity->getLinkMultipleIdList($field), $previousIds));
     }
 }
