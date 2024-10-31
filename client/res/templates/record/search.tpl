@@ -85,7 +85,7 @@
                     tabindex="0"
                     title="{{translate 'Search'}}"
                 >
-                    <span class="fa fa-search"></span>
+                    <span class="fas fa-search"></span>
                 </button>
             </div>
             <div class="input-group-btn">
