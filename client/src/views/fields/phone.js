@@ -438,6 +438,9 @@ class PhoneFieldView extends VarcharFieldView {
      */
     formatForLink(number) {
         if (this.allowExtensions && this.useInternational) {
+            if (number.includes(' ext. ')) {
+                number = number.replace(' ext. ', ',');
+            }
             return number;
         }
 
