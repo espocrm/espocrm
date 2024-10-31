@@ -100,10 +100,7 @@
                         <td>{{translate name category='fields' scope=../name}}</td>
                         {{#each list}}
                         <td>
-                            <span
-                                title="{{translate name scope='Role' category='actions'}}"
-                                class="text-{{prop ../../../styleMap value}}"
-                            >{{translateOption value scope='Role' field='levelList'}}</span>
+                            <div data-name="{{name}}">{{{lookup ../../../this name}}}</div>
                         </td>
                         {{/each}}
                         <td colspan="3"></td>

@@ -103,12 +103,36 @@ class RoleRecordTableView extends View {
 
     /**
      * @private
+     * @type {Object.<string, EnumFieldView>}
+     */
+    enumViews
+
+    /**
+     * @private
      * @type {{
      *     data: Object.<string, Record.<string, string>|false>,
      *     fieldData: Object.<string, Object.<string, Record.<string, string>|false>>,
      * }}
      */
     acl
+
+    /**
+     * @private
+     * @type {
+     *     {
+     *         name: string,
+     *         list: {
+     *             name: string,
+     *             list: {
+     *                 action: 'read'|'edit',
+     *                 value: 'yes'|'no',
+     *                 name: string,
+     *            }[],
+     *          }[],
+     *     }[]
+     * }
+     */
+    fieldTableDataList
 
     data() {
         const data = {};
@@ -307,17 +331,21 @@ class RoleRecordTableView extends View {
         this.setupData();
         this.setupFormModel();
 
-        this.listenTo(this.model, 'change:data change:fieldData', () => {
+        this.listenTo(this.model, 'change:data change:fieldData', async () => {
             this.setupData();
-            this.setupFormModel();
-        });
-
-        this.listenTo(this.model, 'sync', () => {
-            this.setupData();
-            this.setupFormModel();
+            await this.setupFormModel();
 
             if (this.isRendered()) {
-                this.reRenderPreserveSearch();
+                await this.reRenderPreserveSearch();
+            }
+        });
+
+        this.listenTo(this.model, 'sync', async () => {
+            this.setupData();
+            await this.setupFormModel();
+
+            if (this.isRendered()) {
+                await this.reRenderPreserveSearch();
             }
         });
 
@@ -338,11 +366,15 @@ class RoleRecordTableView extends View {
     /**
      * @private
      */
-    setupFormModel() {
+    async setupFormModel() {
         const defs = {fields: {}};
 
         this.formModel = new Model({}, {defs: defs});
         this.formRecordHelper = new ViewRecordHelper();
+
+        this.enumViews = {};
+
+        const promises = [];
 
         this.getTableDataList().forEach(scopeItem => {
             if (!scopeItem) {
@@ -372,7 +404,9 @@ class RoleRecordTableView extends View {
                 recordHelper: this.formRecordHelper,
             });
 
-            this.assignView(scope, view, `td[data-name="${scope}"]`);
+            promises.push(
+                this.assignView(scope, view, `td[data-name="${scope}"]`)
+            );
 
             if (!scopeItem.list) {
                 return;
@@ -404,7 +438,11 @@ class RoleRecordTableView extends View {
                     recordHelper: this.formRecordHelper,
                 });
 
-                this.assignView(name, view, `div[data-name="${name}"]`);
+                this.enumViews[name] = view;
+
+                promises.push(
+                    this.assignView(name, view, `div[data-name="${name}"]`)
+                );
 
                 this.formRecordHelper.setFieldStateParam(name, 'hidden', scopeItem.access !== 'enabled');
 
@@ -437,6 +475,75 @@ class RoleRecordTableView extends View {
                 this.controlSelect(scope, 'delete', editLevel, true);
             }
         });
+
+        this.fieldTableDataList.forEach(scopeItem => {
+            scopeItem.list.forEach(fieldItem => this.setupFormField(scopeItem.name, fieldItem));
+        });
+
+        return Promise.all(promises);
+    }
+
+    /**
+     * @private
+     * @param {string} scope
+     * @param {{
+     *     name: string,
+     *     list: {
+     *         action: 'read'|'edit',
+     *         value: 'yes'|'no',
+     *         name: string,
+     *     }[],
+     * }} fieldItem
+     */
+    async setupFormField(scope, fieldItem) {
+        const promises = [];
+
+        const field = fieldItem.name;
+
+        const defs = this.formModel.defs;
+
+        fieldItem.list.forEach(actionItem => {
+            const name = actionItem.name;
+
+            defs.fields[name] = {
+                type: 'enum',
+                options: ['yes', 'no'],
+                translation: 'Role.options.accessList',
+                style: this.styleMap,
+            };
+
+            this.formModel.set(name, actionItem.value, {silent: true});
+
+            const view = new EnumFieldView({
+                name: name,
+                model: this.formModel,
+                mode: this.mode,
+                inlineEditDisabled: true,
+                recordHelper: this.formRecordHelper,
+            });
+
+            this.enumViews[name] = view;
+
+            promises.push(
+                this.assignView(name, view, `div[data-name="${name}"]`)
+            );
+
+            if (actionItem.action === 'read') {
+                this.listenTo(this.formModel, `change:${scope}-${field}-read`, (m, value) => {
+                    this.controlFieldEditSelect(scope, field, value, true);
+                });
+            }
+        });
+
+        if (fieldItem.list.length) {
+            const readLevel = this.formModel.attributes[`${scope}-${field}-read`];
+
+            if (readLevel) {
+                this.controlFieldEditSelect(scope, field, readLevel);
+            }
+        }
+
+        await Promise.all(promises);
     }
 
     /**
@@ -528,16 +635,6 @@ class RoleRecordTableView extends View {
      * @private
      */
     setupFieldTableDataList() {
-        /**
-         * @type {
-         *     {
-         *         name: string,
-         *         list: {
-         *             name: string,
-         *             list: {name: 'read'|'edit', value: 'yes'|'no'}[],
-         *          }[],
-         *     }[]
-         * } */
         this.fieldTableDataList = [];
 
         this.scopeList.forEach(scope => {
@@ -580,20 +677,19 @@ class RoleRecordTableView extends View {
 
                 this.fieldActionList.forEach(action => {
                     list.push({
-                        name: action,
+                        name: `${scope}-${field}-${action}`,
+                        action: action,
                         value: scopeData[field][action] || 'yes',
                     })
                 });
 
-                if (this.mode === 'detail') {
-                    if (!list.length) {
-                        return;
-                    }
+                if (this.mode === 'detail' && !list.length) {
+                    return;
                 }
 
                 fieldDataList.push({
                     name: field,
-                    list: list
+                    list: list,
                 });
             });
 
@@ -674,30 +770,29 @@ class RoleRecordTableView extends View {
         const data = {};
 
         this.fieldTableDataList.forEach(scopeData => {
-            const scopeObj = {};
+            const scopeValueData = {};
             const scope = scopeData.name;
-
-            const $rows = this.$el.find(`table.field-level tr[data-name="${scope}"]`);
 
             scopeData.list.forEach(fieldData => {
                 const field = fieldData.name;
-                const fieldObj = {};
+                const fieldValueData = {};
 
-                this.fieldActionList.forEach(action =>{
-                    const $select = $rows
-                        .find(`select[data-scope="${scope}"][data-field="${field}"][data-action="${action}"]`);
+                this.fieldActionList.forEach(action => {
+                    const name = `${scope}-${fieldData.name}-${action}`;
 
-                    if (!$select.length) {
+                    const value = this.formModel.attributes[name]
+
+                    if (value === undefined) {
                         return;
                     }
 
-                    fieldObj[action] = $select.val();
+                    fieldValueData[action] = value;
                 });
 
-                scopeObj[field] = fieldObj;
+                scopeValueData[field] = fieldValueData;
             });
 
-            data[scope] = scopeObj;
+            data[scope] = scopeValueData;
         });
 
         return data;
@@ -706,57 +801,6 @@ class RoleRecordTableView extends View {
     afterRender() {
         this.$quickSearch = this.$el.find('input[data-name="quick-search"]');
 
-        if (this.mode === 'edit') {
-            /*this.$el.find('select').each((i, el) => {
-                Select.init(el);
-            });*/
-
-            //this.scopeList.forEach(scope => {
-                /*const $read = this.$el.find(`select[name="${scope}-read"]`);
-
-                $read.on('change', () => {
-                    const value = $read.val();
-
-                    this.controlSelect(scope, 'edit', value);
-                    this.controlSelect(scope, 'delete', value);
-                    this.controlSelect(scope, 'stream', value);
-                });*/
-
-                /*const $edit = this.$el.find(`select[name="${scope}-edit"]`);
-
-                $edit.on('change', () => {
-                    const value = $edit.val();
-
-                    this.controlSelect(scope, 'delete', value);
-                });*/
-
-                /*setTimeout(() => {
-                    this.controlSelect(scope, 'edit', $read.val(), true);
-                    this.controlSelect(scope, 'stream', $read.val(), true);
-                    this.controlSelect(scope, 'delete', $edit.val(), true);
-                }, 10);*/
-            //});
-
-            this.fieldTableDataList.forEach(o => {
-                const scope = o.name;
-
-                o.list.forEach(f => {
-                    const field = f.name;
-
-                    const $read = this.$el
-                        .find('select[data-scope="' + scope + '"][data-field="' + field + '"][data-action="read"]');
-
-                    $read.on('change', () => {
-                        const value = $read.val();
-
-                        this.controlFieldEditSelect(scope, field, value);
-                    });
-
-                    this.controlFieldEditSelect(scope, field, $read.val(), true);
-                });
-            });
-        }
-
         if (this.mode === 'edit' || this.mode === 'detail') {
             this.initStickyHeader('scope');
             this.initStickyHeader('field');
@@ -764,7 +808,6 @@ class RoleRecordTableView extends View {
     }
 
     /**
-     * @todo
      * @private
      * @param {string} scope
      * @param {string} field
@@ -772,13 +815,6 @@ class RoleRecordTableView extends View {
      * @param {boolean} [dontChange]
      */
     controlFieldEditSelect(scope, field, limitValue, dontChange) {
-        /*
-        const view = this.getScopeFieldActionView(scope, field, 'edit');
-
-        if (!view) {
-            return;
-        }
-
         const attribute = `${scope}-${field}-edit`;
 
         let value = this.formModel.attributes[attribute];
@@ -797,7 +833,13 @@ class RoleRecordTableView extends View {
             this.formModel.set(attribute, value);
         }
 
-        view.setOptionList(options);*/
+        this.formRecordHelper.setFieldOptionList(attribute, options);
+
+        const view = this.enumViews[attribute];
+
+        if (view) {
+            view.setOptionList(options);
+        }
     }
 
     /**
@@ -808,12 +850,6 @@ class RoleRecordTableView extends View {
      * @param {boolean} [dontChange]
      */
     controlSelect(scope, action, limitValue, dontChange) {
-        const view = this.getScopeActionView(scope, action);
-
-        if (!view) {
-            return;
-        }
-
         const attribute = `${scope}-${action}`;
 
         let value = this.formModel.attributes[attribute];
@@ -832,7 +868,13 @@ class RoleRecordTableView extends View {
             this.formModel.set(attribute, value);
         }
 
-        view.setOptionList(options);
+        this.formRecordHelper.setFieldOptionList(attribute, options);
+
+        const view = this.enumViews[attribute];
+
+        if (view) {
+            view.setOptionList(options);
+        }
     }
 
     /**
@@ -851,7 +893,7 @@ class RoleRecordTableView extends View {
         }, view => {
             view.render();
 
-            this.listenTo(view, 'add-fields', /** string[] */fields => {
+            this.listenTo(view, 'add-fields', async (/** string[] */fields) => {
                 this.clearView('dialog');
 
                 const scopeData = this.fieldTableDataList.find(it => it.name === scope);
@@ -860,70 +902,104 @@ class RoleRecordTableView extends View {
                     return;
                 }
 
+                const promises = [];
+
                 fields.filter(field => !scopeData.list.find(it => it.name === field))
                     .forEach(field => {
-                        scopeData.list.unshift({
+                        const item = {
                             name: field,
                             list: [
                                 {
-                                    name: 'read',
+                                    name: `${scope}-${field}-read`,
+                                    action: 'read',
                                     value: 'no',
                                 },
                                 {
-                                    name: 'edit',
+                                    name: `${scope}-${field}-edit`,
+                                    action: 'edit',
                                     value: 'no',
                                 },
                             ]
-                        });
+                        };
+
+                        scopeData.list.unshift(item);
+
+                        promises.push(
+                            this.setupFormField(scope, item)
+                        );
                     });
 
-                this.reRenderPreserveSearch();
+                await Promise.all(promises);
+
+                await this.reRenderPreserveSearch();
             });
         });
     }
 
-    removeField(scope, field) {
+    /**
+     * @private
+     * @param {string} scope
+     * @param {string} field
+     */
+    async removeField(scope, field) {
+        const attributeRead = `${scope}-${field}-read`;
+        const attributeEdit = `${scope}-${field}-edit`;
+
+        delete this.enumViews[attributeRead];
+        delete this.enumViews[attributeEdit];
+
+        this.clearView(attributeRead);
+        this.clearView(attributeEdit);
+
+        this.formModel.unset(attributeRead);
+        this.formModel.unset(attributeEdit);
+
+        delete this.formModel.defs.fields[attributeRead];
+        delete this.formModel.defs.fields[attributeEdit];
+
+        const scopeData = this.fieldTableDataList.find(it => it.name === scope);
+
+        if (!scopeData) {
+            return;
+        }
+
+        const index = scopeData.list.findIndex(it => it.name === field);
+
+        if (index === -1) {
+            return;
+        }
+
+        scopeData.list.splice(index, 1);
+
+        await this.reRenderPreserveSearch();
+
         this.trigger('change');
-
-        this.fieldTableDataList.forEach(scopeData => {
-            if (scopeData.name !== scope) {
-                return;
-            }
-
-            let index = -1;
-
-            scopeData.list.forEach((d, i) => {
-                if (d.name === field) {
-                    index = i;
-                }
-            });
-
-            if (~index) {
-                scopeData.list.splice(index, 1);
-
-                this.reRenderPreserveSearch();
-            }
-        });
     }
 
-    reRenderPreserveSearch() {
+    /**
+     * @private
+     */
+    async reRenderPreserveSearch() {
         const searchText = this.$quickSearch.val();
 
-        this.reRender()
-            .then(() => {
-                this.$quickSearch.val(searchText);
-                this.processQuickSearch(searchText);
-            });
+        await this.reRender();
+
+        this.$quickSearch.val(searchText);
+        this.processQuickSearch(searchText);
     }
 
+    /**
+     * @private
+     * @param {string} type
+     */
     initStickyHeader(type) {
-        const $sticky = this.$el.find('.sticky-header-' + type);
+        const $sticky = this.$el.find(`.sticky-header-${type}`);
         const $window = $(window);
 
         const screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
         const $buttonContainer = $('.detail-button-container');
-        const $table = this.$el.find('table.' + type + '-level');
+        const $table = this.$el.find(`table.${type}-level`);
 
         if (!$table.length) {
             return;

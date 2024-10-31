@@ -194,7 +194,7 @@ class ViewRecordHelper {
      * Get a field option list.
      *
      * @param {string} field A field name.
-     * @returns {string|null} Null if not set.
+     * @returns {string[]|null} Null if not set.
      */
     getFieldOptionList(field) {
         return this.fieldOptionListMap[field] || null;

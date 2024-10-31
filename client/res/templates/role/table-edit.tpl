@@ -110,14 +110,7 @@
                         </td>
                         {{#each list}}
                         <td>
-                            <select
-                                name="field-{{../../name}}-{{../name}}"
-                                class="form-control field-action"
-                                data-field="{{../name}}"
-                                data-scope="{{../../name}}"
-                                data-action="{{name}}"
-                                title="{{translate name scope='Role' category='actions'}}"
-                            >{{options ../../../fieldLevelList value scope='Role' field='levelList' styleMap=../../../styleMap}}</select>
+                            <div data-name="{{name}}">{{{lookup ../../../this name}}}</div>
                         </td>
                         {{/each}}
                         <td colspan="2">
