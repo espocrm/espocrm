@@ -289,11 +289,8 @@ class DefaultAssignmentChecker implements AssignmentChecker
 
         $assignmentPermission = $this->aclManager->getPermissionLevel($user, Permission::ASSIGNMENT);
 
-        if (
-            $assignmentPermission === Table::LEVEL_YES ||
-            !in_array($assignmentPermission, [Table::LEVEL_TEAM, Table::LEVEL_NO])
-        ) {
-            if (!$this->hasOnlyInternalUsers($entity, $field)) {
+        if ($assignmentPermission === Table::LEVEL_ALL) {
+            if (!$this->hasOnlyInternalUsers($user, $entity, $field)) {
                 return false;
             }
 
@@ -382,8 +379,10 @@ class DefaultAssignmentChecker implements AssignmentChecker
         return true;
     }
 
-    private function hasOnlyInternalUsers(CoreEntity $entity, string $field): bool
+    private function hasOnlyInternalUsers(User $user, CoreEntity $entity, string $field): bool
     {
+        $ids = array_values(array_diff($entity->getLinkMultipleIdList($field), [$user->getId()]));
+
         $count = $this->entityManager
             ->getRDBRepositoryByClass(User::class)
             ->where([
@@ -391,7 +390,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
                     User::TYPE_REGULAR,
                     User::TYPE_ADMIN,
                 ],
-                'id' => $entity->getLinkMultipleIdList($field),
+                'id' => $ids,
             ])
             ->count();
 
