@@ -27,17 +27,26 @@
  ************************************************************************/
 
 import View from 'view';
-import Select from 'ui/select';
+import Model from 'model';
+import EnumFieldView from 'views/fields/enum';
+import ViewRecordHelper from 'view-record-helper';
 
 class RoleRecordTableView extends View {
 
     template = 'role/table'
 
-    /** @type {string[]} */
+    /**
+     * @type {string[]}
+     */
     scopeList
+
     type = 'acl'
-    /** @type {'detail'|'string'} */
+
+    /**
+     * @type {'detail'|'edit'}
+     */
     mode = 'detail'
+
     lowestLevelByDefault = true
     collaborators = true
 
@@ -80,6 +89,27 @@ class RoleRecordTableView extends View {
      */
     scopeLevelMemory
 
+    /**
+     * @private
+     * @type {import('model').default}
+     */
+    formModel
+
+    /**
+     * @private
+     * @type {ViewRecordHelper}
+     */
+    formRecordHelper
+
+    /**
+     * @private
+     * @type {{
+     *     data: Object.<string, Record.<string, string>|false>,
+     *     fieldData: Object.<string, Object.<string, Record.<string, string>|false>>,
+     * }}
+     */
+    acl
+
     data() {
         const data = {};
 
@@ -103,6 +133,8 @@ class RoleRecordTableView extends View {
 
         data.hasFieldLevelData = hasFieldLevelData;
 
+        data.hiddenFields = this.formRecordHelper.getHiddenFields();
+
         return data;
     }
 
@@ -124,17 +156,22 @@ class RoleRecordTableView extends View {
 
             this.removeField(scope, field);
         },
-        /** @this RoleRecordTableView */
-        'change select[data-type="access"]': function (e) {
-            const $current = $(e.currentTarget);
-
-            const scope = $current.attr('name');
-            const value = $current.val();
-
-            this.onSelectAccess(scope, value);
-        },
     }
 
+    /**
+     * @private
+     * @return {({
+     *     list: {
+     *         level: string|false,
+     *         name: string,
+     *         action: string,
+     *         levelList: string[]|null,
+     *     }[],
+     *     name: string,
+     *     type: 'boolean'|'record',
+     *     access: 'not-set'|'enabled'|'disabled',
+     * }|false)[]}
+     */
     getTableDataList() {
         const aclData = this.acl.data;
         const aclDataList = [];
@@ -165,31 +202,27 @@ class RoleRecordTableView extends View {
 
             if (this.aclTypeMap[scope] !== 'boolean') {
                 this.actionList.forEach(action => {
-                    const allowedActionList = /** @type {string[]} */
-                        this.getMetadata().get(['scopes', scope, this.type + 'ActionList']);
+                    /** @type {string[]} */
+                    const allowedActionList = this.getMetadata().get(`scopes.${scope}.${this.type}ActionList`);
 
-                    if (allowedActionList) {
-                        if (!allowedActionList.includes(action)) {
-                            list.push({
-                                action: action,
-                                levelList: false,
-                                level: null,
-                            });
+                    if (allowedActionList && !allowedActionList.includes(action)) {
+                        list.push({
+                            action: action,
+                            levelList: null,
+                            level: null,
+                        });
 
-                            return;
-                        }
+                        return;
                     }
 
-                    if (action === 'stream') {
-                        if (!this.getMetadata().get(`scopes.${scope}.stream`)) {
-                            list.push({
-                                action: 'stream',
-                                levelList: false,
-                                level: null,
-                            });
+                    if (action === 'stream' && !this.getMetadata().get(`scopes.${scope}.stream`)) {
+                        list.push({
+                            action: 'stream',
+                            levelList: null,
+                            level: null,
+                        });
 
-                            return;
-                        }
+                        return;
                     }
 
                     let level = null;
@@ -216,13 +249,14 @@ class RoleRecordTableView extends View {
                         levelList.push(level);
 
                         levelList.sort((a, b) => {
-                            return this.levelList.findIndex(it => it === a) - this.levelList.findIndex(it => it === b);
+                            return this.levelList.findIndex(it => it === a) -
+                                this.levelList.findIndex(it => it === b);
                         });
                     }
 
                     list.push({
                         level: level,
-                        name: scope + '-' + action,
+                        name: `${scope}-${action}`,
                         action: action,
                         levelList: levelList,
                     });
@@ -271,15 +305,16 @@ class RoleRecordTableView extends View {
         this.scopeLevelMemory = {};
 
         this.setupData();
+        this.setupFormModel();
 
-        this.listenTo(this.model, 'change', () => {
-            if (this.model.hasChanged('data') || this.model.hasChanged('fieldData')) {
-                this.setupData();
-            }
+        this.listenTo(this.model, 'change:data change:fieldData', () => {
+            this.setupData();
+            this.setupFormModel();
         });
 
         this.listenTo(this.model, 'sync', () => {
             this.setupData();
+            this.setupFormModel();
 
             if (this.isRendered()) {
                 this.reRenderPreserveSearch();
@@ -300,19 +335,126 @@ class RoleRecordTableView extends View {
         });
     }
 
+    /**
+     * @private
+     */
+    setupFormModel() {
+        const defs = {fields: {}};
+
+        this.formModel = new Model({}, {defs: defs});
+        this.formRecordHelper = new ViewRecordHelper();
+
+        this.getTableDataList().forEach(scopeItem => {
+            if (!scopeItem) {
+                return;
+            }
+
+            const scope = scopeItem.name;
+
+            defs.fields[scope] = {
+                type: 'enum',
+                options: [
+                    'not-set',
+                    'enabled',
+                    'disabled',
+                ],
+                translation: 'Role.options.accessList',
+                style: this.styleMap,
+            };
+
+            this.formModel.set(scope, scopeItem.access, {silent: true});
+
+            const view = new EnumFieldView({
+                name: scope,
+                model: this.formModel,
+                mode: this.mode,
+                inlineEditDisabled: true,
+                recordHelper: this.formRecordHelper,
+            });
+
+            this.assignView(scope, view, `td[data-name="${scope}"]`);
+
+            if (!scopeItem.list) {
+                return;
+            }
+
+            this.listenTo(this.formModel, `change:${scope}`, () => this.onSelectAccess(scope));
+
+            scopeItem.list.forEach(actionItem => {
+                if (!actionItem.levelList) {
+                    return;
+                }
+
+                const name = actionItem.name;
+
+                defs.fields[name] = {
+                    type: 'enum',
+                    options: actionItem.levelList,
+                    translation: 'Role.options.accessList',
+                    style: this.styleMap,
+                };
+
+                this.formModel.set(name, actionItem.level, {silent: true});
+
+                const view = new EnumFieldView({
+                    name: name,
+                    model: this.formModel,
+                    mode: this.mode,
+                    inlineEditDisabled: true,
+                    recordHelper: this.formRecordHelper,
+                });
+
+                this.assignView(name, view, `div[data-name="${name}"]`);
+
+                this.formRecordHelper.setFieldStateParam(name, 'hidden', scopeItem.access !== 'enabled');
+
+                if (actionItem.action === 'read') {
+                    this.listenTo(this.formModel, `change:${scope}-read`, (m, value) => {
+                        ['edit', 'delete', 'stream'].forEach(action => this.controlSelect(scope, action, value));
+                    });
+                }
+
+                if (actionItem.action === 'edit') {
+                    this.listenTo(this.formModel, `change:${scope}-edit`, (m, value) => {
+                        this.controlSelect(scope, 'delete', value);
+                    });
+                }
+            });
+
+            const readLevel = this.formModel.attributes[`${scope}-read`];
+            const editLevel = this.formModel.attributes[`${scope}-edit`];
+
+            if (readLevel) {
+                this.controlSelect(scope, 'edit', readLevel, true);
+                this.controlSelect(scope, 'stream', readLevel, true);
+
+                if (!editLevel) {
+                    this.controlSelect(scope, 'delete', readLevel, true);
+                }
+            }
+
+            if (editLevel) {
+                this.controlSelect(scope, 'delete', editLevel, true);
+            }
+        });
+    }
+
+    /**
+     * @private
+     */
     setupData() {
         this.acl = {};
 
         if (this.options.acl) {
             this.acl.data = this.options.acl.data;
         } else {
-            this.acl.data = Espo.Utils.cloneDeep(this.model.get('data') || {});
+            this.acl.data = Espo.Utils.cloneDeep(this.model.attributes.data || {});
         }
 
         if (this.options.acl) {
             this.acl.fieldData = this.options.acl.fieldData;
         } else {
-            this.acl.fieldData = Espo.Utils.cloneDeep(this.model.get('fieldData') || {});
+            this.acl.fieldData = Espo.Utils.cloneDeep(this.model.attributes.fieldData || {});
         }
 
         this.setupScopeList();
@@ -320,6 +462,7 @@ class RoleRecordTableView extends View {
     }
 
     /**
+     * @private
      * @return {string[]} scopeList
      */
     getSortedScopeList() {
@@ -356,6 +499,9 @@ class RoleRecordTableView extends View {
             });
     }
 
+    /**
+     * @private
+     */
     setupScopeList() {
         this.aclTypeMap = {};
         this.scopeList = [];
@@ -378,6 +524,9 @@ class RoleRecordTableView extends View {
         });
     }
 
+    /**
+     * @private
+     */
     setupFieldTableDataList() {
         /**
          * @type {
@@ -455,14 +604,19 @@ class RoleRecordTableView extends View {
         });
     }
 
+    /**
+     * @private
+     * @param {string} scope
+     * @return {boolean}
+     */
     isAclFieldLevelDisabledForScope(scope) {
         return !!this.getMetadata().get(`scopes.${scope}.aclFieldLevelDisabled`);
     }
 
     /**
-     *
+     * @private
      * @param {string} [onlyScope]
-     * @return {Object.<Record>}
+     * @return {Object.<string, Object.<string, string>|false|true>}
      */
     fetchScopeData(onlyScope) {
         const data = {};
@@ -471,18 +625,12 @@ class RoleRecordTableView extends View {
         const actionList = this.actionList;
         const aclTypeMap = this.aclTypeMap;
 
-        const $table = this.$el.find(`table.scope-level`);
-
-        for (const i in scopeList) {
-            const scope = scopeList[i];
-
+        for (const scope of scopeList) {
             if (onlyScope && scope !== onlyScope) {
                 continue;
             }
 
-            const $rows = $table.find(`tr[data-name="${scope}"]`);
-
-            const value = $rows.find(`select[name="${scope}"]`).val();
+            const value = this.formModel.attributes[scope] || 'not-set';
 
             if (!onlyScope && value === 'not-set') {
                 continue;
@@ -494,30 +642,34 @@ class RoleRecordTableView extends View {
                 continue;
             }
 
-            let o = true;
+            let scopeData = true;
 
             if (aclTypeMap[scope] !== 'boolean') {
-                o = {};
+                scopeData = {};
 
                 for (const j in actionList) {
                     const action = actionList[j];
 
-                    const value = $rows.find(`select[name="${scope}-${action}"]`).val();
+                    const value = this.formModel.attributes[`${scope}-${action}`];
 
                     if (value === undefined) {
                         continue;
                     }
 
-                    o[action] = value;
+                    scopeData[action] = value;
                 }
             }
 
-            data[scope] = o;
+            data[scope] = scopeData;
         }
 
         return data;
     }
 
+    /**
+     * @private
+     * @return {Object.<string, Object.<string, Record.<string, string>|false>>}
+     */
     fetchFieldData() {
         const data = {};
 
@@ -555,12 +707,12 @@ class RoleRecordTableView extends View {
         this.$quickSearch = this.$el.find('input[data-name="quick-search"]');
 
         if (this.mode === 'edit') {
-            this.$el.find('select').each((i, el) => {
+            /*this.$el.find('select').each((i, el) => {
                 Select.init(el);
-            });
+            });*/
 
-            this.scopeList.forEach(scope => {
-                const $read = this.$el.find(`select[name="${scope}-read"]`);
+            //this.scopeList.forEach(scope => {
+                /*const $read = this.$el.find(`select[name="${scope}-read"]`);
 
                 $read.on('change', () => {
                     const value = $read.val();
@@ -568,22 +720,22 @@ class RoleRecordTableView extends View {
                     this.controlSelect(scope, 'edit', value);
                     this.controlSelect(scope, 'delete', value);
                     this.controlSelect(scope, 'stream', value);
-                });
+                });*/
 
-                const $edit = this.$el.find(`select[name="${scope}-edit"]`);
+                /*const $edit = this.$el.find(`select[name="${scope}-edit"]`);
 
                 $edit.on('change', () => {
                     const value = $edit.val();
 
                     this.controlSelect(scope, 'delete', value);
-                });
+                });*/
 
-                setTimeout(() => {
+                /*setTimeout(() => {
                     this.controlSelect(scope, 'edit', $read.val(), true);
                     this.controlSelect(scope, 'stream', $read.val(), true);
                     this.controlSelect(scope, 'delete', $edit.val(), true);
-                }, 10);
-            });
+                }, 10);*/
+            //});
 
             this.fieldTableDataList.forEach(o => {
                 const scope = o.name;
@@ -611,14 +763,25 @@ class RoleRecordTableView extends View {
         }
     }
 
+    /**
+     * @todo
+     * @private
+     * @param {string} scope
+     * @param {string} field
+     * @param {string} limitValue
+     * @param {boolean} [dontChange]
+     */
     controlFieldEditSelect(scope, field, limitValue, dontChange) {
-        const $select = this.$el.find(`select[data-scope="${scope}"][data-field="${field}"][data-action="edit"]`);
+        /*
+        const view = this.getScopeFieldActionView(scope, field, 'edit');
 
-        if (!$select.length) {
+        if (!view) {
             return;
         }
 
-        let value = $select.val();
+        const attribute = `${scope}-${field}-edit`;
+
+        let value = this.formModel.attributes[attribute];
 
         if (
             !dontChange &&
@@ -628,35 +791,32 @@ class RoleRecordTableView extends View {
         }
 
         const options = this.fieldLevelList
-            .filter(item => {
-                return this.levelList.indexOf(item) >= this.levelList.indexOf(limitValue);
-            })
-            .map(item => {
-                return {
-                    value: item,
-                    text: this.getLanguage().translateOption(item, 'levelList', 'Role'),
-                };
-            });
+            .filter(item => this.levelList.indexOf(item) >= this.levelList.indexOf(limitValue));
 
         if (!dontChange) {
-            // Prevents issues.
-            Select.destroy($select);
-            Select.init($select);
+            this.formModel.set(attribute, value);
         }
 
-        Select.setValue($select, '');
-        Select.setOptions($select, options);
-        Select.setValue($select, value);
+        view.setOptionList(options);*/
     }
 
+    /**
+     * @private
+     * @param {string} scope
+     * @param {string} action
+     * @param {string} limitValue
+     * @param {boolean} [dontChange]
+     */
     controlSelect(scope, action, limitValue, dontChange) {
-        let $select = this.$el.find(`select[name="${scope}-${action}"]`);
+        const view = this.getScopeActionView(scope, action);
 
-        if (!$select.length) {
+        if (!view) {
             return;
         }
 
-        let value = $select.val();
+        const attribute = `${scope}-${action}`;
+
+        let value = this.formModel.attributes[attribute];
 
         if (
             !dontChange &&
@@ -666,34 +826,19 @@ class RoleRecordTableView extends View {
         }
 
         const options = this.getLevelList(scope, action)
-            .filter(item => {
-                return this.levelList.indexOf(item) >= this.levelList.indexOf(limitValue);
-            })
-            .map(item => {
-                return {
-                    value: item,
-                    text: this.getLanguage().translateOption(item, 'levelList', 'Role'),
-                };
-            });
+            .filter(item => this.levelList.indexOf(item) >= this.levelList.indexOf(limitValue));
 
         if (!dontChange) {
-            // Prevents issues.
-            Select.destroy($select);
-
-            const $selectCloned = $select.clone();
-            const $parent = $select.parent();
-            $select.remove();
-            $select = $selectCloned;
-            $parent.append($select);
-
-            Select.init($select);
+            this.formModel.set(attribute, value);
         }
 
-        Select.setValue($select, '');
-        Select.setOptions($select, options);
-        Select.setValue($select, value);
+        view.setOptionList(options);
     }
 
+    /**
+     * @private
+     * @param {string} scope
+     */
     showAddFieldModal(scope) {
         this.trigger('change');
 
@@ -834,18 +979,66 @@ class RoleRecordTableView extends View {
     }
 
     /**
+     * @private
      * @param {string} scope
-     * @param {string} value
+     * @param {string} action
+     * @return {EnumFieldView}
      */
-    onSelectAccess(scope, value) {
-        const $dropdowns = this.$el.find(`.scope-level select[data-scope="${scope}"]`);
+    getScopeActionView(scope, action) {
+        return this.getView(`${scope}-${action}`);
+    }
+
+    /**
+     * @private
+     * @param {string} scope
+     */
+    hideScopeActions(scope) {
+        this.actionList.forEach(action => {
+            const view = this.getScopeActionView(scope, action);
+
+            if (!view) {
+                return;
+            }
+
+            view.hide();
+
+            const name = `${scope}-${action}`;
+
+            this.formRecordHelper.setFieldStateParam(name, 'hidden', true);
+        });
+    }
+
+    /**
+     * @private
+     * @param {string} scope
+     */
+    showScopeActions(scope) {
+        this.actionList.forEach(action => {
+            const view = this.getScopeActionView(scope, action);
+
+            if (!view) {
+                return;
+            }
+
+            view.show();
+
+            const name = `${scope}-${action}`;
+
+            this.formRecordHelper.setFieldStateParam(name, 'hidden', false);
+        });
+    }
+
+    /**
+     * @private
+     * @param {string} scope
+     */
+    onSelectAccess(scope) {
+        const value = this.formModel.attributes[scope];
 
         if (value !== 'enabled') {
             const fetchedData = this.fetchScopeData(scope);
 
-            $dropdowns.attr('disabled', 'disabled');
-            $dropdowns.addClass('hidden');
-            $dropdowns.parent().find('.selectize-control').addClass('hidden');
+            this.hideScopeActions(scope);
 
             delete this.scopeLevelMemory[scope];
 
@@ -856,17 +1049,9 @@ class RoleRecordTableView extends View {
             return;
         }
 
-        $dropdowns.removeAttr('disabled');
-        $dropdowns.removeClass('hidden');
-        $dropdowns.parent().find('.selectize-control').removeClass('hidden');
+        this.showScopeActions(scope);
 
         this.actionList.forEach(action => {
-            const $select = this.$el.find(`select[name="${scope}-${action}"]`);
-
-            if (!$select.length) {
-                return;
-            }
-
             const memoryData = this.scopeLevelMemory[scope] || {};
             const levelInMemory = memoryData[action];
 
@@ -880,11 +1065,14 @@ class RoleRecordTableView extends View {
                 level = [...this.getLevelList(scope, action)].pop();
             }
 
-            Select.setValue($select, level);
-            $select.trigger('change');
+            this.formModel.set(`${scope}-${action}`, level);
         });
     }
 
+    /**
+     * @private
+     * @param {string} text
+     */
     processQuickSearch(text) {
         text = text.trim();
 
@@ -898,7 +1086,7 @@ class RoleRecordTableView extends View {
 
         const lowerCaseText = text.toLowerCase();
 
-        this.scopeList.forEach(/** string */item => {
+        this.scopeList.forEach(item => {
             let matched = false;
 
             const translation = this.getLanguage().translate(item, 'scopeNamesPlural');
