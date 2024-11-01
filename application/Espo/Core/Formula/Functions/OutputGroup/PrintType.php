@@ -33,6 +33,7 @@ use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Functions\BaseFunction;
 
 use stdClass;
+use const JSON_UNESCAPED_UNICODE;
 
 class PrintType extends BaseFunction
 {
@@ -49,9 +50,9 @@ class PrintType extends BaseFunction
         } else if (is_bool($value)) {
             $value = $value ? 'true' : 'false';
         } else if (is_array($value)) {
-            $value = json_encode($value);
+            $value = json_encode($value, JSON_UNESCAPED_UNICODE);
         } else if ($value instanceof stdClass) {
-            $value = json_encode($value);
+            $value = json_encode($value, JSON_UNESCAPED_UNICODE);
         } else if ($value === null) {
             $value = 'null';
         }
