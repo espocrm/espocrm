@@ -5,18 +5,20 @@ body:not([data-navbar="side"]) {
     > .content {
         height: auto;
         min-height: 100%;
-        padding-bottom: var(--42px);
+        padding-bottom: calc(var(--16px) + var(--footer-height));
     }
 
      > footer {
-        margin-top: calc(var(--28px) * -1);
-        clear: both;
-        position: relative;
-        height: var(--26px);
+         margin-top: calc(var(--footer-height) * -1);
+         clear: both;
+         position: relative;
+         height: var(--footer-height);
+         max-height: var(--footer-height);
 
-        p {
-            padding: var(--6px) var(--panel-padding) var(--4px);
-        }
+         p {
+             padding: 0 var(--panel-padding);
+             line-height: var(--footer-height);
+         }
     }
 
     @media screen and (max-width: @screen-xs-max) {
