@@ -141,7 +141,7 @@ class ComplexExpressionFieldView extends TextFieldView {
 
             const editor = this.editor = ace.edit(this.containerId);
 
-            editor.setOptions({fontFamily: 'JetBrainsMono'});
+            editor.setOptions({fontFamily: 'var(--font-family-monospace)'});
             editor.setFontSize('var(--font-size-base)');
             editor.container.style.lineHeight = 'var(--line-height-computed)';
             editor.renderer.updateFontSize();

@@ -459,7 +459,7 @@ function init(langSets) {
                         useSoftTabs: true,
                     });
 
-                    aceEditor.setOptions({fontFamily: 'JetBrainsMono'});
+                    aceEditor.setOptions({fontFamily: 'var(--font-family-monospace)'});
                     aceEditor.setFontSize('var(--font-size-small)');
                     aceEditor.container.style.lineHeight = 'var(--line-height-small)';
                     aceEditor.renderer.updateFontSize();
