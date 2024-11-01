@@ -6,14 +6,13 @@
 @import "elements/form.less";
 @import "elements/table.less";
 @import "elements/alert.less";
+@import "elements/icons.less";
 
 html {
     height: 100%;
 
     &:not(:has(> body > .container > .container-centering)):not(:has(.modal-backdrop)) {
         scrollbar-gutter: stable;
-        // Issue with sortable. Commented.
-        //overflow-y: scroll;
     }
 
     &:has(> body > .container > #main > .no-window-scroll) {
@@ -3536,44 +3535,6 @@ a.field-info > span.fa-info-circle {
     font-size: var(--12px);
     position: relative;
     top: calc(var(--1px) * -1);
-}
-
-.fas, .far, .fa {
-    font-size: var(--16px);
-    line-height: var(--line-height-computed);
-}
-
-.fas.fa-sm,
-.far.fa-sm,
-.btn-sm .fas,
-.btn-sm .far,
-.small .far,
-.small .fas,
-.fas.small,
-.far.small {
-    font-size: var(--12px);
-    line-height: var(--18px);
-}
-
-.btn:not(.btn-sm) {
-    > .fas.fa-ellipsis-h {
-        line-height: var(--23px);
-    }
-}
-
-.btn-sm {
-    > .fa-ellipsis-h,
-    > .fa-plus {
-        font-size: var(--14px);
-    }
-}
-
-.icon-is-replied {
-    transform: scaleX(-1);
-
-    &::before {
-        content: "\f064";
-    }
 }
 
 .btn:not(.btn-icon) > .far:first-child:has(+ span),
