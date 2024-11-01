@@ -55,7 +55,7 @@ class EntityManagerEditFormulaRecordView extends BaseRecordView {
             'views/fields/formula',
             {
                 targetEntityType: this.options.targetEntityType,
-                height: 500,
+                height: 504,
             },
             'edit',
             false,

@@ -41,7 +41,7 @@ class FormulaFieldView extends TextFieldView {
     detailTemplate ='fields/formula/detail'
     editTemplate = 'fields/formula/edit'
 
-    height = 300
+    height = 308
     maxLineDetailCount = 80
     maxLineEditCount = 200
     insertDisabled = false
@@ -148,10 +148,17 @@ class FormulaFieldView extends TextFieldView {
             this.$editor.css('fontSize', 'var(--font-size-base)');
 
             if (this.mode === this.MODE_EDIT) {
-                this.$editor.css('minHeight', this.height + 'px');
+                const height = (this.height * this.getThemeManager().getFontSizeFactor()).toString();
+
+                this.$editor.css('minHeight', `${height}px`);
             }
 
             const editor = this.editor = ace.edit(this.containerId);
+
+            editor.setOptions({fontFamily: 'JetBrainsMono'});
+            editor.setFontSize('var(--font-size-base)');
+            editor.container.style.lineHeight = 'var(--line-height-computed)';
+            editor.renderer.updateFontSize();
 
             editor.setOptions({
                 maxLines: this.mode === this.MODE_EDIT ?

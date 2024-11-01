@@ -459,6 +459,11 @@ function init(langSets) {
                         useSoftTabs: true,
                     });
 
+                    aceEditor.setOptions({fontFamily: 'JetBrainsMono'});
+                    aceEditor.setFontSize('var(--font-size-small)');
+                    aceEditor.container.style.lineHeight = 'var(--line-height-small)';
+                    aceEditor.renderer.updateFontSize();
+
                     if (options.isDark) {
                         aceEditor.setOptions({theme: 'ace/theme/tomorrow_night'});
                     }

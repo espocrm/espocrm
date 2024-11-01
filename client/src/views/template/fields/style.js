@@ -52,7 +52,7 @@ class TemplateStyleFieldView extends TextFieldView {
         <div id="{{containerId}}">{{value}}</div>
     `
 
-    height = 50
+    height = 46
     maxLineDetailCount = 80
     maxLineEditCount = 200
 
@@ -134,6 +134,11 @@ class TemplateStyleFieldView extends TextFieldView {
             }
 
             const editor = this.editor = ace.edit(this.containerId);
+
+            editor.setOptions({fontFamily: 'JetBrainsMono'});
+            editor.setFontSize('var(--font-size-base)');
+            editor.container.style.lineHeight = 'var(--line-height-computed)';
+            editor.renderer.updateFontSize();
 
             editor.setOptions({
                 maxLines: this.mode === this.MODE_EDIT ? this.maxLineEditCount : this.maxLineDetailCount,
