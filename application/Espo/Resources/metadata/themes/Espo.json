@@ -16,7 +16,7 @@
         "navbarHeight": {
             "param": "navbar",
             "valueMap": {
-                "side": 30,
+                "side": 32,
                 "top": 43
             }
         }
