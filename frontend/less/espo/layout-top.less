@@ -400,7 +400,9 @@ body:not([data-navbar="side"]) {
 
     @media screen and (min-width: @screen-sm-min) {
         .folders-container.sticked {
-            top: calc(var(--8px) * 10 + var(--7px));
+            //top: calc(var(--8px) * 10 + var(--7px));
+            // @todo Use variable instead of 46px. It's a sticky bar height.
+            top: calc(var(--navbar-height) + var(--46px));
         }
     }
 }
