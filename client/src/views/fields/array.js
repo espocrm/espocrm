@@ -870,8 +870,12 @@ class ArrayFieldView extends BaseFieldView {
         };
     }
 
+    /**
+     * @protected
+     * @return {Promise<import('views/modals/array-field-add').default>}
+     */
     actionAddItem() {
-        this.createView('addModal', this.addItemModalView, this.getAddItemModalOptions(), view => {
+        return this.createView('dialog', this.addItemModalView, this.getAddItemModalOptions(), view => {
             view.render();
 
             view.once('add', item => {

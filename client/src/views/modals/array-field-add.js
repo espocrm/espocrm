@@ -37,8 +37,7 @@ class ArrayFieldAddModalView extends ModalView {
 
     data() {
         return {
-            optionList: this.optionList,
-            translatedOptions: this.translations,
+            optionDataList: this.getOptionDataList(),
         };
     }
 
@@ -76,7 +75,11 @@ class ArrayFieldAddModalView extends ModalView {
     setup() {
         this.headerText = this.translate('Add Item');
         this.checkedList = [];
+
+        /** @type {Object.<string, string>} */
         this.translations = Espo.Utils.clone(this.options.translatedOptions || {});
+
+        /** @type {string[]} */
         this.optionList = this.options.options || [];
 
         this.optionList.forEach(item => {
@@ -110,6 +113,17 @@ class ArrayFieldAddModalView extends ModalView {
         setTimeout(() => {
             this.$el.find('input[data-name="quick-search"]').focus();
         }, 100);
+    }
+
+    /**
+     * @protected
+     * @return {{value: string, label: string}[]}
+     */
+    getOptionDataList() {
+        return this.optionList.map(value => ({
+            value: value,
+            label: (value in this.translations) ? this.translations[value] : value,
+        }));
     }
 
     processQuickSearch(text) {
