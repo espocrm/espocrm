@@ -265,6 +265,13 @@
     overflow-y: visible !important;
 }
 
+.modal.in {
+    .modal-dialog {
+        // Important. Prevents overflow of sticky bars.
+        transform: translate(0, 0);
+    }
+}
+
 .modal-body > .list-group {
     background-color: var(--panel-bg);
 }
