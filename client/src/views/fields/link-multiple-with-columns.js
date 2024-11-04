@@ -482,7 +482,7 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
         if (this.isEditMode()) {
             $columnList.forEach($column => {
 
-                if ($column.get(0).tagName === 'SELECT') {
+                if ($column.get(0) && $column.get(0).tagName === 'SELECT') {
                     Select.init($column);
                 }
 

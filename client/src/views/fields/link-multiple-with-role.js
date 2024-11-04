@@ -296,7 +296,7 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
             $role = $el.find('input.role');
         }
 
-        if ($role && $role.get(0).tagName === 'SELECT') {
+        if ($role && $role.get(0) && $role.get(0).tagName === 'SELECT') {
             Select.init($role);
         }
 
