@@ -24,21 +24,27 @@ body > .alert {
 
     .close-container {
         width: var(--16px);
+        height: var(--16px);
         float: right;
 
-        height: var(--16px);
-
         .close {
-            right: var(--minus-10px);
+            right: var(--minus-11px);
+            top: var(--minus-1px);
             position: relative;
             color: inherit;
             text-shadow: none;
             opacity: 1;
-
+            background: transparent;
+            padding: 0;
+            border: 0;
             float: none;
 
             &:hover {
                 opacity: 0.7;
+            }
+
+            > span {
+                line-height: var(--16px);
             }
         }
     }

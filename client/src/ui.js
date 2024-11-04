@@ -1121,7 +1121,7 @@ Espo.Ui = {
                 .attr('data-dismiss', 'modal')
                 .attr('aria-hidden', 'true')
                 .addClass('close')
-                .html('&times;');
+                .html(`<span class="fas fa-times"></span>`);
 
             $el.append(
                 $('<div>')
