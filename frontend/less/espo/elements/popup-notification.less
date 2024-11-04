@@ -1,7 +1,8 @@
 #popup-notifications-container {
     overflow-y: auto;
     overflow-x: hidden;
-    right: 0;
+    // Some space to fix the scrollbar gutter issue https://github.com/w3c/csswg-drafts/issues/9904.
+    right: var(--12px);
     bottom: 0;
     position: fixed;
     height: auto;
