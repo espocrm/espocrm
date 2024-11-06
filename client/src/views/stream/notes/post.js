@@ -228,13 +228,28 @@ class PostNoteStreamView extends NoteStreamView {
         Espo.Ui.notify(' ... ');
 
         const previousMyReactions = this.model.attributes.myReactions;
+        const previousReactionCounts = this.model.attributes.reactionCounts;
 
-        this.model.set({myReactions: [type]}, {userReaction: true});
+        const reactionCounts = {...previousReactionCounts};
+
+        if (!(type in reactionCounts)) {
+            reactionCounts[type] = 0;
+        }
+
+        reactionCounts[type]++;
+
+        this.model.set({
+            myReactions: [type],
+            reactionCounts: reactionCounts,
+        }, {userReaction: true});
 
         try {
             await Espo.Ajax.postRequest(`Note/${this.model.id}/myReactions/${type}`);
         } catch (e) {
-            this.model.set({myReactions: previousMyReactions}, {userReaction: true});
+            this.model.set({
+                myReactions: previousMyReactions,
+                reactionCounts: previousReactionCounts,
+            }, {userReaction: true});
 
             return;
         }
@@ -252,13 +267,28 @@ class PostNoteStreamView extends NoteStreamView {
         Espo.Ui.notify(' ... ');
 
         const previousMyReactions = this.model.attributes.myReactions;
+        const previousReactionCounts = this.model.attributes.reactionCounts;
 
-        this.model.set({myReactions: []}, {userReaction: true});
+        const reactionCounts = {...previousReactionCounts};
+
+        if (!(type in reactionCounts)) {
+            reactionCounts[type] = 0;
+        }
+
+        reactionCounts[type]--;
+
+        this.model.set({
+            myReactions: [],
+            reactionCounts: reactionCounts,
+        }, {userReaction: true});
 
         try {
             await Espo.Ajax.deleteRequest(`Note/${this.model.id}/myReactions/${type}`);
         } catch (e) {
-            this.model.set({myReactions: previousMyReactions}, {userReaction: true});
+            this.model.set({
+                myReactions: previousMyReactions,
+                reactionCounts: previousReactionCounts,
+            }, {userReaction: true});
 
             return;
         }
