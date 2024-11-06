@@ -30,7 +30,9 @@
 namespace Espo\Tools\Notification;
 
 use Espo\Core\Acl;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
@@ -44,31 +46,21 @@ use Espo\Tools\Stream\NoteAccessControl;
 
 class RecordService
 {
-    private EntityManager $entityManager;
-    private Acl $acl;
-    private Metadata $metadata;
-    private NoteAccessControl $noteAccessControl;
-    private SelectBuilderFactory $selectBuilderFactory;
-
     public function __construct(
-        EntityManager $entityManager,
-        Acl $acl,
-        Metadata $metadata,
-        NoteAccessControl $noteAccessControl,
-        SelectBuilderFactory $selectBuilderFactory
-    ) {
-        $this->entityManager = $entityManager;
-        $this->acl = $acl;
-        $this->metadata = $metadata;
-        $this->noteAccessControl = $noteAccessControl;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-    }
+        private EntityManager $entityManager,
+        private Acl $acl,
+        private Metadata $metadata,
+        private NoteAccessControl $noteAccessControl,
+        private SelectBuilderFactory $selectBuilderFactory
+    ) {}
 
     /**
      * Get notifications for a user.
      *
      * @return RecordCollection<Notification>
      * @throws Error
+     * @throws BadRequest
+     * @throws Forbidden
      */
     public function get(string $userId, SearchParams $searchParams): RecordCollection
     {
