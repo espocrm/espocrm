@@ -40,16 +40,13 @@ export default class UserReactionNotificationItemView extends BaseNotificationIt
             </div>
             <div class="stream-head-text-container">
                 <span
-                    class="{{reactionIconClass}} text-muted action"
+                    class="{{reactionIconClass}} text-muted action icon"
                     style="cursor: pointer;"
                     title="{{translate 'View'}}"
                     data-action="quickView"
                     data-id="{{noteId}}"
                     data-scope="Note"
-                ></span>
-                <span class="text-muted message">
-                    {{{message}}}
-                </span>
+                ></span><span class="text-muted message">{{{message}}}</span>
             </div>
         </div>
 

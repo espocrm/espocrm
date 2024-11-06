@@ -10,17 +10,13 @@
     </div>
     <div class="stream-head-text-container">
         <span
-            class="text-muted"
-        ><span
             class="{{emailIconClassName}} action icon"
             style="cursor: pointer;"
             title="{{translate 'View'}}"
             data-action="quickView"
             data-id="{{emailId}}"
             data-scope="Email"
-        ></span>
-            {{{message}}}
-        </span>
+        ></span><span class="message text-muted">{{{message}}}</span>
     </div>
 </div>
 
