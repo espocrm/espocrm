@@ -39,7 +39,14 @@ export default class UserReactionNotificationItemView extends BaseNotificationIt
                 {{{avatar}}}
             </div>
             <div class="stream-head-text-container">
-                <span class="{{reactionIconClass}} text-muted"></span>
+                <span
+                    class="{{reactionIconClass}} text-muted action"
+                    style="cursor: pointer;"
+                    title="{{translate 'View'}}"
+                    data-action="quickView"
+                    data-id="{{noteId}}"
+                    data-scope="Note"
+                ></span>
                 <span class="text-muted message">
                     {{{message}}}
                 </span>
@@ -59,11 +66,17 @@ export default class UserReactionNotificationItemView extends BaseNotificationIt
      */
     reactionIconClass
 
+    /**
+     * @private
+     * @type {string}
+     */
+    noteId
 
     data() {
         return {
             ...super.data(),
             reactionIconClass: this.reactionIconClass,
+            noteId: this.noteId,
         };
     }
 
@@ -74,6 +87,7 @@ export default class UserReactionNotificationItemView extends BaseNotificationIt
         const relatedParentType = this.model.attributes.relatedParentType;
 
         this.userId = this.model.attributes.createdById;
+        this.noteId = this.model.attributes.relatedId;
 
         this.messageData['type'] = this.translate(data.type, 'reactions');
 
@@ -108,8 +122,8 @@ export default class UserReactionNotificationItemView extends BaseNotificationIt
         }
 
         const postElement = document.createElement('a');
-        postElement.href = `#Note/view/${this.model.attributes.relatedId}`;
-        postElement.dataset.id = this.model.attributes.relatedId;
+        postElement.href = `#Note/view/${this.noteId}`;
+        postElement.dataset.id = this.noteId;
         postElement.dataset.scope = 'Note';
         postElement.textContent = postLabel;
 
