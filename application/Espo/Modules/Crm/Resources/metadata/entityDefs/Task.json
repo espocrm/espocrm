@@ -88,7 +88,8 @@
             "validatorClassNameList": [
                 "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\Valid",
                 "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\MaxCount"
-            ]
+            ],
+            "duplicateIgnore": true
         },
         "description": {
             "type": "text",
