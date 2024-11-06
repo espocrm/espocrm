@@ -229,9 +229,16 @@ class GlobalSearchView extends SiteNavbarItemView {
             return;
         }
 
+        const target = e.target;
+
+        if (!(target instanceof HTMLElement)) {
+            return;
+        }
+
         if (
-            this.containerElement !== e.target &&
-            !this.containerElement.contains(e.target)
+            this.containerElement !== target &&
+            !this.containerElement.contains(target) &&
+            !target.classList.contains('modal')
         ) {
             return this.closePanel();
         }

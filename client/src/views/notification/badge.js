@@ -527,10 +527,13 @@ class NotificationBadgeView extends View {
         const $document = $(document);
 
         $document.on('mouseup.notification', e => {
-            if (!$container.is(e.target) && $container.has(e.target).length === 0) {
-                if (!$(e.target).closest('div.modal-dialog').length) {
-                    this.closeNotifications();
-                }
+            if (
+                !$container.is(e.target) &&
+                $container.has(e.target).length === 0 &&
+                !$(e.target).closest('div.modal-dialog').length &&
+                !e.target.classList.contains('modal')
+            ) {
+                this.closeNotifications();
             }
         });
 
