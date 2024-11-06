@@ -77,34 +77,16 @@ class Cleanup implements JobDataLess
     private string $cleanupBackupPeriod = '2 month';
     private string $cleanupDeletedRecordsPeriod = '2 months';
 
-    private Config $config;
-    private EntityManager $entityManager;
-    private Metadata $metadata;
-    private FileManager $fileManager;
-    private InjectableFactory $injectableFactory;
-    private SelectBuilderFactory $selectBuilderFactory;
-    private ServiceContainer $recordServiceContainer;
-    private Log $log;
-
     public function __construct(
-        Config $config,
-        EntityManager $entityManager,
-        Metadata $metadata,
-        FileManager $fileManager,
-        InjectableFactory $injectableFactory,
-        SelectBuilderFactory $selectBuilderFactory,
-        ServiceContainer $recordServiceContainer,
-        Log $log
-    ) {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->metadata = $metadata;
-        $this->fileManager = $fileManager;
-        $this->injectableFactory = $injectableFactory;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-        $this->recordServiceContainer = $recordServiceContainer;
-        $this->log = $log;
-    }
+        private Config $config,
+        private EntityManager $entityManager,
+        private Metadata $metadata,
+        private FileManager $fileManager,
+        private InjectableFactory $injectableFactory,
+        private SelectBuilderFactory $selectBuilderFactory,
+        private ServiceContainer $recordServiceContainer,
+        private Log $log
+    ) {}
 
     public function run(): void
     {
