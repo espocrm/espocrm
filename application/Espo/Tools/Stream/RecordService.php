@@ -59,7 +59,8 @@ class RecordService
         private Helper $helper,
         private QueryHelper $queryHelper,
         private Metadata $metadata,
-        private NoteHelper $noteHelper
+        private NoteHelper $noteHelper,
+        private MassNotePreparator $massNotePreparator,
     ) {}
 
     /**
@@ -158,6 +159,8 @@ class RecordService
             $this->prepareNote($item, $scope, $id);
         }
 
+        $this->massNotePreparator->prepare($collection);
+
         return $collection;
     }
 
@@ -215,6 +218,8 @@ class RecordService
         foreach ($collection as $e) {
             $this->prepareNote($e, $scope, $id);
         }
+
+        $this->massNotePreparator->prepare($collection);
 
         $count = $this->entityManager
             ->getRDBRepositoryByClass(Note::class)

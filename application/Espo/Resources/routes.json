@@ -325,6 +325,21 @@
         "actionClassName": "Espo\\Tools\\Attachment\\Api\\PostCopy"
     },
     {
+        "route": "/Note/:id/myReactions/:type",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Stream\\Api\\PostMyReactions"
+    },
+    {
+        "route": "/Note/:id/myReactions/:type",
+        "method": "delete",
+        "actionClassName": "Espo\\Tools\\Stream\\Api\\DeleteMyReactions"
+    },
+    {
+        "route": "/Note/:id/reactors/:type",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\Stream\\Api\\GetNoteReactors"
+    },
+    {
         "route": "/EmailTemplate/:id/prepare",
         "method": "post",
         "actionClassName": "Espo\\Tools\\EmailTemplate\\Api\\PostPrepare"

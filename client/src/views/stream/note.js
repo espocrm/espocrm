@@ -123,6 +123,7 @@ class NoteStreamView extends View {
                 listType: this.listType,
                 isThis: this.isThis,
                 parentModel: this.parentModel,
+                isNotification: this.options.isNotification,
             });
         }
     }

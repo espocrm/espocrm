@@ -36,4 +36,5 @@
     {{#if isPinned}}
         <span class="fas fa-map-pin fa-sm pin-icon" title="{{translate 'Pinned' scope='Note'}}"></span>
     {{/if}}
+    <div class="reactions-container">{{{reactions}}}</div>
 </div>

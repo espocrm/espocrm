@@ -8,17 +8,23 @@
     <ul class="dropdown-menu pull-right list-row-dropdown-menu" data-id="{{model.id}}">
     {{#each actionList}}
         {{#if this}}
-            <li>
-                <a
-                        {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
-                        tabindex="0"
-                        class="action"
-                        {{#if action}}data-action="{{action}}"{{/if}}
-                    {{#each data}}
-                        data-{{hyphen @key}}="{{./this}}"
-                    {{/each}}
-                >{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}
-                </a>
+            <li
+                {{#if viewKey}} data-view-key="{{viewKey}}" {{/if}}
+            >
+                {{#if viewKey}}
+                    {{{lookup ../this viewKey}}}
+                {{else}}
+                    <a
+                        {{#if link}} href="{{link}}" {{else}} role="button" {{/if}}
+                            tabindex="0"
+                            class="action"
+                            {{#if action}}data-action="{{action}}"{{/if}}
+                        {{#each data}}
+                            data-{{hyphen @key}}="{{./this}}"
+                        {{/each}}
+                    >{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}
+                    </a>
+                {{/if}}
             </li>
         {{else}}
             {{#unless @first}}

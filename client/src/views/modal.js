@@ -387,6 +387,10 @@ class ModalView extends View {
             if (!this.noFullHeight) {
                 this.initBodyScrollListener();
             }
+
+            if (this.getParentView()) {
+                this.getParentView().trigger('modal-shown');
+            }
         });
 
         this.once('remove', () => {

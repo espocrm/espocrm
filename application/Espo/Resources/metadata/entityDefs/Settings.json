@@ -918,6 +918,14 @@
             "type": "linkMultiple",
             "entity": "User",
             "tooltip": true
+        },
+        "availableReactions": {
+            "type": "array",
+            "maxCount": 9,
+            "view": "views/settings/fields/available-reactions",
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\Settings\\AvailableReactions\\Valid"
+            ]
         }
     }
 }

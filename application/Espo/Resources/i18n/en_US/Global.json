@@ -311,7 +311,10 @@
         "Copy to Clipboard": "Copy to Clipboard",
         "Copied to clipboard": "Copied to clipboard",
         "Audit Log": "Audit Log",
-        "View Audit Log": "View Audit Log"
+        "View Audit Log": "View Audit Log",
+        "Reacted": "Reacted",
+        "Reaction Removed": "Reaction Removed",
+        "Reactions": "Reactions"
     },
     "messages": {
         "pleaseWait": "Please wait...",
@@ -517,7 +520,9 @@
         "assign": "{entityType} {entity} has been assigned to you",
         "emailReceived": "Email received from {from}",
         "entityRemoved": "{user} removed {entityType} {entity}",
-        "emailInbox": "{user} added email {entity} to your inbox"
+        "emailInbox": "{user} added email {entity} to your inbox",
+        "userPostReaction": "{user} reacted to your {post}",
+        "userPostInParentReaction": "{user} reacted to your {post} in {entityType} {entity}"
     },
     "streamMessages": {
         "post": "{user} posted on {entityType} {entity}",
@@ -984,5 +989,15 @@
     },
     "strings": {
         "yesterdayShort": "Yest"
+    },
+    "reactions": {
+        "Smile": "Smile",
+        "Surprise": "Surprise",
+        "Laugh": "Laugh",
+        "Meh": "Meh",
+        "Sad": "Sad",
+        "Love": "Love",
+        "Like": "Like",
+        "Dislike": "Dislike"
     }
 }

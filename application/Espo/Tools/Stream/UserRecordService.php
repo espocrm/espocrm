@@ -68,7 +68,8 @@ class UserRecordService
         private NoteAccessControl $noteAccessControl,
         private Helper $helper,
         private QueryHelper $queryHelper,
-        private NoteHelper $noteHelper
+        private NoteHelper $noteHelper,
+        private MassNotePreparator $massNotePreparator,
     ) {}
 
     /**
@@ -613,6 +614,8 @@ class UserRecordService
             $this->noteAccessControl->apply($e, $user);
             $this->noteHelper->prepare($e);
         }
+
+        $this->massNotePreparator->prepare($collection);
 
         return RecordCollection::createNoCount($collection, $maxSize);
     }

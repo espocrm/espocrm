@@ -146,6 +146,33 @@ ul.dropdown-menu-with-icons {
     }
 }
 
+ul.dropdown-menu {
+    > li {
+        a {
+            .item-icon + .item-text {
+                padding-left: var(--8px);
+            }
+        }
+    }
+
+    > li {
+        .item-icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(var(--34px), 1fr));
+
+            > a {
+                padding: var(--4px) var(--4px);
+                text-align: center;
+
+                &:hover {
+                    background-color: var(--dropdown-link-hover-bg);
+                }
+            }
+        }
+
+    }
+}
+
 .btn-group.open .dropdown-toggle {
     &.btn-text {
         box-shadow: none;

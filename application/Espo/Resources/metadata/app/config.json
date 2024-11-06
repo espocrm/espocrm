@@ -153,6 +153,9 @@
         },
         "authIpAddressCheckExcludedUsers": {
             "level": "superAdmin"
+        },
+        "availableReactions": {
+            "level": "global"
         }
     }
 }

@@ -338,7 +338,7 @@ class PanelStreamView extends RelationshipPanelView {
                 const model = this.collection.get(data.noteId);
 
                 if (model) {
-                    model.fetch()
+                    model.fetch({keepRowActions: true})
                         .then(() => this.syncPinnedModel(model, true));
                 }
 
@@ -463,6 +463,13 @@ class PanelStreamView extends RelationshipPanelView {
             }, view => {
                 view.render();
 
+                this.listenTo(this.pinnedCollection, 'change',
+                    (/** import('model').default */model, /** Record */o) => {
+                        if (o.userReaction) {
+                            this.syncPinnedModel(model, false);
+                        }
+                    });
+
                 this.listenTo(view, 'after:save', /** import('model').default */model => {
                     this.syncPinnedModel(model, false);
                 });
@@ -492,6 +499,13 @@ class PanelStreamView extends RelationshipPanelView {
                 this.listenTo(view, 'after:save', /** import('model').default */model => {
                     this.syncPinnedModel(model, true);
                 });
+
+                this.listenTo(this.collection, 'change',
+                    (/** import('model').default */model, /** Record */o) => {
+                        if (o.userReaction) {
+                            this.syncPinnedModel(model, true);
+                        }
+                    });
 
                 this.listenTo(view, 'quote-reply', /** string */quoted => this.quoteReply(quoted));
             }
@@ -619,6 +633,8 @@ class PanelStreamView extends RelationshipPanelView {
             attachmentsNames: model.attributes.attachmentsNames,
             attachmentsTypes: model.attributes.attachmentsTypes,
             data: model.attributes.data,
+            reactionCounts: model.attributes.reactionCounts,
+            myReactions: model.attributes.myReactions,
         });
     }
 

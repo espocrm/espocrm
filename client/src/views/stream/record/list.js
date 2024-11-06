@@ -36,7 +36,16 @@ class ListStreamRecordView extends ListExpandedRecordView {
 
     massActionsDisabled = true
 
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    isUserStream
+
     setup() {
+        this.isUserStream = this.options.isUserStream || false;
+
         this.itemViews = this.getMetadata().get('clientDefs.Note.itemViews') || {};
 
         super.setup();
@@ -46,6 +55,12 @@ class ListStreamRecordView extends ListExpandedRecordView {
         this.listenTo(this.collection, 'update-sync', () => {
             this.buildRows(() => this.reRender());
         });
+
+        if (this.isUserStream || this.model.entityType === 'User') {
+            const collection = /** @type {import('collections/note').default} */this.collection;
+
+            collection.reactionsCheckMaxSize = this.getConfig().get('streamReactionsCheckMaxSize') || 0;
+        }
 
         this.listenTo(this.collection, 'sync', (c, r, options) => {
             if (!options.fetchNew) {

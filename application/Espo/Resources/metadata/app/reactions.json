@@ -1,0 +1,36 @@
+{
+    "list": [
+        {
+            "type": "Smile",
+            "iconClass": "far fa-face-smile"
+        },
+        {
+            "type": "Surprise",
+            "iconClass": "far fa-face-surprise"
+        },
+        {
+            "type": "Laugh",
+            "iconClass": "far fa-face-laugh"
+        },
+        {
+            "type": "Meh",
+            "iconClass": "far fa-face-meh"
+        },
+        {
+            "type": "Sad",
+            "iconClass": "far fa-face-frown"
+        },
+        {
+            "type": "Love",
+            "iconClass": "far fa-heart"
+        },
+        {
+            "type": "Like",
+            "iconClass": "far fa-thumbs-up"
+        },
+        {
+            "type": "Dislike",
+            "iconClass": "far fa-thumbs-down"
+        }
+    ]
+}

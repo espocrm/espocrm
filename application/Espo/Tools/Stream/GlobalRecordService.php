@@ -58,7 +58,8 @@ class GlobalRecordService
         private EntityManager $entityManager,
         private QueryHelper $queryHelper,
         private NoteAccessControl $noteAccessControl,
-        private NoteHelper $noteHelper
+        private NoteHelper $noteHelper,
+        private MassNotePreparator $massNotePreparator,
     ) {}
 
     /**
@@ -138,6 +139,8 @@ class GlobalRecordService
             $this->noteAccessControl->apply($note, $this->user);
             $this->noteHelper->prepare($note);
         }
+
+        $this->massNotePreparator->prepare($collection);
 
         return RecordCollection::createNoCount($collection, $maxSize);
     }

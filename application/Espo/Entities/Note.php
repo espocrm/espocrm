@@ -35,6 +35,7 @@ use Espo\Core\ORM\Entity;
 use Espo\Core\Field\DateTime;
 
 use Espo\ORM\Collection;
+use Espo\ORM\Entity as OrmEntity;
 use RuntimeException;
 use stdClass;
 
@@ -358,6 +359,11 @@ class Note extends Entity
         $this->set('isPinned', $isPinned);
 
         return $this;
+    }
+
+    public function getParent(): ?OrmEntity
+    {
+        return $this->relations->getOne('parent');
     }
 
     /**

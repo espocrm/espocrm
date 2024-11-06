@@ -34,6 +34,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Field\DateTime;
 use Espo\Core\Record\SearchParamsFetcher;
 
 use Espo\Core\Select\SearchParams;
@@ -42,6 +43,7 @@ use Espo\Entities\User as UserEntity;
 use Espo\Tools\Stream\RecordService;
 
 use Espo\Tools\Stream\UserRecordService;
+use Espo\Tools\UserReaction\ReactionStreamService;
 use stdClass;
 
 class Stream
@@ -51,7 +53,8 @@ class Stream
     public function __construct(
         private RecordService $service,
         private UserRecordService $userRecordService,
-        private SearchParamsFetcher $searchParamsFetcher
+        private SearchParamsFetcher $searchParamsFetcher,
+        private ReactionStreamService $reactionStreamService,
     ) {}
 
     /**
@@ -73,9 +76,13 @@ class Stream
         if ($scope === UserEntity::ENTITY_TYPE) {
             $collection = $this->userRecordService->find($id, $searchParams);
 
+            $reactionsCheckDate = DateTime::createNow();
+
             return (object) [
                 'total' => $collection->getTotal(),
                 'list' => $collection->getValueMapList(),
+                'reactionsCheckDate' => $reactionsCheckDate->toString(),
+                'updatedReactions' => $this->getReactionUpdates($request, $id),
             ];
         }
 
@@ -194,5 +201,23 @@ class Stream
         }
 
         return $searchParams;
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     * @return stdClass[]
+     */
+    private function getReactionUpdates(Request $request, ?string $id): array
+    {
+        $reactionsAfter = $request->getQueryParam('reactionsAfter');
+        $noteIds = explode(',', $request->getQueryParam('reactionsCheckNoteIds') ?? '');
+
+        if (!$reactionsAfter || !$noteIds) {
+            return [];
+        }
+
+        return $this->reactionStreamService->getReactionUpdates(DateTime::fromString($reactionsAfter), $noteIds, $id);
     }
 }

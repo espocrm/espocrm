@@ -39,9 +39,18 @@
         "relatedParent": {
             "type": "linkParent",
             "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
         }
     },
     "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
         "user": {
             "type": "belongsTo",
             "entity": "User"

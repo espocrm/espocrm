@@ -308,5 +308,7 @@ return [
     'authIpAddressWhitelist' => [],
     'authIpAddressCheckExcludedUsersIds' => [],
     'authIpAddressCheckExcludedUsersNames' => (object) [],
+    'availableReactions' => ['Like'],
+    'streamReactionsCheckMaxSize' => 50,
     'isInstalled' => false,
 ];

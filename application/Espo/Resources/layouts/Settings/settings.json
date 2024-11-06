@@ -46,9 +46,9 @@
         "tabBreak": true,
         "tabLabel": "$label:General",
         "rows": [
-            [{"name": "followCreatedEntities"}, {"name": "emailAddressIsOptedOutByDefault"}],
-            [{"name": "aclAllowDeleteCreated"}, {"name": "cleanupDeletedRecords"}],
-            [{"name": "exportDisabled"}, {"name": "b2cMode"}],
+            [{"name": "cleanupDeletedRecords"}, {"name": "emailAddressIsOptedOutByDefault"}],
+            [{"name": "aclAllowDeleteCreated"}, {"name": "b2cMode"}],
+            [{"name": "exportDisabled"}, false],
             [{"name": "pdfEngine"}, false]
         ]
 
@@ -79,6 +79,12 @@
         "label": "Attachments",
         "rows": [
             [{"name": "attachmentUploadMaxSize"}, {"name": "attachmentUploadChunkSize"}]
+        ]
+    },
+    {
+        "label": "Stream",
+        "rows": [
+            [{"name": "availableReactions"}, {"name": "followCreatedEntities"}]
         ]
     }
 ]

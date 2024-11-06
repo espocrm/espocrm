@@ -172,7 +172,8 @@
         "quickSearchFullTextAppendWildcard": "Append wildcard in quick search",
         "authIpAddressCheck": "Restrict access by IP address",
         "authIpAddressWhitelist": "IP Address Whitelist",
-        "authIpAddressCheckExcludedUsers": "Users excluded from check"
+        "authIpAddressCheckExcludedUsers": "Users excluded from check",
+        "availableReactions": "Available Reactions"
     },
     "options": {
         "authenticationMethod": {

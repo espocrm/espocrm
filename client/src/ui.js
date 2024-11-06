@@ -902,6 +902,8 @@ Espo.Ui = {
      * @property {boolean} [noHideOnOutsideClick=false] Don't hide on clicking outside.
      * @property {function(): void} [onShow] On-show callback.
      * @property {function(): void} [onHide] On-hide callback.
+     * @property {string|function(): string} [title] A title text.
+     * @property {boolean} [keepElementTitle] Keep an original element's title.
      */
 
     /**
@@ -910,7 +912,12 @@ Espo.Ui = {
      * @param {Element|JQuery} element An element.
      * @param {Espo.Ui~PopoverOptions} o Options.
      * @param {module:view} [view] A view.
-     * @return {{hide: function(), destroy: function(), show: function(), detach: function()}}
+     * @return {{
+     *     hide: function(),
+     *     destroy: function(),
+     *     show: function(): string,
+     *     detach: function(),
+     * }}
      */
     popover: function (element, o, view) {
         const $el = $(element);
@@ -935,6 +942,8 @@ Espo.Ui = {
                 html: true,
                 content: content,
                 trigger: o.trigger || 'manual',
+                title: o.title,
+                keepElementTitle: o.keepElementTitle,
             })
             .on('shown.bs.popover', () => {
                 isShown = true;
@@ -1021,6 +1030,8 @@ Espo.Ui = {
         const show = () => {
             // noinspection JSUnresolvedReference
             $el.popover('show');
+
+            return $el.attr('aria-describedby');
         };
 
         if (view) {

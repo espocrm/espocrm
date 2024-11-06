@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import NoteStreamView from 'views/stream/note';
+import NoteReactionsView from 'views/stream/reactions';
 
 class PostNoteStreamView extends NoteStreamView {
 
@@ -49,6 +50,9 @@ class PostNoteStreamView extends NoteStreamView {
     }
 
     setup() {
+        this.addActionHandler('react', (e, target) => this.react(target.dataset.type));
+        this.addActionHandler('unReact', (e, target) => this.unReact(target.dataset.type));
+
         this.createField('post', null, null, 'views/stream/fields/post');
 
         this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple', {
@@ -56,6 +60,8 @@ class PostNoteStreamView extends NoteStreamView {
         });
 
         this.isInternal = this.model.get('isInternal');
+
+        this.setupReactions();
 
         if (!this.model.get('post') && this.model.get('parentId')) {
             this.messageName = 'attach';
@@ -212,6 +218,64 @@ class PostNoteStreamView extends NoteStreamView {
         this.messageData['html:target'] = userHtmlList.join(', ');
 
         this.createMessage();
+    }
+
+    /**
+     * @private
+     * @param {string} type
+     */
+    async react(type) {
+        Espo.Ui.notify(' ... ');
+
+        const previousMyReactions = this.model.attributes.myReactions;
+
+        this.model.set({myReactions: [type]}, {userReaction: true});
+
+        try {
+            await Espo.Ajax.postRequest(`Note/${this.model.id}/myReactions/${type}`);
+        } catch (e) {
+            this.model.set({myReactions: previousMyReactions}, {userReaction: true});
+
+            return;
+        }
+
+        Espo.Ui.success(this.translate('Reacted') + ' · ' + this.translate(type, 'reactions'));
+
+        await this.model.fetch({userReaction: true, keepRowActions: true});
+    }
+
+    /**
+     * @private
+     * @param {string} type
+     */
+    async unReact(type) {
+        Espo.Ui.notify(' ... ');
+
+        const previousMyReactions = this.model.attributes.myReactions;
+
+        this.model.set({myReactions: []}, {userReaction: true});
+
+        try {
+            await Espo.Ajax.deleteRequest(`Note/${this.model.id}/myReactions/${type}`);
+        } catch (e) {
+            this.model.set({myReactions: previousMyReactions}, {userReaction: true});
+
+            return;
+        }
+
+        Espo.Ui.warning(this.translate('Reaction Removed'));
+
+        await this.model.fetch({userReaction: true, keepRowActions: true});
+    }
+
+    /**
+     * @private
+     */
+    setupReactions() {
+        const view = new NoteReactionsView({model: this.model});
+        this.assignView('reactions', view, '.reactions-container');
+
+        this.listenTo(this.model, 'change:reactionCounts change:myReactions', () => view.reRenderWhenNoPopover());
     }
 }
 

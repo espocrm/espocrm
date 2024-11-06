@@ -139,6 +139,10 @@
             [
                 {"name": "assignmentNotificationsIgnoreEntityTypeList"},
                 {"name": "assignmentEmailNotificationsIgnoreEntityTypeList"}
+            ],
+            [
+                {"name": "reactionNotifications"},
+                false
             ]
         ]
     }

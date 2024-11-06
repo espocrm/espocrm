@@ -111,13 +111,21 @@ class BaseNotificationItemView extends View {
 
         string = string.toLowerCase();
 
-        const language = this.getPreferences().get('language') || this.getConfig().get('language');
-
-        if (['de_DE', 'nl_NL'].includes(language)) {
+        if (this.toUpperCaseFirstLetter()) {
             string = Espo.Utils.upperCaseFirst(string);
         }
 
         return string;
+    }
+
+    /**
+     * @property
+     * @return {boolean}
+     */
+    toUpperCaseFirstLetter() {
+        const language = this.getPreferences().get('language') || this.getConfig().get('language');
+
+        return ['de_DE', 'nl_NL'].includes(language);
     }
 }
 

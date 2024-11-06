@@ -35,9 +35,20 @@ class NoteCollection extends Collection {
     paginationByNumber = false
 
     /**
+     * @private
+     * @type {string|null}
+     */
+    reactionsCheckDate = null
+
+    /**
      * @type {Record[]}
      */
     pinnedList
+
+    /**
+     * @type {number}
+     */
+    reactionsCheckMaxSize = 0;
 
     /** @inheritDoc */
     prepareAttributes(response, params) {
@@ -52,6 +63,24 @@ class NoteCollection extends Collection {
 
         if (response.pinnedList) {
             this.pinnedList = Espo.Utils.cloneDeep(response.pinnedList);
+        }
+
+        this.reactionsCheckDate = response.reactionsCheckDate;
+
+        /** @type {Record[]} */
+        const updatedReactions = response.updatedReactions;
+
+        if (updatedReactions) {
+            updatedReactions.forEach(item => {
+                const model = this.get(item.id);
+
+                if (!model) {
+                    return;
+                }
+
+                model.set(item, {keepRowActions: true});
+
+            });
         }
 
         return list;
@@ -76,6 +105,16 @@ class NoteCollection extends Collection {
             options.remove = false;
             options.at = 0;
             options.maxSize = null;
+
+            if (this.reactionsCheckMaxSize) {
+                options.data.reactionsAfter = this.reactionsCheckDate || options.data.after;
+
+                options.data.reactionsCheckNoteIds = this.models
+                    .filter(model => model.attributes.type === 'Post')
+                    .map(model => model.id)
+                    .slice(0, this.reactionsCheckMaxSize)
+                    .join(',');
+            }
         }
 
         return this.fetch(options);

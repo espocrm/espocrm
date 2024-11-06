@@ -44,6 +44,7 @@ class Notification extends Entity
     public const TYPE_NOTE = 'Note';
     public const TYPE_MENTION_IN_POST = 'MentionInPost';
     public const TYPE_MESSAGE = 'Message';
+    public const TYPE_USER_REACTION = 'UserReaction';
     public const TYPE_SYSTEM = 'System';
 
     public function getType(): ?string
@@ -93,9 +94,28 @@ class Notification extends Entity
         return $this->getValueObject('related');
     }
 
-    public function setRelated(?LinkParent $related): self
+    public function setRelated(LinkParent|Entity|null $related): self
     {
-        $this->setValueObject('related', $related);
+        if ($related instanceof LinkParent) {
+            $this->setValueObject('related', $related);
+
+            return $this;
+        }
+
+        $this->relations->set('related', $related);
+
+        return $this;
+    }
+
+    public function setRelatedParent(LinkParent|Entity|null $relatedParent): self
+    {
+        if ($relatedParent instanceof LinkParent) {
+            $this->setValueObject('relatedParent', $relatedParent);
+
+            return $this;
+        }
+
+        $this->relations->set('relatedParent', $relatedParent);
 
         return $this;
     }

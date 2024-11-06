@@ -40,6 +40,8 @@ import View from 'view';
  *     groupIndex?: number,
  *     name?: string,
  *     text?: string,
+ *     html?: string,
+ *     viewKey?: string,
  * }} module:views/record/row-actions/actions~item
  */
 
@@ -62,7 +64,13 @@ class DefaultRowActionsView extends View {
 
         this.setupAdditionalActions();
 
-        this.listenTo(this.model, 'change', () => this.reRender());
+        this.listenTo(this.model, 'change', (m, /** Record */o) => {
+            if (o.keepRowActions) {
+                return;
+            }
+
+            this.reRender();
+        });
     }
 
     afterRender() {

@@ -41,10 +41,11 @@ class NotificationContainerFieldView extends BaseFieldView {
         'EntityRemoved',
         'Message',
         'System',
+        'UserReaction',
     ]
 
     setup() {
-        switch (this.model.get('type')) {
+        switch (this.model.attributes.type) {
             case 'Note':
                 this.processNote(this.model.get('noteData'));
 

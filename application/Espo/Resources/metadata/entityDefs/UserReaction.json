@@ -1,0 +1,39 @@
+{
+    "fields": {
+        "type": {
+            "type": "varchar",
+            "maxLength": 10
+        },
+        "user": {
+            "type": "link"
+        },
+        "parent": {
+            "type": "linkParent"
+        },
+        "createdAt": {
+            "type": "datetime"
+        }
+    },
+    "links": {
+        "user": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "parent": {
+            "type": "belongsToParent",
+            "entityList": ["Note"]
+        }
+    },
+    "indexes": {
+        "parentUserType": {
+            "unique": true,
+            "columns": [
+                "parentId",
+                "parentType",
+                "userId",
+                "type"
+            ]
+        }
+    },
+    "noDeletedAttribute": true
+}

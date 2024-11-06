@@ -27,7 +27,11 @@
         "label": "Notifications",
         "name": "notifications",
         "rows": [
-            [{"name": "receiveStreamEmailNotifications"}, false]
+            [{"name": "receiveStreamEmailNotifications"}, false],
+            [
+                {"name": "reactionNotifications"},
+                false
+            ]
         ]
     }
 ]
