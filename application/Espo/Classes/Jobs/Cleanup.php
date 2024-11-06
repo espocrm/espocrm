@@ -693,6 +693,8 @@ class Cleanup implements JobDataLess
                     ->deleteFromDb($attachment->getId());
             }
 
+            // @todo If ever reactions are supported not only for notes, then move out of the if-block.
+
             $deleteReactionsQuery = DeleteBuilder::create()
                 ->from(UserReaction::ENTITY_TYPE)
                 ->where([
