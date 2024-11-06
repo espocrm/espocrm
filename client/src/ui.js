@@ -953,10 +953,10 @@ Espo.Ui = {
                 }
 
                 if (view && !o.noHideOnOutsideClick) {
-                    $body.off('click.popover-' + view.cid);
+                    $body.off(`click.popover-${view.cid}`);
 
-                    $body.on('click.popover-' + view.cid, e => {
-                        if ($(e.target).closest('.popover-content').get(0)) {
+                    $body.on(`click.popover-${view.cid}`, e => {
+                        if ($(e.target).closest('.popover').get(0)) {
                             return;
                         }
 
@@ -968,7 +968,7 @@ Espo.Ui = {
                             return;
                         }
 
-                        $body.off('click.popover-' + view.cid);
+                        $body.off(`click.popover-${view.cid}`);
                         // noinspection JSUnresolvedReference
                         $el.popover('hide');
                     });
@@ -997,7 +997,7 @@ Espo.Ui = {
 
         const detach = () => {
             if (view) {
-                $body.off('click.popover-' + view.cid);
+                $body.off(`click.popover-${view.cid}`);
 
                 view.off('remove', destroy);
                 view.off('render', destroy);
