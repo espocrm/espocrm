@@ -47,6 +47,8 @@ use Espo\Entities\Notification;
 use Espo\Entities\ScheduledJob;
 use Espo\Entities\ScheduledJobLogRecord;
 use Espo\Entities\UniqueId;
+use Espo\Entities\UserReaction;
+use Espo\ORM\Query\DeleteBuilder;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\InjectableFactory;
@@ -690,6 +692,16 @@ class Cleanup implements JobDataLess
                     ->getRDBRepository(Attachment::ENTITY_TYPE)
                     ->deleteFromDb($attachment->getId());
             }
+
+            $deleteReactionsQuery = DeleteBuilder::create()
+                ->from(UserReaction::ENTITY_TYPE)
+                ->where([
+                    'parentId' => $entity->getId(),
+                    'parentType' => Note::ENTITY_TYPE,
+                ])
+                ->build();
+
+            $this->entityManager->getQueryExecutor()->execute($deleteReactionsQuery);
         }
 
         $arrayValueList = $this->entityManager
