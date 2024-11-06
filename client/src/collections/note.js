@@ -78,8 +78,7 @@ class NoteCollection extends Collection {
                     return;
                 }
 
-                model.set(item, {keepRowActions: true});
-
+                model.set(item);
             });
         }
 

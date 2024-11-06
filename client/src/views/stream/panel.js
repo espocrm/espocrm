@@ -338,7 +338,7 @@ class PanelStreamView extends RelationshipPanelView {
                 const model = this.collection.get(data.noteId);
 
                 if (model) {
-                    model.fetch({keepRowActions: true})
+                    model.fetch()
                         .then(() => this.syncPinnedModel(model, true));
                 }
 

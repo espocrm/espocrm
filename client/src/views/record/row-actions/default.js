@@ -52,6 +52,12 @@ class DefaultRowActionsView extends View {
 
     template = 'record/row-actions/default'
 
+    /**
+     * @private
+     * @type {boolean}
+     */
+    menuIsShown = false
+
     setup() {
         this.options.acl = this.options.acl || {};
         this.scope = this.options.scope || this.model.entityType;
@@ -69,11 +75,19 @@ class DefaultRowActionsView extends View {
                 return;
             }
 
+            if (this.menuIsShown) {
+                this.once('menu-hidden', () => this.reRender());
+
+                return;
+            }
+
             this.reRender();
         });
     }
 
     afterRender() {
+        this.menuIsShown = false;
+
         const $dd = this.$el.find('button[data-toggle="dropdown"]').parent();
 
         let isChecked = false;
@@ -88,12 +102,17 @@ class DefaultRowActionsView extends View {
             }
 
             $el.addClass('active');
+
+            this.menuIsShown = true;
         });
 
         $dd.on('hide.bs.dropdown', () => {
             if (!isChecked) {
                 this.$el.closest('.list-row').removeClass('active');
             }
+
+            this.menuIsShown = false;
+            this.trigger('menu-hidden');
         });
     }
 
