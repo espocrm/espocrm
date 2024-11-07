@@ -392,6 +392,9 @@ class DurationFieldView extends EnumFieldView {
         return end;
     }
 
+    /**
+     * @private
+     */
     updateDateEnd() {
         let end;
 
@@ -413,6 +416,9 @@ class DurationFieldView extends EnumFieldView {
         }, 1);
     }
 
+    /**
+     * @private
+     */
     updateDuration() {
         const seconds = this.seconds;
 
