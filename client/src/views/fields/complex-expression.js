@@ -44,6 +44,7 @@ class ComplexExpressionFieldView extends TextFieldView {
     height = 46
     maxLineDetailCount = 80
     maxLineEditCount = 200
+    smallFont = false
 
     events = {
         /** @this ComplexExpressionFieldView */
@@ -133,7 +134,15 @@ class ComplexExpressionFieldView extends TextFieldView {
                 this.mode === this.MODE_LIST
             )
         ) {
-            this.$editor.css('fontSize', 'var(--font-size-base)');
+            const fontSize = this.smallFont ?
+                'var(--font-size-small)' :
+                'var(--font-size-base)';
+
+            const lineHeight = this.smallFont ?
+                'var(--line-height-small)' :
+                'var(--line-height-computed)';
+
+            this.$editor.css('fontSize', fontSize);
 
             if (this.mode === this.MODE_EDIT) {
                 this.$editor.css('minHeight', this.height + 'px');
@@ -142,8 +151,8 @@ class ComplexExpressionFieldView extends TextFieldView {
             const editor = this.editor = ace.edit(this.containerId);
 
             editor.setOptions({fontFamily: 'var(--font-family-monospace)'});
-            editor.setFontSize('var(--font-size-base)');
-            editor.container.style.lineHeight = 'var(--line-height-computed)';
+            editor.setFontSize(fontSize);
+            editor.container.style.lineHeight = lineHeight;
             editor.renderer.updateFontSize();
 
             editor.setOptions({

@@ -46,6 +46,7 @@ class FormulaFieldView extends TextFieldView {
     maxLineEditCount = 200
     insertDisabled = false
     checkSyntaxDisabled = false
+    smallFont = false
 
     events = {
         /** @this FormulaFieldView */
@@ -66,6 +67,7 @@ class FormulaFieldView extends TextFieldView {
         super.setup();
 
         this.height = this.options.height || this.params.height || this.height;
+        this.smallFont = this.options.smallFont || this.params.smallFont || this.smallFont;
 
         this.maxLineDetailCount =
             this.options.maxLineDetailCount ||
@@ -145,7 +147,15 @@ class FormulaFieldView extends TextFieldView {
                 this.mode === this.MODE_LIST
             )
         ) {
-            this.$editor.css('fontSize', 'var(--font-size-base)');
+            const fontSize = this.smallFont ?
+                'var(--font-size-small)' :
+                'var(--font-size-base)';
+
+            const lineHeight = this.smallFont ?
+                'var(--line-height-small)' :
+                'var(--line-height-computed)';
+
+            this.$editor.css('fontSize', fontSize);
 
             if (this.mode === this.MODE_EDIT) {
                 const height = (this.height * this.getThemeManager().getFontSizeFactor()).toString();
@@ -156,8 +166,8 @@ class FormulaFieldView extends TextFieldView {
             const editor = this.editor = ace.edit(this.containerId);
 
             editor.setOptions({fontFamily: 'var(--font-family-monospace)'});
-            editor.setFontSize('var(--font-size-base)');
-            editor.container.style.lineHeight = 'var(--line-height-computed)';
+            editor.setFontSize(fontSize);
+            editor.container.style.lineHeight = lineHeight;
             editor.renderer.updateFontSize();
 
             editor.setOptions({
