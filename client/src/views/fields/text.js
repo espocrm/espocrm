@@ -153,6 +153,10 @@ class TextFieldView extends BaseFieldView {
             this.addHandler('input', 'textarea', (e, /** HTMLTextAreaElement */target) => {
                 const text = target.value;
 
+                if (!this.previewButtonElement) {
+                    return;
+                }
+
                 if (text) {
                     this.previewButtonElement.classList.remove('hidden');
                 } else {
@@ -376,7 +380,8 @@ class TextFieldView extends BaseFieldView {
                 this.$element.val(text);
             }
 
-            this.previewButtonElement = this.element.querySelector('a[data-action="previewText"]');
+            this.previewButtonElement = this.element ?
+                this.element.querySelector('a[data-action="previewText"]') : undefined;
 
             const textAreaElement = /** @type {HTMLTextAreaElement} */this.$element.get(0);
 
