@@ -145,6 +145,9 @@ class LayoutIndexView extends View {
     }
 
     afterRender() {
+        // To ensure notify about added field is closed. When followed to here from the field manager.
+        Espo.Ui.notify();
+
         this.controlActiveButton();
     }
 

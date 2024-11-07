@@ -179,7 +179,7 @@ class IndexFieldManagerView extends View {
         this.type = type;
 
         this.getRouter()
-            .navigate(`#Admin/fieldManager/scope=${scope}&type=${type}&create=true`, {trigger: false});
+            .navigate('#Admin/fieldManager/scope=' + scope + '&type=' + type + '&create=true', {trigger: false});
 
         Espo.Ui.notify(' ... ');
 
@@ -196,7 +196,18 @@ class IndexFieldManagerView extends View {
             view.once('after:save', () => {
                 this.openScope(this.scope);
 
-                Espo.Ui.success(this.translate('Created'));
+                if (!this.getMetadata().get(`scopes.${this.scope}.layouts`)) {
+                    Espo.Ui.success(this.translate('Created'), {suppress: true});
+
+                    return;
+                }
+
+                const message = this.translate('fieldCreatedAddToLayouts', 'messages', 'FieldManager')
+                    .replace('{link}', `#Admin/layouts/scope=${this.scope}&em=true`);
+
+                setTimeout(() => {
+                    Espo.Ui.notify(message, 'success', undefined, {closeButton: true});
+                }, 100);
             });
         });
     }
