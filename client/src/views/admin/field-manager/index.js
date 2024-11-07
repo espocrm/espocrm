@@ -169,12 +169,17 @@ class IndexFieldManagerView extends View {
         });
     }
 
+    /**
+     * @private
+     * @param {string} scope
+     * @param {string} type
+     */
     createField(scope, type) {
         this.scope = scope;
         this.type = type;
 
         this.getRouter()
-            .navigate('#Admin/fieldManager/scope=' + scope + '&type=' + type + '&create=true', {trigger: false});
+            .navigate(`#Admin/fieldManager/scope=${scope}&type=${type}&create=true`, {trigger: false});
 
         Espo.Ui.notify(' ... ');
 
