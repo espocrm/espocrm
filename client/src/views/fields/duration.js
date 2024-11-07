@@ -408,7 +408,6 @@ class DurationFieldView extends EnumFieldView {
             return;
         }
 
-
         const end = this._getDateEnd();
 
         // Smaller timeouts produce a js error in timepicker.
@@ -418,7 +417,7 @@ class DurationFieldView extends EnumFieldView {
             if (this.hasAllDay) {
                 this.model.set(this.endDateField, null);
             }
-        }, 90);
+        }, 100);
     }
 
     /**
