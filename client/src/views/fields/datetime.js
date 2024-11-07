@@ -204,10 +204,13 @@ class DatetimeFieldView extends DateFieldView {
     initTimepicker() {
         const $time = this.$time;
 
+        const modalBodyElement = this.element.closest('.modal-body');
+
         $time.timepicker({
             step: this.params.minuteStep || 30,
             scrollDefaultNow: true,
             timeFormat: this.timeFormatMap[this.getDateTime().timeFormat],
+            appendTo: modalBodyElement ? $(modalBodyElement) : 'body',
         });
 
         $time

@@ -116,6 +116,8 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
     initTimepicker() {
         const $time = this.$time;
 
+        const modalBodyElement = this.element.closest('.modal-body');
+
         const o = {
             step: this.params.minuteStep || 30,
             scrollDefaultNow: true,
@@ -124,6 +126,7 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
                 label: this.noneOption,
                 value: this.noneOption,
             }],
+            appendTo: modalBodyElement ? $(modalBodyElement) : 'body',
         };
 
         if (this.emptyTimeInInlineEditDisabled && this.isInlineEditMode() || this.noneOptionIsHidden) {
