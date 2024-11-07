@@ -115,7 +115,7 @@ class DurationFieldView extends EnumFieldView {
     getOptions() {
         const options = Espo.Utils.clone(this.model.getFieldParam(this.name, 'options') ?? []);
 
-        if (!this.model.get('isAllDay') && options.indexOf(this.seconds) === -1) {
+        if (!this.model.attributes.isAllDay && options.indexOf(this.seconds) === -1) {
             options.push(this.seconds);
         }
 
@@ -139,7 +139,7 @@ class DurationFieldView extends EnumFieldView {
 
         this.blockDateEndChangeListener = false;
 
-        this.listenTo(this.model, 'change:' + this.endField, (m, v, o) => {
+        this.listenTo(this.model, `change:${this.endField}`, (m, v, o) => {
             if (this.blockDateEndChangeListener) {
                 return;
             }
@@ -395,7 +395,7 @@ class DurationFieldView extends EnumFieldView {
     updateDateEnd() {
         let end;
 
-        if (this.model.get('isAllDay')) {
+        if (this.model.attributes.isAllDay) {
             end = this._getDateEndDate();
 
             setTimeout(() => {
