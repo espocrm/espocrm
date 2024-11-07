@@ -9,7 +9,7 @@
     },
     "tooltips": {
         "code": "ISO 3166-1 alpha-2 code.",
-        "isPreferred": "Preferred counties appear first in the picklist."
+        "isPreferred": "Preferred countries appear first in the picklist."
     },
     "messages": {
         "confirmPopulateDefaults": "All existing countries will be deleted, the default country list will be created. It won't be possible to revert the operation.\n\nAre you sure?"
