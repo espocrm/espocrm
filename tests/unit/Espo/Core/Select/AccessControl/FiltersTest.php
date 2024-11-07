@@ -129,7 +129,21 @@ class FiltersTest extends TestCase
                         'midKeys' => ['nId', 'fId'],
                         'relationName' => 'TestContact'
                     ], 'contacts')
-                ]
+                ],
+                [
+                    'account',
+                    RelationDefs::fromRaw([
+                        'type' => RelationType::BELONGS_TO,
+                        'entity' => Account::ENTITY_TYPE,
+                    ], 'account')
+                ],
+                [
+                    'contact',
+                    RelationDefs::fromRaw([
+                        'type' => RelationType::BELONGS_TO,
+                        'entity' => Contact::ENTITY_TYPE,
+                    ], 'contact')
+                ],
             ]);
 
         $this->queryBuilder
@@ -204,7 +218,21 @@ class FiltersTest extends TestCase
                         'midKeys' => ['nId', 'fId'],
                         'relationName' => 'TestContact'
                     ], 'contacts')
-                ]
+                ],
+                [
+                    'account',
+                    RelationDefs::fromRaw([
+                        'type' => RelationType::BELONGS_TO,
+                        'entity' => Account::ENTITY_TYPE,
+                    ], 'account')
+                ],
+                [
+                    'contact',
+                    RelationDefs::fromRaw([
+                        'type' => RelationType::BELONGS_TO,
+                        'entity' => Contact::ENTITY_TYPE,
+                    ], 'contact')
+                ],
             ]);
 
         $this->queryBuilder
