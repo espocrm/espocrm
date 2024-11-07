@@ -882,19 +882,17 @@ class RoleRecordTableView extends View {
      * @param {string} scope
      */
     showAddFieldModal(scope) {
-        this.trigger('change');
-
         const ignoreFieldList = Object.keys(this.acl.fieldData[scope] || {});
 
         this.createView('dialog', 'views/role/modals/add-field', {
             scope: scope,
             ignoreFieldList: ignoreFieldList,
             type: this.type,
-        }, view => {
+        }, /** import('views/role/modals/add-field').default */view => {
             view.render();
 
             this.listenTo(view, 'add-fields', async (/** string[] */fields) => {
-                this.clearView('dialog');
+                view.close();
 
                 const scopeData = this.fieldTableDataList.find(it => it.name === scope);
 
