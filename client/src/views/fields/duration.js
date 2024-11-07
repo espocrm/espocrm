@@ -63,7 +63,7 @@ class DurationFieldView extends EnumFieldView {
             }
         }
 
-        if (this.model.attributes.isAllDay) {
+        if (this.model.attributes.isAllDay && this.hasAllDay) {
             const startDate = this.model.attributes[this.startDateField];
             const endDate = this.model.attributes[this.endDateField];
 
@@ -131,6 +131,8 @@ class DurationFieldView extends EnumFieldView {
         this.startDateField = this.startField + 'Date';
         this.endDateField = this.endField + 'Date';
 
+        this.hasAllDay = this.model.getFieldType(this.startField) === 'datetimeOptional';
+
         if (!this.startField || !this.endField) {
             throw new Error(`Bad definition for field '${this.name}'.`);
         }
@@ -164,7 +166,7 @@ class DurationFieldView extends EnumFieldView {
             if (o.ui) {
                 const isAllDay = this.model.attributes[this.startDateField];
 
-                if (isAllDay) {
+                if (isAllDay && this.hasAllDay) {
                     const remainder = this.seconds % (3600 * 24);
 
                     if (remainder !== 0) {
@@ -398,7 +400,7 @@ class DurationFieldView extends EnumFieldView {
     updateDateEnd() {
         let end;
 
-        if (this.model.attributes.isAllDay) {
+        if (this.model.attributes.isAllDay && this.hasAllDay) {
             end = this._getDateEndDate();
 
             setTimeout(() => {
@@ -412,7 +414,10 @@ class DurationFieldView extends EnumFieldView {
 
         setTimeout(() => {
             this.model.set(this.endField, end, {updatedByDuration: true});
-            this.model.set(this.endDateField, null);
+
+            if (this.hasAllDay) {
+                this.model.set(this.endDateField, null);
+            }
         }, 1);
     }
 
