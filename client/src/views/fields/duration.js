@@ -398,10 +398,8 @@ class DurationFieldView extends EnumFieldView {
      * @private
      */
     updateDateEnd() {
-        let end;
-
         if (this.model.attributes.isAllDay && this.hasAllDay) {
-            end = this._getDateEndDate();
+            const end = this._getDateEndDate();
 
             setTimeout(() => {
                 this.model.set(this.endDateField, end, {updatedByDuration: true});
@@ -410,15 +408,17 @@ class DurationFieldView extends EnumFieldView {
             return;
         }
 
-        end = this._getDateEnd();
 
+        const end = this._getDateEnd();
+
+        // Smaller timeouts produce a js error in timepicker.
         setTimeout(() => {
             this.model.set(this.endField, end, {updatedByDuration: true});
 
             if (this.hasAllDay) {
                 this.model.set(this.endDateField, null);
             }
-        }, 1);
+        }, 90);
     }
 
     /**
