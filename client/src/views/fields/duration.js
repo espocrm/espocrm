@@ -64,8 +64,8 @@ class DurationFieldView extends EnumFieldView {
         }
 
         if (this.model.attributes.isAllDay) {
-            const startDate = this.model.get(this.startField + 'Date');
-            const endDate = this.model.get(this.endField + 'Date');
+            const startDate = this.model.attributes[this.startDateField];
+            const endDate = this.model.attributes[this.endDateField];
 
             if (startDate && endDate) {
                 this.seconds = moment(endDate).add(1,'days').unix() - moment(startDate).unix();
@@ -128,6 +128,9 @@ class DurationFieldView extends EnumFieldView {
         this.startField = this.model.getFieldParam(this.name, 'start');
         this.endField = this.model.getFieldParam(this.name, 'end');
 
+        this.startDateField = this.startField + 'Date';
+        this.endDateField = this.endField + 'Date';
+
         if (!this.startField || !this.endField) {
             throw new Error(`Bad definition for field '${this.name}'.`);
         }
@@ -159,7 +162,7 @@ class DurationFieldView extends EnumFieldView {
 
         this.listenTo(this.model, `change:${this.startField}`, (m, v, o) => {
             if (o.ui) {
-                const isAllDay = this.model.get(this.startField + 'Date');
+                const isAllDay = this.model.attributes[this.startDateField];
 
                 if (isAllDay) {
                     const remainder = this.seconds % (3600 * 24);
@@ -345,7 +348,7 @@ class DurationFieldView extends EnumFieldView {
      */
     _getDateEndDate() {
         const seconds = this.seconds;
-        const start = this.model.get(this.startField + 'Date');
+        const start = this.model.attributes[this.startDateField];
 
         if (!start) {
             return undefined;
@@ -396,7 +399,7 @@ class DurationFieldView extends EnumFieldView {
             end = this._getDateEndDate();
 
             setTimeout(() => {
-                this.model.set(this.endField + 'Date', end, {updatedByDuration: true});
+                this.model.set(this.endDateField, end, {updatedByDuration: true});
             }, 1);
 
             return;
@@ -406,7 +409,7 @@ class DurationFieldView extends EnumFieldView {
 
         setTimeout(() => {
             this.model.set(this.endField, end, {updatedByDuration: true});
-            this.model.set(this.endField + 'Date', null);
+            this.model.set(this.endDateField, null);
         }, 1);
     }
 
