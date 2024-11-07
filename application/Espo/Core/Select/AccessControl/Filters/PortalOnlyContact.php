@@ -38,6 +38,7 @@ use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Type\RelationType;
 
 class PortalOnlyContact implements Filter
 {
@@ -57,6 +58,10 @@ class PortalOnlyContact implements Filter
                 $orBuilder->add(
                     WhereClause::fromRaw(['contactId' => $contactId])
                 );
+
+                if ($this->fieldHelper->getRelationDefs('contact')->getType() === RelationType::HAS_ONE) {
+                    $queryBuilder->leftJoin('contact');
+                }
             }
 
             if ($this->fieldHelper->hasContactsRelation()) {
