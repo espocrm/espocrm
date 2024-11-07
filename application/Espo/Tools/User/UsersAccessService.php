@@ -120,7 +120,14 @@ class UsersAccessService
             ->from(User::ENTITY_TYPE)
             ->withStrictAccessControl()
             ->withSearchParams($params)
-            ->buildQueryBuilder();
+            ->buildQueryBuilder()
+            ->where([
+                'type' => [
+                    User::TYPE_REGULAR,
+                    User::TYPE_ADMIN,
+                    User::TYPE_API,
+                ]
+            ]);
 
         if ($this->acl->getPermissionLevel('user') === Acl\Table::LEVEL_TEAM) {
             $queryBuilder
