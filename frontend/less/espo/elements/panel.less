@@ -237,6 +237,14 @@
             &.active {
                 .box-shadow(none);
             }
+
+            &:hover,
+            &:focus,
+            &:active,
+            &.active {
+                // Prevents the issue that buttons can be visible through a dropdown opened nearby.
+                z-index: 1;
+            }
         }
 
         .btn-group .dropdown-toggle,
