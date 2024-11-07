@@ -615,6 +615,11 @@
         "actionClassName": "Espo\\Tools\\Stars\\Api\\DeleteUnstar"
     },
     {
+        "route": "/:entityType/:id/usersAccess",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\User\\Api\\PostRecordUsersAccess"
+    },
+    {
         "route": "/:controller/:id/:link",
         "method": "get",
         "params": {

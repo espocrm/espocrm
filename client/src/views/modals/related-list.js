@@ -292,7 +292,7 @@ class RelatedListModalView extends ModalView {
         }
 
         this.getCollectionFactory().create(this.scope, collection => {
-            collection.maxSize = this.getConfig().get('recordsPerPage');
+            collection.maxSize = this.options.maxSize || this.getConfig().get('recordsPerPage');
             collection.url = this.url;
 
             collection.setOrder(this.defaultOrderBy, this.defaultOrder, true);
@@ -429,12 +429,14 @@ class RelatedListModalView extends ModalView {
             collection: this.collection,
             fullSelector: this.containerSelector + ' .list-container',
             rowActionsView: this.rowActionsView,
+            listLayout: this.options.listLayout,
             layoutName: this.layoutName,
             searchManager: this.searchManager,
             buttonsDisabled: true,
             skipBuildRows: true,
             model: this.model,
             unlinkMassAction: !this.massUnlinkDisabled,
+            massActionsDisabled: this.options.massActionsDisabled,
             massActionRemoveDisabled: this.massActionRemoveDisabled,
             massActionMassUpdateDisabled: this.massActionMassUpdateDisabled,
             mandatorySelectAttributeList: this.mandatorySelectAttributeList,

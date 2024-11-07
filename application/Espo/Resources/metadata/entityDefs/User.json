@@ -501,6 +501,12 @@
             "utility": true,
             "notStorable": true,
             "readOnly": true
+        },
+        "recordAccessLevels": {
+            "type": "jsonObject",
+            "utility": true,
+            "notStorable": true,
+            "readOnly": true
         }
     },
     "links": {

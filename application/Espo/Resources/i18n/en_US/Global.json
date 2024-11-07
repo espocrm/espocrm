@@ -312,6 +312,7 @@
         "Copied to clipboard": "Copied to clipboard",
         "Audit Log": "Audit Log",
         "View Audit Log": "View Audit Log",
+        "View User Access": "View User Access",
         "Reacted": "Reacted",
         "Reaction Removed": "Reaction Removed",
         "Reactions": "Reactions"
@@ -999,5 +1000,12 @@
         "Love": "Love",
         "Like": "Like",
         "Dislike": "Dislike"
+    },
+    "recordActions": {
+        "create": "Create",
+        "read": "Read",
+        "edit": "Edit",
+        "delete": "Delete",
+        "stream": "Stream"
     }
 }

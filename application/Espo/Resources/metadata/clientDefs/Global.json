@@ -7,6 +7,14 @@
             "checkVisibilityFunction": "isAvailable",
             "handler": "handlers/record/view-audit-log",
             "groupIndex": 4
+        },
+        {
+            "name": "viewUserAccess",
+            "label": "View User Access",
+            "actionFunction": "show",
+            "checkVisibilityFunction": "isAvailable",
+            "handler": "handlers/record/view-user-access",
+            "groupIndex": 4
         }
     ]
 }
