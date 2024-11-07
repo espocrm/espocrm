@@ -25,6 +25,7 @@
  * In accordance with Section 7(b) of the GNU Affero General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
+
 import RelatedListModalView from 'views/modals/related-list';
 
 export default class {
@@ -84,6 +85,7 @@ export default class {
             maxSize: this.view.getConfig().get('recordsPerPageSmall'),
             rowActionsView: null,
             listLayout: listLayout,
+            filter: 'active',
         });
 
         await this.view.assignView('dialog', view);
