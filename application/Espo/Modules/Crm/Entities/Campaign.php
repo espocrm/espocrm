@@ -33,6 +33,7 @@ use Espo\Core\Field\Date;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\ORM\Entity;
+use Espo\Entities\User;
 
 class Campaign extends Entity
 {
@@ -75,5 +76,17 @@ class Campaign extends Entity
     {
         /** @var LinkMultiple */
         return $this->getValueObject('teams');
+    }
+
+    public function setAssignedUser(Link|User|null $assignedUser): self
+    {
+        return $this->setRelatedLinkOrEntity('assignedUser', $assignedUser);
+    }
+
+    public function setTeams(LinkMultiple $teams): self
+    {
+        $this->setValueObject('teams', $teams);
+
+        return $this;
     }
 }

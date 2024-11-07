@@ -29,6 +29,8 @@
 
 namespace Espo\Core\ORM;
 
+use Espo\Core\Field\Link;
+use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Query\Part\Order;
@@ -632,5 +634,21 @@ class Entity extends BaseEntity
         }
 
         return $columns;
+    }
+
+    /**
+     * @since 9.0.0
+     */
+    protected function setRelatedLinkOrEntity(string $relation, Link|LinkParent|Entity|null $related): static
+    {
+        if ($related instanceof Entity || $related === null) {
+            $this->relations->set($relation, $related);
+
+            return $this;
+        }
+
+        $this->setValueObject($relation, $related);
+
+        return $this;
     }
 }

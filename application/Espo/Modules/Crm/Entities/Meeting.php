@@ -34,6 +34,7 @@ use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Entity;
+use Espo\Entities\User;
 
 class Meeting extends Entity
 {
@@ -142,6 +143,18 @@ class Meeting extends Entity
         }
 
         $this->relations->set('parent', $parent);
+
+        return $this;
+    }
+
+    public function setAssignedUser(Link|User|null $assignedUser): self
+    {
+        return $this->setRelatedLinkOrEntity('assignedUser', $assignedUser);
+    }
+
+    public function setTeams(LinkMultiple $teams): self
+    {
+        $this->setValueObject('teams', $teams);
 
         return $this;
     }

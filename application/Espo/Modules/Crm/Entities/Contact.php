@@ -32,6 +32,7 @@ namespace Espo\Modules\Crm\Entities;
 use Espo\Core\Entities\Person;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
+use Espo\Entities\User;
 
 class Contact extends Person
 {
@@ -79,5 +80,17 @@ class Contact extends Person
     public function getTitle(): ?string
     {
         return $this->get('title');
+    }
+
+    public function setAssignedUser(Link|User|null $assignedUser): self
+    {
+        return $this->setRelatedLinkOrEntity('assignedUser', $assignedUser);
+    }
+
+    public function setTeams(LinkMultiple $teams): self
+    {
+        $this->setValueObject('teams', $teams);
+
+        return $this;
     }
 }

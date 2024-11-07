@@ -31,8 +31,10 @@ namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
+use Espo\Core\ORM\Entity;
+use Espo\Entities\User;
 
-class TargetList extends \Espo\Core\ORM\Entity
+class TargetList extends Entity
 {
     public const ENTITY_TYPE = 'TargetList';
 
@@ -46,5 +48,17 @@ class TargetList extends \Espo\Core\ORM\Entity
     {
         /** @var LinkMultiple */
         return $this->getValueObject('teams');
+    }
+
+    public function setAssignedUser(Link|User|null $assignedUser): self
+    {
+        return $this->setRelatedLinkOrEntity('assignedUser', $assignedUser);
+    }
+
+    public function setTeams(LinkMultiple $teams): self
+    {
+        $this->setValueObject('teams', $teams);
+
+        return $this;
     }
 }

@@ -34,6 +34,7 @@ use Espo\Core\Field\Date;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\ORM\Entity;
+use Espo\Entities\User;
 
 class Opportunity extends Entity
 {
@@ -140,13 +141,17 @@ class Opportunity extends Entity
 
     public function setAccount(Account|Link|null $account): self
     {
-        if ($account instanceof Link) {
-            $this->setValueObject('account', $account);
+        return $this->setRelatedLinkOrEntity('account', $account);
+    }
 
-            return $this;
-        }
+    public function setAssignedUser(Link|User|null $assignedUser): self
+    {
+        return $this->setRelatedLinkOrEntity('assignedUser', $assignedUser);
+    }
 
-        $this->relations->set('account', $account);
+    public function setTeams(LinkMultiple $teams): self
+    {
+        $this->setValueObject('teams', $teams);
 
         return $this;
     }
