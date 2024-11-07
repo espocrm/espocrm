@@ -134,8 +134,11 @@ class DateFieldView extends BaseFieldView {
 
                 await this.whenRendered();
 
-                // noinspection JSUnresolvedReference
-                this.$element.datepicker('setStartDate', this.getStartDateForDatePicker());
+                // Timeout prevents the picker popping one when the duration field adjusts the date end.
+                setTimeout(() => {
+                    // noinspection JSUnresolvedReference
+                    this.$element.datepicker('setStartDate', this.getStartDateForDatePicker());
+                }, 100);
             });
         }
 
