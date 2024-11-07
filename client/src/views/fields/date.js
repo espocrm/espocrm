@@ -221,7 +221,7 @@ class DateFieldView extends BaseFieldView {
         const readableFormat = this.getDateTime().getReadableDateFormat();
         const valueWithTime = value + ' 00:00:00';
 
-        const today = moment().tz(timezone).startOf('day');
+        const today = moment.tz(timezone).startOf('day');
         let dateTime = moment.tz(valueWithTime, internalDateTimeFormat, timezone);
 
         const temp = today.clone();
