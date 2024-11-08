@@ -107,6 +107,38 @@ module.exports = grunt => {
         };
     });
 
+    const cleanupBeforeFinal = [
+        'build/tmp/custom/Espo/Custom/*',
+        '!build/tmp/custom/Espo/Custom/.htaccess',
+        '!build/tmp/custom/Espo/Modules',
+        'build/tmp/custom/Espo/Modules/*',
+        '!build/tmp/custom/Espo/Modules/.htaccess',
+        'build/tmp/install/config.php',
+        'build/tmp/vendor/*/*/.git',
+        'build/tmp/client/custom/*',
+        '!build/tmp/client/custom/modules',
+        'build/tmp/client/custom/modules/*',
+        '!build/tmp/client/custom/modules/dummy.txt',
+        'build/tmp/client/modules/crm/src',
+        'build/tmp/client/lib/original',
+        'build/tmp/client/modules/crm/lib/original',
+        'build/tmp/client/lib/original/espo.js',
+        'build/tmp/client/lib/original/espo-*.js',
+        '!build/tmp/client/lib/original/espo-funnel-chart.js',
+        'build/tmp/client/lib/transpiled',
+    ];
+
+    const cleanupBeforeFinalTest = cleanupBeforeFinal.filter(it => {
+        return ![
+            '!build/tmp/custom/Espo/Modules',
+            'build/tmp/custom/Espo/Modules/*',
+            '!build/tmp/custom/Espo/Modules/.htaccess',
+            '!build/tmp/client/custom/modules',
+            'build/tmp/client/custom/modules/*',
+            '!build/tmp/client/custom/modules/dummy.txt',
+        ].includes(it)
+    })
+
     grunt.initConfig({
         pkg: pkg,
 
@@ -133,28 +165,8 @@ module.exports = grunt => {
             ],
             final: ['build/tmp'],
             release: ['build/EspoCRM-' + pkg.version],
-            beforeFinal: {
-                src: [
-                    'build/tmp/custom/Espo/Custom/*',
-                    '!build/tmp/custom/Espo/Custom/.htaccess',
-                    '!build/tmp/custom/Espo/Modules',
-                    'build/tmp/custom/Espo/Modules/*',
-                    '!build/tmp/custom/Espo/Modules/.htaccess',
-                    'build/tmp/install/config.php',
-                    'build/tmp/vendor/*/*/.git',
-                    'build/tmp/client/custom/*',
-                    '!build/tmp/client/custom/modules',
-                    'build/tmp/client/custom/modules/*',
-                    '!build/tmp/client/custom/modules/dummy.txt',
-                    'build/tmp/client/modules/crm/src',
-                    'build/tmp/client/lib/original',
-                    'build/tmp/client/modules/crm/lib/original',
-                    'build/tmp/client/lib/original/espo.js',
-                    'build/tmp/client/lib/original/espo-*.js',
-                    '!build/tmp/client/lib/original/espo-funnel-chart.js',
-                    'build/tmp/client/lib/transpiled',
-                ]
-            },
+            beforeFinal: {src: cleanupBeforeFinal},
+            beforeFinalTest: {src: cleanupBeforeFinalTest},
         },
 
         less: lessData,
@@ -517,7 +529,7 @@ module.exports = grunt => {
         'uglify:lib',
     ]);
 
-    grunt.registerTask('offline', [
+    const offline = [
         'clean:start',
         'mkdir:tmp',
         'internal',
@@ -529,7 +541,18 @@ module.exports = grunt => {
         'chmod-folders',
         'chmod-multiple',
         'clean:final',
-    ]);
+    ];
+
+    const offlineTest = offline.map(it => {
+        if (it === 'clean:beforeFinal') {
+            return 'clean:beforeFinalTest'
+        }
+
+        return it;
+    })
+
+    grunt.registerTask('offline', offline);
+    grunt.registerTask('offline-test', offlineTest);
 
     grunt.registerTask('build', [
         'composer-install',
@@ -574,6 +597,6 @@ module.exports = grunt => {
     grunt.registerTask('test', [
         'composer-install-dev',
         'npm-install',
-        'offline',
+        'offline-test',
     ]);
 };
