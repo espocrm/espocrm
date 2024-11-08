@@ -290,7 +290,7 @@
     /* dropdown-menu for selectbox */
     &.note-check {
       li a i {
-        color: deepskyblue;
+        //color: deepskyblue; // Espo
         visibility: hidden;
       }
       li a.checked i {
@@ -298,6 +298,25 @@
       }
     }
 
+      // Espo
+      .note-palette {
+          padding-bottom: var(--4px);
+
+          input.note-color-select-btn {
+              position: relative;
+              top: var(--4px);
+              left: var(--4px);
+              border: 0;
+          }
+
+          .note-holder-custom {
+              display: none;
+          }
+
+          .note-color-select {
+              display: none;
+          }
+      }
   }
 
   .note-fontsize-10 {

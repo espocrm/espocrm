@@ -677,6 +677,10 @@ class WysiwygFieldView extends TextFieldView {
             tableClassName: this.tableClassName,
             // Dnd has issues.
             disableDragAndDrop: true,
+            colorButton: {
+                foreColor: '#000000',
+                backColor: '#FFFFFF'
+            },
         };
 
         if (this.height) {
