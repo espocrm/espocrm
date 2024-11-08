@@ -29,6 +29,8 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Acl\OwnershipSharedChecker;
+use Espo\Core\Acl\Permission;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
@@ -69,7 +71,7 @@ use InvalidArgumentException;
  */
 class AclManager
 {
-    protected const PERMISSION_ASSIGNMENT = 'assignment';
+    protected const PERMISSION_ASSIGNMENT = Permission::ASSIGNMENT;
 
     /** @var array<string, AccessChecker> */
     private $accessCheckerHashMap = [];
@@ -245,9 +247,9 @@ class AclManager
      *
      * @param User $user A user to check for.
      * @param string|Entity $subject An entity type or entity.
-     * @param string|null $action Action to check. Constants are available in the `Table` class.
-     *
+     * @param Table::ACTION_*|null $action $action Action to check. Constants are available in the `Table` class.
      * @throws NotImplemented
+     * @noinspection PhpDocSignatureInspection
      */
     public function check(User $user, $subject, ?string $action = null): bool
     {
@@ -272,14 +274,14 @@ class AclManager
      *
      * @param User $user A user to check for.
      * @param string|Entity $subject An entity type or entity.
-     * @param string|null $action Action to check. Constants are available in the `Table` class.
+     * @param Table::ACTION_*|null $action Action to check. Constants are available in the `Table` class.
+     * @noinspection PhpDocSignatureInspection
      */
     public function tryCheck(User $user, $subject, ?string $action = null): bool
     {
         try {
             return $this->check($user, $subject, $action);
-        }
-        catch (NotImplemented) {
+        } catch (NotImplemented) {
             return false;
         }
     }
@@ -289,9 +291,9 @@ class AclManager
      *
      * @param User $user A user to check for.
      * @param Entity $entity An entity to check.
-     * @param string $action Action to check. Constants are available in the `Table` class.
-     *
+     * @param Table::ACTION_* $action Action to check. Constants are available in the `Table` class.
      * @throws NotImplemented
+     * @noinspection PhpDocSignatureInspection
      */
     public function checkEntity(User $user, Entity $entity, string $action = Table::ACTION_READ): bool
     {
@@ -403,6 +405,24 @@ class AclManager
         }
 
         return $checker->checkTeam($user, $entity);
+    }
+
+    /**
+     * Check whether an entity is shared with a user.
+     *
+     * @param Table::ACTION_* $action
+     * @since 8.5.0
+     * @noinspection PhpDocSignatureInspection
+     */
+    public function checkOwnershipShared(User $user, Entity $entity, string $action): bool
+    {
+        $checker = $this->getOwnershipChecker($entity->getEntityType());
+
+        if (!$checker instanceof OwnershipSharedChecker) {
+            return false;
+        }
+
+        return $checker->checkShared($user, $entity, $action);
     }
 
     /**
@@ -572,14 +592,13 @@ class AclManager
      *
      * @param User|string $target User entity or user ID.
      */
-    public function checkUserPermission(User $user, $target, string $permissionType = 'user'): bool
+    public function checkUserPermission(User $user, $target, string $permissionType = Permission::USER): bool
     {
         $permission = $this->getPermissionLevel($user, $permissionType);
 
         if (is_object($target)) {
             $userId = $target->getId();
-        }
-        else {
+        } else {
             $userId = $target;
         }
 
@@ -707,6 +726,7 @@ class AclManager
 
     /**
      * @deprecated As of v7.0. Use `checkOwnershipOwn`.
+     * @todo Remove in v9.0.
      */
     public function checkIsOwner(User $user, Entity $entity): bool
     {
@@ -715,6 +735,7 @@ class AclManager
 
     /**
      * @deprecated As of v7.0. Use `checkOwnershipTeam`.
+     * @todo Remove in v9.0.
      */
     public function checkInTeam(User $user, Entity $entity): bool
     {
@@ -723,6 +744,7 @@ class AclManager
 
     /**
      * @deprecated As of v7.0. Access checkers not to be exposed.
+     * @todo Remove in v9.0.
      * @noinspection PhpUnused
      */
     public function getImplementation(string $scope): object

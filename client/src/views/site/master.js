@@ -50,6 +50,16 @@ class MasterSiteView extends View {
         },
     }
 
+    /**
+     * @type {string}
+     */
+    currentViewKey
+
+    /**
+     * @type {string}
+     */
+    currentName
+
     showLoadingNotification() {
         Espo.Ui.notify(' ... ');
     }
@@ -62,6 +72,13 @@ class MasterSiteView extends View {
         $(window).on('resize.' + this.cid, () => {
             this.adjustContent();
         });
+    }
+
+    /**
+     * @return {Bull.View|null}
+     */
+    getMainView() {
+        return this.getView('main');
     }
 
     onRemove() {

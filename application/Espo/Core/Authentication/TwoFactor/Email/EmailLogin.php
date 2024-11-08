@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Authentication\TwoFactor\Email;
 
+use Espo\Core\Authentication\HeaderKey;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Utils\Log;
@@ -56,7 +57,7 @@ class EmailLogin implements Login
 
     public function login(Result $result, Request $request): Result
     {
-        $code = $request->getHeader('Espo-Authorization-Code');
+        $code = $request->getHeader(HeaderKey::AUTHORIZATION_CODE);
 
         $user = $result->getUser();
 
@@ -67,8 +68,7 @@ class EmailLogin implements Login
         if (!$code) {
             try {
                 $this->util->sendCode($user);
-            }
-            catch (Forbidden|SendingError $e) {
+            } catch (Forbidden|SendingError $e) {
                 $this->log->error("Could not send 2FA code for user {$user->getUserName()}. " . $e->getMessage());
 
                 return Result::fail(FailReason::ERROR);

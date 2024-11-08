@@ -1,0 +1,57 @@
+.fas,
+.far,
+.fa {
+    font-size: var(--16px);
+    line-height: var(--21px);
+}
+
+.btn {
+    .fas,
+    .far {
+        line-height: var(--line-height-computed);
+
+        &.fa-sm {
+            line-height: var(--18px);
+        }
+    }
+}
+
+.fas.fa-sm,
+.far.fa-sm,
+.btn-sm .fas,
+.btn-sm .far,
+.small .far,
+.small .fas,
+.fas.small,
+.far.small {
+    font-size: var(--12px);
+    line-height: var(--18px);
+}
+
+.btn:not(.btn-sm) {
+    > .fas.fa-ellipsis-h {
+        //line-height: var(--23px);
+    }
+}
+
+.btn:not(.btn-sm),
+ul.nav.tabs > li > a {
+    > .fas.fa-ellipsis-h {
+        vertical-align: middle;
+    }
+}
+
+.btn-sm {
+    > .fa-ellipsis-h,
+    > .fa-plus {
+        font-size: var(--14px);
+    }
+}
+
+.icon-is-replied {
+    transform: scaleX(-1);
+
+    &::before {
+        content: "\f064";
+    }
+}

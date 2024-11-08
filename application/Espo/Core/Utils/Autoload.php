@@ -162,8 +162,7 @@ class Autoload
     {
         try {
             $data = $this->getData();
-        }
-        catch (Exception $e) {} // bad permissions
+        } catch (Exception) {} // bad permissions
 
         if (empty($data)) {
             return;

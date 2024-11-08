@@ -44,7 +44,11 @@ class EditRecordView extends DetailRecordView {
     fieldsMode = 'edit'
     /** @inheritDoc */
     mode = 'edit'
-    /** @inheritDoc */
+
+    /**
+     * @inheritDoc
+     * @type {module:views/record/detail~button[]}
+     */
     buttonList = [
         {
             name: 'save',
@@ -124,11 +128,23 @@ class EditRecordView extends DetailRecordView {
 
     /** @inheritDoc */
     setupBeforeFinal() {
+        /** @type {Promise|undefined} */
+        let promise = undefined;
+
         if (this.model.isNew()) {
-            this.populateDefaults();
+            promise = this.populateDefaults();
         }
 
-        super.setupBeforeFinal();
+        if (!promise) {
+            super.setupBeforeFinal();
+        }
+
+        if (promise) {
+            this.wait(promise);
+
+            // @todo Revise. Possible race condition issues.
+            promise.then(() => super.setupBeforeFinal());
+        }
 
         if (this.model.isNew()) {
             this.once('after:render', () => {

@@ -60,9 +60,14 @@ class ActivitiesPanelView extends RelationshipPanelView {
                 {name: 'name', link: true, view: 'views/event/fields/name-for-history'},
             ],
             [
-                {name: 'assignedUser'},
-                {name: 'dateStart'},
-            ],
+                {
+                    name: 'dateStart',
+                    soft: true
+                },
+                {
+                    name: 'assignedUser',
+                }
+            ]
         ]
     }
 
@@ -155,6 +160,8 @@ class ActivitiesPanelView extends RelationshipPanelView {
         this.collection.orderBy = this.orderBy;
         this.collection.order = this.order;
         this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+
+        this.listenTo(this.model, 'update-all', () => this.collection.fetch());
 
         this.setFilter(this.filter);
 

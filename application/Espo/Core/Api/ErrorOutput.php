@@ -37,9 +37,11 @@ use Espo\Core\Exceptions\HasBody;
 use Espo\Core\Exceptions\HasLogLevel;
 use Espo\Core\Exceptions\HasLogMessage;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 
+use LogicException;
+use Psr\Log\LogLevel;
+use RuntimeException;
 use Throwable;
 
 /**
@@ -80,7 +82,7 @@ class ErrorOutput
         NotFound::class,
     ];
 
-    public function __construct(private Log $log, private Config $config)
+    public function __construct(private Log $log)
     {}
 
     public function process(
@@ -112,6 +114,11 @@ class ErrorOutput
     ): void {
 
         $message = $exception->getMessage();
+
+        if ($exception->getPrevious() && $exception->getPrevious()->getMessage()) {
+            $message .= " " . $exception->getPrevious()->getMessage();
+        }
+
         $statusCode = $exception->getCode();
 
         if ($exception instanceof HasLogMessage) {
@@ -122,30 +129,12 @@ class ErrorOutput
             $this->processRoute($route, $request, $exception);
         }
 
-        $logLevel = $exception instanceof HasLogLevel ?
-            $exception->getLogLevel() :
-            Log::LEVEL_ERROR;
+        $level = $this->getLevel($exception);
 
-        $messageLineFile =
-            'line: ' . $exception->getLine() . ', ' .
-            'file: ' . $exception->getFile();
-
-        $logMessageItemList = [];
-
-        if ($message) {
-            $logMessageItemList[] = "$message";
-        }
-
-        $logMessageItemList[] = $request->getMethod() . ' ' . $request->getResourcePath();
-        $logMessageItemList[] = $messageLineFile;
-
-        $logMessage = "($statusCode) " . implode("; ", $logMessageItemList);
-
-        if ($this->toPrintTrace()) {
-            $logMessage .= " :: " . $exception->getTraceAsString();
-        }
-
-        $this->log->log($logLevel, $logMessage);
+        $this->log->log($level, $message, [
+            'exception' => $exception,
+            'request' => $request,
+        ]);
 
         if (!in_array($statusCode, $this->allowedStatusCodeList)) {
             $statusCode = 500;
@@ -224,6 +213,11 @@ class ErrorOutput
         $requestBodyString = $this->clearPasswords($request->getBodyContents() ?? '');
 
         $message = $exception->getMessage();
+
+        if ($exception->getPrevious() && $exception->getPrevious()->getMessage()) {
+            $message .= " " . $exception->getPrevious()->getMessage();
+        }
+
         $statusCode = $exception->getCode();
 
         $routeParams = $request->getRouteParams();
@@ -250,12 +244,7 @@ class ErrorOutput
 
         $logMessage .= implode("; ", $logMessageItemList);
 
-        $this->log->log('debug', $logMessage);
-    }
-
-    private function toPrintTrace(): bool
-    {
-        return (bool) $this->config->get('logger.printTrace');
+        $this->log->debug($logMessage);
     }
 
     private function toPrintExceptionStatusReason(Throwable $exception): bool
@@ -268,5 +257,22 @@ class ErrorOutput
         }
 
         return false;
+    }
+
+    private function getLevel(Throwable $exception): string
+    {
+        if ($exception instanceof HasLogLevel) {
+            return $exception->getLogLevel();
+        }
+
+        if ($exception instanceof LogicException) {
+            return LogLevel::ALERT;
+        }
+
+        if ($exception instanceof RuntimeException) {
+            return LogLevel::CRITICAL;
+        }
+
+        return LogLevel::ERROR;
     }
 }

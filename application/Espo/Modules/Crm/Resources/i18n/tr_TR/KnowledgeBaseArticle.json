@@ -2,7 +2,7 @@
   "labels": {
     "Create KnowledgeBaseArticle": "Makale Oluştur",
     "Any": "Herhangi",
-    "Send in Email": "Email ile gönder",
+    "Send in Email": "Eposta ile gönder",
     "Move Up": "Yukarı Taşı",
     "Move Down": "Aşağı",
     "Move to Top": "En Üste Taşı",
@@ -22,7 +22,7 @@
     "portals": "Portaller"
   },
   "links": {
-    "cases": "Durumlar",
+    "cases": "Olaylar",
     "opportunities": "Fırsatlar",
     "categories": "Kategoriler",
     "portals": "Portaller"

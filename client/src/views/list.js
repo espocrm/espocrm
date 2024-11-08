@@ -154,6 +154,15 @@ class ListView extends MainView {
     /** @const */
     MODE_KANBAN = 'kanban'
 
+    /**
+     * Root data. To be passed to the detail record view when following to a record.
+     *
+     * @protected
+     * @type {Object.<string, *>}
+     * @since 8.5.0
+     */
+    rootData
+
     /** @inheritDoc */
     shortcutKeys = {
         /** @this ListView */
@@ -172,6 +181,14 @@ class ListView extends MainView {
         'Control+Period': function (e) {
             this.handleShortcutKeyCtrlPeriod(e);
         },
+        /** @this ListView */
+        'Control+ArrowLeft': function (e) {
+            this.handleShortcutKeyControlArrowLeft(e);
+        },
+        /** @this ListView */
+        'Control+ArrowRight': function (e) {
+            this.handleShortcutKeyControlArrowRight(e);
+        },
     }
 
     /** @inheritDoc */
@@ -180,6 +197,8 @@ class ListView extends MainView {
 
         this.collectionUrl = this.collection.url;
         this.collectionMaxSize = this.collection.maxSize;
+
+        this.rootData = {};
 
         /**
          * @type {string}
@@ -351,6 +370,7 @@ class ListView extends MainView {
      * @protected
      */
     createSearchView() {
+        // noinspection JSValidateTypes
         return this.createView('search', this.searchView, {
             collection: this.collection,
             fullSelector: '#main > .search-container',
@@ -595,6 +615,7 @@ class ListView extends MainView {
     /**
      * Prepare record view options. Options can be modified in an extended method.
      *
+     * @protected
      * @param {Object} options Options
      */
     prepareRecordViewOptions(options) {}
@@ -606,6 +627,7 @@ class ListView extends MainView {
      * @return {Promise<module:views/record/list>}
      */
     createListRecordView(fetch) {
+        /** @type {module:views/record/list~options | Bull.View~Options} */
         const o = {
             collection: this.collection,
             selector: '.list-container',
@@ -633,22 +655,25 @@ class ListView extends MainView {
             this.getConfig().get('listPagination') ||
             this.getMetadata().get(['clientDefs', this.scope, 'listPagination'])
         ) {
-            // @todo Remove in v8.1.
-            console.warn(`'listPagination' parameter is deprecated and will be removed in the future.`);
-
             o.pagination = true;
         }
+
+        o.rootData = this.rootData;
 
         this.prepareRecordViewOptions(o);
 
         const listViewName = this.getRecordViewName();
 
-        return this.createView('list', listViewName, o, view => {
+        // noinspection JSValidateTypes
+        return this.createView('list', listViewName, o, /** import('views/record/list').default */view => {
             if (!this.hasParentView()) {
                 view.undelegateEvents();
 
                 return;
             }
+
+            this.listenTo(view, 'after:paginate', () => window.scrollTo({top: 0}));
+            this.listenTo(view, 'sort', () => window.scrollTo({top: 0}));
 
             this.listenToOnce(view, 'after:render', () => {
                 if (!this.hasParentView()) {
@@ -794,6 +819,7 @@ class ListView extends MainView {
             returnDispatchParams: returnDispatchParams,
         };
 
+        // noinspection JSValidateTypes
         return this.createView('quickCreate', viewName, options, (view) => {
             view.render();
             view.notify(false);
@@ -928,6 +954,24 @@ class ListView extends MainView {
         }
 
         this.getSearchView().selectNextPreset();
+    }
+
+    // noinspection JSUnusedLocalSymbols
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyControlArrowLeft(e) {
+        this.getRecordView().trigger('request-page', 'previous');
+    }
+
+    // noinspection JSUnusedLocalSymbols
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyControlArrowRight(e) {
+        this.getRecordView().trigger('request-page', 'next');
     }
 }
 

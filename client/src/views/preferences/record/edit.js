@@ -31,7 +31,6 @@ import EditRecordView from 'views/record/edit';
 class PreferencesEditRecordView extends EditRecordView {
 
     sideView = null
-
     saveAndContinueEditingAction = false
 
     buttonList = [
@@ -58,6 +57,16 @@ class PreferencesEditRecordView extends EditRecordView {
                     ]
                 }
             },
+            'addCustomTabs': {
+                visible: {
+                    conditionGroup: [
+                        {
+                            type: 'isTrue',
+                            attribute: 'useCustomTabList',
+                        }
+                    ]
+                }
+            },
         },
     }
 
@@ -69,12 +78,12 @@ class PreferencesEditRecordView extends EditRecordView {
         this.addDropdownItem({
             name: 'reset',
             text: this.getLanguage().translate('Reset to Default', 'labels', 'Admin'),
-            style: 'danger'
+            style: 'danger',
         });
 
         const forbiddenEditFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
 
-        if (!~forbiddenEditFieldList.indexOf('dashboardLayout') && !model.isPortal()) {
+        if (!forbiddenEditFieldList.includes('dashboardLayout') && !model.isPortal()) {
             this.addDropdownItem({
                 name: 'resetDashboard',
                 text: this.getLanguage().translate('Reset Dashboard to Default', 'labels', 'Preferences')
@@ -86,13 +95,15 @@ class PreferencesEditRecordView extends EditRecordView {
         }
 
         if (this.model.id === this.getUser().id) {
-            this.on('after:save', () => {
+            const preferencesModel = this.getPreferences();
+
+            this.on('save', (a, attributeList) => {
                 const data = this.model.getClonedAttributes();
 
                 delete data['smtpPassword'];
 
-                this.getPreferences().set(data);
-                this.getPreferences().trigger('update');
+                preferencesModel.set(data);
+                preferencesModel.trigger('update', attributeList);
             });
         }
 
@@ -153,15 +164,6 @@ class PreferencesEditRecordView extends EditRecordView {
             hideNotificationPanel = false;
         }
 
-        if (this.getConfig().get('scopeColorsDisabled')) {
-            this.hideField('scopeColorsDisabled');
-            this.hideField('tabColorsDisabled');
-        }
-
-        if (this.getConfig().get('tabColorsDisabled')) {
-            this.hideField('tabColorsDisabled');
-        }
-
         if (hideNotificationPanel) {
             this.hidePanel('notifications');
         }
@@ -211,8 +213,8 @@ class PreferencesEditRecordView extends EditRecordView {
     actionReset() {
         this.confirm(this.translate('resetPreferencesConfirmation', 'messages'), () => {
             Espo.Ajax
-                .deleteRequest('Preferences/' + this.model.id)
-                .then(() => {
+                .deleteRequest(`Preferences/${this.model.id}`)
+                .then(data => {
                     Espo.Ui.success(this.translate('resetPreferencesDone', 'messages'));
 
                     this.model.set(data);

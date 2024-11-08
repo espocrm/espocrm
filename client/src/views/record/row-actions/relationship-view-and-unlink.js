@@ -38,6 +38,7 @@ class RelationshipViewAndUnlinkActionsView extends RelationshipActionsView {
                 id: this.model.id,
             },
             link: '#' + this.model.entityType + '/view/' + this.model.id,
+            groupIndex: 0,
         }];
 
         if (this.options.acl.edit && !this.options.unlinkDisabled) {
@@ -47,6 +48,7 @@ class RelationshipViewAndUnlinkActionsView extends RelationshipActionsView {
                 data: {
                     id: this.model.id,
                 },
+                groupIndex: 0,
             });
         }
 

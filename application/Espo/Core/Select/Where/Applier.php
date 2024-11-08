@@ -50,12 +50,25 @@ class Applier
      */
     public function apply(QueryBuilder $queryBuilder, WhereItem $whereItem, Params $params): void
     {
-        $checker = $this->checkerFactory->create($this->entityType, $this->user);
-        $checker->check($whereItem, $params);
+        $this->check($whereItem, $params);
 
         $converter = $this->converterFactory->create($this->entityType, $this->user);
-        $whereClause = $converter->convert($queryBuilder, $whereItem);
 
-        $queryBuilder->where($whereClause);
+        $convertedParams = new Converter\Params(useSubQueryIfMany: true);
+
+        $queryBuilder->where(
+            $converter->convert($queryBuilder, $whereItem, $convertedParams)
+        );
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    private function check(Item $whereItem, Params $params): void
+    {
+        $checker = $this->checkerFactory->create($this->entityType, $this->user);
+
+        $checker->check($whereItem, $params);
     }
 }

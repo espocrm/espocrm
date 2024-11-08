@@ -7,7 +7,7 @@ body[data-navbar="side"] {
                 .nav > li.more > .dropdown-menu > li.tab-group > ul.dropdown-menu,
                 .nav > li.tab-group > .dropdown-menu {
                     left: auto;
-                    right: @navbar-width;
+                    right: var(--navbar-width);
                 }
 
                 .nav > li.more > .dropdown-menu,
@@ -18,19 +18,19 @@ body[data-navbar="side"] {
 
                 .nav li.tab-group {
                     span.full-label {
-                        padding-left: 8px;
-                        padding-right: @navbar-tab-text-left-padding;
+                        padding-left: var(--8px);
+                        padding-right: var(--navbar-tab-text-left-padding);
                     }
 
                     .group-caret {
                         right: auto;
-                        left: 13px;
+                        left: var(--13px);
                         transform: rotate(180deg);
                     }
                 }
 
                 a.minimizer {
-                    margin-right: @navbar-tab-left-padding + 3px;
+                    margin-right: calc(var(--navbar-tab-left-padding) + var(--3px));
                     margin-left: 0;
                 }
 
@@ -44,7 +44,7 @@ body[data-navbar="side"] {
 
                 .side-menu-backdrop {
                     right: 0;
-                    margin-right: @navbar-width;
+                    margin-right: var(--navbar-width);
                     left: 0;
                     margin-left: 0;
                 }
@@ -54,8 +54,8 @@ body[data-navbar="side"] {
                 .navbar-right {
                     left: auto;
                     right: 0;
-                    margin-right: @navbar-width;
-                    padding-left: @navbar-width;
+                    margin-right: var(--navbar-width);
+                    padding-left: var(--navbar-width);
                     margin-left: 0;
                     padding-right: 0;
                 }
@@ -66,13 +66,13 @@ body[data-navbar="side"] {
                     }
 
                     li > a {
-                        padding-right: @navbar-tab-left-padding;
-                        padding-left: @navbar-tab-right-padding;
+                        padding-right: var(--navbar-tab-left-padding);
+                        padding-left: var(--navbar-tab-right-padding);
                     }
 
                     li.tab > a {
-                        padding-right: @navbar-tab-left-padding - @navbar-color-border-width;
-                        padding-left: @navbar-tab-right-padding;
+                        padding-right: var(--navbar-tab-left-padding);
+                        padding-left: var(--navbar-tab-right-padding);
                     }
                 }
             }
@@ -103,12 +103,12 @@ body[data-navbar="side"] {
         ul.tabs {
             > li.more > ul > li > a > span.full-label {
                 padding-left: 0;
-                padding-right: @navbar-tab-text-left-padding;
+                padding-right: var(--navbar-tab-text-left-padding);
             }
 
             > li a > span.full-label {
                 padding-left: 0;
-                padding-right: @navbar-tab-text-left-padding;
+                padding-right: var(--navbar-tab-text-left-padding);
             }
         }
 
@@ -120,7 +120,7 @@ body[data-navbar="side"] {
         }
 
         .navbar li.tab > a {
-            border-right-width: @navbar-color-border-width;
+            border-right-width: 0;
             border-right-style: solid;
         }
     }
@@ -131,7 +131,7 @@ body[data-navbar="side"] {
                 .nav > li.more > ul.dropdown-menu,
                 .nav > li.tab-group > .dropdown-menu {
                     left: auto;
-                    right: @navbar-minimized-width;
+                    right: var(--navbar-minimized-width);
                 }
 
                 a.minimizer > span.left {
@@ -144,12 +144,12 @@ body[data-navbar="side"] {
 
                 ul.tabs {
                     > li > a {
-                        padding-right: @navbar-tab-left-padding;
+                        padding-right: var(--navbar-tab-left-padding);
                         padding-left: 0;
                     }
 
                     > li.tab > a {
-                        padding-right: @navbar-tab-left-padding - @navbar-color-border-width;
+                        padding-right: var(--navbar-tab-left-padding);
                         padding-left: 0;
                     }
 
@@ -167,52 +167,52 @@ body[data-navbar="side"] {
                 .navbar-right {
                     margin-left: 0;
                     padding-right: 0;
-                    margin-right: @navbar-minimized-width;
-                    padding-left: @navbar-minimized-width;
+                    margin-right: var(--navbar-minimized-width);
+                    padding-left: var(--navbar-minimized-width);
                 }
             }
 
             #content {
-                padding-left: 15px;
-                padding-right: @navbar-minimized-width + @container-padding;
+                padding-left: var(--15px);
+                padding-right: calc(var(--navbar-minimized-width) + var(--container-padding));
             }
 
             #footer {
                 margin-left: 0;
-                margin-right: @navbar-minimized-width;
+                margin-right: var(--navbar-minimized-width);
             }
 
             > .side-menu-backdrop {
                 margin-left: 0;
-                margin-right: @navbar-width;
+                margin-right: var(--navbar-width);
             }
         }
 
         &.has-navbar > .content {
-            padding-left: 15px;
-            padding-right: @navbar-width + @container-padding;
+            padding-left: var(--15px);
+            padding-right: calc(var(--navbar-width) + var(--container-padding));
         }
 
         > footer {
             margin-left: 0;
-            margin-right: @navbar-width;
+            margin-right: var(--navbar-width);
         }
     }
 
-    .list-buttons-container .sticked-bar {
+    .list-sticky-bar {
         left: auto;
-        right: @navbar-width;
+        right: var(--navbar-width);
     }
 
-    &.minimized .list-buttons-container .sticked-bar {
+    &.minimized .list-sticky-bar {
         left: auto;
-        right: @navbar-minimized-width;
+        right: var(--navbar-minimized-width);
     }
 
     @media screen and (min-width: @screen-sm-min) {
         .folders-container.sticked {
             left: auto;
-            right: @navbar-width;
+            right: var(--navbar-width);
         }
     }
 
@@ -220,7 +220,7 @@ body[data-navbar="side"] {
         @media screen and (min-width: @screen-sm-min) {
             .folders-container.sticked {
                 left: auto;
-                right: @navbar-minimized-width;
+                right: var(--navbar-minimized-width);
             }
         }
     }

@@ -26,296 +26,301 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/external-account/oauth2', ['view', 'model'], function (Dep, Model) {
+import View from 'view';
+import Model from 'model';
 
-    return Dep.extend({
+/**
+ * @internal Do not extend.
+ */
+class ExternalAccountOauth2View extends View {
 
-        template: 'external-account/oauth2',
+    template = 'external-account/oauth2'
 
-        data: function () {
-            return {
-                integration: this.integration,
-                helpText: this.helpText,
-                isConnected: this.isConnected,
-            };
-        },
+    data() {
+        return {
+            integration: this.integration,
+            helpText: this.helpText,
+            isConnected: this.isConnected,
+        };
+    }
 
-        isConnected: false,
+    isConnected = false
 
-        events: {
-            'click button[data-action="cancel"]': function () {
-                this.getRouter().navigate('#ExternalAccount', {trigger: true});
-            },
-            'click button[data-action="save"]': function () {
-                this.save();
-            },
-            'click [data-action="connect"]': function () {
-                this.connect();
+    setup() {
+        this.addActionHandler('connect', () => this.connect());
+        this.addActionHandler('save', () => this.save());
+        this.addActionHandler('cancel', () => this.getRouter().navigate('#ExternalAccount', {trigger: true}));
+
+        this.integration = this.options.integration;
+        this.id = this.options.id;
+
+        this.helpText = false;
+
+        if (this.getLanguage().has(this.integration, 'help', 'ExternalAccount')) {
+            this.helpText = this.translate(this.integration, 'help', 'ExternalAccount');
+        }
+
+        this.fieldList = [];
+
+        this.dataFieldList = [];
+
+        this.model = new Model();
+        this.model.id = this.id;
+        this.model.entityType = this.model.name = 'ExternalAccount';
+        this.model.urlRoot = 'ExternalAccount';
+
+        this.model.defs = {
+            fields: {
+                enabled: {
+                    required: true,
+                    type: 'bool'
+                },
             }
-        },
+        };
 
-        setup: function () {
-            this.integration = this.options.integration;
-            this.id = this.options.id;
+        this.wait(true);
 
-            this.helpText = false;
+        this.model.populateDefaults();
 
-            if (this.getLanguage().has(this.integration, 'help', 'ExternalAccount')) {
-                this.helpText = this.translate(this.integration, 'help', 'ExternalAccount');
-            }
+        this.listenToOnce(this.model, 'sync', () => {
+            this.createFieldView('bool', 'enabled');
 
-            this.fieldList = [];
+            Espo.Ajax.getRequest('ExternalAccount/action/getOAuth2Info?id=' + this.id)
+                .then(response => {
+                    this.clientId = response.clientId;
+                    this.redirectUri = response.redirectUri;
 
-            this.dataFieldList = [];
+                    if (response.isConnected) {
+                        this.isConnected = true;
+                    }
 
-            this.model = new Model();
-            this.model.id = this.id;
-            this.model.entityType = this.model.name = 'ExternalAccount';
-            this.model.urlRoot = 'ExternalAccount';
+                    this.wait(false);
+                });
+        });
 
-            this.model.defs = {
-                fields: {
-                    enabled: {
-                        required: true,
-                        type: 'bool'
-                    },
-                }
-            };
+        this.model.fetch();
+    }
 
-            this.wait(true);
+    hideField(name) {
+        this.$el.find(`label[data-name="${name}"]`).addClass('hide');
+        this.$el.find(`div.field[data-name="${name}"]`).addClass('hide');
 
-            this.model.populateDefaults();
+        const view = this.getView(name);
 
-            this.listenToOnce(this.model, 'sync', () => {
-                this.createFieldView('bool', 'enabled');
+        if (view) {
+            view.disabled = true;
+        }
+    }
 
-                Espo.Ajax.getRequest('ExternalAccount/action/getOAuth2Info?id=' + this.id)
-                    .then(response => {
-                        this.clientId = response.clientId;
-                        this.redirectUri = response.redirectUri;
+    showField(name) {
+        this.$el.find(`label[data-name="${name}"]`).removeClass('hide');
+        this.$el.find(`div.field[data-name="${name}"]`).removeClass('hide');
 
-                        if (response.isConnected) {
-                            this.isConnected = true;
-                        }
+        const view = this.getView(name);
 
-                        this.wait(false);
-                    });
-            });
+        if (view) {
+            view.disabled = false;
+        }
+    }
 
-            this.model.fetch();
-        },
+    afterRender() {
+        if (!this.model.get('enabled')) {
+            this.$el.find('.data-panel').addClass('hidden');
+        }
 
-        hideField: function (name) {
-            this.$el.find('label[data-name="'+name+'"]').addClass('hide');
-            this.$el.find('div.field[data-name="'+name+'"]').addClass('hide');
-
-            var view = this.getView(name);
-
-            if (view) {
-                view.disabled = true;
-            }
-        },
-
-        showField: function (name) {
-            this.$el.find('label[data-name="'+name+'"]').removeClass('hide');
-            this.$el.find('div.field[data-name="'+name+'"]').removeClass('hide');
-
-            var view = this.getView(name);
-
-            if (view) {
-                view.disabled = false;
-            }
-        },
-
-        afterRender: function () {
-            if (!this.model.get('enabled')) {
+        this.listenTo(this.model, 'change:enabled', () => {
+            if (this.model.get('enabled')) {
+                this.$el.find('.data-panel').removeClass('hidden');
+            } else {
                 this.$el.find('.data-panel').addClass('hidden');
             }
+        });
+    }
 
-            this.listenTo(this.model, 'change:enabled', () => {
-                if (this.model.get('enabled')) {
-                    this.$el.find('.data-panel').removeClass('hidden');
-                } else {
-                    this.$el.find('.data-panel').addClass('hidden');
+    createFieldView(type, name, readOnly, params) {
+        this.createView(name, this.getFieldManager().getViewName(type), {
+            model: this.model,
+            selector: '.field[data-name="' + name + '"]',
+            defs: {
+                name: name,
+                params: params
+            },
+            mode: readOnly ? 'detail' : 'edit',
+            readOnly: readOnly,
+        });
+
+        this.fieldList.push(name);
+    }
+
+    save() {
+        this.fieldList.forEach(field => {
+            const view = /** @type {import('views/fields/base').default} */this.getView(field);
+
+            if (!view.readOnly) {
+                view.fetchToModel();
+            }
+        });
+
+        let notValid = false;
+
+        this.fieldList.forEach(field => {
+            const view = /** @type {import('views/fields/base').default} */this.getView(field);
+
+            notValid = view.validate() || notValid;
+        });
+
+        if (notValid) {
+            Espo.Ui.error(this.translate('Not valid'));
+
+            return;
+        }
+
+        this.listenToOnce(this.model, 'sync', () => {
+            Espo.Ui.success(this.translate('Saved'));
+
+            if (!this.model.get('enabled')) {
+                this.setNotConnected();
+            }
+        });
+
+        Espo.Ui.notify(this.translate('saving', 'messages'));
+
+        this.model.save();
+    }
+
+    popup(options, callback) {
+        options.windowName = options.windowName ||  'ConnectWithOAuth';
+        options.windowOptions = options.windowOptions || 'location=0,status=0,width=800,height=400';
+        options.callback = options.callback || function(){ window.location.reload(); };
+
+        const self = this;
+
+        let path = options.path;
+
+        const arr = [];
+        const params = (options.params || {});
+
+        for (const name in params) {
+            if (params[name]) {
+                arr.push(name + '=' + encodeURI(params[name]));
+            }
+        }
+        path += '?' + arr.join('&');
+
+        const parseUrl = str => {
+            let code = null;
+            let error = null;
+
+            str = str.substr(str.indexOf('?') + 1, str.length);
+
+            str.split('&').forEach(part => {
+                const arr = part.split('=');
+                const name = decodeURI(arr[0]);
+                const value = decodeURI(arr[1] || '');
+
+                if (name === 'code') {
+                    code = value;
+                }
+
+                if (name === 'error') {
+                    error = value;
                 }
             });
-        },
 
-        createFieldView: function (type, name, readOnly, params) {
-            this.createView(name, this.getFieldManager().getViewName(type), {
-                model: this.model,
-                selector: '.field[data-name="' + name + '"]',
-                defs: {
-                    name: name,
-                    params: params
-                },
-                mode: readOnly ? 'detail' : 'edit',
-                readOnly: readOnly,
-            });
+            if (code) {
+                return {
+                    code: code,
+                };
+            } else if (error) {
+                return {
+                    error: error,
+                };
+            }
+        }
 
-            this.fieldList.push(name);
-        },
+        const popup = window.open(path, options.windowName, options.windowOptions);
 
-        save: function () {
-            this.fieldList.forEach(field => {
-                var view = this.getView(field);
+        let interval;
 
-                if (!view.readOnly) {
-                    view.fetchToModel();
-                }
-            });
+        interval = window.setInterval(() => {
+            if (popup.closed) {
+                window.clearInterval(interval);
 
-            var notValid = false;
-
-            this.fieldList.forEach((field) => {
-                notValid = this.getView(field).validate() || notValid;
-            });
-
-            if (notValid) {
-                this.notify('Not valid', 'error');
                 return;
             }
 
-            this.listenToOnce(this.model, 'sync', () => {
-                this.notify('Saved', 'success');
+            const res = parseUrl(popup.location.href.toString());
 
-                if (!this.model.get('enabled')) {
-                    this.setNotConnected();
-                }
-            });
-
-            Espo.Ui.notify(this.translate('saving', 'messages'));
-
-            this.model.save();
-        },
-
-        popup: function (options, callback) {
-            options.windowName = options.windowName ||  'ConnectWithOAuth';
-            options.windowOptions = options.windowOptions || 'location=0,status=0,width=800,height=400';
-            options.callback = options.callback || function(){ window.location.reload(); };
-
-            var self = this;
-
-            var path = options.path;
-
-            var arr = [];
-            var params = (options.params || {});
-
-            for (var name in params) {
-                if (params[name]) {
-                    arr.push(name + '=' + encodeURI(params[name]));
-                }
+            if (res) {
+                callback.call(self, res);
+                popup.close();
+                window.clearInterval(interval);
             }
-            path += '?' + arr.join('&');
+        }, 500);
+    }
 
-            var parseUrl = function (str) {
-                var code = null;
-                var error = null;
+    connect() {
+        this.popup({
+            path: this.getMetadata().get(`integrations.${this.integration}.params.endpoint`),
+            params: {
+                client_id: this.clientId,
+                redirect_uri: this.redirectUri,
+                scope: this.getMetadata().get(`integrations.${this.integration}.params.scope`),
+                response_type: 'code',
+                access_type: 'offline',
+                approval_prompt: 'force',
+            }
+        }, (response) => {
+            if (response.error) {
+                Espo.Ui.notify(false);
 
-                str = str.substr(str.indexOf('?') + 1, str.length);
-
-                str.split('&').forEach((part) => {
-                    var arr = part.split('=');
-                    var name = decodeURI(arr[0]);
-                    var value = decodeURI(arr[1] || '');
-
-                    if (name === 'code') {
-                        code = value;
-                    }
-
-                    if (name === 'error') {
-                        error = value;
-                    }
-                });
-
-                if (code) {
-                    return {
-                        code: code,
-                    };
-                } else if (error) {
-                    return {
-                        error: error,
-                    };
-                }
+                return;
             }
 
-            let popup = window.open(path, options.windowName, options.windowOptions);
+            if (!response.code) {
+                Espo.Ui.error(this.translate('Error occurred'))
 
-            let interval;
+                return;
+            }
 
-            interval = window.setInterval(() => {
-                if (popup.closed) {
-                    window.clearInterval(interval);
-                } else {
-                    var res = parseUrl(popup.location.href.toString());
+            this.$el.find('[data-action="connect"]').addClass('disabled');
 
-                    if (res) {
-                        callback.call(self, res);
-                        popup.close();
-                        window.clearInterval(interval);
-                    }
-                }
-            }, 500);
-        },
-
-        connect: function () {
-            this.popup({
-                path: this.getMetadata().get('integrations.' + this.integration + '.params.endpoint'),
-                params: {
-                    client_id: this.clientId,
-                    redirect_uri: this.redirectUri,
-                    scope: this.getMetadata().get('integrations.' + this.integration + '.params.scope'),
-                    response_type: 'code',
-                    access_type: 'offline',
-                    approval_prompt: 'force',
-                }
-            }, function (res) {
-                if (res.error) {
+            Espo.Ajax
+                .postRequest('ExternalAccount/action/authorizationCode', {
+                    id: this.id,
+                    code: response.code,
+                })
+                .then(response => {
                     Espo.Ui.notify(false);
 
-                    return;
-                }
+                    if (response === true) {
+                        this.setConnected();
+                    } else {
+                        this.setNotConnected();
+                    }
 
-                if (res.code) {
-                    this.$el.find('[data-action="connect"]').addClass('disabled');
+                    this.$el.find('[data-action="connect"]').removeClass('disabled');
+                })
+                .catch(() => {
+                    this.$el.find('[data-action="connect"]').removeClass('disabled');
+                });
+        });
+    }
 
-                    Espo.Ajax
-                        .postRequest('ExternalAccount/action/authorizationCode', {
-                            id: this.id,
-                            code: res.code,
-                        })
-                        .then(response => {
-                            Espo.Ui.notify(false);
+    setConnected() {
+        this.isConnected = true;
 
-                            if (response === true) {
-                                this.setConnected();
-                            } else {
-                                this.setNotConneted();
-                            }
+        this.$el.find('[data-action="connect"]').addClass('hidden');
+        this.$el.find('.connected-label').removeClass('hidden');
+    }
 
-                            this.$el.find('[data-action="connect"]').removeClass('disabled');
-                        })
-                        .catch(() => {
-                            this.$el.find('[data-action="connect"]').removeClass('disabled');
-                        });
-                } else {
-                    this.notify('Error occurred', 'error');
-                }
-            });
-        },
+    setNotConnected() {
+        this.isConnected = false;
 
-        setConnected: function () {
-            this.isConnected = true;
+        this.$el.find('[data-action="connect"]').removeClass('hidden');
+        this.$el.find('.connected-label').addClass('hidden');
+    }
+}
 
-            this.$el.find('[data-action="connect"]').addClass('hidden');;
-            this.$el.find('.connected-label').removeClass('hidden');
-        },
-
-        setNotConnected: function () {
-            this.isConnected = false;
-
-            this.$el.find('[data-action="connect"]').removeClass('hidden');;
-            this.$el.find('.connected-label').addClass('hidden');
-        },
-    });
-});
+// noinspection JSUnusedGlobalSymbols
+export default ExternalAccountOauth2View;

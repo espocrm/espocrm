@@ -1,7 +1,6 @@
 {
   "labels": {
-    "Create WorkingTimeCalendar": "Kalender erstellen",
-    "Ranges": "Zeiträume"
+    "Create WorkingTimeCalendar": "Kalender erstellen"
   },
   "fields": {
     "timeZone": "Zeitzone",
@@ -22,6 +21,6 @@
     "weekday6TimeRanges": "Sa Zeitplan"
   },
   "links": {
-    "ranges": "Zeiträume"
+    "ranges": "Ausnahmen"
   }
 }

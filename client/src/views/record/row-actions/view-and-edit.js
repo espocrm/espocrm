@@ -38,6 +38,7 @@ class ViewAndEditRowActionsView extends DefaultRowActionsView {
                 id: this.model.id,
             },
             link: '#' + this.model.entityType + '/view/' + this.model.id,
+            groupIndex: 0,
         }];
 
         if (this.options.acl.edit) {
@@ -49,9 +50,12 @@ class ViewAndEditRowActionsView extends DefaultRowActionsView {
                         id: this.model.id,
                     },
                     link: '#' + this.model.entityType + '/edit/' + this.model.id,
+                    groupIndex: 0,
                 }
             ]);
         }
+
+        this.getAdditionalActionList().forEach(item => list.push(item));
 
         return list;
     }

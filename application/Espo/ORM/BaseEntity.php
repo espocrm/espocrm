@@ -29,6 +29,10 @@
 
 namespace Espo\ORM;
 
+use Espo\ORM\Relation\EmptyRelations;
+use Espo\ORM\Relation\Relations;
+use Espo\ORM\Type\AttributeType;
+use Espo\ORM\Type\RelationType;
 use Espo\ORM\Value\ValueAccessorFactory;
 use Espo\ORM\Value\ValueAccessor;
 
@@ -51,13 +55,14 @@ class BaseEntity implements Entity
 
     protected ?EntityManager $entityManager;
     private ?ValueAccessor $valueAccessor = null;
+    readonly protected Relations $relations;
 
     /** @var array<string, bool> */
     private array $writtenMap = [];
     /** @var array<string, array<string, mixed>> */
-    private array $attributes = [];
+    private array $attributesDefs = [];
     /** @var array<string, array<string, mixed>> */
-    private array $relations = [];
+    private array $relationsDefs = [];
     /** @var array<string, mixed> */
     private array $fetchedValuesContainer = [];
     /** @var array<string, mixed> */
@@ -81,17 +86,20 @@ class BaseEntity implements Entity
         string $entityType,
         array $defs,
         ?EntityManager $entityManager = null,
-        ?ValueAccessorFactory $valueAccessorFactory = null
+        ?ValueAccessorFactory $valueAccessorFactory = null,
+        ?Relations $relations = null,
     ) {
         $this->entityType = $entityType;
         $this->entityManager = $entityManager;
 
-        $this->attributes = $defs['attributes'] /*?? $defs['fields']*/ ?? $this->attributes;
-        $this->relations = $defs['relations'] ?? $this->relations;
+        $this->attributesDefs = $defs['attributes'] ?? $this->attributesDefs;
+        $this->relationsDefs = $defs['relations'] ?? $this->relationsDefs;
 
         if ($valueAccessorFactory) {
             $this->valueAccessor = $valueAccessorFactory->create($this);
         }
+
+        $this->relations = $relations ?? new EmptyRelations();
     }
 
     /**
@@ -132,6 +140,8 @@ class BaseEntity implements Entity
     public function reset(): void
     {
         $this->valuesContainer = [];
+
+        $this->relations->resetAll();
     }
 
     /**
@@ -228,6 +238,7 @@ class BaseEntity implements Entity
             return $this->id;
         }
 
+        // Legacy.
         $method = '_get' . ucfirst($attribute);
 
         if (method_exists($this, $method)) {
@@ -241,16 +252,36 @@ class BaseEntity implements Entity
         // @todo Remove support in v9.0.
         if (!empty($params)) {
             trigger_error(
-                'Second parameter will be removed from the method Entity::get.',
+                'Second parameter will be removed from the method Entity::get.' .
+                "Use `\$entityManager->getRelation(...)->where(...)->find()`.",
                 E_USER_DEPRECATED
             );
         }
 
-        // @todo Remove support in v9.0.
+        // @todo Remove support in v10.0.
+        if ($this->hasRelation($attribute) && $this->id && !$params) {
+            trigger_error(
+                "Accessing related records with Entity::get is deprecated. " .
+                "Use `\$entityManager->getRelation(...)->find()`.",
+                E_USER_DEPRECATED
+            );
+
+            $isMany = in_array($this->getRelationType($attribute), [
+                RelationType::MANY_MANY,
+                RelationType::HAS_MANY,
+                RelationType::HAS_CHILDREN,
+            ]);
+
+            return $isMany ?
+                $this->relations->getMany($attribute) :
+                $this->relations->getOne($attribute);
+        }
+
+        // @todo Remove support in v10.0.
         if ($this->hasRelation($attribute) && $this->id && $this->entityManager) {
             trigger_error(
                 "Accessing related records with Entity::get is deprecated. " .
-                "Use \$repository->getRelation(...)->find()",
+                "Use `\$entityManager->getRelation(...)->find()`.",
                 E_USER_DEPRECATED
             );
 
@@ -271,10 +302,11 @@ class BaseEntity implements Entity
     protected function setInContainer(string $attribute, $value): void
     {
         $this->valuesContainer[$attribute] = $value;
+        $this->writtenMap[$attribute] = true;
     }
 
     /**
-     * whether an attribute is set in the container.
+     * Whether an attribute is set in the container.
      */
     protected function hasInContainer(string $attribute): bool
     {
@@ -285,6 +317,7 @@ class BaseEntity implements Entity
      * Get a value from the container.
      *
      * @return mixed
+     * @todo Add return type in v9.0.
      */
     protected function getFromContainer(string $attribute)
     {
@@ -323,6 +356,7 @@ class BaseEntity implements Entity
      * Get a value from the fetched-container.
      *
      * @return mixed
+     * @todo Add return type in v9.0.
      */
     protected function getFromFetchedContainer(string $attribute)
     {
@@ -333,7 +367,7 @@ class BaseEntity implements Entity
         $value = $this->fetchedValuesContainer[$attribute] ?? null;
 
         if ($value === null) {
-            return $value;
+            return null;
         }
 
         $type = $this->getAttributeType($attribute);
@@ -358,6 +392,7 @@ class BaseEntity implements Entity
             return (bool) $this->id;
         }
 
+        // Legacy.
         $method = '_has' . ucfirst($attribute);
 
         if (method_exists($this, $method)) {
@@ -409,10 +444,14 @@ class BaseEntity implements Entity
         $this->valueAccessor->set($field, $value);
     }
 
+    /**
+     * @todo Make private in v9.0.
+     */
     protected function populateFromArrayItem(string $attribute, mixed $value): void
     {
         $preparedValue = $this->prepareAttributeValue($attribute, $value);
 
+        // Legacy.
         $method = '_set' . ucfirst($attribute);
 
         if (method_exists($this, $method)) {
@@ -423,7 +462,28 @@ class BaseEntity implements Entity
 
         $this->setInContainer($attribute, $preparedValue);
 
-        $this->writtenMap[$attribute] = true;
+        $type = $this->getAttributeType($attribute);
+
+        if (
+            $type === AttributeType::FOREIGN_ID ||
+            $type === AttributeType::FOREIGN &&
+            $this->isAttributeHasOneForeignId($attribute)
+            // @todo Move the logic for hasOne to Espo\Core\ORM\Entity ?
+        ) {
+            $this->relations->reset(substr($attribute, 0, -2));
+        } else if ($type === AttributeType::FOREIGN_TYPE) {
+            $this->relations->reset(substr($attribute, 0, -4));
+        }
+    }
+
+    private function isAttributeHasOneForeignId(string $attribute): bool
+    {
+        $type = $this->getAttributeType($attribute);
+
+        return $type === AttributeType::FOREIGN &&
+            $this->getAttributeParam($attribute, 'relation') === substr($attribute, 0, -2) &&
+            $this->getAttributeParam($attribute, 'foreign') === 'id' &&
+            str_ends_with($attribute, 'Id');
     }
 
     protected function prepareAttributeValue(string $attribute, mixed $value): mixed
@@ -440,7 +500,20 @@ class BaseEntity implements Entity
 
         switch ($attributeType) {
             case self::VARCHAR:
-                return $value;
+            case self::TEXT:
+                if (is_object($value)) {
+                    // Prevents an error.
+                    // @todo Remove in v10.0.
+                    return 'Object';
+                }
+
+                if (is_array($value)) {
+                    // Prevents an error.
+                    // @todo Remove in v10.0.
+                    return 'Array';
+                }
+
+                return strval($value);
 
             case self::BOOL:
                 return ($value === 1 || $value === '1' || $value === true || $value === 'true');
@@ -624,7 +697,7 @@ class BaseEntity implements Entity
      */
     public function hasAttribute(string $attribute): bool
     {
-        return isset($this->attributes[$attribute]);
+        return isset($this->attributesDefs[$attribute]);
     }
 
     /**
@@ -632,7 +705,7 @@ class BaseEntity implements Entity
      */
     public function hasRelation(string $relation): bool
     {
-        return isset($this->relations[$relation]);
+        return isset($this->relationsDefs[$relation]);
     }
 
     /**
@@ -640,7 +713,7 @@ class BaseEntity implements Entity
      */
     public function getAttributeList(): array
     {
-        return array_keys($this->attributes);
+        return array_keys($this->attributesDefs);
     }
 
     /**
@@ -648,7 +721,7 @@ class BaseEntity implements Entity
      */
     public function getRelationList(): array
     {
-        return array_keys($this->relations);
+        return array_keys($this->relationsDefs);
     }
 
     /**
@@ -692,11 +765,11 @@ class BaseEntity implements Entity
      */
     public function getAttributeType(string $attribute): ?string
     {
-        if (!isset($this->attributes[$attribute])) {
+        if (!isset($this->attributesDefs[$attribute])) {
             return null;
         }
 
-        return $this->attributes[$attribute]['type'] ?? null;
+        return $this->attributesDefs[$attribute]['type'] ?? null;
     }
 
     /**
@@ -704,11 +777,11 @@ class BaseEntity implements Entity
      */
     public function getRelationType(string $relation): ?string
     {
-        if (!isset($this->relations[$relation])) {
+        if (!isset($this->relationsDefs[$relation])) {
             return null;
         }
 
-        return $this->relations[$relation]['type'] ?? null;
+        return $this->relationsDefs[$relation]['type'] ?? null;
     }
 
     /**
@@ -718,11 +791,11 @@ class BaseEntity implements Entity
      */
     public function getAttributeParam(string $attribute, string $name)
     {
-        if (!isset($this->attributes[$attribute])) {
+        if (!isset($this->attributesDefs[$attribute])) {
             return null;
         }
 
-        return $this->attributes[$attribute][$name] ?? null;
+        return $this->attributesDefs[$attribute][$name] ?? null;
     }
 
     /**
@@ -732,11 +805,11 @@ class BaseEntity implements Entity
      */
     public function getRelationParam(string $relation, string $name)
     {
-        if (!isset($this->relations[$relation])) {
+        if (!isset($this->relationsDefs[$relation])) {
             return null;
         }
 
-        return $this->relations[$relation][$name] ?? null;
+        return $this->relationsDefs[$relation][$name] ?? null;
     }
 
     /**
@@ -822,8 +895,7 @@ class BaseEntity implements Entity
 
                 return true;
             }
-        }
-        else if ($type === self::JSON_OBJECT) {
+        } else if ($type === self::JSON_OBJECT) {
             if (is_object($v1) && is_object($v2)) {
                 if ($v1 != $v2) {
                     return false;
@@ -910,7 +982,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * Copy all current values to fetched values. All current attribute values will beset as those
+     * Copy all current values to fetched values. All current attribute values will be set as those
      * that are fetched from DB.
      */
     public function updateFetchedValues(): void
@@ -960,12 +1032,16 @@ class BaseEntity implements Entity
      */
     public function populateDefaults(): void
     {
-        foreach ($this->attributes as $attribute => $defs) {
+        foreach ($this->attributesDefs as $attribute => $defs) {
             if (!array_key_exists('default', $defs)) {
                 continue;
             }
 
+            $wasSet = $this->hasInContainer($attribute);
+
             $this->setInContainer($attribute, $defs['default']);
+
+            $this->writtenMap[$attribute] = $wasSet;
         }
     }
 
@@ -1078,12 +1154,13 @@ class BaseEntity implements Entity
                 continue;
             }
 
-            if ($attribute == 'id') {
+            if ($attribute === 'id') {
                 $this->id = $data[$attribute];
 
                 continue;
             }
 
+            // @todo Revise. To remove?
             if ($onlyAccessible && $this->getAttributeParam($attribute, 'notAccessible')) {
                 continue;
             }

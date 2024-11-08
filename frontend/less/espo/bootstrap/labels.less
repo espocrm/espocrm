@@ -1,30 +1,20 @@
-//
-// Labels
-// --------------------------------------------------
-
 .label {
   display: inline;
-  padding: .2em .6em .3em;
   font-size: 75%;
-  font-weight: bold;
   line-height: 1;
-  color: @label-color;
+  color: var(--label-color);
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: .25em;
 
-  // Add hover effects, but only for links
   a& {
     &:hover,
     &:focus {
-      color: @label-link-hover-color;
       text-decoration: none;
       cursor: pointer;
     }
   }
 
-  // Empty labels collapse automatically (not available in IE8)
   &:empty {
     display: none;
   }
@@ -32,33 +22,30 @@
   // Quick fix for labels in buttons
   .btn & {
     position: relative;
-    top: -1px;
+    top: var(--minus-1px);
   }
 }
 
-// Colors
-// Contextual variations (linked labels get darker on :hover)
-
 .label-default {
-  .label-variant-espo(@label-default-bg; var(--gray-light-10));
+    .label-variant-espo(var(--label-default-bg); var(--gray-light-10));
 }
 
 .label-primary {
-  .label-variant-espo(@label-primary-bg; @brand-primary-10);
+    .label-variant-espo(var(--brand-primary); var(--brand-primary-10));
 }
 
 .label-success {
-  .label-variant-espo(@label-success-bg; @brand-success-10);
+    .label-variant-espo(var(--brand-success); var(--brand-success-10));
 }
 
 .label-info {
-  .label-variant-espo(@label-info-bg; @brand-info-10);
+    .label-variant-espo(var(--brand-info); var(--brand-info-10));
 }
 
 .label-warning {
-  .label-variant-espo(@label-warning-bg; @brand-warning-10);
+    .label-variant-espo(var(--brand-warning); var(--brand-warning-10));
 }
 
 .label-danger {
-  .label-variant-espo(@label-danger-bg; @brand-danger-10);
+    .label-variant-espo(var(--brand-danger); var(--brand-danger-10));
 }

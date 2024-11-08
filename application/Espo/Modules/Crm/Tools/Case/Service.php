@@ -233,8 +233,7 @@ class Service
                     'id' => $contactIdList,
                 ])
                 ->build();
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 

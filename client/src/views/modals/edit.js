@@ -39,12 +39,17 @@ class EditModalView extends ModalView {
     template = 'modals/edit'
 
     cssName = 'edit-modal'
+    /** @protected */
     saveDisabled = false
+    /** @protected */
     fullFormDisabled = false
+    /** @protected */
     editView = null
     escapeDisabled = true
     className = 'dialog dialog-record'
+    /** @protected */
     sideDisabled = false
+    /** @protected */
     bottomDisabled = false
 
     shortcutKeys = {
@@ -108,6 +113,32 @@ class EditModalView extends ModalView {
         },
     }
 
+    /**
+     * @typedef {Record} module:views/modals/edit~options
+     *
+     * @property {string} entityType An entity type.
+     * @property {string} [id] An ID.
+     * @property {string} [layoutName] A layout name.
+     * @property {Record} [attributes] Attributes.
+     * @property {model:model~setRelateItem | model:model~setRelateItem[]} [relate] A relate data.
+     * @property {import('view-record-helper')} [recordHelper] A record helper.
+     * @property {boolean} [saveDisabled] Disable save.
+     * @property {boolean} [fullFormDisabled] Disable full-form.
+     * @property {string} [headerText] A header text.
+     * @property {boolean} [focusForCreate] Focus for create.
+     * @property {string} [rootUrl] A root URL.
+     * @property {string} [returnUrl] A return URL.
+     * @property {Record} [returnDispatchParams] Return dispatch params.
+     * @property {string} [fullFormUrl] A full-form URL. As of v8.5.
+     */
+
+    /**
+     * @param {module:views/modals/edit~options} options
+     */
+    constructor(options) {
+        super(options);
+    }
+
     setup() {
         this.buttonList = [];
 
@@ -146,6 +177,11 @@ class EditModalView extends ModalView {
         this.id = this.options.id;
 
         this.headerHtml = this.composeHeaderHtml();
+
+        if (this.options.headerText !== undefined) {
+            this.headerHtml = undefined;
+            this.headerText = this.options.headerText;
+        }
 
         this.sourceModel = this.model;
 
@@ -205,13 +241,14 @@ class EditModalView extends ModalView {
             sideDisabled: this.sideDisabled,
             bottomDisabled: this.bottomDisabled,
             focusForCreate: this.options.focusForCreate,
+            recordHelper: this.options.recordHelper,
             exit: () => {},
         };
 
         this.handleRecordViewOptions(options);
 
         this.createView('edit', viewName, options, callback)
-            .then(view => {
+            .then(/** import('views/fields/base').default */view => {
                 this.listenTo(view, 'before:save', () => this.trigger('before:save', model));
 
                 if (this.options.relate && ('link' in this.options.relate)) {
@@ -347,7 +384,7 @@ class EditModalView extends ModalView {
         let options;
 
         if (!this.id) {
-            url = '#' + this.scope + '/create';
+            url = this.options.fullFormUrl || `#${this.scope}/create`;
 
             attributes = this.getRecordView().fetch();
             model = this.getRecordView().model;
@@ -371,7 +408,7 @@ class EditModalView extends ModalView {
             }, 10);
         }
         else {
-            url = '#' + this.scope + '/edit/' + this.id;
+            url = this.options.fullFormUrl || `#${this.scope}/edit/${this.id}`;
 
             attributes = this.getRecordView().fetch();
             model = this.getRecordView().model;

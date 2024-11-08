@@ -122,24 +122,29 @@ class LayoutListView extends LayoutRowsView {
     ignoreList = []
     ignoreTypeList = []
 
+    /**
+     * @protected
+     * @type {number}
+     */
+    defaultWidth = 16
+
     setup() {
         super.setup();
 
-        this.wait(true);
-
-        this.loadLayout(() => {
-            this.wait(false);
-        });
+        this.wait(
+            new Promise(resolve => this.loadLayout(() => resolve()))
+        );
     }
 
+    /**
+     * @inheritDoc
+     */
     loadLayout(callback) {
-        this.getModelFactory().create(Espo.Utils.hyphenToUpperCamelCase(this.scope), (model) => {
-            this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, (layout) => {
+        this.getModelFactory().create(Espo.Utils.hyphenToUpperCamelCase(this.scope), model => {
+            this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, layout => {
                 this.readDataFromLayout(model, layout);
 
-                if (callback) {
-                    callback();
-                }
+                callback();
             });
         });
     }
@@ -198,23 +203,24 @@ class LayoutListView extends LayoutRowsView {
 
             const fieldName = field;
 
-            const o = {
+            const item = {
                 name: fieldName,
                 labelText: label,
             };
 
             const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', fieldName, 'type']);
 
-            if (fieldType) {
-                if (this.getMetadata().get(['fields', fieldType, 'notSortable'])) {
-                    o.notSortable = true;
+            this.itemsData[fieldName] = this.itemsData[fieldName] || {};
 
-                    this.itemsData[fieldName] = this.itemsData[fieldName] || {};
-                    this.itemsData[fieldName].notSortable = true;
-                }
+            if (fieldType && this.getMetadata().get(`fields.${fieldType}.notSortable`)) {
+                item.notSortable = true;
+                this.itemsData[fieldName].notSortable = true;
             }
 
-            this.disabledFields.push(o);
+            item.width = this.defaultWidth;
+            this.itemsData[fieldName].width = this.defaultWidth;
+
+            this.disabledFields.push(item);
         }
 
         this.enabledFields.forEach(item => {
@@ -227,6 +233,8 @@ class LayoutListView extends LayoutRowsView {
             if (duplicateLabelList.includes(item.labelText)) {
                 item.labelText += ' (' + item.name + ')';
             }
+
+            //item.width = this.defaultWidth;
         });
 
         this.rowLayout = layout;
@@ -278,7 +286,7 @@ class LayoutListView extends LayoutRowsView {
 
         const layoutIgnoreList = model.getFieldParam(name, 'layoutIgnoreList') || [];
 
-        if (layoutIgnoreList.includes(realType)) {
+        if (layoutIgnoreList.includes(realType) || layoutIgnoreList.includes(this.type)) {
             return false;
         }
 

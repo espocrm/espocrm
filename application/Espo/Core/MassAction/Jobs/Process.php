@@ -83,8 +83,7 @@ class Process implements Job
                 $params,
                 $entity->getData()
             );
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->setFailed($entity);
 
             throw new Error("Mass action job error: " . $e->getMessage());

@@ -42,6 +42,38 @@ class ListNestedCategoriesRecordView extends View {
         },
     }
 
+    /**
+     * @type {import('collections/tree').default}
+     */
+    collection
+
+    constructor(options) {
+        super(options);
+
+        this.collection = options.collection;
+    }
+
+    /**
+     * @type {import('collection').default}
+     */
+    itemCollection
+
+    /**
+     * @type {boolean}
+     */
+    hasNavigationPanel
+
+    /**
+     * @type {boolean}
+     */
+    isExpanded
+
+    /**
+     * @protected
+     * @type {string}
+     */
+    subjectEntityType
+
     data() {
         const data = {};
 
@@ -50,14 +82,15 @@ class ListNestedCategoriesRecordView extends View {
         }
 
         data.scope = this.collection.entityType;
+        data.isExpanded = this.isExpanded;
         data.isLoading = this.isLoading;
         data.currentId = this.collection.currentCategoryId;
         data.currentName = this.collection.currentCategoryName;
         data.categoryData = this.collection.categoryData;
-
+        data.showFolders = !this.isExpanded;
         data.hasExpandedToggler = this.options.hasExpandedToggler;
         data.showEditLink = this.options.showEditLink;
-        data.hasNavigationPanel = this.options.hasNavigationPanel;
+        data.hasNavigationPanel = this.hasNavigationPanel;
 
         const categoryData = this.collection.categoryData || {};
 
@@ -70,20 +103,36 @@ class ListNestedCategoriesRecordView extends View {
 
             if (categoryData.upperId) {
                 data.upperLink += '&' + part;
-            }
-            else {
+            } else {
                 data.upperLink += '/list/' + part;
             }
         }
 
+        data.isExpandedResult = data.isExpanded ||
+            this.itemCollection.data.textFilter ||
+            (
+                this.itemCollection.where &&
+                this.itemCollection.where.find(it => it.type === 'textFilter')
+            );
+
         return data;
     }
 
+    /**
+     * @private
+     * @return {{
+     *     id: string,
+     *     name: string,
+     *     recordCount: number,
+     *     isEmpty: boolean,
+     *     link: string,
+     * }[]}
+     */
     getDataList() {
         const list = [];
 
         this.collection.forEach(model => {
-            let url = '#' + this.subjectEntityType + '/list/categoryId=' + model.id;
+            let url = `#${this.subjectEntityType}/list/categoryId=${model.id}`;
 
             if (this.options.primaryFilter) {
                 url += '&primaryFilter=' + this.getHelper().escapeString(this.options.primaryFilter);
@@ -104,11 +153,13 @@ class ListNestedCategoriesRecordView extends View {
     }
 
     setup() {
-        this.listenTo(this.collection, 'sync', () => {
-            this.reRender();
-        });
-
+        this.isExpanded = this.options.isExpanded;
         this.subjectEntityType = this.options.subjectEntityType;
+        this.hasNavigationPanel = this.options.hasNavigationPanel;
+        this.itemCollection = this.options.itemCollection;
+
+        this.listenTo(this.collection, 'sync', () => this.reRender());
+        this.listenTo(this.itemCollection, 'sync', () => this.reRender());
     }
 
     // noinspection JSUnusedGlobalSymbols

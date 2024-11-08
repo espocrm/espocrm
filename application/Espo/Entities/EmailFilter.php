@@ -40,6 +40,8 @@ class EmailFilter extends Entity
     public const ACTION_MOVE_TO_GROUP_FOLDER = 'Move to Group Folder';
     public const ACTION_NONE = 'None';
 
+    public const STATUS_ACTIVE = 'Active';
+
     /**
      * @return self::ACTION_*|null
      */
@@ -61,6 +63,11 @@ class EmailFilter extends Entity
     public function markAsRead(): bool
     {
         return (bool) $this->get('markAsRead');
+    }
+
+    public function skipNotification(): bool
+    {
+        return (bool) $this->get('skipNotification');
     }
 
     public function isGlobal(): bool

@@ -31,9 +31,10 @@ namespace Espo\Entities;
 
 use Espo\Core\Field\LinkParent;
 
+use Espo\Core\ORM\Entity;
 use stdClass;
 
-class Notification extends \Espo\Core\ORM\Entity
+class Notification extends Entity
 {
     public const ENTITY_TYPE = 'Notification';
 
@@ -43,6 +44,7 @@ class Notification extends \Espo\Core\ORM\Entity
     public const TYPE_NOTE = 'Note';
     public const TYPE_MENTION_IN_POST = 'MentionInPost';
     public const TYPE_MESSAGE = 'Message';
+    public const TYPE_USER_REACTION = 'UserReaction';
     public const TYPE_SYSTEM = 'System';
 
     public function getType(): ?string
@@ -69,7 +71,10 @@ class Notification extends \Espo\Core\ORM\Entity
         return $this->get('data');
     }
 
-    public function setData(stdClass $data): self
+    /**
+     * @param stdClass|array<string, mixed> $data
+     */
+    public function setData(stdClass|array $data): self
     {
         $this->set('data', $data);
 
@@ -89,9 +94,28 @@ class Notification extends \Espo\Core\ORM\Entity
         return $this->getValueObject('related');
     }
 
-    public function setRelated(?LinkParent $related): self
+    public function setRelated(LinkParent|Entity|null $related): self
     {
-        $this->setValueObject('related', $related);
+        if ($related instanceof LinkParent) {
+            $this->setValueObject('related', $related);
+
+            return $this;
+        }
+
+        $this->relations->set('related', $related);
+
+        return $this;
+    }
+
+    public function setRelatedParent(LinkParent|Entity|null $relatedParent): self
+    {
+        if ($relatedParent instanceof LinkParent) {
+            $this->setValueObject('relatedParent', $relatedParent);
+
+            return $this;
+        }
+
+        $this->relations->set('relatedParent', $relatedParent);
 
         return $this;
     }
@@ -106,6 +130,18 @@ class Notification extends \Espo\Core\ORM\Entity
     public function setRelatedId(?string $relatedId): self
     {
         $this->set('relatedId', $relatedId);
+
+        return $this;
+    }
+
+    public function isRead(): bool
+    {
+        return $this->get('read');
+    }
+
+    public function setRead(bool $read = true): self
+    {
+        $this->set('read', $read);
 
         return $this;
     }

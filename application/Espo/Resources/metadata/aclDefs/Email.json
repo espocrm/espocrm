@@ -6,6 +6,7 @@
     "assignmentCheckerClassName": "Espo\\Classes\\Acl\\Email\\AssignmentChecker",
     "readOwnerUserField": "users",
     "linkCheckerClassNameMap": {
-        "parent": "Espo\\Classes\\Acl\\Email\\LinkCheckers\\ParentLinkChecker"
+        "parent": "Espo\\Classes\\Acl\\Email\\LinkCheckers\\ParentLinkChecker",
+        "teams": "Espo\\Classes\\Acl\\Email\\LinkCheckers\\TeamsLinkChecker"
     }
 }

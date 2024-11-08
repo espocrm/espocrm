@@ -89,8 +89,7 @@ class ParentLink implements BeforeSave
             if ($parent instanceof Account) {
                 $accountId = $parent->getId();
                 $accountName = $parent->get('name');
-            }
-            else if (
+            } else if (
                 $parent instanceof Lead &&
                 $parent->getStatus() === Lead::STATUS_CONVERTED &&
                 $parent->get('createdAccountId')

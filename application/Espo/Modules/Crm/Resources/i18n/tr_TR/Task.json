@@ -19,7 +19,8 @@
   "links": {
     "attachments": "Eklentiler",
     "account": "Hesaplar",
-    "contact": "Kişiler"
+    "contact": "Kişiler",
+    "email": "Eposta"
   },
   "options": {
     "status": {

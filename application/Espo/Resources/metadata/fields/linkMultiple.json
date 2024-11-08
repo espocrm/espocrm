@@ -6,12 +6,6 @@
             "default": false
         },
         {
-            "name": "sortable",
-            "type": "bool",
-            "default": false,
-            "hidden": true
-        },
-        {
             "name": "readOnly",
             "type": "bool",
             "tooltip": "linkReadOnly"
@@ -19,6 +13,11 @@
         {
             "name": "readOnlyAfterCreate",
             "type": "bool"
+        },
+        {
+            "name": "audited",
+            "type": "bool",
+            "tooltip": true
         },
         {
             "name": "default",
@@ -34,9 +33,16 @@
             "type": "bool"
         },
         {
-            "name": "audited",
-            "type": "bool",
+            "name": "maxCount",
+            "type": "int",
+            "min": 1,
             "tooltip": true
+        },
+        {
+            "name": "sortable",
+            "type": "bool",
+            "default": false,
+            "hidden": true
         }
     ],
     "actualFields": [
@@ -49,7 +55,8 @@
     "validationList": [
         "required",
         "pattern",
-        "columnsValid"
+        "columnsValid",
+        "maxCount"
     ],
     "mandatoryValidationList": [
         "pattern",

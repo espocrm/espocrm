@@ -45,9 +45,17 @@
             ],
             "dropdown":[
                 {
+                    "name": "archiveEmail",
                     "label":"Archive Email",
                     "link":"#Email/create",
                     "acl":"create"
+                },
+                {
+                    "name": "importEml",
+                    "label": "Import EML",
+                    "handler": "handlers/email/list-actions",
+                    "checkVisibilityFunction": "checkImportEml",
+                    "actionFunction": "importEml"
                 },
                 false,
                 {
@@ -110,6 +118,11 @@
             ]
         }
     },
+    "relationshipPanels": {
+        "users": {
+            "selectHandler": "handlers/email/select-user"
+        }
+    },
     "dynamicLogic":{
         "fields": {
             "replied": {
@@ -135,6 +148,31 @@
                                 "field": "replies"
                             }
                         }
+                    ]
+                }
+            },
+            "folderString": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "or",
+                            "value": [
+                                {
+                                    "type": "and",
+                                    "value": [
+                                        {
+                                            "type": "isTrue",
+                                            "attribute": "isUsers"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "isNotEmpty",
+                                    "attribute": "groupFolderId"
+                                }
+                            ]
+                        }
+
                     ]
                 }
             }

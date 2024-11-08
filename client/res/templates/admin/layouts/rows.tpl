@@ -12,8 +12,13 @@
             <header>{{translate 'Enabled' scope='Admin'}}</header>
             <ul class="enabled connected">
                 {{#each layout}}
-                    <li class="cell" draggable="true" {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}>
-                        <div class="left" style="width: calc(100% - 17px);">
+                    <li
+                        class="cell"
+                        draggable="true"
+                        {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}
+                        title="{{labelText}}"
+                    >
+                        <div class="left" style="width: calc(100% - var(--17px));">
                             <span>{{labelText}}</span>
                         </div>
                         {{#if ../editable}}
@@ -40,8 +45,9 @@
                         class="cell"
                         draggable="true"
                         {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}
+                        title="{{labelText}}"
                     >
-                        <div class="left" style="width: calc(100% - 17px);">
+                        <div class="left" style="width: calc(100% - var(--17px));">
                             <span>{{labelText}}</span>
                         </div>
                         {{#if ../editable}}

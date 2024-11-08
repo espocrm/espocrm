@@ -35,10 +35,12 @@ use Espo\Core\ORM\Entity;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Field\Link;
+use Espo\ORM\Collection;
 use Espo\Repositories\Email as EmailRepository;
 use Espo\Tools\Email\Util as EmailUtil;
 
 use RuntimeException;
+use stdClass;
 
 class Email extends Entity
 {
@@ -51,11 +53,19 @@ class Email extends Entity
     public const STATUS_DRAFT = 'Draft';
 
     public const RELATIONSHIP_EMAIL_USER = 'EmailUser';
+    public const ALIAS_INBOX = 'emailUserInbox';
 
     public const USERS_COLUMN_IS_READ = 'isRead';
     public const USERS_COLUMN_IN_TRASH = 'inTrash';
+    public const USERS_COLUMN_IN_ARCHIVE = 'inArchive';
     public const USERS_COLUMN_FOLDER_ID = 'folderId';
     public const USERS_COLUMN_IS_IMPORTANT = 'isImportant';
+
+    public const GROUP_STATUS_FOLDER_ARCHIVE = 'Archive';
+    public const GROUP_STATUS_FOLDER_TRASH = 'Trash';
+
+    public const SAVE_OPTION_IS_BEING_IMPORTED = 'isBeingImported';
+    public const SAVE_OPTION_IS_JUST_SENT = 'isJustSent';
 
     /** @noinspection PhpUnused */
     protected function _getSubject(): ?string
@@ -348,6 +358,12 @@ class Email extends Entity
         return $this->getValueObject('dateSent');
     }
 
+    public function getDeliveryDate(): ?DateTime
+    {
+        /** @var ?DateTime */
+        return $this->getValueObject('deliveryDate');
+    }
+
     public function getSubject(): ?string
     {
         return $this->get('subject');
@@ -630,9 +646,22 @@ class Email extends Entity
         return $this->getValueObject('parent');
     }
 
-    public function setParent(?LinkParent $parent): self
+    public function setAccount(?Link $account): self
     {
-        $this->setValueObject('parent', $parent);
+        $this->setValueObject('account', $account);
+
+        return $this;
+    }
+
+    public function setParent(LinkParent|Entity|null $parent): self
+    {
+        if ($parent instanceof LinkParent) {
+            $this->setValueObject('parent', $parent);
+
+            return $this;
+        }
+
+        $this->relations->set('parent', $parent);
 
         return $this;
     }
@@ -652,6 +681,24 @@ class Email extends Entity
     {
         /** @var LinkMultiple */
         return $this->getValueObject('teams');
+    }
+
+    public function getUsers(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('users');
+    }
+
+    public function getAssignedUsers(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('assignedUsers');
+    }
+
+    public function getAssignedUser(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('assignedUser');
     }
 
     public function getCreatedBy(): ?Link
@@ -711,6 +758,19 @@ class Email extends Entity
         return $this;
     }
 
+    public function setGroupFolder(Link|GroupEmailFolder|null $groupFolder): self
+    {
+        if ($groupFolder instanceof GroupEmailFolder) {
+            $this->relations->set('groupFolder', $groupFolder);
+
+            return $this;
+        }
+
+        $this->setValueObject('groupFolder', $groupFolder);
+
+        return $this;
+    }
+
     public function setGroupFolderId(?string $groupFolderId): self
     {
         $this->set('groupFolderId', $groupFolderId);
@@ -718,9 +778,28 @@ class Email extends Entity
         return $this;
     }
 
+    public function getGroupStatusFolder(): ?string
+    {
+        return $this->get('groupStatusFolder');
+    }
+
+    public function setGroupStatusFolder(?string $groupStatusFolder): self
+    {
+        $this->set('groupStatusFolder', $groupStatusFolder);
+
+        return $this;
+    }
+
     public function setDateSent(?DateTime $dateSent): self
     {
         $this->setValueObject('dateSent', $dateSent);
+
+        return $this;
+    }
+
+    public function setDeliveryDate(?DateTime $deliveryDate): self
+    {
+        $this->setValueObject('deliveryDate', $deliveryDate);
 
         return $this;
     }
@@ -746,6 +825,60 @@ class Email extends Entity
         return $this;
     }
 
+    public function getUserColumnIsRead(string $userId): ?bool
+    {
+        return $this->getLinkMultipleColumn('users', self::USERS_COLUMN_IS_READ, $userId);
+    }
+
+    public function getUserColumnInTrash(string $userId): ?bool
+    {
+        return $this->getLinkMultipleColumn('users', self::USERS_COLUMN_IN_TRASH, $userId);
+    }
+
+    public function getUserColumnFolderId(string $userId): ?string
+    {
+        return $this->getLinkMultipleColumn('users', self::USERS_COLUMN_FOLDER_ID, $userId);
+    }
+
+    public function setUserColumnFolderId(string $userId, ?string $folderId): self
+    {
+        $this->setLinkMultipleColumn('users', self::USERS_COLUMN_FOLDER_ID, $userId, $folderId);
+
+        return $this;
+    }
+
+    public function setUserColumnIsRead(string $userId, bool $isRead): self
+    {
+        $this->setLinkMultipleColumn('users', self::USERS_COLUMN_IS_READ, $userId, $isRead);
+
+        return $this;
+    }
+
+    public function setUserColumnInTrash(string $userId, bool $inTrash): self
+    {
+        $this->setLinkMultipleColumn('users', self::USERS_COLUMN_IN_TRASH, $userId, $inTrash);
+
+        return $this;
+    }
+
+    public function getUserSkipNotification(string $userId): bool
+    {
+        /** @var stdClass $map */
+        $map = $this->get('skipNotificationMap') ?? (object) [];
+
+        return $map->$userId ?? false;
+    }
+
+    public function setUserSkipNotification(string $userId): self
+    {
+        /** @var stdClass $map */
+        $map = $this->get('skipNotificationMap') ?? (object) [];
+        $map->$userId = true;
+        $this->set('skipNotificationMap', $map);
+
+        return $this;
+    }
+
     public function addTeamId(string $teamId): self
     {
         $this->addLinkMultipleId('teams', $teamId);
@@ -758,5 +891,14 @@ class Email extends Entity
         $this->setValueObject('teams', $teams);
 
         return $this;
+    }
+
+    /**
+     * @return iterable<Attachment>
+     */
+    public function getAttachments(): iterable
+    {
+        /** @var Collection<Attachment> */
+        return $this->relations->getMany('attachments');
     }
 }

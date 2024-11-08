@@ -12,52 +12,28 @@
 {{/if}}
 
 <div class="list list-expanded list-tree{{#if noData}} hidden{{/if}}">
-    {{#if showRootMenu}}
-    <div class="btn-group pull-right">
-        <a role="button" tabindex="0" class="small dropdown-toggle btn-link" data-toggle="dropdown">
-            <span class="fas fa-ellipsis-h"></span>
-        </a>
-        <ul class="dropdown-menu">
-            {{#if showEditLink}}
-            <li>
-                <a
-                    href="#{{scope}}"
-                    class="action manage-categories-link"
-                    data-action="manageCategories"
-                >{{translate 'Manage Categories' scope=scope}}</a>
-            </li>
-            <li class="divider"></li>
-            {{/if}}
-
-            {{#if hasExpandedToggler}}
-            <li class="{{#unless isExpanded}}hidden{{/unless}}">
-                <a
-                    role="button"
-                    tabindex="0"
-                    class="category-expanded-toggle-link action"
-                    data-action="collapse"
-                >{{translate 'Collapse'}}</a>
-            </li>
-            <li class="{{#if isExpanded}}hidden{{/if}}">
-                <a
-                    role="button"
-                    tabindex="0"
-                    class="category-expanded-toggle-link action"
-                    data-action="expand"
-                >{{translate 'Expand'}}</a>
-            </li>
-            {{/if}}
-        </ul>
-    </div>
-    {{/if}}
-
     {{#if showRoot}}
     <div class="root-item">
     <a
         href="#{{scope}}"
         class="action link{{#if rootIsSelected}} text-bold{{/if}}"
         data-action="selectRoot"
-    >{{rootName}}{{#if isExpanded}} <span class="fas fa-level-down-alt fa-sm"></span>{{/if}}</a>
+    >{{rootName}}</a>
+        {{#if hasExpandToggle}}
+         <a
+            role="button"
+            data-role="expandButtonContainer"
+            title="{{#if isExpanded}}{{translate 'Expanded'}}{{else}}{{translate 'Collapsed'}}{{/if}}"
+            data-action="toggleExpandedFromNavigation"
+            class="{{#if expandToggleInactive}} disabled {{/if}}"
+        >
+            {{#if isExpanded}}
+                <span class="fas fa-level-down-alt fa-sm text-soft"></span>
+            {{else}}
+                <span class="fas fa-level-down-alt fa-rotate-270 fa-sm text-soft"></span>
+            {{/if}}
+        </a>
+        {{/if}}
     </div>
     {{/if}}
 

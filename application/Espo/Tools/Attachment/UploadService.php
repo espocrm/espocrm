@@ -45,6 +45,7 @@ use Espo\Entities\Attachment;
 use Espo\ORM\EntityManager;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Tools\Attachment\Jobs\MoveToStorage;
+use Espo\Core\ORM\Type\FieldType;
 
 class UploadService
 {
@@ -144,8 +145,7 @@ class UploadService
         if ($this->detailsObtainer->getFieldType($attachment) === FieldType::IMAGE) {
             try {
                 $this->checker->checkTypeImage($attachment, $filePath);
-            }
-            catch (Forbidden $e) {
+            } catch (Forbidden $e) {
                 $this->entityManager->removeEntity($attachment);
 
                 throw new ForbiddenSilent($e->getMessage());

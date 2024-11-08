@@ -34,8 +34,38 @@ import Autocomplete from 'ui/autocomplete';
 
 /**
  * A link-multiple field (for has-many relations).
+ *
+ * @extends BaseFieldView<module:views/fields/link-multiple~params>
  */
 class LinkMultipleFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/link-multiple~options
+     * @property {
+     *     module:views/fields/link~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/link-multiple~params
+     * @property {boolean} [required] Required.
+     * @property {boolean} [autocompleteOnEmpty] Autocomplete on empty input.
+     * @property {boolean} [sortable] Sortable.
+     * @property {boolean} [createButton] Show 'Create' button.
+     * @property {number} [maxCount] A max number of items.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/link-multiple~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'linkMultiple'
 
@@ -43,6 +73,15 @@ class LinkMultipleFieldView extends BaseFieldView {
     detailTemplate = 'fields/link-multiple/detail'
     editTemplate = 'fields/link-multiple/edit'
     searchTemplate = 'fields/link-multiple/search'
+
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
+    validations = [
+        'required',
+        'maxCount',
+    ]
 
     /**
      * A name-hash attribute name.
@@ -338,10 +377,7 @@ class LinkMultipleFieldView extends BaseFieldView {
             this.events['click a[data-action="clearLink"]'] = (e) => {
                 const id = $(e.currentTarget).attr('data-id');
 
-                this.deleteLink(id);
-
-                // noinspection JSUnresolvedReference
-                this.$element.get(0).focus({preventScroll: true});
+                this.actionDeleteLink(id);
             };
         }
 
@@ -360,6 +396,23 @@ class LinkMultipleFieldView extends BaseFieldView {
         /** @type {Object.<string, *>} */
         this.panelDefs = this.getMetadata()
             .get(['clientDefs', this.entityType, 'relationshipPanels', this.name]) || {};
+    }
+
+    /**
+     * @private
+     * @param {string} id
+     */
+    actionDeleteLink(id) {
+        this.deleteLink(id);
+
+        // noinspection JSUnresolvedReference
+        this.$element.get(0).focus({preventScroll: true});
+
+        // Timeout prevents autocomplete from disappearing.
+        setTimeout(() => {
+            // noinspection JSUnresolvedReference
+            this.$element.get(0).focus({preventScroll: true});
+        }, 140);
     }
 
     /**
@@ -440,7 +493,8 @@ class LinkMultipleFieldView extends BaseFieldView {
 
         const notSelectedFilter = this.ids && this.ids.length ?
             {
-                id: {
+                // Prefix to prevent conflict when the 'id' field is in filters.
+                _id: {
                     type: 'notIn',
                     attribute: 'id',
                     value: this.ids,
@@ -520,8 +574,10 @@ class LinkMultipleFieldView extends BaseFieldView {
             this.$element = this.$el.find('input.main-element');
 
             if (!this.autocompleteDisabled) {
+                /** @type {module:ajax.AjaxPromise & Promise<any>} */
+                let lastAjaxPromise;
+
                 const autocomplete = new Autocomplete(this.$element.get(0), {
-                    minChars: this.autocompleteOnEmpty ? 0 : 1,
                     focusOnSelect: true,
                     handleFocusMode: 3,
                     autoSelectFirst: true,
@@ -538,7 +594,26 @@ class LinkMultipleFieldView extends BaseFieldView {
                         });
                     },
                     lookupFunction: query => {
-                        return Espo.Ajax.getRequest(this.getAutocompleteUrl(query), {q: query})
+                        if (!this.autocompleteOnEmpty && query.length === 0) {
+                            const onEmptyPromise = this.getOnEmptyAutocomplete();
+
+                            if (onEmptyPromise) {
+                                return onEmptyPromise.then(list => this._transformAutocompleteResult({list: list}));
+                            }
+
+                            return Promise.resolve([]);
+                        }
+
+                        return Promise.resolve(this.getAutocompleteUrl(query))
+                            .then(url => {
+                                if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
+                                    lastAjaxPromise.abort();
+                                }
+
+                                lastAjaxPromise = Espo.Ajax.getRequest(url, {q: query});
+
+                                return lastAjaxPromise;
+                            })
                             .then(/** {list: Record[]} */response => {
                                 return response.list.map(item => ({
                                     value: item.name,
@@ -664,11 +739,27 @@ class LinkMultipleFieldView extends BaseFieldView {
      * @return {JQuery|null}
      */
     addLinkHtml(id, name) {
-        // Do not use the `html` method to avoid XSS.
+        // Beware of XSS.
 
         name = name || id;
 
         const $container = this.$el.find('.link-container');
+
+        const itemElement = this.prepareEditItemElement(id, name);
+
+        $container.append(itemElement);
+
+        return $(itemElement);
+    }
+
+    /**
+     * @protected
+     * @param {string} id An ID.
+     * @param {string} name A name.
+     * @return {HTMLElement}
+     */
+    prepareEditItemElement(id, name) {
+        // Beware of XSS.
 
         const $el = $('<div>')
             .addClass('link-' + id)
@@ -689,9 +780,7 @@ class LinkMultipleFieldView extends BaseFieldView {
                 )
         );
 
-        $container.append($el);
-
-        return $el;
+        return $el.get(0);
     }
 
     // noinspection JSUnusedLocalSymbols
@@ -726,6 +815,10 @@ class LinkMultipleFieldView extends BaseFieldView {
             .attr('href', this.getUrl(id))
             .attr('data-id', id)
             .text(name);
+
+        if (this.mode === this.MODE_LIST) {
+            $a.addClass('text-default');
+        }
 
         if (iconHtml) {
             $a.prepend(iconHtml)
@@ -786,6 +879,33 @@ class LinkMultipleFieldView extends BaseFieldView {
         }
 
         return false;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    validateMaxCount() {
+        const maxCount = this.params.maxCount;
+
+        if (!maxCount) {
+            return false;
+        }
+
+        const idList = this.model.get(this.idsName) || [];
+
+        if (idList.length === 0) {
+            return false;
+        }
+
+        if (idList.length <= maxCount) {
+            return false;
+        }
+
+        const msg = this.translate('fieldExceedsMaxCount', 'messages')
+            .replace('{field}', this.getLabelText())
+            .replace('{maxCount}', maxCount.toString());
+
+        this.showValidationMessage(msg);
+
+        return true;
     }
 
     /** @inheritDoc */
@@ -1019,7 +1139,13 @@ class LinkMultipleFieldView extends BaseFieldView {
 
     /**
      * @private
-     * @return {Promise<{bool?: string[], advanced?: Object, primary?: string}>}
+     * @return {Promise<{
+     *     bool?: string[],
+     *     advanced?: Object,
+     *     primary?: string,
+     *     orderBy?: string,
+     *     order?: 'asc'|'desc',
+     * }>}
      */
     _getSelectFilters() {
         const handler = this.panelDefs.selectHandler;
@@ -1092,6 +1218,33 @@ class LinkMultipleFieldView extends BaseFieldView {
                 });
             });
         });
+    }
+
+    /** @private */
+    _transformAutocompleteResult(response) {
+        const list = [];
+
+        response.list.forEach(item => {
+            list.push({
+                id: item.id,
+                name: item.name || item.id,
+                data: item.id,
+                value: item.name || item.id,
+                attributes: item,
+            });
+        });
+
+        return list;
+    }
+
+    /**
+     * Get an empty autocomplete result.
+     *
+     * @protected
+     * @return {Promise<[{name: ?string, id: string} & Record]>}
+     */
+    getOnEmptyAutocomplete() {
+        return undefined;
     }
 }
 

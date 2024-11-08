@@ -57,15 +57,19 @@ class Pdf implements EntryPoint
         $templateId = $request->getQueryParam('templateId');
 
         if (!$entityId || !$entityType || !$templateId) {
-            throw new BadRequest();
+            throw new BadRequest("No entityId or entityType or templateId.");
         }
 
         $entity = $this->entityManager->getEntityById($entityType, $entityId);
         /** @var ?Template $template */
         $template = $this->entityManager->getEntityById(Template::ENTITY_TYPE, $templateId);
 
-        if (!$entity || !$template) {
-            throw new NotFound();
+        if (!$entity) {
+            throw new NotFound("Record not found.");
+        }
+
+        if (!$template) {
+            throw new NotFound("Template not found.");
         }
 
         $contents = $this->service->generate($entityType, $entityId, $templateId);
@@ -77,7 +81,6 @@ class Pdf implements EntryPoint
         $response
             ->setHeader('Content-Type', 'application/pdf')
             ->setHeader('Cache-Control', 'private, must-revalidate, post-check=0, pre-check=0, max-age=1')
-            ->setHeader('Pragma', 'public')
             ->setHeader('Expires', 'Sat, 26 Jul 1997 05:00:00 GMT')
             ->setHeader('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT')
             ->setHeader('Content-Disposition', 'inline; filename="' . basename($fileName) . '"');

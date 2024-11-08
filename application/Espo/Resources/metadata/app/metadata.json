@@ -37,10 +37,14 @@
         ["selectDefs"],
         ["pdfDefs"],
         ["aclDefs"],
-        ["notificationDefs"],
+        ["notificationDefs", "__ANY__", "assignmentNotificatorClassName"],
         ["authenticationMethods", "__ANY__", "implementationClassName"]
     ],
     "frontendNonAdminHiddenPathList": [
         ["recordDefs"]
+    ],
+    "additionalBuilderClassNameList": [
+        "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\Fields",
+        "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\DeleteIdField"
     ]
 }

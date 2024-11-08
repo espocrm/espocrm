@@ -1,12 +1,15 @@
 [
     {
-        "label": "",
         "rows":[
-            [{"name":"name", "fullWidth": true}],
-            [{"name":"status"}, {"name":"language"}],
-            [{"name":"categories"}, {"name":"portals"}],
-            [{"name":"body", "fullWidth": true}],
-            [{"name":"attachments", "fullWidth": true}]
+            [{"name":"name"}],
+            [{"name":"status"}, {"name": "language"}],
+            [{"name":"categories"}, {"name": "portals"}]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "body"}],
+            [{"name": "attachments"}]
         ]
     }
 ]

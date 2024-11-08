@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\Acl\Note;
 
+use Espo\Core\Acl\Permission;
 use Espo\Core\Acl\Table;
 use Espo\Entities\Note;
 use Espo\Entities\User;
@@ -143,7 +144,7 @@ class AccessChecker implements AccessEntityCREDChecker
         }
 
         if ($entity->getTargetType() === Note::TARGET_PORTALS) {
-            return $this->aclManager->getPermissionLevel($user, 'portal') === Table::LEVEL_YES;
+            return $this->aclManager->getPermissionLevel($user, Permission::PORTAL) === Table::LEVEL_YES;
         }
 
         return false;
@@ -183,8 +184,7 @@ class AccessChecker implements AccessEntityCREDChecker
             if ($dt->format('U') > (new DateTime($createdAt))->format('U')) {
                 return false;
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 
@@ -225,8 +225,7 @@ class AccessChecker implements AccessEntityCREDChecker
             if ($dt->format('U') > (new DateTime($createdAt))->format('U')) {
                 return false;
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 

@@ -8,7 +8,7 @@
     ],
     "linkList": [
         {
-            "href": "client/fonts/open-sans/open-sans-v16-cyrillic_latin_cyrillic-ext_latin-ext-regular.woff2",
+            "href": "client/fonts/inter/Inter-Regular.woff2",
             "as": "font",
             "type": "font/woff2",
             "rel": "preload",
@@ -16,7 +16,15 @@
             "crossorigin": true
         },
         {
-            "href": "client/fonts/open-sans/open-sans-v16-cyrillic_latin_cyrillic-ext_latin-ext-600.woff2",
+            "href": "client/fonts/inter/Inter-SemiBold.woff2",
+            "as": "font",
+            "type": "font/woff2",
+            "rel": "preload",
+            "noTimestamp": true,
+            "crossorigin": true
+        },
+        {
+            "href": "client/fonts/inter/Inter-Bold.woff2",
             "as": "font",
             "type": "font/woff2",
             "rel": "preload",

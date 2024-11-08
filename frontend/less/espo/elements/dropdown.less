@@ -5,7 +5,8 @@
     color: var(--dropdown-link-color);
     cursor: default;
     overflow: auto;
-    padding: 5px 0;
+    padding: var(--5px) 0;
+    user-select: none;
 
     .autocomplete-suggestion.autocomplete-selected {
         background-color: var(--dropdown-link-hover-bg) !important;
@@ -18,9 +19,15 @@
     }
 
     .autocomplete-suggestion {
-        padding: 4px 10px;
+        padding: var(--4px) var(--10px);
         white-space: nowrap;
         overflow: hidden;
+
+        a {
+            &:hover {
+                text-decoration: none;
+            }
+        }
     }
 }
 
@@ -62,41 +69,33 @@ ul.dropdown-menu > li.checkbox {
     margin-left: 0;
     margin-top: 0;
     margin-bottom: 0;
-    padding: 4px 0 4px 20px;
+    padding: var(--4px) 0 var(--4px) var(--20px);
 
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
 
     label {
-        padding-left: 23px;
+        padding-left: var(--23px);
 
         input[type="checkbox"].form-checkbox {
-            margin-left: -23px;
+            margin-left: calc(var(--23px) * -1);
 
             &.form-checkbox-small {
-                margin-top: 3px;
+                margin-top: var(--3px);
             }
         }
     }
 }
 
 ul.dropdown-menu {
-    > li.divider + li.divider {
-        display: none;
-    }
-
     > li > a {
-        padding-top: 4px;
-        padding-bottom: 4px;
+        padding-top: var(--4px);
+        padding-bottom: var(--4px);
 
         -webkit-user-select: none;
         -webkit-user-drag: none;
         -moz-user-select: none;
         user-select: none;
-        line-height: @line-height-computed;
+        line-height: var(--line-height-computed);
 
         &.active {
             background-color: @gray-lighter;
@@ -105,11 +104,12 @@ ul.dropdown-menu {
         }
 
         > .check-icon + div {
-            padding-right: 26px;
+            padding-right: var(--26px);
         }
 
         span.fa-check {
-            padding-top: 2px;
+            position: relative;
+            top: var(--1px);
         }
 
         &.disabled {
@@ -118,7 +118,7 @@ ul.dropdown-menu {
     }
 
     > li.checkbox:last-child {
-        margin-bottom: 3px;
+        margin-bottom: var(--3px);
     }
 
     > .dropdown-header {
@@ -129,19 +129,47 @@ ul.dropdown-menu {
 ul.dropdown-menu-with-icons {
     > li {
         a {
-            padding-left: 10px;
+            padding-left: var(--10px);
         }
 
         .fas, .far, .glyphicon, .empty-icon {
-            width: 16px;
+            width: var(--16px);
             text-align: center;
             display: inline-block;
+            color: var(--gray-soft);
         }
 
         .item-text {
-            padding-left: 8px;
+            padding-left: var(--8px);
             position: static;
         }
+    }
+}
+
+ul.dropdown-menu {
+    > li {
+        a {
+            .item-icon + .item-text {
+                padding-left: var(--8px);
+            }
+        }
+    }
+
+    > li {
+        .item-icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(var(--34px), 1fr));
+
+            > a {
+                padding: var(--4px) var(--4px);
+                text-align: center;
+
+                &:hover {
+                    background-color: var(--dropdown-link-hover-bg);
+                }
+            }
+        }
+
     }
 }
 
@@ -151,18 +179,15 @@ ul.dropdown-menu-with-icons {
     }
 }
 
-.btn.dropdown-toggle > span.fa-ellipsis-h {
-    top: 1px;
-    position: relative;
-}
-
-.btn.btn-sm.dropdown-toggle > span.fa-ellipsis-h {
-    top: 0;
-}
-
 .btn.dropdown-toggle > span.caret.wide {
-    margin-left: 2px;
-    margin-right: 2px;
+    margin-left: var(--2px);
+    margin-right: var(--2px);
+}
+
+.fix-overflow {
+    .btn-group {
+        position: unset;
+    }
 }
 
 .dropdown-menu {
@@ -172,5 +197,87 @@ ul.dropdown-menu-with-icons {
             border-right: 0;
             border-radius: 0;
         }
+    }
+}
+
+ul.dropdown-menu {
+    > li.divider:first-child {
+        display: none;
+    }
+
+    > li.divider + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden)  + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden)  + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden)  + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden)  + li.hidden + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden)  + li.hidden + li.hidden + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden) + li.hidden + li.hidden + li.hidden + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.hidden + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.hidden + li.hidden + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden:last-child) {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden + li.hidden:last-child) {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden + li.hidden + li.hidden:last-child) {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden + li.hidden + li.hidden + li.hidden:last-child) {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden + li.hidden + li.hidden + li.hidden + li.hidden:last-child) {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden + li.hidden + li.hidden + li.hidden + li.hidden + li.hidden:last-child) {
+        display: none;
     }
 }

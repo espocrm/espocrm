@@ -113,10 +113,9 @@ class PopupNotificationsProvider implements Provider
 
             if (
                 $entity instanceof CoreEntity &&
-                $entity->hasLinkMultipleField('users')
+                $entity->hasLinkMultipleField('users') &&
+                $entity->hasAttribute('usersColumns')
             ) {
-                $entity->loadLinkMultipleField('users', ['status' => 'acceptanceStatus']);
-
                 $status = $entity->getLinkMultipleColumn('users', 'status', $userId);
 
                 if ($status === Meeting::ATTENDEE_STATUS_DECLINED) {
@@ -126,15 +125,19 @@ class PopupNotificationsProvider implements Provider
                 }
             }
 
-            $dateAttribute = $entityType === Task::ENTITY_TYPE ?
+            $dateField = $entityType === Task::ENTITY_TYPE ?
                 'dateEnd' :
                 'dateStart';
 
             $data = (object) [
                 'id' => $entity->getId(),
                 'entityType' => $entityType,
-                $dateAttribute => $entity->get($dateAttribute),
                 'name' => $entity->get('name'),
+                'dateField' => $dateField,
+                'attributes' => (object) [
+                    $dateField => $entity->get($dateField),
+                    $dateField . 'Date' => $entity->get($dateField . 'Date'),
+                ],
             ];
 
             $resultList[] = new Item($reminderId, $data);

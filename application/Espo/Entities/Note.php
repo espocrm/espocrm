@@ -34,6 +34,8 @@ use Espo\Core\ORM\Entity;
 
 use Espo\Core\Field\DateTime;
 
+use Espo\ORM\Collection;
+use Espo\ORM\Entity as OrmEntity;
 use RuntimeException;
 use stdClass;
 
@@ -224,24 +226,42 @@ class Note extends Entity
         return $this;
     }
 
-    public function setParent(LinkParent $parent): self
+    public function setParent(LinkParent|Entity $parent): self
     {
-        $this->setValueObject('parent', $parent);
+        if ($parent instanceof LinkParent) {
+            $this->setValueObject('parent', $parent);
+
+            return $this;
+        }
+
+        $this->relations->set('parent', $parent);
 
         return $this;
     }
 
-    public function setRelated(LinkParent $related): self
+    public function setRelated(LinkParent|Entity $related): self
     {
-        $this->setValueObject('related', $related);
+        if ($related instanceof LinkParent) {
+            $this->setValueObject('related', $related);
+
+            return $this;
+        }
+
+        $this->relations->set('related', $related);
 
         return $this;
     }
 
-    public function setSuperParent(LinkParent $superParent): self
+    public function setSuperParent(LinkParent|Entity $superParent): self
     {
-        $this->set('superParentId', $superParent->getId());
-        $this->set('superParentType', $superParent->getEntityType());
+        if ($superParent instanceof LinkParent) {
+            $this->set('superParentId', $superParent->getId());
+            $this->set('superParentType', $superParent->getEntityType());
+
+            return $this;
+        }
+
+        $this->relations->set('superParent', $superParent);
 
         return $this;
     }
@@ -253,7 +273,10 @@ class Note extends Entity
         return $this;
     }
 
-    public function setData(stdClass $data): self
+    /**
+     * @param stdClass|array<string, mixed> $data
+     */
+    public function setData(stdClass|array $data): self
     {
         $this->set('data', $data);
 
@@ -299,11 +322,56 @@ class Note extends Entity
             ) {
                 if (!$targetType || $targetType === self::TARGET_TEAMS) {
                     $this->loadLinkMultipleField('teams');
-                }
-                else if ($targetType === self::TARGET_PORTALS) {
+                } else if ($targetType === self::TARGET_PORTALS) {
                     $this->loadLinkMultipleField('portals');
                 }
             }
         }
+    }
+
+    /**
+     * @param string[] $ids
+     */
+    public function setTeamsIds(array $ids): self
+    {
+        $this->set('teamsIds', $ids);
+
+        return $this;
+    }
+
+    /**
+     * @param string[] $ids
+     */
+    public function setUsersIds(array $ids): self
+    {
+        $this->set('usersIds', $ids);
+
+        return $this;
+    }
+
+    public function isPinned(): bool
+    {
+        return (bool) $this->get('isPinned');
+    }
+
+    public function setIsPinned(bool $isPinned): self
+    {
+        $this->set('isPinned', $isPinned);
+
+        return $this;
+    }
+
+    public function getParent(): ?OrmEntity
+    {
+        return $this->relations->getOne('parent');
+    }
+
+    /**
+     * @return iterable<Attachment>
+     */
+    public function getAttachments(): iterable
+    {
+        /** @var Collection<Attachment> */
+        return $this->relations->getMany('attachments');
     }
 }

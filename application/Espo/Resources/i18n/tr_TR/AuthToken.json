@@ -4,13 +4,13 @@
     "ipAddress": "IP Adresi",
     "lastAccess": "Son Erişim Tarihi",
     "createdAt": "Giriş Tarihi",
-    "isActive": "Aktif"
+    "isActive": "Etkin mi?"
   },
   "links": {
     "actionHistoryRecords": "Eylem Tarihçesi"
   },
   "presetFilters": {
-    "active": "Aktif",
+    "active": "Etkin",
     "inactive": "Pasif"
   },
   "labels": {

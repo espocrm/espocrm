@@ -247,7 +247,7 @@ class ViewHelper {
     /**
      * Application parameters.
      *
-     * @type {Object}
+     * @type {import('app-params').default|null}
      */
     appParams = null
 
@@ -260,9 +260,17 @@ class ViewHelper {
         });
 
         Handlebars.registerHelper('prop', (object, name) => {
+            if (object === undefined) {
+                console.warn(`Undefined value passed to 'prop' helper.`);
+
+                return undefined;
+            }
+
             if (name in object) {
                 return object[name];
             }
+
+            return undefined;
         });
 
         Handlebars.registerHelper('var', (name, context, options) => {
@@ -503,6 +511,10 @@ class ViewHelper {
         });
 
         Handlebars.registerHelper('complexText', (text, options) => {
+            if (typeof text !== 'string' && !(text instanceof String)) {
+                return '';
+            }
+
             return this.transformMarkdownText(text, options.hash);
         });
 
@@ -622,7 +634,11 @@ class ViewHelper {
      * @returns {*}
      */
     getAppParam(name) {
-        return (this.appParams || {})[name];
+        if (!this.appParams) {
+            return undefined;
+        }
+
+        return this.appParams.get(name);
     }
 
     /**
@@ -649,7 +665,7 @@ class ViewHelper {
             return '';
         }
 
-        const t = this.cache ? this.cache.get('app', 'timestamp') : Date.now();
+        const t = this.cache ? this.cache.get('app', 'timestamp') : this.settings.get('cacheTimestamp');
 
         const basePath = this.basePath || '';
         size = size || 'small';
@@ -666,7 +682,9 @@ class ViewHelper {
             .attr('src', `${basePath}?entryPoint=avatar&size=${size}&id=${id}&t=${t}`)
             .attr('alt', 'avatar')
             .addClass(className)
-            .attr('width', width.toString())
+            .attr('data-width', width.toString())
+            .css('width', `var(--${width.toString()}px)`)
+            .attr('draggable', 'false')
             .get(0).outerHTML;
     }
 
@@ -710,7 +728,7 @@ class ViewHelper {
         }
 
         text = text.replace(
-            /<a href="mailto:(.*)"/gm,
+            /<a href="mailto:([^"]*)"/gm,
             '<a role="button" class="selectable" data-email-address="$1" data-action="mailTo"'
         );
 
@@ -871,17 +889,18 @@ class ViewHelper {
     /**
      * Calculate a content container height.
      *
-     * @param {JQuery} $el Element.
+     * @param {HTMLElement|JQuery} element An element.
      * @returns {number}
      */
-    calculateContentContainerHeight($el) {
+    calculateContentContainerHeight(element) {
         const smallScreenWidth = this.themeManager.getParam('screenWidthXs');
 
         const $window = $(window);
 
         const footerHeight = $('#footer').height() || 26;
         let top = 0;
-        const element = $el.get(0);
+
+        element = $(element).get(0);
 
         if (element) {
             top = element.getBoundingClientRect().top;

@@ -66,8 +66,7 @@ class LanguageService
     {
         if ($default) {
             $languageObj = $this->getDefaultLanguage();
-        }
-        else {
+        } else {
             $languageObj = $this->getLanguage();
         }
 
@@ -105,8 +104,7 @@ class LanguageService
             unset($data['Campaign']['options']);
             unset($data['Campaign']['tooltips']);
             unset($data['Campaign']['presetFilters']);
-        }
-        else {
+        } else if (!$this->user->isAdmin()) {
             /** @var string[] $scopeList */
             $scopeList = array_keys($this->metadata->get(['scopes'], []));
 
@@ -123,8 +121,7 @@ class LanguageService
                     unset($data[$scope]);
                     unset($data['Global']['scopeNames'][$scope]);
                     unset($data['Global']['scopeNamesPlural'][$scope]);
-                }
-                else {
+                } else {
                     if (in_array($scope, ['EmailAccount', 'InboundEmail'])) {
                         continue;
                     }

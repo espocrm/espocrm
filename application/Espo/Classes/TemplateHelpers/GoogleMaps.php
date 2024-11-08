@@ -95,8 +95,7 @@ class GoogleMaps implements Helper
             $country = $rootContext[$field . 'Country'] ?? null;
             $state = $rootContext[$field . 'State'] ?? null;
             $postalCode = $rootContext[$field . 'postalCode'] ?? null;
-        }
-        else {
+        } else {
             $street = $data->getOption('street');
             $city = $data->getOption('city');
             $country = $data->getOption('country');
@@ -165,7 +164,7 @@ class GoogleMaps implements Helper
 
         $url = "https://maps.googleapis.com/maps/api/staticmap?" .
             'center=' . $addressEncoded .
-            'format=' . $format .
+            '&format=' . $format .
             '&size=' . $size .
             '&key=' . $apiKey;
 

@@ -28,4 +28,11 @@
 
 import LayoutListView from 'views/admin/layouts/list';
 
-export default class extends LayoutListView {}
+export default class extends LayoutListView {
+
+    /**
+     * @protected
+     * @type {number}
+     */
+    defaultWidth = 20
+}

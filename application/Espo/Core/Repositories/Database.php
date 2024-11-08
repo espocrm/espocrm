@@ -33,6 +33,7 @@ use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\SystemUser;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Entity;
+use Espo\ORM\Relation\RelationsMap;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\Core\ORM\EntityFactory;
 use Espo\Core\ORM\EntityManager;
@@ -84,7 +85,8 @@ class Database extends RDBRepository
         HookManager $hookManager,
         ApplicationState $applicationState,
         RecordIdGenerator $recordIdGenerator,
-        private SystemUser $systemUser
+        private SystemUser $systemUser,
+        ?RelationsMap $relationsMap,
     ) {
         $this->metadata = $metadata;
         $this->hookManager = $hookManager;
@@ -99,7 +101,7 @@ class Database extends RDBRepository
             $hookMediator = new HookMediator($hookManager);
         }
 
-        parent::__construct($entityType, $entityManager, $entityFactory, $hookMediator);
+        parent::__construct($entityType, $entityManager, $entityFactory, $hookMediator, $relationsMap);
     }
 
     /**
@@ -387,8 +389,7 @@ class Database extends RDBRepository
 
             if ($modifiedById) {
                 $entity->set(self::ATTR_MODIFIED_BY_ID, $modifiedById);
-            }
-            else if ($this->applicationState->hasUser()) {
+            } else if ($this->applicationState->hasUser()) {
                 $user = $this->applicationState->getUser();
 
                 $entity->set(self::ATTR_MODIFIED_BY_ID, $user->getId());
@@ -426,8 +427,7 @@ class Database extends RDBRepository
                 }
 
                 $entity->set(self::ATTR_CREATED_BY_ID, $createdById);
-            }
-            else if (
+            } else if (
                 empty($options[SaveOption::SKIP_CREATED_BY]) &&
                 (empty($options[SaveOption::IMPORT]) || !$entity->has(self::ATTR_CREATED_BY_ID)) &&
                 $this->applicationState->hasUser()

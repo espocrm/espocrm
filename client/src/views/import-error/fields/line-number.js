@@ -26,39 +26,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/import-error/fields/line-number', ['views/fields/int'], (Dep) => {
+import IntFieldView from 'views/fields/int';
 
-    return Dep.extend({
+export default class extends IntFieldView {
 
-        disableFormatting: true,
+    disableFormatting = true
 
-        data: function () {
-            let data = Dep.prototype.data.call(this);
+    data() {
+        const data = super.data();
 
-            data.valueIsSet = this.model.has(this.sourceName);
-            data.isNotEmpty = this.model.has(this.sourceName);
+        data.valueIsSet = this.model.has(this.sourceName);
+        data.isNotEmpty = this.model.has(this.sourceName);
 
-            return data;
-        },
+        return data;
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.sourceName = this.name === 'exportLineNumber' ?
-                'exportRowIndex' :
-                'rowIndex';
-        },
+        this.sourceName = this.name === 'exportLineNumber' ?
+            'exportRowIndex' :
+            'rowIndex';
+    }
 
-        getAttributeList: function () {
-            return [this.sourceName];
-        },
+    getAttributeList() {
+        return [this.sourceName];
+    }
 
-        getValueForDisplay: function () {
-            let value = this.model.get(this.sourceName);
+    getValueForDisplay() {
+        let value = this.model.get(this.sourceName);
 
-            value++;
+        value++;
 
-            return this.formatNumber(value);
-        },
-    });
-});
+        return this.formatNumber(value);
+    }
+}

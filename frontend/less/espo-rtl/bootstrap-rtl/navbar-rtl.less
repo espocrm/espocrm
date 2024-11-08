@@ -15,35 +15,10 @@
   }
 }
 
-
-// Navbar collapse (body)
-//
-// Group your navbar content into this for easy collapsing and expanding across
-// various device sizes. By default, this content is collapsed when <768px, but
-// will expand past that for a horizontal display.
-//
-// To start (on mobile devices) the navbar links, forms, and buttons are stacked
-// vertically and include a `max-height` to overflow in case you have too much
-// content for the user's viewport.
-
-.navbar-collapse {
-  padding-right: @navbar-padding-horizontal;
-  padding-left:  @navbar-padding-horizontal;
-}
-
-
 // Brand/project name
 
 .navbar-brand {
   float: right;
-
-  @media (min-width: @grid-float-breakpoint) {
-    .navbar > .container &,
-    .navbar > .container-fluid & {
-      margin-right: -@navbar-padding-horizontal;
-      margin-left: auto;
-    }
-  }
 }
 
 
@@ -54,8 +29,6 @@
 
 .navbar-toggle {
   float: left;
-  margin-left: @navbar-padding-horizontal;
-  margin-right: auto;
 }
 
 
@@ -97,15 +70,9 @@
 
   .navbar-right {
     float: left !important;
-    &:last-child {
-      margin-left: -@navbar-padding-horizontal;
-      margin-right: auto;
-    }
 
     &.flip {
       float: left !important;
-      margin-left: -@navbar-padding-horizontal;
-      margin-right: auto;
     }
 
     .dropdown-menu {
@@ -114,22 +81,3 @@
     }
   }
 }
-
-// Text in navbars
-//
-// Add a class to make any element properly align itself vertically within the navbars.
-
-.navbar-text {
-
-  @media (min-width: @grid-float-breakpoint) {
-    float: right;
-
-    // Outdent the form if last child to line up with content down the page
-    &.navbar-right:last-child {
-      margin-left: 0;
-      margin-right: auto;
-    }
-  }
-}
-
-

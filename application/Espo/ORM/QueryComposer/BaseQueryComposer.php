@@ -29,6 +29,7 @@
 
 namespace Espo\ORM\QueryComposer;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\BaseEntity;
@@ -45,6 +46,7 @@ use Espo\ORM\Query\Delete;
 use Espo\ORM\Query\Union;
 use Espo\ORM\QueryComposer\Part\FunctionConverterFactory;
 
+use Espo\ORM\Type\AttributeType;
 use PDO;
 use RuntimeException;
 use LogicException;
@@ -1232,8 +1234,7 @@ abstract class BaseQueryComposer implements QueryComposer
             }
 
             $part = implode(', ', $argumentPartList);
-        }
-        else {
+        } else {
             $part = $this->getFunctionArgumentPart($entity, $attribute, $distinct, $params);
         }
 
@@ -1275,7 +1276,13 @@ abstract class BaseQueryComposer implements QueryComposer
         $argument = $attribute;
 
         if (Util::isArgumentString($argument)) {
+            $isSingleQuote = $argument[0] === "'";
+
             $string = substr($argument, 1, -1);
+
+            $string = $isSingleQuote ?
+                str_replace("\\'", "'", $string) :
+                str_replace('\\"', '"', $string);
 
             return $this->quote($string);
         }
@@ -1283,8 +1290,7 @@ abstract class BaseQueryComposer implements QueryComposer
         if (Util::isArgumentNumeric($argument)) {
             if (filter_var($argument, FILTER_VALIDATE_INT) !== false) {
                 $argument = intval($argument);
-            }
-            else if (filter_var($argument, FILTER_VALIDATE_FLOAT) !== false) {
+            } else if (filter_var($argument, FILTER_VALIDATE_FLOAT) !== false) {
                 $argument = floatval($argument);
             }
 
@@ -1326,8 +1332,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $part = !$isAlias ?
                 $this->toDb($attribute):
                 $attribute;
-        }
-        else {
+        } else {
             $part = '';
         }
 
@@ -1729,7 +1734,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $selectNotSpecified = !count($itemList);
 
-        if (!$selectNotSpecified && $itemList[0] === '*' && $entity) {
+        if (!$selectNotSpecified && self::isSelectAll($itemList) && $entity) {
             array_shift($itemList);
 
             foreach (array_reverse($entity->getAttributeList()) as $item) {
@@ -1813,6 +1818,10 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if (!is_array($attribute) && !is_string($attribute)) { /** @phpstan-ignore-line */
             throw new RuntimeException("ORM Query: Bad select item.");
+        }
+
+        if (is_array($attribute) && count($attribute) === 1) {
+            $attribute = $attribute[0];
         }
 
         if (is_string($attribute) && $entity) {
@@ -2053,13 +2062,12 @@ abstract class BaseQueryComposer implements QueryComposer
                 /** @var string $field */
 
                 if (
-                    $entity->getAttributeType($field) == 'foreign' &&
+                    $entity->getAttributeType($field) == AttributeType::FOREIGN &&
                     $this->getAttributeParam($entity, $field, 'relation')
                 ) {
                     $relationsToJoin[] = $this->getAttributeParam($entity, $field, 'relation');
-                }
-                else if (
-                    $this->getAttributeParam($entity, $field, 'fieldType') == 'linkOne' &&
+                } else if (
+                    $this->getAttributeParam($entity, $field, 'fieldType') == FieldType::LINK_ONE &&
                     $this->getAttributeParam($entity, $field, 'relation')
                 ) {
                     $relationsToJoin[] = $this->getAttributeParam($entity, $field, 'relation');
@@ -2128,7 +2136,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string[]|string> $select
+     * @param array<int, string[]|string> $select
      */
     protected static function isSelectAll(array $select): bool
     {
@@ -2136,7 +2144,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return true;
         }
 
-        return $select[0] === '*';
+        return $select[0] === '*' || $select[0][0] === '*';
     }
 
     /**
@@ -2337,8 +2345,7 @@ abstract class BaseQueryComposer implements QueryComposer
             ) {
                 if (array_key_exists($name, $occurrenceHash)) {
                     $occurrenceHash[$name]++;
-                }
-                else {
+                } else {
                     $occurrenceHash[$name] = 0;
                 }
 
@@ -2529,11 +2536,9 @@ abstract class BaseQueryComposer implements QueryComposer
         if ($field === self::EXISTS_OPERATOR) {
             if ($value instanceof Select) {
                 $subQueryPart = $this->composeSelect($value);
-            }
-            else if (is_array($value)) {
+            } else if (is_array($value)) {
                 $subQueryPart = $this->createSelectQueryInternal($value);
-            }
-            else {
+            } else {
                 throw new RuntimeException("Bad EXISTS usage in where-clause.");
             }
 
@@ -2747,8 +2752,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if ($operatorOrm === '*') {
             $operatorKey = 'LIKE';
-        }
-        else if ($operatorOrm === '!*') {
+        } else if ($operatorOrm === '!*') {
             $operatorKey = 'NOT LIKE';
         }
 
@@ -2760,25 +2764,20 @@ abstract class BaseQueryComposer implements QueryComposer
             if ($value) {
                 $operatorKey = $operator === '=' ?
                     '= TRUE' : '= FALSE';
-            }
-            else {
+            } else {
                 $operatorKey = $operator === '=' ?
                     '= FALSE' : '= TRUE';
             }
-        }
-        else if (is_array($value)) {
+        } else if (is_array($value)) {
             if ($operator == '=') {
                 $operatorKey = 'IN';
-            }
-            else if ($operator == '<>') {
+            } else if ($operator == '<>') {
                 $operatorKey = 'NOT IN';
             }
-        }
-        else if (is_null($value)) {
+        } else if (is_null($value)) {
             if ($operator == '=') {
                 $operatorKey = 'IS NULL';
-            }
-            else if ($operator == '<>') {
+            } else if ($operator == '<>') {
                 $operatorKey = 'IS NOT NULL';
             }
         }
@@ -2804,14 +2803,11 @@ abstract class BaseQueryComposer implements QueryComposer
         if (is_string($whereDefs)) {
             $whereSqlPart = $whereDefs;
             $whereDefs = [];
-        }
-        else if (!empty($whereDefs['sql'])) {
+        } else if (!empty($whereDefs['sql'])) {
             $whereSqlPart = $whereDefs['sql'];
-        }
-        else if (!empty($whereDefs['whereClause'])) {
+        } else if (!empty($whereDefs['whereClause'])) {
             $whereClause = $this->applyValueToCustomWhereClause($whereDefs['whereClause'], $value);
-        }
-        else {
+        } else {
             return $this->quote(false);
         }
 
@@ -2876,12 +2872,16 @@ abstract class BaseQueryComposer implements QueryComposer
         foreach ($whereClause as $left => $right) {
             if ($right === '{value}') {
                 $right = $value;
-            }
-            else if (is_string($right)) {
-                $right = str_replace('{value}', (string) $value, $right);
-            }
-            else if (is_array($right)) {
+            } else if (is_string($right)) {
+                if (!is_array($value)) {
+                    $right = str_replace('{value}', (string) $value, $right);
+                }
+            } else if (is_array($right)) {
                 $right = $this->applyValueToCustomWhereClause($right, $value);
+            }
+
+            if (is_string($left) && str_ends_with($left, ':') && str_contains($left, '{value}')) {
+                $left = str_replace('{value}', Expression\Util::stringifyArgument($value), $left);
             }
 
             $modified[$left] = $right;
@@ -2900,8 +2900,7 @@ abstract class BaseQueryComposer implements QueryComposer
             if (isset($j[0])) {
                 if (isset($j[1]) && $j[1]) {
                     $joinAlias = $j[1];
-                }
-                else {
+                } else {
                     $joinAlias = $j[0];
                 }
             } else {
@@ -2927,8 +2926,7 @@ abstract class BaseQueryComposer implements QueryComposer
             }
 
             $stringValue = '(' . implode(', ', $arr) . ')';
-        }
-        else {
+        } else {
             $stringValue = $this->quote($value);
         }
 
@@ -2998,16 +2996,14 @@ abstract class BaseQueryComposer implements QueryComposer
                     if (count($item) > 3) {
                         $itemParams = $item[3] ?? [];
                     }
-                }
-                else {
+                } else {
                     $alias = $target;
                 }
 
                 if ($target instanceof Select && !is_string($alias)) {
                     throw new LogicException("Sub-query join can't be w/o alias");
                 }
-            }
-            else {
+            } else {
                 $target = $item;
                 $alias = $target;
             }
@@ -3104,8 +3100,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 $leftAlias = $this->sanitize($leftAlias);
                 /** @noinspection PhpDeprecationInspection */
                 $column = $this->toDb($this->sanitize($attribute));
-            }
-            else {
+            } else {
                 /** @noinspection PhpDeprecationInspection */
                 $column = $this->toDb($this->sanitize($left));
 
@@ -3204,8 +3199,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
                 /** @noinspection PhpDeprecationInspection */
                 $alias = $this->sanitizeSelectAlias($alias);
-            }
-            else {
+            } else {
                 /** @noinspection PhpDeprecationInspection */
                 $alias = $alias === null ?
                     $this->sanitize($target) :
@@ -3628,8 +3622,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 $column = $this->toDb($this->sanitize($attribute));
 
                 $left = $this->quoteColumn("$alias.$column");
-            }
-            else {
+            } else {
                 $table = $this->toDb($entity->getEntityType());
                 /** @noinspection PhpDeprecationInspection */
                 $column = $this->toDb($this->sanitize($attribute));

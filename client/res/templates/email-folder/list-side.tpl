@@ -8,12 +8,12 @@
             data-action="selectFolder"
             data-id="all"
             class="side-link"
-        >{{translate 'all' category='presetFilters' scope='Email'}}</a>
+        ><span class="item-icon-container"><span class="far fa-hdd"></span></span><span>{{translate 'all' category='presetFilters' scope='Email'}}</span></a>
     </li>
     {{#each collection.models}}
     <li
         data-id="{{get this 'id'}}"
-        class="list-group-item{{#ifAttrEquals this 'id' ../selectedFolderId}} selected{{/ifAttrEquals}}{{#if droppable}} droppable{{/if}}"
+        class="list-group-item {{#ifAttrEquals this 'id' ../selectedFolderId}} selected {{/ifAttrEquals}}{{#if droppable}} droppable {{/if}}{{#if groupStart}} group-start {{/if}}"
     >
         <a
             href="#Email/list/folder={{get this 'id'}}"
@@ -27,7 +27,7 @@
             data-id="{{get this 'id'}}"
             class="side-link"
             {{#if title}}title="{{title}}"{{/if}}
-        >{{get this 'name'}}</a>
+        ><span class="item-icon-container"><span class="{{iconClass}}"></span></span><span>{{get this 'name'}}</span></a>
     </li>
     {{/each}}
 </ul>

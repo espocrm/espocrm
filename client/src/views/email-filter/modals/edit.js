@@ -23,13 +23,13 @@
  * Section 5 of the GNU Affero General Public License version 3.
  *
  * In accordance with Section 7(b) of the GNU Affero General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" wo
+ * rd.
  ************************************************************************/
 
-define('views/email-filter/modals/edit', ['views/modals/edit'], function (Dep) {
+import EditModalView from 'views/modals/edit';
 
-    return Dep.extend({
+export default class extends EditModalView {
 
-        fullFormDisabled: true,
-    });
-});
+    fullFormDisabled = true
+}

@@ -29,8 +29,12 @@
 
 namespace Espo\Core\ORM;
 
+use Espo\Core\Field\Link;
+use Espo\Core\Field\LinkParent;
+use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
 
 use LogicException;
@@ -48,7 +52,7 @@ class Entity extends BaseEntity
     {
         return
             $this->hasRelation($field) &&
-            $this->getAttributeParam($field . 'Ids', 'isLinkMultipleIdList');
+            $this->getAttributeParam($field . 'Ids', AttributeParam::IS_LINK_MULTIPLE_ID_LIST);
     }
 
     /**
@@ -64,10 +68,8 @@ class Entity extends BaseEntity
      */
     public function hasLinkParentField(string $field): bool
     {
-        return
-            $this->getAttributeType($field . 'Type') == 'foreignType' &&
-            $this->hasAttribute($field . 'Id') &&
-            $this->hasRelation($field);
+        return $this->getAttributeType($field . 'Type') === AttributeType::FOREIGN_TYPE &&
+            $this->hasAttribute($field . 'Id');
     }
 
     /**
@@ -79,15 +81,25 @@ class Entity extends BaseEntity
             throw new LogicException("Called `loadParentNameField` on non-link-parent field `$field`.");
         }
 
-        $parentId = $this->get($field . 'Id');
+        $idAttribute = $field . 'Id';
+        $nameAttribute = $field . 'Name';
+
+        $parentId = $this->get($idAttribute);
         $parentType = $this->get($field . 'Type');
 
         if (!$this->entityManager) {
             throw new LogicException("No entity-manager.");
         }
 
+        $toSetFetched = !$this->isNew() && !$this->hasFetched($idAttribute);
+
         if (!$parentId || !$parentType) {
-            $this->set($field . 'Name', null);
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
+            $this->set($nameAttribute, null);
+
+            if ($toSetFetched) {
+                $this->setFetched($nameAttribute, null);
+            }
 
             return;
         }
@@ -105,13 +117,13 @@ class Entity extends BaseEntity
             ->where(['id' => $parentId])
             ->findOne();
 
-        if ($foreignEntity) {
-            $this->set($field . 'Name', $foreignEntity->get('name'));
+        $entityName = $foreignEntity ? $foreignEntity->get('name') : null;
 
-            return;
+        $this->set($nameAttribute, $entityName);
+
+        if ($toSetFetched) {
+            $this->setFetched($nameAttribute, $entityName);
         }
-
-        $this->set($field . 'Name', null);
     }
 
     /**
@@ -137,6 +149,19 @@ class Entity extends BaseEntity
 
             if ($this->getAttributeParam($idsAttribute, 'orderDirection')) {
                 $defs['order'] = $this->getAttributeParam($idsAttribute, 'orderDirection');
+            }
+
+            return $defs;
+        }
+
+        if ($this->getRelationParam($link, 'orderBy')) {
+            $defs = [
+                'orderBy' => $this->getRelationParam($link, 'orderBy'),
+                'order' => Order::ASC,
+            ];
+
+            if ($this->getRelationParam($link, 'order')) {
+                $defs['order'] = strtoupper($this->getRelationParam($link, 'order'));
             }
 
             return $defs;
@@ -174,7 +199,10 @@ class Entity extends BaseEntity
     }
 
     /**
-     * @param ?array<string, string> $columns
+     * Load a link-multiple field. Should be used wisely. Consider using `getLinkMultipleIdList` instead.
+     *
+     * @param ?array<string, string> $columns Deprecated as of v9.0.
+     * @todo Add a method to load and set only fetched values?
      */
     public function loadLinkMultipleField(string $field, ?array $columns = null): void
     {
@@ -194,9 +222,11 @@ class Entity extends BaseEntity
             $select[] = 'type';
         }
 
+        $columns ??= $this->getLinkMultipleColumnsFromDefs($field);
+
         if ($columns) {
-            foreach ($columns as $item) {
-                $select[] = $item;
+            foreach ($columns as $it) {
+                $select[] = $it;
             }
         }
 
@@ -250,38 +280,51 @@ class Entity extends BaseEntity
                 $types->$id = $e->get('type');
             }
 
-            if (empty($columns)) {
+            if (!$columns) {
                 continue;
             }
 
             $columnsData->$id = (object) [];
 
-            foreach ($columns as $column => $f) {
-                $columnsData->$id->$column = $e->get($f);
+            foreach ($columns as $column => $foreignAttribute) {
+                $columnsData->$id->$column = $e->get($foreignAttribute);
             }
         }
 
         $idsAttribute = $field . 'Ids';
+        $namesAttribute = $field . 'Names';
+        $typesAttribute = $field . 'Types';
+        $columnsAttribute = $field . 'Columns';
+
+        $toSetFetched = !$this->isNew() && !$this->hasFetched($idsAttribute);
 
         $this->set($idsAttribute, $ids);
+        $this->set($namesAttribute, $names);
 
-        if (!$this->isNew() && !$this->hasFetched($idsAttribute)) {
+        if ($toSetFetched) {
             $this->setFetched($idsAttribute, $ids);
+            $this->setFetched($namesAttribute, $names);
         }
-
-        $this->set($field . 'Names', $names);
 
         if ($hasType) {
-            $this->set($field . 'Types', $types);
+            $this->set($typesAttribute, $types);
+
+            if ($toSetFetched) {
+                $this->setFetched($typesAttribute, $types);
+            }
         }
 
-        if (!empty($columns)) {
-            $this->set($field . 'Columns', $columnsData);
+        if ($columns) {
+            $this->set($columnsAttribute, $columnsData);
+
+            if ($toSetFetched) {
+                $this->setFetched($columnsAttribute, $columnsData);
+            }
         }
     }
 
     /**
-     * Load a link field.
+     * Load a link field. If a value is already set, it will set only a fetched value.
      */
     public function loadLinkField(string $field): void
     {
@@ -317,13 +360,19 @@ class Entity extends BaseEntity
         }
 
         $idAttribute = $field . 'Id';
+        $nameAttribute = $field . 'Name';
 
         if (!$this->isNew() && !$this->hasFetched($idAttribute)) {
             $this->setFetched($idAttribute, $entityId);
+            $this->setFetched($nameAttribute, $entityName);
+        }
+
+        if ($this->has($idAttribute)) {
+            return;
         }
 
         $this->set($idAttribute, $entityId);
-        $this->set($field . 'Name', $entityName);
+        $this->set($nameAttribute, $entityName);
     }
 
     /**
@@ -337,8 +386,8 @@ class Entity extends BaseEntity
             throw new LogicException("Called `getLinkMultipleName` on non-link-multiple field `$field.");
         }
 
-        if (!$this->has($namesAttribute)) {
-            return null;
+        if (!$this->has($namesAttribute) && !$this->isNew()) {
+            $this->loadLinkMultipleField($field);
         }
 
         $object = $this->get($namesAttribute) ?? (object) [];
@@ -387,8 +436,8 @@ class Entity extends BaseEntity
             throw new LogicException("Called `getLinkMultipleColumn` on not supported field `$field.");
         }
 
-        if (!$this->has($columnsAttribute)) {
-            return null;
+        if (!$this->has($columnsAttribute) && !$this->isNew()) {
+            $this->loadLinkMultipleField($field);
         }
 
         $object = $this->get($columnsAttribute) ?? (object) [];
@@ -409,6 +458,10 @@ class Entity extends BaseEntity
 
         if (!$this->hasAttribute($columnsAttribute)) {
             throw new LogicException("Called `setLinkMultipleColumn` on non-link-multiple field `$field.");
+        }
+
+        if (!$this->has($columnsAttribute) && !$this->isNew()) {
+            $this->loadLinkMultipleField($field);
         }
 
         $object = $this->get($columnsAttribute) ?? (object) [];
@@ -516,10 +569,8 @@ class Entity extends BaseEntity
             throw new LogicException("Called `getLinkMultipleIdList` for non-link-multiple field `$field.");
         }
 
-        if (!$this->has($idsAttribute)) {
-            if (!$this->isNew()) {
-                $this->loadLinkMultipleField($field);
-            }
+        if (!$this->has($idsAttribute) && !$this->isNew()) {
+            $this->loadLinkMultipleField($field);
         }
 
         /** @var string[] */
@@ -537,10 +588,8 @@ class Entity extends BaseEntity
             throw new LogicException("Called `hasLinkMultipleId` for non-link-multiple field `$field.");
         }
 
-        if (!$this->has($idsAttribute)) {
-            if (!$this->isNew()) {
-                $this->loadLinkMultipleField($field);
-            }
+        if (!$this->has($idsAttribute) && !$this->isNew()) {
+            $this->loadLinkMultipleField($field);
         }
 
         if (!$this->has($idsAttribute)) {
@@ -551,5 +600,55 @@ class Entity extends BaseEntity
         $idList = $this->get($idsAttribute) ?? [];
 
         return in_array($id, $idList);
+    }
+
+    /**
+     * @return string[]|null
+     */
+    private function getLinkMultipleColumnsFromDefs(string $field): ?array
+    {
+        if (!$this->entityManager) {
+            return null;
+        }
+
+        $entityDefs = $this->entityManager->getDefs()->getEntity($this->entityType);
+
+        /** @var ?array<string, string> $columns */
+        $columns = $entityDefs->tryGetField($field)?->getParam('columns');
+
+        if (!$columns) {
+            return $columns;
+        }
+
+        $foreignEntityType = $entityDefs->tryGetRelation($field)?->tryGetForeignEntityType();
+
+        if ($foreignEntityType) {
+            $foreignEntityDefs = $this->entityManager->getDefs()->getEntity($foreignEntityType);
+
+            foreach ($columns as $column => $attribute) {
+                if (!$foreignEntityDefs->hasAttribute($attribute)) {
+                    // For backward compatibility. If foreign attributes defined in the field do not exist.
+                    unset($columns[$column]);
+                }
+            }
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @since 9.0.0
+     */
+    protected function setRelatedLinkOrEntity(string $relation, Link|LinkParent|Entity|null $related): static
+    {
+        if ($related instanceof Entity || $related === null) {
+            $this->relations->set($relation, $related);
+
+            return $this;
+        }
+
+        $this->setValueObject($relation, $related);
+
+        return $this;
     }
 }

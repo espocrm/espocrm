@@ -62,13 +62,15 @@ class DashletView extends View {
 
     /** @inheritDoc */
     data() {
+        const bodyView = this.getBodyView();
+
         return {
             name: this.name,
             id: this.id,
             title: this.getTitle(),
-            actionList: (this.getBodyView() || {}).actionList || [],
-            buttonList: (this.getBodyView() || {}).buttonList || [],
-            noPadding: (this.getBodyView() || {}).noPadding,
+            actionList: bodyView ? bodyView.getActionItemDataList() : [],
+            buttonList: bodyView ? bodyView.buttonList : [],
+            noPadding: bodyView ? bodyView.noPadding : false,
         };
     }
 

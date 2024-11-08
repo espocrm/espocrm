@@ -18,12 +18,12 @@
     "accounts": "Hesaplar",
     "opportunities": "Fırsatlar",
     "folder": "Klasör",
-    "leads": "Müşteri Potansiyelleri",
+    "leads": "Potansiyeller",
     "contacts": "Rehber"
   },
   "options": {
     "status": {
-      "Active": "Aktif",
+      "Active": "Etkin",
       "Draft": "Taslak",
       "Expired": "Süresi Dolan",
       "Canceled": "İptal edildi"
@@ -35,7 +35,7 @@
     }
   },
   "presetFilters": {
-    "active": "Aktif",
+    "active": "Etkin",
     "draft": "Taslak"
   }
 }

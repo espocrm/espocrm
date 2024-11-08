@@ -2,13 +2,16 @@
   "fields": {
     "name": "Ad",
     "roles": "Roller",
-    "positionList": "Pozisyon Listesi"
+    "positionList": "Pozisyon Listesi",
+    "workingTimeCalendar": "Çalışma Süresi Takvimi"
   },
   "links": {
     "users": "Kullanıcılar",
     "notes": "Notlar",
     "roles": "Roller",
-    "inboundEmails": "Grup E-posta Hesapları"
+    "inboundEmails": "Grup Eposta Hesapları",
+    "workingTimeCalendar": "Çalışma Süresi Takvimi",
+    "groupEmailFolders": "Grup Eposta Klasörü"
   },
   "tooltips": {
     "roles": "Rollere Erişim. Bu ekibin kullanıcıları, seçilen rollerden erişim kontrolü düzeyi elde eder.",

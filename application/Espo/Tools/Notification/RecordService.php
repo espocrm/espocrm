@@ -30,7 +30,9 @@
 namespace Espo\Tools\Notification;
 
 use Espo\Core\Acl;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
@@ -44,31 +46,21 @@ use Espo\Tools\Stream\NoteAccessControl;
 
 class RecordService
 {
-    private EntityManager $entityManager;
-    private Acl $acl;
-    private Metadata $metadata;
-    private NoteAccessControl $noteAccessControl;
-    private SelectBuilderFactory $selectBuilderFactory;
-
     public function __construct(
-        EntityManager $entityManager,
-        Acl $acl,
-        Metadata $metadata,
-        NoteAccessControl $noteAccessControl,
-        SelectBuilderFactory $selectBuilderFactory
-    ) {
-        $this->entityManager = $entityManager;
-        $this->acl = $acl;
-        $this->metadata = $metadata;
-        $this->noteAccessControl = $noteAccessControl;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-    }
+        private EntityManager $entityManager,
+        private Acl $acl,
+        private Metadata $metadata,
+        private NoteAccessControl $noteAccessControl,
+        private SelectBuilderFactory $selectBuilderFactory
+    ) {}
 
     /**
      * Get notifications for a user.
      *
      * @return RecordCollection<Notification>
      * @throws Error
+     * @throws BadRequest
+     * @throws Forbidden
      */
     public function get(string $userId, SearchParams $searchParams): RecordCollection
     {
@@ -167,28 +159,23 @@ class RecordService
         User $user
     ): void {
 
-        $data = $entity->getData();
-
-        if ($data === null) {
-            return;
-        }
-
-        $noteId = $data->noteId ?? null;
+        $noteId = $this->getNoteId($entity);
 
         if (!$noteId) {
             return;
         }
 
-        $type = $entity->getType();
-
-        if (!in_array($type, [Notification::TYPE_NOTE, Notification::TYPE_MENTION_IN_POST])) {
+        if (
+            !in_array($entity->getType(), [
+                Notification::TYPE_NOTE,
+                Notification::TYPE_MENTION_IN_POST,
+                Notification::TYPE_USER_REACTION,
+            ])
+        ) {
             return;
         }
 
-        /** @var ?Note $note */
-        $note = $this->entityManager
-            ->getRDBRepositoryByClass(Note::class)
-            ->getById($noteId);
+        $note = $this->entityManager->getRDBRepositoryByClass(Note::class)->getById($noteId);
 
         if (!$note) {
             unset($collection[$index]);
@@ -200,46 +187,7 @@ class RecordService
         }
 
         $this->noteAccessControl->apply($note, $user);
-
-        $parentId = $note->getParentId();
-        $parentType = $note->getParentType();
-
-        if ($parentId && $parentType) {
-            $parent = $this->entityManager->getEntityById($parentType, $parentId);
-
-            if ($parent) {
-                $note->set('parentName', $parent->get('name'));
-            }
-        }
-        else if (!$note->isGlobal()) {
-            $targetType = $note->getTargetType();
-
-            if (!$targetType || $targetType === Note::TARGET_USERS) {
-                $note->loadLinkMultipleField('users');
-            }
-
-            if ($targetType !== Note::TARGET_USERS) {
-                if (!$targetType || $targetType === Note::TARGET_TEAMS) {
-                    $note->loadLinkMultipleField('teams');
-                }
-                else if ($targetType === Note::TARGET_PORTALS) {
-                    $note->loadLinkMultipleField('portals');
-                }
-            }
-        }
-
-        $relatedId = $note->getRelatedId();
-        $relatedType = $note->getRelatedType();
-
-        if ($relatedId && $relatedType) {
-            $related = $this->entityManager->getEntityById($relatedType, $relatedId);
-
-            if ($related) {
-                $note->set('relatedName', $related->get('name'));
-            }
-        }
-
-        $note->loadLinkMultipleField('attachments');
+        $this->loadNoteFields($note, $entity);
 
         $entity->set('noteData', $note->getValueMap());
     }
@@ -310,5 +258,67 @@ class RecordService
         }
 
         return $ignoreScopeList;
+    }
+
+    private function getNoteId(Notification $entity): ?string
+    {
+        $noteId = null;
+
+        $data = $entity->getData();
+
+        if ($data) {
+            $noteId = $data->noteId ?? null;
+        }
+
+        if ($entity->getRelated()?->getEntityType() === Note::ENTITY_TYPE) {
+            $noteId = $entity->getRelated()->getId();
+        }
+
+        return $noteId;
+    }
+
+    private function loadNoteFields(Note $note, Notification $notification): void
+    {
+        $parentId = $note->getParentId();
+        $parentType = $note->getParentType();
+
+        if ($parentId && $parentType) {
+            if ($notification->getType() !== Notification::TYPE_USER_REACTION) {
+                $parent = $this->entityManager->getEntityById($parentType, $parentId);
+
+                if ($parent) {
+                    $note->set('parentName', $parent->get('name'));
+                }
+            }
+        } else if (!$note->isGlobal()) {
+            $targetType = $note->getTargetType();
+
+            if (!$targetType || $targetType === Note::TARGET_USERS) {
+                $note->loadLinkMultipleField('users');
+            }
+
+            if ($targetType !== Note::TARGET_USERS) {
+                if (!$targetType || $targetType === Note::TARGET_TEAMS) {
+                    $note->loadLinkMultipleField('teams');
+                } else if ($targetType === Note::TARGET_PORTALS) {
+                    $note->loadLinkMultipleField('portals');
+                }
+            }
+        }
+
+        $relatedId = $note->getRelatedId();
+        $relatedType = $note->getRelatedType();
+
+        if ($relatedId && $relatedType && $notification->getType() !== Notification::TYPE_USER_REACTION) {
+            $related = $this->entityManager->getEntityById($relatedType, $relatedId);
+
+            if ($related) {
+                $note->set('relatedName', $related->get('name'));
+            }
+        }
+
+        if ($notification->getType() !== Notification::TYPE_USER_REACTION) {
+            $note->loadLinkMultipleField('attachments');
+        }
     }
 }

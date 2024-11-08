@@ -24,12 +24,12 @@ div.vis-configuration {
     position:relative;
     display:block;
     float:left;
-    font-size:12px;
+    font-size: var(--font-size-small);
 }
 
 div.vis-configuration-wrapper {
     display:block;
-    width:700px;
+    width: 700px;
 }
 
 div.vis-configuration-wrapper::after {
@@ -40,13 +40,13 @@ div.vis-configuration-wrapper::after {
 
 div.vis-configuration.vis-config-option-container{
     display:block;
-    width:495px;
+    width: 495px;
     background-color: #ffffff;
-    border:2px solid #f7f8fa;
-    border-radius:4px;
-    margin-top:20px;
-    left:10px;
-    padding-left:5px;
+    border: 2px solid #f7f8fa;
+    border-radius: 4px;
+    margin-top: 20px;
+    left: 10px;
+    padding-left: 5px;
 }
 
 div.vis-configuration.vis-config-button{
@@ -96,12 +96,12 @@ div.vis-configuration.vis-config-item.vis-config-s3{
 div.vis-configuration.vis-config-item.vis-config-s4{
     left:30px;
     background-color: #cfd8e6;
-    padding-left:5px;
-    border-radius:3px;
+    padding-left: 5px;
+    border-radius: 3px;
 }
 
 div.vis-configuration.vis-config-header{
-    font-size:18px;
+    font-size: var(--18px);
     font-weight: bold;
 }
 
@@ -119,13 +119,12 @@ div.vis-configuration.vis-config-label.vis-config-s4{
 }
 
 div.vis-configuration.vis-config-colorBlock{
-    top:1px;
-    width:30px;
-    height:19px;
-    border:1px solid #444444;
-    border-radius:2px;
-    padding:0px;
-    margin:0px;
+    top: 1px;
+    width: 30px;
+    height: 19px;
+    border: 1px solid #444444;
+    padding: 0;
+    margin: 0;
     cursor:pointer;
 }
 
@@ -279,10 +278,7 @@ input.vis-configuration.vis-config-range:focus::-ms-fill-upper {
     width:150px;
     text-align:center;
     color: #ffffff;
-    font-size:14px;
-    border-radius:4px;
-    -webkit-transition: opacity 0.3s ease-in-out;
-    -moz-transition: opacity 0.3s ease-in-out;
+    font-size: var(--14px);
     transition: opacity 0.3s ease-in-out;
 }
 .vis-configuration-popup:after, .vis-configuration-popup:before {
@@ -784,7 +780,6 @@ input.vis-configuration.vis-config-range:focus::-ms-fill-upper {
 }
 
 .vis-legend-text {
-  /*font-size: 10px;*/
   white-space: nowrap;
   display: inline-block
 }
@@ -953,7 +948,7 @@ div.vis-network div.vis-manipulation div.vis-button,
 div.vis-network div.vis-edit-mode div.vis-button {
   float:left;
   font-family: verdana;
-  font-size: 12px;
+  font-size: var(--font-size-small);
   -moz-border-radius: 15px;
   border-radius: 15px;
   display:inline-block;
@@ -1051,7 +1046,7 @@ div.vis-network-tooltip {
   white-space: nowrap;
 
   font-family: verdana;
-  font-size:14px;
+  font-size: var(--14px);
   color:#000000;
   background-color: #f5f4ed;
 
@@ -1215,7 +1210,7 @@ div.vis-color-picker div.vis-new-color {
   left:159px;
   text-align:right;
   padding-right:2px;
-  font-size:10px;
+  font-size: var(--10px);
   color:rgba(0,0,0,0.4);
   vertical-align:middle;
   line-height:20px;
@@ -1232,7 +1227,7 @@ div.vis-color-picker div.vis-initial-color {
   left:10px;
   text-align:left;
   padding-left:2px;
-  font-size:10px;
+  font-size: var(--10px);
   color:rgba(0,0,0,0.4);
   vertical-align:middle;
   line-height:20px;

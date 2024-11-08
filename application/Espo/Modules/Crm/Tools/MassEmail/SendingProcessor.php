@@ -304,8 +304,7 @@ class SendingProcessor
                 ->withMessage($message)
                 ->withAttachments($attachmentList)
                 ->send($email);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->processException($queueItem, $e);
 
             return;
@@ -614,6 +613,7 @@ class SendingProcessor
 
         $body = str_replace('{optOutUrl}', $optOutUrl, $body);
         $body = str_replace('{optOutLink}', $optOutLink, $body);
+        $body = str_replace('{queueItemId}', $queueItem->getId(), $body);
 
         foreach ($trackingUrlList as $trackingUrl) {
             $url = $this->getTrackUrl($trackingUrl, $queueItem);

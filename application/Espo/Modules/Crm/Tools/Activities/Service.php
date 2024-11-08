@@ -139,8 +139,7 @@ class Service
                         'usersLeftMiddle.meetingId:' => 'meeting.id',
                     ]
                 );
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -157,8 +156,7 @@ class Service
                 ->where([
                     'OR' => $where,
                 ]);
-        }
-        else {
+        } else {
             $builder->where($where);
         }
 
@@ -213,8 +211,7 @@ class Service
                         'usersLeftMiddle.callId:' => 'call.id',
                     ]
                 );
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -231,8 +228,7 @@ class Service
                 ->where([
                     'OR' => $where,
                 ]);
-        }
-        else {
+        } else {
             $builder->where($where);
         }
 
@@ -291,8 +287,7 @@ class Service
                 ->where([
                     'usersLeftMiddle.userId' => $entity->getId(),
                 ]);
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -355,8 +350,7 @@ class Service
                     'createdAt',
                     ['false', 'hasAttachment'],
                 ]);
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -380,8 +374,7 @@ class Service
                     ],
                 ],
             ]);
-        }
-        else if ($entityType === Lead::ENTITY_TYPE && $entity->get('createdAccountId')) {
+        } else if ($entityType === Lead::ENTITY_TYPE && $entity->get('createdAccountId')) {
             $builder->where([
                 'OR' => [
                     [
@@ -393,8 +386,7 @@ class Service
                     ],
                 ],
             ]);
-        }
-        else {
+        } else {
             $builder->where([
                 'parentId' => $id,
                 'parentType' => $entityType,
@@ -407,24 +399,8 @@ class Service
 
         $queryList = [$builder->build()];
 
-        $link = null;
-
-        switch ($entityType) {
-            case Contact::ENTITY_TYPE:
-                $link = 'contacts';
-
-                break;
-
-            case Lead::ENTITY_TYPE:
-                $link = 'leads';
-
-                break;
-
-            case User::ENTITY_TYPE:
-                $link = 'users';
-
-                break;
-        }
+        /** @var ?string $link */
+        $link = $this->metadata->get("scopes.$targetEntityType.attendeeLinkMap.$entityType");
 
         if (!$link) {
             return $queryList;
@@ -502,8 +478,7 @@ class Service
                     'createdAt',
                     'hasAttachment',
                 ]);
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -527,8 +502,7 @@ class Service
                     ],
                 ],
             ]);
-        }
-        else if ($entityType == Lead::ENTITY_TYPE && $entity->get('createdAccountId')) {
+        } else if ($entityType == Lead::ENTITY_TYPE && $entity->get('createdAccountId')) {
             $builder->where([
                 'OR' => [
                     [
@@ -540,14 +514,12 @@ class Service
                     ],
                 ],
             ]);
-        }
-        else {
+        } else {
             $builder->where([
                'parentId' => $id,
                'parentType' => $entityType,
             ]);
         }
-
 
         if (!$this->isPerson($entityType) && !$this->isCompany($entityType)) {
             return $builder->build();
@@ -810,8 +782,7 @@ class Service
         if (!$isHistory) {
             $statusList = $this->metadata->get(['scopes', $entityType, 'activityStatusList']) ??
                 [Meeting::STATUS_PLANNED];
-        }
-        else {
+        } else {
             $statusList = $this->metadata->get(['scopes', $entityType, 'historyStatusList']) ??
                 [Meeting::STATUS_HELD, Meeting::STATUS_NOT_HELD];
         }
@@ -1104,8 +1075,7 @@ class Service
                     'createdAt',
                     ['false', 'hasAttachment'],
                 ]);
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -1113,8 +1083,7 @@ class Service
             $builder->where([
                 'assignedUserId' => $entity->getId(),
             ]);
-        }
-        else {
+        } else {
             $builder->where([
                 'parentId' => $entity->getId(),
                 'parentType' => $entity->getEntityType(),

@@ -27,6 +27,9 @@
  ************************************************************************/
 
 import $ from 'jquery';
+import EditTableModalView from 'views/wysiwyg/modals/edit-table';
+import EditCellModalView from 'views/wysiwyg/modals/edit-cell';
+import Handlebars from 'handlebars';
 
 /**
  * @type {{
@@ -50,9 +53,264 @@ function init(langSets) {
             icon: '<i class="note-icon-table"/>',
             tooltip: langSets.table.table,
         },
+        popover: {
+            table: [
+                ['custom', ['tableParams', 'cellParams']],
+                ['add', ['addRowDown', 'addRowUp', 'addColLeft', 'addColRight']],
+                ['delete', ['deleteRow', 'deleteCol', 'deleteTable']],
+            ],
+        },
     });
 
     $.extend($.summernote.plugins, {
+        'cellParams': function (/** Record */context) {
+            const ui = $.summernote.ui;
+
+            const options = context.options;
+            const view = /** @type {import('view').default} */options.espoView;
+
+            if (!view) {
+                return;
+            }
+
+            context.memo('button.cellParams', () => {
+                return ui.button({
+                    className: '',
+                    contents: '<i class="far fa-square fa-sm"/>',
+                    tooltip: view.translate('cell', 'wysiwygLabels'),
+                    click: () => {
+                        context.invoke('cellParams.show');
+                    },
+                }).render();
+            });
+
+            this.show = function () {
+                const range = context.invoke('editor.getLastRange');
+                const $td = $(range.ec).closest('td,th');
+                const td = /** @type {HTMLTableCellElement} */$td[0];
+
+                const width = td.style.width;
+                const height = td.style.height;
+                const backgroundColor = td.style.backgroundColor;
+                const verticalAlign = td.style.verticalAlign;
+
+                const params = {
+                    width,
+                    height,
+                    backgroundColor,
+                    verticalAlign,
+                };
+
+                //const prevParams = params;
+
+                const modalView = new EditCellModalView({
+                    params,
+                    headerText: view.translate('cell', 'wysiwygLabels'),
+                    onApply: params => applyParams(params),
+                });
+
+                view.assignView('dialog', modalView)
+                    .then(() => {
+                        modalView.render();
+                    });
+
+                /**
+                 * @param {{
+                 *     width: string|null,
+                 *     height: string|null,
+                 *     backgroundColor: string|null,
+                 *     verticalAlign: string|null,
+                 * }} params
+                 */
+                const applyParams = params => {
+                    let backgroundColor = td.style.backgroundColor;
+
+                    if (backgroundColor === 'transparent') {
+                        backgroundColor = null;
+                    }
+
+                    td.style.backgroundColor = params.backgroundColor;
+                    td.style.width = params.width;
+                    td.style.height = params.height;
+                    td.style.verticalAlign = params.verticalAlign;
+                };
+            };
+
+            this.destroy = function () {
+                if (view) {
+                    view.clearView('dialog');
+                }
+            };
+        },
+        'tableParams': function (/** Record */context) {
+            const ui = $.summernote.ui;
+
+            const options = context.options;
+            const view = /** @type {import('view').default} */options.espoView;
+
+            if (!view) {
+                // Prevents an issue with a collapsed modal.
+                // @todo Revise.
+                return;
+            }
+
+            context.memo('button.tableParams', () => {
+                return ui.button({
+                    className: '',
+                    contents: '<i class="note-icon-table"/>',
+                    tooltip: langSets.table.table,
+                    click: () => {
+                        context.invoke('tableParams.show');
+                    },
+                }).render();
+            });
+
+            this.show = function () {
+                const range = context.invoke('editor.getLastRange');
+                const $table = $(range.ec).closest('table');
+                const table = /** @type {HTMLTableElement} */$table[0];
+
+                let borderWidth = table.style.borderWidth;
+
+                if (borderWidth !== null) { // @todo
+                    for (const /** HTMLTableCellElement */cell of table.querySelectorAll('td, th')) {
+                        if (cell.style.borderWidth !== borderWidth) {
+                            borderWidth = null;
+
+                            break;
+                        }
+                    }
+                }
+
+                let backgroundColor = table.style.backgroundColor;
+
+                if (backgroundColor === 'transparent') {
+                    backgroundColor = null;
+                }
+
+                let borderColor = table.style.borderColor;
+
+                if (borderColor !== null) { // @todo
+                    for (const /** HTMLTableCellElement */cell of table.querySelectorAll('td, th')) {
+                        if (cell.style.borderColor !== borderColor) {
+                            borderColor = null;
+
+                            break;
+                        }
+                    }
+                }
+
+                let cellPadding = null;
+
+                for (const /** HTMLTableCellElement */cell of table.querySelectorAll('td, th')) {
+                    if (cellPadding !== null && cell.style.padding !== cellPadding) {
+                        cellPadding = null;
+
+                        break;
+                    }
+
+                    cellPadding = cell.style.padding;
+                }
+
+                let align = null;
+
+                if (table.style.marginLeft === 'auto' && table.style.marginRight === '0px') {
+                    align = 'right';
+                } else if (table.style.marginLeft === 'auto' && table.style.marginRight === 'auto') {
+                    align = 'center';
+                } else if (table.style.marginLeft === '0px' && table.style.marginRight === 'auto') {
+                    align = 'left';
+                }
+
+                const width = table.style.width;
+                const height = table.style.height;
+
+                const params = {
+                    align,
+                    width,
+                    height,
+                    borderWidth,
+                    borderColor,
+                    cellPadding,
+                    backgroundColor,
+                };
+
+                const prevParams = params;
+
+                const modalView = new EditTableModalView({
+                    params,
+                    headerText: langSets.table.table,
+                    onApply: params => applyParams(params),
+                });
+
+                view.assignView('dialog', modalView)
+                    .then(() => {
+                        modalView.render();
+                    });
+
+                /**
+                 * @param {{
+                 *     align: string|null,
+                 *     width: string|null,
+                 *     height: string|null,
+                 *     borderWidth: string|null,
+                 *     borderColor: string|null,
+                 *     cellPadding: string|null,
+                 *     backgroundColor: string|null,
+                 * }} params
+                 */
+                const applyParams = params => {
+                    if (params.align === 'left') {
+                        table.style.marginLeft = '0';
+                        table.style.marginRight = 'auto';
+                    } else if (params.align === 'right') {
+                        table.style.marginLeft = 'auto';
+                        table.style.marginRight = '0';
+                    } else if (params.align === 'center') {
+                        table.style.marginLeft = 'auto';
+                        table.style.marginRight = 'auto';
+                    } else if (params.align === null && prevParams.align !== null) {
+                        table.style.marginLeft = null;
+                        table.style.marginRight = null;
+                    }
+
+                    table.style.backgroundColor = params.backgroundColor;
+                    table.style.width = params.width;
+                    table.style.height = params.height;
+
+                    if (params.borderWidth !== null || prevParams.borderWidth !== null) {
+                        table.style.borderWidth = params.borderWidth;
+                        table.style.borderStyle = params.borderWidth !== null ? 'solid' : null;
+
+                        for (const /** HTMLTableCellElement */cell of table.querySelectorAll('td, th')) {
+                            cell.style.borderWidth = params.borderWidth;
+                            cell.style.borderStyle = params.borderWidth !== null ? 'solid' : null;
+                        }
+                    }
+
+                    if (params.borderColor !== null || prevParams.borderColor !== null) {
+                        table.style.borderColor = params.borderColor;
+
+                        for (const /** HTMLTableCellElement */cell of table.querySelectorAll('td, th')) {
+                            cell.style.borderColor = params.borderColor;
+                        }
+                    }
+
+                    if (params.cellPadding !== null || prevParams.padding !== null) {
+                        for (const /** HTMLTableCellElement */cell of table.querySelectorAll('td, th')) {
+                            cell.style.padding = params.cellPadding;
+                        }
+                    }
+                };
+            };
+
+            this.destroy = function () {
+                if (view) {
+                    view.clearView('dialog');
+                }
+            };
+        },
+
         'aceCodeview': function (/** Record */context) {
             const ui = $.summernote.ui;
             const options = context.options;
@@ -183,6 +441,10 @@ function init(langSets) {
 
                 $codable.removeClass('hidden');
 
+                if ($editor.hasClass('fullscreen')) {
+                    $codable.css('height', $editable.css('height'));
+                }
+
                 requireAce().then(() => {
                     const html = prepareHtml($editable.html());
 
@@ -191,11 +453,16 @@ function init(langSets) {
                     aceEditor.setValue(html);
 
                     aceEditor.setOptions({
-                        maxLines: !$editor.hasClass('fullscreen') ? 34: null,
+                        maxLines: !$editor.hasClass('fullscreen') ? 100000: null,
                         enableLiveAutocompletion: true,
                         tabSize: 2,
                         useSoftTabs: true,
                     });
+
+                    aceEditor.setOptions({fontFamily: 'var(--font-family-monospace)'});
+                    aceEditor.setFontSize('var(--font-size-small)');
+                    aceEditor.container.style.lineHeight = 'var(--line-height-small)';
+                    aceEditor.renderer.updateFontSize();
 
                     if (options.isDark) {
                         aceEditor.setOptions({theme: 'ace/theme/tomorrow_night'});
@@ -474,6 +741,7 @@ function init(langSets) {
             };
         },
 
+        // Not used?
         'linkDialog': function (context) {
             const options = context.options;
             const self = options.espoView;
@@ -498,6 +766,8 @@ function init(langSets) {
                     view.render();
 
                     self.listenToOnce(view, 'insert', (data) => {
+                        data.text = Handlebars.Utils.escapeExpression(data.text);
+
                         self.$summernote.summernote('createLink', data);
                     });
 
@@ -567,6 +837,8 @@ function init(langSets) {
                         const scrollY = ('scrollY' in container) ?
                             container.scrollY :
                             container.scrollTop;
+
+                        data.text = Handlebars.Utils.escapeExpression(data.text);
 
                         self.$summernote.summernote('createLink', data);
 
@@ -672,6 +944,7 @@ function init(langSets) {
                     }
 
                     this.$editable.css('maxHeight', this.$editable.css('orgMaxHeight'));
+                    this.$editable.css('height', '');
 
                     if (this.isInModal) {
                         this.$modal.css('overflow-y', '');
@@ -683,7 +956,7 @@ function init(langSets) {
                     this._isFullscreen = false;
 
                     if (aceEditor) {
-                        aceEditor.setOptions({maxLines: maxLines});
+                        aceEditor.setOptions({maxLines: 100000});
                         aceEditor.resize();
                     }
                 }

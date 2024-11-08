@@ -18,7 +18,8 @@
     "smtpPassword": "SMTP-Passwort",
     "useImap": "E-Mails abholen",
     "smtpAuthMechanism": "SMTP-Auth-Mechanismus",
-    "security": "Sicherheit"
+    "security": "Sicherheit",
+    "connectedAt": "Verbunden mit"
   },
   "links": {
     "filters": "Filter",
@@ -38,12 +39,16 @@
   },
   "messages": {
     "couldNotConnectToImap": "Kann keine Verbindung zum IMAP Server herstellen",
-    "connectionIsOk": "Verbindung ist in Ordnung"
+    "connectionIsOk": "Verbindung ist in Ordnung",
+    "imapNotConnected": "Konnte keine Verbindung zu [IMAP account](#EmailAccount/view/{id}) herstellen."
   },
   "tooltips": {
     "monitoredFolders": "Mehrere Ordner sollten durch ein Komma getrennt werden.\n\nSie können einen 'Gesendet' Ordner hinzufügen, um E-Mails zu synchronisieren, die von einem externen Programm gesendet wurden.",
     "storeSentEmails": "Gesendete E-Mail werden auf einem IMAP Server gespeichert. Die E-Mail Adresse muss jene sein, von der die E-Mail gesendet wurde.",
     "useSmtp": "Die Möglichkeit, E-Mails zu versenden.",
     "emailAddress": "Der Benutzerdatensatz (zugeordneter Benutzer) sollte die gleiche E-Mail-Adresse haben, um dieses E-Mail-Konto zum Senden verwenden zu können."
+  },
+  "presetFilters": {
+    "active": "Aktiv"
   }
 }

@@ -7,7 +7,7 @@
 
 @link-color-value: #6e86ca;
 
-@main-gray-value: #E4E7F2;
+@main-gray-value: #E1E4EF;
 @gray-soft-value: #8a8a8a;
 
 @modal-header-bg-value: @body-bg-value;
@@ -18,8 +18,15 @@
 @brand-warning-value: #e4a133;
 
 @navbar-inverse-color-value: #c6bcc9;
-@navbar-inverse-bg-value: #8E5C9C;
+@navbar-inverse-bg-value: #8d6199;
 @navbar-inverse-link-color-value: #F7F7F7;
+@navbar-inverse-link-active-bg-value: darken(@navbar-inverse-bg-value, 10%);
+@navbar-inverse-link-hover-color-value: #fff;
+@navbar-inverse-link-icon-color-value: @navbar-inverse-link-color-value;
+@navbar-inverse-link-icon-hover-color-value: @navbar-inverse-link-hover-color-value;
+@navbar-inverse-link-hover-bg-value: #885994;
+
+@navbar-border-width-value: 0;
 
 @login-panel-heading-bg-value: @brand-primary-value;
 
@@ -29,22 +36,22 @@
 @dropdown-border-value: @default-border-color-value;
 
 @btn-text-color-value: #717078;
-@btn-default-bg-value: #c0c6db;
-@btn-default-border-value: @btn-default-bg-value;
+@btn-default-bg-value: #eef1f4;
+@btn-default-border-value: #c0c6db;
 @btn-default-color-value: #525252;
 @btn-default-hover-bg-value: darken(@btn-default-bg-value, 4%);
-@btn-default-hover-border-value: darken(@btn-default-bg-value, 4%);
+@btn-default-hover-border-value: darken(@btn-default-border-value, 4%);
 @btn-default-active-bg-value: darken(@btn-default-bg-value, 10%);
-@btn-default-active-border-value: darken(@btn-default-bg-value, 15%);
+@btn-default-active-border-value: darken(@btn-default-border-value, 15%);
 
 @btn-primary-active-bg-value: darken(@btn-primary-bg-value, 15%);
 @btn-primary-active-border-value: darken(@btn-primary-bg-value, 18%);
 
-@border-radius-value: 6px;
-@panel-border-radius-value: 10px;
-@dropdown-border-radius-value: 6px;
+@border-radius-value: var(--6px);
+@panel-border-radius-value: var(--10px);
+@dropdown-border-radius-value: var(--6px);
 
-@dropdown-border-width-value: 1px;
+@dropdown-border-width-value: var(--1px);
 @panel-border-width-value: 0px;
 
 @default-box-shadow-value: 2px 2px 4px rgba(0,0,0,0.09);

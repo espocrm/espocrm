@@ -5,11 +5,6 @@
 
 // base styles
 
-@selectize-font-family: inherit;
-@selectize-font-smoothing: inherit;
-@selectize-font-size: 13px;
-@selectize-line-height: 18px;
-
 //@selectize-color-text: #303030;
 @selectize-color-border: #d0d0d0;
 @selectize-color-highlight: rgba(125,168,208,0.2);
@@ -40,7 +35,6 @@
 @selectize-shadow-input-focus: inset 0 1px 2px rgba(0,0,0,0.15);
 @selectize-border: 1px solid @selectize-color-border;
 @selectize-dropdown-border: 1px solid @selectize-color-dropdown-border;
-@selectize-border-radius: 3px;
 
 @selectize-width-item-border: 0;
 @selectize-max-height-dropdown: 200px;
@@ -73,12 +67,9 @@
 	user-select: none;
 }
 .selectize-box-shadow (@shadow) {
-	-webkit-box-shadow: @shadow;
 	box-shadow: @shadow;
 }
 .selectize-box-sizing (@type: border-box) {
-	-webkit-box-sizing: @type;
-	-moz-box-sizing: @type;
 	box-sizing: @type;
 }
 .selectize-vertical-gradient (@color-top, @color-bottom) {
@@ -98,10 +89,7 @@
 
 .selectize-dropdown, .selectize-input, .selectize-input input {
 	color: @selectize-color-text;
-	font-family: @selectize-font-family;
-	font-size: @selectize-font-size;
 	line-height: @selectize-line-height;
-	-webkit-font-smoothing: @selectize-font-smoothing;
 }
 
 .selectize-input, .selectize-control.single .selectize-input.input-active {
@@ -120,12 +108,13 @@
 	z-index: 1;
 	.selectize-box-sizing(border-box);
 	.selectize-box-shadow(@selectize-shadow-input);
-	.selectize-border-radius(@selectize-border-radius);
 
 	.selectize-control.multi &.has-items {
 		@padding-x: @selectize-padding-x;
-		@padding-top: @selectize-padding-y - @selectize-padding-item-y - @selectize-width-item-border;
-		@padding-bottom: @selectize-padding-y - @selectize-padding-item-y - @selectize-margin-item-y - @selectize-width-item-border;
+
+        @padding-top: calc(var(--padding-base-vertical) - var(--1px));
+        @padding-bottom: calc(var(--padding-base-vertical) - var(--1px) - var(--3px));
+
 		padding: @padding-top @padding-x @padding-bottom;
 	}
 
@@ -137,9 +126,6 @@
 	}
 	&.focus {
 		.selectize-box-shadow(@selectize-shadow-input-focus);
-	}
-	&.dropdown-active {
-		.selectize-border-radius(@selectize-border-radius @selectize-border-radius 0 0);
 	}
 
 	> * {
@@ -218,8 +204,6 @@
 	margin: -1px 0 0 0;
 	border-top: 0 none;
 	.selectize-box-sizing(border-box);
-	.selectize-box-shadow(0 1px 3px rgba(0,0,0,0.1));
-	.selectize-border-radius(0 0 @selectize-border-radius @selectize-border-radius);
 
 	[data-selectable] {
 		cursor: pointer;

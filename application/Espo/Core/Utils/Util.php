@@ -177,11 +177,9 @@ class Util
 
         if (is_array($currentArray) && !is_array($newArray)) {
             return $currentArray;
-        }
-        else if (!is_array($currentArray) && is_array($newArray)) {
+        } else if (!is_array($currentArray) && is_array($newArray)) {
             return $newArray;
-        }
-        else if (
+        } else if (
             (!is_array($currentArray) || empty($currentArray)) &&
             (!is_array($newArray) || empty($newArray))
         ) {
@@ -202,8 +200,7 @@ class Util
                     unset($newValue[$appendKey]);
 
                     $newValue = array_merge($currentArray[$newName], $newValue);
-                }
-                else if (
+                } else if (
                     !static::isSingleArray($newValue) ||
                     !static::isSingleArray($currentArray[$newName])
                 ) {
@@ -237,8 +234,7 @@ class Util
         foreach ($haystack as $key => $value) {
             if (is_array($value)) {
                 $haystack[$key] = static::unsetInArrayByValue($needle, $value);
-            }
-            else if ($needle === $value) {
+            } else if ($needle === $value) {
                 unset($haystack[$key]);
 
                 if ($reIndex) {
@@ -546,8 +542,7 @@ class Util
 
         if (is_array($key)) {
             $keys = $key;
-        }
-        else {
+        } else {
             $keys = explode('.', $key);
         }
 
@@ -557,16 +552,13 @@ class Util
             if (is_array($item)) {
                 if (isset($item[$keyName])) {
                     $item = $item[$keyName];
-                }
-                else {
+                } else {
                     return $default;
                 }
-            }
-            else if (is_object($item)) {
+            } else if (is_object($item)) {
                 if (isset($item->$keyName)) {
                     $item = $item->$keyName;
-                }
-                else {
+                } else {
                     return $default;
                 }
             }
@@ -641,8 +633,7 @@ class Util
             $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
 
             $hex = bin2hex($data);
-        }
-        catch (Exception) {
+        } catch (Exception) {
             throw new RuntimeException("Could not generate UUID.");
         }
 

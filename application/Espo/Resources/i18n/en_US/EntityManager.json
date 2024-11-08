@@ -5,7 +5,8 @@
         "Layouts": "Layouts",
         "Schedule": "Schedule",
         "Log": "Log",
-        "Formula": "Formula"
+        "Formula": "Formula",
+        "Parameters": "Parameters"
     },
     "fields": {
         "name": "Name",
@@ -41,14 +42,18 @@
         "parentEntityTypeList": "Parent Entity Types",
         "foreignLinkEntityTypeList": "Foreign Links",
         "optimisticConcurrencyControl": "Optimistic concurrency control",
+        "preserveAuditLog": "Preserve Audit Log",
         "updateDuplicateCheck": "Duplicate check on update",
         "duplicateCheckFieldList": "Duplicate check fields",
+        "stars": "Stars",
         "layout": "Layout",
         "selectFilter": "Select Filter",
         "author": "Author",
         "module": "Module",
         "version": "Version",
-        "primaryFilters": "Primary Filters"
+        "primaryFilters": "Primary Filters",
+        "assignedUsers": "Multiple Assigned Users",
+        "collaborators": "Collaborators"
     },
     "options": {
         "type": {
@@ -78,7 +83,7 @@
         }
     },
     "messages": {
-        "urlHashCopiedToClipboard": "A URL hash fragment of the list view with the applied *{name}* filter is copied to the clipboard. You can add it to a navbar.",
+        "urlHashCopiedToClipboard": "A URL fragment for the *{name}* filter is copied to the clipboard. You can add it to the navbar.",
         "confirmRemoveLink": "Are you sure you want to remove the *{link}* relationship?",
         "nameIsAlreadyUsed": "Name '{name}' is already used.",
         "nameIsNotAllowed": "Name '{name}' is not allowed.",
@@ -91,18 +96,23 @@
         "beforeSaveApiScript": "A script called on create and update API requests before an entity is saved. Use for custom validation and duplicate checking."
     },
     "tooltips": {
+        "collaborators": "The ability to share records with specific users.",
+        "assignedUsers": "The ability to assign multiple users to a record.\n\nNote that after enabling the parameter, existing assigned users won't be transferred to the new *Assigned Users* field.",
         "duplicateCheckFieldList": "Which fields to check when performing checking for duplicates.",
         "updateDuplicateCheck": "Perform checking for duplicates when updating a record.",
         "optimisticConcurrencyControl": "Prevents writing conflicts.",
+        "preserveAuditLog": "Disables cleanup of the audit log. This parameter is applicable only if Stream is disabled. As if Stream is enabled, audit log records are not being deleted.",
+        "stars": "The ability to star records. Stars can be used by users to bookmark records.",
         "statusField": "Updates of this field are logged in stream.",
         "textFilterFields": "Fields used by text search.",
-        "stream": "Whether entity has a Stream.",
+        "stream": "Whether the entity has the Stream.",
         "disabled": "Check if you don't need this entity in your system.",
         "linkAudited": "Creating related record and linking with existing record will be logged in Stream.",
         "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records.",
         "linkSelectFilter": "A primary filter to apply by default when selecting a record.",
         "entityType": "Base Plus - has Activities, History and Tasks panels.\n\nEvent - available in Calendar and Activities panel.",
         "countDisabled": "Total number won't be displayed on the list view. Can decrease loading time when the DB table is big.",
-        "fullTextSearch": "Running rebuild is required."
+        "fullTextSearch": "Running rebuild is required.",
+        "linkParamReadOnly": "A read-only link cannot be edited via the *link* and *unlink* API requests. It won't be possible to relate and unrelate records via the relationship panel. It still possible to edit read-only links via link and link-multiple fields."
     }
 }

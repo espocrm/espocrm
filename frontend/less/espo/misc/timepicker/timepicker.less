@@ -1,18 +1,14 @@
 .ui-timepicker-wrapper {
 	overflow-y: auto;
-	height: 164px; // Espo
+	height: var(--168px); // Espo
 	width: 6.5em;
-	//background: #fff;
-	//border: 1px solid #ddd;
-	-webkit-box-shadow:0 5px 10px rgba(0,0,0,0.2);
-	-moz-box-shadow:0 5px 10px rgba(0,0,0,0.2);
-	box-shadow:0 5px 10px rgba(0,0,0,0.2);
+	box-shadow: 0 var(--5px) var(--10px) rgba(0,0,0,0.2);
 	outline: none;
 	z-index: 10001;
 	margin: 0;
 
-	background: @dropdown-bg;
-	border-color: @dropdown-border;
+	background: var(--dropdown-bg);
+	border-color: var(--dropdown-border);
 }
 
 .ui-timepicker-wrapper.ui-timepicker-with-duration {
@@ -26,67 +22,37 @@
 }
 
 .ui-timepicker-duration {
-	margin-left: 5px;
-    //color: #888;
+	margin-left: var(--5px);
 }
 
 .ui-timepicker-list:hover .ui-timepicker-duration {
-	//color: #888;
 }
 
 .ui-timepicker-list li {
-	padding: 3px 0 3px 5px;
+	padding: var(--3px) 0 var(--3px) var(--5px);
 	cursor: pointer;
 	white-space: nowrap;
-	//color: #000;
 	list-style: none;
 	margin: 0;
 
-	color: @dropdown-link-color;
+	color: var(--dropdown-link-color);
 }
 
 .ui-timepicker-list {
     > li.ui-timepicker-selected {
         color: var(--text-color);
-        background: @dropdown-link-hover-bg;
+        background: var(--dropdown-link-hover-bg);
     }
 
     > li:hover:not(.ui-timepicker-selected) {
         color: var(--text-color);
-        background: @dropdown-link-hover-bg;
+        background: var(--dropdown-link-hover-bg);
     }
-}
-
-.ui-timepicker-list:hover .ui-timepicker-selected {
-	//background: #fff; color: #000;
-	//color: var(--text-color);
-	//background: @dropdown-link-hover-bg;
-    //background: @brand-primary;
-    //color: var(--white-color);
-}
-
-li.ui-timepicker-selected,
-.ui-timepicker-list li:hover,
-.ui-timepicker-list .ui-timepicker-selected:hover {
-    //color: var(--text-color);
-    //background: @dropdown-link-hover-bg;
-	//background: @brand-primary;
-	//color: var(--white-color);
-}
-
-li.ui-timepicker-selected .ui-timepicker-duration,
-.ui-timepicker-list li:hover .ui-timepicker-duration {
-	//color: #ccc;
 }
 
 .ui-timepicker-list li.ui-timepicker-disabled,
 .ui-timepicker-list li.ui-timepicker-disabled:hover,
 .ui-timepicker-list li.ui-timepicker-selected.ui-timepicker-disabled {
-	//color: #888;
-	cursor: default;
-}
 
-.ui-timepicker-list li.ui-timepicker-disabled:hover,
-.ui-timepicker-list li.ui-timepicker-selected.ui-timepicker-disabled {
-	//background: #f2f2f2;
+	cursor: default;
 }

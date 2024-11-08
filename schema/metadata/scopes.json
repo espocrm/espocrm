@@ -21,6 +21,14 @@
             "description": "Whether the entity has the stream.",
             "type": "boolean"
         },
+        "stars": {
+            "description": "Enables stars.",
+            "type": "boolean"
+        },
+        "collaborators": {
+            "description": "Enables collaborators.",
+            "type": "boolean"
+        },
         "importable": {
             "description": "Whether the entity is available in the Import tool.",
             "type": "boolean"
@@ -280,6 +288,10 @@
         },
         "hasPersonalData": {
             "description": "Whether the entity may contain personal data.",
+            "type": "boolean"
+        },
+        "preserveAuditLog": {
+            "description": "Disables audit log cleanup. As of v8.5.",
             "type": "boolean"
         },
         "exportFormatList": {

@@ -26,93 +26,93 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/portal-user/list', ['views/list'], function (Dep) {
+import ListView from 'views/list';
 
-    return Dep.extend({
+class PortalUserListView extends ListView {
 
-        defaultOrderBy: 'createdAt',
+    defaultOrderBy = 'createdAt'
+    defaultOrder = 'desc'
 
-        defaultOrder: 'desc',
+    actionCreate() {
+        const viewName = 'crm:views/contact/modals/select-for-portal-user';
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+        this.createView('modal', viewName, {
+            scope: 'Contact',
+            primaryFilterName: 'notPortalUsers',
+            createButton: false,
+            mandatorySelectAttributeList: [
+                'salutationName',
+                'firstName',
+                'lastName',
+                'accountName',
+                'accountId',
+                'emailAddress',
+                'emailAddressData',
+                'phoneNumber',
+                'phoneNumberData',
+            ]
+        }, view => {
+            view.render();
 
-        actionCreate: function () {
-            var viewName = 'crm:views/contact/modals/select-for-portal-user';
+            this.listenToOnce(view, 'select', model => {
+                const attributes = {};
 
-            this.createView('modal', viewName, {
-                scope: 'Contact',
-                primaryFilterName: 'notPortalUsers',
-                createButton: false,
-                mandatorySelectAttributeList: [
-                    'salutationName',
-                    'firstName',
-                    'lastName',
-                    'accountName',
-                    'accountId',
-                    'emailAddress',
-                    'emailAddressData',
-                    'phoneNumber',
-                    'phoneNumberData',
-                ]
-            }, view => {
-                view.render();
+                attributes.contactId = model.id;
+                attributes.contactName = model.get('name');
 
-                this.listenToOnce(view, 'select', model => {
-                    var attributes = {};
+                if (model.get('accountId')) {
+                    const names = {};
+                    names[model.get('accountId')] = model.get('accountName');
 
-                    attributes.contactId = model.id;
-                    attributes.contactName = model.get('name');
+                    attributes.accountsIds = [model.get('accountId')];
+                    attributes.accountsNames = names;
+                }
 
-                    if (model.get('accountId')) {
-                        var names = {};
-                        names[model.get('accountId')] = model.get('accountName');
+                attributes.firstName = model.get('firstName');
+                attributes.lastName = model.get('lastName');
+                attributes.salutationName = model.get('salutationName');
 
-                        attributes.accountsIds = [model.get('accountId')];
-                        attributes.accountsNames = names;
-                    }
+                attributes.emailAddress = model.get('emailAddress');
+                attributes.emailAddressData = model.get('emailAddressData');
 
-                    attributes.firstName = model.get('firstName');
-                    attributes.lastName = model.get('lastName');
-                    attributes.salutationName = model.get('salutationName');
+                attributes.phoneNumber = model.get('phoneNumber');
+                attributes.phoneNumberData = model.get('phoneNumberData');
 
-                    attributes.emailAddress = model.get('emailAddress');
-                    attributes.emailAddressData = model.get('emailAddressData');
+                attributes.userName = attributes.emailAddress;
 
-                    attributes.phoneNumber = model.get('phoneNumber');
-                    attributes.phoneNumberData = model.get('phoneNumberData');
+                if (attributes.userName) {
+                    attributes.userName = attributes.userName.toLowerCase();
+                }
 
-                    attributes.userName = attributes.emailAddress;
+                attributes.type = 'portal';
 
-                    attributes.type = 'portal';
+                const router = this.getRouter();
 
-                    var router = this.getRouter();
+                const url = `#${this.scope}/create`;
 
-                    var url = '#' + this.scope + '/create';
-
-                    router.dispatch(this.scope, 'create', {
-                        attributes: attributes
-                    });
-
-                    router.navigate(url, {trigger: false});
+                router.dispatch(this.scope, 'create', {
+                    attributes: attributes
                 });
 
-                this.listenToOnce(view, 'skip', () => {
-                    var attributes = {
-                        type: 'portal',
-                    };
-
-                    var router = this.getRouter();
-                    var url = '#' + this.scope + '/create';
-
-                    router.dispatch(this.scope, 'create', {
-                        attributes: attributes
-                    });
-
-                    router.navigate(url, {trigger: false});
-                });
+                router.navigate(url, {trigger: false});
             });
-        },
-    });
-});
+
+            this.listenToOnce(view, 'skip', () => {
+                const attributes = {
+                    type: 'portal',
+                };
+
+                const router = this.getRouter();
+                const url = `#${this.scope}/create`;
+
+                router.dispatch(this.scope, 'create', {
+                    attributes: attributes
+                });
+
+                router.navigate(url, {trigger: false});
+            });
+        });
+    }
+}
+
+export default PortalUserListView;

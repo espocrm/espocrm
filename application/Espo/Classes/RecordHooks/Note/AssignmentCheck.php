@@ -30,6 +30,7 @@
 namespace Espo\Classes\RecordHooks\Note;
 
 use Espo\Core\Acl;
+use Espo\Core\Acl\Permission;
 use Espo\Core\Acl\Table as AclTable;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
@@ -90,7 +91,7 @@ class AssignmentCheck implements SaveHook
             }
         }
 
-        $messagePermission = $this->acl->getPermissionLevel('message');
+        $messagePermission = $this->acl->getPermissionLevel(Permission::MESSAGE);
 
         if ($messagePermission === AclTable::LEVEL_NO) {
             if (
@@ -126,14 +127,14 @@ class AssignmentCheck implements SaveHook
                 throw new BadRequest("No portal IDs.");
             }
 
-            if ($this->acl->getPermissionLevel('portal') !== AclTable::LEVEL_YES) {
+            if ($this->acl->getPermissionLevel(Permission::PORTAL) !== AclTable::LEVEL_YES) {
                 throw new Forbidden('Not permitted to post to portal users.');
             }
         }
 
         if (
             $targetType === Note::TARGET_USERS &&
-            $this->acl->getPermissionLevel('portal') !== AclTable::LEVEL_YES
+            $this->acl->getPermissionLevel(Permission::PORTAL) !== AclTable::LEVEL_YES
         ) {
             if ($hasPortalTargetUser) {
                 throw new Forbidden('Not permitted to post to portal users.');

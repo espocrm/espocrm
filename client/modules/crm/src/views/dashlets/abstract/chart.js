@@ -51,6 +51,8 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
         init: function () {
             Dep.prototype.init.call(this);
 
+            this.fontSizeFactor = this.getThemeManager().getFontSizeFactor();
+
             this.flotr = Flotr;
 
             this.successColor = this.getThemeManager().getParam('chartSuccessColor') || this.successColor;
@@ -181,18 +183,22 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
         },
 
         getLegendColumnNumber: function () {
-            var width = this.$el.closest('.panel-body').width();
-            var legendColumnNumber = Math.floor(width / this.legendColumnWidth);
+            const width = this.$el.closest('.panel-body').width();
+
+            const legendColumnNumber = Math.floor(width / (this.legendColumnWidth * this.fontSizeFactor));
 
             return legendColumnNumber || this.legendColumnNumber;
         },
 
         getLegendHeight: function () {
-            var lineNumber = Math.ceil(this.chartData.length / this.getLegendColumnNumber());
-            var legendHeight = 0;
+            const lineNumber = Math.ceil(this.chartData.length / this.getLegendColumnNumber());
+            let legendHeight = 0;
 
-            var lineHeight = this.getThemeManager().getParam('dashletChartLegendRowHeight') || 19;
-            var paddingTopHeight = this.getThemeManager().getParam('dashletChartLegendPaddingTopHeight') || 7;
+            const lineHeight = (this.getThemeManager().getParam('dashletChartLegendRowHeight') || 19) *
+                this.fontSizeFactor;
+
+            const paddingTopHeight = (this.getThemeManager().getParam('dashletChartLegendPaddingTopHeight') || 7) *
+                this.fontSizeFactor;
 
             if (lineNumber > 0) {
                 legendHeight = lineHeight * lineNumber + paddingTopHeight;
@@ -202,26 +208,27 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
         },
 
         adjustContainer: function () {
-            var legendHeight = this.getLegendHeight();
-            var heightCss = 'calc(100% - ' + legendHeight.toString() + 'px)';
+            const legendHeight = this.getLegendHeight();
+            const heightCss = `calc(100% - ${legendHeight.toString()}px)`;
 
             this.$container.css('height', heightCss);
         },
 
         adjustLegend: function () {
-            var number = this.getLegendColumnNumber();
+            const number = this.getLegendColumnNumber();
 
             if (!number) {
                 return;
             }
 
-            var dashletChartLegendBoxWidth = this.getThemeManager().getParam('dashletChartLegendBoxWidth') || 21;
+            const dashletChartLegendBoxWidth = (this.getThemeManager().getParam('dashletChartLegendBoxWidth') || 21) *
+                this.fontSizeFactor;
 
-            var containerWidth = this.$legendContainer.width();
-            var width = Math.floor((containerWidth - dashletChartLegendBoxWidth * number) / number);
-            var columnNumber = this.$legendContainer.find('> table tr:first-child > td').length / 2;
+            const containerWidth = this.$legendContainer.width();
+            const width = Math.floor((containerWidth - dashletChartLegendBoxWidth * number) / number);
+            const columnNumber = this.$legendContainer.find('> table tr:first-child > td').length / 2;
 
-            var tableWidth = (width + dashletChartLegendBoxWidth) * columnNumber;
+            const tableWidth = (width + dashletChartLegendBoxWidth) * columnNumber;
 
             this.$legendContainer.find('> table')
                 .css('table-layout', 'fixed')
@@ -287,23 +294,21 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
         },
 
         showNoData: function () {
-            var fontSize = this.getThemeManager().getParam('fontSize') || 14;
             this.$container.empty();
-            var textFontSize = fontSize * 1.2;
 
             var $text = $('<span>').html(this.translate('No Data')).addClass('text-muted');
 
-            var $div = $('<div>')
+            const $div = $('<div>')
                 .css('text-align', 'center')
-                 .css('font-size', textFontSize + 'px')
-                 .css('display', 'table')
-                 .css('width', '100%')
-                 .css('height', '100%');
+                .css('font-size', 'calc(var(--font-size-base) * 1.2)')
+                .css('display', 'table')
+                .css('width', '100%')
+                .css('height', '100%');
 
             $text
                 .css('display', 'table-cell')
                 .css('vertical-align', 'middle')
-                .css('padding-bottom', fontSize * 1.5 + 'px');
+                .css('padding-bottom', 'calc(var(--font-size-base) * 1.5)');
 
 
             $div.append($text);

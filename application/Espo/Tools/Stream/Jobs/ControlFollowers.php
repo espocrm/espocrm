@@ -45,19 +45,12 @@ use Espo\Entities\User;
  */
 class ControlFollowers implements Job
 {
-    private Service $service;
-    private AclManager $aclManager;
-    private EntityManager $entityManager;
 
     public function __construct(
-        Service $service,
-        AclManager $aclManager,
-        EntityManager $entityManager
-    ) {
-        $this->service = $service;
-        $this->aclManager = $aclManager;
-        $this->entityManager = $entityManager;
-    }
+        private Service $service,
+        private AclManager $aclManager,
+        private EntityManager $entityManager
+    ) {}
 
     public function run(Data $data): void
     {
@@ -78,9 +71,7 @@ class ControlFollowers implements Job
 
         $userList = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
-            ->where([
-                'id' => $idList,
-            ])
+            ->where(['id' => $idList])
             ->find();
 
         foreach ($userList as $user) {
@@ -99,8 +90,7 @@ class ControlFollowers implements Job
 
             try {
                 $hasAccess = $this->aclManager->checkEntityStream($user, $entity);
-            }
-            catch (AclNotImplemented $e) {
+            } catch (AclNotImplemented) {
                 $hasAccess = false;
             }
 

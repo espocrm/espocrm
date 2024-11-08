@@ -30,6 +30,12 @@ import LinkMultipleFieldView from 'views/fields/link-multiple';
 
 class LinkMultipleWithStatusFieldView extends LinkMultipleFieldView {
 
+    /**
+     * @protected
+     * @type {string[]}
+     */
+    canceledStatusList
+
     setup() {
         super.setup();
 
@@ -45,6 +51,8 @@ class LinkMultipleWithStatusFieldView extends LinkMultipleFieldView {
 
         this.styleMap = this.getMetadata()
             .get(['entityDefs', this.foreignScope, 'fields', this.statusField, 'style']) || {};
+
+        this.canceledStatusList = [];
     }
 
     getAttributeList() {
@@ -56,15 +64,15 @@ class LinkMultipleWithStatusFieldView extends LinkMultipleFieldView {
     }
 
     getDetailLinkHtml(id, name) {
-        let status = (this.columns[id] || {}).status;
+        const status = (this.columns[id] || {}).status;
 
         if (!status) {
             return super.getDetailLinkHtml(id, name);
         }
 
-        let style = this.styleMap[status];
+        const style = this.styleMap[status];
 
-        let targetStyleList = ['success', 'danger'];
+        const targetStyleList = ['success', 'info', 'danger', 'warning'];
 
         if (!style || !~targetStyleList.indexOf(style)) {
             return super.getDetailLinkHtml(id, name);
@@ -74,12 +82,11 @@ class LinkMultipleWithStatusFieldView extends LinkMultipleFieldView {
 
         if (style === 'success') {
             iconStyle = 'fas fa-check text-success small';
-        }
-        else if (style === 'danger') {
-            iconStyle = 'fas fa-times text-danger small';
+        } else if (this.canceledStatusList.includes(status)) {
+            iconStyle = `fas fa-times text-${style} small`;
         }
 
-        return '<span class="' + iconStyle + '"></span> ' +
+        return `<span class="${iconStyle}" style="display: inline-block; min-width: 12px"></span> ` +
             super.getDetailLinkHtml(id, name);
     }
 }

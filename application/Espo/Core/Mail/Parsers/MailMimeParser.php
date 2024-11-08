@@ -40,10 +40,10 @@ use Espo\Core\Mail\Message\MailMimeParser\Part as WrapperPart;
 use Psr\Http\Message\StreamInterface;
 
 use ZBateson\MailMimeParser\Header\AddressHeader;
+use ZBateson\MailMimeParser\IMessage;
 use ZBateson\MailMimeParser\MailMimeParser as WrappeeParser;
-use ZBateson\MailMimeParser\Message\Part\MessagePart;
-use ZBateson\MailMimeParser\Message\Part\MimePart;
-use ZBateson\MailMimeParser\Message as ParserMessage;
+use ZBateson\MailMimeParser\Message\MessagePart;
+use ZBateson\MailMimeParser\Message\MimePart;
 
 use stdClass;
 
@@ -68,7 +68,7 @@ class MailMimeParser implements Parser
 
     private const DISPOSITION_INLINE = 'inline';
 
-    /** @var array<string, ParserMessage> */
+    /** @var array<string, IMessage> */
     private array $messageHash = [];
 
     public function __construct(private EntityManager $entityManager)
@@ -89,12 +89,11 @@ class MailMimeParser implements Parser
 
         $key = spl_object_hash($message);
 
-        $this->messageHash[$key] = $this->getParser()->parse($raw);
+        $this->messageHash[$key] = $this->getParser()->parse($raw, false);
     }
 
-
     /**
-     * @return ParserMessage
+     * @return IMessage
      */
     private function getMessage(Message $message)
     {
@@ -107,7 +106,7 @@ class MailMimeParser implements Parser
                 $raw = $message->getFullRawContent();
             }
 
-            $this->messageHash[$key] = $this->getParser()->parse($raw);
+            $this->messageHash[$key] = $this->getParser()->parse($raw, false);
         }
 
         return $this->messageHash[$key];
@@ -256,7 +255,7 @@ class MailMimeParser implements Parser
 
             $inlinePart = $this->getMessage($message)->getHtmlPart($i);
 
-            $bodyHtml .= $inlinePart->getContent();
+            $bodyHtml .= $inlinePart?->getContent() ?? '';
         }
 
         for ($i = 0; $i < $textPartCount; $i++) {
@@ -266,7 +265,7 @@ class MailMimeParser implements Parser
 
             $inlinePart = $this->getMessage($message)->getTextPart($i);
 
-            $bodyPlain .= $inlinePart->getContent();
+            $bodyPlain .= $inlinePart?->getContent() ?? '';
         }
 
         if ($bodyHtml) {
@@ -276,8 +275,7 @@ class MailMimeParser implements Parser
             if ($bodyPlain) {
                 $email->setBodyPlain($bodyPlain);
             }
-        }
-        else {
+        } else {
             $email->setIsHtml(false);
             $email->setBody($bodyPlain);
             $email->setBodyPlain($bodyPlain);
@@ -335,8 +333,7 @@ class MailMimeParser implements Parser
             if ($disposition === self::DISPOSITION_INLINE) {
                 $attachment->setRole(Attachment::ROLE_INLINE_ATTACHMENT);
                 $attachment->setTargetField(self::FIELD_BODY);
-            }
-            else {
+            } else {
                 $attachment->setRole(Attachment::ROLE_ATTACHMENT);
                 $attachment->setTargetField(self::FIELD_ATTACHMENTS);
             }

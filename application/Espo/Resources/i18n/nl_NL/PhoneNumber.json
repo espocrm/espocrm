@@ -2,7 +2,8 @@
   "fields": {
     "type": "Soort",
     "optOut": "Afgemeld",
-    "invalid": "Ongeldig"
+    "invalid": "Ongeldig",
+    "numeric": "Numerieke waarde"
   },
   "presetFilters": {
     "orphan": "Wees"

@@ -24,7 +24,6 @@
     > a {
       margin-left: auto;
       margin-right: -2px;
-      border-radius: @border-radius-base @border-radius-base 0 0;
     }
   }
 }
@@ -36,10 +35,6 @@
   > li {
     float: right;
 
-    // Links rendered as pills
-    > a {
-      border-radius: @nav-pills-border-radius;
-    }
     + li {
       margin-right: 2px;
       margin-left: auto;
@@ -67,12 +62,12 @@
 // -------------------------
 
 .nav-justified {
-  
+
   //To fix the overridden style by line 21
   > li{
     float: none;
   }
-  
+
   > .dropdown .dropdown-menu {
     right: auto;
   }
@@ -87,11 +82,5 @@
     // Override margin from .nav-tabs
     margin-left: 0;
     margin-right: auto;
-  }
-
-  @media (min-width: @screen-sm-min) {
-    > li > a {
-      border-radius: @border-radius-base @border-radius-base 0 0;
-    }
   }
 }

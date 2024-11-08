@@ -11,6 +11,7 @@
     "Install": "Installeren"
   },
   "messages": {
-    "uninstalled": "Extensie {name} is gedeïnstalleerd"
+    "uninstalled": "Extensie {name} is gedeïnstalleerd",
+    "fileExceedsMaxUploadSize": "Het bestands overschrijdt de maximale upload {maxSize}. Overweeg om `post_max_size` te verhogen of installeer de via CLI."
   }
 }

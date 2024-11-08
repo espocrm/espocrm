@@ -26,17 +26,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/conditions-string/item-operator-only-date',
-['views/admin/dynamic-logic/conditions-string/item-operator-only-base'], function (Dep) {
+import ItemOperatorOnlyBase from 'views/admin/dynamic-logic/conditions-string/item-operator-only-base';
 
-    return Dep.extend({
+export default class extends ItemOperatorOnlyBase {
 
-        template: 'admin/dynamic-logic/conditions-string/item-operator-only-date',
+    template = 'admin/dynamic-logic/conditions-string/item-operator-only-date'
 
-        data: function () {
-            var data = Dep.prototype.data.call(this);
-            data.dateValue = this.dateValue;
-            return data;
-        },
-    });
-});
+    dateValue
+
+    data() {
+        const data = super.data();
+        data.dateValue = this.dateValue;
+
+        return data;
+    }
+}

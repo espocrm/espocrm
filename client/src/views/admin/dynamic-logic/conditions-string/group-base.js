@@ -26,98 +26,143 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/conditions-string/group-base', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+export default class DynamicLogicConditionsStringGroupBaseView extends View {
 
-        template: 'admin/dynamic-logic/conditions-string/group-base',
+    template = 'admin/dynamic-logic/conditions-string/group-base'
 
-        data: function () {
-            if (!this.conditionList.length) {
-                return {
-                    isEmpty: true
-                };
-            }
+    /**
+     * @type {number}
+     */
+    level
 
+    /**
+     * @type {string}
+     */
+    scope
+
+    /**
+     * @type {number}
+     */
+    number
+
+    /**
+     * @type {string}
+     */
+    operator
+
+    /**
+     * @type {Record}
+     */
+    itemData
+
+    /**
+     * @type {Record}
+     */
+    additionalData
+
+    /**
+     * @type {string[]}
+     */
+    viewList
+
+    /**
+     * @type {{key: string, isEnd: boolean}[]}
+     */
+    viewDataList
+
+    data() {
+        if (!this.conditionList.length) {
             return {
-                viewDataList: this.viewDataList,
-                operator: this.operator,
-                level: this.level
+                isEmpty: true
             };
-        },
+        }
 
-        setup: function () {
-            this.level = this.options.level || 0;
-            this.number = this.options.number || 0;
-            this.scope = this.options.scope;
+        return {
+            viewDataList: this.viewDataList,
+            operator: this.operator,
+            level: this.level
+        };
+    }
 
-            this.operator = this.options.operator || this.operator;
+    setup() {
+        this.level = this.options.level || 0;
+        this.number = this.options.number || 0;
+        this.scope = this.options.scope;
 
-            this.itemData = this.options.itemData || {};
-            this.viewList = [];
+        this.operator = this.options.operator || this.operator;
 
-            const conditionList = this.conditionList = this.itemData.value || [];
+        this.itemData = this.options.itemData || {};
+        this.viewList = [];
 
-            this.viewDataList = [];
+        const conditionList = this.conditionList = this.itemData.value || [];
 
-            conditionList.forEach((item, i) => {
-                const key = 'view-' + this.level.toString() + '-' + this.number.toString() + '-' + i.toString();
+        this.viewDataList = [];
 
-                this.createItemView(i, key, item);
-                this.viewDataList.push({
-                    key: key,
-                    isEnd: i === conditionList.length - 1,
-                });
+        conditionList.forEach((item, i) => {
+            const key = `view-${this.level.toString()}-${this.number.toString()}-${i.toString()}`;
+
+            this.createItemView(i, key, item);
+            this.viewDataList.push({
+                key: key,
+                isEnd: i === conditionList.length - 1,
             });
-        },
+        });
+    }
 
-        getFieldType: function (item) {
-            return this.getMetadata()
-                .get(['entityDefs', this.scope, 'fields', item.attribute, 'type']) || 'base';
-        },
+    getFieldType(item) {
+        return this.getMetadata()
+            .get(['entityDefs', this.scope, 'fields', item.attribute, 'type']) || 'base';
+    }
 
-        createItemView: function (number, key, item) {
-            this.viewList.push(key);
+    /**
+     *
+     * @param {number} number
+     * @param {string} key
+     * @param {{data?: Record, type?: string}} item
+     */
+    createItemView(number, key, item) {
+        this.viewList.push(key);
 
-            item = item || {};
+        item = item || {};
 
-            const additionalData = item.data || {};
+        const additionalData = item.data || {};
 
-            const type = additionalData.type || item.type || 'equals';
-            const fieldType = this.getFieldType(item);
+        const type = additionalData.type || item.type || 'equals';
+        const fieldType = this.getFieldType(item);
 
-            const viewName = this.getMetadata()
-                .get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType, 'conditionTypes', type, 'itemView']) ||
-                this.getMetadata()
-                    .get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'view']);
+        const viewName = this.getMetadata()
+            .get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType, 'conditionTypes', type, 'itemView']) ||
+            this.getMetadata()
+                .get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'view']);
 
-            if (!viewName) {
-                return;
-            }
+        if (!viewName) {
+            return;
+        }
 
-            const operator = this.getMetadata()
-                .get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'operator']);
+        const operator = this.getMetadata()
+            .get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'operator']);
 
-            let operatorString = this.getMetadata()
-                .get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'operatorString']);
+        let operatorString = this.getMetadata()
+            .get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'operatorString']);
 
-            if (!operatorString) {
-                operatorString = this.getLanguage()
-                    .translateOption(type, 'operators', 'DynamicLogic')
-                    .toLowerCase();
+        if (!operatorString) {
+            operatorString = this.getLanguage()
+                .translateOption(type, 'operators', 'DynamicLogic')
+                .toLowerCase();
 
-                operatorString = '<i class="small">' + operatorString + '</i>';
-            }
+            operatorString = '<i class="small">' + operatorString + '</i>';
+        }
 
-            this.createView(key, viewName, {
-                itemData: item,
-                scope: this.scope,
-                level: this.level + 1,
-                selector: '[data-view-key="'+key+'"]',
-                number: number,
-                operator: operator,
-                operatorString: operatorString,
-            });
-        },
-    });
-});
+        this.createView(key, viewName, {
+            itemData: item,
+            scope: this.scope,
+            level: this.level + 1,
+            selector: `[data-view-key="${key}"]`,
+            number: number,
+            operator: operator,
+            operatorString: operatorString,
+        });
+    }
+}

@@ -42,60 +42,53 @@ define('crm:views/meeting/record/list', ['views/record/list'], function (Dep) {
         },
 
         actionSetHeld: function (data) {
-            let id = data.id;
+            const id = data.id;
 
             if (!id) {
                 return;
             }
 
-            let model = this.collection.get(id);
+            const model = this.collection.get(id);
 
             if (!model) {
                 return;
             }
 
-            model.set('status', 'Held');
+            Espo.Ui.notify(this.translate('saving', 'messages'));
 
-            this.listenToOnce(model, 'sync', () => {
-                Espo.Ui.notify(false);
+            model.save({status: 'Held'}, {patch: true}).then(() => {
+                Espo.Ui.success(this.translate('Saved'));
 
                 this.collection.fetch();
             });
-
-            Espo.Ui.notify(this.translate('saving', 'messages'));
-
-            model.save();
         },
 
         actionSetNotHeld: function (data) {
-            let id = data.id;
+            const id = data.id;
 
             if (!id) {
                 return;
             }
 
-            var model = this.collection.get(id);
+            const model = this.collection.get(id);
 
             if (!model) {
                 return;
             }
 
-            model.set('status', 'Not Held');
-
-            this.listenToOnce(model, 'sync', () => {
-                Espo.Ui.notify(false);
-                this.collection.fetch();
-            });
-
             Espo.Ui.notify(this.translate('saving', 'messages'));
 
-            model.save();
+            model.save({status: 'Not Held'}, {patch: true}).then(() => {
+                Espo.Ui.success(this.translate('Saved'));
+
+                this.collection.fetch();
+            });
         },
 
         massActionSetHeld: function () {
             Espo.Ui.notify(this.translate('saving', 'messages'));
 
-            let data = {ids: this.checkedList};
+            const data = {ids: this.checkedList};
 
             Espo.Ajax.postRequest(this.collection.entityType + '/action/massSetHeld', data)
                 .then(() => {
@@ -116,7 +109,7 @@ define('crm:views/meeting/record/list', ['views/record/list'], function (Dep) {
         massActionSetNotHeld: function () {
             Espo.Ui.notify(this.translate('saving', 'messages'));
 
-            let data = {ids: this.checkedList};
+            const data = {ids: this.checkedList};
 
             Espo.Ajax.postRequest(this.collection.entityType + '/action/massSetNotHeld', data)
                 .then(() => {

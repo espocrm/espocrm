@@ -112,6 +112,11 @@ class SearchView extends View {
         this.filtersLayoutName = this.options.filtersLayoutName || this.filtersLayoutName;
         this.primaryFiltersDisabled = this.options.primaryFiltersDisabled || this.primaryFiltersDisabled;
 
+        this.viewModeIconClassMap = {
+            ...this.viewModeIconClassMap,
+            ...this.getMetadata().get(`clientDefs.${this.scope}.viewModeIconClassMap`),
+        };
+
         /** @type {module:search-manager} */
         this.searchManager = this.options.searchManager;
 
@@ -201,6 +206,10 @@ class SearchView extends View {
             this.boolFilterList.push('followed');
         }
 
+        if (this.getMetadata().get(`scopes.${this.entityType}.collaborators`) && !this.getUser().isPortal()) {
+            this.boolFilterList.push('shared');
+        }
+
         this.loadSearchData();
 
         if (this.hasAdvancedFilter()) {
@@ -253,7 +262,7 @@ class SearchView extends View {
         const filterList = this.options.filterList ||
             this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || [];
 
-        this.presetFilterList = Espo.Utils.clone(filterList).filter(item => {
+        this.presetFilterList = filterList.filter(item => {
             if (typeof item === 'string') {
                 return true;
             }
@@ -280,6 +289,12 @@ class SearchView extends View {
 
             return true;
         });
+
+        if (this.getMetadata().get(`scopes.${this.scope}.stars`)) {
+            this.presetFilterList.unshift({
+                name: 'starred',
+            });
+        }
 
         ((this.getPreferences().get('presetFilters') || {})[this.scope] || [])
             .forEach(item => {
@@ -321,6 +336,8 @@ class SearchView extends View {
                 });
             }
         }
+
+        this.collection.offset = 0;
 
         if (toTriggerEvent) {
             this.trigger('change-view-mode', mode);

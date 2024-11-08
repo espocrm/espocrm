@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "event": "Ereignis",
+    "target": "Ziel",
+    "data": "Daten",
+    "processedAt": "Verarbeitet am",
+    "attempts": "Versuche",
+    "processAt": "Verarbeitung um"
+  },
+  "options": {
+    "status": {
+      "Pending": "Ausstehend",
+      "Success": "Erfolgreich",
+      "Failed": "Fehlgeschlagen"
+    }
+  }
+}

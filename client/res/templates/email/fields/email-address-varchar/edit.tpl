@@ -7,7 +7,6 @@
             autocomplete="espo-{{name}}"
             spellcheck="false"
             maxlength="{{maxLength}}"
-            title="{{translate 'Select'}}"
         >
         <div class="input-group-btn">
             <button

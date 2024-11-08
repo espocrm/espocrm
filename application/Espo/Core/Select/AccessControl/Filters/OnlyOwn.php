@@ -30,9 +30,12 @@
 namespace Espo\Core\Select\AccessControl\Filters;
 
 use Espo\Core\Select\AccessControl\Filter;
+use Espo\Core\Select\Helpers\RelationQueryHelper;
 use Espo\Core\Select\Helpers\FieldHelper;
 use Espo\Entities\User;
-use Espo\ORM\Defs;
+use Espo\ORM\Query\Part\Where\OrGroup;
+use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Query\Part\WhereItem;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class OnlyOwn implements Filter
@@ -41,43 +44,57 @@ class OnlyOwn implements Filter
         private User $user,
         private FieldHelper $fieldHelper,
         private string $entityType,
-        private Defs $defs
+        private RelationQueryHelper $relationQueryHelper,
     ) {}
 
     public function apply(QueryBuilder $queryBuilder): void
     {
-        if ($this->fieldHelper->hasAssignedUsersField()) {
-            $relationDefs = $this->defs
-                ->getEntity($this->entityType)
-                ->getRelation('assignedUsers');
+        $ownItem = $this->getOwnWhereItem();
 
-            $middleEntityType = ucfirst($relationDefs->getRelationshipName());
-            $key1 = $relationDefs->getMidKey();
-            $key2 = $relationDefs->getForeignMidKey();
-
-            $subQuery = QueryBuilder::create()
-                ->select('id')
-                ->from($this->entityType)
-                ->leftJoin($middleEntityType, 'assignedUsersMiddle', [
-                    "assignedUsersMiddle.{$key1}:" => 'id',
-                    'assignedUsersMiddle.deleted' => false,
-                ])
-                ->where(["assignedUsersMiddle.{$key2}" => $this->user->getId()])
-                ->build();
-
-            $queryBuilder->where(['id=s' => $subQuery]);
+        if ($this->fieldHelper->hasCollaboratorsField()) {
+            $this->applyCollaborators($queryBuilder, $ownItem);
 
             return;
+        }
+
+        if (!$ownItem) {
+            $queryBuilder->where(['id' => null]);
+
+            return;
+        }
+
+        $queryBuilder->where($ownItem);
+    }
+
+    private function applyCollaborators(QueryBuilder $queryBuilder, ?WhereItem $ownItem): void
+    {
+        $sharedItem = $this->relationQueryHelper->prepareCollaboratorsWhere($this->entityType, $this->user->getId());
+
+        $orBuilder = OrGroup::createBuilder();
+
+        if ($ownItem) {
+            $orBuilder->add($ownItem);
+        }
+
+        $orBuilder->add($sharedItem);
+
+        $queryBuilder->where($orBuilder->build());
+    }
+
+    private function getOwnWhereItem(): ?WhereItem
+    {
+        if ($this->fieldHelper->hasAssignedUsersField()) {
+            return $this->relationQueryHelper->prepareAssignedUsersWhere($this->entityType, $this->user->getId());
         }
 
         if ($this->fieldHelper->hasAssignedUserField()) {
-            $queryBuilder->where(['assignedUserId' => $this->user->getId()]);
-
-            return;
+            return WhereClause::fromRaw(['assignedUserId' => $this->user->getId()]);
         }
 
         if ($this->fieldHelper->hasCreatedByField()) {
-            $queryBuilder->where(['createdById' => $this->user->getId()]);
+            return WhereClause::fromRaw(['createdById' => $this->user->getId()]);
         }
+
+        return null;
     }
 }

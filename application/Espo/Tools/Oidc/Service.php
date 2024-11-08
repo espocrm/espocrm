@@ -53,7 +53,7 @@ class Service
      *     redirectUri: string,
      *     scopes: non-empty-array<string>,
      *     claims: ?string,
-     *     prompt: 'login'|'consent'|'select_account',
+     *     prompt: 'none'|'login'|'consent'|'select_account',
      *     maxAge: ?int,
      * }
      * @throws Forbidden
@@ -91,7 +91,9 @@ class Service
             ]);
         }
 
-        /** @var 'login'|'consent'|'select_account' $prompt */
+        /** @var 'none'|'login'|'consent'|'select_account' $prompt
+         * @noinspection PhpRedundantVariableDocTypeInspection
+         */
         $prompt = $this->configDataProvider->getAuthorizationPrompt();
         $maxAge = $this->configDataProvider->getAuthorizationMaxAge();
 
@@ -117,8 +119,7 @@ class Service
 
         try {
             $this->backchannelLogout->logout($rawToken);
-        }
-        catch (Invalid $e) {
+        } catch (Invalid $e) {
             throw new Forbidden("OIDC logout: Invalid JWT. " . $e->getMessage());
         }
     }

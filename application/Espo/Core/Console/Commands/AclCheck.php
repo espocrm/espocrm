@@ -37,6 +37,7 @@ use Espo\Core\Console\Command\Params;
 use Espo\Core\Console\IO;
 use Espo\Core\Container;
 use Espo\Core\Portal\Application as PortalApplication;
+use Espo\Core\Acl\Table;
 
 /**
  * Checks access for websocket topic subscription. Prints `true` if access allowed.
@@ -55,6 +56,8 @@ class AclCheck implements Command
         $userId = $options['userId'] ?? null;
         $scope = $options['scope'] ?? null;
         $id = $options['id'] ?? null;
+
+        /** @var Table::ACTION_*|null $action */
         $action = $options['action'] ?? null;
 
         if (!$userId || !$scope || !$id) {
@@ -102,6 +105,10 @@ class AclCheck implements Command
         }
     }
 
+    /**
+     * @param Table::ACTION_*|null $action
+     * @noinspection PhpDocSignatureInspection
+     */
     private function check(
         User $user,
         string $scope,

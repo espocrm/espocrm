@@ -1,0 +1,5 @@
+{
+    "primaryFilterClassNameMap": {
+        "errors": "Espo\\Classes\\Select\\AppLogRecord\\PrimaryFilters\\Errors"
+    }
+}

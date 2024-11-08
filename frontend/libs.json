@@ -64,7 +64,7 @@
         "amdId": "jquery-textcomplete"
     },
     {
-        "src": "node_modules/bootstrap/dist/js/bootstrap.js",
+        "src": "node_modules/bootstrap/dist/js/bootstrap-for-espo.js",
         "bundle": true
     },
     {
@@ -171,6 +171,11 @@
     {
         "src": "node_modules/qrcodejs/qrcode.js",
         "amdId": "qrcodejs"
+    },
+    {
+        "src": "node_modules/turndown/lib/turndown.browser.umd.js",
+        "amdId": "turndown",
+        "minify": true
     },
     {
         "name": "ace-builds",

@@ -39,6 +39,7 @@ class ViewOnlyRowActionsView extends DefaultRowActionsView {
                     id: this.model.id,
                 },
                 link: '#' + this.model.entityType + '/view/' + this.model.id,
+                groupIndex: 0,
             },
         ];
     }

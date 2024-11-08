@@ -33,7 +33,7 @@ define('crm:views/dashlets/opportunities-by-lead-source', ['crm:views/dashlets/a
         name: 'OpportunitiesByLeadSource',
 
         url: function () {
-            var url = 'Opportunity/action/reportByLeadSource?dateFilter='+ this.getDateFilter();
+            let url = 'Opportunity/action/reportByLeadSource?dateFilter=' + this.getDateFilter();
 
             if (this.getDateFilter() === 'between') {
                 url += '&dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
@@ -78,17 +78,17 @@ define('crm:views/dashlets/opportunities-by-lead-source', ['crm:views/dashlets/a
                 pie: {
                     show: true,
                     explode: 0,
-                    lineWidth: 1,
+                    lineWidth: 1 * this.fontSizeFactor,
                     fillOpacity: 1,
                     sizeRatio: 0.8,
                     labelFormatter: (total, value) => {
-                        var percentage = (100 * value / total).toFixed(2);
+                        const percentage = Math.round(100 * value / total);
 
-                        if (percentage < 7) {
+                        if (percentage < 5) {
                             return '';
                         }
 
-                        return '<span class="small" style="font-size: 0.8em;color:'+this.textColor+'">' +
+                        return '<span class="small numeric-text" style="font-size: 0.8em;color:'+this.textColor+'">' +
                             percentage.toString() +'%' + '</span>';
                     },
                 },
@@ -111,12 +111,14 @@ define('crm:views/dashlets/opportunities-by-lead-source', ['crm:views/dashlets/a
                     relative: true,
                     lineColor: this.hoverColor,
                     trackFormatter: (obj) => {
-                        var value = this.currencySymbol + this.formatNumber(obj.y, true);
+                        const value = this.currencySymbol +
+                            '<span class="numeric-text">' + this.formatNumber(obj.y, true) + '</span>';
 
-                        var fraction = obj.fraction || 0;
-                        var percentage = (100 * fraction).toFixed(2).toString();
+                        const fraction = obj.fraction || 0;
+                        const percentage = '<span class="numeric-text">' +
+                            (100 * fraction).toFixed(2).toString() +'</span>';
 
-                        let label = this.getHelper().escapeString(obj.series.label || this.translate('None'));
+                        const label = this.getHelper().escapeString(obj.series.label || this.translate('None'));
 
                         return label + '<br>' +  value + ' / ' + percentage + '%';
                     },

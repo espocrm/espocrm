@@ -33,8 +33,37 @@ import AutoNumeric from 'autonumeric';
 
 /**
  * An integer field.
+ *
+ * @extends BaseFieldView<module:views/fields/int~params>
  */
 class IntFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/int~options
+     * @property {
+     *     module:views/fields/int~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/int~params
+     * @property {number} [min] A max value.
+     * @property {number} [max] A max value.
+     * @property {boolean} [required] Required.
+     * @property {boolean} [disableFormatting] Disable formatting.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/int~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'int'
 
@@ -42,6 +71,11 @@ class IntFieldView extends BaseFieldView {
     detailTemplate = 'fields/int/detail'
     editTemplate = 'fields/int/edit'
     searchTemplate = 'fields/int/search'
+
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = ['required', 'int', 'range']
 
     thousandSeparator = ','
@@ -113,6 +147,14 @@ class IntFieldView extends BaseFieldView {
             selectOnFocus: false,
             formulaMode: true,
         };
+
+        if (this.params.max != null && this.params.max > Math.pow(10, 6)) {
+            this.autoNumericOptions.maximumValue = this.params.max.toString();
+        }
+
+        if (this.params.min != null && this.params.min < - Math.pow(10, 6)) {
+            this.autoNumericOptions.minimumValue = this.params.min.toString();
+        }
     }
 
     afterRender() {

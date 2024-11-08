@@ -10,17 +10,13 @@
     </div>
     <div class="stream-head-text-container">
         <span
-            class="text-muted"
-        ><span
             class="{{emailIconClassName}} action icon"
             style="cursor: pointer;"
             title="{{translate 'View'}}"
             data-action="quickView"
             data-id="{{emailId}}"
             data-scope="Email"
-        ></span>
-            {{{message}}}
-        </span>
+        ></span><span class="message text-muted">{{{message}}}</span>
     </div>
 </div>
 
@@ -46,5 +42,8 @@
 
 <div class="stream-date-container">
     <a class="text-muted small" href="#Note/view/{{model.id}}">{{{createdAt}}}</a>
+    {{#if isPinned}}
+        <span class="fas fa-map-pin fa-sm pin-icon" title="{{translate 'Pinned' scope='Note'}}"></span>
+    {{/if}}
 </div>
 

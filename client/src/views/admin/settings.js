@@ -26,23 +26,49 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/settings', ['views/settings/record/edit'], function (Dep) {
+import SettingsEditRecordView from 'views/settings/record/edit';
 
-    return Dep.extend({
+class SettingsAdminRecordView extends SettingsEditRecordView {
 
-        layoutName: 'settings',
+    layoutName = 'settings'
 
-        saveAndContinueEditingAction: false,
+    saveAndContinueEditingAction = false
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            if (this.getHelper().getAppParam('isRestrictedMode') && !this.getUser().isSuperAdmin()) {
-                this.hideField('cronDisabled');
-                this.hideField('maintenanceMode');
-                this.setFieldReadOnly('useWebSocket');
-                this.setFieldReadOnly('siteUrl');
+    dynamicLogicDefs = {
+        fields: {
+            phoneNumberPreferredCountryList: {
+                visible: {
+                    conditionGroup: [
+                        {
+                            attribute: 'phoneNumberInternational',
+                            type: 'isTrue'
+                        }
+                    ]
+                }
+            },
+            phoneNumberExtensions: {
+                visible: {
+                    conditionGroup: [
+                        {
+                            attribute: 'phoneNumberInternational',
+                            type: 'isTrue'
+                        }
+                    ]
+                }
             }
-        },
-    });
-});
+        }
+    }
+
+    setup() {
+        super.setup();
+
+        if (this.getHelper().getAppParam('isRestrictedMode') && !this.getUser().isSuperAdmin()) {
+            this.hideField('cronDisabled');
+            this.hideField('maintenanceMode');
+            this.setFieldReadOnly('useWebSocket');
+            this.setFieldReadOnly('siteUrl');
+        }
+    }
+}
+
+export default SettingsAdminRecordView;

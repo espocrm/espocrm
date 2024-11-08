@@ -44,7 +44,11 @@ class FilterView extends View {
 
     setup() {
         const name = this.name = this.options.name;
-        const type = this.model.getFieldType(name);
+        let type = this.model.getFieldType(name);
+
+        if (!type && name === 'id') {
+            type = 'id'
+        }
 
         if (type) {
             const viewName =

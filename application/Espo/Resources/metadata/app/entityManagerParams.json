@@ -1,7 +1,21 @@
 {
     "Global": {
+        "stars": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
         "optimisticConcurrencyControl": {
             "location": "entityDefs",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "preserveAuditLog": {
+            "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
@@ -23,6 +37,20 @@
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
             }
+        },
+        "collaborators": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "@Person": {
@@ -39,6 +67,20 @@
                 "type": "multiEnum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
+            }
+        },
+        "collaborators": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
             }
         }
     },
@@ -57,6 +99,20 @@
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
             }
+        },
+        "collaborators": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "@BasePlus": {
@@ -73,6 +129,20 @@
                 "type": "multiEnum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
+            }
+        },
+        "collaborators": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
             }
         }
     }

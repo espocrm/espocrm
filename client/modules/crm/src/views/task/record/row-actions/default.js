@@ -39,7 +39,8 @@ define('crm:views/task/record/row-actions/default', ['views/record/row-actions/v
                     label: 'Complete',
                     data: {
                         id: this.model.id
-                    }
+                    },
+                    groupIndex: 1,
                 });
             }
 
@@ -50,7 +51,8 @@ define('crm:views/task/record/row-actions/default', ['views/record/row-actions/v
                     data: {
                         id: this.model.id,
                         scope: this.model.entityType
-                    }
+                    },
+                    groupIndex: 0,
                 });
             }
 

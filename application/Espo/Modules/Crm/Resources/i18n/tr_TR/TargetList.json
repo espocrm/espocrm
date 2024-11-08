@@ -14,14 +14,14 @@
   },
   "links": {
     "accounts": "Hesaplar",
-    "contacts": "Kişiler ",
-    "leads": "Müşteri Potansiyelleri",
+    "contacts": "Kişiler",
+    "leads": "Potansiyeller",
     "campaigns": "Kampanyalar",
-    "massEmails": "Toplu E-postalar"
+    "massEmails": "Toplu Epostalar"
   },
   "options": {
     "type": {
-      "Email": "E-posta   ",
+      "Email": "Eposta",
       "Television": "Televizyon!",
       "Radio": "radyo",
       "Newsletter": "Newsletter (Bülten)"

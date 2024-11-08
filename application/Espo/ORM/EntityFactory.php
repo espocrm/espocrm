@@ -39,12 +39,12 @@ interface EntityFactory
     public function create(string $entityType): Entity;
 
     /**
-     * For internal use.
+     * @internal
      */
     public function setEntityManager(EntityManager $entityManager): void;
 
     /**
-     * For internal use.
+     * @internal
      */
     public function setValueAccessorFactory(ValueAccessorFactory $valueAccessorFactory): void;
 }

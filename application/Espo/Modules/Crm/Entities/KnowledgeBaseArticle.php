@@ -32,6 +32,9 @@ namespace Espo\Modules\Crm\Entities;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\ORM\Entity;
+use Espo\Entities\Attachment;
+use Espo\Entities\User;
+use Espo\ORM\Collection;
 
 class KnowledgeBaseArticle extends Entity
 {
@@ -39,6 +42,11 @@ class KnowledgeBaseArticle extends Entity
 
     public const STATUS_PUBLISHED = 'Published';
     public const STATUS_ARCHIVED = 'Archived';
+
+    public function getStatus(): string
+    {
+        return (string) $this->get('status');
+    }
 
     public function getOrder(): ?int
     {
@@ -64,5 +72,26 @@ class KnowledgeBaseArticle extends Entity
     {
         /** @var string[] */
         return $this->getLinkMultipleIdList('attachments');
+    }
+
+    /**
+     * @return iterable<Attachment>
+     */
+    public function getAttachments(): iterable
+    {
+        /** @var Collection<Attachment> */
+        return $this->relations->getMany('attachments');
+    }
+
+    public function setAssignedUser(Link|User|null $assignedUser): self
+    {
+        return $this->setRelatedLinkOrEntity('assignedUser', $assignedUser);
+    }
+
+    public function setTeams(LinkMultiple $teams): self
+    {
+        $this->setValueObject('teams', $teams);
+
+        return $this;
     }
 }

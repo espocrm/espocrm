@@ -1,6 +1,4 @@
-//
 // Dropdown menus
-// --------------------------------------------------
 
 
 // Dropdown arrow/caret
@@ -8,10 +6,9 @@
   display: inline-block;
   width: 0;
   height: 0;
-  margin-left: 2px;
+  margin-left: var(--2px);
   vertical-align: middle;
-  border-top:   @caret-width-base dashed;
-  border-top:   @caret-width-base solid ~"\9"; // IE8
+  border-top: @caret-width-base dashed;
   border-right: @caret-width-base solid transparent;
   border-left:  @caret-width-base solid transparent;
 }
@@ -35,17 +32,14 @@
   z-index: @zindex-dropdown;
   display: none; // none by default, but block on "open" of the menu
   float: left;
-  min-width: 160px;
-  padding: 5px 0;
-  margin: 2px 0 0; // override default ul
+  min-width: calc(var(--16px) * 10);
+  padding: var(--5px) 0;
+  margin: var(--2px) 0 0;
   list-style: none;
-  font-size: @font-size-base;
+  font-size: var(--font-size-base);
   text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
-  background-color: @dropdown-bg;
-  border: 1px solid @dropdown-fallback-border; // IE8 fallback
-  border: 1px solid @dropdown-border;
-  border-radius: @border-radius-base;
-  .box-shadow(0 6px 12px rgba(0,0,0,.175));
+  background-color: var(--dropdown-bg);
+  border: var(--1px) solid var(--dropdown-border);
   background-clip: padding-box;
 
   // Aligns the dropdown menu to right
@@ -58,17 +52,17 @@
 
   // Dividers (basically an hr) within the dropdown
   .divider {
-    .nav-divider(@dropdown-divider-bg);
+    .nav-divider(var(--dropdown-divider-bg));
   }
 
   // Links within the dropdown menu
   > li > a {
     display: block;
-    padding: 3px 20px;
+    padding: var(--3px) var(--20px);
     clear: both;
     font-weight: normal;
-    line-height: @line-height-base;
-    color: @dropdown-link-color;
+    line-height: var(--line-height-base);
+    color: var(--dropdown-link-color);
     white-space: nowrap; // prevent links from randomly breaking onto new lines
   }
 }
@@ -78,8 +72,8 @@
   &:hover,
   &:focus {
     text-decoration: none;
-    color: @dropdown-link-hover-color;
-    background-color: @dropdown-link-hover-bg;
+    color: var(--dropdown-link-hover-color);
+    background-color: var(--dropdown-link-hover-bg);
   }
 }
 
@@ -88,10 +82,8 @@
   &,
   &:hover,
   &:focus {
-    color: @dropdown-link-active-color;
     text-decoration: none;
     outline: 0;
-    background-color: @dropdown-link-active-bg;
   }
 }
 
@@ -103,7 +95,7 @@
   &,
   &:hover,
   &:focus {
-    color: @dropdown-link-disabled-color;
+    color: var(--gray-light);
   }
 
   // Nuke hover/focus effects
@@ -152,10 +144,10 @@
 // Dropdown section headers
 .dropdown-header {
   display: block;
-  padding: 3px 20px;
-  font-size: @font-size-smaller;
-  line-height: @line-height-base;
-  color: @dropdown-header-color;
+  padding: var(--3px) var(--20px);
+  font-size: calc(var(--font-size-small) + var(--1px));
+  line-height: var(--line-height-base);
+  color: var(--gray-light);
   white-space: nowrap; // as with > li > a
 }
 
@@ -180,8 +172,7 @@
 // Just add .dropup after the standard .dropdown class and you're set, bro.
 // TODO: abstract this so that the navbar fixed styles are not placed here?
 
-.dropup,
-.navbar-fixed-bottom .dropdown {
+.dropup {
   // Reverse the caret
   .caret {
     border-top: 0;
@@ -193,7 +184,7 @@
   .dropdown-menu {
     top: auto;
     bottom: 100%;
-    margin-bottom: 2px;
+    margin-bottom: var(--2px);
   }
 }
 

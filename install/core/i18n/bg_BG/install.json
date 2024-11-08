@@ -31,7 +31,6 @@
     "Install": "Инсталирай",
     "Configuration Instructions": "Инструкция за конфигуриране",
     "phpVersion": "PHP версия",
-    "requiredMysqlVersion": "MySQL версия",
     "dbHostName": "Хост/Сървър",
     "dbName": "Име на базата данни",
     "dbUserName": "Потребителско име за базата данни",
@@ -46,7 +45,10 @@
     "extension is missing": "разширението липсва",
     "headerTitle": "EspoCRM инсталация",
     "Crontab setup instructions": "Без стартиране на планирани задачи входящите имейли, известията и напомнянията няма да работят. Тук можете да прочетете повече {SETUP_INSTRUCTIONS}.",
-    "Setup instructions": "инструкции за настройка"
+    "Setup instructions": "инструкции за настройка",
+    "requiredMysqlVersion": "MySQL версия",
+    "requiredMariadbVersion": "MariaDB версия",
+    "requiredPostgresqlVersion": "PostgreSQL версия"
   },
   "fields": {
     "Choose your language": "Изберете вашия език",

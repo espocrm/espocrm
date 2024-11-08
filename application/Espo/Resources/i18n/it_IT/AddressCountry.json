@@ -1,0 +1,20 @@
+{
+  "labels": {
+    "Create AddressCountry": "Crea Indirizzo Paese",
+    "Populate": "RIempi"
+  },
+  "fields": {
+    "code": "Codice",
+    "isPreferred": "Preferenziale"
+  },
+  "tooltips": {
+    "code": "Codice ISO 3166-1 alpha-2.",
+    "isPreferred": "I paesi preferenziali appaiono per primi nell'elenco."
+  },
+  "messages": {
+    "confirmPopulateDefaults": "Tutti i Paesi esistenti verranno eliminati e verrà generato l'elenco dei Paesi predefinito. Non sarà possibile annullare l'operazione.\n\nVuoi procedere?"
+  },
+  "strings": {
+    "populateDefaults": "Riempire con l'elenco dei paesi predefinito"
+  }
+}

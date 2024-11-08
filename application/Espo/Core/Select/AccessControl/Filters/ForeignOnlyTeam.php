@@ -30,6 +30,10 @@
 namespace Espo\Core\Select\AccessControl\Filters;
 
 use Espo\Core\Select\AccessControl\Filter;
+use Espo\Entities\Team;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Defs;
@@ -37,32 +41,27 @@ use Espo\Entities\User;
 
 use LogicException;
 
+/**
+ * @noinspection PhpUnused
+ */
 class ForeignOnlyTeam implements Filter
 {
-    private string $entityType;
-    private User $user;
-    private Metadata $metadata;
-    private Defs $defs;
-
-    public function __construct(string $entityType, User $user, Metadata $metadata, Defs $defs)
-    {
-        $this->user = $user;
-        $this->entityType = $entityType;
-        $this->metadata = $metadata;
-        $this->defs = $defs;
-    }
+    public function __construct(
+        private string $entityType,
+        private User $user,
+        private Metadata $metadata,
+        private Defs $defs
+    ) {}
 
     public function apply(SelectBuilder $queryBuilder): void
     {
         $link = $this->metadata->get(['aclDefs', $this->entityType, 'link']);
 
         if (!$link) {
-            throw new LogicException("No `link` in aclDefs for {$this->entityType}.");
+            throw new LogicException("No `link` in aclDefs for $this->entityType.");
         }
 
-        $alias = $link . 'Access';
-
-        $queryBuilder->leftJoin($link, $alias);
+        $alias = "{$link}Access";
 
         $ownerAttribute = $this->getOwnerAttribute($link);
 
@@ -75,44 +74,42 @@ class ForeignOnlyTeam implements Filter
         $teamIdList = $this->user->getTeamIdList();
 
         if (count($teamIdList) === 0) {
-            $queryBuilder->where([
-                "{$alias}.{$ownerAttribute}" => $this->user->getId(),
-            ]);
+            $queryBuilder
+                ->leftJoin($link, $alias)
+                ->where(["$alias.$ownerAttribute" => $this->user->getId()]);
 
             return;
         }
 
-        $foreignEntityType = $this->defs
-            ->getEntity($this->entityType)
-            ->getRelation($link)
-            ->getForeignEntityType();
+        $foreignEntityType = $this->getForeignEntityType($link);
+
+        $orGroup = OrGroup::create(
+            Condition::equal(
+                Expression::column("$alias.$ownerAttribute"),
+                $this->user->getId()
+            ),
+            Condition::in(
+                Expression::column("$alias.id"),
+                SelectBuilder::create()
+                    ->from(Team::RELATIONSHIP_ENTITY_TEAM)
+                    ->select('entityId')
+                    ->where([
+                        'teamId' => $teamIdList,
+                        'entityType' => $foreignEntityType,
+                    ])
+                    ->build()
+            )
+        );
 
         $queryBuilder
-            ->distinct()
-            ->leftJoin(
-                'EntityTeam',
-                'entityTeamAccess',
-                [
-                    'entityTeamAccess.entityType' => $foreignEntityType,
-                    'entityTeamAccess.entityId:' => "{$alias}.id",
-                    'entityTeamAccess.deleted' => false,
-                ]
-            )
-            ->where([
-                'OR' => [
-                    'entityTeamAccess.teamId' => $teamIdList,
-                    "{$alias}.{$ownerAttribute}" => $this->user->getId(),
-                ],
-                "{$alias}.id!=" => null,
-            ]);
+            ->leftJoin($link, $alias)
+            ->where($orGroup)
+            ->where(["$alias.id!=" => null]);
     }
 
     private function getOwnerAttribute(string $link): ?string
     {
-        $foreignEntityType = $this->defs
-            ->getEntity($this->entityType)
-            ->getRelation($link)
-            ->getForeignEntityType();
+        $foreignEntityType = $this->getForeignEntityType($link);
 
         $foreignEntityDefs = $this->defs->getEntity($foreignEntityType);
 
@@ -125,5 +122,13 @@ class ForeignOnlyTeam implements Filter
         }
 
         return null;
+    }
+
+    private function getForeignEntityType(string $link): string
+    {
+        return $this->defs
+            ->getEntity($this->entityType)
+            ->getRelation($link)
+            ->getForeignEntityType();
     }
 }

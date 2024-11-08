@@ -35,7 +35,7 @@
 
   // Ensure icons don't overlap text
   .form-control {
-    padding-left: (@input-height-base * 1.25);
+    padding-left: calc(var(--input-height-base) * 1.25);
     padding-right: 12px;
   }
 }
@@ -96,7 +96,7 @@
   // Reposition the icon because it's now within a grid column and columns have
   // `position: relative;` on them. Also accounts for the grid gutter padding.
   .has-feedback .form-control-feedback {
-    left: (@grid-gutter-width / 2);
+    left: var(--grid-gutter-width-half);
     right: auto;
   }
 }

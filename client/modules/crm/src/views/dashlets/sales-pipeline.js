@@ -108,6 +108,7 @@ function (Dep) {
                 'opacity:0.7;background-color:#000;color:#fff;position:absolute;'+
                 'padding:2px 8px;-moz-border-radius:4px;border-radius:4px;white-space:nowrap;'
 
+            // noinspection JSUnusedGlobalSymbols
             new EspoFunnel.Funnel(
                 this.$container.get(0),
                 {
@@ -118,7 +119,10 @@ function (Dep) {
                             let value = this.chartData[i].value;
 
                             return this.chartData[i].stageTranslated +
-                                '<br>' + this.currencySymbol + this.formatNumber(value, true)
+                                '<br>' + this.currencySymbol +
+                                '<span class="numeric-text">' +
+                                this.formatNumber(value, true) +
+                                '</span>';
                         },
                     },
                     tooltipClassName: 'flotr-mouse-value',
@@ -148,9 +152,9 @@ function (Dep) {
 
                 let stageTranslated = this.getHelper().escapeString(item.stageTranslated);
 
-                let box = '<div style="border:1px solid transparent;padding:1px">'+
-                    '<div style="width:13px;height:9px;border:1px solid ' + item.color + '">'+
-                    '<div style="width:14px;height:10px;background-color:' + item.color + ';"></div></div></div>';
+                let box = '<div style="border: var(--1px) solid transparent; padding: var(--1px)">'+
+                    '<div style="width: var(--13px); height: var(--9px); border: var(--1px) solid ' + item.color + '">'+
+                    '<div style="width: var(--14px); height: var(--10px); background-color:' + item.color + ';"></div></div></div>';
 
                 html += '<td class="flotr-legend-color-box">' + box + '</td>';
 

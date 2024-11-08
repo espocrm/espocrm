@@ -35,7 +35,7 @@ use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Log;
-use Espo\Modules\Crm\Business\Reminder\EmailReminder;
+use Espo\Modules\Crm\Tools\Reminder\Sender\EmailReminder;
 use Espo\Modules\Crm\Entities\Reminder;
 use Throwable;
 use DateTime;
@@ -83,8 +83,7 @@ class SendEmailReminders implements JobDataLess
         foreach ($collection as $entity) {
             try {
                 $emailReminder->send($entity);
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $this->log->error("Email reminder '{$entity->getId()}': " . $e->getMessage());
             }
 

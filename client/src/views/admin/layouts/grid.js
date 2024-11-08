@@ -28,6 +28,9 @@
 
 import LayoutBaseView from 'views/admin/layouts/base';
 
+/**
+ * @abstract
+ */
 class LayoutGridView extends LayoutBaseView {
 
     template = 'admin/layouts/grid'
@@ -186,7 +189,9 @@ class LayoutGridView extends LayoutBaseView {
             const $label = $header.children('label');
             const panelName = $label.text();
 
-            const id = $header.closest('li').data('number').toString();
+            const $panel = $header.closest('li');
+
+            const id = $panel.data('number').toString();
 
             const attributes = {
                 panelName: panelName,
@@ -208,20 +213,22 @@ class LayoutGridView extends LayoutBaseView {
                 attributeDefs: attributeDefs,
                 attributes: attributes,
                 dynamicLogicDefs: this.panelDynamicLogicDefs,
-            }, (view) => {
+            }, view => {
                 view.render();
 
-                this.listenTo(view, 'after:save', (attributes) => {
+                this.listenTo(view, 'after:save', attributes => {
                     $label.text(attributes.panelName);
                     $label.attr('data-is-custom', 'true');
 
-                    this.panelDataAttributeList.forEach((item) => {
+                    this.panelDataAttributeList.forEach(item => {
                         if (item === 'panelName') {
                             return;
                         }
 
                         this.panelsData[id][item] = attributes[item];
                     });
+
+                    $panel.attr('data-tab-break', attributes.tabBreak ? 'true' : false);
 
                     view.close();
 
@@ -295,11 +302,13 @@ class LayoutGridView extends LayoutBaseView {
     getPanelDataList() {
         const panelDataList = [];
 
-        this.panels.forEach((item) => {
+        this.panels.forEach(item => {
             const o = {};
 
             o.viewKey = 'panel-' + item.number;
             o.number = item.number;
+
+            o.tabBreak = !!item.tabBreak;
 
             panelDataList.push(o);
         });

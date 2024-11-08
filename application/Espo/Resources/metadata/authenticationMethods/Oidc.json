@@ -93,6 +93,12 @@
                     {
                         "name": "oidcLogoutUrl"
                     }
+                ],
+                [
+                    {
+                        "name": "oidcAuthorizationPrompt"
+                    },
+                    false
                 ]
             ]
         },

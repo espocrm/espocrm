@@ -21,7 +21,7 @@
                 role="button"
                 tabindex="0"
                 data-name="{{./this}}"
-                data-action="add-field"
+                data-action="addField"
             >{{translate this scope=../entityType category='fields'}}</a></li>
         {{/each}}
         </ul>

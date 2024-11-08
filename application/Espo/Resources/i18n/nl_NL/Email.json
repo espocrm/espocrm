@@ -24,6 +24,7 @@
     "isReplied": "Is beantwoord",
     "isNotReplied": "Is niet beantwoord",
     "folder": "Map",
+    "folderString": "Map",
     "inboundEmails": "Groepsaccounts",
     "emailAccounts": "Persoonlijke accounts",
     "hasAttachment": "Heeft bijlage",
@@ -65,14 +66,14 @@
     "ccEmailAddresses": "CC e-mailadressen",
     "bccEmailAddresses": "BCC e-mail Adressen",
     "replyToEmailAddresses": "Antwoord Aan e-mail adressen",
-    "groupFolder": "Groepsmap"
+    "groupFolder": "Groepsmap",
+    "createdEvent": "Gecreëerd evenement"
   },
   "options": {
     "status": {
       "Draft": "Concept",
       "Sending": "Verzenden",
       "Sent": "Verzonden",
-      "Archived": "Gearchiveerd",
       "Received": "Ontvangen",
       "Failed": "Mislukt"
     }
@@ -107,8 +108,8 @@
     "No Subject": "Geen onderwerp",
     "Insert Field": "Veld invoegen",
     "Event": "Evenement",
-    "Moving to folder": "Verplaatsen naar map",
-    "Group Folders": "Groepsmappen"
+    "Group Folders": "Groepsmappen",
+    "View Attachments": "Bijlagen bekijken"
   },
   "messages": {
     "testEmailSent": "Test e-mail is verzonden",
@@ -118,11 +119,13 @@
     "noSmtpSetup": "SMTP is niet geconfigureerd: {link}",
     "sendConfirm": "De e-mail verzenden?",
     "removeSelectedRecordsConfirmation": "Weet u zeker dat u geselecteerde e-mails wilt verwijderen?\n\nZe zullen ook voor andere gebruikers worden verwijderd.",
-    "removeRecordConfirmation": "Weet u zeker dat u de e-mail wilt verwijderen?\n\nHij zal ook voor andere gebruikers worden verwijderd."
+    "removeRecordConfirmation": "Weet u zeker dat u de e-mail wilt verwijderen?\n\nHij zal ook voor andere gebruikers worden verwijderd.",
+    "invalidCredentials": "Ongeldige gegevens.",
+    "unknownError": "Onbekende fout.",
+    "recipientAddressRejected": "Adres ontvanger geweigerd."
   },
   "presetFilters": {
     "sent": "Verzend",
-    "archived": "Gearchiveerd",
     "drafts": "Concepten",
     "trash": "Prullenbak",
     "important": "Belangrijk"

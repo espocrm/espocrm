@@ -121,8 +121,7 @@ class SalesByMonth
             $dtTo = $dtTo
                 ->addDays(1 - $dtTo->getDay()) // First day of month.
                 ->addMonths(1);
-        }
-        else {
+        } else {
             $dtTo = $dtTo->addDays(1 - $dtTo->getDay());
         }
 
@@ -148,8 +147,7 @@ class SalesByMonth
 
             try {
                 $dt = new DateTime($key . '-01');
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 throw new LogicException();
             }
 

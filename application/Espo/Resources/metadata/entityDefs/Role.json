@@ -96,6 +96,15 @@
             "view": "views/role/fields/permission",
             "audited": true
         },
+        "mentionPermission": {
+            "type": "enum",
+            "options": ["not-set", "all", "team", "no"],
+            "default": "not-set",
+            "tooltip": true,
+            "translation": "Role.options.levelList",
+            "view": "views/role/fields/permission",
+            "audited": true
+        },
         "data": {
             "type": "jsonObject",
             "audited": true

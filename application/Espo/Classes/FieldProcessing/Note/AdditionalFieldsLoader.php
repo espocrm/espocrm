@@ -33,14 +33,21 @@ use Espo\Core\FieldProcessing\Loader;
 use Espo\Core\FieldProcessing\Loader\Params;
 use Espo\Entities\Note;
 use Espo\ORM\Entity;
+use Espo\Tools\Stream\MassNotePreparator;
 
 /**
  * @implements Loader<Note>
  */
 class AdditionalFieldsLoader implements Loader
 {
+    public function __construct(
+        private MassNotePreparator $massNotePreparator,
+    ) {}
+
     public function process(Entity $entity, Params $params): void
     {
         $entity->loadAdditionalFields();
+
+        $this->massNotePreparator->prepare([$entity]);
     }
 }

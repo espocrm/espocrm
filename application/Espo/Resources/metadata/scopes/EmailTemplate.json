@@ -4,5 +4,7 @@
     "tab": true,
     "acl": true,
     "aclFieldLevelDisabled": true,
-    "customizable": false
+    "customizable": false,
+    "importable": true,
+    "stars": true
 }

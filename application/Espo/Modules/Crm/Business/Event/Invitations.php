@@ -29,13 +29,16 @@
 
 namespace Espo\Modules\Crm\Business\Event;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Field\DateTime as DateTimeField;
+use Espo\Core\Field\LinkParent;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 use Espo\Entities\UniqueId;
-use Laminas\Mail\Message;
-
+use Espo\Modules\Crm\Entities\Call;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Lead;
+use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Entity;
 use Espo\Entities\User;
 use Espo\Core\Utils\Util;
@@ -45,9 +48,7 @@ use Espo\Core\Mail\SmtpParams;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
-use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Language;
-use Espo\Core\Utils\NumberUtil;
 use Espo\Core\Utils\TemplateFileManager;
 
 use DateTime;
@@ -57,47 +58,21 @@ class Invitations
     private const TYPE_INVITATION = 'invitation';
     private const TYPE_CANCELLATION = 'cancellation';
 
-    private $smtpParams;
-    private $entityManager;
-    private $emailSender;
-    private $config;
-    private $dateTime; /** @phpstan-ignore-line */
-    private $language;
-    private $number; /** @phpstan-ignore-line */
-    private $templateFileManager;
-    private $fileManager; /** @phpstan-ignore-line */
-    private $htmlizerFactory;
-
     /**
      * Some dependencies are unused to keep backward compatibility.
      */
     public function __construct(
-        EntityManager $entityManager,
-        ?SmtpParams $smtpParams,
-        EmailSender $emailSender,
-        Config $config,
-        FileManager $fileManager,
-        DateTimeUtil $dateTime,
-        NumberUtil $number,
-        Language $language,
-        TemplateFileManager $templateFileManager,
-        HtmlizerFactory $htmlizerFactory
-    ) {
-        $this->entityManager = $entityManager;
-        $this->smtpParams = $smtpParams;
-        $this->emailSender = $emailSender;
-        $this->config = $config;
-        $this->dateTime = $dateTime;
-        $this->language = $language;
-        $this->number = $number;
-        $this->fileManager = $fileManager;
-        $this->templateFileManager = $templateFileManager;
-        $this->htmlizerFactory = $htmlizerFactory;
-    }
+        private EntityManager $entityManager,
+        private ?SmtpParams $smtpParams,
+        private EmailSender $emailSender,
+        private Config $config,
+        private Language $language,
+        private TemplateFileManager $templateFileManager,
+        private HtmlizerFactory $htmlizerFactory
+    ) {}
 
     /**
      * @throws SendingError
-     * @throws Error
      */
     public function sendInvitation(Entity $entity, Entity $invitee, string $link): void
     {
@@ -106,7 +81,6 @@ class Invitations
 
     /**
      * @throws SendingError
-     * @throws Error
      */
     public function sendCancellation(Entity $entity, Entity $invitee, string $link): void
     {
@@ -115,7 +89,6 @@ class Invitations
 
     /**
      * @throws SendingError
-     * @throws Error
      */
     private function sendInternal(
         Entity $entity,
@@ -124,57 +97,30 @@ class Invitations
         string $type = self::TYPE_INVITATION
     ): void {
 
-        $uid = $type === self::TYPE_INVITATION ?
-            $this->createUniqueId($entity, $invitee, $link) : null;
+        $uid = $type === self::TYPE_INVITATION ? $this->createUniqueId($entity, $invitee, $link) : null;
 
+        /** @var ?string $emailAddress */
         $emailAddress = $invitee->get('emailAddress');
 
-        if (empty($emailAddress)) {
+        if (!$emailAddress) {
             return;
         }
 
-        /** @var Email $email */
-        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
+        $htmlizer = $invitee instanceof User ?
+            $this->htmlizerFactory->createForUser($invitee) :
+            $this->htmlizerFactory->createNoAcl();
 
-        $email->set('to', $emailAddress);
+        $data = $this->prepareData($entity, $uid, $invitee);
 
         $subjectTpl = $this->templateFileManager->getTemplate($type, 'subject', $entity->getEntityType(), 'Crm');
-        $bodyTpl = $this->templateFileManager->getTemplate($type, 'body', $entity->getEntityType(), 'Crm');
-
         $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
-        $data = [];
-
-        $siteUrl = rtrim($this->config->get('siteUrl'), '/');
-        $recordUrl = $siteUrl . '/#' . $entity->getEntityType() . '/view/' . $entity->getId();
-
-        $data['recordUrl'] = $recordUrl;
-
-        if ($uid) {
-            $part = $siteUrl . '?entryPoint=eventConfirmation&action=';
-
-            $data['acceptLink'] = $part . 'accept&uid=' . $uid->getIdValue();
-            $data['declineLink'] = $part . 'decline&uid=' . $uid->getIdValue();
-            $data['tentativeLink'] = $part . 'tentative&uid=' . $uid->getIdValue();
-        }
-
-        if ($invitee instanceof User) {
-            $data['isUser'] = true;
-
-            $htmlizer = $this->htmlizerFactory->createForUser($invitee);
-        }
-        else {
-            $htmlizer = $this->htmlizerFactory->createNoAcl();
-        }
-
-        $data['inviteeName'] = $invitee->get('name');
-        $data['entityType'] = $this->language->translateLabel($entity->getEntityType(), 'scopeNames');
-        $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
+        $bodyTpl = $this->templateFileManager->getTemplate($type, 'body', $entity->getEntityType(), 'Crm');
 
         $subject = $htmlizer->render(
             $entity,
             $subjectTpl,
-            $type . '-email-subject-' . $entity->getEntityType(),
+            "$type-email-subject-{$entity->getEntityType()}",
             $data,
             true,
             true
@@ -183,28 +129,29 @@ class Invitations
         $body = $htmlizer->render(
             $entity,
             $bodyTpl,
-            $type . '-email-body-' . $entity->getEntityType(),
+            "$type-email-body-{$entity->getEntityType()}",
             $data,
             false,
             true
         );
 
-        $email->set('subject', $subject);
-        $email->set('body', $body);
-        $email->set('isHtml', true);
+        $email = $this->entityManager->getRDBRepositoryByClass(Email::class)->getNew();
+
+        $email
+            ->addToAddress($emailAddress)
+            ->setSubject($subject)
+            ->setBody($body)
+            ->setIsHtml()
+            ->setParent(LinkParent::createFromEntity($entity));
 
         $attachmentName = ucwords($this->language->translateLabel($entity->getEntityType(), 'scopeNames')) . '.ics';
 
-        /** @var Attachment $attachment */
-        $attachment = $this->entityManager->getNewEntity(Attachment::ENTITY_TYPE);
+        $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getNew();
 
-        $attachment->set([
-            'name' => $attachmentName,
-            'type' => 'text/calendar',
-            'contents' => $this->getIcsContents($entity, $type),
-        ]);
-
-        $message = new Message();
+        $attachment
+            ->setName($attachmentName)
+            ->setType('text/calendar')
+            ->setContents($this->getIcsContents($entity, $type));
 
         $sender = $this->emailSender->create();
 
@@ -213,17 +160,15 @@ class Invitations
         }
 
         $sender
-            ->withMessage($message)
             ->withAttachments([$attachment])
             ->send($email);
     }
 
     private function createUniqueId(Entity $entity, Entity $invitee, string $link): UniqueId
     {
-        /** @var UniqueId $uid */
-        $uid = $this->entityManager->getNewEntity(UniqueId::ENTITY_TYPE);
+        $uid = $this->entityManager->getRDBRepositoryByClass(UniqueId::class)->getNew();
 
-        $uid->set('data', [
+        $uid->setData([
             'eventType' => $entity->getEntityType(),
             'eventId' => $entity->getId(),
             'inviteeId' => $invitee->getId(),
@@ -234,19 +179,15 @@ class Invitations
 
         if ($entity->get('dateEnd')) {
             $terminateAt = $entity->get('dateEnd');
-        }
-        else {
+        } else {
             $dt = new DateTime();
             $dt->modify('+1 month');
 
             $terminateAt = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
         }
 
-        $uid->set([
-            'targetId' => $entity->getId(),
-            'targetType' => $entity->getEntityType(),
-            'terminateAt' => $terminateAt,
-        ]);
+        $uid->setTarget(LinkParent::createFromEntity($entity));
+        $uid->setTerminateAt(DateTimeField::fromString($terminateAt));
 
         $this->entityManager->saveEntity($uid);
 
@@ -257,16 +198,21 @@ class Invitations
     {
         /** @var ?User $user */
         $user = $this->entityManager
-            ->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, 'assignedUser')
             ->findOne();
 
-        $who = '';
-        $email = '';
+        $addressList = [];
+
+        $organizerName = null;
+        $organizerAddress = null;
 
         if ($user) {
-            $who = $user->getName();
-            $email = $user->getEmailAddress();
+            $organizerName = $user->getName();
+            $organizerAddress = $user->getEmailAddress();
+
+            if ($organizerAddress) {
+                $addressList[] = $organizerAddress;
+            }
         }
 
         $status = $type === self::TYPE_CANCELLATION ?
@@ -277,18 +223,101 @@ class Invitations
             Ics::METHOD_CANCEL :
             Ics::METHOD_REQUEST;
 
+        $attendees = [];
+
+        if ($entity instanceof Meeting || $entity instanceof Call) {
+            $attendees = $this->getAttendees($entity, $addressList);
+        }
+
         $ics = new Ics('//EspoCRM//EspoCRM Calendar//EN', [
             'method' => $method,
+            'status' => $status,
             'startDate' => strtotime($entity->get('dateStart')),
             'endDate' => strtotime($entity->get('dateEnd')),
             'uid' => $entity->getId(),
             'summary' => $entity->get('name'),
-            'who' => $who,
-            'email' => $email,
+            'organizer' => $organizerAddress ? [$organizerAddress, $organizerName] : null,
+            'attendees' => $attendees,
             'description' => $entity->get('description'),
-            'status' => $status,
         ]);
 
         return $ics->get();
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function prepareData(Entity $entity, ?UniqueId $uid, Entity $invitee): array
+    {
+        $data = [];
+
+        $siteUrl = rtrim($this->config->get('siteUrl'), '/');
+
+        $data['recordUrl'] = "$siteUrl/#{$entity->getEntityType()}/view/{$entity->getId()}";
+
+        if ($uid) {
+            $part = "$siteUrl?entryPoint=eventConfirmation&action=";
+
+            $data['acceptLink'] = $part . 'accept&uid=' . $uid->getIdValue();
+            $data['declineLink'] = $part . 'decline&uid=' . $uid->getIdValue();
+            $data['tentativeLink'] = $part . 'tentative&uid=' . $uid->getIdValue();
+        }
+
+        if ($invitee instanceof User) {
+            $data['isUser'] = true;
+        }
+
+        $data['inviteeName'] = $invitee->get('name');
+        $data['entityType'] = $this->language->translateLabel($entity->getEntityType(), 'scopeNames');
+        $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
+
+        return $data;
+    }
+
+    /**
+     * @param string[] $addressList
+     * @return array{string, ?string}[]
+     */
+    private function getAttendees(Meeting|Call $entity, array $addressList): array
+    {
+        $attendees = [];
+
+        /** @var iterable<User> $users */
+        $users = $this->entityManager->getRelation($entity, 'users')->find();
+
+        foreach ($users as $it) {
+            $address = $it->getEmailAddress();
+
+            if ($address && !in_array($address, $addressList)) {
+                $addressList[] = $address;
+                $attendees[] = [$address, $it->getName()];
+            }
+        }
+
+        /** @var iterable<Contact> $contacts */
+        $contacts = $this->entityManager->getRelation($entity, 'contacts')->find();
+
+        foreach ($contacts as $it) {
+            $address = $it->getEmailAddress();
+
+            if ($address && !in_array($address, $addressList)) {
+                $addressList[] = $address;
+                $attendees[] = [$address, $it->getName()];
+            }
+        }
+
+        /** @var iterable<Lead> $leads */
+        $leads = $this->entityManager->getRelation($entity, 'leads')->find();
+
+        foreach ($leads as $it) {
+            $address = $it->getEmailAddress();
+
+            if ($address && !in_array($address, $addressList)) {
+                $addressList[] = $address;
+                $attendees[] = [$address, $it->getName()];
+            }
+        }
+
+        return $attendees;
     }
 }

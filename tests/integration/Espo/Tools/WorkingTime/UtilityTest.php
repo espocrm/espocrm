@@ -30,13 +30,14 @@
 namespace tests\integration\Espo\Tools\WorkingTime;
 
 use Espo\Core\Field\DateTime;
+use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Entities\WorkingTimeCalendar;
 use Espo\Tools\WorkingTime\CalendarUtilityFactory;
 use tests\integration\Core\BaseTestCase;
 
 class UtilityTest extends BaseTestCase
 {
-    public function testUtility(): void
+    public function testUtilityUser(): void
     {
         $em = $this->getEntityManager();
 
@@ -49,6 +50,26 @@ class UtilityTest extends BaseTestCase
         $utility = $this->getInjectableFactory()
             ->create(CalendarUtilityFactory::class)
             ->createForUser($user);
+
+        $this->assertTrue($utility->isWorkingDay(DateTime::fromString('2024-02-23 00:00')));
+        $this->assertFalse($utility->isWorkingDay(DateTime::fromString('2024-02-24 00:00')));
+        $this->assertFalse($utility->isWorkingDay(DateTime::fromString('2024-02-25 00:00')));
+        $this->assertTrue($utility->isWorkingDay(DateTime::fromString('2024-02-26 00:00')));
+    }
+
+    public function testUtilityGlobal(): void
+    {
+        $em = $this->getEntityManager();
+
+        $calendar = $em->createEntity(WorkingTimeCalendar::ENTITY_TYPE);
+
+        $configWriter = $this->getInjectableFactory()->create(ConfigWriter::class);
+        $configWriter->set('workingTimeCalendarId', $calendar->getId());
+        $configWriter->save();;
+
+        $utility = $this->getInjectableFactory()
+            ->create(CalendarUtilityFactory::class)
+            ->createGlobal();
 
         $this->assertTrue($utility->isWorkingDay(DateTime::fromString('2024-02-23 00:00')));
         $this->assertFalse($utility->isWorkingDay(DateTime::fromString('2024-02-24 00:00')));

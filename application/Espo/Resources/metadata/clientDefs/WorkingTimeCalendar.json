@@ -10,7 +10,7 @@
             "buttons": [
                 {
                     "name": "ranges",
-                    "label": "Ranges",
+                    "labelTranslation": "WorkingTimeCalendar.links.ranges",
                     "link": "#WorkingTimeRange"
                 }
             ]

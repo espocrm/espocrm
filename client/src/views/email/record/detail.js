@@ -127,46 +127,96 @@ class EmailDetailRecordView extends DetailRecordView {
             });
         }
 
-        if (this.model.get('isUsers')) {
+        if (this.model.attributes.isUsers) {
             this.addDropdownItem({
-                'label': 'Mark as Important',
-                'name': 'markAsImportant',
-                'hidden': this.model.get('isImportant')
+                label: 'Mark as Important',
+                name: 'markAsImportant',
+                hidden: this.model.get('isImportant'),
+                groupIndex: 1,
             });
 
             this.addDropdownItem({
-                'label': 'Unmark Importance',
-                'name': 'markAsNotImportant',
-                'hidden': !this.model.get('isImportant')
+                label: 'Unmark Importance',
+                name: 'markAsNotImportant',
+                hidden: !this.model.get('isImportant'),
+                groupIndex: 1,
             });
 
             this.addDropdownItem({
-                'label': 'Move to Trash',
-                'name': 'moveToTrash',
-                'hidden': this.model.get('inTrash')
+                label: 'Move to Trash',
+                name: 'moveToTrash',
+                hidden: this.isInTrash(),
+                groupIndex: 2,
             });
 
             this.addDropdownItem({
-                'label': 'Retrieve from Trash',
-                'name': 'retrieveFromTrash',
-                'hidden': !this.model.get('inTrash')
+                label: 'Retrieve from Trash',
+                name: 'retrieveFromTrash',
+                hidden: !this.isInTrash(),
+                groupIndex: 2,
             });
 
             this.addDropdownItem({
-                'label': 'Move to Folder',
-                'name': 'moveToFolder'
+                labelTranslation: 'Email.actions.moveToArchive',
+                name: 'moveToArchive',
+                groupIndex: 2,
+                hidden: this.isInArchive(),
+                onClick: () => this.actionMoveToArchive(),
+            });
+
+            this.addDropdownItem({
+                label: 'Move to Folder',
+                name: 'moveToFolder',
+                groupIndex: 2,
+            });
+        } else if (this.model.attributes.groupFolderId) {
+            this.addDropdownItem({
+                label: 'Move to Trash',
+                name: 'moveToTrash',
+                hidden: this.isInTrash(),
+                groupIndex: 2,
+            });
+
+            this.addDropdownItem({
+                label: 'Retrieve from Trash',
+                name: 'retrieveFromTrash',
+                hidden: !this.isInTrash(),
+                groupIndex: 2,
+            });
+
+            this.addDropdownItem({
+                labelTranslation: 'Email.actions.moveToArchive',
+                name: 'moveToArchive',
+                groupIndex: 2,
+                hidden: this.isInArchive() || this.isInTrash(),
+                onClick: () => this.actionMoveToArchive(),
+            });
+
+            this.addDropdownItem({
+                label: 'Move to Folder',
+                name: 'moveToFolder',
+                groupIndex: 2,
+                hidden: this.isInTrash(),
+            });
+        } else {
+            this.addDropdownItem({
+                label: 'Move to Folder',
+                name: 'moveToFolder',
+                groupIndex: 2,
             });
         }
 
         this.addDropdownItem({
             label: 'Show Plain Text',
             name: 'showBodyPlain',
-            hidden: !(this.model.get('isHtml') && this.model.get('bodyPlain'))
+            hidden: !(this.model.get('isHtml') && this.model.get('bodyPlain')),
+            groupIndex: 7,
         });
 
         this.addDropdownItem({
             label: 'Print',
             name: 'print',
+            groupIndex: 7,
         });
 
         this.listenTo(this.model, 'change:isImportant', () => {
@@ -179,8 +229,8 @@ class EmailDetailRecordView extends DetailRecordView {
             }
         });
 
-        this.listenTo(this.model, 'change:inTrash', () => {
-            if (this.model.get('inTrash')) {
+        this.listenTo(this.model, 'change:inTrash change:groupStatusFolder', () => {
+            if (this.isInTrash()) {
                 this.hideActionItem('moveToTrash');
                 this.showActionItem('retrieveFromTrash');
             } else {
@@ -189,10 +239,18 @@ class EmailDetailRecordView extends DetailRecordView {
             }
         });
 
+        this.listenTo(this.model, 'change:inArchive change:groupStatusFolder', () => {
+            if (this.isInArchive()) {
+                this.hideActionItem('moveToArchive');
+            } else {
+                this.showActionItem('moveToArchive');
+            }
+        });
+
         this.handleTasksField();
         this.listenTo(this.model, 'change:tasksIds', () => this.handleTasksField());
 
-        if (this.getUser().isAdmin()) {
+        if (this.getAcl().checkScope('User')) {
             this.addDropdownItem({
                 label: 'View Users',
                 name: 'viewUsers'
@@ -274,10 +332,14 @@ class EmailDetailRecordView extends DetailRecordView {
             Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
         });
 
-        this.model.set('inTrash', true);
+        if (this.model.attributes.groupFolderId) {
+            this.model.set('groupStatusFolder', 'Trash');
+        } else {
+            this.model.set('inTrash', true);
+        }
 
         if (this.model.collection) {
-            this.model.collection.trigger('moving-to-trash', this.model.id);
+            this.model.collection.trigger('moving-to-trash', this.model.id, true);
         }
     }
 
@@ -289,30 +351,85 @@ class EmailDetailRecordView extends DetailRecordView {
 
         this.model.set('inTrash', false);
 
+        if (this.model.attributes.groupFolderId) {
+            this.model.set('groupStatusFolder', null);
+        }
+
         if (this.model.collection) {
-            this.model.collection.trigger('retrieving-from-trash', this.model.id);
+            this.model.collection.trigger('retrieving-from-trash', this.model.id, true);
         }
     }
 
     actionMoveToFolder() {
-        this.createView('dialog', 'views/email-folder/modals/select-folder', {}, (view) => {
+        let currentFolderId = undefined;
+
+        if (!this.isInArchive() && !this.isInTrash()) {
+            if (this.model.attributes.groupFolderId) {
+                currentFolderId = 'group:' + this.model.attributes.groupFolderId;
+            } else if (this.model.attributes.folderId) {
+                currentFolderId = this.model.attributes.folderId;
+            }
+        } else if (this.isInArchive()) {
+            currentFolderId = 'archive';
+        }
+
+        this.createView('dialog', 'views/email-folder/modals/select-folder', {
+            headerText: this.translate('Move to Folder', 'labels', 'Email'),
+            isGroup: !!this.model.attributes.groupFolderId || !this.model.attributes.isUsers,
+            noArchive: !this.model.attributes.groupFolderId && !this.model.attributes.isUsers,
+            currentFolderId: currentFolderId,
+        }, view => {
             view.render();
 
-            this.listenToOnce(view, 'select', folderId => {
+            this.listenToOnce(view, 'select', /** string|null */folderId => {
                 this.clearView('dialog');
 
                 Espo.Ajax.postRequest(`Email/inbox/folders/${folderId}`, {id: this.model.id})
                     .then(() => {
-                        if (folderId === 'inbox') {
+                        if (this.model.attributes.groupFolderId) {
+                            if (folderId === 'archive') {
+                                this.model.set('groupStatusFolder', 'Archive');
+                            } else {
+                                this.model.set('groupStatusFolder', null);
+                            }
+                        } else {
+                            this.model.set('inArchive', folderId === 'archive');
+                        }
+
+                        if (folderId === 'inbox' || folderId === 'archive') {
                             folderId = null;
                         }
 
+                        if (!folderId) {
+                            this.model.set('groupFolderId', null);
+                            this.model.set('groupFolderName', null);
+                        }
+
                         this.model.set('folderId', folderId);
+
+                        this.model.fetch();
 
                         Espo.Ui.success(this.translate('Done'));
                     });
             });
         });
+    }
+
+    actionMoveToArchive() {
+        Espo.Ui.notify(' ... ');
+
+        Espo.Ajax.postRequest(`Email/inbox/folders/archive`, {id: this.model.id})
+            .then(() => {
+                this.model.attributes.groupFolderId ?
+                    this.model.set('groupStatusFolder', 'Archive') :
+                    this.model.set('inArchive', true);
+
+                Espo.Ui.info(this.translate('Moved to Archive', 'labels', 'Email'));
+
+                if (this.model.collection) {
+                    this.model.collection.trigger('moving-to-archive', this.model.id, true);
+                }
+            });
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -393,7 +510,8 @@ class EmailDetailRecordView extends DetailRecordView {
 
     // noinspection JSUnusedGlobalSymbols
     exitAfterDelete() {
-        let folderId = ((this.collection || {}).data || {}).folderId || null;
+        let folderId = this.rootData.selectedFolderId ?
+            this.rootData.selectedFolderId : null;
 
         if (folderId === 'inbox') {
             folderId = null;
@@ -422,19 +540,21 @@ class EmailDetailRecordView extends DetailRecordView {
     // noinspection JSUnusedGlobalSymbols
     actionViewUsers(data) {
         const viewName =
-            this.getMetadata()
-                .get(['clientDefs', this.model.entityType, 'relationshipPanels', 'users', 'viewModalView']) ||
-            this.getMetadata().get(['clientDefs', 'User', 'modalViews', 'relatedList']) ||
+            this.getMetadata().get(`clientDefs.${this.model.entityType}.relationshipPanels.users.viewModalView`) ||
+            this.getMetadata().get(`clientDefs.User.modalViews.relatedList`) ||
             'views/modals/related-list';
 
         const options = {
             model: this.model,
             link: 'users',
             scope: 'User',
+            url: `${this.model.entityType}/${this.model.id}/users`,
             filtersDisabled: true,
-            url: this.model.entityType + '/' + this.model.id + '/users',
             createDisabled: true,
-            selectDisabled: !this.getUser().isAdmin(),
+            selectDisabled: !this.getAcl().checkModel(this.model, 'edit') ||
+                this.getAcl().getPermissionLevel('assignment') === 'no',
+            unlinkDisabled: !this.getUser().isAdmin(),
+            removeDisabled: true,
             rowActionsView: 'views/record/row-actions/relationship-view-and-unlink',
         };
 
@@ -575,6 +695,26 @@ class EmailDetailRecordView extends DetailRecordView {
         }
 
         this.actionSaveAndContinueEditing();
+    }
+
+    /**
+     * @private
+     * @return {boolean}
+     */
+    isInTrash() {
+        return this.model.attributes.groupFolderId ?
+            this.model.attributes.groupStatusFolder === 'Trash' :
+            this.model.attributes.inTrash;
+    }
+
+    /**
+     * @private
+     * @return {boolean}
+     */
+    isInArchive() {
+        return this.model.attributes.groupFolderId ?
+            this.model.attributes.groupStatusFolder === 'Archive' :
+            this.model.attributes.inArchive;
     }
 }
 

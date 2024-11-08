@@ -1,9 +1,9 @@
 #main > .calendar-container .timeline {
-    border: 1px solid var(--calendar-border);
+    border: var(--1px) solid var(--calendar-border);
 }
 
 .calendar-container .timeline {
-    border-bottom: 1px solid var(--calendar-border);
+    border-bottom: var(--1px) solid var(--calendar-border);
 }
 
 .vis-content .vis-item.clickable .vis-item-content {
@@ -14,11 +14,11 @@
 }
 
 .vis-content .vis-labelset .vis-label .vis-inner {
-    max-width: 200px;
+    max-width: var(--200px);
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    padding: @table-cell-padding;
+    padding: var(--table-cell-padding);
 }
 
 .vis-foreground .vis-group,
@@ -45,10 +45,10 @@
 
 .vis-item.vis-range .vis-item-content,
 .vis-item.vis-box .vis-item-content {
-    padding-left: 2px !important;
-    padding-right: 2px !important;
-    padding-top: 2px !important;
-    padding-bottom: 2px !important;
+    padding-left: var(--2px) !important;
+    padding-right: var(--2px) !important;
+    padding-top: var(--2px) !important;
+    padding-bottom: var(--2px) !important;
 }
 
 .vis-timeline {
@@ -92,8 +92,8 @@
 
 .vis-item.vis-background.event-range {
     border-color: var(--brand-primary-lighten-10);
-    border-left-width: 4px ;
-    border-right-width: 4px;
+    border-left-width: var(--4px);
+    border-right-width: var(--4px);
     border-left-style: solid;
     border-right-style: solid;
     background: none;
@@ -110,7 +110,7 @@
     }
 }
 
-@media screen and (max-width: (@screen-sm-min - 1px)) {
+@media screen and (max-width: @screen-xs-max) {
     .vis-timeline {
         font-size: 93%;
     }

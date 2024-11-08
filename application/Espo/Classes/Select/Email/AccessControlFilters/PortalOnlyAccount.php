@@ -31,7 +31,9 @@ namespace Espo\Classes\Select\Email\AccessControlFilters;
 
 use Espo\Core\Select\AccessControl\Filter;
 use Espo\Classes\Select\Email\Helpers\JoinHelper;
+use Espo\Entities\Email;
 use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class PortalOnlyAccount implements Filter
@@ -43,30 +45,25 @@ class PortalOnlyAccount implements Filter
     {
         $this->joinHelper->joinEmailUser($queryBuilder, $this->user->getId());
 
-        $queryBuilder->distinct();
-
         $orGroup = [
-            'emailUser.userId' => $this->user->getId(),
+            Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
         ];
 
-        /** @var string[] $accountIdList */
-        $accountIdList = $this->user->getLinkMultipleIdList('accounts');
+        $accountIdList = $this->user->getAccounts()->getIdList();
 
         if (count($accountIdList)) {
             $orGroup['accountId'] = $accountIdList;
         }
 
-        $contactId = $this->user->get('contactId');
+        $contactId = $this->user->getContactId();
 
         if ($contactId) {
             $orGroup[] = [
                 'parentId' => $contactId,
-                'parentType' => 'Contact',
+                'parentType' => Contact::ENTITY_TYPE,
             ];
         }
 
-        $queryBuilder->where([
-            'OR' => $orGroup,
-        ]);
+        $queryBuilder->where(['OR' => $orGroup]);
     }
 }

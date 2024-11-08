@@ -49,6 +49,11 @@
         },
         {
             "type": "bool",
+            "name": "afterOrEqual",
+            "hidden": true
+        },
+        {
+            "type": "bool",
             "name": "useNumericFormat"
         },
         {
@@ -94,5 +99,8 @@
     "personalData": true,
     "valueFactoryClassName": "Espo\\Core\\Field\\DateTime\\DateTimeFactory",
     "attributeExtractorClassName": "Espo\\Core\\Field\\DateTime\\DateTimeAttributeExtractor",
+    "sanitizerClassNameList": [
+        "Espo\\Classes\\FieldSanitizers\\Datetime"
+    ],
     "default": null
 }

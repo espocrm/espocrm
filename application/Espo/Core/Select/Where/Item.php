@@ -87,8 +87,7 @@ class Item
             $obj->data = Data\DateTime
                 ::create()
                 ->withTimeZone($params['timeZone'] ?? null);
-        }
-        else if ($params['date'] ?? null) {
+        } else if ($params['date'] ?? null) {
             $obj->data = Data\Date
                 ::create()
                 ->withTimeZone($params['timeZone'] ?? null);

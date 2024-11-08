@@ -27,138 +27,201 @@
  ************************************************************************/
 
 import $ from 'jquery';
+import {Events} from 'bullbone';
 
 /**
  * @internal
+ *
+ * @mixes Bull.Events
  */
 class StickyBarHelper {
 
     /** @private */
-    $stickedBar
+    $bar
+    /** @private */
+    $scrollable
+    /** @private */
+    $window
+    /** @private */
+    $navbarRight
+    /** @private */
+    $middle
+    /** @private */
+    _isReady = false
 
     /**
      * @param {import('views/record/list').default} view
+     * @param {{force?: boolean}} options
      */
-    constructor(view) {
+    constructor(view, options = {}) {
         this.view = view;
+
+        /**
+         * @private
+         * @type {import('theme-manager').default}
+         */
+
         this.themeManager = this.view.getThemeManager();
 
         this.$el = view.$el;
+
+        /** @private */
+        this.force = options.force || false;
+
+        this.init();
     }
 
     init() {
-        const controlSticking = () => {
+        this.$bar = this.$el.find('.sticked-bar');
+        this.$middle = this.$el.find('> .list');
+
+        if (!this.$middle.get(0)) {
+            return;
+        }
+
+        this.$window = $(window);
+        this.$scrollable = this.$window;
+        this.$navbarRight = $('#navbar .navbar-right');
+
+        this.isModal = !!this.$el.closest('.modal-body').length;
+
+        this.isSmallWindow = $(window.document).width() < this.themeManager.getParam('screenWidthXs');
+
+        if (this.isModal) {
+            this.$scrollable = this.$el.closest('.modal-body');
+            this.$navbarRight = this.$scrollable.parent().find('.modal-footer');
+        }
+
+        if (!this.force) {
+            this.$scrollable.off(`scroll.list-${this.view.cid}`);
+            this.$scrollable.on(`scroll.list-${this.view.cid}`, () => this._controlSticking());
+
+            this.$window.off(`resize.list-${this.view.cid}`);
+            this.$window.on(`resize.list-${this.view.cid}`, () => this._controlSticking());
+        }
+
+        this.listenTo(this.view, 'check', () => {
             if (this.view.getCheckedIds().length === 0 && !this.view.isAllResultChecked()) {
                 return;
             }
 
-            const scrollTop = $scrollable.scrollTop();
-
-            const stickTop = buttonsTop;
-            const edge = middleTop + $middle.outerHeight(true);
-
-            if (isSmallWindow && $('#navbar .navbar-body').hasClass('in')) {
-                return;
-            }
-
-            if (scrollTop >= edge) {
-                $stickedBar.removeClass('hidden');
-                $navbarRight.addClass('has-sticked-bar');
-
-                return;
-            }
-
-            if (scrollTop > stickTop) {
-                $stickedBar.removeClass('hidden');
-                $navbarRight.addClass('has-sticked-bar');
-
-                return;
-            }
-
-            $stickedBar.addClass('hidden');
-            $navbarRight.removeClass('has-sticked-bar');
-        };
-
-        const $stickedBar = this.$stickedBar = this.$el.find('.sticked-bar');
-        const $middle = this.$el.find('> .list');
-
-        const $window = $(window);
-
-        let $scrollable = $window;
-        let $navbarRight = $('#navbar .navbar-right');
-
-        this.view.on('render', () => {
-            this.$stickedBar = null;
+            this._controlSticking();
         });
 
-        const isModal = !!this.$el.closest('.modal-body').length;
+        this._isReady = true;
+    }
 
-        const screenWidthXs = this.themeManager.getParam('screenWidthXs');
-        const navbarHeight = this.themeManager.getParam('navbarHeight');
-
-        const isSmallWindow = $(window.document).width() < screenWidthXs;
-
-        const getOffsetTop = (element) => {
-            let offsetTop = 0;
-
-            const withHeader = !isSmallWindow && !isModal;
-
-            do {
-                if (element.classList.contains('modal-body')) {
-                    break;
-                }
-
-                if (!isNaN(element.offsetTop)) {
-                    offsetTop += element.offsetTop;
-                }
-
-                element = element.offsetParent;
-            } while (element);
-
-            if (withHeader) {
-                offsetTop -= navbarHeight;
-            }
-
-            return offsetTop;
-        };
-
-        if (isModal) {
-            $scrollable = this.$el.closest('.modal-body');
-            $navbarRight = $scrollable.parent().find('.modal-footer');
+    _getMiddleTop() {
+        if (this._middleTop !== undefined && this._middleTop >= 0) {
+            return this._middleTop;
         }
 
-        let middleTop = getOffsetTop($middle.get(0));
-        let buttonsTop =  getOffsetTop(this.$el.find('.list-buttons-container').get(0));
+        this._middleTop = this._getOffsetTop(this.$middle.get(0));
 
-        if (!isModal) {
+        return this._middleTop;
+    }
+
+    _getButtonsTop() {
+        if (this._buttonsTop !== undefined && this._buttonsTop >= 0) {
+            return this._buttonsTop;
+        }
+
+        this._buttonsTop = this._getOffsetTop(this.$el.find('.list-buttons-container').get(0));
+
+        return this._buttonsTop;
+    }
+
+    /**
+     * @private
+     */
+    _controlSticking() {
+        if (!this.view.toShowStickyBar()) {
+            return;
+        }
+
+        if (this.isSmallWindow && $('#navbar .navbar-body').hasClass('in')) {
+            return;
+        }
+
+        const scrollTop = this.$scrollable.scrollTop();
+        const stickTop = !this.force ? this._getButtonsTop() : 0;
+        const edge = this._getMiddleTop() + this.$middle.outerHeight(true);
+
+        const hide = () => {
+            this.$bar.addClass('hidden');
+            this.$navbarRight.removeClass('has-sticked-bar');
+        };
+
+        const show = () => {
+            this.$bar.removeClass('hidden');
+            this.$navbarRight.addClass('has-sticked-bar');
+        };
+
+        if (scrollTop >= edge) {
+            hide();
+
+            return;
+        }
+
+        if (scrollTop > stickTop || this.force) {
+            show();
+
+            return;
+        }
+
+        hide();
+    }
+
+    /**
+     * @private
+     * @param {HTMLElement} element
+     */
+    _getOffsetTop(element) {
+        const navbarHeight = this.themeManager.getParam('navbarHeight') * this.themeManager.getFontSizeFactor();
+        const withHeader = !this.isSmallWindow && !this.isModal;
+
+        let offsetTop = 0;
+
+        do {
+            if (element.classList.contains('modal-body')) {
+                break;
+            }
+
+            if (!isNaN(element.offsetTop)) {
+                offsetTop += element.offsetTop;
+            }
+
+            element = element.offsetParent;
+        } while (element);
+
+        if (withHeader) {
+            offsetTop -= navbarHeight;
+        }
+
+        if (!this.isModal) {
             // padding
-            middleTop -= 5;
-            buttonsTop -= 5;
+            offsetTop -= 5;
         }
 
-        $scrollable.off('scroll.list-' + this.view.cid);
-        $scrollable.on('scroll.list-' + this.view.cid, () => controlSticking());
-
-        $window.off('resize.list-' + this.view.cid);
-        $window.on('resize.list-' + this.view.cid, () => controlSticking());
-
-        this.view.on('check', () => {
-            if (this.view.getCheckedIds().length === 0 && !this.view.isAllResultChecked()) {
-                return;
-            }
-
-            controlSticking();
-        });
-
-        this.view.on('remove', () => {
-            $scrollable.off('scroll.list-' + this.view.cid);
-            $window.off('resize.list-' + this.view.cid);
-        });
+        return offsetTop;
     }
 
     hide() {
-        this.$stickedBar.addClass('hidden');
+        this.$bar.addClass('hidden');
+    }
+
+    destroy() {
+        this.stopListening(this.view, 'check');
+
+        if (!this._isReady) {
+            return;
+        }
+
+        this.$window.off(`resize.list-${this.view.cid}`);
+        this.$scrollable.off(`scroll.list-${this.view.cid}`);
     }
 }
+
+Object.assign(StickyBarHelper.prototype, Events);
 
 export default StickyBarHelper;

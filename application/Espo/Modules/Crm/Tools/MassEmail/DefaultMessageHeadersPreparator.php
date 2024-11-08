@@ -50,16 +50,17 @@ class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
         $headers->addHeaderLine('Precedence', 'bulk');
 
         if (!$this->config->get('massEmailDisableMandatoryOptOutLink')) {
-            $optOutUrl = $this->getSiteUrl() . '?entryPoint=unsubscribe&id=' . $id;
+            $url = "{$this->getSiteUrl()}/api/v1/Campaign/unsubscribe/$id";
 
-            $headers->addHeaderLine('List-Unsubscribe', '<' . $optOutUrl . '>');
+            $headers->addHeaderLine('List-Unsubscribe-Post', 'List-Unsubscribe=One-Click');
+            $headers->addHeaderLine('List-Unsubscribe', "<$url>");
         }
     }
 
     private function getSiteUrl(): string
     {
-        return
-            $this->config->get('massEmailSiteUrl') ??
-            $this->config->get('siteUrl');
+        $url = $this->config->get('massEmailSiteUrl') ?? $this->config->get('siteUrl');
+
+        return rtrim($url, '/');
     }
 }

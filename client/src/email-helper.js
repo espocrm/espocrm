@@ -100,6 +100,8 @@ class EmailHelper {
         const replyToAddressString = model.get('replyTo') || null;
         const replyToString = model.get('replyToString') || null;
         const userEmailAddressList = this.getUser().get('emailAddressList') || [];
+        const idHash = model.attributes.idHash || {};
+        const typeHash = model.attributes.typeHash || {};
 
         if (replyToAddressString) {
             const replyToAddressList = replyToAddressString.split(';');
@@ -156,10 +158,17 @@ class EmailHelper {
         if (cc) {
             attributes.cc = model.get('cc') || '';
 
+            /** @type {string[]} */
+            const excludeFromReplyEmailAddressList = this.getUser().get('excludeFromReplyEmailAddressList') || [];
+
             (model.get('to') || '').split(';').forEach(item => {
                 item = item.trim();
 
                 if (item === this.getUser().get('emailAddress')) {
+                    return;
+                }
+
+                if (excludeFromReplyEmailAddressList.includes(item)) {
                     return;
                 }
 
@@ -197,16 +206,23 @@ class EmailHelper {
             attributes.to = toList.join(';');
         }
 
+        /** @type {string[]} */
+        const personalAddresses = this.getUser().get('userEmailAddressList') || [];
+        const lcPersonalAddresses = personalAddresses.map(it => it.toLowerCase());
+
         if (attributes.cc) {
-            let ccList = attributes.cc.split(';');
+            const ccList = attributes.cc.split(';')
+                .filter(item => {
+                    if (lcPersonalAddresses.includes(item.toLowerCase())) {
+                        return false;
+                    }
 
-            ccList = ccList.filter(item => {
-                if (item.indexOf(this.erasedPlaceholder) === 0) {
-                    return false;
-                }
+                    if (item.indexOf(this.erasedPlaceholder) === 0) {
+                        return false;
+                    }
 
-                return true;
-            });
+                    return true;
+                });
 
             attributes.cc = ccList.join(';');
         }
@@ -228,21 +244,21 @@ class EmailHelper {
                 attributes.teamsNames[this.user.get('defaultTeamId')] = this.user.get('defaultTeamName');
             }
 
-            attributes.teamsIds = attributes.teamsIds.filter(teamId => {
-                return this.acl.checkTeamAssignmentPermission(teamId);
-            });
+            attributes.teamsIds = attributes.teamsIds
+                .filter(teamId => this.acl.checkTeamAssignmentPermission(teamId));
         }
 
         attributes.nameHash = nameHash;
+        attributes.typeHash = typeHash;
+        attributes.idHash = idHash;
         attributes.repliedId = model.id;
         attributes.inReplyTo = model.get('messageId');
 
+        /** @type {string[]} */
+        const lcToAddresses = (model.attributes.to || '').split(';').map(it => it.toLowerCase());
 
-        const toAddressList = (model.get('to') || '').split(';');
-        const userPersonalEmailAddressList = this.getUser().get('userEmailAddressList') || [];
-
-        for (const address of userPersonalEmailAddressList) {
-            if (toAddressList.includes(address)) {
+        for (const address of personalAddresses) {
+            if (lcToAddresses.includes(address.toLowerCase())) {
                 attributes.from = address;
 
                 break;
@@ -441,16 +457,20 @@ class EmailHelper {
 
         const dateSent = model.get('dateSent');
 
-        let dateSentSting = null;
+        let dateSentString = null;
 
         if (dateSent) {
             const dateSentMoment = this.getDateTime().toMoment(dateSent);
 
-            dateSentSting = dateSentMoment.format(format);
+            dateSentString = dateSentMoment.format(format);
+
+            if (dateSentMoment.year() !== this.getDateTime().getNowMoment().year()) {
+                dateSentString += ', ' + dateSentMoment.year();
+            }
         }
 
         let replyHeadString =
-            (dateSentSting || this.getLanguage().translate('Original message', 'labels', 'Email'));
+            (dateSentString || this.getLanguage().translate('Original message', 'labels', 'Email'));
 
         let fromName = model.get('fromName');
 
@@ -465,28 +485,28 @@ class EmailHelper {
         replyHeadString += ':';
 
         if (model.get('isHtml')) {
-            let body = model.get('body');
+            const body = model.get('body');
 
-            body = '<p>&nbsp;</p><p>' +  replyHeadString + '</p><blockquote>' +  body + '</blockquote>';
+            attributes['body'] = `<p data-quote-start="true"><br></p>` +
+                `<p>${replyHeadString}</p><blockquote>${body}</blockquote>`;
 
-            attributes['body'] = body;
+            return;
         }
-        else {
-            let bodyPlain = model.get('body') || model.get('bodyPlain') || '';
 
-            let b = '\n\n';
+        let bodyPlain = model.get('body') || model.get('bodyPlain') || '';
 
-            b += replyHeadString + '\n';
+        let b = '\n\n';
 
-            bodyPlain.split('\n').forEach(line => {
-                b += '> ' + line + '\n';
-            });
+        b += replyHeadString + '\n';
 
-            bodyPlain = b;
+        bodyPlain.split('\n').forEach(line => {
+            b += '> ' + line + '\n';
+        });
 
-            attributes['body'] = bodyPlain;
-            attributes['bodyPlain'] = bodyPlain;
-        }
+        bodyPlain = b;
+
+        attributes['body'] = bodyPlain;
+        attributes['bodyPlain'] = bodyPlain;
     }
 }
 

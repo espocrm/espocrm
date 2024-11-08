@@ -174,9 +174,13 @@
                 "Closed Lost": 0
             },
             "style": {
+                "Proposal": "primary",
+                "Negotiation": "warning",
                 "Closed Won": "success",
-                "Closed Lost": "danger"
+                "Closed Lost": "info"
             },
+            "displayAsLabel": true,
+            "labelType": "state",
             "fieldManagerAdditionalParamList": [
                 {
                     "name": "probabilityMap",
@@ -194,7 +198,6 @@
         },
         "probability": {
             "type": "int",
-            "required": true,
             "min": 0,
             "max": 100
         },
@@ -223,6 +226,7 @@
         "contactRole": {
             "type": "enum",
             "notStorable": true,
+            "orderDisabled": true,
             "layoutMassUpdateDisabled": true,
             "layoutDetailDisabled": true,
             "layoutAvailabilityList": ["listForContact"],

@@ -26,41 +26,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/extensions/done', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+export default class extends ModalView {
 
-        cssName: 'done-modal',
+    template = 'admin/extensions/done'
+    cssName = 'done-modal'
+    createButton = true
 
-        header: false,
+    data() {
+        return {
+            version: this.options.version,
+            name: this.options.name,
+            text: this.translate('extensionInstalled', 'messages', 'Admin')
+                .replace('{version}', this.options.version)
+                .replace('{name}', this.options.name)
+        };
+    }
 
-        template: 'admin/extensions/done',
+    setup() {
+        this.on('remove', () => {
+            window.location.reload();
+        });
 
-        createButton: true,
+        this.buttonList = [
+            {
+                name: 'close',
+                label: 'Close',
+            }
+        ];
 
-        data: function () {
-            return {
-                version: this.options.version,
-                name: this.options.name,
-                text: this.translate('extensionInstalled', 'messages', 'Admin')
-                    .replace('{version}', this.options.version)
-                    .replace('{name}', this.options.name)
-            };
-        },
-
-        setup: function () {
-            this.on('remove', () => {
-                window.location.reload();
-            });
-
-            this.buttonList = [
-                {
-                    name: 'close',
-                    label: 'Close',
-                }
-            ];
-
-            this.header = this.getLanguage().translate('Installed successfully', 'labels', 'Admin');
-        },
-    });
-});
+        this.headerText = this.getLanguage().translate('Installed successfully', 'labels', 'Admin');
+    }
+}

@@ -33,7 +33,7 @@ class EnumColumnFieldView extends EnumFieldView {
     searchTypeList = ['anyOf', 'noneOf']
 
     fetchSearch() {
-        let type = this.fetchSearchType();
+        const type = this.fetchSearchType();
 
         let list = this.$element.val().split(':,:');
 

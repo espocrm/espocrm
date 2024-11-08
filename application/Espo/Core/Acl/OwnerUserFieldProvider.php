@@ -29,31 +29,24 @@
 
 namespace Espo\Core\Acl;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
 
+use Espo\Entities\User;
 use Espo\ORM\Defs;
 
 class OwnerUserFieldProvider
 {
     protected const FIELD_ASSIGNED_USERS = 'assignedUsers';
-
     protected const FIELD_ASSIGNED_USER = 'assignedUser';
-
     protected const FIELD_CREATED_BY = 'createdBy';
 
-    private $ormDefs;
-
-    private $metadata;
-
-    public function __construct(Defs $ormDefs, Metadata $metadata)
-    {
-        $this->ormDefs = $ormDefs;
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Defs $ormDefs, private Metadata $metadata)
+    {}
 
     /**
      * Get an entity field that stores an owner-user (or multiple users).
-     * Must be link or linkMulitple field. NULL means no owner.
+     * Must be a link or linkMultiple field. NULL means no owner.
      */
     public function get(string $entityType): ?string
     {
@@ -67,27 +60,27 @@ class OwnerUserFieldProvider
 
         if (
             $defs->hasField(self::FIELD_ASSIGNED_USERS) &&
-            $defs->getField(self::FIELD_ASSIGNED_USERS)->getType() === 'linkMultiple' &&
+            $defs->getField(self::FIELD_ASSIGNED_USERS)->getType() === FieldType::LINK_MULTIPLE &&
             $defs->hasRelation(self::FIELD_ASSIGNED_USERS) &&
-            $defs->getRelation(self::FIELD_ASSIGNED_USERS)->getForeignEntityType() === 'User'
+            $defs->getRelation(self::FIELD_ASSIGNED_USERS)->getForeignEntityType() === User::ENTITY_TYPE
         ) {
             return self::FIELD_ASSIGNED_USERS;
         }
 
         if (
             $defs->hasField(self::FIELD_ASSIGNED_USER) &&
-            $defs->getField(self::FIELD_ASSIGNED_USER)->getType() === 'link' &&
+            $defs->getField(self::FIELD_ASSIGNED_USER)->getType() === FieldType::LINK &&
             $defs->hasRelation(self::FIELD_ASSIGNED_USER) &&
-            $defs->getRelation(self::FIELD_ASSIGNED_USER)->getForeignEntityType() === 'User'
+            $defs->getRelation(self::FIELD_ASSIGNED_USER)->getForeignEntityType() === User::ENTITY_TYPE
         ) {
             return self::FIELD_ASSIGNED_USER;
         }
 
         if (
             $defs->hasField(self::FIELD_CREATED_BY) &&
-            $defs->getField(self::FIELD_CREATED_BY)->getType() === 'link' &&
+            $defs->getField(self::FIELD_CREATED_BY)->getType() === FieldType::LINK &&
             $defs->hasRelation(self::FIELD_CREATED_BY) &&
-            $defs->getRelation(self::FIELD_CREATED_BY)->getForeignEntityType() === 'User'
+            $defs->getRelation(self::FIELD_CREATED_BY)->getForeignEntityType() === User::ENTITY_TYPE
         ) {
             return self::FIELD_CREATED_BY;
         }

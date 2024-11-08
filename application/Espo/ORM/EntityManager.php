@@ -40,6 +40,8 @@ use Espo\ORM\QueryComposer\QueryComposerWrapper;
 use Espo\ORM\Mapper\Mapper;
 use Espo\ORM\Mapper\MapperFactory;
 use Espo\ORM\Mapper\BaseMapper;
+use Espo\ORM\Relation\RelationsMap;
+use Espo\ORM\Repository\RDBRelation;
 use Espo\ORM\Repository\RepositoryFactory;
 use Espo\ORM\Repository\Repository;
 use Espo\ORM\Repository\RDBRepository;
@@ -90,9 +92,10 @@ class EntityManager
         AttributeExtractorFactory $attributeExtractorFactory,
         EventDispatcher $eventDispatcher,
         private PDOProvider $pdoProvider,
+        private RelationsMap $relationsMap,
         private ?MapperFactory $mapperFactory = null,
         ?QueryExecutor $queryExecutor = null,
-        ?SqlExecutor $sqlExecutor = null
+        ?SqlExecutor $sqlExecutor = null,
     ) {
         if (!$this->databaseParams->getPlatform()) {
             throw new RuntimeException("No 'platform' parameter.");
@@ -278,7 +281,18 @@ class EntityManager
             throw new RuntimeException("Can't refresh a non-existent entity.");
         }
 
-        $entity->set($fetchedEntity->getValueMap());
+        $this->relationsMap->get($entity)?->resetAll();
+
+        $prevMap = get_object_vars($entity->getValueMap());
+        $fetchedMap = get_object_vars($fetchedEntity->getValueMap());
+
+        foreach (array_keys($prevMap) as $attribute) {
+            if (!array_key_exists($attribute, $fetchedMap)) {
+                $entity->clear($attribute);
+            }
+        }
+
+        $entity->set($fetchedMap);
         $entity->setAsFetched();
     }
 
@@ -367,6 +381,17 @@ class EntityManager
 
         /** @var Repository<T> */
         return $this->getRepository($entityType);
+    }
+
+    /**
+     * Get an access point for a specific relation of a record.
+     *
+     * @return RDBRelation<Entity>
+     * @since 8.4.0
+     */
+    public function getRelation(Entity $entity, string $relationName): RDBRelation
+    {
+        return $this->getRDBRepository($entity->getEntityType())->getRelation($entity, $relationName);
     }
 
     /**

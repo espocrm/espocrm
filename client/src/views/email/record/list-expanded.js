@@ -26,24 +26,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define(
-    'views/email/record/list-expanded',
-    ['views/record/list-expanded', 'views/email/record/list'],
-    function (Dep, List) {
+import ListExpandedRecordView from 'views/record/list-expanded';
+import List from 'views/email/record/list';
 
-    return Dep.extend({
+export default class extends ListExpandedRecordView {
 
-        actionMarkAsImportant: function (data) {
-            List.prototype.actionMarkAsImportant.call(this, data);
-        },
+    // noinspection JSUnusedGlobalSymbols
+    actionMarkAsImportant(data) {
+        List.prototype.actionMarkAsImportant.call(this, data);
+    }
 
-        actionMarkAsNotImportant: function (data) {
-            List.prototype.actionMarkAsNotImportant.call(this, data);
-        },
+    // noinspection JSUnusedGlobalSymbols
+    actionMarkAsNotImportant(data) {
+        List.prototype.actionMarkAsNotImportant.call(this, data);
+    }
 
-        actionMoveToTrash: function (data) {
-            List.prototype.actionMoveToTrash.call(this, data);
-        },
-
-    });
-});
+    // noinspection JSUnusedGlobalSymbols
+    actionMoveToTrash(data) {
+        List.prototype.actionMoveToTrash.call(this, data);
+    }
+}

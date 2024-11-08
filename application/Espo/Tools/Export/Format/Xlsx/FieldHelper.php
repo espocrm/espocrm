@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Export\Format\Xlsx;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\ORM\Defs;
 
 class FieldHelper
@@ -52,7 +53,7 @@ class FieldHelper
 
         return
             $entityDefs->hasField($name) &&
-            $entityDefs->getField($name)->getType() === 'foreign';
+            $entityDefs->getField($name)->getType() === FieldType::FOREIGN;
     }
 
     public function getData(string $entityType, string $name): ?FieldData
@@ -76,14 +77,13 @@ class FieldHelper
 
         if (
             $entityDefs->hasField($name) &&
-            $entityDefs->getField($name)->getType() === 'foreign'
+            $entityDefs->getField($name)->getType() === FieldType::FOREIGN
         ) {
             $fieldDefs = $entityDefs->getField($name);
 
             $link = $fieldDefs->getParam('link');
             $field = $fieldDefs->getParam('field');
-        }
-        else if (str_contains($name, '_')) {
+        } else if (str_contains($name, '_')) {
             [$link, $field] = explode('_', $name);
         }
 

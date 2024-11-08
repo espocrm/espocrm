@@ -32,7 +32,6 @@ namespace Espo\Classes\RecordHooks\Note;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Record\Hook\SaveHook;
 use Espo\Entities\Note;
-use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\Tools\Stream\NoteUtil;
 
@@ -43,18 +42,27 @@ use Espo\Tools\Stream\NoteUtil;
 class BeforeUpdate implements SaveHook
 {
     public function __construct(
-        private User $user,
-        private NoteUtil $noteUtil
+        private NoteUtil $noteUtil,
     ) {}
 
     public function process(Entity $entity): void
     {
+        if (!$this->isEditableType($entity)) {
+            throw new ForbiddenSilent("Note is not editable.");
+        }
+
         if ($entity->isPost()) {
             $this->noteUtil->handlePostText($entity);
         }
 
-        if (!$entity->isPost() && !$this->user->isAdmin()) {
-            throw new ForbiddenSilent("Only 'Post' type allowed.");
+        if (!$entity->isPost()) {
+            $entity->clear('post');
+            $entity->clear('attachmentsIds');
         }
+    }
+
+    private function isEditableType(Note $entity): bool
+    {
+        return $entity->getType() == Note::TYPE_POST;
     }
 }

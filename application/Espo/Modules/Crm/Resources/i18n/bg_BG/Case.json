@@ -11,7 +11,8 @@
     "description": "Описание",
     "lead": "Потенциална продажба",
     "attachments": "Прикачени файлове",
-    "inboundEmail": "Групов имейл акаунт"
+    "inboundEmail": "Групов имейл акаунт",
+    "originalEmail": "Оригинален имейл"
   },
   "links": {
     "account": "Клиент",

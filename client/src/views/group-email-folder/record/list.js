@@ -26,48 +26,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/group-email-folder/record/list', ['views/record/list'], function (Dep) {
+import ListRecordView from 'views/record/list';
 
-    return Dep.extend({
+export default class extends ListRecordView {
 
-        rowActionsView: 'views/email-folder/record/row-actions/default',
+    rowActionsView = 'views/email-folder/record/row-actions/default'
 
-        actionMoveUp: function (data) {
-            let model = this.collection.get(data.id);
+    // noinspection JSUnusedGlobalSymbols
+    async actionMoveUp(data) {
+        const model = this.collection.get(data.id);
 
-            if (!model) {
-                return;
-            }
+        if (!model) {
+            return;
+        }
 
-            let index = this.collection.indexOf(model);
+        const index = this.collection.indexOf(model);
 
-            if (index === 0) {
-                return;
-            }
+        if (index === 0) {
+            return;
+        }
 
-            Espo.Ajax.postRequest('GroupEmailFolder/action/moveUp', {id: model.id})
-                .then(() => {
-                    this.collection.fetch();
-                });
-        },
+        Espo.Ui.notify(' ... ');
 
-        actionMoveDown: function (data) {
-            let model = this.collection.get(data.id);
+        await Espo.Ajax.postRequest('GroupEmailFolder/action/moveUp', {id: model.id});
+        await this.collection.fetch();
 
-            if (!model) {
-                return;
-            }
+        Espo.Ui.notify(false);
+    }
 
-            let index = this.collection.indexOf(model);
+    // noinspection JSUnusedGlobalSymbols
+    async actionMoveDown(data) {
+        const model = this.collection.get(data.id);
 
-            if ((index === this.collection.length - 1) && (this.collection.length === this.collection.total)) {
-                return;
-            }
+        if (!model) {
+            return;
+        }
 
-            Espo.Ajax.postRequest('GroupEmailFolder/action/moveDown', {id: model.id})
-                .then(() => {
-                    this.collection.fetch();
-                });
-        },
-    });
-});
+        const index = this.collection.indexOf(model);
+
+        if ((index === this.collection.length - 1) && (this.collection.length === this.collection.total)) {
+            return;
+        }
+
+        Espo.Ui.notify(' ... ');
+
+        await Espo.Ajax.postRequest('GroupEmailFolder/action/moveDown', {id: model.id});
+        await this.collection.fetch();
+
+        Espo.Ui.notify(false);
+    }
+}

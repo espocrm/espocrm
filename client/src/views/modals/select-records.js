@@ -82,6 +82,39 @@ class SelectRecordsModalView extends ModalView {
         },
     }
 
+    /**
+     * @typedef {Object} module:views/modals/select-records~Options
+     * @property {string} entityType An entity type.
+     * @property {Object.<string, module:search-manager~advancedFilter>} [filters] Filters.
+     * @property {string[]} [boolFilterList] Bool filters.
+     * @property {string} [primaryFilterName] A primary filter.
+     * @property {string} [filterList] A filter list.
+     * @property {string} [layoutName] A layout name.
+     * @property {boolean} [multiple] Allow select multiple.
+     * @property {boolean} [createButton] A create button.
+     * @property {boolean} [massRelateEnabled] Mass-relate.
+     * @property {string} [orderBy] An order-by.
+     * @property {'asc'|'desc'} [orderDirection] An order direction.
+     * @property {boolean} [forceSelectAllAttributes] Force select all attributes.
+     * @property {string[]} [mandatorySelectAttributeList] Mandatory attributes to select.
+     * @property {function(): Promise<Record>} [createAttributesProvider] Create-attributes provider.
+     * @property {Record} [createAttributes] Create-attributes.
+     * @property {function(import('model').default[])} [onSelect] On record select. As of 8.5.
+     */
+
+    /**
+     *
+     * @param {module:views/modals/select-records~Options & module:views/modal~Options} options
+     */
+    constructor(options) {
+        super(options);
+
+        if (options.onSelect) {
+            /** @private */
+            this.onSelect = options.onSelect;
+        }
+    }
+
     data() {
         return {
             createButton: this.createButton,
@@ -124,7 +157,7 @@ class SelectRecordsModalView extends ModalView {
             });
         }
 
-        this.scope = this.entityType = this.options.scope || this.scope;
+        this.scope = this.entityType = this.options.scope || this.scope || this.options.entityType;
 
         const orderBy = this.options.orderBy ||
             this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'orderBy']);
@@ -285,6 +318,10 @@ class SelectRecordsModalView extends ModalView {
             this.listenToOnce(view, 'select', model => {
                 this.trigger('select', model);
 
+                if (this.onSelect) {
+                    this.onSelect([model]);
+                }
+
                 this.close();
             });
 
@@ -422,6 +459,10 @@ class SelectRecordsModalView extends ModalView {
 
         if (list.length) {
             this.trigger('select', list);
+
+            if (this.onSelect) {
+                this.onSelect(list);
+            }
         }
 
         this.close();
@@ -429,7 +470,7 @@ class SelectRecordsModalView extends ModalView {
 
     /**
      * @protected
-     * @return {?module:views/record/search}
+     * @return {import('views/record/search').default}
      */
     getSearchView() {
         return this.getView('search');

@@ -95,8 +95,7 @@ if (
 
     try {
         $installer->checkDatabaseConnection($databaseParams, true);
-    }
-    catch (\Exception $e) {
+    } catch (\Exception $e) {
         $isConnected = false;
         $result['success'] = false;
         $result['errors']['dbConnect']['errorCode'] = $e->getCode();

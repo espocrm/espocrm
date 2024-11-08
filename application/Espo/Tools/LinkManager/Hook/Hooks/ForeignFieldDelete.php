@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\LinkManager\Hook\Hooks;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Tools\LinkManager\Hook\DeleteHook;
 use Espo\Tools\LinkManager\Params;
 use Espo\Core\Utils\Metadata;
@@ -58,7 +59,7 @@ class ForeignFieldDelete implements DeleteHook
         }
 
         foreach ($this->defs->getEntity($entityType)->getFieldList() as $fieldDefs) {
-            if ($fieldDefs->getType() !== 'foreign') {
+            if ($fieldDefs->getType() !== FieldType::FOREIGN) {
                 continue;
             }
 

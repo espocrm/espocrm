@@ -91,8 +91,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
         try {
             $dt = new DateTime('now', new DateTimeZone($timeZone));
-        }
-        catch (Exception) {
+        } catch (Exception) {
             throw new BadRequest("Bad timezone");
         }
 
@@ -132,7 +131,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 break;
 
-            case 'lastSevenDays':
+            case Type::LAST_SEVEN_DAYS:
                 $where['type'] = Type::BETWEEN;
 
                 $dtFrom = clone $dt;
@@ -223,8 +222,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 try {
                     $dt = new DateTime($value, new DateTimeZone($timeZone));
-                }
-                catch (Exception) {
+                } catch (Exception) {
                     throw new BadRequest("Bad date value or timezone.");
                 }
 
@@ -249,8 +247,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 try {
                     $dt = new DateTime($value, new DateTimeZone($timeZone));
-                }
-                catch (Exception) {
+                } catch (Exception) {
                     throw new BadRequest("Bad date value or timezone.");
                 }
 
@@ -265,8 +262,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 try {
                     $dt = new DateTime($value, new DateTimeZone($timeZone));
-                }
-                catch (Exception) {
+                } catch (Exception) {
                     throw new BadRequest("Bad date value or timezone.");
                 }
 
@@ -289,8 +285,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 try {
                     $dt = new DateTime($value[0], new DateTimeZone($timeZone));
-                }
-                catch (Exception) {
+                } catch (Exception) {
                     throw new BadRequest("Bad date value or timezone.");
                 }
 
@@ -300,8 +295,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 try {
                     $dt = new DateTime($value[1], new DateTimeZone($timeZone));
-                }
-                catch (Exception) {
+                } catch (Exception) {
                     throw new BadRequest("Bad date value or timezone.");
                 }
 
@@ -326,8 +320,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 if ($type == Type::LAST_MONTH) {
                     $dtFrom->modify('-1 month');
-                }
-                else if ($type == Type::NEXT_MONTH) {
+                } else if ($type == Type::NEXT_MONTH) {
                     $dtFrom->modify('+1 month');
                 }
 
@@ -347,8 +340,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 try {
                     $dt = new DateTime('now', new DateTimeZone($timeZone));
-                }
-                catch (Exception) {
+                } catch (Exception) {
                     throw new BadRequest("Bad timezone.");
                 }
 
@@ -368,8 +360,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 try {
                     $dtFrom->add(new DateInterval('P' . (($quarter - 1) * 3) . 'M'));
-                }
-                catch (Exception) {
+                } catch (Exception) {
                     throw new RuntimeException();
                 }
 
@@ -391,8 +382,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 try {
                     $dtFrom = new DateTime('now', new DateTimeZone($timeZone));
-                }
-                catch (Exception) {
+                } catch (Exception) {
                     throw new BadRequest("Bad timezone.");
                 }
 
@@ -420,8 +410,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 try {
                     $dtToday = new DateTime('now', new DateTimeZone($timeZone));
-                }
-                catch (Exception) {
+                } catch (Exception) {
                     throw new BadRequest("Bad timezone.");
                 }
 
@@ -461,8 +450,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 try {
                     $dtToday = new DateTime('now', new DateTimeZone($timeZone));
-                }
-                catch (Exception) {
+                } catch (Exception) {
                     throw new BadRequest("Bad timezone.");
                 }
 
@@ -483,8 +471,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                     if ($quarterShift >= 0) {
                         try {
                             $dt->add(new DateInterval('P' . ($quarterShift * 3) . 'M'));
-                        }
-                        catch (Exception) {
+                        } catch (Exception) {
                             throw new RuntimeException();
                         }
                     } else {
@@ -492,8 +479,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                         try {
                             $dt->sub(new DateInterval('P' . ($quarterShift * 3) . 'M'));
-                        }
-                        catch (Exception) {
+                        } catch (Exception) {
                             throw new RuntimeException();
                         }
                     }

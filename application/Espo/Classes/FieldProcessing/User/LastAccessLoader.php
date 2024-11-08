@@ -82,8 +82,7 @@ class LastAccessLoader implements Loader
         if ($lastAccess) {
             try {
                 $dt = new DateTime($lastAccess);
-            }
-            catch (Exception) {}
+            } catch (Exception) {}
         }
 
         $where = [

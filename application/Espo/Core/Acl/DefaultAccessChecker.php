@@ -68,31 +68,35 @@ class DefaultAccessChecker implements
         private ScopeChecker $scopeChecker
     ) {}
 
+    /**
+     * @param Table::ACTION_* $action
+     * @noinspection PhpDocSignatureInspection
+     */
     private function checkEntity(User $user, Entity $entity, ScopeData $data, string $action): bool
     {
         $checkerData = ScopeCheckerData
             ::createBuilder()
             ->setIsOwnChecker(
-                function () use ($user, $entity): bool {
-                    return $this->aclManager->checkOwnershipOwn($user, $entity);
-                }
+                fn(): bool => $this->aclManager->checkOwnershipOwn($user, $entity)
             )
             ->setInTeamChecker(
-                function () use ($user, $entity): bool {
-                    return $this->aclManager->checkOwnershipTeam($user, $entity);
-                }
+                fn(): bool => $this->aclManager->checkOwnershipTeam($user, $entity)
+            )
+            ->setIsSharedChecker(
+                fn(): bool => $this->aclManager->checkOwnershipShared($user, $entity, $action)
             )
             ->build();
 
         return $this->scopeChecker->check($data, $action, $checkerData);
     }
 
-    private function checkScope(User $user, ScopeData $data, ?string $action = null): bool
+    private function checkScope(ScopeData $data, ?string $action = null): bool
     {
         $checkerData = ScopeCheckerData
             ::createBuilder()
             ->setIsOwn(true)
             ->setInTeam(true)
+            ->setIsShared(true)
             ->build();
 
         return $this->scopeChecker->check($data, $action, $checkerData);
@@ -100,27 +104,27 @@ class DefaultAccessChecker implements
 
     public function check(User $user, ScopeData $data): bool
     {
-        return $this->checkScope($user, $data);
+        return $this->checkScope($data);
     }
 
     public function checkCreate(User $user, ScopeData $data): bool
     {
-        return $this->checkScope($user, $data, Table::ACTION_CREATE);
+        return $this->checkScope($data, Table::ACTION_CREATE);
     }
 
     public function checkRead(User $user, ScopeData $data): bool
     {
-        return $this->checkScope($user, $data, Table::ACTION_READ);
+        return $this->checkScope($data, Table::ACTION_READ);
     }
 
     public function checkEdit(User $user, ScopeData $data): bool
     {
-        return $this->checkScope($user, $data, Table::ACTION_EDIT);
+        return $this->checkScope($data, Table::ACTION_EDIT);
     }
 
     public function checkDelete(User $user, ScopeData $data): bool
     {
-        if ($this->checkScope($user, $data, Table::ACTION_DELETE)) {
+        if ($this->checkScope($data, Table::ACTION_DELETE)) {
             return true;
         }
 
@@ -137,7 +141,7 @@ class DefaultAccessChecker implements
 
     public function checkStream(User $user, ScopeData $data): bool
     {
-        return $this->checkScope($user, $data, Table::ACTION_STREAM);
+        return $this->checkScope($data, Table::ACTION_STREAM);
     }
 
     public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool
@@ -182,12 +186,10 @@ class DefaultAccessChecker implements
 
         if (!$entity->has(self::ATTR_ASSIGNED_USER_ID)) {
             $isDeletedAllowed = true;
-        }
-        else {
+        } else {
             if (!$entity->get(self::ATTR_ASSIGNED_USER_ID)) {
                 $isDeletedAllowed = true;
-            }
-            else if ($entity->get(self::ATTR_ASSIGNED_USER_ID) === $entity->get(self::ATTR_CREATED_BY_ID)) {
+            } else if ($entity->get(self::ATTR_ASSIGNED_USER_ID) === $entity->get(self::ATTR_CREATED_BY_ID)) {
                 $isDeletedAllowed = true;
             }
         }
@@ -217,8 +219,7 @@ class DefaultAccessChecker implements
     {
         try {
             $dt = new DateTime($value);
-        }
-        catch (Exception) {
+        } catch (Exception) {
             return false;
         }
 

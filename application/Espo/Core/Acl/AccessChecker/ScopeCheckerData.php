@@ -38,7 +38,8 @@ class ScopeCheckerData
 {
     public function __construct(
         private Closure $isOwnChecker,
-        private Closure $inTeamChecker
+        private Closure $inTeamChecker,
+        private Closure $isSharedChecker,
     ) {}
 
     public function isOwn(): bool
@@ -49,6 +50,11 @@ class ScopeCheckerData
     public function inTeam(): bool
     {
         return ($this->inTeamChecker)();
+    }
+
+    public function isShared(): bool
+    {
+        return ($this->isSharedChecker)();
     }
 
     public static function createBuilder(): ScopeCheckerDataBuilder

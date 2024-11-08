@@ -67,9 +67,7 @@ class Authentication
 {
     private const LOGOUT_USERNAME = '**logout';
 
-    private const HEADER_ESPO_AUTHORIZATION = 'Espo-Authorization';
     private const HEADER_CREATE_TOKEN_SECRET = 'Espo-Authorization-Create-Token-Secret';
-    private const HEADER_BY_TOKEN = 'Espo-Authorization-By-Token';
     private const HEADER_ANOTHER_USER = 'X-Another-User';
     private const HEADER_LOGOUT_REDIRECT_URL = 'X-Logout-Redirect-Url';
 
@@ -95,6 +93,7 @@ class Authentication
      * Process logging in.
      *
      * @throws ServiceUnavailable
+     * @throws Forbidden
      */
     public function login(AuthenticationData $data, Request $request, Response $response): Result
     {
@@ -107,16 +106,21 @@ class Authentication
             $method &&
             !$this->configDataProvider->authenticationMethodIsApi($method)
         ) {
-            $this->log
-                ->warning("AUTH: Trying to use not allowed authentication method '$method'.");
+            $this->log->warning("Auth: Trying to use not allowed authentication method '{method}'.", [
+                'method' => $method,
+            ]);
 
             return $this->processFail(Result::fail(FailReason::METHOD_NOT_ALLOWED), $data, $request);
         }
 
-        $this->hookManager->processBeforeLogin($data, $request);
+        try {
+            $this->hookManager->processBeforeLogin($data, $request);
+        } catch (Forbidden $e) {
+            $this->processForbidden($e);
+        }
 
         if (!$method && $password === null) {
-            $this->log->error("AUTH: Trying to login w/o password.");
+            $this->log->error("Auth: Trying to login w/o password.");
 
             return Result::fail(FailReason::NO_PASSWORD);
         }
@@ -149,7 +153,7 @@ class Authentication
             }
         }
 
-        $byTokenAndUsername = $request->getHeader(self::HEADER_BY_TOKEN) === 'true';
+        $byTokenAndUsername = $request->getHeader(HeaderKey::AUTHORIZATION_BY_TOKEN) === 'true';
 
         if ($method && $byTokenAndUsername) {
             return Result::fail(FailReason::DISCREPANT_DATA);
@@ -157,7 +161,9 @@ class Authentication
 
         if (($byTokenAndUsername || $byTokenOnly) && !$authToken) {
             if ($username) {
-                $this->log->info("AUTH: Trying to login as user '$username' by token but token is not found.");
+                $this->log->info("Auth: Trying to login as user '{username}' by token but token is not found.", [
+                    'username' => $username,
+                ]);
             }
 
             return $this->processFail(Result::fail(FailReason::TOKEN_NOT_FOUND), $data, $request);
@@ -213,15 +219,7 @@ class Authentication
             return $this->processFail(Result::fail(FailReason::DENIED), $data, $request);
         }
 
-        if ($this->isPortal()) {
-            $user->set('portalId', $this->getPortal()->getId());
-        }
-
-        if (!$this->isPortal()) {
-            $user->loadLinkMultipleField('teams');
-        }
-
-        $user->set('ipAddress', $this->util->obtainIpFromRequest($request));
+        $this->prepareUser($user, $request);
 
         [$loggedUser, $anotherUserFailReason] = $this->getLoggedUser($request, $user);
 
@@ -234,6 +232,7 @@ class Authentication
         $this->applicationUser->setUser($loggedUser);
 
         if (
+            !$result->bypassSecondStep() &&
             !$result->isSecondStepRequired() &&
             !$authToken &&
             $this->configDataProvider->isTwoFactorEnabled()
@@ -241,13 +240,19 @@ class Authentication
             $result = $this->processTwoFactor($result, $request);
 
             if ($result->isFail()) {
-                return $this->processFail($result, $data, $request);
+                return $this->processTwoFactorFail($result, $data, $request, $authLogRecord);
             }
+        }
+
+        try {
+            $this->hookManager->processOnLogin($result, $data, $request);
+        } catch (Forbidden $e) {
+            $this->processForbidden($e, $authLogRecord);
         }
 
         if (
             !$result->isSecondStepRequired() &&
-            $request->getHeader(self::HEADER_ESPO_AUTHORIZATION)
+            $request->getHeader(HeaderKey::AUTHORIZATION)
         ) {
             $authToken = $this->processAuthTokenFinal(
                 $authToken,
@@ -344,13 +349,13 @@ class Authentication
     private function processAuthTokenCheck(AuthToken $authToken): bool
     {
         if ($this->isPortal() && $authToken->getPortalId() !== $this->getPortal()->getId()) {
-            $this->log->info("AUTH: Trying to login to portal with a token not related to portal.");
+            $this->log->info("Auth: Trying to login to portal with a token not related to portal.");
 
             return false;
         }
 
         if (!$this->isPortal() && $authToken->getPortalId()) {
-            $this->log->info("AUTH: Trying to login to crm with a token related to portal.");
+            $this->log->info("Auth: Trying to login to crm with a token related to portal.");
 
             return false;
         }
@@ -361,8 +366,9 @@ class Authentication
     private function processUserCheck(User $user, ?AuthLogRecord $authLogRecord): bool
     {
         if (!$user->isActive()) {
-            $this->log
-                ->info("AUTH: Trying to login as user '" . $user->getUserName() . "' which is not active.");
+            $this->log->info("Auth: Trying to login as user '{username}' which is not active.", [
+                'username' => $user->getUserName(),
+            ]);
 
             $this->logDenied($authLogRecord, AuthLogRecord::DENIAL_REASON_INACTIVE_USER);
 
@@ -370,8 +376,9 @@ class Authentication
         }
 
         if ($user->isSystem()) {
-            $this->log
-                ->info("AUTH: Trying to login to crm as a system user '{$user->getUserName()}'.");
+            $this->log->info("Auth: Trying to login to crm as a system user '{username}'.", [
+                'username' => $user->getUserName(),
+            ]);
 
             $this->logDenied($authLogRecord, AuthLogRecord::DENIAL_REASON_IS_SYSTEM_USER);
 
@@ -379,8 +386,9 @@ class Authentication
         }
 
         if (!$user->isAdmin() && !$this->isPortal() && $user->isPortal()) {
-            $this->log
-                ->info("AUTH: Trying to login to crm as a portal user '" . $user->getUserName() . "'.");
+            $this->log->info("Auth: Trying to login to crm as a portal user '{username}'.", [
+                'username' => $user->getUserName(),
+            ]);
 
             $this->logDenied($authLogRecord, AuthLogRecord::DENIAL_REASON_IS_PORTAL_USER);
 
@@ -388,8 +396,9 @@ class Authentication
         }
 
         if ($this->isPortal() && !$user->isPortal()) {
-            $this->log->info(
-                "AUTH: Trying to login to portal as user '" . $user->getUserName() . "' which is not portal user.");
+            $this->log->info("Auth: Trying to login to portal as user '{username}' which is not portal user.", [
+                'username' => $user->getUserName(),
+            ]);
 
             $this->logDenied($authLogRecord, AuthLogRecord::DENIAL_REASON_IS_NOT_PORTAL_USER);
 
@@ -403,9 +412,12 @@ class Authentication
                 ->isRelated($user);
 
             if (!$isPortalRelatedToUser) {
-                $this->log->info(
-                    "AUTH: Trying to login to portal as user '" . $user->getUserName() . "' ".
-                    "which is portal user but does not belong to portal.");
+                $msg = "Auth: Trying to login to portal as user '{username}' " .
+                    "which is portal user but does not belong to portal.";
+
+                $this->log->info($msg, [
+                    'username' => $user->getUserName(),
+                ]);
 
                 $this->logDenied($authLogRecord, AuthLogRecord::DENIAL_REASON_USER_IS_NOT_IN_PORTAL);
 
@@ -770,5 +782,57 @@ class Authentication
         $loggedUser->loadLinkMultipleField('teams');
 
         return [$loggedUser, null];
+    }
+
+    private function prepareUser(User $user, Request $request): void
+    {
+        if ($this->isPortal()) {
+            $user->set('portalId', $this->getPortal()->getId());
+        }
+
+        if (!$this->isPortal()) {
+            $user->loadLinkMultipleField('teams');
+        }
+
+        $user->set('ipAddress', $this->util->obtainIpFromRequest($request));
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function processForbidden(Forbidden $exception, ?AuthLogRecord $authLogRecord = null): never
+    {
+        $this->log->warning('Auth: Forbidden. {message}', [
+            'message' => $exception->getMessage(),
+            'exception' => $exception,
+        ]);
+
+        if ($authLogRecord) {
+            $authLogRecord
+                ->setIsDenied()
+                ->setDenialReason(AuthLogRecord::DENIAL_REASON_FORBIDDEN);
+
+            $this->entityManager->saveEntity($authLogRecord);
+        }
+
+        throw new Forbidden();
+    }
+
+    private function processTwoFactorFail(
+        Result $result,
+        AuthenticationData $data,
+        Request $request,
+        ?AuthLogRecord $authLogRecord
+    ): Result {
+
+        if ($authLogRecord) {
+            $authLogRecord
+                ->setIsDenied()
+                ->setDenialReason(AuthLogRecord::DENIAL_REASON_WRONG_CODE);
+
+            $this->entityManager->saveEntity($authLogRecord);
+        }
+
+        return $this->processFail($result, $data, $request);
     }
 }

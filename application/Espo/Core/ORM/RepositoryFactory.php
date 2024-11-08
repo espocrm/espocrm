@@ -34,6 +34,7 @@ use Espo\Core\Binding\ContextualBinder;
 use Espo\Core\InjectableFactory;
 use Espo\ORM\Entity as Entity;
 use Espo\ORM\EntityFactory as EntityFactoryInterface;
+use Espo\ORM\Relation\RelationsMap;
 use Espo\ORM\Repository\Repository;
 use Espo\ORM\Repository\RepositoryFactory as RepositoryFactoryInterface;
 
@@ -42,7 +43,8 @@ class RepositoryFactory implements RepositoryFactoryInterface
     public function __construct(
         private EntityFactoryInterface $entityFactory,
         private InjectableFactory $injectableFactory,
-        private ClassNameProvider $classNameProvider
+        private ClassNameProvider $classNameProvider,
+        private RelationsMap $relationsMap,
     ) {}
 
     public function create(string $entityType): Repository
@@ -54,6 +56,7 @@ class RepositoryFactory implements RepositoryFactoryInterface
             BindingContainerBuilder::create()
                 ->bindInstance(EntityFactoryInterface::class, $this->entityFactory)
                 ->bindInstance(EntityFactory::class, $this->entityFactory)
+                ->bindInstance(RelationsMap::class, $this->relationsMap)
                 ->inContext(
                     $className,
                     function (ContextualBinder $binder) use ($entityType) {

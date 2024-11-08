@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "message": "Messaggio",
+    "code": "Codice",
+    "level": "Livello",
+    "exceptionClass": "Classe Eccezione",
+    "line": "Linea",
+    "requestMethod": "Tipo di Richiesta",
+    "requestResourcePath": "Percorso Risorsa Richiesta"
+  },
+  "presetFilters": {
+    "errors": "Errori"
+  }
+}

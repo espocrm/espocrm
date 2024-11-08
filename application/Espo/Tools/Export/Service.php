@@ -64,7 +64,7 @@ class Service
 
         $entityType = $params->getEntityType();
 
-        if ($this->acl->getPermissionLevel('exportPermission') !== Table::LEVEL_YES) {
+        if ($this->acl->getPermissionLevel(Acl\Permission::EXPORT) !== Table::LEVEL_YES) {
             throw new ForbiddenSilent("No 'export' permission.");
         }
 

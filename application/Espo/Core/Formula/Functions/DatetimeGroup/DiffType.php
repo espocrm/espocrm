@@ -107,8 +107,7 @@ class DiffType extends BaseFunction
         try {
             $dateTime1 = new DateTime($dateTime1String);
             $dateTime2 = new DateTime($dateTime2String);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return null;
         }
 

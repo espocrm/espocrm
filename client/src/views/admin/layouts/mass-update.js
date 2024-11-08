@@ -31,11 +31,8 @@ import LayoutRowsView from 'views/admin/layouts/rows';
 class LayoutMassUpdateView extends LayoutRowsView {
 
     dataAttributeList = ['name']
-
     editable = false
-
     ignoreList = []
-
     ignoreTypeList = ['duration']
 
     dataAttributesDefs = {
@@ -61,6 +58,7 @@ class LayoutMassUpdateView extends LayoutRowsView {
 
                 for (const field in model.defs.fields) {
                     if (
+                        !model.getFieldParam(field, 'massUpdateDisabled') &&
                         !model.getFieldParam(field, 'readOnly') &&
                         this.isFieldEnabled(model, field)
                     ) {

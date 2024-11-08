@@ -4,6 +4,7 @@
         "detail": "views/template/record/detail",
         "edit": "views/template/record/edit"
     },
+    "mergeDisabled": true,
     "dynamicLogic": {
         "fields": {
             "entityType": {

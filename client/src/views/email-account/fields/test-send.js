@@ -26,43 +26,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-account/fields/test-send', ['views/outbound-email/fields/test-send'], function (Dep) {
+import TestSendView from 'views/outbound-email/fields/test-send';
 
-    return Dep.extend({
+export default class extends TestSendView {
 
-        checkAvailability: function () {
-            if (this.model.get('smtpHost')) {
-                this.$el.find('button').removeClass('hidden');
-            } else {
-                this.$el.find('button').addClass('hidden');
-            }
-        },
+    checkAvailability() {
+        if (this.model.get('smtpHost')) {
+            this.$el.find('button').removeClass('hidden');
+        } else {
+            this.$el.find('button').addClass('hidden');
+        }
+    }
 
-        afterRender: function () {
+    afterRender() {
+        this.checkAvailability();
+
+        this.stopListening(this.model, 'change:smtpHost');
+
+        this.listenTo(this.model, 'change:smtpHost', () => {
             this.checkAvailability();
+        });
+    }
 
-            this.stopListening(this.model, 'change:smtpHost');
-
-            this.listenTo(this.model, 'change:smtpHost', () => {
-                this.checkAvailability();
-            });
-        },
-
-        getSmtpData: function () {
-            return {
-                'server': this.model.get('smtpHost'),
-                'port': this.model.get('smtpPort'),
-                'auth': this.model.get('smtpAuth'),
-                'security': this.model.get('smtpSecurity'),
-                'username': this.model.get('smtpUsername'),
-                'password': this.model.get('smtpPassword') || null,
-                'authMechanism': this.model.get('smtpAuthMechanism'),
-                'fromName': this.getUser().get('name'),
-                'fromAddress': this.model.get('emailAddress'),
-                'type': 'emailAccount',
-                'id': this.model.id,
-                'userId': this.model.get('assignedUserId'),
-            };
-        },
-    });
-});
+    getSmtpData() {
+        return {
+            'server': this.model.get('smtpHost'),
+            'port': this.model.get('smtpPort'),
+            'auth': this.model.get('smtpAuth'),
+            'security': this.model.get('smtpSecurity'),
+            'username': this.model.get('smtpUsername'),
+            'password': this.model.get('smtpPassword') || null,
+            'authMechanism': this.model.get('smtpAuthMechanism'),
+            'fromName': this.getUser().get('name'),
+            'fromAddress': this.model.get('emailAddress'),
+            'type': 'emailAccount',
+            'id': this.model.id,
+            'userId': this.model.get('assignedUserId'),
+        };
+    }
+}

@@ -4,9 +4,9 @@
   },
   "fields": {
     "event": "Evento",
-    "isActive": "È attivo",
+    "isActive": "Attivo",
     "user": "Utente API",
-    "entityType": "Tipo di entità",
+    "entityType": "Tipo di Entità",
     "field": "Campo",
     "secretKey": "Chiave segreta"
   },

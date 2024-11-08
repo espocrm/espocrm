@@ -26,38 +26,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/fields/contact', ['views/fields/link'], function (Dep) {
+import LinkFieldView from 'views/fields/link';
 
-    return Dep.extend({
+export default class extends LinkFieldView {
 
-        select: function (model) {
-            Dep.prototype.select.call(this, model);
+    select(model) {
+        super.select(model);
 
-            var attributes = {};
+        const attributes = {};
 
-            if (model.get('accountId')) {
-                var names = {};
+        if (model.get('accountId')) {
+            const names = {};
 
-                names[model.get('accountId')] = model.get('accountName');
-                attributes.accountsIds = [model.get('accountId')];
-                attributes.accountsNames = names;
-            }
+            names[model.get('accountId')] = model.get('accountName');
+            attributes.accountsIds = [model.get('accountId')];
+            attributes.accountsNames = names;
+        }
 
-            attributes.firstName = model.get('firstName');
-            attributes.lastName = model.get('lastName');
-            attributes.salutationName = model.get('salutationName');
+        attributes.firstName = model.get('firstName');
+        attributes.lastName = model.get('lastName');
+        attributes.salutationName = model.get('salutationName');
 
-            attributes.emailAddress = model.get('emailAddress');
-            attributes.emailAddressData = model.get('emailAddressData');
+        attributes.emailAddress = model.get('emailAddress');
+        attributes.emailAddressData = model.get('emailAddressData');
 
-            attributes.phoneNumber = model.get('phoneNumber');
-            attributes.phoneNumberData = model.get('phoneNumberData');
+        attributes.phoneNumber = model.get('phoneNumber');
+        attributes.phoneNumberData = model.get('phoneNumberData');
 
-            if (this.model.isNew() && !this.model.get('userName') && attributes.emailAddress) {
-                attributes.userName = attributes.emailAddress;
-            }
+        if (this.model.isNew() && !this.model.get('userName') && attributes.emailAddress) {
+            attributes.userName = attributes.emailAddress;
+        }
 
-            this.model.set(attributes);
-        },
-    });
-});
+        this.model.set(attributes);
+    }
+}

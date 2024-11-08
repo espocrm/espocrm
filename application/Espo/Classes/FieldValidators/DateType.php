@@ -57,8 +57,7 @@ class DateType
 
         try {
             Date::fromString($value);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 

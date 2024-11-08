@@ -42,16 +42,12 @@
 .btn-group > .btn:first-child {
   margin-right: 0;
   &:not(:last-child):not(.dropdown-toggle) {
-    border-top-right-radius: @border-radius-base;
-    border-bottom-right-radius: @border-radius-base;
     .border-left-radius(0);
   }
 }
 // Need .dropdown-toggle since :last-child doesn't apply given a .dropdown-menu immediately after it
 .btn-group > .btn:last-child:not(:first-child),
 .btn-group > .dropdown-toggle:not(:first-child) {
-    border-top-left-radius: @border-radius-base;
-    border-bottom-left-radius: @border-radius-base;
   .border-right-radius(0);
 }
 
@@ -71,14 +67,10 @@
 .btn-group > .btn-group:first-child {
   > .btn:last-child,
   > .dropdown-toggle {
-    border-top-right-radius: @border-radius-base;
-    border-bottom-right-radius: @border-radius-base;
     .border-left-radius(0);
   }
 }
 .btn-group > .btn-group:last-child > .btn:first-child {
-    border-top-left-radius: @border-radius-base;
-    border-bottom-left-radius: @border-radius-base;
   .border-right-radius(0);
 }
 

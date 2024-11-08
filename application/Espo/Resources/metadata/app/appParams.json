@@ -4,5 +4,8 @@
     },
     "extensions": {
         "className": "Espo\\Classes\\AppParams\\Extensions"
+    },
+    "addressCountryData": {
+        "className": "Espo\\Classes\\AppParams\\AddressCountryData"
     }
 }

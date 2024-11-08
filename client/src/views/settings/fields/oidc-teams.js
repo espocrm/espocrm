@@ -26,22 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/oidc-teams', ['views/fields/link-multiple-with-role'], function (Dep) {
+import LinkMultipleWithRoleFieldView from 'views/fields/link-multiple-with-role';
 
-    return Dep.extend({
+// noinspection JSUnusedGlobalSymbols
+export default class extends LinkMultipleWithRoleFieldView {
 
-        forceRoles: true,
+    forceRoles = true
+    roleType = 'varchar'
+    columnName = 'group'
+    roleMaxLength = 255
 
-        roleType: 'varchar',
+    setup() {
+        super.setup();
 
-        columnName: 'group',
-
-        roleMaxLength: 255,
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.rolePlaceholderText = this.translate('IdP Group', 'labels', 'Settings');
-        },
-    });
-});
+        this.rolePlaceholderText = this.translate('IdP Group', 'labels', 'Settings');
+    }
+}

@@ -29,6 +29,8 @@
 
 namespace Espo\Core\FieldProcessing\Relation;
 
+use Espo\Core\ORM\Defs\AttributeParam;
+use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\ORM\Entity;
 
 use Espo\Core\FieldProcessing\Saver as SaverInterface;
@@ -77,10 +79,14 @@ class Saver implements SaverInterface
 
     private function processManyItem(Entity $entity, string $name, Params $params): void
     {
-        $idListAttribute = $name . 'Ids';
+        $idsAttribute = $name . 'Ids';
         $columnsAttribute = $name . 'Columns';
 
-        if (!$entity->has($idListAttribute) && !$entity->has($columnsAttribute)) {
+        if (!$entity->has($idsAttribute) && !$entity->has($columnsAttribute)) {
+            return;
+        }
+
+        if (!$entity instanceof CoreEntity) {
             return;
         }
 
@@ -99,57 +105,52 @@ class Saver implements SaverInterface
     private function processHasOneItem(Entity $entity, string $name): void
     {
         $entityType = $entity->getEntityType();
-
         $idAttribute = $name . 'Id';
 
-        if (!$entity->has($idAttribute)) {
+        if (!$entity->has($idAttribute) || !$entity->isAttributeChanged($idAttribute)) {
             return;
         }
 
-        if (!$entity->isAttributeChanged($idAttribute)) {
-            return;
-        }
-
+        /** @var ?string $id */
         $id = $entity->get($idAttribute);
 
         $defs = $this->entityManager->getDefs()->getEntity($entityType);
-
         $relationDefs = $defs->getRelation($name);
 
         $foreignKey = $relationDefs->getForeignKey();
         $foreignEntityType = $relationDefs->getForeignEntityType();
 
-        $previousForeignEntity = $this->entityManager
+        $previous = $this->entityManager
             ->getRDBRepository($foreignEntityType)
             ->select(['id'])
-            ->where([
-                $foreignKey => $entity->getId(),
-            ])
+            ->where([$foreignKey => $entity->getId()])
             ->findOne();
 
-        if ($previousForeignEntity) {
-            if (!$entity->isNew()) {
-                $entity->setFetched($idAttribute, $previousForeignEntity->getId());
-            }
+        if (!$entity->isNew() && !$entity->hasFetched($idAttribute)) {
+            $entity->setFetched($idAttribute, $previous ? $previous->getId() : null);
+        }
 
+        if ($previous) {
             if (!$id) {
-                $previousForeignEntity->set($foreignKey, null);
+                $this->entityManager
+                    ->getRelation($entity, $name)
+                    ->unrelate($previous);
 
-                $this->entityManager->saveEntity($previousForeignEntity, [
-                    SaveOption::SKIP_ALL => true,
-                ]);
+                return;
+            }
+
+            if ($previous->getId() === $id) {
+                return;
             }
         }
-        else if (!$entity->isNew()) {
-            $entity->setFetched($idAttribute, null);
+
+        if (!$id) {
+            return;
         }
 
-        if ($id) {
-            $this->entityManager
-                ->getRDBRepository($entityType)
-                ->getRelation($entity, $name)
-                ->relateById($id);
-        }
+        $this->entityManager
+            ->getRelation($entity, $name)
+            ->relateById($id);
     }
 
     private function processBelongsToHasOne(Entity $entity): void
@@ -188,6 +189,7 @@ class Saver implements SaverInterface
             return;
         }
 
+        /** @noinspection PhpRedundantOptionalArgumentInspection */
         $anotherEntity->set($idAttribute, null);
 
         $this->entityManager->saveEntity($anotherEntity, [
@@ -221,7 +223,18 @@ class Saver implements SaverInterface
                 continue;
             }
 
-            if (!$defs->hasAttribute($name . 'Ids')) {
+            $idsAttribute = $name . 'Ids';
+
+            if (!$defs->hasAttribute($idsAttribute)) {
+                continue;
+            }
+
+            $attributeDefs = $defs->getAttribute($idsAttribute);
+
+            if (
+                !$attributeDefs->getParam(AttributeParam::IS_LINK_MULTIPLE_ID_LIST) &&
+                !$attributeDefs->getParam(AttributeParam::IS_LINK_STUB)
+            ) {
                 continue;
             }
 

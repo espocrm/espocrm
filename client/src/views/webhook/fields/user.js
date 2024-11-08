@@ -26,11 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/webhook/fields/user', ['views/fields/link'], function (Dep) {
+import LinkFieldView from 'views/fields/link';
 
-    return Dep.extend({
+export default class extends LinkFieldView {
 
-        selectPrimaryFilterName: 'activeApi',
-
-    });
-});
+    selectPrimaryFilterName = 'activeApi';
+}

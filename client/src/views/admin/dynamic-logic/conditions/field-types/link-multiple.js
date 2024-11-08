@@ -26,72 +26,72 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/conditions/field-types/link-multiple',
-['views/admin/dynamic-logic/conditions/field-types/base'], function (Dep) {
+import DynamicLogicConditionFieldTypeBaseView from 'views/admin/dynamic-logic/conditions/field-types/base';
 
-    return Dep.extend({
+export default class DynamicLogicConditionFieldTypeLinkMultipleView extends DynamicLogicConditionFieldTypeBaseView {
 
-        getValueFieldName: function () {
-            return this.name;
-        },
+    getValueFieldName() {
+        return this.name;
+    }
 
-        getValueViewName: function () {
-            return 'views/fields/link';
-        },
+    getValueViewName() {
+        return 'views/fields/link';
+    }
 
-        createValueViewContains: function () {
-            this.createLinkValueField();
-        },
+    // noinspection JSUnusedGlobalSymbols
+    createValueViewContains() {
+        this.createLinkValueField();
+    }
 
-        createValueViewNotContains: function () {
-            this.createLinkValueField();
-        },
+    // noinspection JSUnusedGlobalSymbols
+    createValueViewNotContains() {
+        this.createLinkValueField();
+    }
 
-        createLinkValueField: function () {
-            const viewName = 'views/fields/link';
-            const fieldName = 'link';
+    createLinkValueField() {
+        const viewName = 'views/fields/link';
+        const fieldName = 'link';
 
-            this.createView('value', viewName, {
-                model: this.model,
-                name: fieldName,
-                selector: '.value-container',
-                mode: 'edit',
-                readOnlyDisabled: true,
-                foreignScope: this.getMetadata()
-                    .get(['entityDefs', this.scope, 'fields', this.field, 'entity']) ||
-                    this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'entity']),
-            }, (view) => {
-                if (this.isRendered()) {
-                    view.render();
-                }
-            });
-        },
-
-        fetch: function () {
-            const valueView = this.getView('value');
-
-            const item = {
-                type: this.type,
-                attribute: this.field + 'Ids',
-                data: {
-                    field: this.field,
-                },
-            };
-
-            if (valueView) {
-                valueView.fetchToModel();
-
-                item.value = this.model.get('linkId');
-
-                const values = {};
-
-                values['linkName'] = this.model.get('linkName');
-                values['linkId'] = this.model.get('linkId');
-
-                item.data.values = values;
+        this.createView('value', viewName, {
+            model: this.model,
+            name: fieldName,
+            selector: '.value-container',
+            mode: 'edit',
+            readOnlyDisabled: true,
+            foreignScope: this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'entity']) ||
+                this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'entity']),
+        }, view => {
+            if (this.isRendered()) {
+                view.render();
             }
+        });
+    }
 
-            return item;
-        },
-    });
-});
+    fetch() {
+        /** @type {import('views/fields/base').default} */
+        const valueView = this.getView('value');
+
+        const item = {
+            type: this.type,
+            attribute: this.field + 'Ids',
+            data: {
+                field: this.field,
+            },
+        };
+
+        if (valueView) {
+            valueView.fetchToModel();
+
+            item.value = this.model.get('linkId');
+
+            const values = {};
+
+            values['linkName'] = this.model.get('linkName');
+            values['linkId'] = this.model.get('linkId');
+
+            item.data.values = values;
+        }
+
+        return item;
+    }
+}

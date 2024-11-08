@@ -34,8 +34,36 @@ import Autocomplete from 'ui/autocomplete';
 
 /**
  * A link field (belongs-to relation).
+ *
+ * @extends BaseFieldView<module:views/fields/link~params>
  */
 class LinkFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/link~options
+     * @property {
+     *     module:views/fields/link~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/link~params
+     * @property {boolean} [required] Required.
+     * @property {boolean} [autocompleteOnEmpty] Autocomplete on empty input.
+     * @property {boolean} [createButton] Show 'Create' button.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/link~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     /** @inheritDoc */
     type = 'link'
@@ -381,15 +409,17 @@ class LinkFieldView extends BaseFieldView {
 
         this.controlCreateButtonVisibility();
 
+        const attributes = {};
+
         for (const [foreign, field] of Object.entries(this.getDependantForeignMap())) {
-            this.model.set(field, model.get(foreign))
+            attributes[field] = model.get(foreign);
         }
 
-        this.getSelectFieldHandler().then(handler => {
-            handler.getAttributes(model)
-                .then(attributes => {
-                    this.model.set(attributes)
-                });
+        this.getSelectFieldHandler().then(async handler => {
+            this.model.set({
+                ...attributes,
+                ...(await handler.getAttributes(model)),
+            });
         });
     }
 
@@ -405,13 +435,13 @@ class LinkFieldView extends BaseFieldView {
         this.controlCreateButtonVisibility();
 
         for (const [, field] of Object.entries(this.getDependantForeignMap())) {
-            this.model.clear(field)
+            this.model.unset(field, {fromField: this.name})
         }
 
         this.getSelectFieldHandler().then(handler => {
             handler.getClearAttributes()
                 .then(attributes => {
-                    this.model.set(attributes);
+                    this.model.set(attributes, {fromField: this.name});
                 });
         });
     }
@@ -660,15 +690,8 @@ class LinkFieldView extends BaseFieldView {
             const $elementName = this.$elementName;
 
             if (!this.autocompleteDisabled) {
-                let isEmptyQueryResult = false;
-
-                if (this.getEmptyAutocompleteResult()) {
-                    this.$elementName.on('keydown', e => {
-                        if (e.code === 'Tab' && isEmptyQueryResult) {
-                            e.stopImmediatePropagation();
-                        }
-                    });
-                }
+                /** @type {module:ajax.AjaxPromise & Promise<any>} */
+                let lastAjaxPromise;
 
                 const autocomplete = new Autocomplete(this.$elementName.get(0), {
                     name: this.name,
@@ -686,21 +709,25 @@ class LinkFieldView extends BaseFieldView {
                     },
                     lookupFunction: query => {
                         if (!this.autocompleteOnEmpty && query.length === 0) {
-                            isEmptyQueryResult = true;
+                            const onEmptyPromise = this.getOnEmptyAutocomplete();
 
-                            const emptyResult = this.getEmptyAutocompleteResult();
-
-                            if (emptyResult) {
-                                return Promise.resolve(this._transformAutocompleteResult({list: emptyResult}));
+                            if (onEmptyPromise) {
+                                return onEmptyPromise.then(list => this._transformAutocompleteResult({list: list}));
                             }
 
                             return Promise.resolve([]);
                         }
 
-                        isEmptyQueryResult = false;
-
                         return Promise.resolve(this.getAutocompleteUrl(query))
-                            .then(url => Espo.Ajax.getRequest(url, {q: query}))
+                            .then(url => {
+                                if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
+                                    lastAjaxPromise.abort();
+                                }
+
+                                lastAjaxPromise = Espo.Ajax.getRequest(url, {q: query});
+
+                                return lastAjaxPromise;
+                            })
                             .then(response => this._transformAutocompleteResult(response));
                     },
                 });
@@ -709,6 +736,9 @@ class LinkFieldView extends BaseFieldView {
 
                 if (this.isSearchMode()) {
                     const $elementOneOf = this.$el.find('input.element-one-of');
+
+                    /** @type {module:ajax.AjaxPromise & Promise<any>} */
+                    let lastAjaxPromise;
 
                     const autocomplete = new Autocomplete($elementOneOf.get(0), {
                         minChars: 1,
@@ -728,7 +758,16 @@ class LinkFieldView extends BaseFieldView {
                             });
                         },
                         lookupFunction: query => {
-                            return Espo.Ajax.getRequest(this.getAutocompleteUrl(query), {q: query})
+                            return Promise.resolve(this.getAutocompleteUrl(query))
+                                .then(url => {
+                                    if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
+                                        lastAjaxPromise.abort();
+                                    }
+
+                                    lastAjaxPromise = Espo.Ajax.getRequest(url, {q: query});
+
+                                    return lastAjaxPromise;
+                                })
                                 .then(/** {list: Record[]} */response => {
                                     return response.list.map(item => ({
                                         value: item.name,
@@ -1186,7 +1225,13 @@ class LinkFieldView extends BaseFieldView {
 
     /**
      * @private
-     * @return {Promise<{bool?: string[], advanced?: Object, primary?: string}>}
+     * @return {Promise<{
+     *     bool?: string[],
+     *     advanced?: Object,
+     *     primary?: string,
+     *     orderBy?: string,
+     *     order?: 'asc'|'desc',
+     * }>}
      */
     _getSelectFilters() {
         const handler = this.panelDefs.selectHandler;
@@ -1279,9 +1324,12 @@ class LinkFieldView extends BaseFieldView {
     }
 
     /**
-     * @return {Record[]|undefined}
+     * Get an empty autocomplete result.
+     *
+     * @protected
+     * @return {Promise<[{name: ?string, id: string} & Record]>}
      */
-    getEmptyAutocompleteResult() {
+    getOnEmptyAutocomplete() {
         return undefined;
     }
 

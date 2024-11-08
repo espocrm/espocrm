@@ -85,7 +85,7 @@ class ViewRecordHelper {
      * Set a field-state parameter.
      *
      * @param {string} field A field name.
-     * @param {string} name A parameter.
+     * @param {string|'hidden'} name A parameter.
      * @param {*} value A value.
      */
     setFieldStateParam(field, name, value) {
@@ -132,7 +132,7 @@ class ViewRecordHelper {
      * Set a panel-state parameter.
      *
      * @param {string} panel A panel name.
-     * @param {string} name A parameter.
+     * @param {string|'hidden'} name A parameter.
      * @param {*} value A value.
      */
     setPanelStateParam(panel, name, value) {
@@ -154,7 +154,7 @@ class ViewRecordHelper {
      * Get a panel-state parameter.
      *
      * @param {string} panel A panel name.
-     * @param {string} name A parameter.
+     * @param {string|'hidden'} name A parameter.
      * @returns {*} A value.
      */
     getPanelStateParam(panel, name) {
@@ -194,7 +194,7 @@ class ViewRecordHelper {
      * Get a field option list.
      *
      * @param {string} field A field name.
-     * @returns {string|null} Null if not set.
+     * @returns {string[]|null} Null if not set.
      */
     getFieldOptionList(field) {
         return this.fieldOptionListMap[field] || null;

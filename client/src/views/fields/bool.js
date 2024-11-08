@@ -33,8 +33,33 @@ import Select from 'ui/select';
 
 /**
  * A boolean field (checkbox).
+ *
+ * @extends BaseFieldView<module:views/fields/bool~params>
  */
 class BoolFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/bool~options
+     * @property {
+     *     module:views/fields/bool~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/varchar~params
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/bool~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'bool'
 
@@ -46,12 +71,14 @@ class BoolFieldView extends BaseFieldView {
     validations = []
     initialSearchIsNotIdle = true
 
+    // noinspection JSCheckFunctionSignatures
     /** @inheritDoc */
     data() {
         const data = super.data();
 
         data.valueIsSet = this.model.has(this.name);
 
+        // noinspection JSValidateTypes
         return data;
     }
 

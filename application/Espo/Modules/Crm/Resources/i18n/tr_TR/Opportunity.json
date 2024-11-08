@@ -1,11 +1,11 @@
 {
   "fields": {
     "name": "Ad",
-    "account": "Hesap",
+    "account": "Firma",
     "stage": "Aşama",
     "amount": "Tutar",
     "probability": "Olasılık, %",
-    "leadSource": "Müşteri Potansiyeli Kaynağı",
+    "leadSource": "Potansiyel Kaynağı",
     "doNotCall": "Arama Yapma",
     "closeDate": "Kapanış Tarii",
     "contacts": "Kişiler",
@@ -13,16 +13,18 @@
     "amountConverted": "Tutar (dönüştürülen)",
     "amountWeightedConverted": "Ağırlıklı Tutar",
     "campaign": "Kampanya",
-    "originalLead": "Orijinal Müşteri Potansiyeli",
+    "originalLead": "Orijinal Potansiyel",
     "amountCurrency": "Döviz Tutarı",
     "contactRole": "İlgili Rolü",
-    "lastStage": "Son aşama"
+    "lastStage": "Son aşama",
+    "contact": "Kişi (Birincil)"
   },
   "links": {
     "contacts": "Kişiler",
     "documents": "Belgeler",
     "campaign": "Kampanya",
-    "originalLead": "Orijinal Müşteri Potansiyeli"
+    "originalLead": "Orijinal Potansiyel",
+    "contact": "Kişi (Birincil)"
   },
   "options": {
     "stage": {

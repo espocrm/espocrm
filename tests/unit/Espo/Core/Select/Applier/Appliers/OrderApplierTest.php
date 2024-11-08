@@ -279,8 +279,7 @@ class OrderApplierTest extends TestCase
                 ->method('convert')
                 ->with($item)
                 ->willReturn($converterResult);
-        }
-        else {
+        } else {
             if ($notExisting) {
                 $this->expectException(BadRequest::class);
 

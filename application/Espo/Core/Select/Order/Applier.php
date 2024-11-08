@@ -30,6 +30,7 @@
 namespace Espo\Core\Select\Order;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\ORM\Query\Part\OrderList;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Select\Order\Item as OrderItem;
@@ -62,13 +63,17 @@ class Applier
 
         $orderBy = $params->getOrderBy();
 
-        if (/*$params->forbidComplexExpressions() && */$orderBy) {
+        if ($orderBy) {
             if (
                 !is_string($orderBy) ||
                 str_contains($orderBy, '.') ||
                 str_contains($orderBy, ':')
             ) {
                 throw new Forbidden("Complex expressions are forbidden in 'orderBy'.");
+            }
+
+            if ($this->metadataProvider->isFieldOrderDisabled($this->entityType, $orderBy)) {
+                throw new Forbidden("Order by the field '$orderBy' is disabled.");
             }
         }
 
@@ -102,11 +107,9 @@ class Applier
 
             if ($order && strtolower($order) === 'desc') {
                 $order = SearchParams::ORDER_DESC;
-            }
-            else if ($order && strtolower($order) === 'asc') {
+            } else if ($order && strtolower($order) === 'asc') {
                 $order = SearchParams::ORDER_ASC;
-            }
-            else if ($order !== null) {
+            } else if ($order !== null) {
                 throw new RuntimeException("Bad default order.");
             }
         }
@@ -161,16 +164,11 @@ class Applier
                     OrderItem::create($orderBy, $order)
                 )
             );
-        }
-        else if (in_array($type, ['link', 'file', 'image', 'linkOne'])) {
+        } else if (in_array($type, [FieldType::LINK, FieldType::FILE, FieldType::IMAGE, FieldType::LINK_ONE])) {
             $resultOrderBy .= 'Name';
-        }
-        else if ($type === 'linkParent') {
+        } else if ($type === FieldType::LINK_PARENT) {
             $resultOrderBy .= 'Type';
-        }
-        else if (
-            /*!str_contains($orderBy, '.') &&
-            !str_contains($orderBy, ':') &&*/
+        } else if (
             !$this->metadataProvider->hasAttribute($this->entityType, $orderBy)
         ) {
             throw new BadRequest("Order by non-existing field '$orderBy'.");

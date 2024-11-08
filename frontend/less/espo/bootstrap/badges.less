@@ -1,22 +1,18 @@
-//
 // Badges
-// --------------------------------------------------
 
-
-// Base class
 .badge {
   display: inline-block;
-  min-width: 10px;
-  padding: 3px 7px;
-  font-size: @font-size-small;
-  font-weight: @badge-font-weight;
-  color: @badge-color;
-  line-height: @badge-line-height;
+  min-width: var(--10px);
+  padding: var(--3px) var(--7px);
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  color: var(--white-color);
+  line-height: 1;
   vertical-align: middle;
   white-space: nowrap;
   text-align: center;
-  background-color: @badge-bg;
-  border-radius: @badge-border-radius;
+  background-color: var(--gray-light);
+  border-radius: var(--badge-border-radius-value);
 
   // Empty badges collapse automatically (not available in IE8)
   &:empty {
@@ -26,20 +22,20 @@
   // Quick fix for badges in buttons
   .btn & {
     position: relative;
-    top: -1px;
+    top: var(--minus-1px);
   }
 
   .btn-xs &,
   .btn-group-xs > .btn & {
     top: 0;
-    padding: 1px 5px;
+    padding: var(--1px) var(--5px);
   }
 
   // Hover state, but only for links
   a& {
     &:hover,
     &:focus {
-      color: @badge-link-hover-color;
+      color: var(--white-color);
       text-decoration: none;
       cursor: pointer;
     }
@@ -48,8 +44,8 @@
   // Account for badges in navs
   .list-group-item.active > &,
   .nav-pills > .active > a > & {
-    color: @badge-active-color;
-    background-color: @badge-active-bg;
+    color: var(--link-color);
+    background-color: var(--white-color);
   }
 
   .list-group-item > & {
@@ -57,10 +53,10 @@
   }
 
   .list-group-item > & + & {
-    margin-right: 5px;
+    margin-right: var(--5px);
   }
 
   .nav-pills > li > a > & {
-    margin-left: 3px;
+    margin-left: var(--3px);
   }
 }

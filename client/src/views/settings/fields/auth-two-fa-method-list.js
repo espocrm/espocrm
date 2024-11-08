@@ -26,20 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/auth-two-fa-method-list', ['views/fields/multi-enum'], function (Dep) {
+import MultiEnumFieldView from 'views/fields/multi-enum';
 
-    return Dep.extend({
+// noinspection JSUnusedGlobalSymbols
+export default class extends MultiEnumFieldView {
 
-        setupOptions: function () {
-            this.params.options = [];
+    setupOptions() {
+        this.params.options = [];
 
-            let defs = this.getMetadata().get(['app', 'authentication2FAMethods']) || {};
+        const defs = this.getMetadata().get(['app', 'authentication2FAMethods']) || {};
 
-            for (let method in defs) {
-                if (defs[method].settings && defs[method].settings.isAvailable) {
-                    this.params.options.push(method);
-                }
+        for (const method in defs) {
+            if (defs[method].settings && defs[method].settings.isAvailable) {
+                this.params.options.push(method);
             }
-        },
-    });
-});
+        }
+    }
+}

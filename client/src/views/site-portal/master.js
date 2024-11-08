@@ -26,31 +26,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/site-portal/master', ['views/site/master'], function (Dep) {
+import MasterSiteView from 'views/site/master';
 
-    return Dep.extend({
+export default class extends MasterSiteView {
 
-        template: 'site/master',
-
-        views: {
-            header: {
-                id: 'header',
-                view: 'views/site-portal/header'
-            },
-            main: {
-                id: 'main',
-                view: false,
-            },
-            footer: {
-                fullSelector: 'body > footer',
-                view: 'views/site/footer'
-            }
+    views = {
+        header: {
+            id: 'header',
+            view: 'views/site-portal/header'
         },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-            this.$el.find('#main').addClass('main-portal');
+        main: {
+            id: 'main',
+            view: false,
         },
+        footer: {
+            fullSelector: 'body > footer',
+            view: 'views/site/footer'
+        }
+    }
 
-    });
-});
+    afterRender() {
+        super.afterRender();
+
+        this.element.querySelector('#main').classList.add('main-portal');
+
+        //this.$el.find('#main').addClass('main-portal');
+    }
+}

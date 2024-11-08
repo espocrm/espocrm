@@ -59,7 +59,7 @@ class AfterCreate implements SaveHook
 
         $email = $this->entityManager->getRDBRepositoryByClass(Email::class)->getById($emailId);
 
-        if (!$email || $email->getParentId() || !$this->acl->check($email)) {
+        if (!$email || $email->getParentId() || !$this->acl->checkEntityRead($email)) {
             return;
         }
 

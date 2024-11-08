@@ -32,6 +32,7 @@ namespace Espo\Tools\Export\Format\Xlsx;
 use Espo\Core\Field\Currency;
 use Espo\Core\Field\Date;
 use Espo\Core\Field\DateTime as DateTimeValue;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\Attachment;
 use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\ORM\EntityManager;
@@ -175,7 +176,7 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
             $sheet->getColumnDimension($col)->setAutoSize(true);
 
             $linkTypeList = $params->getParam(self::PARAM_RECORD_LINKS) ?
-                ['url', 'phone', 'email', 'link', 'linkParent'] :
+                [FieldType::URL, FieldType::PHONE, FieldType::EMAIL, FieldType::LINK, FieldType::LINK_PARENT] :
                 ['url'];
 
             if (
@@ -190,8 +191,8 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
 
         $col = $azRange[$lastIndex];
 
-        $sheet->getStyle("A{$rowNumber}:{$col}{$rowNumber}")->applyFromArray($this->headerStyle);
-        $sheet->setAutoFilter("A{$rowNumber}:{$col}{$rowNumber}");
+        $sheet->getStyle("A$rowNumber:$col$rowNumber")->applyFromArray($this->headerStyle);
+        $sheet->setAutoFilter("A$rowNumber:$col$rowNumber");
 
         $typesCache = [];
 
@@ -210,7 +211,7 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
             $rowNumber++;
         }
 
-        $sheet->getStyle("A{$headerRowNumber}:A{$rowNumber}")
+        $sheet->getStyle("A$headerRowNumber:A$rowNumber")
             ->getNumberFormat()
             ->setFormatCode(NumberFormat::FORMAT_TEXT);
 
@@ -229,35 +230,35 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
 
             $type = $typesCache[$name];
 
-            $coordinate = $col . $startingRowNumber . ':' . $col . $rowNumber;
+            $coordinate = "$col$startingRowNumber:$col$rowNumber";
 
             switch ($type) {
-                case 'currency':
-                case 'currencyConverted':
+                case FieldType::CURRENCY:
+                case FieldType::CURRENCY_CONVERTED:
                     break;
 
-                case 'int':
+                case FieldType::INT:
                     $sheet->getStyle($coordinate)
                         ->getNumberFormat()
                         ->setFormatCode('0');
 
                     break;
 
-                case 'float':
+                case FieldType::FLOAT:
                     $sheet->getStyle($coordinate)
                         ->getNumberFormat()
                         ->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
                     break;
 
-                case 'date':
+                case FieldType::DATE:
                     $sheet->getStyle($coordinate)
                         ->getNumberFormat()
                         ->setFormatCode($this->dateTime->getDateFormat());
 
                     break;
 
-                case 'datetimeOptional':
-                case 'datetime':
+                case FieldType::DATETIME_OPTIONAL:
+                case FieldType::DATETIME:
                     $sheet->getStyle($coordinate)
                         ->getNumberFormat()
                         ->setFormatCode($this->dateTime->getDateTimeFormat());
@@ -395,7 +396,7 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
 
         $value = $preparator->prepare($entity, $name);
 
-        if ($type === 'image') {
+        if ($type === FieldType::IMAGE) {
             $this->applyImage(
                 $entity,
                 $coordinate,
@@ -411,30 +412,27 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
 
         if (is_string($value)) {
             $sheet->setCellValueExplicit($coordinate, $value, DataType::TYPE_STRING);
-        }
-        else if (is_int($value) || is_float($value)) {
+        } else if (is_int($value) || is_float($value)) {
             $sheet->setCellValueExplicit($coordinate, $value, DataType::TYPE_NUMERIC);
         }
+
         if (is_bool($value)) {
             $sheet->setCellValueExplicit($coordinate, $value, DataType::TYPE_BOOL);
-        }
-        else if ($value instanceof Date) {
+        } else if ($value instanceof Date) {
             $sheet->setCellValue(
                 $coordinate,
                 SharedDate::PHPToExcel(
                     strtotime($value->toString())
                 )
             );
-        }
-        else if ($value instanceof DateTimeValue) {
+        } else if ($value instanceof DateTimeValue) {
             $sheet->setCellValue(
                 $coordinate,
                 SharedDate::PHPToExcel(
                     strtotime($value->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT))
                 )
             );
-        }
-        else if ($value instanceof Currency) {
+        } else if ($value instanceof Currency) {
             $sheet->setCellValue($coordinate, $value->getAmount());
 
             $sheet->getStyle($coordinate)
@@ -509,31 +507,28 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
         $foreignField = null;
 
         if (strpos($name, '_')) {
-            list($foreignLink, $foreignField) = explode('_', $name);
+            [$foreignLink, $foreignField] = explode('_', $name);
         }
 
         $siteUrl = $this->config->getSiteUrl();
 
         if ($name === 'name') {
             if ($entity->hasId()) {
-                $link = $siteUrl . '/#' . $entityType . '/view/' . $entity->getId();
+                $link = "$siteUrl/#$entityType/view/{$entity->getId()}";
             }
-        }
-        else if ($type === 'url') {
+        } else if ($type === FieldType::URL) {
             $value = $entity->get($name);
 
-            if ($value && filter_var($value, FILTER_VALIDATE_URL)) {
-                $link = $value;
+            if ($value) {
+                $link = $this->sanitizeUrl($value);
             }
-        }
-        else if ($type === 'link') {
+        } else if ($type === FieldType::LINK) {
             $idValue = $entity->get($name . 'Id');
 
             if ($idValue && $foreignField) {
                 if (!$foreignLink) {
                     $foreignEntity = $this->metadata->get(['entityDefs', $entityType, 'links', $name, 'entity']);
-                }
-                else {
+                } else {
                     $foreignEntity1 = $this->metadata
                         ->get(['entityDefs', $entityType, 'links', $foreignLink, 'entity']);
 
@@ -542,38 +537,33 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
                 }
 
                 if ($foreignEntity) {
-                    $link = $siteUrl . '/#' . $foreignEntity . '/view/' . $idValue;
+                    $link = "$siteUrl/#$foreignEntity/view/$idValue";
                 }
             }
-        }
-        else if ($type === 'file') {
+        } else if ($type === FieldType::FILE) {
             $idValue = $entity->get($name . 'Id');
 
             if ($idValue) {
-                $link = $siteUrl . '/?entryPoint=download&id=' . $idValue;
+                $link = "$siteUrl/?entryPoint=download&id=$idValue";
             }
-        }
-        else if ($type === 'linkParent') {
+        } else if ($type === FieldType::LINK_PARENT) {
             $idValue = $entity->get($name . 'Id');
-            $typeValue = $entity->get($name . 'Type');;
+            $typeValue = $entity->get($name . 'Type');
 
             if ($idValue && $typeValue) {
-                $link = $siteUrl . '/#' . $typeValue . '/view/' . $idValue;
+                $link = "$siteUrl/#$typeValue/view/$idValue";
             }
-        }
-        else if ($type === 'phone') {
+        } else if ($type === FieldType::PHONE) {
             $value = $entity->get($name);
 
             if ($value) {
-                $link = 'tel:' . $value;
+                $link = "tel:$value";
             }
-        }
-
-        else if ($type === 'email') {
+        } else if ($type === FieldType::EMAIL) {
             $value = $entity->get($name);
 
             if ($value) {
-                $link = 'mailto:' . $value;
+                $link = "mailto:$value";
             }
         }
 
@@ -646,5 +636,20 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
         }
 
         return $value;
+    }
+
+    private function sanitizeUrl(string $value): ?string
+    {
+        $link = $value;
+
+        if (!preg_match("/[a-z]+:\/\//", $link)) {
+            $link = 'https://' . $link;
+        }
+
+        if (filter_var($link, FILTER_VALIDATE_URL)) {
+            return $link;
+        }
+
+        return null;
     }
 }

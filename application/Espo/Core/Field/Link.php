@@ -81,8 +81,8 @@ class Link
     /**
      * Create from an ID.
      */
-    public static function create(string $id): self
+    public static function create(string $id, ?string $name = null): self
     {
-        return new self($id);
+        return (new self($id))->withName($name);
     }
 }

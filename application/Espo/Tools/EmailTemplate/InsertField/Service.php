@@ -32,6 +32,7 @@ namespace Espo\Tools\EmailTemplate\InsertField;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Entities\Email;
@@ -116,16 +117,17 @@ class Service
 
             $recordService = $this->recordServiceContainer->get($entityType);
 
+            $recordService->loadAdditionalFields($e);
             $recordService->prepareEntityForOutput($e);
 
             $ignoreTypeList = [
-                'image',
-                'file',
+                FieldType::IMAGE,
+                FieldType::FILE,
+                FieldType::WYSIWYG,
+                FieldType::LINK_MULTIPLE,
+                FieldType::ATTACHMENT_MULTIPLE,
+                FieldType::BOOL,
                 'map',
-                'wysiwyg',
-                'linkMultiple',
-                'attachmentMultiple',
-                'bool',
             ];
 
             foreach ($fm->getEntityTypeFieldList($entityType) as $field) {

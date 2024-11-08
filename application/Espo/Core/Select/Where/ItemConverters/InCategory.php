@@ -34,6 +34,8 @@ use Espo\Core\Select\Where\Item;
 use Espo\Core\Select\Where\ItemConverter;
 use Espo\ORM\Defs;
 use Espo\ORM\Entity;
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
@@ -69,36 +71,34 @@ class InCategory implements ItemConverter
 
         $defs = $entityDefs->getRelation($link);
 
-        $foreignEntity = $defs->getForeignEntityType();
-        $pathName = lcfirst($foreignEntity) . 'Path';
-        $relationType = $defs->getType();
+        $path = lcfirst($defs->getForeignEntityType()) . 'Path';
 
-        if ($relationType === Entity::MANY_MANY) {
-            $alias = $link . 'InCategoryFilter';
-            $key = $defs->getForeignMidKey();
-            $middleName = $alias . 'Middle';
+        if ($defs->getType() === Entity::MANY_MANY) {
+            $middle = ucfirst($defs->getRelationshipName());
 
-            $queryBuilder->distinct();
-            $queryBuilder->join($link, $alias);
-            $queryBuilder->join(
-                ucfirst($pathName),
-                $pathName,
-                ["$pathName.descendorId:" => "$middleName.$key"]
+            return Cond::in(
+                Expr::column('id'),
+                QueryBuilder::create()
+                    ->from($middle, 'm')
+                    ->select($defs->getMidKey())
+                    ->join(
+                        ucfirst($path),
+                        $path,
+                        ["$path.descendorId:" => "m.{$defs->getForeignMidKey()}"]
+                    )
+                    ->where(["$path.ascendorId" => $value])
+                    ->build()
             );
-
-            return WhereClause::fromRaw([$pathName . '.ascendorId' => $value]);
         }
 
-        if ($relationType === Entity::BELONGS_TO) {
-            $key = $defs->getKey();
-
+        if ($defs->getType() === Entity::BELONGS_TO) {
             $queryBuilder->join(
-                ucfirst($pathName),
-                $pathName,
-                ["$pathName.descendorId:" => "$key"]
+                ucfirst($path),
+                $path,
+                ["$path.descendorId:" => $defs->getKey()]
             );
 
-            return WhereClause::fromRaw([$pathName . '.ascendorId' => $value]);
+            return WhereClause::fromRaw(["$path.ascendorId" => $value]);
         }
 
         throw new BadRequest("Not supported link '$link' in where item.");

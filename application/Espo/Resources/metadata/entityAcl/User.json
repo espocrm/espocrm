@@ -35,6 +35,9 @@
         "teams": {
             "nonAdminReadOnly": true
         },
+        "defaultTeam": {
+            "nonAdminReadOnly": true
+        },
         "roles": {
             "nonAdminReadOnly": true
         },

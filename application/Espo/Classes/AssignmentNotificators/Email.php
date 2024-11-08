@@ -30,6 +30,7 @@
 namespace Espo\Classes\AssignmentNotificators;
 
 use Espo\Core\Field\DateTime;
+use Espo\Core\Notification\DefaultAssignmentNotificator;
 use Espo\Entities\EmailAddress;
 use Espo\Entities\EmailFolder;
 use Espo\Modules\Crm\Entities\Account;
@@ -56,25 +57,14 @@ class Email implements AssignmentNotificator
 {
     private const DAYS_THRESHOLD = 2;
 
-    private User $user;
-    private EntityManager $entityManager;
-    private UserEnabledChecker $userChecker;
-    private AclManager $aclManager;
-    private StreamService $streamService;
-
     public function __construct(
-        User $user,
-        EntityManager $entityManager,
-        UserEnabledChecker $userChecker,
-        AclManager $aclManager,
-        StreamService $streamService
-    ) {
-        $this->user = $user;
-        $this->entityManager = $entityManager;
-        $this->userChecker = $userChecker;
-        $this->aclManager = $aclManager;
-        $this->streamService = $streamService;
-    }
+        private User $user,
+        private EntityManager $entityManager,
+        private UserEnabledChecker $userChecker,
+        private AclManager $aclManager,
+        private StreamService $streamService,
+        private DefaultAssignmentNotificator $defaultAssignmentNotificator,
+    ) {}
 
     /**
      * @param EmailEntity $entity
@@ -94,10 +84,19 @@ class Email implements AssignmentNotificator
             return;
         }
 
-        if ($params->getOption('isJustSent')) {
-            $previousUserIdList = [];
+        if (
+            $entity->getStatus() !== EmailEntity::STATUS_BEING_IMPORTED &&
+            !$this->streamService->checkIsEnabled(EmailEntity::ENTITY_TYPE)
+        ) {
+            $this->defaultAssignmentNotificator->process(
+                $entity,
+                $params->withOption(DefaultAssignmentNotificator::OPTION_FORCE_ASSIGNED_USER, true)
+            );
         }
-        else {
+
+        if ($params->getOption(EmailEntity::SAVE_OPTION_IS_JUST_SENT)) {
+            $previousUserIdList = [];
+        } else {
             $previousUserIdList = $entity->getFetched('usersIds');
 
             if (!is_array($previousUserIdList)) {
@@ -183,37 +182,24 @@ class Email implements AssignmentNotificator
             }
         }
 
-        $parent = null;
+        $parent = $entity->getParent() ?
+            $this->entityManager->getEntityById($entity->getParent()->getEntityType(), $entity->getParent()->getId()) :
+            null;
 
-        $parentId = $entity->getParentId();
-        $parentType = $entity->getParentType();
-
-        if ($parentType && $parentId) {
-            $parent = $this->entityManager->getEntityById($parentType, $parentId);
-        }
-
-        $account = null;
-
-        $accountLink = $entity->getAccount();
-
-        if ($accountLink) {
-            $account = $this->entityManager->getEntityById(Account::ENTITY_TYPE, $accountLink->getId());
-        }
+        $account = $entity->getAccount() ?
+            $this->entityManager->getEntityById(Account::ENTITY_TYPE, $entity->getAccount()->getId()) :
+            null;
 
         foreach ($userIdList as $userId) {
-            if (!$userId) {
-                continue;
-            }
-
             if ($userIdFrom === $userId) {
                 continue;
             }
 
-            if ($entity->getLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IN_TRASH, $userId)) {
-                continue;
-            }
-
-            if ($entity->getLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IS_READ, $userId)) {
+            if (
+                $entity->getUserColumnInTrash($userId) ||
+                $entity->getUserColumnIsRead($userId) ||
+                $entity->getUserSkipNotification($userId)
+            ) {
                 continue;
             }
 
@@ -222,10 +208,10 @@ class Email implements AssignmentNotificator
             }
 
             if (
-                $params->getOption('isBeingImported') ||
-                $params->getOption('isJustSent')
+                $params->getOption(EmailEntity::SAVE_OPTION_IS_BEING_IMPORTED) ||
+                $params->getOption(EmailEntity::SAVE_OPTION_IS_JUST_SENT)
             ) {
-                $folderId = $entity->getLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_FOLDER_ID, $userId);
+                $folderId = $entity->getUserColumnFolderId($userId);
 
                 if (
                     $folderId &&
@@ -241,8 +227,7 @@ class Email implements AssignmentNotificator
                 }
             }
 
-            /** @var ?User $user */
-            $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
+            $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
 
             if (!$user) {
                 continue;
@@ -258,7 +243,7 @@ class Email implements AssignmentNotificator
 
             $isArchivedOrBeingImported =
                 $entity->getStatus() === EmailEntity::STATUS_ARCHIVED ||
-                $params->getOption('isBeingImported');
+                $params->getOption(EmailEntity::SAVE_OPTION_IS_BEING_IMPORTED);
 
             if (
                 $isArchivedOrBeingImported &&

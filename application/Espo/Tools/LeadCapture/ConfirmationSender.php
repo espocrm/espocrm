@@ -140,8 +140,7 @@ class ConfirmationSender
         if ($leadId) {
             /** @var ?Lead $lead */
             $lead = $this->entityManager->getEntityById(Lead::ENTITY_TYPE, $leadId);
-        }
-        else {
+        } else {
             $lead = $this->entityManager->getNewEntity(Lead::ENTITY_TYPE);
 
             $lead->set($data);

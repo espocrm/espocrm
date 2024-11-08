@@ -10,8 +10,11 @@
             "options": ["Planned", "Held", "Not Held"],
             "default": "Planned",
             "style": {
-                "Held": "success"
+                "Held": "success",
+                "Not Held": "info"
             },
+            "displayAsLabel": true,
+            "labelType": "state",
             "audited": true,
             "customizationOptionsReferenceDisabled": true
         },
@@ -19,13 +22,14 @@
             "type": "datetime",
             "required": true,
             "default": "javascript: return this.dateTime.getNow(15);",
-            "audited": true
+            "audited": true,
+            "view": "crm:views/call/fields/date-start"
         },
         "dateEnd": {
             "type": "datetime",
             "required": true,
-            "view": "crm:views/call/fields/date-end",
-            "after": "dateStart"
+            "after": "dateStart",
+            "afterOrEqual": true
         },
         "duration": {
             "type": "duration",
@@ -46,12 +50,15 @@
         "reminders": {
             "type": "jsonArray",
             "notStorable": true,
+            "orderDisabled": true,
             "view": "crm:views/meeting/fields/reminders",
             "layoutListDisabled": true,
             "validatorClassNameList": [
                 "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\Valid",
                 "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\MaxCount"
-            ]
+            ],
+            "dynamicLogicDisabled": true,
+            "duplicateIgnore": true
         },
         "direction": {
             "type": "enum",
@@ -81,6 +88,7 @@
             },
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
+            "orderDisabled": true,
             "importDisabled": true,
             "exportDisabled": true,
             "customizationDefaultDisabled": true,
@@ -303,6 +311,7 @@
         "phoneNumbersMap": {
             "type": "jsonObject",
             "notStorable": true,
+            "orderDisabled": true,
             "utility": true,
             "customizationDisabled": true
         },

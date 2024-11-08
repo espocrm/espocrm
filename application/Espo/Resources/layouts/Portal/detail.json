@@ -4,7 +4,7 @@
             [{"name": "name"}, {"name": "isActive"}],
             [{"name": "url"}, {"name": "isDefault"}],
             [{"name": "portalRoles"}, {"name": "customId"}],
-            [{"name": "authenticationProvider"}, {"name": "customUrl"}]
+            [{"name": "customUrl"}, false]
         ],
         "tabBreak": true,
         "tabLabel": "$label:General"
@@ -20,8 +20,14 @@
     },
     {
         "rows": [
+            [{"name": "authenticationProvider"}, {"name": "authTokenLifetime"}],
+            [false, {"name": "authTokenMaxIdleTime"}]
+        ]
+    },
+    {
+        "rows": [
             [{"name": "companyLogo"}, {"name": "theme"}],
-            [{"name": "layoutSet"}, false],
+            [{"name": "layoutSet"}, {"name": "applicationName"}],
             [{"name": "tabList"}, {"name": "quickCreateList"}],
             [{"name": "dashboardLayout", "fullWidth": true}]
         ],

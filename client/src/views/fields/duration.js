@@ -39,7 +39,7 @@ class DurationFieldView extends EnumFieldView {
     editTemplate = 'fields/duration/edit'
 
     data() {
-        let valueIsSet = this.model.has(this.startField) && this.model.has(this.endField);
+        const valueIsSet = this.model.has(this.startField) && this.model.has(this.endField);
 
         return {
             valueIsSet: valueIsSet,
@@ -48,10 +48,13 @@ class DurationFieldView extends EnumFieldView {
         };
     }
 
+    /**
+     * @private
+     */
     calculateSeconds() {
         this.seconds = 0;
 
-        let start = this.model.get(this.startField);
+        const start = this.model.get(this.startField);
         let end = this.model.get(this.endField);
 
         if (this.isEditMode() || this.isDetailMode()) {
@@ -60,9 +63,9 @@ class DurationFieldView extends EnumFieldView {
             }
         }
 
-        if (this.model.get('isAllDay')) {
-            let startDate = this.model.get(this.startField + 'Date');
-            let endDate = this.model.get(this.endField + 'Date');
+        if (this.model.attributes.isAllDay && this.hasAllDay) {
+            const startDate = this.model.attributes[this.startDateField];
+            const endDate = this.model.attributes[this.endDateField];
 
             if (startDate && endDate) {
                 this.seconds = moment(endDate).add(1,'days').unix() - moment(startDate).unix();
@@ -93,16 +96,13 @@ class DurationFieldView extends EnumFieldView {
 
             this.durationOptions = '';
 
-            this.getOptions().forEach(d => {
-                let $o = $('<option>')
-                    .val(d)
-                    .text(this.stringifyDuration(d));
+            this.getOptions().forEach(duration => {
+                const option = document.createElement('option');
+                option.value = duration.toString();
+                option.text = this.stringifyDuration(duration);
+                option.selected = duration === this.seconds;
 
-                if (d === this.seconds) {
-                    $o.attr('selected', 'selected')
-                }
-
-                this.durationOptions += $o.get(0).outerHTML;
+                this.durationOptions += option.outerHTML;
             });
 
             this.stringValue = this.stringifyDuration(this.seconds);
@@ -113,9 +113,9 @@ class DurationFieldView extends EnumFieldView {
      * @return {Number[]}
      */
     getOptions() {
-        let options = Espo.Utils.clone(this.model.getFieldParam(this.name, 'options') ?? []);
+        const options = Espo.Utils.clone(this.model.getFieldParam(this.name, 'options') ?? []);
 
-        if (!this.model.get('isAllDay') && options.indexOf(this.seconds) === -1) {
+        if (!this.model.attributes.isAllDay && options.indexOf(this.seconds) === -1) {
             options.push(this.seconds);
         }
 
@@ -128,27 +128,32 @@ class DurationFieldView extends EnumFieldView {
         this.startField = this.model.getFieldParam(this.name, 'start');
         this.endField = this.model.getFieldParam(this.name, 'end');
 
+        this.startDateField = this.startField + 'Date';
+        this.endDateField = this.endField + 'Date';
+
+        this.hasAllDay = this.model.getFieldType(this.startField) === 'datetimeOptional';
+
         if (!this.startField || !this.endField) {
-            throw new Error('Bad definition for field \'' + this.name + '\'.');
+            throw new Error(`Bad definition for field '${this.name}'.`);
         }
 
         this.calculateSeconds();
 
         this.blockDateEndChangeListener = false;
 
-        this.listenTo(this.model, 'change:' + this.endField, (m, v, o) => {
+        this.listenTo(this.model, `change:${this.endField}`, (m, v, o) => {
             if (this.blockDateEndChangeListener) {
                 return;
             }
 
-            let start = this.model.get(this.startField);
-            let end = this.model.get(this.endField);
+            const start = this.model.get(this.startField);
+            const end = this.model.get(this.endField);
 
             if (!end || !start) {
                 return;
             }
 
-            this.seconds = moment(end).unix() - moment(start).unix();
+            this.seconds = moment.utc(end).unix() - moment.utc(start).unix();
 
             if (o.updatedByDuration) {
                 return;
@@ -157,12 +162,12 @@ class DurationFieldView extends EnumFieldView {
             this.updateDuration();
         });
 
-        this.listenTo(this.model, 'change:' + this.startField, (m, v, o) => {
+        this.listenTo(this.model, `change:${this.startField}`, (m, v, o) => {
             if (o.ui) {
-                let isAllDay = this.model.get(this.startField + 'Date');
+                const isAllDay = this.model.attributes[this.startDateField];
 
-                if (isAllDay) {
-                    let remainder = this.seconds % (3600 * 24);
+                if (isAllDay && this.hasAllDay) {
+                    const remainder = this.seconds % (3600 * 24);
 
                     if (remainder !== 0) {
                         this.seconds = this.seconds - remainder + 3600 * 24;
@@ -191,6 +196,11 @@ class DurationFieldView extends EnumFieldView {
         return this.stringValue;
     }
 
+    /**
+     * @private
+     * @param {number} secondsTotal
+     * @return {string}
+     */
     stringifyDuration(secondsTotal) {
         if (!secondsTotal) {
             return '0';
@@ -201,14 +211,14 @@ class DurationFieldView extends EnumFieldView {
         }
 
         let d = secondsTotal;
-        let days = Math.floor(d / (86400));
+        const days = Math.floor(d / (86400));
         d = d % (86400);
 
-        let hours = Math.floor(d / (3600));
+        const hours = Math.floor(d / (3600));
         d = d % (3600);
-        let minutes = Math.floor(d / (60));
+        const minutes = Math.floor(d / (60));
 
-        let parts = [];
+        const parts = [];
 
         if (days) {
             parts.push(days + '' + this.getLanguage().translate('d', 'durationUnits'));
@@ -230,7 +240,7 @@ class DurationFieldView extends EnumFieldView {
     }
 
     afterRender() {
-        let parentView = this.getParentView();
+        const parentView = this.getParentView();
 
         if (parentView && 'getView' in parentView) {
             this.endFieldView = parentView.getView(this.endField);
@@ -245,10 +255,10 @@ class DurationFieldView extends EnumFieldView {
                 this.updateDateEnd();
             });
 
-            let start = this.model.get(this.startField);
-            let end = this.model.get(this.endField);
+            const start = this.model.get(this.startField);
+            const end = this.model.get(this.endField);
 
-            let seconds = this.$duration.val();
+            const seconds = this.$duration.val();
 
             if (!end && start && seconds) {
                 if (this.endFieldView) {
@@ -272,14 +282,14 @@ class DurationFieldView extends EnumFieldView {
                  * @return {number}
                  */
                 score: (search, item) => {
-                    let num = parseInt(item.value);
-                    let searchNum = parseInt(search);
+                    const num = parseInt(item.value);
+                    const searchNum = parseInt(search);
 
                     if (isNaN(searchNum)) {
                         return 0;
                     }
 
-                    let numOpposite = Number.MAX_SAFE_INTEGER - num;
+                    const numOpposite = Number.MAX_SAFE_INTEGER - num;
 
                     if (searchNum === 0 && num === 0) {
                         return numOpposite;
@@ -300,7 +310,7 @@ class DurationFieldView extends EnumFieldView {
                     return 0;
                 },
                 load: (item, callback) => {
-                    let num = parseInt(item);
+                    const num = parseInt(item);
 
                     if (isNaN(num) || num <= 0) {
                         return;
@@ -310,9 +320,9 @@ class DurationFieldView extends EnumFieldView {
                         return;
                     }
 
-                    let list = [];
+                    const list = [];
 
-                    let mSeconds = num * 60;
+                    const mSeconds = num * 60;
 
                     list.push({
                         value: mSeconds.toString(),
@@ -320,7 +330,7 @@ class DurationFieldView extends EnumFieldView {
                     });
 
                     if (num <= 9) {
-                        let hSeconds = num * 3600;
+                        const hSeconds = num * 3600;
 
                         list.push({
                             value: hSeconds.toString(),
@@ -334,19 +344,23 @@ class DurationFieldView extends EnumFieldView {
         }
     }
 
+    /**
+     * @private
+     * @return {string}
+     */
     _getDateEndDate() {
-        let seconds = this.seconds;
-        let start = this.model.get(this.startField + 'Date');
+        const seconds = this.seconds;
+        const start = this.model.attributes[this.startDateField];
 
         if (!start) {
-            return;
+            return undefined;
         }
 
         if (!seconds) {
             return start;
         }
 
-        let endUnix = moment.utc(start).unix() + seconds;
+        const endUnix = moment.utc(start).unix() + seconds;
 
         return moment.unix(endUnix)
             .utc()
@@ -354,12 +368,16 @@ class DurationFieldView extends EnumFieldView {
             .format(this.getDateTime().internalDateFormat);
     }
 
+    /**
+     * @private
+     * @return {string}
+     */
     _getDateEnd() {
-        let seconds = this.seconds;
-        let start = this.model.get(this.startField);
+        const seconds = this.seconds;
+        const start = this.model.get(this.startField);
 
         if (!start) {
-            return;
+            return undefined;
         }
 
         let endUnix;
@@ -369,40 +387,47 @@ class DurationFieldView extends EnumFieldView {
             endUnix = moment.utc(start).unix() + seconds;
 
             end = moment.unix(endUnix).utc().format(this.getDateTime().internalDateTimeFormat);
-        }
-        else {
+        } else {
             end = start;
         }
 
         return end;
     }
 
+    /**
+     * @private
+     */
     updateDateEnd() {
-        let end;
-
-        if (this.model.get('isAllDay')) {
-            end = this._getDateEndDate();
+        if (this.model.attributes.isAllDay && this.hasAllDay) {
+            const end = this._getDateEndDate();
 
             setTimeout(() => {
-                this.model.set(this.endField + 'Date', end, {updatedByDuration: true});
+                this.model.set(this.endDateField, end, {updatedByDuration: true});
             }, 1);
 
             return;
         }
 
-        end = this._getDateEnd();
+        const end = this._getDateEnd();
 
+        // Smaller timeouts produce a js error in timepicker.
         setTimeout(() => {
             this.model.set(this.endField, end, {updatedByDuration: true});
-            this.model.set(this.endField + 'Date', null);
-        }, 1);
+
+            if (this.hasAllDay) {
+                this.model.set(this.endDateField, null);
+            }
+        }, 100);
     }
 
+    /**
+     * @private
+     */
     updateDuration() {
-        let seconds = this.seconds;
+        const seconds = this.seconds;
 
         if (this.isEditMode() && this.$duration && this.$duration.length) {
-            let options = this.getOptions().map(value => {
+            const options = this.getOptions().map(value => {
                 return {
                     value: value.toString(),
                     text: this.stringifyDuration(value),

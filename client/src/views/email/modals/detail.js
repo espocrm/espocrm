@@ -26,44 +26,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/modals/detail', ['views/modals/detail', 'views/email/detail'], function (Dep, Detail) {
+import DetailModalView from 'views/modals/detail';
+import DetailView from 'views/email/detail';
 
-    return Dep.extend({
+export default class extends DetailModalView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.addButton({
-                name: 'reply',
-                label: 'Reply',
-                hidden: this.model && this.model.get('status') === 'Draft',
-                style: 'danger',
-                position: 'right',
-            }, true)
+        this.addButton({
+            name: 'reply',
+            label: 'Reply',
+            hidden: this.model && this.model.get('status') === 'Draft',
+            style: 'danger',
+            position: 'right',
+        }, true)
 
-            if (this.model) {
-                this.listenToOnce(this.model, 'sync', () => {
-                    setTimeout(() => {
-                        this.model.set('isRead', true);
-                    }, 50);
-                });
-            }
-        },
+        if (this.model) {
+            this.listenToOnce(this.model, 'sync', () => {
+                setTimeout(() => {
+                    this.model.set('isRead', true);
+                }, 50);
+            });
+        }
+    }
 
-        controlRecordButtonsVisibility: function () {
-            Dep.prototype.controlRecordButtonsVisibility.call(this);
+    controlRecordButtonsVisibility() {
+        super.controlRecordButtonsVisibility();
 
-            if (this.model.get('status') === 'Draft' || !this.getAcl().check('Email', 'create')) {
-                this.hideActionItem('reply');
+        if (this.model.get('status') === 'Draft' || !this.getAcl().check('Email', 'create')) {
+            this.hideActionItem('reply');
 
-                return;
-            }
+            return;
+        }
 
-            this.showActionItem('reply');
-        },
+        this.showActionItem('reply');
+    }
 
-        actionReply: function (data, e) {
-            Detail.prototype.actionReply.call(this, {}, e, this.getPreferences().get('emailReplyToAllByDefault'));
-        },
-    });
-});
+    // noinspection JSUnusedGlobalSymbols
+    actionReply(data, e) {
+        DetailView.prototype.actionReply.call(this, {}, e, this.getPreferences().get('emailReplyToAllByDefault'));
+    }
+}

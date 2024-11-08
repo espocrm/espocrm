@@ -29,27 +29,37 @@
 
 namespace tests\integration\Espo\ORM;
 
+use Espo\Entities\Team;
+use Espo\Modules\Crm\Entities\Account;
 use Espo\ORM\EntityManager;
+use tests\integration\Core\BaseTestCase;
 
-class EntityManagerTest extends \tests\integration\Core\BaseTestCase
+class EntityManagerTest extends BaseTestCase
 {
     public function testRefreshEntity(): void
     {
         $app = $this->createApplication();
 
         /** @var EntityManager $em */
-        $em = $app->getContainer()->get('entityManager');
+        $em = $app->getContainer()->getByClass(EntityManager::class);
 
-        $entity = $em->createEntity('Account', [
+        $team1 = $em->createEntity(Team::ENTITY_TYPE);
+        $team2 = $em->createEntity(Team::ENTITY_TYPE);
+
+        /** @var Account $account */
+        $account = $em->createEntity(Account::ENTITY_TYPE, [
             'name' => 'Test',
+            'teamsIds' => [$team1->getId()],
         ]);
 
-        $entity->set('name', 'Hello');
+        $account->set('name', 'Hello');
 
-        $em->refreshEntity($entity);
+        $em->getRelation($account, 'teams')->relateById($team2->getId());
 
-        $this->assertEquals('Test', $entity->get('name'));
+        $em->refreshEntity($account);
 
-        $this->assertFalse($entity->isAttributeChanged('name'));
+        $this->assertEquals('Test', $account->get('name'));
+        $this->assertFalse($account->isAttributeChanged('name'));
+        $this->assertEqualsCanonicalizing([$team1->getId(), $team2->getId()], $account->getLinkMultipleIdList('teams'));
     }
 }

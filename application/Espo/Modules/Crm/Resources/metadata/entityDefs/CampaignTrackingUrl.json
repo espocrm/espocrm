@@ -11,6 +11,7 @@
         "urlToUse": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "readOnly": true
         },
         "campaign": {

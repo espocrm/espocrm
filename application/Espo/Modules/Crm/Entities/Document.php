@@ -32,6 +32,9 @@ namespace Espo\Modules\Crm\Entities;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\ORM\Entity;
+use Espo\Entities\Attachment;
+use Espo\Entities\User;
+use RuntimeException;
 
 class Document extends Entity
 {
@@ -45,9 +48,27 @@ class Document extends Entity
         return $this->get('name');
     }
 
+    public function setFile(?Attachment $file): self
+    {
+        $this->relations->set('file', $file);
+
+        return $this;
+    }
+
     public function getFileId(): ?string
     {
         return $this->get('fileId');
+    }
+
+    public function getFile(): ?Attachment
+    {
+        $file = $this->relations->getOne('file');
+
+        if ($file && !$file instanceof Attachment) {
+            throw new RuntimeException();
+        }
+
+        return $file;
     }
 
     public function getAssignedUser(): ?Link
@@ -60,5 +81,17 @@ class Document extends Entity
     {
         /** @var LinkMultiple */
         return $this->getValueObject('teams');
+    }
+
+    public function setAssignedUser(Link|User|null $assignedUser): self
+    {
+        return $this->setRelatedLinkOrEntity('assignedUser', $assignedUser);
+    }
+
+    public function setTeams(LinkMultiple $teams): self
+    {
+        $this->setValueObject('teams', $teams);
+
+        return $this;
     }
 }

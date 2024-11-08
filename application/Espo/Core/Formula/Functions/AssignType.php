@@ -29,10 +29,7 @@
 
 namespace Espo\Core\Formula\Functions;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Core\Formula\ArgumentList;
 
 class AssignType extends BaseFunction
 {

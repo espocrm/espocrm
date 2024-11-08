@@ -30,15 +30,20 @@
 namespace Espo\Modules\Crm\Classes\Select\KnowledgeBaseArticle\AccessControlFilters;
 
 use Espo\Core\Select\AccessControl\Filter;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\Portal;
 use Espo\Modules\Crm\Entities\KnowledgeBaseArticle;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\SelectBuilder;
-
 use Espo\Entities\User;
 
 class Mandatory implements Filter
 {
-    public function __construct(private User $user)
-    {}
+    public function __construct(
+        private User $user,
+        private Metadata $metadata
+    ) {}
 
     public function apply(SelectBuilder $queryBuilder): void
     {
@@ -46,14 +51,20 @@ class Mandatory implements Filter
             return;
         }
 
+        $statusList = $this->metadata->get("entityDefs.KnowledgeBaseArticle.fields.status.activeOptions") ??
+            [KnowledgeBaseArticle::STATUS_PUBLISHED];
+
         $queryBuilder
-            ->where([
-                'status' => KnowledgeBaseArticle::STATUS_PUBLISHED,
-            ])
-            ->distinct()
-            ->leftJoin('portals', 'portalsAccess')
-            ->where([
-                'portalsAccess.id' => $this->user->getPortalId(),
-            ]);
+            ->where(['status' => $statusList])
+            ->where(
+                Condition::in(
+                    Expression::column('id'),
+                    SelectBuilder::create()
+                        ->select('knowledgeBaseArticleId')
+                        ->from(KnowledgeBaseArticle::ENTITY_TYPE . Portal::ENTITY_TYPE)
+                        ->where(['portalId' => $this->user->getPortalId()])
+                        ->build()
+                )
+            );
     }
 }

@@ -33,7 +33,7 @@
                                 data-name="{{name}}"
                                 data-action="selectPreset"
                             >
-                                <div>
+                                <div class="{{#if style}}text-{{style}}{{/if}}">
                                 {{#if label}}{{label}}{{else}}{{translate name category='presetFilters' scope=../entityType}}{{/if}}
                                 </div>
                             </a>
@@ -85,7 +85,7 @@
                     tabindex="0"
                     title="{{translate 'Search'}}"
                 >
-                    <span class="fa fa-search"></span>
+                    <span class="fas fa-search"></span>
                 </button>
             </div>
             <div class="input-group-btn">

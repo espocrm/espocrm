@@ -29,37 +29,26 @@
 
 namespace Espo\Tools\EmailTemplate;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\ORM\Entity;
-
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\NumberUtil;
 use Espo\Core\Utils\Language;
 
+use Espo\ORM\Type\AttributeType;
 use Stringable;
 
 class Formatter
 {
-    private Metadata $metadata;
-    private Config $config;
-    private DateTimeUtil $dateTime;
-    private NumberUtil $number;
-    private Language $language;
-
     public function __construct(
-        Metadata $metadata,
-        Config $config,
-        DateTimeUtil $dateTime,
-        NumberUtil $number,
-        Language $language
-    ) {
-        $this->metadata = $metadata;
-        $this->config = $config;
-        $this->dateTime = $dateTime;
-        $this->number = $number;
-        $this->language = $language;
-    }
+        private Metadata $metadata,
+        private Config $config,
+        private DateTimeUtil $dateTime,
+        private NumberUtil $number,
+        private Language $language
+    ) {}
 
     public function formatAttributeValue(Entity $entity, string $attribute, bool $isPlainText = false): ?string
     {
@@ -70,7 +59,7 @@ class Formatter
 
         $attributeType = $entity->getAttributeType($attribute);
 
-        if ($fieldType === 'enum') {
+        if ($fieldType === FieldType::ENUM) {
             if ($value === null) {
                 return '';
             }
@@ -88,7 +77,11 @@ class Formatter
             return $label;
         }
 
-        if ($fieldType === 'array' || $fieldType === 'multiEnum' || $fieldType === 'checklist') {
+        if (
+            $fieldType === FieldType::ARRAY ||
+            $fieldType === FieldType::MULTI_ENUM ||
+            $fieldType === FieldType::CHECKLIST
+        ) {
             $valueList = [];
 
             if (!is_array($value)) {
@@ -102,7 +95,7 @@ class Formatter
             return implode(', ', $valueList);
         }
 
-        if ($attributeType === 'date') {
+        if ($attributeType === AttributeType::DATE) {
             if (!$value) {
                 return '';
             }
@@ -110,7 +103,7 @@ class Formatter
             return $this->dateTime->convertSystemDate($value);
         }
 
-        if ($attributeType === 'datetime') {
+        if ($attributeType === AttributeType::DATETIME) {
             if (!$value) {
                 return '';
             }
@@ -118,12 +111,12 @@ class Formatter
             return $this->dateTime->convertSystemDateTime($value);
         }
 
-        if ($attributeType === 'text') {
+        if ($attributeType === AttributeType::TEXT) {
             if (!is_string($value)) {
                 return '';
             }
 
-            if ($fieldType === 'wysiwyg') {
+            if ($fieldType === FieldType::WYSIWYG) {
                 return $value;
             }
 
@@ -134,28 +127,28 @@ class Formatter
             return nl2br($value);
         }
 
-        if ($attributeType === 'float') {
+        if ($attributeType === AttributeType::FLOAT) {
             if (!is_float($value)) {
                 return '';
             }
 
             $decimalPlaces = 2;
 
-            if ($fieldType === 'currency') {
+            if ($fieldType === FieldType::CURRENCY) {
                 $decimalPlaces = $this->config->get('currencyDecimalPlaces');
             }
 
             return $this->number->format($value, $decimalPlaces);
         }
 
-        if ($attributeType === 'int') {
+        if ($attributeType === AttributeType::INT) {
             if (!is_int($value)) {
                 return '';
             }
 
             if (
-                $fieldType === 'autoincrement' ||
-                $fieldType === 'int' &&
+                $fieldType === FieldType::AUTOINCREMENT ||
+                $fieldType === FieldType::INT &&
                 $this->metadata
                     ->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'disableFormatting'])
             ) {

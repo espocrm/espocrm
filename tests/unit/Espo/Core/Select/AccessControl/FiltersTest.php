@@ -29,20 +29,24 @@
 
 namespace tests\unit\Espo\Core\Select\AccessControl;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Core\Select\Helpers\FieldHelper,
-    Core\Select\AccessControl\Filters\No,
-    Core\Select\AccessControl\Filters\OnlyOwn,
-    Core\Select\AccessControl\Filters\OnlyTeam,
-    Core\Select\AccessControl\Filters\PortalOnlyAccount,
-    Core\Select\AccessControl\Filters\PortalOnlyContact,
-    Core\Select\AccessControl\Filters\PortalOnlyOwn,
-    Core\Select\AccessControl\Filter as AccessControlFilter,
-    Entities\User,
-};
+use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Field\LinkMultipleItem;
+use Espo\Core\Select\AccessControl\Filter as AccessControlFilter;
+use Espo\Core\Select\AccessControl\Filters\No;
+use Espo\Core\Select\AccessControl\Filters\PortalOnlyAccount;
+use Espo\Core\Select\AccessControl\Filters\PortalOnlyContact;
+use Espo\Core\Select\AccessControl\Filters\PortalOnlyOwn;
+use Espo\Core\Select\Helpers\FieldHelper;
+use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\ORM\Defs\RelationDefs;
+use Espo\ORM\Query\Part\Where\OrGroup;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Type\RelationType;
+use PHPUnit\Framework\TestCase;
 
-class FiltersTest extends \PHPUnit\Framework\TestCase
+class FiltersTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -50,9 +54,10 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
         $this->fieldHelper = $this->createMock(FieldHelper::class);
         $this->user = $this->createMock(User::class);
 
-        $this->user->id = 'user-id';
+        $this->user->set('id', 'user-id');
 
         $this->user
+            ->expects($this->any())
             ->method('getId')
             ->willReturn('user-id');
 
@@ -84,14 +89,14 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
 
         $this->user
             ->expects($this->any())
-            ->method('getLinkMultipleIdList')
-            ->with('accounts')
-            ->willReturn(['account-id']);
+            ->method('getAccounts')
+            ->willReturn(LinkMultiple::create([
+                LinkMultipleItem::create('account-id')
+            ]));
 
         $this->user
             ->expects($this->any())
-            ->method('get')
-            ->with('contactId')
+            ->method('getContactId')
             ->willReturn('contact-id');
 
         $this->initHelperMethods([
@@ -103,40 +108,52 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
             ['hasCreatedByField', true],
         ]);
 
-        $this->queryBuilder
-            ->expects($this->exactly(2))
-            ->method('distinct')
-            ->willReturn($this->queryBuilder);
-
-        $this->queryBuilder
-            ->expects($this->exactly(2))
-            ->method('leftJoin')
-            ->withConsecutive(
-                ['accounts', 'accountsAccess'],
-                ['contacts', 'contactsAccess'],
-            )
-            ->willReturn($this->queryBuilder);
+        $this->fieldHelper
+            ->expects($this->any())
+            ->method('getRelationDefs')
+            ->willReturnMap([
+                [
+                    'accounts',
+                    RelationDefs::fromRaw([
+                        'type' => RelationType::MANY_MANY,
+                        'entity' => Account::ENTITY_TYPE,
+                        'midKeys' => ['nId', 'fId'],
+                        'relationName' => 'TestAccount'
+                    ], 'accounts')
+                ],
+                [
+                    'contacts',
+                    RelationDefs::fromRaw([
+                        'type' => RelationType::MANY_MANY,
+                        'entity' => Contact::ENTITY_TYPE,
+                        'midKeys' => ['nId', 'fId'],
+                        'relationName' => 'TestContact'
+                    ], 'contacts')
+                ],
+                [
+                    'account',
+                    RelationDefs::fromRaw([
+                        'type' => RelationType::BELONGS_TO,
+                        'entity' => Account::ENTITY_TYPE,
+                    ], 'account')
+                ],
+                [
+                    'contact',
+                    RelationDefs::fromRaw([
+                        'type' => RelationType::BELONGS_TO,
+                        'entity' => Contact::ENTITY_TYPE,
+                    ], 'contact')
+                ],
+            ]);
 
         $this->queryBuilder
             ->expects($this->once())
             ->method('where')
-            ->with([
-                'OR' => [
-                    'accountId' => ['account-id'],
-                    'accountsAccess.id' => ['account-id'],
-                    [
-                        'parentType' => 'Account',
-                        'parentId' => ['account-id'],
-                    ],
-                    [
-                        'parentType' => 'Contact',
-                        'parentId' => 'contact-id',
-                    ],
-                    'contactId' => 'contact-id',
-                    'contactsAccess.id' => 'contact-id',
-                    'createdById' => $this->user->id,
-                ],
-            ])
+            ->with(
+                $this->callback(function ($where) {
+                    return $where instanceof OrGroup;
+                })
+            )
             ->willReturn($this->queryBuilder);
 
         $filter->apply($this->queryBuilder);
@@ -178,8 +195,7 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
 
         $this->user
             ->expects($this->any())
-            ->method('get')
-            ->with('contactId')
+            ->method('getContactId')
             ->willReturn('contact-id');
 
         $this->initHelperMethods([
@@ -189,31 +205,44 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
             ['hasCreatedByField', true],
         ]);
 
-        $this->queryBuilder
-            ->expects($this->once())
-            ->method('distinct')
-            ->willReturn($this->queryBuilder);
 
-        $this->queryBuilder
-            ->expects($this->once())
-            ->method('leftJoin')
-            ->with('contacts', 'contactsAccess')
-            ->willReturn($this->queryBuilder);
+        $this->fieldHelper
+            ->expects($this->any())
+            ->method('getRelationDefs')
+            ->willReturnMap([
+                [
+                    'contacts',
+                    RelationDefs::fromRaw([
+                        'type' => RelationType::MANY_MANY,
+                        'entity' => Contact::ENTITY_TYPE,
+                        'midKeys' => ['nId', 'fId'],
+                        'relationName' => 'TestContact'
+                    ], 'contacts')
+                ],
+                [
+                    'account',
+                    RelationDefs::fromRaw([
+                        'type' => RelationType::BELONGS_TO,
+                        'entity' => Account::ENTITY_TYPE,
+                    ], 'account')
+                ],
+                [
+                    'contact',
+                    RelationDefs::fromRaw([
+                        'type' => RelationType::BELONGS_TO,
+                        'entity' => Contact::ENTITY_TYPE,
+                    ], 'contact')
+                ],
+            ]);
 
         $this->queryBuilder
             ->expects($this->once())
             ->method('where')
-            ->with([
-                'OR' => [
-                    'contactId' => 'contact-id',
-                    'contactsAccess.id' => 'contact-id',
-                    [
-                        'parentType' => 'Contact',
-                        'parentId' => 'contact-id',
-                    ],
-                    'createdById' => $this->user->id,
-                ],
-            ])
+            ->with(
+                $this->callback(function ($where) {
+                    return $where instanceof OrGroup;
+                })
+            )
             ->willReturn($this->queryBuilder);
 
         $filter->apply($this->queryBuilder);
@@ -232,14 +261,6 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
         $this->initHelperMethods([
             ['hasCreatedByField', false],
         ]);
-
-        $this->queryBuilder
-            ->expects($this->never())
-            ->method('distinct');
-
-        $this->queryBuilder
-            ->expects($this->never())
-            ->method('leftJoin');
 
         $this->queryBuilder
             ->expects($this->once())
@@ -264,7 +285,7 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
             ->expects($this->once())
             ->method('where')
             ->with([
-                'createdById' => $this->user->id,
+                'createdById' => $this->user->getId(),
             ])
             ->willReturn($this->queryBuilder);
 

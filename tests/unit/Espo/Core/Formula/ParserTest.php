@@ -502,7 +502,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
         $actual = $this->parse($expression);
         $expected = (object) [
             'type' => 'value',
-            'value' => 'test\" + \"test'
+            'value' => 'test" + "test'
         ];
         $this->assertEquals($expected, $actual);
 
@@ -889,8 +889,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
                 $array[] = var_export($key, true) . " => " . $this->varExport($value, $level + 1);
             }
             $result = "[\n" . $tab . implode(",\n" . $tab, $array) . "\n" . $prevTab . "]";
-        }
-        else {
+        } else {
             $result = var_export($variable, true);
         }
 

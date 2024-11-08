@@ -188,11 +188,13 @@ class BarcodeFieldView extends VarcharFieldView {
     }
 
     initBarcode(value) {
+        const factor = this.getThemeManager().getFontSizeFactor();
+
         try {
             JsBarcode(this.getSelector() + ' .barcode', value, {
                 format: this.params.codeType,
-                height: 50,
-                fontSize: 14,
+                height: 50 * factor,
+                fontSize: 14 * factor,
                 margin: 0,
                 lastChar: this.params.lastChar,
             });

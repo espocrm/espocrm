@@ -10,6 +10,7 @@
     "publishDate": "Data di pubblicazione",
     "expirationDate": "Data di Scadenza",
     "description": "Descrizione",
+    "accounts": "Account",
     "folder": "Cartella"
   },
   "links": {

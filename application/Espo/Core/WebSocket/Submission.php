@@ -35,6 +35,9 @@ use Espo\Core\Utils\Json;
 use stdClass;
 use Throwable;
 
+/**
+ * @todo Introduce a wrapper class that will skip sending if WebSocket is not enabled.
+ */
 class Submission
 {
     public function __construct(
@@ -61,8 +64,7 @@ class Submission
 
         try {
             $this->sender->send($message);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->error("WebSocketSubmission: " . $e->getMessage());
         }
     }

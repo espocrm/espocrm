@@ -152,8 +152,7 @@ class JobManager
         if ($this->fileManager->isFile($this->lastRunTimeFile)) {
             try {
                 $data = $this->fileManager->getPhpContents($this->lastRunTimeFile);
-            }
-            catch (RuntimeException) {
+            } catch (RuntimeException) {
                 $data = null;
             }
 

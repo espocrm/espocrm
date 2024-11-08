@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "message": "Bericht",
+    "level": "Niveau",
+    "exceptionClass": "Uitzonderings klasse",
+    "file": "Bestand",
+    "line": "Regel",
+    "requestMethod": "Aanvraag Methode",
+    "requestResourcePath": "Bron Pad aanvragen"
+  },
+  "presetFilters": {
+    "errors": "Fouten"
+  }
+}

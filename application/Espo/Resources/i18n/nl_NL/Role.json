@@ -12,7 +12,9 @@
     "followerManagementPermission": "Volgersbeheer Toestemming",
     "data": "Gegevens",
     "fieldData": "Veldgegevens",
-    "messagePermission": "Toestemming voor berichten"
+    "messagePermission": "Toestemming voor berichten",
+    "auditPermission": "Controle Toestemming",
+    "mentionPermission": "Vermeld toestemming"
   },
   "links": {
     "users": "Gebruikers",
@@ -58,6 +60,8 @@
     "portalPermission": "Toegang tot portaalinformatie, de mogelijkheid om berichten te posten voor portaalgebruikers.",
     "groupEmailAccountPermission": "Toegang tot e-mailaccounts van groepen, de mogelijkheid om e-mails te versturen via SMTP van groepen.",
     "exportPermission": "Het kunnen exporteren van records.",
-    "massUpdatePermission": "Het uitvoeren van massale updates van records."
+    "massUpdatePermission": "Het uitvoeren van massale updates van records.",
+    "auditPermission": "Hiermee kan het auditlogboek worden bekeken.",
+    "mentionPermission": "Hiermee kunnen andere gebruikers in de stream worden genoemd.\n\n* all - kan iedereen vermelden\n* team - kan alleen teamgenoten noemen\n* nee - kan niet vermelden"
   }
 }

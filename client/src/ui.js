@@ -53,7 +53,7 @@ import $ from 'jquery';
  * @property {boolean} [keyboard=true] Enable a keyboard control. The `Esc` key closes a dialog.
  * @property {boolean} [footerAtTheTop=false] To display a footer at the top.
  * @property {module:ui.Dialog~Button[]} [buttonList] Buttons.
- * @property {module:ui.Dialog~Button[]} [dropdownItemList] Dropdown action items.
+ * @property {Array<module:ui.Dialog~Button|false>} [dropdownItemList] Dropdown action items.
  * @property {boolean} [fullHeight] Deprecated.
  * @property {Number} [bodyDiffHeight]
  * @property {Number} [screenWidthXs]
@@ -377,6 +377,10 @@ class Dialog {
         });
 
         this.dropdownItemList.forEach(o => {
+            if (o === false) {
+                return;
+            }
+
             if (typeof o.onClick === 'function') {
                 const $button = $('#' + this.id + ' .modal-footer a[data-name="' + o.name + '"]');
 
@@ -501,7 +505,7 @@ class Dialog {
             $main.append($button);
         });
 
-        const allDdItemsHidden = this.dropdownItemList.filter(o => !o.hidden).length === 0;
+        const allDdItemsHidden = this.dropdownItemList.filter(o => o && !o.hidden).length === 0;
 
         const $dropdown = $('<div>')
             .addClass('btn-group')
@@ -521,7 +525,17 @@ class Dialog {
 
         $dropdown.append($ul);
 
-        this.dropdownItemList.forEach(/** module:ui.Dialog~Button */o => {
+        this.dropdownItemList.forEach((o, i) => {
+            if (o === false) {
+                if (i === this.dropdownItemList.length - 1) {
+                    return;
+                }
+
+                $ul.append(`<li class="divider"></li>`);
+
+                return;
+            }
+
             const $a = $('<a>')
                 .attr('role', 'button')
                 .attr('tabindex', '0')
@@ -888,6 +902,8 @@ Espo.Ui = {
      * @property {boolean} [noHideOnOutsideClick=false] Don't hide on clicking outside.
      * @property {function(): void} [onShow] On-show callback.
      * @property {function(): void} [onHide] On-hide callback.
+     * @property {string|function(): string} [title] A title text.
+     * @property {boolean} [keepElementTitle] Keep an original element's title.
      */
 
     /**
@@ -896,7 +912,12 @@ Espo.Ui = {
      * @param {Element|JQuery} element An element.
      * @param {Espo.Ui~PopoverOptions} o Options.
      * @param {module:view} [view] A view.
-     * @return {{hide: function(), destroy: function(), show: function(), detach: function()}}
+     * @return {{
+     *     hide: function(),
+     *     destroy: function(),
+     *     show: function(): string,
+     *     detach: function(),
+     * }}
      */
     popover: function (element, o, view) {
         const $el = $(element);
@@ -921,6 +942,8 @@ Espo.Ui = {
                 html: true,
                 content: content,
                 trigger: o.trigger || 'manual',
+                title: o.title,
+                keepElementTitle: o.keepElementTitle,
             })
             .on('shown.bs.popover', () => {
                 isShown = true;
@@ -930,10 +953,10 @@ Espo.Ui = {
                 }
 
                 if (view && !o.noHideOnOutsideClick) {
-                    $body.off('click.popover-' + view.cid);
+                    $body.off(`click.popover-${view.cid}`);
 
-                    $body.on('click.popover-' + view.cid, e => {
-                        if ($(e.target).closest('.popover-content').get(0)) {
+                    $body.on(`click.popover-${view.cid}`, e => {
+                        if ($(e.target).closest('.popover').get(0)) {
                             return;
                         }
 
@@ -945,7 +968,7 @@ Espo.Ui = {
                             return;
                         }
 
-                        $body.off('click.popover-' + view.cid);
+                        $body.off(`click.popover-${view.cid}`);
                         // noinspection JSUnresolvedReference
                         $el.popover('hide');
                     });
@@ -974,7 +997,7 @@ Espo.Ui = {
 
         const detach = () => {
             if (view) {
-                $body.off('click.popover-' + view.cid);
+                $body.off(`click.popover-${view.cid}`);
 
                 view.off('remove', destroy);
                 view.off('render', destroy);
@@ -1007,6 +1030,8 @@ Espo.Ui = {
         const show = () => {
             // noinspection JSUnresolvedReference
             $el.popover('show');
+
+            return $el.attr('aria-describedby');
         };
 
         if (view) {
@@ -1107,7 +1132,7 @@ Espo.Ui = {
                 .attr('data-dismiss', 'modal')
                 .attr('aria-hidden', 'true')
                 .addClass('close')
-                .html('&times;');
+                .html(`<span class="fas fa-times"></span>`);
 
             $el.append(
                 $('<div>')

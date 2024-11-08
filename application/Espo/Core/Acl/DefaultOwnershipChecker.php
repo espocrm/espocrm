@@ -38,17 +38,27 @@ use Espo\Entities\User;
  *
  * @implements OwnershipOwnChecker<CoreEntity>
  * @implements OwnershipTeamChecker<CoreEntity>
+ * @implements OwnershipSharedChecker<CoreEntity>
  */
-class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
+class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker, OwnershipSharedChecker
 {
     private const ATTR_CREATED_BY_ID = 'createdById';
     private const ATTR_ASSIGNED_USER_ID = 'assignedUserId';
     private const ATTR_ASSIGNED_TEAMS_IDS = 'teamsIds';
     private const FIELD_TEAMS = 'teams';
     private const FIELD_ASSIGNED_USERS = 'assignedUsers';
+    private const FIELD_COLLABORATORS = 'collaborators';
 
     public function checkOwn(User $user, Entity $entity): bool
     {
+        if ($entity instanceof CoreEntity && $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS)) {
+            if ($entity->hasLinkMultipleId(self::FIELD_ASSIGNED_USERS, $user->getId())) {
+                return true;
+            }
+
+            return false;
+        }
+
         if ($entity->hasAttribute(self::ATTR_ASSIGNED_USER_ID)) {
             if (
                 $entity->has(self::ATTR_ASSIGNED_USER_ID) &&
@@ -56,18 +66,15 @@ class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamCheck
             ) {
                 return true;
             }
+
+            return false;
         }
-        else if ($entity->hasAttribute(self::ATTR_CREATED_BY_ID)) {
+
+        if ($entity->hasAttribute(self::ATTR_CREATED_BY_ID)) {
             if (
                 $entity->has(self::ATTR_CREATED_BY_ID) &&
                 $user->getId() === $entity->get(self::ATTR_CREATED_BY_ID)
             ) {
-                return true;
-            }
-        }
-
-        if ($entity instanceof CoreEntity && $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS)) {
-            if ($entity->hasLinkMultipleId(self::FIELD_ASSIGNED_USERS, $user->getId())) {
                 return true;
             }
         }
@@ -81,7 +88,6 @@ class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamCheck
             return false;
         }
 
-        /** @var string[] $userTeamIdList */
         $userTeamIdList = $user->getLinkMultipleIdList(self::FIELD_TEAMS);
 
         if (
@@ -104,5 +110,25 @@ class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamCheck
         }
 
         return false;
+    }
+
+    public function checkShared(User $user, Entity $entity, string $action): bool
+    {
+        if (!$entity instanceof CoreEntity) {
+            return false;
+        }
+
+        if ($action !== Table::ACTION_READ && $action !== Table::ACTION_STREAM) {
+            return false;
+        }
+
+        if (
+            !$entity->hasRelation(self::FIELD_COLLABORATORS) ||
+            !$entity->hasLinkMultipleField(self::FIELD_COLLABORATORS)
+        ) {
+            return false;
+        }
+
+        return in_array($user->getId(), $entity->getLinkMultipleIdList(self::FIELD_COLLABORATORS));
     }
 }

@@ -177,12 +177,10 @@ class HookManager
     private function createHookByClassName(string $className): object
     {
         if (!class_exists($className)) {
-            $this->log->error("Hook class '{$className}' does not exist.");
+            $this->log->error("Hook class '$className' does not exist.");
         }
 
-        $obj = $this->injectableFactory->create($className);
-
-        return $obj;
+        return $this->injectableFactory->create($className);
     }
 
     /**

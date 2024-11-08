@@ -2,7 +2,7 @@
   "labels": {
     "Fields": "Alanlar",
     "Relationships": "İlişkiler",
-    "Schedule": "Planlama ",
+    "Schedule": "Takvim",
     "Log": "Kütük",
     "Formula": "formül"
   },
@@ -47,7 +47,7 @@
       "Base": "Temel",
       "Person": "Kişi",
       "CategoryTree": "Kategori Ağacı",
-      "Event": "Etkinlik ",
+      "Event": "Etkinlik",
       "BasePlus": "Taban Artı",
       "Company": "Şirket"
     },
@@ -69,7 +69,8 @@
     "linkConflict": "İsim çakışması: aynı isimde bağlantı veya alan zaten var",
     "nameIsAlreadyUsed": "'{name}' adı zaten kullanılıyor.",
     "nameIsNotAllowed": "'{name}' ismine izin verilmiyor.",
-    "nameIsTooLong": "Ad çok uzun."
+    "nameIsTooLong": "Ad çok uzun.",
+    "confirmRemoveLink": "*{link}* ilişkisini kaldırmak istediğinizden emin misiniz?"
   },
   "tooltips": {
     "statusField": "Bu alanın güncellemeleri akış halinde kaydedildi.",

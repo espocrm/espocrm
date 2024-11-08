@@ -26,24 +26,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/fields/name', ['views/fields/person-name'], function (Dep) {
+import PersonNameFieldView from 'views/fields/person-name';
 
-    return Dep.extend({
+export default class extends PersonNameFieldView {
 
-        listTemplate: 'user/fields/name/list-link',
+    listTemplate = 'user/fields/name/list-link'
+    listLinkTemplate = 'user/fields/name/list-link'
 
-        listLinkTemplate: 'user/fields/name/list-link',
+    data() {
+        const model = /** @type {import('models/user').default} */this.model;
 
-        data: function () {
-            return _.extend({
-                avatar: this.getAvatarHtml(),
-                frontScope: this.model.isPortal() ? 'PortalUser': 'User',
-                isOwn: this.model.id === this.getUser().id,
-            }, Dep.prototype.data.call(this));
-        },
+        // noinspection JSValidateTypes
+        return {
+            ...super.data(),
+            avatar: this.getAvatarHtml(),
+            frontScope: model.isPortal() ? 'PortalUser': 'User',
+            isOwn: this.model.id === this.getUser().id,
+        };
+    }
 
-        getAvatarHtml: function () {
-            return this.getHelper().getAvatarHtml(this.model.id, 'small', 16, 'avatar-link');
-        },
-    });
-});
+    getAvatarHtml() {
+        return this.getHelper().getAvatarHtml(this.model.id, 'small', 20, 'avatar-link');
+    }
+}

@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils\Database\Orm\FieldConverters;
 
+use Espo\Core\ORM\Defs\AttributeParam;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
@@ -64,7 +66,7 @@ class Phone implements FieldConverter
             ->withType(AttributeType::JSON_ARRAY)
             ->withNotStorable()
             ->withParamsMerged([
-                'notExportable' => true,
+                AttributeParam::NOT_EXPORTABLE => true,
                 'isPhoneNumberData' => true,
                 'field' => $name,
             ]);
@@ -158,7 +160,7 @@ class Phone implements FieldConverter
                     ]
                 ],
             ],
-            'fieldType' => 'phone',
+            'fieldType' => FieldType::PHONE,
             'where' => [
                 'LIKE' => [
                     'whereClause' => [
@@ -210,36 +212,82 @@ class Phone implements FieldConverter
                     'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
                         'phoneNumbersMultiple.name=' => '{value}',
-                    ],
-                    'distinct' => true,
+                    ]
                 ],
                 '<>' => [
-                    'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
-                        'phoneNumbersMultiple.name!=' => '{value}',
+                        'id!=s' => [
+                            'from' => 'EntityPhoneNumber',
+                            'select' => ['entityId'],
+                            'joins' => [
+                                [
+                                    'phoneNumber',
+                                    'phoneNumber',
+                                    [
+                                        'phoneNumber.id:' => 'phoneNumberId',
+                                        'phoneNumber.deleted' => false,
+                                    ],
+                                ],
+                            ],
+                            'whereClause' => [
+                                'deleted' => false,
+                                'entityType' => $entityType,
+                                'phoneNumber.name' => '{value}',
+                            ],
+                        ],
                     ],
-                    'distinct' => true,
                 ],
                 'IN' => [
-                    'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
-                        'phoneNumbersMultiple.name=' => '{value}',
+                        'id=s' => [
+                            'from' => 'EntityPhoneNumber',
+                            'select' => ['entityId'],
+                            'joins' => [
+                                [
+                                    'phoneNumber',
+                                    'phoneNumber',
+                                    [
+                                        'phoneNumber.id:' => 'phoneNumberId',
+                                        'phoneNumber.deleted' => false,
+                                    ],
+                                ],
+                            ],
+                            'whereClause' => [
+                                'deleted' => false,
+                                'entityType' => $entityType,
+                                'phoneNumber.name' => '{value}',
+                            ],
+                        ],
                     ],
-                    'distinct' => true,
                 ],
                 'NOT IN' => [
-                    'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
-                        'phoneNumbersMultiple.name!=' => '{value}',
+                        'id=s' => [
+                            'from' => 'EntityPhoneNumber',
+                            'select' => ['entityId'],
+                            'joins' => [
+                                [
+                                    'phoneNumber',
+                                    'phoneNumber',
+                                    [
+                                        'phoneNumber.id:' => 'phoneNumberId',
+                                        'phoneNumber.deleted' => false,
+                                    ],
+                                ],
+                            ],
+                            'whereClause' => [
+                                'deleted' => false,
+                                'entityType' => $entityType,
+                                'phoneNumber.name!=' => '{value}',
+                            ],
+                        ],
                     ],
-                    'distinct' => true,
                 ],
                 'IS NULL' => [
                     'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
                         'phoneNumbersMultiple.name=' => null,
-                    ],
-                    'distinct' => true,
+                    ]
                 ],
                 'IS NOT NULL' => [
                     'whereClause' => [
@@ -390,7 +438,7 @@ class Phone implements FieldConverter
     private function getNumericParams(string $entityType): array
     {
         return [
-            'notExportable' => true,
+            AttributeParam::NOT_EXPORTABLE => true,
             'where' => [
                 'LIKE' => [
                     'whereClause' => [
@@ -439,39 +487,102 @@ class Phone implements FieldConverter
                     ],
                 ],
                 '=' => [
-                    'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
-                        'phoneNumbersMultiple.numeric=' => '{value}',
+                        'id=s' => [
+                            'from' => 'EntityPhoneNumber',
+                            'select' => ['entityId'],
+                            'joins' => [
+                                [
+                                    'phoneNumber',
+                                    'phoneNumber',
+                                    [
+                                        'phoneNumber.id:' => 'phoneNumberId',
+                                        'phoneNumber.deleted' => false,
+                                    ],
+                                ],
+                            ],
+                            'whereClause' => [
+                                'deleted' => false,
+                                'entityType' => $entityType,
+                                'phoneNumber.numeric' => '{value}',
+                            ],
+                        ],
                     ],
-                    'distinct' => true
                 ],
                 '<>' => [
-                    'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
-                        'phoneNumbersMultiple.numeric!=' => '{value}',
+                        'id!=s' => [
+                            'from' => 'EntityPhoneNumber',
+                            'select' => ['entityId'],
+                            'joins' => [
+                                [
+                                    'phoneNumber',
+                                    'phoneNumber',
+                                    [
+                                        'phoneNumber.id:' => 'phoneNumberId',
+                                        'phoneNumber.deleted' => false,
+                                    ],
+                                ],
+                            ],
+                            'whereClause' => [
+                                'deleted' => false,
+                                'entityType' => $entityType,
+                                'phoneNumber.numeric' => '{value}',
+                            ],
+                        ],
                     ],
-                    'distinct' => true
                 ],
                 'IN' => [
-                    'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
-                        'phoneNumbersMultiple.numeric=' => '{value}',
+                        'id=s' => [
+                            'from' => 'EntityPhoneNumber',
+                            'select' => ['entityId'],
+                            'joins' => [
+                                [
+                                    'phoneNumber',
+                                    'phoneNumber',
+                                    [
+                                        'phoneNumber.id:' => 'phoneNumberId',
+                                        'phoneNumber.deleted' => false,
+                                    ],
+                                ],
+                            ],
+                            'whereClause' => [
+                                'deleted' => false,
+                                'entityType' => $entityType,
+                                'phoneNumber.numeric' => '{value}',
+                            ],
+                        ],
                     ],
-                    'distinct' => true
                 ],
                 'NOT IN' => [
-                    'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
-                        'phoneNumbersMultiple.numeric!=' => '{value}',
+                        'id!=s' => [
+                            'from' => 'EntityPhoneNumber',
+                            'select' => ['entityId'],
+                            'joins' => [
+                                [
+                                    'phoneNumber',
+                                    'phoneNumber',
+                                    [
+                                        'phoneNumber.id:' => 'phoneNumberId',
+                                        'phoneNumber.deleted' => false,
+                                    ],
+                                ],
+                            ],
+                            'whereClause' => [
+                                'deleted' => false,
+                                'entityType' => $entityType,
+                                'phoneNumber.numeric' => '{value}',
+                            ],
+                        ],
                     ],
-                    'distinct' => true
                 ],
                 'IS NULL' => [
                     'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
                         'phoneNumbersMultiple.numeric=' => null,
-                    ],
-                    'distinct' => true
+                    ]
                 ],
                 'IS NOT NULL' => [
                     'whereClause' => [

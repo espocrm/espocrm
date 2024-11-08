@@ -43,7 +43,7 @@
     },
     {
         "tabBreak": true,
-        "tabLabel": "$label:Misc",
+        "tabLabel": "$label:General",
         "rows": [
             [
                 {"name": "emailReplyToAllByDefault"},
@@ -86,11 +86,11 @@
         "rows": [
             [
                 {"name": "calendarSlotDuration"},
-                {"name": "defaultReminders"}
+                {"name": "calendarScrollHour"}
             ],
             [
-                {"name": "calendarScrollHour"},
-                false
+                {"name": "defaultReminders"},
+                {"name": "defaultRemindersTask"}
             ]
         ]
     },
@@ -101,10 +101,6 @@
             [
                 {"name": "theme"},
                 false
-            ],
-            [
-                {"name": "scopeColorsDisabled"},
-                {"name": "tabColorsDisabled"}
             ]
         ]
     },
@@ -112,7 +108,11 @@
         "rows": [
             [
                 {"name": "useCustomTabList"},
-                {"name": "tabList"}
+                {"name": "addCustomTabs"}
+            ],
+            [
+                {"name": "tabList"},
+                false
             ]
         ]
     },
@@ -139,6 +139,10 @@
             [
                 {"name": "assignmentNotificationsIgnoreEntityTypeList"},
                 {"name": "assignmentEmailNotificationsIgnoreEntityTypeList"}
+            ],
+            [
+                {"name": "reactionNotifications"},
+                false
             ]
         ]
     }

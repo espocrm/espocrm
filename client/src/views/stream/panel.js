@@ -27,12 +27,15 @@
  ************************************************************************/
 
 import RelationshipPanelView from 'views/record/panels/relationship';
-// noinspection ES6UnusedImports
-import Textcomplete from 'jquery-textcomplete';
+import _ from 'underscore';
+import NotePostFieldView from 'views/note/fields/post';
+import ViewRecordHelper from 'view-record-helper';
 
 class PanelStreamView extends RelationshipPanelView {
 
     template = 'stream/panel'
+
+    rowActionsView = 'views/stream/record/row-actions/default'
 
     postingMode = false
     postDisabled = false
@@ -45,27 +48,19 @@ class PanelStreamView extends RelationshipPanelView {
     /** @private */
     _justPosted = false
 
+    /** @type {import('collections/note').default} */
+    pinnedCollection
+
+    /**
+     * @private
+     * @type {import('model').default}
+     */
+    seed
+
     additionalEvents = {
         /** @this PanelStreamView */
         'focus textarea[data-name="post"]': function () {
             this.enablePostingMode(true);
-        },
-        /** @this PanelStreamView */
-        'click button.post': function () {
-            this.post();
-        },
-        /** @this PanelStreamView */
-        'click .action[data-action="switchInternalMode"]': function (e) {
-            this.isInternalNoteMode = !this.isInternalNoteMode;
-
-            const $a = $(e.currentTarget);
-
-            if (this.isInternalNoteMode) {
-                $a.addClass('enabled');
-            } else {
-                $a.removeClass('enabled');
-            }
-
         },
         /** @this PanelStreamView */
         'keydown textarea[data-name="post"]': function (e) {
@@ -88,11 +83,7 @@ class PanelStreamView extends RelationshipPanelView {
         /** @this PanelStreamView */
         'input textarea[data-name="post"]': function () {
             this.controlPreviewButton();
-            this.controlPostButtonAvailability(this.$textarea.val());
-        },
-        /** @this PanelStreamView */
-        'click .action[data-action="preview"]': function () {
-            this.preview();
+            this.controlPostButtonAvailability(this.postFieldView.getTextAreaElement().value);
         },
     }
 
@@ -102,6 +93,7 @@ class PanelStreamView extends RelationshipPanelView {
         data.postDisabled = this.postDisabled;
         data.placeholderText = this.placeholderText;
         data.allowInternalNotes = this.allowInternalNotes;
+        data.hasPinned = this.hasPinned;
 
         return data;
     }
@@ -109,19 +101,23 @@ class PanelStreamView extends RelationshipPanelView {
     controlPreviewButton() {
         this.$previewButton = this.$previewButton || this.$el.find('.stream-post-preview');
 
-        if (this.$textarea.val() === '') {
+        if (this.postFieldView.getTextAreaElement().value === '') {
             this.$previewButton.addClass('hidden');
         } else {
             this.$previewButton.removeClass('hidden');
         }
     }
 
+    /**
+     * @private
+     * @param {boolean} [byFocus]
+     */
     enablePostingMode(byFocus) {
         this.$el.find('.buttons-panel').removeClass('hide');
 
         if (!this.postingMode) {
-            if (this.$textarea.val() && this.$textarea.val().length) {
-                this.getPostFieldView().controlTextareaHeight();
+            if (this.postFieldView.getTextAreaElement().value) {
+                this.postFieldView.controlTextareaHeight();
             }
 
             let isClicked = false;
@@ -143,7 +139,7 @@ class PanelStreamView extends RelationshipPanelView {
                     return;
                 }
 
-                if (this.$textarea.val() !== '') {
+                if (this.postFieldView.getTextAreaElement().value !== '') {
                     return;
                 }
 
@@ -173,7 +169,7 @@ class PanelStreamView extends RelationshipPanelView {
     disablePostingMode() {
         this.postingMode = false;
 
-        this.$textarea.val('');
+        this.setPostText(null);
 
         if (this.getAttachmentsFieldView()) {
             this.getAttachmentsFieldView().empty();
@@ -183,7 +179,7 @@ class PanelStreamView extends RelationshipPanelView {
 
         $('body').off('click.stream-panel');
 
-        this.$textarea.prop('rows', 1);
+        this.postFieldView.getTextAreaElement().rows = 1;
     }
 
     setup() {
@@ -191,6 +187,10 @@ class PanelStreamView extends RelationshipPanelView {
             ...this.additionalEvents,
             ...this.events,
         };
+
+        this.addHandler('click', 'button.post', () => this.post());
+        this.addActionHandler('switchInternalMode', () => this.switchInternalMode());
+        this.addActionHandler('preview', () => this.preview());
 
         this.entityType = this.model.entityType;
         this.filter = this.getStoredFilter();
@@ -204,11 +204,13 @@ class PanelStreamView extends RelationshipPanelView {
             this.allowInternalNotes = this.getMetadata().get(['clientDefs', this.entityType, 'allowInternalNotes']);
         }
 
+        this.hasPinned = this.model.entityType !== 'User';
+
         this.isInternalNoteMode = false;
 
-        this.storageTextKey = 'stream-post-' + this.model.entityType + '-' + this.model.id;
-        this.storageAttachmentsKey = 'stream-post-attachments-' + this.model.entityType + '-' + this.model.id;
-        this.storageIsInernalKey = 'stream-post-is-internal-' + this.model.entityType + '-' + this.model.id;
+        this.storageTextKey = `stream-post-${this.model.entityType}-${this.model.id}`;
+        this.storageAttachmentsKey = `stream-post-attachments-${this.model.entityType}-${this.model.id}`;
+        this.storageIsInernalKey = `stream-post-is-internal-${this.model.entityType}-${this.model.id}`;
 
         this.on('remove', () => {
             this.storeControl();
@@ -216,19 +218,20 @@ class PanelStreamView extends RelationshipPanelView {
             $(window).off('beforeunload.stream-'+ this.cid);
         });
 
-        $(window).off('beforeunload.stream-'+ this.cid);
+        $(window).off(`beforeunload.stream-${this.cid}`);
 
-        $(window).on('beforeunload.stream-'+ this.cid, () => {
+        $(window).on(`beforeunload.stream-${this.cid}`, () => {
             this.storeControl();
         });
+
+        /** @private */
+        this.formRecordHelper = new ViewRecordHelper();
 
         const storedAttachments = this.getSessionStorage().get(this.storageAttachmentsKey);
 
         this.setupActions();
 
-        this.wait(true);
-
-        this.getModelFactory().create('Note', (model) => {
+        const promise = this.getModelFactory().create('Note', model => {
             this.seed = model;
 
             if (storedAttachments) {
@@ -254,29 +257,36 @@ class PanelStreamView extends RelationshipPanelView {
                 this.seed.set('isInternal', true);
             }
 
-            this.createView('postField', 'views/note/fields/post', {
-                selector: '.textarea-container',
+            this.postFieldView = new NotePostFieldView({
                 name: 'post',
                 mode: 'edit',
                 params: {
                     required: true,
                     rowsMin: 1,
+                    preview: false,
+                    attachmentField: 'attachments',
                 },
                 model: this.seed,
                 placeholderText: this.placeholderText,
                 noResize: true,
-            }, view => {
+                recordHelper: this.formRecordHelper,
+            });
+
+            this.assignView('postField', this.postFieldView, '.textarea-container').then(view => {
                 this.initPostEvents(view);
             });
 
-            this.createCollection(() => {
-                this.wait(false);
-            });
+            this.wait(
+                this.createCollection()
+                    .then(() => this.setupPinned())
+            );
 
             this.listenTo(this.seed, 'change:attachmentsIds', () => {
                 this.controlPostButtonAvailability();
             });
         });
+
+        this.wait(promise);
 
         if (!this.defs.hidden) {
             this.subscribeToWebSocket();
@@ -288,11 +298,21 @@ class PanelStreamView extends RelationshipPanelView {
             }
         });
 
-        this.once('remove', () => {
+        this.on('remove', () => {
             if (this.isSubscribedToWebSocket) {
                 this.unsubscribeFromWebSocket();
             }
         });
+    }
+
+    switchInternalMode() {
+        this.isInternalNoteMode = !this.isInternalNoteMode;
+
+        if (this.internalModeButtonElement) {
+            this.isInternalNoteMode ?
+                this.internalModeButtonElement.classList.add('enabled') :
+                this.internalModeButtonElement.classList.remove('enabled');
+        }
     }
 
     subscribeToWebSocket() {
@@ -304,7 +324,7 @@ class PanelStreamView extends RelationshipPanelView {
             return;
         }
 
-        const topic = 'streamUpdate.' + this.model.entityType + '.' + this.model.id;
+        const topic = `streamUpdate.${this.model.entityType}.${this.model.id}`;
         this.streamUpdateWebSocketTopic = topic;
 
         this.isSubscribedToWebSocket = true;
@@ -318,10 +338,13 @@ class PanelStreamView extends RelationshipPanelView {
                 const model = this.collection.get(data.noteId);
 
                 if (model) {
-                    model.fetch();
+                    model.fetch()
+                        .then(() => this.syncPinnedModel(model, true));
                 }
 
-                return;
+                if (!data.pin) {
+                    return;
+                }
             }
 
             this.collection.fetchNew();
@@ -342,21 +365,21 @@ class PanelStreamView extends RelationshipPanelView {
         }
     }
 
+    /**
+     * @private
+     */
     storeControl() {
         let isNotEmpty = false;
 
-        if (this.$textarea && this.$textarea.length) {
-            const text = this.$textarea.val();
+        if (this.isRendered()) {
+            const text = /** @type {string} */this.seed.attributes.post;
 
-            if (text.length) {
+            if (text && text.length) {
                 this.getSessionStorage().set(this.storageTextKey, text);
 
                 isNotEmpty = true;
-            }
-            else {
-                if (this.hasStoredText) {
-                    this.getSessionStorage().clear(this.storageTextKey);
-                }
+            } else if (this.hasStoredText) {
+                this.getSessionStorage().clear(this.storageTextKey);
             }
         }
 
@@ -384,20 +407,29 @@ class PanelStreamView extends RelationshipPanelView {
         }
     }
 
-    createCollection(callback, context) {
-        this.getCollectionFactory().create('Note', (collection) => {
+    /**
+     * @private
+     * @return {Promise}
+     */
+    createCollection() {
+        return this.getCollectionFactory().create('Note', collection => {
             this.collection = collection;
 
-            collection.url = this.model.entityType + '/' + this.model.id + '/stream';
+            collection.url = `${this.model.entityType}/${this.model.id}/stream`;
             collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
             this.setFilter(this.filter);
-
-            callback.call(context);
         });
     }
 
+    /** @private */
     initPostEvents(view) {
+        this.listenTo(this.formRecordHelper, 'upload-files:attachments', () => {
+            if (!this.postingMode) {
+                this.enablePostingMode();
+            }
+        });
+
         this.listenTo(view, 'add-files', (files) => {
             this.getAttachmentsFieldView().uploadFiles(files);
 
@@ -407,8 +439,97 @@ class PanelStreamView extends RelationshipPanelView {
         });
     }
 
+    /**
+     * @private
+     * @param {string|null} text
+     */
+    setPostText(text) {
+        this.seed.set('post', text, {silent: true});
+        this.postFieldView.getTextAreaElement().value = text || '';
+    }
+
+    /**
+     * @private
+     */
+    onSync() {
+        if (this.hasPinned) {
+            this.pinnedCollection.add(this.collection.pinnedList);
+
+            this.createView('pinnedList', 'views/stream/record/list', {
+                selector: '> .list-container[data-role="pinned"]',
+                collection: this.pinnedCollection,
+                model: this.model,
+                noDataDisabled: true,
+            }, view => {
+                view.render();
+
+                this.listenTo(this.pinnedCollection, 'change',
+                    (/** import('model').default */model, /** Record */o) => {
+                        if (o.userReaction) {
+                            this.syncPinnedModel(model, false);
+                        }
+                    });
+
+                this.listenTo(view, 'after:save', /** import('model').default */model => {
+                    this.syncPinnedModel(model, false);
+                });
+
+                this.listenTo(view, 'after:delete', /** import('model').default */model => {
+                    this.collection.remove(model.id);
+                    this.collection.trigger('update-sync');
+                });
+
+                this.listenTo(view, 'quote-reply', /** string */quoted => this.quoteReply(quoted));
+            });
+        }
+
+        this.createView('list', 'views/stream/record/list', {
+            selector: '> .list-container[data-role="stream"]',
+            collection: this.collection,
+            model: this.model,
+        }, view => {
+            view.render();
+
+            if (this.pinnedCollection) {
+                this.listenTo(view, 'after:delete', /** import('model').default */model => {
+                    this.pinnedCollection.remove(model.id);
+                    this.pinnedCollection.trigger('update-sync');
+                });
+
+                this.listenTo(view, 'after:save', /** import('model').default */model => {
+                    this.syncPinnedModel(model, true);
+                });
+
+                this.listenTo(this.collection, 'change',
+                    (/** import('model').default */model, /** Record */o) => {
+                        if (o.userReaction) {
+                            this.syncPinnedModel(model, true);
+                        }
+                    });
+
+                this.listenTo(view, 'quote-reply', /** string */quoted => this.quoteReply(quoted));
+            }
+        });
+
+        this.stopListening(this.model, 'all');
+        this.stopListening(this.model, 'destroy');
+
+        setTimeout(() => {
+            this.listenTo(this.model, 'all', event => {
+                if (!['sync', 'after:relate'].includes(event)) {
+                    return;
+                }
+
+                this.collection.fetchNew();
+            });
+
+            this.listenTo(this.model, 'destroy', () => {
+                this.stopListening(this.model, 'all');
+            });
+        }, 500);
+    }
+
     afterRender() {
-        this.$textarea = this.$el.find('textarea[data-name="post"]');
         this.$attachments = this.$el.find('div.attachments');
         this.$postContainer = this.$el.find('.post-container');
         this.$postButton = this.$el.find('button.post');
@@ -417,93 +538,27 @@ class PanelStreamView extends RelationshipPanelView {
 
         if (storedText && storedText.length) {
             this.hasStoredText = true;
-            this.$textarea.val(storedText);
+
+            this.setPostText(storedText);
         }
 
         this.controlPostButtonAvailability(storedText);
 
-        if (this.isInternalNoteMode) {
-            this.$el.find('.action[data-action="switchInternalMode"]').addClass('enabled');
+        if (this.allowInternalNotes) {
+            this.internalModeButtonElement =
+                /** @type {HTMLAnchorElement} */
+                this.element.querySelector('.action[data-action="switchInternalMode"]');
         }
 
-        const collection = this.collection;
-
-        this.listenToOnce(collection, 'sync', () => {
-            this.createView('list', 'views/stream/record/list', {
-                selector: '> .list-container',
-                collection: collection,
-                model: this.model,
-            }, view => {
-                view.render();
-            });
-
-            this.stopListening(this.model, 'all');
-            this.stopListening(this.model, 'destroy');
-
-            setTimeout(() => {
-                this.listenTo(this.model, 'all', event => {
-                    if (!~['sync', 'after:relate'].indexOf(event)) {
-                        return;
-                    }
-
-                    collection.fetchNew();
-                });
-
-                this.listenTo(this.model, 'destroy', () => {
-                    this.stopListening(this.model, 'all');
-                });
-            }, 500);
-        });
+        if (this.isInternalNoteMode) {
+            this.internalModeButtonElement.classList.add('enabled');
+        }
 
         if (!this.defs.hidden) {
-            collection.fetch();
-        }
-        else {
-            this.once('show', () => collection.fetch());
-        }
-
-        const assignmentPermission = this.getAcl().getPermissionLevel('assignmentPermission');
-
-        const buildUserListUrl = term => {
-            let url = 'User?orderBy=name&limit=7&q=' + term + '&' + $.param({'primaryFilter': 'active'});
-
-            if (assignmentPermission === 'team') {
-                url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
-            }
-
-            return url;
-        };
-
-        if (assignmentPermission !== 'no') {
-            this.$textarea.textcomplete([{
-                match: /(^|\s)@(\w*)$/,
-                index: 2,
-                search: (term, callback) => {
-                    if (term.length === 0) {
-                        callback([]);
-
-                        return;
-                    }
-
-                    Espo.Ajax
-                        .getRequest(buildUserListUrl(term))
-                        .then(data => callback(data.list));
-                },
-                template: (mention) => {
-                    return this.getHelper()
-                        .escapeString(mention.name) +
-                        ' <span class="text-muted">@' +
-                        this.getHelper().escapeString(mention.userName) + '</span>';
-                },
-                replace: (o) => {
-                    return '$1@' + o.userName + '';
-                },
-            }]);
-
-            this.once('remove', () => {
-                if (this.$textarea.length) {
-                    this.$textarea.textcomplete('destroy');
-                }
+            this.collection.fetch().then(() => this.onSync());
+        } else {
+            this.once('show', () => {
+                this.collection.fetch().then(() => this.onSync());
             });
         }
 
@@ -547,42 +602,72 @@ class PanelStreamView extends RelationshipPanelView {
             model: this.seed,
             mode: 'edit',
             selector: 'div.attachments-container',
-            defs: {
-                name: 'attachments',
-            },
+            name: 'attachments',
+            recordHelper: this.formRecordHelper,
         }, view => {
             view.render();
         });
     }
 
-    afterPost() {
-        this.$el.find('textarea.note').prop('rows', 1);
-    }
-
     /**
-     * @return {import('views/fields/text').default}
+     * @private
+     * @param {import('model').default} model
+     * @param {boolean} toPinned
      */
-    getPostFieldView() {
-        return this.getView('postField');
+    syncPinnedModel(model, toPinned) {
+        if (toPinned && !this.pinnedCollection) {
+            return;
+        }
+
+        const cModel = toPinned ?
+            this.pinnedCollection.get(model.id) :
+            this.collection.get(model.id);
+
+        if (!cModel) {
+            return;
+        }
+
+        cModel.setMultiple({
+            post: model.attributes.post,
+            attachmentsIds: model.attributes.attachmentsIds,
+            attachmentsNames: model.attributes.attachmentsNames,
+            attachmentsTypes: model.attributes.attachmentsTypes,
+            data: model.attributes.data,
+            reactionCounts: model.attributes.reactionCounts,
+            myReactions: model.attributes.myReactions,
+        });
     }
 
     /**
+     * @private
+     */
+    afterPost() {
+        this.postFieldView.getTextAreaElement().rows = 1;
+    }
+
+    /**
+     * @private
      * @return {import('views/fields/attachment-multiple').default}
      */
     getAttachmentsFieldView() {
         return this.getView('attachments');
     }
 
+    /**
+     * @private
+     */
     post() {
-        const message = this.$textarea.val();
+        const message = /** @type {string} */this.seed.attributes.post || '';
 
         this.disablePostButton();
-        this.$textarea.prop('disabled', true);
+
+        const textAreaElement = this.postFieldView.getTextAreaElement();
+
+        textAreaElement.disabled = true;
 
         this.getModelFactory().create('Note', model => {
-
             if (this.getAttachmentsFieldView().validateReady()) {
-                this.$textarea.prop('disabled', false);
+                textAreaElement.disabled = false;
                 this.enablePostButton();
 
                 return;
@@ -591,10 +676,10 @@ class PanelStreamView extends RelationshipPanelView {
             if (message.trim() === '' && (this.seed.get('attachmentsIds') || []).length === 0) {
                 Espo.Ui.error(this.translate('Post cannot be empty'))
 
-                this.$textarea.prop('disabled', false);
+                textAreaElement.disabled = false;
                 this.controlPostButtonAvailability();
 
-                this.$textarea.focus();
+                textAreaElement.focus();
 
                 return;
             }
@@ -617,7 +702,8 @@ class PanelStreamView extends RelationshipPanelView {
 
                     this.collection.fetchNew();
 
-                    this.$textarea.prop('disabled', false);
+                    textAreaElement.disabled = false;
+
                     this.disablePostingMode();
                     this.afterPost();
 
@@ -630,7 +716,7 @@ class PanelStreamView extends RelationshipPanelView {
                     this.getSessionStorage().clear(this.storageIsInernalKey);
                 })
                 .catch(() => {
-                    this.$textarea.prop('disabled', false);
+                    this.postFieldView.getTextAreaElement().disabled = false;
                     this.controlPostButtonAvailability();
                 });
         });
@@ -694,12 +780,13 @@ class PanelStreamView extends RelationshipPanelView {
         const url = this.model.entityType + '/' + this.model.id + '/posts';
 
         const data = {
-            scope: 'Note',
+            entityType: 'Note',
             viewOptions: {
                 url: url,
-                title: this.translate('Stream') +
-                    ' @right ' + this.translate('posts', 'filters', 'Note'),
+                title: `${this.translate('Stream')} @right ${this.translate('posts', 'filters', 'Note')}`,
                 forceSelectAllAttributes: true,
+                forcePagination: true,
+                rowActionsView: 'views/stream/record/row-actions/detached',
             },
         };
 
@@ -710,12 +797,14 @@ class PanelStreamView extends RelationshipPanelView {
         const url = `User/${this.model.id}/stream/own`;
 
         const data = {
-            scope: 'Note',
+            entityType: 'Note',
             viewOptions: {
                 url: url,
                 title: this.translate('Stream') + ' @right ' + this.translate('activity', 'filters', 'Note'),
                 forceSelectAllAttributes: true,
                 filtersLayoutName: 'filtersGlobal',
+                forcePagination: true,
+                rowActionsView: 'views/stream/record/row-actions/detached',
             },
         };
 
@@ -729,8 +818,7 @@ class PanelStreamView extends RelationshipPanelView {
     storeFilter(filter) {
         if (filter) {
             this.getStorage().set('state', 'streamPanelFilter' + this.entityType, filter);
-        }
-        else {
+        } else {
             this.getStorage().clear('state', 'streamPanelFilter' + this.entityType);
         }
     }
@@ -758,17 +846,13 @@ class PanelStreamView extends RelationshipPanelView {
     }
 
     preview() {
-        this.createView('dialog', 'views/modal', {
-            templateContent: '<div class="complex-text">' +
-                   '{{complexText viewObject.options.text linksInNewTab=true}}</div>',
-            text: this.$textarea.val(),
-            headerText: this.translate('Preview'),
-            backdrop: true,
-        }, view => {
-            view.render();
-        });
+        this.postFieldView.preview();
     }
 
+    /**
+     * @private
+     * @param {string} [postEntered]
+     */
     controlPostButtonAvailability(postEntered) {
         const attachmentsIdList = this.seed.get('attachmentsIds') || [];
         let post = this.seed.get('post');
@@ -796,12 +880,107 @@ class PanelStreamView extends RelationshipPanelView {
         this.enablePostButton();
     }
 
+    /**
+     * @private
+     */
     disablePostButton() {
         this.$postButton.addClass('disabled').attr('disabled', 'disabled');
     }
 
+    /**
+     * @private
+     */
     enablePostButton() {
         this.$postButton.removeClass('disabled').removeAttr('disabled');
+    }
+
+    /**
+     * @private
+     */
+    setupPinned() {
+        if (!this.hasPinned) {
+            return;
+        }
+
+        const promise = this.getCollectionFactory().create('Note')
+            .then(/** import('collections/note').default */collection => {
+                this.pinnedCollection = collection;
+
+                this.listenTo(this.collection, 'sync', () => {
+                    if (!this.collection.pinnedList) {
+                        return;
+                    }
+
+                    if (
+                        _.isEqual(
+                            this.collection.pinnedList,
+                            this.pinnedCollection.models.map(m => m.attributes)
+                        )
+                    ) {
+                        return;
+                    }
+
+                    this.pinnedCollection.reset();
+                    this.pinnedCollection.add(this.collection.pinnedList);
+                    this.pinnedCollection.trigger('sync', this.pinnedCollection, {}, {});
+                });
+
+                this.listenTo(this.pinnedCollection, 'pin unpin', () => {
+                    this.collection.fetchNew();
+                });
+
+                this.listenTo(this.pinnedCollection, 'pin', id => {
+                    const model = this.collection.get(id);
+
+                    if (!model) {
+                        return;
+                    }
+
+                    model.set('isPinned', true);
+                });
+
+                this.listenTo(this.pinnedCollection, 'unpin', id => {
+                    const model = this.collection.get(id);
+
+                    if (!model) {
+                        return;
+                    }
+
+                    model.set('isPinned', false);
+                });
+            });
+
+        this.wait(promise);
+    }
+
+    /**
+     * @private
+     * @param {string} quoted
+     */
+    quoteReply(quoted) {
+        const quote = '> ' + quoted.split(/\r?\n|\r|\n/g).join('\n> ');
+
+        let post = this.seed.attributes.post || '';
+
+        if (post !== '') {
+            post += '\n';
+        }
+
+        post += quote + '\n\n';
+
+        this.setPostText(post);
+
+        this.controlPreviewButton();
+        this.controlPostButtonAvailability();
+        this.postFieldView.controlTextareaHeight();
+        this.enablePostingMode();
+
+        setTimeout(() => {
+            const textArea = this.postFieldView.getTextAreaElement();
+
+            textArea.focus();
+            textArea.setSelectionRange(textArea.value.length, textArea.value.length);
+        }, 1);
     }
 }
 

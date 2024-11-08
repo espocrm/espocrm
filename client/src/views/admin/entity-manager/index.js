@@ -60,10 +60,10 @@ class EntityManagerIndexView extends View {
                 return v1.localeCompare(v2);
             });
 
-        let scopeListSorted = [];
+        const scopeListSorted = [];
 
         scopeList.forEach(scope => {
-            var d = this.getMetadata().get('scopes.' + scope);
+            const d = this.getMetadata().get('scopes.' + scope);
 
             if (d.entity && d.customizable) {
                 scopeListSorted.push(scope);
@@ -71,7 +71,7 @@ class EntityManagerIndexView extends View {
         });
 
         scopeList.forEach(scope => {
-            var d = this.getMetadata().get('scopes.' + scope);
+            const d = this.getMetadata().get('scopes.' + scope);
 
             if (d.entity && !d.customizable) {
                 scopeListSorted.push(scope);
@@ -121,7 +121,7 @@ class EntityManagerIndexView extends View {
     processQuickSearch(text) {
         text = text.trim();
 
-        let $noData = this.$noData;
+        const $noData = this.$noData;
 
         $noData.addClass('hidden');
 
@@ -131,9 +131,9 @@ class EntityManagerIndexView extends View {
             return;
         }
 
-        let matchedList = [];
+        const matchedList = [];
 
-        let lowerCaseText = text.toLowerCase();
+        const lowerCaseText = text.toLowerCase();
 
         this.scopeDataList.forEach(item => {
             let matched = false;
@@ -146,7 +146,7 @@ class EntityManagerIndexView extends View {
             }
 
             if (!matched) {
-                let wordList = item.label.split(' ')
+                const wordList = item.label.split(' ')
                     .concat(
                         item.label.split(' ')
                     );

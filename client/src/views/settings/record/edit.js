@@ -26,33 +26,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/record/edit', ['views/record/edit'], function (Dep) {
+import EditRecordView from 'views/record/edit';
 
-    return Dep.extend({
+class SettingsEditRecordView extends EditRecordView {
 
-        saveAndContinueEditingAction: false,
+    saveAndContinueEditingAction = false
 
-        sideView: null,
+    sideView = null
 
-        layoutName: 'settings',
+    layoutName = 'settings'
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.listenTo(this.model, 'after:save', () => {
-                this.getConfig().set(this.model.getClonedAttributes());
-            });
-        },
+        this.listenTo(this.model, 'after:save', () => {
+            this.getConfig().set(this.model.getClonedAttributes());
+        });
+    }
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-        },
+    exit(after) {
+        if (after === 'cancel') {
+            this.getRouter().navigate('#Admin', {trigger: true});
+        }
+    }
+}
 
-        exit: function (after) {
-            if (after === 'cancel') {
-                this.getRouter().navigate('#Admin', {trigger: true});
-            }
-        },
-    });
-});
+export default SettingsEditRecordView;
 

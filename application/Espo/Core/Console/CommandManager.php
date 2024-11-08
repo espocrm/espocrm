@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Console;
 
+use Espo\Core\ApplicationUser;
+use Espo\Core\Console\Exceptions\InvalidArgument;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
@@ -44,12 +46,14 @@ class CommandManager
     private const DEFAULT_COMMAND = 'Help';
     private const DEFAULT_COMMAND_FLAG = 'help';
 
-    public function __construct(private InjectableFactory $injectableFactory, private Metadata $metadata)
-    {}
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata,
+        private ApplicationUser $applicationUser
+    ) {}
 
     /**
      * @param array<int, string> $argv
-     *
      * @return int<0, 255> Exit-status.
      */
     public function run(array $argv): int
@@ -73,7 +77,11 @@ class CommandManager
             throw new CommandNotSpecified("Command name is not specified.");
         }
 
+        $this->checkParams($command, $params);
+
         $io = new IO();
+
+        $this->setupUser($command);
 
         $commandObj = $this->createCommand($command);
 
@@ -145,5 +153,60 @@ class CommandManager
     private function createParamsFromArgv(array $argv): Params
     {
         return Params::fromArgs(array_slice($argv, 1));
+    }
+
+    private function setupUser(string $command): void
+    {
+        $noSystemUser = $this->metadata->get(['app', 'consoleCommands', lcfirst($command), 'noSystemUser']);
+
+        if ($noSystemUser) {
+            return;
+        }
+
+        $this->applicationUser->setupSystemUser();
+    }
+
+    private function checkParams(string $command, Params $params): void
+    {
+        $this->checkOptions($command, $params);
+        $this->checkFlags($command, $params);
+    }
+
+    private function checkOptions(string $command, Params $params): void
+    {
+        $allowedOptions = $this->metadata->get(['app', 'consoleCommands', lcfirst($command), 'allowedOptions']);
+
+        if (!is_array($allowedOptions)) {
+            return;
+        }
+
+        $notAllowedOptions = array_diff(array_keys($params->getOptions()), $allowedOptions);
+
+        if ($notAllowedOptions === []) {
+            return;
+        }
+
+        $msg = sprintf("Not allowed options: %s.", implode(', ', $notAllowedOptions));
+
+        throw new InvalidArgument($msg);
+    }
+
+    private function checkFlags(string $command, Params $params): void
+    {
+        $allowedFlags = $this->metadata->get(['app', 'consoleCommands', lcfirst($command), 'allowedFlags']);
+
+        if (!is_array($allowedFlags)) {
+            return;
+        }
+
+        $notAllowedFlags = array_diff($params->getFlagList(), $allowedFlags);
+
+        if ($notAllowedFlags === []) {
+            return;
+        }
+
+        $msg = sprintf("Not allowed flags: %s.", implode(', ', $notAllowedFlags));
+
+        throw new InvalidArgument($msg);
     }
 }

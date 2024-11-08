@@ -35,10 +35,16 @@ class UpdateNoteStreamView extends NoteStreamView {
     rowActionsView = 'views/stream/record/row-actions/update'
 
     data() {
+        const fieldsString = this.fieldDataList
+            .map(it => it.label)
+            .join(', ');
+
         return {
             ...super.data(),
-            fieldsArr: this.fieldsArr,
+            fieldDataList: this.fieldDataList,
             parentType: this.model.get('parentType'),
+            iconHtml: this.getIconHtml(),
+            fieldsString: fieldsString,
         };
     }
 
@@ -68,7 +74,7 @@ class UpdateNoteStreamView extends NoteStreamView {
             modelWas.set(data.attributes.was);
             modelBecame.set(data.attributes.became);
 
-            this.fieldsArr = [];
+            this.fieldDataList = [];
 
             const fields = this.fieldList = data.fields;
 
@@ -90,9 +96,10 @@ class UpdateNoteStreamView extends NoteStreamView {
                 }
 
                 if (!hasValue) {
-                    this.fieldsArr.push({
+                    this.fieldDataList.push({
                         field: field,
                         noValues: true,
+                        label: this.translate(field, 'fields',  this.model.attributes.parentType),
                     });
 
                     return;
@@ -120,10 +127,11 @@ class UpdateNoteStreamView extends NoteStreamView {
                     selector: `.row[data-name="${field}"] .cell-became`,
                 });
 
-                this.fieldsArr.push({
+                this.fieldDataList.push({
                     field: field,
                     was: field + 'Was',
                     became: field + 'Became',
+                    label: this.translate(field, 'fields',  this.model.attributes.parentType),
                 });
             });
 
@@ -136,8 +144,12 @@ class UpdateNoteStreamView extends NoteStreamView {
      * @param {HTMLElement} target
      */
     toggleDetails(event, target) {
-        if (this.$el.find('.details').hasClass('hidden')) {
-            this.$el.find('.details').removeClass('hidden');
+        const $details = this.$el.find('> .details');
+        const $fields = this.$el.find('> .fields');
+
+        if ($details.hasClass('hidden')) {
+            $details.removeClass('hidden');
+            $fields.addClass('hidden');
 
             this.fieldList.forEach(field => {
                 const wasField = this.getView(field + 'Was');
@@ -156,7 +168,8 @@ class UpdateNoteStreamView extends NoteStreamView {
             return;
         }
 
-        this.$el.find('.details').addClass('hidden');
+        $details.addClass('hidden');
+        $fields.removeClass('hidden');
 
         $(target).find('span')
             .addClass('fa-chevron-down')

@@ -1,84 +1,40 @@
-.margin {
-    margin: @table-cell-padding 0;
-}
-
-.margin-top-sm {
-    margin-top: calc(@table-cell-padding / 2);
-}
-
-.margin-top {
-    margin-top: @table-cell-padding;
-}
-
-.margin-top-2x {
-    margin-top: @table-cell-padding * 2;
-}
-
-.margin-bottom-sm {
-    margin-bottom: calc(@table-cell-padding / 2);
-}
-
-.margin-bottom {
-    margin-bottom: @table-cell-padding;
-}
-
-.margin-bottom-sm {
-    margin-bottom: calc(@table-cell-padding / 2);
-}
-
-.margin-bottom-2x {
-    margin-bottom: @table-cell-padding * 2;
-}
-
-.margin-bottom-3x {
-    margin-bottom: @table-cell-padding * 3;
-}
-
-.margin-bottom-4x {
-    margin-bottom: @table-cell-padding * 4;
-}
-
-.margin-bottom.margin {
-    margin-top: 0;
-}
-
 .center-align {
     text-align: center;
 }
 
 h1 {
-    font-size: 30px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    font-size: var(--30px);
+    margin-top: var(--20px);
+    margin-bottom: var(--20px);
 }
 
 h2 {
-    font-size: 26px;
-    margin-top: 19px;
-    margin-bottom: 16px;
+    font-size: var(--26px);
+    margin-top: var(--19px);
+    margin-bottom: var(--16px);
 }
 
 h3 {
-    font-size: 22px;
-     margin-bottom: 12px;
+    font-size: var(--22px);
+    margin-bottom: var(--12px);
 }
 
 h4 {
-    font-size: 18px;
+    font-size: var(--18px);
 }
 
 h5 {
     font-weight: 600;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    font-size: 15px;
+    margin-top: var(--10px);
+    margin-bottom: var(--10px);
+    font-size: var(--15px);
     color: @gray-soft;
 }
 
 h6 {
     font-weight: 600;
     color: @gray-soft;
-    font-size: 14px;
+    font-size: var(--14px);
 }
 
 code {
@@ -94,7 +50,7 @@ b, strong {
 }
 
 .text-smaller {
-    font-size: @font-size-smaller;
+    font-size: calc(var(--font-size-small) + var(--1px));
 }
 
 .text-italic {
@@ -138,12 +94,12 @@ pre > code {
 }
 
 hr {
-    border-top: 1px solid @panel-default-border;
+    border-top: var(--1px) solid @panel-default-border;
 }
 
 blockquote {
-    font-size: @font-size-base;
-    border-left: 3px solid var(--blockquote-border-color);
+    font-size: var(--font-size-base);
+    border-left: var(--3px) solid var(--blockquote-border-color);
 }
 
 .well > p:last-child {
@@ -151,7 +107,7 @@ blockquote {
 }
 
 .well {
-    padding: @well-padding;
+    padding: var(--panel-padding);
 }
 
 .badge {
@@ -159,13 +115,13 @@ blockquote {
 }
 
 .badge-circle {
-    width: 8px;
-    height: 8px;
-    border-radius: 4px;
+    width: var(--8px);
+    height: var(--8px);
+    border-radius: var(--4px);
     text-align: center;
     display: table-cell;
-    font-size: 5px;
-    line-height: 8px;
+    font-size: var(--5px);
+    line-height: var(--8px);
     background-color: @main-gray;
 }
 
@@ -179,13 +135,13 @@ blockquote {
 
 label {
     font-weight: 400;
-    margin-bottom: 3px;
+    margin-bottom: var(--3px);
 }
 
 .label {
     padding: .09em .5em .2em;
     position: relative;
-    top: -1px;
+    top: var(--minus-1px);
     font-weight: 600;
     border-radius: var(--border-radius-small);
 }
@@ -193,7 +149,7 @@ label {
 .label-md {
     font-weight: normal;
     font-size: 100%;
-    padding: @label-padding-medium;
+    padding: var(--1px) var(--7px) var(--2px);
     top: 0;
     line-height: 1.8;
 }
@@ -204,11 +160,50 @@ label {
     padding: @label-padding-small;
 }
 
+.label.label-state {
+    font-weight: 400;
+
+    &.label-default {
+        color: var(--state-default-text);
+        background-color: var(--state-default-bg);
+    }
+
+    &.label-primary {
+        color: var(--state-primary-text);
+        background-color: var(--state-primary-bg);
+    }
+
+    &.label-info {
+        color: var(--state-info-text);
+        background-color: var(--state-info-bg);
+    }
+
+    &.label-danger {
+        color: var(--state-danger-text);
+        background-color: var(--state-danger-bg);
+    }
+
+    &.label-warning {
+        color: var(--state-warning-text);
+        background-color: var(--state-warning-bg);
+    }
+
+    &.label-success {
+        color: var(--state-success-text);
+        background-color: var(--state-success-bg);
+    }
+}
+
+small,
+.small {
+    font-size: 0.85em;
+}
+
 .small .label-md,
 .label-lg.small {
     font-size: 75%;
     padding: @label-padding-small;
-    top: -1px;
+    top: var(--minus-1px);
 }
 
 a[role="button"],
@@ -250,6 +245,26 @@ a.text-soft {
             color: var(--text-gray-color);
         }
     }
+}
+
+a.text-default {
+    color: var(--text-color);
+
+    &:hover,
+    &:focus {
+        color: var(--text-color);
+    }
+
+    &:hover {
+        > .fas,
+        > .far {
+            color: var(--text-gray-color);
+        }
+    }
+}
+
+.nowrap {
+    white-space: nowrap;
 }
 
 .text-primary {

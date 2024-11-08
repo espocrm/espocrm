@@ -30,6 +30,8 @@
 namespace Espo\Core\Acl;
 
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\ORM\Type\FieldType;
+use Espo\Core\Utils\Metadata;
 use Espo\Repositories\User as UserRepository;
 use Espo\ORM\Defs;
 use Espo\ORM\Entity;
@@ -45,12 +47,13 @@ class DefaultAssignmentChecker implements AssignmentChecker
     protected const FIELD_ASSIGNED_USERS = 'assignedUsers';
     protected const FIELD_TEAMS = 'teams';
     protected const ATTR_ASSIGNED_USER_ID = 'assignedUserId';
-    protected const ATTR_ASSIGNED_USERS_IDS = 'assignedUsersIds';
+    private const FIELD_COLLABORATORS = 'collaborators';
 
     public function __construct(
         private AclManager $aclManager,
         private EntityManager $entityManager,
-        private Defs $ormDefs
+        private Defs $ormDefs,
+        private Metadata $metadata,
     ) {}
 
     public function check(User $user, Entity $entity): bool
@@ -69,7 +72,26 @@ class DefaultAssignmentChecker implements AssignmentChecker
             }
         }
 
+        if ($this->hasCollaboratorsField($entity->getEntityType())) {
+            if (!$this->isPermittedUsers($user, $entity, self::FIELD_COLLABORATORS)) {
+                return false;
+            }
+        }
+
         return true;
+    }
+
+    private function hasCollaboratorsField(string $entityType): bool
+    {
+        if (!$this->metadata->get("scopes.$entityType.collaborators")) {
+            return false;
+        }
+
+        $entityDefs = $this->ormDefs->getEntity($entityType);
+
+        return
+            $entityDefs->tryGetField(self::FIELD_COLLABORATORS)?->getType() === FieldType::LINK_MULTIPLE &&
+            $entityDefs->tryGetRelation(self::FIELD_COLLABORATORS)?->tryGetForeignEntityType() === User::ENTITY_TYPE;
     }
 
     private function hasAssignedUsersField(string $entityType): bool
@@ -78,9 +100,9 @@ class DefaultAssignmentChecker implements AssignmentChecker
 
         return
             $entityDefs->hasField(self::FIELD_ASSIGNED_USERS) &&
-            $entityDefs->getField(self::FIELD_ASSIGNED_USERS)->getType() === 'linkMultiple' &&
+            $entityDefs->getField(self::FIELD_ASSIGNED_USERS)->getType() === FieldType::LINK_MULTIPLE &&
             $entityDefs->hasRelation(self::FIELD_ASSIGNED_USERS) &&
-            $entityDefs->getRelation(self::FIELD_ASSIGNED_USERS)->getForeignEntityType() === 'User';
+            $entityDefs->getRelation(self::FIELD_ASSIGNED_USERS)->getForeignEntityType() === User::ENTITY_TYPE;
     }
 
     protected function isPermittedAssignedUser(User $user, Entity $entity): bool
@@ -99,7 +121,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
             return false;
         }
 
-        $assignmentPermission = $this->aclManager->getPermissionLevel($user, 'assignmentPermission');
+        $assignmentPermission = $this->aclManager->getPermissionLevel($user, Permission::ASSIGNMENT);
 
         if (
             $assignmentPermission === Table::LEVEL_YES ||
@@ -114,8 +136,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
             if ($entity->isAttributeChanged(self::ATTR_ASSIGNED_USER_ID)) {
                 $toProcess = true;
             }
-        }
-        else {
+        } else {
             $toProcess = true;
         }
 
@@ -135,8 +156,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
             if ($user->getId() !== $assignedUserId) {
                 return false;
             }
-        }
-        else if ($assignmentPermission === Table::LEVEL_TEAM) {
+        } else if ($assignmentPermission === Table::LEVEL_TEAM) {
             $teamIdList = $user->getTeamIdList();
 
             if (
@@ -157,7 +177,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
 
     protected function isPermittedTeams(User $user, Entity $entity): bool
     {
-        $assignmentPermission = $this->aclManager->getPermissionLevel($user, 'assignmentPermission');
+        $assignmentPermission = $this->aclManager->getPermissionLevel($user, Permission::ASSIGNMENT);
 
         if (!in_array($assignmentPermission, [Table::LEVEL_TEAM, Table::LEVEL_NO])) {
             return true;
@@ -197,8 +217,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
                     $newIdList[] = $id;
                 }
             }
-        }
-        else {
+        } else {
             $newIdList = $teamIdList;
         }
 
@@ -219,7 +238,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
 
     private function isPermittedTeamsEmpty(User $user, CoreEntity $entity): bool
     {
-        $assignmentPermission = $this->aclManager->getPermissionLevel($user, 'assignmentPermission');
+        $assignmentPermission = $this->aclManager->getPermissionLevel($user, Permission::ASSIGNMENT);
 
         if ($assignmentPermission !== Table::LEVEL_TEAM) {
             return true;
@@ -231,8 +250,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
             if (empty($assignedUserIdList)) {
                 return false;
             }
-        }
-        else if ($entity->hasAttribute(self::ATTR_ASSIGNED_USER_ID)) {
+        } else if ($entity->hasAttribute(self::ATTR_ASSIGNED_USER_ID)) {
             if (!$entity->get(self::ATTR_ASSIGNED_USER_ID)) {
                 return false;
             }
@@ -241,54 +259,53 @@ class DefaultAssignmentChecker implements AssignmentChecker
         return true;
     }
 
+    /**
+     * Left for backward compatibility.
+     */
     protected function isPermittedAssignedUsers(User $user, Entity $entity): bool
+    {
+        return $this->isPermittedUsers($user, $entity, self::FIELD_ASSIGNED_USERS);
+    }
+
+    private function isPermittedUsers(User $user, Entity $entity, string $field): bool
     {
         if (!$entity instanceof CoreEntity) {
             return true;
         }
 
-        if (!$entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS)) {
+        $idsAttr = $field . 'Ids';
+
+        if (!$entity->hasLinkMultipleField($field)) {
             return true;
         }
 
         if ($user->isPortal()) {
-            if (!$entity->isAttributeChanged(self::ATTR_ASSIGNED_USERS_IDS)) {
+            if (!$entity->isAttributeChanged($idsAttr)) {
                 return true;
             }
 
             return false;
         }
 
-        $assignmentPermission = $this->aclManager->getPermissionLevel($user, 'assignmentPermission');
+        $assignmentPermission = $this->aclManager->getPermissionLevel($user, Permission::ASSIGNMENT);
 
-        if (
-            $assignmentPermission === Table::LEVEL_YES ||
-            !in_array($assignmentPermission, [Table::LEVEL_TEAM, Table::LEVEL_NO])
-        ) {
+        if ($assignmentPermission === Table::LEVEL_ALL) {
+            if (!$this->hasOnlyInternalUsers($user, $entity, $field)) {
+                return false;
+            }
+
             return true;
         }
 
-        $toProcess = false;
-
-        if (!$entity->isNew()) {
-            // Might be on purpose.
-            $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS);
-
-            if ($entity->isAttributeChanged(self::ATTR_ASSIGNED_USERS_IDS)) {
-                $toProcess = true;
-            }
-        }
-        else {
-            $toProcess = true;
-        }
-
-        $userIdList = $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS);
+        $toProcess = $entity->isNew() || $entity->isAttributeChanged($idsAttr);
 
         if (!$toProcess) {
             return true;
         }
 
-        if (empty($userIdList)) {
+        $userIds = $entity->getLinkMultipleIdList($field);
+
+        if ($userIds === []) {
             if ($assignmentPermission === Table::LEVEL_NO && !$user->isApi()) {
                 return false;
             }
@@ -297,27 +314,21 @@ class DefaultAssignmentChecker implements AssignmentChecker
         }
 
         if ($assignmentPermission === Table::LEVEL_NO) {
-            return $this->isPermittedAssignedUsersLevelNo($user, $entity);
+            return $this->isPermittedUsersLevelNo($user, $entity, $field);
         }
 
         if ($assignmentPermission === Table::LEVEL_TEAM) {
-            return $this->isPermittedAssignedUsersLevelTeam($user, $entity);
+            return $this->isPermittedUsersLevelTeam($user, $entity, $field);
         }
 
-        return true;
+        return false;
     }
 
-    private function isPermittedAssignedUsersLevelNo(User $user, CoreEntity $entity): bool
+    private function isPermittedUsersLevelNo(User $user, CoreEntity $entity, string $field): bool
     {
-        $userIdList = $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS);
+        $userIds = $this->getAddedLinkMultipleIds($entity, $field);
 
-        $fetchedAssignedUserIdList = $entity->getFetched(self::ATTR_ASSIGNED_USERS_IDS);
-
-        foreach ($userIdList as $userId) {
-            if (!$entity->isNew() && in_array($userId, $fetchedAssignedUserIdList)) {
-                continue;
-            }
-
+        foreach ($userIds as $userId) {
             if ($user->getId() !== $userId) {
                 return false;
             }
@@ -326,26 +337,47 @@ class DefaultAssignmentChecker implements AssignmentChecker
         return true;
     }
 
-    private function isPermittedAssignedUsersLevelTeam(User $user, CoreEntity $entity): bool
+    private function isPermittedUsersLevelTeam(User $user, CoreEntity $entity, string $field): bool
     {
-        $userIdList = $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS);
+        $teamIds = $user->getLinkMultipleIdList(self::FIELD_TEAMS);
+        $userIds = $this->getAddedLinkMultipleIds($entity, $field);
 
-        $fetchedAssignedUserIdList = $entity->getFetched(self::ATTR_ASSIGNED_USERS_IDS);
-
-        $teamIdList = $user->getLinkMultipleIdList(self::FIELD_TEAMS);
-
-        foreach ($userIdList as $userId) {
-            if (!$entity->isNew() && in_array($userId, $fetchedAssignedUserIdList)) {
-                continue;
-            }
-
-            if (
-                !$this->getUserRepository()->checkBelongsToAnyOfTeams($userId, $teamIdList)
-            ) {
+        foreach ($userIds as $userId) {
+            if (!$this->getUserRepository()->checkBelongsToAnyOfTeams($userId, $teamIds)) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    private function hasOnlyInternalUsers(User $user, CoreEntity $entity, string $field): bool
+    {
+        $ids = array_diff($this->getAddedLinkMultipleIds($entity, $field), [$user->getId()]);
+        $ids = array_values($ids);
+
+        $count = $this->entityManager
+            ->getRDBRepositoryByClass(User::class)
+            ->where([
+                'type!=' => [
+                    User::TYPE_REGULAR,
+                    User::TYPE_ADMIN,
+                ],
+                'id' => $ids,
+            ])
+            ->count();
+
+        return $count === 0;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getAddedLinkMultipleIds(CoreEntity $entity, string $field): array
+    {
+        /** @var string[] $previousIds */
+        $previousIds = $entity->getFetched(self::FIELD_COLLABORATORS . 'Ids') ?? [];
+
+        return array_values(array_diff($entity->getLinkMultipleIdList($field), $previousIds));
     }
 }

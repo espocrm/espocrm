@@ -40,6 +40,7 @@ use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\FieldSanitize\SanitizeManager;
+use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\Access\LinkCheck;
@@ -69,6 +70,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\ORM\Collection;
 use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Type\AttributeType;
 use Espo\Tools\Stream\Service as StreamService;
 use Espo\Entities\User;
 
@@ -337,7 +339,7 @@ class Service implements Crud,
         }
 
         if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
-            throw new ForbiddenSilent();
+            throw new ForbiddenSilent("No read access.");
         }
 
         $entity = $this->getEntity($id);
@@ -376,9 +378,11 @@ class Service implements Crud,
 
             // @todo Apply access control filter. If a parameter enabled? Check compatibility.
 
-            $query = $builder->build();
-        }
-        catch (BadRequest $e) {
+            $query = $builder
+                ->buildQueryBuilder()
+                ->order([])
+                ->build();
+        } catch (BadRequest $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -578,6 +582,38 @@ class Service implements Crud,
             foreach ($this->nonAdminReadOnlyAttributeList as $attribute) {
                 unset($data->$attribute);
             }
+        }
+
+        $this->filterInputForeignAttributes($data);
+    }
+
+    private function filterInputForeignAttributes(stdClass $data): void
+    {
+        $entityDefs = $this->entityManager->getDefs()->tryGetEntity($this->entityType);
+
+        if (!$entityDefs) {
+            return;
+        }
+
+        foreach ($entityDefs->getAttributeList() as $attributeDefs) {
+            if (
+                $attributeDefs->getType() !== AttributeType::FOREIGN &&
+                !$attributeDefs->getParam(AttributeParam::IS_LINK_MULTIPLE_NAME_MAP)
+            ) {
+                continue;
+            }
+
+            if (
+                // link-one
+                $attributeDefs->getType() === AttributeType::FOREIGN &&
+                $attributeDefs->getParam('attributeRole') === 'id'
+            ) {
+                continue;
+            }
+
+            $attribute = $attributeDefs->getName();
+
+            unset($data->$attribute);
         }
     }
 
@@ -798,7 +834,7 @@ class Service implements Crud,
     public function create(stdClass $data, CreateParams $params): Entity
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_CREATE)) {
-            throw new ForbiddenSilent();
+            throw new ForbiddenSilent("No create access.");
         }
 
         $entity = $this->getRepository()->getNew();
@@ -807,14 +843,10 @@ class Service implements Crud,
         $this->sanitizeInput($data);
 
         $entity->set($data);
-
         $this->populateDefaults($entity, $data);
 
-        if (!$this->acl->check($entity, AclTable::ACTION_CREATE)) {
-            throw new ForbiddenSilent("No create access.");
-        }
-
         $this->processValidation($entity, $data);
+        $this->checkEntityCreateAccess($entity);
         $this->processAssignmentCheck($entity);
         $this->getLinkCheck()->processFields($entity);
 
@@ -827,9 +859,17 @@ class Service implements Crud,
         /** @noinspection PhpDeprecationInspection */
         $this->beforeCreateEntity($entity, $data);
 
-        $this->entityManager->saveEntity($entity, [SaveOption::API => true]);
+        $this->entityManager->saveEntity($entity, [
+            SaveOption::API => true,
+            SaveOption::KEEP_NEW => true,
+            SaveOption::DUPLICATE_SOURCE_ID => $params->getDuplicateSourceId(),
+        ]);
 
         $this->getRecordHookManager()->processAfterCreate($entity, $params);
+
+        $entity->setAsNotNew();
+        $entity->updateFetchedValues();
+
         /** @noinspection PhpDeprecationInspection */
         $this->afterCreateEntity($entity, $data);
         /** @noinspection PhpDeprecationInspection */
@@ -857,7 +897,7 @@ class Service implements Crud,
     public function update(string $id, stdClass $data, UpdateParams $params): Entity
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
-            throw new ForbiddenSilent();
+            throw new ForbiddenSilent("No edit access.");
         }
 
         if (!$id) {
@@ -940,7 +980,7 @@ class Service implements Crud,
     public function delete(string $id, DeleteParams $params): void
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_DELETE)) {
-            throw new ForbiddenSilent();
+            throw new ForbiddenSilent("No delete access.");
         }
 
         if (!$id) {
@@ -979,7 +1019,7 @@ class Service implements Crud,
     public function find(SearchParams $searchParams, ?FindParams $params = null): RecordCollection
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
-            throw new ForbiddenSilent();
+            throw new ForbiddenSilent("No read access.");
         }
 
         if (!$params) {
@@ -1076,10 +1116,23 @@ class Service implements Crud,
         }
 
         if (!$entity->get('deleted')) {
-            throw new Forbidden();
+            throw new Forbidden("No 'deleted' attribute.");
         }
 
-        $this->getRepository()->restoreDeleted($entity->getId());
+        $this->entityManager->getTransactionManager()
+            ->run(function () use ($entity) {
+                $this->getRepository()->restoreDeleted($entity->getId());
+
+                if (
+                    $entity->hasAttribute('deleteId') &&
+                    $this->metadata->get("entityDefs.$this->entityType.deleteId")
+                ) {
+                    $this->entityManager->refreshEntity($entity);
+
+                    $entity->set('deleteId', '0');
+                    $this->getRepository()->save($entity, [SaveOption::SILENT => true]);
+                }
+            });
     }
 
     public function getMaxSelectTextAttributeLength(): ?int
@@ -1122,7 +1175,7 @@ class Service implements Crud,
         }
 
         if (!$this->acl->check($entity, AclTable::ACTION_READ)) {
-            throw new ForbiddenSilent();
+            throw new ForbiddenSilent("No read access.");
         }
 
         $this->processForbiddenLinkReadCheck($link);
@@ -1171,8 +1224,7 @@ class Service implements Crud,
 
         if (!$skipAcl) {
             $selectBuilder->withStrictAccessControl();
-        }
-        else {
+        } else {
             $selectBuilder->withComplexExpressionsForbidden();
             $selectBuilder->withWherePermissionCheck();
         }
@@ -1789,7 +1841,7 @@ class Service implements Crud,
             unset($attributes->$attribute);
         }
 
-        if ($this->acl->getPermissionLevel('assignment') === AclTable::LEVEL_NO) {
+        if ($this->acl->getPermissionLevel(Acl\Permission::ASSIGNMENT) === AclTable::LEVEL_NO) {
             unset($attributes->assignedUserId);
             unset($attributes->assignedUserName);
             unset($attributes->assignedUsersIds);
@@ -2043,5 +2095,15 @@ class Service implements Crud,
         }
 
         return $this->recordHookManager;
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function checkEntityCreateAccess(Entity $entity): void
+    {
+        if (!$this->acl->check($entity, AclTable::ACTION_CREATE)) {
+            throw new ForbiddenSilent("No create access.");
+        }
     }
 }

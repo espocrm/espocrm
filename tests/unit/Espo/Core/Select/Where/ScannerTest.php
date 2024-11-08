@@ -32,11 +32,14 @@ namespace tests\unit\Espo\Core\Select\Where;
 use Espo\Core\Select\Where\Item;
 use Espo\Core\Select\Where\Scanner;
 use Espo\ORM\BaseEntity as Entity;
+use Espo\ORM\Entity as OrmEntity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Select as Query;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Type\RelationType;
+use PHPUnit\Framework\TestCase;
 
-class ScannerTest extends \PHPUnit\Framework\TestCase
+class ScannerTest extends TestCase
 {
     protected function setUp() : void
     {
@@ -69,7 +72,7 @@ class ScannerTest extends \PHPUnit\Framework\TestCase
             ->willReturn($this->entity);
     }
 
-    public function testApplyLeftJoins1()
+    public function testApplyLeftJoins1(): void
     {
         $item = Item::fromRaw([
             'type' => 'and',
@@ -77,17 +80,22 @@ class ScannerTest extends \PHPUnit\Framework\TestCase
                 [
                     'type' => 'equals',
                     'attribute' => 'test1',
-                    'value' => 'value1',
+                    'value' => 'value',
                 ],
                 [
                     'type' => 'equals',
                     'attribute' => 'TEST:(link2.test2)',
-                    'value' => 'value2',
+                    'value' => 'value',
                 ],
                 [
-                    'type' => 'linkedWith',
-                    'attribute' => 'link3',
-                    'value' => 'value3',
+                    'type' => 'equals',
+                    'attribute' => 'link3.test3',
+                    'value' => 'value',
+                ],
+                [
+                    'type' => 'equals',
+                    'attribute' => 'test4',
+                    'value' => 'value',
                 ],
             ],
         ]);
@@ -104,39 +112,36 @@ class ScannerTest extends \PHPUnit\Framework\TestCase
             );
 
         $this->queryBuilder
+            ->expects($this->exactly(3))
             ->method('leftJoin')
             ->withConsecutive(
                 ['link2'],
                 ['link3'],
-                ['link4']
+                ['link4'],
             );
 
-        $this->queryBuilder
+        /*$this->queryBuilder
             ->expects($this->once())
-            ->method('distinct');
+            ->method('distinct');*/
 
         $this->entity
             ->expects($this->any())
             ->method('getAttributeType')
             ->will(
-                $this->returnValueMap(
-                    [
-                        ['test1', Entity::VARCHAR],
-                        ['test4', Entity::FOREIGN],
-                    ]
-                )
+                $this->returnValueMap([
+                    ['test1', OrmEntity::VARCHAR],
+                    ['test4', OrmEntity::FOREIGN],
+                ])
             );
 
         $this->entity
             ->expects($this->any())
             ->method('getRelationType')
             ->will(
-                $this->returnValueMap(
-                    [
-                        ['link2', Entity::HAS_MANY],
-                        ['link3', Entity::BELONGS_TO],
-                    ]
-                )
+                $this->returnValueMap([
+                    ['link2', OrmEntity::HAS_MANY],
+                    ['link3', OrmEntity::BELONGS_TO],
+                ])
             );
 
         $this->entity
@@ -151,5 +156,73 @@ class ScannerTest extends \PHPUnit\Framework\TestCase
             );
 
         $this->scanner->apply($this->queryBuilder, $item);
+    }
+
+    public function testHasRelatedMany(): void
+    {
+        $em = $this->createMock(EntityManager::class);
+        $entity = $this->createMock(Entity::class);
+
+        $em->expects($this->once())
+            ->method('getNewEntity')
+            ->willReturn($entity);
+
+        $entity
+            ->expects($this->any())
+            ->method('hasRelation')
+            ->will(
+                $this->returnValueMap([
+                    ['link2', true],
+                    ['link3', true],
+                ])
+            );
+
+        $entity
+            ->expects($this->any())
+            ->method('getRelationType')
+            ->will(
+                $this->returnValueMap([
+                    ['link2', RelationType::HAS_MANY],
+                    ['link3', RelationType::BELONGS_TO],
+                ])
+            );
+
+        $scanner = new Scanner($em);
+
+        $item = Item::fromRaw([
+            'type' => 'and',
+            'value' => [
+                [
+                    'type' => 'equals',
+                    'attribute' => 'test1',
+                    'value' => 'value',
+                ],
+                [
+                    'type' => 'equals',
+                    'attribute' => 'TEST:(link2.test2)',
+                    'value' => 'value',
+                ],
+                [
+                    'type' => 'equals',
+                    'attribute' => 'link3.test3',
+                    'value' => 'value',
+                ],
+            ],
+        ]);
+
+        $this->assertTrue($scanner->hasRelatedMany('Test', $item));
+
+        $item = Item::fromRaw([
+            'type' => 'and',
+            'value' => [
+                [
+                    'type' => 'equals',
+                    'attribute' => 'link3.test3',
+                    'value' => 'value',
+                ],
+            ],
+        ]);
+
+        $this->assertFalse($scanner->hasRelatedMany('Test', $item));
     }
 }

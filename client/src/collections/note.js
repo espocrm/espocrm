@@ -34,6 +34,22 @@ class NoteCollection extends Collection {
 
     paginationByNumber = false
 
+    /**
+     * @private
+     * @type {string|null}
+     */
+    reactionsCheckDate = null
+
+    /**
+     * @type {Record[]}
+     */
+    pinnedList
+
+    /**
+     * @type {number}
+     */
+    reactionsCheckMaxSize = 0;
+
     /** @inheritDoc */
     prepareAttributes(response, params) {
         const total = this.total;
@@ -41,11 +57,29 @@ class NoteCollection extends Collection {
         const list = super.prepareAttributes(response, params);
 
         if (params.data && params.data.after) {
-            if (total >= 0 && response.total >= 0) {
-                this.total = total + response.total;
-            } else {
-                this.total = total;
-            }
+            this.total = total >= 0 && response.total >= 0 ?
+                total + response.total : total;
+        }
+
+        if (response.pinnedList) {
+            this.pinnedList = Espo.Utils.cloneDeep(response.pinnedList);
+        }
+
+        this.reactionsCheckDate = response.reactionsCheckDate;
+
+        /** @type {Record[]} */
+        const updatedReactions = response.updatedReactions;
+
+        if (updatedReactions) {
+            updatedReactions.forEach(item => {
+                const model = this.get(item.id);
+
+                if (!model) {
+                    return;
+                }
+
+                model.set(item);
+            });
         }
 
         return list;
@@ -70,6 +104,16 @@ class NoteCollection extends Collection {
             options.remove = false;
             options.at = 0;
             options.maxSize = null;
+
+            if (this.reactionsCheckMaxSize) {
+                options.data.reactionsAfter = this.reactionsCheckDate || options.data.after;
+
+                options.data.reactionsCheckNoteIds = this.models
+                    .filter(model => model.attributes.type === 'Post')
+                    .map(model => model.id)
+                    .slice(0, this.reactionsCheckMaxSize)
+                    .join(',');
+            }
         }
 
         return this.fetch(options);

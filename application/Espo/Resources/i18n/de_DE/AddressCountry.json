@@ -1,0 +1,19 @@
+{
+  "labels": {
+    "Create AddressCountry": "Landzuordnung erstellen",
+    "Populate": "Befüllen"
+  },
+  "fields": {
+    "isPreferred": "Wird bevorzugt"
+  },
+  "tooltips": {
+    "code": "ISO 3166-1 alpha-2-Code.",
+    "isPreferred": "Die bevorzugten Länder erscheinen zuerst in der Auswahlliste."
+  },
+  "messages": {
+    "confirmPopulateDefaults": "Alle vorhandenen Länder werden gelöscht, die Standard-Länderliste wird erstellt. Es ist nicht möglich, den Vorgang rückgängig zu machen.\n\nSind Sie sicher?"
+  },
+  "strings": {
+    "populateDefaults": "Mit Standard-Länderliste befüllen"
+  }
+}

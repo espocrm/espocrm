@@ -64,8 +64,7 @@ class Processor implements ProcessorInterface
     {
         try {
             return $this->phpSpreadsheetProcessor->process($params, $collection);
-        }
-        catch (SpreadsheetException|WriterException $e) {
+        } catch (SpreadsheetException|WriterException $e) {
             throw new Error($e->getMessage());
         }
     }
@@ -77,8 +76,7 @@ class Processor implements ProcessorInterface
     {
         try {
             return $this->openSpoutProcessor->process($params, $collection);
-        }
-        catch (\Throwable $e) {
+        } catch (\Throwable $e) {
             throw new Error($e->getMessage());
         }
     }

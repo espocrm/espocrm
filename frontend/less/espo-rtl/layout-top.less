@@ -42,7 +42,7 @@ body:not([data-navbar="side"]) {
         }
     }
 
-    @media screen and (max-width: (@screen-sm-min - 1px)) {
+    @media screen and (max-width: @screen-xs-max) {
         #navbar .navbar {
             ul.tabs {
                 > li a > span.full-label {
@@ -57,7 +57,7 @@ body:not([data-navbar="side"]) {
         th.group-header {
             > div {
                 padding-left: 0;
-                padding-right: @table-cell-padding;
+                padding-right: var(--table-cell-padding);
             }
 
             > div:before,

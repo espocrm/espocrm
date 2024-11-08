@@ -30,6 +30,7 @@
 namespace Espo\Tools\EmailNotification;
 
 use Espo\Core\ORM\Entity;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\Email;
 use Espo\Entities\Preferences;
 use Espo\Entities\User;
@@ -182,8 +183,7 @@ class AssignmentProcessor
 
         try {
             $this->emailSender->send($email);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log->error('EmailNotification: [' . $e->getCode() . '] ' . $e->getMessage());
         }
     }
@@ -202,7 +202,7 @@ class AssignmentProcessor
         $fieldDefs = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
 
         foreach ($fieldDefs as $field => $defs) {
-            if (isset($defs['type']) && $defs['type'] == 'linkParent') {
+            if (isset($defs['type']) && $defs['type'] == FieldType::LINK_PARENT) {
                 $entity->loadParentNameField($field);
             }
         }

@@ -15,7 +15,7 @@
     "bouncedCount": "Geri Döndü",
     "hardBouncedCount": "Sert Geri Döndü",
     "softBouncedCount": "Yumuşak Geri Döndü",
-    "leadCreatedCount": "Müşteri Potansiyelleri Oluşturuldu",
+    "leadCreatedCount": "Potansiyeller Oluşturuldu",
     "revenue": "Gelir",
     "revenueConverted": "Gelir (dönüştürülmüş)",
     "budget": "Bütçe",
@@ -29,29 +29,30 @@
   "links": {
     "targetLists": "Hedef Listeler",
     "excludingTargetLists": "Hedef Listeleri Hariç Tutma",
-    "accounts": "Hesaplar",
-    "contacts": "İletişim kişileri",
-    "leads": "Müşteri Potansiyelleri",
+    "accounts": "Firmalar",
+    "contacts": "Kişiler",
+    "leads": "Potansiyeller",
     "opportunities": "Fırsatlar",
     "campaignLogRecords": "Kayıt",
-    "massEmails": "Toplu emailler",
+    "massEmails": "Toplu epostalar",
     "trackingUrls": "İzleme URL'leri",
     "contactsTemplate": "Kişi Şablonu",
     "leadsTemplate": "Fırsat Şabonu ",
-    "accountsTemplate": "Hesap ŞAblonu",
+    "accountsTemplate": "Hesap Şablonu",
     "usersTemplate": "Kullanıcı Şablonu"
   },
   "options": {
     "type": {
+      "Email": "Eposta",
       "Television": "Televizyon",
       "Radio": "Radyo",
       "Newsletter": "Bülten",
-      "Mail": "Email"
+      "Mail": "Eposta"
     },
     "status": {
       "Planning": "Planlanıyor",
-      "Active": "Aktif",
-      "Inactive": "Pasif",
+      "Active": "Etkin",
+      "Inactive": "Etkin",
       "Complete": "Tamamla"
     }
   },
@@ -62,15 +63,16 @@
     "hard": "sert",
     "soft": "Yumuşak",
     "Unsubscribe": "Abonelikten Ayrıl (Bülten üyeliğinden çıkma)",
-    "Mass Emails": "Toplu Email",
-    "Email Templates": "Email şablonları",
+    "Mass Emails": "Toplu Eposta",
+    "Email Templates": "Eposta şablonları",
     "Unsubscribe again": "Tekrar abonelikten çık",
     "Subscribe again": "Tekrar üye olun",
     "Create Target List": "Hedef Liste Yarat",
-    "Mail Merge": "Eposta Birleştirme"
+    "Mail Merge": "Eposta Birleştirme",
+    "Generate Mail Merge PDF": "Posta Birleştirme PDF'i Oluştur"
   },
   "presetFilters": {
-    "active": "Aktif"
+    "active": "Etkin"
   },
   "messages": {
     "unsubscribed": "Posta listemizden ayrıldınız",

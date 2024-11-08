@@ -1,5 +1,5 @@
 {{#if closeButton}}
-<a role="button" tabindex="0" class="pull-right close" data-action="close" aria-hidden="true">×</a>
+<a role="button" tabindex="0" class="pull-right close" data-action="close" aria-hidden="true"><span class="fas fa-times"></span></a>
 {{/if}}
 <h4>{{header}}</h4>
 
@@ -14,9 +14,9 @@
 
 </div>
 
-<div class="cell form-group" data-name="{{dateAttribute}}">
-    <div class="field" data-name="{{dateAttribute}}">
-        {{{dateField}}}
+<div class="cell form-group" data-name="{{dateField}}">
+    <div class="field" data-name="{{dateField}}">
+        {{{date}}}
     </div>
 </div>
 

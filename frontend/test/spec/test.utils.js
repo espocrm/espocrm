@@ -26,34 +26,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-describe('utils', function () {
-    var Utils;
+describe('utils', () => {
+    let Utils;
 
-    beforeEach(function (done) {
-        require(['utils'], function (UtilsD) {
+    beforeEach(done => {
+        require(['utils'], UtilsD => {
             Utils = UtilsD;
             done();
         });
     });
 
-	it('#upperCaseFirst should make first letter upercase', function () {
+	it('#upperCaseFirst should make first letter uppercase', () => {
 		expect(Utils.upperCaseFirst('someTest')).toBe('SomeTest');
 	});
 
-    it('#checkAccessDataList should check access 1', function () {
-        var user = {
-            isPortal:  function () {},
-            getLinkMultipleIdList: function () {},
-            isAdmin: function () {}
+    it('#checkAccessDataList should check access 1', () => {
+        const user = {
+            isPortal: () => {
+            },
+            getLinkMultipleIdList: () => {
+            },
+            isAdmin: () => {
+            }
         };
-        var acl = {
-            check: function () {},
-            checkScope: function () {}
+        const acl = {
+            check: () => {
+            },
+            checkScope: () => {
+            }
         };
-        var entity = {
+        const entity = {
             name: 'Account'
         };
-        spyOn(user, 'getLinkMultipleIdList').and.callFake(function (link) {
+        spyOn(user, 'getLinkMultipleIdList').and.callFake(link => {
             if (link === 'teams') {
                 return ['team1', 'team2'];
             }
@@ -143,23 +148,27 @@ describe('utils', function () {
         ], acl, user, entity)).toBe(false);
     });
 
-    it('#checkAccessDataList should check access 2', function () {
-        var user = {
-            isPortal:  function () {},
-            getLinkMultipleIdList: function () {},
-            isAdmin: function () {}
+    it('#checkAccessDataList should check access 2', () => {
+        const user = {
+            isPortal: () => {
+            },
+            getLinkMultipleIdList: () => {
+            },
+            isAdmin: () => {
+            }
         };
-        var acl = {
-            check: function () {},
-            checkScope: function () {}
+        const acl = {
+            check: () => {
+            },
+            checkScope: () => {
+            }
         };
-        var entity = {
-            name: 'Account'
-        };
-        spyOn(user, 'getLinkMultipleIdList').and.callFake(function (link) {
+
+        spyOn(user, 'getLinkMultipleIdList').and.callFake(link => {
             if (link === 'teams') {
                 return ['team1', 'team2'];
             }
+
             if (link === 'portals') {
                 return ['portal1', 'portal2'];
             }
@@ -181,20 +190,24 @@ describe('utils', function () {
     });
 
 
-    it('#checkAccessDataList should check access 3', function () {
-        var user = {
-            isPortal:  function () {},
-            getLinkMultipleIdList: function () {},
-            isAdmin: function () {}
+    it('#checkAccessDataList should check access 3', () => {
+        const user = {
+            isPortal: function () {
+            },
+            getLinkMultipleIdList: function () {
+            },
+            isAdmin: function () {
+            }
         };
-        var acl = {
-            check: function () {},
-            checkScope: function () {}
+        const acl = {
+            check: function () {
+            },
+            checkScope: function () {
+            }
         };
-        var entity = {
-            name: 'Account'
-        };
-        spyOn(user, 'getLinkMultipleIdList').and.callFake(function (link) {
+
+
+        spyOn(user, 'getLinkMultipleIdList').and.callFake(link => {
             if (link === 'teams') {
                 return ['team1', 'team2'];
             }
@@ -202,6 +215,7 @@ describe('utils', function () {
                 return ['portal1', 'portal2'];
             }
         });
+
         spyOn(user, 'isPortal').and.returnValue(false);
         spyOn(user, 'isAdmin').and.returnValue(true);
 

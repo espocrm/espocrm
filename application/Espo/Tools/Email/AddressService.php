@@ -32,6 +32,8 @@ namespace Espo\Tools\Email;
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Select\Text\MetadataProvider as TextMetadataProvider;
 use Espo\Core\Templates\Entities\Company;
@@ -53,6 +55,8 @@ class AddressService
 {
     private const ERASED_PREFIX = 'ERASED:';
 
+    private const ATTR_EMAIL_ADDRESS = 'emailAddress';
+
     public function __construct(
         private Config $config,
         private Acl $acl,
@@ -62,6 +66,32 @@ class AddressService
         private User $user,
         private TextMetadataProvider $textMetadataProvider
     ) {}
+
+    /**
+     * @return array<int, array<string, mixed>>
+     * @throws NotFound
+     * @throws Forbidden
+     */
+    public function searchInEntityType(string $entityType, string $query, int $limit): array
+    {
+        if (!in_array($entityType, $this->getHavingEmailAddressEntityTypeList())) {
+            throw new NotFound("No 'email' field.");
+        }
+
+        if (!$this->acl->checkScope($entityType, Acl\Table::ACTION_READ)) {
+            throw new Forbidden("No access to $entityType.");
+        }
+
+        if (!$this->acl->checkField($entityType, 'email')) {
+            throw new Forbidden("No access to field 'email' in $entityType.");
+        }
+
+        $result = [];
+
+        $this->findInAddressBookByEntityType($query, $limit, $entityType, $result);
+
+        return $result;
+    }
 
     /**
      * @return array<int, array<string, mixed>>
@@ -188,8 +218,7 @@ class AddressService
             $whereClause = [
                 'emailAddress*' => $filter . '%',
             ];
-        }
-        else {
+        } else {
             $textFilter = $filter;
         }
 
@@ -208,15 +237,8 @@ class AddressService
                 ->where($whereClause)
                 ->order('name')
                 ->limit(0, $limit);
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
-        }
-
-        if ($textFilter) {
-            $builder
-                ->join('emailAddresses', 'emailAddressesJoin')
-                ->distinct();
         }
 
         if ($entityType === User::ENTITY_TYPE) {
@@ -230,9 +252,7 @@ class AddressService
         ];
 
         if (
-            $this->metadata->get(
-                ['entityDefs', $entityType, 'fields', 'name', 'type']
-            ) === 'personName'
+            $this->metadata->get(['entityDefs', $entityType, 'fields', 'name', 'type']) === FieldType::PERSON_NAME
         ) {
             $select[] = 'firstName';
             $select[] = 'lastName';
@@ -246,7 +266,7 @@ class AddressService
             ->find();
 
         foreach ($collection as $entity) {
-            $emailAddress = $entity->get('emailAddress');
+            $emailAddress = $entity->get(self::ATTR_EMAIL_ADDRESS);
 
             $emailAddressData = $this->getEmailAddressRepository()->getEmailAddressData($entity);
 
@@ -360,6 +380,7 @@ class AddressService
         }*/
 
         $queryBuilder->where([
+            'isActive' => true,
             'type!=' => [
                 User::TYPE_PORTAL,
                 User::TYPE_API,

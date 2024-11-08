@@ -34,7 +34,12 @@ use Espo\Core\Select\Helpers\FieldHelper;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\Part\Expression as Expr;
+use Espo\ORM\Query\Part\Where\OrGroup;
+use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Type\RelationType;
 
 class PortalOnlyAccount implements Filter
 {
@@ -45,63 +50,100 @@ class PortalOnlyAccount implements Filter
 
     public function apply(QueryBuilder $queryBuilder): void
     {
-        $orGroup = [];
+        $orBuilder = OrGroup::createBuilder();
 
-        $accountIdList = $this->user->getLinkMultipleIdList('accounts');
-        $contactId = $this->user->get('contactId');
+        $accountIdList = $this->user->getAccounts()->getIdList();
+        $contactId = $this->user->getContactId();
 
         if (count($accountIdList)) {
             if ($this->fieldHelper->hasAccountField()) {
-                $orGroup['accountId'] = $accountIdList;
+                $orBuilder->add(
+                    Cond::in(
+                        Expr::column('accountId'),
+                        $accountIdList
+                    )
+                );
+
+                if ($this->fieldHelper->getRelationDefs('account')->getType() === RelationType::HAS_ONE) {
+                    $queryBuilder->leftJoin('account');
+                }
             }
 
             if ($this->fieldHelper->hasAccountsRelation()) {
-                $queryBuilder
-                    ->leftJoin('accounts', 'accountsAccess')
-                    ->distinct();
+                $defs = $this->fieldHelper->getRelationDefs('accounts');
 
-                $orGroup['accountsAccess.id'] = $accountIdList;
+                $orBuilder->add(
+                    Cond::in(
+                        Expr::column('id'),
+                        QueryBuilder::create()
+                            ->from(ucfirst($defs->getRelationshipName()), 'm')
+                            ->select($defs->getMidKey())
+                            ->where([$defs->getForeignMidKey() => $accountIdList])
+                            ->build()
+                    )
+                );
             }
 
             if ($this->fieldHelper->hasParentField()) {
-                $orGroup[] = [
-                    'parentType' => Account::ENTITY_TYPE,
-                    'parentId' => $accountIdList,
-                ];
+                $orBuilder->add(
+                    WhereClause::fromRaw([
+                        'parentType' => Account::ENTITY_TYPE,
+                        'parentId' => $accountIdList,
+                    ])
+                );
 
                 if ($contactId) {
-                    $orGroup[] = [
-                        'parentType' => Contact::ENTITY_TYPE,
-                        'parentId' => $contactId,
-                    ];
+                    $orBuilder->add(
+                        WhereClause::fromRaw([
+                            'parentType' => Contact::ENTITY_TYPE,
+                            'parentId' => $contactId,
+                        ])
+                    );
                 }
             }
         }
 
         if ($contactId) {
             if ($this->fieldHelper->hasContactField()) {
-                $orGroup['contactId'] = $contactId;
+                $orBuilder->add(
+                    WhereClause::fromRaw(['contactId' => $contactId])
+                );
+
+                if ($this->fieldHelper->getRelationDefs('contact')->getType() === RelationType::HAS_ONE) {
+                    $queryBuilder->leftJoin('contact');
+                }
             }
 
             if ($this->fieldHelper->hasContactsRelation()) {
-                $queryBuilder
-                    ->leftJoin('contacts', 'contactsAccess')
-                    ->distinct();
+                $defs = $this->fieldHelper->getRelationDefs('contacts');
 
-                $orGroup['contactsAccess.id'] = $contactId;
+                $orBuilder->add(
+                    Cond::in(
+                        Expr::column('id'),
+                        QueryBuilder::create()
+                            ->from(ucfirst($defs->getRelationshipName()), 'm')
+                            ->select($defs->getMidKey())
+                            ->where([$defs->getForeignMidKey() => $contactId])
+                            ->build()
+                    )
+                );
             }
         }
 
         if ($this->fieldHelper->hasCreatedByField()) {
-            $orGroup['createdById'] = $this->user->getId();
+            $orBuilder->add(
+                WhereClause::fromRaw(['createdById' => $this->user->getId()])
+            );
         }
 
-        if (empty($orGroup)) {
+        $orGroup = $orBuilder->build();
+
+        if ($orGroup->getItemCount() === 0) {
             $queryBuilder->where(['id' => null]);
 
             return;
         }
 
-        $queryBuilder->where(['OR' => $orGroup]);
+        $queryBuilder->where($orGroup);
     }
 }

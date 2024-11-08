@@ -62,8 +62,7 @@ class DatetimeOptionalType extends DatetimeType
         if ($dateValue !== null) {
             try {
                 Date::fromString($dateValue);
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 return false;
             }
         }
@@ -74,8 +73,7 @@ class DatetimeOptionalType extends DatetimeType
         if ($value !== null) {
             try {
                 DateTime::fromString($value);
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 return false;
             }
         }

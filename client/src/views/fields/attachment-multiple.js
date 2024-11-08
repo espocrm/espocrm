@@ -33,8 +33,40 @@ import FileUpload from 'helpers/file-upload';
 
 /**
  * An attachment-multiple field.
+ *
+ * @extends BaseFieldView<module:views/fields/attachment-multiple~params>
  */
 class AttachmentMultipleFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/attachment-multiple~options
+     * @property {
+     *     module:views/fields/attachment-multiple~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/attachment-multiple~params
+     * @property {boolean} [required] Required.
+     * @property {boolean} [showPreviews] Show previews.
+     * @property {'x-small'|'small'|'medium'|'large'} [previewSize] A preview size.
+     * @property {string[]} [sourceList] A source list.
+     * @property {string[]} [accept] Formats to accept.
+     * @property {number} [maxFileSize] A max file size (in Mb).
+     * @property {number} [maxCount] A max number of items.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/attachment-multiple~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'attachmentMultiple'
 
@@ -48,9 +80,22 @@ class AttachmentMultipleFieldView extends BaseFieldView {
     idsName
     nameHash
     foreignScope
-    showPreviews = true
     accept = null
-    validations = ['ready', 'required']
+    /** @protected */
+    showPreviews = true
+    /** @protected */
+    showPreviewsInListMode = false
+
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
+    validations = [
+        'ready',
+        'required',
+        'maxCount',
+    ]
+
     searchTypeList = ['isNotEmpty', 'isEmpty']
 
     events = {
@@ -232,6 +277,16 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         this.on('inline-edit-off', () => {
             this.isUploading = false;
         });
+
+        if (this.recordHelper) {
+            this.listenTo(this.recordHelper, `upload-files:${this.name}`, /** File[] */files => {
+                if (!this.isEditMode()) {
+                    return;
+                }
+
+                this.uploadFiles(files);
+            });
+        }
     }
 
     setupSearch() {
@@ -250,18 +305,28 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         this.$el.find('.attach-file-label').focus();
     }
 
+    /**
+     * @protected
+     */
     empty() {
         this.clearIds();
 
         this.$attachments.empty();
     }
 
+    /**
+     * @private
+     */
     handleResize() {
         const width = this.$el.width();
 
         this.$el.find('img.image-preview').css('maxWidth', width + 'px');
     }
 
+    /**
+     * @protected
+     * @param {string} id
+     */
     deleteAttachment(id) {
         this.removeId(id);
 
@@ -273,8 +338,14 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         }
     }
 
+    /**
+     * @protected
+     * @param {string} id
+     * @param {string} [size]
+     * @return {string}
+     */
     getImageUrl(id, size) {
-        let url = this.getBasePath() + '?entryPoint=image&id=' + id;
+        let url = `${this.getBasePath()}?entryPoint=image&id=${id}`;
 
         if (size) {
             url += '&size=' + size;
@@ -287,8 +358,13 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         return url;
     }
 
+    /**
+     * @protected
+     * @param {string} id
+     * @return {string}
+     */
     getDownloadUrl(id) {
-        let url = this.getBasePath() + '?entryPoint=download&id=' + id;
+        let url = `${this.getBasePath()}?entryPoint=download&id=${id}`;
 
         if (this.getUser().get('portalId')) {
             url += '&portalId=' + this.getUser().get('portalId');
@@ -297,6 +373,10 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         return url;
     }
 
+    /**
+     * @protected
+     * @param {string} id
+     */
     removeId(id) {
         const arr = _.clone(this.model.get(this.idsName) || []);
         const i = arr.indexOf(id);
@@ -316,6 +396,10 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         this.model.set(this.typeHashName, typeHash);
     }
 
+    /**
+     * @protected
+     * @param {boolean} [silent]
+     */
     clearIds(silent) {
         silent = silent || false;
 
@@ -324,6 +408,12 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         this.model.set(this.typeHashName, {}, {silent: silent})
     }
 
+    /**
+     * @protected
+     * @param {import('model').default} attachment
+     * @param {string|null} [link]
+     * @param {boolean} [ui]
+     */
     pushAttachment(attachment, link, ui) {
         const arr = _.clone(this.model.get(this.idsName) || []);
 
@@ -344,6 +434,13 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         this.model.set(this.nameHashName, nameHash, {ui: ui});
     }
 
+    /**
+     * @protected
+     * @param {string} name
+     * @param {string} type
+     * @param {string} id
+     * @return {string|null}
+     */
     getEditPreview(name, type, id) {
         if (!~this.previewTypeList.indexOf(type)) {
             return null;
@@ -356,8 +453,8 @@ class AttachmentMultipleFieldView extends BaseFieldView {
             .attr('alt', name)
             .attr('draggable', 'false')
             .css({
-                maxWidth: (this.imageSizes[this.previewSize] || {})[0],
-                maxHeight: (this.imageSizes[this.previewSize] || {})[1],
+                maxWidth: (this.imageSizes['small'] || {})[0],
+                maxHeight: (this.imageSizes['small'] || {})[1],
             })
             .get(0)
             .outerHTML;
@@ -471,6 +568,11 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         return maxFileSize;
     }
 
+    /**
+     * Upload files.
+     *
+     * @param {FileList|File[]} files
+     */
     uploadFiles(files) {
         let uploadedCount = 0;
         let totalCount = 0;
@@ -492,7 +594,7 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         if (exceedsMaxFileSize) {
             const msg = this.translate('fieldMaxFileSizeError', 'messages')
                 .replace('{field}', this.getLabelText())
-                .replace('{max}', maxFileSize);
+                .replace('{max}', maxFileSize.toString());
 
             this.showValidationMessage(msg, 'label');
 
@@ -720,11 +822,12 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         if (this.isDetailMode() || this.isListMode()) {
             const nameHash = this.nameHash;
             const typeHash = this.model.get(this.typeHashName) || {};
+            const ids = /** @type {string[]} */this.model.get(this.idsName) || [];
 
             const previews = [];
             const names = [];
 
-            for (const id in nameHash) {
+            for (const id of ids) {
                 const type = typeHash[id] || false;
                 const name = nameHash[id];
 
@@ -899,6 +1002,33 @@ class AttachmentMultipleFieldView extends BaseFieldView {
 
             return true;
         }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    validateMaxCount() {
+        const maxCount = this.params.maxCount;
+
+        if (!maxCount) {
+            return false;
+        }
+
+        const idList = this.model.get(this.idsName) || [];
+
+        if (idList.length === 0) {
+            return false;
+        }
+
+        if (idList.length <= maxCount) {
+            return false;
+        }
+
+        const msg = this.translate('fieldExceedsMaxCount', 'messages')
+            .replace('{field}', this.getLabelText())
+            .replace('{maxCount}', maxCount.toString());
+
+        this.showValidationMessage(msg, 'label');
+
+        return true;
     }
 
     fetch() {

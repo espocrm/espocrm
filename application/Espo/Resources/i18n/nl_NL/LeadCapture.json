@@ -20,7 +20,8 @@
     "skipOptInConfirmationIfSubscribed": "Bevestiging overslaan als het lood al in de doellijst is opgenomen",
     "smtpAccount": "SMTP-account",
     "inboundEmail": "Groep e-mailaccount",
-    "exampleRequestHeaders": "Koppen"
+    "exampleRequestHeaders": "Koppen",
+    "phoneNumberCountry": "Telefoon landcode "
   },
   "links": {
     "targetList": "Doellijst",

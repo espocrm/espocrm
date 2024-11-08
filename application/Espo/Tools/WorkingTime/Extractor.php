@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\WorkingTime;
 
+use DateTimeZone;
 use Espo\Tools\WorkingTime\Calendar\WorkingWeekday;
 use Espo\Tools\WorkingTime\Calendar\WorkingDate;
 use Espo\Tools\WorkingTime\Calendar\HavingRanges;
@@ -137,10 +138,16 @@ class Extractor
     /**
      * @return array{DateTime,DateTime}[]
      */
-    public function extractAllDay(Calendar $calendar, DateTime $from, DateTime $to): array
-    {
+    public function extractAllDay(Calendar $calendar,
+        DateTime $from,
+        DateTime $to,
+        ?DateTimeZone $timezone = null
+    ): array {
+
+        $timezone ??= $calendar->getTimezone();
+
         $pointer = $from
-            ->withTimezone($calendar->getTimezone())
+            ->withTimezone($timezone)
             ->withTime(0, 0, 0);
 
         $fromDate = Date::fromDateTime($from->modify('-1 day')->toDateTime());
@@ -152,7 +159,7 @@ class Extractor
 
         $list = [];
 
-        $end = $to->withTimezone($calendar->getTimezone())->withTime(23, 59, 59);
+        $end = $to->withTimezone($timezone)->withTime(23, 59, 59);
 
         while ($pointer->toTimestamp() < $end->toTimestamp()) {
             $isWorkingDay = $this->isWorkingDay(
@@ -225,9 +232,14 @@ class Extractor
     /**
      * @return array{DateTime,DateTime}[]
      */
-    public function extractAllDayInversion(Calendar $calendar, DateTime $from, DateTime $to): array
-    {
-        $list = $this->extractAllDay($calendar, $from, $to);
+    public function extractAllDayInversion(
+        Calendar $calendar,
+        DateTime $from,
+        DateTime $to,
+        ?DateTimeZone $timezone = null
+    ): array {
+
+        $list = $this->extractAllDay($calendar, $from, $to, $timezone);
 
         if ($list === []) {
             return [[$from, $to]];

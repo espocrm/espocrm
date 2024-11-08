@@ -51,11 +51,7 @@ class ScopeChecker
         }
 
         if ($action === null) {
-            if ($data->hasNotNo()) {
-                return true;
-            }
-
-            return false;
+            return true;
         }
 
         $level = $data->get($action);
@@ -74,6 +70,12 @@ class ScopeChecker
 
         if ($level === Table::LEVEL_OWN || $level === Table::LEVEL_TEAM) {
             if ($checkerData->isOwn()) {
+                return true;
+            }
+        }
+
+        if ($level === Table::LEVEL_OWN || $level === Table::LEVEL_TEAM) {
+            if ($checkerData->isShared()) {
                 return true;
             }
         }

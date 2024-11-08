@@ -26,28 +26,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/global-search-entity-list', ['views/fields/multi-enum'], function (Dep) {
+import MultiEnumFieldView from 'views/fields/multi-enum';
 
-    return Dep.extend({
+export default class extends MultiEnumFieldView {
 
-        setup: function () {
+    setup() {
+        this.params.options = Object.keys(this.getMetadata().get('scopes'))
+            .filter(scope => {
+                const defs = this.getMetadata().get(['scopes', scope]) || {};
 
-            this.params.options = Object.keys(this.getMetadata().get('scopes'))
-                .filter(scope => {
-                    let defs = this.getMetadata().get(['scopes', scope]) || {};
+                if (defs.disabled || scope === 'Note') {
+                    return;
+                }
 
-                    if (defs.disabled || scope === 'Note') {
-                        return;
-                    }
+                return defs.customizable && defs.entity;
+            })
+            .sort((v1, v2) => {
+                return this.translate(v1, 'scopeNamesPlural')
+                    .localeCompare(this.translate(v2, 'scopeNamesPlural'));
+            });
 
-                    return defs.customizable && defs.entity;
-                })
-                .sort((v1, v2) => {
-                    return this.translate(v1, 'scopeNamesPlural')
-                        .localeCompare(this.translate(v2, 'scopeNamesPlural'));
-                });
-
-            Dep.prototype.setup.call(this);
-        },
-    });
-});
+        super.setup();
+    }
+}

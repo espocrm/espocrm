@@ -105,8 +105,7 @@ class Params
             if ($ids) {
                 throw new RuntimeException("Can't combine 'ids' and search params.");
             }
-        }
-        else if ($ids) {
+        } else if ($ids) {
             if (!is_array($ids)) {
                 throw new RuntimeException("Bad 'ids'.");
             }
@@ -222,6 +221,8 @@ class Params
 
         if ($this->getAttributeList()) {
             $searchParams = $searchParams->withSelect($this->getAttributeList());
+        } else {
+            $searchParams = $searchParams->withSelect(['*']);
         }
 
         return $searchParams;

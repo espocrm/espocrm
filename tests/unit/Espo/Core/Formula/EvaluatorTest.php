@@ -31,14 +31,16 @@ namespace tests\unit\Espo\Core\Formula;
 
 use Espo\Core\Formula\Evaluator;
 use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\UnsafeFunction;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Formula\Exceptions\SyntaxError;
 use Espo\Core\Utils\Log;
 use Espo\ORM\EntityManager;
 
+use PHPUnit\Framework\TestCase;
 use tests\unit\ContainerMocker;
 
-class EvaluatorTest extends \PHPUnit\Framework\TestCase
+class EvaluatorTest extends TestCase
 {
     /**
      * @var Evaluator
@@ -59,7 +61,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $injectableFactory = new InjectableFactory($container);
 
-        $this->evaluator = new Evaluator($injectableFactory);
+        $this->evaluator = new Evaluator($injectableFactory, [], ['test\\unsafe']);
     }
 
     protected function tearDown() : void
@@ -121,6 +123,55 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $expression = "5 * (2 + 3) * 4 - (5 - 4)";
         $actual = $this->evaluator->process($expression);
         $this->assertEquals(5 * (2 + 3) * 4 - (5 - 4), $actual);
+    }
+
+    public function testEvaluateMathExpression9(): void
+    {
+        $expression = "5 * -2";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 * -2, $actual);
+    }
+
+    public function testEvaluateMathExpression10(): void
+    {
+        $expression = "5 *  -2";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 * -2, $actual);
+    }
+
+    public function testEvaluateMathExpression11(): void
+    {
+        $expression = "5 *  - 2";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 * -2, $actual);
+    }
+
+    public function testEvaluateMathExpression12(): void
+    {
+        $expression = "5 * +2";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 * +2, $actual);
+    }
+
+    public function testEvaluateMathExpression13(): void
+    {
+        $expression = "5 + -2";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 + -2, $actual);
+    }
+
+    public function testEvaluateMathExpression14(): void
+    {
+        $expression = "(5 - 2) + -2";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals((5 - 2) + -2, $actual);
+    }
+
+    public function testEvaluateMathExpression15(): void
+    {
+        $expression = "+ -2";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(+ -2, $actual);
     }
 
     public function testEvaluateList1()
@@ -867,6 +918,26 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testNumberPower1(): void
+    {
+        $expression = "number\\power(3, 2)";
+
+        $this->assertSame(
+            9,
+            $this->evaluator->process($expression)
+        );
+    }
+
+    public function testNumberPower2(): void
+    {
+        $expression = "number\\power(3.0, 2.0)";
+
+        $this->assertSame(
+            9.0,
+            $this->evaluator->process($expression)
+        );
+    }
+
     public function testNullCoalescing1(): void
     {
         $expression = "null ?? 1";
@@ -1358,6 +1429,195 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $this->evaluator->process($expression, null, $vars);
 
-        $this->assertEquals(2, $vars->j);;
+        $this->assertEquals(2, $vars->j);
+    }
+
+    public function testStrings1(): void
+    {
+        $expression = '"\\\\"';
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals("\\", $result);
+    }
+
+    public function testStrings2(): void
+    {
+        $expression = '"\\""';
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals("\"", $result);
+    }
+
+    public function testStrings3(): void
+    {
+        $expression = '"\\n"';
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals("\n", $result);
+    }
+
+    public function testStrings4(): void
+    {
+        $expression = '"\\\\n"';
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals("\\n", $result);
+    }
+
+    public function testStrings5(): void
+    {
+        $expression = '"test\\\\nest\\\\nest"';
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals("test\\nest\\nest", $result);
+    }
+
+    public function testStrings6(): void
+    {
+        $expression = '"\\n\\\\test"';
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals("\n\\test", $result);
+    }
+
+    public function testStrings7(): void
+    {
+        $expression = '"\\n\\\\test\\n"';
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals("\n\\test\n", $result);
+    }
+
+    public function testStrings8(): void
+    {
+        $expression = '"\\\\\\""';
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals("\\\"", $result);
+    }
+
+    public function testStrings9(): void
+    {
+        $expression = '"\\\\\\"test\\\\\\""';
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals("\\\"test\\\"", $result);
+    }
+
+    public function testStrings10(): void
+    {
+        $expression = "'test \"hello\\''";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals("test \"hello'", $result);
+    }
+
+    public function testBase64(): void
+    {
+        $expression = "util\\base64Encode('1')";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $value = $this->evaluator->process($expression);
+
+        $this->assertEquals(base64_encode('1'), $value);
+
+        $expression = "util\\base64Decode('" . base64_encode('1') . "')";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $value = $this->evaluator->process($expression);
+
+        $this->assertEquals('1', $value);
+    }
+
+    public function testUnsafe1(): void
+    {
+        $expression = "util\\base64Encode(test\\unsafe());";
+
+        $this->expectException(UnsafeFunction::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->processSafe($expression);
+    }
+
+    public function testUnsafe2(): void
+    {
+        $expression = "test\\unsafe();";
+
+        $this->expectException(UnsafeFunction::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->processSafe($expression);
+    }
+
+    public function testStringsWithOperator(): void
+    {
+        $expression = "\$a = '='";
+
+        $vars = (object) [];
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertEquals("=", $vars->a);
+    }
+
+    public function testAssignAndLogical1(): void
+    {
+        $expression = "\$a = 'a' == 'a'";
+
+        $vars = (object) [];
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression, null, $vars);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+
+        $this->assertTrue($vars->a);
+    }
+
+    public function testAssignAndLogical2(): void
+    {
+        $expression = "\$a = 'a' == 'a' && 'b' == 'b'";
+
+        $vars = (object) [];
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression, null, $vars);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+
+        $this->assertTrue($vars->a);
+    }
+
+    public function testMarkdownTransform(): void
+    {
+        $expression = "ext\\markdown\\transform('**test**')";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals("<p><strong>test</strong></p>\n", $result);
     }
 }

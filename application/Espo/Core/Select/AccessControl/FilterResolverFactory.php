@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Select\AccessControl;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Acl;
 use Espo\Core\Portal\Acl as PortalAcl;
@@ -38,9 +37,7 @@ use Espo\Core\Utils\Acl\UserAclManagerProvider;
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\Binder;
 use Espo\Core\Binding\BindingData;
-
 use Espo\Entities\User;
-use RuntimeException;
 
 class FilterResolverFactory
 {
@@ -56,14 +53,9 @@ class FilterResolverFactory
             $this->getClassName($entityType) :
             $this->getPortalClassName($entityType);
 
-        try {
-            $acl = $this->userAclManagerProvider
-                ->get($user)
-                ->createUserAcl($user);
-        }
-        catch (Error $e) {
-            throw new RuntimeException($e->getMessage());
-        }
+        $acl = $this->userAclManagerProvider
+            ->get($user)
+            ->createUserAcl($user);
 
         $bindingData = new BindingData();
 

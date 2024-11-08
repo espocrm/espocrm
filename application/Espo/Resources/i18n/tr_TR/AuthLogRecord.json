@@ -9,7 +9,8 @@
     "user": "Kullanıcı",
     "requestUrl": "İstenen URL",
     "requestMethod": "İstek Şekli",
-    "authTokenIsActive": "Kimlik Doğrulama Aktif"
+    "authTokenIsActive": "Kimlik Doğrulama Etkin",
+    "authenticationMethod": "Kimlik Doğrulama Yöntemi"
   },
   "links": {
     "authToken": "Kimlik Doğrulama Oluşturuldu",

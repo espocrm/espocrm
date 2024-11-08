@@ -11,7 +11,11 @@
     "dynamicLogicStyled": "Condizioni che applicano lo stile.",
     "noLabel": "Nessuna Etichetta",
     "tabLabel": "Etichetta Scheda",
-    "tabBreak": "Interruzione Scheda"
+    "tabBreak": "Interruzione Scheda",
+    "width": "Larghezza",
+    "noteText": "Testo Nota",
+    "noteStyle": "Stile Nota",
+    "isMuted": "Colore tenue"
   },
   "options": {
     "align": {
@@ -31,7 +35,7 @@
     "Layout": "Struttura"
   },
   "tooltips": {
-    "link": "Se selezionato, verrà visualizzato un valore di campo come collegamento che punta alla vista di dettaglio del record. Di solito è usato per i campi *Nome*.",
+    "link": "Se selezionato, il valore del campo verrà visualizzato come collegamento che punta alla vista dettaglio del record. Di solito è usato per i campi *Nome*.",
     "hiddenPanel": "È necessario fare clic su \"Mostra altro\" per visualizzare il pannello.",
     "sticked": "Il pannello sarà attaccato a quello sovrastante. Non ci saranno spazi tra i pannelli.",
     "panelStyle": "Un colore per il pannello",
@@ -39,7 +43,9 @@
     "dynamicLogicStyled": "Un colore verrà applicato se viene soddisfatta una condizione specifica. Il colore è definito dal parametro *Stile*.",
     "tabBreak": "Una scheda separata per il pannello e per tutti i pannelli successivi fino alla successiva interruzione di scheda.",
     "noLabel": "Non visualizzare l'etichetta della colonna nell'intestazione.",
-    "notSortable": "Disabilita la possibilità di ordinare per colonna."
+    "notSortable": "Disabilita la possibilità di ordinare per colonna.",
+    "width": "Larghezza della colonna. Si raccomanda di avere una colonna senza larghezza specificata, di solito dovrebbe essere il campo *Nome*.",
+    "noteText": "Un testo da visualizzare nel pannello. Il Markdown è supportato."
   },
   "messages": {
     "cantBeEmpty": "Il layout non può essere vuoto.",

@@ -58,6 +58,9 @@ class User extends Person
     public const TYPE_API = 'api';
     public const TYPE_SUPER_ADMIN = 'super-admin';
 
+    public const RELATIONSHIP_ENTITY_USER = 'EntityUser';
+    public const RELATIONSHIP_ENTITY_COLLABORATOR = 'EntityCollaborator';
+
     public function isActive(): bool
     {
         return (bool) $this->get('isActive');
@@ -265,6 +268,16 @@ class User extends Person
         $value = $this->getValueObject('accounts');
 
         return $value;
+    }
+
+    public function getAvatarId(): ?string
+    {
+        return $this->get('avatarId');
+    }
+
+    public function getAvatarColor(): ?string
+    {
+        return $this->get('avatarColor');
     }
 
     /**

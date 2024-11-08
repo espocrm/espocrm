@@ -38,6 +38,16 @@ class ConfigDataProvider
     {}
 
     /**
+     * Get decimal places.
+     *
+     * @since 8.3.0
+     */
+    public function getDecimalPlaces(): ?int
+    {
+        return $this->config->get('currencyDecimalPlaces');
+    }
+
+    /**
      * Get a system default currency.
      */
     public function getDefaultCurrency(): string

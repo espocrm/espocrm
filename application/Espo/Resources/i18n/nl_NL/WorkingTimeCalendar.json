@@ -1,7 +1,6 @@
 {
   "labels": {
-    "Create WorkingTimeCalendar": "Kalender maken",
-    "Ranges": "Bereiken"
+    "Create WorkingTimeCalendar": "Kalender maken"
   },
   "fields": {
     "timeZone": "Tijdzone",
@@ -22,6 +21,6 @@
     "weekday6TimeRanges": "Zat Schema"
   },
   "links": {
-    "ranges": "Bereiken"
+    "ranges": "Uitzonderingen"
   }
 }

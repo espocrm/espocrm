@@ -52,8 +52,7 @@ class Valid implements Validator
 
         try {
             new CronExpression($scheduling);
-        }
-        catch (Exception) {
+        } catch (Exception) {
             return Failure::create();
         }
 

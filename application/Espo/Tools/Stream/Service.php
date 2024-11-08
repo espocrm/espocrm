@@ -29,10 +29,11 @@
 
 namespace Espo\Tools\Stream;
 
+use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
-use Espo\Entities\Subscription;
+use Espo\Entities\StreamSubscription;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
@@ -66,9 +67,6 @@ use Espo\Core\Select\SearchParams;
 use Espo\Core\Utils\Acl\UserAclManagerProvider;
 
 use stdClass;
-use DateTime;
-use DateTimeInterface;
-use LogicException;
 
 class Service
 {
@@ -87,10 +85,10 @@ class Service
     ];
     /** @var string[] */
     private $dangerDefaultStyleList = [
-        'Not Held',
         'Closed Lost',
-        'Dead',
     ];
+
+    private const FIELD_ASSIGNED_USERS = 'assignedUsers';
 
     /**
      * @var array<
@@ -106,17 +104,6 @@ class Service
      * >
      */
     private $auditedFieldsCache = [];
-
-    /**
-     * When a record is re-assigned, ACL will be recalculated for related notes
-     * created within the period.
-     */
-    private const NOTE_ACL_PERIOD = '3 days';
-    private const NOTE_ACL_LIMIT = 50;
-    /**
-     * Not used currently.
-     */
-    private const NOTE_NOTIFICATION_PERIOD = '1 hour';
 
     public function __construct(
         private EntityManager $entityManager,
@@ -181,7 +168,7 @@ class Service
         }
 
         return (bool) $this->entityManager
-            ->getRDBRepository(Subscription::ENTITY_TYPE)
+            ->getRDBRepository(StreamSubscription::ENTITY_TYPE)
             ->select(['id'])
             ->where([
                 'userId' => $userId,
@@ -198,7 +185,7 @@ class Service
      */
     public function followEntityMass(Entity $entity, array $sourceUserIdList, bool $skipAclCheck = false): void
     {
-        if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'stream'])) {
+        if (!$this->checkIsEnabled($entity->getEntityType())) {
             return;
         }
 
@@ -237,8 +224,7 @@ class Service
 
                 try {
                     $hasAccess = $this->aclManager->checkEntityStream($user, $entity);
-                }
-                catch (AclNotImplemented) {
+                } catch (AclNotImplemented) {
                     $hasAccess = false;
                 }
 
@@ -256,7 +242,7 @@ class Service
 
         $delete = $this->entityManager->getQueryBuilder()
             ->delete()
-            ->from(Subscription::ENTITY_TYPE)
+            ->from(StreamSubscription::ENTITY_TYPE)
             ->where([
                 'userId' => $userIdList,
                 'entityId' => $entity->getId(),
@@ -269,7 +255,7 @@ class Service
         $collection = new EntityCollection();
 
         foreach ($userIdList as $userId) {
-            $subscription = $this->entityManager->getNewEntity(Subscription::ENTITY_TYPE);
+            $subscription = $this->entityManager->getNewEntity(StreamSubscription::ENTITY_TYPE);
 
             $subscription->set([
                 'userId' => $userId,
@@ -289,7 +275,7 @@ class Service
             return false;
         }
 
-        if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'stream'])) {
+        if (!$this->checkIsEnabled($entity->getEntityType())) {
             return false;
         }
 
@@ -321,7 +307,7 @@ class Service
             return true;
         }
 
-        $this->entityManager->createEntity(Subscription::ENTITY_TYPE, [
+        $this->entityManager->createEntity(StreamSubscription::ENTITY_TYPE, [
             'entityId' => $entity->getId(),
             'entityType' => $entity->getEntityType(),
             'userId' => $userId,
@@ -332,13 +318,13 @@ class Service
 
     public function unfollowEntity(Entity $entity, string $userId): bool
     {
-        if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'stream'])) {
+        if (!$this->checkIsEnabled($entity->getEntityType())) {
             return false;
         }
 
         $delete = $this->entityManager->getQueryBuilder()
             ->delete()
-            ->from(Subscription::ENTITY_TYPE)
+            ->from(StreamSubscription::ENTITY_TYPE)
             ->where([
                 'userId' => $userId,
                 'entityId' => $entity->getId(),
@@ -359,7 +345,7 @@ class Service
 
         $delete = $this->entityManager->getQueryBuilder()
             ->delete()
-            ->from(Subscription::ENTITY_TYPE)
+            ->from(StreamSubscription::ENTITY_TYPE)
             ->where([
                 'entityId' => $entity->getId(),
                 'entityType' => $entity->getEntityType(),
@@ -368,7 +354,6 @@ class Service
 
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
-
 
     private function loadAssignedUserName(Entity $entity): void
     {
@@ -389,7 +374,7 @@ class Service
      * Notes having `related` or `superParent` are subjects to access control
      * through `users` and `teams` fields.
      *
-     * When users or teams of `related` or `parent` record are changed
+     * When users or teams of `related` or `parent` record are changed,
      * the note record will be changed too.
      */
     private function processNoteTeamsUsers(Note $note, Entity $entity): void
@@ -399,58 +384,82 @@ class Service
         }
 
         $note->setAclIsProcessed();
-
-        $note->set('teamsIds', []);
-        $note->set('usersIds', []);
+        $note->setTeamsIds([]);
 
         if ($entity->hasLinkMultipleField('teams')) {
-            $teamIdList = $entity->getLinkMultipleIdList('teams');
-
-            $note->set('teamsIds', $teamIdList);
+            $note->setTeamsIds($entity->getLinkMultipleIdList('teams'));
         }
 
+        $userIds = array_merge(
+            $this->getAssignedUserIds($entity),
+            $this->getCollaboratorIds($entity)
+        );
+
+        $userIds = array_values(array_unique($userIds));
+
+        $note->setUsersIds($userIds);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getAssignedUserIds(CoreEntity $entity): array
+    {
         $ownerUserField = $this->aclManager->getReadOwnerUserField($entity->getEntityType());
 
         if (!$ownerUserField) {
-            return;
+            return [];
         }
 
         $defs = $this->entityManager->getDefs()->getEntity($entity->getEntityType());
 
         if (!$defs->hasField($ownerUserField)) {
-            return;
+            return [];
         }
 
         $fieldDefs = $defs->getField($ownerUserField);
 
         if ($fieldDefs->getType() === FieldType::LINK_MULTIPLE) {
             $ownerUserIdAttribute = $ownerUserField . 'Ids';
-        }
-        else if ($fieldDefs->getType() === FieldType::LINK) {
+        } else if ($fieldDefs->getType() === FieldType::LINK) {
             $ownerUserIdAttribute = $ownerUserField . 'Id';
-        }
-        else {
-            return;
+        } else {
+            return [];
         }
 
         if (!$entity->has($ownerUserIdAttribute)) {
-            return;
+            return [];
         }
 
         if ($fieldDefs->getType() === FieldType::LINK_MULTIPLE) {
-            $userIdList = $entity->getLinkMultipleIdList($ownerUserField);
-        }
-        else {
-            $userId = $entity->get($ownerUserIdAttribute);
-
-            if (!$userId) {
-                return;
-            }
-
-            $userIdList = [$userId];
+            return $entity->getLinkMultipleIdList($ownerUserField);
         }
 
-        $note->set('usersIds', $userIdList);
+        $userId = $entity->get($ownerUserIdAttribute);
+
+        if ($userId) {
+            return [$userId];
+        }
+
+        return [];
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getCollaboratorIds(CoreEntity $entity): array
+    {
+        if (!$this->metadata->get("scopes.{$entity->getEntityType()}.collaborators")) {
+            return [];
+        }
+
+        $field = 'collaborators';
+
+        if (!$entity->hasLinkMultipleField($field)) {
+            return [];
+        }
+
+        return $entity->getLinkMultipleIdList($field);
     }
 
     public function noteEmailReceived(Entity $entity, Email $email, bool $isInitial = false): void
@@ -493,14 +502,14 @@ class Service
         $data = [];
 
         $data['emailId'] = $email->getId();
-        $data['emailName'] = $email->get('name');
+        $data['emailName'] = $email->getSubject();
         $data['isInitial'] = $isInitial;
 
         if ($withContent) {
             $data['attachmentsIds'] = $email->get('attachmentsIds');
         }
 
-        $from = $email->get('from');
+        $from = $email->getFromAddress();
 
         if ($from) {
             $person = $this->getEmailAddressRepository()->getEntityByAddress($from);
@@ -509,10 +518,18 @@ class Service
                 $data['personEntityType'] = $person->getEntityType();
                 $data['personEntityName'] = $person->get('name');
                 $data['personEntityId'] = $person->getId();
+
+                if (
+                    !$isInitial &&
+                    $person instanceof User &&
+                    ($person->isRegular() || $person->isAdmin())
+                ) {
+                    $note->setType(Note::TYPE_EMAIL_SENT);
+                }
             }
         }
 
-        $note->set('data', (object) $data);
+        $note->setData((object) $data);
 
         $this->entityManager->saveEntity($note);
     }
@@ -554,8 +571,7 @@ class Service
 
         if (!$user->isSystem()) {
             $person = $user;
-        }
-        else {
+        } else {
             $from = $email->get('from');
 
             if ($from) {
@@ -591,12 +607,26 @@ class Service
         $data = [];
 
         if ($entity->get('assignedUserId')) {
-            if (!$entity->has('assignedUserName')) {
-                $this->loadAssignedUserName($entity);
-            }
+            $this->loadAssignedUserName($entity);
 
             $data['assignedUserId'] = $entity->get('assignedUserId');
             $data['assignedUserName'] = $entity->get('assignedUserName');
+        } else if (
+            $entity instanceof CoreEntity &&
+            $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS) &&
+            $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS) !== [] &&
+            // Exclude for Email as the assignedUsers serves not for direct assignment.
+            $entity->getEntityType() !== Email::ENTITY_TYPE
+        ) {
+            /** @var LinkMultiple $users */
+            $users = $entity->getValueObject(self::FIELD_ASSIGNED_USERS);
+
+            $data['assignedUsers'] = array_map(function ($it) {
+                return [
+                    'id' => $it->getId(),
+                    'name' => $it->getName(),
+                ];
+            }, $users->getList());
         }
 
         $field = $this->getStatusField($entityType);
@@ -770,21 +800,7 @@ class Service
         $note->setParent(LinkParent::createFromEntity($entity));
 
         $this->setSuperParent($entity, $note, true);
-
-        if ($entity->get('assignedUserId')) {
-            if (!$entity->has('assignedUserName')) {
-                $this->loadAssignedUserName($entity);
-            }
-
-            $note->set('data', [
-                'assignedUserId' => $entity->get('assignedUserId'),
-                'assignedUserName' => $entity->get('assignedUserName'),
-            ]);
-        } else {
-            $note->set('data', [
-                'assignedUserId' => null
-            ]);
-        }
+        $this->setAssignData($entity, $note);
 
         $noteOptions = [];
 
@@ -793,7 +809,7 @@ class Service
         }
 
         if (!empty($options[SaveOption::MODIFIED_BY_ID])) {
-            $noteOptions[SaveOption::CREATED_BY_ID] = SaveOption::MODIFIED_BY_ID;
+            $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
         }
 
         $this->entityManager->saveEntity($note, $noteOptions);
@@ -830,7 +846,7 @@ class Service
         }
 
         if (!empty($options[SaveOption::MODIFIED_BY_ID])) {
-            $noteOptions[SaveOption::CREATED_BY_ID] = SaveOption::MODIFIED_BY_ID;
+            $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
         }
 
         $this->entityManager->saveEntity($note, $noteOptions);
@@ -991,7 +1007,7 @@ class Service
             ->getRDBRepository(User::ENTITY_TYPE)
             ->select(['id'])
             ->join(
-                Subscription::ENTITY_TYPE,
+                StreamSubscription::ENTITY_TYPE,
                 'subscription',
                 [
                     'subscription.userId=:' => 'user.id',
@@ -1034,7 +1050,7 @@ class Service
         }
 
         $builder->join(
-            Subscription::ENTITY_TYPE,
+            StreamSubscription::ENTITY_TYPE,
             'subscription',
             [
                 'subscription.userId=:' => 'user.id',
@@ -1082,7 +1098,7 @@ class Service
             ->getRDBRepository(User::ENTITY_TYPE)
             ->select(['id', 'name'])
             ->join(
-                Subscription::ENTITY_TYPE,
+                StreamSubscription::ENTITY_TYPE,
                 'subscription',
                 [
                     'subscription.userId=:' => 'user.id',
@@ -1120,8 +1136,7 @@ class Service
     {
         try {
             return $this->userAclManagerProvider->get($user);
-        }
-        catch (NotAvailable) {
+        } catch (NotAvailable) {
             return null;
         }
     }
@@ -1131,7 +1146,7 @@ class Service
      */
     public function getSubscriberList(string $parentType, string $parentId, bool $isInternal = false): Collection
     {
-        if (!$this->metadata->get(['scopes', $parentType, 'stream'])) {
+        if (!$this->checkIsEnabled($parentType)) {
             /** @var Collection<User> */
             return $this->entityManager->getCollectionFactory()->create(User::ENTITY_TYPE);
         }
@@ -1139,7 +1154,7 @@ class Service
         $builder = $this->entityManager
             ->getQueryBuilder()
             ->select()
-            ->from(Subscription::ENTITY_TYPE)
+            ->from(StreamSubscription::ENTITY_TYPE)
             ->select('userId')
             ->where([
                 'entityId' => $parentId,
@@ -1165,199 +1180,6 @@ class Service
             ])
             ->select(['id', 'type'])
             ->find();
-    }
-
-    /**
-     * Changes users and teams of notes related to an entity according users and teams of the entity.
-     *
-     * Notes having `related` or `superParent` are subjects to access control
-     * through `users` and `teams` fields.
-     *
-     * When users or teams of `related` or `parent` record are changed
-     * the note record will be changed too.
-     *
-     * @todo Job to process the rest, after the last ID.
-     */
-    public function processNoteAcl(Entity $entity, bool $forceProcessNoteNotifications = false): void
-    {
-        if (!$entity instanceof CoreEntity) {
-            return;
-        }
-
-        $entityType = $entity->getEntityType();
-
-        if (in_array($entityType, ['Note', 'User', 'Team', 'Role', 'Portal', 'PortalRole'])) {
-            return;
-        }
-
-        if (!$this->metadata->get(['scopes', $entityType, 'acl'])) {
-            return;
-        }
-
-        if (!$this->metadata->get(['scopes', $entityType, 'object'])) {
-            return;
-        }
-
-        $usersAttributeIsChanged = false;
-        $teamsAttributeIsChanged = false;
-
-        $ownerUserField = $this->aclManager->getReadOwnerUserField($entityType);
-
-        $defs = $this->entityManager->getDefs()->getEntity($entity->getEntityType());
-
-        $userIdList = [];
-        $teamIdList = [];
-
-        if ($ownerUserField) {
-            if (!$defs->hasField($ownerUserField)) {
-                throw new LogicException("Non-existing read-owner user field.");
-            }
-
-            $fieldDefs = $defs->getField($ownerUserField);
-
-            if ($fieldDefs->getType() === 'linkMultiple') {
-                $ownerUserIdAttribute = $ownerUserField . 'Ids';
-            }
-            else if ($fieldDefs->getType() === 'link') {
-                $ownerUserIdAttribute = $ownerUserField . 'Id';
-            }
-            else {
-                throw new LogicException("Bad read-owner user field type.");
-            }
-
-            if ($entity->isAttributeChanged($ownerUserIdAttribute)) {
-                $usersAttributeIsChanged = true;
-            }
-
-            if ($usersAttributeIsChanged || $forceProcessNoteNotifications) {
-                if ($fieldDefs->getType() === 'linkMultiple') {
-                    $userIdList = $entity->getLinkMultipleIdList($ownerUserField);
-                }
-                else {
-                    $userId = $entity->get($ownerUserIdAttribute);
-
-                    $userIdList = $userId ? [$userId] : [];
-                }
-            }
-        }
-
-        if ($entity->hasLinkMultipleField('teams')) {
-            if ($entity->isAttributeChanged('teamsIds')) {
-                $teamsAttributeIsChanged = true;
-            }
-
-            if ($teamsAttributeIsChanged || $forceProcessNoteNotifications) {
-                $teamIdList = $entity->getLinkMultipleIdList('teams');
-            }
-        }
-
-        if (!$usersAttributeIsChanged && !$teamsAttributeIsChanged && !$forceProcessNoteNotifications) {
-            return;
-        }
-
-        $limit = $this->config->get('noteAclLimit', self::NOTE_ACL_LIMIT);
-
-        $noteList = $this->entityManager
-            ->getRDBRepository(Note::ENTITY_TYPE)
-            ->where([
-                'OR' => [
-                    [
-                        'relatedId' => $entity->getId(),
-                        'relatedType' => $entityType,
-                    ],
-                    [
-                        'parentId' => $entity->getId(),
-                        'parentType' => $entityType,
-                        'superParentId!=' => null,
-                        'relatedId' => null,
-                    ]
-                ]
-            ])
-            ->select([
-                'id',
-                'parentType',
-                'parentId',
-                'superParentType',
-                'superParentId',
-                'isInternal',
-                'relatedType',
-                'relatedId',
-                'createdAt',
-            ])
-            ->order('number', 'DESC')
-            ->limit(0, $limit)
-            ->find();
-
-        $notificationPeriod = '-' . $this->config->get('noteNotificationPeriod', self::NOTE_NOTIFICATION_PERIOD);
-        $aclPeriod = '-' . $this->config->get('noteAclPeriod', self::NOTE_ACL_PERIOD);
-
-        $notificationThreshold = (new DateTime())->modify($notificationPeriod);
-        $aclThreshold = (new DateTime())->modify($aclPeriod);
-
-        foreach ($noteList as $note) {
-            $this->processNoteAclItem($entity, $note, [
-                'teamsAttributeIsChanged' => $teamsAttributeIsChanged,
-                'usersAttributeIsChanged' => $usersAttributeIsChanged,
-                'forceProcessNoteNotifications' => $forceProcessNoteNotifications,
-                'teamIdList' => $teamIdList,
-                'userIdList' => $userIdList,
-                'notificationThreshold' => $notificationThreshold,
-                'aclThreshold' => $aclThreshold,
-            ]);
-        }
-    }
-
-    /**
-     * @param array{
-     *   teamsAttributeIsChanged: bool,
-     *   usersAttributeIsChanged: bool,
-     *   forceProcessNoteNotifications: bool,
-     *   teamIdList: string[],
-     *   userIdList: string[],
-     *   notificationThreshold: DateTimeInterface,
-     *   aclThreshold: DateTimeInterface,
-     * } $params
-     * @return void
-     */
-    private function processNoteAclItem(Entity $entity, Note $note, array $params): void
-    {
-        $teamsAttributeIsChanged = $params['teamsAttributeIsChanged'];
-        $usersAttributeIsChanged = $params['usersAttributeIsChanged'];
-        $forceProcessNoteNotifications = $params['forceProcessNoteNotifications'];
-
-        $teamIdList = $params['teamIdList'];
-        $userIdList = $params['userIdList'];
-
-        $notificationThreshold = $params['notificationThreshold'];
-        $aclThreshold = $params['aclThreshold'];
-
-        $createdAt = $note->getCreatedAt();
-
-        if (!$createdAt) {
-            return;
-        }
-
-        if (!$entity->isNew()) {
-            if ($createdAt->toTimestamp() < $notificationThreshold->getTimestamp()) {
-                $forceProcessNoteNotifications = false;
-            }
-
-            if ($createdAt->toTimestamp() < $aclThreshold->getTimestamp()) {
-                return;
-            }
-        }
-
-        if ($teamsAttributeIsChanged || $forceProcessNoteNotifications) {
-            $note->set('teamsIds', $teamIdList);
-        }
-
-        if ($usersAttributeIsChanged || $forceProcessNoteNotifications) {
-            $note->set('usersIds', $userIdList);
-        }
-
-        $this->entityManager->saveEntity($note, [
-            'forceProcessNotifications' => $forceProcessNoteNotifications,
-        ]);
     }
 
     private function getEmailAddressRepository(): EmailAddressRepository
@@ -1396,5 +1218,69 @@ class Service
     {
         /** @var Note */
         return $this->entityManager->getNewEntity(Note::ENTITY_TYPE);
+    }
+
+    private function setAssignData(Entity $entity, Note $note): void
+    {
+        if (
+            $entity instanceof CoreEntity &&
+            $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS) &&
+            // Exclude for Email as the assignedUsers serves not for direct assignment.
+            $entity->getEntityType() !== Email::ENTITY_TYPE
+        ) {
+            $data = [];
+
+            $newIds = $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS);
+            /** @var array<string, ?string> $newNames */
+            $newNames = get_object_vars($entity->get(self::FIELD_ASSIGNED_USERS . 'Names') ?? (object) []);
+
+            /** @var string[] $prevIds */
+            $prevIds = $entity->getFetched(self::FIELD_ASSIGNED_USERS . 'Ids') ?? [];
+            /** @var array<string, ?string> $prevNames */
+            $prevNames = get_object_vars($entity->getFetched(self::FIELD_ASSIGNED_USERS . 'Names') ?? (object) []);
+
+            $addedIds = array_values(array_diff($newIds, $prevIds));
+            $removedIds = array_values(array_diff($prevIds, $newIds));
+            $names = array_merge($prevNames, $newNames);
+
+            $data['addedAssignedUsers'] = array_map(function ($id) use ($names) {
+                return [
+                    'id' => $id,
+                    'name' => $names[$id] ?? null,
+                ];
+            }, $addedIds);
+
+            $data['removedAssignedUsers'] = array_map(function ($id) use ($names) {
+                return [
+                    'id' => $id,
+                    'name' => $names[$id] ?? null,
+                ];
+            }, $removedIds);
+
+            $note->setData($data);
+
+            return;
+        }
+
+        if ($entity->get('assignedUserId')) {
+            $this->loadAssignedUserName($entity);
+
+            $note->setData([
+                'assignedUserId' => $entity->get('assignedUserId'),
+                'assignedUserName' => $entity->get('assignedUserName'),
+            ]);
+
+            return;
+        }
+
+        $note->setData(['assignedUserId' => null]);
+    }
+
+    /**
+     * Whether the Stream is enabled for an entity type.
+     */
+    public function checkIsEnabled(string $entityType): bool
+    {
+        return (bool) $this->metadata->get("scopes.$entityType.stream");
     }
 }

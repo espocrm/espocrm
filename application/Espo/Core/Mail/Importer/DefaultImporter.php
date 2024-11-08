@@ -38,9 +38,9 @@ use Espo\Core\Mail\FiltersMatcher;
 use Espo\Core\Mail\Importer;
 use Espo\Core\Mail\Message;
 use Espo\Core\Mail\MessageWrapper;
+use Espo\Core\Mail\Parser;
 use Espo\Core\Mail\ParserFactory;
 use Espo\Core\ORM\Repository\Option\SaveOption;
-use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Notification\AssignmentNotificator;
 use Espo\Core\Notification\AssignmentNotificatorFactory;
 use Espo\Core\Notification\AssignmentNotificator\Params as AssignmentNotificatorParams;
@@ -49,14 +49,20 @@ use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
 use Espo\Core\FieldProcessing\Saver\Params as SaverParams;
 use Espo\Core\Job\QueueName;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 use Espo\Entities\EmailFilter;
+use Espo\Entities\GroupEmailFolder;
+use Espo\Entities\Team;
+use Espo\Entities\User;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\Repositories\Email as EmailRepository;
 use Espo\ORM\EntityManager;
 use Espo\Tools\Stream\Jobs\ProcessNoteAcl;
 
 use DateTime;
-use DateTimeZone;
 use Exception;
 
 class DefaultImporter implements Importer
@@ -84,170 +90,64 @@ class DefaultImporter implements Importer
 
     public function import(Message $message, Data $data): ?Email
     {
-        $assignedUserId = $data->getAssignedUserId();
-        $teamIdList = $data->getTeamIdList();
-        $userIdList = $data->getUserIdList();
-        $filterList = $data->getFilterList();
-        $folderData = $data->getFolderData();
-        $groupEmailFolderId = $data->getGroupEmailFolderId();
+        $parser = $this->getParser($message);
 
-        $parser = $message instanceof MessageWrapper ?
-            ($message->getParser() ?? $this->parserFactory->create()) :
-            $this->parserFactory->create();
-
-        /** @var Email $email */
-        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
-
+        $email = $this->entityManager->getRDBRepositoryByClass(Email::class)->getNew();
         $email->set('isBeingImported', true);
 
-        $subject = '';
+        $subject = $this->getSubject($parser, $message);
 
-        if ($parser->hasHeader($message, 'subject')) {
-            $subject = $parser->getHeader($message, 'subject');
+        $email
+            ->setSubject($subject)
+            ->setStatus(Email::STATUS_ARCHIVED)
+            ->setIsHtml(false)
+            ->setGroupFolderId($data->getGroupEmailFolderId())
+            ->setTeams(LinkMultiple::create()->withAddedIdList($data->getTeamIdList()));
+
+        if ($data->getAssignedUserId()) {
+            $email->setAssignedUserId($data->getAssignedUserId());
+            $email->addAssignedUserId($data->getAssignedUserId());
         }
 
-        if (!empty($subject) && is_string($subject)) {
-            $subject = trim($subject);
-        }
-
-        if ($subject !== '0' && empty($subject)) {
-            $subject = '(No Subject)';
-        }
-
-        if (strlen($subject) > self::SUBJECT_MAX_LENGTH) {
-            $subject = substr($subject, 0, self::SUBJECT_MAX_LENGTH);
-        }
-
-        $email->setSubject($subject);
-        $email->setStatus(Email::STATUS_ARCHIVED);
-        $email->setIsHtml(false);
-        $email->setGroupFolderId($groupEmailFolderId);
-        $email->setTeams(LinkMultiple::create()->withAddedIdList($teamIdList));
-        //$email->set('attachmentsIds', []);
-
-        if ($assignedUserId) {
-            $email->setAssignedUserId($assignedUserId);
-            $email->addAssignedUserId($assignedUserId);
-        }
-
-        foreach ($userIdList as $uId) {
+        foreach ($data->getUserIdList() as $uId) {
             $email->addUserId($uId);
         }
 
-        $fromAddressData = $parser->getAddressData($message, 'from');
+        $this->setFromStrings($parser, $message, $email);
+        $this->setAddresses($parser, $message, $email);
 
-        if ($fromAddressData) {
-            $fromString = ($fromAddressData->name ? ($fromAddressData->name . ' ') : '') . '<' .
-                $fromAddressData->address . '>';
-
-            $email->set('fromString', $fromString);
+        foreach ($data->getFolderData() as $uId => $folderId) {
+            $email->setUserColumnFolderId($uId, $folderId);
         }
 
-        $replyToData = $parser->getAddressData($message, 'reply-To');
+        $toSkip = $this->processFilters($email, $data->getFilterList(), true);
 
-        if ($replyToData) {
-            $replyToString = ($replyToData->name ? ($replyToData->name . ' ') : '') .
-                '<' . $replyToData->address . '>';
-
-            $email->set('replyToString', $replyToString);
-        }
-
-        $fromArr = $parser->getAddressList($message, 'from');
-        $toArr = $parser->getAddressList($message, 'to');
-        $ccArr = $parser->getAddressList($message, 'cc');
-        $replyToArr = $parser->getAddressList($message, 'reply-To');
-
-        $email->setFromAddress($fromArr[0] ?? null);
-        $email->setToAddressList($toArr);
-        $email->setCcAddressList($ccArr);
-        $email->setReplyToAddressList($replyToArr);
-
-        $addressNameMap = $parser->getAddressNameMap($message);
-
-        $email->set('addressNameMap', $addressNameMap);
-
-        foreach ($folderData as $uId => $folderId) {
-            $email->setLinkMultipleColumn('users', Email::USERS_COLUMN_FOLDER_ID, $uId, $folderId);
-        }
-
-        $matchedFilter = $this->filtersMatcher->findMatch($email, $filterList, true);
-
-        if ($matchedFilter && $matchedFilter->getAction() === EmailFilter::ACTION_SKIP) {
+        if ($toSkip) {
             return null;
         }
 
-        if ($matchedFilter && $matchedFilter->getAction() === EmailFilter::ACTION_MOVE_TO_GROUP_FOLDER) {
-            $groupEmailFolderId = $matchedFilter->getGroupEmailFolderId();
+        $isSystemEmail = $this->processMessageId($parser, $message, $email);
 
-            $email->setGroupFolderId($groupEmailFolderId);
+        if ($isSystemEmail) {
+            return null;
         }
 
-        if (
-            $parser->hasHeader($message, 'message-Id') &&
-            $parser->getHeader($message, 'message-Id')
-        ) {
-            /** @var string $messageId */
-            $messageId = $parser->getMessageId($message);
-
-            $email->setMessageId($messageId);
-
-            if ($parser->hasHeader($message, 'delivered-To')) {
-                $messageIdInternal = $messageId . '-' . $parser->getHeader($message, 'delivered-To');
-
-                $email->set('messageIdInternal', $messageIdInternal);
-            }
-
-            if (stripos($messageId, '@espo-system') !== false) {
-                return null;
-            }
-        }
-
-        if ($parser->hasHeader($message, 'date')) {
-            try {
-                $dateHeaderValue = $parser->getHeader($message, 'date') ?? 'now';
-
-                $dateSent = new DateTime($dateHeaderValue);
-
-                $email->setDateSent(DateTimeField::fromDateTime($dateSent));
-            }
-            catch (Exception) {}
-        }
+        $this->processDate($parser, $message, $email);
 
         $duplicate = $this->findDuplicate($email, $message);
 
         if ($duplicate && $duplicate->getStatus() !== Email::STATUS_BEING_IMPORTED) {
             $this->entityManager->refreshEntity($duplicate);
 
-            $this->processDuplicate(
-                $duplicate,
-                $assignedUserId,
-                $userIdList,
-                $folderData,
-                $teamIdList,
-                $groupEmailFolderId
-            );
+            $this->processDuplicate($duplicate, $data, $email->getGroupFolder()?->getId());
 
             return $duplicate;
         }
 
+        $this->processDeliveryDate($parser, $message, $email);
+
         if (!$email->getDateSent()) {
             $email->setDateSent(DateTimeField::createNow());
-        }
-
-        if ($parser->hasHeader($message, 'delivery-Date')) {
-            try {
-                /** @var string $deliveryDateHeaderValue */
-                $deliveryDateHeaderValue = $parser->getHeader($message, 'delivery-Date');
-
-                $dt = new DateTime($deliveryDateHeaderValue);
-
-                $deliveryDate = $dt
-                    ->setTimezone(new DateTimeZone('UTC'))
-                    ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
-
-                $email->set('deliveryDate', $deliveryDate);
-            }
-            catch (Exception) {}
         }
 
         $inlineAttachmentList = [];
@@ -255,58 +155,22 @@ class DefaultImporter implements Importer
         if (!$data->fetchOnlyHeader()) {
             $inlineAttachmentList = $parser->getInlineAttachmentList($message, $email);
 
-            $matchedFilter = $this->filtersMatcher->findMatch($email, $filterList);
+            $toSkip = $this->processFilters($email, $data->getFilterList());
 
-            if ($matchedFilter && $matchedFilter->getAction() === EmailFilter::ACTION_SKIP) {
+            if ($toSkip) {
                 return null;
             }
-
-            if ($matchedFilter && $matchedFilter->getAction() === EmailFilter::ACTION_MOVE_TO_GROUP_FOLDER) {
-                $groupEmailFolderId = $matchedFilter->getGroupEmailFolderId();
-
-                $email->setGroupFolderId($groupEmailFolderId);
-            }
-        }
-        else {
+        } else {
             $email->setBody('Not fetched. The email size exceeds the limit.');
             $email->setIsHtml(false);
         }
 
-        if (
-            $parser->hasHeader($message, 'in-Reply-To') &&
-            $parser->getHeader($message, 'in-Reply-To')
-        ) {
-            $arr = explode(' ', $parser->getHeader($message, 'in-Reply-To'));
-
-            $inReplyTo = $arr[0];
-
-            if ($inReplyTo) {
-                if ($inReplyTo[0] !== '<') {
-                    $inReplyTo = '<' . $inReplyTo . '>';
-                }
-
-                /** @var ?Email $replied */
-                $replied = $this->entityManager
-                    ->getRDBRepository(Email::ENTITY_TYPE)
-                    ->where(['messageId' => $inReplyTo])
-                    ->findOne();
-
-                if ($replied) {
-                    $email->setRepliedId($replied->getId());
-
-                    $repliedTeamIdList = $replied->getLinkMultipleIdList('teams');
-
-                    foreach ($repliedTeamIdList as $repliedTeamId) {
-                        $email->addTeamId($repliedTeamId);
-                    }
-                }
-            }
-        }
+        $this->processInReplyTo($parser, $message, $email);
 
         $parentFound = $this->parentFinder->find($email, $message);
 
         if ($parentFound) {
-            $email->setParent(LinkParent::create($parentFound->getEntityType(), $parentFound->getId()));
+            $email->setParent(LinkParent::createFromEntity($parentFound));
         }
 
         if (!$duplicate) {
@@ -320,14 +184,7 @@ class DefaultImporter implements Importer
                 if ($duplicate->getStatus() !== Email::STATUS_BEING_IMPORTED) {
                     $this->entityManager->refreshEntity($duplicate);
 
-                    $this->processDuplicate(
-                        $duplicate,
-                        $assignedUserId,
-                        $userIdList,
-                        $folderData,
-                        $teamIdList,
-                        $groupEmailFolderId
-                    );
+                    $this->processDuplicate($duplicate, $data, $email->getGroupFolder()?->getId());
 
                     return $duplicate;
                 }
@@ -336,20 +193,9 @@ class DefaultImporter implements Importer
 
         if ($duplicate) {
             $this->copyAttributesToDuplicate($email, $duplicate);
+            $this->getEmailRepository()->fillAccount($duplicate);
 
-            /** @var EmailRepository $emailRepository */
-            $emailRepository = $this->entityManager->getRDBRepository(Email::ENTITY_TYPE);
-
-            $emailRepository->fillAccount($duplicate);
-
-            $this->processDuplicate(
-                $duplicate,
-                $assignedUserId,
-                $userIdList,
-                $folderData,
-                $teamIdList,
-                $groupEmailFolderId
-            );
+            $this->processDuplicate($duplicate, $data, $email->getGroupFolder()?->getId());
 
             return $duplicate;
         }
@@ -373,23 +219,8 @@ class DefaultImporter implements Importer
 
         $email->setStatus(Email::STATUS_ARCHIVED);
 
-        $this->entityManager->getTransactionManager()->start();
-        $this->entityManager
-            ->getRDBRepositoryByClass(Email::class)
-            ->forUpdate()
-            ->where(['id' => $email->getId()])
-            ->findOne();
-
-        $this->entityManager->saveEntity($email, ['isBeingImported' => true]);
-
-        $this->entityManager->getTransactionManager()->commit();
-
-        foreach ($inlineAttachmentList as $attachment) {
-            $attachment->setTargetField('body');
-            $attachment->setRelated(LinkParent::create(Email::ENTITY_TYPE, $email->getId()));
-
-            $this->entityManager->saveEntity($attachment);
-        }
+        $this->processFinalTransactionalSave($email);
+        $this->processAttachmentSave($inlineAttachmentList, $email);
 
         return $email;
     }
@@ -455,134 +286,435 @@ class DefaultImporter implements Importer
         return $this->duplicateFinder->find($email, $message);
     }
 
-    /**
-     * @param string[] $userIdList
-     * @param array<string, string> $folderData
-     * @param string[] $teamIdList
-     */
-    private function processDuplicate(
-        Email $duplicate,
-        ?string $assignedUserId,
-        array $userIdList,
-        array $folderData,
-        array $teamIdList,
-        ?string $groupEmailFolderId
-    ): void {
+    private function processDuplicate(Email $email, Data $data, ?string $groupFolderId): void
+    {
+        $assignedUserId = $data->getAssignedUserId();
 
-        /** @var EmailRepository $emailRepository */
-        $emailRepository = $this->entityManager->getRDBRepository(Email::ENTITY_TYPE);
-
-        if ($duplicate->getStatus() === Email::STATUS_ARCHIVED) {
-            $emailRepository->loadFromField($duplicate);
-            $emailRepository->loadToField($duplicate);
+        if ($email->getStatus() === Email::STATUS_ARCHIVED) {
+            $this->getEmailRepository()->loadFromField($email);
+            $this->getEmailRepository()->loadToField($email);
         }
 
-        $duplicate->loadLinkMultipleField('users');
-        $fetchedUserIdList = $duplicate->getLinkMultipleIdList('users');
+        $fetchedTeamIds = $email->getTeams()->getIdList();
+        $fetchedUserIds = $email->getUsers()->getIdList();
+        $fetchedAssignedUserIds = $email->getAssignedUsers()->getIdList();
 
-        $duplicate->setLinkMultipleIdList('users', []);
+        $email->setLinkMultipleIdList('users', []);
+        $email->setLinkMultipleIdList('teams', []);
+        $email->setLinkMultipleIdList('assignedUsers', []);
 
         $processNoteAcl = false;
 
         if ($assignedUserId) {
-            if (!in_array($assignedUserId, $fetchedUserIdList)) {
+            if (!in_array($assignedUserId, $fetchedUserIds)) {
                 $processNoteAcl = true;
 
-                $duplicate->addUserId($assignedUserId);
+                $email->addUserId($assignedUserId);
             }
 
-            $duplicate->addAssignedUserId($assignedUserId);
-        }
-
-        foreach ($userIdList as $uId) {
-            if (!in_array($uId, $fetchedUserIdList)) {
-                $processNoteAcl = true;
-
-                $duplicate->addUserId($uId);
+            if (!in_array($assignedUserId, $fetchedAssignedUserIds)) {
+                $email->addAssignedUserId($assignedUserId);
             }
         }
 
-        foreach ($folderData as $uId => $folderId) {
-            if (!in_array($uId, $fetchedUserIdList)) {
-                $duplicate->setLinkMultipleColumn('users', Email::USERS_COLUMN_FOLDER_ID, $uId, $folderId);
+        foreach ($data->getUserIdList() as $uId) {
+            if (!in_array($uId, $fetchedUserIds)) {
+                $processNoteAcl = true;
+
+                $email->addUserId($uId);
+            }
+        }
+
+        foreach ($data->getFolderData() as $uId => $folderId) {
+            if (!in_array($uId, $fetchedUserIds)) {
+                $email->setUserColumnFolderId($uId, $folderId);
 
                 continue;
             }
 
+            // Can cause skip-notification bypass. @todo Revise.
             $this->entityManager
-                ->getRDBRepository(Email::ENTITY_TYPE)
-                ->getRelation($duplicate, 'users')
-                // Can cause skip-notification bypass.
+                ->getRelation($email, 'users')
                 ->updateColumnsById($uId, [Email::USERS_COLUMN_FOLDER_ID => $folderId]);
         }
 
-        $duplicate->set('isBeingImported', true);
+        $email->set('isBeingImported', true);
 
-        $emailRepository->applyUsersFilters($duplicate);
+        $this->getEmailRepository()->applyUsersFilters($email);
+
+        if ($groupFolderId && !$email->getGroupFolder()) {
+            $this->relateWithGroupFolder($email, $groupFolderId);
+
+            $addedFromFolder = $this->applyGroupFolder(
+                $email,
+                $groupFolderId,
+                $fetchedUserIds,
+                $fetchedTeamIds
+            );
+
+            if ($addedFromFolder) {
+                $processNoteAcl = true;
+            }
+        }
+
+        foreach ($data->getTeamIdList() as $teamId) {
+            if (!in_array($teamId, $fetchedTeamIds)) {
+                $processNoteAcl = true;
+
+                $email->addTeamId($teamId);
+            }
+        }
 
         $saverParams = SaverParams::create()->withRawOptions([
             'skipLinkMultipleRemove' => true,
             'skipLinkMultipleUpdate' => true,
         ]);
 
-        $this->linkMultipleSaver->process($duplicate, 'users', $saverParams);
-        $this->linkMultipleSaver->process($duplicate, 'assignedUsers', $saverParams);
+        $this->linkMultipleSaver->process($email, 'users', $saverParams);
+        $this->linkMultipleSaver->process($email, 'assignedUsers', $saverParams);
+        $this->linkMultipleSaver->process($email, 'teams', $saverParams);
 
-        if ($this->emailNotificationsEnabled()) {
-            $this->notificator->process(
-                $duplicate,
-                AssignmentNotificatorParams::create()->withRawOptions(['isBeingImported' => true])
-            );
+        if ($this->notificationsEnabled()) {
+            $notificatorParams = AssignmentNotificatorParams::create()
+                ->withRawOptions([Email::SAVE_OPTION_IS_BEING_IMPORTED => true]);
+
+            $this->notificator->process($email, $notificatorParams);
         }
 
-        $fetchedTeamIdList = $duplicate->getLinkMultipleIdList('teams');
+        $email->set('isBeingImported', false);
+        $email->clear('teamsIds');
+        $email->clear('usersIds');
+        $email->clear('assignedUsersIds');
 
-        foreach ($teamIdList as $teamId) {
-            if (!in_array($teamId, $fetchedTeamIdList)) {
-                $processNoteAcl = true;
+        $email->setAsFetched();
 
-                $this->entityManager
-                    ->getRDBRepository(Email::ENTITY_TYPE)
-                    ->getRelation($duplicate, 'teams')
-                    ->relateById($teamId);
-            }
-        }
-
-        if ($groupEmailFolderId && !$duplicate->getGroupFolder()) {
-            $this->entityManager
-                ->getRDBRepository(Email::ENTITY_TYPE)
-                ->getRelation($duplicate, 'groupFolder')
-                ->relateById($groupEmailFolderId);
-        }
-
-        if ($duplicate->getParentType() && $processNoteAcl) {
-            // Need to update acl fields (users and teams)
-            // of notes related to the duplicate email.
-            // To grant access to the user who received the email.
-
-            $dt = new DateTime();
-            $dt->modify('+' . self::PROCESS_ACL_DELAY_PERIOD);
-
-            $this->jobSchedulerFactory
-                ->create()
-                ->setClassName(ProcessNoteAcl::class)
-                ->setData(
-                    JobData
-                        ::create()
-                        ->withTargetId($duplicate->getId())
-                        ->withTargetType(Email::ENTITY_TYPE)
-                )
-                ->setQueue(QueueName::Q1)
-                ->setTime($dt)
-                ->schedule();
+        if ($email->getParentType() && $processNoteAcl) {
+            $this->scheduleAclJob($email);
         }
     }
 
-    private function emailNotificationsEnabled(): bool
+    private function notificationsEnabled(): bool
     {
         return in_array(
             Email::ENTITY_TYPE,
             $this->config->get('assignmentNotificationsEntityList') ?? []
         );
+    }
+
+    private function getSubject(Parser $parser, Message $message): string
+    {
+        $subject = '';
+
+        if ($parser->hasHeader($message, 'subject')) {
+            $subject = $parser->getHeader($message, 'subject');
+        }
+
+        if (!empty($subject) && is_string($subject)) {
+            $subject = trim($subject);
+        }
+
+        if ($subject !== '0' && empty($subject)) {
+            $subject = '(No Subject)';
+        }
+
+        if (strlen($subject) > self::SUBJECT_MAX_LENGTH) {
+            $subject = substr($subject, 0, self::SUBJECT_MAX_LENGTH);
+        }
+
+        return $subject;
+    }
+
+    private function setFromStrings(Parser $parser, Message $message, Email $email): void
+    {
+        $fromAddressData = $parser->getAddressData($message, 'from');
+
+        if ($fromAddressData) {
+            $namePart = ($fromAddressData->name ? ($fromAddressData->name . ' ') : '');
+
+            $email->set('fromString', "$namePart<$fromAddressData->address>");
+        }
+
+        $replyToData = $parser->getAddressData($message, 'reply-To');
+
+        if ($replyToData) {
+            $namePart = ($replyToData->name ? ($replyToData->name . ' ') : '');
+
+            $email->set('replyToString', "$namePart<$replyToData->address>");
+        }
+    }
+
+    private function setAddresses(Parser $parser, Message $message, Email $email): void
+    {
+        $from = $parser->getAddressList($message, 'from');
+        $to = $parser->getAddressList($message, 'to');
+        $cc = $parser->getAddressList($message, 'cc');
+        $replyTo = $parser->getAddressList($message, 'reply-To');
+
+        $email->setFromAddress($from[0] ?? null);
+        $email->setToAddressList($to);
+        $email->setCcAddressList($cc);
+        $email->setReplyToAddressList($replyTo);
+
+        $email->set('addressNameMap', $parser->getAddressNameMap($message));
+    }
+
+    /**
+     * @return bool True if an email is system.
+     */
+    private function processMessageId(Parser $parser, Message $message, Email $email): bool
+    {
+        if (!$parser->hasHeader($message, 'message-Id')) {
+            return false;
+        }
+
+        $messageId = $parser->getMessageId($message);
+
+        if (!$messageId) {
+            return false;
+        }
+
+        $email->setMessageId($messageId);
+
+        if ($parser->hasHeader($message, 'delivered-To')) {
+            $deliveredTo = $parser->getHeader($message, 'delivered-To') ?? '';
+
+            $email->set('messageIdInternal', "$messageId-$deliveredTo");
+        }
+
+        if (stripos($messageId, '@espo-system') !== false) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function processDate(Parser $parser, Message $message, Email $email): void
+    {
+        if (!$parser->hasHeader($message, 'date')) {
+            return;
+        }
+
+        $dateString = $parser->getHeader($message, 'date') ?? 'now';
+
+        try {
+            $dateSent = DateTimeField::fromDateTime(new DateTime($dateString));
+        } catch (Exception) {
+            return;
+        }
+
+        $email->setDateSent($dateSent);
+    }
+
+    private function processDeliveryDate(Parser $parser, Message $message, Email $email): void
+    {
+        if (!$parser->hasHeader($message, 'delivery-Date')) {
+            return;
+        }
+
+        $dateString = $parser->getHeader($message, 'delivery-Date') ?? 'now';
+
+        try {
+            $deliveryDate = DateTimeField::fromDateTime(new DateTime($dateString));
+        } catch (Exception) {
+            return;
+        }
+
+        $email->setDeliveryDate($deliveryDate);
+    }
+
+    private function processInReplyTo(Parser $parser, Message $message, Email $email): void
+    {
+        if (!$parser->hasHeader($message, 'in-Reply-To')) {
+            return;
+        }
+
+        $stringValue = $parser->getHeader($message, 'in-Reply-To');
+
+        if (!$stringValue) {
+            return;
+        }
+
+        $values = explode(' ', $stringValue);
+
+        $inReplyTo = $values[0] ?? null;
+
+        if (!$inReplyTo) {
+            return;
+        }
+
+        if ($inReplyTo[0] !== '<') {
+            $inReplyTo = "<$inReplyTo>";
+        }
+
+        $replied = $this->entityManager
+            ->getRDBRepositoryByClass(Email::class)
+            ->where(['messageId' => $inReplyTo])
+            ->findOne();
+
+        if (!$replied) {
+            return;
+        }
+
+        $email->setRepliedId($replied->getId());
+
+        foreach ($replied->getTeams()->getIdList() as $teamId) {
+            $email->addTeamId($teamId);
+        }
+    }
+
+    /**
+     * @param iterable<EmailFilter> $filterList
+     * @return bool True if to skip.
+     */
+    private function processFilters(Email $email, iterable $filterList, bool $skipBody = false): bool
+    {
+        $matchedFilter = $this->filtersMatcher->findMatch($email, $filterList, $skipBody);
+
+        if (!$matchedFilter) {
+            return false;
+        }
+
+        if ($matchedFilter->getAction() === EmailFilter::ACTION_SKIP) {
+            return true;
+        }
+
+        if (
+            $matchedFilter->getAction() === EmailFilter::ACTION_MOVE_TO_GROUP_FOLDER &&
+            $matchedFilter->getGroupEmailFolderId()
+        ) {
+            $this->applyGroupFolder($email, $matchedFilter->getGroupEmailFolderId());
+        }
+
+        return false;
+    }
+
+    private function processFinalTransactionalSave(Email $email): void
+    {
+        $this->entityManager->getTransactionManager()->start();
+
+        $this->entityManager
+            ->getRDBRepositoryByClass(Email::class)
+            ->forUpdate()
+            ->where(['id' => $email->getId()])
+            ->findOne();
+
+        $this->entityManager->saveEntity($email, [Email::SAVE_OPTION_IS_BEING_IMPORTED => true]);
+
+        $this->entityManager->getTransactionManager()->commit();
+    }
+
+    /**
+     * @param Attachment[] $inlineAttachmentList
+     */
+    private function processAttachmentSave(array $inlineAttachmentList, Email $email): void
+    {
+        foreach ($inlineAttachmentList as $attachment) {
+            $attachment->setTargetField('body');
+            $attachment->setRelated(LinkParent::createFromEntity($email));
+
+            $this->entityManager->saveEntity($attachment);
+        }
+    }
+
+    private function getParser(Message $message): Parser
+    {
+        return $message instanceof MessageWrapper ?
+            ($message->getParser() ?? $this->parserFactory->create()) :
+            $this->parserFactory->create();
+    }
+
+    private function getEmailRepository(): EmailRepository
+    {
+        /** @var EmailRepository */
+        return $this->entityManager->getRDBRepositoryByClass(Email::class);
+    }
+
+    private function relateWithGroupFolder(Email $email, string $groupFolderId): void
+    {
+        $this->entityManager
+            ->getRelation($email, 'groupFolder')
+            ->relateById($groupFolderId);
+    }
+
+    /**
+     * @param string[] $fetchedUserIds
+     * @param string[] $fetchedTeamIds
+     */
+    private function applyGroupFolder(
+        Email $email,
+        string $groupFolderId,
+        array $fetchedUserIds = [],
+        array $fetchedTeamIds = [],
+    ): bool {
+
+        $email->setGroupFolderId($groupFolderId);
+
+        $groupFolder = $this->entityManager
+            ->getRDBRepositoryByClass(GroupEmailFolder::class)
+            ->getById($groupFolderId);
+
+        if (!$groupFolder || !$groupFolder->getTeams()->getCount()) {
+            return false;
+        }
+
+        $added = false;
+
+        foreach ($groupFolder->getTeams()->getIdList() as $teamId) {
+            if (!in_array($teamId, $fetchedTeamIds)) {
+                $added = true;
+
+                $email->addTeamId($teamId);
+            }
+        }
+
+        $users = $this->entityManager
+            ->getRDBRepositoryByClass(User::class)
+            ->select(['id'])
+            ->where([
+                'type' => [User::TYPE_REGULAR, User::TYPE_ADMIN],
+                'isActive' => true,
+                'id!=' => $fetchedUserIds,
+            ])
+            ->where(
+                Condition::in(
+                    Expression::column('id'),
+                    SelectBuilder::create()
+                        ->from(Team::RELATIONSHIP_TEAM_USER)
+                        ->select('userId')
+                        ->where(['teamId' => $groupFolder->getTeams()->getIdList()])
+                        ->build()
+                )
+            )
+            ->find();
+
+        foreach ($users as $user) {
+            $added = true;
+
+            $email->addUserId($user->getId());
+        }
+
+        return $added;
+    }
+
+    private function scheduleAclJob(Email $email): void
+    {
+        // Need to update acl fields (users and teams)
+        // of notes related to the duplicate email.
+        // To grant access to the user who received the email.
+
+        $dt = new DateTime();
+        $dt->modify('+' . self::PROCESS_ACL_DELAY_PERIOD);
+
+        $this->jobSchedulerFactory
+            ->create()
+            ->setClassName(ProcessNoteAcl::class)
+            ->setData(
+                JobData::create(['notify' => true])
+                    ->withTargetId($email->getId())
+                    ->withTargetType(Email::ENTITY_TYPE)
+            )
+            ->setQueue(QueueName::Q1)
+            ->setTime($dt)
+            ->schedule();
     }
 }

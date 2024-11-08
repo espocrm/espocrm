@@ -44,7 +44,7 @@ class VarcharFieldView extends BaseFieldView {
      * @property {
      *     module:views/fields/varchar~params &
      *     module:views/fields/base~params &
-     *     Object.<string, *>
+     *     Record
      * } [params] Parameters.
      */
 
@@ -88,7 +88,10 @@ class VarcharFieldView extends BaseFieldView {
         'isNotEmpty',
     ]
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = [
         'required',
         'pattern',
@@ -249,6 +252,7 @@ class VarcharFieldView extends BaseFieldView {
 
         data.noSpellCheck = this.noSpellCheck;
         data.copyToClipboard = this.params.copyToClipboard;
+        data.textClass = null;
 
         return data;
     }
@@ -279,6 +283,15 @@ class VarcharFieldView extends BaseFieldView {
                 this.useAutocompleteUrl
             )
         ) {
+            let lookupFunction = this.getAutocompleteLookupFunction();
+
+            if (this.useAutocompleteUrl) {
+                lookupFunction = query => {
+                    return Espo.Ajax.getRequest(this.getAutocompleteUrl(query))
+                        .then(response => this.transformAutocompleteResult(response));
+                };
+            }
+
             const autocomplete = new Autocomplete(this.$element.get(0), {
                 name: this.name,
                 triggerSelectOnValidInput: true,
@@ -287,12 +300,7 @@ class VarcharFieldView extends BaseFieldView {
                 focusOnSelect: true,
                 onSelect: () => this.trigger('change'),
                 lookup: this.params.options,
-                lookupFunction: this.useAutocompleteUrl ?
-                    query => {
-                        return Espo.Ajax.getRequest(this.getAutocompleteUrl(query))
-                            .then(response => this.transformAutocompleteResult(response));
-                    } :
-                    undefined,
+                lookupFunction: lookupFunction,
             });
 
             this.once('render remove', () => autocomplete.dispose());
@@ -360,7 +368,7 @@ class VarcharFieldView extends BaseFieldView {
     fetchSearch() {
         const type = this.fetchSearchType() || 'startsWith';
 
-        if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+        if (['isEmpty', 'isNotEmpty'].includes(type)) {
             if (type === 'isEmpty') {
                 return {
                     type: 'or',
@@ -381,6 +389,7 @@ class VarcharFieldView extends BaseFieldView {
                 };
             }
 
+            /** @type {Record[]} */
             const value = [
                 {
                     type: 'isNotNull',
@@ -424,6 +433,16 @@ class VarcharFieldView extends BaseFieldView {
     getSearchType() {
         return this.getSearchParamsData().type || this.searchParams.typeFront ||
             this.searchParams.type;
+    }
+
+    /**
+     * Get an autocomplete lookup function.
+     *
+     * @protected
+     * @return {function (string): Promise<Array<module:ui/autocomplete~item & Record>>|undefined}
+     */
+    getAutocompleteLookupFunction() {
+        return undefined;
     }
 }
 

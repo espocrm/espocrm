@@ -27,9 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+use Doctrine\DBAL\Exception as DBALException;
 use Espo\Core\Application;
 use Espo\Core\Container;
 use Espo\Core\DataManager;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\Utils\Database\ConfigDataProvider;
@@ -253,8 +255,7 @@ class Installer
                 }
 
                 $this->language = $language;
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 echo "Error: " . $e->getMessage();
 
                 $GLOBALS['log']->error($e->getMessage());
@@ -269,11 +270,11 @@ class Installer
     public function getThemeList(): array
     {
         return [
+            'Light',
             'Violet',
-            'Espo',
             'Dark',
             'Glass',
-            'Light',
+            'Espo',
             'Sakura',
             'Hazyblue',
         ];
@@ -320,6 +321,10 @@ class Installer
         return $systemRequirementManager->getRequiredListByType($type, $requiredOnly, $additionalData);
     }
 
+    /**
+     * @throws DBALException
+     * @throws Exception
+     */
     public function checkDatabaseConnection(array $rawParams, bool $createDatabase = false): void
     {
         $params = $this->databaseParamsFactory->createWithMergedAssoc($rawParams);
@@ -328,8 +333,7 @@ class Installer
 
         try {
             $this->databaseHelper->createPDO($params);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             if (!$createDatabase) {
                 throw $e;
             }
@@ -338,6 +342,7 @@ class Installer
                 throw $e;
             }
 
+            /** @noinspection RegExpRedundantEscape */
             if ($dbname !== preg_replace('/[^A-Za-z0-9_\-@$#\(\)]+/', '', $dbname)) {
                 throw new Exception("Bad database name.");
             }
@@ -357,7 +362,7 @@ class Installer
 
             $schemaManager->createDatabase($platform->quoteIdentifier($dbname));
 
-            $this->checkDatabaseConnection($rawParams, false);
+             $this->checkDatabaseConnection($rawParams);
         }
     }
 
@@ -365,13 +370,13 @@ class Installer
      * Save data.
      *
      * @param array<string, mixed> $saveData
-     * array(
-     *   'driver' => 'pdo_mysql',
-     *   'host' => 'localhost',
-     *   'dbname' => 'espocrm_test',
-     *   'user' => 'root',
-     *   'password' => '',
-     * )
+     *     [
+     *       'driver' => 'pdo_mysql',
+     *       'host' => 'localhost',
+     *       'dbname' => 'espocrm_test',
+     *       'user' => 'root',
+     *       'password' => '',
+     *     ]
      * @return bool
      */
     public function saveData(array $saveData)
@@ -392,7 +397,7 @@ class Installer
             'passwordSalt' => $this->getPasswordHash()->generateSalt(),
             'cryptKey' => Util::generateSecretKey(),
             'hashSecretKey' => Util::generateSecretKey(),
-            'theme' => $saveData['theme'] ?? 'Violet',
+            'theme' => $saveData['theme'] ?? 'Light',
         ];
 
         if (empty($saveData['defaultPermissions']['user'])) {
@@ -427,12 +432,14 @@ class Installer
         return true;
     }
 
+    /**
+     * @throws Error
+     */
     public function rebuild(): void
     {
         try {
             $this->app->getContainer()->getByClass(DataManager::class)->rebuild();
-        }
-        catch (Exception) {
+        } catch (Exception) {
             $this->auth();
 
             $this->app->getContainer()->getByClass(DataManager::class)->rebuild();
@@ -647,19 +654,13 @@ class Installer
             $paramType = $paramDefs['type'] ?? 'varchar';
 
             switch ($paramType) {
-                case 'enumInt':
-                    $normalizedParams[$name] = (int) $value;;
-
-                    break;
-
                 case 'enum':
                     if (
                         isset($paramDefs['options']) && array_key_exists($value, $paramDefs['options']) ||
                         !isset($paramDefs['options'])
                     ) {
                         $normalizedParams[$name] = $value;
-                    }
-                    else if (array_key_exists('default', $paramDefs)) {
+                    } else if (array_key_exists('default', $paramDefs)) {
                         $normalizedParams[$name] = $paramDefs['default'];
 
                         $GLOBALS['log']->warning(
@@ -676,6 +677,7 @@ class Installer
                     break;
 
                 case 'int':
+                case 'enumInt':
                     $normalizedParams[$name] = (int) $value;
 
                     break;

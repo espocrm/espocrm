@@ -15,10 +15,10 @@
     "job": {
       "Cleanup": "Temizle",
       "CheckInboundEmails": "Gelen Epostaları Kontrol Et",
-      "CheckEmailAccounts": "Kişisel email hesaplarını kontrol et",
-      "SendEmailReminders": "Hatırlatıcı Email Gönder",
+      "CheckEmailAccounts": "Kişisel eposta hesaplarını kontrol et",
+      "SendEmailReminders": "Hatırlatıcı Eposta Gönder",
       "AuthTokenControl": "Kimlik Doğrulama Simgesi Kontrolü",
-      "SendEmailNotifications": "E-posta Bildirimleri gönder",
+      "SendEmailNotifications": "Eposta Bildirimleri gönder",
       "CheckNewVersion": "Yeni versiyon denetleme",
       "ProcessWebhookQueue": "Web Oltası Kuyruğunu İşlet"
     },
@@ -29,7 +29,7 @@
       "default": "Not: Bu komutu CronTab'a ekleyin:"
     },
     "status": {
-      "Active": "Aktif",
+      "Active": "Etkin",
       "Inactive": "Pasif"
     }
   }

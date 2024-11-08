@@ -60,12 +60,22 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
      * @protected
      */
     roleMaxLength = 50
+    /**
+     * @protected
+     */
+    forceRoles = false
 
     /** @const */
     ROLE_TYPE_ENUM = 'enum'
     // noinspection JSUnusedGlobalSymbols
     /** @const */
     ROLE_TYPE_VARCHAR = 'varchar'
+
+    /**
+     * @type {Record}
+     * @protected
+     */
+    columns
 
     setup() {
         super.setup();
@@ -270,62 +280,23 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
             return super.addLinkHtml(id, name);
         }
 
-        const role = (this.columns[id] || {})[this.columnName];
-
         const $container = this.$el.find('.link-container');
 
-        const $el = $('<div>')
-            .addClass('form-inline clearfix')
-            .addClass('list-group-item link-with-role link-group-item-with-columns')
-            .addClass('link-' + id);
+        const itemElement = this.prepareEditItemElement(id, name);
 
-        const $remove = $('<a>')
-            .attr('role', 'button')
-            .attr('tabindex', '0')
-            .attr('data-id', id)
-            .attr('data-action', 'clearLink')
-            .addClass('pull-right')
-            .append(
-                $('<span>').addClass('fas fa-times')
-            );
+        $container.append(itemElement);
 
-        const $left = $('<div>').addClass('pull-left');
-        const $right = $('<div>').append($remove);
-
-        const $name = $('<div>')
-            .addClass('link-item-name')
-            .text(name)
-            .append('&nbsp;');
+        const $el = $(itemElement);
 
         let $role;
 
         if (this.roleType === this.ROLE_TYPE_ENUM) {
-            $role = this.getJQSelect(id, role);
-        }
-        else {
-            const text = this.rolePlaceholderText || this.translate(this.roleField, 'fields', this.roleFieldScope);
-
-            $role = $('<input>')
-                .addClass('role form-control input-sm')
-                .attr('maxlength', this.roleMaxLength) // @todo Get the value from metadata.
-                .attr('placeholder', text)
-                .attr('data-id', id)
-                .attr('value', role || '');
+            $role = $el.find('select.role');
+        } else {
+            $role = $el.find('input.role');
         }
 
-        if ($role) {
-            $left.append($('<span>')
-                .addClass('link-item-column')
-                .addClass('link-item-column-' + $role.get(0).tagName.toLowerCase())
-                .append($role)
-            );
-        }
-
-        $left.append($name);
-        $el.append($left).append($right);
-        $container.append($el);
-
-        if ($role && $role.get(0).tagName === 'SELECT') {
+        if ($role && $role.get(0) && $role.get(0).tagName === 'SELECT') {
             Select.init($role);
         }
 
@@ -359,6 +330,69 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
         }
 
         return $el;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    prepareEditItemElement(id, name) {
+        if (this.isSearchMode() || this.skipRoles) {
+            return super.prepareEditItemElement(id, name);
+        }
+
+        const role = (this.columns[id] || {})[this.columnName];
+
+        const $el = $('<div>')
+            .addClass('form-inline clearfix')
+            .addClass('list-group-item link-with-role link-group-item-with-columns')
+            .addClass('link-' + id);
+
+        const $remove = $('<a>')
+            .attr('role', 'button')
+            .attr('tabindex', '0')
+            .attr('data-id', id)
+            .attr('data-action', 'clearLink')
+            .addClass('pull-right')
+            .append(
+                $('<span>').addClass('fas fa-times')
+            );
+
+        const $left = $('<div>').addClass('pull-left');
+        const $right = $('<div>').append($remove);
+
+        const $name = $('<div>')
+            .addClass('link-item-name')
+            .text(name)
+            .append('&nbsp;');
+
+        let $role;
+
+        if (this.roleType === this.ROLE_TYPE_ENUM) {
+            $role = this.getJQSelect(id, role);
+        } else {
+            const text = this.rolePlaceholderText || this.translate(this.roleField, 'fields', this.roleFieldScope);
+
+            $role = $('<input>')
+                .addClass('role form-control input-sm')
+                .attr('maxlength', this.roleMaxLength) // @todo Get the value from metadata.
+                .attr('placeholder', text)
+                .attr('data-id', id)
+                .attr('value', role || '');
+        }
+
+        if ($role) {
+            $left.append($('<span>')
+                .addClass('link-item-column')
+                .addClass('link-item-column-' + $role.get(0).tagName.toLowerCase())
+                .append($role)
+            );
+        }
+
+        $left.append($name);
+
+        $el.append($left).append($right);
+
+        return $el.get(0);
     }
 
     fetch() {

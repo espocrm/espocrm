@@ -1,0 +1,19 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/record.json",
+    "title": "app/select",
+    "description": "Record framework definitions.",
+    "type": "object",
+    "properties": {
+        "selectApplierClassNameList": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {"type": "string"}
+                ]
+            },
+            "description": "Classes for additional handling of a select query. Should implement Espo\\Core\\Select\\Applier\\AdditionalApplier interface. An entity type is passed to the constructor in `$entityType` parameter. As of v8.5.0."
+        }
+    }
+}

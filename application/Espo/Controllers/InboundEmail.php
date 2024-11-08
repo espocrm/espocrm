@@ -35,6 +35,7 @@ use Espo\Core\Mail\Account\Storage\Params as StorageParams;
 
 use Espo\Core\Controllers\Record;
 use Espo\Core\Api\Request;
+use Espo\Core\Mail\Exceptions\ImapError;
 
 class InboundEmail extends Record
 {
@@ -45,7 +46,8 @@ class InboundEmail extends Record
 
     /**
      * @return string[]
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
+     * @throws ImapError
      */
     public function postActionGetFolders(Request $request): array
     {

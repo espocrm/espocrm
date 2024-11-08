@@ -80,8 +80,7 @@ class ByLeadSource
                 ->from(Opportunity::ENTITY_TYPE)
                 ->withStrictAccessControl()
                 ->buildQueryBuilder();
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 

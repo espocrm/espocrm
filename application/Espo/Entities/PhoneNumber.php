@@ -71,5 +71,33 @@ class PhoneNumber extends Entity
     {
         return $this->get('type');
     }
+
+    public function setType(string $type): self
+    {
+        $this->set('type', $type);
+
+        return $this;
+    }
+
+    public function setNumber(string $number): self
+    {
+        $this->set('name', $number);
+
+        return $this;
+    }
+
+    public function setOptedOut(bool $optedOut): self
+    {
+        $this->set('optOut', $optedOut);
+
+        return $this;
+    }
+
+    public function setInvalid(bool $invalid): self
+    {
+        $this->set('invalid', $invalid);
+
+        return $this;
+    }
 }
 

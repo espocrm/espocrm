@@ -29,6 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\LinkMultiple;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\FieldProcessing\Loader as LoaderInterface;
@@ -69,12 +70,11 @@ class ListLoader implements LoaderInterface
                 continue;
             }
 
-            $columns = $this->ormDefs
-                ->getEntity($entityType)
-                ->getField($field)
-                ->getParam('columns');
+            if ($entity->has($field . 'Ids') && $entity->has($field . 'Names')) {
+                continue;
+            }
 
-            $entity->loadLinkMultipleField($field, $columns);
+            $entity->loadLinkMultipleField($field);
         }
     }
 
@@ -93,8 +93,8 @@ class ListLoader implements LoaderInterface
 
         foreach ($entityDefs->getFieldList() as $fieldDefs) {
             if (
-                $fieldDefs->getType() !== 'linkMultiple' &&
-                $fieldDefs->getType() !== 'attachmentMultiple'
+                $fieldDefs->getType() !== FieldType::LINK_MULTIPLE &&
+                $fieldDefs->getType() !== FieldType::ATTACHMENT_MULTIPLE
             ) {
                 continue;
             }

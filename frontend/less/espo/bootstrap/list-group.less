@@ -1,7 +1,4 @@
-//
 // List groups
-// --------------------------------------------------
-
 
 // Base class
 //
@@ -9,7 +6,7 @@
 
 .list-group {
   // No need to set list-style: none; since .list-group-item is block level
-  margin-bottom: 20px;
+  margin-bottom: var(--20px);
   padding-left: 0; // reset padding because ul and ol
 }
 
@@ -21,22 +18,18 @@
 .list-group-item {
   position: relative;
   display: block;
-  padding: 10px 15px;
+  padding: var(--10px) var(--15px);
   // Place the border on the list items and negative margin up for better styling
-  margin-bottom: -1px;
-  background-color: @list-group-bg;
-  border: 1px solid @list-group-border;
+  margin-bottom: var(--minus-1px);
+  border: var(--1px) solid var(--default-border-color);
 
   // Round the first and last items
   &:first-child {
-    .border-top-radius(@list-group-border-radius);
   }
   &:last-child {
     margin-bottom: 0;
-    .border-bottom-radius(@list-group-border-radius);
   }
 }
-
 
 // Interactive list items
 //
@@ -45,17 +38,10 @@
 
 a.list-group-item,
 button.list-group-item {
-  color: @list-group-link-color;
-
-  .list-group-item-heading {
-    color: @list-group-link-heading-color;
-  }
-
   // Hover state
   &:hover,
   &:focus {
     text-decoration: none;
-    color: @list-group-link-hover-color;
     background-color: @list-group-hover-bg;
   }
 }
@@ -104,12 +90,6 @@ button.list-group-item {
   }
 }
 
-
-// Contextual variants
-//
-// Add modifier classes to change text and background color on individual items.
-// Organizationally, this must come after the `:hover` states.
-
 .list-group-item-variant-espo(success; @state-success-bg; @state-success-text; @state-success-bg-5);
 .list-group-item-variant-espo(info; @state-info-bg; @state-info-text; @state-info-bg-5);
 .list-group-item-variant-espo(warning; @state-warning-bg; @state-warning-text; var(--state-warning-bg-5));
@@ -122,7 +102,7 @@ button.list-group-item {
 
 .list-group-item-heading {
   margin-top: 0;
-  margin-bottom: 5px;
+  margin-bottom: var(--5px);
 }
 .list-group-item-text {
   margin-bottom: 0;

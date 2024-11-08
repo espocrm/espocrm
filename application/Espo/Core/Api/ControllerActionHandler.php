@@ -85,7 +85,6 @@ class ControllerActionHandler implements RequestHandlerInterface
             ->setHeader('X-App-Timestamp', (string) ($this->config->get('appTimestamp') ?? '0'))
             ->setHeader('Expires', '0')
             ->setHeader('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT')
-            ->setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
-            ->setHeader('Pragma', 'no-cache');
+            ->setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
     }
 }

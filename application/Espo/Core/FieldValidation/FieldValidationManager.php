@@ -90,8 +90,7 @@ class FieldValidationManager
     {
         try {
             return $this->processInternal($entity, $data, $params, false);
-        }
-        catch (ValidationError) {
+        } catch (ValidationError) {
             throw new LogicException();
         }
     }

@@ -41,7 +41,7 @@ class ComplexExpressionFieldView extends TextFieldView {
     detailTemplate = 'fields/formula/detail'
     editTemplate = 'fields/formula/edit'
 
-    height = 50
+    height = 46
     maxLineDetailCount = 80
     maxLineEditCount = 200
 
@@ -133,13 +133,18 @@ class ComplexExpressionFieldView extends TextFieldView {
                 this.mode === this.MODE_LIST
             )
         ) {
-            this.$editor.css('fontSize', '14px');
+            this.$editor.css('fontSize', 'var(--font-size-base)');
 
             if (this.mode === this.MODE_EDIT) {
                 this.$editor.css('minHeight', this.height + 'px');
             }
 
             const editor = this.editor = ace.edit(this.containerId);
+
+            editor.setOptions({fontFamily: 'var(--font-family-monospace)'});
+            editor.setFontSize('var(--font-size-base)');
+            editor.container.style.lineHeight = 'var(--line-height-computed)';
+            editor.renderer.updateFontSize();
 
             editor.setOptions({
                 maxLines: this.mode === this.MODE_EDIT ? this.maxLineEditCount : this.maxLineDetailCount,
@@ -262,7 +267,10 @@ class ComplexExpressionFieldView extends TextFieldView {
         }
 
         const attributeList = this.getFieldManager()
-            .getEntityTypeAttributeList(this.targetEntityType)
+            .getEntityTypeAttributeList(this.targetEntityType, {
+                ignoreTypeList: ['map', 'linkMultiple', 'attachmentMultiple'],
+                onlyAvailable: true,
+            })
             .sort();
 
         attributeList.unshift('id');
@@ -288,18 +296,25 @@ class ComplexExpressionFieldView extends TextFieldView {
         linkList.sort();
 
         linkList.forEach(link => {
-            const scope = links[link].entity;
+            /** @type {Record} */
+            const defs = links[link];
+            const scope = defs.entity;
 
             if (!scope) {
                 return;
             }
 
-            if (links[link].disabled) {
+            if (defs.disabled || defs.utility) {
                 return;
             }
 
+            attributeList.push(`${link}.id`);
+
             const linkAttributeList = this.getFieldManager()
-                .getEntityTypeAttributeList(scope)
+                .getEntityTypeAttributeList(scope, {
+                    ignoreTypeList: ['map', 'linkMultiple', 'attachmentMultiple'],
+                    onlyAvailable: true,
+                })
                 .sort();
 
             linkAttributeList.forEach(item => attributeList.push(link + '.' + item));

@@ -1,6 +1,6 @@
 .record .record-grid {
     display: grid;
-    grid-column-gap: @container-padding;
+    grid-column-gap: var(--container-padding);
 
     grid-template-columns: minmax(auto, 67%) minmax(auto, 33%);
 
@@ -29,11 +29,11 @@
 
 .modal-body {
     .record .record-grid {
-        grid-column-gap: @padding-base-horizontal;
+        grid-column-gap: var(--padding-base-horizontal);
     }
 }
 
-@media screen and (max-width: (@screen-md-min - 1px)) {
+@media screen and (max-width: @screen-sm-max) {
     .record .record-grid {
         grid-template-columns: 100%;
 
@@ -46,8 +46,8 @@
 .record {
     .tabs {
         > button.btn {
-            font-size: 15px;
-            height: 40px;
+            font-size: var(--15px);
+            height: var(--40px);
 
             &.invalid {
                 color: var(--state-danger-text);
@@ -55,11 +55,11 @@
             }
 
             &:after {
-                height: 2px;
+                height: var(--2px);
             }
 
-            padding-left: 16px;
-            padding-right: 16px;
+            padding-left: var(--16px);
+            padding-right: var(--16px);
         }
 
         margin-left: var(--panel-border-radius);
@@ -71,7 +71,7 @@
 
     .side.tabs-margin {
         @media screen and (min-width: @screen-sm-min) {
-            margin-top: 40px;
+            margin-top: var(--40px);
         }
     }
 
@@ -122,16 +122,16 @@
     }
 
     .panel + .panel.panels-show-more-delimiter {
-        padding: @padding-large-vertical @panel-padding;
+        padding: var(--padding-large-vertical) var(--panel-padding);
         border-top-width: 0;
     }
 
     > .panel {
-        border-top-width: ~"max(var(--panel-border-width), 1px)";
+        border-top-width: max(var(--panel-border-width), var(--1px));
 
         > .panel-heading {
             .btn-group {
-                top: -6px;
+                top: var(--minus-6px);
                 .btn {
                     border-top-width: 0;
                 }
@@ -160,7 +160,7 @@
     }
 
     > .panel.hidden + .panel {
-        border-top-width: ~"max(var(--panel-border-width), 1px)";
+        border-top-width: max(var(--panel-border-width), var(--1px));
     }
 
     .panel + .panel.panels-show-more-delimiter {

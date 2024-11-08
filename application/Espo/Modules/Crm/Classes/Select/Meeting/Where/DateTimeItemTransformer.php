@@ -69,8 +69,7 @@ class DateTimeItemTransformer implements DateTimeItemTransformerInterface
             if (strlen($value) > 11) {
                 return $transformedItem;
             }
-        }
-        else if (is_array($value)) {
+        } else if (is_array($value)) {
             foreach ($value as $valueItem) {
                 if (is_string($valueItem) && strlen($valueItem) > 11) {
                     return $transformedItem;

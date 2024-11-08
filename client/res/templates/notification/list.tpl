@@ -6,7 +6,7 @@
         <div class="col-sm-5">
             <div class="pull-right btn-group">
                 <button
-                    class="btn btn-default btn-text"
+                    class="btn btn-text"
                     data-action="markAllNotificationsRead"
                     title="{{translate 'Mark all read'}}"
                 >{{translate 'Mark all read'}}</button>

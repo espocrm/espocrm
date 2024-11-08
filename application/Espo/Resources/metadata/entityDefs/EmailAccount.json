@@ -87,6 +87,10 @@
             "required": true,
             "view": "views/fields/assigned-user"
         },
+        "connectedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
         "useImap": {
             "type": "bool",
             "default": true

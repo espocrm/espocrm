@@ -1,6 +1,10 @@
 {
     "beforeLoginHookClassNameList": [
-        "Espo\\Core\\Authentication\\Hook\\Hooks\\FailedAttemptsLimit"
+        "Espo\\Core\\Authentication\\Hook\\Hooks\\FailedAttemptsLimit",
+        "Espo\\Core\\Authentication\\Hook\\Hooks\\FailedCodeAttemptsLimit"
+    ],
+    "onLoginHookClassNameList": [
+        "Espo\\Core\\Authentication\\Hook\\Hooks\\IpAddressWhitelist"
     ],
     "onFailHookClassNameList": [],
     "onSuccessHookClassNameList": [],

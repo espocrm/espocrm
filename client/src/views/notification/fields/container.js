@@ -35,8 +35,17 @@ class NotificationContainerFieldView extends BaseFieldView {
     listTemplate = 'notification/fields/container'
     detailTemplate = 'notification/fields/container'
 
+    types = [
+        'Assign',
+        'EmailReceived',
+        'EntityRemoved',
+        'Message',
+        'System',
+        'UserReaction',
+    ]
+
     setup() {
-        switch (this.model.get('type')) {
+        switch (this.model.attributes.type) {
             case 'Note':
                 this.processNote(this.model.get('noteData'));
 
@@ -59,11 +68,17 @@ class NotificationContainerFieldView extends BaseFieldView {
             return;
         }
 
-        type = type.replace(/ /g, '');
+        type = Espo.Utils.upperCaseFirst(type.replace(/ /g, ''));
 
-        let viewName = this.getMetadata()
-            .get('clientDefs.Notification.itemViews.' + type) ||
-            'views/notification/items/' + Espo.Utils.camelCaseToHyphen(type);
+        let viewName = this.getMetadata().get(`clientDefs.Notification.itemViews.${type}`);
+
+        if (!viewName) {
+            if (!this.types.includes(type)) {
+                return;
+            }
+
+            viewName = 'views/notification/items/' + Espo.Utils.camelCaseToHyphen(type);
+        }
 
         this.createView('notification', viewName, {
             model: this.model,
@@ -81,13 +96,17 @@ class NotificationContainerFieldView extends BaseFieldView {
         this.getModelFactory().create('Note', model => {
             model.set(data);
 
-            let viewName = this.getMetadata().get('clientDefs.Note.itemViews.' + data.type) ||
-                'views/stream/notes/' + Espo.Utils.camelCaseToHyphen(data.type);
+            let viewName = this.getMetadata().get(`clientDefs.Note.itemViews.${data.type}`);
+
+            if (!viewName) {
+                // @todo Check if type exists.
+                viewName = 'views/stream/notes/' + Espo.Utils.camelCaseToHyphen(data.type);
+            }
 
             this.createView('notification', viewName, {
                 model: model,
                 isUserStream: true,
-                fullSelector: this.options.containerSelector  + ' li[data-id="' + this.model.id + '"]',
+                fullSelector: `${this.options.containerSelector} li[data-id="${this.model.id}"] .cell[data-name="data"]`,
                 onlyContent: true,
                 isNotification: true,
             });
@@ -106,7 +125,7 @@ class NotificationContainerFieldView extends BaseFieldView {
         this.getModelFactory().create('Note', model => {
             model.set(data);
 
-            let viewName = 'views/stream/notes/mention-in-post';
+            const viewName = 'views/stream/notes/mention-in-post';
 
             this.createView('notification', viewName, {
                 model: model,

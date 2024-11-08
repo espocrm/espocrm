@@ -286,12 +286,19 @@ class CalendarView extends View {
         }
     }
 
+    /**
+     * @private
+     * @return {boolean}
+     */
     isAgendaMode() {
         return this.mode.indexOf('agenda') === 0;
     }
 
+    /**
+     * @param {string} mode
+     */
     selectMode(mode) {
-        if (~this.fullCalendarModeList.indexOf(mode) || mode.indexOf('view-') === 0) {
+        if (this.fullCalendarModeList.includes(mode) || mode.indexOf('view-') === 0) {
             const previousMode = this.mode;
 
             if (
@@ -340,12 +347,16 @@ class CalendarView extends View {
     }
 
     /**
-     * @return {module:modules/crm/views/calendar/mode-buttons}
+     * @return {import('./mode-buttons').default}
      */
     getModeButtonsView() {
         return this.getView('modeButtons');
     }
 
+    /**
+     * @private
+     * @param {string} name
+     */
     toggleScopeFilter(name) {
         const index = this.enabledScopeList.indexOf(name);
 
@@ -360,18 +371,29 @@ class CalendarView extends View {
         this.calendar.refetchEvents();
     }
 
+    /**
+     * @private
+     * @return {string[]|null}
+     */
     getStoredEnabledScopeList() {
         const key = 'calendarEnabledScopeList';
 
         return this.getStorage().get('state', key) || null;
     }
 
+    /**
+     * @private
+     * @param {string[]} enabledScopeList
+     */
     storeEnabledScopeList(enabledScopeList) {
         const key = 'calendarEnabledScopeList';
 
         this.getStorage().set('state', key, enabledScopeList);
     }
 
+    /**
+     * @private
+     */
     updateDate() {
         if (!this.header) {
             return;
@@ -388,6 +410,10 @@ class CalendarView extends View {
         this.$el.find('.date-title h4 span').text(title);
     }
 
+    /**
+     * @private
+     * @return {boolean}
+     */
     isToday() {
         const view = this.calendar.view;
 
@@ -398,6 +424,10 @@ class CalendarView extends View {
         return startUnix <= todayUnix && todayUnix < endUnix;
     }
 
+    /**
+     * @private
+     * @return {string}
+     */
     getTitle() {
         const view = this.calendar.view;
 
@@ -436,8 +466,7 @@ class CalendarView extends View {
     }
 
     /**
-     * @param {Object.<string, *>} o
-     * @return {{
+     * @typedef {{
      *     recordId,
      *     dateStart?: string,
      *     originalColor?: string,
@@ -449,7 +478,16 @@ class CalendarView extends View {
      *     title: string,
      *     dateEndDate?: ?string,
      *     status?: string,
-     * }}
+     *     allDay?: boolean,
+     *     start?: Date,
+     *     end?: Date,
+     * }} module:modules/crm/views/calendar/calendar~FcEvent
+     */
+
+    /**
+     * @private
+     * @param {Object.<string, *>} o
+     * @return {module:modules/crm/views/calendar/calendar~FcEvent}
      */
     convertToFcEvent(o) {
         const event = {
@@ -540,6 +578,7 @@ class CalendarView extends View {
     }
 
     /**
+     * @private
      * @param {string} scope
      * @return {string[]}
      */
@@ -548,6 +587,7 @@ class CalendarView extends View {
     }
 
     /**
+     * @private
      * @param {string} scope
      * @return {string[]}
      */
@@ -555,6 +595,10 @@ class CalendarView extends View {
         return this.getMetadata().get(['scopes', scope, 'canceledStatusList']) || [];
     }
 
+    /**
+     * @private
+     * @param {Record} event
+     */
     fillColor(event) {
         let color = this.colors[event.scope];
 
@@ -579,6 +623,10 @@ class CalendarView extends View {
         event.color = color;
     }
 
+    /**
+     * @private
+     * @param {Object} event
+     */
     handleStatus(event) {
         if (this.getEventTypeCanceledStatusList(event.scope).includes(event.status)) {
             event.className = ['event-canceled'];
@@ -587,6 +635,12 @@ class CalendarView extends View {
         }
     }
 
+    /**
+     * @private
+     * @param {string} color
+     * @param {number} percent
+     * @return {string}
+     */
     shadeColor(color, percent) {
         if (color === 'transparent') {
             return color;
@@ -614,18 +668,19 @@ class CalendarView extends View {
     }
 
     /**
+     * @private
      * @param {EventImpl} event
-     * @param {boolean} [notInitial]
+     * @param {boolean} [afterDrop]
      */
-    handleAllDay(event, notInitial) {
+    handleAllDay(event, afterDrop) {
         let start = event.start ? this.dateToMoment(event.start) : null;
         const end = event.end ? this.dateToMoment(event.end) : null;
 
         if (this.allDayScopeList.includes(event.scope)) {
             event.allDay = event.allDayCopy = true;
 
-            if (!notInitial && end) {
-                start = end;
+            if (!afterDrop && end) {
+                start = end.clone();
 
                 if (
                     !event.dateEndDate &&
@@ -634,6 +689,10 @@ class CalendarView extends View {
                 ) {
                     start.add(-1, 'days');
                 }
+            }
+
+            if (start.isSame(end)) {
+                end.add(1, 'days');
             }
 
             if (start) {
@@ -651,7 +710,7 @@ class CalendarView extends View {
             event.allDay = true;
             event.allDayCopy = event.allDay;
 
-            if (!notInitial) {
+            if (!afterDrop) {
                 end.add(1, 'days')
             }
 
@@ -672,24 +731,19 @@ class CalendarView extends View {
             if (end) {
                 start = end;
             }
-        } else {
-            if (
-                (
-                    start.format('d') !== end.format('d') &&
-                    (end.hours() !== 0 || end.minutes() !== 0)
-                ) &&
-                (end.unix() - start.unix() >= 86400)
-            ) {
-                event.allDay = true;
+        } else if (
+            start.format('YYYY-DD') !== end.format('YYYY-DD') &&
+            end.unix() - start.unix() >= 86400
+        ) {
+            event.allDay = true;
 
-                //if (!notInitial) {
-                    if (end.hours() !== 0 || end.minutes() !== 0) {
-                        end.add(1, 'days');
-                    }
-                //}
-            } else {
-                event.allDay = false;
+            //if (!notInitial) {
+            if (end.hours() !== 0 || end.minutes() !== 0) {
+                end.add(1, 'days');
             }
+            //}
+        } else {
+            event.allDay = false;
         }
 
         event.allDayCopy = event.allDay;
@@ -703,6 +757,11 @@ class CalendarView extends View {
         }
     }
 
+    /**
+     * @private
+     * @param {Record[]} list
+     * @return {Record[]}
+     */
     convertToFcEvents(list) {
         this.now = moment.tz(this.getDateTime().getTimeZone());
 
@@ -718,6 +777,7 @@ class CalendarView extends View {
     }
 
     /**
+     * @private
      * @param {string} date
      * @return {string}
      */
@@ -732,6 +792,10 @@ class CalendarView extends View {
         return m.format(format) + ':00';
     }
 
+    /**
+     * @private
+     * @return {number}
+     */
     getCalculatedHeight() {
         if (this.$container && this.$container.length) {
             return this.$container.height();
@@ -740,6 +804,9 @@ class CalendarView extends View {
         return this.getHelper().calculateContentContainerHeight(this.$el.find('.calendar'));
     }
 
+    /**
+     * @private
+     */
     adjustSize() {
         if (this.isRemoved()) {
             return;
@@ -1006,6 +1073,17 @@ class CalendarView extends View {
                         });
                 });
             },
+            eventAllow: (info, event) => {
+                if (event.allDay && !info.allDay) {
+                    return false;
+                }
+
+                if (!event.allDay && info.allDay) {
+                    return false;
+                }
+
+                return true;
+            }
         };
 
         if (this.teamIdList) {
@@ -1081,6 +1159,9 @@ class CalendarView extends View {
         }, 150);
     }
 
+    /**
+     * @private
+     */
     handleScrollToNow() {
         if (!(this.mode === 'agendaWeek' || this.mode === 'agendaDay')) {
             return;
@@ -1160,8 +1241,14 @@ class CalendarView extends View {
         });
     }
 
+    /**
+     * @private
+     * @param {string} from
+     * @param {string} to
+     * @param {function} callback
+     */
     fetchEvents(from, to, callback) {
-        let url = 'Activities?from=' + from + '&to=' + to;
+        let url = `Activities?from=${from}&to=${to}`;
 
         if (this.options.userId) {
             url += '&userId=' + this.options.userId;
@@ -1195,6 +1282,10 @@ class CalendarView extends View {
         setTimeout(() => this.fetching = false, 50)
     }
 
+    /**
+     * @private
+     * @param {import('model').default} model
+     */
     addModel(model) {
         const attributes = model.getClonedAttributes();
 
@@ -1202,9 +1293,14 @@ class CalendarView extends View {
 
         const event = this.convertToFcEvent(attributes);
 
-        this.calendar.addEvent(event);
+        // true passed to prevent duplicates after re-fetch.
+        this.calendar.addEvent(event, true);
     }
 
+    /**
+     * @private
+     * @param {import('model').default} model
+     */
     updateModel(model) {
         const eventId = model.entityType + '-' + model.id;
 
@@ -1222,9 +1318,11 @@ class CalendarView extends View {
 
         this.applyPropsToEvent(event, data);
     }
+
     /**
+     * @private
      * @param {EventImpl} event
-     * @return {Object.<string, *>}
+     * @return {module:modules/crm/views/calendar/calendar~FcEvent}
      */
     obtainPropsFromEvent(event) {
         const props = {};
@@ -1244,11 +1342,21 @@ class CalendarView extends View {
     }
 
     /**
+     * @private
      * @param {EventImpl} event
-     * @param {Object.<string, *>} props
+     * @param {{start?: Date, end?: Date, allDay: boolean} & Record} props
      */
     applyPropsToEvent(event, props) {
         if ('start' in props) {
+            if (
+                !props.allDay &&
+                props.end &&
+                props.end.getTime() === props.start.getTime()
+            ) {
+                // Otherwise, 0-duration event would disappear.
+                props.end = moment(props.end).add(1, 'hour').toDate();
+            }
+
             event.setDates(props.start, props.end, {allDay: props.allDay});
         }
 
@@ -1263,6 +1371,12 @@ class CalendarView extends View {
                 continue;
             }
 
+            if (key === 'className') {
+                event.setProp('classNames', value);
+
+                continue;
+            }
+
             if (this.extendedProps.includes(key)) {
                 event.setExtendedProp(key, value);
 
@@ -1273,6 +1387,10 @@ class CalendarView extends View {
         }
     }
 
+    /**
+     * @private
+     * @param {import('model').default} model
+     */
     removeModel(model) {
         const event = this.calendar.getEventById(model.entityType + '-' + model.id);
 
@@ -1308,6 +1426,11 @@ class CalendarView extends View {
         this.updateDate();
     }
 
+    /**
+     * @private
+     * @param {string} scope
+     * @return {string|undefined}
+     */
     getColorFromScopeName(scope) {
         const additionalColorList = this.getMetadata().get('clientDefs.Calendar.additionalColorList') || [];
 

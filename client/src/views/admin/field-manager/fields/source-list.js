@@ -26,18 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/fields/source-list', ['views/fields/multi-enum'], function (Dep) {
+import MultiEnumFieldView from 'views/fields/multi-enum';
 
-    return Dep.extend({
+export default class extends MultiEnumFieldView {
 
-        setupOptions: function () {
-            this.params.options = Espo.Utils.clone(this.getMetadata().get('entityDefs.Attachment.sourceList') || []);
+    setupOptions() {
+        this.params.options = Espo.Utils.clone(this.getMetadata().get('entityDefs.Attachment.sourceList') || []);
 
-            this.translatedOptions = {};
+        this.translatedOptions = {};
 
-            this.params.options.forEach(item => {
-                this.translatedOptions[item] = this.translate(item, 'scopeNamesPlural');
-            });
-        }
-    });
-});
+        this.params.options.forEach(item => {
+            this.translatedOptions[item] = this.translate(item, 'scopeNamesPlural');
+        });
+    }
+}

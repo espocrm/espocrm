@@ -26,42 +26,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/entity-manager/fields/icon-class', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+export default class extends BaseFieldView {
 
-        editTemplate: 'admin/entity-manager/fields/icon-class/edit',
+    editTemplate = 'admin/entity-manager/fields/icon-class/edit'
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.events['click [data-action="selectIcon"]'] = function () {
-                this.selectIcon();
-            };
-        },
+        this.addActionHandler('selectIcon', () => this.selectIcon());
+    }
 
-        selectIcon: function () {
-            this.createView('dialog', 'views/admin/entity-manager/modals/select-icon', {}, view => {
-                view.render();
+    selectIcon() {
+        this.createView('dialog', 'views/admin/entity-manager/modals/select-icon', {}, view => {
+            view.render();
 
-                this.listenToOnce(view, 'select', value => {
-                    if (value === '') {
-                        value = null;
-                    }
+            this.listenToOnce(view, 'select', value => {
+                if (value === '') {
+                    value = null;
+                }
 
-                    this.model.set(this.name, value);
+                this.model.set(this.name, value);
 
-                    view.close();
-                });
+                view.close();
             });
-        },
+        });
+    }
 
-        fetch: function () {
-            let data = {};
+    fetch() {
+        const data = {};
 
-            data[this.name] = this.model.get(this.name);
+        data[this.name] = this.model.get(this.name);
 
-            return data;
-        },
-    });
-});
+        return data;
+    }
+}

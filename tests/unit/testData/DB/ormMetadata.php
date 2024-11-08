@@ -475,6 +475,7 @@ return [
                              'OR' => [
                                  ['test' => '{value}'],
                                  ['test' => '1'],
+                                 ['EQUAL:(test, LOWER:({value})):' => null],
                              ],
                          ],
                          'joins' => [
@@ -485,6 +486,17 @@ return [
                          'whereClause' => [
                              'test' => '{value}'
                          ],
+                     ],
+                     "NOT IN" => [
+                        'whereClause' => [
+                            'id!=s' => [
+                                'from' => 'TestWhere',
+                                'select' => ['id'],
+                                'whereClause' => [
+                                    'test!=' => '{value}',
+                                ],
+                            ],
+                        ],
                      ]
                 ],
                 'order' => [

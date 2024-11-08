@@ -54,6 +54,8 @@ class EnumFieldView extends BaseFieldView {
      * @property {boolean} [required] Required.
      * @property {string} [translation] A translation string. E.g. `Global.scopeNames`.
      * @property {boolean} [displayAsLabel] Display as label.
+     * @property {string|'state'} [labelType] A label type.
+     * @property {'regular'|'state'} [labelType] A label type.
      * @property {string} [optionsReference] A reference to options. E.g. `Account.industry`.
      * @property {string} [optionsPath] An options metadata path.
      * @property {boolean} [isSorted] To sort options.
@@ -109,10 +111,16 @@ class EnumFieldView extends BaseFieldView {
         }
 
         if (this.isReadMode()) {
-            if (this.params.displayAsLabel && data.style && data.style !== 'default') {
-                data.class = 'label label-md label';
-            } else {
+            if (!this.params.displayAsLabel) {
                 data.class = 'text';
+            } else {
+                if (this.params.labelType === 'state') {
+                    data.class = 'label label-md label-state label';
+                } else {
+                    data.class = data.style && data.style !== 'default' ?
+                        'label label-md label' :
+                        'text';
+                }
             }
         }
 
@@ -193,8 +201,8 @@ class EnumFieldView extends BaseFieldView {
             this.params.options = Espo.Utils.clone(this.params.options) || [];
 
             this.params.options = this.params.options.sort((v1, v2) => {
-                 return (this.translatedOptions[v1] || v1)
-                     .localeCompare(this.translatedOptions[v2] || v2);
+                return (this.translatedOptions[v1] || v1)
+                    .localeCompare(this.translatedOptions[v2] || v2);
             });
         }
 
@@ -263,6 +271,16 @@ class EnumFieldView extends BaseFieldView {
      * Set up options.
      */
     setupOptions() {}
+
+    /**
+     * Set translated options.
+     *
+     * @param {Record} translatedOptions
+     * @since 8.4.0
+     */
+    setTranslatedOptions(translatedOptions) {
+        this.translatedOptions = translatedOptions;
+    }
 
     /**
      * Set an option list.

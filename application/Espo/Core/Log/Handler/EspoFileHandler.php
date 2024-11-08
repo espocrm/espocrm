@@ -77,8 +77,7 @@ class EspoFileHandler extends MonologStreamHandler
                 $this->url,
                 $this->pruneMessage($record)
             );
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $msg = "Could not write file `$this->url`.";
 
             if ($e->getMessage()) {

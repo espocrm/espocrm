@@ -47,13 +47,13 @@ class FollowersFieldView extends LinkMultipleFieldView {
         this.limit = this.portionSize;
 
         this.listenTo(this.model, 'change:isFollowed', () => {
-            let idList = this.model.get(this.idsName) || [];
+            const idList = this.model.get(this.idsName) || [];
 
             if (this.model.get('isFollowed')) {
-                if (!~idList.indexOf(this.getUser().id)) {
+                if (!idList.includes(this.getUser().id)) {
                     idList.unshift(this.getUser().id);
 
-                    let nameMap = this.model.get(this.nameHashName) || {};
+                    const nameMap = this.model.get(this.nameHashName) || {};
 
                     nameMap[this.getUser().id] = this.getUser().get('name');
 
@@ -65,7 +65,7 @@ class FollowersFieldView extends LinkMultipleFieldView {
                 return;
             }
 
-            let index = idList.indexOf(this.getUser().id);
+            const index = idList.indexOf(this.getUser().id);
 
             if (~index) {
                 idList.splice(index, 1);
@@ -112,8 +112,8 @@ class FollowersFieldView extends LinkMultipleFieldView {
             collection.order = null;
 
             this.listenToOnce(collection, 'sync', () => {
-                let idList = this.model.get(this.idsName) || [];
-                let nameMap = this.model.get(this.nameHashName) || {};
+                const idList = this.model.get(this.idsName) || [];
+                const nameMap = this.model.get(this.nameHashName) || {};
 
                 collection.forEach(user => {
                     idList.push(user.id);
@@ -133,7 +133,7 @@ class FollowersFieldView extends LinkMultipleFieldView {
 
     getValueForDisplay() {
         if (this.mode === this.MODE_DETAIL || this.mode === this.MODE_LIST) {
-            let list = [];
+            const list = [];
 
             this.ids.forEach(id => {
                 list.push(this.getDetailLinkHtml(id));

@@ -97,17 +97,18 @@ class AclManager {
 
             const params = {
                 aclAllowDeleteCreated: this.aclAllowDeleteCreated,
-                teamsFieldIsForbidden: !!~forbiddenFieldList.indexOf('teams'),
+                teamsFieldIsForbidden: forbiddenFieldList.includes('teams'),
                 forbiddenFieldList: forbiddenFieldList,
             };
 
-            this.implementationHash[scope] = new implementationClass(this.getUser(), scope, params);
+            this.implementationHash[scope] = new implementationClass(this.getUser(), scope, params, this);
         }
 
         return this.implementationHash[scope];
     }
 
     /**
+     * @return {import('models/user').default}
      * @protected
      */
     getUser() {
@@ -156,7 +157,7 @@ class AclManager {
      *
      * @param {string} scope A scope.
      * @param {module:acl-manager~action} action An action.
-     * @returns {'yes'|'all'|'team'|'no'|null}
+     * @returns {'yes'|'all'|'team'|'own'|'no'|null}
      */
     getLevel(scope, action) {
         if (!(scope in this.data.table)) {
@@ -302,6 +303,17 @@ class AclManager {
 
     // noinspection JSUnusedGlobalSymbols
     /**
+     * Check if a record is shared with the user.
+     *
+     * @param {module:model} model A model.
+     * @returns {boolean|null} True if shared, null if not clear.
+     */
+    checkIsShared(model) {
+        return this.getImplementation(model.entityType).checkIsShared(model);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
      * Check an assignment permission to a user.
      *
      * @param {module:models/user} user A user.
@@ -353,7 +365,7 @@ class AclManager {
             const teamsIds = user.get('teamsIds') || [];
 
             teamsIds.forEach(id => {
-                if (~(this.getUser().get('teamsIds') || []).indexOf(id)) {
+                if ((this.getUser().get('teamsIds') || []).includes(id)) {
                     result = true;
                 }
             });
@@ -403,7 +415,7 @@ class AclManager {
             const list = actionData[level] || [];
 
             list.forEach(field => {
-                if (~fieldList.indexOf(field)) {
+                if (fieldList.includes(field)) {
                     return;
                 }
 
@@ -448,7 +460,7 @@ class AclManager {
             const list = actionData[level] || [];
 
             list.forEach(attribute => {
-                if (~attributeList.indexOf(attribute)) {
+                if (attributeList.includes(attribute)) {
                     return;
                 }
 
@@ -472,7 +484,7 @@ class AclManager {
             return true;
         }
 
-        return !!~this.getUser().getLinkMultipleIdList('teams').indexOf(teamId);
+        return this.getUser().getLinkMultipleIdList('teams').includes(teamId);
     }
 
     /**

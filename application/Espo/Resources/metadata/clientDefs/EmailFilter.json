@@ -1,5 +1,5 @@
 {
-    "controller": "controllers/record",
+    "controller": "controllers/email-filter",
     "dynamicHandler": "handlers/email-filter",
     "modalViews": {
         "edit": "views/email-filter/modals/edit"
@@ -85,6 +85,17 @@
                 }
             },
             "markAsRead": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "attribute": "parentType",
+                            "type": "equals",
+                            "value": "User"
+                        }
+                    ]
+                }
+            },
+            "skipNotification": {
                 "visible": {
                     "conditionGroup": [
                         {

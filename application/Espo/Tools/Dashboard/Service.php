@@ -133,8 +133,7 @@ class Service
                 'dashboardLayout' => $template->get('layout'),
                 'dashletsOptions' => $template->get('dashletsOptions'),
             ]);
-        }
-        else {
+        } else {
             $dashletsOptions = $preferences->get('dashletsOptions');
 
             if (!$dashletsOptions) {

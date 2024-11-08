@@ -289,6 +289,20 @@ class ThemeManager {
 
         return name !== this.config.get('theme');
     }
+
+    /**
+     * Get a font-size factor. To adjust px sizes based on font-size.
+     *
+     * @return {number}
+     * @since 9.0.0
+     * @internal Experimental.
+     */
+    getFontSizeFactor() {
+        const paramFontSize = this.getParam('fontSize') || 14;
+        const fontSize = parseInt(getComputedStyle(document.body).fontSize);
+
+        return Math.round(fontSize / paramFontSize * 10000) / 10000;
+    }
 }
 
 export default ThemeManager;

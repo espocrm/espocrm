@@ -1,7 +1,7 @@
 {
   "labels": {
     "Primary": "Birincil",
-    "Opted Out": "Devre Dışı Bırakıldı",
+    "Opted Out": "Pasif Bırakıldı",
     "Invalid": "Geçersiz"
   }
 }

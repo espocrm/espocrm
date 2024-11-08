@@ -40,7 +40,6 @@ use Exception;
 class Command implements Runner
 {
     use Cli;
-    use SetupSystemUser;
 
     public function __construct(private ConsoleCommandManager $commandManager)
     {}
@@ -49,8 +48,7 @@ class Command implements Runner
     {
         try {
             $exitStatus = $this->commandManager->run($_SERVER['argv']);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             echo "Error: " . $e->getMessage() . "\n";
 
             exit(1);

@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Classes\Select\Call\PrimaryFilters;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Entities\User;
 
@@ -63,8 +64,7 @@ class Todays implements Filter
             $whereItem = $this->converterFactory
                 ->create(Call::ENTITY_TYPE, $this->user)
                 ->convert($queryBuilder, $item);
-        }
-        catch (Error $e) {
+        } catch (BadRequest $e) {
             throw new LogicException($e->getMessage());
         }
 

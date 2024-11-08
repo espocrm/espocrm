@@ -30,8 +30,11 @@
 namespace tests\integration\Espo\Core\FieldProcessing;
 
 use Espo\Core\ORM\EntityManager;
+use Espo\Modules\Crm\Entities\Contact;
+use tests\integration\Core\BaseTestCase;
+use tests\integration\testClasses\Entities\Opportunity;
 
-class RelationTest extends \tests\integration\Core\BaseTestCase
+class RelationTest extends BaseTestCase
 {
     public function testLinkMultiple1(): void
     {
@@ -123,6 +126,39 @@ class RelationTest extends \tests\integration\Core\BaseTestCase
             ->getColumn($contact3, 'role');
 
         $this->assertEquals('Decision Maker', $column3);
+
+        // W/o link-multiple.
+
+        $opp1 = $entityManager->getRDBRepositoryByClass(Opportunity::class)->getNew();
+        $entityManager->saveEntity($opp1);
+
+        $opp2 = $entityManager->getRDBRepositoryByClass(Opportunity::class)->getNew();
+        $entityManager->saveEntity($opp2);
+
+        $contact = $entityManager->getRDBRepositoryByClass(Contact::class)->getNew();
+        $contact->setMultiple([
+            'opportunitiesIds' => [$opp1->getId()]
+        ]);
+        $entityManager->saveEntity($contact);
+
+        $this->assertTrue(
+            $entityManager->getRelation($contact, 'opportunities')->isRelatedById($opp1->getId())
+        );
+
+        // Do not allow update IDs if no link-multiple field.
+
+        $contact->setMultiple([
+            'opportunitiesIds' => [$opp2->getId()]
+        ]);
+        $entityManager->saveEntity($contact);
+
+        $this->assertTrue(
+            $entityManager->getRelation($contact, 'opportunities')->isRelatedById($opp1->getId())
+        );
+
+        $this->assertFalse(
+            $entityManager->getRelation($contact, 'opportunities')->isRelatedById($opp2->getId())
+        );
     }
 
     public function testHasOne(): void

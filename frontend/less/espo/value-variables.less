@@ -1,4 +1,4 @@
-@main-gray-value: #E8ECED;
+@main-gray-value: #e0e2e3;
 
 @white-color-value: #FEFEFE;
 
@@ -13,14 +13,20 @@
 
 @body-bg-value: #f1f3f5;
 
-@brand-primary-value: #6791c5;
-@brand-danger-value: #CF605D;
+@text-color-value: @gray-dark-value;
+@text-white-color-value: @white-color-value;
+@text-muted-color-value: @gray-light-value;
+@text-gray-color-value: #6a6a6a;
+
+@brand-primary-value: #6092d0;
+@brand-danger-value: #d7657d;
 @brand-info-value: #a595c9;
 @brand-success-value: #6fc374;
-@brand-warning-value: #eda530;
+@brand-warning-value: #e4a133;
 
 @brand-primary-text-value: #FFF;
 
+@state-primary-bg-value: #ecf5fd;
 @state-primary-text-value: #5b9aca;
 
 @state-success-bg-value: lighten(spin(@brand-success-value, 5), 30%);
@@ -35,27 +41,37 @@
 @state-danger-text-value: #ad4846;
 @state-danger-bg-value: #f2dede;
 
+@state-default-text-value: @text-gray-color-value;
+@state-default-bg-value: @gray-lighter-value;
+
+@warning-bg-value: #fffdf2;
+
 @default-box-shadow-value: 2px 2px 4px rgba(0, 0, 0, 0.09);
 
 @top-bar-box-shadow-value: 2px 2px 2px rgba(0, 0, 0, 0.09);
 
-@navbar-bg-value: @body-bg-value;
-@navbar-link-color-value: @gray-light-value;
-@navbar-link-hover-color-value: @gray-value;
-@navbar-link-hover-bg-value: @body-bg-value;
 @navbar-box-shadow-value: none;
 @navbar-border-width-value: 0;
 
-@navbar-inverse-color-value: #c5c4c4;
-@navbar-inverse-bg-value: #566b90;
-@navbar-inverse-border-value: transparent;
-@navbar-inverse-link-color-value: #EBEBEB;//#DFDFDF;
+@navbar-bg-value: @body-bg-value;
+@navbar-link-color-value: @gray-light-value;
+@navbar-link-hover-color-value: @gray-value;
+@navbar-link-hover-bg-value: @body-bg-value; // @todo Remove ?
+@navbar-link-icon-color-value: @gray-dark-value;
+
+@navbar-inverse-color-value: #d2d5da;
+@navbar-inverse-bg-value: #5d759e;
+@navbar-inverse-border-value: @default-border-color-value;
+@navbar-inverse-link-color-value: #fff;
 @navbar-inverse-link-hover-color-value: #fff;
-@navbar-inverse-link-hover-bg-value: transparent;
+@navbar-inverse-link-hover-bg-value: #596e93;
 @navbar-inverse-link-disabled-color-value: #444;
 @navbar-inverse-link-disabled-bg-value: transparent;
-@navbar-inverse-link-active-bg-value: darken(@navbar-inverse-bg-value, 10%);
+@navbar-inverse-link-active-bg-value: #4a6086;
+@navbar-inverse-link-icon-color-value: @navbar-inverse-link-color-value;
+@navbar-inverse-link-icon-hover-color-value: @navbar-inverse-link-icon-color-value;
 
+@navbar-link-icon-color-value: @text-gray-color-value;
 
 @input-border-value: #D1D5D6;
 @input-border-focus-value: #66afe9;
@@ -63,8 +79,8 @@
 @input-bg-value: @white-color-value;
 @input-bg-disabled-value: @gray-lighter-value;
 @input-color-disabled-value: @gray-light-value;
-@input-box-shadow-value: inset 0 1px 1px rgb(0 0 0 / 4%);
-@input-border-width-value: 1px;
+@input-box-shadow-value: inset 0 var(--1px) var(--1px) rgb(0 0 0 / 4%);
+@input-border-width-value: var(--1px);
 
 @modal-backdrop-bg-value: fade(#DBDBDB, 50%);
 @modal-backdrop-filter-value: blur(1px);
@@ -74,27 +90,22 @@
 @modal-content-bg-value: @body-bg-value;
 @modal-box-shadow-value: 0 5px 15px rgb(0 0 0 / 50%);
 
-@text-color-value: @gray-dark-value;
-@text-white-color-value: @white-color-value;
-@text-muted-color-value: @gray-light-value;
-@text-gray-color-value: #6a6a6a;
-
 @link-color-value: @brand-primary-value;
 @link-hover-color-value: darken(@link-color-value, 15%);
 
-@panel-bg-value: #ffffff;
-// Should be in px units to work in CSS math functions.
-@panel-border-width-value: 0px;
-@panel-heading-height-value: 30px;
-@panel-heading-font-size-value: 15px;
+// Should be in with unit to work in CSS math functions.
+@panel-border-width-value: 0rem;
+@panel-heading-height-value: var(--30px);
+@panel-heading-font-size-value: var(--15px);
+@vertical-gap-value: var(--16px);
 
-@vertical-gap-value: 16px;
+@panel-bg-value: #ffffff;
 
 @table-bg-value: @panel-bg-value;
 @table-bg-accent-value: #f9f9f9;
 
 @default-border-color-value: @main-gray-value;
-@default-heading-bg-color-value: @main-gray-value;
+@default-heading-bg-color-value: #ecf4f8;
 
 @code-bg-value: #f9f9f9;
 @code-border-color-value: @default-border-color-value;
@@ -126,13 +137,13 @@
 @panel-info-border-value: @panel-info-bg-value;
 @panel-info-text-value: @state-info-text-value;
 
-@btn-default-bg-value: #f6f6f6;
+@btn-default-bg-value: #fcfcfc;
 @btn-default-border-value: #c2cacc;
 @btn-default-color-value: #585858;
 @btn-default-hover-bg-value: darken(@btn-default-bg-value, 3%);
 @btn-default-hover-border-value: darken(@btn-default-border-value, 3%);
-@btn-default-active-bg-value: darken(@btn-default-bg-value, 17%);
-@btn-default-active-border-value: darken(@btn-default-bg-value, 25%);
+@btn-default-active-bg-value: darken(@btn-default-bg-value, 8%);
+@btn-default-active-border-value: darken(@btn-default-border-value, 8%);
 
 @btn-primary-bg-value: @brand-primary-value;
 @btn-primary-border-value: @btn-primary-bg-value;
@@ -187,7 +198,7 @@
 @dropdown-link-hover-color-value: darken(@gray-dark-value, 5%);
 @dropdown-link-hover-bg-value: #f5f5f5;
 @dropdown-border-value: @default-border-color-value;
-@dropdown-border-width-value: 1px;
+@dropdown-border-width-value: var(--1px);
 @dropdown-divider-bg-value: #e5e5e5;
 @dropdown-box-shadow-value: 0 4px 6px rgba(0, 0, 0, 0.11);
 
@@ -219,15 +230,14 @@
 @collapsed-modal-bg-value: @gray-soft-value;
 @collapsed-modal-text-color-value: @text-white-color-value;
 
-@btn-xs-wide-width-value: 65px;
-@btn-s-wide-width-value: 80px;
-@btn-wide-width-value: 100px;
-@btn-x-wide-width-value: 150px;
-@btn-xx-wide-width-value: 200px;
+@btn-xs-wide-width-value: var(--65px);
+@btn-s-wide-width-value: var(--80px);
+@btn-wide-width-value: var(--100px);
+@btn-x-wide-width-value: var(--150px);
+@btn-xx-wide-width-value: var(--200px);
 
-@border-radius-value: 5px;
-@border-radius-small-value: 4px;
-@panel-border-radius-value: 8px;
-@dropdown-border-radius-value: 6px;
-
-@record-grid-max-width-value: 1300px;
+@border-radius-value: var(--6px);
+@border-radius-small-value: var(--4px);
+@panel-border-radius-value: var(--8px);
+@dropdown-border-radius-value: var(--6px);
+@badge-border-radius-value: var(--10px);

@@ -20,10 +20,12 @@
         "valuePermissionList": {
             "type": "array",
             "description": "A list of all available permissions in the system.",
-            "anyOf": [
-                {"const": "__APPEND__"},
-                {"type": "string"}
-            ]
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {"type": "string"}
+                ]
+            }
         },
         "valuePermissionHighestLevels": {
             "type": "object",
@@ -38,32 +40,6 @@
                 "$ref": "#/definitions/levelsAll"
             },
             "description": "Default permissions. Not to be modified."
-        },
-        "scopeLevelTypesStrictDefaults": {
-            "type": "object",
-            "description": "Defaults by type. Not to be modified.",
-            "properties": {
-                "boolean": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/levelsBoolean"
-                        },
-                        {
-                            "type": "boolean"
-                        }
-                    ]
-                },
-                "record": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/levels"
-                        },
-                        {
-                            "type": "boolean"
-                        }
-                    ]
-                }
-            }
         }
     },
     "definitions": {

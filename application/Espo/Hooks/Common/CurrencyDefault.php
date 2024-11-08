@@ -29,30 +29,21 @@
 
 namespace Espo\Hooks\Common;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\ORM\Entity;
-
-use Espo\Core\Utils\{
-    Config,
-    FieldUtil,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\FieldUtil;
 
 class CurrencyDefault
 {
     public static int $order = 200;
 
-    private Config $config;
-
-    private FieldUtil $fieldUtil;
-
-    public function __construct(Config $config, FieldUtil $fieldUtil)
-    {
-        $this->config = $config;
-        $this->fieldUtil = $fieldUtil;
-    }
+    public function __construct(private Config $config, private FieldUtil $fieldUtil)
+    {}
 
     public function beforeSave(Entity $entity): void
     {
-        $fieldList = $this->fieldUtil->getFieldByTypeList($entity->getEntityType(), 'currency');
+        $fieldList = $this->fieldUtil->getFieldByTypeList($entity->getEntityType(), FieldType::CURRENCY);
 
         $defaultCurrency = $this->config->get('defaultCurrency');
 

@@ -4,7 +4,8 @@
         "roles": "Roles",
         "layoutSet": "Layout Set",
         "workingTimeCalendar": "Working Time Calendar",
-        "positionList": "Position List"
+        "positionList": "Position List",
+        "userRole": "User Role"
     },
     "links": {
         "users": "Users",

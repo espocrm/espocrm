@@ -26,12 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/auth-token/modals/detail', ['views/modals/detail'], function (Dep) {
+import DetailModalView from 'views/modals/detail';
 
-    return Dep.extend({
+export default class extends DetailModalView {
 
-        sideDisabled: true,
-
-        editDisabled: true,
-    });
-});
+    sideDisabled = true
+    editDisabled = true
+}

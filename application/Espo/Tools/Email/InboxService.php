@@ -29,32 +29,39 @@
 
 namespace Espo\Tools\Email;
 
-use Espo\Core\Acl\Table;
 use Espo\Core\AclManager;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error\Body;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Select\Where\Item as WhereItem;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
+use Espo\Core\WebSocket\Submission as WebSocketSubmission;
 use Espo\Entities\Email;
 use Espo\Entities\EmailFolder;
 use Espo\Entities\GroupEmailFolder;
 use Espo\Entities\Notification;
+use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\SelectBuilder;
 use Exception;
+use RuntimeException;
 
 class InboxService
 {
-    private const FOLDER_INBOX = Folder::INBOX;
-    private const FOLDER_DRAFTS = Folder::DRAFTS;
-
     public function __construct(
         private User $user,
         private EntityManager $entityManager,
         private AclManager $aclManager,
         private Log $log,
-        private SelectBuilderFactory $selectBuilderFactory
+        private SelectBuilderFactory $selectBuilderFactory,
+        private WebSocketSubmission $webSocketSubmission,
+        private Config $config,
     ) {}
 
     /**
@@ -65,8 +72,7 @@ class InboxService
         foreach ($idList as $id) {
             try {
                 $this->moveToFolder($id, $folderId, $userId);
-            }
-            catch (Exception) {}
+            } catch (Exception) {}
         }
     }
 
@@ -78,48 +84,22 @@ class InboxService
     {
         $userId = $userId ?? $this->user->getId();
 
-        if ($folderId === self::FOLDER_INBOX) {
+        if ($folderId === Folder::INBOX) {
             $folderId = null;
         }
 
-        $email = $this->entityManager->getRDBRepositoryByClass(Email::class)->getById($id);
+        $email = $this->getEmail($id);
+        $user = $this->getUser($userId);
 
-        if (!$email) {
-            throw new NotFound();
-        }
-
-        $user = $userId === $this->user->getId() ?
-            $this->user :
-            $this->entityManager
-                ->getRDBRepositoryByClass(User::class)
-                ->getById($userId);
-
-        if (!$user) {
-            throw new NotFound("User not found.");
-        }
-
-        $previousFolderLink = $email->getGroupFolder();
-
-        if ($previousFolderLink) {
-            $previousFolderId = $previousFolderLink->getId();
-
-            $previousFolder = $this->entityManager->getEntityById(GroupEmailFolder::ENTITY_TYPE, $previousFolderId);
-
-            if ($previousFolder && !$this->aclManager->checkEntityRead($user, $previousFolder)) {
-                throw new Forbidden("No access to current group folder.");
-            }
-
-            if (!$this->aclManager->checkField($user, Email::ENTITY_TYPE, 'groupFolder', Table::ACTION_EDIT)) {
-                throw new Forbidden("No access to `groupFolder` field.");
-            }
+        if ($email->getGroupFolder()) {
+            $this->checkCurrentGroupFolder($email->getGroupFolder()->getId(), $user);
         }
 
         if ($folderId && str_starts_with($folderId, 'group:')) {
             try {
                 $this->moveToGroupFolder($email, substr($folderId, 6), $user);
-            }
-            catch (Exception $e) {
-                $this->log->debug("Move to group folder exception: " . $e->getMessage());
+            } catch (Exception $e) {
+                $this->log->debug("Could not move email to group folder. {message}", ['message' => $e->getMessage()]);
 
                 throw $e;
             }
@@ -127,12 +107,23 @@ class InboxService
             return;
         }
 
-        if ($previousFolderLink) {
-            $email->set('groupFolderId', null);
+        if ($folderId === Folder::ARCHIVE) {
+            $this->moveToArchive($email, $user);
 
-            if (!$this->aclManager->checkEntityRead($user, $email)) {
-                throw new Forbidden("No read access to email to unset group folder.");
+            return;
+        }
+
+        if ($email->getGroupFolder()) {
+            if (!$this->aclManager->checkEntityEdit($user, $email)) {
+                throw Forbidden::createWithBody(
+                    "Cannot move out from group folder. No edit access to email.",
+                    Body::create()->withMessageTranslation('groupMoveOutNoEditAccess', 'Email')
+                );
             }
+
+            $email
+                ->setGroupFolder(null)
+                ->setGroupStatusFolder(null);
 
             $this->entityManager->saveEntity($email);
         }
@@ -144,6 +135,7 @@ class InboxService
             ->set([
                 'folderId' => $folderId,
                 'inTrash' => false,
+                'inArchive' => false,
             ])
             ->where([
                 'deleted' => false,
@@ -161,27 +153,28 @@ class InboxService
      */
     private function moveToGroupFolder(Email $email, string $folderId, User $user): void
     {
-        $folder = $this->entityManager->getEntityById(GroupEmailFolder::ENTITY_TYPE, $folderId);
-
-        if (!$folder) {
-            throw new NotFound("Group folder not found.");
-        }
+        $folder = $this->getGroupFolder($folderId);
 
         if (!$this->aclManager->checkEntityRead($user, $folder)) {
-            throw new Forbidden("No access to folder.");
+            throw new Forbidden("Cannot move to group folder. No access to folder.");
         }
 
-        if (!$this->aclManager->checkEntityRead($user, $email)) {
-            throw new Forbidden("No read access to email to unset group folder.");
+        if (!$this->aclManager->checkEntityEdit($user, $email)) {
+            throw Forbidden::createWithBody(
+                "Cannot move to group folder. No edit access to email.",
+                Body::create()->withMessageTranslation('groupMoveToNoEditAccess', 'Email')
+            );
         }
 
-        if (!$this->aclManager->checkField($user, Email::ENTITY_TYPE, 'groupFolder', Table::ACTION_EDIT)) {
-            throw new Forbidden("No access to `groupFolder` field.");
-        }
+        $email
+            ->setGroupFolder($folder)
+            ->setGroupStatusFolder(null);
 
-        $email->set('groupFolderId', $folderId);
+        $this->applyGroupFolder($email, $folder);
 
         $this->entityManager->saveEntity($email);
+
+        $this->retrieveFromArchive($email, $user);
     }
 
     /**
@@ -190,7 +183,9 @@ class InboxService
     public function moveToTrashIdList(array $idList, ?string $userId = null): bool
     {
         foreach ($idList as $id) {
-            $this->moveToTrash($id, $userId);
+            try {
+                $this->moveToTrash($id, $userId);
+            } catch (Exception) {}
         }
 
         return true;
@@ -202,13 +197,45 @@ class InboxService
     public function retrieveFromTrashIdList(array $idList, ?string $userId = null): void
     {
         foreach ($idList as $id) {
-            $this->retrieveFromTrash($id, $userId);
+            try {
+                $this->retrieveFromTrash($id, $userId);
+            } catch (Exception) {}
         }
     }
 
+    /**
+     * @throws NotFound
+     * @throws Forbidden
+     */
     public function moveToTrash(string $id, ?string $userId = null): void
     {
         $userId = $userId ?? $this->user->getId();
+
+        $email = $this->getEmail($id);
+        $user = $this->getUser($userId);
+
+        if ($email->getGroupFolder()) {
+            $folder = $this->getGroupFolder($email->getGroupFolder()->getId());
+
+            if (!$this->aclManager->checkEntityRead($user, $folder)) {
+                throw Forbidden::createWithBody(
+                    "Cannot move email from group folder to trash. No access to group folder.",
+                    Body::create()->withMessageTranslation('groupFolderNoAccess', 'Email')
+                );
+            }
+
+            if (!$this->aclManager->checkEntityEdit($user, $email)) {
+                throw Forbidden::createWithBody(
+                    "Cannot move email from group folder to trash.",
+                    Body::create()->withMessageTranslation('groupMoveToTrashNoEditAccess', 'Email')
+                );
+            }
+
+            $email->setGroupStatusFolder(Email::GROUP_STATUS_FOLDER_TRASH);
+            $this->entityManager->saveEntity($email);
+
+            return;
+        }
 
         $update = $this->entityManager
             ->getQueryBuilder()
@@ -227,9 +254,40 @@ class InboxService
         $this->markNotificationAsRead($id, $userId);
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function retrieveFromTrash(string $id, ?string $userId = null): void
     {
         $userId = $userId ?? $this->user->getId();
+
+        $email = $this->getEmail($id);
+        $user = $this->getUser($userId);
+
+        if ($email->getGroupFolder()) {
+            $folder = $this->getGroupFolder($email->getGroupFolder()->getId());
+
+            if (!$this->aclManager->checkEntityEdit($user, $email)) {
+                throw Forbidden::createWithBody(
+                    "Cannot retrieve group folder email from trash. No edit to email.",
+                    Body::create()->withMessageTranslation('notEditAccess', 'Email')
+                );
+            }
+
+            if (!$this->aclManager->checkEntityRead($user, $folder)) {
+                throw Forbidden::createWithBody(
+                    "Cannot retrieve group folder email from trash. No access to group folder.",
+                    Body::create()->withMessageTranslation('groupFolderNoAccess', 'Email')
+                );
+            }
+
+            $email->setGroupStatusFolder(null);
+
+            $this->entityManager->saveEntity($email);
+
+            return;
+        }
 
         $update = $this->entityManager
             ->getQueryBuilder()
@@ -398,26 +456,40 @@ class InboxService
             ->build();
 
         $this->entityManager->getQueryExecutor()->execute($update);
+
+        $this->submitNotificationWebSocket($userId);
     }
 
     public function markNotificationAsRead(string $id, string $userId): void
     {
-        $update = $this->entityManager
-            ->getQueryBuilder()
-            ->update()
-            ->in(Notification::ENTITY_TYPE)
-            ->set(['read' => true])
+        $notification = $this->entityManager
+            ->getRDBRepositoryByClass(Notification::class)
             ->where([
-                'deleted' => false,
                 'userId' => $userId,
                 'relatedType' => Email::ENTITY_TYPE,
                 'relatedId' => $id,
                 'read' => false,
                 'type' => Notification::TYPE_EMAIL_RECEIVED,
             ])
-            ->build();
+            ->findOne();
 
-        $this->entityManager->getQueryExecutor()->execute($update);
+        if (!$notification) {
+            return;
+        }
+
+        $notification->setRead();
+        $this->entityManager->saveEntity($notification);
+
+        $this->submitNotificationWebSocket($userId);
+    }
+
+    private function submitNotificationWebSocket(string $userId): void
+    {
+        if (!$this->config->get('useWebSocket')) {
+            return;
+        }
+
+        $this->webSocketSubmission->submit('newNotification', $userId);
     }
 
     /**
@@ -441,7 +513,7 @@ class InboxService
             ])
         );
 
-        $folderIdList = [self::FOLDER_INBOX, self::FOLDER_DRAFTS];
+        $folderIdList = [Folder::INBOX, Folder::DRAFTS];
 
         $emailFolderList = $this->entityManager
             ->getRDBRepository(EmailFolder::ENTITY_TYPE)
@@ -472,7 +544,7 @@ class InboxService
         foreach ($folderIdList as $folderId) {
             $itemSelectBuilder = clone $selectBuilder;
 
-            if ($folderId === self::FOLDER_DRAFTS) {
+            if ($folderId === Folder::DRAFTS) {
                 $itemSelectBuilder = clone $draftsSelectBuilder;
             }
 
@@ -484,12 +556,168 @@ class InboxService
                 ])
             );
 
-            $data[$folderId] = $this->entityManager
-                ->getRDBRepository(Email::ENTITY_TYPE)
-                ->clone($itemSelectBuilder->build())
-                ->count();
+            try {
+                $data[$folderId] = $this->entityManager
+                    ->getRDBRepository(Email::ENTITY_TYPE)
+                    ->clone($itemSelectBuilder->build())
+                    ->count();
+            } catch (BadRequest|Forbidden $e) {
+                throw new RuntimeException($e->getMessage());
+            }
         }
 
         return $data;
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    public function moveToArchive(Email $email, User $user): void
+    {
+        if (!$this->aclManager->checkEntityRead($user, $email)) {
+            throw new Forbidden("No read access to email.");
+        }
+
+        if ($email->getGroupFolder()) {
+            if (!$this->aclManager->checkEntityEdit($user, $email)) {
+                throw Forbidden::createWithBody(
+                    "Cannot move from group folder to Archive. No edit access to email.",
+                    Body::create()->withMessageTranslation('groupMoveToArchiveNoEditAccess', 'Email')
+                );
+            }
+
+            $email->setGroupStatusFolder(Email::GROUP_STATUS_FOLDER_ARCHIVE);
+            $this->entityManager->saveEntity($email);
+
+            return;
+        }
+
+        $update = $this->entityManager
+            ->getQueryBuilder()
+            ->update()
+            ->in(Email::RELATIONSHIP_EMAIL_USER)
+            ->set([
+                'folderId' => null,
+                'inArchive' => true,
+                'inTrash' => false,
+            ])
+            ->where([
+                'deleted' => false,
+                'userId' => $user->getId(),
+                'emailId' => $email->getId(),
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($update);
+    }
+
+    public function retrieveFromArchive(Email $email, User $user): void
+    {
+        $update = $this->entityManager
+            ->getQueryBuilder()
+            ->update()
+            ->in(Email::RELATIONSHIP_EMAIL_USER)
+            ->set([
+                'folderId' => null,
+                'inArchive' => false,
+            ])
+            ->where([
+                'deleted' => false,
+                'userId' => $user->getId(),
+                'emailId' => $email->getId(),
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($update);
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function checkCurrentGroupFolder(string $folderId, User $user): void
+    {
+        $folder = $this->entityManager->getEntityById(GroupEmailFolder::ENTITY_TYPE, $folderId);
+
+        if ($folder && !$this->aclManager->checkEntityRead($user, $folder)) {
+            throw new Forbidden("No access to current group folder.");
+        }
+    }
+
+    /**
+     * @throws NotFound
+     */
+    private function getUser(string $userId): User
+    {
+        $user = $userId === $this->user->getId() ?
+            $this->user :
+            $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
+
+        if (!$user) {
+            throw new NotFound("User not found.");
+        }
+
+        return $user;
+    }
+
+    /**
+     * @throws NotFound
+     */
+    private function getEmail(string $id): Email
+    {
+        $email = $this->entityManager->getRDBRepositoryByClass(Email::class)->getById($id);
+
+        if (!$email) {
+            throw new NotFound();
+        }
+
+        return $email;
+    }
+
+    /**
+     * @throws NotFound
+     */
+    private function getGroupFolder(string $folderId): GroupEmailFolder
+    {
+        $folder = $this->entityManager->getRDBRepositoryByClass(GroupEmailFolder::class)->getById($folderId);
+
+        if (!$folder) {
+            throw new NotFound("Group folder not found.");
+        }
+
+        return $folder;
+    }
+
+    private function applyGroupFolder(Email $email, GroupEmailFolder $folder): void
+    {
+        if (!$folder->getTeams()->getCount()) {
+            return;
+        }
+
+        foreach ($folder->getTeams()->getIdList() as $teamId) {
+            $email->addTeamId($teamId);
+        }
+
+        $users = $this->entityManager
+            ->getRDBRepositoryByClass(User::class)
+            ->select(['id'])
+            ->where([
+                'type' => [User::TYPE_REGULAR, User::TYPE_ADMIN],
+                'isActive' => true,
+            ])
+            ->where(
+                Condition::in(
+                    Expression::column('id'),
+                    SelectBuilder::create()
+                        ->from(Team::RELATIONSHIP_TEAM_USER)
+                        ->select('userId')
+                        ->where(['teamId' => $folder->getTeams()->getIdList()])
+                        ->build()
+                )
+            )
+            ->find();
+
+        foreach ($users as $user) {
+            $email->addUserId($user->getId());
+        }
     }
 }

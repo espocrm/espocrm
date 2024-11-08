@@ -69,8 +69,7 @@ class Map
             $cachedData = $this->dataCache->get($this->cacheKey);
 
             $this->data = $cachedData;
-        }
-        else {
+        } else {
             $this->data = $this->dataBuilder->build($table);
 
             if ($this->config->get('useCache')) {

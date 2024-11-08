@@ -33,20 +33,19 @@
                         <tr data-name="{{name}}" class="item-row">
                             <td><b>{{translate name category='scopeNamesPlural'}}</b></td>
 
-                            <td>
-                                <span class="text-{{prop ../styleMap access}}"
-                                >{{translateOption access scope='Role' field='accessList'}}</span>
-                            </td>
+                            <td data-name="{{name}}">{{{lookup ../this name}}}</td>
 
                             {{#ifNotEqual type 'boolean'}}
                                 {{#each list}}
-                                    <td>
-                                        {{#ifNotEqual access 'not-set'}}
-                                            <span
-                                                class="text-{{prop ../../styleMap level}}"
-                                                title="{{translate action scope='Role' category='actions'}}"
-                                            >{{translateOption level field='levelList' scope='Role'}}</span>
-                                        {{/ifNotEqual}}
+                                    <td data-name="{{name}}">
+                                        <div
+                                            data-name="{{name}}"
+                                            class="cell {{#if (lookup ../../hiddenFields name) }} hidden  {{/if}} "
+                                        >
+                                            {{#ifNotEqual access 'not-set'}}
+                                                {{{lookup ../../this name}}}
+                                            {{/ifNotEqual}}
+                                        </div>
                                     </td>
                                 {{/each}}
                             {{/ifNotEqual}}
@@ -101,10 +100,7 @@
                         <td>{{translate name category='fields' scope=../name}}</td>
                         {{#each list}}
                         <td>
-                            <span
-                                title="{{translate name scope='Role' category='actions'}}"
-                                class="text-{{prop ../../../styleMap value}}"
-                            >{{translateOption value scope='Role' field='levelList'}}</span>
+                            <div data-name="{{name}}">{{{lookup ../../../this name}}}</div>
                         </td>
                         {{/each}}
                         <td colspan="3"></td>

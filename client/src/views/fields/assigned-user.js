@@ -50,13 +50,18 @@ class AssignedUserFieldView extends UserWithAvatarFieldView {
         return 'active';
     }
 
-    getEmptyAutocompleteResult() {
-        return [
+    /** @inheritDoc */
+    getOnEmptyAutocomplete() {
+        if (this.params.autocompleteOnEmpty) {
+            return undefined;
+        }
+
+        return Promise.resolve([
             {
                 id: this.getUser().id,
                 name: this.getUser().get('name'),
             },
-        ];
+        ]);
     }
 }
 

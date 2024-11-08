@@ -71,6 +71,7 @@ class GlobalSearchPanel extends View {
      * @return {Promise<module:views/record/list-expanded>}
      */
     createRecordView() {
+        // noinspection JSValidateTypes
         return this.createView('list', 'views/record/list-expanded', {
             selector: '.list-container',
             collection: this.collection,
@@ -95,12 +96,12 @@ class GlobalSearchPanel extends View {
     processSizing() {
         const $window = $(window);
 
-        let windowHeight = $window.height();
-        let windowWidth = $window.width();
+        const windowHeight = $window.height();
+        const windowWidth = $window.width();
 
-        let diffHeight = this.$el.find('.panel-heading').outerHeight();
+        const diffHeight = this.$el.find('.panel-heading').outerHeight();
 
-        let cssParams = {};
+        const cssParams = {};
 
         if (windowWidth <= this.getThemeManager().getParam('screenWidthXs')) {
             cssParams.height = (windowHeight - diffHeight) + 'px';
@@ -121,7 +122,7 @@ class GlobalSearchPanel extends View {
             }
 
             if (windowHeight - this.navbarPanelBodyMaxHeight < this.navbarPanelHeightSpace) {
-                let maxHeight = windowHeight - this.navbarPanelHeightSpace;
+                const maxHeight = windowHeight - this.navbarPanelHeightSpace;
 
                 cssParams.maxHeight = maxHeight + 'px';
             }

@@ -15,7 +15,9 @@
     "customUrl": "Benutzerdefinierte URL",
     "customId": "Benutzerdefinierte ID",
     "layoutSet": "Layout-Set",
-    "authenticationProvider": "Authentifizierungsanbieter"
+    "authenticationProvider": "Authentifizierungsanbieter",
+    "authTokenLifetime": "Auth Token-Lebensdauer (Stunden)",
+    "authTokenMaxIdleTime": "Auth Token Maximale Leerlaufzeit (Stunden)"
   },
   "links": {
     "users": "Benutzer",

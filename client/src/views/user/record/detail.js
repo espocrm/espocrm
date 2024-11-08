@@ -169,6 +169,7 @@ class UserDetailRecordView extends DetailRecordView {
             'password',
             'portals',
             'portalRoles',
+            'defaultTeam',
             'contact',
             'accounts',
             'type',
@@ -320,16 +321,20 @@ class UserDetailRecordView extends DetailRecordView {
     }
 
     getGridLayout(callback) {
-        this.getHelper().layoutManager
-            .get(this.model.entityType, this.options.layoutName || this.layoutName, (simpleLayout) => {
+        const layoutName = this.options.layoutName || this.layoutName;
 
-                const layout = Espo.Utils.cloneDeep(simpleLayout);
+        this.getHelper().layoutManager.get(this.model.entityType, layoutName, simpleLayout => {
+            const layout = Espo.Utils.cloneDeep(simpleLayout);
 
-                if (!this.getUser().isPortal()) {
+            const hasTab = layout.find(it => it.tabBreak) !== undefined;
+
+            if (!this.getUser().isPortal()) {
                 layout.push({
-                    "label": "Teams and Access Control",
-                    "name": "accessControl",
-                    "rows": [
+                    label: "Teams and Access Control",
+                    name: "accessControl",
+                    tabBreak: hasTab,
+                    tabLabel: this.translate('Settings', 'scopeNames'),
+                    rows: [
                         [{"name":"type"}, {"name":"isActive"}],
                         [{"name":"teams"}, {"name":"defaultTeam"}],
                         [{"name":"roles"}, false],
@@ -378,12 +383,14 @@ class UserDetailRecordView extends DetailRecordView {
                 });
             }
 
-                const gridLayout = {
-                    type: 'record',
-                    layout: this.convertDetailLayout(layout),
-                };
+            this.detailLayout = layout;
 
-                callback(gridLayout);
+            const gridLayout = {
+                type: 'record',
+                layout: this.convertDetailLayout(layout),
+            };
+
+            callback(gridLayout);
         });
     }
 
@@ -429,7 +436,7 @@ class UserDetailRecordView extends DetailRecordView {
         this.confirm(
             this.translate('generateAndSendNewPassword', 'messages', 'User')
         ).then(() => {
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             Espo.Ajax
                 .postRequest('UserSecurity/password/generate', {id: this.model.id})

@@ -42,6 +42,8 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
             hasPost: this.hasPost,
             hasAttachments: this.hasAttachments,
             emailIconClassName: this.getMetadata().get(['clientDefs', 'Email', 'iconClass']) || '',
+            isPinned: this.isThis && this.model.get('isPinned') && this.model.collection &&
+                !this.model.collection.pinnedList,
         };
     }
 
@@ -81,8 +83,10 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
 
         this.messageData['email'] =
             $('<a>')
-                .attr('href', '#Email/view/' + data.emailId)
-                .text(data.emailName);
+                .attr('href', `#Email/view/${data.emailId}`)
+                .text(data.emailName)
+                .attr('data-scope', 'Email')
+                .attr('data-id', data.emailId);
 
         this.messageName = 'emailReceived';
 
@@ -95,8 +99,10 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
 
             this.messageData['from'] =
                 $('<a>')
-                    .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
-                    .text(data.personEntityName);
+                    .attr('href', `#${data.personEntityType}/view/${data.personEntityId}`)
+                    .text(data.personEntityName)
+                    .attr('data-scope', data.personEntityType)
+                    .attr('data-id', data.personEntityId);
         }
 
         if (

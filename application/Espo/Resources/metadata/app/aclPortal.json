@@ -66,6 +66,7 @@
                 "followEntityOnStreamPost": false,
                 "doNotFillAssignedUserIfNotRequired": false,
                 "useCustomTabList": false,
+                "addCustomTabs": false,
                 "tabList": false,
                 "emailUseExternalClient": false,
                 "assignmentNotificationsIgnoreEntityTypeList": false,
@@ -125,6 +126,7 @@
                 "read": "yes",
                 "edit": "no"
             },
+            "collaborators": false,
             "teams": false
         },
         "scopeFieldLevel": {
@@ -140,9 +142,5 @@
     "permissionsStrictDefaults": {
         "exportPermission": "no",
         "massUpdatePermission": "no"
-    },
-    "scopeLevelTypesStrictDefaults": {
-        "boolean": false,
-        "record": false
     }
 }

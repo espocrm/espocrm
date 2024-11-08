@@ -95,8 +95,7 @@ class AwsS3 implements Storage
     {
         try {
             $this->filesystem->delete($attachment->getSourceId());
-        }
-        catch (FilesystemException $e) {
+        } catch (FilesystemException $e) {
             throw new RuntimeException($e->getMessage(), 0, $e);
         }
     }
@@ -105,8 +104,7 @@ class AwsS3 implements Storage
     {
         try {
             return $this->filesystem->fileExists($attachment->getSourceId());
-        }
-        catch (FilesystemException $e) {
+        } catch (FilesystemException $e) {
             throw new RuntimeException($e->getMessage(), 0, $e);
         }
     }
@@ -115,8 +113,7 @@ class AwsS3 implements Storage
     {
         try {
             return $this->filesystem->fileSize($attachment->getSourceId());
-        }
-        catch (FilesystemException $e) {
+        } catch (FilesystemException $e) {
             throw new RuntimeException($e->getMessage(), 0, $e);
         }
     }
@@ -125,8 +122,7 @@ class AwsS3 implements Storage
     {
         try {
             $resource = $this->filesystem->readStream($attachment->getSourceId());
-        }
-        catch (FilesystemException $e) {
+        } catch (FilesystemException $e) {
             throw new RuntimeException($e->getMessage(), 0, $e);
         }
 
@@ -151,8 +147,7 @@ class AwsS3 implements Storage
 
         try {
             $this->filesystem->writeStream($attachment->getSourceId(), $resource);
-        }
-        catch (FilesystemException $e) {
+        } catch (FilesystemException $e) {
             throw new RuntimeException($e->getMessage(), 0, $e);
         }
 

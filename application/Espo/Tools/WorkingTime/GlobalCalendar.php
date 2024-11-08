@@ -29,51 +29,38 @@
 
 namespace Espo\Tools\WorkingTime;
 
+use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Config;
 use Espo\Entities\WorkingTimeCalendar;
-use Espo\Entities\WorkingTimeRange;
 use Espo\ORM\EntityManager;
-use Espo\ORM\Query\Part\Condition;
-use Espo\ORM\Query\Part\Expression;
-use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\Tools\WorkingTime\Calendar\WorkingWeekday;
 use Espo\Tools\WorkingTime\Calendar\WorkingDate;
-
 use Espo\Core\Field\Date;
 
 use DateTimeZone;
-use Espo\Tools\WorkingTime\Util\CalendarUtil;
+use Exception;
+use RuntimeException;
 
 class GlobalCalendar implements Calendar
 {
-    private EntityManager $entityManager;
-    private Config $config;
-
     private ?WorkingTimeCalendar $workingTimeCalendar = null;
-    private ?CalendarUtil $util = null;
+    private ?SpecificCalendar $specificCalendar = null;
 
-    /** @var ?array{WorkingDate[], WorkingDate[]} */
-    private ?array $cache = null;
-    private ?string $cacheKey = null;
-    private DateTimeZone $timezone;
-
-    /**
-     * @param EntityManager $entityManager
-     * @param Config $config
-     */
-    public function __construct(EntityManager $entityManager, Config $config)
-    {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-
-        $this->timezone = new DateTimeZone($config->get('timeZone'));
-
+    public function __construct(
+        private EntityManager $entityManager,
+        private Config $config,
+        private InjectableFactory $injectableFactory,
+    ) {
         $this->initDefault();
 
         if ($this->workingTimeCalendar) {
-            $this->util = new CalendarUtil($this->workingTimeCalendar);
-
-            $this->timezone = $this->workingTimeCalendar->getTimeZone() ?? $this->timezone;
+            $this->specificCalendar = $this->injectableFactory->createWithBinding(
+                SpecificCalendar::class,
+                BindingContainerBuilder::create()
+                    ->bindInstance(WorkingTimeCalendar::class, $this->workingTimeCalendar)
+                    ->build()
+            );
         }
     }
 
@@ -88,14 +75,27 @@ class GlobalCalendar implements Calendar
         $this->workingTimeCalendar = $this->entityManager->getEntityById(WorkingTimeCalendar::ENTITY_TYPE, $id);
     }
 
+    /** @noinspection PhpUnused */
     public function isAvailable(): bool
     {
-        return $this->workingTimeCalendar !== null;
+        if ($this->specificCalendar) {
+            return $this->specificCalendar->isAvailable();
+        }
+
+        return false;
     }
 
     public function getTimezone(): DateTimeZone
     {
-        return $this->timezone;
+        if ($this->specificCalendar) {
+            return $this->specificCalendar->getTimezone();
+        }
+
+        try {
+            return new DateTimeZone($this->config->get('timeZone'));
+        } catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
+        }
     }
 
     /**
@@ -103,11 +103,11 @@ class GlobalCalendar implements Calendar
      */
     public function getWorkingWeekdays(): array
     {
-        if ($this->workingTimeCalendar === null) {
-            return [];
+        if ($this->specificCalendar) {
+            return $this->specificCalendar->getWorkingWeekdays();
         }
 
-        return $this->workingTimeCalendar->getWorkingWeekdays();
+        return [];
     }
 
     /**
@@ -115,11 +115,11 @@ class GlobalCalendar implements Calendar
      */
     public function getNonWorkingDates(Date $from, Date $to): array
     {
-        if ($this->workingTimeCalendar === null) {
-            return [];
+        if ($this->specificCalendar) {
+            return $this->specificCalendar->getNonWorkingDates($from, $to);
         }
 
-        return $this->getDates($from, $to)[0];
+        return [];
     }
 
     /**
@@ -127,100 +127,10 @@ class GlobalCalendar implements Calendar
      */
     public function getWorkingDates(Date $from, Date $to): array
     {
-        if ($this->workingTimeCalendar === null) {
-            return [];
+        if ($this->specificCalendar) {
+            return $this->specificCalendar->getWorkingDates($from, $to);
         }
 
-        return $this->getDates($from, $to)[1];
-    }
-
-    /**
-     * @return array{WorkingDate[], WorkingDate[]}
-     */
-    private function getDates(Date $from, Date $to): array
-    {
-        $cacheKey = $from->toString() . '-' . $to->toString();
-
-        if ($this->cacheKey === $cacheKey) {
-            assert($this->cache !== null);
-
-            return $this->cache;
-        }
-
-        $notWorkingList = [];
-        $workingList = [];
-
-        $list = $this->fetchRanges($from, $to);
-
-        foreach ($list as $range) {
-            $dates = $this->rangeToDates($range);
-
-            if ($range->getType() === WorkingTimeRange::TYPE_NON_WORKING) {
-                $notWorkingList = array_merge($notWorkingList, $dates);
-
-                continue;
-            }
-
-            $workingList = array_merge($workingList, $dates);
-        }
-
-        $this->cacheKey = $cacheKey;
-        $this->cache = [$notWorkingList, $workingList];
-
-        return $this->cache;
-    }
-
-    /**
-     * @param WorkingTimeRange $range
-     * @return WorkingDate[]
-     */
-    private function rangeToDates(WorkingTimeRange $range): array
-    {
-        if (!$this->util) {
-            return [];
-        }
-
-        return $this->util->rangeToDates($range);
-    }
-
-    /**
-     * @return WorkingTimeRange[]
-     */
-    private function fetchRanges(Date $from, Date $to): array
-    {
-        if ($this->workingTimeCalendar === null) {
-            return [];
-        }
-
-        $list = [];
-
-        $collection = $this->entityManager
-            ->getRDBRepositoryByClass(WorkingTimeRange::class)
-            ->leftJoin('calendars')
-            ->where(
-                Condition::equal(
-                    Expression::column('calendars.id'),
-                    $this->workingTimeCalendar->getId()
-                )
-            )
-            ->where(
-                OrGroup::create(
-                    Condition::greaterOrEqual(
-                        Expression::column('dateEnd'),
-                        $from->toString()
-                    ),
-                    Condition::lessOrEqual(
-                        Expression::column('dateStart'),
-                        $to->toString()
-                    ),
-                )
-            )
-            ->find();
-
-        foreach ($collection as $entity) {
-            $list[] = $entity;
-        }
-
-        return $list;
+        return [];
     }
 }

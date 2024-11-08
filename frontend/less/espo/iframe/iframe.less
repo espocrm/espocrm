@@ -1,6 +1,6 @@
 
 body, table {
-    font-size: @font-size-base;
+    font-size: var(--font-size-base);
     font-family: @font-family-base;
     color: @text-color;
 }
@@ -15,7 +15,7 @@ body {
     }
 
     background-color: var(--panel-bg);
-    line-height: @line-height-base;
+    line-height: var(--line-height-base);
 }
 
 body {
@@ -25,12 +25,15 @@ body {
 a {
     color: @link-color;
     text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 table {
     display: table;
     border-collapse: separate;
-    border-spacing: 2px;
     border-color: #e8eced;
     border-spacing: 0;
 }
@@ -41,7 +44,7 @@ table {
 }
 
 .table-bordered {
-    border: 1px solid @default-border-color;
+    border: var(--1px) solid @default-border-color;
 }
 
 .table-bordered>thead>tr>th,
@@ -50,7 +53,7 @@ table {
 .table-bordered>thead>tr>td,
 .table-bordered>tbody>tr>td,
 .table-bordered>tfoot>tr>td {
-    border: 1px solid @default-border-color;
+    border: var(--1px) solid @default-border-color;
 }
 
 .table>thead>tr>th,
@@ -59,25 +62,23 @@ table {
 .table>thead>tr>td,
 .table>tbody>tr>td,
 .table>tfoot>tr>td {
-    padding: @table-cell-padding;
-    line-height: @line-height-base;
+    padding: var(--table-cell-padding);
+    line-height: var(--line-height-base);
     vertical-align: top;
-    border-top: 1px solid @default-border-color;
+    border-top: var(--1px) solid @default-border-color;
 }
 
 pre {
     display: block;
-    padding: ((@line-height-computed - 1) / 2);
-    margin: 0 0 (@line-height-computed / 2);
-    font-size: (@font-size-base - 1);
-    line-height: @line-height-base;
+    padding: calc((var(--line-height-computed) - var(--1px)) / 2);
+    margin: 0 0 var(--line-height-computed-half);
+    font-size: calc(var(--font-size-base) - var(--1px));
+    line-height: var(--line-height-base);
     word-break: break-all;
     word-wrap: break-word;
     color: var(--code-color);
     background-color: var(--code-bg);
-    border: 1px solid var(--code-border-color);
-
-    border-radius: @border-radius-base;
+    border: var(--1px) solid var(--code-border-color);
 
     code {
         padding: 0;

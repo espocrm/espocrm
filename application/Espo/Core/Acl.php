@@ -31,6 +31,7 @@ namespace Espo\Core;
 
 use Espo\Core\Acl\Exceptions\NotImplemented;
 use Espo\Core\Acl\GlobalRestriction;
+use Espo\Core\Acl\Permission;
 use Espo\Core\Acl\Table;
 
 use Espo\ORM\Entity;
@@ -112,9 +113,9 @@ class Acl
      * whether a scope level is set to 'enabled'.
      *
      * @param string|Entity $subject An entity type or entity.
-     * @param string|null $action Action to check. Constants are available in the `Table` class.
-     *
+     * @param Table::ACTION_*|null $action Action to check. Constants are available in the `Table` class.
      * @throws NotImplemented
+     * @noinspection PhpDocSignatureInspection
      */
     public function check($subject, ?string $action = null): bool
     {
@@ -125,7 +126,8 @@ class Acl
      * The same as `check` but does not throw NotImplemented exception.
      *
      * @param string|Entity $subject An entity type or entity.
-     * @param string|null $action Action to check. Constants are available in the `Table` class.
+     * @param Table::ACTION_*|null $action Action to check. Constants are available in the `Table` class.
+     * @noinspection PhpDocSignatureInspection
      */
     public function tryCheck($subject, ?string $action = null): bool
     {
@@ -147,7 +149,8 @@ class Acl
      * Check access to a specific entity.
      *
      * @param Entity $entity An entity to check.
-     * @param string $action Action to check. Constants are available in the `Table` class.
+     * @param Table::ACTION_* $action Action to check. Constants are available in the `Table` class.
+     * @noinspection PhpDocSignatureInspection
      */
     public function checkEntity(Entity $entity, string $action = Table::ACTION_READ): bool
     {
@@ -209,6 +212,18 @@ class Acl
     public function checkOwnershipTeam(Entity $entity): bool
     {
         return $this->aclManager->checkOwnershipTeam($this->user, $entity);
+    }
+
+    /**
+     * Check whether an entity is shared with a user.
+     *
+     * @param Table::ACTION_* $action
+     * @since 8.5.0
+     * @noinspection PhpDocSignatureInspection
+     */
+    public function checkOwnershipShared(Entity $entity, string $action): bool
+    {
+        return $this->aclManager->checkOwnershipShared($this->user, $entity, $action);
     }
 
     /**
@@ -283,7 +298,7 @@ class Acl
      *
      * @param User|string $target User entity or user ID.
      */
-    public function checkUserPermission($target, string $permissionType = 'user'): bool
+    public function checkUserPermission($target, string $permissionType = Permission::USER): bool
     {
         return $this->aclManager->checkUserPermission($this->user, $target, $permissionType);
     }

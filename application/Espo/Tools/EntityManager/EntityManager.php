@@ -367,6 +367,10 @@ class EntityManager
             throw new Error("Entity `$name` does not exist.");
         }
 
+        if (!$this->isScopeCustomizable($name)) {
+            throw new Error("Entity type $name is not customizable.");
+        }
+
         $isCustom = $this->metadata->get(['scopes', $name, 'isCustom']);
         $type = $this->metadata->get(['scopes', $name, 'type']);
 
@@ -394,6 +398,11 @@ class EntityManager
 
         if (array_key_exists('statusField', $params)) {
             $this->metadata->set('scopes', $name, ['statusField' => $params['statusField']]);
+
+            if (!$params['statusField'] && $this->metadata->get("clientDefs.$name.kanbanViewMode")) {
+                $params['kanbanViewMode'] = false;
+                $params['kanbanStatusIgnoreList'] = null;
+            }
         }
 
         if (isset($params['sortBy'])) {
@@ -504,6 +513,10 @@ class EntityManager
             throw new Forbidden;
         }
 
+        if (!$this->isScopeCustomizable($name)) {
+            throw new Error("Entity type $name is not customizable.");
+        }
+
         $normalizedName = Util::normalizeClassName($name);
 
         $type = $this->metadata->get(['scopes', $name, 'type']);
@@ -524,13 +537,13 @@ class EntityManager
         $this->metadata->delete('clientDefs', $name);
         $this->metadata->delete('recordDefs', $name);
         $this->metadata->delete('selectDefs', $name);
+        $this->metadata->delete('entityAcl', $name);
         $this->metadata->delete('scopes', $name);
 
         foreach ($this->metadata->get(['entityDefs', $name, 'links'], []) as $link => $item) {
             try {
                 $this->linkManager->delete(['entity' => $name, 'link' => $link]);
-            }
-            catch (Exception) {}
+            } catch (Exception) {}
         }
 
         $this->fileManager->removeFile("custom/Espo/Custom/Resources/metadata/entityDefs/$name.json");
@@ -569,8 +582,7 @@ class EntityManager
 
             $this->baseLanguage->delete('Global', 'scopeNames', $name);
             $this->baseLanguage->delete('Global', 'scopeNamesPlural', $name);
-        }
-        catch (Exception) {}
+        } catch (Exception) {}
 
         $this->metadata->save();
         $this->language->save();
@@ -623,6 +635,10 @@ class EntityManager
      */
     public function setFormulaData(string $scope, array $data): void
     {
+        if (!$this->isScopeCustomizableFormula($scope)) {
+            throw new Error("Entity type $scope is not customizable.");
+        }
+
         $this->metadata->set('formula', $scope, $data);
         $this->metadata->save();
 
@@ -689,6 +705,7 @@ class EntityManager
             'iconClass',
             'statusField',
             'kanbanViewMode',
+            'color',
         ]);
 
         $this->metadata->delete('entityDefs', $name, [
@@ -768,8 +785,7 @@ class EntityManager
             // @todo Remove.
             /** @var array<string, array<string, mixed>> $params */
             $params = array_merge($map1, $map2, $map3);
-        }
-        else {
+        } else {
             /** @var array<string, array<string, mixed>> $params */
             $params = [...$map1, ...$map2, ...$map3];
         }
@@ -800,5 +816,31 @@ class EntityManager
     {
         $this->metadata->delete('formula', $scope, $type);
         $this->metadata->save();
+    }
+
+    private function isScopeCustomizable(string $scope): bool
+    {
+        if (!$this->metadata->get("scopes.$scope.customizable")) {
+            return false;
+        }
+
+        if ($this->metadata->get("scopes.$scope.entityManager.edit") === false) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function isScopeCustomizableFormula(string $scope): bool
+    {
+        if (!$this->metadata->get("scopes.$scope.customizable")) {
+            return false;
+        }
+
+        if ($this->metadata->get("scopes.$scope.entityManager.formula") === false) {
+            return false;
+        }
+
+        return true;
     }
 }

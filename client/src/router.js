@@ -420,10 +420,12 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
      *     isReturn?: boolean,
      * }} [options] Options.
      */
-    navigate: function (fragment, options) {
-        this.history.push(fragment);
+    navigate: function (fragment, options = {}) {
+        if (!options.trigger) {
+            this.history.push(fragment);
+        }
 
-        if (options && options.isReturn) {
+        if (options.isReturn) {
             this._isReturn = true;
         }
 
@@ -438,12 +440,9 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
     navigateBack: function (options) {
         let url;
 
-        if (this.history.length > 1) {
-            url = this.history[this.history.length - 2];
-        }
-        else {
-            url = this.history[0];
-        }
+        url = this.history.length > 1 ?
+            this.history[this.history.length - 2] :
+            this.history[0];
 
         this.navigate(url, options);
     },
@@ -641,8 +640,7 @@ if (isIOS9UIWebView()) {
                 function wait() {
                     if (oldHash === location.hash) {
                         window.setTimeout(wait, 50);
-                    }
-                    else {
+                    } else {
                         runCallback();
                     }
                 }
@@ -685,8 +683,7 @@ if (isIOS9UIWebView()) {
 
         if (this._hasPushState) {
             this.history[options.replace ? 'replaceState' : 'pushState']({}, document.title, url);
-        }
-        else if (this._wantsHashChange) {
+        } else if (this._wantsHashChange) {
             this._updateHash(this.location, fragment, options.replace);
 
             if (
@@ -699,8 +696,7 @@ if (isIOS9UIWebView()) {
 
                 this._updateHash(this.iframe.location, fragment, options.replace);
             }
-        }
-        else {
+        } else {
             return this.location.assign(url);
         }
 

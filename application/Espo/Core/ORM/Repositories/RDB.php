@@ -37,6 +37,7 @@ use Espo\Core\HookManager;
 use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\SystemUser;
+use Espo\ORM\Relation\RelationsMap;
 
 /**
  * @deprecated As of v6.0. Not to be extended. Extend Espo\Core\Repositories\Database, or better
@@ -97,7 +98,8 @@ class RDB extends \Espo\Core\Repositories\Database implements Injectable /** @ph
         HookManager $hookManager,
         ApplicationState $applicationState,
         RecordIdGenerator $recordIdGenerator,
-        SystemUser $systemUser
+        SystemUser $systemUser,
+        ?RelationsMap $relationsMap,
     ) {
         parent::__construct(
             $entityType,
@@ -107,7 +109,8 @@ class RDB extends \Espo\Core\Repositories\Database implements Injectable /** @ph
             $hookManager,
             $applicationState,
             $recordIdGenerator,
-            $systemUser
+            $systemUser,
+            $relationsMap
         );
 
         $this->init();

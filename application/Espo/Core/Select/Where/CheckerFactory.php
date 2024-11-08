@@ -48,8 +48,7 @@ class CheckerFactory
             $acl = $this->userAclManagerProvider
                 ->get($user)
                 ->createUserAcl($user);
-        }
-        catch (NotAvailable $e) {
+        } catch (NotAvailable $e) {
             throw new RuntimeException($e->getMessage());
         }
 

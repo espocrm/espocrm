@@ -61,8 +61,7 @@ class Service
             $this->parser->parse($expression);
 
             $result = SyntaxCheckResult::createSuccess();
-        }
-        catch (SyntaxError $e) {
+        }  catch (SyntaxError $e) {
             return SyntaxCheckResult::createError($e);
         }
 
@@ -94,8 +93,7 @@ class Service
 
         try {
             $this->manager->run($expression, $target, $variables);
-        }
-        catch (Error $e) {
+        } catch (Error $e) {
             $output = $variables->__output ?? null;
 
             return RunResult::createError($e, $output);

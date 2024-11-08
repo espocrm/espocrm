@@ -49,14 +49,11 @@ class Valid implements Validator
     {
         if ($field === 'to') {
             $addresses = $entity->getToAddressList();
-        }
-        else if ($field === 'cc') {
+        } else if ($field === 'cc') {
             $addresses = $entity->getCcAddressList();
-        }
-        else if ($field === 'bcc') {
+        } else if ($field === 'bcc') {
             $addresses = $entity->getBccAddressList();
-        }
-        else {
+        } else {
             throw new LogicException();
         }
 

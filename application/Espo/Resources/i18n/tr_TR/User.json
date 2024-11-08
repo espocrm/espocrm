@@ -17,9 +17,9 @@
     "newPassword": "Yeni Şifre",
     "newPasswordConfirm": "Yeni şifreyi Doğrula",
     "avatar": "Foto",
-    "isActive": "Aktif",
+    "isActive": "Etkin mi?",
     "isPortalUser": "Portal kullanıcısı mı",
-    "contact": "İletişim",
+    "contact": "Kişi",
     "accounts": "Hesaplar",
     "account": "Hesap (Birincil)",
     "sendAccessInfo": "Kullanıcıya Erişim Bilgisiyle Eposta Gönder",
@@ -34,7 +34,9 @@
     "authMethod": "Kimlik Doğrulama Yöntemi",
     "yourPassword": "Geçerli şifreniz",
     "dashboardTemplate": "Pano Şablonu",
+    "auth2FAEnable": "2 Taraflı Kimlik Doğrulamayı Etkinleştir",
     "auth2FAMethod": "2FA Yöntemi",
+    "workingTimeCalendar": "Çalışma Süresi Takvimi",
     "layoutSet": "Düzen Kümesi"
   },
   "links": {
@@ -49,18 +51,19 @@
     "tasks": "Görevler",
     "defaultTeam": "Varsayılan Takım",
     "dashboardTemplate": "Pano Şablonu",
+    "workingTimeCalendar": "Çalışma Süresi Takvimi",
     "layoutSet": "Düzen Kümesi"
   },
   "labels": {
     "Create User": "Kullanıcı Oluştur",
-    "Generate": "Üretmek",
+    "Generate": "Oluştur",
     "Access": "Erişim",
     "Preferences": "Seçenekler",
     "Change Password": "Şifreyi Değiştir",
     "Teams and Access Control": "Takımlar ve Erişim Kontrolü",
     "Forgot Password?": "Şifremi unuttum?",
     "Password Change Request": "Şifre Değiştirme İsteği",
-    "Email Address": "Email Adresi",
+    "Email Address": "Eposta Adresi",
     "External Accounts": "Harici Hesaplar",
     "Email Accounts": "Eposta hesapları",
     "Portal": "Internet anakapısı",
@@ -86,19 +89,21 @@
     "layoutSet": "Kullanıcı için varsayılanlar yerine belirli bir kümedeki düzenler uygulanacaktır."
   },
   "messages": {
-    "passwordWillBeSent": "Şifre kullanıcının email adresine gönderilecektir.",
+    "passwordWillBeSent": "Şifre kullanıcının eposta adresine gönderilecektir.",
     "passwordChanged": "Şifre değiştirildi",
     "userCantBeEmpty": "Kullanıcı adı boş olamaz.",
     "wrongUsernamePassword": "Yanlış kullanıcı adı/şifre",
-    "emailAddressCantBeEmpty": "Email Adresi boş olamaz",
-    "userNameEmailAddressNotFound": "Kullanıcı adı/email adresi bulunamadı",
+    "emailAddressCantBeEmpty": "Eposta Adresi boş olamaz",
+    "userNameEmailAddressNotFound": "Kullanıcı adı/eposta adresi bulunamadı",
     "forbidden": "Yasaklı, lütfen daha sonra deneyin",
-    "uniqueLinkHasBeenSent": "Özel URL belirtilen email adresine gönderilmiştir.",
+    "uniqueLinkHasBeenSent": "Özel URL belirtilen eposta adresine gönderilmiştir.",
     "passwordChangedByRequest": "Şifre değiştirildi.",
     "userNameExists": "Kullanıcı adı zaten var",
     "passwordStrengthLength": "En az {length} karakter uzunluğunda olmalıdır.",
     "passwordStrengthLetterCount": "En az {count} harf(ler) içermelidir.",
     "passwordStrengthNumberCount": "En az {count} basamak içermelidir.",
+    "auth2FARequiredHeader": "2 taraflı Kimlik Doğrulaması gerekiyor",
+    "auth2FARequired": "2 taraflı Kimlik Doğrulaması gerekiyor. Cep telefonunuzda bir kimlik doğrulama uygulaması kullanın (ör. Google Authenticator).",
     "2faMethodNotConfigured": "2FA yöntemi sistemde tam olarak yapılandırılmamıştır.",
     "loginError": "Hata oluştu"
   },
@@ -106,8 +111,9 @@
     "onlyMyTeam": "Yalnızca Ekibim"
   },
   "presetFilters": {
-    "active": "Aktif",
-    "activePortal": "Portal Aktif"
+    "active": "Etkin",
+    "activePortal": "Portal Etkin",
+    "activeApi": "API Etkin"
   },
   "options": {
     "gender": {

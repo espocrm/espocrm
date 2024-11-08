@@ -110,15 +110,18 @@ class RDBSelectBuilder
      */
     public function findOne(?array $params = null): ?Entity
     {
-        $builder = $this;
+        $cloned = $this->repository->clone($this->builder->build());
 
         if ($params !== null) { // @todo Remove.
             $query = $this->getMergedParams($params);
 
-            $builder = $this->repository->clone($query);
+            $cloned = $this->repository->clone($query);
         }
 
-        $collection = $builder->sth()->limit(0, 1)->find();
+        $collection = $cloned
+            ->sth()
+            ->limit(0, 1)
+            ->find();
 
         foreach ($collection as $entity) {
             return $entity;

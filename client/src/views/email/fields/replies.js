@@ -26,33 +26,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/replies', ['views/fields/link-multiple'], function (Dep) {
+import LinkMultipleFieldView from 'views/fields/link-multiple';
 
-    return Dep.extend({
+export default class extends LinkMultipleFieldView {
 
-        getAttributeList: function () {
-            let attributeList = Dep.prototype.getAttributeList.call(this);
+    getAttributeList() {
+        const attributeList = super.getAttributeList();
 
-            attributeList.push(this.name + 'Columns');
+        attributeList.push(this.name + 'Columns');
 
-            return attributeList;
-        },
+        return attributeList;
+    }
 
-        getDetailLinkHtml: function (id) {
-            let html = Dep.prototype.getDetailLinkHtml.call(this, id);
+    getDetailLinkHtml(id) {
+        const html = super.getDetailLinkHtml(id);
 
-            let columns = this.model.get(this.name + 'Columns') || {};
+        const columns = this.model.get(this.name + 'Columns') || {};
 
-            let status = (columns[id] || {})['status'];
+        const status = (columns[id] || {})['status'];
 
-            return $('<div>')
-                .append(
-                    $('<span>')
-                        .addClass('fas fa-arrow-right fa-sm link-multiple-item-icon')
-                        .addClass(status === 'Draft' ? 'text-warning' : 'text-success')
-                )
-                .append(html)
-                .html();
-        },
-    });
-});
+        return $('<div>')
+            .append(
+                $('<span>')
+                    .addClass('fas fa-arrow-right fa-sm link-multiple-item-icon')
+                    .addClass(status === 'Draft' ? 'text-warning' : 'text-success')
+            )
+            .append(html)
+            .html();
+    }
+}

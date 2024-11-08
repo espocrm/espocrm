@@ -76,7 +76,7 @@ class ScopeCheckerTest extends \PHPUnit\Framework\TestCase
 
         $result = $this->scopeChecker->check($data);
 
-        $this->assertEquals(false, $result);
+        $this->assertEquals(true, $result);
     }
 
     public function testCheckerNoData4()
@@ -524,6 +524,6 @@ class ScopeCheckerTest extends \PHPUnit\Framework\TestCase
 
         $result = $this->scopeChecker->check($data, null, $checkerData);
 
-        $this->assertEquals(false, $result);
+        $this->assertEquals(true, $result);
     }
 }

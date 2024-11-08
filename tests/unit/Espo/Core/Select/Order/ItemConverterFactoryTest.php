@@ -92,8 +92,7 @@ class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
                     [['entityDefs', $entityType, 'fields', $field, 'type'], null, $type],
                     [['app', 'select', 'orderItemConverterClassNameMap', $type], null, $className2],
                 ]);
-        }
-        else {
+        } else {
             $this->metadata
                 ->expects($this->any())
                 ->method('get')

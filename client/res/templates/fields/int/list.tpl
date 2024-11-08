@@ -1,1 +1,1 @@
-{{#if isNotEmpty}}<span title="{{value}}">{{value}}</span>{{/if}}
+{{#if isNotEmpty}}<span title="{{value}}" class="numeric-text">{{value}}</span>{{/if}}

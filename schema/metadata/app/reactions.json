@@ -1,0 +1,31 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/reactions.json",
+    "title": "app/language",
+    "description": "Reactions.",
+    "type": "object",
+    "properties": {
+        "list": {
+            "type": "array",
+            "description": "A list of available reactions.",
+            "items": {
+                "type": "object",
+                "required": [
+                    "type",
+                    "iconClass"
+                ],
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "description": "A type."
+                    },
+                    "iconClass": {
+                        "type": "string",
+                        "description": "A CSS class for an icon."
+                    }
+                }
+            }
+        }
+    }
+}

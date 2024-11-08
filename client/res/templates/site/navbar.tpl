@@ -7,7 +7,7 @@
             ><a
                 class="navbar-brand nav-link"
                 href="#"
-            ><img src="{{logoSrc}}" class="logo" alt="logo"></span></a></div>
+            ><img src="{{logoSrc}}" class="logo" alt="logo"></a></div>
         <a role="button" class="side-menu-button"><span class="fas fa-bars"></span></a>
     </div>
 
@@ -47,7 +47,7 @@
                     {{#if html}}{{{html}}}{{/if}}
 
                     {{#if isGroup}}
-                    <span class="fas fa-caret-right group-caret"><span>
+                    <span class="fas fa-caret-right group-caret"></span>
                     {{/if}}
                 </a>
                 {{/unless}}
@@ -132,7 +132,7 @@
                             {{#if html}}{{{html}}}{{/if}}
 
                             {{#if isGroup}}
-                            <span class="fas fa-caret-right group-caret"><span>
+                            <span class="fas fa-caret-right group-caret"></span>
                             {{/if}}
                         </a>
                         {{/unless}}
@@ -179,15 +179,9 @@
         </ul>
         <div class="navbar-right-container">
         <ul class="nav navbar-nav navbar-right">
-            <li class="nav navbar-nav navbar-form global-search-container">
-                {{{globalSearch}}}
-            </li>
             {{#each itemDataList}}
                 <li class="{{class}}" data-item="{{name}}">{{{var key ../this}}}</li>
             {{/each}}
-            <li class="dropdown notifications-badge-container">
-                {{{notificationsBadge}}}
-            </li>
             <li class="dropdown menu-container">
                 <a
                     id="nav-menu-dropdown"
@@ -201,11 +195,11 @@
                     {{#each menuDataList}}
                         {{#unless divider}}
                             <li><a
-                                    {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
-                                    tabindex="0"
-                                    class="nav-link{{#if action}} action{{/if}}"{{#if action}}
-                                    data-action="{{action}}"{{/if}}
-                                >{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</a></li>
+                                {{#if name}}data-name="{{name}}"{{/if}}
+                                {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+                                tabindex="0"
+                                class="nav-link{{#if handler}} action{{/if}}"
+                            >{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</a></li>
                         {{else}}
                             <li class="divider"></li>
                         {{/unless}}

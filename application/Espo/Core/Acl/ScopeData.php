@@ -170,11 +170,9 @@ class ScopeData
                     throw new RuntimeException("Bad raw scope data.");
                 }
             }
-        }
-        else if (is_bool($raw)) {
+        } else if (is_bool($raw)) {
             $obj->isBoolean = true;
-        }
-        else {
+        } else {
             throw new InvalidArgumentException();
         }
 

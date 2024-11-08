@@ -29,7 +29,10 @@
 
 namespace Espo\Classes\Jobs;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Job\Job\Status as JobStatus;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Entities\ActionHistoryRecord;
@@ -44,6 +47,8 @@ use Espo\Entities\Notification;
 use Espo\Entities\ScheduledJob;
 use Espo\Entities\ScheduledJobLogRecord;
 use Espo\Entities\UniqueId;
+use Espo\Entities\UserReaction;
+use Espo\ORM\Query\DeleteBuilder;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\InjectableFactory;
@@ -57,6 +62,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
 use DateTime;
+use RuntimeException;
 use SplFileInfo;
 use Exception;
 use Throwable;
@@ -69,38 +75,20 @@ class Cleanup implements JobDataLess
     private string $cleanupAuthLogPeriod = '2 months';
     private string $cleanupNotificationsPeriod = '2 months';
     private string $cleanupAttachmentsPeriod = '15 days';
-    private string $cleanupAttachmentsFromPeriod = '3 months';
+    private string $cleanupAttachmentsFromPeriod = '6 months';
     private string $cleanupBackupPeriod = '2 month';
-    private string $cleanupDeletedRecordsPeriod = '3 months';
-
-    private Config $config;
-    private EntityManager $entityManager;
-    private Metadata $metadata;
-    private FileManager $fileManager;
-    private InjectableFactory $injectableFactory;
-    private SelectBuilderFactory $selectBuilderFactory;
-    private ServiceContainer $recordServiceContainer;
-    private Log $log;
+    private string $cleanupDeletedRecordsPeriod = '2 months';
 
     public function __construct(
-        Config $config,
-        EntityManager $entityManager,
-        Metadata $metadata,
-        FileManager $fileManager,
-        InjectableFactory $injectableFactory,
-        SelectBuilderFactory $selectBuilderFactory,
-        ServiceContainer $recordServiceContainer,
-        Log $log
-    ) {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->metadata = $metadata;
-        $this->fileManager = $fileManager;
-        $this->injectableFactory = $injectableFactory;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-        $this->recordServiceContainer = $recordServiceContainer;
-        $this->log = $log;
-    }
+        private Config $config,
+        private EntityManager $entityManager,
+        private Metadata $metadata,
+        private FileManager $fileManager,
+        private InjectableFactory $injectableFactory,
+        private SelectBuilderFactory $selectBuilderFactory,
+        private ServiceContainer $recordServiceContainer,
+        private Log $log
+    ) {}
 
     public function run(): void
     {
@@ -135,9 +123,8 @@ class Cleanup implements JobDataLess
                 $obj = $injectableFactory->create($className);
 
                 $obj->process();
-            }
-            catch (Throwable $e) {
-                $this->log->error("Cleanup: {$name}: " . $e->getMessage());
+            } catch (Throwable $e) {
+                $this->log->error("Cleanup: $name: " . $e->getMessage());
             }
         }
     }
@@ -183,14 +170,16 @@ class Cleanup implements JobDataLess
 
     private function cleanupScheduledJobLog(): void
     {
+        /** @var iterable<ScheduledJobLogRecord> $scheduledJobList */
         $scheduledJobList = $this->entityManager
             ->getRDBRepository(ScheduledJob::ENTITY_TYPE)
             ->select(['id'])
             ->find();
 
         foreach ($scheduledJobList as $scheduledJob) {
-            $scheduledJobId = $scheduledJob->get('id');
+            $scheduledJobId = $scheduledJob->getId();
 
+            /** @var iterable<ScheduledJobLogRecord> $ignoreLogRecordList */
             $ignoreLogRecordList = $this->entityManager
                 ->getRDBRepository(ScheduledJobLogRecord::ENTITY_TYPE)
                 ->select(['id'])
@@ -212,7 +201,7 @@ class Cleanup implements JobDataLess
             $ignoreIdList = [];
 
             foreach ($ignoreLogRecordList as $logRecord) {
-                $ignoreIdList[] = $logRecord->get('id');
+                $ignoreIdList[] = $logRecord->getId();
             }
 
             $delete = $this->entityManager
@@ -234,9 +223,7 @@ class Cleanup implements JobDataLess
     {
         $period = '-' . $this->config->get('cleanupActionHistoryPeriod', $this->cleanupActionHistoryPeriod);
 
-        $datetime = new DateTime();
-
-        $datetime->modify($period);
+        $datetime = $this->createDateTimeFromPeriod($period);
 
         $delete = $this->entityManager
             ->getQueryBuilder()
@@ -254,8 +241,7 @@ class Cleanup implements JobDataLess
     {
         $period = '-' . $this->config->get('cleanupAuthTokenPeriod', $this->cleanupAuthTokenPeriod);
 
-        $datetime = new DateTime();
-        $datetime->modify($period);
+        $datetime = $this->createDateTimeFromPeriod($period);
 
         $delete = $this->entityManager
             ->getQueryBuilder()
@@ -274,9 +260,7 @@ class Cleanup implements JobDataLess
     {
         $period = '-' . $this->config->get('cleanupAuthLogPeriod', $this->cleanupAuthLogPeriod);
 
-        $datetime = new DateTime();
-
-        $datetime->modify($period);
+        $datetime = $this->createDateTimeFromPeriod($period);
 
         $delete = $this->entityManager
             ->getQueryBuilder()
@@ -294,8 +278,7 @@ class Cleanup implements JobDataLess
     {
         $period = '-' . $this->config->get('cleanupJobPeriod', $this->cleanupJobPeriod);
 
-        $datetime = new DateTime();
-        $datetime->modify($period);
+        $datetime = $this->createDateTimeFromPeriod($period);
 
         return $datetime->format(DateTimeUtil::SYSTEM_DATE_FORMAT);
     }
@@ -304,9 +287,7 @@ class Cleanup implements JobDataLess
     {
         $period = '-' . $this->config->get('cleanupAttachmentsPeriod', $this->cleanupAttachmentsPeriod);
 
-        $datetime = new DateTime();
-
-        $datetime->modify($period);
+        $datetime = $this->createDateTimeFromPeriod($period);
 
         $collection = $this->entityManager
             ->getRDBRepository(Attachment::ENTITY_TYPE)
@@ -331,11 +312,15 @@ class Cleanup implements JobDataLess
         }
 
         if ($this->config->get('cleanupOrphanAttachments')) {
-            $orphanQueryBuilder = $this->selectBuilderFactory
-                ->create()
-                ->from(Attachment::ENTITY_TYPE)
-                ->withPrimaryFilter('orphan')
-                ->buildQueryBuilder();
+            try {
+                $orphanQueryBuilder = $this->selectBuilderFactory
+                    ->create()
+                    ->from(Attachment::ENTITY_TYPE)
+                    ->withPrimaryFilter('orphan')
+                    ->buildQueryBuilder();
+            } catch (BadRequest|Forbidden $e) {
+                throw new RuntimeException('', 0, $e);
+            }
 
             $orphanQueryBuilder->where([
                 'createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
@@ -356,9 +341,7 @@ class Cleanup implements JobDataLess
 
         $fromPeriod = '-' . $this->config->get('cleanupAttachmentsFromPeriod', $this->cleanupAttachmentsFromPeriod);
 
-        $datetimeFrom = new DateTime();
-
-        $datetimeFrom->modify($fromPeriod);
+        $datetimeFrom = $this->createDateTimeFromPeriod($fromPeriod);
 
         /** @var string[] $scopeList */
         $scopeList = array_keys($this->metadata->get(['scopes']));
@@ -378,7 +361,7 @@ class Cleanup implements JobDataLess
 
             $hasAttachmentField = false;
 
-            if ($scope === 'Note') {
+            if ($scope === Note::ENTITY_TYPE) {
                 $hasAttachmentField = true;
             }
 
@@ -388,7 +371,13 @@ class Cleanup implements JobDataLess
                         continue;
                     }
 
-                    if (in_array($defs['type'], ['file', 'image', 'attachmentMultiple'])) {
+                    if (
+                        in_array($defs['type'], [
+                            FieldType::FILE,
+                            FieldType::IMAGE,
+                            FieldType::ATTACHMENT_MULTIPLE,
+                        ])
+                    ) {
                         $hasAttachmentField = true;
 
                         break;
@@ -492,7 +481,8 @@ class Cleanup implements JobDataLess
             ->withDeleted()
             ->build();
 
-        $emailList = $this->entityManager
+        /** @var iterable<Email> $emails */
+        $emails = $this->entityManager
             ->getRDBRepository(Email::ENTITY_TYPE)
             ->clone($query)
             ->sth()
@@ -503,8 +493,8 @@ class Cleanup implements JobDataLess
             ])
             ->find();
 
-        foreach ($emailList as $email) {
-            $id = $email->get('id');
+        foreach ($emails as $email) {
+            $id = $email->getId();
 
             $attachments = $this->entityManager
                 ->getRDBRepository(Attachment::ENTITY_TYPE)
@@ -547,21 +537,19 @@ class Cleanup implements JobDataLess
     {
         $period = '-' . $this->config->get('cleanupNotificationsPeriod', $this->cleanupNotificationsPeriod);
 
-        $datetime = new DateTime();
-        $datetime->modify($period);
+        $datetime = $this->createDateTimeFromPeriod($period);
 
-        $notificationList = $this->entityManager
+        /** @var iterable<Notification> $notifications */
+        $notifications = $this->entityManager
             ->getRDBRepository(Notification::ENTITY_TYPE)
             ->sth()
-            ->where([
-                'DATE:createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-            ])
+            ->where(['DATE:createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_FORMAT)])
             ->find();
 
-        foreach ($notificationList as $notification) {
+        foreach ($notifications as $notification) {
             $this->entityManager
                 ->getRDBRepository(Notification::ENTITY_TYPE)
-                ->deleteFromDb($notification->get('id'));
+                ->deleteFromDb($notification->getId());
         }
     }
 
@@ -569,7 +557,7 @@ class Cleanup implements JobDataLess
     {
         $path = 'data/.backup/upgrades';
 
-        $datetime = new DateTime('-' . $this->cleanupBackupPeriod);
+        $datetime = $this->createDateTimeFromPeriod('-' . $this->cleanupBackupPeriod);
 
         $fileManager = $this->fileManager;
 
@@ -651,8 +639,7 @@ class Cleanup implements JobDataLess
                     ->build();
 
                 $this->entityManager->getQueryExecutor()->execute($delete);
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 $this->log->error("Cleanup: " . $e->getMessage());
             }
         }
@@ -705,6 +692,18 @@ class Cleanup implements JobDataLess
                     ->getRDBRepository(Attachment::ENTITY_TYPE)
                     ->deleteFromDb($attachment->getId());
             }
+
+            // @todo If ever reactions are supported not only for notes, then move out of the if-block.
+
+            $deleteReactionsQuery = DeleteBuilder::create()
+                ->from(UserReaction::ENTITY_TYPE)
+                ->where([
+                    'parentId' => $entity->getId(),
+                    'parentType' => Note::ENTITY_TYPE,
+                ])
+                ->build();
+
+            $this->entityManager->getQueryExecutor()->execute($deleteReactionsQuery);
         }
 
         $arrayValueList = $this->entityManager
@@ -731,7 +730,7 @@ class Cleanup implements JobDataLess
 
         $period = '-' . $this->config->get('cleanupDeletedRecordsPeriod', $this->cleanupDeletedRecordsPeriod);
 
-        $datetime = new DateTime($period);
+        $datetime = $this->createDateTimeFromPeriod($period);
 
         /** @var string[] $scopeList */
         $scopeList = array_keys($this->metadata->get(['scopes']));
@@ -757,9 +756,7 @@ class Cleanup implements JobDataLess
 
             $service = $this->recordServiceContainer->get($scope);
 
-            $whereClause = [
-                'deleted' => true,
-            ];
+            $whereClause = ['deleted' => true];
 
             if (
                 !$this->entityManager
@@ -772,8 +769,7 @@ class Cleanup implements JobDataLess
 
             if ($this->metadata->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) {
                 $whereClause['modifiedAt<'] = $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
-            }
-            else if ($this->metadata->get(['entityDefs', $scope, 'fields', 'createdAt'])) {
+            } else if ($this->metadata->get(['entityDefs', $scope, 'fields', 'createdAt'])) {
                 $whereClause['createdAt<'] = $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
             }
 
@@ -794,14 +790,27 @@ class Cleanup implements JobDataLess
                 if (method_exists($service, 'cleanup')) {
                     try {
                         $service->cleanup($entity->getId());
-                    }
-                    catch (Throwable $e) {
-                        $this->log->error("Cleanup job: Cleanup scope {$scope}: " . $e->getMessage());
+                    } catch (Throwable $e) {
+                        $this->log
+                            ->error("Cleanup job: Cleanup scope $scope: " . $e->getMessage(), ['exception' => $e]);
                     }
                 }
 
                 $this->cleanupDeletedEntity($entity);
             }
         }
+    }
+
+    private function createDateTimeFromPeriod(string $period): DateTime
+    {
+        $datetime = new DateTime();
+
+        try {
+            $datetime->modify($period);
+        } catch (Exception $e) { /** @phpstan-ignore-line */
+            throw new RuntimeException($e->getMessage(), 0, $e);
+        }
+
+        return $datetime;
     }
 }

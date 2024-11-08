@@ -31,6 +31,7 @@ namespace Espo\Tools\App;
 
 use Espo\Core\Acl;
 use Espo\Core\Utils\Metadata as MetadataUtil;
+use Espo\Core\Utils\Util;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Reminder;
 use Espo\Tools\App\Metadata\AclDependencyProvider;
@@ -252,16 +253,21 @@ class MetadataService
                         $k = $row[$j];
 
                         unset($o->$k);
-                    }
-                    else {
+                    } else {
                         break;
                     }
                 }
-            }
-            else {
+            } else {
                 $p = &$p->$item;
                 $path[] = &$p;
             }
         }
+    }
+
+    public function getDataForFrontendByKey(?string $key): mixed
+    {
+        $data = $this->getDataForFrontend();
+
+        return Util::getValueByKey($data, $key);
     }
 }

@@ -26,122 +26,159 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/fields/password', ['views/fields/password'], function (Dep) {
+import PasswordFieldView from 'views/fields/password';
 
-    return Dep.extend({
+class UserPasswordFieldView extends PasswordFieldView {
 
-        validations: ['required', 'strength', 'confirm'],
+    validations = [
+        'required',
+        'strength',
+        'confirm',
+    ]
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+    init() {
+        const tooltipItemList = [];
 
-        init: function () {
-            var tooltipItemList = [];
+        this.strengthParams = this.options.strengthParams || {
+            passwordStrengthLength: this.getConfig().get('passwordStrengthLength'),
+            passwordStrengthLetterCount: this.getConfig().get('passwordStrengthLetterCount'),
+            passwordStrengthNumberCount: this.getConfig().get('passwordStrengthNumberCount'),
+            passwordStrengthBothCases: this.getConfig().get('passwordStrengthBothCases'),
+        };
 
-            this.strengthParams = this.options.strengthParams || {
-                passwordStrengthLength: this.getConfig().get('passwordStrengthLength'),
-                passwordStrengthLetterCount: this.getConfig().get('passwordStrengthLetterCount'),
-                passwordStrengthNumberCount: this.getConfig().get('passwordStrengthNumberCount'),
-                passwordStrengthBothCases: this.getConfig().get('passwordStrengthBothCases'),
-            };
+        const minLength = this.strengthParams.passwordStrengthLength;
 
-            var minLength = this.strengthParams.passwordStrengthLength;
-            if (minLength) {
-                tooltipItemList.push(
-                    '* ' + this.translate('passwordStrengthLength', 'messages', 'User').replace('{length}', minLength.toString())
-                );
+        if (minLength) {
+            tooltipItemList.push(
+                '* ' + this.translate('passwordStrengthLength', 'messages', 'User')
+                    .replace('{length}', minLength.toString())
+            );
+        }
+
+        const requiredLetterCount = this.strengthParams.passwordStrengthLetterCount;
+
+        if (requiredLetterCount) {
+            tooltipItemList.push(
+                '* ' + this.translate('passwordStrengthLetterCount', 'messages', 'User')
+                    .replace('{count}', requiredLetterCount.toString())
+            );
+        }
+
+        const requiredNumberCount = this.strengthParams.passwordStrengthNumberCount;
+
+        if (requiredNumberCount) {
+            tooltipItemList.push(
+                '* ' + this.translate('passwordStrengthNumberCount', 'messages', 'User')
+                    .replace('{count}', requiredNumberCount.toString())
+            );
+        }
+
+        const bothCases = this.strengthParams.passwordStrengthBothCases;
+
+        if (bothCases) {
+            tooltipItemList.push(
+                '* ' + this.translate('passwordStrengthBothCases', 'messages', 'User')
+            );
+        }
+
+        if (tooltipItemList.length) {
+            this.tooltip = true;
+            this.tooltipText = this.translate('Requirements', 'labels', 'User') + ':\n' + tooltipItemList.join('\n');
+        }
+
+        super.init();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    validateStrength() {
+        if (!this.model.get(this.name)) {
+            return;
+        }
+
+        const password = this.model.get(this.name);
+        const minLength = this.strengthParams.passwordStrengthLength;
+
+        if (minLength) {
+            if (password.length < minLength) {
+                const msg = this.translate('passwordStrengthLength', 'messages', 'User')
+                    .replace('{length}', minLength.toString());
+
+                this.showValidationMessage(msg);
+
+                return true;
             }
+        }
 
-            var requiredLetterCount = this.strengthParams.passwordStrengthLetterCount;
-            if (requiredLetterCount) {
-                tooltipItemList.push(
-                    '* ' + this.translate('passwordStrengthLetterCount', 'messages', 'User').replace('{count}', requiredLetterCount.toString())
-                );
-            }
+        const requiredLetterCount = this.strengthParams.passwordStrengthLetterCount;
 
-            var requiredNumberCount = this.strengthParams.passwordStrengthNumberCount;
-            if (requiredNumberCount) {
-                tooltipItemList.push(
-                    '* ' + this.translate('passwordStrengthNumberCount', 'messages', 'User').replace('{count}', requiredNumberCount.toString())
-                );
-            }
+        if (requiredLetterCount) {
+            let letterCount = 0;
 
-            var bothCases = this.strengthParams.passwordStrengthBothCases;
-            if (bothCases) {
-                tooltipItemList.push(
-                    '* ' + this.translate('passwordStrengthBothCases', 'messages', 'User')
-                );
-            }
-
-            if (tooltipItemList.length) {
-                this.tooltip = true;
-                this.tooltipText = this.translate('Requirements', 'labels', 'User') + ':\n' + tooltipItemList.join('\n');
-            }
-
-            Dep.prototype.init.call(this);
-        },
-
-        validateStrength: function () {
-            if (!this.model.get(this.name)) return;
-
-            var password = this.model.get(this.name);
-
-            var minLength = this.strengthParams.passwordStrengthLength;
-            if (minLength) {
-                if (password.length < minLength) {
-                    var msg = this.translate('passwordStrengthLength', 'messages', 'User').replace('{length}', minLength.toString());
-                    this.showValidationMessage(msg);
-                    return true;;
+            password.split('').forEach(c => {
+                if (c.toLowerCase() !== c.toUpperCase()) {
+                    letterCount++;
                 }
+            });
+
+            if (letterCount < requiredLetterCount) {
+                const msg = this.translate('passwordStrengthLetterCount', 'messages', 'User')
+                    .replace('{count}', requiredLetterCount.toString());
+
+                this.showValidationMessage(msg);
+
+                return true;
             }
+        }
 
-            var requiredLetterCount = this.strengthParams.passwordStrengthLetterCount;
-            if (requiredLetterCount) {
-                var letterCount = 0;
-                password.split('').forEach(function (c) {
-                    if (c.toLowerCase() !== c.toUpperCase()) letterCount++;
-                }, this);
+        const requiredNumberCount = this.strengthParams.passwordStrengthNumberCount;
 
-                if (letterCount < requiredLetterCount) {
-                    var msg = this.translate('passwordStrengthLetterCount', 'messages', 'User').replace('{count}', requiredLetterCount.toString());
-                    this.showValidationMessage(msg);
-                    return true;;
+        if (requiredNumberCount) {
+            let numberCount = 0;
+
+            password.split('').forEach((c) => {
+                if (c >= '0' && c <= '9') {
+                    numberCount++;
                 }
+            });
+
+            if (numberCount < requiredNumberCount) {
+                const msg = this.translate('passwordStrengthNumberCount', 'messages', 'User')
+                    .replace('{count}', requiredNumberCount.toString());
+
+                this.showValidationMessage(msg);
+
+                return true;
             }
+        }
 
-            var requiredNumberCount = this.strengthParams.passwordStrengthNumberCount;
-            if (requiredNumberCount) {
-                var numberCount = 0;
-                password.split('').forEach(function (c) {
-                    if (c >= '0' && c <= '9') numberCount++;
-                }, this);
+        const bothCases = this.strengthParams.passwordStrengthBothCases;
 
-                if (numberCount < requiredNumberCount) {
-                    var msg = this.translate('passwordStrengthNumberCount', 'messages', 'User').replace('{count}', requiredNumberCount.toString());
-                    this.showValidationMessage(msg);
-                    return true;;
+        if (bothCases) {
+            let ucCount = 0;
+
+            password.split('').forEach((c) => {
+                if (c.toLowerCase() !== c.toUpperCase() && c === c.toUpperCase()) {
+                    ucCount++;
                 }
-            }
+            });
 
-            var bothCases = this.strengthParams.passwordStrengthBothCases;
-            if (bothCases) {
-                var ucCount = 0;
-                password.split('').forEach(function (c) {
-                    if (c.toLowerCase() !== c.toUpperCase() && c === c.toUpperCase()) ucCount++;
-                }, this);
-                var lcCount = 0;
-                password.split('').forEach(function (c) {
-                    if (c.toLowerCase() !== c.toUpperCase() && c === c.toLowerCase()) lcCount++;
-                }, this);
+            let lcCount = 0;
 
-                if (!ucCount || !lcCount) {
-                    var msg = this.translate('passwordStrengthBothCases', 'messages', 'User');
-                    this.showValidationMessage(msg);
-                    return true;
+            password.split('').forEach(c => {
+                if (c.toLowerCase() !== c.toUpperCase() && c === c.toLowerCase()) {
+                    lcCount++;
                 }
-            }
-        },
+            });
 
-    });
-});
+            if (!ucCount || !lcCount) {
+                const msg = this.translate('passwordStrengthBothCases', 'messages', 'User');
+
+                this.showValidationMessage(msg);
+
+                return true;
+            }
+        }
+    }
+}
+
+export default UserPasswordFieldView;

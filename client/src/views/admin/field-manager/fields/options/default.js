@@ -26,68 +26,66 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/fields/options/default', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    // noinspection JSUnusedGlobalSymbols
-    return Dep.extend({
+export default class extends EnumFieldView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.validations.push('listed');
+        this.validations.push(() => this.validateListed());
+
+        this.updateAvailableOptions();
+
+        this.listenTo(this.model, 'change', () => {
+            if (
+                !this.model.hasChanged('options') &&
+                !this.model.hasChanged('optionsReference')
+            ) {
+                return;
+            }
 
             this.updateAvailableOptions();
+        });
+    }
 
-            this.listenTo(this.model, 'change', () => {
-                if (
-                    !this.model.hasChanged('options') &&
-                    !this.model.hasChanged('optionsReference')
-                ) {
-                    return;
-                }
+    updateAvailableOptions() {
+        this.setOptionList(this.getAvailableOptions());
+    }
 
-                this.updateAvailableOptions();
-            });
-        },
+    getAvailableOptions() {
+        const optionsReference = this.model.get('optionsReference');
 
-        updateAvailableOptions: function () {
-            this.setOptionList(this.getAvailableOptions());
-        },
+        if (optionsReference) {
+            const [entityType, field] = optionsReference.split('.');
 
-        getAvailableOptions: function () {
-            const optionsReference = this.model.get('optionsReference');
+            const options = this.getMetadata()
+                .get(`entityDefs.${entityType}.fields.${field}.options`) || [''];
 
-            if (optionsReference) {
-                const [entityType, field] = optionsReference.split('.');
+            return Espo.Utils.clone(options);
+        }
 
-                const options = this.getMetadata()
-                    .get(`entityDefs.${entityType}.fields.${field}.options`) || [''];
+        return this.model.get('options') || [''];
+    }
 
-                return Espo.Utils.clone(options);
-            }
+    validateListed() {
+        const value = this.model.get(this.name) ?? '';
 
-            return this.model.get('options') || [''];
-        },
-
-        validateListed: function () {
-            const value = this.model.get(this.name) ?? '';
-
-            if (!this.params.options) {
-                return false;
-            }
-
-            const options = this.getAvailableOptions();
-
-            if (options.indexOf(value) === -1) {
-                const msg = this.translate('fieldInvalid', 'messages')
-                    .replace('{field}', this.getLabelText());
-
-                this.showValidationMessage(msg);
-
-                return true;
-            }
-
+        if (!this.params.options) {
             return false;
-        },
-    });
-});
+        }
+
+        const options = this.getAvailableOptions();
+
+        if (options.indexOf(value) === -1) {
+            const msg = this.translate('fieldInvalid', 'messages')
+                .replace('{field}', this.getLabelText());
+
+            this.showValidationMessage(msg);
+
+            return true;
+        }
+
+        return false;
+    }
+}

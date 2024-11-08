@@ -38,6 +38,7 @@ use Espo\Core\MassAction\Params;
 use Espo\Core\MassAction\Result;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\Access\LinkCheck;
 use Espo\Core\Record\ActionHistory\Action as RecordAction;
 use Espo\Core\Record\ServiceFactory;
@@ -49,6 +50,7 @@ use Espo\ORM\Entity;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Entities\User;
 use Espo\Entities\Attachment;
+use Espo\Core\ORM\Type\FieldType;
 
 use Exception;
 use RuntimeException;
@@ -56,8 +58,6 @@ use stdClass;
 
 class Processor
 {
-    private const PERMISSION = 'massUpdatePermission';
-
     public function __construct(
         private ValueMapPreparator $valueMapPreparator,
         private QueryBuilder $queryBuilder,
@@ -80,16 +80,16 @@ class Processor
         $entityType = $params->getEntityType();
 
         if (!$this->acl->check($entityType, Table::ACTION_EDIT)) {
-            throw new Forbidden("No edit access for '{$entityType}'.");
+            throw new Forbidden("No edit access for '$entityType'.");
         }
 
-        if ($this->acl->getPermissionLevel(self::PERMISSION) !== Table::LEVEL_YES) {
+        if ($this->acl->getPermissionLevel(Acl\Permission::MASS_UPDATE) !== Table::LEVEL_YES) {
             throw new Forbidden("No mass-update permission.");
         }
 
         $service = $this->serviceFactory->create($entityType);
 
-        $filteredData = $this->filterData($data, $service);
+        $filteredData = $this->filterData($entityType, $data, $service);
 
         if ($filteredData->getAttributeList() === []) {
             return new Result(0, []);
@@ -125,7 +125,7 @@ class Processor
     /**
      * @param Service<Entity> $service
      */
-    private function filterData(Data $data, Service $service): Data
+    private function filterData(string $entityType, Data $data, Service $service): Data
     {
         $filteredData = $data;
 
@@ -133,6 +133,7 @@ class Processor
 
         $service->filterUpdateInput($values);
         $service->sanitizeInput($values);
+        $this->filterDisabledFields($entityType, $values);
 
         foreach ($data->getAttributeList() as $attribute) {
             if (!property_exists($values, $attribute)) {
@@ -173,8 +174,7 @@ class Processor
 
         try {
             $service->processValidation($entity, $values);
-        }
-        catch (Exception) {
+        } catch (Exception) {
             return false;
         }
 
@@ -184,15 +184,14 @@ class Processor
 
         try {
             $this->linkCheck->processFields($entity);
-        }
-        catch (Forbidden) {
+        } catch (Forbidden) {
             return false;
         }
 
         $this->entityManager->saveEntity($entity, [
-            'massUpdate' => true,
+            SaveOption::MASS_UPDATE => true,
+            SaveOption::MODIFIED_BY_ID => $this->user->getId(),
             'skipStreamNotesAcl' => true,
-            'modifiedById' => $this->user->getId(),
         ]);
 
         $service->processActionHistoryRecord(RecordAction::UPDATE, $entity);
@@ -226,16 +225,16 @@ class Processor
         foreach ($copyFieldList as $field) {
             $type = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
 
-            if ($type === 'file' || $type === 'image') {
+            if ($type === FieldType::FILE || $type === FieldType::IMAGE) {
                 $data = $this->copyFileField($field, $data);
 
                 continue;
             }
 
-             if ($type === 'attachmentMultiple') {
+             if ($type === FieldType::ATTACHMENT_MULTIPLE) {
                 $data = $this->copyAttachmentMultipleField($field, $data);
 
-                continue;
+                //continue;
             }
         }
 
@@ -252,7 +251,7 @@ class Processor
             return $data;
         }
 
-        $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $id);
+        $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
 
         if (!$attachment) {
             return $data->with($attribute, null);
@@ -286,7 +285,7 @@ class Processor
         $copiedIds = [];
 
         foreach ($ids as $id) {
-            $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $id);
+            $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
 
             if (!$attachment) {
                 continue;
@@ -308,9 +307,9 @@ class Processor
         $resultFieldList = [];
 
         $fieldList = array_merge(
-            $this->fieldUtil->getFieldByTypeList($entityType, 'file'),
-            $this->fieldUtil->getFieldByTypeList($entityType, 'image'),
-            $this->fieldUtil->getFieldByTypeList($entityType, 'attachmentMultiple')
+            $this->fieldUtil->getFieldByTypeList($entityType, FieldType::FILE),
+            $this->fieldUtil->getFieldByTypeList($entityType, FieldType::IMAGE),
+            $this->fieldUtil->getFieldByTypeList($entityType, FieldType::ATTACHMENT_MULTIPLE)
         );
 
         foreach ($fieldList as $field) {
@@ -330,5 +329,22 @@ class Processor
         }
 
         return $resultFieldList;
+    }
+
+    private function filterDisabledFields(string $entityType, stdClass $values): void
+    {
+        $fieldDefsList = array_filter(
+            $this->entityManager
+                ->getDefs()
+                ->getEntity($entityType)
+                ->getFieldList(),
+            fn ($it) => $it->getParam('massUpdateDisabled')
+        );
+
+        foreach ($fieldDefsList as $fieldDefs) {
+            foreach ($this->fieldUtil->getActualAttributeList($entityType, $fieldDefs->getName()) as $attribute) {
+                unset($values->$attribute);
+            }
+        }
     }
 }

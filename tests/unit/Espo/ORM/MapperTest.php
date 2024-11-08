@@ -378,7 +378,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($entity instanceof Comment);
         $this->assertTrue($entity->has('postName'));
-        $this->assertEquals($entity->get('postName'), 'test');
+        $this->assertEquals('test', $entity->get('postName'));
     }
 
     public function testSelectRelatedManyMany1()
@@ -391,12 +391,12 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         ]);
         $collection = $this->createCollectionMock([$tag]);
 
-        $this->post->id = '1';
+        $this->post->set('id', '1');
 
         $query = SelectBuilder::create()
             ->from('Tag', 'tag')
             ->select([
-                '*',
+                ['*'],
                 ['postTag.role', 'postRole']
             ])
             ->join('PostTag', 'postTag', [
@@ -404,7 +404,6 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'postId' => '1',
                 'deleted' => false,
             ])
-            ->where([])
             ->build();
 
         $this->collectionFactory
@@ -423,7 +422,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($entity instanceof Tag);
         $this->assertTrue($entity->has('name'));
-        $this->assertEquals($entity->get('name'), 'test');
+        $this->assertEquals('test', $entity->get('name'));
     }
 
     public function testSelectRelatedManyMany2()
@@ -441,12 +440,12 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         ]);
         $collection = $this->createCollectionMock([$tag]);
 
-        $this->post->id = '1';
+        $this->post->set('id', '1');
 
         $query = SelectBuilder::create()
             ->from('Tag', 'tag')
             ->select([
-                'id',
+                ['id'],
                 ['postTag.role', 'postRole'],
             ])
             ->join('PostTag', 'postTag', [
@@ -454,7 +453,6 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'postId' => '1',
                 'deleted' => false,
             ])
-            ->where([])
             ->build();
 
         $this->collectionFactory
@@ -466,7 +464,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->db->selectRelated($this->post, 'tags', $select);
     }
 
-    public function testSelectRelatedManyManyWithConditions()
+    public function testSelectRelatedManyManyWithConditions(): void
     {
         $team = $this->entityFactory->create('Team');
         $team->set([
@@ -476,12 +474,12 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         ]);
         $collection = $this->createCollectionMock([$team]);
 
-        $this->account->id = '1';
+        $this->account->set('id', '1');
 
         $query = SelectBuilder::create()
             ->from('Team', 'team')
             ->select([
-                '*',
+                ['*'],
                 ['entityTeam.teamId', 'stub'],
             ])
             ->join('EntityTeam', 'entityTeam', [
@@ -490,7 +488,6 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'entityType' => 'Account',
                 'deleted' => false,
             ])
-            ->where([])
             ->build();
 
         $this->collectionFactory
@@ -525,8 +522,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $query = SelectBuilder::create()
             ->from('Note', 'note')
             ->where([
-                ['parentId' => '1'],
-                ['parentType' => 'Post'],
+                'parentId' => '1',
+                'parentType' => 'Post',
             ])
             ->build();
 
@@ -548,10 +545,10 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($entity instanceof Note);
         $this->assertTrue($entity->has('name'));
-        $this->assertEquals($entity->get('name'), 'test');
+        $this->assertEquals('test', $entity->get('name'));
     }
 
-    public function testSelectRelatedBelongsTo()
+    public function testSelectRelatedBelongsTo1(): void
     {
         $query =
             "SELECT ".
@@ -560,8 +557,9 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             "post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
             "FROM `post` AS `post` ".
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
-            "WHERE (post.id = '1') AND post.deleted = 0 ".
+            "WHERE post.id = '1' AND post.deleted = 0 ".
             "LIMIT 0, 1";
+
         $return = [
             [
                 'id' => '1',
@@ -569,15 +567,48 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'deleted' => false,
             ],
         ];
+
         $this->mockQuery($query, $return);
 
-        $this->comment->id = '11';
+        $this->comment->set('id', '11');
         $this->comment->set('postId', '1');
         $post = $this->db->selectRelated($this->comment, 'post');
 
         $this->assertTrue($post instanceof Post);
-        $this->assertTrue(($post->has('name')));
-        $this->assertEquals($post->get('name'), 'test');
+        $this->assertTrue($post->has('name'));
+        $this->assertEquals('test', $post->get('name'));
+    }
+
+    public function testSelectRelatedBelongsToWithQuery(): void
+    {
+        $query =
+            "SELECT ".
+            "p.id AS `id`, p.name AS `name`, NULLIF(TRIM(CONCAT(COALESCE(createdBy.salutation_name, ''), ".
+            "COALESCE(createdBy.first_name, ''), ' ', COALESCE(createdBy.last_name, ''))), '') AS `createdByName`, ".
+            "p.created_by_id AS `createdById`, p.deleted AS `deleted` ".
+            "FROM `post` AS `p` ".
+            "LEFT JOIN `user` AS `createdBy` ON p.created_by_id = createdBy.id " .
+            "WHERE p.id = '1' AND p.deleted = 0 ".
+            "LIMIT 0, 1";
+
+        $return = [
+            [
+                'id' => '1',
+                'name' => 'test',
+                'deleted' => false,
+            ],
+        ];
+
+        $this->mockQuery($query, $return);
+
+        $select = SelectBuilder::create()
+            ->from('Post', 'p')
+            ->build();
+
+        $this->comment->set('id', '11');
+        $this->comment->set('postId', '1');
+
+        $this->db->selectRelated($this->comment, 'post', $select);
     }
 
     public function testCountRelated()

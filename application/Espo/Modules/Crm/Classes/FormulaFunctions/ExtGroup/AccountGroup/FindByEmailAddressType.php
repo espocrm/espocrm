@@ -118,8 +118,7 @@ class FindByEmailAddressType extends BaseFunction implements
                 if ($account) {
                     return $account->getId();
                 }
-            }
-            else {
+            } else {
                 if ($contact->get('accountId')) {
                     return $contact->get('accountId');
                 }

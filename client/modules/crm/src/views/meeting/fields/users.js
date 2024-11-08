@@ -26,36 +26,52 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/fields/users', ['crm:views/meeting/fields/attendees'], function (Dep) {
+import AttendeesFieldView from 'modules/crm/views/meeting/fields/attendees';
 
-    return Dep.extend({
+export default class extends AttendeesFieldView {
 
-        selectPrimaryFilterName: 'active',
+    selectPrimaryFilterName = 'active'
 
-        init: function () {
-            this.assignmentPermission = this.getAcl().getPermissionLevel('assignmentPermission');
+    init() {
+        this.assignmentPermission = this.getAcl().getPermissionLevel('assignmentPermission');
 
-            if (this.assignmentPermission === 'no') {
-                this.readOnly = true;
-            }
+        if (this.assignmentPermission === 'no') {
+            this.readOnly = true;
+        }
 
-            Dep.prototype.init.call(this);
-        },
+        super.init();
+    }
 
-        getSelectBoolFilterList: function () {
-            if (this.assignmentPermission === 'team') {
-                return ['onlyMyTeam'];
-            }
-        },
+    getSelectBoolFilterList() {
+        if (this.assignmentPermission === 'team') {
+            return ['onlyMyTeam'];
+        }
+    }
 
-        getIconHtml: function (id) {
-            let iconHtml = this.getHelper().getAvatarHtml(id, 'small', 14, 'avatar-link');
+    getIconHtml(id) {
+        let iconHtml = this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
 
-            if (iconHtml) {
-                iconHtml += ' ';
-            }
+        if (iconHtml) {
+            iconHtml += ' ';
+        }
 
-            return iconHtml;
-        },
-    });
-});
+        return iconHtml;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    prepareEditItemElement(id, name) {
+        const itemElement = super.prepareEditItemElement(id, name);
+
+        const avatarHtml = this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
+
+        if (avatarHtml) {
+            const img = new DOMParser().parseFromString(avatarHtml, 'text/html').body.childNodes[0];
+
+            itemElement.children[0].querySelector('.link-item-name').prepend(img);
+        }
+
+        return itemElement;
+    }
+}

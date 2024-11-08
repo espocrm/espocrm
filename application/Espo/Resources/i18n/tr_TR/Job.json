@@ -10,6 +10,7 @@
     "data": "Veri",
     "method": "Metod",
     "scheduledJobJob": "Zamanlanmış Görev Adı",
+    "startedAt": "Başlangıç",
     "number": "Numara",
     "queue": "Kuyruk",
     "job": "Görev"

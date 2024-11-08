@@ -105,9 +105,9 @@ class BeforeSaveValidate implements SaveHook
 
         $type = $this->metadata->get("scopes.$scope.$key");
 
-        if ($type === 'boolean') {
+        if ($type === Table\ScopeDataType::BOOLEAN) {
             if (!is_bool($item)) {
-                throw new BadRequest("Bad data. Value for *$scope* should be be bool.");
+                throw new BadRequest("Bad data. Value for *$scope* should be be boolean.");
             }
 
             return;

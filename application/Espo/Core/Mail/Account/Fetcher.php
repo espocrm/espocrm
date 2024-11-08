@@ -32,6 +32,8 @@ namespace Espo\Core\Mail\Account;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Mail\Account\Storage\Flag;
+use Espo\Core\Mail\Exceptions\ImapError;
+use Espo\Core\Mail\Exceptions\NoImap;
 use Espo\Core\Mail\Importer;
 use Espo\Core\Mail\Importer\Data as ImporterData;
 use Espo\Core\Mail\ParserFactory;
@@ -45,6 +47,7 @@ use Espo\Core\Utils\Log;
 use Espo\Core\Field\DateTime as DateTimeField;
 use Espo\Entities\EmailFilter;
 use Espo\Entities\Email;
+use Espo\Entities\GroupEmailFolder;
 use Espo\Entities\InboundEmail;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
@@ -69,6 +72,8 @@ class Fetcher
 
     /**
      * @throws Error
+     * @throws ImapError
+     * @throws NoImap
      */
     public function fetch(Account $account): void
     {
@@ -110,11 +115,10 @@ class Fetcher
 
         try {
             $storage->selectFolder($folderOriginal);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->error(
                 "{$account->getEntityType()} {$account->getId()}, " .
-                "could not select folder '{$folder}'; [{$e->getCode()}] {$e->getMessage()}"
+                "could not select folder '$folder'; [{$e->getCode()}] {$e->getMessage()}"
             );
 
             return;
@@ -312,8 +316,7 @@ class Fetcher
             ) {
                 $storage->setFlags($id, self::flagsWithoutRecent($flags));
             }
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->error(
                 "{$account->getEntityType()} {$account->getId()}, get message; " .
                 "{$e->getCode()} {$e->getMessage()}"
@@ -334,8 +337,7 @@ class Fetcher
                 $email,
                 $hookResult ?? BeforeFetchHookResult::create()
             );
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->error(
                 "{$account->getEntityType()} {$account->getId()}, after-fetch hook; " .
                 "{$e->getCode()} {$e->getMessage()}"
@@ -351,15 +353,14 @@ class Fetcher
 
         try {
             return $this->beforeFetchHook->process($account, $message);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->error(
                 "{$account->getEntityType()} {$account->getId()}, before-fetch hook; " .
                 "{$e->getCode()} {$e->getMessage()}"
             );
         }
 
-        return BeforeFetchHookResult::create()->withToSkip(true);
+        return BeforeFetchHookResult::create()->withToSkip();
     }
 
     /**
@@ -412,13 +413,8 @@ class Fetcher
         }
 
         try {
-            $size = $storage->getSize((int) $id);
-        }
-        catch (Throwable $e) {
-            return false;
-        }
-
-        if (!is_int($size)) {
+            $size = $storage->getSize($id);
+        } catch (Throwable) {
             return false;
         }
 
@@ -437,8 +433,7 @@ class Fetcher
 
         try {
             return $this->importer->import($message, $data);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->error(
                 "{$account->getEntityType()} {$account->getId()}, import message; " .
                 "{$e->getCode()} {$e->getMessage()}"

@@ -571,13 +571,13 @@ class Diff
         const resolveItemDest = item =>
             item.dest || 'client/lib/' + item.src.split('/').pop();
 
-        const resolveBundledItemDest = item => {
+        /*const resolveBundledItemDest = item => {
             if (item.amdId) {
-                return `'client/lib/original/${item.amdId}.js`;
+                return `client/lib/original/${item.amdId}.js`;
             }
 
             return 'client/lib/original/' + item.src.split('/').pop();
-        };
+        };*/
 
         const resolveItemName = item => {
             if (item.name) {
@@ -760,7 +760,7 @@ class Diff
 
             changedBundledList.push(name);
 
-            if (item.files) {
+            /*if (item.files) {
                 item.files.forEach(item =>
                     data.filesToCopy.push(resolveBundledItemDest(item))
                 );
@@ -772,7 +772,7 @@ class Diff
                 return;
             }
 
-            data.filesToCopy.push(resolveBundledItemDest(item));
+            data.filesToCopy.push(resolveBundledItemDest(item));*/
         });
 
         bundledOldDataList.forEach(item => {
@@ -788,10 +788,11 @@ class Diff
             }
 
             if (!toRemove) {
+                // noinspection UnnecessaryReturnStatementJS
                 return;
             }
 
-            if (item.files) {
+            /*if (item.files) {
                 item.files.forEach(item =>
                     data.filesToDelete.push(resolveBundledItemDest(item))
                 );
@@ -803,7 +804,7 @@ class Diff
                 return;
             }
 
-            data.filesToDelete.push(resolveBundledItemDest(item));
+            data.filesToDelete.push(resolveBundledItemDest(item));*/
         });
 
         return data;
@@ -865,6 +866,8 @@ class Diff
         fs.mkdirSync(tempFolderPath + '/new');
 
         const vendorPath = tempFolderPath + '/new/vendor/';
+
+        cp.execSync(`cp -r ${currentPath}/dev ${tempFolderPath}/new/dev`);
 
         fs.writeFileSync(tempFolderPath + '/new/composer.lock', composerLockNewContents);
         fs.writeFileSync(tempFolderPath + '/new/composer.json', composerNewContents);

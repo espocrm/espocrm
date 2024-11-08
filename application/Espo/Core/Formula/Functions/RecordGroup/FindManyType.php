@@ -99,8 +99,7 @@ class FindManyType implements Func
             if ($filter) {
                 $builder->withPrimaryFilter($filter);
             }
-        }
-        else {
+        } else {
             $i = 4;
 
             while ($i < count($arguments) - 1) {
@@ -115,8 +114,7 @@ class FindManyType implements Func
 
         try {
             $queryBuilder = $builder->buildQueryBuilder();
-        }
-        catch (BadRequest|Forbidden $e) {
+        } catch (BadRequest|Forbidden $e) {
             throw new FormulaError($e->getMessage(), $e->getCode(), $e);
         }
 

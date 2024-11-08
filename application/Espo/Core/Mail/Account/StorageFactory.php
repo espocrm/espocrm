@@ -30,10 +30,23 @@
 namespace Espo\Core\Mail\Account;
 
 use Espo\Core\Mail\Account\Storage\Params;
+use Espo\Core\Mail\Exceptions\ImapError;
+use Espo\Core\Mail\Exceptions\NoImap;
 
 interface StorageFactory
 {
+    /**
+     * Create an account.
+     *
+     * @throws NoImap
+     * @throws ImapError
+     */
     public function create(Account $account): Storage;
 
+    /**
+     * Create an account with parameters.
+     *
+     * @throws ImapError
+     */
     public function createWithParams(Params $params): Storage;
 }

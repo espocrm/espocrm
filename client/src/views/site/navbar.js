@@ -28,11 +28,16 @@
 
 import View from 'view';
 import $ from 'jquery';
+import TabsHelper from 'helpers/site/tabs';
 
 class NavbarSiteView extends View {
 
     template = 'site/navbar'
 
+    /**
+     * @private
+     * @type {string|false|null}
+     */
     currentTab = null
 
     events = {
@@ -64,10 +69,6 @@ class NavbarSiteView extends View {
             this.switchSideMenu();
         },
         /** @this NavbarSiteView */
-        'click a.action': function (e) {
-            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
-        },
-        /** @this NavbarSiteView */
         'click [data-action="toggleCollapsable"]': function () {
             this.toggleCollapsable();
         },
@@ -91,13 +92,16 @@ class NavbarSiteView extends View {
             tabDefsList1: this.tabDefsList.filter(item => !item.isInMore),
             tabDefsList2: this.tabDefsList.filter(item => item.isInMore),
             title: this.options.title,
-            menuDataList: this.getMenuDataList(),
+            menuDataList: this.menuDataList,
             userId: this.getUser().id,
             logoSrc: this.getLogoSrc(),
             itemDataList: this.getItemDataList(),
         };
     }
 
+    /**
+     * @private
+     */
     handleGroupDropdownClick(e) {
         const $target = $(e.currentTarget).parent();
 
@@ -122,6 +126,9 @@ class NavbarSiteView extends View {
         this.handleGroupDropdownOpen($target);
     }
 
+    /**
+     * @private
+     */
     handleGroupMenuPosition($menu, $target) {
         if (this.navbarAdjustmentHandler && this.navbarAdjustmentHandler.handleGroupMenuPosition()) {
             this.handleGroupMenuPosition($menu, $target);
@@ -171,6 +178,9 @@ class NavbarSiteView extends View {
         this.handleGroupMenuScrolling($menu, $target, maxHeight);
     }
 
+    /**
+     * @private
+     */
     handleGroupMenuScrolling($menu, $target, maxHeight) {
         $menu.css({
             maxHeight: maxHeight + 'px',
@@ -193,6 +203,9 @@ class NavbarSiteView extends View {
         });
     }
 
+    /**
+     * @private
+     */
     handleGroupDropdownOpen($target) {
         const $menu = $target.find('.dropdown-menu');
 
@@ -209,6 +222,9 @@ class NavbarSiteView extends View {
         });
     }
 
+    /**
+     * @private
+     */
     handleGroupDropdownInMoreOpen($target) {
         this.$el.find('.tab-group.tab.dropdown').removeClass('open');
 
@@ -239,10 +255,16 @@ class NavbarSiteView extends View {
         }
     }
 
+    /**
+     * @private
+     */
     isCollapsableVisible() {
         return this.$el.find('.navbar-body').hasClass('in');
     }
 
+    /**
+     * @private
+     */
     toggleCollapsable() {
         if (this.isCollapsableVisible()) {
             this.hideCollapsable();
@@ -251,20 +273,33 @@ class NavbarSiteView extends View {
         }
     }
 
+    /**
+     * @private
+     */
     hideCollapsable() {
         this.$el.find('.navbar-body').removeClass('in');
     }
 
+    /**
+     * @private
+     */
     showCollapsable() {
         this.$el.find('.navbar-body').addClass('in');
     }
 
+    /**
+     * @private
+     */
     xsCollapse() {
         this.hideCollapsable();
     }
 
+    /**
+     * @private
+     * @return {boolean}
+     */
     isMinimized() {
-        return this.$body.hasClass('minimized');
+        return document.body.classList.contains('minimized');
     }
 
     switchSideMenu() {
@@ -280,13 +315,13 @@ class NavbarSiteView extends View {
     openSideMenu() {
         this.isSideMenuOpened = true;
 
-        this.$body.addClass('side-menu-opened');
+        document.body.classList.add('side-menu-opened');
 
         this.$sideMenuBackdrop =
             $('<div>')
                 .addClass('side-menu-backdrop')
                 .click(() => this.closeSideMenu())
-                .appendTo(this.$body);
+                .appendTo(document.body);
 
         this.$sideMenuBackdrop2 =
             $('<div>')
@@ -295,27 +330,32 @@ class NavbarSiteView extends View {
                 .appendTo(this.$navbarRightContainer);
     }
 
+    /**
+     * @private
+     */
     closeSideMenu() {
         this.isSideMenuOpened = false;
-        this.$body.removeClass('side-menu-opened');
+
+        document.body.classList.remove('side-menu-opened')
+
         this.$sideMenuBackdrop.remove();
         this.$sideMenuBackdrop2.remove();
     }
 
+    /**
+     * @private
+     */
     switchMinimizer() {
-        const $body = this.$body;
-
         if (this.isMinimized()) {
             if (this.isSideMenuOpened) {
                 this.closeSideMenu();
             }
 
-            $body.removeClass('minimized');
+            document.body.classList.remove('minimized');
 
             this.getStorage().set('state', 'siteLayoutState', 'expanded');
-        }
-        else {
-            $body.addClass('minimized');
+        }  else {
+            document.body.classList.add('minimized');
 
             this.getStorage().set('state', 'siteLayoutState', 'collapsed');
         }
@@ -334,15 +374,14 @@ class NavbarSiteView extends View {
             return this.getBasePath() + (this.getThemeManager().getParam('logo') || 'client/img/logo.svg');
         }
 
-        return this.getBasePath() + '?entryPoint=LogoImage&id='+companyLogoId;
+        return `${this.getBasePath()}?entryPoint=LogoImage&id=${companyLogoId}`;
     }
 
+    /**
+     * @return {(Object|string)[]}
+     */
     getTabList() {
-        let tabList = this.getPreferences().get('useCustomTabList') ?
-            this.getPreferences().get('tabList') :
-            this.getConfig().get('tabList');
-
-        tabList = Espo.Utils.cloneDeep(tabList || []);
+        const tabList = this.tabsHelper.getTabList();
 
         if (this.isSide()) {
             tabList.unshift('Home');
@@ -352,6 +391,24 @@ class NavbarSiteView extends View {
     }
 
     setup() {
+        this.addHandler('click', 'a.action', (/** MouseEvent */event, target) => {
+            let actionData;
+            const name = target.dataset.name;
+
+            if (name) {
+                const item = this.menuDataList.find(it => it.name === name);
+
+                if (item.handler && item.actionFunction) {
+                    actionData = {
+                        handler: item.handler,
+                        actionFunction: item.actionFunction,
+                    };
+                }
+            }
+
+            Espo.Utils.handleAction(this, event, target, actionData);
+        });
+
         this.getRouter().on('routed', (e) => {
             if (e.controller) {
                 this.selectTab(e.controller);
@@ -362,7 +419,17 @@ class NavbarSiteView extends View {
             this.selectTab(false);
         });
 
-        const itemDefs = this.getMetadata().get(['app', 'clientNavbar', 'items']) || {};
+        /** @private */
+        this.tabsHelper = new TabsHelper(
+            this.getConfig(),
+            this.getPreferences(),
+            this.getUser(),
+            this.getAcl(),
+            this.getMetadata(),
+            this.getLanguage()
+        );
+
+        const itemDefs = this.getMetadata().get('app.clientNavbar.items') || {};
 
         /** @type {string[]} */
         this.itemList = Object.keys(itemDefs)
@@ -373,10 +440,6 @@ class NavbarSiteView extends View {
 
                 return order1 - order2;
             });
-
-        this.createView('notificationsBadge', 'views/notification/badge', {
-            selector: '.notifications-badge-container',
-        });
 
         const setup = () => {
             this.setupTabDefsList();
@@ -389,19 +452,35 @@ class NavbarSiteView extends View {
             setup().then(() => this.reRender());
         };
 
-        this.setupGlobalSearch();
         setup();
 
         this.listenTo(this.getHelper().settings, 'sync', () => update());
         this.listenTo(this.getHelper().language, 'sync', () => update());
+
+        this.listenTo(this.getHelper().preferences, 'update', (/** string[] */attributeList) => {
+            if (!attributeList) {
+                return;
+            }
+
+            if (
+                attributeList.includes('tabList') ||
+                attributeList.includes('addCustomTabs') ||
+                attributeList.includes('useCustomTabList')
+            ) {
+                update();
+            }
+        });
+
 
         this.once('remove', () => {
             $(window).off('resize.navbar');
             $(window).off('scroll.navbar');
             $(window).off('scroll.navbar-tab-group');
 
-            this.$body.removeClass('has-navbar');
+            document.body.classList.remove('has-navbar');
         });
+
+        this.setupMenu();
     }
 
     getItemDataList() {
@@ -462,72 +541,8 @@ class NavbarSiteView extends View {
     }
 
     /**
-     * @param {Record|string} item
-     * @return {boolean}
+     * @private
      */
-    filterTabItem(item) {
-        if (typeof item === 'object' && item.type === 'url') {
-            if (item.onlyAdmin && !this.getUser().isAdmin()) {
-                return false;
-            }
-
-            if (!item.aclScope) {
-                return true;
-            }
-
-            return this.getAcl().check(item.aclScope);
-        }
-
-        if (['Home', '_delimiter_', '_delimiter-ext_'].includes(item)) {
-            return true;
-        }
-
-        const scopes = this.getMetadata().get('scopes') || {};
-
-        if (!scopes[item]) {
-            return false;
-        }
-
-        const defs = /** @type {{disabled?: boolean, acl?: boolean, tabAclPermission?: string}} */
-            scopes[item] || {};
-
-        if (defs.disabled) {
-            return false;
-        }
-
-        if (defs.acl) {
-            return this.getAcl().check(item);
-        }
-
-        if (defs.tabAclPermission) {
-            const level = this.getAcl().getPermissionLevel(defs.tabAclPermission);
-
-            return level && level !== 'no';
-        }
-
-        return true;
-    }
-
-    setupGlobalSearch() {
-        this.globalSearchAvailable = false;
-
-        (this.getConfig().get('globalSearchEntityList') || []).forEach(scope => {
-            if (this.globalSearchAvailable) {
-                return;
-            }
-
-            if (this.getAcl().checkScope(scope)) {
-                this.globalSearchAvailable = true;
-            }
-        });
-
-        if (this.globalSearchAvailable) {
-            this.createView('globalSearch', 'views/global-search/global-search', {
-                selector: '.global-search-container',
-            });
-        }
-    }
-
     adjustTop() {
         const smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
         const navbarHeight = this.getNavbarHeight();
@@ -537,6 +552,12 @@ class NavbarSiteView extends View {
         const $tabs = this.$tabs;
         const $more = this.$more;
         const $moreDropdown = this.$moreDropdown;
+
+
+        $window.off('scroll.navbar');
+        $window.off('resize.navbar');
+        this.$moreDropdown.off('shown.bs.dropdown.navbar');
+        this.off('show-more-tabs');
 
         $window.on('resize.navbar', () => updateWidth());
 
@@ -548,7 +569,7 @@ class NavbarSiteView extends View {
             $more.scrollTop($window.scrollTop());
         });
 
-        this.$moreDropdown.on('shown.bs.dropdown', () => {
+        this.$moreDropdown.on('shown.bs.dropdown.navbar', () => {
             $more.scrollTop($window.scrollTop());
         });
 
@@ -569,9 +590,7 @@ class NavbarSiteView extends View {
             }
         };
 
-        $window.on('resize.navbar', () => {
-            updateMoreHeight();
-        });
+        $window.on('resize.navbar', () => updateMoreHeight());
 
         updateMoreHeight();
 
@@ -606,7 +625,7 @@ class NavbarSiteView extends View {
             $navbar.css('overflow', 'visible');
         }
 
-        const navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 555;
+        const navbarBaseWidth = this.getFontSizeFactor() * (this.getThemeManager().getParam('navbarBaseWidth') || 550);
 
         const tabCount = this.tabList.length;
 
@@ -684,19 +703,32 @@ class NavbarSiteView extends View {
         processUpdateWidth();
     }
 
+    /**
+     * @private
+     */
     adjustSide() {
         const smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
-        const navbarStaticItemsHeight = this.getStaticItemsHeight();
 
         const $window = $(window);
         const $tabs = this.$tabs;
         const $more = this.$more;
+
+        /** @type {HTMLElement} */
+        const tabsElement = this.$tabs.get(0);
+
+        /** @type {HTMLElement} */
+        const moreElement = this.$more.get(0);
 
         this.adjustBodyMinHeightMethodName = 'adjustBodyMinHeightSide';
 
         if ($more.children().length === 0) {
             $more.parent().addClass('hidden');
         }
+
+        $window.off('scroll.navbar');
+        $window.off('resize.navbar');
+        this.$moreDropdown.off('shown.bs.dropdown.navbar');
+        this.off('show-more-tabs');
 
         $window.on('scroll.navbar', () => {
             $window.scrollTop() ?
@@ -712,7 +744,7 @@ class NavbarSiteView extends View {
             $more.scrollTop($window.scrollTop());
         });
 
-        this.$moreDropdown.on('shown.bs.dropdown', () => {
+        this.$moreDropdown.on('shown.bs.dropdown.navbar', () => {
             $more.scrollTop($window.scrollTop());
         });
 
@@ -724,40 +756,71 @@ class NavbarSiteView extends View {
             const windowHeight = window.innerHeight;
             const windowWidth = window.innerWidth;
 
+            const t = new Date().getMilliseconds();
+            const navbarStaticItemsHeight = this.getStaticItemsHeight();
+
             this.$minimizer.removeClass('hidden');
 
             if (windowWidth < smallScreenWidth) {
-                $tabs.css('height', 'auto');
-                $more.css('max-height', '');
+                tabsElement.style.height = 'auto';
+
+                if (moreElement) {
+                    moreElement.style.maxHeight = '';
+                }
 
                 return;
             }
 
-            $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
-            $more.css('max-height', windowHeight + 'px');
+            tabsElement.style.height = (windowHeight - navbarStaticItemsHeight) + 'px';
+
+            if (moreElement) {
+                moreElement.style.maxHeight = windowHeight + 'px';
+            }
         };
 
-        $(window).on('resize.navbar', () => {
+        $window.on('resize.navbar', () => {
             updateSizeForSide();
+            this.adjustBodyMinHeight();
         });
 
         updateSizeForSide();
-
         this.adjustBodyMinHeight();
     }
 
+    /**
+     * @private
+     * @return {number}
+     */
     getNavbarHeight() {
-        return this.getThemeManager().getParam('navbarHeight') || 43;
+        return this.getFontSizeFactor() * (this.getThemeManager().getParam('navbarHeight') || 43);
     }
 
+    /**
+     * @private
+     * @return {boolean}
+     */
     isSide() {
         return this.getThemeManager().getParam('navbar') === 'side';
     }
 
+    /**
+     * @private
+     * @return {number}
+     */
     getStaticItemsHeight() {
-        return this.getThemeManager().getParam('navbarStaticItemsHeight') || 97;
+        return this.getFontSizeFactor() * (this.getThemeManager().getParam('navbarStaticItemsHeight') || 97);
     }
 
+    /**
+     * @private
+     */
+    getFontSizeFactor() {
+        return this.getThemeManager().getFontSizeFactor();
+    }
+
+    /**
+     * @private
+     */
     adjustBodyMinHeight() {
         if (!this.adjustBodyMinHeightMethodName) {
             return;
@@ -766,6 +829,9 @@ class NavbarSiteView extends View {
         this[this.adjustBodyMinHeightMethodName]();
     }
 
+    /**
+     * @private
+     */
     adjustBodyMinHeightSide() {
         let minHeight = this.$tabs.get(0).scrollHeight + this.getStaticItemsHeight();
 
@@ -801,9 +867,12 @@ class NavbarSiteView extends View {
             }
         });
 
-        this.$body.css('minHeight', minHeight + 'px');
+        document.body.style.minHeight = minHeight + 'px';
     }
 
+    /**
+     * @private
+     */
     adjustBodyMinHeightTop() {
         let minHeight = this.getNavbarHeight();
 
@@ -846,16 +915,15 @@ class NavbarSiteView extends View {
             }
         });
 
-        this.$body.css('minHeight', minHeight + 'px');
+        document.body.style.minHeight = minHeight + 'px';
     }
 
     afterRender() {
-        this.$body = $('body');
-        this.$tabs = this.$el.find('ul.tabs');
+         this.$tabs = this.$el.find('ul.tabs');
         this.$more = this.$tabs.find('li.more > ul');
         this.$minimizer = this.$el.find('a.minimizer');
 
-        this.$body.addClass('has-navbar');
+        document.body.classList.add('has-navbar');
 
         const $moreDd = this.$moreDropdown = this.$tabs.find('li.more');
 
@@ -885,7 +953,7 @@ class NavbarSiteView extends View {
         }
 
         if (layoutMinimized) {
-            this.$body.addClass('minimized');
+            document.body.classList.add('minimized');
         }
 
         this.$navbar = this.$el.find('> .navbar');
@@ -913,6 +981,9 @@ class NavbarSiteView extends View {
         this.adjustAfterRender();
     }
 
+    /**
+     * @private
+     */
     adjustAfterRender() {
         if (this.isSide()) {
             const processSide = () => {
@@ -978,84 +1049,82 @@ class NavbarSiteView extends View {
             });
     }
 
+    /**
+     * @private
+     */
     setupTabDefsList() {
-        function isMoreDelimiter(item) {
-            return item === '_delimiter_' || item === '_delimiter-ext_';
-        }
-
-        function isDivider(item) {
-            return typeof item === 'object' && item.type === 'divider';
-        }
-
-        function isUrl(item) {
-            return typeof item === 'object' && item.type === 'url';
-        }
-
         /** @type {{url: string, name: string}[]} */
         this.urlList = [];
 
-        this.tabList = this.getTabList().filter(item => {
+        const allTabList = this.getTabList();
+
+        this.tabList = allTabList.filter((item, i) => {
             if (!item) {
                 return false;
             }
 
-            if (typeof item === 'object') {
-                if (isDivider(item)) {
-                    if (!this.isSide()) {
-                        return false;
-                    }
-
-                    return true;
-                }
-
-                if (isUrl(item)) {
-                    return this.filterTabItem(item);
-                }
-
-                let itemList = (item.itemList || []).filter((item) => {
-                    if (isDivider(item)) {
-                        return true;
-                    }
-
-                    return this.filterTabItem(item);
-                });
-
-                itemList = itemList.filter((item, i) => {
-                    if (!isDivider(item)) {
-                        return true;
-                    }
-
-                    const nextItem = itemList[i + 1];
-
-                    if (!nextItem) {
-                        return true;
-                    }
-
-                    if (isDivider(nextItem)) {
-                        return false;
-                    }
-
-                    return true;
-                });
-
-                itemList = itemList.filter((item, i) => {
-                    if (!isDivider(item)) {
-                        return true;
-                    }
-
-                    if (i === 0 || i === itemList.length - 1) {
-                        return false;
-                    }
-
-                    return true;
-                });
-
-                item.itemList = itemList;
-
-                return !!itemList.length;
+            if (typeof item !== 'object') {
+                return this.tabsHelper.checkTabAccess(item);
             }
 
-            return this.filterTabItem(item);
+            if (this.tabsHelper.isTabDivider(item)) {
+                if (!this.isSide()) {
+                    return false;
+                }
+
+                if (i === allTabList.length - 1) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            if (this.tabsHelper.isTabUrl(item)) {
+                return this.tabsHelper.checkTabAccess(item);
+            }
+
+            /** @type {(Record|string)[]} */
+            let itemList = (item.itemList || []).filter(item => {
+                if (this.tabsHelper.isTabDivider(item)) {
+                    return true;
+                }
+
+                return this.tabsHelper.checkTabAccess(item);
+            });
+
+            itemList = itemList.filter((item, i) => {
+                if (!this.tabsHelper.isTabDivider(item)) {
+                    return true;
+                }
+
+                const nextItem = itemList[i + 1];
+
+                if (!nextItem) {
+                    return true;
+                }
+
+                if (this.tabsHelper.isTabDivider(nextItem)) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            itemList = itemList.filter((item, i) => {
+                if (!this.tabsHelper.isTabDivider(item)) {
+                    return true;
+                }
+
+                if (i === 0 || i === itemList.length - 1) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            item.itemList = itemList;
+
+            return !!itemList.length;
         });
 
         let moreIsMet = false;
@@ -1064,11 +1133,11 @@ class NavbarSiteView extends View {
             const nextItem = this.tabList[i + 1];
             const prevItem = this.tabList[i - 1];
 
-            if (isMoreDelimiter(item)) {
+            if (this.tabsHelper.isTabMoreDelimiter(item)) {
                 moreIsMet = true;
             }
 
-            if (!isDivider(item)) {
+            if (!this.tabsHelper.isTabDivider(item)) {
                 return true;
             }
 
@@ -1076,11 +1145,11 @@ class NavbarSiteView extends View {
                 return true;
             }
 
-            if (isDivider(nextItem)) {
+            if (this.tabsHelper.isTabDivider(nextItem)) {
                 return false;
             }
 
-            if (isDivider(prevItem) && isMoreDelimiter(nextItem) && moreIsMet) {
+            if (this.tabsHelper.isTabDivider(prevItem) && this.tabsHelper.isTabMoreDelimiter(nextItem) && moreIsMet) {
                 return false;
             }
 
@@ -1090,8 +1159,6 @@ class NavbarSiteView extends View {
         const tabDefsList = [];
 
         const colorsDisabled =
-            this.getPreferences().get('scopeColorsDisabled') ||
-            this.getPreferences().get('tabColorsDisabled') ||
             this.getConfig().get('scopeColorsDisabled') ||
             this.getConfig().get('tabColorsDisabled');
 
@@ -1108,7 +1175,7 @@ class NavbarSiteView extends View {
         };
 
         this.tabList.forEach((tab, i) => {
-            if (isMoreDelimiter(tab)) {
+            if (this.tabsHelper.isTabMoreDelimiter(tab)) {
                 if (!vars.moreIsMet) {
                     vars.moreIsMet = true;
 
@@ -1139,8 +1206,30 @@ class NavbarSiteView extends View {
         this.tabDefsList = tabDefsList;
     }
 
+    /**
+     * @private
+     * @param {{
+     *     colorsDisabled: boolean,
+     *     tabIconsDisabled: boolean,
+     * }} params
+     * @param {Record|string} tab
+     * @param {number} i
+     * @param {Object} vars
+     * @return {{
+     *     isAfterShowMore: boolean,
+     *     isDivider: boolean,
+     *     color: null,
+     *     link: string,
+     *     name: string,
+     *     isInMore: boolean,
+     *     shortLabel: string,
+     *     label: string,
+     *     isGroup: boolean,
+     *     aClassName: string,
+     *     iconClass: null
+     * }}
+     */
     prepareTabItemDefs(params, tab, i, vars) {
-        let label;
         let link;
 
         let iconClass = null;
@@ -1151,65 +1240,38 @@ class NavbarSiteView extends View {
         let name = tab;
         let aClassName = 'nav-link';
 
-        const translateLabel = label => {
-            if (label.indexOf('$') === 0) {
-                return this.translate(label.slice(1), 'navbarTabs');
-            }
-
-            return label;
-        };
+        const label = this.tabsHelper.getTranslatedTabLabel(tab);
 
         if (tab === 'Home') {
-            label = this.getLanguage().translate(tab);
             link = '#';
-        }
-        else if (typeof tab === 'object' && tab.type === 'divider') {
+        } else if (this.tabsHelper.isTabDivider(tab)) {
             isDivider = true;
-            label = tab.text;
-            aClassName = 'nav-divider-text';
-            name = 'divider-' + i;
 
-            if (label) {
-                label = translateLabel(label);
-            }
-        }
-        else if (typeof tab === 'object' && tab.type === 'url') {
+            aClassName = 'nav-divider-text';
+            name = `divider-${i}`;
+        } else if (this.tabsHelper.isTabUrl(tab)) {
             isUrl = true;
-            label = tab.text || '#';
-            name = 'url-' + i;
+
+            name = `url-${i}`;
             link = tab.url || '#';
             color = tab.color;
             iconClass = tab.iconClass;
 
-            if (label) {
-                label = translateLabel(label);
-            }
-
             this.urlList.push({name: name, url: link});
-        }
-        else if (typeof tab === 'object') {
+        } else if (this.tabsHelper.isTabGroup(tab)) {
             isGroup = true;
 
-            label = tab.text || '';
             color = tab.color;
             iconClass = tab.iconClass;
 
-            name = 'group-' + i;
+            name = `group-${i}`;
 
             link = null;
 
             aClassName = 'nav-link-group';
-
-            if (label) {
-                label = translateLabel(label);
-            }
-        }
-        else {
-            label = this.getLanguage().translate(tab, 'scopeNamesPlural');
+        } else {
             link = '#' + tab;
         }
-
-        label = label || '';
 
         const shortLabel = label.substring(0, 2);
 
@@ -1255,97 +1317,98 @@ class NavbarSiteView extends View {
     /**
      * @typedef {Object} MenuDataItem
      * @property {string} [link]
+     * @property {string} [name]
      * @property {string} [html]
+     * @property {string} [handler]
+     * @property {string} [actionFunction]
      * @property {true} [divider]
      */
 
     /**
-     * @return {MenuDataItem[]}
+     * @private
      */
-    getMenuDataList() {
-        let avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 16, 'avatar-link');
+    setupMenu() {
+        let avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 20, 'avatar-link');
 
         if (avatarHtml) {
             avatarHtml += ' ';
         }
 
-        /** @type {MenuDataItem[]}*/
-        let list = [
+        /** @type {MenuDataItem[]} */
+        this.menuDataList = [
             {
-                link: '#User/view/' + this.getUser().id,
+                link: `#User/view/${this.getUser().id}`,
                 html: avatarHtml + this.getHelper().escapeString(this.getUser().get('name')),
             },
             {divider: true}
         ];
 
-        if (this.getUser().isAdmin()) {
-            list.push({
-                link: '#Admin',
-                label: this.getLanguage().translate('Administration'),
+        /**
+         * @type {Record<string, {
+         *     order?: number,
+         *     groupIndex?: number,
+         *     link?: string,
+         *     labelTranslation?: string,
+         *     configCheck?: string,
+         *     disabled:? boolean,
+         *     handler?: string,
+         *     actionFunction?: string,
+         *     accessDataList?: module:utils~AccessDefs[],
+         * }>} items
+         */
+        const items = this.getMetadata().get('app.clientNavbar.menuItems') || {};
+
+        const nameList = Object.keys(items).sort((n1, n2) => {
+            const o1 = items[n1].order;
+            const o2 = items[n2].order;
+
+            const g1 = items[n1].groupIndex;
+            const g2 = items[n2].groupIndex;
+
+            if (g2 === g1) {
+                return o1 - o2;
+            }
+
+            return g1 - g2;
+        });
+
+        let currentGroup = 0;
+
+        for (const name of nameList) {
+            const item = items[name];
+
+            if (item.groupIndex !== currentGroup) {
+                currentGroup = item.groupIndex;
+
+                this.menuDataList.push({divider: true});
+            }
+
+            if (item.disabled) {
+                continue;
+            }
+
+            if (
+                item.configCheck &&
+                !Espo.Utils.checkActionAvailability(this.getHelper(), item)
+            ) {
+                continue;
+            }
+
+            if (
+                item.accessDataList &&
+                !Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())
+            ) {
+                continue;
+            }
+
+            this.menuDataList.push({
+                name: name,
+                link: item.link,
+                label: this.getLanguage().translatePath(item.labelTranslation),
+                handler: item.handler,
+                actionFunction: item.actionFunction,
             });
         }
-
-        list.push({
-            link: '#Preferences',
-            label: this.getLanguage().translate('Preferences'),
-        });
-
-        if (!this.getConfig().get('actionHistoryDisabled')) {
-            list.push({divider: true});
-
-            list.push({
-                action: 'showLastViewed',
-                link: '#LastViewed',
-                label: this.getLanguage().translate('LastViewed', 'scopeNamesPlural'),
-            });
-        }
-
-        list = list.concat([
-            {
-                divider: true
-            },
-            {
-                link: '#About',
-                label: this.getLanguage().translate('About')
-            },
-            {
-                action: 'logout',
-                label: this.getLanguage().translate('Log Out')
-            },
-        ]);
-
-        return list;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    actionLogout() {
-        this.getRouter().logout();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    actionShowLastViewed() {
-        Espo.Ui.notify(' ... ');
-
-        this.createView('dialog', 'views/modals/last-viewed', {}, (view) => {
-            view.render();
-
-            Espo.Ui.notify(false);
-
-            this.listenToOnce(view, 'close', () => {
-                this.clearView('dialog');
-            });
-        });
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    actionShowHistory() {
-        this.createView('dialog', 'views/modals/action-history', {}, (view) => {
-            view.render();
-
-            this.listenTo(view, 'close', () => {
-                this.clearView('dialog');
-            });
-        });
     }
 
     showMoreTabs() {

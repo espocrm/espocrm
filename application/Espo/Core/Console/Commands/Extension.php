@@ -124,8 +124,7 @@ class Extension implements Command
 
         try {
             $id = $manager->upload($fileDataEncoded);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $io->writeLine($e->getMessage());
             $io->setExitStatus(1);
 
@@ -148,8 +147,7 @@ class Extension implements Command
 
         try {
             $manager->install(['id' => $id]);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $io->writeLine("");
             $io->writeLine($e->getMessage());
             $io->setExitStatus(1);
@@ -184,8 +182,7 @@ class Extension implements Command
             }
 
             $name = $record->get('name');
-        }
-        else {
+        } else {
             if (!$name) {
                 $io->writeLine("Can't uninstall. No --name or --id specified.");
                 $io->setExitStatus(1);
@@ -217,8 +214,7 @@ class Extension implements Command
 
         try {
             $manager->uninstall(['id' => $id]);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $io->writeLine("");
             $io->writeLine($e->getMessage());
             $io->setExitStatus(1);
@@ -237,8 +233,7 @@ class Extension implements Command
 
         try {
             $manager->delete(['id' => $id]);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $io->writeLine($e->getMessage());
             $io->writeLine("Extension '$name' is uninstalled but could not be deleted.");
 
@@ -275,6 +270,7 @@ class Extension implements Command
 
             $io->writeLine(' Name: ' . $extension->get('name'));
             $io->writeLine(' ID: ' . $extension->getId());
+            $io->writeLine(' Version: ' . $extension->getVersion());
             $io->writeLine(' Installed: ' . ($isInstalled ? 'yes' : 'no'));
 
             $io->writeLine("");

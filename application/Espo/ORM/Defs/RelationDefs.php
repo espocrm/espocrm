@@ -170,6 +170,20 @@ class RelationDefs
     }
 
     /**
+     * Try to get a foreign relation name.
+     *
+     * @since 8.3.0
+     */
+    public function tryGetForeignRelationName(): ?string
+    {
+        if (!$this->hasForeignRelationName()) {
+            return null;
+        }
+
+        return $this->getForeignRelationName();
+    }
+
+    /**
      * Get a foreign relation name.
      *
      * @throws RuntimeException

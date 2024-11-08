@@ -42,60 +42,69 @@
     {{else}}
     <thead>
         <tr>
-            <th style="width: 15%; text-align: left">{{translate 'entity' category='fields' scope='EntityManager'}}</th>
-            <th style="width: 15%; text-align: left">{{translate 'linkForeign' category='fields' scope='EntityManager'}}</th>
-            <th style="width: 10%; text-align: center">
+            <th style="width: 20%;">{{translate 'linkForeign' category='fields' scope='EntityManager'}}</th>
+            <th style="width: 20%;">
                 {{translate 'linkType' category='fields' scope='EntityManager'}}
             </th>
-            <th style="width: 15%; text-align: right">
+            <th style="width: 20%;">
                 {{translate 'link' category='fields' scope='EntityManager'}}
             </th>
-            <th style="width: 15%; text-align: right">
+            <th style="width: 20%;">
                 {{translate 'entityForeign' category='fields' scope='EntityManager'}}
             </th>
-            <th style="width: 10%"></th>
             <th style="width: 10%"></th>
         </tr>
     </thead>
     {{/unless}}
     {{#each linkDataList}}
     <tr data-link="{{link}}" class="link-row">
-        <td style="width: 15%; text-align: left">
-            {{translate entity category='scopeNames'}}
-        </td>
-        <td style="width: 15%; text-align: left">
+        <td style="">
             <span title="{{translate linkForeign category='links' scope=entityForeign}}">
                 {{linkForeign}}
             </span>
         </td>
-        <td style="width: 10%; text-align: center">
-            <strong>
+        <td>
+            <span style="color: var(--gray-soft); font-weight: 600;">
             {{translateOption type field='linkType' scope='EntityManager'}}
-            </strong>
+            </span>
         </td>
-        <td style="width: 15%; text-align: right">
+        <td>
             <span title="{{translate link category='links' scope=entity}}">
                 {{link}}
             </span>
         </td>
-        <td style="width: 15%; text-align: right">
+        <td>
             {{translate entityForeign category='scopeNames'}}
         </td>
-        <td style="width: 10%; text-align: right">
-            {{#if isEditable}}
-                <a role="button" tabindex="0" data-action="editLink" data-link="{{link}}">
-                    {{translate 'Edit'}}
-                </a>
-            {{/if}}
-        </td>
-        <td style="width: 10%; ; text-align: right" class="">
-            {{#if isRemovable}}
+        <td style="text-align: right">
+            {{#if hasDropdown}}
                 <div class="btn-group row-dropdown-group">
                     <button
                         class="btn btn-link btn-sm dropdown-toggle"
                         data-toggle="dropdown"
                     ><span class="caret"></span></button>
                     <ul class="dropdown-menu pull-right">
+                        {{#if isEditable}}
+                            <li>
+                                <a
+                                    role="button"
+                                    tabindex="0"
+                                    data-action="editLink"
+                                    data-link="{{link}}"
+                                >{{translate 'Edit'}}</a>
+                            </li>
+                        {{/if}}
+                        {{#if hasEditParams}}
+                            <li>
+                                <a
+                                    role="button"
+                                    tabindex="0"
+                                    data-action="editParams"
+                                    data-link="{{link}}"
+                                >{{translate 'Parameters' scope='EntityManager'}}</a>
+                            </li>
+                        {{/if}}
+                        {{#if isRemovable}}
                         <li>
                             <a
                                 role="button"
@@ -104,6 +113,7 @@
                                 data-link="{{link}}"
                             >{{translate 'Remove'}}</a>
                         </li>
+                        {{/if}}
                     </ul>
                 </div>
             {{/if}}

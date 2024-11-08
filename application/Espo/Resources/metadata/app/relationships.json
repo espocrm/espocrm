@@ -11,6 +11,9 @@
     "entityUser": {
         "converterClassName": "Espo\\Core\\Utils\\Database\\Orm\\LinkConverters\\EntityUser"
     },
+    "entityCollaborator": {
+        "converterClassName": "Espo\\Core\\Utils\\Database\\Orm\\LinkConverters\\EntityCollaborator"
+    },
     "smsPhoneNumber": {
         "converterClassName": "Espo\\Core\\Utils\\Database\\Orm\\LinkConverters\\SmsPhoneNumber"
     }

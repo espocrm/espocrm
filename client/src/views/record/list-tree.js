@@ -50,6 +50,8 @@ class ListTreeRecordView extends ListRecordView {
     level = 0
     itemViewName = 'views/record/list-tree-item'
 
+    expandToggleInactive = false;
+
     // noinspection JSCheckFunctionSignatures
     data() {
         const data = super.data();
@@ -59,32 +61,20 @@ class ListTreeRecordView extends ListRecordView {
         data.showRoot = this.showRoot;
 
         if (data.showRoot) {
-            data.rootName = this.rootName || this.translate('Root');
+            data.rootName = this.rootName || this.translate('Top Level');
         }
-
-        data.showEditLink = this.showEditLink;
 
         if (this.level === 0 && this.selectable && (this.selectedData || {}).id === null) {
             data.rootIsSelected = true;
-        }
-
-        if (this.level === 0 && this.options.hasExpandedToggler) {
-            data.hasExpandedToggler = true;
         }
 
         if (this.level === 0) {
             data.isExpanded = this.isExpanded;
         }
 
-        if (data.hasExpandedToggler || this.showEditLink) {
-            data.showRootMenu = true;
-        }
-
-        if (this.options.menuDisabled) {
-            data.showRootMenu = false;
-        }
-
-        data.noData = data.createDisabled && !data.rowList.length && !data.showRoot;
+        data.noData = data.createDisabled && !data.rowDataList.length && !data.showRoot;
+        data.expandToggleInactive = this.expandToggleInactive;
+        data.hasExpandToggle = !this.getUser().isPortal();
 
         return data;
     }
@@ -104,10 +94,6 @@ class ListTreeRecordView extends ListRecordView {
             if ('rootName' in this.options) {
                 this.rootName = this.options.rootName;
             }
-        }
-
-        if ('showRoot' in this.options) {
-            this.showEditLink = this.options.showEditLink;
         }
 
         if ('level' in this.options) {

@@ -30,26 +30,28 @@
 namespace Espo\Modules\Crm\Jobs;
 
 use Espo\Core\Utils\DateTime;
+use Espo\Core\Utils\Metadata;
 use Espo\Modules\Crm\Entities\KnowledgeBaseArticle;
 use Espo\Core\Job\JobDataLess;
 use Espo\Core\ORM\EntityManager;
 
 class ControlKnowledgeBaseArticleStatus implements JobDataLess
 {
-    private EntityManager $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        private EntityManager $entityManager,
+        private Metadata $metadata
+    ) {}
 
     public function run(): void
     {
+        $statusList = $this->metadata->get("entityDefs.KnowledgeBaseArticle.fields.status.activeOptions") ??
+            [KnowledgeBaseArticle::STATUS_PUBLISHED];
+
         $list = $this->entityManager
             ->getRDBRepository(KnowledgeBaseArticle::ENTITY_TYPE)
             ->where([
                 'expirationDate<=' => date(DateTime::SYSTEM_DATE_FORMAT),
-                'status' => KnowledgeBaseArticle::STATUS_PUBLISHED,
+                'status' => $statusList,
             ])
             ->find();
 

@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\MassUpdate;
 
+use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\ORM\Entity;
 use Espo\ORM\Defs as OrmDefs;
 
@@ -95,17 +96,12 @@ class ValueMapPreparator
             }
 
             if (
-                $entity->getAttributeParam($attribute, 'isLinkMultipleIdList') &&
+                $entity->getAttributeParam($attribute, AttributeParam::IS_LINK_MULTIPLE_ID_LIST) &&
                 $entity->getAttributeParam($attribute, 'relation')
             ) {
                 $field = $entity->getAttributeParam($attribute, 'relation');
 
-                $columns = $this->ormDefs
-                    ->getEntity($entity->getEntityType())
-                    ->getField($field)
-                    ->getParam('columns');
-
-                $entity->loadLinkMultipleField($field, $columns);
+                $entity->loadLinkMultipleField($field);
             }
         }
     }

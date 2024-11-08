@@ -26,62 +26,64 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/record/panels/event', ['views/record/panels/side'], function (Dep) {
+import SidePanelView from 'views/record/panels/side';
 
-    return class extends Dep {
+export default class extends SidePanelView {
 
-        setupFields() {
-            super.setupFields();
+    setupFields() {
+        super.setupFields();
 
-            this.fieldList.push({
-                name: 'icsEventDateStart',
-                readOnly: true,
-                labelText: this.translate('dateStart', 'fields', 'Meeting'),
-            });
+        this.fieldList.push({
+            name: 'icsEventDateStart',
+            readOnly: true,
+            labelText: this.translate('dateStart', 'fields', 'Meeting'),
+        });
 
-            this.fieldList.push({
-                name: 'createdEvent',
-                readOnly: true,
-            });
+        this.fieldList.push({
+            name: 'createdEvent',
+            readOnly: true,
+        });
 
-            this.fieldList.push({
-                name: 'createEvent',
-                readOnly: true,
-                noLabel: true,
-            });
+        this.fieldList.push({
+            name: 'createEvent',
+            readOnly: true,
+            noLabel: true,
+        });
 
-            this.controlEventField();
+        this.controlEventField();
 
-            this.listenTo(this.model, 'change:icsEventData', this.controlEventField, this);
-            this.listenTo(this.model, 'change:createdEventId', this.controlEventField, this);
-        }
+        this.listenTo(this.model, 'change:icsEventData', this.controlEventField, this);
+        this.listenTo(this.model, 'change:createdEventId', this.controlEventField, this);
+    }
 
-        controlEventField() {
-            if (!this.model.get('icsEventData')) {
-                this.recordViewObject.hideField('createEvent');
-                this.recordViewObject.showField('createdEvent');
-
-                return;
-            }
-
-            const eventData = this.model.get('icsEventData');
-
-            if (eventData.createdEvent) {
-                this.recordViewObject.hideField('createEvent');
-                this.recordViewObject.showField('createdEvent');
-
-                return;
-            }
-
-            if (!this.model.get('createdEventId')) {
-                this.recordViewObject.hideField('createdEvent');
-                this.recordViewObject.showField('createEvent');
-
-                return;
-            }
-
+    /**
+     * @private
+     */
+    controlEventField() {
+        if (!this.model.get('icsEventData')) {
             this.recordViewObject.hideField('createEvent');
             this.recordViewObject.showField('createdEvent');
+
+            return;
         }
-    };
-});
+
+        const eventData = this.model.get('icsEventData');
+
+        if (eventData.createdEvent) {
+            this.recordViewObject.hideField('createEvent');
+            this.recordViewObject.showField('createdEvent');
+
+            return;
+        }
+
+        if (!this.model.get('createdEventId')) {
+            this.recordViewObject.hideField('createdEvent');
+            this.recordViewObject.showField('createEvent');
+
+            return;
+        }
+
+        this.recordViewObject.hideField('createEvent');
+        this.recordViewObject.showField('createdEvent');
+    }
+}

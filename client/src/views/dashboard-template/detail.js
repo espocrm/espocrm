@@ -26,24 +26,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashboard-template/detail', ['views/detail'], function (Dep) {
+import DetailView from 'views/detail';
 
-    return Dep.extend({
+export default class extends DetailView {
 
-        actionDeployToUsers: function () {
-            this.createView('dialog', 'views/dashboard-template/modals/deploy-to-users', {
-                model: this.model,
-            }, function (view) {
-                view.render();
-            }, this);
-        },
+    // noinspection JSUnusedGlobalSymbols
+    actionDeployToUsers() {
+        this.createView('dialog', 'views/dashboard-template/modals/deploy-to-users', {
+            model: this.model,
+        }, view => {
+            view.render();
+        });
+    }
 
-        actionDeployToTeam: function () {
-            this.createView('dialog', 'views/dashboard-template/modals/deploy-to-team', {
-                model: this.model,
-            }, function (view) {
-                view.render();
-            }, this);
-        },
-    });
-});
+    // noinspection JSUnusedGlobalSymbols
+    actionDeployToTeam() {
+        this.createView('dialog', 'views/dashboard-template/modals/deploy-to-team', {
+            model: this.model,
+        }, view => {
+            view.render();
+        });
+    }
+}

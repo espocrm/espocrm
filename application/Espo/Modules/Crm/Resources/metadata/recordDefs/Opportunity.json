@@ -7,5 +7,8 @@
     "mandatoryAttributeList": [
         "accountId",
         "accountName"
+    ],
+    "beforeUpdateHookClassNameList": [
+        "Espo\\Modules\\Crm\\Classes\\RecordHooks\\Opportunity\\BeforeUpdate"
     ]
 }

@@ -138,6 +138,7 @@ class SendService
         $userAddressList = [];
 
         if ($user) {
+            // @todo Use getEmailAddressGroup.
             /** @var Collection<EmailAddress> $emailAddressCollection */
             $emailAddressCollection = $this->entityManager
                 ->getRDBRepositoryByClass(User::class)
@@ -219,20 +220,14 @@ class SendService
 
         $message = new Message();
 
-        $repliedMessageId = $this->getRepliedEmailMessageId($entity);
-
-        if ($repliedMessageId) {
-            $message->getHeaders()->addHeaderLine('In-Reply-To', $repliedMessageId);
-            $message->getHeaders()->addHeaderLine('References', $repliedMessageId);
-        }
+        $this->applyReplied($entity, $message);
 
         try {
             $emailSender
                 ->withParams($params)
                 ->withMessage($message)
                 ->send($entity);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $entity->setStatus(Email::STATUS_DRAFT);
 
             $this->entityManager->saveEntity($entity, [SaveOption::SILENT => true]);
@@ -263,7 +258,7 @@ class SendService
             }
         }
 
-        $this->entityManager->saveEntity($entity, ['isJustSent' => true]);
+        $this->entityManager->saveEntity($entity, [Email::SAVE_OPTION_IS_JUST_SENT => true]);
 
         $this->store($message, $groupAccount, $personalAccount);
 
@@ -308,8 +303,7 @@ class SendService
 
             try {
                 $this->groupAccountService->storeSentMessage($id, $message);
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 $this->log->error(
                     "Email sending: Could not store sent email (Group Email Account {$groupAccount->getId()}): " .
                     $e->getMessage() . "."
@@ -326,8 +320,7 @@ class SendService
 
             try {
                 $this->personalAccountService->storeSentMessage($id, $message);
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 $this->log->error(
                     "Email sending: Could not store sent email (Email Account {$personalAccount->getId()}): " .
                     $e->getMessage() . "."
@@ -473,8 +466,7 @@ class SendService
             $this->emailSender
                 ->withSmtpParams($params)
                 ->send($email);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log->warning("Email sending:" . $e->getMessage() . "; " . $e->getCode());
 
             if ($e instanceof SendingError) {
@@ -561,24 +553,6 @@ class SendService
             ->withFromAddress($address);
     }
 
-    private function getRepliedEmailMessageId(Email $email): ?string
-    {
-        $repliedLink = $email->getReplied();
-
-        if (!$repliedLink) {
-            return null;
-        }
-
-        /** @var ?Email $replied */
-        $replied = $this->entityManager
-            ->getRDBRepositoryByClass(Email::class)
-            ->select(['messageId'])
-            ->where(['id' => $repliedLink->getId()])
-            ->findOne();
-
-        return $replied?->getMessageId();
-    }
-
     /**
      * @internal For bc.
      * @param array<string, mixed> $params
@@ -606,8 +580,7 @@ class SendService
 
         try {
             $handler = $this->injectableFactory->create($handlerClassName);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->log->error(
                 "Email sending: Could not create Smtp Handler for $emailAddress. Error: " .
                 $e->getMessage() . "."
@@ -678,5 +651,32 @@ class SendService
     {
         /** @var UserDataRepository */
         return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
+    }
+
+    private function applyReplied(Email $entity, Message $message): void
+    {
+        $replied = $this->getRepliedEmail($entity);
+
+        if ($replied && $replied->getMessageId()) {
+            $message->getHeaders()->addHeaderLine('In-Reply-To', $replied->getMessageId());
+            $message->getHeaders()->addHeaderLine('References', $replied->getMessageId());
+        }
+
+        if ($replied && $replied->getGroupFolder()) {
+            $entity->setGroupFolder($replied->getGroupFolder());
+        }
+    }
+
+    private function getRepliedEmail(Email $email): ?Email
+    {
+        if (!$email->getReplied()) {
+            return null;
+        }
+
+        return $this->entityManager
+            ->getRDBRepositoryByClass(Email::class)
+            ->select(['id', 'groupFolderId', 'messageId'])
+            ->where(['id' => $email->getReplied()->getId()])
+            ->findOne();
     }
 }

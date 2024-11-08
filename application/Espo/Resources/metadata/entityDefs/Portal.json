@@ -48,6 +48,9 @@
             "translation": "Global.scopeNames",
             "view": "views/portal/fields/quick-create-list"
         },
+        "applicationName": {
+            "type": "varchar"
+        },
         "companyLogo": {
             "type": "image"
         },
@@ -102,6 +105,16 @@
         },
         "authenticationProvider": {
             "type": "link"
+        },
+        "authTokenLifetime": {
+            "type": "float",
+            "min": 0,
+            "tooltip": "Settings.authTokenMaxIdleTime"
+        },
+        "authTokenMaxIdleTime": {
+            "type": "float",
+            "min": 0,
+            "tooltip": "Settings.authTokenMaxIdleTime"
         },
         "modifiedAt": {
             "type": "datetime",

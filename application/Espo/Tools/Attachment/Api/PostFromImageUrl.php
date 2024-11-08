@@ -60,8 +60,7 @@ class PostFromImageUrl implements Action
 
         try {
             $fieldData = new FieldData($field, $parentType, $relatedType);
-        }
-        catch (Error $e) {
+        } catch (Error $e) {
             throw new BadRequest($e->getMessage());
         }
 

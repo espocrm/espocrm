@@ -93,6 +93,28 @@ class DetailModalView extends ModalView {
         },
     }
 
+    /**
+     * @typedef {Record} module:views/modals/detail~options
+     *
+     * @property {string} entityType An entity type.
+     * @property {string} [id] An ID.
+     * @property {string} [layoutName] A layout name.
+     * @property {import('view-record-helper')} [recordHelper] A record helper.
+     * @property {boolean} [editDisabled] Disable edit.
+     * @property {boolean} [removeDisabled] Disable remove.
+     * @property {boolean} [fullFormDisabled] Disable full-form.
+     * @property {boolean} [quickEditDisabled] Disable quick edit.
+     * @property {string} [rootUrl] A root URL.
+     * @property {string} [fullFormUrl] A full-form URL. As of v8.5.
+     */
+
+    /**
+     * @param {module:views/modals/detail~options} options
+     */
+    constructor(options) {
+        super(options);
+    }
+
     setup() {
         this.scope = this.scope || this.options.scope || this.options.entityType;
         this.entityType = this.options.entityType || this.scope;
@@ -220,6 +242,7 @@ class DetailModalView extends ModalView {
             this.addDropdownItem({
                 name: 'duplicate',
                 label: 'Duplicate',
+                groupIndex: 0,
             });
         }
     }
@@ -262,6 +285,9 @@ class DetailModalView extends ModalView {
         }
     }
 
+    /**
+     * @protected
+     */
     controlRecordButtonsVisibility() {
         if (this.getAcl().check(this.model, 'edit')) {
             this.showButton('edit');
@@ -284,6 +310,7 @@ class DetailModalView extends ModalView {
         }, true);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     removeEditButton() {
         this.removeButton('edit');
     }
@@ -292,9 +319,11 @@ class DetailModalView extends ModalView {
         this.addDropdownItem({
             name: 'remove',
             label: 'Remove',
+            groupIndex: 0,
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     removeRemoveButton() {
         this.removeButton('remove');
     }
@@ -329,7 +358,7 @@ class DetailModalView extends ModalView {
         }
 
         if (!this.fullFormDisabled) {
-            const url = '#' + scope + '/view/' + this.id;
+            const url = this.options.fullFormUrl || `#${scope}/view/${this.id}`;
 
             this.headerHtml =
                 $('<a>')
@@ -365,15 +394,14 @@ class DetailModalView extends ModalView {
             const removeAccess = this.getAcl().check(model, 'delete', true);
 
             if (removeAccess) {
-                this.showButton('remove');
-            }
-            else {
-                this.hideButton('remove');
+                this.showActionItem('remove');
+            } else {
+                this.hideActionItem('remove');
 
                 if (removeAccess === null) {
                     this.listenToOnce(model, 'sync', () => {
                         if (this.getAcl().check(model, 'delete')) {
-                            this.showButton('remove');
+                            this.showActionItem('remove');
                         }
                     });
                 }
@@ -381,7 +409,6 @@ class DetailModalView extends ModalView {
         }
 
         const viewName =
-            this.detailViewName ||
             this.detailView ||
             this.getMetadata().get(['clientDefs', model.entityType, 'recordViews', 'detailSmall']) ||
             this.getMetadata().get(['clientDefs', model.entityType, 'recordViews', 'detailQuick']) ||
@@ -396,6 +423,7 @@ class DetailModalView extends ModalView {
             inlineEditDisabled: true,
             sideDisabled: this.sideDisabled,
             bottomDisabled: this.bottomDisabled,
+            recordHelper: this.options.recordHelper,
             exit: function () {
             },
         };
@@ -414,7 +442,7 @@ class DetailModalView extends ModalView {
         super.afterRender();
 
         setTimeout(() => {
-            this.$el.children(0).scrollTop(0);
+            this.$el.children().first().scrollTop(0);
         }, 50);
 
         if (!this.navigateButtonsDisabled) {
@@ -429,26 +457,25 @@ class DetailModalView extends ModalView {
             return;
         }
 
+        const collection = this.model.collection;
+
         const indexOfRecord = this.indexOfRecord;
 
         let previousButtonEnabled = false;
         let nextButtonEnabled = false;
 
-        if (indexOfRecord > 0) {
+        if (indexOfRecord > 0 || collection.offset > 0) {
             previousButtonEnabled = true;
         }
 
-        if (indexOfRecord < this.model.collection.total - 1) {
+        if (indexOfRecord < collection.total - 1 - collection.offset) {
             nextButtonEnabled = true;
         }
-        else {
-            if (this.model.collection.total === -1) {
-                nextButtonEnabled = true;
-            } else if (this.model.collection.total === -2) {
-                if (indexOfRecord < this.model.collection.length - 1) {
-                    nextButtonEnabled = true;
-                }
-            }
+        else if (collection.total === -1) {
+            nextButtonEnabled = true;
+        }
+        else if (collection.total === -2 && indexOfRecord < collection.length - 1 - collection.offset) {
+            nextButtonEnabled = true;
         }
 
         if (previousButtonEnabled) {
@@ -514,7 +541,30 @@ class DetailModalView extends ModalView {
             return;
         }
 
-        if (!(this.indexOfRecord > 0)) {
+        const collection = this.model.collection;
+
+        if (this.indexOfRecord <= 0 && !collection.offset) {
+            return;
+        }
+
+        if (
+            this.indexOfRecord === 0 &&
+            collection.offset > 0 &&
+            collection.maxSize
+        ) {
+            collection.offset = Math.max(0, collection.offset - collection.maxSize);
+
+            collection.fetch()
+                .then(() => {
+                    const indexOfRecord = collection.length - 1;
+
+                    if (indexOfRecord < 0) {
+                        return;
+                    }
+
+                    this.switchToModelByIndex(indexOfRecord);
+                });
+
             return;
         }
 
@@ -528,19 +578,25 @@ class DetailModalView extends ModalView {
             return;
         }
 
-        if (!(this.indexOfRecord < this.model.collection.total - 1) && this.model.collection.total >= 0) {
-            return;
-        }
-
-        if (this.model.collection.total === -2 && this.indexOfRecord >= this.model.collection.length - 1) {
-            return;
-        }
-
         const collection = this.model.collection;
+
+        if (
+            !(this.indexOfRecord < collection.total - 1 - collection.offset) &&
+            this.model.collection.total >= 0
+        ) {
+            return;
+        }
+
+        if (
+            collection.total === -2 &&
+            this.indexOfRecord >= collection.length - 1 - collection.offset
+        ) {
+            return;
+        }
 
         const indexOfRecord = this.indexOfRecord + 1;
 
-        if (indexOfRecord <= collection.length - 1) {
+        if (indexOfRecord <= collection.length - 1 - collection.offset) {
             this.switchToModelByIndex(indexOfRecord);
 
             return;
@@ -604,6 +660,9 @@ class DetailModalView extends ModalView {
                     this.controlRecordButtonsVisibility();
 
                     this.trigger('model-sync');
+
+                    // Triggers stream panel update.
+                    this.model.trigger('sync');
                 });
 
                 view.render()
@@ -617,6 +676,7 @@ class DetailModalView extends ModalView {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionRemove() {
         const model = this.getRecordView().model;
 
@@ -629,6 +689,8 @@ class DetailModalView extends ModalView {
                 .then(() => {
                     this.trigger('after:destroy', model);
                     this.dialog.close();
+
+                    Espo.Ui.success(this.translate('Removed'));
                 })
                 .catch(() => {
                     $buttons.removeClass('disabled').removeAttr('disabled');
@@ -636,6 +698,7 @@ class DetailModalView extends ModalView {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionFullForm() {
         let url;
         const router = this.getRouter();
@@ -669,6 +732,7 @@ class DetailModalView extends ModalView {
         this.dialog.close();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionDuplicate() {
         Espo.Ui.notify(' ... ');
 

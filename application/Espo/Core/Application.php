@@ -76,8 +76,7 @@ class Application
 
         try {
             $runnerRunner->run($className, $params);
-        }
-        catch (RunnerException $e) {
+        } catch (RunnerException $e) {
             die($e->getMessage());
         }
     }

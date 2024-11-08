@@ -11,5 +11,8 @@
     },
     "itemViews": {
         "Post": "views/stream/notes/post"
+    },
+    "viewSetupHandlers": {
+        "record/detail": ["handlers/note/record-detail-setup"]
     }
 }

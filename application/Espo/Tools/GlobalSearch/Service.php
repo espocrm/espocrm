@@ -178,8 +178,7 @@ class Service
         if ($isPerson) {
             $selectList[] = 'firstName';
             $selectList[] = 'lastName';
-        }
-        else {
+        } else {
             $selectList[] = ['VALUE:', 'firstName'];
             $selectList[] = ['VALUE:', 'lastName'];
         }
@@ -202,8 +201,7 @@ class Service
             $queryBuilder
                 ->select($expression, 'relevance')
                 ->order($expression, Order::DESC);
-        }
-        else {
+        } else {
             $queryBuilder->select(Expr::value(1.1), 'relevance');
         }
 

@@ -87,8 +87,7 @@ class UserIsBusyType implements Func
 
         try {
             $ranges = $this->service->fetchBusyRanges($userId, $params, $ignoreList);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
 

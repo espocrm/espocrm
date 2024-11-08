@@ -3,22 +3,22 @@
     "parent": "Ebeveyn",
     "contacts": "Kişiler",
     "opportunities": "Fırsatlar",
-    "leads": "Müşteri Potansiyelleri",
+    "leads": "Potansiyeller",
     "meetings": "Toplantılar",
     "calls": "Aramalar",
     "tasks": "Görevler",
-    "emails": "Emailler",
+    "emails": "Epostalar",
     "accounts": "Firmalar",
-    "cases": "Dosyalar",
+    "cases": "Olaylar",
     "documents": "Belgeler",
     "account": "Hesap",
     "opportunity": "Fırsat",
-    "contact": "İletişim"
+    "contact": "Kişi"
   },
   "scopeNames": {
     "Account": "Hesap",
-    "Contact": "Bağlantı",
-    "Lead": "Müşteri Potansiyeli",
+    "Contact": "Kişi",
+    "Lead": "Potansiyeller",
     "Target": "Hedef",
     "Opportunity": "Fırsat",
     "Meeting": "Toplantı",
@@ -31,7 +31,7 @@
     "Campaign": "Kampanya",
     "TargetList": "Hedef Liste",
     "MassEmail": "Toplu Eposta",
-    "EmailQueueItem": "E-posta Kuyruğu Öğesi",
+    "EmailQueueItem": "Eposta Kuyruğu Öğesi",
     "CampaignTrackingUrl": "İzleme URL'i",
     "Activities": "Faaliyetler",
     "KnowledgeBaseArticle": "Bilgi Bankası Makalesi",
@@ -41,20 +41,20 @@
   "scopeNamesPlural": {
     "Account": "Firmalar",
     "Contact": "Kişiler",
-    "Lead": "Müşteri Potansiyelleri",
+    "Lead": "Potansiyeller",
     "Target": "Hedefler",
     "Opportunity": "Fırsatlar",
     "Meeting": "Toplantılar",
     "Calendar": "Takvim",
     "Call": "Aramalar",
     "Task": "Görevler",
-    "Case": "Dosyalar",
+    "Case": "Olaylar",
     "Document": "Belgeler",
     "DocumentFolder": "Doküman Klasörleri",
     "Campaign": "Kampanyalar",
     "TargetList": "Hedef Listeler",
-    "MassEmail": "Toplu Email",
-    "EmailQueueItem": "Email Kuyruğu Öğeleri",
+    "MassEmail": "Toplu Eposta",
+    "EmailQueueItem": "Eposta Kuyruğu Öğeleri",
     "CampaignTrackingUrl": "İzleme URL'leri",
     "Activities": "Faaliyetler",
     "KnowledgeBaseArticle": "Bilgi bankası",
@@ -62,15 +62,15 @@
     "CampaignLogRecord": "Kampanya Günlük Kayıtları"
   },
   "dashlets": {
-    "Leads": "Müşteri Potansiyellerim",
+    "Leads": "Potansiyellerim",
     "Opportunities": "Fırsatlarım",
     "Tasks": "Görevlerim",
-    "Cases": "Dosyalarım",
+    "Cases": "Olay Kayıtlarım",
     "Calendar": "Takvim",
     "Calls": "Çağrılarım",
     "Meetings": "Toplantılarım",
     "OpportunitiesByStage": "Aşamaya Göre Fırstalar",
-    "OpportunitiesByLeadSource": "Müşteri Potansiyeli Kaynağına Göre Fırsatlar",
+    "OpportunitiesByLeadSource": "Potansiyel Kaynağına Göre Fırsatlar",
     "SalesByMonth": "Aylık Satışlar",
     "SalesPipeline": "Satış Öngörüleri",
     "Activities": "Faaliyetlerim"
@@ -113,7 +113,8 @@
   },
   "options": {
     "reminderTypes": {
-      "Popup": "Yeni Pencere"
+      "Popup": "Yeni Pencere",
+      "Email": "Epostalar"
     }
   }
 }

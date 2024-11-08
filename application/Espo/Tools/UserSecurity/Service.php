@@ -155,8 +155,7 @@ class Service
             $clientData = $this->twoFactorUserSetupFactory
                 ->create($auth2FAMethod)
                 ->getData($user);
-        }
-        catch (NotConfigured $e) {
+        } catch (NotConfigured $e) {
             $this->log->error($e->getMessage());
 
             throw Forbidden::createWithBody(

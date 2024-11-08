@@ -29,8 +29,7 @@
 /** @module handlers/select-related */
 
 /**
- * @typedef Object
- * @name module:handlers/select-related~filters
+ * @typedef {Object} module:handlers/select-related~filters
  * @property {Object.<string, module:search-manager~advancedFilter>} [advanced]
  *  Advanced filters map. A field name as a key.
  * @property {string[]} [bool] Bool filters.
@@ -47,11 +46,15 @@
 class SelectRelatedHandler {
 
     /**
-     * @param {module:view-helper} viewHelper
+     * @protected
+     * @type {import('view-helper').default}
+     */
+    viewHelper
+
+    /**
+     * @param {import('view-helper').default} viewHelper
      */
     constructor(viewHelper) {
-        // noinspection JSUnusedGlobalSymbols
-        /** @protected */
         this.viewHelper = viewHelper;
     }
 

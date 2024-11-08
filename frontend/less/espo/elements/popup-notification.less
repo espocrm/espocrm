@@ -1,7 +1,8 @@
 #popup-notifications-container {
     overflow-y: auto;
     overflow-x: hidden;
-    right: 0;
+    // Some space to fix the scrollbar gutter issue https://github.com/w3c/csswg-drafts/issues/9904.
+    right: var(--12px);
     bottom: 0;
     position: fixed;
     height: auto;
@@ -10,20 +11,20 @@
 }
 
 .popup-notification {
-    width: 400px;
-    padding: @panel-padding;
+    width: var(--400px);
+    padding: var(--panel-padding);
     background-color: @panel-bg;
-    border: 2px solid @main-gray;
-    margin-top: 10px;
-    margin-right: 5px;
+    border: var(--2px) solid @main-gray;
+    margin-top: var(--10px);
+    margin-right: var(--5px);
     border-radius: var(--panel-border-radius);
 
     &:last-child {
-        margin-bottom: 5px;
+        margin-bottom: var(--5px);
     }
 
     .cell {
-        margin-bottom: 5px;
+        margin-bottom: var(--5px);
         &:last-child {
             margin-bottom: 0;
         }
@@ -34,8 +35,8 @@
     }
 
     a.close {
-        margin-top: -8px;
-        margin-right: -3px;
+        margin-top: var(--minus-8px);
+        margin-right: var(--minus-3px);
     }
 }
 
@@ -81,7 +82,7 @@
     }
 }
 
-@media screen and (max-width: (@screen-sm-min - 1px)) {
+@media screen and (max-width: @screen-xs-max) {
     #popup-notifications-container {
         width: 100%;
     }

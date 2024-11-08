@@ -6,6 +6,7 @@
         autocomplete="espo-global-search"
         spellcheck="false"
     >
+    {{#if hasSearchButton}}
     <div class="input-group-btn">
         <a
             class="btn btn-link global-search-button"
@@ -13,5 +14,6 @@
             title="{{translate 'Search'}}"
         ><span class="fas fa-search icon"></span></a>
     </div>
+    {{/if}}
 </div>
 <div class="global-search-panel-container"></div>

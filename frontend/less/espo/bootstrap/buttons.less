@@ -1,23 +1,15 @@
-//
-// Buttons
-// --------------------------------------------------
-
-
-// Base styles
-// --------------------------------------------------
-
 .btn {
   display: inline-block;
   margin-bottom: 0; // For input.btn
-  font-weight: @btn-font-weight;
+  font-weight: normal;
   text-align: center;
   vertical-align: middle;
   touch-action: manipulation;
   cursor: pointer;
   background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
-  border: 1px solid transparent;
+  border: var(--1px) solid transparent;
   white-space: nowrap;
-  .button-size(@padding-base-vertical; @padding-base-horizontal; @font-size-base; @line-height-base; @btn-border-radius-base);
+  .button-size(var(--padding-base-vertical); var(--padding-base-horizontal); var(--font-size-base); var(--line-height-base));
   .user-select(none);
 
   &,
@@ -32,20 +24,9 @@
   &:hover,
   &:focus,
   &.focus {
-    color: @btn-default-color;
+    color: var(--btn-default-color);
     text-decoration: none;
   }
-
-// Espo-fix
-/*
-  &:active:hover,
-  &.active {
-    outline: 0;
-    background-image: none;
-      box-shadow: var(--input-);
-    .box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
-  }
- */
 
   &.disabled,
   &[disabled],
@@ -82,8 +63,7 @@
   &:active {
     border-color: transparent;
   }
-  &:hover/*, Espo-fix
-  &:focus */{
+  &:hover {
     color: @link-hover-color;
     text-decoration: @link-hover-decoration;
     background-color: transparent;
@@ -99,24 +79,12 @@
 }
 
 
-// Button Sizes
-// --------------------------------------------------
-
 .btn-lg {
-  // line-height: ensure even-numbered height of button next to large input
-  .button-size(@padding-large-vertical; @padding-large-horizontal; @font-size-large; @line-height-large; @btn-border-radius-large);
+  .button-size(var(--padding-large-vertical); var(--padding-large-horizontal); var(--font-size-large); var(--line-height-large));
 }
 .btn-sm {
-  // line-height: ensure proper height of button next to small input
-  .button-size(@padding-small-vertical; @padding-small-horizontal; @font-size-small; @line-height-small; @btn-border-radius-small);
+  .button-size(var(--padding-small-vertical); var(--padding-small-horizontal); var(--font-size-small); var(--line-height-small));
 }
-.btn-xs {
-  .button-size(@padding-xs-vertical; @padding-xs-horizontal; @font-size-small; @line-height-small; @btn-border-radius-small);
-}
-
-
-// Block button
-// --------------------------------------------------
 
 .btn-block {
   display: block;
@@ -125,7 +93,7 @@
 
 // Vertically space out multiple block buttons
 .btn-block + .btn-block {
-  margin-top: 5px;
+  margin-top: var(--5px);
 }
 
 // Specificity overrides

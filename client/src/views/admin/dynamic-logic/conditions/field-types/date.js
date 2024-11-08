@@ -26,10 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/conditions/field-types/date',
-['views/admin/dynamic-logic/conditions/field-types/base'], function (Dep) {
+import DynamicLogicConditionFieldTypeBaseView from 'views/admin/dynamic-logic/conditions/field-types/base';
 
-    return Dep.extend({
-
-    });
-});
+export default class extends DynamicLogicConditionFieldTypeBaseView {}

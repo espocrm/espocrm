@@ -9,10 +9,11 @@
     "description": "Açıklama",
     "users": "Kullanıcılar",
     "contacts": "Kişiler",
-    "leads": "Müşteri Potansiyelleri",
+    "leads": "Potansiyeller",
     "reminders": "Hatırlatıcılar",
-    "account": "Hesap",
-    "acceptanceStatus": "Kabul Durumu"
+    "account": "Firma",
+    "acceptanceStatus": "Kabul Durumu",
+    "sourceEmail": "Kaynak Eposta"
   },
   "options": {
     "status": {
@@ -50,7 +51,7 @@
   "messages": {
     "nothingHasBeenSent": "Hiçbir şey gönderilmedi",
     "selectAcceptanceStatus": "Kabul durumunuzu ayarlayın.",
-    "sendInvitationsToSelectedAttendees": "Seçilen katılımcılara davetiye emailleri gönderilecektir.",
-    "sendCancellationsToSelectedAttendees": "Seçilen katılımcılara iptal emailleri gönderilecektir."
+    "sendInvitationsToSelectedAttendees": "Seçilen katılımcılara davetiye epotaları gönderilecektir.",
+    "sendCancellationsToSelectedAttendees": "Seçilen katılımcılara iptal postaları gönderilecektir."
   }
 }

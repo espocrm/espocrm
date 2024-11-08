@@ -70,6 +70,7 @@ class BeforeCreate implements SaveHook
 
         $targetType = $entity->getTargetType();
 
+        $entity->clear('isPinned');
         $entity->clear('isGlobal');
 
         switch ($targetType) {
@@ -87,7 +88,7 @@ class BeforeCreate implements SaveHook
                 $entity->clear('usersIds');
                 $entity->clear('teamsIds');
                 $entity->clear('portalsIds');
-                $entity->set('usersIds', [$this->user->getId()]);
+                $entity->setUsersIds([$this->user->getId()]);
                 $entity->set('isForSelf', true);
 
                 break;

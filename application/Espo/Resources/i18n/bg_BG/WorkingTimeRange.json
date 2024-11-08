@@ -1,7 +1,7 @@
 {
   "labels": {
-    "Create WorkingTimeRange": "Създаване на диапазон",
-    "Calendars": "Календари"
+    "Calendars": "Календари",
+    "Create WorkingTimeRange": "Създаване на изключение"
   },
   "fields": {
     "timeRanges": "График",

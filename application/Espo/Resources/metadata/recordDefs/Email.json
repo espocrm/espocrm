@@ -3,6 +3,7 @@
     "readLoaderClassNameList": [
         "Espo\\Classes\\FieldProcessing\\Email\\AddressDataLoader",
         "Espo\\Classes\\FieldProcessing\\Email\\UserColumnsLoader",
+        "Espo\\Classes\\FieldProcessing\\Email\\FolderDataLoader",
         "Espo\\Classes\\FieldProcessing\\Email\\IcsDataLoader"
     ],
     "listLoaderClassNameList": [
@@ -34,15 +35,18 @@
         "sentById",
         "replyToString",
         "hasAttachment",
-        "groupFolderId"
+        "groupFolderId",
+        "groupStatusFolder"
     ],
     "beforeReadHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\Email\\MarkAsRead"
     ],
     "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Email\\CheckFromAddress",
         "Espo\\Classes\\RecordHooks\\Email\\BeforeCreate"
     ],
     "beforeUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Email\\CheckFromAddress",
         "Espo\\Classes\\RecordHooks\\Email\\MarkAsReadBeforeUpdate",
         "Espo\\Classes\\RecordHooks\\Email\\BeforeUpdate"
     ],

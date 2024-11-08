@@ -97,19 +97,22 @@
                 "url": "#Admin/users",
                 "label": "Users",
                 "iconClass": "fas fa-user",
-                "description": "users"
+                "description": "users",
+                "tabQuickSearch": true
             },
             {
                 "url": "#Admin/teams",
                 "label": "Teams",
                 "iconClass": "fas fa-users",
-                "description": "teams"
+                "description": "teams",
+                "tabQuickSearch": true
             },
             {
                 "url": "#Admin/roles",
                 "label": "Roles",
                 "iconClass": "fas fa-key",
-                "description": "roles"
+                "description": "roles",
+                "tabQuickSearch": true
             },
             {
                 "url": "#Admin/authLog",
@@ -145,7 +148,8 @@
                 "url": "#Admin/entityManager",
                 "label": "Entity Manager",
                 "iconClass": "fas fa-tools",
-                "description": "entityManager"
+                "description": "entityManager",
+                "tabQuickSearch": true
             },
             {
                 "url": "#Admin/layouts",
@@ -238,7 +242,8 @@
                 "url": "#Admin/portalUsers",
                 "label": "Portal Users",
                 "iconClass": "fas fa-user",
-                "description": "portalUsers"
+                "description": "portalUsers",
+                "tabQuickSearch": true
             },
             {
                 "url": "#Admin/portalRoles",
@@ -256,7 +261,8 @@
                 "url": "#Admin/workingTimeCalendar",
                 "label": "Working Time Calendars",
                 "iconClass": "far fa-calendar-alt",
-                "description": "workingTimeCalendars"
+                "description": "workingTimeCalendars",
+                "tabQuickSearch": true
             },
             {
                 "url": "#Admin/layoutSets",
@@ -289,6 +295,12 @@
                 "label": "Webhooks",
                 "iconClass": "fas fa-share-alt icon-rotate-90",
                 "description": "webhooks"
+            },
+            {
+                "url": "#Admin/addressCountries",
+                "label": "Address Countries",
+                "iconClass": "far fa-flag",
+                "description": "addressCountries"
             },
             {
                 "url": "#Admin/authenticationProviders",
@@ -331,6 +343,18 @@
                 "label": "Phone Numbers",
                 "iconClass": "fas fa-phone",
                 "description": "phoneNumbers"
+            },
+            {
+                "url": "#Admin/appSecrets",
+                "label": "App Secrets",
+                "iconClass": "fas fa-key",
+                "description": "appSecrets"
+            },
+            {
+                "url": "#Admin/appLog",
+                "label": "App Log",
+                "iconClass": "fas fa-list",
+                "description": "appLog"
             }
         ],
         "order": 25

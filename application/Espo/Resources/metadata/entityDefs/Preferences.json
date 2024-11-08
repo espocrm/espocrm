@@ -31,6 +31,9 @@
                 ".",
                 ",",
                 "'"
+            ],
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\Settings\\ThousandSeparator\\Valid"
             ]
         },
         "decimalMark": {
@@ -104,6 +107,10 @@
             "translation": "Global.scopeNamesPlural",
             "view": "views/preferences/fields/assignment-email-notifications-ignore-entity-type-list"
         },
+        "reactionNotifications": {
+            "type": "bool",
+            "default": true
+        },
         "autoFollowEntityTypeList": {
             "type": "multiEnum",
             "view": "views/preferences/fields/auto-follow-entity-type-list",
@@ -118,7 +125,20 @@
         "defaultReminders": {
             "type": "jsonArray",
             "view": "crm:views/meeting/fields/reminders",
-            "default": []
+            "default": [],
+            "validatorClassNameList": [
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\Valid",
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\MaxCount"
+            ]
+        },
+        "defaultRemindersTask": {
+            "type": "jsonArray",
+            "view": "crm:views/meeting/fields/reminders",
+            "default": [],
+            "validatorClassNameList": [
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\Valid",
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\MaxCount"
+            ]
         },
         "theme": {
             "type": "enum",
@@ -131,6 +151,11 @@
         "useCustomTabList": {
             "type": "bool",
             "default": false
+        },
+        "addCustomTabs": {
+            "type": "bool",
+            "default": false,
+            "tooltip": true
         },
         "tabList": {
             "type": "array",
@@ -149,7 +174,7 @@
         },
         "emailReplyForceHtml": {
             "type": "bool",
-            "default": false
+            "default": true
         },
         "isPortalUser": {
             "type": "bool",

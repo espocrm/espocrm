@@ -26,81 +26,80 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/conditions/field-types/link-parent',
-['views/admin/dynamic-logic/conditions/field-types/base'], function (Dep) {
+import DynamicLogicConditionFieldTypeBaseView from 'views/admin/dynamic-logic/conditions/field-types/base';
 
-    return Dep.extend({
+export default class extends DynamicLogicConditionFieldTypeBaseView {
 
-        fetch: function () {
-            var valueView = this.getView('value');
+    fetch() {
+        /** @type {import('views/fields/base').default} */
+        const valueView = this.getView('value');
 
-            var item;
+        let item;
 
-            if (valueView) {
-                valueView.fetchToModel();
-            }
+        if (valueView) {
+            valueView.fetchToModel();
+        }
 
-            if (this.type === 'equals' || this.type === 'notEquals') {
-                var values = {};
+        if (this.type === 'equals' || this.type === 'notEquals') {
+            const values = {};
 
-                values[this.field + 'Id'] = valueView.model.get(this.field + 'Id');
-                values[this.field + 'Name'] = valueView.model.get(this.field + 'Name');
-                values[this.field + 'Type'] = valueView.model.get(this.field + 'Type');
+            values[this.field + 'Id'] = valueView.model.get(this.field + 'Id');
+            values[this.field + 'Name'] = valueView.model.get(this.field + 'Name');
+            values[this.field + 'Type'] = valueView.model.get(this.field + 'Type');
 
-                if (this.type === 'equals') {
-                    item = {
-                        type: 'and',
-                        value: [
-                            {
-                                type: 'equals',
-                                attribute: this.field + 'Id',
-                                value: valueView.model.get(this.field + 'Id')
-                            },
-                            {
-                                type: 'equals',
-                                attribute: this.field + 'Type',
-                                value: valueView.model.get(this.field + 'Type')
-                            }
-                        ],
-                        data: {
-                            field: this.field,
+            if (this.type === 'equals') {
+                item = {
+                    type: 'and',
+                    value: [
+                        {
                             type: 'equals',
-                            values: values
+                            attribute: this.field + 'Id',
+                            value: valueView.model.get(this.field + 'Id')
+                        },
+                        {
+                            type: 'equals',
+                            attribute: this.field + 'Type',
+                            value: valueView.model.get(this.field + 'Type')
                         }
-                    };
-                } else {
-                    item = {
-                        type: 'or',
-                        value: [
-                            {
-                                type: 'notEquals',
-                                attribute: this.field + 'Id',
-                                value: valueView.model.get(this.field + 'Id')
-                            },
-                            {
-                                type: 'notEquals',
-                                attribute: this.field + 'Type',
-                                value: valueView.model.get(this.field + 'Type')
-                            }
-                        ],
-                        data: {
-                            field: this.field,
-                            type: 'notEquals',
-                            values: values
-                        }
-                    };
-                }
+                    ],
+                    data: {
+                        field: this.field,
+                        type: 'equals',
+                        values: values
+                    }
+                };
             } else {
                 item = {
-                    type: this.type,
-                    attribute: this.field + 'Id',
+                    type: 'or',
+                    value: [
+                        {
+                            type: 'notEquals',
+                            attribute: this.field + 'Id',
+                            value: valueView.model.get(this.field + 'Id')
+                        },
+                        {
+                            type: 'notEquals',
+                            attribute: this.field + 'Type',
+                            value: valueView.model.get(this.field + 'Type')
+                        }
+                    ],
                     data: {
-                        field: this.field
+                        field: this.field,
+                        type: 'notEquals',
+                        values: values
                     }
                 };
             }
+        } else {
+            item = {
+                type: this.type,
+                attribute: this.field + 'Id',
+                data: {
+                    field: this.field
+                }
+            };
+        }
 
-            return item;
-        },
-    });
-});
+        return item;
+    }
+}

@@ -128,7 +128,7 @@ class ItemGeneralConverter implements ItemConverter
             case 'columnIsNotNull':
             case 'columnEquals':
             case 'columnNotEquals':
-                return WhereClause::fromRaw($this->groupProcessColumn($queryBuilder, $type, $attribute, $value));
+                return WhereClause::fromRaw($this->groupProcessColumn($type, $attribute, $value));
 
             case Type::ARRAY_ANY_OF:
             case Type::ARRAY_NONE_OF:
@@ -420,15 +420,13 @@ class ItemGeneralConverter implements ItemConverter
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      * @throws BadRequest
      */
     private function groupProcessColumn(
-        QueryBuilder $queryBuilder,
         string $type,
         string $attribute,
-        $value
+        mixed $value
     ): array {
 
         $link = $this->metadata->get(['entityDefs', $this->entityType, 'fields', $attribute, 'link']);
@@ -438,56 +436,38 @@ class ItemGeneralConverter implements ItemConverter
             throw new BadRequest("Bad where item 'column'.");
         }
 
-        $alias =  $link . 'ColumnFilter' . $this->randomStringGenerator->generate();
+        $subQueryBuilder = QueryBuilder::create()
+            ->from($this->entityType)
+            ->select('id')
+            ->leftJoin($link);
 
-        $queryBuilder->distinct();
-        $queryBuilder->leftJoin($link, $alias);
-
-        $columnKey = $alias . 'Middle.' . $column;
+        $alias = $link;
+        $expr = "{$alias}Middle.$column";
 
         if ($type === 'columnLike') {
-            return [
-                $columnKey . '*' => $value,
-            ];
+            $where = [$expr . '*' => $value];
+        } else if ($type === 'columnIn') {
+            $where = [$expr . '=' => $value];
+        } else if ($type === 'columnEquals') {
+            $where = [$expr . '=' => $value];
+        } else if ($type === 'columnNotEquals') {
+            $where = [$expr . '!=' => $value];
+        } else if ($type === 'columnNotIn') {
+            $where = [$expr . '!=' => $value];
+        } else if ($type === 'columnIsNull') {
+            $where = [$expr . '=' => null];
+        } else if ($type === 'columnIsNotNull') {
+            $where = [$expr . '!=' => null];
+        } else {
+            throw new BadRequest("Bad where item 'column'.");
         }
 
-        if ($type === 'columnIn') {
-            return [
-                $columnKey . '=' => $value,
-            ];
-        }
-
-        if ($type === 'columnEquals') {
-            return [
-                $columnKey . '=' => $value,
-            ];
-        }
-
-        if ($type === 'columnNotEquals') {
-            return [
-                $columnKey . '!=' => $value,
-            ];
-        }
-
-        if ($type === 'columnNotIn') {
-            return [
-                $columnKey . '!=' => $value,
-            ];
-        }
-
-        if ($type === 'columnIsNull') {
-            return [
-                $columnKey . '=' => null,
-            ];
-        }
-
-        if ($type === 'columnIsNotNull') {
-            return [
-                $columnKey . '!=' => null,
-            ];
-        }
-
-        throw new BadRequest("Bad where item 'column'.");
+        return Cond::in(
+            Cond::column('id'),
+            $subQueryBuilder
+                ->where($where)
+                ->build()
+        )->getRaw();
     }
 
     /**
@@ -519,31 +499,36 @@ class ItemGeneralConverter implements ItemConverter
 
         if ($isForeign) {
             if ($isForeignType) {
-                $arrayAttributeLink = $entityDefs->getAttribute($attribute)->getParam('relation');
+                $arrayLink = $entityDefs->getAttribute($attribute)->getParam('relation');
                 $arrayAttribute = $entityDefs->getAttribute($attribute)->getParam('foreign');
-            }
-            else {
-                [$arrayAttributeLink, $arrayAttribute] = explode('.', $attribute);
+            } else {
+                [$arrayLink, $arrayAttribute] = explode('.', $attribute);
             }
 
-            if (!$arrayAttributeLink || !$arrayAttribute) {
+            if (!$arrayLink || !$arrayAttribute) {
                 throw new BadRequest("Bad where item.");
             }
 
-            $arrayEntityType = $entityDefs->getRelation($arrayAttributeLink)->getForeignEntityType();
-            $arrayLinkAlias = $arrayAttributeLink . 'ArrayFilter' . $this->randomStringGenerator->generate();
-            $idPart = $arrayLinkAlias . '.id';
+            $arrayEntityType = $entityDefs->getRelation($arrayLink)->getForeignEntityType();
+            $arrayAlias = "{$arrayLink}ArrayFilter{$this->randomStringGenerator->generate()}";
+            $idPart = "$arrayAlias.id";
 
-            $queryBuilder->leftJoin($arrayAttributeLink, $arrayLinkAlias);
+            $queryBuilder->leftJoin($arrayLink, $arrayAlias);
 
-            $relationType = $entityDefs->getRelation($arrayAttributeLink)->getType();
+            // A sub-query is supposed to be used.
+            /*
+            $relationType = $entityDefs->getRelation($arrayLink)->getType();
 
             if (
-                $relationType === Entity::MANY_MANY ||
-                $relationType === Entity::HAS_MANY
+                in_array($relationType, [
+                    Entity::MANY_MANY,
+                    Entity::HAS_MANY,
+                    Entity::HAS_CHILDREN,
+                ])
             ) {
                 $queryBuilder->distinct();
             }
+            */
         }
 
         if ($type === Type::ARRAY_ANY_OF) {
@@ -1678,8 +1663,7 @@ class ItemGeneralConverter implements ItemConverter
 
         try {
             return new DateTimeZone($timeZone);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
     }
@@ -1697,8 +1681,7 @@ class ItemGeneralConverter implements ItemConverter
 
         try {
             return new DateTimeZone($timeZone);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new BadRequest($e->getMessage());
         }
     }

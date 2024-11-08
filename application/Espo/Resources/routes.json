@@ -325,6 +325,21 @@
         "actionClassName": "Espo\\Tools\\Attachment\\Api\\PostCopy"
     },
     {
+        "route": "/Note/:id/myReactions/:type",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Stream\\Api\\PostMyReactions"
+    },
+    {
+        "route": "/Note/:id/myReactions/:type",
+        "method": "delete",
+        "actionClassName": "Espo\\Tools\\Stream\\Api\\DeleteMyReactions"
+    },
+    {
+        "route": "/Note/:id/reactors/:type",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\Stream\\Api\\GetNoteReactors"
+    },
+    {
         "route": "/EmailTemplate/:id/prepare",
         "method": "post",
         "actionClassName": "Espo\\Tools\\EmailTemplate\\Api\\PostPrepare"
@@ -333,6 +348,11 @@
         "route": "/Email/:id/attachments/copy",
         "method": "post",
         "actionClassName": "Espo\\Tools\\Email\\Api\\PostAttachmentsCopy"
+    },
+    {
+        "route": "/Email/importEml",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Email\\Api\\PostImportEml"
     },
     {
         "route": "/Email/sendTest",
@@ -385,6 +405,11 @@
         "actionClassName": "Espo\\Tools\\Email\\Api\\GetInsertFieldData"
     },
     {
+        "route": "/Email/:id/users",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Email\\Api\\PostUsers"
+    },
+    {
         "route": "/EmailAddress/search",
         "method": "get",
         "actionClassName": "Espo\\Tools\\EmailAddress\\Api\\GetSearch"
@@ -430,6 +455,11 @@
         "method": "post",
         "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\PostChangePasswordByRequest",
         "noAuth": true
+    },
+    {
+        "route": "/Team/:id/userPosition",
+        "method": "put",
+        "actionClassName": "Espo\\Tools\\User\\Api\\PutTeamUserPosition"
     },
     {
         "route": "/Oidc/authorizationData",
@@ -563,6 +593,26 @@
             "id": ":id",
             "action": "unfollow"
         }
+    },
+    {
+        "route": "/:Note/:id/pin",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Stream\\Api\\PostNotePin"
+    },
+    {
+        "route": "/:Note/:id/pin",
+        "method": "delete",
+        "actionClassName": "Espo\\Tools\\Stream\\Api\\DeleteNotePin"
+    },
+    {
+        "route": "/:entityType/:id/starSubscription",
+        "method": "put",
+        "actionClassName": "Espo\\Tools\\Stars\\Api\\PutStar"
+    },
+    {
+        "route": "/:entityType/:id/starSubscription",
+        "method": "delete",
+        "actionClassName": "Espo\\Tools\\Stars\\Api\\DeleteUnstar"
     },
     {
         "route": "/:controller/:id/:link",

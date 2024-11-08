@@ -110,7 +110,7 @@ define('crm:views/dashlets/sales-by-month', ['crm:views/dashlets/abstract/chart'
         getTickNumber: function () {
             var containerWidth = this.$container.width();
 
-            return Math.floor(containerWidth / this.columnWidth);
+            return Math.floor(containerWidth / this.columnWidth * this.fontSizeFactor);
         },
 
         draw: function () {
@@ -122,7 +122,7 @@ define('crm:views/dashlets/sales-by-month', ['crm:views/dashlets/abstract/chart'
                     show: true,
                     horizontal: false,
                     shadowSize: 0,
-                    lineWidth: 1,
+                    lineWidth: 1 * this.fontSizeFactor,
                     fillOpacity: 1,
                     barWidth: 0.5,
                 },
@@ -146,7 +146,9 @@ define('crm:views/dashlets/sales-by-month', ['crm:views/dashlets/abstract/chart'
                         }
 
                         if (value % 1 === 0) {
-                            return this.currencySymbol + this.formatNumber(Math.floor(value), false, true).toString();
+                            return this.currencySymbol +
+                                '<span class="numeric-text">' +
+                                this.formatNumber(Math.floor(value), false, true).toString() + '</span>';
                         }
 
                         return '';
@@ -186,7 +188,8 @@ define('crm:views/dashlets/sales-by-month', ['crm:views/dashlets/abstract/chart'
                             value += moment(this.monthList[i] + '-01').format('MMM YYYY') + '<br>';
                         }
 
-                        return value + this.currencySymbol + this.formatNumber(obj.y, true);
+                        return value + this.currencySymbol +
+                            '<span class="numeric-text">' + this.formatNumber(obj.y, true) + '</span>';
                     }
                 },
             })

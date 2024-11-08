@@ -31,6 +31,7 @@ namespace Espo\Tools\FieldManager\Hooks;
 
 use Espo\Core\Di;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\ORM\Type\FieldType;
 
 class AutoincrementType implements Di\MetadataAware
 {
@@ -49,8 +50,8 @@ class AutoincrementType implements Di\MetadataAware
 
         $fields = $this->metadata->get(['entityDefs', $scope, 'fields']);
 
-        foreach ($fields as $fieldName => $fieldDefs) {
-            if ($fieldDefs['type'] == 'autoincrement') {
+        foreach ($fields as $fieldDefs) {
+            if ($fieldDefs['type'] == FieldType::AUTOINCREMENT) {
                 throw new Error('The entity can have only one Auto-increment field.');
             }
         }

@@ -17,7 +17,9 @@
     "customUrl": "Eigen URL",
     "customId": "Aangepaste ID",
     "layoutSet": "Lay-out set",
-    "authenticationProvider": "Authenticatie aanbieder"
+    "authenticationProvider": "Authenticatie aanbieder",
+    "authTokenLifetime": "Auth Token duur (uren)",
+    "authTokenMaxIdleTime": "Auth Token Max idle tijd (uren)"
   },
   "links": {
     "users": "Gebruikers",

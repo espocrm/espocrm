@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Export;
 
+use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\Select\ApplierClassNameListProvider;
 use Espo\Tools\Export\Collection as ExportCollection;
@@ -252,7 +253,7 @@ class Export
             return false;
         }
 
-        if ($this->getAttributeParam($entity, $attribute, 'notExportable')) {
+        if ($this->getAttributeParam($entity, $attribute, AttributeParam::NOT_EXPORTABLE)) {
             return false;
         }
 
@@ -260,11 +261,11 @@ class Export
             return true;
         }
 
-        if ($this->getAttributeParam($entity, $attribute, 'isLinkMultipleIdList')) {
+        if ($this->getAttributeParam($entity, $attribute, AttributeParam::IS_LINK_MULTIPLE_ID_LIST)) {
             return false;
         }
 
-        if ($this->getAttributeParam($entity, $attribute, 'isLinkMultipleNameMap')) {
+        if ($this->getAttributeParam($entity, $attribute, AttributeParam::IS_LINK_MULTIPLE_NAME_MAP)) {
             return false;
         }
 

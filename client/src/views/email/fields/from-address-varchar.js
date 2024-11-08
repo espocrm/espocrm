@@ -173,6 +173,11 @@ class EmailFromAddressVarchar extends BaseFieldView {
         return super.getValueForDisplay();
     }
 
+    /**
+     * @protected
+     * @param {string} address
+     * @return {string}
+     */
     getDetailAddressHtml(address) {
         if (!address) {
             return '';
@@ -186,8 +191,15 @@ class EmailFromAddressVarchar extends BaseFieldView {
         const id = this.idHash[address] || null;
 
         if (id) {
-            return $('<div>')
+            let avatarHtml = '';
+
+            if (entityType === 'User') {
+                avatarHtml = this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
+            }
+
+            return $('<div class="email-address-detail-item">')
                 .append(
+                    avatarHtml,
                     $('<a>')
                         .attr('href', `#${entityType}/view/${id}`)
                         .attr('data-scope', entityType)
@@ -303,6 +315,25 @@ class EmailFromAddressVarchar extends BaseFieldView {
                             .attr('data-action', 'addToLead')
                             .attr('data-address', address)
                             .text(this.translate('Add to Lead', 'labels', 'Email'))
+                    )
+            );
+        }
+
+        if (this.name === 'from' && this.getAcl().check('EmailFilter', 'create')) {
+            if ($ul.children().length) {
+                $ul.append(`<li class="divider"></li>`)
+            }
+
+            const url = '#EmailFilter/create?from=' + encodeURI(address) +
+                '&returnUrl=' + encodeURI(this.getRouter().getCurrentUrl());
+
+            $ul.append(
+                $('<li>')
+                    .append(
+                        $('<a>')
+                            .attr('tabindex', '0')
+                            .attr('href', url)
+                            .text(this.translate('Create EmailFilter', 'labels', 'EmailFilter'))
                     )
             );
         }

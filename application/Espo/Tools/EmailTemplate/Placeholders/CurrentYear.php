@@ -50,8 +50,7 @@ class CurrentYear implements Placeholder
     {
         try {
             $now = new DateTime('now', new DateTimezone($this->config->get('timeZone')));
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
 

@@ -128,6 +128,11 @@
         "exportsTo": "window",
         "exportsAs": "QRCode"
     },
+    "turndown": {
+        "path": "client/lib/turndown.browser.umd.js",
+        "devPath": "client/lib/turndown.browser.umd.js",
+        "sourceMap": true
+    },
     "ace": {
         "path": "client/lib/ace.js",
         "exportsTo": "window",

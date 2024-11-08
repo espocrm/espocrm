@@ -30,7 +30,6 @@
 namespace Espo\Core\Duplicate;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Select\SelectBuilderFactory;
 
@@ -43,7 +42,7 @@ use RuntimeException;
 
 class Finder
 {
-    private const LIMIT = 10;
+    private const LIMIT = 5;
 
     /** @var array<string, ?WhereBuilder<Entity>> */
     private array $whereBuilderMap = [];
@@ -130,29 +129,39 @@ class Finder
         }
 
         try {
-            $query = $this->selectBuilderFactory
+            $baseQueryBuilder = $this->selectBuilderFactory
                 ->create()
                 ->from($entityType)
                 ->withStrictAccessControl()
                 ->buildQueryBuilder()
-                ->where($where)
                 ->select(['id'])
-                ->limit(0, self::LIMIT)
-                ->build();
-        }
-        catch (Error|Forbidden|BadRequest $e) {
+                ->limit(0, self::LIMIT);
+        } catch (Forbidden|BadRequest $e) {
             throw new RuntimeException($e->getMessage(), 0, $e);
         }
 
-        $builder = $this->entityManager
-            ->getRDBRepository($entityType)
-            ->clone($query);
+        $repository = $this->entityManager->getRDBRepository($entityType);
 
-        if (!$builder->findOne()) {
+        $query = $baseQueryBuilder
+            ->where($where)
+            ->build();
+
+        $rdbBuilder = $repository->clone($query);
+
+        if (!$rdbBuilder->findOne()) {
             return null;
         }
 
-        return $builder->select(['*'])->find();
+        $ids = array_map(
+            fn(Entity $e) => $e->getId(),
+            iterator_to_array($rdbBuilder->find())
+        );
+
+        return $repository
+            ->clone($baseQueryBuilder->build())
+            ->select(['*'])
+            ->where(['id' => $ids])
+            ->find();
     }
 
     private function getWhere(Entity $entity): ?WhereItem

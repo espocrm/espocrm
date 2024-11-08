@@ -2,9 +2,10 @@ body[data-navbar="side"] {
     #navbar .navbar {
         .navbar-right-container {
             input.global-search-input {
-                width: 260px;
-                padding-bottom: 4px;
-                padding-top: 4px;
+                width: var(--260px);
+                padding-bottom: var(--4px);
+                padding-top: var(--4px);
+                max-width: 50vw;
             }
         }
     }
@@ -42,7 +43,7 @@ body[data-navbar="side"] {
         &,
         &.minimized.side-menu-opened {
             #header {
-                width: @navbar-width;
+                width: var(--navbar-width);
             }
 
             #navbar .navbar {
@@ -59,7 +60,7 @@ body[data-navbar="side"] {
                 .nav > li.more > .dropdown-menu > li.tab-group > ul.dropdown-menu,
                 .nav > li.tab-group > .dropdown-menu {
                     top: 0;
-                    left: @navbar-width;
+                    left: var(--navbar-width);
                     padding-top: 0;
                     padding-bottom: 0;
                     position: fixed;
@@ -69,7 +70,7 @@ body[data-navbar="side"] {
                 .nav > li.more > .dropdown-menu,
                 .nav > li.tab-group > .dropdown-menu {
                     border-left-width: 0;
-                    min-width: @navbar-dropdown-min-width;
+                    min-width: var(--180px);
                 }
 
                 .nav > li.tab-group > .dropdown-menu {
@@ -84,7 +85,7 @@ body[data-navbar="side"] {
 
                 .nav li.tab-group {
                     span.full-label {
-                        padding-right: 8px;
+                        padding-right: var(--8px);
                     }
 
                     .group-caret {
@@ -93,20 +94,20 @@ body[data-navbar="side"] {
                 }
 
                 ul.tabs {
-                    width: @navbar-width;
+                    width: var(--navbar-width);
                     margin-left: 0;
                     overflow-y: hidden;
 
                     > li.tab-group .group-caret {
-                        right: 13px;
+                        right: var(--13px);
                     }
 
                     > li.tab-divider {
                         > div {
-                            padding-top: calc(@navbar-tab-vertical-padding + 4px);
-                            padding-bottom: @navbar-tab-vertical-padding;
-                            padding-left: @navbar-tab-left-padding;
-                            padding-right: @navbar-tab-right-padding;
+                            padding-top: calc(var(--navbar-tab-vertical-padding) + var(--4px));
+                            padding-bottom: var(--navbar-tab-vertical-padding);
+                            padding-left: var(--navbar-tab-left-padding);
+                            padding-right: var(--navbar-tab-right-padding);
                             display: block;
 
                             > .label-text {
@@ -124,12 +125,12 @@ body[data-navbar="side"] {
                     > li.more {
                         > ul {
                             > li.tab-divider {
-                                min-height: 10px;
-                                margin-top: 9px;
+                                min-height: var(--10px);
+                                margin-top: var(--9px);
 
                                 &:not(:first-child):before {
-                                    height: 1px;
-                                    margin: 9.5px 0;
+                                    height: var(--1px);
+                                    margin: calc(var(--19px) / 2) 0;
                                     overflow: hidden;
                                     background-color: var(--dropdown-divider-bg);
                                     display: block;
@@ -138,7 +139,7 @@ body[data-navbar="side"] {
 
                                 &:first-child {
                                     > div {
-                                        padding-top: @navbar-tab-vertical-padding;
+                                        padding-top: var(--navbar-tab-vertical-padding);
                                     }
                                 }
 
@@ -147,10 +148,10 @@ body[data-navbar="side"] {
                                         display: none;
                                     }
 
-                                    padding-top: calc(@navbar-tab-vertical-padding - 3px);
-                                    padding-bottom: @navbar-tab-vertical-padding;
-                                    padding-left: @navbar-tab-left-padding;
-                                    padding-right: @navbar-tab-right-padding;
+                                    padding-top: calc(var(--navbar-tab-vertical-padding) - var(--3px));
+                                    padding-bottom: var(--navbar-tab-vertical-padding);
+                                    padding-left: var(--navbar-tab-left-padding);
+                                    padding-right: var(--navbar-tab-right-padding);
 
                                     > .label-text {
                                         color: var(--gray-light);
@@ -165,9 +166,9 @@ body[data-navbar="side"] {
                 a.minimizer {
                     color: @navbar-inverse-link-color;
                     text-decoration: none;
-                    margin-top: 5px;
+                    margin-top: var(--5px);
                     display: inline-block;
-                    margin-left: @navbar-tab-left-padding + 3px;
+                    margin-left: calc(var(--navbar-tab-left-padding) + var(--3px));
                 }
 
                 a.minimizer > span.left {
@@ -179,29 +180,29 @@ body[data-navbar="side"] {
                 }
 
                 a.side-menu-button {
-                    width: @navbar-minimized-width;
-                    padding-top: @navbar-tab-vertical-padding;
-                    padding-bottom: @navbar-tab-vertical-padding;
+                    width: var(--navbar-minimized-width);
+                    padding-top: var(--navbar-tab-vertical-padding);
+                    padding-bottom: var(--navbar-tab-vertical-padding);
                     text-align: center;
                     display: none;
 
                     > span {
-                        width: 16px;
+                        width: var(--16px);
                         text-align: center;
                     }
 
-                    height: @navbar-logo-height;
+                    height: var(--navbar-height);
                 }
 
                 .side-menu-backdrop {
                     z-index: 1200;
                     position: fixed;
-                    bottom: 20px;
+                    bottom: var(--20px);
                     top: 0;
                     left: 0;
-                    height: @tob-bar-height;
+                    height: var(--top-bar-height);
                     width: 100%;
-                    margin-left: @navbar-width;
+                    margin-left: var(--navbar-width);
                 }
             }
 
@@ -212,33 +213,33 @@ body[data-navbar="side"] {
 
                     position: fixed;
                     z-index: @zindex-navbar-fixed;
-                    width: @navbar-width;
+                    width: var(--navbar-width);
                     margin-bottom: 0;
                     height: 100%;
                 }
 
                 .navbar-brand img {
-                    max-width: @navbar-width - @navbar-minimized-width;
-                    height: @navbar-logo-height;
+                    max-width: calc(var(--navbar-width) - var(--navbar-minimized-width));
+                    height: var(--navbar-height);
                 }
 
                 a.navbar-brand {
-                    max-width: @navbar-width - @navbar-minimized-width;
-                    height: @navbar-logo-height;
+                    max-width: calc(var(--navbar-width) - var(--navbar-minimized-width));
+                    height: var(--navbar-height);
                     margin-left: 0;
                 }
 
                 .navbar-header {
-                    width: @navbar-width;
-                    height: @navbar-header-height;
+                    width: var(--navbar-width);
+                    height: var(--navbar-header-height);
                     display: block;
-                    padding-bottom: @navbar-header-vertical-padding;
-                    padding-top: @navbar-header-vertical-padding;
+                    padding-bottom: calc((var(--navbar-header-height) - var(--navbar-height)) / 2);
+                    padding-top: calc((var(--navbar-header-height) - var(--navbar-height)) / 2);
                 }
 
                 .navbar-header > a.minimizer {
-                    width: 30px;
-                    height: 30px;
+                    width: var(--30px);
+                    height: var(--30px);
                     float: right;
                 }
 
@@ -254,14 +255,14 @@ body[data-navbar="side"] {
                     justify-content: flex-end;
 
                     position: fixed;
-                    bottom: 20px;
+                    bottom: var(--20px);
                     top: 0;
                     left: 0;
-                    height: @tob-bar-height;
-                    width: calc(100vw - 18px);
+                    height: var(--top-bar-height);
+                    width: calc(100vw - var(--18px));
                     background-color: var(--navbar-bg);
-                    margin-left: @navbar-width;
-                    padding-right: @navbar-width;
+                    margin-left: var(--navbar-width);
+                    padding-right: var(--navbar-width);
 
                     > li {
                         float: none;
@@ -269,13 +270,17 @@ body[data-navbar="side"] {
                         flex-direction: row;
 
                         > a {
-                            width: 34px;
+                            width: var(--34px);
+
+                            &:focus {
+                                background-color: transparent;
+                            }
                         }
                     }
 
                     .global-search-container a.global-search-button {
                         color: var(--navbar-link-color);
-                        height: @tob-bar-height;
+                        height: var(--top-bar-height);
 
                         &:hover {
                             color: var(--navbar-link-hover-color);
@@ -283,11 +288,11 @@ body[data-navbar="side"] {
                     }
 
                     .quick-create-container {
-                        width: 34px;
+                        width: var(--34px);
                     }
 
                     .menu-container {
-                        width: 34px;
+                        width: var(--34px);
                     }
 
                     > li > a {
@@ -295,9 +300,10 @@ body[data-navbar="side"] {
 
                         &:hover {
                             color: var(--navbar-link-hover-color);
+                            background-color: transparent;
                         }
 
-                        padding: 5px 10px;
+                        padding: var(--5px) var(--10px);
                     }
 
                     > li.open > a {
@@ -311,28 +317,28 @@ body[data-navbar="side"] {
                     }
 
                     .notifications-badge-container {
-                        width: 34px;
+                        width: var(--34px);
                     }
                 }
 
                 ul.tabs {
-                    margin-top: @navbar-tabs-margin-top;
+                    margin-top: 0;
 
                     li {
                         float: none;
                     }
 
                     li > a {
-                        padding-top: @navbar-tab-vertical-padding;
-                        padding-bottom: @navbar-tab-vertical-padding;
-                        padding-left: @navbar-tab-left-padding;
-                        padding-right: @navbar-tab-right-padding;
-                        height: @navbar-logo-height;
+                        padding-top: var(--navbar-tab-vertical-padding);
+                        padding-bottom: var(--navbar-tab-vertical-padding);
+                        padding-left: var(--navbar-tab-left-padding);
+                        padding-right: var(--navbar-tab-right-padding);
+                        height: var(--navbar-height);
                     }
 
                     li.tab > a {
-                        padding-left: @navbar-tab-left-padding - @navbar-color-border-width;
-                        padding-right: @navbar-tab-right-padding;
+                        padding-left: var(--navbar-tab-left-padding);
+                        padding-right: var(--navbar-tab-right-padding);
                     }
                 }
 
@@ -357,7 +363,7 @@ body[data-navbar="side"] {
         &.minimized.side-menu-opened {
             #navbar > .navbar {
                 .navbar-logo-container {
-                    width: ~"calc(100% - " @navbar-minimized-width ~")";
+                    width: ~"calc(100% - var(--navbar-minimized-width))";
                     float: right;
                     display: flex;
                 }
@@ -404,13 +410,14 @@ body[data-navbar="side"] {
             }
 
             .stick-sub,
-            .sticked-bar {
+            .sticked-bar,
+            .list-sticky-bar {
                 visibility: hidden;
             }
         }
     }
 
-    @media screen and (max-width: (@screen-sm-min - 1px)) {
+    @media screen and (max-width: @screen-xs-max) {
         #navbar {
             a.minimizer {
                 display: none;
@@ -431,23 +438,24 @@ body[data-navbar="side"] {
 
         #global-search-input {
             width: 100% !important;
+            max-width: unset;
         }
     }
 
     #navbar {
         ul.tabs {
             > li > a {
-                height: @navbar-logo-height;
+                height: var(--navbar-height);
             }
 
             > li.more > ul > li > a > span.full-label {
-                padding-left: @navbar-tab-text-left-padding;
+                padding-left: var(--navbar-tab-text-left-padding);
                 position: static;
             }
 
             > li a > span.full-label {
                 position: static;
-                padding-left: @navbar-tab-text-left-padding;
+                padding-left: var(--navbar-tab-text-left-padding);
             }
 
             > li a > span.short-label {
@@ -465,7 +473,7 @@ body[data-navbar="side"] {
 
             > li span.short-label > span {
                 display: inline-block;
-                width: 16px;
+                width: var(--16px);
                 text-align: center;
             }
 
@@ -480,8 +488,8 @@ body[data-navbar="side"] {
 
         .navbar-header {
             > a.minimizer span {
-                margin-top: 7px;
-                margin-left: 8px;
+                margin-top: var(--7px);
+                margin-left: var(--8px);
             }
         }
 
@@ -497,7 +505,7 @@ body[data-navbar="side"] {
         }
 
         .navbar li.tab > a {
-            border-left-width: @navbar-color-border-width;
+            border-left-width: 0;
             border-left-style: solid;
             border-color: transparent;
 
@@ -511,13 +519,13 @@ body[data-navbar="side"] {
     @media screen and (min-width: @screen-sm-min) {
         &.minimized {
             #header {
-                width: @navbar-minimized-width;
+                width: var(--navbar-minimized-width);
             }
 
             #navbar {
                 .nav > li.more > ul.dropdown-menu,
                 .nav > li.tab-group > .dropdown-menu {
-                    left: @navbar-minimized-width;
+                    left: var(--navbar-minimized-width);
                 }
 
                 .navbar-logo-container {
@@ -535,8 +543,8 @@ body[data-navbar="side"] {
                 }
 
                 .navbar-header {
-                    width: @navbar-minimized-width;
-                    height: @navbar-header-height;
+                    width: var(--navbar-minimized-width);
+                    height: var(--navbar-header-height);
                 }
 
                 a.minimizer > span.left {
@@ -548,18 +556,18 @@ body[data-navbar="side"] {
                 }
 
                 .navbar {
-                    width: @navbar-minimized-width;
+                    width: var(--navbar-minimized-width);
                 }
 
                 ul.tabs {
-                    width: @navbar-minimized-width;
+                    width: var(--navbar-minimized-width);
 
                     > li > a {
-                        padding-left: @navbar-tab-left-padding;
+                        padding-left: var(--navbar-tab-left-padding);
                     }
 
                     > li.tab > a {
-                        padding-left: @navbar-tab-left-padding - @navbar-color-border-width;
+                        padding-left: var(--navbar-tab-left-padding);
                     }
 
                     > li > a > span.short-label {
@@ -576,28 +584,28 @@ body[data-navbar="side"] {
 
                     > li > a > span.short-label > .short-label-text {
                         position: relative;
-                        left: -1px;
+                        left: calc(var(--1px) * -1);
                         visibility: visible;
                     }
 
                     > li.tab-group .group-caret {
-                        right: 5px;
+                        right: var(--5px);
                     }
                 }
 
                 .navbar-right {
-                    margin-left: @navbar-minimized-width;
-                    padding-right: @navbar-minimized-width;
+                    margin-left: var(--navbar-minimized-width);
+                    padding-right: var(--navbar-minimized-width);
                 }
             }
 
             #content {
-                padding-left: @navbar-minimized-width + @container-padding;
-                max-width: @container-max-width + @navbar-minimized-width;
+                padding-left: calc(var(--navbar-minimized-width) + var(--container-padding));
+                max-width: calc(var(--container-max-width) + var(--navbar-minimized-width));
             }
 
             #footer {
-                margin-left: @navbar-minimized-width;
+                margin-left: var(--navbar-minimized-width);
             }
 
             > .side-menu-backdrop {
@@ -607,7 +615,7 @@ body[data-navbar="side"] {
                 left: 0;
                 z-index: 2140;
                 height: 100%;
-                margin-left: @navbar-width;
+                margin-left: var(--navbar-width);
             }
         }
 
@@ -644,83 +652,85 @@ body[data-navbar="side"] {
         }
 
         &.has-navbar > .content {
-            padding-left: @navbar-width + @container-padding;
-            max-width: @container-max-width + @navbar-width;
+            padding-left: calc(var(--navbar-width) + var(--container-padding));
+            max-width: calc(var(--container-max-width) + var(--navbar-width));
         }
 
-        padding-top: @tob-bar-height;
+        padding-top: var(--top-bar-height);
         height: 100%;
 
 
         > .content {
             height: auto;
             min-height: 100%;
-            padding-bottom: 42px;
+            padding-bottom: calc(var(--16px) + var(--footer-height));
         }
 
         > footer {
             clear: both;
             position: relative;
-            height: 26px;
-            margin-top: -26px;
-            margin-left: @navbar-width;
+            height: var(--footer-height);
+            max-height: var(--footer-height);
+            margin-top: calc(var(--footer-height) * -1);
+            margin-left: var(--navbar-width);
 
-            p {
-                padding: 4px @panel-padding;
+            > p {
+                padding: 0 var(--panel-padding);
+                line-height: var(--footer-height);
             }
         }
 
         input.global-search-input {
-            height: @tob-bar-height !important;
+            height: var(--top-bar-height) !important;
             margin-top: 0 !important;
         }
     }
 
     @media (min-width: @screen-lg-min) {
         .container {
-            max-width: @container-max-width;
+            max-width: var(--container-max-width);
         }
     }
 
 
     @media (min-width: @screen-sm-min) {
         .stick-sub.button-container {
-            width: calc(~"100% - " @navbar-width);
+            width: ~"calc(100% - var(--navbar-width))";
         }
 
         &.minimized .stick-sub.button-container {
-            width: calc(~"100% - " @navbar-minimized-width);
+            width: ~"calc(100% - var(--navbar-minimized-width))";
         }
     }
 
     .stick-sub {
-        left: @navbar-width;
+        left: var(--navbar-width);
     }
 
     &.minimized .stick-sub {
-        left: @navbar-minimized-width;
+        left: var(--navbar-minimized-width);
     }
 
-    .list-buttons-container .sticked-bar {
-        width: calc(~"100% - " @navbar-width);
-        left: @navbar-width;
-        top: @tob-bar-height;
-        padding-left: @container-padding;
+    .list-sticky-bar {
+        width: ~"calc(100% - var(--navbar-width))";
+        left: var(--navbar-width);
+        top: var(--top-bar-height);
+        padding-left: var(--container-padding);
     }
 
-    &.minimized .list-buttons-container .sticked-bar {
-        width: calc(~"100% - " @navbar-minimized-width);
-        left: @navbar-minimized-width;
+    &.minimized .list-sticky-bar {
+        width: ~"calc(100% - var(--navbar-minimized-width))";
+        left: var(--navbar-minimized-width);
     }
 
-    @media screen and (max-width: (@screen-sm-min - 1px)) {
+    @media screen and (max-width: @screen-xs-max) {
         .stick-sub,
         &.minimized .stick-sub {
             left: 0;
         }
 
-        .list-buttons-container .sticked-bar,
-        &.minimized .list-buttons-container .sticked-bar {
+        .list-sticky-bar,
+        &.minimized .list-sticky-bar {
             width: 100%;
             top: 0;
             left: 0;
@@ -730,28 +740,29 @@ body[data-navbar="side"] {
             .navbar-right-container {
                 input.global-search-input {
                     width: 100%;
+                    max-width: unset;
                 }
             }
         }
 
         > .content {
-            margin-top: -42px;
-            padding-top: 42px;
+            margin-top: calc(var(--21px) * -2);
+            padding-top: calc(var(--21px) * 2);
         }
 
         > header + .content {
-            margin-top: -95px;
-            padding-top: 95px;
-            margin-bottom: -20px;
-            padding-bottom: 20px;
+            margin-top: calc(var(--95px) * -1);
+            padding-top: var(--95px);
+            margin-bottom: calc(var(--20px) * -1);
+            padding-bottom: var(--20px);
         }
 
         > footer {
-            margin-top: 19px;
+            margin-top: var(--19px);
             height: unset;
 
             p {
-                padding: 2px @panel-padding 2px;
+                padding: var(--2px) var(--panel-padding) var(--2px);
             }
         }
 
@@ -773,12 +784,12 @@ body[data-navbar="side"] {
 
                     > table td:first-child,
                     > table th:first-child {
-                        padding-left: @panel-padding;
+                        padding-left: var(--panel-padding);
                     }
 
                     > table td:last-child,
                     > table th:last-child {
-                        padding-right: @panel-padding;
+                        padding-right: var(--panel-padding);
                     }
 
                     .list-with-border-radius();
@@ -811,12 +822,12 @@ body[data-navbar="side"] {
 
                         > table td:first-child,
                         > table th:first-child {
-                            padding-left: @panel-padding;
+                            padding-left: var(--panel-padding);
                         }
 
                         > table td:last-child,
                         > table th:last-child {
-                            padding-right: @panel-padding;
+                            padding-right: var(--panel-padding);
                         }
 
                         .list-with-border-radius();
@@ -842,45 +853,43 @@ body[data-navbar="side"] {
 
     .list-kanban {
         .kanban-head-container.sticked {
-            margin-top: @tob-bar-height;
+            margin-top: var(--top-bar-height);
         }
     }
 
     .stick-sub {
-        margin-top: @tob-bar-height;
+        margin-top: var(--top-bar-height);
 
-        @media screen and (max-width: (@screen-sm-min - 1px)) {
+        @media screen and (max-width: @screen-xs-max) {
             margin-top: 0;
         }
     }
 
     @media screen and (min-width: @screen-sm-min) {
         .folders-container.sticked {
-            top: 75px;
-            //left: @navbar-width;
+            // @todo Use variable instead of 46px. It's a sticky bar height.
+            top: calc(var(--top-bar-height) + var(--46px));
         }
     }
 
     &.minimized {
         @media screen and (min-width: @screen-sm-min) {
-            .folders-container.sticked {
-                //left: @navbar-minimized-width;
-            }
+            .folders-container.sticked {}
         }
     }
 
     .alert {
-        min-height: @tob-bar-height;
+        min-height: var(--top-bar-height);
     }
 
     #navbar {
         .navbar-header {
             > a {
-                color: @navbar-inverse-link-color;
+                color: var(--navbar-inverse-link-icon-color);
 
                 &:hover,
                 &:focus {
-                    color: @navbar-inverse-link-hover-color;
+                    color: var(--navbar-inverse-link-icon-hover-color);
                     background-color: @navbar-inverse-link-hover-bg;
                 }
             }
@@ -899,7 +908,7 @@ body[data-navbar="side"] {
     }
 
     input.global-search-input {
-        border: 1px solid var(--navbar-bg);
+        border: var(--1px) solid var(--navbar-bg);
 
         &:focus {
             border-color: var(--navbar-bg);
@@ -912,17 +921,17 @@ body[data-navbar="side"] {
         }
 
         #global-search-panel {
-            margin-top: @tob-bar-height;
+            margin-top: var(--top-bar-height);
         }
 
         #notifications-panel {
-            margin-top: @tob-bar-height;
+            margin-top: var(--top-bar-height);
         }
 
         .notifications-badge-container {
             > .notifications-button > .number-badge {
-                top: 3px;
-                left: 22px;
+                top: var(--3px);
+                left: var(--22px);
             }
         }
 

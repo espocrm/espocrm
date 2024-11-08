@@ -8,18 +8,26 @@
             [
                 {"name":"name"},
                 {"name":"replyToAddress"}
-            ],
-            [
-                {"name":"teams"},
-                false
-            ],
-            [
-                {"name":"addAllTeamUsers"},
-                false
             ]
         ],
         "tabBreak": true,
         "tabLabel": "$label:Main"
+    },
+    {
+        "rows": [
+            [
+                {"name":"teams"},
+                {"name":"groupEmailFolder"}
+            ],
+            [
+                {"name":"addAllTeamUsers"},
+                {"name": "excludeFromReply"}
+            ],
+            [
+                {"name":"isSystem"},
+                false
+            ]
+        ]
     },
     {
         "rows": [
@@ -37,7 +45,7 @@
                 {"name":"keepFetchedEmailsUnread"}, {"name":"storeSentEmails"}
             ],
             [
-                {"name":"groupEmailFolder"}, {"name":"sentFolder"}
+                false, {"name":"sentFolder"}
             ],
             [{"name": "testConnection", "customLabel": null, "view": "views/inbound-email/fields/test-connection"}, false]
         ],

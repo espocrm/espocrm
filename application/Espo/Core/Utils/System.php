@@ -49,7 +49,7 @@ class System
         }
 
         return strtolower(
-            trim($match[1])
+            trim($match[1]) /** @phpstan-ignore-line */
         );
     }
 

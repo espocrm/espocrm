@@ -140,6 +140,13 @@ class Attachment extends Entity
         return $this;
     }
 
+    public function setStorage(?string $storage): self
+    {
+        $this->set('storage', $storage);
+
+        return $this;
+    }
+
     public function setName(?string $name): self
     {
         $this->set('name', $name);
@@ -182,16 +189,28 @@ class Attachment extends Entity
         return $this;
     }
 
-    public function setParent(?LinkParent $parent): self
+    public function setParent(LinkParent|Entity|null $parent): self
     {
-        $this->setValueObject('parent', $parent);
+        if ($parent instanceof LinkParent) {
+            $this->setValueObject('parent', $parent);
+
+            return $this;
+        }
+
+        $this->relations->set('parent', $parent);
 
         return $this;
     }
 
-    public function setRelated(?LinkParent $related): self
+    public function setRelated(LinkParent|Entity|null $related): self
     {
-        $this->setValueObject('related', $related);
+        if ($related instanceof LinkParent) {
+            $this->setValueObject('related', $related);
+
+            return $this;
+        }
+
+        $this->relations->set('related', $related);
 
         return $this;
     }

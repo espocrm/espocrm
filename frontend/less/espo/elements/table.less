@@ -6,26 +6,50 @@ table.table,
 }
 
 .table {
-    margin-bottom: 10px;
+    margin-bottom: var(--10px);
 
     > thead,
     > tbody {
         > tr {
             > th:first-child,
             > td:first-child {
-                padding-left: @padding-base-horizontal;
+                padding-left: var(--padding-base-horizontal);
 
-                @media screen and (max-width: (@screen-sm-min - 1px)) {
-                    padding-left: @table-cell-padding;
+                @media screen and (max-width: @screen-xs-max) {
+                    padding-left: var(--table-cell-padding);
                 }
             }
 
             > th:last-child,
             > td:last-child {
-                padding-right: @padding-base-horizontal;
+                padding-right: var(--padding-base-horizontal);
 
-                @media screen and (max-width: (@screen-sm-min - 1px)) {
-                    padding-right: @table-cell-padding;
+                @media screen and (max-width: @screen-xs-max) {
+                    padding-right: var(--table-cell-padding);
+                }
+            }
+        }
+    }
+
+    &:has(> tbody > tr.border-top-highlighted:first-child) {
+        > thead > tr:last-child {
+            > th {
+                border-bottom: var(--3px) solid var(--brand-info) !important;
+            }
+        }
+    }
+
+    > tbody {
+        > tr {
+            &.border-bottom-highlighted {
+                > td {
+                    border-bottom: var(--3px) solid var(--brand-info) !important;
+                }
+            }
+
+            &.border-top-highlighted {
+                > td {
+                    border-top: var(--3px) solid var(--brand-info) !important;
                 }
             }
         }
@@ -45,7 +69,7 @@ th {
 }
 
 .table thead > tr > th {
-    border-bottom: 1px solid @table-border-color;
+    border-bottom: var(--1px) solid @table-border-color;
     font-weight: normal;
 }
 
@@ -54,11 +78,11 @@ th {
 }
 
 .table tr.accented {
-    background-color: @table-bg-accent;
+    background-color: var(--table-bg-accent);
 }
 
 .table td.accented {
-    background-color: @table-bg-accent;
+    background-color: var(--table-bg-accent);
 }
 
 table.table-bordered-inside {
@@ -66,19 +90,19 @@ table.table-bordered-inside {
     border-style: hidden;
 
     td, th {
-        border: 1px solid var(--default-border-color);
+        border: var(--1px) solid var(--default-border-color);
     }
 }
 
 table.table-bottom-bordered {
-    border-bottom: 1px solid var(--default-border-color);
+    border-bottom: var(--1px) solid var(--default-border-color);
 }
 
 table.table > tbody td > .list-row-buttons button {
     position: relative;
-    margin-top: 3px;
-    padding-left: 8px;
-    padding-right: 8px;
+    margin-top: var(--3px);
+    padding-left: var(--table-cell-padding);
+    padding-right: var(--table-cell-padding);
 }
 
 .table.table-no-overflow {
@@ -95,12 +119,12 @@ table.table-fixed {
 }
 
 .table.less-padding > thead > tr > th,
-.table.less-padding > tbody >tr > th,
-.table.less-padding > tfoot >tr > th,
-.table.less-padding > thead >tr > td,
-.table.less-padding > tbody >tr > td,
-.table.less-padding > tfoot >tr > td {
-    padding: @table-cell-padding @table-cell-less-padding @table-cell-padding @table-cell-less-padding;
+.table.less-padding > tbody > tr > th,
+.table.less-padding > tfoot > tr > th,
+.table.less-padding > thead > tr > td,
+.table.less-padding > tbody > tr > td,
+.table.less-padding > tfoot > tr > td {
+    padding: var(--table-cell-padding) var(--table-cell-less-padding) var(--table-cell-padding) var(--table-cell-less-padding);
 }
 
 table.no-margin {
@@ -116,8 +140,8 @@ table.table-panel {
         border-bottom: 0;
     }
 
-    &.table-striped {
-        tbody > tr:last-child {
+    tbody {
+        > tr:nth-last-child(1 of :not(.hidden)) {
             > td:first-child {
                 border-bottom-left-radius: var(--panel-border-radius);
             }
@@ -143,11 +167,11 @@ table th.cell-nowrap {
 table td {
     > .btn-group.row-dropdown-group {
         > .btn.dropdown-toggle {
-            margin-top: -6px;
-            margin-bottom: -6px;
+            margin-top: var(--minus-6px);
+            margin-bottom: var(--minus-6px);
 
             > .caret {
-                top: -1px;
+                top: var(--minus-1px);
                 position: relative;
             }
         }

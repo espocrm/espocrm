@@ -123,14 +123,16 @@ class EditView extends MainView {
             o.rootUrl = params.rootUrl;
         }
 
+        if (params.rootData) {
+            o.rootData = params.rootData;
+        }
+
         if (params.focusForCreate) {
             o.focusForCreate = true;
         }
 
         return this.createView('record', this.getRecordViewName(), o);
     }
-
-
 
     /**
      * @return {module:views/record/edit}

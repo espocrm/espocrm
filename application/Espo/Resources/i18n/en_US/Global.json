@@ -47,6 +47,7 @@
         "Preferences": "Preferences",
         "EmailAddress": "Email Address",
         "PhoneNumber": "Phone Number",
+        "AppLogRecord": "App Log Record",
         "AuthLogRecord": "Auth Log Record",
         "AuthFailLogRecord": "Auth Fail Log Record",
         "LeadCapture": "Lead Capture Entry Point",
@@ -59,9 +60,11 @@
         "WebhookQueueItem": "Webhook Queue Item",
         "Mass Action": "Mass Action",
         "WorkingTimeCalendar": "Working Time Calendar",
-        "WorkingTimeRange": "Working Time Range",
+        "WorkingTimeRange": "Working Time Exception",
         "AuthenticationProvider": "Authentication Provider",
-        "GlobalStream": "Global Stream"
+        "GlobalStream": "Global Stream",
+        "AddressCountry": "Address Country",
+        "AppSecret": "App Secret"
     },
     "scopeNamesPlural": {
         "Note": "Notes",
@@ -100,6 +103,7 @@
         "AuthToken": "Auth Tokens",
         "UniqueId": "Unique IDs",
         "LastViewed": "Last Viewed",
+        "AppLogRecord": "App Log",
         "AuthLogRecord": "Auth Log",
         "AuthFailLogRecord": "Auth Fail Log",
         "LeadCapture": "Lead Capture",
@@ -111,13 +115,22 @@
         "Webhook": "Webhooks",
         "WebhookQueueItem": "Webhook Queue Items",
         "WorkingTimeCalendar": "Working Time Calendars",
-        "WorkingTimeRange": "Working Time Ranges",
+        "WorkingTimeRange": "Working Time Exceptions",
         "AuthenticationProvider": "Authentication Providers",
-        "GlobalStream": "Global Stream"
+        "GlobalStream": "Global Stream",
+        "AddressCountry": "Address Countries",
+        "AppSecret": "App Secrets"
     },
     "labels": {
+        "Previous Page": "Previous Page",
+        "Next Page": "Next Page",
+        "First Page": "First Page",
+        "Last Page": "Last Page",
+        "Page": "Page",
         "Sort": "Sort",
+        "Column Resize": "Column Resize",
         "Misc": "Misc",
+        "General": "General",
         "Merge": "Merge",
         "None": "None",
         "Home": "Home",
@@ -133,6 +146,7 @@
         "Loading...": "Loading...",
         "Uploading...": "Uploading...",
         "Sending...": "Sending...",
+        "Send": "Send",
         "Merged": "Merged",
         "Removed": "Removed",
         "Posted": "Posted",
@@ -188,6 +202,9 @@
         "Country": "Country",
         "City": "City",
         "PostalCode": "Postal Code",
+        "Star": "Star",
+        "Unstar": "Unstar",
+        "Starred": "Starred",
         "Followed": "Followed",
         "Follow": "Follow",
         "Followers": "Followers",
@@ -226,6 +243,8 @@
         "Change": "Change",
         "Primary": "Primary",
         "Save Filter": "Save Filter",
+        "Remove Filter": "Remove Filter",
+        "Ready": "Ready",
         "Administration": "Administration",
         "Run Import": "Run Import",
         "Duplicate": "Duplicate",
@@ -264,6 +283,9 @@
         "Self-Assigned": "Self-Assigned",
         "Expand": "Expand",
         "Collapse": "Collapse",
+        "Expanded": "Expanded",
+        "Collapsed": "Collapsed",
+        "Top Level": "Top Level",
         "New notifications": "New notifications",
         "Manage Categories": "Manage Categories",
         "Manage Folders": "Manage Folders",
@@ -280,16 +302,19 @@
         "Save & Continue Editing": "Save & Continue Editing",
         "Save & New": "Save & New",
         "Field": "Field",
+        "Fields": "Fields",
         "Resolution": "Resolution",
         "Resolve Conflict": "Resolve Conflict",
         "Download": "Download",
         "Global Search": "Global Search",
-        "Show Navigation Panel": "Show Navigation Panel",
-        "Hide Navigation Panel": "Hide Navigation Panel",
+        "Navigation Panel": "Show Navigation Panel",
         "Copy to Clipboard": "Copy to Clipboard",
         "Copied to clipboard": "Copied to clipboard",
         "Audit Log": "Audit Log",
-        "View Audit Log": "View Audit Log"
+        "View Audit Log": "View Audit Log",
+        "Reacted": "Reacted",
+        "Reaction Removed": "Reaction Removed",
+        "Reactions": "Reactions"
     },
     "messages": {
         "pleaseWait": "Please wait...",
@@ -299,6 +324,7 @@
         "notModified": "You have not modified the record",
         "duplicate": "The record you are creating might already exist",
         "dropToAttach": "Drop to attach",
+        "pageNumberIsOutOfBound": "Page number is out of bound",
         "fieldUrlExceedsMaxLength": "Encoded URL exceeds max length of {maxLength}",
         "fieldNotMatchingPattern": "{field} does not match the pattern `{pattern}`",
         "fieldNotMatchingPattern$noBadCharacters": "{field} contains not allowed characters",
@@ -309,6 +335,7 @@
         "fieldNotMatchingPattern$latinLettersWhitespace": "{field} can contain only latin letters and whitespace",
         "fieldNotMatchingPattern$digits": "{field} can contain only digits",
         "fieldNotMatchingPattern$uriOptionalProtocol": "{field} must be a valid URL",
+        "fieldNotMatchingPattern$phoneNumberLoose": "{field} contains characters not allowed in a phone number",
         "fieldInvalid": "{field} is invalid",
         "fieldIsRequired": "{field} is required",
         "fieldPhoneInvalid": "{field} is invalid",
@@ -316,6 +343,7 @@
         "fieldPhoneTooShort": "{field} is too short",
         "fieldPhoneTooLong": "{field} is too long",
         "fieldPhoneInvalidCharacters": "Only digits, latin letters and characters `-+_@:#().` are allowed",
+        "fieldPhoneExtensionTooLong": "Extension should not be longer than {maxLength}",
         "fieldShouldBeEmail": "{field} should be a valid email",
         "fieldShouldBeFloat": "{field} should be a valid float",
         "fieldShouldBeInt": "{field} should be a valid integer",
@@ -387,20 +415,30 @@
         "cannotRelateNonExisting": "Can't relate with non-existing {foreignEntityType} record.",
         "cannotRelateForbidden": "Can't relate with forbidden {foreignEntityType} record. `{action}` access required.",
         "cannotRelateForbiddenLink": "No access to link '{link}'.",
+        "cannotLinkAlreadyLinked": "Cannot link an already linked record.",
         "error404": "The url you requested can't be handled.",
         "error403": "You don't have an access to this area.",
         "emptyMassUpdate": "No fields available for Mass Update.",
         "attemptIntervalFailure": "The operation is not allowed during a specific time interval. Wait for some time before the next attempt.",
-        "confirmRestoreFromAudit": "The previous values will be set in a form. Then you can save the record to restore the previous values."
+        "confirmRestoreFromAudit": "The previous values will be set in a form. Then you can save the record to restore the previous values.",
+        "starsLimitExceeded": "The number of stars exceeded the limit.",
+        "select2OrMoreRecords": "Select 2 or more records",
+        "selectNotMoreThanNumberRecords": "Select not more than {number} records",
+        "selectAtLeastOneRecord": "Select at least one record",
+        "duplicateConflict": "A record already exists.",
+        "cannotRemoveCategoryWithChildCategory": "Cannot remove a category that has a child category.",
+        "cannotRemoveNotEmptyCategory": "Cannot remove a non-empty category."
     },
     "boolFilters": {
         "onlyMy": "Only My",
         "onlyMyTeam": "My Team",
-        "followed": "Followed"
+        "followed": "Followed",
+        "shared": "Shared"
     },
     "presetFilters": {
         "followed": "Followed",
-        "all": "All"
+        "all": "All",
+        "starred": "Starred"
     },
     "massActions": {
         "delete": "Delete",
@@ -424,6 +462,7 @@
         "salutationName": "Salutation",
         "assignedUser": "Assigned User",
         "assignedUsers": "Assigned Users",
+        "collaborators": "Collaborators",
         "emailAddress": "Email",
         "emailAddressData": "Email Address Data",
         "emailAddressIsOptedOut": "Email Address is Opted-Out",
@@ -459,6 +498,8 @@
     },
     "links": {
         "assignedUser": "Assigned User",
+        "assignedUsers": "Assigned Users",
+        "collaborators": "Collaborators",
         "createdBy": "Created By",
         "modifiedBy": "Modified By",
         "team": "Team",
@@ -478,7 +519,10 @@
     "notificationMessages": {
         "assign": "{entityType} {entity} has been assigned to you",
         "emailReceived": "Email received from {from}",
-        "entityRemoved": "{user} removed {entityType} {entity}"
+        "entityRemoved": "{user} removed {entityType} {entity}",
+        "emailInbox": "{user} added email {entity} to your inbox",
+        "userPostReaction": "{user} reacted to your {post}",
+        "userPostInParentReaction": "{user} reacted to your {post} in {entityType} {entity}"
     },
     "streamMessages": {
         "post": "{user} posted on {entityType} {entity}",
@@ -533,6 +577,14 @@
 
         "assignThisSelf": "{user} self-assigned this {entityType}",
         "assignSelf": "{user} self-assigned {entityType} {entity}",
+
+        "assignMultiAdd": "{user} assigned {entity} to {assignee}",
+        "assignMultiRemove": "{user} unassigned {entity} from {removedAssignee}",
+        "assignMultiAddRemove": "{user} assigned {entity} to {assignee} and unassigned from {removedAssignee}",
+
+        "assignMultiAddThis": "{user} assigned this {entityType} to {assignee}",
+        "assignMultiRemoveThis": "{user} unassigned this {entityType} from {removedAssignee}",
+        "assignMultiAddRemoveThis": "{user} assigned this {entityType} to {assignee} and unassigned from {removedAssignee}",
 
         "postThis": "{user} posted",
         "attachThis": "{user} attached",
@@ -879,12 +931,15 @@
         "phoneNumber": "Valid Phone Number",
         "array": "Array",
         "arrayOfString": "Array of Strings",
-        "valid": "Valid",
+        "valid": "Validity",
         "noEmptyString": "No Empty String",
         "max": "Max Value",
         "min": "Min Value"
     },
     "fieldValidationExplanations": {
+        "valid": "Invalid value.",
+        "maxLength": "Value length exceeds maximum value.",
+        "phone_valid": "Phone number is not valid. May be caused by a wrong or empty country code.",
         "url_valid": "Invalid URL value.",
         "currency_valid": "Invalid amount value.",
         "currency_validCurrency": "The currency code value is invalid or not allowed.",
@@ -905,5 +960,44 @@
         "Support": "Support",
         "CRM": "CRM",
         "Activities": "Activities"
+    },
+    "wysiwygLabels": {
+        "cell": "Cell",
+        "align": "Align",
+        "width": "Width",
+        "height": "Height",
+        "borderWidth": "Border Width",
+        "borderColor": "Border Color",
+        "cellPadding": "Cell Padding",
+        "backgroundColor": "Background Color",
+        "verticalAlign": "Vertical Align"
+    },
+    "wysiwygOptions": {
+        "align": {
+            "left": "Left",
+            "center": "Center",
+            "right": "Right"
+        },
+        "verticalAlign": {
+            "top": "Top",
+            "middle": "Middle",
+            "bottom": "Bottom"
+        }
+    },
+    "detailViewModes": {
+        "detail": "Detail"
+    },
+    "strings": {
+        "yesterdayShort": "Yest"
+    },
+    "reactions": {
+        "Smile": "Smile",
+        "Surprise": "Surprise",
+        "Laugh": "Laugh",
+        "Meh": "Meh",
+        "Sad": "Sad",
+        "Love": "Love",
+        "Like": "Like",
+        "Dislike": "Dislike"
     }
 }

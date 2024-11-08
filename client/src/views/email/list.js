@@ -51,6 +51,8 @@ class EmailListView extends ListView {
     FOLDER_DRAFTS = 'drafts'
     /** @const */
     FOLDER_TRASH = 'trash'
+    /** @const */
+    FOLDER_ARCHIVE = 'archive'
 
     noDropFolderIdList = [
         'sent',
@@ -143,7 +145,7 @@ class EmailListView extends ListView {
         this.collection.models.slice(fromIndex).forEach(m => {
             const $row = $container.find(`.list-row[data-id="${m.id}"]`).first();
 
-            // noinspection JSUnresolvedReference
+            // noinspection JSUnresolvedReference,JSUnusedGlobalSymbols
             $row.draggable({
                 cancel: 'input,textarea,button,select,option,.dropdown-menu',
                 helper: () => {
@@ -180,7 +182,16 @@ class EmailListView extends ListView {
                     top: 0,
                     left: 0,
                 },
+                drag: () => {
+                    if (recordView.allResultIsChecked) {
+                        return false;
+                    }
+                },
                 start: (e) => {
+                    if (recordView.allResultIsChecked) {
+                        return;
+                    }
+
                     const $target = $(e.target);
 
                     $target.closest('tr').addClass('active');
@@ -227,11 +238,22 @@ class EmailListView extends ListView {
                 return true;
             }
 
-            if (folderId === this.FOLDER_TRASH) {
+            if (folderId === this.FOLDER_TRASH || folderId === this.FOLDER_ARCHIVE) {
                 return false;
             }
 
             return true;
+        }
+
+        if (this.selectedFolderId.indexOf('group:') === 0) {
+            if (
+                [this.FOLDER_ALL, this.FOLDER_ARCHIVE, this.FOLDER_TRASH].includes(folderId) ||
+                folderId.startsWith('group:')
+            ) {
+                return true;
+            }
+
+            return false;
         }
 
         return true;
@@ -249,6 +271,10 @@ class EmailListView extends ListView {
                 link: '#EmailAccount/list/userId=' + this.getUser().id + '&userName=' +
                     encodeURIComponent(this.getUser().get('name'))
             });
+        }
+
+        if (!this.getAcl().checkScope('Import')) {
+            this.hideHeaderActionItem('archiveEmail');
         }
 
         if (this.getUser().isAdmin()) {
@@ -321,6 +347,17 @@ class EmailListView extends ListView {
             this.getEmailRecordView().massActionMoveToTrash();
         };
 
+        this.shortcutKeys['Control+Backspace'] = e => {
+            if (!this.hasSelectedRecords()) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.getEmailRecordView().massActionMoveToArchive();
+        };
+
         this.shortcutKeys['Control+KeyI'] = e => {
             if (!this.hasSelectedRecords()) {
                 return;
@@ -342,6 +379,19 @@ class EmailListView extends ListView {
 
             this.getEmailRecordView().massActionMoveToFolder();
         };
+
+        this.shortcutKeys['Control+KeyQ'] = e => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (this.hasSelectedRecords()) {
+                this.getEmailRecordView().massActionMarkAsRead();
+
+                return;
+            }
+
+            this.getEmailRecordView().actionMarkAllAsRead();
+        };
     }
 
     hasSelectedRecords() {
@@ -357,6 +407,10 @@ class EmailListView extends ListView {
         this.applyRoutingParams(params);
         this.initDroppable();
         this.initStickableFolders();
+
+        const recordView = /** @type {import('views/email/record/list').default} */this.getRecordView();
+
+        recordView.removeQueuedRecord();
     }
 
     /**
@@ -395,6 +449,10 @@ class EmailListView extends ListView {
         }
     }
 
+    /**
+     * @private
+     * @param {function(import('collection').default)} callback
+     */
     getFolderCollection(callback) {
         this.getCollectionFactory().create(this.folderScope, (collection) => {
             collection.url = 'EmailFolder/action/listAll';
@@ -418,19 +476,46 @@ class EmailListView extends ListView {
             this.FOLDER_INBOX,
             this.FOLDER_IMPORTANT,
             this.FOLDER_SENT,
+            this.FOLDER_ARCHIVE,
         ];
 
+        const iconMap = {
+            [this.FOLDER_TRASH]: 'far fa-trash-alt',
+            [this.FOLDER_SENT]: 'far fa-paper-plane',
+            [this.FOLDER_INBOX]: 'fas fa-inbox',
+            [this.FOLDER_ARCHIVE]: 'far fa-caret-square-down',
+            [this.FOLDER_DRAFTS]: 'far fa-file',
+            [this.FOLDER_IMPORTANT]: 'far fa-star',
+        }
+
         this.getFolderCollection(collection => {
-            collection.forEach(model => {
+            collection.forEach((model, i) => {
                 if (this.noDropFolderIdList.indexOf(model.id) === -1) {
                     model.droppable = true;
                 }
 
+                if (model.id === this.FOLDER_INBOX) {
+                    model.groupStart = true;
+                } else if (
+                    model.id === this.FOLDER_ARCHIVE ||
+                    model.id === this.FOLDER_TRASH && !collection.models.find(m => m.id === this.FOLDER_ARCHIVE)
+                ) {
+                    model.groupStart = true;
+                } else if (
+                    model.id.indexOf('group:') === 0 &&
+                    collection.models.findIndex(m => m.id.indexOf('group:') === 0) === i
+                ) {
+                    model.groupStart = true;
+                }
+
+                model.iconClass = iconMap[model.id];
+
                 if (model.id.indexOf('group:') === 0) {
                     model.title = this.translate('groupFolder', 'fields', 'Email');
-                }
-                else if (auxFolderList.indexOf(model.id) === -1) {
+                    model.iconClass = 'far fa-circle';
+                } else if (auxFolderList.indexOf(model.id) === -1) {
                     model.title = this.translate('folder', 'fields', 'Email');
+                    model.iconClass = 'far fa-folder';
                 }
             });
 
@@ -455,12 +540,14 @@ class EmailListView extends ListView {
 
                     Espo.Ui.notify(' ... ');
 
+                    this.collection.offset = 0;
+
                     xhr = this.collection
                         .fetch()
                         .then(() => Espo.Ui.notify(false));
 
                     if (id !== this.defaultFolderId) {
-                        this.getRouter().navigate('#Email/list/folder=' + id);
+                        this.getRouter().navigate(`#Email/list/folder=${id}`);
                     } else {
                         this.getRouter().navigate('#Email');
                     }
@@ -472,7 +559,8 @@ class EmailListView extends ListView {
     }
 
     applyFolder() {
-        this.collection.selectedFolderId = this.selectedFolderId;
+        this.rootData.selectedFolderId = this.selectedFolderId;
+        this.collection.trigger('select-folder');
 
         if (!this.selectedFolderId) {
             this.collection.whereFunction = null;
@@ -493,9 +581,10 @@ class EmailListView extends ListView {
 
     /**
      * @protected
-     * @return {module:views/email-folder/list-side}
+     * @return {import('views/email-folder/list-side').default}
      */
     getFoldersView() {
+        // noinspection JSValidateTypes
         return this.getView('folders')
     }
 
@@ -581,8 +670,10 @@ class EmailListView extends ListView {
         const screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
         const isSmallScreen = $(window.document).width() < screenWidthXs;
 
-        const offset = this.getThemeManager().getParam('navbarHeight') +
-            (this.getThemeManager().getParam('buttonsContainerHeight') || 47);
+        const factor = this.getThemeManager().getFontSizeFactor();
+
+        const offset = this.getThemeManager().getParam('navbarHeight') * factor +
+            (this.getThemeManager().getParam('buttonsContainerHeight') || 47) * factor;
 
         const bottomSpaceHeight = parseInt(window.getComputedStyle($('#content').get(0)).paddingBottom, 10);
 

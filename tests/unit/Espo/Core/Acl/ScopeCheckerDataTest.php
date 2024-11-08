@@ -29,11 +29,10 @@
 
 namespace tests\unit\Espo\Core\Acl;
 
-use Espo\Core\{
-    Acl\AccessChecker\ScopeCheckerData,
-};
+use Espo\Core\Acl\AccessChecker\ScopeCheckerData;
+use PHPUnit\Framework\TestCase;
 
-class ScopeCheckerDataTest extends \PHPUnit\Framework\TestCase
+class ScopeCheckerDataTest extends TestCase
 {
     protected function setUp() : void
     {
@@ -45,8 +44,9 @@ class ScopeCheckerDataTest extends \PHPUnit\Framework\TestCase
             ::createBuilder()
             ->build();
 
-        $this->assertEquals(false, $checkerData->isOwn());
-        $this->assertEquals(false, $checkerData->inTeam());
+        $this->assertFalse($checkerData->isOwn());
+        $this->assertFalse($checkerData->inTeam());
+        $this->assertFalse($checkerData->isShared());
     }
 
     public function testCheckerData1()
@@ -55,10 +55,12 @@ class ScopeCheckerDataTest extends \PHPUnit\Framework\TestCase
             ::createBuilder()
             ->setIsOwn(true)
             ->setInTeam(true)
+            ->setIsShared(true)
             ->build();
 
-        $this->assertEquals(true, $checkerData->isOwn());
-        $this->assertEquals(true, $checkerData->inTeam());
+        $this->assertTrue($checkerData->isOwn());
+        $this->assertTrue($checkerData->inTeam());
+        $this->assertTrue($checkerData->isShared());
     }
 
     public function testCheckerData2()
@@ -71,10 +73,16 @@ class ScopeCheckerDataTest extends \PHPUnit\Framework\TestCase
                     return true;
                 }
             )
+            ->setIsSharedChecker(
+                function (): bool {
+                    return true;
+                }
+            )
             ->build();
 
-        $this->assertEquals(false, $checkerData->isOwn());
-        $this->assertEquals(true, $checkerData->inTeam());
+        $this->assertFalse($checkerData->isOwn());
+        $this->assertTrue($checkerData->inTeam());
+        $this->assertTrue($checkerData->isShared());
     }
 
     public function testCheckerData3()
@@ -91,9 +99,15 @@ class ScopeCheckerDataTest extends \PHPUnit\Framework\TestCase
                     return false;
                 }
             )
+            ->setIsSharedChecker(
+                function (): bool {
+                    return false;
+                }
+            )
             ->build();
 
-        $this->assertEquals(true, $checkerData->isOwn());
-        $this->assertEquals(false, $checkerData->inTeam());
+        $this->assertTrue($checkerData->isOwn());
+        $this->assertFalse($checkerData->inTeam());
+        $this->assertFalse($checkerData->isShared());
     }
 }

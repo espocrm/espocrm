@@ -140,12 +140,10 @@ trait SelectingBuilderTrait
         if ($orderBy instanceof Expression) {
             $orderBy = $orderBy->getValue();
             $direction = $direction ?? Order::ASC;
-        }
-        else if ($orderBy instanceof Order) {
+        } else if ($orderBy instanceof Order) {
             $direction = $direction ?? $orderBy->getDirection();
             $orderBy = $orderBy->getExpression()->getValue();
-        }
-        else {
+        } else {
             $direction = $direction ?? Order::ASC;
         }
 

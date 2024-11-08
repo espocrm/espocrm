@@ -66,8 +66,7 @@ class KeysProvider
         foreach ($rawKeys as $raw) {
             try {
                 $list[] = $this->factory->create($raw);
-            }
-            catch (UnsupportedKey) {
+            } catch (UnsupportedKey) {
                 $this->log->debug("OIDC: Unsupported key " . print_r($raw, true));
             }
         }
@@ -134,8 +133,7 @@ class KeysProvider
 
         try {
             $parsedResponse = Json::decode($response);
-        }
-        catch (JsonException) {}
+        } catch (JsonException) {}
 
         if (!$parsedResponse instanceof stdClass || !isset($parsedResponse->keys)) {
             throw new RuntimeException("OIDC: JWKS bad response.");

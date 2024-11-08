@@ -29,9 +29,12 @@
 
 namespace Espo\ORM\Repository;
 
+use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\EntityManager;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\Collection;
+use Espo\ORM\Relation\Relations;
+use Espo\ORM\Relation\RelationsMap;
 use Espo\ORM\Repository\Deprecation\RDBRepositoryDeprecationTrait;
 use Espo\ORM\Repository\Option\SaveOption;
 use Espo\ORM\SthCollection;
@@ -46,6 +49,7 @@ use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Mapper\BaseMapper;
 
+use Espo\ORM\Type\RelationType;
 use RuntimeException;
 
 /**
@@ -66,7 +70,8 @@ class RDBRepository implements Repository
         protected string $entityType,
         protected EntityManager $entityManager,
         protected EntityFactory $entityFactory,
-        ?HookMediator $hookMediator = null
+        ?HookMediator $hookMediator = null,
+        private ?RelationsMap $relationsMap = null,
     ) {
         $this->hookMediator = $hookMediator ?? (new EmptyHookMediator());
         $this->transactionManager = new RDBTransactionManager($entityManager->getTransactionManager());
@@ -105,9 +110,7 @@ class RDBRepository implements Repository
             ->getQueryBuilder()
             ->select()
             ->from($this->entityType)
-            ->where([
-                'id' => $id,
-            ])
+            ->where(['id' => $id])
             ->build();
 
         /** @var ?TEntity $entity */
@@ -147,10 +150,11 @@ class RDBRepository implements Repository
 
         if ($entity->isNew() && !$isSaved) {
             $this->getMapper()->insert($entity);
-        }
-        else {
+        } else {
             $this->getMapper()->update($entity);
         }
+
+        $this->saveSetRelations($entity);
 
         if ($entity instanceof BaseEntity) {
             $entity->setAsSaved();
@@ -169,16 +173,15 @@ class RDBRepository implements Repository
 
                 $entity->updateFetchedValues();
             }
-        }
-        else {
-            if (empty($options[SaveOption::KEEP_DIRTY])) {
-                $entity->updateFetchedValues();
-            }
+        } else if (empty($options[SaveOption::KEEP_DIRTY])) {
+            $entity->updateFetchedValues();
         }
 
         if ($entity instanceof BaseEntity) {
             $entity->setAsNotBeingSaved();
         }
+
+        $this->relationsMap?->get($entity)?->resetAll();
     }
 
     /**
@@ -584,4 +587,173 @@ class RDBRepository implements Repository
      */
     protected function afterMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
     {}
+
+    /**
+     * @param TEntity $entity
+     */
+    private function saveSetRelations(Entity $entity): void
+    {
+        if (!$this->relationsMap) {
+            return;
+        }
+
+        $relations = $this->relationsMap->get($entity);
+
+        if (!$relations) {
+            return;
+        }
+
+        foreach ($entity->getRelationList() as $relation) {
+            if (!$relations->isSet($relation)) {
+                continue;
+            }
+
+            $this->saveSetRelation($entity, $relations, $relation);
+        }
+    }
+
+    /**
+     * @param TEntity $entity
+     */
+    private function saveSetRelation(Entity $entity, Relations $relations, string $name): void
+    {
+        $related = $relations->getSet($name);
+
+        $type = $entity->getRelationType($name);
+
+        if ($type === RelationType::HAS_ONE) {
+            $this->saveSetRelationHasOne($entity, $name, $related);
+        } else if ($type === RelationType::BELONGS_TO) {
+            $this->saveSetRelationBelongsTo($entity, $name, $related);
+        } else if ($type === RelationType::BELONGS_TO_PARENT) {
+            $this->saveSetRelationBelongsToParent($entity, $name, $related);
+        }
+    }
+
+    /**
+     * @param TEntity $entity
+     */
+    private function saveSetRelationHasOne(Entity $entity, string $name, ?Entity $related): void
+    {
+        $idAttribute = $name . 'Id';
+
+        $defs = $this->getRelationDefs($name);
+
+        $foreignKey = $defs->getForeignKey();
+        $foreignEntityType = $defs->getForeignEntityType();
+        $foreign = $defs->tryGetForeignRelationName();
+
+        $previous = $this->entityManager
+            ->getRDBRepository($foreignEntityType)
+            ->where([$foreignKey => $entity->getId()])
+            ->findOne();
+
+        if (!$entity->isNew()) {
+            $entity->setFetched($idAttribute, $previous ? $previous->getId() : null);
+        }
+
+        if ($previous) {
+            if (!$related) {
+                $this->getRelation($entity, $name)->unrelate($previous);
+
+                return;
+            }
+
+            if ($previous->getId() === $related->getId()) {
+                return;
+            }
+        }
+
+        if (!$related) {
+            return;
+        }
+
+        $this->getRelation($entity, $name)->relate($related);
+
+        $related->set($foreignKey, $entity->getId());
+        $related->setFetched($foreignKey, $entity->getId());
+
+        $related->clear($foreign . 'Name');
+    }
+
+    /**
+     * @param TEntity $entity
+     */
+    private function saveSetRelationBelongsTo(Entity $entity, string $name, ?Entity $related): void
+    {
+        $setId = $entity->get($name . 'Id');
+
+        if (!$related) {
+            if ($setId) {
+                $this->getRelation($entity, $name)->unrelateById($setId);
+            }
+
+            return;
+        }
+
+        $defs = $this->getRelationDefs($name);
+
+        $foreignType = $defs->tryGetForeignRelationName() ?
+            $this->entityManager
+                ->getDefs()
+                ->getEntity($defs->getForeignEntityType())
+                ->getRelation($defs->getForeignRelationName())
+                ->getType() :
+            null;
+
+        if ($setId === $related->getId() && $foreignType !== RelationType::HAS_ONE) {
+            return;
+        }
+
+        $this->getRelation($entity, $name)->relate($related);
+    }
+
+    private function getRelationDefs(string $relation): RelationDefs
+    {
+        return $this->entityManager
+            ->getDefs()
+            ->getEntity($this->entityType)
+            ->getRelation($relation);
+    }
+
+    /**
+     * @param TEntity $entity
+     */
+    private function saveSetRelationBelongsToParent(Entity $entity, string $name, ?Entity $related): void
+    {
+        $setId = $entity->get($name . 'Id');
+        $setType = $entity->get($name . 'Type');
+
+        if (!$related) {
+            if (!$setType && !$setId) {
+                return;
+            }
+
+            $entity->setMultiple([
+                $name . 'Id' => null,
+                $name . 'Type' => null,
+                $name . 'Name' => null,
+            ]);
+
+            if (!$setType || !$setId) {
+                return;
+            }
+
+            $previous = $this->entityManager->getEntityById($setType, $setId);
+
+            if (!$previous) {
+                return;
+            }
+
+            $this->getRelation($entity, $name)->unrelate($previous);
+
+            return;
+        }
+
+        if ($setType === $related->getEntityType() && $setId === $related->getId()) {
+            return;
+        }
+
+        $this->getRelation($entity, $name)->relate($related);
+    }
 }

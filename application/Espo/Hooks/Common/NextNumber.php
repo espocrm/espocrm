@@ -29,25 +29,24 @@
 
 namespace Espo\Hooks\Common;
 
+use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\ORM\Entity;
-
 use Espo\Core\FieldProcessing\NextNumber\BeforeSaveProcessor as Processor;
 
 class NextNumber
 {
-    private Processor $processor;
-
-    public function __construct(Processor $processor)
-    {
-        $this->processor = $processor;
-    }
+    public function __construct(private Processor $processor)
+    {}
 
     /**
-     * @param \Espo\Entities\NextNumber $entity
      * @param array<string, mixed> $options
      */
     public function beforeSave(Entity $entity, array $options): void
     {
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
+
         $this->processor->process($entity, $options);
     }
 }

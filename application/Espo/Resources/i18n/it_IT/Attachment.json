@@ -4,7 +4,7 @@
   },
   "fields": {
     "role": "Ruolo",
-    "related": "Collegato",
+    "related": "Correlato",
     "type": "Tipo",
     "field": "Campo",
     "sourceId": "Sorgente ID",

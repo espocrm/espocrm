@@ -26,119 +26,170 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/record/row-actions/default', ['views/record/row-actions/default'], function (Dep) {
+import DefaultRowActionsView from 'views/record/row-actions/default';
 
-    return Dep.extend({
+class EmailDefaultRowActionView extends DefaultRowActionsView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-            this.listenTo(this.model, 'change', function (model) {
-                if (model.hasChanged('isImportant') || model.hasChanged('inTrash')) {
-                    setTimeout(function () {
-                        this.reRender();
-                    }.bind(this), 10);
-                }
-            }, this);
-        },
+    setup() {
+        super.setup();
 
-        getActionList: function () {
-            var list = [{
-                action: 'quickView',
-                label: 'View',
+        this.listenTo(this.model, 'change:isImportant change:inTrash change:groupStatusFolder', () => {
+            setTimeout(() => this.reRender(), 10);
+        });
+    }
+
+    getActionList() {
+        /** @type {module:views/record/list~rowAction[]} */
+        let list = [{
+            action: 'quickView',
+            label: 'View',
+            data: {
+                id: this.model.id
+            },
+            groupIndex: 0,
+        }];
+
+        if (
+            this.model.get('createdById') === this.getUser().id && this.model.get('status') === 'Draft' &&
+            !this.model.attributes.inTrash
+        ) {
+            list.push({
+                action: 'send',
+                label: 'Send',
                 data: {
-                    id: this.model.id
-                }
-            }];
+                    id: this.model.id,
+                },
+            });
+        }
 
-            if (
-                this.model.get('createdById') === this.getUser().id && this.model.get('status') === 'Draft' &&
-                !this.model.get('inTrash')
-            ) {
-                list.push({
-                    action: 'send',
-                    label: 'Send',
+        if (this.options.acl.edit) {
+            list = list.concat([
+                {
+                    action: 'quickEdit',
+                    label: 'Edit',
                     data: {
-                        id: this.model.id,
+                        id: this.model.id
                     },
-                });
-            }
+                    groupIndex: 0,
+                },
+            ]);
+        }
 
-            if (this.options.acl.edit) {
-                list = list.concat([
-                    {
-                        action: 'quickEdit',
-                        label: 'Edit',
-                        data: {
-                            id: this.model.id
-                        }
-                    }
-                ]);
-            }
-
-            if (this.model.get('isUsers') && this.model.get('status') !== 'Draft') {
+        if (this.model.get('isUsers')) {
+            if (!this.model.get('isImportant')) {
                 if (!this.model.get('inTrash')) {
                     list.push({
-                        action: 'moveToTrash',
-                        label: 'Move to Trash',
+                        action: 'markAsImportant',
+                        label: 'Mark as Important',
                         data: {
                             id: this.model.id
-                        }
-                    });
-                } else {
-                    list.push({
-                        action: 'retrieveFromTrash',
-                        label: 'Retrieve from Trash',
-                        data: {
-                            id: this.model.id
-                        }
+                        },
+                        groupIndex: 1,
                     });
                 }
-            }
-
-            if (this.model.get('isUsers')) {
-                if (!this.model.get('isImportant')) {
-                    if (!this.model.get('inTrash')) {
-                        list.push({
-                            action: 'markAsImportant',
-                            label: 'Mark as Important',
-                            data: {
-                                id: this.model.id
-                            }
-                        });
-                    }
-                } else {
-                    list.push({
-                        action: 'markAsNotImportant',
-                        label: 'Unmark Importance',
-                        data: {
-                            id: this.model.id
-                        }
-                    });
-                }
-            }
-
-            if (this.model.get('isUsers') && this.model.get('status') !== 'Draft') {
+            } else {
                 list.push({
-                    action: 'moveToFolder',
-                    label: 'Move to Folder',
+                    action: 'markAsNotImportant',
+                    label: 'Unmark Importance',
                     data: {
                         id: this.model.id
-                    }
+                    },
+                    groupIndex: 1,
+                });
+            }
+        }
+
+        if (this.model.attributes.isUsers && !this.model.attributes.isRead) {
+            list.push({
+                action: 'markAsRead',
+                label: 'Mark Read',
+                data: {
+                    id: this.model.id
+                },
+                groupIndex: 1,
+            });
+        }
+
+        if (
+            (this.model.attributes.isUsers && this.model.attributes.status !== 'Draft') ||
+            this.model.attributes.groupFolderId
+        ) {
+            const inTrash = this.model.attributes.groupFolderId ?
+                this.model.attributes.groupStatusFolder === 'Trash' :
+                this.model.attributes.inTrash;
+
+            const inArchive = this.model.attributes.groupFolderId ?
+                this.model.attributes.groupStatusFolder === 'Archive' :
+                this.model.attributes.inArchive;
+
+            if (!inTrash) {
+                list.push({
+                    action: 'moveToTrash',
+                    label: 'Move to Trash',
+                    data: {
+                        id: this.model.id
+                    },
+                    groupIndex: 2,
+                });
+            } else {
+                list.push({
+                    action: 'retrieveFromTrash',
+                    label: 'Retrieve from Trash',
+                    data: {
+                        id: this.model.id
+                    },
+                    groupIndex: 2,
                 });
             }
 
-            if (this.options.acl.delete) {
+            if (!inArchive) {
                 list.push({
-                    action: 'quickRemove',
-                    label: 'Remove',
+                    action: 'moveToArchive',
+                    text: this.getLanguage().translatePath('Email.actions.moveToArchive'),
                     data: {
                         id: this.model.id
-                    }
+                    },
+                    groupIndex: 2,
                 });
             }
 
-            return list;
-        },
+            list.push({
+                action: 'moveToFolder',
+                label: 'Move to Folder',
+                data: {
+                    id: this.model.id
+                },
+                groupIndex: 2,
+            });
+        } else if (
+            !this.model.attributes.isUsers &&
+            !this.model.attributes.groupFolderId &&
+            this.model.attributes.status === 'Archived'
+        ) {
+            list.push({
+                action: 'moveToFolder',
+                label: 'Move to Folder',
+                data: {
+                    id: this.model.id
+                },
+                groupIndex: 2,
+            });
+        }
 
-    });
-});
+        if (this.options.acl.delete) {
+            list.push({
+                action: 'quickRemove',
+                label: 'Remove',
+                data: {
+                    id: this.model.id
+                },
+                groupIndex: 0,
+            });
+        }
+
+
+        return list;
+    }
+}
+
+export default EmailDefaultRowActionView;

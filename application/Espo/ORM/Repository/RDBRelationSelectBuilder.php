@@ -72,8 +72,7 @@ class RDBRelationSelectBuilder
 
         if ($entity instanceof BaseEntity) {
             $this->foreignEntityType = $entity->getRelationParam($relationName, 'entity');
-        }
-        else {
+        } else {
             $this->foreignEntityType = $this->entityManager
                 ->getDefs()
                 ->getEntity($entityType)
@@ -219,7 +218,19 @@ class RDBRelationSelectBuilder
      */
     public function findOne(): ?Entity
     {
-        $collection = $this->sth()->limit(0, 1)->find();
+        $queryTemp = $this->builder->build();
+
+        $returnSthCollection = $this->returnSthCollection;
+        $offset = $queryTemp->getOffset();
+        $limit = $queryTemp->getLimit();
+
+        $collection = $this
+            ->sth()
+            ->limit(0, 1)
+            ->find();
+
+        $this->returnSthCollection = $returnSthCollection;
+        $this->limit($offset, $limit);
 
         foreach ($collection as $entity) {
             return $entity;
@@ -311,11 +322,9 @@ class RDBRelationSelectBuilder
         if ($this->isManyMany()) {
             if ($clause instanceof WhereItem) {
                 $clause = $this->applyRelationAliasToWhereClause($clause->getRaw());
-            }
-            else if (is_string($clause)) {
+            } else if (is_string($clause)) {
                 $clause = $this->applyRelationAliasToWhereClauseKey($clause);
-            }
-            else if (is_array($clause)) {
+            } else if (is_array($clause)) {
                 $clause = $this->applyRelationAliasToWhereClause($clause);
             }
         }

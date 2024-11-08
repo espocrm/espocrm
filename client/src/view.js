@@ -45,24 +45,6 @@ class View extends BullView {
      */
 
     /**
-     * A model.
-     *
-     * @name model
-     * @type {module:model|null}
-     * @memberOf View.prototype
-     * @public
-     */
-
-    /**
-     * A collection.
-     *
-     * @name collection
-     * @type {module:collection|null}
-     * @memberOf View.prototype
-     * @public
-     */
-
-    /**
      * A helper.
      *
      * @name _helper
@@ -70,6 +52,36 @@ class View extends BullView {
      * @memberOf View.prototype
      * @private
      */
+
+    /**
+     * A model.
+     *
+     * @type {import('model').default}
+     */
+    model
+
+    /**
+     * A collection.
+     *
+     * @type {import('collection').default}
+     */
+    collection
+
+    /**
+     * @param {Record<string, *>} options
+     */
+    constructor(options = {}) {
+        super(options);
+
+        if (options.model) {
+            this.model = options.model;
+        }
+
+        if (options.collection) {
+            this.collection = options.collection;
+        }
+    }
+
 
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -326,8 +338,8 @@ class View extends BullView {
      * Translate a label.
      *
      * @param {string} label Label.
-     * @param {string} [category] Category.
-     * @param {string} [scope] Scope.
+     * @param {string|'messages'|'labels'|'fields'|'links'|'scopeNames'|'scopeNamesPlural'} [category='labels'] Category.
+     * @param {string} [scope='Global'] Scope.
      * @returns {string}
      */
     translate(label, category, scope) {

@@ -40,9 +40,9 @@ class AclPortal extends Acl {
     checkScope(data, action, precise, entityAccessData) {
         entityAccessData = entityAccessData || {};
 
-        let inAccount = entityAccessData.inAccount;
-        let isOwnContact = entityAccessData.isOwnContact;
-        let isOwner = entityAccessData.isOwner;
+        const inAccount = entityAccessData.inAccount;
+        const isOwnContact = entityAccessData.isOwnContact;
+        const isOwner = entityAccessData.isOwner;
 
         if (this.getUser().isAdmin()) {
             return true;
@@ -74,7 +74,7 @@ class AclPortal extends Acl {
             return false;
         }
 
-        var value = data[action];
+        const value = data[action];
 
         if (value === 'all') {
             return true;
@@ -98,15 +98,15 @@ class AclPortal extends Acl {
             }
         }
 
-        var result = false;
+        let result = false;
 
         if (value === 'account') {
             result = inAccount;
+
             if (inAccount === null) {
                 if (precise) {
                     result = null;
-                }
-                else {
+                } else {
                     return true;
                 }
             }
@@ -121,8 +121,7 @@ class AclPortal extends Acl {
             if (isOwnContact === null) {
                 if (precise) {
                     result = null;
-                }
-                else {
+                } else {
                     return true;
                 }
             }
@@ -134,8 +133,7 @@ class AclPortal extends Acl {
         if (isOwner === null) {
             if (precise) {
                 result = null;
-            }
-            else {
+            } else {
                 return true;
             }
         }
@@ -149,7 +147,7 @@ class AclPortal extends Acl {
             return true;
         }
 
-        let entityAccessData = {
+        const entityAccessData = {
             isOwner: this.checkIsOwner(model),
             inAccount: this.checkInAccount(model),
             isOwnContact: this.checkIsOwnContact(model),
@@ -160,10 +158,11 @@ class AclPortal extends Acl {
 
     /** @inheritDoc */
     checkIsOwner(model) {
-        if (model.hasField('createdBy')) {
-            if (this.getUser().id === model.get('createdById')) {
-                return true;
-            }
+        if (
+            model.hasField('createdBy') &&
+            this.getUser().id === model.get('createdById')
+        ) {
+            return true;
         }
 
         return false;
@@ -176,21 +175,21 @@ class AclPortal extends Acl {
      * @returns {boolean|null} True if in an account, null if not clear.
      */
     checkInAccount(model) {
-        let accountIdList = this.getUser().getLinkMultipleIdList('accounts');
+        const accountIdList = this.getUser().getLinkMultipleIdList('accounts');
 
         if (!accountIdList.length) {
             return false;
         }
 
-        if (model.hasField('account')) {
-            if (model.get('accountId')) {
-                if (~accountIdList.indexOf(model.get('accountId'))) {
-                    return true;
-                }
-            }
+        if (
+            model.hasField('account') &&
+            model.get('accountId') &&
+            accountIdList.includes(model.get('accountId'))
+        ) {
+            return true;
         }
 
-        var result = false;
+        let result = false;
 
         if (model.hasField('accounts') && model.hasLink('accounts')) {
             if (!model.has('accountsIds')) {
@@ -198,18 +197,19 @@ class AclPortal extends Acl {
             }
 
             (model.getLinkMultipleIdList('accounts')).forEach(id => {
-                if (~accountIdList.indexOf(id)) {
+                if (accountIdList.includes(id)) {
                     result = true;
                 }
             });
         }
 
-        if (model.hasField('parent') && model.hasLink('parent')) {
-            if (model.get('parentType') === 'Account') {
-                if (!accountIdList.indexOf(model.get('parentId'))) {
-                    return true;
-                }
-            }
+        if (
+            model.hasField('parent') &&
+            model.hasLink('parent') &&
+            model.get('parentType') === 'Account' &&
+            accountIdList.includes(model.get('parentId'))
+        ) {
+            return true;
         }
 
         if (result === false) {
@@ -228,7 +228,7 @@ class AclPortal extends Acl {
      * @returns {boolean|null} True if in a contact-owner, null if not clear.
      */
     checkIsOwnContact(model) {
-        let contactId = this.getUser().get('contactId');
+        const contactId = this.getUser().get('contactId');
 
         if (!contactId) {
             return false;

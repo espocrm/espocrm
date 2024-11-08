@@ -97,8 +97,7 @@ class PostProcess implements Action
             if (!is_null($searchParams)) {
                 $params['searchParams'] = json_decode(Json::encode($searchParams), true);
             }
-        }
-        else if (!is_null($ids)) {
+        } else if (!is_null($ids)) {
             $params['ids'] = $ids;
         }
 

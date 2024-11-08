@@ -10,26 +10,24 @@
     "currencyList": "Para Birimi Listesi",
     "language": "Dil",
     "exportDelimiter": "Dışa Aktarma Sınırlayıcısı",
-    "signature": "Email İmzası",
+    "signature": "Eposta İmzası",
     "dashboardTabList": "Sekme Listesi",
     "tabList": "Sekme Listesi",
     "defaultReminders": "Ön Tanımlı Hatırlatıcılar",
     "theme": "Tema",
     "useCustomTabList": "Özel Sekme Listesi",
-    "receiveAssignmentEmailNotifications": "Ödev sırasında e-posta bildirimleri",
-    "receiveMentionEmailNotifications": "Yayınlarda bahsedilen bildirimlerle ilgili e-posta bildirimleri",
-    "receiveStreamEmailNotifications": "Yayınlar ve durum güncellemeleri ile ilgili e-posta bildirimleri",
+    "receiveAssignmentEmailNotifications": "Ödev sırasında eposta bildirimleri",
+    "receiveMentionEmailNotifications": "Yayınlarda bahsedilen bildirimlerle ilgili eposta bildirimleri",
+    "receiveStreamEmailNotifications": "Yayınlar ve durum güncellemeleri ile ilgili eposta bildirimleri",
     "dashboardLayout": "Kontrol Paneli Düzeni",
-    "emailReplyForceHtml": "HTML'de Yanıtla E-postasını Yanıtla",
+    "emailReplyForceHtml": "HTML'de Yanıtla Epostasını Yanıtla",
     "autoFollowEntityTypeList": "Oto-Takip",
     "emailReplyToAllByDefault": "Ön Tanımlı Olarak Tümünü Yanıtla",
     "doNotFillAssignedUserIfNotRequired": "Gerekli değilse, Atanmış Kullanıcıyı doldurmayın",
     "followEntityOnStreamPost": "Akışta yayınlandıktan sonra varlığı otomatik olarak takip etme",
     "followCreatedEntities": "Oluşturulan kayıtları otomatik takip et",
     "followCreatedEntityTypeList": "Belirli varlık türlerinin kayıtlarını otomatik takip et",
-    "emailUseExternalClient": "Harici bir e-posta istemcisi kullanın",
-    "scopeColorsDisabled": "Kapsam renklerini devre dışı bırak",
-    "tabColorsDisabled": "Sekme renklerini devre dışı bırak",
+    "emailUseExternalClient": "Harici bir eposta istemcisi kullanın",
     "dashboardLocked": "Kontrol Panelini Kilitle",
     "textSearchStoringDisabled": "Metin filtre saklamayı devre dışı bırak"
   },
@@ -42,13 +40,14 @@
   "labels": {
     "Notifications": "Bildirimler",
     "User Interface": "Kullanıcı Arayüzü",
-    "Misc": "Çeşit",
-    "Locale": "Lokal",
+    "Misc": "Tür",
+    "Locale": "Ayarlar",
     "Reset Dashboard to Default": "Panoyu Varsayılan Ayarlara Sıfırla"
   },
   "tooltips": {
     "autoFollowEntityTypeList": "Kullanıcı, seçili varlık türlerinin tüm yeni kayıtlarını otomatik olarak izleyecek, akışta bilgi görecek ve bildirim alacaktır.",
     "doNotFillAssignedUserIfNotRequired": "Kayıt oluştururken atanan kullanıcı, zorunlu olmadıkça kendi kullanıcısıyla doldurulmaz.",
-    "followCreatedEntities": "Yeni kayıtlar oluşturulduğunda, başka bir kullanıcıya atansa bile otomatik olarak takip edilecektir."
+    "followCreatedEntities": "Yeni kayıtlar oluşturulduğunda, başka bir kullanıcıya atansa bile otomatik olarak takip edilecektir.",
+    "followCreatedEntityTypeList": "Seçilen varlık türlerinin yeni kayıtları oluşturulduğunda, başka bir kullanıcıya atansa bile otomatik olarak takip edilecektir."
   }
 }

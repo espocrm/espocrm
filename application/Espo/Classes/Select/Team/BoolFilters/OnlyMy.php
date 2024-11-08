@@ -29,35 +29,32 @@
 
 namespace Espo\Classes\Select\Team\BoolFilters;
 
+use Espo\Entities\Team;
 use Espo\Entities\User;
-
 use Espo\Core\Select\Bool\Filter;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Where\OrGroupBuilder;
+use Espo\ORM\Query\SelectBuilder;
 
-use Espo\ORM\Query\{
-    SelectBuilder,
-    Part\Where\OrGroupBuilder,
-    Part\Condition as Cond,
-};
-
+/**
+ * @noinspection PhpUnused
+ */
 class OnlyMy implements Filter
 {
-    private $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
+    public function __construct(private User $user)
+    {}
 
     public function apply(SelectBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
     {
-        $queryBuilder
-            ->leftJoin('users', 'usersOnlyMyFilter')
-            ->distinct();
-
         $orGroupBuilder->add(
-            Cond::equal(
-                Cond::column('usersOnlyMyFilter.id'),
-                $this->user->getId()
+            Condition::in(
+                Expression::column('id'),
+                SelectBuilder::create()
+                    ->from(Team::RELATIONSHIP_TEAM_USER)
+                    ->select('teamId')
+                    ->where(['userId' => $this->user->getId()])
+                    ->build()
             )
         );
     }

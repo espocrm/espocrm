@@ -1,45 +1,47 @@
 body:not([data-navbar="side"]) {
-    padding-top: 52px;
+    padding-top: calc(var(--10px) * 5 + var(--2px));
     height: 100%;
 
     > .content {
         height: auto;
         min-height: 100%;
-        padding-bottom: 42px;
+        padding-bottom: calc(var(--16px) + var(--footer-height));
     }
 
      > footer {
-        margin-top: -28px;
-        clear: both;
-        position: relative;
-        height: 26px;
+         margin-top: calc(var(--footer-height) * -1);
+         clear: both;
+         position: relative;
+         height: var(--footer-height);
+         max-height: var(--footer-height);
 
-        p {
-            padding: 6px @panel-padding 4px;
-        }
+         p {
+             padding: 0 var(--panel-padding);
+             line-height: var(--footer-height);
+         }
     }
 
-    @media screen and (max-width: (@screen-sm-min - 1px)) {
+    @media screen and (max-width: @screen-xs-max) {
         padding-top: 0;
 
         > .content {
-            margin-top: -42px;
-            padding-top: 42px;
+            margin-top: calc(var(--42px) * -1);
+            padding-top: var(--42px);
         }
 
         > header + .content {
-            margin-top: -95px;
-            padding-top: 95px;
-            margin-bottom: -20px;
-            padding-bottom: 20px;
+            margin-top: calc(var(--95px) * -1);
+            padding-top: var(--95px);
+            margin-bottom: calc(var(--20px) * -1);
+            padding-bottom: var(--20px);
         }
 
         > footer {
-            margin-top: 19px;
+            margin-top: var(--19px);
             height: unset;
 
             p {
-                padding: 2px @panel-padding 2px;
+                padding: var(--2px) var(--panel-padding) var(--2px);
             }
         }
     }
@@ -59,7 +61,7 @@ body:not([data-navbar="side"]) {
 
             display: flex;
             flex-wrap: nowrap;
-            width: calc(100vw);
+            width: ~"calc(100vw)";
 
             > .navbar-header {
                 display: flex;
@@ -81,7 +83,7 @@ body:not([data-navbar="side"]) {
                     float: none;
                     flex-grow: 1;
                     justify-content: end;
-                    padding-right: 18px;
+                    padding-right: var(--18px);
                 }
 
                 @supports selector(::-webkit-scrollbar) {
@@ -98,11 +100,11 @@ body:not([data-navbar="side"]) {
 
         .navbar-brand {
             padding: 0;
-            width: @logo-width;
-            height: @logo-height;
+            width: var(--logo-width);
+            height: var(--navbar-height);
 
             img.logo {
-                max-width: @logo-width;
+                max-width: var(--logo-width);
             }
         }
 
@@ -115,7 +117,7 @@ body:not([data-navbar="side"]) {
         left: 0;
         z-index: @zindex-navbar-fixed;
         top: 0;
-        border-width: 0 0 1px;
+        border-width: 0 0 var(--1px);
 
         a.minimizer {
             display: none;
@@ -129,7 +131,7 @@ body:not([data-navbar="side"]) {
 
             span.short-label > span {
                 display: inline-block;
-                width: 16px;
+                width: var(--16px);
                 text-align: center;
             }
 
@@ -147,12 +149,12 @@ body:not([data-navbar="side"]) {
 
                 > ul > li > ul > li > a,
                 > ul > li > a {
-                    padding-top: @navbar-tab-vertical-padding;
-                    padding-bottom: @navbar-tab-vertical-padding;
-                    height: 38px;
+                    padding-top: var(--navbar-tab-vertical-padding);
+                    padding-bottom: var(--navbar-tab-vertical-padding);
+                    height: var(--38px);
 
                     > span.full-label {
-                        padding-left: 30px;
+                        padding-left: var(--30px);
                         position: static;
                     }
 
@@ -175,29 +177,43 @@ body:not([data-navbar="side"]) {
 
         .navbar-right {
             > li > a {
-                width: 44px;
+                width: calc(var(--4px) * 10 + var(--4px));
             }
         }
 
         @media screen and (min-width: @screen-sm-min) {
             input.global-search-input {
-                width: 195px;
-                height: 30px;
-                padding-bottom: 4px;
-                padding-top: 4px;
+                width: calc(var(--190px));
+                height: var(--30px);
+                padding-bottom: var(--4px);
+                padding-top: var(--4px);
             }
 
             #global-search-panel {
-                margin-top: 1px;
+                margin-top: var(--1px);
             }
 
             .global-search-button {
-                margin-top: -1px;
+                margin-top: calc(var(--1px) * -1);
+            }
+
+            .navbar-right {
+                a.global-search-button,
+                > li > a {
+                    color: var(--navbar-inverse-link-icon-color);
+
+                    &:hover {
+                        color: var(--navbar-inverse-link-icon-hover-color);
+                    }
+                }
+                > li.dropdown .open > a {
+                    color: var(--navbar-inverse-link-icon-hover-color);
+                }
             }
         }
     }
 
-    @media screen and (max-width: (@screen-sm-min - 1px)) {
+    @media screen and (max-width: @screen-xs-max) {
         #navbar .navbar {
             position: static;
 
@@ -206,7 +222,7 @@ body:not([data-navbar="side"]) {
             }
 
             li.tab > a {
-                border-right-width: @navbar-color-border-width;
+                border-right-width: 0;
                 border-right-style: solid;
                 border-color: transparent;
             }
@@ -214,7 +230,7 @@ body:not([data-navbar="side"]) {
             ul.tabs {
                 > li a > span.full-label {
                     position: static;
-                    padding-left: 30px;
+                    padding-left: var(--30px);
                 }
 
                 > li a > span.short-label {
@@ -229,14 +245,14 @@ body:not([data-navbar="side"]) {
             }
 
             .global-search-button {
-                height: 33px;
+                height: var(--33px);
             }
         }
     }
 
     @media screen and (min-width: @screen-sm-min) {
         #navbar .navbar {
-            max-height: @navbar-height;
+            max-height: var(--navbar-height);
             overflow: hidden;
 
             ul.tabs {
@@ -244,31 +260,27 @@ body:not([data-navbar="side"]) {
                     display: block;
                     float: left;
                     position: relative;
-                    left: -4px;
-                    margin-right: 4px;
+                    left: calc(var(--4px) * -1);
+                    margin-right: var(--4px);
                 }
 
                 li.more > li > a {
-                    padding-left: 10px;
+                    padding-left: var(--10px);
                 }
             }
 
-            .navbar-header {
-                //width: @logo-width + 10px;
-            }
-
             ul.nav > li.tab > a {
-                border-bottom-width: @navbar-color-border-width;
+                border-bottom-width: 0;
                 border-bottom-style: solid;
                 border-color: transparent;
-                padding-bottom: floor(@navbar-padding-vertical - @navbar-color-border-width);
+                padding-bottom: var(--navbar-padding-vertical);
             }
 
             ul.dropdown-menu > li.tab > a {
-                border-left-width: @navbar-color-border-width;
+                border-left-width: 0;
                 border-left-style: solid;
                 border-color: transparent;
-                padding-left: 15px - @navbar-color-border-width;
+                padding-left: calc(1rem - var(--1px));
             }
 
             .nav > li.more > .dropdown-menu > li.tab-group > ul.dropdown-menu,
@@ -282,27 +294,23 @@ body:not([data-navbar="side"]) {
 
             .nav li.tab-group {
                 span.full-label {
-                    padding-right: 8px;
+                    padding-right: var(--8px);
                 }
             }
 
             ul.nav > li.tab-group > a {
                 > span.full-label {
-                    padding-right: 10px;
+                    padding-right: var(--10px);
                 }
 
                 > span.group-caret {
-                    top: 17px;
-                    -webkit-transform: rotate(90deg);
-                    -moz-transform: rotate(90deg);
-                    -ms-transform: rotate(90deg);
-                    -o-transform: rotate(90deg);
+                    top: var(--17px);
                     transform: rotate(90deg);
                 }
             }
 
             .navbar-form {
-                padding-top: 4px;
+                padding-top: var(--4px);
                 margin-top: 0;
                 margin-bottom: 0;
             }
@@ -313,7 +321,7 @@ body:not([data-navbar="side"]) {
 
     @media (min-width: @screen-lg-min) {
         .container {
-            max-width: @container-max-width;
+            max-width: var(--container-max-width);
         }
     }
 
@@ -321,16 +329,16 @@ body:not([data-navbar="side"]) {
         left: 0;
     }
 
-    .list-buttons-container .sticked-bar {
+    .list-sticky-bar {
         width: 100%;
         left: 0;
-        top: @navbar-height;
-        padding-left: @container-padding;
+        top: var(--navbar-height);
+        padding-left: var(--container-padding);
     }
 
-    @media screen and (max-width: (@screen-sm-min - 1px)) {
-        .list-buttons-container .sticked-bar,
-        &.minimized .list-buttons-container .sticked-bar {
+    @media screen and (max-width: @screen-xs-max) {
+        .list-sticky-bar,
+        &.minimized .list-sticky-bar {
             width: 100%;
             top: 0;
             left: 0;
@@ -347,12 +355,12 @@ body:not([data-navbar="side"]) {
 
                     > table td:first-child,
                     > table th:first-child {
-                        padding-left: @panel-padding;
+                        padding-left: var(--panel-padding);
                     }
 
                     > table td:last-child,
                     > table th:last-child {
-                        padding-right: @panel-padding;
+                        padding-right: var(--panel-padding);
                     }
 
                     .list-with-border-radius();
@@ -378,22 +386,23 @@ body:not([data-navbar="side"]) {
 
     .list-kanban {
         .kanban-head-container.sticked {
-            margin-top: @navbar-height;
+            margin-top: var(--navbar-height);
         }
     }
 
     .stick-sub {
-        margin-top: @navbar-height;
+        margin-top: var(--navbar-height);
 
-        @media screen and (max-width: (@screen-sm-min - 1px)) {
+        @media screen and (max-width: @screen-xs-max) {
             margin-top: 0;
         }
     }
 
     @media screen and (min-width: @screen-sm-min) {
         .folders-container.sticked {
-            top: 87px;
-            //left: 0;
+            //top: calc(var(--8px) * 10 + var(--7px));
+            // @todo Use variable instead of 46px. It's a sticky bar height.
+            top: calc(var(--navbar-height) + var(--46px));
         }
     }
 }

@@ -85,7 +85,9 @@ class Argument implements Evaluatable
         }
 
         if ($this->data instanceof Variable) {
-            return new ArgumentList([$this->data->getName()]);
+            $value = new Value($this->data->getName());
+
+            return new ArgumentList([$value]);
         }
 
         if ($this->data instanceof Attribute) {

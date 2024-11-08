@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Classes\Select\Meeting\PrimaryFilters;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Entities\User;
 use Espo\Core\Select\Primary\Filter;
@@ -60,8 +61,7 @@ class Todays implements Filter
             $whereItem = $this->converterFactory
                 ->create(Meeting::ENTITY_TYPE, $this->user)
                 ->convert($queryBuilder, $item);
-        }
-        catch (Error $e) {
+        } catch (BadRequest $e) {
             throw new LogicException($e->getMessage());
         }
 

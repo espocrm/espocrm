@@ -343,10 +343,18 @@ class DashboardView extends View {
             disableResize = true;
         }
 
+        const paramCellHeight = this.getThemeManager().getParam('dashboardCellHeight');
+        const paramCellMargin = this.getThemeManager().getParam('dashboardCellMargin');
+
+        const factor = this.getThemeManager().getFontSizeFactor();
+
+        const cellHeight = Math.ceil(factor * paramCellHeight * 1.14);
+        const margin = Math.round(factor * paramCellMargin / 2);
+
         const grid = this.grid = GridStack.init(
             {
-                cellHeight: this.getThemeManager().getParam('dashboardCellHeight') * 1.14,
-                margin: this.getThemeManager().getParam('dashboardCellMargin') / 2,
+                cellHeight: cellHeight,
+                margin: margin,
                 column: 12,
                 handle: '.panel-heading',
                 disableDrag: disableDrag,

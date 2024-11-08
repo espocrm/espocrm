@@ -54,7 +54,7 @@ class RangeFloatFieldView extends RangeIntFieldView {
     validateFloat() {
         const validate = (name) => {
             if (isNaN(this.model.get(name))) {
-                let msg = this.translate('fieldShouldBeFloat', 'messages')
+                const msg = this.translate('fieldShouldBeFloat', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg, '[data-name="' + name + '"]');

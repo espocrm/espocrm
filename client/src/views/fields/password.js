@@ -37,13 +37,6 @@ class PasswordFieldView extends BaseFieldView {
 
     validations = ['required', 'confirm']
 
-    events = {
-        /** @this PasswordFieldView */
-        'click [data-action="change"]': function () {
-            this.changePassword();
-        },
-    }
-
     changePassword() {
         this.$el.find('[data-action="change"]').addClass('hidden');
         this.$element.removeClass('hidden');
@@ -51,12 +44,17 @@ class PasswordFieldView extends BaseFieldView {
         this.changing = true;
     }
 
-    /** @inheritDoc */
     data() {
         return {
             isNew: this.model.isNew(),
             ...super.data(),
         }
+    }
+
+    setup() {
+        super.setup();
+
+        this.addActionHandler('change', () => this.changePassword());
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -66,7 +64,7 @@ class PasswordFieldView extends BaseFieldView {
         }
 
         if (this.model.get(this.name) !== this.model.get(this.name + 'Confirm')) {
-            let msg = this.translate('fieldBadPasswordConfirm', 'messages')
+            const msg = this.translate('fieldBadPasswordConfirm', 'messages')
                 .replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg);

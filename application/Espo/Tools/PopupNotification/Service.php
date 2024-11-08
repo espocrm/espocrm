@@ -127,8 +127,7 @@ class Service
                 );
 
                 $result[$type] = $itemList;
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $this->log->error("Popup notifications: " . $e->getMessage());
             }
         }

@@ -36,6 +36,7 @@ use Espo\Core\ORM\Entity;
 use Espo\Core\ORM\Helper;
 
 use Espo\ORM\EntityManager;
+use Espo\ORM\Relation\Relations;
 use Espo\ORM\Value\ValueAccessorFactory;
 
 class Person extends Entity
@@ -47,9 +48,16 @@ class Person extends Entity
         array $defs,
         EntityManager $entityManager,
         Helper $helper,
-        ?ValueAccessorFactory $valueAccessorFactory = null
+        ?ValueAccessorFactory $valueAccessorFactory = null,
+        ?Relations $relations = null,
     ) {
-        parent::__construct($entityType, $defs, $entityManager, $valueAccessorFactory);
+        parent::__construct(
+            $entityType,
+            $defs,
+            $entityManager,
+            $valueAccessorFactory,
+            $relations
+        );
 
         $this->helper = $helper;
     }

@@ -177,8 +177,7 @@ class Container implements ContainerInterface
         if ($this->isSet($id)) {
             try {
                 $object = $this->get($id);
-            }
-            catch (NotFoundExceptionInterface) {
+            } catch (NotFoundExceptionInterface) {
                 throw new LogicException();
             }
 
@@ -308,7 +307,9 @@ class Container implements ContainerInterface
             return $loader;
         }
 
-        assert($this->configuration !== null);
+        if ($this->configuration === null) {
+            throw new RuntimeException("Container configuration is not ready.");
+        }
 
         return $this->configuration->getLoaderClassName($id);
     }

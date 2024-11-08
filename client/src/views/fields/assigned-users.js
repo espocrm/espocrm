@@ -51,16 +51,51 @@ class AssignedUsersFieldView extends LinkMultipleFieldView {
     }
 
     getDetailLinkHtml(id, name) {
-        let html = super.getDetailLinkHtml(id);
+        const html = super.getDetailLinkHtml(id);
 
-        let avatarHtml = this.isDetailMode() ?
-            this.getHelper().getAvatarHtml(id, 'small', 14, 'avatar-link') : '';
+        const avatarHtml = this.isDetailMode() ?
+            this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link') : '';
 
         if (!avatarHtml) {
             return html;
         }
 
         return avatarHtml + ' ' + html;
+    }
+
+    /** @inheritDoc */
+    getOnEmptyAutocomplete() {
+        if (this.params.autocompleteOnEmpty) {
+            return undefined;
+        }
+
+        if (this.ids && this.ids.includes(this.getUser().id)) {
+            return Promise.resolve([]);
+        }
+
+        return Promise.resolve([
+            {
+                id: this.getUser().id,
+                name: this.getUser().get('name'),
+            },
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    prepareEditItemElement(id, name) {
+        const itemElement = super.prepareEditItemElement(id, name);
+
+        const avatarHtml = this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
+
+        if (avatarHtml) {
+            const img = new DOMParser().parseFromString(avatarHtml, 'text/html').body.childNodes[0];
+
+            itemElement.prepend(img);
+        }
+
+        return itemElement;
     }
 }
 

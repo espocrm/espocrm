@@ -1,7 +1,7 @@
 {
   "labels": {
-    "Create WorkingTimeRange": "Zeitraum erstellen",
-    "Calendars": "Kalender"
+    "Calendars": "Kalender",
+    "Create WorkingTimeRange": "Ausnahme erstellen"
   },
   "fields": {
     "timeRanges": "Zeitplan",
@@ -23,5 +23,9 @@
   },
   "presetFilters": {
     "actual": "Aktuell"
+  },
+  "tooltips": {
+    "calendars": "Kalender, auf die die Ausnahme angewendet werden soll. Die Ausnahme wird auf alle Benutzer der ausgewählten Kalender angewendet.\n\nLassen Sie das Feld leer, wenn Sie die Ausnahme nur für bestimmte Benutzer anwenden möchten.",
+    "users": "Bestimmte Benutzer, für die die Ausnahme gelten soll."
   }
 }

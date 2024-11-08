@@ -59,15 +59,14 @@ class LeadLinkChecker implements LinkChecker
             return false;
         }
 
-        $emailIds = $entity->getLinkMultipleIdList('emails');
 
-        if (count($emailIds) === 0 || count($emailIds) > 1) {
+        $emailId = $entity->get('originalEmailId');
+
+        if (!$emailId) {
             return false;
         }
 
-        $email = $this->entityManager
-            ->getRepositoryByClass(Email::class)
-            ->getById($emailIds[0]);
+        $email = $this->entityManager->getRepositoryByClass(Email::class)->getById($emailId);
 
         if (!$email) {
             return false;

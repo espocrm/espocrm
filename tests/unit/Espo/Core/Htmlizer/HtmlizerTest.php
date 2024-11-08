@@ -30,12 +30,19 @@
 namespace tests\unit\Espo\Core\Htmlizer;
 
 use Espo\Core\Htmlizer\Htmlizer;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Select\SelectBuilderFactory;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\NumberUtil;
 use Espo\Core\Utils\DateTime;
 
 use Espo\Core\ORM\Entity;
 
+use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -43,7 +50,6 @@ use stdClass;
 class HtmlizerTest extends TestCase
 {
     private ?Htmlizer $htmlizer;
-    private ?Manager $fileManager;
     private ?DateTime $dateTime;
     private ?NumberUtil $number;
     private ?EntityManager $entityManager;
@@ -84,53 +90,26 @@ class HtmlizerTest extends TestCase
     {
         date_default_timezone_set('UTC');
 
-        $this->entityManager =
-            $this->getMockBuilder(EntityManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $obj = new stdClass();
-
-        $this->fileManager = $this->getMockBuilder(Manager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->fileManager
-            ->expects($this->any())
-            ->method('putContents')
-            ->will($this->returnCallback(function($fileName, $contents) use ($obj) {
-                $obj->contents = $contents;
-            }));
-
-        $this->fileManager
-            ->expects($this->any())
-            ->method('getPhpContents')
-            ->will(
-                $this->returnCallback(function () use ($obj) {
-                    $obj->contents = str_replace('<?php ', '', $obj->contents);
-                    $obj->contents = str_replace('?>', '', $obj->contents);
-
-                    return eval($obj->contents . ';');
-                })
-            );
-
-
-        $this->fileManager
-                    ->expects($this->any())
-                    ->method('unlink');
+        $this->entityManager = $this->createMock(EntityManager::class);
 
         $this->dateTime = new DateTime('MM/DD/YYYY', 'hh:mm A', 'Europe/Kiev');
         $this->number = new NumberUtil('.', ',');
-        $this->htmlizer = new Htmlizer($this->fileManager, $this->dateTime, $this->number);
+        $this->htmlizer = new Htmlizer(
+            $this->dateTime,
+            $this->number,
+            $this->createMock(SelectBuilderFactory::class),
+            $this->createMock(User::class),
+            $this->entityManager,
+            $this->createMock(Metadata::class),
+            $this->createMock(Language::class),
+            $this->createMock(Config::class),
+            $this->createMock(Log::class),
+            $this->createMock(InjectableFactory::class)
+        );
     }
 
     protected function tearDown(): void
-    {
-        unset($this->htmlizer);
-        unset($this->fileManager);
-        unset($this->dateTime);
-        unset($this->number);
-    }
+    {}
 
     public function testRender()
     {
@@ -210,7 +189,7 @@ class HtmlizerTest extends TestCase
 
         $template = "{{file name}}";
         $entity->set('name', '1');
-        $html = $this->htmlizer->render($entity, $template);
+        $html = $this->htmlizer->render($entity, $template, skipInlineAttachmentHandling: true);
         $this->assertEquals('?entryPoint=attachment&id=1', $html);
 
         $template = "{{#ifEqual name '1'}}hello{{/ifEqual}}";
@@ -222,12 +201,26 @@ class HtmlizerTest extends TestCase
         $entity->set('name', '1');
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('test', $html);
+
+        $template = "{{#if (and (equal name 'test') true 1)}}test{{/if}}";
+        $entity->set('name', 'test');
+        $html = $this->htmlizer->render($entity, $template);
+        $this->assertEquals('test', $html);
+
+        $template = "{{#if (or (notEqual name 'test') false 0)}}test{{/if}}";
+        $entity->set('name', 'test');
+        $html = $this->htmlizer->render($entity, $template);
+        $this->assertEquals('test', $html);
+
+        $template = "{{#if (not false)}}test{{/if}}";
+        $html = $this->htmlizer->render($entity, $template);
+        $this->assertEquals('test', $html);
     }
 
     public function testIterate(): void
     {
         /** @noinspection HtmlUnknownAttribute */
-        $template = "<ul><li iterate=\"{{items}}\">{{name}}</li></ul>";
+        $template = "<ul><li iterate=\"{{items}}\">{{name}}</li></ul><ul><li iterate=\"{{items}}\">{{name}}</li></ul>";
 
         $html = $this->htmlizer->render(null, $template, null, [
             'items' => [
@@ -237,7 +230,21 @@ class HtmlizerTest extends TestCase
         ]);
 
         /** @noinspection HtmlUnknownAttribute */
-        $expected = "<ul><li>1</li><li>2</li></ul>";
+        $expected = "<ul><li>1</li><li>2</li></ul><ul><li>1</li><li>2</li></ul>";
+
+        $this->assertEquals($expected, $html);
+    }
+
+    public function testIf(): void
+    {
+        /** @noinspection HtmlUnknownAttribute */
+        $template = "<ul><li x-if=\"{{and (equal 1 1) true}}\">1</li><li x-if=\"{{false}}\">2</li>".
+            "<li x-if=\"{{1}}\">true</li></ul>";
+
+        $html = $this->htmlizer->render(null, $template, null, []);
+
+        /** @noinspection HtmlUnknownAttribute */
+        $expected = "<ul><li>1</li><li>true</li></ul>";
 
         $this->assertEquals($expected, $html);
     }

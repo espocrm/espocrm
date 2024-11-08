@@ -15,9 +15,8 @@
 }
 
 .datepicker {
-  border-radius: @border-radius-base;
   &-inline {
-    width: 220px;
+    width: var(--220px);
   }
   direction: ltr;
   &-rtl {
@@ -30,13 +29,13 @@
   &-dropdown {
     top: 0;
     left: 0;
-    padding: 4px;
+    padding: var(--4px);
     &:before {
       content: '';
       display: inline-block;
-      border-left:   7px solid transparent;
-      border-right:  7px solid transparent;
-      border-bottom: 7px solid @dropdown-border;
+      border-left: var(--7px) solid transparent;
+      border-right: var(--7px) solid transparent;
+      border-bottom: var(--7px) solid var(--dropdown-border);
       border-top:    0;
       border-bottom-color: rgba(0,0,0,.2);
       position: absolute;
@@ -44,43 +43,38 @@
     &:after {
       content: '';
       display: inline-block;
-      border-left:   6px solid transparent;
-      border-right:  6px solid transparent;
-      border-bottom: 6px solid @dropdown-bg;
+      border-left: var(--6px) solid transparent;
+      border-right: var(--6px)solid transparent;
+      border-bottom: var(--6px) solid var(--dropdown-bg);
       border-top:    0;
       position: absolute;
     }
-    &.datepicker-orient-left:before   { left: 6px; }
-    &.datepicker-orient-left:after    { left: 7px; }
-    &.datepicker-orient-right:before  { right: 6px; }
-    &.datepicker-orient-right:after   { right: 7px; }
-    &.datepicker-orient-bottom:before { top: -7px; }
-    &.datepicker-orient-bottom:after  { top: -6px; }
+    &.datepicker-orient-left:before   { left: var(--6px); }
+    &.datepicker-orient-left:after    { left: var(--7px); }
+    &.datepicker-orient-right:before  { right: var(--6px); }
+    &.datepicker-orient-right:after   { right: var(--7px); }
+    &.datepicker-orient-bottom:before { top: var(--minus-7px); }
+    &.datepicker-orient-bottom:after  { top: var(--minus-6px); }
     &.datepicker-orient-top:before {
-      bottom: -7px;
+      bottom: var(--minus-7px);
       border-bottom: 0;
-      border-top:    7px solid @dropdown-border;
+      border-top: var(--7px) solid var(--dropdown-border);
     }
     &.datepicker-orient-top:after {
-      bottom: -6px;
+      bottom: var(--minus-6px);
       border-bottom: 0;
-      border-top:    6px solid @dropdown-bg;
+      border-top: var(--6px) solid var(--dropdown-bg);
     }
   }
   table {
     margin: 0;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
     tr {
       td, th {
         text-align: center;
-        width: 30px;
-        height: 30px;
-        border-radius: 4px;
+        width: var(--30px);
+        height: var(--30px);
+        border-radius: var(--border-radius-small);
         border: none;
       }
     }
@@ -99,7 +93,7 @@
     }
     &.day:hover,
     &.focused {
-      background: @dropdown-link-hover-bg;
+      background: var(--dropdown-link-hover-bg);
       cursor: pointer;
     }
     &.disabled,
@@ -228,7 +222,7 @@
         var(--gray-light-12);
         var(--gray-light-25)
       );
-      text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+      text-shadow: 0 var(--minus-1px) 0 rgba(0,0,0,.25);
     }
     &.active,
     &.active.highlighted {
@@ -241,20 +235,20 @@
             var(--btn-primary-hover-border);
             var(--btn-primary-active-border)
         );
-      text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+      text-shadow: 0 var(--minus-1px) 0 rgba(0,0,0,.25);
     }
     span {
       display: block;
       width: 23%;
-      height: 54px;
-      line-height: 54px;
+      height: calc(var(--32px) + var(--22px));
+      line-height: calc(var(--32px) + var(--22px));
       float: left;
       margin: 1%;
       cursor: pointer;
-      border-radius: 4px;
+      border-radius: var(--border-radius-small);
       &:hover,
       &.focused {
-        background: @dropdown-link-hover-bg;
+        background: var(--dropdown-link-hover-bg);
       }
       &.disabled,
       &.disabled:hover {
@@ -275,7 +269,7 @@
               var(--btn-primary-hover-border);
               var(--btn-primary-active-border)
           );
-        text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+        text-shadow: 0 var(--minus-1px) 0 rgba(0,0,0,.25);
       }
       &.old,
       &.new {
@@ -285,7 +279,7 @@
   }
 
   .datepicker-switch {
-    width: 145px;
+    width: calc(var(--100px) + var(--40px) + var(--5px));
   }
 
   .datepicker-switch,
@@ -294,7 +288,7 @@
   tfoot tr th {
     cursor: pointer;
     &:hover {
-      background: @dropdown-link-hover-bg;
+      background: var(--dropdown-link-hover-bg);
     }
   }
 
@@ -306,9 +300,9 @@
 
   // Basic styling for calendar-week cells
   .cw {
-    font-size: 10px;
-    width: 12px;
-    padding: 0 2px 0 5px;
+    font-size: var(--10px);
+    width: var(--12px);
+    padding: 0 var(--2px) 0 var(--5px);
     vertical-align: middle;
   }
 }
@@ -321,18 +315,18 @@
     text-align: center;
   }
   input:first-child {
-    border-radius: 3px 0 0 3px;
+    border-radius: var(--3px) 0 0 var(--3px);
   }
   input:last-child {
-    border-radius: 0 3px 3px 0;
+    border-radius: 0 var(--3px) var(--3px) 0;
   }
   .input-group-addon {
     width: auto;
-    min-width: 16px;
-    padding: 4px 5px;
-    line-height: @line-height-base;
-    border-width: 1px 0;
-    margin-left: -5px;
-    margin-right: -5px;
+    min-width: var(--16px);
+    padding: var(--4px) var(--5px);
+    line-height: var(--line-height-base);
+    border-width: var(--1px) 0;
+    margin-left: calc(var(--5px) * -1);
+    margin-right: calc(var(--5px) * -1);
   }
 }

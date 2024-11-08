@@ -18,6 +18,13 @@
         "detail": "views/user/modals/detail",
         "massUpdate": "views/user/modals/mass-update"
     },
+    "rowActionDefs": {
+        "changeTeamPosition": {
+            "labelTranslation": "User.actions.changePosition",
+            "handler": "handlers/user/change-team-position-row-action",
+            "groupIndex": 3
+        }
+    },
     "defaultSidePanel": {
         "detail": {
             "name": "default",
@@ -127,6 +134,31 @@
     },
     "iconClass": "fas fa-user-circle",
     "dynamicLogic": {
+        "fields": {
+            "avatarColor": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "equals",
+                            "attribute": "avatarId",
+                            "value": null,
+                            "data": {
+                                "field": "avatar"
+                            }
+                        },
+                        {
+                            "type": "in",
+                            "attribute": "type",
+                            "value": [
+                                "regular",
+                                "admin",
+                                "api"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
         "options": {
             "authMethod": [
                 {

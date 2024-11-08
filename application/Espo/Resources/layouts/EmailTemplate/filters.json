@@ -1,6 +1,9 @@
 [
     "assignedUser",
     "teams",
+    "body",
+    "attachments",
+    "oneOff",
     "createdAt",
     "createdBy",
     "modifiedAt"

@@ -58,6 +58,9 @@ class EmailEmailAddressFieldView extends BaseFieldView {
     initSearchAutocomplete() {
         this.$input = this.$input || this.$el.find('input');
 
+        /** @type {module:ajax.AjaxPromise & Promise<any>} */
+        let lastAjaxPromise;
+
         const autocomplete = new Autocomplete(this.$input.get(0), {
             name: this.name,
             autoSelectFirst: true,
@@ -74,33 +77,38 @@ class EmailEmailAddressFieldView extends BaseFieldView {
                     this.getHelper().escapeString(item.id) + '&#62;';
             },
             lookupFunction: query => {
-                return Espo.Ajax
+                if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
+                    lastAjaxPromise.abort();
+                }
+
+                lastAjaxPromise = Espo.Ajax
                     .getRequest('EmailAddress/search', {
                         q: query,
                         maxSize: this.getAutocompleteMaxCount(),
-                    })
-                    .then(/** Record[] */response => {
-                        let result = response.map(item => {
-                            return {
-                                id: item.emailAddress,
-                                name: item.entityName,
-                                emailAddress: item.emailAddress,
-                                entityId: item.entityId,
-                                entityName: item.entityName,
-                                entityType: item.entityType,
-                                data: item.emailAddress,
-                                value: item.emailAddress,
-                            };
-                        });
-
-                        if (this.skipCurrentInAutocomplete) {
-                            const current = this.$input.val();
-
-                            result = result.filter(item => item.emailAddress !== current)
-                        }
-
-                        return result;
                     });
+
+                return lastAjaxPromise.then(/** Record[] */response => {
+                    let result = response.map(item => {
+                        return {
+                            id: item.emailAddress,
+                            name: item.entityName,
+                            emailAddress: item.emailAddress,
+                            entityId: item.entityId,
+                            entityName: item.entityName,
+                            entityType: item.entityType,
+                            data: item.emailAddress,
+                            value: item.emailAddress,
+                        };
+                    });
+
+                    if (this.skipCurrentInAutocomplete) {
+                        const current = this.$input.val();
+
+                        result = result.filter(item => item.emailAddress !== current)
+                    }
+
+                    return result;
+                });
             },
         });
 

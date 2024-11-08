@@ -26,15 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/lead-capture/record/panels/request', ['views/record/panels/side'], function (Dep) {
+import SidePanelView from 'views/record/panels/side';
 
-    return Dep.extend({
+export default class extends SidePanelView {
 
-        fieldList: [
-            'exampleRequestUrl',
-            'exampleRequestMethod',
-            'exampleRequestHeaders',
-            'exampleRequestPayload'
-        ],
-    });
-});
+    fieldList = [
+        'exampleRequestUrl',
+        'exampleRequestMethod',
+        'exampleRequestHeaders',
+        'exampleRequestPayload',
+    ]
+}

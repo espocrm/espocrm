@@ -26,18 +26,70 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import View from 'view';
+import Autocomplete from 'ui/autocomplete';
+import TabsHelper from 'helpers/site/tabs';
+import SiteNavbarItemView from 'views/site/navbar/item';
 
-class GlobalSearchView extends View {
+/** @module views/global-search/global-search */
+
+class GlobalSearchView extends SiteNavbarItemView {
 
     template = 'global-search/global-search'
+
+    /**
+     * @private
+     * @type {HTMLElement}
+     */
+    containerElement
+
+    /**
+     * @private
+     * @type {HTMLInputElement}
+     */
+    inputElement
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    tabQuickSearch
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    hasGlobalSearch
+
+    /**
+     * @private
+     * @type {TabsHelper}
+     */
+    tabsHelper
+
+    /**
+     * @private
+     * @type {Autocomplete}
+     */
+    autocomplete
+
+    /**
+     * @private
+     * @type {module:views/global-search/global-search~tabData[]}
+     */
+    tabDataList
+
+    data() {
+        return {
+            hasSearchButton: this.hasGlobalSearch,
+        };
+    }
 
     setup() {
         this.addHandler('keydown', 'input.global-search-input', 'onKeydown');
         this.addHandler('focus', 'input.global-search-input', 'onFocus');
         this.addHandler('click', '[data-action="search"]', () => this.runSearch());
 
-        let promise = this.getCollectionFactory().create('GlobalSearch', collection => {
+        const promise = this.getCollectionFactory().create('GlobalSearch', collection => {
             this.collection = collection;
             this.collection.url = 'GlobalSearch';
         });
@@ -45,22 +97,45 @@ class GlobalSearchView extends View {
         this.wait(promise);
 
         this.closeNavbarOnShow = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+        this.onMouseUpBind = this.onMouseUp.bind(this);
+        this.onClickBind = this.onClick.bind(this);
+
+        this.tabQuickSearch = this.getConfig().get('tabQuickSearch') || false;
+        this.hasGlobalSearch = (this.getConfig().get('globalSearchEntityList') || []).length > 0;
+
+        this.tabsHelper = new TabsHelper(
+            this.getConfig(),
+            this.getPreferences(),
+            this.getUser(),
+            this.getAcl(),
+            this.getMetadata(),
+            this.getLanguage()
+        );
+
+        this.tabDataList = this.getTabDataList();
     }
 
     /**
      * @param {MouseEvent} e
+     * @private
      */
     onFocus(e) {
-        let inputElement = /** @type {HTMLInputElement} */e.target;
+        const inputElement = /** @type {HTMLInputElement} */e.target;
 
         inputElement.select();
     }
 
     /**
      * @param {KeyboardEvent} e
+     * @private
      */
     onKeydown(e) {
-        let key = Espo.Utils.getKeyFromKeyEvent(e);
+        if (!this.hasGlobalSearch) {
+            return;
+        }
+
+        const key = Espo.Utils.getKeyFromKeyEvent(e);
 
         if (e.code === 'Enter' || key === 'Enter' || key === 'Control+Enter') {
             this.runSearch();
@@ -75,30 +150,138 @@ class GlobalSearchView extends View {
 
     afterRender() {
         this.$input = this.$el.find('input.global-search-input');
+
+        this.inputElement = this.$input.get(0);
+
+        if (this.tabQuickSearch) {
+            this.autocomplete = new Autocomplete(this.inputElement, {
+                minChars: 1,
+                lookupFunction: async query => {
+                    const lower = query.toLowerCase();
+
+                    return this.tabDataList
+                        .filter(it => {
+                            if (it.words.find(word => word.startsWith(lower))) {
+                                return true;
+                            }
+
+                            if (it.lowerLabel.toLowerCase().startsWith(lower)) {
+                                return true;
+                            }
+
+                            return false;
+                        })
+                        .map(it => ({
+                            value: it.label,
+                            url: it.url,
+                        }));
+                },
+                formatResult: /** {value: string, url: string} */item => {
+                    const a = document.createElement('a');
+
+                    a.text = item.value;
+                    a.href = item.url;
+                    a.classList.add('text-default');
+
+                    return a.outerHTML;
+                },
+                onSelect: /** {value: string, url: string} */item => {
+                    window.location.href =item.url;
+
+                    this.inputElement.value = '';
+                },
+            });
+
+            this.once('render remove', () => {
+                this.autocomplete.dispose();
+                this.autocomplete = undefined;
+            });
+        }
     }
 
+    /**
+     * @private
+     */
     runSearch() {
-        let text = this.$input.val().trim();
+        const text = this.$input.val().trim();
 
         if (text !== '' && text.length >= 2) {
             this.search(text);
         }
     }
 
+    /**
+     * @private
+     * @param {string} text
+     */
     search(text) {
         this.collection.url = this.collection.urlRoot = 'GlobalSearch?q=' + encodeURIComponent(text);
 
         this.showPanel();
     }
 
+    /**
+     * @param {MouseEvent} e
+     * @private
+     */
+    onMouseUp(e) {
+        if (e.button !== 0) {
+            return;
+        }
+
+        const target = e.target;
+
+        if (!(target instanceof HTMLElement)) {
+            return;
+        }
+
+        if (
+            this.containerElement !== target &&
+            !this.containerElement.contains(target) &&
+            !target.classList.contains('modal')
+        ) {
+            return this.closePanel();
+        }
+    }
+
+    /**
+     * @param {MouseEvent} e
+     * @private
+     */
+    onClick(e) {
+        const target = e.target;
+
+        if (!(target instanceof HTMLAnchorElement)) {
+            return;
+        }
+
+        if (
+            target.dataset.action === 'showMore' ||
+            target.classList.contains('global-search-button')
+        ) {
+            return;
+        }
+
+        setTimeout(() => this.closePanel(), 100);
+    }
+
+    /**
+     * @private
+     */
     showPanel() {
         this.closePanel();
+
+        if (this.autocomplete) {
+            this.autocomplete.hide();
+        }
 
         if (this.closeNavbarOnShow) {
             this.$el.closest('.navbar-body').removeClass('in');
         }
 
-        let $container = $('<div>').attr('id', 'global-search-panel');
+        const $container = this.$container = $('<div>').attr('id', 'global-search-panel');
+
+        this.containerElement = this.$container.get(0);
 
         $container.appendTo(this.$el.find('.global-search-panel-container'));
 
@@ -111,42 +294,150 @@ class GlobalSearchView extends View {
             this.listenToOnce(view, 'close', this.closePanel);
         });
 
-        let $document = $(document);
-
-        $document.on('mouseup.global-search', (e) => {
-            if (e.which !== 1) {
-                return;
-            }
-
-            if (!$container.is(e.target) && $container.has(e.target).length === 0) {
-                this.closePanel();
-            }
-        });
-
-        $document.on('click.global-search', (e) => {
-            if (
-                e.target.tagName === 'A' &&
-                $(e.target).data('action') !== 'showMore' &&
-                !$(e.target).hasClass('global-search-button')
-            ) {
-                setTimeout(() => this.closePanel(), 100);
-            }
-        });
+        document.addEventListener('mouseup', this.onMouseUpBind);
+        document.addEventListener('click', this.onClickBind);
     }
 
+    /**
+     * @private
+     */
     closePanel() {
-        let $container = $('#global-search-panel');
+        const $container = $('#global-search-panel');
 
         $container.remove();
-
-        let $document = $(document);
 
         if (this.hasView('panel')) {
             this.getView('panel').remove();
         }
 
-        $document.off('mouseup.global-search');
-        $document.off('click.global-search');
+        document.removeEventListener('mouseup', this.onMouseUpBind);
+        document.removeEventListener('click', this.onClickBind);
+    }
+
+    /**
+     * @typedef {Object} module:views/global-search/global-search~tabData
+     * @property {string} url
+     * @property {string} label
+     * @property {string} lowerLabel
+     * @property {string[]} words
+     */
+
+    /**
+     * @private
+     * @return {module:views/global-search/global-search~tabData[]}
+     */
+    getTabDataList() {
+        /** @type {module:views/global-search/global-search~tabData[]}*/
+        const list = [];
+
+        /**
+         *
+         * @param {string|TabsHelper~item} item
+         * @return {module:views/global-search/global-search~tabData}
+         */
+        const toData = (item) => {
+            const label = this.tabsHelper.getTranslatedTabLabel(item);
+
+            const url = this.tabsHelper.isTabScope(item) ? `#${item}` : item.url;
+
+            return {
+                url: url,
+                label: label,
+                words: label.split(' ').map(it => it.toLowerCase()),
+                lowerLabel: label.toLowerCase(),
+            };
+        };
+
+        const checkTab = (item) => {
+            return (this.tabsHelper.isTabScope(item) || this.tabsHelper.isTabUrl(item)) &&
+                this.tabsHelper.checkTabAccess(item)
+        }
+
+        for (const item of this.tabsHelper.getTabList()) {
+            if (checkTab(item)) {
+                list.push(toData(item));
+
+                continue;
+            }
+
+            if (this.tabsHelper.isTabGroup(item)) {
+                for (const subItem of item.itemList) {
+                    if (checkTab(subItem)) {
+                        list.push(toData(subItem));
+                    }
+                }
+            }
+        }
+
+        if (this.getUser().isAdmin()) {
+            /** @type {
+             *     Record<string, {
+             *         order?: number,
+             *         itemList: {
+             *             url: string,
+             *             tabQuickSearch: boolean,
+             *             label: string,
+             *         }[]
+             *     }>
+             * } panels */
+            const panels = this.getMetadata().get(`app.adminPanel`) || {};
+
+            Object.entries(panels)
+                .map(it => it[1])
+                .sort((a, b) => a.order - b.order)
+                .forEach(it => {
+                    it.itemList
+                        .filter(it => it.tabQuickSearch && it.label)
+                        .forEach(it => {
+                            const label = this.translate(it.label, 'labels', 'Admin');
+
+                            list.push({
+                                label: this.translate(it.label, 'labels', 'Admin'),
+                                url: it.url,
+                                lowerLabel: label.toLowerCase(),
+                                words: label.split(' ').map(it => it.toLowerCase()),
+                            });
+                        });
+                });
+        }
+
+        /** @type {Record<string, {tab: boolean}>} */
+        const scopes = this.getMetadata().get('scopes') || {};
+
+        Object.entries(scopes)
+            .filter(([scope, it]) => it.tab && checkTab(scope))
+            .forEach(([scope]) => {
+                const data = toData(scope);
+
+                if (list.find(it => it.lowerLabel === data.lowerLabel)) {
+                    return;
+                }
+
+                list.push(data);
+            });
+
+        return list.filter((item, index) => list.findIndex(it => it.lowerLabel === item.lowerLabel) === index);
+    }
+
+    isAvailable() {
+        if (this.tabQuickSearch && !this.getUser().isPortal()) {
+            return true;
+        }
+
+        let isAvailable = false;
+
+        /** @type {string[]} */
+        const entityTypeList = this.getConfig().get('globalSearchEntityList') || [];
+
+        for (const it of entityTypeList) {
+            if (this.getAcl().checkScope(it)) {
+                isAvailable = true;
+
+                break;
+            }
+        }
+
+        return isAvailable;
     }
 }
 

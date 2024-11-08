@@ -26,72 +26,74 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/auth-token/record/list', ['views/record/list'], function (Dep) {
+import ListRecordView from 'views/record/list';
 
-    return Dep.extend({
+export default class extends ListRecordView {
 
-        rowActionsView: 'views/admin/auth-token/record/row-actions/default',
+    rowActionsView = 'views/admin/auth-token/record/row-actions/default'
+    massActionList = ['remove', 'setInactive']
+    checkAllResultMassActionList = ['remove', 'setInactive']
 
-        massActionList: ['remove', 'setInactive'],
+    // noinspection JSUnusedGlobalSymbols
+    massActionSetInactive() {
+        let ids = null;
+        const allResultIsChecked = this.allResultIsChecked;
 
-        checkAllResultMassActionList: ['remove', 'setInactive'],
+        if (!allResultIsChecked) {
+            ids = this.checkedList;
+        }
 
-        massActionSetInactive: function () {
-            let ids = null;
-            let allResultIsChecked = this.allResultIsChecked;
+        const attributes = {
+            isActive: false,
+        };
 
-            if (!allResultIsChecked) {
-                ids = this.checkedList;
-            }
+        Espo.Ajax
+            .postRequest('MassAction', {
+                action: 'update',
+                entityType: this.entityType,
+                params: {
+                    ids: ids || null,
+                    where: (!ids || ids.length === 0) ? this.collection.getWhere() : null,
+                    searchParams: (!ids || ids.length === 0) ? this.collection.data : null,
+                },
+                data: attributes,
+            })
+            .then(() => {
+                this.collection
+                    .fetch()
+                    .then(() => {
+                        Espo.Ui.success(this.translate('Done'));
 
-            let attributes = {
-                isActive: false,
-            };
+                        if (ids) {
+                            ids.forEach(id => {
+                                this.checkRecord(id);
+                            });
+                        }
+                    });
+            });
+    }
 
-            Espo.Ajax
-                .postRequest('MassAction', {
-                    action: 'update',
-                    entityType: this.entityType,
-                    params: {
-                        ids: ids || null,
-                        where: (!ids || ids.length === 0) ? this.collection.getWhere() : null,
-                        searchParams: (!ids || ids.length === 0) ? this.collection.data : null,
-                    },
-                    data: attributes,
-                })
-                .then(() => {
-                    this.collection
-                        .fetch()
-                        .then(() => {
-                            Espo.Ui.success(this.translate('Done'));
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {Record} data
+     */
+    actionSetInactive(data) {
+        if (!data.id) {
+            return;
+        }
 
-                            if (ids) {
-                                ids.forEach(id => {
-                                    this.checkRecord(id);
-                                });
-                            }
-                        });
-                });
-        },
+        const model = this.collection.get(data.id);
 
-        actionSetInactive: function (data) {
-            if (!data.id) {
-                return;
-            }
+        if (!model) {
+            return;
+        }
 
-            var model = this.collection.get(data.id);
+        Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-            if (!model) {
-                return;
-            }
-
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-
-            model
-                .save({'isActive': false}, {patch: true})
-                .then(() => {
-                    Espo.Ui.notify(false);
-                });
-        },
-    });
-});
+        model
+            .save({'isActive': false}, {patch: true})
+            .then(() => {
+                Espo.Ui.notify(false);
+            });
+    }
+}

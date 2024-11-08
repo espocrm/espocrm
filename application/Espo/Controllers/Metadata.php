@@ -29,8 +29,10 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Api\Response;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Api\Request;
+use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata as MetadataUtil;
 use Espo\Entities\User as UserEntity;
 use Espo\Tools\App\MetadataService as Service;
@@ -53,16 +55,21 @@ class Metadata
         $this->user = $user;
     }
 
-    public function getActionRead(): stdClass
+    public function getActionRead(Request $request): mixed
     {
+        $key = $request->getQueryParam('key');
+
+        if (is_string($key)) {
+            return $this->service->getDataForFrontendByKey($key);
+        }
+
         return $this->service->getDataForFrontend();
     }
 
     /**
-     * @return mixed
      * @throws Forbidden
      */
-    public function getActionGet(Request $request)
+    public function getActionGet(Request $request, Response $response): void
     {
         if (!$this->user->isAdmin()) {
             throw new Forbidden();
@@ -70,6 +77,8 @@ class Metadata
 
         $key = $request->getQueryParam('key');
 
-        return $this->metadata->get($key, false);
+        $value = $this->metadata->get($key);
+
+        $response->writeBody(Json::encode($value));
     }
 }

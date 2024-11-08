@@ -31,15 +31,10 @@ namespace Espo\Core\Upgrades;
 
 class ExtensionManager extends Base
 {
-    /**
-     * @var string
-     */
-    protected $name = 'Extension';
+    protected ?string $name = 'Extension';
 
-    /**
-     * @var array<string, mixed>
-     */
-    protected $params = [
+    /** @var array<string, mixed> */
+    protected array $params = [
         'packagePath' => 'data/upload/extensions',
         'backupPath' => 'data/.backup/extensions',
 

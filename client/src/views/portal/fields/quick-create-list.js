@@ -26,18 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/portal/fields/quick-create-list', ['views/settings/fields/quick-create-list'], function (Dep) {
+import SettingsQuickCreateListFieldView from 'views/settings/fields/quick-create-list';
 
-    return Dep.extend({
+export default class extends SettingsQuickCreateListFieldView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.params.options = this.params.options.filter(tab => {
-                if (!!this.getMetadata().get('scopes.' + tab + '.aclPortal')) {
-                    return true;
-                }
-            });
-        },
-    });
-});
+        this.params.options = this.params.options.filter(tab => {
+            return !!this.getMetadata().get(`scopes.${tab}.aclPortal`);
+        });
+    }
+}

@@ -26,22 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/person-string-data', ['views/fields/varchar'], function (Dep) {
+import VarcharFieldView from 'views/fields/varchar';
 
-    return Dep.extend({
+export default class extends VarcharFieldView {
 
-        listTemplate: 'email/fields/person-string-data/list',
+    listTemplate = 'email/fields/person-string-data/list'
 
-        getAttributeList: function () {
-            return ['personStringData', 'isReplied'];
-        },
+    getAttributeList() {
+        return ['personStringData', 'isReplied'];
+    }
 
-        data: function () {
-            var data = Dep.prototype.data.call(this);
+    data() {
+        const data = super.data();
 
-            data.isReplied = this.model.get('isReplied');
+        data.isReplied = this.model.get('isReplied');
 
-            return data;
-        },
-    });
-});
+        return data;
+    }
+}

@@ -4,6 +4,7 @@
     "aclPortal": "acl-portal/notification",
     "collection": "collections/note",
     "itemViews": {
-        "System": "views/notification/items/system"
+        "System": "views/notification/items/system",
+        "EmailInbox": "views/notification/items/email-inbox"
     }
 }

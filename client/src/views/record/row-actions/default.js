@@ -29,11 +29,34 @@
 import View from 'view';
 
 /**
+ * @module views/record/row-actions/actions
+ */
+
+/**
+ * @typedef {{
+ *     label?: string,
+ *     labelTranslation?: string,
+ *     acl?: string,
+ *     groupIndex?: number,
+ *     name?: string,
+ *     text?: string,
+ *     html?: string,
+ *     viewKey?: string,
+ * }} module:views/record/row-actions/actions~item
+ */
+
+/**
  * Row actions.
  */
 class DefaultRowActionsView extends View {
 
     template = 'record/row-actions/default'
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    menuIsShown = false
 
     setup() {
         this.options.acl = this.options.acl || {};
@@ -42,13 +65,29 @@ class DefaultRowActionsView extends View {
         /** @type {Object.<string, {isAvailable: function(module:model, string)}>} */
         this.handlers = this.options.rowActionHandlers || {};
 
-        /** @type {{name: string, acl: string, text: string}[]} */
+        /** @type {module:views/record/row-actions/actions~item[]} */
         this.additionalActionDataList = [];
 
         this.setupAdditionalActions();
+
+        this.listenTo(this.model, 'change', (m, /** Record */o) => {
+            if (o.keepRowActions) {
+                return;
+            }
+
+            if (this.menuIsShown) {
+                this.once('menu-hidden', () => this.reRender());
+
+                return;
+            }
+
+            this.reRender();
+        });
     }
 
     afterRender() {
+        this.menuIsShown = false;
+
         const $dd = this.$el.find('button[data-toggle="dropdown"]').parent();
 
         let isChecked = false;
@@ -63,12 +102,17 @@ class DefaultRowActionsView extends View {
             }
 
             $el.addClass('active');
+
+            this.menuIsShown = true;
         });
 
         $dd.on('hide.bs.dropdown', () => {
             if (!isChecked) {
                 this.$el.closest('.list-row').removeClass('active');
             }
+
+            this.menuIsShown = false;
+            this.trigger('menu-hidden');
         });
     }
 
@@ -86,6 +130,7 @@ class DefaultRowActionsView extends View {
                 id: this.model.id
             },
             link: '#' + this.model.entityType + '/view/' + this.model.id,
+            groupIndex: 0,
         }];
 
         if (this.options.acl.edit) {
@@ -96,6 +141,7 @@ class DefaultRowActionsView extends View {
                     id: this.model.id
                 },
                 link: '#' + this.model.entityType + '/edit/' + this.model.id,
+                groupIndex: 0,
             });
         }
 
@@ -108,6 +154,7 @@ class DefaultRowActionsView extends View {
                 data: {
                     id: this.model.id,
                 },
+                groupIndex: 0,
             });
         }
 
@@ -135,6 +182,7 @@ class DefaultRowActionsView extends View {
                     id: this.model.id,
                     actualAction: item.name,
                 },
+                groupIndex: item.groupIndex,
             });
         });
 
@@ -142,9 +190,35 @@ class DefaultRowActionsView extends View {
     }
 
     data() {
+        /** @type {Array<module:views/record/row-actions/actions~item[]>} */
+        const dropdownGroups = [];
+
+        this.getActionList().forEach(item => {
+            // For bc.
+            if (item === false) {
+                return;
+            }
+
+            const index = (item.groupIndex === undefined ? 9999 : item.groupIndex) + 100;
+
+            if (dropdownGroups[index] === undefined) {
+                dropdownGroups[index] = [];
+            }
+
+            dropdownGroups[index].push(item);
+        });
+
+        const dropdownItemList = [];
+
+        dropdownGroups.forEach(list => {
+            list.forEach(it => dropdownItemList.push(it));
+
+            dropdownItemList.push(false);
+        });
+
         return {
             acl: this.options.acl,
-            actionList: this.getActionList(),
+            actionList: dropdownItemList,
             scope: this.model.entityType,
         };
     }
@@ -160,7 +234,7 @@ class DefaultRowActionsView extends View {
         const defs = this.getMetadata().get(`clientDefs.${this.scope}.rowActionDefs`) || {};
 
         list.forEach(action => {
-            /** @type {{label?: string, labelTranslation?: string, acl?: string}} */
+            /** @type {{label?: string, labelTranslation?: string, acl?: string, groupIndex?: number}} */
             const itemDefs = defs[action] || {};
 
             const text = itemDefs.labelTranslation ?
@@ -171,6 +245,7 @@ class DefaultRowActionsView extends View {
                 name: action,
                 acl:  itemDefs.acl,
                 text: text,
+                groupIndex: itemDefs.groupIndex,
             });
         });
     }

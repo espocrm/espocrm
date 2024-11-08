@@ -40,8 +40,9 @@ class Acl {
      * @param {module:models/user} user A user.
      * @param {string} scope A scope.
      * @param {Object} params Parameters.
+     * @param {import('acl-manager').default} aclManager
      */
-    constructor(user, scope, params) {
+    constructor(user, scope, params, aclManager) {
         /**
          * A user.
          *
@@ -55,7 +56,23 @@ class Acl {
 
         this.aclAllowDeleteCreated = params.aclAllowDeleteCreated;
         this.teamsFieldIsForbidden = params.teamsFieldIsForbidden;
-        this.forbiddenFieldList = params.forbiddenFieldList;
+
+        /**
+         * @type {string[]}
+         */
+        this.forbiddenFieldList = params.forbiddenFieldList || [];
+
+        /**
+         * @protected
+         * @type {boolean}
+         */
+        this.collaboratorsFieldIsForbidden = this.forbiddenFieldList.includes('collaborators');
+
+        /**
+         * @type {import('acl-manager').default}
+         * @private
+         */
+        this._aclManager = aclManager;
     }
 
     /**
@@ -74,7 +91,7 @@ class Acl {
      * @param {string|boolean|Object.<string, string>} data Access data.
      * @param {module:acl-manager~action|null} [action=null] An action.
      * @param {boolean} [precise=false] To return `null` if `inTeam == null`.
-     * @param {Object|null} [entityAccessData=null] Entity access data. `inTeam`, `isOwner`.
+     * @param {Record.<string, boolean|null>|null} [entityAccessData=null] Entity access data. `inTeam`, `isOwner`.
      * @returns {boolean|null} True if access allowed.
      */
     checkScope(data, action, precise, entityAccessData) {
@@ -82,6 +99,7 @@ class Acl {
 
         const inTeam = entityAccessData.inTeam;
         const isOwner = entityAccessData.isOwner;
+        const isShared = entityAccessData.isShared;
 
         if (this.getUser().isAdmin()) {
             if (data === false) {
@@ -112,6 +130,7 @@ class Acl {
         if (action === null) {
             return true;
         }
+
         if (!(action in data)) {
             return false;
         }
@@ -130,7 +149,7 @@ class Acl {
             return false;
         }
 
-        if (typeof isOwner === 'undefined') {
+        if (isOwner === undefined) {
             return true;
         }
 
@@ -140,31 +159,30 @@ class Acl {
             }
         }
 
-        let result = false;
+        if (isShared) {
+            return true;
+        }
 
-        if (value === 'team') {
-            result = inTeam;
-
-            if (inTeam === null) {
-                if (precise) {
-                    result = null;
-                }
-                else {
-                    return true;
-                }
-            }
-            else if (inTeam) {
+        if (inTeam) {
+            if (value === 'team') {
                 return true;
             }
         }
 
-        if (isOwner === null) {
-            if (precise) {
+        let result = false;
+
+        if (value === 'team') {
+            if (inTeam === null && precise) {
                 result = null;
             }
-            else {
-                return true;
-            }
+        }
+
+        if (isOwner === null && precise) {
+            result = null;
+        }
+
+        if (isShared === null) {
+            result = null;
         }
 
         return result;
@@ -185,9 +203,16 @@ class Acl {
             return true;
         }
 
+        let isShared = false;
+
+        if (action === 'read' || action === 'stream') {
+            isShared = this.checkIsShared(model);
+        }
+
         const entityAccessData = {
             isOwner: this.checkIsOwner(model),
             inTeam: this.checkInTeam(model),
+            isShared: isShared,
         };
 
         return this.checkScope(data, action, precise, entityAccessData);
@@ -220,20 +245,21 @@ class Acl {
             return false;
         }
 
-        if (model.has('createdById')) {
-            if (model.get('createdById') === this.getUser().id && this.aclAllowDeleteCreated) {
-                if (!model.has('assignedUserId')) {
-                    return true;
-                }
+        if (
+            model.has('createdById') &&
+            model.get('createdById') === this.getUser().id &&
+            this.aclAllowDeleteCreated
+        ) {
+            if (!model.has('assignedUserId')) {
+                return true;
+            }
 
-                if (!model.get('assignedUserId')) {
-                    return true;
-                }
+            if (!model.get('assignedUserId')) {
+                return true;
+            }
 
-                if (model.get('assignedUserId') === this.getUser().id) {
-                    return true;
-                }
-
+            if (model.get('assignedUserId') === this.getUser().id) {
+                return true;
             }
         }
 
@@ -258,15 +284,13 @@ class Acl {
                 result = null;
             }
         }
-        else {
-            if (model.hasField('createdBy')) {
-                if (this.getUser().id === model.get('createdById')) {
-                    return true;
-                }
+        else if (model.hasField('createdBy')) {
+            if (this.getUser().id === model.get('createdById')) {
+                return true;
+            }
 
-                if (!model.has('createdById')) {
-                    result = null;
-                }
+            if (!model.has('createdById')) {
+                result = null;
             }
         }
 
@@ -275,7 +299,7 @@ class Acl {
                 return null;
             }
 
-            if (~(model.get('assignedUsersIds') || []).indexOf(this.getUser().id)) {
+            if ((model.get('assignedUsersIds') || []).includes(this.getUser().id)) {
                 return true;
             }
 
@@ -299,6 +323,10 @@ class Acl {
                 return true;
             }
 
+            if (!model.hasField('teams')) {
+                return false;
+            }
+
             return null;
         }
 
@@ -307,12 +335,47 @@ class Acl {
         let inTeam = false;
 
         userTeamIdList.forEach(id => {
-            if (~teamIdList.indexOf(id)) {
+            if (teamIdList.includes(id)) {
                 inTeam = true;
             }
         });
 
         return inTeam;
+    }
+
+    /**
+     * Check if a record is shared with the user.
+     *
+     * @param {module:model} model A model.
+     * @returns {boolean|null} True if shared. Null if not enough data to determine.
+     */
+    checkIsShared(model) {
+        if (!model.has('collaboratorsIds')) {
+            if (this.collaboratorsFieldIsForbidden) {
+                return true;
+            }
+
+            if (!model.hasField('collaborators')) {
+                return false;
+            }
+
+            return null;
+        }
+
+        const collaboratorsIds = model.getLinkMultipleIdList('collaborators');
+
+        return collaboratorsIds.includes(this.user.id);
+    }
+
+    /**
+     * Get a permission level.
+     *
+     * @protected
+     * @param {string} permission A permission name.
+     * @returns {'yes'|'all'|'team'|'no'}
+     */
+    getPermissionLevel(permission) {
+        return this._aclManager.getPermissionLevel(permission);
     }
 }
 

@@ -32,6 +32,7 @@ namespace Espo\Core\Mail\Account\PersonalAccount;
 use Espo\Core\Mail\Account\Storage\Params;
 use Espo\Core\Mail\Account\StorageFactory as StorageFactoryInterface;
 use Espo\Core\Mail\Account\Account;
+use Espo\Core\Mail\Exceptions\ImapError;
 use Espo\Core\Mail\Exceptions\NoImap;
 use Espo\Core\Mail\Mail\Storage\Imap;
 use Espo\Core\Mail\Account\Storage\LaminasStorage;
@@ -41,6 +42,9 @@ use Espo\Entities\UserData;
 use Espo\Repositories\UserData as UserDataRepository;
 use Espo\ORM\EntityManager;
 
+use Laminas\Mail\Protocol\Exception\RuntimeException as ProtocolRuntimeException;
+use Laminas\Mail\Storage\Exception\InvalidArgumentException;
+use Laminas\Mail\Storage\Exception\RuntimeException;
 use LogicException;
 use Throwable;
 
@@ -52,9 +56,6 @@ class StorageFactory implements StorageFactoryInterface
         private EntityManager $entityManager
     ) {}
 
-    /**
-     * @throws NoImap
-     */
     public function create(Account $account): LaminasStorage
     {
         $userLink = $account->getUser();
@@ -114,8 +115,7 @@ class StorageFactory implements StorageFactoryInterface
         if ($handlerClassName && !empty($rawParams['id'])) {
             try {
                 $handler = $this->injectableFactory->create($handlerClassName);
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $this->log->error(
                     "EmailAccount: Could not create Imap Handler. Error: " . $e->getMessage()
                 );
@@ -143,8 +143,7 @@ class StorageFactory implements StorageFactoryInterface
 
                     try {
                         $handler = $this->injectableFactory->create($handlerClassName);
-                    }
-                    catch (Throwable $e) {
+                    } catch (Throwable $e) {
                         $this->log->error(
                             "EmailAccount: Could not create Imap Handler for {$emailAddress}. Error: " .
                             $e->getMessage()
@@ -172,9 +171,13 @@ class StorageFactory implements StorageFactoryInterface
             }
         }
 
-        return new LaminasStorage(
-            new Imap($imapParams)
-        );
+        try {
+            $storage = new Imap($imapParams);
+        } catch (RuntimeException|InvalidArgumentException|ProtocolRuntimeException $e) {
+            throw new ImapError($e->getMessage(), 0, $e);
+        }
+
+        return new LaminasStorage($storage);
     }
 
     private function getUserDataRepository(): UserDataRepository

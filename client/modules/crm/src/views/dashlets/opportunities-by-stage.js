@@ -118,7 +118,7 @@ define('crm:views/dashlets/opportunities-by-stage', ['crm:views/dashlets/abstrac
                     show: true,
                     horizontal: true,
                     shadowSize: 0,
-                    lineWidth: 1,
+                    lineWidth: 1 * this.fontSizeFactor,
                     fillOpacity: 1,
                     barWidth: 0.5,
                 },
@@ -149,7 +149,10 @@ define('crm:views/dashlets/opportunities-by-stage', ['crm:views/dashlets/abstrac
                                 return '';
                             }
 
-                            return this.currencySymbol + this.formatNumber(Math.floor(value), false, true).toString();
+                            return this.currencySymbol +
+                                '<span class="numeric-text">' +
+                                this.formatNumber(Math.floor(value), false, true).toString() +
+                                '</span>';
                         }
 
                         return '';
@@ -164,7 +167,10 @@ define('crm:views/dashlets/opportunities-by-stage', ['crm:views/dashlets/abstrac
                     trackFormatter: obj => {
                         let label = this.getHelper().escapeString(obj.series.label || this.translate('None'));
 
-                        return label  + '<br>' + this.currencySymbol + this.formatNumber(obj.x, true);
+                        return label  + '<br>' + this.currencySymbol +
+                            '<span class="numeric-text">' +
+                            this.formatNumber(obj.x, true) +
+                            '</span>';
                     },
                 },
                 legend: {

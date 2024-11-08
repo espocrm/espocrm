@@ -31,6 +31,8 @@
 import BottomPanelView from 'views/record/panels/bottom';
 import SearchManager from 'search-manager';
 import RecordModal from 'helpers/record-modal';
+import CreateRelatedHelper from 'helpers/record/create-related';
+import SelectRelatedHelper from 'helpers/record/select-related';
 
 /**
  * A relationship panel.
@@ -96,6 +98,11 @@ class RelationshipPanelView extends BottomPanelView {
      */
     viewModalView = null
 
+    /**
+     * @protected
+     */
+    listLayoutName
+
     setup() {
         super.setup();
 
@@ -129,10 +136,10 @@ class RelationshipPanelView extends BottomPanelView {
         // noinspection JSDeprecatedSymbols
         this.scope = this.entityType;
 
-        const linkReadOnly = this.getMetadata()
-            .get(['entityDefs', this.model.entityType, 'links', this.link, 'readOnly']) || false;
+        /** @type {Record} */
+        const linkDefs = this.getMetadata().get(`entityDefs.${this.model.entityType}.links.${this.link}`) || {};
 
-        const url = this.url = this.url || this.model.entityType + '/' + this.model.id + '/' + this.link;
+        const url = this.url = this.url || `${this.model.entityType}/${this.model.id}/${this.link}`;
 
         if (!('create' in this.defs)) {
             this.defs.create = true;
@@ -146,8 +153,30 @@ class RelationshipPanelView extends BottomPanelView {
             this.defs.view = true;
         }
 
-        if (linkReadOnly) {
-            this.defs.create = false;
+        if (linkDefs.readOnly) {
+            let hasCreate = false;
+
+            if (this.entityType && linkDefs.foreign) {
+                const foreign = linkDefs.foreign;
+
+                /** @type {Record} */
+                const foreignLinkDefs =
+                    this.getMetadata().get(`entityDefs.${this.entityType}.links.${foreign}`) || {};
+
+                if (foreignLinkDefs.type === 'belongsTo') {
+                    hasCreate = true;
+                } else if (
+                    foreignLinkDefs.type === 'hasMany' &&
+                    this.getMetadata().get(`entityDefs.${this.entityType}.fields.${foreign}.type`) === 'linkMultiple'
+                ) {
+                    hasCreate = true;
+                }
+            }
+
+            if (!hasCreate) {
+                this.defs.create = false;
+            }
+
             this.defs.select = false;
         }
 
@@ -288,7 +317,11 @@ class RelationshipPanelView extends BottomPanelView {
                 this.listenTo(this.model, 'after:relate', () => collection.fetch());
             }
 
-            this.listenTo(this.model, 'update-all', () => collection.fetch());
+            this.listenTo(this.model, `update-related:${this.link} update-all`, () => collection.fetch());
+
+            this.listenTo(this.collection, 'change', () => {
+                this.model.trigger(`after:related-change:${this.link}`);
+            });
 
             if (this.defs.syncWithModel) {
                 this.listenTo(this.model, 'sync', (m, a, o) => {
@@ -547,6 +580,7 @@ class RelationshipPanelView extends BottomPanelView {
             }
         });
 
+        this.collection.abortLastFetch();
         this.collection.reset();
 
         const listView = this.getView('list');
@@ -587,17 +621,23 @@ class RelationshipPanelView extends BottomPanelView {
      * A `view-related-list` action.
      *
      * @protected
+     * @param {{
+     *     scope?: string,
+     *     entityType: string,
+     *     title?: string,
+     *     url?: string,
+     *     viewOptions?: Record,
+     * }} data
      */
     actionViewRelatedList(data) {
+        const entityType = data.scope || data.entityType || this.entityType;
+
         const viewName =
-            this.getMetadata().get(
-                ['clientDefs', this.model.entityType, 'relationshipPanels', this.name, 'viewModalView']
-            ) ||
-            this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'relatedList']) ||
+            this.getMetadata()
+                .get(`clientDefs.${this.model.entityType}.relationshipPanels.${this.name}.viewModalView`) ||
+            this.getMetadata().get(`clientDefs.${entityType}.modalViews.relatedList`) ||
             this.viewModalView ||
             'views/modals/related-list';
-
-        const scope = data.scope || this.entityType;
 
         let filter = this.filter;
 
@@ -609,7 +649,7 @@ class RelationshipPanelView extends BottomPanelView {
             model: this.model,
             panelName: this.panelName,
             link: this.link,
-            scope: scope,
+            entityType: entityType,
             defs: this.defs,
             title: data.title || this.title,
             filterList: this.filterList,
@@ -619,8 +659,8 @@ class RelationshipPanelView extends BottomPanelView {
             defaultOrderBy: this.defaultOrderBy,
             url: data.url || this.url,
             listViewName: this.listViewName,
-            createDisabled: !this.isCreateAvailable(scope),
-            selectDisabled: !this.isSelectAvailable(scope),
+            createDisabled: !this.isCreateAvailable(entityType),
+            selectDisabled: !this.isSelectAvailable(entityType),
             rowActionsView: this.rowActionsView,
             panelCollection: this.collection,
             filtersDisabled: this.relatedListFiltersDisabled,
@@ -818,6 +858,28 @@ class RelationshipPanelView extends BottomPanelView {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @protected
+     * @since 8.4.0
+     */
+    actionCreateRelated() {
+        const helper = new CreateRelatedHelper(this);
+
+        helper.process(this.model, this.link);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @protected
+     * @since 8.4.0
+     */
+    actionSelectRelated() {
+        const helper = new SelectRelatedHelper(this);
+
+        helper.process(this.model, this.link);
+    }
+
     /**
      * @private
      */
@@ -844,6 +906,8 @@ class RelationshipPanelView extends BottomPanelView {
 
         this.defs.create = false;
     }
+
+
 }
 
 export default RelationshipPanelView;

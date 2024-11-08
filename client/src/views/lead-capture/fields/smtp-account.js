@@ -26,127 +26,128 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/lead-capture/fields/smtp-account', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+export default class extends EnumFieldView {
 
-        dataUrl: 'LeadCapture/action/smtpAccountDataList',
+    /**
+     * @private
+     * @type {string}
+     */
+    dataUrl = 'LeadCapture/action/smtpAccountDataList'
 
-        getAttributeList: function () {
-            return [this.name, 'inboundEmailId'];
-        },
+    getAttributeList() {
+        return [this.name, 'inboundEmailId'];
+    }
 
-        data: function () {
-            var data = Dep.prototype.data.call(this);
+    data() {
+        const data = super.data();
 
-            data.valueIsSet = true;
-            data.isNotEmpty = true;
+        data.valueIsSet = true;
+        data.isNotEmpty = true;
 
-            return data;
-        },
+        return data;
+    }
 
-        setupOptions: function () {
-            Dep.prototype.setupOptions.call(this);
+    setupOptions() {
+        super.setupOptions();
 
-            this.params.options = [];
-            this.translatedOptions = {};
+        this.params.options = [];
+        this.translatedOptions = {};
 
-            this.params.options.push('system');
+        this.params.options.push('system');
 
-            if (!this.loadedOptionList) {
+        if (!this.loadedOptionList) {
+            if (this.model.get('inboundEmailId')) {
+                const item = 'inboundEmail:' + this.model.get('inboundEmailId');
+
+                this.params.options.push(item);
+
+                this.translatedOptions[item] =
+                    (this.model.get('inboundEmailName') || this.model.get('inboundEmailId')) +
+                    ' (' + this.translate('group', 'labels', 'MassEmail') + ')';
+            }
+        } else {
+            this.loadedOptionList.forEach(item => {
+                this.params.options.push(item);
+
+                this.translatedOptions[item] =
+                    (this.loadedOptionTranslations[item] || item) +
+                    ' (' + this.translate('group', 'labels', 'MassEmail') + ')';
+            });
+        }
+
+        this.translatedOptions['system'] =
+            this.getConfig().get('outboundEmailFromAddress') +
+            ' (' + this.translate('system', 'labels', 'MassEmail') + ')';
+    }
+
+    getValueForDisplay() {
+        if (!this.model.has(this.name) && this.isReadMode()) {
+            if (this.model.has('inboundEmailId')) {
                 if (this.model.get('inboundEmailId')) {
-                    var item = 'inboundEmail:' + this.model.get('inboundEmailId');
-
-                    this.params.options.push(item);
-
-                    this.translatedOptions[item] =
-                        (this.model.get('inboundEmailName') || this.model.get('inboundEmailId')) +
-                        ' (' + this.translate('group', 'labels', 'MassEmail') + ')';
+                    return 'inboundEmail:' + this.model.get('inboundEmailId');
+                } else {
+                    return 'system';
                 }
             } else {
-                this.loadedOptionList.forEach((item) => {
-                    this.params.options.push(item);
-
-                    this.translatedOptions[item] =
-                        (this.loadedOptionTranslations[item] || item) +
-                        ' (' + this.translate('group', 'labels', 'MassEmail') + ')';
-                });
+                return '...';
             }
+        }
 
-            this.translatedOptions['system'] =
-                this.getConfig().get('outboundEmailFromAddress') +
-                ' (' + this.translate('system', 'labels', 'MassEmail') + ')';
-        },
+        return this.model.get(this.name);
+    }
 
-        getValueForDisplay: function () {
-            if (!this.model.has(this.name) && this.isReadMode()) {
-                if (this.model.has('inboundEmailId')) {
-                    if (this.model.get('inboundEmailId')) {
-                        return 'inboundEmail:' + this.model.get('inboundEmailId');
-                    } else {
-                        return 'system';
-                    }
-                } else {
-                    return '...';
+    setup() {
+        super.setup();
+
+        if (
+            this.getAcl().checkScope('MassEmail', 'create') ||
+            this.getAcl().checkScope('MassEmail', 'edit')
+        ) {
+            Espo.Ajax.getRequest(this.dataUrl).then(dataList => {
+                if (!dataList.length) {
+                    return;
                 }
-            }
 
-            return this.model.get(this.name);
-        },
+                this.loadedOptionList = [];
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+                this.loadedOptionTranslations = {};
+                this.loadedOptionAddresses = {};
+                this.loadedOptionFromNames = {};
 
-            if (
-                this.getAcl().checkScope('MassEmail', 'create') ||
-                this.getAcl().checkScope('MassEmail', 'edit')
-            ) {
+                dataList.forEach(item => {
+                    this.loadedOptionList.push(item.key);
 
-                Espo.Ajax.getRequest(this.dataUrl).then(dataList => {
-                    if (!dataList.length) {
-                        return;
-                    }
-
-                    this.loadedOptionList = [];
-
-                    this.loadedOptionTranslations = {};
-                    this.loadedOptionAddresses = {};
-                    this.loadedOptionFromNames = {};
-
-                    dataList.forEach(item => {
-                        this.loadedOptionList.push(item.key);
-
-                        this.loadedOptionTranslations[item.key] = item.emailAddress;
-                        this.loadedOptionAddresses[item.key] = item.emailAddress;
-                        this.loadedOptionFromNames[item.key] = item.fromName || '';
-                    });
-
-                    this.setupOptions();
-                    this.reRender();
+                    this.loadedOptionTranslations[item.key] = item.emailAddress;
+                    this.loadedOptionAddresses[item.key] = item.emailAddress;
+                    this.loadedOptionFromNames[item.key] = item.fromName || '';
                 });
+
+                this.setupOptions();
+                this.reRender();
+            });
+        }
+    }
+
+    fetch() {
+        const data = {};
+        const value = this.$element.val();
+
+        data[this.name] = value;
+
+        if (!value || value === 'system') {
+            data.inboundEmailId = null;
+            data.inboundEmailName = null;
+        } else {
+            const arr = value.split(':');
+
+            if (arr.length > 1) {
+                data.inboundEmailId = arr[1];
+                data.inboundEmailName = this.translatedOptions[data.inboundEmailId] || data.inboundEmailId;
             }
-        },
+        }
 
-        fetch: function () {
-            var data = {};
-            var value = this.$element.val();
-
-            data[this.name] = value;
-
-            if (!value || value === 'system') {
-                data.inboundEmailId = null;
-                data.inboundEmailName = null;
-            }
-            else {
-                var arr = value.split(':');
-
-                if (arr.length > 1) {
-                    data.inboundEmailId = arr[1];
-                    data.inboundEmailName = this.translatedOptions[data.inboundEmailId] || data.inboundEmailId;
-                }
-            }
-
-            return data;
-        },
-    });
-});
+        return data;
+    }
+}

@@ -10,7 +10,8 @@
         "body": {
             "type": "wysiwyg",
             "view": "views/email-template/fields/body",
-            "useIframe": true
+            "useIframe": true,
+            "attachmentField": "attachments"
         },
         "isHtml": {
             "type": "bool",

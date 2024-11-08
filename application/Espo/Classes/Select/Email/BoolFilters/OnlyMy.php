@@ -31,6 +31,7 @@ namespace Espo\Classes\Select\Email\BoolFilters;
 
 use Espo\Classes\Select\Email\Helpers\JoinHelper;
 use Espo\Core\Select\Bool\Filter;
+use Espo\Entities\Email;
 use Espo\Entities\User;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
 use Espo\ORM\Query\Part\WhereClause;
@@ -46,7 +47,7 @@ class OnlyMy implements Filter
         $this->joinHelper->joinEmailUser($queryBuilder, $this->user->getId());
 
         $item = WhereClause::fromRaw([
-            'emailUser.userId' => $this->user->getId(),
+            Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
         ]);
 
         $orGroupBuilder->add($item);

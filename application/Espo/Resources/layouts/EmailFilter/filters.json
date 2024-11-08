@@ -2,6 +2,7 @@
     "parent",
     "action",
     "markAsRead",
+    "skipNotification",
     "createdBy",
     "createdAt"
 ]

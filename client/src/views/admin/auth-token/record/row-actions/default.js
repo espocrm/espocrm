@@ -26,50 +26,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/auth-token/record/row-actions/default', ['views/record/row-actions/default'], function (Dep) {
+import DefaultRowActionsView from 'views/record/row-actions/default';
 
-    return Dep.extend({
+export default class extends DefaultRowActionsView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.listenTo(this.model, 'change:isActive', () => {
-                setTimeout(() => {
-                    this.reRender();
-                }, 10);
-            });
-        },
+        this.listenTo(this.model, 'change:isActive', () => {
+            setTimeout(() => this.reRender(), 10);
+        });
+    }
 
-        getActionList: function () {
-            var list = [];
+    getActionList() {
+        const list = [];
 
+        list.push({
+            action: 'quickView',
+            label: 'View',
+            data: {id: this.model.id},
+        });
+
+        if (this.model.get('isActive')) {
             list.push({
-                action: 'quickView',
-                label: 'View',
-                data: {
-                    id: this.model.id
-                }
+                action: 'setInactive',
+                label: 'Set Inactive',
+                data: {id: this.model.id},
             });
+        }
 
-            if (this.model.get('isActive')) {
-                list.push({
-                    action: 'setInactive',
-                    label: 'Set Inactive',
-                    data: {
-                        id: this.model.id
-                    }
-                });
-            }
+        list.push({
+            action: 'quickRemove',
+            label: 'Remove',
+            data: {id: this.model.id},
+        });
 
-            list.push({
-                action: 'quickRemove',
-                label: 'Remove',
-                data: {
-                    id: this.model.id
-                }
-            });
-
-            return list;
-        },
-    });
-});
+        return list;
+    }
+}

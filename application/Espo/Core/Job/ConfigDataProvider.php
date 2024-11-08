@@ -33,6 +33,8 @@ use Espo\Core\Utils\Config;
 
 class ConfigDataProvider
 {
+    private const MAX_PORTION = 15;
+
     public function __construct(private Config $config) {}
 
     public function runInParallel(): bool
@@ -42,7 +44,7 @@ class ConfigDataProvider
 
     public function getMaxPortion(): int
     {
-        return (int) $this->config->get('jobMaxPortion', 0);
+        return (int) $this->config->get('jobMaxPortion', self::MAX_PORTION);
     }
 
     public function getCronMinInterval(): int

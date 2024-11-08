@@ -30,15 +30,17 @@
 namespace Espo\Core\Select\Where\ItemConverters;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Select\Helpers\RandomStringGenerator;
 use Espo\Core\Select\Where\Item;
 use Espo\Core\Select\Where\ItemConverter;
 use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\ORM\Defs;
 use Espo\ORM\Entity;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 /**
@@ -49,7 +51,6 @@ class IsUserFromTeams implements ItemConverter
     public function __construct(
         private string $entityType,
         private Defs $ormDefs,
-        private RandomStringGenerator $randomStringGenerator
     ) {}
 
     public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
@@ -85,20 +86,14 @@ class IsUserFromTeams implements ItemConverter
         }
 
         if ($relationType === Entity::BELONGS_TO) {
-            $key = $defs->getKey();
-            $aliasName = $link . 'IsUserFromTeamsFilter' . $this->randomStringGenerator->generate();
-
-            $queryBuilder->distinct();
-            $queryBuilder->leftJoin(
-                Team::RELATIONSHIP_TEAM_USER,
-                $aliasName . 'Middle',
-                [
-                    "{$aliasName}Middle.userId:" => $key,
-                    "{$aliasName}Middle.deleted" => false,
-                ]
+            return Condition::in(
+                Expression::column($defs->getKey()),
+                SelectBuilder::create()
+                    ->from(Team::RELATIONSHIP_TEAM_USER, 'sq')
+                    ->select('userId')
+                    ->where(['teamId' => $value])
+                    ->build()
             );
-
-            return WhereClause::fromRaw(["{$aliasName}Middle.teamId" => $value]);
         }
 
         throw new BadRequest("Not supported link '$link' in where item.");

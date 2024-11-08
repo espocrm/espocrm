@@ -23,8 +23,8 @@
 
 <table class="table fields-table table-panel table-hover">
     <thead>
-        <th style="width: 35%">{{translate 'Name' scope='FieldManager'}}</th>
         <th style="width: 35%">{{translate 'Label' scope='FieldManager'}}</th>
+        <th style="width: 35%">{{translate 'Name' scope='FieldManager'}}</th>
         <th style="width: 20%">{{translate 'Type' scope='FieldManager'}}</th>
         <th style="width: 8%; text-align: right;"></th>
     </thead>
@@ -33,17 +33,17 @@
     <tr data-name="{{name}}" class="field-row">
         <td>
             {{#if isEditable}}
-            <a
-                href="#Admin/fieldManager/scope={{../scope}}&field={{name}}"
-                class="field-link"
-                data-scope="{{../scope}}"
-                data-field="{{name}}"
-            >{{name}}</a>
+                <a
+                    href="#Admin/fieldManager/scope={{../scope}}&field={{name}}"
+                    class="field-link"
+                    data-scope="{{../scope}}"
+                    data-field="{{name}}"
+                >{{translate name scope=../scope category='fields'}}</a>
             {{else}}
-            {{name}}
+                {{translate name scope=../scope category='fields'}}
             {{/if}}
         </td>
-        <td>{{translate name scope=../scope category='fields'}}</td>
+        <td>{{name}}</td>
         <td>{{translate type category='fieldTypes' scope='Admin'}}</td>
         <td style="text-align: right">
             {{#if isCustom}}

@@ -11,6 +11,10 @@
             "className": {
                 "type": "string",
                 "description": "An implementation class. Should implement Espo\\Core\\Cleanup\\Cleanup interface."
+            },
+            "order": {
+                "type": "integer",
+                "description": "An order."
             }
         }
     }

@@ -107,9 +107,7 @@ class Helper
                 continue;
             }
 
-            if (
-                $this->aclManager->checkReadOnlyOwn($user, $scope)
-            ) {
+            if ($this->aclManager->checkReadOnlyOwn($user, $scope)) {
                 $list[] = $scope;
             }
         }
@@ -142,8 +140,7 @@ class Helper
                     $aclManager &&
                     $aclManager->checkScope($user, $scope, Table::ACTION_READ) &&
                     (!$forParent || $aclManager->checkScope($user, $scope, Table::ACTION_STREAM));
-            }
-            catch (AclNotImplemented) {
+            } catch (AclNotImplemented) {
                 $hasAccess = false;
             }
 
@@ -159,8 +156,7 @@ class Helper
     {
         try {
             return $this->userAclManagerProvider->get($user);
-        }
-        catch (NotAvailable) {
+        } catch (NotAvailable) {
             return null;
         }
     }

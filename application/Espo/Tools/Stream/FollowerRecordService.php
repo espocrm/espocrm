@@ -214,7 +214,7 @@ class FollowerRecordService
             throw new Forbidden("No 'read' access to user $userId.");
         }
 
-        if ($user->isPortal() && $this->acl->getPermissionLevel('portal') !== Acl\Table::LEVEL_YES) {
+        if ($user->isPortal() && $this->acl->getPermissionLevel(Acl\Permission::PORTAL) !== Acl\Table::LEVEL_YES) {
             throw new Forbidden("No 'portal' permission.");
         }
 

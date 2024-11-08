@@ -103,7 +103,6 @@ class BaseRecordView extends View {
     /**
      * A record-helper.
      *
-     * @protected
      * @type {module:view-record-helper}
      */
     recordHelper = null
@@ -939,6 +938,8 @@ class BaseRecordView extends View {
 
     /**
      * Processed after save.
+     *
+     * @protected
      */
     afterSave() {
         if (this.isNew) {
@@ -953,11 +954,15 @@ class BaseRecordView extends View {
 
     /**
      * Processed before before-save.
+     *
+     * @protected
      */
     beforeBeforeSave() {}
 
     /**
      * Processed before save.
+     *
+     * @protected
      */
     beforeSave() {
         Espo.Ui.notify(this.translate('saving', 'messages'));
@@ -965,11 +970,15 @@ class BaseRecordView extends View {
 
     /**
      * Processed after save error.
+     *
+     * @protected
      */
     afterSaveError() {}
 
     /**
      * Processed after save a not modified record.
+     *
+     * @protected
      */
     afterNotModified() {
         Espo.Ui.warning(this.translate('notModified', 'messages'));
@@ -979,6 +988,8 @@ class BaseRecordView extends View {
 
     /**
      * Processed after save not valid.
+     *
+     * @protected
      */
     afterNotValid() {
         Espo.Ui.error(this.translate('Not valid'));
@@ -1114,7 +1125,10 @@ class BaseRecordView extends View {
                 });
 
             this.afterSaveError();
-            this.setModelAttributes(beforeSaveAttributes);
+
+            if (!options.bypassClose) {
+                this.setModelAttributes(beforeSaveAttributes);
+            }
 
             this.lastSaveCancelReason = 'error';
 
@@ -1132,7 +1146,7 @@ class BaseRecordView extends View {
                     },
                 )
                 .then(() => {
-                    this.trigger('save', initialAttributes);
+                    this.trigger('save', initialAttributes, Object.keys(setAttributes));
 
                     this.afterSave();
 
@@ -1159,6 +1173,8 @@ class BaseRecordView extends View {
      * @param {function} saveResolve Resolve the save promise.
      * @param {function} saveReject Reject the same promise.
      * @return {Promise<boolean>}
+     *
+     * @protected
      */
     handleSaveError(xhr, options, saveResolve, saveReject) {
         let handlerData = null;
@@ -1243,7 +1259,7 @@ class BaseRecordView extends View {
     /**
      * Fetch data from the form.
      *
-     * @return {Object.<string,*>}
+     * @return {Object.<string, *>}
      */
     fetch() {
         let data = {};
@@ -1283,16 +1299,20 @@ class BaseRecordView extends View {
 
     /**
      * Populate defaults.
+     *
+     * @return {Promise|undefined}
      */
     populateDefaults() {
         const populator = new DefaultsPopulator(
             this.getUser(),
             this.getPreferences(),
             this.getAcl(),
-            this.getConfig()
+            this.getConfig(),
+            this.getMetadata(),
+            this.getHelper(),
         );
 
-        populator.populate(this.model);
+        return populator.populate(this.model);
     }
 
     // noinspection JSUnusedGlobalSymbols

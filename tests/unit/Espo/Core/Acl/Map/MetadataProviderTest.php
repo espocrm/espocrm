@@ -27,15 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\Acl;
+namespace tests\unit\Espo\Core\Acl\Map;
 
+use Espo\Core\Acl\Map\MetadataProvider;
+use Espo\Core\Acl\Permission;
+use Espo\Core\Utils\Metadata;
+use PHPUnit\Framework\TestCase;
 
-use Espo\Core\{
-    Acl\Map\MetadataProvider,
-    Utils\Metadata,
-};
-
-class MetadataProviderTest extends \PHPUnit\Framework\TestCase
+class MetadataProviderTest extends TestCase
 {
     private $metadata;
 
@@ -54,6 +53,6 @@ class MetadataProviderTest extends \PHPUnit\Framework\TestCase
             ->with(['app', 'acl', 'valuePermissionList'])
             ->willReturn(['assignmentPermission', 'portalPermission']);
 
-        $this->assertEquals(['assignment', 'portal'], $provider->getPermissionList());
+        $this->assertEquals([Permission::ASSIGNMENT, 'portal'], $provider->getPermissionList());
     }
 }

@@ -26,15 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/opportunity/record/edit-small',
-['views/record/edit-small', 'crm:views/opportunity/record/edit'], function (Dep, Edit) {
+import EditSmallRecordView from 'views/record/edit-small';
 
-    return Dep.extend({
+class OpportunityEditSmallRecordView extends EditSmallRecordView {}
 
-        populateDefaults: function () {
-            Dep.prototype.populateDefaults.call(this);
-            Edit.prototype.populateDefaults.call(this);
-        }
-    });
-});
-
+export default OpportunityEditSmallRecordView;

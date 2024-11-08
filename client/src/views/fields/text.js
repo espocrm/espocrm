@@ -30,11 +30,48 @@
 
 import BaseFieldView from 'views/fields/base';
 import MailtoHelper from 'helpers/misc/mailto';
+import Modal from 'views/modal';
 
 /**
  * A text field.
+ *
+ * @extends BaseFieldView<module:views/fields/text~params>
  */
 class TextFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/text~options
+     * @property {
+     *     module:views/fields/text~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/text~params
+     * @property {boolean} [required] Required.
+     * @property {number} [maxLength] A max length.
+     * @property {number} [rows] A number of rows.
+     * @property {number} [rowsMin] A min number of rows.
+     * @property {boolean} [noResize] No resize.
+     * @property {boolean} [seeMoreDisabled] Disable 'See-more'.
+     * @property {boolean} [autoHeightDisabled] Disable auto-height.
+     * @property {number} [cutHeight] A height of cut in pixels.
+     * @property {boolean} [displayRawText] Display raw text.
+     * @property {boolean} [preview] Display the preview button.
+     * @property {string} [attachmentField] An attachment-multiple field to connect with.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/text~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'text'
 
@@ -83,6 +120,12 @@ class TextFieldView extends BaseFieldView {
     /** @private */
     maxRows
 
+    /**
+     * @private
+     * @type {HTMLElement}
+     */
+    previewButtonElement
+
     setup() {
         super.setup();
 
@@ -105,6 +148,25 @@ class TextFieldView extends BaseFieldView {
         this.on('remove', () => {
             $(window).off('resize.see-more-' + this.cid);
         });
+
+        if (this.params.preview) {
+            this.addHandler('input', 'textarea', (e, /** HTMLTextAreaElement */target) => {
+                const text = target.value;
+
+                if (text) {
+                    this.previewButtonElement.classList.remove('hidden');
+                } else {
+                    this.previewButtonElement.classList.add('hidden');
+                }
+            });
+
+            this.addActionHandler('previewText', () => this.preview());
+        }
+
+        /** @private */
+        this.controlSeeMoreBind = this.controlSeeMore.bind(this);
+        /** @private */
+        this.onPasteBind = this.onPaste.bind(this);
     }
 
     setupSearch() {
@@ -152,6 +214,7 @@ class TextFieldView extends BaseFieldView {
         }
 
         data.noResize = this.noResize || (!this.autoHeightDisabled && !this.params.rows);
+        data.preview = this.params.preview && !this.params.displayRawText;
 
         // noinspection JSValidateTypes
         return data;
@@ -295,6 +358,14 @@ class TextFieldView extends BaseFieldView {
                 $(window).on('resize.see-more-' + this.cid, () => {
                     this.controlSeeMore();
                 });
+
+                // Can be hidden.
+                // @todo Revise stream post with empty text.
+                if (this.element) {
+                    this.element.querySelectorAll('img').forEach(image => {
+                        image.addEventListener('load', this.controlSeeMoreBind);
+                    });
+                }
             }
         }
 
@@ -303,6 +374,15 @@ class TextFieldView extends BaseFieldView {
 
             if (text) {
                 this.$element.val(text);
+            }
+
+            this.previewButtonElement = this.element.querySelector('a[data-action="previewText"]');
+
+            const textAreaElement = /** @type {HTMLTextAreaElement} */this.$element.get(0);
+
+            if (this.params.attachmentField && textAreaElement) {
+                textAreaElement.removeEventListener('paste', this.onPasteBind);
+                textAreaElement.addEventListener('paste', this.onPasteBind);
             }
         }
 
@@ -440,6 +520,47 @@ class TextFieldView extends BaseFieldView {
 
             Espo.Ui.notify(false);
         });
+    }
+
+    /**
+     * Show the preview modal.
+     *
+     * @since 8.5.0
+     * @return {Promise<void>}
+     */
+    async preview() {
+        const view = new Modal({
+            templateContent:
+                `<div class="complex-text">{{complexText viewObject.options.text linksInNewTab=true}}</div>`,
+            text: this.model.attributes[this.name] || '',
+            headerText: this.translate('Preview'),
+            backdrop: true,
+        });
+
+        await this.assignView('dialog', view);
+        await view.render();
+    }
+
+    /**
+     * @protected
+     * @param {ClipboardEvent} event
+     */
+    onPaste(event) {
+        const items = event.clipboardData.items;
+
+        if (!items) {
+            return;
+        }
+
+        for (let i = 0; i < items.length; i++) {
+            if (!items[i].type.startsWith('image')) {
+                continue;
+            }
+
+            const blob = items[i].getAsFile();
+
+            this.recordHelper.trigger('upload-files:' + this.params.attachmentField, [blob]);
+        }
     }
 }
 

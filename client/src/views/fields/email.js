@@ -26,11 +26,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module views/fields/email */
+
 import VarcharFieldView from 'views/fields/varchar';
 import MailtoHelper from 'helpers/misc/mailto';
 import Autocomplete from 'ui/autocomplete';
 
+/**
+ * @extends VarcharFieldView<module:views/fields/email~params>
+ */
 class EmailFieldView extends VarcharFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/email~options
+     * @property {
+     *     module:views/fields/email~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/email~params
+     * @property {boolean} [required] Required.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/email~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'email'
 
@@ -376,7 +405,7 @@ class EmailFieldView extends VarcharFieldView {
         this.manageButtonsVisibility();
         this.manageAddButton();
 
-        if (this.mode === this.MODE_SEARCH && this.getAcl().check('Email', 'create')) {
+        if (this.mode === this.MODE_SEARCH) {
             const autocomplete = new Autocomplete(this.$element.get(0), {
                 name: this.name,
                 autoSelectFirst: true,
@@ -397,6 +426,7 @@ class EmailFieldView extends VarcharFieldView {
                         .getRequest('EmailAddress/search', {
                             q: query,
                             maxSize: this.getAutocompleteMaxCount(),
+                            entityType: this.entityType,
                         })
                         .then(/** Record[] */response => {
                             return response.map(item => {

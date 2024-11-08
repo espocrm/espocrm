@@ -27,18 +27,40 @@
  ************************************************************************/
 
 import SelectRecordsModal from 'views/modals/select-records';
-import ListWithCategories from 'views/list-with-categories';
 
 class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
 
     template = 'modals/select-records-with-categories'
 
-    // Used in applyCategoryToCollection.
+    /**
+     * @private
+     * @type {string}
+     */
     categoryField = 'category'
-    // noinspection JSUnusedGlobalSymbols
+
+    /**
+     * @private
+     * @type {string}
+     */
     categoryFilterType = 'inCategory'
-    categoryScope = ''
+
+    /**
+     * @private
+     * @type {string}
+     */
+    categoryScope
+
+    /**
+     * @private
+     * @type {boolean}
+     */
     isExpanded = true
+
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    isCategoryMultiple
 
     data() {
         return {
@@ -52,11 +74,16 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
         this.categoryScope = this.categoryScope || this.scope + 'Category';
         this.categoryField = this.getMetadata().get(`scopes.${this.categoryScope}.categoryField`) || this.categoryField;
 
+        this.isCategoryMultiple = this.getMetadata()
+            .get(`entityDefs.${this.scope}.fields.${this.categoryField}.type`) === 'linkMultiple';
+
         this.categoriesDisabled = this.categoriesDisabled ||
            this.getMetadata().get(['scopes',  this.categoryScope, 'disabled']) ||
            !this.getAcl().checkScope(this.categoryScope);
 
         super.setup();
+
+        this.addActionHandler('toggleExpandedFromNavigation', () => this.actionToggleExpandedFromNavigation());
     }
 
     setupList() {
@@ -79,6 +106,14 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
         });
     }
 
+    /**
+     * @protected
+     * @return {import('views/record/list-tree').default}
+     */
+    getCategoriesView() {
+        return this.getView('categories');
+    }
+
     createCategoriesView() {
         this.createView('categories', 'views/record/list-tree', {
             collection: this.treeCollection,
@@ -86,7 +121,6 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
             selectable: true,
             readOnly: true,
             showRoot: true,
-            rootName: this.translate(this.scope, 'scopeNamesPlural'),
             buttonsDisabled: true,
             checkboxes: false,
             isExpanded: this.isExpanded,
@@ -116,13 +150,98 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
         });
     }
 
-    applyCategoryToCollection() {
-        ListWithCategories.prototype.applyCategoryToCollection.call(this);
+    /**
+     * @private
+     */
+    async actionToggleExpandedFromNavigation() {
+        this.isExpanded = !this.isExpanded;
+
+        /** @type {HTMLAnchorElement} */
+        const a = this.element.querySelector('a[data-role="expandButtonContainer"]');
+
+        if (a) {
+            a.classList.add('disabled');
+        }
+
+        this.applyCategoryToCollection();
+        this.getCategoriesView().isExpanded = this.isExpanded;
+
+        Espo.Ui.notify(' ... ');
+
+        await this.collection.fetch();
+
+        this.getCategoriesView().reRender().then(() => {});
+
+        Espo.Ui.notify();
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    isCategoryMultiple() {
-        ListWithCategories.prototype.isCategoryMultiple.call(this);
+    /**
+     * @private
+     * @todo Move to helper. Together with list view.
+     */
+    applyCategoryToCollection() {
+        this.collection.whereFunction = () => {
+            let filter;
+            const isExpanded = this.isExpanded;
+
+            if (!isExpanded && !this.hasTextFilter()) {
+                if (this.isCategoryMultiple) {
+                    if (this.currentCategoryId) {
+                        filter = {
+                            attribute: this.categoryField,
+                            type: 'linkedWith',
+                            value: [this.currentCategoryId]
+                        };
+                    }
+                    else {
+                        filter = {
+                            attribute: this.categoryField,
+                            type: 'isNotLinked'
+                        };
+                    }
+                }
+                else {
+                    if (this.currentCategoryId) {
+                        filter = {
+                            attribute: this.categoryField + 'Id',
+                            type: 'equals',
+                            value: this.currentCategoryId
+                        };
+                    }
+                    else {
+                        filter = {
+                            attribute: this.categoryField + 'Id',
+                            type: 'isNull'
+                        };
+                    }
+                }
+            }
+            else {
+                if (this.currentCategoryId) {
+                    filter = {
+                        attribute: this.categoryField,
+                        type: this.categoryFilterType,
+                        value: this.currentCategoryId,
+                    };
+                }
+            }
+
+            if (filter) {
+                return [filter];
+            }
+        };
+    }
+
+    /**
+     * @private
+     * @return {boolean}
+     */
+    hasTextFilter() {
+        return !!this.collection.data.textFilter ||
+            (
+                this.collection.where &&
+                this.collection.where.find(it => it.type === 'textFilter')
+            );
     }
 }
 

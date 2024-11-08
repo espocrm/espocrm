@@ -40,10 +40,10 @@
 <table class="table table-hover table-panel scopes-table">
     <thead>
         <tr>
-            <th>{{translate 'name' scope='EntityManager' category='fields'}}</th>
-            <th style="width: 33%">{{translate 'label' scope='EntityManager' category='fields'}}</th>
-            <th style="width: 20%">{{translate 'type' scope='EntityManager' category='fields'}}</th>
-            <th style="width: 20%">{{translate 'module' scope='EntityManager' category='fields'}}</th>
+            <th>{{translate 'label' scope='EntityManager' category='fields'}}</th>
+            <th style="width: 27%">{{translate 'name' scope='EntityManager' category='fields'}}</th>
+            <th style="width: 19%">{{translate 'type' scope='EntityManager' category='fields'}}</th>
+            <th style="width: 19%">{{translate 'module' scope='EntityManager' category='fields'}}</th>
         </tr>
     </thead>
     <tbody>
@@ -51,13 +51,13 @@
         <tr data-scope="{{name}}" class="scope-row">
             <td>
                 {{#if hasView}}
-                <a href="#Admin/entityManager/scope={{name}}">{{name}}</a>
+                <a href="#Admin/entityManager/scope={{name}}">{{label}}</a>
                 {{else}}
-                {{name}}
+                {{label}}
                 {{/if}}
             </td>
             <td>
-                {{label}}
+                {{name}}
             </td>
             <td>
                 {{#if type}}

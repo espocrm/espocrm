@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils\Database\Orm\FieldConverters;
 
+use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\FieldConverter;
@@ -52,7 +53,7 @@ class AttachmentMultiple implements FieldConverter
                             ['createdAt', Order::ASC],
                             ['name', Order::ASC],
                         ],
-                        'isLinkMultipleIdList' => true,
+                        AttributeParam::IS_LINK_MULTIPLE_ID_LIST => true,
                         'relation' => $name,
                     ])
             )
@@ -61,7 +62,7 @@ class AttachmentMultiple implements FieldConverter
                     ->withType(AttributeType::JSON_OBJECT)
                     ->withNotStorable()
                     ->withParamsMerged([
-                        'isLinkMultipleNameMap' => true,
+                        AttributeParam::IS_LINK_MULTIPLE_NAME_MAP => true,
                     ])
             );
     }

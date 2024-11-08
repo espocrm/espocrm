@@ -33,25 +33,43 @@ import moment from 'moment';
 
 class DatetimeShortFieldView extends DatetimeFieldView {
 
-    listTemplate = 'fields/datetime-short/list'
-    detailTemplate = 'fields/datetime-short/detail'
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    shortInListMode = true
+
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    shortInDetailMode = true
 
     data() {
-        let data = super.data();
+        const data = super.data();
 
-        if (this.mode === this.MODE_LIST || this.mode === this.MODE_DETAIL) {
-            data.fullDateValue = super.getDateStringValue();
+        if (this.toApplyShort()) {
+            data.titleDateValue = super.getDateStringValue();
         }
 
         return data;
     }
 
+    /**
+     * @private
+     * @return {boolean}
+     */
+    toApplyShort() {
+        return this.shortInListMode && this.mode === this.MODE_LIST ||
+            this.shortInDetailMode && this.mode === this.MODE_DETAIL;
+    }
+
     getDateStringValue() {
-        if (!(this.mode === this.MODE_LIST || this.mode === this.MODE_DETAIL)) {
+        if (!this.toApplyShort()) {
             return super.getDateStringValue();
         }
 
-        let value = this.model.get(this.name)
+        const value = this.model.get(this.name);
 
         if (!value) {
             return super.getDateStringValue();
@@ -63,8 +81,23 @@ class DatetimeShortFieldView extends DatetimeFieldView {
             timeFormat = timeFormat.replace(/:mm/, ':mm:ss');
         }
 
-        let m = this.getDateTime().toMoment(value);
-        let now = moment().tz(this.getDateTime().timeZone || 'UTC');
+        const m = this.getDateTime().toMoment(value);
+        const now = moment().tz(this.getDateTime().timeZone || 'UTC');
+        const dt = now.clone().startOf('day');
+
+        const ranges = {
+            'today': [dt.unix(), dt.add(1, 'days').unix()],
+            'tomorrow': [dt.unix(), dt.add(1, 'days').unix()],
+            'yesterday': [dt.add(-3, 'days').unix(), dt.add(1, 'days').unix()]
+        };
+
+        if (
+            m.unix() > ranges['yesterday'][0] &&
+            m.unix() < ranges['yesterday'][1] &&
+            this.getLanguage().has('yesterdayShort', 'strings', 'Global')
+        ) {
+            return this.translate('yesterdayShort', 'strings') + ' ' + m.format(timeFormat);
+        }
 
         if (
             m.unix() > now.clone().startOf('day').unix() &&
@@ -73,7 +106,7 @@ class DatetimeShortFieldView extends DatetimeFieldView {
             return m.format(timeFormat);
         }
 
-        let readableFormat = this.getDateTime().getReadableShortDateFormat();
+        const readableFormat = this.getDateTime().getReadableShortDateFormat();
 
         return m.format('YYYY') === now.format('YYYY') ?
             m.format(readableFormat) :

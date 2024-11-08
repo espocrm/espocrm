@@ -39,12 +39,8 @@ use RuntimeException;
 class LinkMultipleItem
 {
     private string $id;
-
     private ?string $name = null;
-
-    /**
-     * @var array<string, mixed>
-     */
+    /** @var array<string, mixed> */
     private array $columnData = [];
 
     /**
@@ -86,7 +82,7 @@ class LinkMultipleItem
     }
 
     /**
-     * Wether a column value is set.
+     * Whether a column value is set.
      */
     public function hasColumnValue(string $column): bool
     {
@@ -109,7 +105,6 @@ class LinkMultipleItem
     public function withName(string $name): self
     {
         $obj = $this->clone();
-
         $obj->name = $name;
 
         return $obj;
@@ -123,7 +118,6 @@ class LinkMultipleItem
     public function withColumnValue(string $column, $value): self
     {
         $obj = $this->clone();
-
         $obj->columnData[$column] = $value;
 
         return $obj;
@@ -134,9 +128,12 @@ class LinkMultipleItem
      *
      * @throws RuntimeException
      */
-    public static function create(string $id): self
+    public static function create(string $id, ?string $name = null): self
     {
-        return new self($id);
+        $obj = new self($id);
+        $obj->name = $name;
+
+        return $obj;
     }
 
     private function clone(): self

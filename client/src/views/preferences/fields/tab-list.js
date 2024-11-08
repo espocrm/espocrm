@@ -26,40 +26,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/preferences/fields/tab-list', ['views/settings/fields/tab-list'], function (Dep) {
+import TabListFieldView from 'views/settings/fields/tab-list';
 
-    return Dep.extend({
+export default class extends TabListFieldView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.params.options = this.params.options.filter(scope => {
-                if (scope === '_delimiter_' || scope === 'Home') {
-                    return true;
-                }
-
-                let defs = this.getMetadata().get(['scopes', scope]);
-
-                if (!defs) {
-                    return;
-                }
-
-                if (defs.disabled) {
-                    return;
-                }
-
-                if (defs.acl) {
-                    return this.getAcl().check(scope);
-                }
-
-                if (defs.tabAclPermission) {
-                    let level = this.getAcl().get(defs.tabAclPermission);
-
-                    return level && level !== 'no';
-                }
-
+        this.params.options = this.params.options.filter(scope => {
+            if (scope === '_delimiter_' || scope === 'Home') {
                 return true;
-            });
-        },
-    });
-});
+            }
+
+            const defs = this.getMetadata().get(['scopes', scope]);
+
+            if (!defs) {
+                return;
+            }
+
+            if (defs.disabled) {
+                return;
+            }
+
+            if (defs.acl) {
+                return this.getAcl().check(scope);
+            }
+
+            if (defs.tabAclPermission) {
+                const level = this.getAcl().getPermissionLevel(defs.tabAclPermission);
+
+                return level && level !== 'no';
+            }
+
+            return true;
+        });
+    }
+}

@@ -39,33 +39,32 @@
     {
         "rows": [
             [{"name": "addressFormat"}, {"name": "addressPreview"}],
-            [{"name": "addressCountryList"}],
-            [{"name": "addressCityList"}],
-            [{"name": "addressStateList"}]
+            [{"name": "addressCityList"}, {"name": "addressStateList"}]
         ]
     },
     {
         "tabBreak": true,
-        "tabLabel": "$label:Misc",
+        "tabLabel": "$label:General",
         "rows": [
-            [{"name": "followCreatedEntities"}, {"name": "emailAddressIsOptedOutByDefault"}],
-            [{"name": "aclAllowDeleteCreated"}, {"name": "cleanupDeletedRecords"}],
-            [{"name": "exportDisabled"}, {"name": "b2cMode"}],
-            [{"name": "pdfEngine"}, {"name": "mapProvider"}]
+            [{"name": "cleanupDeletedRecords"}, {"name": "emailAddressIsOptedOutByDefault"}],
+            [{"name": "aclAllowDeleteCreated"}, {"name": "b2cMode"}],
+            [{"name": "exportDisabled"}, false],
+            [{"name": "pdfEngine"}, false]
         ]
 
     },
     {
         "label": "Search",
         "rows": [
-            [{"name": "textFilterUseContainsForVarchar"}, {"name": "globalSearchEntityList"}]
+            [{"name": "textFilterUseContainsForVarchar"}, {"name": "globalSearchEntityList"}],
+            [{"name": "quickSearchFullTextAppendWildcard"}, false]
         ]
     },
     {
         "label": "Phone Numbers",
         "rows": [
             [{"name": "phoneNumberInternational"}, {"name": "phoneNumberPreferredCountryList"}],
-            [{"name": "phoneNumberNumericSearch"}, false]
+            [{"name": "phoneNumberNumericSearch"}, {"name": "phoneNumberExtensions"}]
         ]
     },
     {
@@ -80,6 +79,12 @@
         "label": "Attachments",
         "rows": [
             [{"name": "attachmentUploadMaxSize"}, {"name": "attachmentUploadChunkSize"}]
+        ]
+    },
+    {
+        "label": "Stream",
+        "rows": [
+            [{"name": "availableReactions"}, {"name": "followCreatedEntities"}]
         ]
     }
 ]

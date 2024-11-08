@@ -37,6 +37,8 @@
         "User Interface": "User Interface",
         "Auth Tokens": "Auth Tokens",
         "Auth Log": "Auth Log",
+        "App Log": "App Log",
+        "App Secrets": "App Secrets",
         "Authentication": "Authentication",
         "Currency": "Currency",
         "Integrations": "Integrations",
@@ -79,6 +81,7 @@
         "Working Time Calendars": "Working Time Calendars",
         "Group Email Folders": "Group Email Folders",
         "Authentication Providers": "Authentication Providers",
+        "Address Countries": "Address Countries",
         "Success": "Success",
         "Fail": "Fail",
         "Configuration Instructions": "Configuration Instructions",
@@ -200,8 +203,11 @@
         "dynamicLogicInvalid": "Conditions making field invalid",
         "probabilityMap": "Stage Probabilities (%)",
         "notActualOptions": "Not Actual Options",
+        "activeOptions": "Active Options",
         "readOnly": "Read-only",
         "readOnlyAfterCreate": "Read-only After Create",
+        "preview": "Preview",
+        "attachmentField": "Attachment Field",
         "maxFileSize": "Max File Size (Mb)",
         "isPersonalData": "Is Personal Data",
         "useIframe": "Use Iframe",
@@ -212,6 +218,7 @@
         "allowCustomOptions": "Allow Custom Options",
         "displayAsLabel": "Display as Label",
         "displayAsList": "Display as List",
+        "labelType": "Label Type",
         "maxCount": "Max Item Count",
         "accept": "Accept",
         "viewMap": "View Map Button",
@@ -235,6 +242,7 @@
         "rebuildRequired": "Rebuild is required"
     },
     "messages": {
+        "cacheIsDisabled": "Cache is disabled, the application will run slow. Enable cache in the [settings](#Admin/settings).",
         "formulaFunctions": "More functions can be found in [documentation]({documentationUrl}).",
         "rebuildRequired": "You need to run rebuild from CLI.",
         "upgradeVersion": "EspoCRM will be upgraded to version **{version}**. Please be patient as this may take a while.",
@@ -249,6 +257,7 @@
         "selectExtensionPackage": "Select extension package",
         "extensionInstalled": "Extension {name} {version} has been installed.",
         "installExtension": "Extension {name} {version} is ready for an installation.",
+        "cronIsDisabled": "Cron is disabled, the application is not fully functional. Enable cron in the [settings](#Admin/settings).",
         "cronIsNotConfigured": "Scheduled jobs are not running.  Hence inbound emails, notifications and reminders are not working. Please follow the [instructions](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) to setup cron job.",
         "newVersionIsAvailable": "New EspoCRM version {latestVersion} is available. Please follow the [instructions](https://www.espocrm.com/documentation/administration/upgrading/) to upgrade your instance." ,
         "newExtensionVersionIsAvailable": "New {extensionName} version {latestVersion} is available.",
@@ -290,6 +299,8 @@
         "labelManager": "Customize application labels.",
         "templateManager": "Customize message templates.",
         "authLog": "Login history.",
+        "appLog": "Application log.",
+        "appSecrets": "Store sensitive information like API keys, passwords, and other secrets.",
         "leadCapture": "API entry points for Web-to-Lead.",
         "attachments": "All file attachments stored in the system.",
         "systemRequirements": "System Requirements for EspoCRM.",
@@ -304,7 +315,8 @@
         "jobsSettings": "Job processing settings. Jobs execute tasks in the background.",
         "sms": "SMS settings.",
         "pdfTemplates": "Templates for printing to PDF.",
-        "formulaSandbox": "Write and test formula scripts."
+        "formulaSandbox": "Write and test formula scripts.",
+        "addressCountries": "Countries available for address fields."
     },
     "keywords": {
         "settings": "system",
@@ -317,7 +329,8 @@
         "entityManager": "fields,relations,relationships",
         "templateManager": "notifications",
         "jobs": "cron",
-        "labelManager": "language,translation"
+        "labelManager": "language,translation",
+        "appSecrets": "key,keys,password"
     },
     "options": {
         "previewSize": {
@@ -326,6 +339,10 @@
             "small": "Small",
             "medium": "Medium",
             "large": "Large"
+        },
+        "labelType": {
+            "state": "State",
+            "regular": "Regular"
         }
     },
     "logicalOperators": {

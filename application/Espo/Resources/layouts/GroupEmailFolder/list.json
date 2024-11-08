@@ -3,5 +3,10 @@
         "name": "name",
         "link": true,
         "notSortable": true
+    },
+    {
+        "name": "teams",
+        "notSortable": true,
+        "width": 50
     }
 ]

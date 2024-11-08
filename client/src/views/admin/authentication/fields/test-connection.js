@@ -26,75 +26,75 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/authentication/fields/test-connection', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+export default class extends BaseFieldView {
 
-        templateContent: `
-            <button
-                class="btn btn-default"
-                data-action="testConnection"
-            >{{translate \'Test Connection\' scope=\'Settings\'}}</button>
-        `,
+    // language=Handlebars
+    templateContent = `
+        <button
+            class="btn btn-default"
+            data-action="testConnection"
+        >{{translate \'Test Connection\' scope=\'Settings\'}}</button>
+    `
 
-        events: {
-            'click [data-action="testConnection"]': function () {
-                this.testConnection();
-            },
-        },
+    fetch() {
+        return {};
+    }
 
-        fetch: function () {
-            return {};
-        },
+    setup() {
+        super.setup();
 
-        getConnectionData: function () {
-            return {
-                'host': this.model.get('ldapHost'),
-                'port': this.model.get('ldapPort'),
-                'useSsl': this.model.get('ldapSecurity'),
-                'useStartTls': this.model.get('ldapSecurity'),
-                'username': this.model.get('ldapUsername'),
-                'password': this.model.get('ldapPassword'),
-                'bindRequiresDn': this.model.get('ldapBindRequiresDn'),
-                'accountDomainName': this.model.get('ldapAccountDomainName'),
-                'accountDomainNameShort': this.model.get('ldapAccountDomainNameShort'),
-                'accountCanonicalForm': this.model.get('ldapAccountCanonicalForm'),
-            };
-        },
+        this.addActionHandler('testConnection', () => this.testConnection());
+    }
 
-        testConnection: function () {
-            let data = this.getConnectionData();
 
-            this.$el.find('button').prop('disabled', true);
+    getConnectionData() {
+        return {
+            'host': this.model.get('ldapHost'),
+            'port': this.model.get('ldapPort'),
+            'useSsl': this.model.get('ldapSecurity'),
+            'useStartTls': this.model.get('ldapSecurity'),
+            'username': this.model.get('ldapUsername'),
+            'password': this.model.get('ldapPassword'),
+            'bindRequiresDn': this.model.get('ldapBindRequiresDn'),
+            'accountDomainName': this.model.get('ldapAccountDomainName'),
+            'accountDomainNameShort': this.model.get('ldapAccountDomainNameShort'),
+            'accountCanonicalForm': this.model.get('ldapAccountCanonicalForm'),
+        };
+    }
 
-            this.notify('Connecting', null, null, 'Settings');
+    testConnection() {
+        const data = this.getConnectionData();
 
-            Espo.Ajax
-                .postRequest('Ldap/action/testConnection', data)
-                .then(() => {
-                    this.$el.find('button').prop('disabled', false);
+        this.$el.find('button').prop('disabled', true);
 
-                    Espo.Ui.success(this.translate('ldapTestConnection', 'messages', 'Settings'));
-                })
-                .catch(xhr => {
-                    let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
-                    statusReason = statusReason.replace(/ $/, '');
-                    statusReason = statusReason.replace(/,$/, '');
+        Espo.Ui.notify(this.translate('Connecting', 'labels', 'Settings'));
 
-                    let msg = this.translate('Error') + ' ' + xhr.status;
+        Espo.Ajax.postRequest('Ldap/action/testConnection', data)
+            .then(() => {
+                this.$el.find('button').prop('disabled', false);
 
-                    if (statusReason) {
-                        msg += ': ' + statusReason;
-                    }
+                Espo.Ui.success(this.translate('ldapTestConnection', 'messages', 'Settings'));
+            })
+            .catch(xhr => {
+                let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
+                statusReason = statusReason.replace(/ $/, '');
+                statusReason = statusReason.replace(/,$/, '');
 
-                    Espo.Ui.error(msg, true);
+                let msg = this.translate('Error') + ' ' + xhr.status;
 
-                    console.error(msg);
+                if (statusReason) {
+                    msg += ': ' + statusReason;
+                }
 
-                    xhr.errorIsHandled = true;
+                Espo.Ui.error(msg, true);
 
-                    this.$el.find('button').prop('disabled', false);
-                });
-        },
-    });
-});
+                console.error(msg);
+
+                xhr.errorIsHandled = true;
+
+                this.$el.find('button').prop('disabled', false);
+            });
+    }
+}

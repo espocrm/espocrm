@@ -33,8 +33,38 @@ import moment from 'moment';
 
 /**
  * A date field.
+ *
+ * @extends BaseFieldView<module:views/fields/date~params>
  */
 class DateFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/date~options
+     * @property {
+     *     module:views/fields/date~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/date~params
+     * @property {boolean} [required] Required.
+     * @property {boolean} [useNumericFormat] Use numeric format.
+     * @property {string} [after] Validate to be after another date field.
+     * @property {string} [before] Validate to be before another date field.
+     * @property {boolean} [afterOrEqual] Allow an equal date for 'after' validation.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/date~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'date'
 
@@ -44,6 +74,10 @@ class DateFieldView extends BaseFieldView {
     editTemplate = 'fields/date/edit'
     searchTemplate = 'fields/date/search'
 
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = [
         'required',
         'date',
@@ -78,7 +112,7 @@ class DateFieldView extends BaseFieldView {
     initialSearchIsNotIdle = true
 
     setup() {
-       super.setup();
+        super.setup();
 
         if (this.getConfig().get('fiscalYearShift')) {
             this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
@@ -91,6 +125,25 @@ class DateFieldView extends BaseFieldView {
             this.searchTypeList.push('currentFiscalYear');
             this.searchTypeList.push('lastFiscalYear');
         }
+
+        if (this.params.after) {
+            this.listenTo(this.model, `change:${this.params.after}`, async () => {
+                if (!this.isEditMode()) {
+                    return;
+                }
+
+                await this.whenRendered();
+
+                // Timeout prevents the picker popping one when the duration field adjusts the date end.
+                setTimeout(() => {
+                    // noinspection JSUnresolvedReference
+                    this.$element.datepicker('setStartDate', this.getStartDateForDatePicker());
+                }, 100);
+            });
+        }
+
+        /** @protected */
+        this.useNumericFormat = this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat;
     }
 
     // noinspection JSCheckFunctionSignatures
@@ -116,6 +169,14 @@ class DateFieldView extends BaseFieldView {
             if (['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].includes(this.getSearchType())) {
                 data.number = this.searchParams.value;
             }
+        }
+
+        if (this.isListMode()) {
+            data.titleDateValue = data.dateValue;
+        }
+
+        if (this.useNumericFormat) {
+            data.useNumericFormat = true;
         }
 
         // noinspection JSValidateTypes
@@ -154,7 +215,7 @@ class DateFieldView extends BaseFieldView {
     }
 
     convertDateValueForDetail(value) {
-        if (this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat) {
+        if (this.useNumericFormat) {
             return this.getDateTime().toDisplayDate(value);
         }
 
@@ -163,7 +224,7 @@ class DateFieldView extends BaseFieldView {
         const readableFormat = this.getDateTime().getReadableDateFormat();
         const valueWithTime = value + ' 00:00:00';
 
-        const today = moment().tz(timezone).startOf('day');
+        const today = moment.tz(timezone).startOf('day');
         let dateTime = moment.tz(valueWithTime, internalDateTimeFormat, timezone);
 
         const temp = today.clone();
@@ -204,6 +265,32 @@ class DateFieldView extends BaseFieldView {
         const value = this.model.get(this.name);
 
         return this.stringifyDateValue(value);
+    }
+
+    /**
+     * @protected
+     * @return {string|undefined}
+     */
+    getStartDateForDatePicker() {
+        if (!this.isEditMode() || !this.params.after) {
+            return undefined;
+        }
+
+        /** @type {string} */
+        let date = this.model.attributes[this.params.after];
+
+        if (date == null) {
+            return undefined;
+        }
+
+        if (date.length > 10) {
+            date = this.getDateTime().toDisplay(date);
+            [date,] = date.split(' ');
+
+            return date;
+        }
+
+        return this.getDateTime().toDisplayDate(date);
     }
 
     afterRender() {
@@ -249,6 +336,7 @@ class DateFieldView extends BaseFieldView {
                 container: this.$el.closest('.modal-body').length ?
                     this.$el.closest('.modal-body') :
                     'body',
+                startDate: this.getStartDateForDatePicker(),
             };
 
             const language = this.getConfig().get('language');
@@ -279,8 +367,8 @@ class DateFieldView extends BaseFieldView {
                 // noinspection JSUnresolvedReference
                 this.$el.find('.input-group.additional').datepicker(options);
 
-                this.initDatePickerEventHandlers('input.filter-from', options);
-                this.initDatePickerEventHandlers('input.filter-to', options);
+                this.initDatePickerEventHandlers('input.filter-from');
+                this.initDatePickerEventHandlers('input.filter-to');
             }
 
             this.$element.parent().find('button.date-picker-btn').on('click', () => {
@@ -299,18 +387,9 @@ class DateFieldView extends BaseFieldView {
     /**
      * @private
      * @param {string} selector
-     * @param {Record} options
      */
-    initDatePickerEventHandlers(selector, options) {
+    initDatePickerEventHandlers(selector) {
         const $input = this.$el.find(selector);
-
-        // noinspection JSUnresolvedReference
-        //$input.datepicker(options);
-
-        //$input.parent().find('button.date-picker-btn').on('click', () => {
-            // noinspection JSUnresolvedReference
-        //    $input.datepicker('show');
-        //});
 
         $input.on('change', /** Record */e => {
             this.trigger('change');
@@ -468,7 +547,7 @@ class DateFieldView extends BaseFieldView {
 
     // noinspection JSUnusedGlobalSymbols
     validateAfter() {
-        const field = this.model.getFieldParam(this.name, 'after');
+        const field = this.params.after;
 
         if (!field) {
             return false;
@@ -478,10 +557,17 @@ class DateFieldView extends BaseFieldView {
         const otherValue = this.model.get(field);
 
         if (!(value && otherValue)) {
-            return;
+            return false;
         }
 
-        if (moment(value).unix() <= moment(otherValue).unix()) {
+        const unix = moment(value).unix();
+        const otherUnix = moment(otherValue).unix();
+
+        if (this.params.afterOrEqual && unix === otherUnix) {
+            return false;
+        }
+
+        if (unix <= otherUnix) {
             const msg = this.translate('fieldShouldAfter', 'messages')
                 .replace('{field}', this.getLabelText())
                 .replace('{otherField}', this.translate(field, 'fields', this.entityType));
@@ -490,11 +576,13 @@ class DateFieldView extends BaseFieldView {
 
             return true;
         }
+
+        return false;
     }
 
     // noinspection JSUnusedGlobalSymbols
     validateBefore() {
-        const field = this.model.getFieldParam(this.name, 'before');
+        const field = this.params.before;
 
         if (!field) {
             return false;

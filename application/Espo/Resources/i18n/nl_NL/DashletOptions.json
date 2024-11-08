@@ -28,7 +28,7 @@
     }
   },
   "messages": {
-    "selectEntityType": "Selecteer Entiteit Type in dashlet opties."
+    "selectEntityType": "Selecteer entiteit Type in dashlet opties."
   },
   "tooltips": {
     "skipOwn": "Acties van uw gebruikersaccount worden niet weergegeven."

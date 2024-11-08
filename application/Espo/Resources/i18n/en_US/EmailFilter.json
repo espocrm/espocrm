@@ -9,7 +9,8 @@
         "isGlobal": "Is Global",
         "emailFolder": "Folder",
         "groupEmailFolder": "Group Email Folder",
-        "markAsRead": "Mark as Read"
+        "markAsRead": "Mark as Read",
+        "skipNotification": "Skip Notification"
     },
     "links": {
         "emailFolder": "Folder",

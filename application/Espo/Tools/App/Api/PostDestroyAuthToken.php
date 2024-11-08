@@ -58,8 +58,7 @@ class PostDestroyAuthToken implements Action
 
         try {
             $authentication->destroyAuthToken($token, $request, $response);
-        }
-        catch (NotFound) {
+        } catch (NotFound) {
             return $response->writeBody(Json::encode(false));
         }
 

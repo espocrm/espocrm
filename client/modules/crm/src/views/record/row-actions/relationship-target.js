@@ -40,7 +40,8 @@ define('crm:views/record/row-actions/relationship-target', ['views/record/row-ac
                         text: this.translate('Cancel Opt-Out', 'labels', 'TargetList'),
                         data: {
                             id: this.model.id
-                        }
+                        },
+                        groupIndex: 1,
                     });
                 } else {
                     list.push({
@@ -48,7 +49,8 @@ define('crm:views/record/row-actions/relationship-target', ['views/record/row-ac
                         text: this.translate('Opt-Out', 'labels', 'TargetList'),
                         data: {
                             id: this.model.id
-                        }
+                        },
+                        groupIndex: 1,
                     });
                 }
             }

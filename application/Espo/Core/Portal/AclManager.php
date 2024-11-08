@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Portal;
 
+use Espo\Core\Acl\Permission;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -188,7 +189,7 @@ class AclManager extends InternalAclManager
      */
     public function checkReadOnlyAccount(User $user, string $scope): bool
     {
-        return $this->getLevel($user, $scope, PortalTable::ACTION_READ) === PortalTable::LEVEL_ACCOUNT;
+        return $this->getLevel($user, $scope, Table::ACTION_READ) === PortalTable::LEVEL_ACCOUNT;
     }
 
     /**
@@ -196,7 +197,7 @@ class AclManager extends InternalAclManager
      */
     public function checkReadOnlyContact(User $user, string $scope): bool
     {
-        return $this->getLevel($user, $scope, PortalTable::ACTION_READ)=== PortalTable::LEVEL_CONTACT;
+        return $this->getLevel($user, $scope, Table::ACTION_READ)=== PortalTable::LEVEL_CONTACT;
     }
 
     public function check(User $user, $subject, ?string $action = null): bool
@@ -208,7 +209,7 @@ class AclManager extends InternalAclManager
         return parent::check($user, $subject, $action);
     }
 
-    public function checkEntity(User $user, Entity $entity, string $action = PortalTable::ACTION_READ): bool
+    public function checkEntity(User $user, Entity $entity, string $action = Table::ACTION_READ): bool
     {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->internalAclManager->checkEntity($user, $entity, $action);
@@ -217,7 +218,7 @@ class AclManager extends InternalAclManager
         return parent::checkEntity($user, $entity, $action);
     }
 
-    public function checkUserPermission(User $user, $target, string $permissionType = 'user'): bool
+    public function checkUserPermission(User $user, $target, string $permissionType = Permission::USER): bool
     {
         return $this->internalAclManager->checkUserPermission($user, $target, $permissionType);
     }
@@ -231,13 +232,22 @@ class AclManager extends InternalAclManager
         return parent::checkOwnershipOwn($user, $entity);
     }
 
+    public function checkOwnershipShared(User $user, Entity $entity, string $action): bool
+    {
+        if ($this->checkUserIsNotPortal($user)) {
+            return $this->internalAclManager->checkOwnershipShared($user, $entity, $action);
+        }
+
+        return false;
+    }
+
     public function checkOwnershipTeam(User $user, Entity $entity): bool
     {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->internalAclManager->checkOwnershipTeam($user, $entity);
         }
 
-        return parent::checkOwnershipOwn($user, $entity);
+        return false;
     }
 
     /**
@@ -304,8 +314,8 @@ class AclManager extends InternalAclManager
     public function getScopeForbiddenFieldList(
         User $user,
         string $scope,
-        string $action = PortalTable::ACTION_READ,
-        string $thresholdLevel = PortalTable::LEVEL_NO
+        string $action = Table::ACTION_READ,
+        string $thresholdLevel = Table::LEVEL_NO
     ): array {
 
         if ($this->checkUserIsNotPortal($user)) {
@@ -331,6 +341,7 @@ class AclManager extends InternalAclManager
 
     /**
      * @deprecated As of v7.0. Use `checkOwnershipOwn`.
+     * @todo Remove in v9.0.
      */
     public function checkIsOwner(User $user, Entity $entity): bool
     {
@@ -339,6 +350,7 @@ class AclManager extends InternalAclManager
 
     /**
      * @deprecated As of v7.0. Use `checkOwnershipTeam`.
+     * @todo Remove in v9.0.
      */
     public function checkInTeam(User $user, Entity $entity): bool
     {
@@ -347,6 +359,7 @@ class AclManager extends InternalAclManager
 
     /**
      * @deprecated As of v7.0. Use `checkOwnershipAccount`.
+     * @todo Remove in v9.0.
      */
     public function checkInAccount(User $user, Entity $entity): bool
     {
@@ -355,6 +368,7 @@ class AclManager extends InternalAclManager
 
     /**
      * @deprecated As of v7.0. Use `checkOwnershipContact`.
+     * @todo Remove in v9.0.
      */
     public function checkIsOwnContact(User $user, Entity $entity): bool
     {

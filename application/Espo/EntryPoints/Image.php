@@ -72,7 +72,7 @@ class Image implements EntryPoint
         $size = $request->getQueryParam('size') ?? null;
 
         if (!$id) {
-            throw new BadRequest();
+            throw new BadRequest("No id.");
         }
 
         $this->show($response, $id, $size);
@@ -90,7 +90,7 @@ class Image implements EntryPoint
         $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $id);
 
         if (!$attachment) {
-            throw new NotFoundSilent();
+            throw new NotFoundSilent("Attachment not found.");
         }
 
         if (!$disableAccessCheck && !$this->acl->checkEntity($attachment)) {
@@ -105,13 +105,13 @@ class Image implements EntryPoint
 
         if ($this->allowedRelatedTypeList) {
             if (!in_array($attachment->getRelatedType(), $this->allowedRelatedTypeList)) {
-                throw new NotFoundSilent();
+                throw new NotFoundSilent("Not allowed related type.");
             }
         }
 
         if ($this->allowedFieldList) {
             if (!in_array($attachment->getTargetField(), $this->allowedFieldList)) {
-                throw new NotFoundSilent();
+                throw new NotFoundSilent("Not allowed field.");
             }
         }
 
@@ -146,7 +146,6 @@ class Image implements EntryPoint
 
         $response
             ->setHeader('Content-Disposition', 'inline;filename="' . $fileName . '"')
-            ->setHeader('Pragma', 'public')
             ->setHeader('Cache-Control', 'max-age=360000, must-revalidate')
             ->setHeader('Content-Length', (string) $fileSize)
             ->setHeader('Content-Security-Policy', "default-src 'self'");
@@ -175,7 +174,7 @@ class Image implements EntryPoint
         $filePath = $this->getAttachmentRepository()->getFilePath($attachment);
 
         if (!$this->fileManager->isFile($filePath)) {
-            throw new NotFound();
+            throw new NotFound("File not found.");
         }
 
         $fileType = $attachment->getType() ?? '';
@@ -239,8 +238,7 @@ class Image implements EntryPoint
         if ($originalWidth <= $width && $originalHeight <= $height) {
             $targetWidth = $originalWidth;
             $targetHeight = $originalHeight;
-        }
-        else {
+        } else {
             if ($originalWidth > $originalHeight) {
                 $targetWidth = $width;
                 $targetHeight = (int) ($originalHeight / ($originalWidth / $width));
@@ -333,8 +331,7 @@ class Image implements EntryPoint
             case 'image/webp':
                 try {
                     $sourceImage = imagecreatefromwebp($filePath);
-                }
-                catch (Throwable) {
+                } catch (Throwable) {
                     return null;
                 }
 

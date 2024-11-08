@@ -35,10 +35,11 @@ use Espo\ORM\Entity;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\QueryComposer\Util as QueryComposerUtil;
+use Espo\ORM\Type\RelationType;
 use RuntimeException;
 
 /**
- * Scans where-item to apply needed joins to a query builder.
+ * Scans where items.
  */
 class Scanner
 {
@@ -60,6 +61,62 @@ class Scanner
 
     public function __construct(private EntityManager $entityManager)
     {}
+
+    /**
+     * Check whether at least one has-many link appears in the where-clause.
+     *
+     * @since 8.5.0
+     */
+    public function hasRelatedMany(string $entityType, Item $item): bool
+    {
+        $type = $item->getType();
+        $attribute = $item->getAttribute();
+
+        if (in_array($type, $this->subQueryTypeList)) {
+            return false;
+        }
+
+        if (in_array($type, $this->nestingTypeList)) {
+            foreach ($item->getItemList() as $subItem) {
+                if ($this->hasRelatedMany($entityType, $subItem)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        if (!$attribute) {
+            return false;
+        }
+
+        $seed = $this->getSeed($entityType);
+
+
+        foreach (QueryComposerUtil::getAllAttributesFromComplexExpression($attribute) as $expr) {
+            if (!str_contains($expr, '.')) {
+                continue;
+            }
+
+            [$link,] = explode('.', $expr);
+
+            if (!$seed->hasRelation($link)) {
+                continue;
+            }
+
+            $isMany = in_array($seed->getRelationType($link), [
+                RelationType::HAS_MANY,
+                RelationType::MANY_MANY,
+                RelationType::HAS_CHILDREN,
+            ]);
+
+            if ($isMany) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * Apply needed joins to a query builder.
@@ -127,12 +184,6 @@ class Scanner
 
             if ($seed->hasRelation($link)) {
                 $queryBuilder->leftJoin($link);
-
-                if (
-                    in_array($seed->getRelationType($link), [Entity::HAS_MANY, Entity::MANY_MANY])
-                ) {
-                    $queryBuilder->distinct();
-                }
             }
 
             return;

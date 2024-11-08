@@ -1,8 +1,8 @@
-{{#unless optionList}}
+{{#unless optionDataList}}
     {{translate 'No Data'}}
 {{/unless}}
 
-{{#if optionList}}
+{{#if optionDataList}}
     <div class="margin-bottom-2x margin-top">
         <input
             type="text"
@@ -14,18 +14,21 @@
         >
     </div>
     <ul class="list-group list-group-panel array-add-list-group no-side-margin">
-    {{#each optionList}}
-        <li class="list-group-item clearfix" data-name="{{./this}}">
-            <input
-                class="cell form-checkbox form-checkbox-small"
-                type="checkbox"
-                data-value="{{./this}}"
-            >
-            <a role="button" tabindex="0" class="add text-bold" data-value="{{./this}}">
-                {{#if ../translatedOptions}}{{prop ../translatedOptions this}}{{else}}{{./this}}{{/if}}
-            </a>
-        </li>
-    {{/each}}
+        {{#each optionDataList}}
+            <li class="list-group-item clearfix" data-name="{{value}}">
+                <input
+                    class="cell form-checkbox form-checkbox-small"
+                    type="checkbox"
+                    data-value="{{value}}"
+                >
+                <a
+                    role="button"
+                    tabindex="0"
+                    class="add text-bold"
+                    data-value="{{value}}"
+                >{{label}}</a>
+            </li>
+        {{/each}}
     </ul>
 {{/if}}
 

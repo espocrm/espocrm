@@ -38,6 +38,8 @@ use ReflectionClass;
 use RuntimeException;
 
 /**
+ * @internal
+ *
  * @phpstan-type DefaultHandlerLoaderData array{
  *     className?: ?class-string<HandlerInterface>,
  *     params?: ?array<string, mixed>,
@@ -82,9 +84,10 @@ class DefaultHandlerLoader
     }
 
     /**
+     * @internal
      * @param DefaultHandlerLoaderData $data
      */
-    private function loadFormatter(array $data): ?FormatterInterface
+    public function loadFormatter(array $data): ?FormatterInterface
     {
         $formatterData = $data['formatter'] ?? null;
 
@@ -126,8 +129,7 @@ class DefaultHandlerLoader
 
             if (array_key_exists($name, $params)) {
                 $value = $params[$name];
-            }
-            else if ($parameter->isDefaultValueAvailable()) {
+            } else if ($parameter->isDefaultValueAvailable()) {
                 $value = $parameter->getDefaultValue();
             } else {
                 continue;

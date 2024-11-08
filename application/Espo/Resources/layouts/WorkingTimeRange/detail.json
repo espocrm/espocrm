@@ -11,10 +11,10 @@
             ],
             [
                 {"name": "timeRanges"},
-                {"name": "calendars"}
+                false
             ],
             [
-                false,
+                {"name": "calendars"},
                 {"name": "users"}
             ],
             [

@@ -29,12 +29,15 @@
 import $ from 'jquery';
 import Handlebars from 'handlebars';
 
+/**
+ * An autocomplete.
+ */
 class Autocomplete {
 
     /** @module ui/autocomplete */
 
     /**
-     * @typedef {Object & Record} module:ui/autocomplete~item
+     * @typedef {Object} module:ui/autocomplete~item
      * @property {string} value
      */
 
@@ -43,10 +46,10 @@ class Autocomplete {
      *     name?: string,
      *     forceHide?: boolean,
      *     lookup?: string[],
-     *     lookupFunction?: function (string): Promise<module:ui/autocomplete~item[]>,
+     *     lookupFunction?: function (string): Promise<Array<module:ui/autocomplete~item & Record>>,
      *     minChars?: Number,
-     *     formatResult?: function (module:ui/autocomplete~item): string,
-     *     onSelect?: function (module:ui/autocomplete~item): void,
+     *     formatResult?: function (module:ui/autocomplete~item & Record): string,
+     *     onSelect?: function (module:ui/autocomplete~item & Record): void,
      *     beforeRender?: function (HTMLElement): void,
      *     triggerSelectOnValidInput?: boolean,
      *     autoSelectFirst?: boolean,
@@ -62,6 +65,12 @@ class Autocomplete {
     constructor(element, options) {
         /** @private */
         this.$element = $(element);
+
+        this.$element.on('keydown', e => {
+            if (e.code === 'Tab' && !this.$element.val()) {
+                e.stopImmediatePropagation();
+            }
+        });
 
         const lookup = options.lookupFunction ?
             (query, done) => {
@@ -81,6 +90,8 @@ class Autocomplete {
                 return false;
             } :
             undefined;
+
+        const $modalBody = this.$element.closest('.modal-body');
 
         this.$element.autocomplete({
             beforeRender: $container => {
@@ -104,6 +115,8 @@ class Autocomplete {
             minChars: options.minChars || 0,
             noCache: true,
             autoSelectFirst: options.autoSelectFirst,
+            appendTo: $modalBody.length ? $modalBody : 'body',
+            forceFixPosition: true,
             formatResult: item => {
                 if (options.formatResult) {
                     return options.formatResult(item);
@@ -157,19 +170,32 @@ class Autocomplete {
             }
 
             this.$element.autocomplete('onFocus');
-
-            if (options.handleFocusMode === 3) {
-                this.$element.on('change', () => this.$element.val(''));
-            }
         });
+
+        if (options.handleFocusMode === 3) {
+            this.$element.on('change', () => this.$element.val(''));
+        }
     }
 
+    /**
+     * Dispose.
+     */
     dispose() {
         this.$element.autocomplete('dispose');
     }
 
+    /**
+     * Hide.
+     */
     hide() {
         this.$element.autocomplete('hide');
+    }
+
+    /**
+     * Clear.
+     */
+    clear() {
+        this.$element.autocomplete('clear');
     }
 }
 

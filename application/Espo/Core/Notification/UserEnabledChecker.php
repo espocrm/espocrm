@@ -30,21 +30,29 @@
 namespace Espo\Core\Notification;
 
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Entities\Preferences;
 
 class UserEnabledChecker
 {
     /** @var array<string, bool> */
     private $assignmentCache = [];
 
-    public function __construct(private EntityManager $entityManager)
-    {}
+    public function __construct(
+        private EntityManager $entityManager,
+        private Config $config,
+    ) {}
 
     public function checkAssignment(string $entityType, string $userId): bool
     {
+        if (!in_array($entityType, $this->config->get('assignmentNotificationsEntityList', []))) {
+            return false;
+        }
+
         $key = $entityType . '_' . $userId;
 
         if (!array_key_exists($key, $this->assignmentCache)) {
-            $preferences = $this->entityManager->getEntity('Preferences', $userId);
+            $preferences = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $userId);
 
             $isEnabled = false;
 

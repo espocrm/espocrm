@@ -30,6 +30,16 @@ import EnumFieldView from 'views/fields/enum';
 
 class EntityTypeFieldView extends EnumFieldView {
 
+    /**
+     * @type {Record<string, Record>}
+     * @protected
+     */
+    scopesMetadataDefs
+
+    /**
+     * @param {string} entityType
+     * @return {boolean}
+     */
     checkAvailability(entityType) {
         const defs = this.scopesMetadataDefs[entityType] || {};
 

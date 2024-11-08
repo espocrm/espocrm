@@ -47,6 +47,7 @@ class Config extends BaseConfig
      * @var string[]
      */
     private $portalParamList = [
+        'applicationName',
         'companyLogoId',
         'tabList',
         'quickCreateList',
@@ -107,6 +108,10 @@ class Config extends BaseConfig
         }
 
         $this->portalParamsSet = true;
+
+        if (empty($data['applicationName'])) {
+            unset($data['applicationName']);
+        }
 
         if (empty($data['language'])) {
             unset($data['language']);

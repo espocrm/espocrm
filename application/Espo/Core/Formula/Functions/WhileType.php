@@ -44,11 +44,9 @@ class WhileType extends BaseFunction
         while ($this->evaluate($args[0])) {
             try {
                 $this->evaluate($args[1]);
-            }
-            catch (BreakLoop) {
+            } catch (BreakLoop) {
                 break;
-            }
-            catch (ContinueLoop) {
+            } catch (ContinueLoop) {
                 continue;
             }
         }

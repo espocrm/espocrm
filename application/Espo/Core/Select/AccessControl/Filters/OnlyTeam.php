@@ -75,17 +75,32 @@ class OnlyTeam implements Filter
             $key2 = $relationDefs->getForeignMidKey();
 
             $subQueryBuilder->leftJoin($middleEntityType, 'assignedUsersMiddle', [
-                "assignedUsersMiddle.{$key1}:" => 'id',
+                "assignedUsersMiddle.$key1:" => 'id',
                 'assignedUsersMiddle.deleted' => false,
             ]);
 
-            $orGroup["assignedUsersMiddle.{$key2}"] = $this->user->getId();
-        }
-        else if ($this->fieldHelper->hasAssignedUserField()) {
+            $orGroup["assignedUsersMiddle.$key2"] = $this->user->getId();
+        } else if ($this->fieldHelper->hasAssignedUserField()) {
             $orGroup['assignedUserId'] = $this->user->getId();
-        }
-        else if ($this->fieldHelper->hasCreatedByField()) {
+        } else if ($this->fieldHelper->hasCreatedByField()) {
             $orGroup['createdById'] = $this->user->getId();
+        }
+
+        if ($this->fieldHelper->hasCollaboratorsField()) {
+            $relationDefs = $this->defs
+                ->getEntity($this->entityType)
+                ->getRelation('collaborators');
+
+            $middleEntityType = ucfirst($relationDefs->getRelationshipName());
+            $key1 = $relationDefs->getMidKey();
+            $key2 = $relationDefs->getForeignMidKey();
+
+            $subQueryBuilder->leftJoin($middleEntityType, 'collaboratorsMiddle', [
+                "collaboratorsMiddle.$key1:" => 'id',
+                'collaboratorsMiddle.deleted' => false,
+            ]);
+
+            $orGroup["collaboratorsMiddle.$key2"] = $this->user->getId();
         }
 
         $subQuery = $subQueryBuilder

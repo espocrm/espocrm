@@ -53,11 +53,30 @@ class UrlMultipleFieldView extends ArrayFieldView {
             value = this.strip(value);
         }
 
-        if (value === decodeURI(value)) {
-            value = encodeURI(value);
+        try {
+            if (value === decodeURI(value)) {
+                value = encodeURI(value);
+            }
+        } catch (e) {
+            console.warn(`Malformed URI ${value}.`);
         }
 
         super.addValueFromUi(value);
+    }
+
+    /**
+     * @private
+     * @param {string} value
+     * @return {string}
+     */
+    decodeURI(value) {
+        try {
+            return decodeURI(value);
+        } catch (e) {
+            console.warn(`Malformed URI ${value}.`);
+
+            return value;
+        }
     }
 
     /**
@@ -84,11 +103,11 @@ class UrlMultipleFieldView extends ArrayFieldView {
 
     getValueForDisplay() {
         /** @type {JQuery[]} */
-        let $list = this.selected.map(value => {
+        const $list = this.selected.map(value => {
             return $('<a>')
                 .attr('href', this.prepareUrl(value))
                 .attr('target', '_blank')
-                .text(decodeURI(value));
+                .text(this.decodeURI(value));
         });
 
         return $list
@@ -102,16 +121,16 @@ class UrlMultipleFieldView extends ArrayFieldView {
     }
 
     getItemHtml(value) {
-        let html = super.getItemHtml(value);
+        const html = super.getItemHtml(value);
 
-        let $item = $(html);
+        const $item = $(html);
 
         $item.find('span.text').html(
             $('<a>')
                 .attr('href', this.prepareUrl(value))
                 .css('user-drag', 'none')
                 .attr('target', '_blank')
-                .text(decodeURI(value))
+                .text(this.decodeURI(value))
         );
 
         return $item.get(0).outerHTML;

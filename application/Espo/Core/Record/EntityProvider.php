@@ -35,6 +35,8 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
+use const E_USER_DEPRECATED;
+
 /**
  * Fetches entities.
  *
@@ -55,15 +57,53 @@ class EntityProvider
      * @return T
      * @throws NotFound A record not found.
      * @throws Forbidden Read is forbidden for a current user.
-     * @since 8.1.0
+     * @since 8.3.0
      * @noinspection PhpDocSignatureInspection
      */
-    public function get(string $className, string $id): Entity
+    public function getByClass(string $className, string $id): Entity
     {
         $entity = $this->entityManager
             ->getRDBRepositoryByClass($className)
             ->getById($id);
 
+        return $this->processGet($entity);
+    }
+
+    /**
+     * Fetch an entity by an entity type.
+     *
+     * @return Entity
+     * @throws NotFound
+     * @throws Forbidden
+     * @since 8.5.0
+     */
+    public function get(string $entityType, string $id): Entity
+    {
+        if (!$this->entityManager->hasRepository($entityType)) {
+            // @todo Remove in v9.0.
+            trigger_error(
+                'EntityProvider::get should receive an entity type, not a class name.',
+                E_USER_DEPRECATED
+            );
+            /** @phpstan-ignore-next-line  */
+            return $this->getByClass($entityType, $id);
+        }
+
+        $entity = $this->entityManager->getEntityById($entityType, $id);
+
+        return $this->processGet($entity);
+    }
+
+    /**
+     * @template T of Entity
+     * @param ?T $entity
+     * @return T
+     * @throws Forbidden
+     * @throws NotFound
+     * @noinspection PhpDocSignatureInspection
+     */
+    private function processGet(?Entity $entity): Entity
+    {
         if (!$entity) {
             throw new NotFound();
         }

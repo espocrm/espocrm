@@ -7,11 +7,21 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Not Started", "Started", "Completed", "Canceled", "Deferred"],
+            "options": [
+                "Not Started",
+                "Started",
+                "Completed",
+                "Canceled",
+                "Deferred"
+            ],
             "style": {
-                "Completed": "success"
+                "Completed": "success",
+                "Started": "primary",
+                "Canceled": "info"
             },
             "default": "Not Started",
+            "displayAsLabel": true,
+            "labelType": "state",
             "audited": true,
             "fieldManagerAdditionalParamList": [
                 {
@@ -24,7 +34,12 @@
         },
         "priority": {
             "type": "enum",
-            "options": ["Low", "Normal", "High", "Urgent"],
+            "options": [
+                "Low",
+                "Normal",
+                "High",
+                "Urgent"
+            ],
             "default": "Normal",
             "displayAsLabel": true,
             "style": {
@@ -60,21 +75,26 @@
             "type": "bool",
             "readOnly": true,
             "notStorable": true,
+            "orderDisabled": true,
             "view": "crm:views/task/fields/is-overdue",
             "utility": true
         },
         "reminders": {
             "type": "jsonArray",
             "notStorable": true,
+            "orderDisabled": true,
             "view": "crm:views/meeting/fields/reminders",
             "dateField": "dateEnd",
             "validatorClassNameList": [
                 "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\Valid",
                 "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\MaxCount"
-            ]
+            ],
+            "duplicateIgnore": true
         },
         "description": {
-            "type": "text"
+            "type": "text",
+            "preview": true,
+            "attachmentField": "attachments"
         },
         "parent": {
             "type": "linkParent",
@@ -89,6 +109,14 @@
             "type": "link",
             "readOnly": true,
             "customizationReadOnlyDisabled": true
+        },
+        "originalEmail": {
+            "type": "link",
+            "notStorable": true,
+            "entity": "Email",
+            "utility": true,
+            "orderDisabled": true,
+            "directAccessDisabled": true
         },
         "createdAt": {
             "type": "datetime",
@@ -165,7 +193,8 @@
         "email": {
             "type": "belongsTo",
             "entity": "Email",
-            "foreign": "tasks"
+            "foreign": "tasks",
+            "noForeignName": true
         }
     },
     "collection": {

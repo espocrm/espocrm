@@ -396,9 +396,21 @@
         },
         {
             "fileMatch": [
+                "*/Resources/metadata/app/reactions.json"
+            ],
+            "url": "./schema/metadata/app/reactions.json"
+        },
+        {
+            "fileMatch": [
                 "*/Resources/metadata/app/rebuild.json"
             ],
             "url": "./schema/metadata/app/rebuild.json"
+        },
+        {
+            "fileMatch": [
+                "*/Resources/metadata/app/record.json"
+            ],
+            "url": "./schema/metadata/app/record.json"
         },
         {
             "fileMatch": [

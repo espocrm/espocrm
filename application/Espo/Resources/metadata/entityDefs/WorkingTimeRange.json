@@ -12,7 +12,9 @@
         "dateEnd": {
             "type": "date",
             "required": true,
-            "view": "views/working-time-range/fields/date-end"
+            "view": "views/working-time-range/fields/date-end",
+            "after": "dateStart",
+            "afterOrEqual": true
         },
         "type": {
             "type": "enum",
@@ -31,11 +33,13 @@
             "type": "text"
         },
         "calendars": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "tooltip": true
         },
         "users": {
             "type": "linkMultiple",
-            "view": "views/working-time-range/fields/users"
+            "view": "views/working-time-range/fields/users",
+            "tooltip": true
         },
         "createdAt": {
             "type": "datetime",

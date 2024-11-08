@@ -16,5 +16,8 @@
     "boolFilterClassNameMap": {
         "actual": "Espo\\Modules\\Crm\\Classes\\Select\\Task\\BoolFilters\\Actual",
         "completed": "Espo\\Modules\\Crm\\Classes\\Select\\Task\\BoolFilters\\Completed"
+    },
+    "ordererClassNameMap": {
+        "dateUpcoming": "Espo\\Modules\\Crm\\Classes\\Select\\Task\\Orderers\\DateUpcoming"
     }
 }

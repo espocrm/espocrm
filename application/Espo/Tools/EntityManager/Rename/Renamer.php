@@ -30,6 +30,7 @@
 namespace Espo\Tools\EntityManager\Rename;
 
 use Espo\Core\Console\IO;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Util;
@@ -193,10 +194,6 @@ class Renamer
 
         if ($this->nameUtil->nameIsUsed($newName)) {
             return Result::createFail(FailReason::NAME_USED);
-        }
-
-        if (!$this->fileManager->isFile($this->getClassFilePath(ClassType::ENTITY, $entityType))) {
-            return Result::createFail(FailReason::NOT_CUSTOM);
         }
 
         if (!$this->fileManager->isFile($this->getClassFilePath(ClassType::CONTROLLER, $entityType))) {
@@ -378,8 +375,7 @@ class Renamer
 
         try {
             $this->entityManager->getSqlExecutor()->execute($sql);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $msg = $e->getMessage();
 
             $this->log->error("Entity-rename: Rename relationship column failed: {$msg}.");
@@ -503,10 +499,8 @@ class Renamer
             ->getEntity($entityType)
             ->getField($field);
 
-        if ($defs->getType() === 'linkParent') {
+        if ($defs->getType() === FieldType::LINK_PARENT) {
             $this->renameInLinkParentField($entityType, $defs->getName(), $from, $to);
-
-            return;
         }
     }
 
@@ -586,10 +580,8 @@ class Renamer
             ->getEntity($entityType)
             ->getField($field);
 
-        if ($defs->getType() === 'linkParent') {
+        if ($defs->getType() === FieldType::LINK_PARENT) {
             $this->changeValuesInDbFieldsFieldLinkParent($entityType, $defs->getName(), $from, $to);
-
-            return;
         }
     }
 
@@ -612,8 +604,7 @@ class Renamer
 
         try {
             $this->entityManager->getQueryExecutor()->execute($query);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $msg = $e->getMessage();
 
             $this->log->error("Entity-rename: Update values in link-parent field {$entityType}.{$field}: {$msg}.");

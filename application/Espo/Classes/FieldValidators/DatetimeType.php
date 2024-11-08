@@ -47,8 +47,7 @@ class DatetimeType extends DateType
 
         try {
             DateTime::fromString($value);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 

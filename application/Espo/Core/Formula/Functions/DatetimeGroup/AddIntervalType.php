@@ -88,8 +88,7 @@ abstract class AddIntervalType extends BaseFunction implements Di\DateTimeAware
 
         try {
             $dateTime = new DateTime($dateTimeString);
-        }
-        catch (Exception $e) {
+        } catch (Exception) {
             $this->log('bad date-time value passed', 'warning');
 
             return null;
@@ -101,8 +100,7 @@ abstract class AddIntervalType extends BaseFunction implements Di\DateTimeAware
 
         if ($isTime) {
             return $dateTime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
-        }
-        else {
+        } else {
             return $dateTime->format(DateTimeUtil::SYSTEM_DATE_FORMAT);
         }
     }

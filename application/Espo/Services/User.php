@@ -156,8 +156,7 @@ class User extends Record
             }
 
             $this->getPasswordService()->sendAccessInfoForNewUser($user);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log->error("Could not send user access info. " . $e->getMessage());
         }
 
@@ -192,8 +191,7 @@ class User extends Record
                 if ($user->isActive() && !empty($data->sendAccessInfo)) {
                     $this->sendPassword($user, $newPassword);
                 }
-            }
-            catch (Exception) {}
+            } catch (Exception) {}
         }
 
         return $user;
@@ -257,14 +255,6 @@ class User extends Record
         }
 
         parent::restoreDeleted($id);
-
-        $entity = $this->getRepository()->getById($id);
-
-        if ($entity) {
-            $entity->set('deleteId', '0');
-
-            $this->getRepository()->save($entity);
-        }
     }
 
     private function createPasswordChecker(): PasswordChecker

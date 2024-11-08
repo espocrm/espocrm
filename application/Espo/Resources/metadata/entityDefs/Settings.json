@@ -155,6 +155,9 @@
                 ".",
                 ",",
                 "'"
+            ],
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\Settings\\ThousandSeparator\\Valid"
             ]
         },
         "decimalMark": {
@@ -568,7 +571,8 @@
         },
         "massEmailMaxPerHourCount": {
             "type": "int",
-            "min": 1
+            "min": 1,
+            "required": true
         },
         "massEmailMaxPerBatchCount": {
             "type": "int",
@@ -703,6 +707,9 @@
         "phoneNumberInternational": {
             "type": "bool"
         },
+        "phoneNumberExtensions": {
+            "type": "bool"
+        },
         "phoneNumberPreferredCountryList": {
             "type": "multiEnum",
             "view": "views/settings/fields/phone-number-preferred-country-list"
@@ -726,10 +733,6 @@
         },
         "cleanupDeletedRecords": {
             "type": "bool",
-            "tooltip": true
-        },
-        "addressCountryList": {
-            "type": "multiEnum",
             "tooltip": true
         },
         "addressCityList": {
@@ -882,13 +885,47 @@
             "type": "varchar",
             "tooltip": true
         },
+        "oidcAuthorizationPrompt": {
+            "type": "enum",
+            "options": [
+                "none",
+                "consent",
+                "login",
+                "select_account"
+            ]
+        },
         "pdfEngine": {
             "type": "enum",
             "view": "views/settings/fields/pdf-engine"
         },
-        "mapProvider": {
-            "type": "enum",
-            "view": "views/settings/fields/map-provider"
+        "quickSearchFullTextAppendWildcard": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "authIpAddressCheck": {
+            "type": "bool"
+        },
+        "authIpAddressWhitelist": {
+            "type": "array",
+            "allowCustomOptions": true,
+            "noEmptyString": true,
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\Settings\\AuthIpAddressWhitelist\\Valid"
+            ],
+            "tooltip": true
+        },
+        "authIpAddressCheckExcludedUsers": {
+            "type": "linkMultiple",
+            "entity": "User",
+            "tooltip": true
+        },
+        "availableReactions": {
+            "type": "array",
+            "maxCount": 9,
+            "view": "views/settings/fields/available-reactions",
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\Settings\\AvailableReactions\\Valid"
+            ]
         }
     }
 }

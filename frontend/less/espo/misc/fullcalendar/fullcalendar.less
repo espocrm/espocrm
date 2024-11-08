@@ -12,16 +12,20 @@
 }
 
 .date-title h4 {
-    margin: 10px 0 0;
+    margin: var(--10px) 0 0;
 }
 
 .dashlet-body div.calendar-container {
     height: 100% !important;
 }
 
+.calendar.fc {
+    user-select: none;
+}
+
 //-----
 
-@media screen and (max-width: (@screen-sm-min - 1px)) {
+@media screen and (max-width: @screen-xs-max) {
     .fc {
         font-size: 85%;
     }
@@ -29,6 +33,25 @@
 
 .fc {
     overflow: hidden;
+
+    @supports not selector(::-webkit-scrollbar) {
+        .fc-scroller {
+            scrollbar-width: thin;
+        }
+
+        .fc-timegrid {
+            table.fc-col-header th:last-child,
+            table.fc-scrollgrid-sync-table td:last-child {
+                .fc-scrollgrid-sync-inner {
+                    border-right: var(--1px) solid var(--calendar-border);
+                }
+            }
+
+            table[role="presentation"] td.fc-day:last-child > div.fc-timegrid-col-frame {
+                border-right: var(--1px) solid var(--calendar-border);
+            }
+        }
+    }
 
     th {
         font-weight: normal;
@@ -54,7 +77,7 @@
 
         .fc-event {
             border-radius: var(--border-radius) !important;
-            min-height: 19px !important; // ?
+            min-height: var(--19px) !important; // ?
         }
 
         a.fc-col-header-cell-cushion,
@@ -115,21 +138,21 @@
     .fc-timegrid-now-indicator-line {
         opacity: 0.9;
 
-        height: 2px;
-        border-top: 1px solid var(--brand-danger);
+        height: var(--2px);
+        border-top: var(--1px) solid var(--brand-danger);
         border-bottom-width: 0;
         background-color: var(--brand-danger);
 
         &:before {
             content: "";
             position: inherit;
-            left: -4px;
+            left: var(--minus-4px);
             border-radius: 50%;
-            height: 8px;
-            width: 8px;
+            height: var(--8px);
+            width: var(--8px);
             background-color: var(--brand-danger);
             display: inline-block;
-            top: -4px;
+            top: var(--minus-4px);
             opacity: 0.9;
         }
     }
@@ -160,7 +183,7 @@
             cursor: default;
         }
 
-        padding-left: 4px;
+        padding-left: var(--4px);
     }
 
     border-style: none;
@@ -185,7 +208,7 @@
     }
 
     tr[role="presentation"]:first-child:not(:last-child) > td {
-        border-bottom: 1px solid var(--calendar-border);
+        border-bottom: var(--1px) solid var(--calendar-border);
     }
 
     [role='row']:last-of-type td {

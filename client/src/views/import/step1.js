@@ -201,9 +201,9 @@ class Step1ImportView extends View {
                     'update',
                 ],
                 translatedOptions: {
-                    create: this.translate('Create Only', 'labels', 'Admin'),
-                    createAndUpdate: this.translate('Create and Update', 'labels', 'Admin'),
-                    update: this.translate('Update Only', 'labels', 'Admin'),
+                    create: this.translate('Create Only', 'labels', 'Import'),
+                    createAndUpdate: this.translate('Create and Update', 'labels', 'Import'),
+                    update: this.translate('Update Only', 'labels', 'Import'),
                 },
             },
         });
@@ -673,7 +673,7 @@ class Step1ImportView extends View {
             label = label.replace(new RegExp(item, 'g'), value);
         }
 
-        return format + ' - ' + label;
+        return format + ' · ' + label;
     }
 
     getDateFormatDataList() {

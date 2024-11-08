@@ -269,8 +269,7 @@ class PhoneNumber extends Database implements
 
             if (is_string($number) && !str_starts_with($number, self::ERASED_PREFIX)) {
                 $numeric = preg_replace('/[^0-9]/', '', $number);
-            }
-            else {
+            } else {
                 $numeric = null;
             }
 

@@ -4,13 +4,20 @@
         "listed": true
     },
     "clearCache": {
-        "listed": true
+        "listed": true,
+        "noSystemUser": true
     },
     "rebuild": {
-        "listed": true
+        "listed": true,
+        "noSystemUser": true,
+        "allowedFlags": [
+            "hard",
+            "y"
+        ]
     },
     "updateAppTimestamp": {
-        "listed": true
+        "listed": true,
+        "noSystemUser": true
     },
     "appInfo": {
         "listed": true
@@ -25,10 +32,16 @@
         "listed": true
     },
     "runJob": {
-        "listed": true
+        "listed": true,
+        "allowedOptions": [
+            "job",
+            "targetId",
+            "targetType"
+        ]
     },
     "version": {
-        "listed": true
+        "listed": true,
+        "noSystemUser": true
     },
     "createAdminUser": {
         "className": "Espo\\Classes\\ConsoleCommands\\CreateAdminUser",
@@ -48,6 +61,15 @@
     },
     "checkFilePermissions": {
         "className": "Espo\\Classes\\ConsoleCommands\\CheckFilePermissions",
-        "listed": true
+        "listed": true,
+        "noSystemUser": true
+    },
+    "migrate": {
+        "listed": true,
+        "noSystemUser": true
+    },
+    "migrationVersionStep": {
+        "listed": false,
+        "noSystemUser": true
     }
 }

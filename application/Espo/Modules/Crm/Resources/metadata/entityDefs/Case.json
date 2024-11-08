@@ -15,10 +15,14 @@
             "default": "New",
             "style": {
                 "Closed": "success",
-                "Duplicate": "danger",
-                "Rejected": "danger"
+                "Assigned": "primary",
+                "Duplicate": "info",
+                "Pending": "warning",
+                "Rejected": "info"
             },
             "audited": true,
+            "displayAsLabel": true,
+            "labelType": "state",
             "fieldManagerAdditionalParamList": [
                 {
                     "name": "notActualOptions",
@@ -47,7 +51,9 @@
             "customizationOptionsReferenceDisabled": true
         },
         "description": {
-            "type": "text"
+            "type": "text",
+            "preview": true,
+            "attachmentField": "attachments"
         },
         "account": {
             "type": "link"
@@ -72,6 +78,7 @@
         "originalEmail": {
             "type": "link",
             "notStorable": true,
+            "orderDisabled": true,
             "entity": "Email",
             "customizationDisabled": true,
             "layoutAvailabilityList": [],

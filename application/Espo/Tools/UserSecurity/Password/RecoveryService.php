@@ -239,8 +239,7 @@ class RecoveryService
 
         try {
             $this->send($request->getRequestId(), $emailAddress, $user);
-        }
-        catch (SendingError $e) {
+        } catch (SendingError $e) {
             $message = "Email sending error. " . $e->getMessage();
 
             $this->log->error($message);
@@ -323,8 +322,7 @@ class RecoveryService
 
         try {
             $this->send($entity->getRequestId(), $emailAddress, $user);
-        }
-        catch (SendingError $e) {
+        } catch (SendingError $e) {
             $this->log->error("Email sending error. " . $e->getMessage());
 
             throw new Error("Email sending error.");

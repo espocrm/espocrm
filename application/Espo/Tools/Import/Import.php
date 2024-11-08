@@ -64,6 +64,7 @@ use Exception;
 use LogicException;
 use PDOException;
 
+
 class Import
 {
     private const DEFAULT_DELIMITER = ',';
@@ -93,6 +94,7 @@ class Import
         private Log $log,
         private FieldValidationManager $fieldValidationManager,
         private PhoneNumberSanitizer $phoneNumberSanitizer
+
     ) {
         $this->params = Params::create();
     }
@@ -240,8 +242,7 @@ class Import
             }
 
             $import->set('status', ImportEntity::STATUS_IN_PROCESS);
-        }
-        else {
+        } else {
             /** @var ImportEntity $import */
             $import = $this->entityManager->getNewEntity(ImportEntity::ENTITY_TYPE);
 
@@ -256,8 +257,7 @@ class Import
                 $params = $params->withIdleMode(false);
 
                 $import->set('status', ImportEntity::STATUS_STANDBY);
-            }
-            else if ($params->isIdleMode()) {
+            } else if ($params->isIdleMode()) {
                 $import->set('status', ImportEntity::STATUS_PENDING);
             }
 
@@ -367,8 +367,7 @@ class Import
                     'isDuplicate' => $rowResult['isDuplicate'] ?? false,
                 ]);
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log->error('Import: ' . $e->getMessage());
 
             $import->set('status', ImportEntity::STATUS_FAILED);
@@ -487,8 +486,7 @@ class Import
                     $entity->set('id', $whereClause['id']);
                 }
             }
-        }
-        else {
+        } else {
             $entity = $this->entityManager->getNewEntity($this->entityType);
         }
 
@@ -500,6 +498,7 @@ class Import
 
         $entity->set($params->getDefaultValues());
 
+        // Values are not supposed to be sanitized with the field Sanitizer.
         $valueMap = $this->prepareRowValueMap($attributeList, $row);
 
         $failureList = [];
@@ -516,8 +515,7 @@ class Import
 
             try {
                 $this->processRowItem($entity, $attribute, $value, $valueMap);
-            }
-            catch (ValidationError $e) {
+            } catch (ValidationError $e) {
                 $failureList[] = $e->getFailure();
             }
         }
@@ -593,15 +591,20 @@ class Import
             } else {
                 $result['isUpdated'] = true;
             }
-        }
-        catch (Exception $e) {
-            $this->log->error("Import: " . $e->getMessage());
-
+        } catch (Exception $e) {
             $errorType = null;
 
             if ((int) $e->getCode() === 23000 && $e instanceof PDOException) {
                 $errorType = ImportError::TYPE_INTEGRITY_CONSTRAINT_VIOLATION;
             }
+
+            $msg = "Import: " . $e->getMessage();
+
+            if (!$errorType && !$e->getMessage()) {
+                $msg .= "; {$e->getFile()}, {$e->getLine()}";
+            }
+
+            $this->log->error($msg);
 
             $this->createError(
                 $errorType,
@@ -715,7 +718,9 @@ class Import
 
         if ($attribute === 'id') {
             if ($action === Params::ACTION_CREATE) {
-                $entity->set('id', $value);
+                if ($value !== '') {
+                    $entity->set('id', $value);
+                }
             }
 
             return;
@@ -940,6 +945,10 @@ class Import
 
                 return $value;
             }
+
+            if ($fieldType === FieldType::URL) {
+                $value = self::encodeUrl($value);
+            }
         }
 
         switch ($type) {
@@ -1020,7 +1029,7 @@ class Import
                     return Json::decode($value);
                 }
 
-                return explode(',', $value);
+                return array_map(fn ($it) => trim($it), explode(',', $value));
         }
 
         return $this->prepareAttributeValue($entity, $attribute, $value);
@@ -1359,6 +1368,18 @@ class Import
                 $this->processForeignAttribute($entity, $attribute);
             }
         }
+    }
+
+    private static function encodeUrl(string $string): string
+    {
+        /** @noinspection RegExpRedundantEscape */
+        $result = preg_replace_callback(
+            "/[^-\._~:\/\?#\\[\\]@!\$&'\(\)\*\+,;=]+/",
+            fn ($match) => rawurlencode($match[0]),
+            $string
+        );
+
+        return $result ?? $string;
     }
 
     /**

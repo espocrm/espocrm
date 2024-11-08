@@ -40,7 +40,6 @@ use DateTimeZone;
 use Exception;
 use RuntimeException;
 
-
 /**
  * Util for a date-time formatting and conversion.
  * Available as 'dateTime' service.
@@ -67,8 +66,7 @@ class DateTime
 
         try {
             $this->timezone = new DateTimeZone($timeZone ?? 'UTC');
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
     }
@@ -144,8 +142,7 @@ class DateTime
 
         try {
             $tz = $timezone ? new DateTimeZone($timezone) : $this->timezone;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -167,8 +164,7 @@ class DateTime
     {
         try {
             $tz = $timezone ? new DateTimeZone($timezone) : $this->timezone;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
 
@@ -191,8 +187,7 @@ class DateTime
     {
         try {
             $tz = $timezone ? new DateTimeZone($timezone) : $this->timezone;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
 

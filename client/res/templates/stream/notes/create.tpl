@@ -9,10 +9,15 @@
         {{{avatar}}}
     </div>
     <div class="stream-head-text-container">
-        {{#if statusText}}<span class="label label-{{statusStyle}}">{{statusText}}</span>{{/if}}
-        <span class="text-muted message">{{{message}}}</span>
+        {{#if iconHtml}}{{{iconHtml}}}{{/if}}<span class="text-muted message">{{{message}}}</span>
     </div>
 </div>
+
+{{#if statusText}}
+    <div class="stream-post-container">
+        <span class="label label-state label-{{statusStyle}}">{{statusText}}</span>
+    </div>
+{{/if}}
 
 <div class="stream-date-container">
     <a class="text-muted small" href="#Note/view/{{model.id}}">{{{createdAt}}}</a>

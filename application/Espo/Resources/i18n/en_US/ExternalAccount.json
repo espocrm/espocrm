@@ -5,6 +5,8 @@
         "Disconnected": "Disconnected",
         "Connected": "Connected"
     },
-    "help": {
+    "help": {},
+    "messages": {
+        "externalAccountNoConnectDisabled": "External account for integration '{integration}' has been disabled due not being able to connect."
     }
 }

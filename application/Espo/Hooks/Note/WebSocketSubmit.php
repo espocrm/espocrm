@@ -29,11 +29,17 @@
 
 namespace Espo\Hooks\Note;
 
+use Espo\Core\Hook\Hook\AfterSave;
+use Espo\Entities\Note;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Config;
 use Espo\Core\WebSocket\Submission as WebSocketSubmission;
+use Espo\ORM\Repository\Option\SaveOptions;
 
-class WebSocketSubmit
+/**
+ * @implements AfterSave<Note>
+ */
+class WebSocketSubmit implements AfterSave
 {
     public static int $order = 20;
 
@@ -42,32 +48,29 @@ class WebSocketSubmit
         private Config $config
     ) {}
 
-    public function afterSave(Entity $entity): void
+    public function afterSave(Entity $entity, SaveOptions $options): void
     {
         if (!$this->config->get('useWebSocket')) {
             return;
         }
 
-        $parentId = $entity->get('parentId');
-        $parentType = $entity->get('parentType');
+        $parentId = $entity->getParentId();
+        $parentType = $entity->getParentType();
 
-        if (!$parentId) {
-            return;
-        }
-
-        if (!$parentType) {
+        if (!$parentId || !$parentType) {
             return;
         }
 
         $data = (object) [
-            'createdById' => $entity->get('createdById'),
+            'createdById' => $entity->getCreatedById(),
         ];
 
         if (!$entity->isNew()) {
             $data->noteId = $entity->getId();
+            $data->pin = $entity->isAttributeChanged('isPinned');
         }
 
-        $topic = "streamUpdate.{$parentType}.{$parentId}";
+        $topic = "streamUpdate.$parentType.$parentId";
 
         $this->webSocketSubmission->submit($topic, null, $data);
     }

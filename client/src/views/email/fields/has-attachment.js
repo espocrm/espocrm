@@ -26,44 +26,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/has-attachment', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
+
+export default class extends BaseFieldView {
+
+    listTemplate = 'email/fields/has-attachment/detail'
+    detailTemplate = 'email/fields/has-attachment/detail'
+
+    data() {
+        const data = super.data();
+
+        data.isSmall = this.mode === this.MODE_LIST;
+
+        return data;
+    }
+
+    setup() {
+        super.setup();
+
+        this.addActionHandler('show', e => {
+            e.stopPropagation();
+
+            this.show();
+        });
+    }
 
     /**
-     * @class
-     * @name Class
-     * @extends module:views/fields/base
-     * @memberOf module:views/email/fields/has-attachment
+     * @private
      */
-    return Dep.extend(/** @lends module:views/email/fields/has-attachment.Class# */{
+    show() {
+        Espo.Ui.notify(' ... ');
 
-        listTemplate: 'email/fields/has-attachment/detail',
-        detailTemplate: 'email/fields/has-attachment/detail',
+        this.createView('dialog', 'views/email/modals/attachments', {model: this.model})
+            .then(view => {
+                view.render();
 
-        events: {
-            'click [data-action="show"]': function (e) {
-                e.stopPropagation();
-
-                this.show();
-            },
-        },
-
-        data: function () {
-            let data = Dep.prototype.data.call(this);
-
-            data.isSmall = this.mode === this.MODE_LIST;
-
-            return data;
-        },
-
-        show: function () {
-            Espo.Ui.notify(' ... ');
-
-            this.createView('dialog', 'views/email/modals/attachments', {model: this.model})
-                .then(view => {
-                    view.render();
-
-                    Espo.Ui.notify(false);
-                });
-        },
-    });
-});
+                Espo.Ui.notify(false);
+            });
+    }
+}

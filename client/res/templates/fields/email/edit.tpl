@@ -29,7 +29,7 @@
                 data-placement="top"
                 title="{{translate 'Opted Out' scope='EmailAddress'}}"
             >
-                <span class="fa fa-ban{{#unless optOut}} text-muted{{/unless}}"></span>
+                <span class="fas fa-ban{{#unless optOut}} text-muted{{/unless}}"></span>
             </button>
             <button
                 class="btn btn-default btn-icon radius-right email-property{{#if invalid}} active{{/if}}"
@@ -40,7 +40,7 @@
                 data-placement="top"
                 title="{{translate 'Invalid' scope='EmailAddress'}}"
             >
-                <span class="fa fa-exclamation-circle{{#unless invalid}} text-muted{{/unless}}"></span>
+                <span class="fas fa-exclamation-circle{{#unless invalid}} text-muted{{/unless}}"></span>
             </button>
             <button
                 class="btn btn-link btn-icon hidden"
@@ -58,4 +58,4 @@
 {{/each}}
 </div>
 
-<button class="btn btn-default btn-icon" type="button" data-action="addEmailAddress"><span class="fa fa-plus"></span></button>
+<button class="btn btn-default btn-icon" type="button" data-action="addEmailAddress"><span class="fas fa-plus"></span></button>

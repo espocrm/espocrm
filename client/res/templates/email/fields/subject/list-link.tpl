@@ -4,15 +4,16 @@
         role="button"
         tabindex="0"
         data-action="showAttachments"
+        class="text-muted"
     ><span
-        class="fas fa-paperclip small text-muted"
+        class="fas fa-paperclip small"
         title="{{translate 'hasAttachment' category='fields' scope='Email'}}"
     ></span></a>
 </span>
 {{/if}}
 <a
     href="#{{scope}}/view/{{model.id}}"
-    class="link{{#if isImportant}} text-warning{{/if}}{{#if inTrash}} text-muted{{/if}}{{#unless isRead}} text-bold{{/unless}}"
+    class="link {{#if style}}text-{{style}}{{/if}} {{#unless isRead}} text-bold {{/unless}}"
     data-id="{{model.id}}"
     title="{{value}}"
 >{{value}}</a>

@@ -1,6 +1,7 @@
 {
     "stylesheet": "client/css/espo/hazyblue.css",
     "stylesheetIframe": "client/css/espo/hazyblue-iframe.css",
+    "logo": "client/img/logo.svg",
     "textColor": "#333",
     "chartGridColor": "#ddd",
     "chartTickColor": "#e8eced",

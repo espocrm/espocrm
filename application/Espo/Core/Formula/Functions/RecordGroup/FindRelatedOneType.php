@@ -116,8 +116,7 @@ class FindRelatedOneType extends BaseFunction implements
             if (is_null($order)) {
                 $order = $metadata->get(['entityDefs', $entityType, 'collection', 'order']) ?? 'ASC';
             }
-        }
-        else {
+        } else {
             $order = $order ?? 'ASC';
         }
 
@@ -177,8 +176,7 @@ class FindRelatedOneType extends BaseFunction implements
                 $foreignLink . 'Id' => $entity->getId(),
                 $foreignLink . 'Type' => $entity->getEntityType(),
             ]);
-        }
-        else {
+        } else {
             $queryBuilder
                 ->join($foreignLink)
                 ->where([

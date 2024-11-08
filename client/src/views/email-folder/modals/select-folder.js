@@ -26,71 +26,126 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-folder/modals/select-folder', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+export default class extends ModalView {
 
-        cssName: 'select-folder',
+    template = 'email-folder/modals/select-folder'
 
-        template: 'email-folder/modals/select-folder',
+    cssName = 'select-folder'
+    backdrop = true
 
-        fitHeight: true,
+    /** @const */
+    FOLDER_ALL = 'all'
+    /** @const */
+    FOLDER_INBOX = 'inbox'
+    /** @const */
+    FOLDER_IMPORTANT = 'important'
+    /** @const */
+    FOLDER_SENT = 'sent'
+    /** @const */
+    FOLDER_DRAFTS = 'drafts'
+    /** @const */
+    FOLDER_TRASH = 'trash'
+    /** @const */
+    FOLDER_ARCHIVE = 'archive'
 
-        backdrop: true,
+    data() {
+        return {
+            folderDataList: this.folderDataList,
+        };
+    }
 
-        data: function () {
-            return {
-                folderDataList: this.folderDataList,
-            };
-        },
+    /**
+     * @private
+     * @type {string|undefined}
+     */
+    currentFolderId
 
-        events: {
-            'click a[data-action="selectFolder"]': function (e) {
-                let $target = $(e.currentTarget);
+    setup() {
+        this.addActionHandler('selectFolder', (e, target) => {
+            const id = target.dataset.id;
+            const name = target.dataset.name;
 
-                let id = $target.attr('data-id');
-                let name = $target.attr('data-name');
+            this.trigger('select', id, name);
+            this.close();
+        });
 
-                this.trigger('select', id, name);
-                this.close();
-            },
-        },
+        this.headerText = this.options.headerText || '';
+        this.isGroup = this.options.isGroup || false;
+        this.noArchive = this.options.noArchive || false;
+        this.currentFolderId = this.options.currentFolderId;
 
-        setup: function () {
-            this.headerText = this.options.headerText || '';
+        if (this.headerText === '') {
+            this.buttonList.push({
+                name: 'cancel',
+                label: 'Cancel',
+            });
+        }
 
-            if (this.headerText === '') {
-                this.buttonList.push({
-                    name: 'cancel',
-                    label: 'Cancel',
-                });
-            }
+        Espo.Ui.notify(' ... ');
 
-            Espo.Ui.notify(' ... ');
+        this.wait(
+            Espo.Ajax.getRequest('EmailFolder/action/listAll')
+                .then(/** {list: {id: string, name: string}[]} */data => {
+                    Espo.Ui.notify(false);
 
-            this.wait(
-                Espo.Ajax.getRequest('EmailFolder/action/listAll')
-                    .then(data => {
-                        Espo.Ui.notify(false);
+                    const builtInFolders = [
+                        this.FOLDER_INBOX,
+                        this.FOLDER_IMPORTANT,
+                        this.FOLDER_SENT,
+                        this.FOLDER_DRAFTS,
+                        this.FOLDER_TRASH,
+                        this.FOLDER_ARCHIVE,
+                    ];
 
-                        this.folderDataList = data.list
-                            .filter(item => {
-                                return ['inbox', 'important', 'sent', 'drafts', 'trash'].indexOf(item.id) === -1;
-                            })
-                            .map(item => {
-                                return {
-                                    id: item.id,
-                                    name: item.name,
-                                    isGroup: item.id.indexOf('group:') === 0,
-                                };
-                            });
+                    const iconMap = {
+                        [this.FOLDER_ALL]: 'far fa-hdd',
+                        [this.FOLDER_TRASH]: 'far fa-trash-alt',
+                        [this.FOLDER_SENT]: 'far fa-paper-plane',
+                        [this.FOLDER_INBOX]: 'fas fa-inbox',
+                        [this.FOLDER_ARCHIVE]: 'far fa-caret-square-down',
+                    };
 
-                        this.folderDataList.unshift({
-                            id: 'inbox',
-                            name: this.translate('inbox', 'presetFilters', 'Email'),
+                    this.folderDataList = data.list
+                        .filter(item => {
+                            if (this.isGroup && !item.id.startsWith('group:')) {
+                                return false;
+                            }
+
+                            return !builtInFolders.includes(item.id);
                         })
-                    })
-            );
-        },
-    });
-});
+                        .map(item => {
+                            const isGroup = item.id.startsWith('group:');
+
+                            return {
+                                disabled: item.id === this.currentFolderId,
+                                id: item.id,
+                                name: item.name,
+                                isGroup: isGroup,
+                                iconClass: isGroup ? 'far fa-circle' : 'far fa-folder',
+                            };
+                        });
+
+                    this.folderDataList.unshift({
+                        id: 'inbox',
+                        name: this.isGroup ?
+                            this.translate('all', 'presetFilters', 'Email') :
+                            this.translate('inbox', 'presetFilters', 'Email'),
+                        iconClass: this.isGroup ?
+                            iconMap[this.FOLDER_ALL] :
+                            iconMap[this.FOLDER_INBOX],
+                    });
+
+                    if (!this.noArchive) {
+                        this.folderDataList.push({
+                            id: this.FOLDER_ARCHIVE,
+                            name: this.translate('archive', 'presetFilters', 'Email'),
+                            iconClass: iconMap[this.FOLDER_ARCHIVE],
+                            disabled: this.currentFolderId === this.FOLDER_ARCHIVE,
+                        });
+                    }
+                })
+        );
+    }
+}

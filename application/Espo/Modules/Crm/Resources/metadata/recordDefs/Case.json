@@ -3,9 +3,6 @@
         "articles": {
             "linkRequiredAccess": "edit",
             "linkRequiredForeignAccess": "read"
-        },
-        "emails": {
-            "linkRequiredForeignAccess": "read"
         }
     },
     "beforeCreateHookClassNameList": [

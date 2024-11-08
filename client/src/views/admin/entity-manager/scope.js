@@ -268,13 +268,19 @@ class EntityManagerScopeView extends View {
      * @return {string[]}
      */
     getPrimaryFilters() {
-        return this.getMetadata().get(`clientDefs.${this.scope}.filterList`, []).map(item => {
+        const list = this.getMetadata().get(`clientDefs.${this.scope}.filterList`, []).map(item => {
             if (typeof item === 'object' && item.name) {
                 return item.name;
             }
 
             return item.toString();
         });
+
+        if (this.getMetadata().get(`scopes.${this.scope}.stars`)) {
+            list.unshift('starred');
+        }
+
+        return list;
     }
 }
 

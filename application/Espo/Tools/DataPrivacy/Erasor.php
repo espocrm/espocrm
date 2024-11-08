@@ -29,14 +29,17 @@
 
 namespace Espo\Tools\DataPrivacy;
 
+use Espo\Core\Acl\Permission;
 use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\FieldProcessing\EmailAddress\AccessChecker as EmailAddressAccessChecker;
 use Espo\Core\FieldProcessing\PhoneNumber\AccessChecker as PhoneNumberAccessChecker;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
 use Espo\Core\Di;
+use Espo\Entities\Attachment;
 
 class Erasor implements
 
@@ -69,7 +72,7 @@ class Erasor implements
      */
     public function erase(string $entityType, string $id, array $fieldList): void
     {
-        if ($this->acl->getPermissionLevel('dataPrivacyPermission') === Table::LEVEL_NO) {
+        if ($this->acl->getPermissionLevel(Permission::DATA_PRIVACY) === Table::LEVEL_NO) {
             throw new Forbidden();
         }
 
@@ -102,7 +105,7 @@ class Erasor implements
 
             $attributeList = $fieldUtil->getActualAttributeList($entityType, $field);
 
-            if ($type === 'email') {
+            if ($type === FieldType::EMAIL) {
                 $emailAddressList = $entity->get('emailAddresses');
 
                 foreach ($emailAddressList as $emailAddress) {
@@ -120,8 +123,7 @@ class Erasor implements
                 $entity->clear($field . 'Data');
 
                 continue;
-            }
-            else if ($type === 'phone') {
+            } else if ($type === FieldType::PHONE) {
                 $phoneNumberList = $entity->get('phoneNumbers');
 
                 foreach ($phoneNumberList as $phoneNumber) {
@@ -139,19 +141,17 @@ class Erasor implements
                 $entity->clear($field . 'Data');
 
                 continue;
-            }
-            else if ($type === 'file' || $type === 'image') {
+            } else if ($type === FieldType::FILE || $type === FieldType::IMAGE) {
                 $attachmentId = $entity->get($field . 'Id');
 
                 if ($attachmentId) {
-                    $attachment = $this->entityManager->getEntityById('Attachment', $attachmentId);
+                    $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $attachmentId);
 
                     if ($attachment) {
                         $this->entityManager->removeEntity($attachment);
                     }
                 }
-            }
-            else if ($type === 'attachmentMultiple') {
+            } else if ($type === FieldType::ATTACHMENT_MULTIPLE) {
                 $attachmentList = $entity->get($field);
 
                 foreach ($attachmentList as $attachment) {
@@ -165,8 +165,7 @@ class Erasor implements
                     $entity->get($attribute)
                 ) {
                     $entity->set($attribute, null);
-                }
-                else {
+                } else {
                     $entity->set($attribute, null);
                 }
             }

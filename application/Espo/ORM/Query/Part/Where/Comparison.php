@@ -353,8 +353,7 @@ class Comparison implements WhereItem
             if ($key === '') {
                 throw new RuntimeException("Expression can't be empty.");
             }
-        }
-        else {
+        } else {
             $key = $argument1->getValue();
         }
 
@@ -368,8 +367,7 @@ class Comparison implements WhereItem
             $key .= ':';
 
             $value = $argument2->getValue();
-        }
-        else {
+        } else {
             $value = $argument2;
         }
 
@@ -401,8 +399,7 @@ class Comparison implements WhereItem
             if (str_ends_with($key, ':')) {
                 throw new RuntimeException("Expression can't end with `:`.");
             }
-        }
-        else {
+        } else {
             $key = $argument1->getValue();
         }
 
@@ -427,8 +424,7 @@ class Comparison implements WhereItem
             if (str_ends_with($key, ':')) {
                 throw new RuntimeException("Expression can't end with `:`.");
             }
-        }
-        else {
+        } else {
             $key = $argument1->getValue();
         }
 

@@ -49,12 +49,20 @@ import _ from 'underscore';
  */
 
 /**
- * Defs.
+ * Definitions.
  *
  * @typedef module:model~defs
  * @type {Object}
- * @property {Object.<string, Object.<string, *>>} [fields] Fields.
+ * @property {Object.<string, module:model~fieldDefs>} [fields] Fields.
  * @property {Object.<string, Object.<string, *>>} [links] Links.
+ */
+
+/**
+ * Field definitions.
+ *
+ * @typedef module:model~fieldDefs
+ * @type {Object & Record}
+ * @property {string} type A type.
  */
 
 /** @typedef {import('bullbone')} Bull */
@@ -772,9 +780,15 @@ class Model {
     }
 
     /**
+     * @typedef {Object} model:model~setRelateItem
+     * @property {string} link A link.
+     * @property {import('model').default} model A model.
+     */
+
+    /**
      * Set relate data (when creating a related record).
      *
-     * @param {Object} data
+     * @param {model:model~setRelateItem | model:model~setRelateItem[]} data
      */
     setRelate(data) {
         const setRelate = options => {

@@ -31,6 +31,7 @@ namespace Espo\Classes\FieldValidators;
 
 use Brick\PhoneNumber\PhoneNumber;
 use Brick\PhoneNumber\PhoneNumberParseException;
+use Espo\Core\PhoneNumber\Util;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Defs;
@@ -203,10 +204,25 @@ class PhoneType
             return true;
         }
 
+        $ext = null;
+
+        if ($this->config->get('phoneNumberExtensions')) {
+            [$number, $ext] = Util::splitExtension($number);
+        }
+
+        if ($ext) {
+            if (!preg_match('/[0-9]+/', $ext)) {
+                return false;
+            }
+
+            if (strlen($ext) > 6) {
+                return false;
+            }
+        }
+
         try {
             $numberObj = PhoneNumber::parse($number);
-        }
-        catch (PhoneNumberParseException) {
+        } catch (PhoneNumberParseException) {
             return false;
         }
 

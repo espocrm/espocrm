@@ -36,6 +36,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
 use Espo\Entities\Settings;
 use Espo\Entities\User;
+use Espo\Core\ORM\Type\FieldType;
 
 class AccessChecker
 {

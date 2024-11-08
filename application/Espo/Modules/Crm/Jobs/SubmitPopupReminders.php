@@ -106,10 +106,9 @@ class SubmitPopupReminders implements JobDataLess
 
             if (
                 $entity instanceof CoreEntity &&
-                $entity->hasLinkMultipleField('users')
+                $entity->hasLinkMultipleField('users') &&
+                $entity->hasAttribute('usersColumns')
             ) {
-                $entity->loadLinkMultipleField('users', ['status' => 'acceptanceStatus']);
-
                 $status = $entity->getLinkMultipleColumn('users', 'status', $userId);
 
                 if ($status === Meeting::ATTENDEE_STATUS_DECLINED) {
@@ -119,14 +118,14 @@ class SubmitPopupReminders implements JobDataLess
                 }
             }
 
-            $dateAttribute = 'dateStart';
+            $dateField = 'dateStart';
 
             $entityDefs = $this->entityManager->getDefs()->getEntity($entityType);
 
             if ($entityDefs->hasField('reminders')) {
-                $dateAttribute = $entityDefs
+                $dateField = $entityDefs
                     ->getField('reminders')
-                    ->getParam('dateField') ?? $dateAttribute;
+                    ->getParam('dateField') ?? $dateField;
             }
 
             $submitData[$userId] ??= [];
@@ -136,8 +135,12 @@ class SubmitPopupReminders implements JobDataLess
                 'data' => (object) [
                     'id' => $entity->getId(),
                     'entityType' => $entityType,
-                    $dateAttribute => $entity->get($dateAttribute),
                     'name' => $entity->get('name'),
+                    'dateField' => $dateField,
+                    'attributes' => (object) [
+                        $dateField => $entity->get($dateField),
+                        $dateField . 'Date' => $entity->get($dateField . 'Date'),
+                    ],
                 ],
             ];;
 
@@ -149,8 +152,7 @@ class SubmitPopupReminders implements JobDataLess
             try {
                 $this->webSocketSubmission
                     ->submit('popupNotifications.event', $userId, (object) ['list' => $list]);
-            }
-            catch (Throwable $e) {
+            } catch (Throwable $e) {
                 $this->log->error('Job SubmitPopupReminders: [' . $e->getCode() . '] ' .$e->getMessage());
             }
         }

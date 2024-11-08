@@ -10,7 +10,7 @@
                 <button
                     class="btn btn-default btn-xs-wide"
                     data-action="createPost"
-                ><span class="fas fa-plus fa-sm"></span> {{translate 'Create Post'}}</button>
+                ><span class="fas fa-plus fa-sm"></span><span>{{translate 'Create Post'}}</span></button>
                 {{#if hasMenu}}
                     <button
                         class="btn btn-default dropdown-toggle"
@@ -35,7 +35,7 @@
 
 <div class="row">
     <div class="col-md-8">
-        <div class="button-container clearfix">
+        <div class="button-container clearfix" tabindex="-1">
             <div class="btn-group">
                 {{#each filterList}}
                     <button

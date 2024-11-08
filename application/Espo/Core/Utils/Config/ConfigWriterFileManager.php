@@ -52,8 +52,7 @@ class ConfigWriterFileManager
 
         if ($defaultPermissions) {
             $defaultPermissionsToSet = $defaultPermissions;
-        }
-        else if ($config) {
+        } else if ($config) {
             $defaultPermissionsToSet = $config->get('defaultPermissions');
         }
 
@@ -109,8 +108,7 @@ class ConfigWriterFileManager
     {
         try {
             $data = $this->fileManager->getPhpContents($path);
-        }
-        catch (RuntimeException) {
+        } catch (RuntimeException) {
             return false;
         }
 

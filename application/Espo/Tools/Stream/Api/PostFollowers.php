@@ -56,11 +56,11 @@ class PostFollowers implements Action
         $data = $request->getParsedBody();
 
         if (!$entityType || !$id) {
-            throw new BadRequest();
+            throw new BadRequest("No entityType or id.");
         }
 
         if (!$this->acl->check($entityType)) {
-            throw new Forbidden();
+            throw new Forbidden("No access to $entityType.");
         }
 
         $ids = $data->ids ?? (isset($data->id) ? [$data->id] : []);

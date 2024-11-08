@@ -34,6 +34,7 @@ use Espo\Core\Formula\Exceptions\BadArgumentType;
 use Espo\Core\Formula\Exceptions\TooFewArguments;
 use Espo\Core\Formula\Func;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use stdClass;
@@ -84,7 +85,7 @@ class FetchType implements Func
         foreach ($fieldDefsList as $fieldDefs) {
             $field = $fieldDefs->getName();
 
-            if ($fieldDefs->getType() === 'linkMultiple') {
+            if ($fieldDefs->getType() === FieldType::LINK_MULTIPLE && $entity->hasLinkMultipleField($field)) {
                 $entity->loadLinkMultipleField($field);
             }
         }

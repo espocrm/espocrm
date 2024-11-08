@@ -4,17 +4,17 @@
 
 .modal-header {
     background-color: @modal-header-bg;
-    padding: @modal-title-padding @panel-padding;
-    border-bottom: 0 solid @modal-header-border-color;
-    min-height: (@modal-title-padding + @modal-title-line-height);
+    padding: var(--modal-title-padding) var(--panel-padding);
+    border-bottom: 0 solid var(--modal-header-border-color);
+    min-height: calc(var(--modal-title-line-height) + var(--modal-title-padding));
 
     &.fixed-height {
-        height: 43px;
-        max-height: 43px;
+        height: var(--43px);
+        max-height: var(--43px);
         overflow: hidden;
 
         .modal-title {
-            width: ~"calc(100% - 20px)";
+            width: calc(100% - var(--20px));
             > .modal-title-text {
                 max-width: 100%;
                 overflow: hidden;
@@ -27,13 +27,19 @@
                     &:before {
                         content: " ";
                         position: absolute;
-                        right: 34px;
+                        right: var(--34px);
                         background: linear-gradient(to right, transparent, @modal-header-bg);
-                        height: 30px;
-                        width: 60px;
+                        height: var(--30px);
+                        width: calc(var(--30px) * 2);
                     }
                 }
             }
+        }
+    }
+
+    .modal-title {
+        > .modal-title-text {
+            user-select: none;
         }
     }
 
@@ -42,14 +48,14 @@
     }
 
     .close {
-        font-size: 31px;
+        font-size: var(--31px);
         font-weight: normal;
-        margin-top: -4px;
-        max-height: @font-size-h3;
+        margin-top: calc(var(--6px) * -1);
+        max-height: var(--24px);
         > span {
             position: relative;
-            max-height: @font-size-h3;
-            height: @font-size-h3;
+            max-height: var(--24px);
+            height: var(--24px);
             display: inline-block;
         }
         opacity: 1;
@@ -73,9 +79,9 @@
 
     .collapse-button {
         float: right;
-        padding-right: 17px;
-        padding-left: 17px;
-        top: 3px;
+        padding-right: var(--17px);
+        padding-left: var(--17px);
+        top: var(--3px);
         position: relative;
 
         &,
@@ -95,8 +101,8 @@
 }
 
 .modal-footer {
-    margin-top: @modal-title-padding;
-    padding: @panel-padding @panel-padding @panel-padding;
+    margin-top: var(--modal-title-padding);
+    padding: var(--panel-padding) var(--panel-padding) var(--panel-padding);
     background-color: @modal-footer-bg;
 
     &.shadowed:not(.has-sticked-bar) {
@@ -130,13 +136,13 @@
 
 .modal-footer {
     margin-top: 0;
-    padding-top: @modal-title-padding;
-    padding-bottom: @modal-title-padding;
+    padding-top: var(--modal-title-padding);
+    padding-bottom: var(--modal-title-padding);
 }
 
 .modal-header {
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding-top: var(--8px);
+    padding-bottom: var(--8px);
 }
 
 .modal-header + .modal-footer {
@@ -158,7 +164,7 @@
         margin: 0 0 0 auto;
     }
     .modal-content .note-editor > .modal > .modal-dialog {
-        margin: 0 0 0 -@container-padding;
+        margin: 0 0 0 calc(var(--container-padding) * -1);
     }
 
     .dialog-confirm > .modal-dialog,
@@ -173,21 +179,22 @@
     }
 }
 
-.modal-dialog .modal-body .list-buttons-container .sticked-bar {
-    top: 94px !important;
+.modal-dialog .modal-body .list-sticky-bar {
+    top: var(--94px) !important;
     width: 100% !important;
     right: 0 !important;
     left: unset !important;
-    padding-left: @container-padding - 1px;
+    padding-left: calc(var(--container-padding) - var(--1px));
+    padding-right: calc(var(--container-padding) - var(--1px) + var(--scroll-width));
 }
 
-@media screen and (max-width: (@screen-sm-min - 1px)) {
+@media screen and (max-width: @screen-xs-max) {
     .modal-dialog {
         margin: 0 0;
     }
     .modal-dialog .image-container {
-        margin-left: -@panel-padding;
-        margin-right: -@panel-padding;
+        margin-left: calc(0rem - var(--panel-padding));
+        margin-right: calc(0rem - var(--panel-padding));
     }
 }
 
@@ -197,18 +204,18 @@
 
 @media screen and (min-width: @screen-sm-min) {
     .modal-dialog {
-        width: 740px;
+        width: ~"min(var(--740px), 94vw)";
     }
 }
 
 @media screen and (min-width: @screen-md-min) {
     .modal-dialog {
-        width: 900px;
+        width: ~"min(var(--900px), 90vw)";
     }
 
     .dialog-confirm > .modal-dialog,
     .dialog-centered > .modal-dialog {
-        width: 550px;
+        width: ~"min(var(--550px), 90vw)";
     }
 }
 
@@ -216,6 +223,11 @@
 .dialog-centered {
     > .modal-dialog > .modal-content {
         border-radius: var(--panel-border-radius);
+
+        @media screen and (max-width: @screen-xs-max) {
+            // Already applied for wider screens.
+            box-shadow: var(--modal-box-shadow);
+        }
 
         > .modal-header {
             border-top-left-radius: var(--panel-border-radius);
@@ -233,21 +245,31 @@
             }
         }
     }
+
+
 }
 
 .modal-body > .no-side-margin {
-    margin-left: -@panel-padding;
-    margin-right: -@panel-padding;
+    margin-left: calc(0rem - var(--panel-padding));
+    margin-right: calc(0rem - var(--panel-padding));
 
     > .negate-no-side-margin {
-        margin-left: @panel-padding;
-        margin-right: @panel-padding;
+        margin-left: var(--panel-padding);
+        margin-right: var(--panel-padding);
     }
 }
 
 .modal.in .modal.in {
     overflow: visible !important;
+    //noinspection CssOverwrittenProperties
     overflow-y: visible !important;
+}
+
+.modal.in {
+    .modal-dialog {
+        // Important. Prevents overflow of sticky bars.
+        transform: translate(0, 0);
+    }
 }
 
 .modal-body > .list-group {

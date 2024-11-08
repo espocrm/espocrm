@@ -1,22 +1,22 @@
 {
   "fields": {
     "name": "Ad",
-    "status": "Durum ",
+    "status": "Durum",
     "target": "Hedef",
     "sentAt": "Gönderilen Tarih",
     "attemptCount": "Girişimler",
-    "emailAddress": "Email Adres",
-    "massEmail": "Toplu Email",
+    "emailAddress": "Eposta Adres",
+    "massEmail": "Toplu Eposta",
     "isTest": "Test mi"
   },
   "links": {
     "target": "Hedef",
-    "massEmail": "Toplu Email"
+    "massEmail": "Toplu Eposta"
   },
   "options": {
     "status": {
       "Pending": "Bekliyor",
-      "Sent": "gönderildi",
+      "Sent": "Gönderildi",
       "Failed": "Hata",
       "Sending": "Gönderme"
     }

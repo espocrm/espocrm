@@ -1,7 +1,7 @@
 {
   "labels": {
-    "Create WorkingTimeRange": "Crea Intervallo",
-    "Calendars": "Calendari"
+    "Calendars": "Calendari",
+    "Create WorkingTimeRange": "Crea Eccezione"
   },
   "fields": {
     "timeRanges": "Orario",
@@ -23,5 +23,9 @@
   },
   "presetFilters": {
     "actual": "Attivo"
+  },
+  "tooltips": {
+    "calendars": "Calendari a cui applicare l'eccezione. L'eccezione sarà applicata a tutti gli utenti dei calendari selezionati.\n\nLasciare il campo vuoto se si desidera applicare l'eccezione solo a utenti specifici.",
+    "users": "Utenti specifici a cui applicare l'eccezione."
   }
 }

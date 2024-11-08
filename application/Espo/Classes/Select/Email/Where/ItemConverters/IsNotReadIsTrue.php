@@ -32,6 +32,7 @@ namespace Espo\Classes\Select\Email\Where\ItemConverters;
 use Espo\Core\Select\Where\Item;
 use Espo\Core\Select\Where\ItemConverter;
 use Espo\Classes\Select\Email\Helpers\JoinHelper;
+use Espo\Entities\Email;
 use Espo\Entities\User;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
@@ -47,7 +48,7 @@ class IsNotReadIsTrue implements ItemConverter
         $this->joinHelper->joinEmailUser($queryBuilder, $this->user->getId());
 
         return WhereClause::fromRaw([
-            'emailUser.isRead' => false,
+            Email::ALIAS_INBOX . '.isRead' => false,
             'OR' => [
                 'sentById' => null,
                 'sentById!=' => $this->user->getId()

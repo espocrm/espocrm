@@ -36,11 +36,11 @@ import SelectProvider from 'helpers/list/select-provider';
 import RecordListSettingsView from 'views/record/list/settings';
 import ListSettingsHelper from 'helpers/list/settings';
 import StickyBarHelper from 'helpers/list/misc/sticky-bar';
+import ListColumnResizeHelper from 'helpers/record/list/column-resize';
+import ListColumnWidthControlHelper from 'helpers/record/list/column-width-control';
 
 /**
  * A record-list view. Renders and processes list items, actions.
- *
- * @todo Document all options.
  */
 class ListRecordView extends View {
 
@@ -54,7 +54,56 @@ class ListRecordView extends View {
      * @property {string} [link] A link.
      * @property {string} [text] A text.
      * @property {Object.<string, string|number|boolean>} [data] Data attributes.
+     * @property {number} [groupIndex] A group index.
      */
+
+    /**
+     * List view options.
+     *
+     * @typedef {Record} module:views/record/list~options
+     * @property {import('collection').default} collection A collection.
+     * @property {module:views/record/list~columnDefs[]} [listLayout] A layout.
+     * @property {string|'list'|'listSmall'} [type] A type.
+     * @property {string} [layoutName] A layout name.
+     * @property {boolean} [checkboxes] To show row checkboxes.
+     * @property {boolean} [selectable] Clicking on the record link will trigger the 'select' event.
+     * @property {boolean} [skipBuildRows] Do not build rows on initialization. Use when the collection will be fetched
+     *    afterward.
+     * @property {boolean} [buttonsDisabled] Disable buttons.
+     * @property {boolean} [checkAllResultDisabled] Disable select-all-results.
+     * @property {boolean} [pagination] To enable the pagination.
+     * @property {boolean} [headerDisabled] Disable the header.
+     * @property {boolean} [noDataDisabled] Disable the no-data label (when no results).
+     * @property {string} [rowActionsView] A row actions view.
+     * @property {boolean} [rowActionsDisabled] Disable row actions.
+     * @property {boolean} [showMore] The show-more button.
+     * @property {boolean} [keepCurrentRootUrl] Keep a current root URL.
+     * @property {boolean} [stickyBarDisabled] Disable the sticky bar.
+     * @property {boolean} [forceStickyBar] To make bar sticky regardless of scrolling.
+     * @property {boolean} [massActionsDisabled] Disable mass actions.
+     * @property {module:views/record/list~dropdownItem[]} [dropdownItemList] Dropdown items.
+     * @property {string[]} [mandatorySelectAttributeList] Mandatory select attributes. Attributes to be selected
+     *     regardless being in the layout.
+     * @property {boolean} [editDisabled] Disable edit.
+     * @property {boolean} [removeDisabled] Disable remove.
+     * @property {boolean} [showCount] To show a record count.
+     * @property {boolean} [forceDisplayTopBar] Force displaying the top bar even if empty.
+     * @property {boolean} [unlinkMassAction] Enable the 'unlink' mass-action.
+     * @property {Record} [rowActionsOptions] Row-actions options.
+     * @property {string[]} [additionalRowActionList] Additional row-action list.
+     * @property {boolean} [settingsEnabled] Enable settings dropdown.
+     * @property {import('helpers/list/settings').default} [settingsHelper] A settings helper.
+     * @property {boolean} [displayTotalCount] Display total count.
+     * @property {Record} [rootData] Root data.
+     * @property {boolean} [columnResize] Column resize. Actual only if the settings is enabled.
+     */
+
+    /**
+     * @param {module:views/record/list~options | Record} options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     /** @inheritDoc */
     template = 'record/list'
@@ -81,7 +130,7 @@ class ListRecordView extends View {
     checkboxes = true
 
     /**
-     * If true clicking on the record link will trigger 'select' event with model passed.
+     * If true clicking on the record link will trigger the 'select' event with model passed.
      * Can be overridden by an option parameter.
      */
     selectable = false
@@ -136,9 +185,6 @@ class ListRecordView extends View {
     /** @protected */
     checkboxColumnWidth = 40
 
-    /** @protected */
-    minColumnWidth = 100
-
     /**
      * A button. Handled by a class method `action{Name}` or a handler.
      *
@@ -180,7 +226,7 @@ class ListRecordView extends View {
     dropdownItemList = []
 
     /**
-     * Disable a header. Can be overridden by an option parameter.
+     * Disable the header. Can be overridden by an option parameter.
      *
      * @protected
      */
@@ -202,7 +248,7 @@ class ListRecordView extends View {
 
     /**
      * Mandatory select attributes. Can be overridden by an option parameter.
-     * Attributes to be selected regardless being on a layout.
+     * Attributes to be selected regardless being in the layout.
      *
      * @protected
      * @type {string[]|null}
@@ -258,7 +304,7 @@ class ListRecordView extends View {
      * Where to display the pagination. Can be overridden by an option parameter.
      *
      * @protected
-     * @type {'top'|'bottom'|boolean|null}
+     * @type {boolean}
      */
     pagination = false
 
@@ -276,6 +322,15 @@ class ListRecordView extends View {
      * @protected
      */
     showMore = true
+
+    /**
+     * Column resize.
+     *
+     * @protected
+     * @type {boolean}
+     * @since 8.5.0
+     */
+    columnResize = true
 
     /**
      * A mass-action list.
@@ -421,7 +476,14 @@ class ListRecordView extends View {
      *
      * @protected
      */
-    stickedBarDisabled = false
+    stickyBarDisabled = false
+
+    /**
+     * To show sticky bar regardless of scrolling.
+     *
+     * @protected
+     */
+    forceStickyBar = false
 
     /**
      * Disable the follow/unfollow mass action.
@@ -466,11 +528,18 @@ class ListRecordView extends View {
     mergeDisabled = false
 
     /**
-     * Disable a no-data label (when no result).
+     * Disable the no-data label (when no result).
      *
      * @protected
      */
     noDataDisabled = false
+
+    /**
+     * Disable pagination.
+     *
+     * @protected
+     */
+    paginationDisabled = false
 
     /** @private */
     _$focusedCheckbox = null
@@ -481,50 +550,55 @@ class ListRecordView extends View {
      */
     $selectAllCheckbox = null
 
+    /** @private */
+    _disabledCheckboxes = false
+
     /**
-     * @protected
-     * @type {?Object.<string, Object.<string, *>>}
+     * Mass-action definitions.
+     *
+     * @typedef {Object} module:views/record/list~massActionItem
+     * @property {string} [name] A name.
+     * @property {number} [groupIndex] A group index.
+     * @property {string} [handler] A handler.
+     * @property {string} [initFunction] An init function.
+     * @property {string} [actionFunction] An action function.
+     * @property {string} [configCheck] A config check.
+     * @property {string} [aclScope] An ACL scope to check.
+     * @property {string} [acl] An access action to check.
+     * @property {string} [url]
+     * @property {boolean} [bypassConfirmation] To skip confirmation.
+     * @property {string} [confirmationMessage] A confirmation message.
+     * @property {string} [waitMessage] A wait message.
+     * @property {string} [successMessage] A success message.
+     * @property {boolean} [hidden] Is hidden.
      */
-    massActionDefs = null
+
+    /**
+     * @private
+     * @type {Object.<string, module:views/record/list~massActionItem>}
+     */
+    massActionDefs
+
+    /**
+     * Data to pass to record views.
+     *
+     * @protected
+     * @type {Object.<string, *>}
+     * @since 8.5.0
+     */
+    rootData
 
     /** @private */
     _additionalRowActionList
 
+    /**
+     * @private
+     * @type {import('helpers/record/list/column-resize').default}
+     */
+    _columnResizeHelper
+
     /** @inheritDoc */
     events = {
-        /**
-         * @param {JQueryKeyEventObject} e
-         * @this ListRecordView
-         */
-        'click a.link': function (e) {
-            if (e.ctrlKey || e.metaKey || e.shiftKey) {
-                return;
-            }
-
-            e.stopPropagation();
-
-            if (!this.scope || this.selectable) {
-                return;
-            }
-
-            e.preventDefault();
-
-            const id = $(e.currentTarget).attr('data-id');
-            const model = this.collection.get(id);
-            const scope = this.getModelScope(id);
-
-            const options = {
-                id: id,
-                model: model,
-            };
-
-            if (this.options.keepCurrentRootUrl) {
-                options.rootUrl = this.getRouter().getCurrentUrl();
-            }
-
-            this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
-            this.getRouter().dispatch(scope, 'view', options);
-        },
         /**
          * @param {JQueryMouseEventObject} e
          * @this ListRecordView
@@ -563,8 +637,10 @@ class ListRecordView extends View {
             this.actionQuickView({id: id});
         },
         /** @this ListRecordView */
-        'click [data-action="showMore"]': function () {
-            this.showMoreRecords();
+        'click [data-action="showMore"]': async function () {
+            await this.showMoreRecords();
+
+            this.focusOnList();
         },
         'mousedown a.sort': function (e) {
             e.preventDefault();
@@ -582,28 +658,14 @@ class ListRecordView extends View {
          * @param {JQueryKeyEventObject} e
          * @this ListRecordView
          */
-        'click .pagination a': function (e) {
+        'click .pagination a[data-page]': function (e) {
             const page = $(e.currentTarget).data('page');
 
             if ($(e.currentTarget).parent().hasClass('disabled')) {
                 return;
             }
 
-            Espo.Ui.notify(' ... ');
-
-            this.collection.once('sync', () => {
-                Espo.Ui.notify(false);
-            });
-
-            if (page === 'current') {
-                this.collection.fetch();
-            }
-            else {
-                this.collection[page + 'Page'].call(this.collection);
-                this.trigger('paginate');
-            }
-
-            this.deactivate();
+            this.goToPage(page);
         },
         /** @this ListRecordView */
         'mousedown input.record-checkbox': function () {
@@ -624,8 +686,11 @@ class ListRecordView extends View {
          * @this ListRecordView
          */
         'click input.record-checkbox': function (e) {
-            const $target = $(e.currentTarget);
+            if (this._disabledCheckboxes) {
+                return;
+            }
 
+            const $target = $(e.currentTarget);
             const $from = this._$focusedCheckbox;
 
             if (e.shiftKey && $from) {
@@ -651,6 +716,10 @@ class ListRecordView extends View {
          * @this module:views/record/list
          */
         'click .select-all': function (e) {
+            if (this._disabledCheckboxes) {
+                return;
+            }
+
             // noinspection JSUnresolvedReference
             this.selectAllHandler(e.currentTarget.checked);
         },
@@ -663,6 +732,10 @@ class ListRecordView extends View {
         },
         /** @this ListRecordView */
         'click .checkbox-dropdown [data-action="selectAllResult"]': function () {
+            if (this._disabledCheckboxes) {
+                return;
+            }
+
             this.selectAllResult();
         },
         /**
@@ -699,6 +772,53 @@ class ListRecordView extends View {
         },
     }
 
+    focusOnList() {
+        const element = /** @type {HTMLElement} */this.$el.find('.list').get(0);
+
+        if (!element) {
+            return;
+        }
+
+        element.focus({preventScroll: true});
+    }
+
+    /**
+     * @private
+     * @param {'first'|'last'|'next'|'previous'|'current'} page
+     */
+    goToPage(page) {
+        Espo.Ui.notify(' ... ');
+
+        const onSync = () => {
+            Espo.Ui.notify(false);
+            this.trigger('after:paginate');
+            this.focusOnList();
+        };
+
+        if (page === 'current') {
+            this.collection.fetch().then(() => onSync());
+            this.deactivate();
+
+            return;
+        }
+
+        if (page === 'next') {
+            this.collection.nextPage().then(() => onSync());
+        }
+        else if (page === 'previous') {
+            this.collection.previousPage().then(() => onSync());
+        }
+        else if (page === 'last') {
+            this.collection.lastPage().then(() => onSync());
+        }
+        else if (page === 'first') {
+            this.collection.firstPage().then(() => onSync());
+        }
+
+        this.trigger('paginate');
+        this.deactivate();
+    }
+
     /**
      * @param {JQuery} $checkbox
      * @param {boolean} checked
@@ -717,6 +837,7 @@ class ListRecordView extends View {
     }
 
     resetCustomOrder() {
+        this.collection.offset = 0;
         this.collection.resetOrderToDefault();
         this.collection.trigger('order-changed');
 
@@ -751,6 +872,8 @@ class ListRecordView extends View {
             this.collection.pop();
         }
 
+        this.collection.offset = 0;
+
         this.collection
             .sort(orderBy, order)
             .then(() => {
@@ -764,11 +887,18 @@ class ListRecordView extends View {
         this.deactivate();
     }
 
-    /** @protected */
-    initStickyBar() {
-        this._stickyBarHelper = new StickyBarHelper(this);
+    /**
+     * @return {boolean}
+     */
+    toShowStickyBar() {
+        return this.getCheckedIds().length > 0 || this.isAllResultChecked() || this.pagination;
+    }
 
-        this._stickyBarHelper.init();
+    /** @private */
+    initStickyBar() {
+        this._stickyBarHelper = new StickyBarHelper(this, {
+            force: this.forceStickyBar,
+        });
     }
 
     /** @protected */
@@ -776,8 +906,8 @@ class ListRecordView extends View {
         this.$el.find('.actions-button').removeClass('hidden');
 
         if (
-            !this.options.stickedBarDisabled &&
-            !this.stickedBarDisabled &&
+            !this.options.stickyBarDisabled &&
+            !this.stickyBarDisabled &&
             this.massActionList.length
         ) {
             if (!this._stickyBarHelper) {
@@ -790,7 +920,7 @@ class ListRecordView extends View {
     hideActions() {
         this.$el.find('.actions-button').addClass('hidden');
 
-        if (this._stickyBarHelper) {
+        if (this._stickyBarHelper && (!this.pagination || this.forceStickyBar)) {
             this._stickyBarHelper.hide();
         }
     }
@@ -825,14 +955,7 @@ class ListRecordView extends View {
 
     /** @inheritDoc */
     data() {
-        const paginationTop = this.pagination === 'both' ||
-            this.pagination === 'top';
-
-        const paginationBottom = this.pagination === 'both' ||
-            this.pagination === true ||
-            this.pagination === 'bottom';
-
-        const moreCount = this.collection.total - this.collection.length;
+        const moreCount = this.collection.total - this.collection.length - this.collection.offset;
         let checkAllResultDisabled = this.checkAllResultDisabled;
 
         if (!this.massActionsDisabled) {
@@ -841,45 +964,73 @@ class ListRecordView extends View {
             }
         }
 
-        const displayTotalCount = this.displayTotalCount && this.collection.total > 0;
+        const displayTotalCount = this.displayTotalCount && this.collection.total > 0 && !this.pagination;
 
-        const topBar =
-            paginationTop ||
-            this.checkboxes ||
-            (this.buttonList.length && !this.buttonsDisabled) ||
-            (this.dropdownItemList.length && !this.buttonsDisabled) ||
-            this.forceDisplayTopBar ||
-            displayTotalCount;
+        let topBar = this.forceDisplayTopBar ||
+            this.collection.length && (
+                this.pagination ||
+                this.checkboxes ||
+                (this.buttonList.length && !this.buttonsDisabled) ||
+                (this.dropdownItemList.length && !this.buttonsDisabled) ||
+                displayTotalCount
+            );
+
+        if (!topBar && this.pagination && !this.collection.length && this.collection.offset > 0) {
+            topBar = true;
+        }
+
+        if (this.forceStickyBar) {
+            topBar = false;
+        }
+
+        const checkboxes = this.checkboxes && this.massActionList.length;
+
+        const displayActionsButtonGroup = checkboxes || this.buttonList.length ||
+            this.dropdownItemList.length;
+
+        const hasStickyBar = this.forceStickyBar || displayActionsButtonGroup || this.pagination;
 
         const noDataDisabled = this.noDataDisabled || this._renderEmpty;
 
+        const rowDataList = this.rowList ?
+            this.rowList.map(id => {
+                return {
+                    id: id,
+                    isStarred: this.hasStars && this.collection.get(id) ?
+                        this.collection.get(id).attributes.isStarred :
+                        false,
+                };
+            }) : [];
+
+        const checkboxColumnWidth = (this.checkboxColumnWidth * this._fontSizeFactor).toString() + 'px';
+
         return {
             scope: this.scope,
+            collectionLength: this.collection.models.length,
             entityType: this.entityType,
             header: this.header,
+            hasColumnResize: this._hasColumnResize(),
             headerDefs: this._getHeaderDefs(),
-            paginationEnabled: this.pagination,
-            paginationTop: paginationTop,
-            paginationBottom: paginationBottom,
+            hasPagination: this.hasPagination(),
             showMoreActive: this.collection.hasMore(),
             showMoreEnabled: this.showMore,
             showCount: this.showCount && this.collection.total > 0,
             moreCount: moreCount,
             checkboxes: this.checkboxes,
-            massActionList: this.massActionList,
-            rowList: this.rowList,
+            massActionDataList: this.getMassActionDataList(),
+            rowList: this.rowList, // For bc.
+            rowDataList: rowDataList,
             topBar: topBar,
-            bottomBar: paginationBottom,
             checkAllResultDisabled: checkAllResultDisabled,
             buttonList: this.buttonList,
             dropdownItemList: this.dropdownItemList,
             displayTotalCount: displayTotalCount,
-            displayActionsButtonGroup: this.checkboxes ||
-                this.massActionList || this.buttonList.length || this.dropdownItemList.length,
+            displayActionsButtonGroup: displayActionsButtonGroup,
             totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
             moreCountFormatted: this.getNumberUtil().formatInt(moreCount),
-            checkboxColumnWidth: this.checkboxColumnWidth + 'px',
+            checkboxColumnWidth: checkboxColumnWidth,
             noDataDisabled: noDataDisabled,
+            hasStickyBar: hasStickyBar,
         };
     }
 
@@ -899,9 +1050,15 @@ class ListRecordView extends View {
             this.header = false;
         }
 
-        this.pagination = _.isUndefined(this.options.pagination) || this.options.pagination === null ?
-            this.pagination :
-            this.options.pagination;
+        this.pagination = this.options.pagination == null ? this.pagination : this.options.pagination;
+
+        if (this.paginationDisabled) {
+            this.pagination = false;
+        }
+
+        if (this.options.columnResize !== undefined) {
+            this.columnResize = this.options.columnResize;
+        }
 
         this.checkboxes = _.isUndefined(this.options.checkboxes) ? this.checkboxes :
             this.options.checkboxes;
@@ -935,6 +1092,10 @@ class ListRecordView extends View {
         if ('checkAllResultDisabled' in this.options) {
             this.checkAllResultDisabled = this.options.checkAllResultDisabled;
         }
+
+        this.rootData = this.options.rootData || {};
+
+        this._fontSizeFactor = this.getThemeManager().getFontSizeFactor();
     }
 
     /**
@@ -959,11 +1120,9 @@ class ListRecordView extends View {
         this.$selectAllCheckbox.prop('checked', true);
 
         this.massActionList.forEach(item => {
-            if (!~this.checkAllResultMassActionList.indexOf(item)) {
+            if (!this.checkAllResultMassActionList.includes(item)) {
                 this.$el
-                    .find(
-                        'div.list-buttons-container .actions-menu li a.mass-action[data-action="'+item+'"]'
-                    )
+                    .find(`div.list-buttons-container .actions-menu li a.mass-action[data-action="${item}"]`)
                     .parent()
                     .addClass('hidden');
             }
@@ -988,10 +1147,12 @@ class ListRecordView extends View {
         this.$selectAllCheckbox.prop('checked', false);
 
         this.massActionList.forEach(item => {
-            if (!~this.checkAllResultMassActionList.indexOf(item)) {
+            if (
+                !this.checkAllResultMassActionList.includes(item) &&
+                !(this.massActionDefs[item] || {}).hidden
+            ) {
                 this.$el
-                    .find('div.list-buttons-container .actions-menu ' +
-                        'li a.mass-action[data-action="'+item+'"]')
+                    .find(`div.list-buttons-container .actions-menu li a.mass-action[data-action="${item}"]`)
                     .parent()
                     .removeClass('hidden');
             }
@@ -1001,7 +1162,7 @@ class ListRecordView extends View {
     /** @protected */
     deactivate() {
         if (this.$el) {
-            this.$el.find(".pagination li").addClass('disabled');
+            this.$el.find(".pagination a").addClass('disabled');
             this.$el.find("a.sort").addClass('disabled');
         }
     }
@@ -1054,10 +1215,10 @@ class ListRecordView extends View {
         const idle = this.allResultIsChecked && helper.checkIsIdle(this.collection.total);
 
         const proceedDownload = (attachmentId) => {
-            window.location = this.getBasePath() + '?entryPoint=download&id=' + attachmentId;
+            window.location = `${this.getBasePath()}?entryPoint=download&id=${attachmentId}`;
         };
 
-        this.createView('dialogExport', 'views/export/modals/export', o, (view) => {
+        this.createView('dialogExport', 'views/export/modals/export', o, view => {
             view.render();
 
             this.listenToOnce(view, 'proceed', (dialogData) => {
@@ -1072,8 +1233,7 @@ class ListRecordView extends View {
 
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-                Espo.Ajax
-                    .postRequest(url, data, {timeout: 0})
+                Espo.Ajax.postRequest(url, data, {timeout: 0})
                     .then(/** Object.<string, *> */response => {
                         Espo.Ui.notify(false);
 
@@ -1081,9 +1241,7 @@ class ListRecordView extends View {
                             helper
                                 .process(response.exportId)
                                 .then(view => {
-                                    this.listenToOnce(view, 'download', id => {
-                                        proceedDownload(id);
-                                    });
+                                    this.listenToOnce(view, 'download', id => proceedDownload(id));
                                 });
 
                             return;
@@ -1092,8 +1250,6 @@ class ListRecordView extends View {
                         if (!response.id) {
                             throw new Error("No attachment-id.");
                         }
-
-                        window.location = this.getBasePath() + '?entryPoint=download&id=' + response.id;
 
                         proceedDownload(response.id);
                     });
@@ -1172,8 +1328,7 @@ class ListRecordView extends View {
                 .then(/** Object.<string, *> */result => {
                     const successMessage = result.successMessage || defs.successMessage || 'done';
 
-                    this.collection
-                        .fetch()
+                    this.collection.fetch()
                         .then(() => {
                             let message = this.translate(successMessage, 'messages', this.scope);
 
@@ -1188,8 +1343,7 @@ class ListRecordView extends View {
 
         if (!bypassConfirmation) {
             this.confirm(this.translate(confirmationMsg, 'messages', this.scope), proceed, this);
-        }
-        else {
+        } else {
             proceed.call(this);
         }
     }
@@ -1234,12 +1388,13 @@ class ListRecordView extends View {
             const helper = new MassActionHelper(this);
             const idle = !!params.searchParams && helper.checkIsIdle(this.collection.total);
 
-            Espo.Ajax.postRequest('MassAction', {
-                entityType: this.entityType,
-                action: 'recalculateFormula',
-                params: params,
-                idle: idle,
-            })
+            Espo.Ajax
+                .postRequest('MassAction', {
+                    entityType: this.entityType,
+                    action: 'recalculateFormula',
+                    params: params,
+                    idle: idle,
+                })
                 .then(result => {
                     result = result || {};
 
@@ -1294,85 +1449,90 @@ class ListRecordView extends View {
             const params = this.getMassActionSelectionPostData();
             const idle = !!params.searchParams && helper.checkIsIdle(this.collection.total);
 
-            Espo.Ajax.postRequest('MassAction', {
-                entityType: this.entityType,
-                action: 'delete',
-                params: params,
-                idle: idle,
-            })
-            .then(result => {
-                result = result || {};
+            Espo.Ajax
+                .postRequest('MassAction', {
+                    entityType: this.entityType,
+                    action: 'delete',
+                    params: params,
+                    idle: idle,
+                })
+                .then(result => {
+                    result = result || {};
 
-                const afterAllResult = count => {
+                    const afterAllResult = count => {
+                        if (!count) {
+                            Espo.Ui.warning(this.translate('noRecordsRemoved', 'messages'));
+
+                            return;
+                        }
+
+                        this.unselectAllResult();
+
+                        this.collection.fetch()
+                            .then(() => {
+                                const msg = count === 1 ? 'massRemoveResultSingle' : 'massRemoveResult';
+
+                                Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
+                            });
+
+                        this.collection.trigger('after:mass-remove');
+
+                        Espo.Ui.notify(false);
+                    };
+
+                    if (result.id) {
+                        helper
+                            .process(result.id, 'delete')
+                            .then(view => {
+                                this.listenToOnce(view, 'close:success', result => afterAllResult(result.count));
+                            });
+
+                        return;
+                    }
+
+                    const count = result.count;
+
+                    if (this.allResultIsChecked) {
+                        afterAllResult(count);
+
+                        return;
+                    }
+
+                    const idsRemoved = result.ids || [];
+
                     if (!count) {
                         Espo.Ui.warning(this.translate('noRecordsRemoved', 'messages'));
 
                         return;
                     }
 
-                    this.unselectAllResult();
+                    idsRemoved.forEach(id => {
+                        Espo.Ui.notify(false);
 
-                    this.collection
-                        .fetch()
-                        .then(() => {
-                            const msg = count === 1 ? 'massRemoveResultSingle' : 'massRemoveResult';
+                        this.collection.trigger('model-removing', id);
+                        this.removeRecordFromList(id);
+                        this.uncheckRecord(id, null, true);
+                    });
 
-                            Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
-                        });
+                    if (this.$selectAllCheckbox.prop('checked')) {
+                        this.$selectAllCheckbox.prop('checked', false);
+
+                        if (this.collection.hasMore()) {
+                            this.showMoreRecords({skipNotify: true});
+                        }
+                    }
 
                     this.collection.trigger('after:mass-remove');
 
-                    Espo.Ui.notify(false);
-                };
+                    const showSuccess = () => {
+                        const msgKey = count === 1 ? 'massRemoveResultSingle' : 'massRemoveResult';
+                        const msg = this.translate(msgKey, 'messages').replace('{count}', count);
 
-                if (result.id) {
-                    helper
-                        .process(result.id, 'delete')
-                        .then(view => {
-                            this.listenToOnce(view, 'close:success', result => afterAllResult(result.count));
-                        });
-
-                    return;
-                }
-
-                const count = result.count;
-
-                if (this.allResultIsChecked) {
-                    afterAllResult(count);
-
-                    return;
-                }
-
-                const idsRemoved = result.ids || [];
-
-                if (!count) {
-                    Espo.Ui.warning(this.translate('noRecordsRemoved', 'messages'));
-
-                    return;
-                }
-
-                idsRemoved.forEach(id => {
-                    Espo.Ui.notify(false);
-
-                    this.collection.trigger('model-removing', id);
-                    this.removeRecordFromList(id);
-                    this.uncheckRecord(id, null, true);
-                });
-
-                if (this.$selectAllCheckbox.prop('checked')) {
-                    this.$selectAllCheckbox.prop('checked', false);
-
-                    if (this.collection.hasMore()) {
-                        this.showMoreRecords({skipNotify: true});
+                        Espo.Ui.success(msg);
                     }
-                }
 
-                this.collection.trigger('after:mass-remove');
-
-                const msg = count === 1 ? 'massRemoveResultSingle' : 'massRemoveResult';
-
-                Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
-            });
+                    showSuccess();
+                });
         });
     }
 
@@ -1476,7 +1636,7 @@ class ListRecordView extends View {
 
         this.confirm({
             message: confirmMsg,
-            confirmText: this.translate('Unfollow'),
+            confirmText: this.translate('Yes'),
         }, () => {
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
@@ -1534,12 +1694,15 @@ class ListRecordView extends View {
         }
 
         if (this.checkedList.length < 2) {
-            Espo.Ui.error(this.translate('Select 2 or more records'));
+            Espo.Ui.error(this.translate('select2OrMoreRecords', 'messages'));
 
             return;
         }
         if (this.checkedList.length > 4) {
-            Espo.Ui.error(this.translate('Select not more than 4 records'));
+            const msg = this.translate('selectNotMoreThanNumberRecords', 'messages')
+                .replace('{number}', '4');
+
+            Espo.Ui.error(msg);
 
             return;
         }
@@ -1626,8 +1789,7 @@ class ListRecordView extends View {
                             }
 
                             Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
-                        }
-                        else {
+                        } else {
                             Espo.Ui.warning(this.translate('noRecordsUpdated', 'messages'));
                         }
 
@@ -1750,11 +1912,19 @@ class ListRecordView extends View {
      * Add a mass action.
      *
      * @protected
-     * @param {string} item An action.
+     * @param {string|module:views/record/list~massActionItem} item An action.
      * @param {boolean} [allResult] To make available for all-result.
      * @param {boolean} [toBeginning] Add to the beginning of the list.
      */
     addMassAction(item, allResult, toBeginning) {
+        if (typeof item !== 'string') {
+            const name = item.name;
+
+            this.massActionDefs[name] = {...this.massActionDefs[name], ...item};
+
+            item = name;
+        }
+
         toBeginning ?
             this.massActionList.unshift(item) :
             this.massActionList.push(item);
@@ -1773,7 +1943,6 @@ class ListRecordView extends View {
     /**
      * Remove a mass action.
      *
-     * @protected
      * @param {string} item An action.
      */
     removeMassAction(item) {
@@ -1793,7 +1962,6 @@ class ListRecordView extends View {
     /**
      * Remove an all-result mass action.
      *
-     * @protected
      * @param {string} item An action.
      */
     removeAllResultMassAction(item) {
@@ -1806,6 +1974,22 @@ class ListRecordView extends View {
 
     /** @inheritDoc */
     setup() {
+        this.addHandler('click', 'a.link', (/** KeyboardEvent */e, target) => {
+            if (e.ctrlKey || e.metaKey || e.shiftKey) {
+                return;
+            }
+
+            e.stopPropagation();
+
+            if (!this.scope || this.selectable) {
+                return;
+            }
+
+            e.preventDefault();
+
+            this.processLinkClick(target.dataset.id);
+        });
+
         if (typeof this.collection === 'undefined') {
             throw new Error('Collection has not been injected into views/record/list view.');
         }
@@ -1823,6 +2007,8 @@ class ListRecordView extends View {
             this.options.mandatorySelectAttributeList || this.mandatorySelectAttributeList || []
         );
 
+        this.forceStickyBar = this.options.forceStickyBar || this.forceStickyBar;
+
         this.editDisabled = this.options.editDisabled || this.editDisabled ||
             this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']);
 
@@ -1835,21 +2021,10 @@ class ListRecordView extends View {
             this.events['click .list a.link'] = (e) => {
                 e.preventDefault();
 
-                const id = $(e.target).attr('data-id');
+                const id = $(e.currentTarget).attr('data-id');
 
                 if (id) {
-                    const model = this.collection.get(id);
-
-                    if (this.checkboxes) {
-                        const list = [];
-
-                        list.push(model);
-
-                        this.trigger('select', list);
-                    }
-                    else {
-                        this.trigger('select', model);
-                    }
+                    this.selectModel(id);
                 }
 
                 e.stopPropagation();
@@ -1871,6 +2046,12 @@ class ListRecordView extends View {
         if (!this.massActionList.length && !this.selectable) {
             this.checkboxes = false;
         }
+
+        /**
+         * @private
+         * @type {boolean}
+         */
+        this.hasStars = this.getMetadata().get(`scopes.${this.entityType}.stars`) || false;
 
         if (
             this.getUser().isPortal() &&
@@ -1901,7 +2082,10 @@ class ListRecordView extends View {
                     return Espo.Utils.cloneDeep(model.attributes);
                 });
 
-                if (_.isEqual(currentDataList, options.previousDataList)) {
+                if (
+                    _.isEqual(currentDataList, options.previousDataList) &&
+                    options.previousTotal === this.collection.total
+                ) {
                     return;
                 }
             }
@@ -1932,10 +2116,89 @@ class ListRecordView extends View {
             this.buildRows();
         }
 
+        if (this.pagination) {
+            this.createView('pagination', 'views/record/list-pagination', {
+                collection: this.collection,
+                displayTotalCount: this.displayTotalCount,
+                recordView: this,
+            });
+
+            this.createView('paginationSticky', 'views/record/list-pagination', {
+                collection: this.collection,
+                displayTotalCount: this.displayTotalCount,
+                recordView: this,
+            });
+
+            this.on('request-page', /** string */page => {
+                if (this.collection.isBeingFetched()) {
+                    return;
+                }
+
+                if (page === 'next' && !this.collection.hasNextPage()) {
+                    return;
+                }
+
+                if (page === 'previous' && !this.collection.hasPreviousPage()) {
+                    return;
+                }
+
+                this.goToPage(page);
+            });
+        }
+
         this._renderEmpty = this.options.skipBuildRows;
+
+        if (this.columnResize && this._listSettingsHelper) {
+            this._columnResizeHelper = new ListColumnResizeHelper(this, this._listSettingsHelper);
+        }
+    }
+
+    /**
+     * @private
+     * @param {string} id
+     */
+    processLinkClick(id) {
+        const model = this.collection.get(id);
+        const scope = this.getModelScope(id);
+
+        const options = {
+            id: id,
+            model: model,
+        };
+
+        if (this.options.keepCurrentRootUrl) {
+            options.rootUrl = this.getRouter().getCurrentUrl();
+        }
+
+        options.rootData = this.rootData;
+
+        this.getRouter().navigate(`#${scope}/view/${id}`, {trigger: false});
+        this.getRouter().dispatch(scope, 'view', options);
+    }
+
+    /**
+     * @private
+     * @param {string} id
+     */
+    selectModel(id) {
+        const model = this.collection.get(id);
+
+        if (this.checkboxes) {
+            this.trigger('select', [model]);
+
+            return;
+        }
+
+        this.trigger('select', model);
+    }
+
+    onRemove() {
+        this.destroyStickyBar();
     }
 
     afterRender() {
+        this.destroyStickyBar();
+
         this.$selectAllCheckbox = this.$el.find('input.select-all');
 
         if (this.allResultIsChecked) {
@@ -1946,6 +2209,23 @@ class ListRecordView extends View {
                 this.checkRecord(id);
             });
         }
+
+        if (this.pagination && this.$el.find('.list-buttons-container').length) {
+            this.initStickyBar();
+        }
+
+        if (this._disabledCheckboxes) {
+            this.disableCheckboxes();
+        }
+    }
+
+    /** @private */
+    destroyStickyBar() {
+        if (this._stickyBarHelper) {
+            this._stickyBarHelper.destroy();
+        }
+
+        this._stickyBarHelper = null;
     }
 
     /** @private */
@@ -1953,6 +2233,7 @@ class ListRecordView extends View {
         if (this.massActionsDisabled) {
             this.massActionList = [];
             this.checkAllResultMassActionList = [];
+            this.massActionDefs = {};
 
             return;
         }
@@ -1982,6 +2263,14 @@ class ListRecordView extends View {
         }
 
         this.massActionDefs = {
+            remove: {groupIndex: 0},
+            merge: {groupIndex: 0},
+            massUpdate: {groupIndex: 0},
+            export: {groupIndex: 2},
+            follow: {groupIndex: 4},
+            unfollow: {groupIndex: 4},
+            convertCurrency: {groupIndex: 6},
+            printToPdf: {groupIndex: 8},
             ...this.getMetadata().get(['clientDefs', 'Global', 'massActionDefs']) || {},
             ...this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs']) || {},
         };
@@ -2002,7 +2291,7 @@ class ListRecordView extends View {
 
             if (
                 !Espo.Utils.checkActionAvailability(this.getHelper(), defs) ||
-                !Espo.Utils.checkActionAccess(this.getAcl(), null, defs)
+                !Espo.Utils.checkActionAccess(this.getAcl(), this.entityType, defs)
             ) {
                 return;
             }
@@ -2024,7 +2313,7 @@ class ListRecordView extends View {
 
                 if (
                     !Espo.Utils.checkActionAvailability(this.getHelper(), defs) ||
-                    !Espo.Utils.checkActionAccess(this.getAcl(), null, defs)
+                    !Espo.Utils.checkActionAccess(this.getAcl(), this.entityType, defs)
                 ) {
                     return;
                 }
@@ -2165,11 +2454,11 @@ class ListRecordView extends View {
             forbiddenFieldList = [];
         }
 
-        if (!forbiddenFieldList.length) {
+        /*if (!forbiddenFieldList.length) {
             this._cachedFilteredListLayout = listLayout;
 
             return this._cachedFilteredListLayout;
-        }
+        }*/
 
         const filteredListLayout = Espo.Utils.cloneDeep(listLayout);
 
@@ -2187,6 +2476,19 @@ class ListRecordView extends View {
         deleteIndexes
             .reverse()
             .forEach(index => filteredListLayout.splice(index, 1));
+
+        /** @type {Record<Record>} */
+        const fieldDefs = this.getMetadata().get(`entityDefs.${this.entityType}.fields`) || {};
+
+        filteredListLayout.forEach(item => {
+            if (!item.name || !fieldDefs[item.name]) {
+                return;
+            }
+
+            if (fieldDefs[item.name].orderDisabled) {
+                item.notSortable = true;
+            }
+        });
 
         this._cachedFilteredListLayout = filteredListLayout;
 
@@ -2268,29 +2570,57 @@ class ListRecordView extends View {
         return selectProvider.getFromLayout(this.entityType, this.listLayout);
     }
 
+    /**
+     * @private
+     */
+    _hasColumnResize() {
+        return this._listSettingsHelper ? this._listSettingsHelper.getColumnResize() : false;
+    }
+
     /** @protected */
     _getHeaderDefs() {
         const defs = [];
 
-        const hiddenMap = this._listSettingsHelper ?
-            this._listSettingsHelper.getHiddenColumnMap() : {};
+        const resize = this._hasColumnResize();
+
+        const widthMap = this._listSettingsHelper ? this._listSettingsHelper.getColumnWidthMap() : {};
 
         // noinspection JSIncompatibleTypesComparison
         if (!this.listLayout || !Array.isArray(this.listLayout)) {
             return [];
         }
 
-        for (const col of this.listLayout) {
+        let emptyWidthMet = false;
+
+        const visibleColumns = this.listLayout.filter(it => {
+            if (!this._listSettingsHelper) {
+                return true;
+            }
+
+            if (it.name && this._listSettingsHelper.isColumnHidden(it.name, it.hidden)) {
+                return false;
+            }
+
+            return true;
+        })
+
+        for (const col of visibleColumns) {
             let width = false;
 
-            if ('width' in col && col.width !== null) {
+            const itemName = col.name;
+
+            if (itemName && (itemName in widthMap)) {
+                const widthItem = widthMap[itemName];
+
+                width = widthItem.value + widthItem.unit;
+            } else if ('width' in col && col.width !== null) {
                 width = col.width + '%';
-            }
-            else if ('widthPx' in col) {
-                width = col.widthPx + 'px';
+            } else if ('widthPx' in col) {
+                width = (col.widthPx * this._fontSizeFactor).toString() + 'px';
+            } else {
+                emptyWidthMet = true;
             }
 
-            const itemName = col.name;
             const label = col.label || itemName;
 
             const item = {
@@ -2298,6 +2628,8 @@ class ListRecordView extends View {
                 isSortable: !(col.notSortable || false),
                 width: width,
                 align: ('align' in col) ? col.align : false,
+                resizable: resize && width && visibleColumns.length > 1,
+                resizeOnRight: resize && width && !emptyWidthMet,
             };
 
             if ('customLabel' in col) {
@@ -2318,20 +2650,6 @@ class ListRecordView extends View {
 
                 if (item.isSorted) {
                     item.isDesc = this.collection.order === 'desc' ;
-                }
-            }
-
-            if (itemName && hiddenMap[itemName]) {
-                continue;
-            }
-
-            if (itemName) {
-                if (hiddenMap[itemName]) {
-                    continue;
-                }
-
-                if (col.hidden && !(itemName in hiddenMap)) {
-                    continue;
                 }
             }
 
@@ -2358,8 +2676,10 @@ class ListRecordView extends View {
                         .get(0).outerHTML
             }
 
+            const width = (this._fontSizeFactor * this.rowActionsColumnWidth).toString() + 'px';
+
             defs.push({
-                width: this.rowActionsColumnWidth + 'px',
+                width: width,
                 html: html,
                 className: 'action-cell',
             });
@@ -2381,9 +2701,6 @@ class ListRecordView extends View {
                 template: 'record/list-checkbox',
             });
         }
-
-        const hiddenMap = this._listSettingsHelper ?
-            this._listSettingsHelper.getHiddenColumnMap() : {};
 
         for (const col of listLayout) {
             const type = col.type || model.getFieldType(col.name) || 'base';
@@ -2432,12 +2749,8 @@ class ListRecordView extends View {
                 }
             }
 
-            if (col.name) {
-                if (hiddenMap[col.name]) {
-                    continue;
-                }
-
-                if (col.hidden && !(col.name in hiddenMap)) {
+            if (col.name && this._listSettingsHelper) {
+                if (this._listSettingsHelper.isColumnHidden(col.name, col.hidden)) {
                     continue;
                 }
             }
@@ -2710,6 +3023,11 @@ class ListRecordView extends View {
     buildRows(callback) {
         this.checkedList = [];
 
+        /**
+         * @internal
+         * @type {string[]}
+         * @private
+         */
         this.rowList = [];
 
         if (this.collection.length <= 0) {
@@ -2722,44 +3040,27 @@ class ListRecordView extends View {
             return;
         }
 
-        let iteration = 0;
-        const repeatCount = !this.pagination ? 1 : 2;
-
-        const callbackWrapped = () => {
-            iteration++;
-
-            if (iteration === repeatCount) {
-                if (typeof callback === 'function') {
-                    callback();
-                }
-            }
-        };
-
         this.wait(true);
 
         const modelList = this.collection.models;
-        const count = modelList.length;
-        let builtCount = 0;
+        let counter = 0;
 
-        modelList.forEach(model => {
-            this.buildRow(iteration, model, () => {
-                builtCount++;
+        modelList.forEach((model, i) => {
+            this.buildRow(i, model, () => {
+                counter++;
 
-                if (builtCount === count) {
-                    callbackWrapped();
-
-                    this.wait(false);
-
-                    this.trigger('after:build-rows');
+                if (counter !== modelList.length) {
+                    return;
                 }
+
+                if (typeof callback === 'function') {
+                    callback();
+                }
+
+                this.wait(false);
+                this.trigger('after:build-rows');
             });
         });
-
-        if (this.pagination) {
-            this.createView('pagination', 'views/record/list-pagination', {
-                collection: this.collection,
-            }, callbackWrapped);
-        }
     }
 
     /**
@@ -2790,14 +3091,12 @@ class ListRecordView extends View {
         const final = () => {
             $showMore.parent().append($showMore);
 
-            if (
-                collection.total > collection.length + collection.lengthCorrection ||
-                collection.total === -1
-            ) {
-                const moreCount = collection.total - collection.length - collection.lengthCorrection;
-                const moreCountString = this.getNumberUtil().formatInt(moreCount);
+            if (collection.hasMore()) {
+                const moreCount = collection.total - collection.offset -
+                    collection.length - collection.lengthCorrection;
 
-                this.$el.find('.more-count').text(moreCountString);
+                this.$el.find('.more-count')
+                    .text(this.getNumberUtil().formatInt(moreCount));
 
                 $showMore.removeClass('hidden');
                 $container.addClass('has-show-more');
@@ -2849,16 +3148,13 @@ class ListRecordView extends View {
 
                 this.buildRow(i, model, view => {
                     const model = view.model;
-
                     const $existingRow = this.getDomRowItem(model.id);
 
                     if ($existingRow && $existingRow.length) {
                         $existingRow.remove();
                     }
 
-                    $list.append(
-                        $(this.getRowContainerHtml(model.id))
-                    );
+                    $list.append(this.getRowContainerHtml(model.id));
 
                     view.render()
                         .then(() => {
@@ -2874,18 +3170,20 @@ class ListRecordView extends View {
             this.noRebuild = true;
         };
 
-        this.listenToOnce(collection, 'update', (collection, o) => {
+        const onUpdate = (c, /** Record */o) => {
             if (o.changes.merged.length) {
                 collection.lengthCorrection += o.changes.merged.length;
             }
-        });
+        };
+
+        this.listenToOnce(collection, 'update', onUpdate);
 
         // If using promise callback, then need to pass `noRebuild: true`.
         collection.fetch({
             success: success,
             remove: false,
             more: true,
-        });
+        }).catch(() => this.stopListening(collection, 'update', onUpdate));
     }
 
     getDomRowItem(id) {
@@ -2951,8 +3249,7 @@ class ListRecordView extends View {
                 id: id,
                 scope: scope,
                 model: model,
-                rootUrl: this.options.keepCurrentRootUrl ?
-                    this.getRouter().getCurrentUrl() : null,
+                rootUrl: this.options.keepCurrentRootUrl ? this.getRouter().getCurrentUrl() : null,
                 editDisabled: this.quickEditDisabled,
             })
             .then(view => {
@@ -2963,6 +3260,8 @@ class ListRecordView extends View {
                 this.listenTo(view, 'after:save', model => {
                     this.trigger('after:save', model);
                 });
+
+                this.listenTo(view, 'after:destroy', model => this.removeRecordFromList(model.id));
             });
     }
 
@@ -3043,7 +3342,7 @@ class ListRecordView extends View {
                     const model = this.collection.get(m.id);
 
                     if (model) {
-                        model.set(m.getClonedAttributes());
+                        model.set(m.getClonedAttributes(), {sync: true});
                     }
 
                     this.trigger('after:save', m);
@@ -3111,14 +3410,15 @@ class ListRecordView extends View {
 
             Espo.Ui.notify(' ... ');
 
-            model
-                .destroy({wait: true, fromList: true})
+            model.destroy({wait: true, fromList: true})
                 .then(() => {
                     Espo.Ui.success(this.translate('Removed'));
 
+                    this.trigger('after:delete', model);
                     this.removeRecordFromList(id);
                 })
                 .catch(() => {
+                    // @todo Revert to the same position.
                     this.collection.push(model);
                 });
         });
@@ -3129,11 +3429,13 @@ class ListRecordView extends View {
      * @param {string} id An ID.
      */
     removeRecordFromList(id) {
-        this.collection.remove(id);
-
         if (this.collection.total > 0) {
             this.collection.total--;
+
+            this.collection.trigger('update-total');
         }
+
+        this.collection.remove(id);
 
         this.$el.find('.total-count-span').text(this.collection.total.toString());
 
@@ -3180,56 +3482,6 @@ class ListRecordView extends View {
         return this.checkedList.indexOf(id) !== -1;
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    getTableMinWidth() {
-        if (!this.listLayout) {
-            return;
-        }
-
-        let totalWidth = 0;
-        let totalWidthPx = 0;
-        let emptyCount = 0;
-        let columnCount = 0;
-
-        this.listLayout.forEach((item) => {
-            columnCount ++;
-
-            if (item.widthPx) {
-                totalWidthPx += item.widthPx;
-
-                return;
-            }
-
-            if (item.width) {
-                totalWidth += item.width;
-
-                return;
-            }
-
-            emptyCount ++;
-        });
-
-        if (this.rowActionsView && !this.rowActionsDisabled) {
-            totalWidthPx += this.rowActionsColumnWidth;
-        }
-
-        if (this.checkboxes) {
-            totalWidthPx += this.checkboxColumnWidth;
-        }
-
-        let minWidth;
-
-        if (totalWidth >= 100) {
-            minWidth = columnCount * this.minColumnWidth;
-        }
-        else {
-            minWidth = (totalWidthPx + this.minColumnWidth * emptyCount) / (1 - totalWidth / 100);
-            minWidth = Math.round(minWidth);
-        }
-
-        return minWidth;
-    }
-
     setupRowActionDefs() {
         this._rowActionHandlers = {};
 
@@ -3244,7 +3496,7 @@ class ListRecordView extends View {
         const defs = this.getMetadata().get(`clientDefs.${this.scope}.rowActionDefs`) || {};
 
         const promiseList = list.map(action => {
-            /** @type {{handler: string, label?: string, labelTranslation?: string}} */
+            /** @type {{handler: string, label?: string, labelTranslation?: string, groupIndex?: number}} */
             const itemDefs = defs[action] || {};
 
             if (!itemDefs.handler) {
@@ -3289,7 +3541,7 @@ class ListRecordView extends View {
         handler.process(model, action);
     }
 
-    /** @private */
+    /** @protected */
     setupSettings() {
         if (!this.options.settingsEnabled || !this.collection.entityType || !this.layoutName) {
             return;
@@ -3309,7 +3561,7 @@ class ListRecordView extends View {
             return;
         }
 
-        this._listSettingsHelper = new ListSettingsHelper(
+        this._listSettingsHelper = this.options.settingsHelper || new ListSettingsHelper(
             this.entityType,
             this.layoutName,
             this.getUser().id,
@@ -3320,17 +3572,197 @@ class ListRecordView extends View {
             layoutProvider: () => this.listLayout,
             helper: this._listSettingsHelper,
             entityType: this.entityType,
-            onChange: () => {
-                this._internalLayout = null;
-
-                Espo.Ui.notify(' ... ');
-
-                this.collection.fetch()
-                    .then(() => Espo.Ui.notify(false));
-            },
+            columnResize: this.columnResize,
+            onChange: (options) => this.afterSettingsChange(options),
         });
 
         this.assignView('settings', view, '.settings-container');
+    }
+
+    /**
+     * @protected
+     * @param {RecordListSettingsView~onChangeOptions} options
+     */
+    async afterSettingsChange(options) {
+        if (options.action === 'toggleColumnResize') {
+            await this.reRender();
+
+            return;
+        }
+
+        if (
+            options.action === 'toggleColumn' &&
+            !this._listSettingsHelper.getHiddenColumnMap()[options.column] &&
+            this._columnResizeHelper
+        ) {
+            const helper = new ListColumnWidthControlHelper({
+                view: this,
+                helper: this._listSettingsHelper,
+                layoutProvider: () => this.listLayout,
+            });
+
+            helper.adjust();
+        }
+
+        this._internalLayout = null;
+
+        Espo.Ui.notify(' ... ');
+
+        await this.collection.fetch();
+
+        Espo.Ui.notify(false);
+    }
+
+    /**
+     * Whether the pagination is enabled.
+     *
+     * @return {boolean}
+     */
+    hasPagination() {
+        return this.pagination;
+    }
+
+    /**
+     * Hide a mass action. Requires re-render.
+     *
+     * @protected
+     * @param {string} name An action name.
+     * @since 8.4.0
+     */
+    hideMassAction(name) {
+        if (!this.massActionDefs[name]) {
+            this.massActionDefs[name] = {};
+        }
+
+        this.massActionDefs[name].hidden = true;
+    }
+
+    /**
+     * Show a mass action. Requires re-render.
+     *
+     * @protected
+     * @param {string} name An action name.
+     * @since 8.4.0
+     */
+    showMassAction(name) {
+        if (!this.massActionDefs[name]) {
+            this.massActionDefs[name] = {};
+        }
+
+        this.massActionDefs[name].hidden = false;
+    }
+
+    /**
+     * @private
+     * @return {Array<{name: string, hidden: boolean}|false>}
+     */
+    getMassActionDataList() {
+        /** @type {string[][]} */
+        const groups = [];
+
+        this.massActionList.forEach(action => {
+            const item = this.massActionDefs[action];
+
+            // For bc.
+            if (item === false) {
+                return;
+            }
+
+            const index = (!item || item.groupIndex === undefined ? 9999 : item.groupIndex) + 100;
+
+            if (groups[index] === undefined) {
+                groups[index] = [];
+            }
+
+            groups[index].push(action);
+        });
+
+        const list = [];
+
+        groups.forEach(subList => {
+            subList.forEach(it => list.push(it));
+
+            list.push(false);
+        });
+
+        return list.map(name => {
+            if (name === false) {
+                return false;
+            }
+
+            return {
+                name,
+                hidden: (this.massActionDefs[name] || {}).hidden,
+            };
+        });
+    }
+
+    /**
+     * Uncheck all.
+     *
+     * @since 8.4.0
+     */
+    uncheckAll() {
+        if (this.allResultIsChecked) {
+            this.unselectAllResult();
+        }
+
+        this.checkedList.forEach(id => this.uncheckRecord(id));
+    }
+
+    /**
+     * To temporarily disable checkboxes.
+     *
+     * @since 8.4.0
+     */
+    disableCheckboxes() {
+        if (!this.checkboxes) {
+            return;
+        }
+
+        this._disabledCheckboxes = true;
+
+        this.uncheckAll();
+
+        this.$el.find('input.record-checkbox').attr('disabled', 'disabled');
+
+        if (this.$selectAllCheckbox) {
+            this.$selectAllCheckbox.attr('disabled', 'disabled');
+        }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * To enabled temporarily disabled checkboxes.
+     *
+     * @since 8.4.0
+     */
+    enableCheckboxes() {
+        if (!this.checkboxes) {
+            return;
+        }
+
+        this._disabledCheckboxes = false;
+
+        this.$el.find('input.record-checkbox').removeAttr('disabled');
+
+        if (this.$selectAllCheckbox) {
+            this.$selectAllCheckbox.removeAttr('disabled');
+        }
+    }
+
+    /**
+     * Rebuild the internal layout.
+     *
+     * @return {Promise}
+     * @since 8.4.0
+     */
+    rebuild() {
+        return new Promise(resolve => {
+            this._internalLayout = null;
+
+            this.buildRows(() => resolve());
+        })
     }
 }
 

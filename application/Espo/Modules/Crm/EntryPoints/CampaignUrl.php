@@ -73,32 +73,30 @@ class CampaignUrl implements EntryPoint
         $uid = $request->getQueryParam('uid') ?? null;
 
         if (!$trackingUrlId || !is_string($trackingUrlId)) {
-            throw new BadRequest();
+            throw new BadRequest("No tracking URL ID.");
         }
 
         /** @var ?CampaignTrackingUrl $trackingUrl */
         $trackingUrl = $this->entityManager->getEntityById(CampaignTrackingUrl::ENTITY_TYPE, $trackingUrlId);
 
         if (!$trackingUrl) {
-            throw new NotFoundSilent("Tracking URL '{$trackingUrlId}' not found.");
+            throw new NotFoundSilent("Tracking URL '$trackingUrlId' not found.");
         }
 
         if ($emailAddress && $hash) {
             $this->processWithHash($trackingUrl, $emailAddress, $hash);
-        }
-        else if ($uid && $hash) {
+        } else if ($uid && $hash) {
             $this->processWithUniqueId($trackingUrl, $uid, $hash);
-        }
-        else {
+        } else {
             if (!$queueItemId || !is_string($queueItemId)) {
-                throw new BadRequest();
+                throw new BadRequest("No item ID.");
             }
 
             /** @var ?EmailQueueItem $queueItem */
             $queueItem = $this->entityManager->getEntityById(EmailQueueItem::ENTITY_TYPE, $queueItemId);
 
             if (!$queueItem) {
-                throw new NotFoundSilent();
+                throw new NotFoundSilent("Item not found.");
             }
 
             $this->processWithQueueItem($trackingUrl, $queueItem);

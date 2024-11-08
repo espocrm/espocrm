@@ -1,5 +1,5 @@
 {
-    "controller": "controllers/record",
+    "controller": "crm:controllers/task",
     "recordViews": {
         "list": "crm:views/task/record/list",
         "detail": "crm:views/task/record/detail"

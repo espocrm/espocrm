@@ -54,8 +54,7 @@ class ImageSourceProvider
 
         try {
             $this->checker->checkTypeImage($attachment);
-        }
-        catch (Forbidden) {
+        } catch (Forbidden) {
             return null;
         }
 

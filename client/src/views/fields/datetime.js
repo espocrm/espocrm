@@ -33,14 +33,55 @@ import moment from 'moment';
 
 /**
  * A date-time field.
+ *
+ * @extends DateFieldView<module:views/fields/datetime~params>
  */
 class DatetimeFieldView extends DateFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/datetime~options
+     * @property {
+     *     module:views/fields/varchar~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/datetime~params
+     * @property {boolean} [required] Required.
+     * @property {boolean} [useNumericFormat] Use numeric format.
+     * @property {boolean} [hasSeconds] Display seconds.
+     * @property {number} [minuteStep] A minute step.
+     * @property {string} [after] Validate to be after another date field.
+     * @property {string} [before] Validate to be before another date field.
+     * @property {boolean} [afterOrEqual] Allow an equal date for 'after' validation.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/datetime~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'datetime'
 
     editTemplate = 'fields/datetime/edit'
 
-    validations = ['required', 'datetime', 'after', 'before']
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
+    validations = [
+        'required',
+        'datetime',
+        'after',
+        'before',
+    ]
 
     searchTypeList = [
         'lastSevenDays',
@@ -163,10 +204,13 @@ class DatetimeFieldView extends DateFieldView {
     initTimepicker() {
         const $time = this.$time;
 
+        const modalBodyElement = this.element.closest('.modal-body');
+
         $time.timepicker({
             step: this.params.minuteStep || 30,
             scrollDefaultNow: true,
             timeFormat: this.timeFormatMap[this.getDateTime().timeFormat],
+            appendTo: modalBodyElement ? $(modalBodyElement) : 'body',
         });
 
         $time

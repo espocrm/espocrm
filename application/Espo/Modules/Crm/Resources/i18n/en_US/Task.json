@@ -14,7 +14,8 @@
         "dateCompleted": "Date Completed",
         "attachments": "Attachments",
         "reminders": "Reminders",
-        "contact": "Contact"
+        "contact": "Contact",
+        "originalEmail": "Original Email"
     },
     "links": {
         "attachments": "Attachments",

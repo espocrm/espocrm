@@ -88,8 +88,7 @@ class Webhook extends Database
             }
 
             $entity->set('field', $field);
-        }
-        else {
+        } else {
             $entity->set('field', null);
         }
     }

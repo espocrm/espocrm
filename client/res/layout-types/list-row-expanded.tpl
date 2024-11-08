@@ -3,8 +3,7 @@
     {{{<%= layout.right.name %>}}}
 </div>
 <% } %>
-<% _.each(layout.rows, function (row, key) { %>
-    <div class="expanded-row"><% _.each(row, function (defs, key) { %>{{#ifNotEmptyHtml this.<%= defs.name %>}}<span class="cell" data-name="<%= defs.field %>"><%
+<% _.each(layout.rows, function (row, key) { %><div class="expanded-row"><% _.each(row, function (defs, key) { %>{{#ifNotEmptyHtml this.<%= defs.name %>}}<span class="cell<%= defs.align ? ' pull-right' : '' %><%= defs.small ? ' small' : '' %><%= defs.soft ? ' text-soft' : '' %>" data-name="<%= defs.field %>"><%
                 var tag = 'tag' in defs ? defs.tag : false;
                 if (tag) {
                     print( '<' + tag);

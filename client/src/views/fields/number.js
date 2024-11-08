@@ -37,6 +37,13 @@ class NumberFieldView extends VarcharFieldView {
     inlineEditDisabled = true
     readOnly = true
 
+    data() {
+        return {
+            ...super.data(),
+            textClass: 'numeric-text',
+        };
+    }
+
     /** @inheritDoc */
     fetch() {
         return {};

@@ -72,8 +72,7 @@ class Container extends BaseContainer
 
             /** @var AclManager $aclManager */
             $aclManager = $this->get(self::ID_ACL_MANAGER);
-        }
-        catch (NotFoundExceptionInterface) {
+        } catch (NotFoundExceptionInterface) {
             throw new LogicException();
         }
 

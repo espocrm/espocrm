@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "event": "Събитие",
+    "target": "Цел",
+    "data": "Данни",
+    "status": "Статус",
+    "processedAt": "Обработено на",
+    "attempts": "Опити",
+    "processAt": "Обработка на"
+  },
+  "options": {
+    "status": {
+      "Pending": "Текущо",
+      "Success": "Успешно",
+      "Failed": "Неуспешно"
+    }
+  }
+}

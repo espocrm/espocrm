@@ -7,10 +7,15 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Planned", "Held", "Not Held"],
+            "options": [
+                "Planned",
+                "Held",
+                "Not Held"
+            ],
             "default": "Planned",
             "style": {
-                "Held": "success"
+                "Held": "success",
+                "Not Held": "info"
             },
             "audited": true
         },
@@ -60,12 +65,15 @@
         "reminders": {
             "type": "jsonArray",
             "notStorable": true,
+            "orderDisabled": true,
             "view": "crm:views/meeting/fields/reminders",
             "layoutListDisabled": true,
             "validatorClassNameList": [
                 "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\Valid",
                 "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\MaxCount"
-            ]
+            ],
+            "dynamicLogicDisabled": true,
+            "duplicateIgnore": true
         },
         "createdAt": {
             "type": "datetime",

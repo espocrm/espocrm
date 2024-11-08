@@ -19,6 +19,12 @@
             ]
         }
     },
+    "params": [
+        {
+            "name": "disableFormatting",
+            "type": "bool"
+        }
+    ],
     "naming": "prefix",
     "notMergeable": true,
     "notCreatable": true,

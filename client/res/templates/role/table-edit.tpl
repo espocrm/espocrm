@@ -36,27 +36,15 @@
                                     <b>{{translate name category='scopeNamesPlural'}}</b>
                                 </div>
                             </td>
-                            <td>
-                                <select
-                                    name="{{name}}"
-                                    class="form-control"
-                                    data-type="access"
-                                >{{options ../accessList access scope='Role' field='accessList' styleMap=../styleMap}}</select>
-                            </td>
+                            <td data-name="{{name}}">{{{lookup ../this name}}}</td>
 
                             {{#ifNotEqual type 'boolean'}}
                                 {{#each list}}
-                                    <td>
-                                        {{#if levelList}}
-                                            <select name="{{name}}"
-                                                    class="form-control scope-action{{#ifNotEqual ../access 'enabled'}} hidden{{/ifNotEqual}}"
-                                                    data-scope="{{../name}}"
-
-                                                    title="{{translate action scope='Role' category='actions'}}"
-                                                    data-role-action="{{action}}">
-                                                {{options levelList level field='levelList' scope='Role' styleMap=../../styleMap}}
-                                            </select>
-                                        {{/if}}
+                                    <td data-name="{{name}}">
+                                        <div
+                                            data-name="{{name}}"
+                                            class=" {{#if (lookup ../../hiddenFields name) }} hidden  {{/if}} "
+                                        >{{{lookup ../../this name}}}</div>
                                     </td>
                                 {{/each}}
                             {{/ifNotEqual}}
@@ -122,14 +110,7 @@
                         </td>
                         {{#each list}}
                         <td>
-                            <select
-                                name="field-{{../../name}}-{{../name}}"
-                                class="form-control field-action"
-                                data-field="{{../name}}"
-                                data-scope="{{../../name}}"
-                                data-action="{{name}}"
-                                title="{{translate name scope='Role' category='actions'}}"
-                            >{{options ../../../fieldLevelList value scope='Role' field='levelList' styleMap=../../../styleMap}}</select>
+                            <div data-name="{{name}}">{{{lookup ../../../this name}}}</div>
                         </td>
                         {{/each}}
                         <td colspan="2">

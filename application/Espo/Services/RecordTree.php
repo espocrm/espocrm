@@ -165,8 +165,7 @@ class RecordTree extends Record
             if (!$this->acl->checkScope($this->getSubjectEntityType(), Table::ACTION_CREATE)) {
                 return true;
             }
-        }
-        catch (NotImplemented) {
+        } catch (NotImplemented) {
             return false;
         }
 
@@ -262,8 +261,7 @@ class RecordTree extends Record
                 $parentId = $parent->get('parentId');
 
                 array_unshift($arr, $parent->getId());
-            }
-            else {
+            } else {
                 $parentId = null;
             }
         }
@@ -310,6 +308,33 @@ class RecordTree extends Record
             if (!$this->acl->check($parent, Table::ACTION_EDIT)) {
                 throw new Forbidden();
             }
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     * @throws BadRequest
+     */
+    protected function beforeDeleteEntity(Entity $entity)
+    {
+        parent::beforeDeleteEntity($entity);
+
+        $childCategory = $this->entityManager
+            ->getRelation($entity, 'children')
+            ->findOne();
+
+        if ($childCategory) {
+            throw Forbidden::createWithBody(
+                'cannotRemoveCategoryWithChildCategory',
+                Error\Body::create()->withMessageTranslation('cannotRemoveCategoryWithChildCategory')
+            );
+        }
+
+        if (!$this->checkItemIsEmpty($entity)) {
+            throw Forbidden::createWithBody(
+                'cannotRemoveNotEmptyCategory',
+                Error\Body::create()->withMessageTranslation('cannotRemoveNotEmptyCategory')
+            );
         }
     }
 

@@ -31,6 +31,8 @@ namespace Espo\Core\Utils\Database\Orm;
 
 use Doctrine\DBAL\Types\Types;
 use Espo\Core\InjectableFactory;
+use Espo\Core\ORM\Defs\AttributeParam;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Database\ConfigDataProvider;
 use Espo\Core\Utils\Database\MetadataProvider;
 use Espo\Core\Utils\Util;
@@ -70,7 +72,7 @@ class Converter
         'maxLength' => 'len',
         'len' => 'len',
         'notNull' => 'notNull',
-        'exportDisabled' => 'notExportable',
+        'exportDisabled' => AttributeParam::NOT_EXPORTABLE,
         'autoincrement' => 'autoincrement',
         'entity' => 'entity',
         'notStorable' => 'notStorable',
@@ -217,8 +219,7 @@ class Converter
 
             if (array_key_exists('orderByColumn', $collectionDefs)) {
                 $ormMetadata[$entityType]['collection']['orderBy'] = $collectionDefs['orderByColumn'];
-            }
-            else if (array_key_exists('orderBy', $collectionDefs)) {
+            } else if (array_key_exists('orderBy', $collectionDefs)) {
                 if (array_key_exists($collectionDefs['orderBy'], $ormMetadata[$entityType]['attributes'])) {
                     $ormMetadata[$entityType]['collection']['orderBy'] = $collectionDefs['orderBy'];
                 }
@@ -400,8 +401,7 @@ class Converter
             if ($fieldDefs !== false) {
                 if (isset($output[$attribute]) && !in_array($attribute, $unmergedFields)) {
                     $output[$attribute] = array_merge($output[$attribute], $fieldDefs);
-                }
-                else {
+                } else {
                     $output[$attribute] = $fieldDefs;
                 }
 
@@ -500,21 +500,33 @@ class Converter
         if ($scopeDefs['stream'] ?? false) {
             if (!isset($entityMetadata['fields']['isFollowed'])) {
                 $ormMetadata[$entityType]['attributes']['isFollowed'] = [
-                    'type' => Entity::VARCHAR,
+                    'type' => Entity::BOOL,
                     'notStorable' => true,
-                    'notExportable' => true,
+                    AttributeParam::NOT_EXPORTABLE => true,
                 ];
 
                 $ormMetadata[$entityType]['attributes']['followersIds'] = [
                     'type' => Entity::JSON_ARRAY,
                     'notStorable' => true,
-                    'notExportable' => true,
+                    AttributeParam::NOT_EXPORTABLE => true,
                 ];
 
                 $ormMetadata[$entityType]['attributes']['followersNames'] = [
                     'type' => Entity::JSON_OBJECT,
                     'notStorable' => true,
-                    'notExportable' => true,
+                    AttributeParam::NOT_EXPORTABLE => true,
+                ];
+            }
+        }
+
+        // @todo Refactor.
+        if ($scopeDefs['stars'] ?? false) {
+            if (!isset($entityMetadata['fields']['isStarred'])) {
+                $ormMetadata[$entityType]['attributes']['isStarred'] = [
+                    'type' => Entity::BOOL,
+                    'notStorable' => true,
+                    AttributeParam::NOT_EXPORTABLE => true,
+                    'readOnly' => true,
                 ];
             }
         }
@@ -524,7 +536,7 @@ class Converter
             $ormMetadata[$entityType]['attributes']['versionNumber'] = [
                 'type' => Entity::INT,
                 'dbType' => Types::BIGINT,
-                'notExportable' => true,
+                AttributeParam::NOT_EXPORTABLE => true,
             ];
         }
 
@@ -592,7 +604,7 @@ class Converter
     {
         $type = $fieldParams['type'] ?? null;
 
-        if ($type === 'enum') {
+        if ($type === FieldType::ENUM) {
             if (($fieldParams['default'] ?? null) === '') {
                 $fieldParams['default'] = null;
             }
@@ -617,7 +629,7 @@ class Converter
                 continue;
             }
 
-            $convertedLink = $this->relationConverter->process($linkName, $linkParams, $entityType, $ormMetadata);
+            $convertedLink = $this->relationConverter->process($linkName, $linkParams, $entityType);
 
             if ($convertedLink) {
                 /** @var array<string, mixed> $relationships */
@@ -705,14 +717,12 @@ class Converter
                     foreach ($partList as $part) {
                         $fullTextSearchColumnList[] = $part . ucfirst($field);
                     }
-                }
-                else {
+                } else {
                     foreach ($partList as $part) {
                         $fullTextSearchColumnList[] = $field . ucfirst($part);
                     }
                 }
-            }
-            else {
+            } else {
                 $fullTextSearchColumnList[] = $field;
             }
         }
@@ -970,8 +980,7 @@ class Converter
             if ($keyValue === true) {
                 $indexList[$indexName]['type'] = $indexType;
                 $indexList[$indexName]['columns'] = [$attributeName];
-            }
-            else if (is_string($keyValue)) {
+            } else if (is_string($keyValue)) {
                 $indexList[$indexName]['type'] = $indexType;
                 $indexList[$indexName]['columns'][] = $attributeName;
             }

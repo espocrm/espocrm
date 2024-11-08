@@ -104,8 +104,7 @@ class ParentLink implements BeforeSave
             if ($parent instanceof Account) {
                 $accountId = $parent->getId();
                 $accountName = $parent->get('name');
-            }
-            else if (
+            } else if (
                 $parent instanceof Lead &&
                 $parent->getStatus() == Lead::STATUS_CONVERTED
             ) {
@@ -118,8 +117,7 @@ class ParentLink implements BeforeSave
                     $contactId = $parent->get('createdContactId');
                     $contactName = $parent->get('createdContactName');
                 }
-            }
-            else if ($parent instanceof Contact) {
+            } else if ($parent instanceof Contact) {
                 $contactId = $parent->getId();
                 $contactName = $parent->get('name');
             }

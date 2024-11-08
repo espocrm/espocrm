@@ -26,95 +26,96 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/note/detail', ['views/main'], (Dep) => {
+import MainView from 'views/main';
+
+class NoteDetailView extends MainView {
+
+    templateContent = `
+        <div class="header page-header">{{{header}}}</div>
+        <div class="record list-container list-container-panel block-center">{{{record}}}</div>
+    `
 
     /**
-     * @class
-     * @name Class
-     * @extends module:views/main
-     * @memberOf module:views/note/detail
+     * @private
      */
-    return Dep.extend(/** @lends module:views/note/detail.Class# */{
+    isDeleted = false
 
-        templateContent: `
-            <div class="header page-header">{{{header}}}</div>
-            <div class="record list-container list-container-panel block-center">{{{record}}}</div>
-        `,
+    setup() {
+        this.scope = this.model.entityType;
 
-        /**
-         * @private
-         */
-        isDeleted: false,
+        this.setupHeader();
+        this.setupRecord();
 
-        setup: function () {
-            this.scope = this.model.entityType;
+        this.listenToOnce(this.model, 'remove', () => {
+            this.clearView('record');
+            this.isDeleted = true;
+            this.getHeaderView().reRender();
+        });
+    }
 
-            this.setupHeader();
-            this.setupRecord();
+    /**
+     * @private
+     */
+    setupHeader() {
+        this.createView('header', 'views/header', {
+            selector: '> .header',
+            scope: this.scope,
+            fontSizeFlexible: true,
+        });
+    }
 
-            this.listenToOnce(this.model, 'remove', () => {
-                this.clearView('record');
-                this.isDeleted = true;
-                this.getHeaderView().reRender();
-            });
-        },
+    /**
+     * @private
+     */
+    setupRecord() {
+        this.wait(
+            this.getCollectionFactory().create(this.scope)
+                .then(collection => {
+                    this.collection = collection;
+                    this.collection.add(this.model);
 
-        setupHeader: function () {
-            this.createView('header', 'views/header', {
-                selector: '> .header',
-                scope: this.scope,
-                fontSizeFlexible: true,
-            });
-        },
+                    this.createView('record', 'views/stream/record/list', {
+                        selector: '> .record',
+                        collection: this.collection,
+                        isUserStream: true,
+                    });
+                })
+        );
+    }
 
-        setupRecord: function () {
-            this.wait(
-                this.getCollectionFactory().create(this.scope)
-                    .then(collection => {
-                        this.collection = collection;
-                        this.collection.add(this.model);
+    getHeader() {
+        const parentType = this.model.get('parentType');
+        const parentId = this.model.get('parentId');
+        const parentName = this.model.get('parentName');
+        const type = this.model.get('type');
 
-                        this.createView('record', 'views/stream/record/list', {
-                            selector: '> .record',
-                            collection: this.collection,
-                            isUserStream: true,
-                        });
-                    })
-            );
-        },
+        const $type = $('<span>')
+            .text(this.getLanguage().translateOption(type, 'type', 'Note'));
 
-        getHeader: function () {
-            let parentType = this.model.get('parentType');
-            let parentId = this.model.get('parentId');
-            let parentName = this.model.get('parentName');
-            let type = this.model.get('type');
+        if (this.model.get('deleted') || this.isDeleted) {
+            $type.css('text-decoration', 'line-through');
+        }
 
-            let $type = $('<span>')
-                    .text(this.getLanguage().translateOption(type, 'type', 'Note'));
-
-            if (this.model.get('deleted') || this.isDeleted) {
-                $type.css('text-decoration', 'line-through');
-            }
-
-            if (parentType && parentId) {
-                return this.buildHeaderHtml([
-                    $('<a>')
-                        .attr('href', '#' + parentType)
-                        .text(this.translate(parentType, 'scopeNamesPlural')),
-                    $('<a>')
-                        .attr('href', '#' + parentType + '/view/' + parentId)
-                        .text(parentName || parentId),
-                    $('<span>')
-                        .text(this.translate('Stream', 'scopeNames')),
-                    $type,
-                ]);
-            }
-
+        if (parentType && parentId) {
             return this.buildHeaderHtml([
+                $('<a>')
+                    .attr('href', `#${parentType}`)
+                    .text(this.translate(parentType, 'scopeNamesPlural')),
+                $('<a>')
+                    .attr('href', `#${parentType}/view/${parentId}`)
+                    .text(parentName || parentId),
                 $('<span>')
                     .text(this.translate('Stream', 'scopeNames')),
                 $type,
             ]);
-        },
-    });
-});
+        }
+
+        return this.buildHeaderHtml([
+            $('<span>')
+                .text(this.translate('Stream', 'scopeNames')),
+            $type,
+        ]);
+    }
+}
+
+export default NoteDetailView;

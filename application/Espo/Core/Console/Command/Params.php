@@ -129,14 +129,11 @@ class Params
                 $name = Util::hyphenToCamelCase($name);
 
                 $options[$name] = $value;
-            }
-            else if (str_starts_with($item, '--')) {
+            } else if (str_starts_with($item, '--')) {
                 $flagList[] = Util::hyphenToCamelCase(substr($item, 2));
-            }
-            else if (str_starts_with($item, '-')) {
+            } else if (str_starts_with($item, '-')) {
                 $flagList[] = substr($item, 1);
-            }
-            else if ($i > 0) {
+            } else if ($i > 0) {
                 $argumentList[] = $item;
             }
         }

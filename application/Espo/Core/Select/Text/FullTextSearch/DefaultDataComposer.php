@@ -90,7 +90,8 @@ class DefaultDataComposer implements DataComposer
         if (
             mb_strpos($preparedFilter, ' ') === false &&
             mb_strpos($preparedFilter, '+') === false &&
-            mb_strpos($preparedFilter, '-') === false &&
+            mb_strpos($preparedFilter, ' -') === false &&
+            mb_strpos($preparedFilter, '-') !== 0 &&
             mb_strpos($preparedFilter, '*') === false
         ) {
             $mode = Mode::NATURAL_LANGUAGE;

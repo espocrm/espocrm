@@ -26,56 +26,55 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/fields/link-multiple/default', ['views/fields/link-multiple'], function (Dep) {
+import LinkMultipleFieldView from 'views/fields/link-multiple';
 
-    return Dep.extend({
+export default class extends LinkMultipleFieldView {
 
-        data: function () {
-            var defaultAttributes = this.model.get('defaultAttributes') || {};
+    data() {
+        const defaultAttributes = this.model.get('defaultAttributes') || {};
 
-            var nameHash = defaultAttributes[this.options.field + 'Names'] || {};
-            var idValues = defaultAttributes[this.options.field + 'Ids'] || [];
+        const nameHash = defaultAttributes[this.options.field + 'Names'] || {};
+        const idValues = defaultAttributes[this.options.field + 'Ids'] || [];
 
-            var data = Dep.prototype.data.call(this);
+        const data = super.data();
 
-            data.nameHash = nameHash;
-            data.idValues = idValues;
+        data.nameHash = nameHash;
+        data.idValues = idValues;
 
-            return data;
-        },
+        return data;
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.foreignScope = this.getMetadata()
-                .get(['entityDefs', this.options.scope, 'links', this.options.field, 'entity']);
-        },
+        this.foreignScope = this.getMetadata()
+            .get(['entityDefs', this.options.scope, 'links', this.options.field, 'entity']);
+    }
 
-        fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
+    fetch() {
+        const data = super.fetch();
 
-            var defaultAttributes = {};
+        let defaultAttributes = {};
 
-            defaultAttributes[this.options.field + 'Ids'] = data[this.idsName];
-            defaultAttributes[this.options.field + 'Names'] = data[this.nameHashName];
+        defaultAttributes[this.options.field + 'Ids'] = data[this.idsName];
+        defaultAttributes[this.options.field + 'Names'] = data[this.nameHashName];
 
-            if (data[this.idsName] === null || data[this.idsName].length === 0) {
-                defaultAttributes = null;
-            }
+        if (data[this.idsName] === null || data[this.idsName].length === 0) {
+            defaultAttributes = null;
+        }
 
-            return {
-                defaultAttributes: defaultAttributes
-            };
-        },
+        return {
+            defaultAttributes: defaultAttributes,
+        };
+    }
 
-        copyValuesFromModel: function () {
-            var defaultAttributes = this.model.get('defaultAttributes') || {};
+    copyValuesFromModel() {
+        const defaultAttributes = this.model.get('defaultAttributes') || {};
 
-            var idValues = defaultAttributes[this.options.field + 'Ids'] || [];
-            var nameHash = defaultAttributes[this.options.field + 'Names'] || {};
+        const idValues = defaultAttributes[this.options.field + 'Ids'] || [];
+        const nameHash = defaultAttributes[this.options.field + 'Names'] || {};
 
-            this.ids = idValues;
-            this.nameHash = nameHash;
-        },
-    });
-});
+        this.ids = idValues;
+        this.nameHash = nameHash;
+    }
+}

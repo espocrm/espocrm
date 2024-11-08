@@ -26,8 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/fields/entity-list', ['views/fields/entity-type-list'], function (Dep) {
+import EntityTypeListFieldView from 'views/fields/entity-type-list';
 
-    return Dep.extend({
-    });
-});
+export default class extends EntityTypeListFieldView {}

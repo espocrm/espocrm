@@ -73,8 +73,7 @@ class Event extends Database implements
                 $dateStart = $this->convertDateTimeToDefaultTimezone($dateStart);
 
                 $entity->set('dateStart', $dateStart);
-            }
-            else {
+            } else {
                 /** @noinspection PhpRedundantOptionalArgumentInspection */
                 $entity->set('dateStartDate', null);
             }
@@ -96,8 +95,7 @@ class Event extends Database implements
 
                 $dateEnd = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
                 $entity->set('dateEnd', $dateEnd);
-            }
-            else {
+            } else {
                 /** @noinspection PhpRedundantOptionalArgumentInspection */
                 $entity->set('dateEndDate', null);
             }
@@ -136,8 +134,7 @@ class Event extends Database implements
 
         try {
             $tz = new DateTimeZone($timeZone);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }
 

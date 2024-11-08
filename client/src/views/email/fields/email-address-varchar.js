@@ -339,6 +339,9 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
                 this.addAddressHtml(item, this.nameHash[item] || '');
             });
 
+            /** @type {module:ajax.AjaxPromise & Promise<any>} */
+            let lastAjaxPromise;
+
             const autocomplete = new Autocomplete(this.$input.get(0), {
                 name: this.name,
                 autoSelectFirst: true,
@@ -361,26 +364,31 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
                         this.getHelper().escapeString(item.id) + '&#62;';
                 },
                 lookupFunction: query => {
-                    return Espo.Ajax
+                    if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
+                        lastAjaxPromise.abort();
+                    }
+
+                    lastAjaxPromise = Espo.Ajax
                         .getRequest('EmailAddress/search', {
                             q: query,
                             maxSize: this.getAutocompleteMaxCount(),
                             onlyActual: true,
-                        })
-                        .then(/** Record[] */response => {
-                            return response.map(item => {
-                                return {
-                                    id: item.emailAddress,
-                                    name: item.entityName,
-                                    emailAddress: item.emailAddress,
-                                    entityId: item.entityId,
-                                    entityName: item.entityName,
-                                    entityType: item.entityType,
-                                    data: item.emailAddress,
-                                    value: item.emailAddress,
-                                };
-                            });
                         });
+
+                    return lastAjaxPromise.then(/** Record[] */response => {
+                        return response.map(item => {
+                            return {
+                                id: item.emailAddress,
+                                name: item.entityName,
+                                emailAddress: item.emailAddress,
+                                entityId: item.entityId,
+                                entityName: item.entityName,
+                                entityType: item.entityType,
+                                data: item.emailAddress,
+                                value: item.emailAddress,
+                            };
+                        });
+                    });
                 },
             });
 
@@ -448,12 +456,26 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
         }
     }
 
+    /**
+     * @private
+     * @param {string} address
+     * @param {string} name
+     */
     addAddressHtml(address, name) {
         const $container = this.$el.find('.link-container');
+
+        const type = this.typeHash[address];
+        const id = this.idHash[address];
+
+        let avatarHtml = '';
 
         const $text = $('<span>');
 
         if (name) {
+            if (type === 'User' && id) {
+                avatarHtml = this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
+            }
+
             $text.append(
                 $('<span>').text(name),
                 ' ',
@@ -470,6 +492,7 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
             .attr('data-address', address)
             .addClass('list-group-item')
             .append(
+                avatarHtml,
                 $('<a>')
                     .attr('data-address', address)
                     .attr('role', 'button')
@@ -546,10 +569,17 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
         const id = this.idHash[address] || null;
 
         if (id) {
-            return $('<div>')
+            let avatarHtml = '';
+
+            if (entityType === 'User') {
+                avatarHtml = this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
+            }
+
+            return $('<div class="email-address-detail-item">')
                 .append(
+                    avatarHtml,
                     $('<a>')
-                        .attr('href', '#' + entityType + '/view/' + id)
+                        .attr('href', `#${entityType}/view/${id}`)
                         .attr('data-scope', entityType)
                         .attr('data-id', id)
                         .text(name),

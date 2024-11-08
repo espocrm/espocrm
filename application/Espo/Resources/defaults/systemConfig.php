@@ -104,6 +104,7 @@ return [
         'authLogDisabled',
         'authApiUserLogDisabled',
         'authFailedAttemptsPeriod',
+        'authFailedCodeAttemptsPeriod',
         'authMaxFailedAttemptNumber',
         'ipAddressServerParam',
         'jobNoTableLocking',
@@ -111,6 +112,8 @@ return [
         'passwordChangeRequestNewUserLifetime',
         'passwordChangeRequestExistingUserLifetime',
         'passwordRecoveryInternalIntervalPeriod',
+        'cleanupAppLog',
+        'cleanupAppLogPeriod',
     ],
     'adminItems' => [
         'devMode',
@@ -208,6 +211,8 @@ return [
         'emailAddressEntityLookupDefaultOrder',
         'phoneNumberEntityLookupDefaultOrder',
         'customPrefixDisabled',
+        'noteAclLimit',
+        'noteAclPeriod',
         'latestVersion',
     ],
     'superAdminItems' => [
@@ -217,6 +222,7 @@ return [
         'jobRunInParallel',
         'jobPoolConcurrencyNumber',
         'jobPeriodForActiveProcess',
+        'appLogAdminAllowed',
         'cronMinInterval',
         'daemonInterval',
         'daemonProcessTimeout',

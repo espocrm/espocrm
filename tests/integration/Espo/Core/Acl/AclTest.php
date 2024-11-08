@@ -32,6 +32,9 @@ namespace tests\integration\Espo\Core\Acl;
 use Espo\Core\AclManager;
 use Espo\Core\Acl;
 use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Call;
+use Espo\Modules\Crm\Entities\Meeting;
+use Espo\Modules\Crm\Entities\Task;
 
 class AclTest extends \tests\integration\Core\BaseTestCase
 {
@@ -67,6 +70,40 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $acl = $this->getContainer()->get('acl');
 
         $this->assertFalse($acl->tryCheck('NonExistingEntityType'));
+    }
+
+    public function testCheckScopeAccess(): void
+    {
+        $this->createUser('tester', [
+            'data' => [
+                Task::ENTITY_TYPE => false,
+                Call::ENTITY_TYPE => [
+                    'create' => Acl\Table::LEVEL_NO,
+                    'read' => Acl\Table::LEVEL_NO,
+                    'edit' => Acl\Table::LEVEL_NO,
+                    'delete' => Acl\Table::LEVEL_NO,
+                ],
+                Meeting::ENTITY_TYPE => [
+                    'create' => Acl\Table::LEVEL_YES,
+                    'read' => Acl\Table::LEVEL_YES,
+                    'edit' => Acl\Table::LEVEL_NO,
+                    'delete' => Acl\Table::LEVEL_NO,
+                ],
+            ],
+        ]);
+
+        $this->auth('tester');
+        $this->reCreateApplication();
+
+        $acl = $this->getContainer()->getByClass(Acl::class);
+
+        $this->assertFalse($acl->checkScope(Task::ENTITY_TYPE));
+        $this->assertTrue($acl->checkScope(Call::ENTITY_TYPE));
+        $this->assertTrue($acl->checkScope(Meeting::ENTITY_TYPE));
+
+        $this->assertFalse($acl->check(Task::ENTITY_TYPE, Acl\Table::ACTION_READ));
+        $this->assertFalse($acl->check(Call::ENTITY_TYPE, Acl\Table::ACTION_READ));
+        $this->assertTrue($acl->check(Meeting::ENTITY_TYPE, Acl\Table::ACTION_READ));
     }
 
     public function testCheckField(): void

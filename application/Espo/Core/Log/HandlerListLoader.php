@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Log;
 
+use Monolog\Handler\FormattableHandlerInterface;
 use Monolog\Handler\HandlerInterface;
 
 use Espo\Core\InjectableFactory;
@@ -71,7 +72,17 @@ class HandlerListLoader
         if ($loaderClassName) {
             $loader = $this->injectableFactory->create($loaderClassName);
 
-            return $loader->load($params);
+            $handler = $loader->load($params);
+
+            if ($handler instanceof FormattableHandlerInterface) {
+                $formatter = $this->defaultLoader->loadFormatter($data);
+
+                if ($formatter) {
+                    $handler->setFormatter($formatter);
+                }
+            }
+
+            return $handler;
         }
 
         return $this->defaultLoader->load($data, $defaultLevel);

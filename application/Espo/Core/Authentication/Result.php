@@ -51,6 +51,7 @@ class Result
     private ?string $token = null;
     private ?string $view = null;
     private ?string $failReason = null;
+    private bool $bypassSecondStep = false;
     private ?Data $data;
 
     private function __construct(string $status, ?User $user = null, ?Data $data = null)
@@ -105,11 +106,21 @@ class Result
     }
 
     /**
-     * Second step is required. E.g. for 2FA.
+     * The second step is required.
      */
     public function isSecondStepRequired(): bool
     {
         return $this->status === self::STATUS_SECOND_STEP_REQUIRED;
+    }
+
+    /**
+     * To bypass the second step.
+     *
+     * @since 8.4.0
+     */
+    public function bypassSecondStep(): bool
+    {
+        return $this->bypassSecondStep;
     }
 
     /**
@@ -182,5 +193,18 @@ class Result
     public function getFailReason(): ?string
     {
         return $this->failReason;
+    }
+
+    /**
+     * Clone with bypass second step.
+     *
+     * @since 8.4.0
+     */
+    public function withBypassSecondStep(bool $bypassSecondStep = true): self
+    {
+        $obj = clone $this;
+        $obj->bypassSecondStep = $bypassSecondStep;
+
+        return $obj;
     }
 }

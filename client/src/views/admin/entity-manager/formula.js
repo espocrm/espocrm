@@ -128,7 +128,7 @@ class EntityManagerFormulaView extends View {
     }
 
     actionSave() {
-        let data = this.recordView.fetch();
+        const data = this.recordView.fetch();
 
         if (_.isEqual(data, this.attributes)) {
             Espo.Ui.warning(this.translate('notModified', 'messages'));
@@ -215,7 +215,7 @@ class EntityManagerFormulaView extends View {
      * @param {KeyboardEvent} e
      */
     onKeyDown(e) {
-        let key = Espo.Utils.getKeyFromKeyEvent(e);
+        const key = Espo.Utils.getKeyFromKeyEvent(e);
 
         if (key === 'Control+KeyS' || key === 'Control+Enter') {
             this.actionSave();

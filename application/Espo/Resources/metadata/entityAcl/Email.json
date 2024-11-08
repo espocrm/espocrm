@@ -9,7 +9,7 @@
     },
     "links": {
         "users": {
-            "onlyAdmin": true
+            "nonAdminReadOnly": true
         }
     }
 }

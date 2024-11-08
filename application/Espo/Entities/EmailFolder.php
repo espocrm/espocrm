@@ -29,8 +29,15 @@
 
 namespace Espo\Entities;
 
-class EmailFolder extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class EmailFolder extends Entity
 {
     public const ENTITY_TYPE = 'EmailFolder';
+
+    public function getName(): string
+    {
+        return $this->get('name') ?? '';
+    }
 }
 

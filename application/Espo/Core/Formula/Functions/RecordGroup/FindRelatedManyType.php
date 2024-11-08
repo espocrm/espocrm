@@ -110,8 +110,7 @@ class FindRelatedManyType extends BaseFunction implements
             if (is_null($order)) {
                 $order = $metadata->get(['entityDefs', $entityType, 'collection', 'order']) ?? 'asc';
             }
-        }
-        else {
+        } else {
             $order = $order ?? 'asc';
         }
 
@@ -156,8 +155,7 @@ class FindRelatedManyType extends BaseFunction implements
             if ($filter) {
                 $builder->withPrimaryFilter($filter);
             }
-        }
-        else {
+        } else {
             $i = 6;
 
             while ($i < count($args) - 1) {
@@ -181,8 +179,7 @@ class FindRelatedManyType extends BaseFunction implements
                 $foreignLink . 'Id' => $entity->getId(),
                 $foreignLink . 'Type' => $entity->getEntityType(),
             ]);
-        }
-        else {
+        } else {
             $alias = $foreignLink . $this->generateRandomString();
 
             $queryBuilder

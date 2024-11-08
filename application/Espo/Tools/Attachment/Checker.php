@@ -34,22 +34,15 @@ use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Utils\File\MimeType;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
+use Espo\Core\ORM\Type\FieldType;
 
 class Checker
 {
-    private Metadata $metadata;
-    private MimeType $mimeType;
-    private DetailsObtainer $detailsObtainer;
-
     public function __construct(
-        Metadata $metadata,
-        MimeType $mimeType,
-        DetailsObtainer $detailsObtainer
-    ) {
-        $this->metadata = $metadata;
-        $this->mimeType = $mimeType;
-        $this->detailsObtainer = $detailsObtainer;
-    }
+        private Metadata $metadata,
+        private MimeType $mimeType,
+        private DetailsObtainer $detailsObtainer
+    ) {}
 
     /**
      * Check a mine-type for allowance.

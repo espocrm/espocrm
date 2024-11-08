@@ -39,12 +39,17 @@ class Params
      */
     private $options = [];
 
+    /**
+     * Whether an option is set.
+     */
     public function hasOption(string $option): bool
     {
         return array_key_exists($option, $this->options);
     }
 
     /**
+     * Get an option.
+     *
      * @return mixed
      */
     public function getOption(string $option)
@@ -72,6 +77,22 @@ class Params
         return $obj;
     }
 
+    /**
+     * Clone with an option.
+     *
+     * @since 8.5.0
+     */
+    public function withOption(string $option, mixed $value): self
+    {
+        $obj = clone $this;
+        $obj->options[$option] = $value;
+
+        return $obj;
+    }
+
+    /**
+     * Create an instance.
+     */
     public static function create(): self
     {
         return new self();

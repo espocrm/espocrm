@@ -111,14 +111,19 @@ class NoteStreamView extends View {
             'entityType': translatedEntityType,
         };
 
+        const rowActionsView = this.options.rowActionsView || this.rowActionsView;
+
         if (!this.options.noEdit && (this.isEditable || this.isRemovable)) {
-            this.createView('right', this.rowActionsView, {
+            this.createView('right', rowActionsView, {
                 selector: '.right-container',
                 acl: this.options.acl,
                 model: this.model,
                 isEditable: this.isEditable,
                 isRemovable: this.isRemovable,
                 listType: this.listType,
+                isThis: this.isThis,
+                parentModel: this.parentModel,
+                isNotification: this.options.isNotification,
             });
         }
     }
@@ -222,21 +227,38 @@ class NoteStreamView extends View {
         return this.getHelper().getAvatarHtml(id, 'small', 20);
     }
 
+    /**
+     *
+     * @param [scope]
+     * @param [id]
+     * @return {string|null}
+     */
     getIconHtml(scope, id) {
-        if (this.isThis && scope === this.parentModel.entityType) {
-            return;
+        if (!scope) {
+            if (!this.model.attributes.parentType) {
+                return null;
+            }
+
+            scope = this.model.attributes.parentType;
+            id = this.model.attributes.parentId;
         }
 
-        const iconClass = this.getMetadata().get(['clientDefs', scope, 'iconClass']);
+        if (this.isThis && this.parentModel && scope === this.parentModel.entityType) {
+            return null;
+        }
+
+        const iconClass = this.getMetadata().get(`clientDefs.${scope}.iconClass`);
+        const color = this.getMetadata().get(`clientDefs.${scope}.color`);
 
         if (!iconClass) {
-            return;
+            return null;
         }
 
         return $('<span>')
             .addClass(iconClass)
             .addClass('action text-muted icon')
             .css('cursor', 'pointer')
+            .css('color', color ? color : '')
             .attr('title', this.translate('View'))
             .attr('data-action', 'quickView')
             .attr('data-id', id)

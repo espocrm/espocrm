@@ -1,1 +1,6 @@
-{{#if dateValue}}<span title="{{dateValue}}">{{dateValue}}</span>{{/if}}
+{{#if dateValue~}}
+    <span
+        {{#if titleDateValue}}title="{{titleDateValue}}"{{/if}}
+        class="{{#if style}} text-{{style}} {{/if}} {{#if useNumericFormat}} numeric-text {{/if}}"
+    >{{dateValue}}</span>
+{{~/if}}

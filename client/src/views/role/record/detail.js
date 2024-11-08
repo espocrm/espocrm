@@ -26,24 +26,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/role/record/detail', ['views/record/detail'], function (Dep) {
+import DetailRecordView from 'views/record/detail';
 
-    return Dep.extend({
+export default class RoleDetailRecordView extends DetailRecordView {
 
-        tableView: 'views/role/record/table',
+    tableView = 'views/role/record/table'
 
-        sideView: false,
-        isWide: true,
-        editModeDisabled: true,
-        stickButtonsContainerAllTheWay: true,
+    sideView = false
+    isWide = true
+    editModeDisabled = true
+    stickButtonsContainerAllTheWay = true
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.createView('extra', this.tableView, {
-                selector: '.extra',
-                model: this.model
-            });
-        },
-    });
-});
+        this.createView('extra', this.tableView, {
+            selector: '.extra',
+            model: this.model,
+        });
+    }
+}

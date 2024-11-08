@@ -148,6 +148,8 @@ class LoginView extends View {
                 this.translate('Sign in');
         }
 
+        this.wait(this.getHelper().processSetupHandlers(this, 'login'));
+
         if (this.getLanguage().has('Log in', 'labels', 'Global')) {
             this.logInText = this.translate('Log in');
         }

@@ -1,4 +1,4 @@
-@body-bg-value: #e3e8fb;
+@body-bg-value: #eef1fc;
 @text-color-value: #424242;
 @panel-bg-value: #FFF;
 
@@ -22,15 +22,22 @@
 @state-info-bg-value: #eee4fa;
 
 @navbar-inverse-color-value: #d7d1d4;
-@navbar-inverse-bg-value: #9f6083;
+@navbar-inverse-bg-value: #956289;
 @navbar-inverse-link-color-value: #F7F7F7;
+@navbar-inverse-link-active-bg-value: darken(@navbar-inverse-bg-value, 10%);
+@navbar-inverse-link-hover-color-value: #fff;
+@navbar-inverse-link-icon-color-value: @navbar-inverse-link-color-value;
+@navbar-inverse-link-icon-hover-color-value: @navbar-inverse-link-hover-color-value;
+@navbar-inverse-link-hover-bg-value: #8a5c7f;
 
-@btn-default-bg-value: #f7f7f7;
+@navbar-border-width-value: 0;
+
+@btn-default-bg-value: #fcfcfc;
 @btn-default-border-value: #c9c8cb;
-@btn-default-hover-bg-value: darken(@btn-default-bg-value, 3%);
-@btn-default-hover-border-value: darken(@btn-default-bg-value, 12%);
-@btn-default-active-bg-value: darken(@btn-default-bg-value, 9%);
-@btn-default-active-border-value: darken(@btn-default-bg-value, 18%);
+@btn-default-hover-bg-value: darken(@btn-default-bg-value, 2%);
+@btn-default-hover-border-value: darken(@btn-default-border-value, 2%);
+@btn-default-active-bg-value: darken(@btn-default-bg-value, 5%);
+@btn-default-active-border-value: darken(@btn-default-border-value, 5%);
 
 @btn-text-color-value: #73747e;
 
@@ -47,12 +54,11 @@
 
 @select-item-border-value: @btn-default-border-value;
 
-@border-radius-value: 5px;
-@panel-border-radius-value: 8px;
-@dropdown-border-radius-value: 6px;
+@border-radius-value: var(--6px);
+@panel-border-radius-value: var(--10px);
+@dropdown-border-radius-value: var(--6px);
 
-@dropdown-border-width-value: 1px;
+@dropdown-border-width-value: var(--1px);
 @panel-border-width-value: 0px;
 
 @default-box-shadow-value: 2px 2px 4px rgba(0,0,0,0.09);
-

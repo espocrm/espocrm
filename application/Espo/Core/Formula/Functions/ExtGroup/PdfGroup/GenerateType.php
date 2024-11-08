@@ -84,8 +84,7 @@ class GenerateType extends BaseFunction implements
 
         try {
             $entity = $em->getEntity($entityType, $id);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log("Message: " . $e->getMessage() . ".");
 
             throw new Error();
@@ -125,8 +124,7 @@ class GenerateType extends BaseFunction implements
                 $template->getId(),
                 $params
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log("Error while generating. Message: " . $e->getMessage() . ".", 'error');
 
             throw new Error();

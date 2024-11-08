@@ -29,14 +29,14 @@
 
 namespace Espo\Classes\Select\Event\PrimaryFilters;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Select\Primary\Filter;
 use Espo\Core\Select\Helpers\UserTimeZoneProvider;
 use Espo\Core\Select\Where\ConverterFactory;
 use Espo\Core\Select\Where\Item;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Entities\User;
-use LogicException;
+use RuntimeException;
 
 class Todays implements Filter
 {
@@ -60,9 +60,8 @@ class Todays implements Filter
             $whereItem = $this->converterFactory
                 ->create($this->entityType, $this->user)
                 ->convert($queryBuilder, $item);
-        }
-        catch (Error $e) {
-            throw new LogicException($e->getMessage());
+        } catch (BadRequest $e) {
+            throw new RuntimeException('', 0, $e);
         }
 
         $queryBuilder->where($whereItem);

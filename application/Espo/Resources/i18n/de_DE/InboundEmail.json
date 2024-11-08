@@ -34,10 +34,13 @@
     "keepFetchedEmailsUnread": "Geholte E-Mails ungelesen halten",
     "smtpAuthMechanism": "SMTP-Auth-Mechanismus",
     "security": "Sicherheit",
-    "groupEmailFolder": "E-Mail Gruppenordner"
+    "groupEmailFolder": "E-Mail Gruppenordner",
+    "connectedAt": "Verbunden mit",
+    "excludeFromReply": "Von Antwort ausschließen",
+    "isSystem": "Ist System"
   },
   "tooltips": {
-    "reply": "Benachrichtigt E-Mail Empfänger beim Empfang der Nachrichten.\n\n Nur eine E-Mail pro Empfänger wird zu einer Zeit versendet, um eine Endlosschleife zu verhindern.",
+    "reply": "Benachrichtigt die Absender von E-Mails, dass ihre Nachrichten empfangen wurden.\n\n Nur eine E-Mail pro Empfänger wird in einem bestimmten Zeitraum versendet, um eine Endlosschleife zu verhindern.",
     "createCase": "Fall aus eingehender E-Mail automatisch erstellen.",
     "replyToAddress": "Geben Sie die E-Mail Adresse dieser Mailbox an, um Antworten hier zu empfangen.",
     "caseDistribution": "Wie Fälle zugewiesen werden. Entweder direkt dem Benutzer oder im Team.",
@@ -51,7 +54,9 @@
     "smtpIsForMassEmail": "Wenn diese Option aktiviert ist, steht SMTP für Massen-E-Mail zur Verfügung.",
     "storeSentEmails": "Gesendete E-Mails werden auf dem IMAP-Server gespeichert.",
     "useSmtp": "Die Möglichkeit, E-Mails zu versenden.",
-    "groupEmailFolder": "Eingehende E-Mails in einem Gruppenordner ablegen."
+    "groupEmailFolder": "Eingehende E-Mails in einem Gruppenordner ablegen.",
+    "excludeFromReply": "Beim Beantworten von E-Mails, die an die E-Mail-Adresse dieses Kontos gesendet werden, wird dessen E-Mail-Adresse nicht zur Kopie (CC-Feld) hinzugefügt.\n\nBeachten Sie, dass durch die Aktivierung dieses Parameters die E-Mail-Adresse dieses Kontos für Benutzer, die Zugriff auf das Senden von E-Mails haben, sichtbar wird.",
+    "isSystem": "Ist das E-Mail-Konto des Systems."
   },
   "links": {
     "filters": "Filter",
@@ -77,6 +82,7 @@
     "Main": "Hauptteil"
   },
   "messages": {
-    "couldNotConnectToImap": "Kann keine Verbindung zum IMAP Server herstellen"
+    "couldNotConnectToImap": "Kann keine Verbindung zum IMAP Server herstellen",
+    "imapNotConnected": "Konnte keine Verbindung zum Gruppen-[IMAP account](#InboundEmail/view/{id}) herstellen."
   }
 }

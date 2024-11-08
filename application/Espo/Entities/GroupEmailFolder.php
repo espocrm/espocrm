@@ -29,12 +29,21 @@
 
 namespace Espo\Entities;
 
-class GroupEmailFolder extends \Espo\Core\ORM\Entity
+use Espo\Core\Field\LinkMultiple;
+use Espo\Core\ORM\Entity;
+
+class GroupEmailFolder extends Entity
 {
     public const ENTITY_TYPE = 'GroupEmailFolder';
 
     public function getOrder(): ?int
     {
         return $this->get('order');
+    }
+
+    public function getTeams(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        return $this->getValueObject('teams');
     }
 }

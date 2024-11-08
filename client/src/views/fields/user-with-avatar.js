@@ -34,18 +34,85 @@ class UserWithAvatarFieldView extends UserFieldView {
     detailTemplate = 'fields/user-with-avatar/detail'
 
     data() {
-        let o = super.data();
+        const data = super.data();
 
-        if (this.mode === this.MODE_DETAIL) {
-            o.avatar = this.getAvatarHtml();
-            o.isOwn = this.model.get(this.idName) === this.getUser().id;
+        if (this.mode === this.MODE_DETAIL || this.mode === this.MODE_LIST) {
+            data.avatar = this.getAvatarHtml();
+            data.isOwn = this.model.get(this.idName) === this.getUser().id;
         }
 
-        return o;
+        return data;
     }
 
     getAvatarHtml() {
-        return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', 14, 'avatar-link');
+        const size = this.mode === this.MODE_DETAIL ? 18: 16;
+
+        return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', size, 'avatar-link');
+    }
+
+    afterRender() {
+        super.afterRender();
+
+        if (this.isEditMode()) {
+            this.controlEditModeAvatar();
+        }
+    }
+
+    setup() {
+        super.setup();
+
+        this.addHandler('keydown', `input[data-name="${this.nameName}"]`, (e, target) => {
+            target.classList.add('being-typed');
+        });
+
+        this.addHandler('change', `input[data-name="${this.nameName}"]`, (e, target) => {
+            setTimeout(() => target.classList.remove('being-typed'), 200);
+        });
+
+        this.on('change', () => {
+            if (!this.isEditMode()) {
+                return;
+            }
+
+            const img = this.element.querySelector('img.avatar');
+
+            if (img) {
+                img.parentNode.removeChild(img);
+            }
+
+            this.controlEditModeAvatar();
+        });
+    }
+
+    /**
+     * @private
+     */
+    controlEditModeAvatar() {
+        const nameElement = this.element.querySelector(`input[data-name="${this.nameName}"]`);
+        nameElement.classList.remove('being-typed');
+
+        const userId = this.model.attributes[this.idName];
+
+        if (!userId) {
+            return;
+        }
+
+        const avatarHtml = this.getHelper().getAvatarHtml(userId, 'small', 18, 'avatar-link');
+
+        if (!avatarHtml) {
+            return;
+        }
+
+        const img = new DOMParser().parseFromString(avatarHtml, 'text/html').body.childNodes[0];
+
+        if (!(img instanceof HTMLImageElement)) {
+            return;
+        }
+
+        img.classList.add('avatar-in-input')
+        img.draggable = false;
+
+        this.element.append(img);
     }
 }
 

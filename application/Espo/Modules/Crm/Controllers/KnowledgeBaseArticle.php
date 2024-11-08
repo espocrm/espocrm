@@ -68,8 +68,7 @@ class KnowledgeBaseArticle extends Record
                 $parentType,
                 $relatedType
             );
-        }
-        catch (Error $e) {
+        } catch (Error $e) {
             throw new BadRequest($e->getMessage());
         }
 

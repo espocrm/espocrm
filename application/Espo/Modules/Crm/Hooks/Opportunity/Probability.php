@@ -53,7 +53,7 @@ class Probability implements BeforeSave
             return;
         }
 
-        if ($entity->has('probability')) {
+        if ($entity->get('probability') !== null) {
             return;
         }
 
@@ -63,8 +63,7 @@ class Probability implements BeforeSave
             return;
         }
 
-        $probability = $this->metadata
-            ->get('entityDefs.Opportunity.fields.stage.probabilityMap.' . $stage) ?? 0;
+        $probability = $this->metadata->get("entityDefs.Opportunity.fields.stage.probabilityMap.$stage") ?? 0;
 
         $entity->setProbability($probability);
     }

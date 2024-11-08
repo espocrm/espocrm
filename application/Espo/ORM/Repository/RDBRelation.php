@@ -80,8 +80,7 @@ class RDBRelation
 
         if ($entity instanceof BaseEntity) {
             $this->foreignEntityType = $entity->getRelationParam($relationName, 'entity');
-        }
-        else {
+        } else {
             $this->foreignEntityType = $this->entityManager
                 ->getDefs()
                 ->getEntity($this->entityType)

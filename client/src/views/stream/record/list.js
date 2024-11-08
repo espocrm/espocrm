@@ -30,24 +30,37 @@
 
 import ListExpandedRecordView from 'views/record/list-expanded';
 
-/**
- * @property collection
- * @memberOf ListStreamRecordView#
- * @type module:collections/note
- */
-
 class ListStreamRecordView extends ListExpandedRecordView {
 
     type = 'listStream'
 
     massActionsDisabled = true
 
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    isUserStream
+
     setup() {
+        this.isUserStream = this.options.isUserStream || false;
+
         this.itemViews = this.getMetadata().get('clientDefs.Note.itemViews') || {};
 
         super.setup();
 
         this.isRenderingNew = false;
+
+        this.listenTo(this.collection, 'update-sync', () => {
+            this.buildRows(() => this.reRender());
+        });
+
+        if (this.isUserStream || this.model.entityType === 'User') {
+            const collection = /** @type {import('collections/note').default} */this.collection;
+
+            collection.reactionsCheckMaxSize = this.getConfig().get('streamReactionsCheckMaxSize') || 0;
+        }
 
         this.listenTo(this.collection, 'sync', (c, r, options) => {
             if (!options.fetchNew) {
@@ -146,6 +159,7 @@ class ListStreamRecordView extends ListExpandedRecordView {
             selector: 'li[data-id="' + model.id + '"]',
             setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
             listType: this.type,
+            rowActionsView: this.options.rowActionsView,
         }, callback);
     }
 
@@ -193,7 +207,123 @@ class ListStreamRecordView extends ListExpandedRecordView {
      * @return {Promise}
      */
     showNewRecords() {
-        return this.collection.fetchNew();
+        const collection = /** @type {import('collections/note').default} */
+            this.collection;
+
+        return collection.fetchNew();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @private
+     * @param {{id: string}} data
+     */
+    actionPin(data) {
+        const collection = /** @type {import('collections/note').default} */this.collection;
+
+        Espo.Ui.notify(' ... ');
+
+        Espo.Ajax.postRequest(`Note/${data.id}/pin`).then(() => {
+            Espo.Ui.notify(false);
+
+            const model = collection.get(data.id);
+
+            if (model) {
+                model.set('isPinned', true);
+            }
+
+            if (collection.pinnedList) {
+                collection.fetchNew();
+            }
+
+            collection.trigger('pin', model.id);
+        });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @private
+     * @param {{id: string}} data
+     */
+    actionUnpin(data) {
+        const collection = /** @type {import('collections/note').default} */this.collection;
+
+        Espo.Ui.notify(' ... ');
+
+        Espo.Ajax.deleteRequest(`Note/${data.id}/pin`).then(() => {
+            Espo.Ui.notify(false);
+
+            const model = collection.get(data.id);
+
+            if (model) {
+                model.set('isPinned', false);
+            }
+
+            if (collection.pinnedList) {
+                collection.fetchNew();
+            }
+
+            collection.trigger('unpin', model.id);
+        });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @private
+     * @param {{id: string}} data
+     */
+    actionQuoteReply(data) {
+        const rowView = this.getView(data.id);
+
+        const selection = window.getSelection();
+
+        if (selection && selection.anchorNode && selection.focusNode) {
+            const postContainer = rowView.element.querySelector('.complex-text');
+
+            if (
+                postContainer.contains(selection.anchorNode) &&
+                postContainer.contains(selection.focusNode)
+            ) {
+                let contents = '';
+
+                for (let i = 0; i < selection.rangeCount; i++) {
+                    const range = selection.getRangeAt(i);
+
+                    const div = document.createElement('div');
+                    div.appendChild(range.cloneContents());
+
+                    contents += div.innerHTML;
+                }
+
+                if (contents) {
+                    Espo.loader.requirePromise('turndown')
+                        .then(/** typeof import('turndown').default */TurndownService => {
+                            const turndownService = (new TurndownService());
+
+                            // noinspection JSValidateTypes
+                            const code = turndownService.turndown(contents);
+
+                            this.trigger('quote-reply', code);
+                        });
+
+                    return;
+                }
+            }
+        }
+
+        const model = this.collection.get(data.id);
+
+        if (!model) {
+            return;
+        }
+
+        const code = model.attributes.post;
+
+        if (!code) {
+            return;
+        }
+
+        this.trigger('quote-reply', code);
     }
 }
 

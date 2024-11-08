@@ -81,4 +81,15 @@ class SaveOption
      * Override modified-by. String.
      */
     public const MODIFIED_BY_ID = 'modifiedById';
+    /**
+     * A duplicate source ID. A record that is being duplicated.
+     * @since 8.4.0
+     */
+    public const DUPLICATE_SOURCE_ID = 'duplicateSourceId';
+
+    /**
+     * When saved in Mass-Update.
+     * @since 8.4.0
+     */
+    public const MASS_UPDATE = 'massUpdate';
 }

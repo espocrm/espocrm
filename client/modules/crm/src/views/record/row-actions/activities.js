@@ -38,6 +38,7 @@ define('crm:views/record/row-actions/activities', ['views/record/row-actions/rel
                     id: this.model.id,
                 },
                 link: '#' + this.model.entityType + '/view/' + this.model.id,
+                groupIndex: 0,
             }];
 
             if (this.options.acl.edit) {
@@ -48,6 +49,7 @@ define('crm:views/record/row-actions/activities', ['views/record/row-actions/rel
                         id: this.model.id,
                     },
                     link: '#' + this.model.entityType + '/edit/' + this.model.id,
+                    groupIndex: 0,
                 });
 
                 if (this.model.entityType === 'Meeting' || this.model.entityType === 'Call') {
@@ -57,6 +59,7 @@ define('crm:views/record/row-actions/activities', ['views/record/row-actions/rel
                         data: {
                             id: this.model.id,
                         },
+                        groupIndex: 1,
                     });
 
                     list.push({
@@ -65,6 +68,7 @@ define('crm:views/record/row-actions/activities', ['views/record/row-actions/rel
                         data: {
                             id: this.model.id,
                         },
+                        groupIndex: 1,
                     });
                 }
             }
@@ -75,7 +79,8 @@ define('crm:views/record/row-actions/activities', ['views/record/row-actions/rel
                     label: 'Remove',
                     data: {
                         id: this.model.id,
-                    }
+                    },
+                    groupIndex: 0,
                 });
             }
 

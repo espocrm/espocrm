@@ -26,12 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/fields/attachment-multiple', ['views/fields/attachment-multiple'], function (Dep) {
+import AttachmentMultipleFieldView from 'views/fields/attachment-multiple';
 
-    return Dep.extend({
+export default class extends AttachmentMultipleFieldView {
 
-        showPreviews: true,
+    showPreviews = true
+    showPreviewsInListMode = true
+}
 
-        showPreviewsInListMode: true,
-    });
-});

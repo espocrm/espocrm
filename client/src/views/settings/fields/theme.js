@@ -26,159 +26,179 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/theme', ['views/fields/enum', 'theme-manager', 'ui/select'],
-function (Dep, ThemeManager, /** module:ui/select*/Select) {
+import EnumFieldView from 'views/fields/enum';
+import ThemeManager from 'theme-manager';
+import Select from 'ui/select';
 
-    return Dep.extend({
+export default class ThemeSettingsFieldView extends EnumFieldView {
 
-        editTemplateContent: `
-            <div class="grid-auto-fit-xxs">
-                <div>
-                    <select data-name="{{name}}" class="form-control main-element">
-                        {{options
-                            params.options value
-                            scope=scope
-                            field=name
-                            translatedOptions=translatedOptions
-                            includeMissingOption=true
-                            styleMap=params.style
-                        }}
-                    </select>
-                </div>
-                {{#if navbarOptionList.length}}
-                <div>
-                    <select data-name="themeNavbar" class="form-control">
-                        {{options navbarOptionList navbar translatedOptions=navbarTranslatedOptions}}
-                    </select>
-                </div>
-                {{/if}}
+    // language=Handlebars
+    editTemplateContent = `
+        <div class="grid-auto-fit-xxs">
+            <div>
+                <select data-name="{{name}}" class="form-control main-element">
+                    {{options
+                        params.options value
+                        scope=scope
+                        field=name
+                        translatedOptions=translatedOptions
+                        includeMissingOption=true
+                        styleMap=params.style
+                    }}
+                </select>
             </div>
-        `,
+            {{#if navbarOptionList.length}}
+            <div>
+                <select data-name="themeNavbar" class="form-control">
+                    {{options navbarOptionList navbar translatedOptions=navbarTranslatedOptions}}
+                </select>
+            </div>
+            {{/if}}
+        </div>
+    `
 
-        data: function () {
-            let data = Dep.prototype.data.call(this);
+    data() {
+        const data = super.data();
 
-            data.navbarOptionList = this.getNavbarOptionList();
-            data.navbar = this.getNavbarValue() || this.getDefaultNavbar();
+        data.navbarOptionList = this.getNavbarOptionList();
+        data.navbar = this.getNavbarValue() || this.getDefaultNavbar();
 
-            data.navbarTranslatedOptions = {};
-            data.navbarOptionList.forEach(item => {
-                data.navbarTranslatedOptions[item] = this.translate(item, 'themeNavbars');
-            });
+        data.navbarTranslatedOptions = {};
+        data.navbarOptionList.forEach(item => {
+            data.navbarTranslatedOptions[item] = this.translate(item, 'themeNavbars');
+        });
 
-            return data;
-        },
+        return data;
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup () {
+        super.setup();
 
-            this.initThemeManager();
+        this.initThemeManager();
 
-            this.model.on('change:theme', (m, v, o) => {
-                this.initThemeManager()
+        this.model.on('change:theme', (m, v, o) => {
+            this.initThemeManager()
 
-                if (o.ui) {
-                    this.reRender()
-                        .then(() => Select.focus(this.$element, {noTrigger: true}));
+            if (o.ui) {
+                this.reRender()
+                    .then(() => Select.focus(this.$element, {noTrigger: true}));
+            }
+        })
+    }
+
+    afterRenderEdit() {
+        this.$navbar = this.$el.find('[data-name="themeNavbar"]');
+
+        this.$navbar.on('change', () => this.trigger('change'));
+
+        Select.init(this.$navbar);
+    }
+
+    /**
+     * @protected
+     * @return {string}
+     */
+    getNavbarValue() {
+        const params = this.model.get('themeParams') || {};
+
+        return params.navbar;
+    }
+
+    /**
+     * @protected
+     * @return {Record|null}
+     */
+    getNavbarDefs() {
+        if (!this.themeManager) {
+            return null;
+        }
+
+        const params = this.themeManager.getParam('params');
+
+        if (!params || !params.navbar) {
+            return null;
+        }
+
+        return Espo.Utils.cloneDeep(params.navbar);
+    }
+
+    /**
+     * @private
+     * @return {string[]}
+     */
+    getNavbarOptionList() {
+        const defs = this.getNavbarDefs();
+
+        if (!defs) {
+            return [];
+        }
+
+        const optionList = defs.options || [];
+
+        if (!optionList.length || optionList.length === 1) {
+            return [];
+        }
+
+        return optionList;
+    }
+
+    /**
+     * @protected
+     * @return {string|null}
+     */
+    getDefaultNavbar() {
+        const defs = this.getNavbarDefs() || {};
+
+        return defs.default || null;
+    }
+
+    /**
+     * @private
+     */
+    initThemeManager() {
+        const theme = this.model.get('theme');
+
+        if (!theme) {
+            this.themeManager = null;
+
+            return;
+        }
+
+        this.themeManager = new ThemeManager(
+            this.getConfig(),
+            this.getPreferences(),
+            this.getMetadata(),
+            theme
+        );
+    }
+
+    getAttributeList() {
+        return [this.name, 'themeParams'];
+    }
+
+    setupOptions() {
+        this.params.options = Object.keys(this.getMetadata().get('themes') || {})
+            .sort((v1, v2) => {
+                if (v2 === 'EspoRtl') {
+                    return -1;
                 }
-            })
-        },
 
-        afterRenderEdit: function () {
-            this.$navbar = this.$el.find('[data-name="themeNavbar"]');
+                return this.translate(v1, 'theme')
+                    .localeCompare(this.translate(v2, 'theme'));
+            });
+    }
 
-            this.$navbar.on('change', () => this.trigger('change'));
+    fetch() {
+        const data = super.fetch();
 
-            Select.init(this.$navbar);
-        },
+        const params = {};
 
-        getNavbarValue: function () {
-            let params = this.model.get('themeParams') || {};
+        if (this.$navbar.length) {
+            params.navbar = this.$navbar.val();
+        }
 
-            return params.navbar;
-        },
+        data.themeParams = params;
 
-        getNavbarDefs: function () {
-            if (!this.themeManager) {
-                return null;
-            }
-
-            let params = this.themeManager.getParam('params');
-
-            if (!params || !params.navbar) {
-                return null;
-            }
-
-            return Espo.Utils.cloneDeep(params.navbar);
-        },
-
-        getNavbarOptionList: function () {
-            let defs = this.getNavbarDefs();
-
-            if (!defs) {
-                return [];
-            }
-
-            let optionList = defs.options || [];
-
-            if (!optionList.length || optionList.length === 1) {
-                return [];
-            }
-
-            return optionList;
-        },
-
-        getDefaultNavbar: function () {
-            let defs = this.getNavbarDefs() || {};
-
-            return defs.default || null;
-        },
-
-        initThemeManager: function () {
-            let theme = this.model.get('theme');
-
-            if (!theme) {
-                this.themeManager = null;
-
-                return;
-            }
-
-            this.themeManager = new ThemeManager(
-                this.getConfig(),
-                this.getPreferences(),
-                this.getMetadata(),
-                theme
-            );
-        },
-
-        getAttributeList: function () {
-            return [this.name, 'themeParams'];
-        },
-
-        setupOptions: function () {
-            this.params.options = Object.keys(this.getMetadata().get('themes') || {})
-                .sort((v1, v2) => {
-                    if (v2 === 'EspoRtl') {
-                        return -1;
-                    }
-
-                    return this.translate(v1, 'theme')
-                        .localeCompare(this.translate(v2, 'theme'));
-                });
-        },
-
-        fetch: function () {
-            let data = Dep.prototype.fetch.call(this);
-
-            let params = {};
-
-            if (this.$navbar.length) {
-                params.navbar = this.$navbar.val();
-            }
-
-            data.themeParams = params;
-
-            return data;
-        },
-    });
-});
+        return data;
+    }
+}

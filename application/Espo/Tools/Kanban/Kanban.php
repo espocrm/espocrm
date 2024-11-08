@@ -39,6 +39,7 @@ use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 class Kanban
@@ -143,17 +144,11 @@ class Kanban
             ->withSearchParams($searchParams)
             ->build();
 
-        $collection = $this->entityManager
-            ->getCollectionFactory()
-            ->create($this->entityType);
-
         $statusField = $this->getStatusField();
         $statusList = $this->getStatusList();
         $statusIgnoreList = $this->getStatusIgnoreList();
 
-        $additionalData = (object) [
-            'groupList' => [],
-        ];
+        $groupList = [];
 
         $repository = $this->entityManager->getRDBRepository($this->entityType);
 
@@ -176,10 +171,6 @@ class Kanban
             $itemSelectBuilder->where([
                 $statusField => $status,
             ]);
-
-            $groupData = (object) [
-                'name' => $status,
-            ];
 
             $itemQuery = $itemSelectBuilder->build();
 
@@ -217,8 +208,7 @@ class Kanban
 
             if (!$this->countDisabled) {
                 $totalSub = $repository->clone($itemQuery)->count();
-            }
-            else {
+            } else {
                 $recordCollection = Collection::createNoCount($collectionSub, $maxSize);
 
                 $collectionSub = $recordCollection->getCollection();
@@ -237,21 +227,19 @@ class Kanban
                 $this->listLoadProcessor->process($e, $loadProcessorParams);
 
                 $recordService->prepareEntityForOutput($e);
-
-                $collection[] = $e;
             }
 
-            $groupData->total = $totalSub;
-            $groupData->list = $collectionSub->getValueMapList();
+            /** @var Collection<Entity> $itemRecordCollection */
+            $itemRecordCollection = new Collection($collectionSub, $totalSub);
 
-            $additionalData->groupList[] = $groupData;
+            $groupList[] = new GroupItem($status, $itemRecordCollection);
         }
 
         $total = !$this->countDisabled ?
             $repository->clone($query)->count() :
             ($hasMore ? Collection::TOTAL_HAS_MORE : Collection::TOTAL_HAS_NO_MORE);
 
-        return new Result($collection, $total, $additionalData);
+        return new Result($groupList, $total);
     }
 
     /**
