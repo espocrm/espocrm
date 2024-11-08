@@ -123,13 +123,25 @@ class LinkMultipleFactory implements ValueFactory
 
         $select = ['id'];
 
-        $columns = $this->ormDefs
-            ->getEntity($entity->getEntityType())
-            ->getField($field)
-            ->getParam('columns') ?? [];
+        $entityDefs = $this->ormDefs->getEntity($entity->getEntityType());
+
+        $columns = $entityDefs->getField($field)->getParam('columns') ?? [];
 
         if (count($columns) === 0) {
             return $columnData;
+        }
+
+        $foreignEntityType = $entityDefs->tryGetRelation($field)?->tryGetForeignEntityType();
+
+        if ($foreignEntityType) {
+            $foreignEntityDefs = $this->entityManager->getDefs()->getEntity($foreignEntityType);
+
+            foreach ($columns as $column => $attribute) {
+                if (!$foreignEntityDefs->hasAttribute($attribute)) {
+                    // For backward compatibility. If foreign attributes defined in the field do not exist.
+                    unset($columns[$column]);
+                }
+            }
         }
 
         foreach ($columns as $item) {
