@@ -29,7 +29,9 @@
 
 namespace Espo\Core\MassAction\Actions;
 
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\ActionHistory\Action;
+use Espo\Core\Utils\Log;
 use Espo\Entities\User;
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\Forbidden;
@@ -40,6 +42,7 @@ use Espo\Core\MassAction\QueryBuilder;
 use Espo\Core\MassAction\Result;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Record\ServiceFactory;
+use Exception;
 
 class MassDelete implements MassAction
 {
@@ -48,7 +51,8 @@ class MassDelete implements MassAction
         private Acl $acl,
         private ServiceFactory $serviceFactory,
         private EntityManager $entityManager,
-        private User $user
+        private User $user,
+        private Log $log,
     ) {}
 
     public function process(Params $params, Data $data): Result
@@ -56,7 +60,7 @@ class MassDelete implements MassAction
         $entityType = $params->getEntityType();
 
         if (!$this->acl->check($entityType, Acl\Table::ACTION_DELETE)) {
-            throw new Forbidden("No delete access for '{$entityType}'.");
+            throw new Forbidden("No delete access for '$entityType'.");
         }
 
         if (
@@ -86,9 +90,19 @@ class MassDelete implements MassAction
                 continue;
             }
 
-            $repository->remove($entity, [
-                'modifiedById' => $this->user->getId(),
-            ]);
+            try {
+                $repository->remove($entity, [
+                    SaveOption::MASS_UPDATE => true,
+                    SaveOption::MODIFIED_BY_ID => $this->user->getId(),
+                ]);
+            } catch (Exception $e) {
+                $this->log->info("Mass delete exception. Record: {id}.", [
+                    'exception' => $e,
+                    'id' => $entity->getId(),
+                ]);
+
+                continue;
+            }
 
             /** @var string $id */
             $id = $entity->getId();
@@ -100,11 +114,6 @@ class MassDelete implements MassAction
             $service->processActionHistoryRecord(Action::DELETE, $entity);
         }
 
-        $result = [
-            'count' => $count,
-            'ids' => $ids,
-        ];
-
-        return Result::fromArray($result);
+        return new Result($count, $ids);
     }
 }

@@ -45,6 +45,7 @@ use Espo\Core\Record\ServiceFactory;
 use Espo\Core\Record\Service;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Utils\Log;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 use Espo\Repositories\Attachment as AttachmentRepository;
@@ -67,7 +68,8 @@ class Processor
         private FieldUtil $fieldUtil,
         private User $user,
         private LinkCheck $linkCheck,
-        private LinkMultipleLoader $linkMultipleLoader
+        private LinkMultipleLoader $linkMultipleLoader,
+        private Log $log,
     ) {}
 
     /**
@@ -188,11 +190,20 @@ class Processor
             return false;
         }
 
-        $this->entityManager->saveEntity($entity, [
-            SaveOption::MASS_UPDATE => true,
-            SaveOption::MODIFIED_BY_ID => $this->user->getId(),
-            'skipStreamNotesAcl' => true,
-        ]);
+        try {
+            $this->entityManager->saveEntity($entity, [
+                SaveOption::MASS_UPDATE => true,
+                SaveOption::MODIFIED_BY_ID => $this->user->getId(),
+                'skipStreamNotesAcl' => true,
+            ]);
+        } catch (Exception $e) {
+            $this->log->info("Mass update save exception. Record: {id}.", [
+                'exception' => $e,
+                'id' => $entity->getId(),
+            ]);
+
+            return false;
+        }
 
         $service->processActionHistoryRecord(RecordAction::UPDATE, $entity);
 
