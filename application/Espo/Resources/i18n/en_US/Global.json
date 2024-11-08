@@ -884,8 +884,8 @@
             "color":{
                 "recent":"Recent Color",
                 "more":"More Color",
-                "background":"BackColor",
-                "foreground":"FontColor",
+                "background": "Back Color",
+                "foreground": "Font Color",
                 "transparent":"Transparent",
                 "setTransparent":"Set transparent",
                 "reset":"Reset",
