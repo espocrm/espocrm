@@ -414,7 +414,7 @@ class EmailListRecordView extends ListRecordView {
             .then(() => {
                 Espo.Ui.info(this.translate('Moved to Archive', 'labels', 'Email'));
 
-                this.collection.trigger('moving-to-archive', id, this.collection.get(id));
+                this.collection.trigger('moving-to-archive', id);
             });
     }
 
