@@ -17,16 +17,19 @@
   &.right  { margin-left:  var(--3px); padding: 0 @tooltip-arrow-width; }
   &.bottom { margin-top: var(--3px); padding: @tooltip-arrow-width 0; }
   &.left   { margin-left: var(--minus-3px); padding: 0 @tooltip-arrow-width; }
+
+    transition: none;
 }
 
 // Wrapper for the tooltip content
 .tooltip-inner {
-  max-width: var(--200px);
-  padding: var(--3px) var(--8px);
-  color: var(--tooltip-color);
-  text-align: center;
-  background-color: var(--tooltip-bg);
-  border-radius: var(--border-radius-small);
+    max-width: var(--200px);
+    padding: var(--3px) var(--8px);
+    color: var(--tooltip-color);
+    text-align: center;
+    background-color: var(--tooltip-bg);
+    border-radius: var(--border-radius-small);
+    line-height: var(--line-height-small);
 }
 
 // Arrows
