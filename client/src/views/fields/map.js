@@ -130,16 +130,6 @@ class MapFieldView extends BaseFieldView {
 
         if (typeof this[methodName] === 'function') {
             this[methodName]();
-
-            return;
-        }
-
-        // For bc.
-        // @todo Remove in v9.0.
-        const implId = this.getMetadata().get(['clientDefs', 'AddressMap', 'implementations', this.provider]);
-
-        if (implId) {
-            Espo.loader.require(implId, impl => impl.render(this));
         }
     }
 

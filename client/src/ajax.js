@@ -323,21 +323,6 @@ class AjaxPromise extends Promise {
     isAborted = false
 
     /**
-     * @deprecated Use `catch`.
-     * @todo Remove in v9.0.
-     */
-    fail(...args) {
-        return this.catch(args[0]);
-    }
-    /**
-     * @deprecated Use `then`
-     * @todo Remove in v9.0.
-     */
-    done(...args) {
-        return this.then(args[0]);
-    }
-
-    /**
      * Abort the request.
      */
     abort() {

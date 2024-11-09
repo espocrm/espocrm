@@ -1263,39 +1263,6 @@ class App {
             onError: onError,
             onTimeout: onTimeout,
         });
-
-        // For backward compatibility.
-        // @todo Remove in v9.0.
-        $.ajaxSetup({
-            beforeSend: (xhr, options) => {
-                if (!options.url || !options.url.includes('q=')) {
-                    console.warn(`$.ajax is deprecated, support will be removed in v9.0. Use Espo.Ajax instead.`);
-                }
-
-                // noinspection JSUnresolvedReference
-                if (!options.local && this.apiUrl) {
-                    options.url = Utils.trimSlash(this.apiUrl) + '/' + options.url;
-                }
-
-                // noinspection JSUnresolvedReference
-                if (!options.local && this.basePath !== '') {
-                    options.url = this.basePath + options.url;
-                }
-
-                if (this.auth !== null) {
-                    xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
-                    xhr.setRequestHeader('Espo-Authorization', this.auth);
-                    xhr.setRequestHeader('Espo-Authorization-By-Token', 'true');
-                }
-
-                if (this.anotherUser !== null) {
-                    xhr.setRequestHeader('X-Another-User', this.anotherUser);
-                }
-            },
-            dataType: 'json',
-            timeout: this.ajaxTimeout,
-            contentType: 'application/json',
-        });
     }
 
     /**

@@ -334,15 +334,6 @@ class SidePanelView extends View {
         });
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @deprecated Use `getFieldViews`.
-     * @todo Remove in v9.0.
-     */
-    getFields() {
-        return this.getFieldViews();
-    }
-
     /**
      * Get field views.
      *

@@ -355,52 +355,6 @@ class View extends BullView {
         return this._helper.basePath || '';
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * Ajax request.
-     *
-     * @deprecated Use `Espo.Ajax`.
-     * @todo Remove in v9.0.
-     * @param {string} url An URL.
-     * @param {string} type A method.
-     * @param {any} [data] Data.
-     * @param {Object} [options] Options.
-     * @returns {Promise<*>}
-     */
-    ajaxRequest(url, type, data, options) {
-        return /** @type {Promise<*>} */ Espo.Ajax.request(url, type, data, options);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * POST request.
-     *
-     * @deprecated Use `Espo.Ajax.postRequest`.
-     * @todo Remove in v9.0.
-     * @param {string} url An URL.
-     * @param {any} [data] Data.
-     * @param {Object} [options] Options.
-     * @returns {Promise<any>}
-     */
-    ajaxPostRequest(url, data, options) {
-        return Espo.Ajax.postRequest(url, data, options);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * GET request.
-     *
-     * @deprecated Use `Espo.Ajax.getRequest`.
-     * @todo Remove in v9.0.
-     * @param {string} url An URL.
-     * @param {any} [data] Data.
-     * @param {Object} [options] Options.
-     * @returns {Promise<any>}
-     */
-    ajaxGetRequest(url, data, options) {
-        return Espo.Ajax.getRequest(url, data, options);
-    }
-
     /**
      * @typedef {Object} module:view~ConfirmOptions
      *

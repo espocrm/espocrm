@@ -1036,18 +1036,6 @@ class Model {
             this.lastSyncPromise.abort();
         }
     }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @deprecated Use `getClonedAttributes`.
-     * @todo Remove in v9.0.
-     * @return {Object.<string, *>}
-     */
-    toJSON() {
-        console.warn(`model.toJSON is deprecated. Use 'getClonedAttributes' instead.`);
-
-        return this.getClonedAttributes();
-    }
 }
 
 Object.assign(Model.prototype, Events);

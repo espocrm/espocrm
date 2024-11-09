@@ -530,15 +530,6 @@ class BaseRecordView extends View {
     }
 
     /**
-     * @deprecated Use `getFieldViews`.
-     * @private
-     * @return {Object<string, module:views/fields/base>}
-     */
-    getFields() {
-        return this.getFieldViews();
-    }
-
-    /**
      * Get a field view.
      *
      * @param {string} name A field name.

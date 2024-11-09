@@ -203,13 +203,6 @@ class DetailMiddleRecordView extends View {
     }
 
     /**
-     * @deprecated Use `getFieldViews`.
-     */
-    getFields() {
-        return this.getFieldViews();
-    }
-
-    /**
      * Get field views.
      *
      * @return {Object.<string, module:views/fields/base>}
