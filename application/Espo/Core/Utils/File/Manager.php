@@ -36,9 +36,6 @@ use Espo\Core\Utils\File\Exceptions\PermissionError;
 
 use stdClass;
 use Throwable;
-use InvalidArgumentException;
-
-use const E_USER_DEPRECATED;
 
 class Manager
 {
@@ -222,23 +219,8 @@ class Manager
      * @param string $path
      * @throws FileError If the file could not be read.
      */
-    public function getContents($path): string
+    public function getContents(string $path): string
     {
-        /** @var mixed $path */
-
-        if (is_array($path)) {
-            // For backward compatibility.
-            // @todo Remove support of arrays in v9.0.
-            trigger_error(
-                'Array parameter is deprecated for FileManager::getContents.',
-                E_USER_DEPRECATED
-            );
-
-            $path = $this->concatPaths($path);
-        } else if (!is_string($path)) {
-            throw new InvalidArgumentException();
-        }
-
         if (!file_exists($path)) {
             throw new FileError("File '{$path}' does not exist.");
         }
@@ -502,26 +484,6 @@ class Manager
         }
 
         return (bool) $this->putJsonContents($path, $unsettedData);
-    }
-
-    /**
-     * @deprecated
-     * @param string|string[] $paths
-     * @return string
-     */
-    private function concatPaths($paths)
-    {
-        if (is_string($paths)) {
-            return Util::fixPath($paths);
-        }
-
-        $fullPath = '';
-
-        foreach ($paths as $path) {
-            $fullPath = Util::concatPath($fullPath, $path);
-        }
-
-        return $fullPath;
     }
 
     /**
