@@ -95,14 +95,6 @@ class HookProcessor
 
         $notificator = $this->getNotificator($entityType);
 
-        if (!$notificator instanceof AssignmentNotificator) {
-            // @todo Remove in v9.0.
-            // For backward compatibility.
-            $notificator->process($entity, $options);
-
-            return;
-        }
-
         $params = AssignmentNotificatorParams::create()->withRawOptions($options);
 
         $notificator->process($entity, $params);
@@ -181,7 +173,7 @@ class HookProcessor
     /**
      * @return AssignmentNotificator<Entity>
      */
-    private function getNotificator(string $entityType): object
+    private function getNotificator(string $entityType): AssignmentNotificator
     {
         if (empty($this->notificatorsHash[$entityType])) {
             $notificator = $this->notificatorFactory->create($entityType);
