@@ -129,7 +129,7 @@ class EditModalView extends ModalView {
      * @property {string} [rootUrl] A root URL.
      * @property {string} [returnUrl] A return URL.
      * @property {Record} [returnDispatchParams] Return dispatch params.
-     * @property {string} [fullFormUrl] A full-form URL. As of v8.5.
+     * @property {string} [fullFormUrl] A full-form URL. As of v9.0.
      */
 
     /**

@@ -105,7 +105,7 @@ class DetailModalView extends ModalView {
      * @property {boolean} [fullFormDisabled] Disable full-form.
      * @property {boolean} [quickEditDisabled] Disable quick edit.
      * @property {string} [rootUrl] A root URL.
-     * @property {string} [fullFormUrl] A full-form URL. As of v8.5.
+     * @property {string} [fullFormUrl] A full-form URL. As of v9.0.
      */
 
     /**
