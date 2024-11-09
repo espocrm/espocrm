@@ -71,11 +71,7 @@ class ExternalAccount extends Record implements Di\HookManagerAware
             ->create($integration, $id);
     }
 
-    /**
-     * @deprecated As of v8.2.
-     * @todo Make private in v9.0.
-     */
-    public function getExternalAccountEntity(string $integration, string $userId): ?ExternalAccountEntity
+    private function getExternalAccountEntity(string $integration, string $userId): ?ExternalAccountEntity
     {
         $id = $integration . '__' . $userId;
 
