@@ -338,40 +338,4 @@ class AclManager extends InternalAclManager
     {
         return $this->getPermissionLevel($user, $permission);
     }
-
-    /**
-     * @deprecated As of v7.0. Use `checkOwnershipOwn`.
-     * @todo Remove in v9.0.
-     */
-    public function checkIsOwner(User $user, Entity $entity): bool
-    {
-        return $this->checkOwnershipOwn($user, $entity);
-    }
-
-    /**
-     * @deprecated As of v7.0. Use `checkOwnershipTeam`.
-     * @todo Remove in v9.0.
-     */
-    public function checkInTeam(User $user, Entity $entity): bool
-    {
-        return $this->checkOwnershipTeam($user, $entity);
-    }
-
-    /**
-     * @deprecated As of v7.0. Use `checkOwnershipAccount`.
-     * @todo Remove in v9.0.
-     */
-    public function checkInAccount(User $user, Entity $entity): bool
-    {
-        return $this->checkOwnershipAccount($user, $entity);
-    }
-
-    /**
-     * @deprecated As of v7.0. Use `checkOwnershipContact`.
-     * @todo Remove in v9.0.
-     */
-    public function checkIsOwnContact(User $user, Entity $entity): bool
-    {
-        return $this->checkOwnershipContact($user, $entity);
-    }
 }

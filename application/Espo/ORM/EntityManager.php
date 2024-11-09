@@ -467,13 +467,4 @@ class EntityManager
     {
         return $this->pdoProvider->get();
     }
-
-    /**
-     * @todo Remove in v9.0.
-     * @deprecated As of v6.0. Use `getQueryComposer`.
-     */
-    public function getQuery(): QueryComposer
-    {
-        return $this->queryComposer;
-    }
 }

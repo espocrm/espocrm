@@ -27,14 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/** @todo Remove in v9.0. */
+// To add aliases for backward compatibility.
+$map = [];
 
-$map = [
-    ['Laminas\\Mail\\Protocol\\Smtp', 'Zend\\Mail\\Protocol\\Smtp'],
-    ['Laminas\\Mail\\Protocol\\Imap', 'Zend\\Mail\\Protocol\\Imap'],
-    ['Laminas\\Mail\\Message', 'Zend\\Mail\\Message'],
-];
-
+/** @phpstan-ignore-next-line  */
 foreach ($map as $item) {
     $className = $item[0];
     $alias = $item[1];

@@ -725,34 +725,6 @@ class AclManager
     }
 
     /**
-     * @deprecated As of v7.0. Use `checkOwnershipOwn`.
-     * @todo Remove in v9.0.
-     */
-    public function checkIsOwner(User $user, Entity $entity): bool
-    {
-        return $this->checkOwnershipOwn($user, $entity);
-    }
-
-    /**
-     * @deprecated As of v7.0. Use `checkOwnershipTeam`.
-     * @todo Remove in v9.0.
-     */
-    public function checkInTeam(User $user, Entity $entity): bool
-    {
-        return $this->checkOwnershipTeam($user, $entity);
-    }
-
-    /**
-     * @deprecated As of v7.0. Access checkers not to be exposed.
-     * @todo Remove in v9.0.
-     * @noinspection PhpUnused
-     */
-    public function getImplementation(string $scope): object
-    {
-        return $this->getAccessChecker($scope);
-    }
-
-    /**
      * @deprecated Use `getPermissionLevel` instead.
      */
     public function get(User $user, string $permission): string
