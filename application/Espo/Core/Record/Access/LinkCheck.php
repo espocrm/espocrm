@@ -77,9 +77,6 @@ class LinkCheck
         FieldType::ATTACHMENT_MULTIPLE,
     ];
 
-    /**
-     * @param string[] $noEditAccessRequiredLinkList
-     */
     public function __construct(
         private Defs $ormDefs,
         private EntityManager $entityManager,
@@ -87,8 +84,6 @@ class LinkCheck
         private Metadata $metadata,
         private InjectableFactory $injectableFactory,
         private User $user,
-        private array $noEditAccessRequiredLinkList = [],
-        private bool $noEditAccessRequiredForLink = false
     ) {}
 
     /**
@@ -299,9 +294,7 @@ class LinkCheck
         $action = $this->getParam($entityType, $link, 'linkRequiredAccess');
 
         if (!$action) {
-            $action = $this->noEditAccessRequiredForLink ?
-                AclTable::ACTION_READ :
-                AclTable::ACTION_EDIT;
+            $action = AclTable::ACTION_EDIT;
         }
 
         if (!$this->acl->check($entity, $action)) {
@@ -375,14 +368,8 @@ class LinkCheck
         bool $fromUpdate = false
     ): bool {
 
-        $action = in_array($link, $this->noEditAccessRequiredLinkList) ?
-            AclTable::ACTION_READ :
-            null;
-
-        if (!$action) {
-            /** @var AclTable::ACTION_* $action */
-            $action = $this->getParam($entityType, $link, 'linkRequiredForeignAccess') ?? AclTable::ACTION_EDIT;
-        }
+        /** @var AclTable::ACTION_* $action */
+        $action = $this->getParam($entityType, $link, 'linkRequiredForeignAccess') ?? AclTable::ACTION_EDIT;
 
         if ($this->getParam($entityType, $link, 'linkForeignAccessCheckDisabled')) {
             return true;

@@ -31,7 +31,6 @@ namespace Espo\Core\Record;
 
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\BindingContainerBuilder;
-use Espo\Core\Binding\ContextualBinder;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ConflictSilent;
@@ -79,8 +78,6 @@ use InvalidArgumentException;
 use LogicException;
 use RuntimeException;
 
-use const E_USER_DEPRECATED;
-
 /**
  * The layer between a controller and ORM repository. For CRUD and other operations with records.
  * Access control is processed here.
@@ -127,143 +124,11 @@ class Service implements Crud,
     private ?StreamService $streamService = null;
 
     /**
-     * @deprecated As of v8.2. Use metadata > recordDefs > relationships > {link} > linkRequiredAccess.
-     * @todo Remove in v9.0.
-     */
-    protected bool $noEditAccessRequiredForLink = false;
-
-    /**
-     * @var string[]
-     * @deprecated As of v8.2. Use metadata > recordDefs > relationships > {link} > linkRequiredAccess.
-     * @todo Remove in v9.0.
-     */
-    protected array $noEditAccessRequiredLinkList = [];
-
-    /**
-     * @var array<string, string[]>
-     * @deprecated As of v8.2. Use metadata > recordDefs > relationships > {link} > mandatoryAttributeList.
-     * @todo Remove in v9.0.
-     */
-    protected array $linkMandatorySelectAttributeList = [];
-
-    /**
-     * @var string[]
-     * @deprecated As of v8.2. Use metadata > recordDefs > duplicateLinkList.
-     * @todo Remove in v9.0.
-     */
-    protected array $duplicatingLinkList = [];
-
-    /**
-     * @var bool
-     * @deprecated As of v8.2. Use metadata > recordDefs > forceSelectAllAttributes.
-     * @todo Remove in v9.0.
-     */
-    protected $forceSelectAllAttributes = false;
-
-    /**
-     * @var string[]
-     * @deprecated As of v8.2. Use metadata > entityAcl.
-     * @todo Remove in v9.0.
-     */
-    protected array $forbiddenAttributeList = [];
-
-    /**
-     * @var string[]
-     * @deprecated As of v8.2. Use metadata > entityAcl.
-     * @todo Remove in v9.0.
-     */
-    protected array $internalAttributeList = [];
-
-    /**
-     * @var string[]
-     * @deprecated As of v8.2. Use metadata > entityAcl.
-     * @todo Remove in v9.0.
-     */
-    protected $onlyAdminAttributeList = [];
-
-    /**
-     * @var string[]
-     * @deprecated As of v8.2. Use metadata > entityAcl.
-     * @todo Remove in v9.0.
-     */
-    protected $readOnlyAttributeList = [];
-
-    /**
-     * @var string[]
-     * @deprecated As of v8.2. Use metadata > entityAcl.
-     * @todo Remove in v9.0.
-     */
-    protected $nonAdminReadOnlyAttributeList = [];
-
-    /**
-     * @var string[]
-     * @deprecated As of v8.2. Use metadata > entityAcl.
-     * @todo Remove in v9.0.
-     */
-    protected $forbiddenLinkList = [];
-
-    /**
-     * @var string[]
-     * @deprecated As of v8.2. Use metadata > entityAcl.
-     * @todo Remove in v9.0.
-     */
-    protected $internalLinkList = [];
-
-    /**
-     * @var string[]
-     * @deprecated As of v8.2. Use metadata > entityAcl.
-     * @todo Remove in v9.0.
-     */
-    protected $readOnlyLinkList = [];
-
-    /**
-     * @var string[]
-     * @deprecated As of v8.2. Use metadata > entityAcl.
-     * @todo Remove in v9.0.
-     */
-    protected $nonAdminReadOnlyLinkList = [];
-
-    /**
-     * @var string[]
-     * @deprecated As of v8.2. Use metadata > entityAcl.
-     * @todo Remove in v9.0.
-     */
-    protected $onlyAdminLinkList = [];
-
-    /**
-     * @deprecated As of v8.2. Use 'duplicateIgnore' metadata or field duplicators.
-     * @todo Remove in v9.0.
-     * @var string[]
-     */
-    protected $duplicateIgnoreAttributeList = [];
-
-    /**
-     * @var string[]
-     * @deprecated As of v8.0. Use `suppressValidationList` metadata parameter.
-     * @todo Remove in v9.0.
-     */
-    protected $validateSkipFieldList = [];
-
-    /**
      * @var string[]
      * @deprecated As of v8.2. Use recordDefs > mandatoryAttributeList.
      * @todo Remove in v10.0. Fix usages.
      */
     protected $mandatorySelectAttributeList = [];
-
-    /**
-     * @var bool
-     * @deprecated As of v8.2. Use metadata > recordDefs.
-     * @todo Remove in v9.0.
-     */
-    protected $checkForDuplicatesInUpdate = false;
-
-    /**
-     * @var bool
-     * @deprecated As of v8.2. Use metadata > recordDefs.
-     * @todo Remove in v9.0.
-     */
-    protected $actionHistoryDisabled = false;
 
     private ?ListLoadProcessor $listLoadProcessor = null;
     private ?DuplicateFinder $duplicateFinder = null;
@@ -302,9 +167,7 @@ class Service implements Crud,
      */
     public function processActionHistoryRecord(string $action, Entity $entity): void
     {
-        /** @noinspection PhpDeprecationInspection */
         if (
-            $this->actionHistoryDisabled ||
             $this->config->get('actionHistoryDisabled') ||
             $this->metadata->get("recordDefs.$this->entityType.actionHistoryDisabled")
         ) {
@@ -437,11 +300,9 @@ class Service implements Crud,
 
     /**
      * @param TEntity $entity
-     * @return void
-     * @todo Add void return type in v9.0.
      * @noinspection PhpDocSignatureInspection
      */
-    public function loadAdditionalFields(Entity $entity)
+    public function loadAdditionalFields(Entity $entity): void
     {
         $loadProcessor = $this->createReadLoadProcessor();
 
@@ -450,10 +311,8 @@ class Service implements Crud,
 
     /**
      * @param Entity $entity
-     * @todo Make private in v9.0
-     * @deprecated
      */
-    protected function loadListAdditionalFields(Entity $entity, ?SearchParams $searchParams = null): void
+    private function loadListAdditionalFields(Entity $entity, ?SearchParams $searchParams = null): void
     {
         $params = new FieldLoaderParams();
 
@@ -476,18 +335,7 @@ class Service implements Crud,
      */
     public function processValidation(Entity $entity, stdClass $data): void
     {
-        /** @noinspection PhpDeprecationInspection */
-        $params = FieldValidationParams
-            ::create()
-            ->withSkipFieldList($this->validateSkipFieldList);
-
-        /** @noinspection PhpDeprecationInspection */
-        if (!empty($this->validateSkipFieldList)) {
-            trigger_error(
-                '$validateSkipFieldList is deprecated and will be removed in v9.0.',
-                E_USER_DEPRECATED
-            );
-        }
+        $params = FieldValidationParams::create();
 
         $this->fieldValidationManager->process($entity, $data, $params);
     }
@@ -523,12 +371,6 @@ class Service implements Crud,
                 BindingContainerBuilder::create()
                     ->bindInstance(Acl::class, $this->acl)
                     ->bindInstance(User::class, $this->user)
-                    ->inContext(LinkCheck::class, function (ContextualBinder $binder) {
-                        /** @noinspection PhpDeprecationInspection */
-                        $binder
-                            ->bindValue('$noEditAccessRequiredLinkList', $this->noEditAccessRequiredLinkList)
-                            ->bindValue('$noEditAccessRequiredForLink', $this->noEditAccessRequiredForLink);
-                    })
                     ->build()
             );
 
@@ -553,35 +395,11 @@ class Service implements Crud,
 
     protected function filterInput(stdClass $data): void
     {
-        /** @noinspection PhpDeprecationInspection */
-        foreach($this->readOnlyAttributeList as $attribute) {
-            unset($data->$attribute);
-        }
-
-        /** @noinspection PhpDeprecationInspection */
-        foreach ($this->forbiddenAttributeList as $attribute) {
-            unset($data->$attribute);
-        }
-
-        if (!$this->user->isAdmin()) {
-            /** @noinspection PhpDeprecationInspection */
-            foreach ($this->onlyAdminAttributeList as $attribute) {
-                unset($data->$attribute);
-            }
-        }
-
         $forbiddenAttributeList = $this->acl
             ->getScopeForbiddenAttributeList($this->entityType, AclTable::ACTION_EDIT);
 
         foreach ($forbiddenAttributeList as $attribute) {
             unset($data->$attribute);
-        }
-
-        if (!$this->user->isAdmin()) {
-            /** @noinspection PhpDeprecationInspection */
-            foreach ($this->nonAdminReadOnlyAttributeList as $attribute) {
-                unset($data->$attribute);
-            }
         }
 
         $this->filterInputForeignAttributes($data);
@@ -635,11 +453,6 @@ class Service implements Crud,
         $this->filterInputSystemAttributes($data);
         $this->filterInput($data);
 
-        /** @noinspection PhpDeprecationInspection */
-        $this->handleInput($data);
-        /** @noinspection PhpDeprecationInspection */
-        $this->handleCreateInput($data);
-
         $wrappedData = new Data($data);
 
         foreach ($this->getCreateFilterList() as $filter) {
@@ -652,9 +465,6 @@ class Service implements Crud,
         $this->filterInputSystemAttributes($data);
         $this->filterInput($data);
         $this->filterReadOnlyAfterCreate($data);
-
-        /** @noinspection PhpDeprecationInspection */
-        $this->handleInput($data);
 
         $wrappedData = new Data($data);
 
@@ -710,28 +520,6 @@ class Service implements Crud,
                 unset($data->$attribute);
             }
         }
-    }
-
-    /**
-     * @deprecated As of v7.0. Use filterCreateInput or filterUpdateInput. Or better don't extend the class.
-     * Use entityAcl, app > acl, roles to restrict write access for specific fields.
-     * @todo Remove in v9.0.
-     * @param stdClass $data
-     * @return void
-     */
-    protected function handleCreateInput($data)
-    {
-    }
-
-    /**
-     * @deprecated As of v7.0. Use filterCreateInput or filterUpdateInput. Or better don't extend the class.
-     * Use entityAcl, app > acl, roles to restrict write access for specific fields.
-     * @todo Remove in v9.0.
-     * @param stdClass $data
-     * @return void
-     */
-    protected function handleInput($data)
-    {
     }
 
     /**
@@ -933,10 +721,8 @@ class Service implements Crud,
         $this->processAssignmentCheck($entity);
         $this->getLinkCheck()->processFields($entity);
 
-        /** @noinspection PhpDeprecationInspection */
         $checkForDuplicates =
-            $this->metadata->get(['recordDefs', $this->entityType, 'updateDuplicateCheck']) ??
-            $this->checkForDuplicatesInUpdate;
+            $this->metadata->get(['recordDefs', $this->entityType, 'updateDuplicateCheck']) ?? false;
 
         if ($checkForDuplicates && !$params->skipDuplicateCheck()) {
             $this->processDuplicateCheck($entity);
@@ -1180,10 +966,6 @@ class Service implements Crud,
 
         $this->processForbiddenLinkReadCheck($link);
 
-        if ($methodResult = $this->processFindLinkedMethod($id, $link, $searchParams)) {
-            return $methodResult;
-        }
-
         $foreignEntityType = $this->entityManager
             ->getDefs()
             ->getEntity($this->entityType)
@@ -1259,31 +1041,6 @@ class Service implements Crud,
     }
 
     /**
-     * @param string $link
-     * @return ?RecordCollection<Entity>
-     * @throws Forbidden
-     * @throws NotFound
-     * @throws BadRequest
-     * @todo Remove in v9.0.
-     */
-    private function processFindLinkedMethod(string $id, string $link, SearchParams $searchParams): ?RecordCollection
-    {
-        $methodName = 'findLinked' . ucfirst($link);
-
-        if (method_exists($this, $methodName)) {
-            trigger_error(
-                "Usage of $methodName method is deprecated and will be removed in v9.0.",
-                E_USER_DEPRECATED
-            );
-
-
-            return $this->$methodName($id, $searchParams);
-        }
-
-        return null;
-    }
-
-    /**
      * Link records.
      *
      * @throws BadRequest
@@ -1313,10 +1070,6 @@ class Service implements Crud,
         }
 
         $this->getLinkCheck()->processLink($entity, $link);
-
-        if ($this->processLinkMethod($id, $link, $foreignId)) {
-            return;
-        }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
 
@@ -1372,10 +1125,6 @@ class Service implements Crud,
 
         $this->getLinkCheck()->processUnlink($entity, $link);
 
-        if ($this->processUnlinkMethod($id, $link, $foreignId)) {
-            return;
-        }
-
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
 
         if (!$foreignEntityType) {
@@ -1399,51 +1148,6 @@ class Service implements Crud,
         $this->getRecordHookManager()->processAfterUnlink($entity, $link, $foreignEntity);
     }
 
-    /**
-     * @throws Forbidden
-     * @throws NotFound
-     * @todo Remove in v9.0.
-     */
-    private function processLinkMethod(string $id, string $link, string $foreignId): bool
-    {
-        $methodName = 'link' . ucfirst($link);
-
-        if ($link !== 'entity' && $link !== 'entityMass' && method_exists($this, $methodName)) {
-            $this->$methodName($id, $foreignId);
-
-            trigger_error(
-                "Usage of $methodName method is deprecated and will be removed in v9.0.",
-                E_USER_DEPRECATED
-            );
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @throws Forbidden
-     * @throws NotFound
-     * @todo Remove in v9.0.
-     */
-    private function processUnlinkMethod(string $id, string $link, string $foreignId): bool
-    {
-        $methodName = 'unlink' . ucfirst($link);
-
-        if ($link !== 'entity' && method_exists($this, $methodName)) {
-            $this->$methodName($id, $foreignId);
-
-            trigger_error(
-                "Usage of $methodName method is deprecated and will be removed in v9.0.",
-                E_USER_DEPRECATED
-            );
-
-            return true;
-        }
-
-        return false;
-    }
 
     /**
      * @throws BadRequest
@@ -1547,21 +1251,6 @@ class Service implements Crud,
         if (in_array($link, $forbiddenLinkList)) {
             throw new Forbidden();
         }
-
-        /** @noinspection PhpDeprecationInspection */
-        if (in_array($link, $this->forbiddenLinkList)) {
-            throw new Forbidden();
-        }
-
-        /** @noinspection PhpDeprecationInspection */
-        if (in_array($link, $this->internalLinkList)) {
-            throw new Forbidden();
-        }
-
-        /** @noinspection PhpDeprecationInspection */
-        if (!$this->user->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
-            throw new Forbidden();
-        }
     }
 
     /**
@@ -1589,26 +1278,6 @@ class Service implements Crud,
         $forbiddenLinkList = $this->acl->getScopeForbiddenLinkList($this->entityType, AclTable::ACTION_EDIT);
 
         if (in_array($link, $forbiddenLinkList)) {
-            throw new Forbidden();
-        }
-
-        /** @noinspection PhpDeprecationInspection */
-        if (in_array($link, $this->forbiddenLinkList)) {
-            throw new Forbidden();
-        }
-
-        /** @noinspection PhpDeprecationInspection */
-        if (in_array($link, $this->readOnlyLinkList)) {
-            throw new Forbidden();
-        }
-
-        /** @noinspection PhpDeprecationInspection */
-        if (!$this->user->isAdmin() && in_array($link, $this->nonAdminReadOnlyLinkList)) {
-            throw new Forbidden();
-        }
-
-        /** @noinspection PhpDeprecationInspection */
-        if (!$this->user->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
             throw new Forbidden();
         }
     }
@@ -1732,53 +1401,10 @@ class Service implements Crud,
      * Do not extend. Prefer metadata recordDefs > outputFilterClassNameList.
      *
      * @param TEntity $entity
-     * @return void
-     * @todo Add void return type in v9.0.
      * @noinspection PhpDocSignatureInspection
      */
-    public function prepareEntityForOutput(Entity $entity)
+    public function prepareEntityForOutput(Entity $entity): void
     {
-        /** @noinspection PhpDeprecationInspection */
-        if ($this->internalAttributeList !== []) {
-            trigger_error(
-                '$internalAttributeList is deprecated and will be removed in v9.0.',
-                E_USER_DEPRECATED
-            );
-        }
-
-        /** @noinspection PhpDeprecationInspection */
-        if ($this->forbiddenAttributeList !== []) {
-            trigger_error(
-                '$forbiddenAttributeList is deprecated and will be removed in v9.0.',
-                E_USER_DEPRECATED
-            );
-        }
-
-        /** @noinspection PhpDeprecationInspection */
-        if ($this->onlyAdminAttributeList !== []) {
-            trigger_error(
-                '$onlyAdminAttributeList is deprecated and will be removed in v9.0.',
-                E_USER_DEPRECATED
-            );
-        }
-
-        /** @noinspection PhpDeprecationInspection */
-        foreach ($this->internalAttributeList as $attribute) {
-            $entity->clear($attribute);
-        }
-
-        /** @noinspection PhpDeprecationInspection */
-        foreach ($this->forbiddenAttributeList as $attribute) {
-            $entity->clear($attribute);
-        }
-
-        if (!$this->user->isAdmin()) {
-            /** @noinspection PhpDeprecationInspection */
-            foreach ($this->onlyAdminAttributeList as $attribute) {
-                $entity->clear($attribute);
-            }
-        }
-
         $forbiddenAttributeList = $this->acl->getScopeForbiddenAttributeList($entity->getEntityType());
 
         foreach ($forbiddenAttributeList as $attribute) {
@@ -1836,11 +1462,6 @@ class Service implements Crud,
 
         $attributes = $this->createEntityDuplicator()->duplicate($entity);
 
-        /** @noinspection PhpDeprecationInspection */
-        foreach ($this->duplicateIgnoreAttributeList as $attribute) {
-            unset($attributes->$attribute);
-        }
-
         if ($this->acl->getPermissionLevel(Acl\Permission::ASSIGNMENT) === AclTable::LEVEL_NO) {
             unset($attributes->assignedUserId);
             unset($attributes->assignedUserName);
@@ -1853,10 +1474,8 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @noinspection PhpDocSignatureInspection
-     * @todo Make private in v9.0.
-     * @deprecated As of v8.2. Use afterCreate record hook instead.
      */
-    protected function afterCreateProcessDuplicating(Entity $entity, CreateParams $params): void
+    private function afterCreateProcessDuplicating(Entity $entity, CreateParams $params): void
     {
         $duplicatingEntityId = $params->getDuplicateSourceId();
 
@@ -1883,24 +1502,10 @@ class Service implements Crud,
      * @param TEntity $entity
      * @param TEntity $duplicatingEntity
      * @noinspection PhpDocSignatureInspection
-     * @todo Make private in v9.0.
-     * @deprecated As of v8.2. Use afterCreate record hook instead.
      */
-    protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity): void
+    private function duplicateLinks(Entity $entity, Entity $duplicatingEntity): void
     {
-        /** @noinspection PhpDeprecationInspection */
-        if ($this->duplicatingLinkList !== []) {
-            trigger_error(
-                '$duplicatingLinkList is deprecated and will be removed in v9.0.',
-                E_USER_DEPRECATED
-            );
-        }
-
-        /** @noinspection PhpDeprecationInspection */
-        $linkList = array_merge(
-            $this->duplicatingLinkList,
-            $this->metadata->get("recordDefs.$this->entityType.duplicateLinkList") ?? [],
-        );
+        $linkList = $this->metadata->get("recordDefs.$this->entityType.duplicateLinkList") ?? [];
 
         foreach ($linkList as $link) {
             $linkedList = $this->getRepository()
@@ -1931,11 +1536,6 @@ class Service implements Crud,
 
     protected function prepareSearchParamsSelect(SearchParams $searchParams): SearchParams
     {
-        /** @noinspection PhpDeprecationInspection */
-        if ($this->forceSelectAllAttributes) {
-            return $searchParams->withSelect(null);
-        }
-
         if ($this->metadata->get("recordDefs.$this->entityType.forceSelectAllAttributes")) {
             return $searchParams->withSelect(null);
         }

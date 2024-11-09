@@ -61,13 +61,6 @@ class RecordTree extends Record
     /** @var ?string */
     protected $categoryField = null;
 
-    public function __construct(string $entityType = '')
-    {
-        parent::__construct($entityType);
-
-        $this->readOnlyLinkList[] = 'children';
-    }
-
     /**
      * @param array<string, mixed> $params
      * @return ?Collection<Entity>
