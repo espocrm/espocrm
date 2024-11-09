@@ -32,10 +32,7 @@ namespace Espo\Core\Utils\Database\Schema;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Database\ConfigDataProvider;
 use Espo\Core\Utils\Database\MetadataProvider as MetadataProvider;
-use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Log;
-use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\Module\PathProvider;
 use Espo\Core\Utils\Util;
 
 use Espo\ORM\Defs\AttributeDefs;
@@ -51,8 +48,6 @@ use Doctrine\DBAL\Schema\Schema as DbalSchema;
 use Doctrine\DBAL\Types\Type as DbalType;
 use Espo\ORM\Type\AttributeType;
 
-use const E_USER_DEPRECATED;
-
 /**
  * Schema representation builder.
  */
@@ -64,17 +59,13 @@ class Builder
     private int $idLength;
     private string $idDbType;
 
-    private string $tablesPath = 'Core/Utils/Database/Schema/tables';
     /** @var string[] */
     private $typeList;
     private ColumnPreparator $columnPreparator;
 
     public function __construct(
-        private Metadata $metadata,
-        private FileManager $fileManager,
         private Log $log,
         private InjectableFactory $injectableFactory,
-        private PathProvider $pathProvider,
         ConfigDataProvider $configDataProvider,
         ColumnPreparatorFactory $columnPreparatorFactory,
         MetadataProvider $metadataProvider
@@ -227,12 +218,6 @@ class Builder
      */
     private function amendMetadata(array $ormMeta, ?array $entityTypeList): array
     {
-        /** @var array<string, mixed> $ormMeta */
-        $ormMeta = Util::merge(
-            $ormMeta,
-            $this->getCustomTables()
-        );
-
         if (isset($ormMeta['unsetIgnore'])) {
             $protectedOrmMeta = [];
 
@@ -464,42 +449,6 @@ class Builder
     }
 
     /**
-     * Get custom table definition in `application/Espo/Core/Utils/Database/Schema/tables`.
-     * This logic can be removed in the future. Usage of table files in not recommended.
-     *
-     * @return array<string, array<string, mixed>>
-     * @todo Remove in v9.0.
-     */
-    private function getCustomTables(): array
-    {
-        $customTables = $this->loadData($this->pathProvider->getCore() . $this->tablesPath);
-
-        foreach ($this->metadata->getModuleList() as $moduleName) {
-            $modulePath = $this->pathProvider->getModule($moduleName) . $this->tablesPath;
-
-            $customTables = Util::merge(
-                $customTables,
-                $this->loadData($modulePath)
-            );
-        }
-
-        /** @var array<string, mixed> $customTables */
-        $customTables = Util::merge(
-            $customTables,
-            $this->loadData($this->pathProvider->getCustom() . $this->tablesPath)
-        );
-
-        if ($customTables !== []) {
-            trigger_error(
-                'Definitions in Database\\Schema\\tables are deprecated and will be remove in v9.0.',
-                E_USER_DEPRECATED
-            );
-        }
-
-        return $customTables;
-    }
-
-    /**
      * @param string[] $entityTypeList
      * @param array<string, mixed> $ormMeta
      * @param string[] $depList
@@ -532,40 +481,5 @@ class Builder
         }
 
         return $depList;
-    }
-
-    /**
-     * @param string $path
-     * @return array<string, array<string, mixed>>
-     */
-    private function loadData(string $path): array
-    {
-        $tables = [];
-
-        if (!file_exists($path)) {
-            return $tables;
-        }
-
-        /** @var string[] $fileList */
-        $fileList = $this->fileManager->getFileList($path, false, '\.php$', true);
-
-        foreach ($fileList as $fileName) {
-            $itemPath = $path . '/' . $fileName;
-
-            if (!$this->fileManager->isFile($itemPath)) {
-                continue;
-            }
-
-            $fileData = $this->fileManager->getPhpContents($itemPath);
-
-            if (!is_array($fileData)) {
-                continue;
-            }
-
-            /** @var array<string, array<string, mixed>> $tables */
-            $tables = Util::merge($tables, $fileData);
-        }
-
-        return $tables;
     }
 }
