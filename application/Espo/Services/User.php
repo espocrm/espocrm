@@ -29,6 +29,8 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Di\LogAware;
+use Espo\Core\Di\LogSetter;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Mail\Exceptions\SendingError;
@@ -53,8 +55,10 @@ use Exception;
 /**
  * @extends Record<UserEntity>
  */
-class User extends Record
+class User extends Record implements LogAware
 {
+    use LogSetter;
+
     /**
      * @throws Forbidden
      */
