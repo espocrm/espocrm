@@ -64,12 +64,6 @@ class ContainerConfiguration implements Configuration
 
         try {
             $className = $this->metadata->get(['app', 'containerServices', $name, 'loaderClassName']);
-
-            if (!$className) {
-                /** @deprecated */
-                /** @todo Remove in v9.0. */
-                $className = $this->metadata->get(['app', 'loaders', ucfirst($name)]);
-            }
         } catch (Exception) {}
 
         if ($className && class_exists($className)) {

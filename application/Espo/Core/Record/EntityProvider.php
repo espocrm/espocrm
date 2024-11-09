@@ -35,8 +35,6 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
-use const E_USER_DEPRECATED;
-
 /**
  * Fetches entities.
  *
@@ -75,20 +73,10 @@ class EntityProvider
      * @return Entity
      * @throws NotFound
      * @throws Forbidden
-     * @since 8.5.0
+     * @since 9.0.0
      */
     public function get(string $entityType, string $id): Entity
     {
-        if (!$this->entityManager->hasRepository($entityType)) {
-            // @todo Remove in v9.0.
-            trigger_error(
-                'EntityProvider::get should receive an entity type, not a class name.',
-                E_USER_DEPRECATED
-            );
-            /** @phpstan-ignore-next-line  */
-            return $this->getByClass($entityType, $id);
-        }
-
         $entity = $this->entityManager->getEntityById($entityType, $id);
 
         return $this->processGet($entity);

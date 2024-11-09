@@ -1,7 +1,6 @@
 {
     "frontendHiddenPathList": [
         ["app", "metadata"],
-        ["app", "loaders"],
         ["app", "containerServices"],
         ["app", "portalContainerServices"],
         ["app", "consoleCommands"],
