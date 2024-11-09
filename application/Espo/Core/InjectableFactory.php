@@ -34,7 +34,6 @@ use Psr\Container\NotFoundExceptionInterface;
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\Binding;
 use Espo\Core\Binding\Factory;
-use Espo\Core\Interfaces\Injectable;
 
 use ReflectionClass;
 use ReflectionParameter;
@@ -170,13 +169,6 @@ class InjectableFactory
         $injectionList = $this->getConstructorInjectionList($class, $with, $bindingContainer);
 
         $obj = $class->newInstanceArgs($injectionList);
-
-        // @todo Remove in v9.0.
-        if ($class->implementsInterface(Injectable::class)) {
-            $this->applyInjectable($class, $obj);
-
-            return $obj;
-        }
 
         $this->applyAwareInjections($class, $obj);
 
@@ -456,46 +448,5 @@ class InjectableFactory
         }
 
         return false;
-    }
-
-    /**
-     * @deprecated As of v6.0. Use create or createWith methods instead.
-     *
-     * @template T of object
-     * @param class-string<T> $className
-     * @param ?array<string, mixed> $with
-     * @return T
-     */
-    public function createByClassName(string $className, ?array $with = null): object
-    {
-        return $this->createInternal($className, $with);
-    }
-
-    /**
-     * @deprecated
-     * @param ReflectionClass<object> $class
-     * @todo Remove in v9.0.
-     */
-    private function applyInjectable(ReflectionClass $class, object $obj): void
-    {
-        $setList = [];
-
-        assert($obj instanceof Injectable);
-
-        $dependencyList = $obj->getDependencyList();
-
-        foreach ($dependencyList as $name) {
-            $injection = $this->container->get($name);
-
-            if ($this->classHasDependencySetter($class, $name)) {
-                $methodName = 'set' . ucfirst($name);
-                $obj->$methodName($injection);
-                $setList[] = $name;
-            }
-
-            $obj->inject($name, $injection);
-        }
-
-        $this->applyAwareInjections($class, $obj, $setList);
     }
 }

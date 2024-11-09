@@ -29,11 +29,8 @@
 
 namespace Espo\Core\Formula\Functions;
 
-
 use Espo\Core\Formula\Exceptions\Error;
-use Espo\Core\Interfaces\Injectable;
 use Espo\ORM\Entity;
-
 use Espo\Core\Formula\Processor;
 use Espo\Core\Formula\Argument;
 
@@ -42,7 +39,7 @@ use stdClass;
 /**
  * @deprecated Use BaseFunction instead.
  */
-abstract class Base implements Injectable
+abstract class Base
 {
     /**
      * @var ?string
@@ -64,49 +61,12 @@ abstract class Base implements Injectable
      */
     private $variables;
 
-    protected $dependencyList = []; /** @phpstan-ignore-line */
-
-    protected $injections = []; /** @phpstan-ignore-line */
-
-    public function inject($name, $object) /** @phpstan-ignore-line */
-    {
-        $this->injections[$name] = $object;
-    }
-
-    protected function getInjection($name) /** @phpstan-ignore-line */
-    {
-        return $this->injections[$name] ?? $this->$name ?? null;
-    }
-
-    protected function addDependency($name) /** @phpstan-ignore-line */
-    {
-        $this->dependencyList[] = $name;
-    }
-
-    protected function addDependencyList(array $list) /** @phpstan-ignore-line */
-    {
-        foreach ($list as $item) {
-            $this->addDependency($item);
-        }
-    }
-
-    public function getDependencyList() /** @phpstan-ignore-line */
-    {
-        return $this->dependencyList;
-    }
-
     public function __construct(string $name, Processor $processor, ?Entity $entity = null, ?stdClass $variables = null)
     {
         $this->name = $name;
         $this->processor = $processor;
         $this->entity = $entity;
         $this->variables = $variables;
-
-        $this->init();
-    }
-
-    protected function init() /** @phpstan-ignore-line */
-    {
     }
 
     protected function getVariables(): stdClass
