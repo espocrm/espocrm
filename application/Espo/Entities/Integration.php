@@ -143,7 +143,7 @@ class Integration extends Entity
         }
     }
 
-    public function toArray()
+    public function getValueMap(): stdClass
     {
         $array = [];
 
@@ -167,17 +167,12 @@ class Integration extends Entity
 
         $data = $this->get('data') ?? (object) [];
 
-        return array_merge(
+        $array = array_merge(
             $array,
             get_object_vars($data)
         );
-    }
 
-    public function getValueMap(): stdClass
-    {
-        $arr = $this->toArray();
-
-        return (object) $arr;
+        return (object) $array;
     }
 
     public function isEnabled(): bool

@@ -668,16 +668,14 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @deprecated As of v6.0. Use `getValueMap`.
-     * @todo Remove in v9.0.
-     * @return array<string, mixed>
+     * Get values.
      */
-    public function toArray()
+    public function getValueMap(): stdClass
     {
-        $arr = [];
+        $map = [];
 
         if (isset($this->id)) {
-            $arr['id'] = $this->id;
+            $map['id'] = $this->id;
         }
 
         foreach ($this->getAttributeList() as $attribute) {
@@ -686,21 +684,11 @@ class BaseEntity implements Entity
             }
 
             if ($this->has($attribute)) {
-                $arr[$attribute] = $this->get($attribute);
+                $map[$attribute] = $this->get($attribute);
             }
         }
 
-        return $arr;
-    }
-
-    /**
-     * Get values.
-     */
-    public function getValueMap(): stdClass
-    {
-        $array = $this->toArray();
-
-        return (object) $array;
+        return (object) $map;
     }
 
     /**
