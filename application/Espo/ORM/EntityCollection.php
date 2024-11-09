@@ -348,34 +348,19 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     }
 
     /**
-     * @deprecated As of v6.0. Use `getValueMapList`.
-     * @todo Remove in v9.0.
-     * @return array<array<string, mixed>>|stdClass[]
-     */
-    public function toArray(bool $itemsAsObjects = false): array
-    {
-        $arr = [];
-
-        foreach ($this as $entity) {
-            $item = $entity->getValueMap();
-
-            if (!$itemsAsObjects) {
-                $item = get_object_vars($item);
-            }
-
-            $arr[] = $item;
-        }
-
-        return $arr;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getValueMapList(): array
     {
-        /** @var stdClass[] */
-        return $this->toArray(true);
+        $list = [];
+
+        foreach ($this as $entity) {
+            $item = $entity->getValueMap();
+
+            $list[] = $item;
+        }
+
+        return $list;
     }
 
     /**
