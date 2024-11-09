@@ -204,6 +204,8 @@ class EntityManager
     /**
      * Get an entity. If $id is null, a new entity instance is created.
      * If an entity with a specified ID does not exist, then NULL is returned.
+     * @deprecated As of v9.0. Use getNewEntity and getEntityById instead.
+     * @todo Remove in v11.0.
      */
     public function getEntity(string $entityType, ?string $id = null): ?Entity
     {
@@ -223,7 +225,10 @@ class EntityManager
      */
     public function getNewEntity(string $entityType): Entity
     {
-        /** @var Entity */
+        /**
+         * @var Entity
+         * @noinspection PhpDeprecationInspection
+         */
         return $this->getEntity($entityType);
     }
 
@@ -232,6 +237,7 @@ class EntityManager
      */
     public function getEntityById(string $entityType, string $id): ?Entity
     {
+        /** @noinspection PhpDeprecationInspection */
         return $this->getEntity($entityType, $id);
     }
 
@@ -454,6 +460,7 @@ class EntityManager
      * @deprecated As of v7.0. Use `getCollectionFactory`.
      * @param array<string, mixed> $data
      * @return EntityCollection<Entity>
+     * @todo Remove in v10.0.
      */
     public function createCollection(?string $entityType = null, array $data = []): EntityCollection
     {

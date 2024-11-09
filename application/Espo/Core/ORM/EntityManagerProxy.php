@@ -62,20 +62,21 @@ class EntityManagerProxy
         return $this->getEntityManager()->getEntityById($entityType, $id);
     }
 
+    /**
+     * @deprecated As of v9.0.
+     * @todo Remove in v11.0.
+     */
     public function getEntity(string $entityType, ?string $id = null): ?Entity
     {
         return $this->getEntityManager()->getEntity($entityType, $id);
     }
 
     /**
-     * @param array<mixed, string> $options
-     * @return void
+     * @param array<string, mixed> $options
      */
-    public function saveEntity(Entity $entity, array $options = [])
+    public function saveEntity(Entity $entity, array $options = []): void
     {
-        /** Return for backward compatibility. */
-        /** @phpstan-ignore-next-line */
-        return $this->getEntityManager()->saveEntity($entity, $options);
+        $this->getEntityManager()->saveEntity($entity, $options);
     }
 
     /**
