@@ -221,9 +221,7 @@ class Note extends Entity
 
     public function setType(string $type): self
     {
-        $this->set('type', $type);
-
-        return $this;
+        return $this->set('type', $type);
     }
 
     public function setParent(LinkParent|Entity $parent): self
@@ -278,9 +276,7 @@ class Note extends Entity
      */
     public function setData(stdClass|array $data): self
     {
-        $this->set('data', $data);
-
-        return $this;
+        return $this->set('data', $data);
     }
 
     public function loadAdditionalFields(): void
@@ -334,9 +330,7 @@ class Note extends Entity
      */
     public function setTeamsIds(array $ids): self
     {
-        $this->set('teamsIds', $ids);
-
-        return $this;
+        return $this->set('teamsIds', $ids);
     }
 
     /**
@@ -344,9 +338,7 @@ class Note extends Entity
      */
     public function setUsersIds(array $ids): self
     {
-        $this->set('usersIds', $ids);
-
-        return $this;
+        return $this->set('usersIds', $ids);
     }
 
     public function isPinned(): bool

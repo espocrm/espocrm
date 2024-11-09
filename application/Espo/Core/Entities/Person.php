@@ -151,37 +151,27 @@ class Person extends Entity
 
     public function setFirstName(?string $firstName): self
     {
-        $this->set('firstName', $firstName);
-
-        return $this;
+        return $this->set('firstName', $firstName);
     }
 
     public function setLastName(?string $lastName): self
     {
-        $this->set('lastName', $lastName);
-
-        return $this;
+        return $this->set('lastName', $lastName);
     }
 
     public function setMiddleName(?string $middleName): self
     {
-        $this->set('middleName', $middleName);
-
-        return $this;
+        return $this->set('middleName', $middleName);
     }
 
     public function setEmailAddressGroup(EmailAddressGroup $group): self
     {
-        $this->setValueObject('emailAddress', $group);
-
-        return $this;
+        return $this->setValueObject('emailAddress', $group);
     }
 
     public function setPhoneNumberGroup(PhoneNumberGroup $group): self
     {
-        $this->setValueObject('phoneNumber', $group);
-
-        return $this;
+        return $this->setValueObject('phoneNumber', $group);
     }
 
     public function getAddress(): Address
@@ -192,8 +182,6 @@ class Person extends Entity
 
     public function setAddress(Address $address): self
     {
-        $this->setValueObject('address', $address);
-
-        return $this;
+        return $this->setValueObject('address', $address);
     }
 }

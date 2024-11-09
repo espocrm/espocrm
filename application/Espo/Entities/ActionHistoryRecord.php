@@ -47,37 +47,27 @@ class ActionHistoryRecord extends Entity
      */
     public function setAction(string $action): self
     {
-        $this->set('action', $action);
-
-        return $this;
+        return $this->set('action', $action);
     }
 
     public function setUserId(string $userId): self
     {
-        $this->set('userId', $userId);
-
-        return $this;
+        return $this->set('userId', $userId);
     }
 
     public function setIpAddress(?string $ipAddress): self
     {
-        $this->set('ipAddress', $ipAddress);
-
-        return $this;
+        return $this->set('ipAddress', $ipAddress);
     }
 
     public function setAuthTokenId(?string $authTokenId): self
     {
-        $this->set('authTokenId', $authTokenId);
-
-        return $this;
+        return $this->set('authTokenId', $authTokenId);
     }
 
     public function setAuthLogRecordId(?string $authLogRecordId): self
     {
-        $this->set('authLogRecordId', $authLogRecordId);
-
-        return $this;
+        return $this->set('authLogRecordId', $authLogRecordId);
     }
 
     public function setTarget(LinkParent $target): self

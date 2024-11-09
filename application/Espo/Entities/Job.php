@@ -186,9 +186,7 @@ class Job extends Entity
      */
     public function setStatus(string $status): self
     {
-        $this->set('status', $status);
-
-        return $this;
+        return $this->set('status', $status);
     }
 
     /**
@@ -196,9 +194,7 @@ class Job extends Entity
      */
     public function setPid(?int $pid): self
     {
-        $this->set('pid', $pid);
-
-        return $this;
+        return $this->set('pid', $pid);
     }
 
     /**
@@ -206,9 +202,7 @@ class Job extends Entity
      */
     public function setStartedAtNow(): self
     {
-        $this->set('startedAt', DateTimeUtil::getSystemNowString());
-
-        return $this;
+        return $this->set('startedAt', DateTimeUtil::getSystemNowString());
     }
 
     /**
@@ -216,8 +210,6 @@ class Job extends Entity
      */
     public function setExecutedAtNow(): self
     {
-        $this->set('executedAt', DateTimeUtil::getSystemNowString());
-
-        return $this;
+        return $this->set('executedAt', DateTimeUtil::getSystemNowString());
     }
 }
