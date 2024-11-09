@@ -276,6 +276,10 @@ class Email extends Entity
             $body = mb_ereg_replace($re, $replaceList[$i], $body, 'i');
         }
 
+        if (!$body) {
+            return null;
+        }
+
         return $body;
     }
 
