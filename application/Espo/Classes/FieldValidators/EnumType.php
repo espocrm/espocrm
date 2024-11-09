@@ -94,12 +94,6 @@ class EnumType
 
         $value = $entity->get($field);
 
-        // For bc.
-        // @todo Remove in v9.0.
-        if ($value === '') {
-            $value = null;
-        }
-
         return in_array($value, $optionList);
     }
 
