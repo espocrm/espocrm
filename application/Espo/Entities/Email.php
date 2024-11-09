@@ -717,6 +717,11 @@ class Email extends Entity
         return $this->getValueObject('sentBy');
     }
 
+    public function setSentBy(Link|User|null $sentBy): self
+    {
+        return $this->setRelatedLinkOrEntity('sentBy', $sentBy);
+    }
+
     public function getGroupFolder(): ?Link
     {
         /** @var ?Link */

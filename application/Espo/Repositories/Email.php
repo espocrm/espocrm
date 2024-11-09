@@ -333,6 +333,7 @@ class Email extends Database implements
                         $this->addUserByEmailAddressId($entity, $ids[0], true);
 
                         if (!$entity->getSentBy()) {
+                            /** @var UserEntity $user */
                             $user = $this->getEmailAddressRepository()
                                 ->getEntityByAddressId(
                                     $entity->get('fromEmailAddressId'),
@@ -340,7 +341,8 @@ class Email extends Database implements
                                     true
                                 );
 
-                            if ($user) {
+                            if ($user && $entity->getStatus() !== EmailEntity::STATUS_DRAFT) {
+                                $entity->setSentBy($user);
                                 $entity->set('sentById', $user->getId());
                             }
                         }
