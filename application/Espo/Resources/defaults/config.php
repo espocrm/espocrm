@@ -310,5 +310,6 @@ return [
     'authIpAddressCheckExcludedUsersNames' => (object) [],
     'availableReactions' => ['Like'],
     'streamReactionsCheckMaxSize' => 50,
+    'emailScheduledBatchCount' => 50,
     'isInstalled' => false,
 ];

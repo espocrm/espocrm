@@ -43,12 +43,14 @@
     ],
     "beforeCreateHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\Email\\CheckFromAddress",
-        "Espo\\Classes\\RecordHooks\\Email\\BeforeCreate"
+        "Espo\\Classes\\RecordHooks\\Email\\BeforeCreate",
+        "Espo\\Classes\\RecordHooks\\Email\\BeforeSave"
     ],
     "beforeUpdateHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\Email\\CheckFromAddress",
         "Espo\\Classes\\RecordHooks\\Email\\MarkAsReadBeforeUpdate",
-        "Espo\\Classes\\RecordHooks\\Email\\BeforeUpdate"
+        "Espo\\Classes\\RecordHooks\\Email\\BeforeUpdate",
+        "Espo\\Classes\\RecordHooks\\Email\\BeforeSave"
     ],
     "afterUpdateHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\Email\\AfterUpdate"

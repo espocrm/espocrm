@@ -60,7 +60,8 @@
         "event": "Event",
         "icsEventDateStart": "ICS Event Date Start",
         "groupFolder": "Group Folder",
-        "groupStatusFolder": "Group Status Folder"
+        "groupStatusFolder": "Group Status Folder",
+        "sendAt": "Send At"
     },
     "links": {
         "replied": "Replied",
@@ -129,13 +130,15 @@
         "Event": "Event",
         "View Attachments": "View Attachments",
         "Moved to Trash": "Moved to Trash",
-        "Retrieved from Trash": "Retrieved from Trash"
+        "Retrieved from Trash": "Retrieved from Trash",
+        "Schedule Send": "Schedule Send"
     },
     "strings": {
         "sendingFailed": "Email sending failed",
         "group": "Group"
     },
     "messages": {
+        "couldNotSentScheduledEmail": "Could not send scheduled [email]({link})",
         "notEditAccess": "No edit access to email.",
         "groupFolderNoAccess": "No access to group folder.",
         "groupMoveOutNoEditAccess": "Cannot move out from group folder. No edit access to email.",

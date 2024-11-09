@@ -28,6 +28,7 @@
 
 import EditModalView from 'views/modals/edit';
 import MailtoHelper from 'helpers/misc/mailto';
+import EmailScheduleSendModalView from 'views/email/modals/schedule-send';
 
 class ComposeEmailModalView extends EditModalView {
 
@@ -97,6 +98,12 @@ class ComposeEmailModalView extends EditModalView {
             text: this.translate('Send', 'labels', 'Email'),
             style: 'primary',
             title: 'Ctrl+Enter',
+        });
+
+        this.dropdownItemList.push({
+            name: 'scheduleSend',
+            text: this.translate('Schedule Send', 'labels', 'Email'),
+            onClick: () => this.actionScheduleSend(),
         });
 
         this.$header = $('<a>')
@@ -289,6 +296,36 @@ class ComposeEmailModalView extends EditModalView {
         }
 
         return super.beforeCollapse();
+    }
+
+    /**
+     * @private
+     */
+    async actionScheduleSend() {
+        // Prevents skipping required validation of the 'To' field.
+        this.model.set('status', 'Sending');
+
+        if (this.getRecordView().validate()) {
+            Espo.Ui.error(this.translate('Not valid'));
+
+            this.model.set('status', 'Draft');
+
+            return;
+        }
+
+        this.model.set('status', 'Draft');
+
+        const view = new EmailScheduleSendModalView({
+            model: this.model,
+            onSave: () => {
+                this.trigger('after:save', this.model);
+
+                this.close();
+            },
+        });
+
+        await this.assignView('dialog', view);
+        await view.render();
     }
 }
 

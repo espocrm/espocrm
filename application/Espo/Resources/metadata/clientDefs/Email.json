@@ -175,6 +175,17 @@
 
                     ]
                 }
+            },
+            "sendAt": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "in",
+                            "attribute": "status",
+                            "value": ["Draft"]
+                        }
+                    ]
+                }
             }
         },
         "panels": {

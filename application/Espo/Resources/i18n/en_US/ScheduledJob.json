@@ -21,7 +21,8 @@
             "AuthTokenControl": "Auth Token Control",
             "SendEmailNotifications": "Send Email Notifications",
             "CheckNewVersion": "Check for New Version",
-            "ProcessWebhookQueue": "Process Webhook Queue"
+            "ProcessWebhookQueue": "Process Webhook Queue",
+            "SendScheduledEmails": "Send Scheduled Emails"
         },
         "cronSetup": {
             "linux": "Note: Add this line to the crontab file to run Espo Scheduled Jobs:",

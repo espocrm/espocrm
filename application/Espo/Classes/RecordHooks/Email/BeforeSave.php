@@ -27,56 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Upgrades\Migrations\V9_0;
+namespace Espo\Classes\RecordHooks\Email;
 
-use Espo\Core\Upgrades\Migration\Script;
-use Espo\Entities\Preferences;
-use Espo\Entities\ScheduledJob;
-use Espo\Entities\User;
-use Espo\ORM\EntityManager;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Record\Hook\SaveHook;
+use Espo\Entities\Email;
+use Espo\ORM\Entity;
 
-class AfterUpgrade implements Script
+/**
+ * @implements SaveHook<Email>
+ */
+class BeforeSave implements SaveHook
 {
-    public function __construct(
-        private EntityManager $entityManager,
-    ) {}
 
-    public function run(): void
+    public function process(Entity $entity): void
     {
-        $users = $this->entityManager
-            ->getRDBRepositoryByClass(User::class)
-            ->sth()
-            ->where([
-                'isActive' => true,
-                'type' => [
-                    User::TYPE_ADMIN,
-                    User::TYPE_REGULAR,
-                    User::TYPE_PORTAL,
-                ]
-            ])
-            ->find();
-
-        foreach ($users as $user) {
-            $preferences = $this->entityManager->getRepositoryByClass(Preferences::class)->getById($user->getId());
-
-            if (!$preferences) {
-                continue;
-            }
-
-            $preferences->set('reactionNotifications', true);
-            $this->entityManager->saveEntity($preferences);
+        if (
+            $entity->getStatus() !== Email::STATUS_DRAFT &&
+            $entity->getSendAt() &&
+            $entity->isAttributeChanged('sendAt')
+        ) {
+            throw new BadRequest("Cannot set send-at if status is not Draft.");
         }
-
-        $this->createScheduledJob();
-    }
-
-    private function createScheduledJob(): void
-    {
-        $this->entityManager->createEntity(ScheduledJob::ENTITY_TYPE, [
-            'name' => 'Send Scheduled Emails',
-            'job' => 'SendScheduledEmails',
-            'status' => 'Active',
-            'scheduling' => '*/10 * * * *',
-        ]);
     }
 }

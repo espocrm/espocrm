@@ -60,5 +60,8 @@
     "CheckInboundEmails": {
         "preparatorClassName": "Espo\\Classes\\JobPreparators\\CheckInboundEmails",
         "jobClassName": "Espo\\Classes\\Jobs\\CheckInboundEmails"
+    },
+    "SendScheduledEmails": {
+        "jobClassName": "Espo\\Classes\\Jobs\\SendScheduledEmails"
     }
 }

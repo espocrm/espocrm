@@ -156,6 +156,9 @@
         },
         "availableReactions": {
             "level": "global"
+        },
+        "emailScheduledBatchCount": {
+            "level": "admin"
         }
     }
 }

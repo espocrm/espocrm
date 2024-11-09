@@ -582,6 +582,11 @@
             "type": "bool",
             "tooltip": true
         },
+        "emailScheduledBatchCount": {
+            "type": "int",
+            "min": 1,
+            "required": true
+        },
         "authTokenLifetime": {
             "type": "float",
             "min": 0,

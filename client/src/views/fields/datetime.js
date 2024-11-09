@@ -45,6 +45,7 @@ class DatetimeFieldView extends DateFieldView {
      *     module:views/fields/base~params &
      *     Record
      * } [params] Parameters.
+     * @property {string} [otherFieldLabelText] A label text of other field. Used in before/after validations.
      */
 
     /**

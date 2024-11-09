@@ -45,6 +45,7 @@ class DateFieldView extends BaseFieldView {
      *     module:views/fields/base~params &
      *     Record
      * } [params] Parameters.
+     * @property {string} [otherFieldLabelText] A label text of other field. Used in before/after validations.
      */
 
     /**
@@ -568,9 +569,12 @@ class DateFieldView extends BaseFieldView {
         }
 
         if (unix <= otherUnix) {
+            const otherFieldLabelText = this.options.otherFieldLabelText ||
+                this.translate(field, 'fields', this.entityType);
+
             const msg = this.translate('fieldShouldAfter', 'messages')
                 .replace('{field}', this.getLabelText())
-                .replace('{otherField}', this.translate(field, 'fields', this.entityType));
+                .replace('{otherField}', otherFieldLabelText);
 
             this.showValidationMessage(msg);
 

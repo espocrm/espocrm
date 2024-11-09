@@ -587,8 +587,10 @@ class Sender
 
             $this->transport->send($message);
 
-            $email->setStatus(Email::STATUS_SENT);
-            $email->set('dateSent', DateTime::createNow()->toString());
+            $email
+                ->setStatus(Email::STATUS_SENT)
+                ->setDateSent(DateTime::createNow())
+                ->setSendAt(null);
         } catch (Exception $e) {
             /** @noinspection PhpDeprecationInspection */
             $this->resetParams();

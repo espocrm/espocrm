@@ -24,5 +24,11 @@
             [{"name": "massEmailOpenTracking"}, {"name": "massEmailVerp"}],
             [{"name": "massEmailDisableMandatoryOptOutLink"}, false]
         ]
+    },
+    {
+        "label": "Scheduled Send",
+        "rows": [
+            [{"name": "emailScheduledBatchCount"}, false]
+        ]
     }
 ]

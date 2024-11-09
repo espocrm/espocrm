@@ -92,5 +92,11 @@ return [
             'status' => 'Active',
             'scheduling' => '*/2 * * * *',
         ],
+        [
+            'name' => 'Send Scheduled Emails',
+            'job' => 'SendScheduledEmails',
+            'status' => 'Active',
+            'scheduling' => '*/10 * * * *',
+        ],
     ],
 ];

@@ -417,6 +417,17 @@
             "readOnly": true,
             "customizationDisabled": true
         },
+        "sendAt": {
+            "type": "datetime",
+            "customizationDisabled": true,
+            "layoutAvailabilityList": [
+                "filters",
+                "list"
+            ],
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\Email\\SendAt\\Future"
+            ]
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true,

@@ -27,56 +27,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Upgrades\Migrations\V9_0;
+namespace Espo\Classes\FieldValidators\Email\SendAt;
 
-use Espo\Core\Upgrades\Migration\Script;
-use Espo\Entities\Preferences;
-use Espo\Entities\ScheduledJob;
-use Espo\Entities\User;
-use Espo\ORM\EntityManager;
+use Espo\Core\Field\DateTime;
+use Espo\Core\FieldValidation\Validator;
+use Espo\Core\FieldValidation\Validator\Data;
+use Espo\Core\FieldValidation\Validator\Failure;
+use Espo\Entities\Email;
+use Espo\ORM\Entity;
 
-class AfterUpgrade implements Script
+/**
+ * @implements Validator<Email>
+ */
+class Future implements Validator
 {
-    public function __construct(
-        private EntityManager $entityManager,
-    ) {}
-
-    public function run(): void
+    public function validate(Entity $entity, string $field, Data $data): ?Failure
     {
-        $users = $this->entityManager
-            ->getRDBRepositoryByClass(User::class)
-            ->sth()
-            ->where([
-                'isActive' => true,
-                'type' => [
-                    User::TYPE_ADMIN,
-                    User::TYPE_REGULAR,
-                    User::TYPE_PORTAL,
-                ]
-            ])
-            ->find();
+        $value = $entity->getSendAt();
 
-        foreach ($users as $user) {
-            $preferences = $this->entityManager->getRepositoryByClass(Preferences::class)->getById($user->getId());
-
-            if (!$preferences) {
-                continue;
-            }
-
-            $preferences->set('reactionNotifications', true);
-            $this->entityManager->saveEntity($preferences);
+        if (!$value) {
+            return null;
         }
 
-        $this->createScheduledJob();
-    }
+        if ($value->isLessThan(DateTime::createNow())) {
+            return Failure::create();
+        }
 
-    private function createScheduledJob(): void
-    {
-        $this->entityManager->createEntity(ScheduledJob::ENTITY_TYPE, [
-            'name' => 'Send Scheduled Emails',
-            'job' => 'SendScheduledEmails',
-            'status' => 'Active',
-            'scheduling' => '*/10 * * * *',
-        ]);
+        return null;
     }
 }

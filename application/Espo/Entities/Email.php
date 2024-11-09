@@ -901,4 +901,17 @@ class Email extends Entity
         /** @var Collection<Attachment> */
         return $this->relations->getMany('attachments');
     }
+
+    public function getSendAt(): ?DateTime
+    {
+        /** @var ?DateTime */
+        return $this->getValueObject('sendAt');
+    }
+
+    public function setSendAt(?DateTime $sendAt): self
+    {
+        $this->setValueObject('sendAt', $sendAt);
+
+        return $this;
+    }
 }
