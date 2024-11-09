@@ -266,7 +266,7 @@ class Sender
             }
 
             $options['connectionConfig']['username'] = $params['username'];
-            $options['connectionConfig']['password'] = $params['password'];
+            $options['connectionConfig']['password'] = $params['password'] ?? null;
         }
 
         $authClassName = $params['authClassName'] ?? $params['smtpAuthClassName'] ?? null;
