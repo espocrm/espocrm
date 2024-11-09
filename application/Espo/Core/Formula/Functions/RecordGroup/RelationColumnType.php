@@ -87,6 +87,6 @@ class RelationColumnType extends BaseFunction implements
             return null;
         }
 
-        return $em->getRDBRepository($entityType)->getRelationColumn($entity, $link, $foreignId, $column);
+        return $em->getRelation($entity, $link)->getColumnById($foreignId, $column);
     }
 }
