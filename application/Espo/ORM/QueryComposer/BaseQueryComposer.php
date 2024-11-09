@@ -315,20 +315,6 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @deprecated As of v6.0. Use `composeSelect`.
-     * @todo Remove in v9.0.
-     * @param array<string, mixed>|null $params
-     */
-    public function createSelectQuery(string $entityType, ?array $params = null): string
-    {
-        $params = $params ?? [];
-
-        $params['from'] = $entityType;
-
-        return $this->composeSelect(Select::fromRaw($params));
-    }
-
-    /**
      * @param array<string, mixed>|null $params
      */
     protected function createDeleteQuery(?array $params = null): string
@@ -2266,12 +2252,9 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * Quote a value (if needed).
-     * @deprecated As of v6.0. Not meant to be used outside as Query Builder should be used to
-     * build queries.
-     * @todo Make protected in v9.0.
      * @param mixed $value
      */
-    public function quote($value): string
+    protected function quote($value): string
     {
         if (is_null($value)) {
             return 'NULL';
