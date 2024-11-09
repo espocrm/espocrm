@@ -34,7 +34,6 @@ class EmailDetailRecordView extends DetailRecordView {
 
     sideView = 'views/email/record/detail-side'
     duplicateAction = false
-    shortcutKeyCtrlEnterAction = 'send'
 
     layoutNameConfigure() {
         if (this.model.isNew()) {
@@ -84,25 +83,17 @@ class EmailDetailRecordView extends DetailRecordView {
             this.shortcutKeyCtrlEnterAction = 'save';
         }
 
-        this.addButtonEdit({
-            name: 'send',
-            action: 'send',
-            label: 'Send',
-            style: 'primary',
-            title: 'Ctrl+Enter',
-        }, true);
-
-        this.addButtonEdit({
-            name: 'saveDraft',
-            action: 'save',
-            label: 'Save Draft',
-            title: 'Ctrl+S',
-        }, true);
-
         this.addButton({
             name: 'sendFromDetail',
             label: 'Send',
             hidden: true,
+            onClick: () => this.actionSendFromDetail(),
+        });
+
+        this.dropdownEditItemList.push({
+            name: 'send',
+            label: 'Send',
+            onClick: () => this.actionSendFromDetail(),
         });
 
         this.controlSendButton();
@@ -295,19 +286,13 @@ class EmailDetailRecordView extends DetailRecordView {
 
         if (status === 'Draft') {
             this.showActionItem('send');
-            this.showActionItem('saveDraft');
             this.showActionItem('sendFromDetail');
-            this.hideActionItem('save');
-            this.hideActionItem('saveAndContinueEditing');
 
             return;
         }
 
         this.hideActionItem('sendFromDetail');
         this.hideActionItem('send');
-        this.hideActionItem('saveDraft');
-        this.showActionItem('save');
-        this.showActionItem('saveAndContinueEditing');
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -465,6 +450,11 @@ class EmailDetailRecordView extends DetailRecordView {
         }
     }
 
+    /**
+     * Send.
+     *
+     * @return {Promise}
+     */
     send() {
         const model = this.model;
 
@@ -497,15 +487,16 @@ class EmailDetailRecordView extends DetailRecordView {
         return this.save();
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    actionSendFromDetail() {
-        this.setEditMode()
-            .then(() => {
-                return this.send();
-            })
-            .then(() => {
-                this.setDetailMode();
-            });
+    /**
+     * @private
+     * @return {Promise<void>}
+     */
+    async actionSendFromDetail() {
+        await this.confirm(this.translate('confirmSend', 'messages', 'Email'))
+
+        await this.setEditMode();
+        await this.send();
+        await this.setDetailMode();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -690,7 +681,7 @@ class EmailDetailRecordView extends DetailRecordView {
             return;
         }
 
-        if (!this.hasAvailableActionItem('saveDraft') && !this.hasAvailableActionItem('saveAndContinueEditing')) {
+        if (!this.hasAvailableActionItem('saveAndContinueEditing')) {
             return;
         }
 

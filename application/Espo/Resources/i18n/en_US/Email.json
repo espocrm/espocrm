@@ -138,6 +138,7 @@
         "group": "Group"
     },
     "messages": {
+        "confirmSend": "Send the email?",
         "couldNotSentScheduledEmail": "Could not send scheduled [email]({link})",
         "notEditAccess": "No edit access to email.",
         "groupFolderNoAccess": "No access to group folder.",

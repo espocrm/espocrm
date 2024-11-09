@@ -33,8 +33,6 @@ import EmailDetailRecordView from 'views/email/record/detail';
 
 class EmailEditRecordView extends EditRecordView {
 
-    shortcutKeyCtrlEnterAction = 'send'
-
     init() {
         super.init();
 
@@ -48,18 +46,11 @@ class EmailEditRecordView extends EditRecordView {
             this.shortcutKeyCtrlEnterAction = 'save';
         }
 
-        this.addButton({
+        this.addDropdownItem({
             name: 'send',
             label: 'Send',
-            style: 'primary',
-            title: 'Ctrl+Enter',
-        }, true);
-
-        this.addButton({
-            name: 'saveDraft',
-            label: 'Save Draft',
-            title: 'Ctrl+S',
-        }, true);
+            onClick: () => this.actionSend(),
+        });
 
         this.controlSendButton();
 
@@ -114,17 +105,11 @@ class EmailEditRecordView extends EditRecordView {
 
         if (status === 'Draft') {
             this.showActionItem('send');
-            this.showActionItem('saveDraft');
-            this.hideActionItem('save');
-            this.hideActionItem('saveAndContinueEditing');
 
             return;
         }
 
         this.hideActionItem('send');
-        this.hideActionItem('saveDraft');
-        this.showActionItem('save');
-        this.showActionItem('saveAndContinueEditing');
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -159,10 +144,7 @@ class EmailEditRecordView extends EditRecordView {
             return;
         }
 
-        if (
-            !this.hasAvailableActionItem('saveDraft') &&
-            !this.hasAvailableActionItem('saveAndContinueEditing')
-        ) {
+        if (!this.hasAvailableActionItem('saveAndContinueEditing')) {
             return;
         }
 
