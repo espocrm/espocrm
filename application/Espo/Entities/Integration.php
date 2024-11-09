@@ -37,15 +37,15 @@ class Integration extends Entity
 {
     public const ENTITY_TYPE = 'Integration';
 
-    public function get(string $name, $params = [])
+    public function get(string $attribute): mixed
     {
-        if ($name == 'id') {
+        if ($attribute == 'id') {
             return $this->id;
         }
 
-        if ($this->hasAttribute($name)) {
-            if ($this->hasInContainer($name)) {
-                return $this->getFromContainer($name);
+        if ($this->hasAttribute($attribute)) {
+            if ($this->hasInContainer($attribute)) {
+                return $this->getFromContainer($attribute);
             }
         } else {
             if ($this->get('data')) {
@@ -54,8 +54,8 @@ class Integration extends Entity
                 $data = new stdClass();
             }
 
-            if (isset($data->$name)) {
-                return $data->$name;
+            if (isset($data->$attribute)) {
+                return $data->$attribute;
             }
         }
 
@@ -124,17 +124,13 @@ class Integration extends Entity
         return parent::isAttributeChanged($name);
     }
 
-    /**
-     * @deprecated
-     * @todo Make protected.
-     */
-    public function populateFromArray(array $array, bool $onlyAccessible = true, bool $reset = false): void
+    protected function populateFromArray(array $data, bool $onlyAccessible = true, bool $reset = false): void
     {
         if ($reset) {
             $this->reset();
         }
 
-        foreach ($array as $attribute => $value) {
+        foreach ($data as $attribute => $value) {
             if (!is_string($attribute)) {
                 continue;
             }

@@ -84,13 +84,13 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
         $this->log = $this->getMockBuilder(Log::class)->disableOriginalConstructor()->getMock();
 
-        $this->user->id = '1';
+        $this->user->set('id', '1');
 
         $this->user
             ->expects($this->any())
             ->method('get')
             ->will($this->returnValueMap([
-                ['id', [], '1']
+                ['id', '1']
             ]));
 
 

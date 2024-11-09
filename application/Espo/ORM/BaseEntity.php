@@ -69,11 +69,9 @@ class BaseEntity implements Entity
     private array $valuesContainer = [];
 
     /**
-     * @deprecated As of v7.0. Use `getId`. To be changed to protected.
-     * @todo Change to protected in v9.0.
-     * @var ?string
+     * An ID.
      */
-    public $id = null;
+    protected ?string $id = null;
 
     /**
      * @param array{
@@ -156,38 +154,24 @@ class BaseEntity implements Entity
      */
     public function set($attribute, $value = null): static
     {
-        $p1 = $attribute;
-        $p2 = $value;
+        $arg = $attribute;
 
         /**
-         * @var mixed $p1
-         * @var mixed $p2
+         * @var mixed $arg
          */
 
-        if (is_array($p1) || is_object($p1)) {
-            if (is_object($p1)) {
-                $p1 = get_object_vars($p1);
+        if (is_array($arg) || is_object($arg)) {
+            if (is_object($arg)) {
+                $arg = get_object_vars($arg);
             }
 
-            if ($p2 === null) {
-                $p2 = false;
-            }
-
-            if ($p2) {
-                // @todo Remove second parameter support in v9.0.
-                trigger_error(
-                    'Second parameter is deprecated in Entity::set(array, onlyAccessible).',
-                    E_USER_DEPRECATED
-                );
-            }
-
-            $this->populateFromArray($p1, $p2);
+            $this->populateFromArray($arg, false);
 
             return $this;
         }
 
-        if (is_string($p1)) {
-            $name = $p1;
+        if (is_string($arg)) {
+            $name = $arg;
 
             if ($name == 'id') {
                 $this->id = $value;
@@ -229,10 +213,9 @@ class BaseEntity implements Entity
     /**
      * Get an attribute value.
      *
-     * @param array<string, mixed> $params @deprecated  @todo Remove in v9.0.
      * @retrun mixed
      */
-    public function get(string $attribute, $params = [])
+    public function get(string $attribute): mixed
     {
         if ($attribute === 'id') {
             return $this->id;
@@ -249,17 +232,8 @@ class BaseEntity implements Entity
             return $this->getFromContainer($attribute);
         }
 
-        // @todo Remove support in v9.0.
-        if (!empty($params)) {
-            trigger_error(
-                'Second parameter will be removed from the method Entity::get.' .
-                "Use `\$entityManager->getRelation(...)->where(...)->find()`.",
-                E_USER_DEPRECATED
-            );
-        }
-
         // @todo Remove support in v10.0.
-        if ($this->hasRelation($attribute) && $this->id && !$params) {
+        if ($this->hasRelation($attribute) && $this->id) {
             trigger_error(
                 "Accessing related records with Entity::get is deprecated. " .
                 "Use `\$entityManager->getRelation(...)->find()`.",
@@ -275,20 +249,6 @@ class BaseEntity implements Entity
             return $isMany ?
                 $this->relations->getMany($attribute) :
                 $this->relations->getOne($attribute);
-        }
-
-        // @todo Remove support in v10.0.
-        if ($this->hasRelation($attribute) && $this->id && $this->entityManager) {
-            trigger_error(
-                "Accessing related records with Entity::get is deprecated. " .
-                "Use `\$entityManager->getRelation(...)->find()`.",
-                E_USER_DEPRECATED
-            );
-
-            /** @phpstan-ignore-next-line */
-            return $this->entityManager
-                ->getRepository($this->getEntityType())
-                ->findRelated($this, $attribute, $params);
         }
 
         return null;
@@ -315,11 +275,8 @@ class BaseEntity implements Entity
 
     /**
      * Get a value from the container.
-     *
-     * @return mixed
-     * @todo Add return type in v9.0.
      */
-    protected function getFromContainer(string $attribute)
+    protected function getFromContainer(string $attribute): mixed
     {
         if (!$this->hasInContainer($attribute)) {
             return null;
@@ -354,11 +311,8 @@ class BaseEntity implements Entity
 
     /**
      * Get a value from the fetched-container.
-     *
-     * @return mixed
-     * @todo Add return type in v9.0.
      */
-    protected function getFromFetchedContainer(string $attribute)
+    protected function getFromFetchedContainer(string $attribute): mixed
     {
         if (!$this->hasInFetchedContainer($attribute)) {
             return null;
@@ -446,10 +400,7 @@ class BaseEntity implements Entity
         return $this;
     }
 
-    /**
-     * @todo Make private in v9.0.
-     */
-    protected function populateFromArrayItem(string $attribute, mixed $value): void
+    private function populateFromArrayItem(string $attribute, mixed $value): void
     {
         $preparedValue = $this->prepareAttributeValue($attribute, $value);
 
@@ -685,16 +636,6 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @deprecated As of v6.0. Use `hasAttribute`.
-     * @param string $name
-     * @return bool
-     */
-    public function hasField($name)
-    {
-        return $this->hasAttribute($name);
-    }
-
-    /**
      * Whether an entity type has an attribute defined.
      */
     public function hasAttribute(string $attribute): bool
@@ -821,17 +762,6 @@ class BaseEntity implements Entity
     {
         return $this->isFetched;
     }
-
-    /**
-     * @deprecated As of v6.0. Use `isAttributeChanged`.
-     * @param string $name
-     * @return bool
-     */
-    public function isFieldChanged($name)
-    {
-        return $this->has($name) && ($this->get($name) != $this->getFetched($name));
-    }
-
     /**
      * Whether an attribute was changed (since syncing with DB).
      */
@@ -1143,11 +1073,9 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @deprecated As of v7.0. Use `set` method instead.
-     * @todo Make protected in v9.0.
      * @param array<string, mixed> $data
      */
-    public function populateFromArray(array $data, bool $onlyAccessible = true, bool $reset = false): void
+    protected function populateFromArray(array $data, bool $onlyAccessible = true, bool $reset = false): void
     {
         if ($reset) {
             $this->reset();
@@ -1173,17 +1101,5 @@ class BaseEntity implements Entity
 
             $this->populateFromArrayItem($attribute, $value);
         }
-    }
-
-    /**
-     * @deprecated As of v7.0. Use `setInContainer` method.
-     * @todo Remove in v9.0.
-     *
-     * @param string $attribute
-     * @param mixed $value
-     */
-    protected function setValue($attribute, $value): void
-    {
-        $this->setInContainer($attribute, $value);
     }
 }

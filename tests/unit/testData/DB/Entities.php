@@ -6,7 +6,7 @@ use Espo\ORM\BaseEntity;
 
 class TestEntity extends BaseEntity
 {
-
+    public ?string $id = null;
 }
 
 class Account extends TestEntity
