@@ -62,10 +62,10 @@ class SendAccessInfoType extends BaseFunction implements
             $this->throwBadArgumentType(1, 'string');
         }
 
-        $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $userId);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
-            $this->log("User '{$userId}' does not exist.");
+            $this->log("User '$userId' does not exist.");
 
             return;
         }

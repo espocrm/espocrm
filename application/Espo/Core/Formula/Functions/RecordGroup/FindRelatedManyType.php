@@ -29,6 +29,12 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Formula\Exceptions\BadArgumentType;
+use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\ExecutionException;
+use Espo\Core\Formula\Exceptions\TooFewArguments;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Functions\BaseFunction;
@@ -46,6 +52,14 @@ class FindRelatedManyType extends BaseFunction implements
     use Di\MetadataSetter;
     use Di\InjectableFactorySetter;
 
+    /**
+     * @throws Error
+     * @throws BadRequest
+     * @throws TooFewArguments
+     * @throws BadArgumentType
+     * @throws Forbidden
+     * @throws ExecutionException
+     */
     public function process(ArgumentList $args)
     {
         $args = $this->evaluate($args);
@@ -94,7 +108,7 @@ class FindRelatedManyType extends BaseFunction implements
             $this->throwBadArgumentType(4, 'string');
         }
 
-        $entity = $entityManager->getEntity($entityType, $id);
+        $entity = $entityManager->getEntityById($entityType, $id);
 
         if (!$entity) {
             $this->log("record\\findRelatedMany: Entity $entityType $id not found.", 'notice');

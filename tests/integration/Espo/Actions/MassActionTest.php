@@ -130,7 +130,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
 
         $this->action->process($request);
 
-        $accountReloaded = $this->entityManager->getEntity('Account', $account->getId());
+        $accountReloaded = $this->entityManager->getEntityById('Account', $account->getId());
 
         $this->assertEquals($adminUser->getId(), $accountReloaded->get('assignedUserId'));
     }

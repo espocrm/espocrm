@@ -53,7 +53,7 @@ class RelationsTest extends BaseTestCase
 
         $em = $this->getEntityManager();
 
-        $opp = $em->getEntity(Opportunity::ENTITY_TYPE);
+        $opp = $em->getNewEntity(Opportunity::ENTITY_TYPE);
         $this->assertInstanceOf(OpportunityExtended::class, $opp);
         $this->assertNull($opp->getRelatedAccount());
 
@@ -98,7 +98,7 @@ class RelationsTest extends BaseTestCase
 
         $em = $this->getEntityManager();
 
-        $account = $em->getEntity(Account::ENTITY_TYPE);
+        $account = $em->getNewEntity(Account::ENTITY_TYPE);
         $this->assertInstanceOf(AccountExtended::class, $account);
         $this->assertInstanceOf(EntityCollection::class, $account->getRelatedOpportunities());
 

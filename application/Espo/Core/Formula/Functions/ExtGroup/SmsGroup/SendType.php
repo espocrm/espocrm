@@ -61,7 +61,7 @@ class SendType extends BaseFunction implements
         }
 
         /** @var Sms|null $sms */
-        $sms = $this->entityManager->getEntity(Sms::ENTITY_TYPE, $id);
+        $sms = $this->entityManager->getEntityById(Sms::ENTITY_TYPE, $id);
 
         if (!$sms) {
             $this->log("Sms '{$id}' does not exist.");

@@ -78,7 +78,7 @@ class Erasor implements
 
         $service = $this->recordServiceContainer->get($entityType);
 
-        $entity = $this->entityManager->getEntity($entityType, $id);
+        $entity = $this->entityManager->getEntityById($entityType, $id);
 
         if (!$entity) {
             throw new NotFound();

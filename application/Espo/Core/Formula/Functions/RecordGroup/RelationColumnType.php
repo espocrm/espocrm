@@ -78,10 +78,10 @@ class RelationColumnType extends BaseFunction implements
         $em = $this->entityManager;
 
         if (!$em->hasRepository($entityType)) {
-            $this->throwError("Repository '{$entityType}' does not exist.");
+            $this->throwError("Repository '$entityType' does not exist.");
         }
 
-        $entity = $em->getEntity($entityType, $id);
+        $entity = $em->getEntityById($entityType, $id);
 
         if (!$entity) {
             return null;

@@ -188,7 +188,7 @@ class IcsDataLoader implements Loader
         }
 
         $createdEvent = $this->entityManager
-            ->getEntity($emailSameEvent->get('createdEventType'), $emailSameEvent->get('createdEventId'));
+            ->getEntityById($emailSameEvent->get('createdEventType'), $emailSameEvent->get('createdEventId'));
 
         if (!$createdEvent) {
             return;

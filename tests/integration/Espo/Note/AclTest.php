@@ -95,7 +95,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $em->saveEntity($opportunity);
 
-        $note1 = $em->getEntity('Note', $note1->getId());
+        $note1 = $em->getEntityById('Note', $note1->getId());
 
         $this->assertEquals([$team2->getId()], $note1->getLinkMultipleIdList('teams'));
         $this->assertEquals([$user2->getId()], $note1->getLinkMultipleIdList('users'));
@@ -130,7 +130,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $em->saveEntity($meeting);
 
-        $note2 = $em->getEntity('Note', $note2->getId());
+        $note2 = $em->getEntityById('Note', $note2->getId());
 
         $this->assertEquals([$team2->getId()], $note2->getLinkMultipleIdList('teams'));
         $this->assertEquals([$user2->getId()], $note2->getLinkMultipleIdList('users'));

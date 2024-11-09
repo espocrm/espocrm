@@ -58,7 +58,7 @@ class AfterFetch implements AfterFetchInterface
             return;
         }
 
-        $parent = $this->entityManager->getEntity($parentLink->getEntityType(), $parentLink->getId());
+        $parent = $this->entityManager->getEntityById($parentLink->getEntityType(), $parentLink->getId());
 
         if (!$parent) {
             return;

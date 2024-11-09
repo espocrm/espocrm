@@ -213,7 +213,7 @@ class RecordTree extends Record
             return null;
         }
 
-        $category = $this->entityManager->getEntity($this->entityType, $id);
+        $category = $this->entityManager->getEntityById($this->entityType, $id);
 
         if (!$category) {
             throw new NotFound();

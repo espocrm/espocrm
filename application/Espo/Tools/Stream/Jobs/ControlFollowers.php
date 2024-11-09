@@ -61,7 +61,7 @@ class ControlFollowers implements Job
             return;
         }
 
-        $entity = $this->entityManager->getEntity($entityType, $entityId);
+        $entity = $this->entityManager->getEntityById($entityType, $entityId);
 
         if (!$entity) {
             return;

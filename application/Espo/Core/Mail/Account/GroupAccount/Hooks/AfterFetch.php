@@ -102,7 +102,7 @@ class AfterFetch implements AfterFetchInterface
             $emailToProcess = $email;
 
             if ($email->isFetched()) {
-                $emailToProcess = $this->entityManager->getEntity(Email::ENTITY_TYPE, $email->getId());
+                $emailToProcess = $this->entityManager->getEntityById(Email::ENTITY_TYPE, $email->getId());
             } else {
                 $emailToProcess->updateFetchedValues();
             }
@@ -122,7 +122,7 @@ class AfterFetch implements AfterFetchInterface
             $user = null;
 
             if ($account->getAssignedUser()) {
-                $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $account->getAssignedUser()->getId());
+                $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $account->getAssignedUser()->getId());
             }
 
             $this->autoReply($account, $email, null, $user);
@@ -137,7 +137,7 @@ class AfterFetch implements AfterFetchInterface
             return;
         }
 
-        $parent = $this->entityManager->getEntity($parentLink->getEntityType(), $parentLink->getId());
+        $parent = $this->entityManager->getEntityById($parentLink->getEntityType(), $parentLink->getId());
 
         if (!$parent) {
             return;
@@ -438,7 +438,7 @@ class AfterFetch implements AfterFetchInterface
     private function emailToCase(Email $email, array $params): CaseObj
     {
         /** @var CaseObj $case */
-        $case = $this->entityManager->getEntity(CaseObj::ENTITY_TYPE);
+        $case = $this->entityManager->getNewEntity(CaseObj::ENTITY_TYPE);
 
         $case->populateDefaults();
 

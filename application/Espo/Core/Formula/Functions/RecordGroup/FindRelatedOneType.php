@@ -82,7 +82,7 @@ class FindRelatedOneType extends BaseFunction implements
             $this->throwBadArgumentType(3, 'string');
         }
 
-        $entity = $entityManager->getEntity($entityType, $id);
+        $entity = $entityManager->getEntityById($entityType, $id);
 
         if (!$entity) {
             return null;

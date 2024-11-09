@@ -106,10 +106,7 @@ class NoteMentionHookProcessor
         $mentionCount = 0;
 
         $parent = $note->getParentId() && $note->getParentType() ?
-            $this->entityManager->getEntity(
-                $note->getParentType(),
-                $note->getParentId()
-            ) :
+            $this->entityManager->getEntityById($note->getParentType(), $note->getParentId()) :
             null;
 
         foreach ($matchList as $item) {

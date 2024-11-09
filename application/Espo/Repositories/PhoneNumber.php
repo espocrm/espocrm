@@ -191,7 +191,7 @@ class PhoneNumber extends Database implements
                 continue;
             }
 
-            $entity = $this->entityManager->getEntity($itemEntityType, $itemEntityId);
+            $entity = $this->entityManager->getEntityById($itemEntityType, $itemEntityId);
 
             if (!$entity) {
                 continue;
@@ -244,7 +244,7 @@ class PhoneNumber extends Database implements
                 continue;
             }
 
-            $entity = $this->entityManager->getEntity($itemEntityType, $itemEntityId);
+            $entity = $this->entityManager->getEntityById($itemEntityType, $itemEntityId);
 
             if ($entity) {
                 if ($entity instanceof UserEntity) {

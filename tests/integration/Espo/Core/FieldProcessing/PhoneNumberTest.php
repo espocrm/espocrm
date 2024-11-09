@@ -45,13 +45,13 @@ class PhoneNumberTest extends BaseTestCase
     {
         $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
-        $contact = $entityManager->getEntity(Contact::ENTITY_TYPE);
+        $contact = $entityManager->getNewEntity(Contact::ENTITY_TYPE);
         $contact->set('phoneNumber', '+1');
         $entityManager->saveEntity($contact);
 
         $this->assertEquals('+1', $contact->get('phoneNumber'));
 
-        $contact = $entityManager->getEntity('Contact', $contact->getId());
+        $contact = $entityManager->getEntityById('Contact', $contact->getId());
 
         /* @var $group1 PhoneNumberGroup */
         $group1 = $contact->getPhoneNumberGroup();
@@ -73,7 +73,7 @@ class PhoneNumberTest extends BaseTestCase
 
         $entityManager->saveEntity($contact);
 
-        $contact = $entityManager->getEntity('Contact', $contact->getId());
+        $contact = $entityManager->getEntityById('Contact', $contact->getId());
 
         /* @var $group3 PhoneNumberGroup */
         $group3 = $contact->getPhoneNumberGroup();
@@ -93,7 +93,7 @@ class PhoneNumberTest extends BaseTestCase
 
         $entityManager->saveEntity($contact);
 
-        $contact = $entityManager->getEntity('Contact', $contact->getId());
+        $contact = $entityManager->getEntityById('Contact', $contact->getId());
 
         /* @var $group5 PhoneNumberGroup */
         $group5 = $contact->getPhoneNumberGroup();

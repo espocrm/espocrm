@@ -117,7 +117,7 @@ class ConfirmationSender
         }
 
         /** @var ?LeadCaptureEntity $leadCapture */
-        $leadCapture = $this->entityManager->getEntity(LeadCaptureEntity::ENTITY_TYPE, $leadCaptureId);
+        $leadCapture = $this->entityManager->getEntityById(LeadCaptureEntity::ENTITY_TYPE, $leadCaptureId);
 
         if (!$leadCapture) {
             throw new Error("LeadCapture: LeadCapture not found.");

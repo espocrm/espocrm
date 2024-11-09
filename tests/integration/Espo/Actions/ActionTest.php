@@ -118,7 +118,7 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
         $account2 = $this->entityManager->createEntity('Account', []);
 
         /* @var $contact1 Contact */
-        $contact1 = $this->entityManager->getEntity('Contact');
+        $contact1 = $this->entityManager->getNewEntity('Contact');
 
         $emailAddressGroup1 = $contact1->getEmailAddressGroup()
             ->withAdded(EmailAddress::create('c1a@test.com'))
@@ -137,7 +137,7 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
         $contact1->set('teamsIds', [$team1->getId()]);
 
         /* @var $contact2 Contact */
-        $contact2 =  $this->entityManager->getEntity('Contact');
+        $contact2 =  $this->entityManager->getNewEntity('Contact');
 
         $emailAddressGroup2 = $contact1->getEmailAddressGroup()
             ->withAdded(EmailAddress::create('c2a@test.com'))
@@ -205,8 +205,8 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
         $this->action->process($request);
 
         /* @var $contact1Reloaded Contact */
-        $contact1Reloaded = $this->entityManager->getEntity('Contact', $contact1->getId());
-        $contact2Reloaded = $this->entityManager->getEntity('Contact', $contact2->getId());
+        $contact1Reloaded = $this->entityManager->getEntityById('Contact', $contact1->getId());
+        $contact2Reloaded = $this->entityManager->getEntityById('Contact', $contact2->getId());
 
         $this->assertEquals('merged', $contact1Reloaded->get('description'));
 
@@ -247,7 +247,7 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals(
             $contact1->getId(),
             $this->entityManager
-                ->getEntity('Note', $note2->getId())
+                ->getEntityById('Note', $note2->getId())
                 ->get('parentId')
         );
 

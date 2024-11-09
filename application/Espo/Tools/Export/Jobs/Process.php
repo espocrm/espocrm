@@ -40,7 +40,6 @@ use Espo\Tools\Export\Result;
 use Espo\Core\Utils\Language;
 
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\Export as ExportEntity;
 use Espo\Entities\Notification;
 use Espo\Entities\User;
@@ -49,22 +48,15 @@ use Throwable;
 
 class Process implements Job
 {
-    private EntityManager $entityManager;
-
-    private Factory $factory;
-
-    private Language $language;
-
     public function __construct(
-        EntityManager $entityManager,
-        Factory $factory,
-        Language $language
-    ) {
-        $this->entityManager = $entityManager;
-        $this->factory = $factory;
-        $this->language = $language;
-    }
+        private EntityManager $entityManager,
+        private Factory $factory,
+        private Language $language
+    ) {}
 
+    /**
+     * @throws Error
+     */
     public function run(JobData $data): void
     {
         $id = $data->getTargetId();
@@ -74,17 +66,17 @@ class Process implements Job
         }
 
         /** @var ExportEntity|null $entity */
-        $entity = $this->entityManager->getEntity(ExportEntity::ENTITY_TYPE, $id);
+        $entity = $this->entityManager->getEntityById(ExportEntity::ENTITY_TYPE, $id);
 
         if ($entity === null) {
-            throw new Error("Export '{$id}' not found.");
+            throw new Error("Export '$id' not found.");
         }
 
         /** @var User|null $user */
-        $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $entity->getCreatedBy()->getId());
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $entity->getCreatedBy()->getId());
 
         if (!$user) {
-            throw new Error("Export entity '{$id}', user not found.");
+            throw new Error("Export entity '$id', user not found.");
         }
 
         try {

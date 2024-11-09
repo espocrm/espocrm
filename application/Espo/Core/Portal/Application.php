@@ -44,6 +44,11 @@ use Espo\Core\Portal\Utils\Config;
 
 class Application extends BaseApplication
 {
+    /**
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function __construct(?string $portalId)
     {
         date_default_timezone_set('UTC');
@@ -56,12 +61,13 @@ class Application extends BaseApplication
 
     public function getContainer(): Container
     {
-        $container = parent::getContainer();
-
         /** @var Container */
-        return $container;
+        return parent::getContainer();
     }
 
+    /**
+     * @throws Error
+     */
     protected function initContainer(): void
     {
         $container = (new ContainerBuilder())
@@ -77,6 +83,11 @@ class Application extends BaseApplication
         $this->container = $container;
     }
 
+    /**
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     protected function initPortal(?string $portalId): void
     {
         if (!$portalId) {
@@ -85,7 +96,7 @@ class Application extends BaseApplication
 
         $entityManager = $this->container->getByClass(EntityManager::class);
 
-        $portal = $entityManager->getEntity(Portal::ENTITY_TYPE, $portalId);
+        $portal = $entityManager->getEntityById(Portal::ENTITY_TYPE, $portalId);
 
         if (!$portal) {
             $portal = $entityManager

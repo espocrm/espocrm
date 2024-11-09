@@ -83,7 +83,7 @@ class GenerateType extends BaseFunction implements
         $em = $this->entityManager;
 
         try {
-            $entity = $em->getEntity($entityType, $id);
+            $entity = $em->getEntityById($entityType, $id);
         } catch (Exception $e) {
             $this->log("Message: " . $e->getMessage() . ".");
 
@@ -106,7 +106,7 @@ class GenerateType extends BaseFunction implements
         }
 
         if ($fileName) {
-            if (substr($fileName, -4) !== '.pdf') {
+            if (!str_ends_with($fileName, '.pdf')) {
                 $fileName .= '.pdf';
             }
         } else {

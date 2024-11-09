@@ -57,7 +57,7 @@ class RelationTest extends BaseTestCase
             ],
         ]);
 
-        $opportunity = $entityManager->getEntity('Opportunity', $opportunity->getId());
+        $opportunity = $entityManager->getEntityById('Opportunity', $opportunity->getId());
 
         $this->assertEquals(
             self::sortArray([
@@ -91,7 +91,7 @@ class RelationTest extends BaseTestCase
 
         $entityManager->saveEntity($opportunity);
 
-        $opportunity = $entityManager->getEntity('Opportunity', $opportunity->getId());
+        $opportunity = $entityManager->getEntityById('Opportunity', $opportunity->getId());
 
         $this->assertEquals(
             self::sortArray([
@@ -108,7 +108,7 @@ class RelationTest extends BaseTestCase
 
         $this->assertEquals('Evaluator', $column3);
 
-        $opportunity = $entityManager->getEntity('Opportunity', $opportunity->getId());
+        $opportunity = $entityManager->getEntityById('Opportunity', $opportunity->getId());
 
         $opportunity->set([
             'contactsColumns' => (object) [
@@ -179,11 +179,11 @@ class RelationTest extends BaseTestCase
 
         $entityManager->saveEntity($lead2);
 
-        $lead1 = $entityManager->getEntity('Lead', $lead1->getId());
+        $lead1 = $entityManager->getEntityById('Lead', $lead1->getId());
 
         $this->assertNull($lead1->get('createdAccountId'));
 
-        $lead2 = $entityManager->getEntity('Lead', $lead2->getId());
+        $lead2 = $entityManager->getEntityById('Lead', $lead2->getId());
 
         $this->assertEquals($account->getId(), $lead2->get('createdAccountId'));
     }
@@ -202,7 +202,7 @@ class RelationTest extends BaseTestCase
 
         $entityManager->saveEntity($account);
 
-        $account = $entityManager->getEntity('Account', $account->getId());
+        $account = $entityManager->getEntityById('Account', $account->getId());
 
         $account->set([
             'originalLeadId' => $lead2->getId(),
@@ -210,11 +210,11 @@ class RelationTest extends BaseTestCase
 
         $entityManager->saveEntity($account);
 
-        $lead2 = $entityManager->getEntity('Lead', $lead2->getId());
+        $lead2 = $entityManager->getEntityById('Lead', $lead2->getId());
 
         $this->assertEquals($account->getId(), $lead2->get('createdAccountId'));
 
-        $lead1 = $entityManager->getEntity('Lead', $lead1->getId());
+        $lead1 = $entityManager->getEntityById('Lead', $lead1->getId());
 
         $this->assertEquals(null, $lead1->get('createdAccountId'));
     }

@@ -121,16 +121,16 @@ class ExportTest extends \tests\integration\Core\BaseTestCase
             ->run()
             ->getAttachmentId();
 
-        $attachment = $this->entityManager->getEntity('Attachment', $attachmentId);
+        $attachment = $this->entityManager->getEntityById('Attachment', $attachmentId);
 
         $contents = $this->fileStorageManager->getContents($attachment);
 
-        $exepectedContents =
+        $expectedContents =
             "name,assignedUserId,assignedUserName\n" .
             "test-2,user-id,User\n" .
             "test-1,user-id,User\n";
 
-        $this->assertEquals($exepectedContents, $contents);
+        $this->assertEquals($expectedContents, $contents);
     }
 
     public function testCsvWithAttributeList(): void
@@ -170,16 +170,16 @@ class ExportTest extends \tests\integration\Core\BaseTestCase
             ->run()
             ->getAttachmentId();
 
-        $attachment = $this->entityManager->getEntity('Attachment', $attachmentId);
+        $attachment = $this->entityManager->getEntityById('Attachment', $attachmentId);
 
         $contents = $this->fileStorageManager->getContents($attachment);
 
-        $exepectedContents =
+        $expectedContents =
             "id,name,assignedUserId\n" .
             "2,test-2,user-id\n" .
             "1,test-1,user-id\n";
 
-        $this->assertEquals($exepectedContents, $contents);
+        $this->assertEquals($expectedContents, $contents);
     }
 
     public function testCsvCollection(): void
@@ -235,15 +235,15 @@ class ExportTest extends \tests\integration\Core\BaseTestCase
             ->run()
             ->getAttachmentId();
 
-        $attachment = $this->entityManager->getEntity('Attachment', $attachmentId);
+        $attachment = $this->entityManager->getEntityById('Attachment', $attachmentId);
 
         $contents = $this->fileStorageManager->getContents($attachment);
 
-        $exepectedContents =
+        $expectedContents =
             "name,assignedUserId\n" .
             "test-1,user-id\n" .
             "test-2,user-id\n";
 
-        $this->assertEquals($exepectedContents, $contents);
+        $this->assertEquals($expectedContents, $contents);
     }
 }

@@ -46,7 +46,7 @@ class DateTimeFactory
 
     public function createWithUserTimeZone(User $user): DateTime
     {
-        $preferences = $this->entityManager->getEntity(Preferences::ENTITY_TYPE, $user->getId());
+        $preferences = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $user->getId());
 
         $timeZone = $this->config->get('timeZone') ?? 'UTC';
 

@@ -276,7 +276,7 @@ class SelectManager
     protected function getSeed(): Entity
     {
         if (empty($this->seed)) {
-            $this->seed = $this->entityManager->getEntity($this->entityType);
+            $this->seed = $this->entityManager->getNewEntity($this->entityType);
         }
         return $this->seed;
     }

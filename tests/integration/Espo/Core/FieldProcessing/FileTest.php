@@ -49,7 +49,7 @@ class FileTest extends \tests\integration\Core\BaseTestCase
             'fileId' => $attachment1->getId(),
         ]);
 
-        $attachment1 = $entityManager->getEntity('Attachment', $attachment1->getId());
+        $attachment1 = $entityManager->getEntityById('Attachment', $attachment1->getId());
 
         $this->assertEquals($document->getId(), $attachment1->get('relatedId'));
 
@@ -62,11 +62,11 @@ class FileTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($document);
 
-        $attachment2 = $entityManager->getEntity('Attachment', $attachment2->getId());
+        $attachment2 = $entityManager->getEntityById('Attachment', $attachment2->getId());
 
         $this->assertEquals($document->getId(), $attachment2->get('relatedId'));
 
-        $attachment1 = $entityManager->getEntity('Attachment', $attachment1->getId());
+        $attachment1 = $entityManager->getEntityById('Attachment', $attachment1->getId());
 
         $this->assertNull($attachment1);
     }

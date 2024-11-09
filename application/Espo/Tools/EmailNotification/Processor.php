@@ -41,7 +41,6 @@ use Espo\Entities\Notification;
 use Espo\Entities\Portal;
 use Espo\Entities\Preferences;
 use Espo\Entities\User;
-use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\SelectBuilder as SelectBuilder;
 use Espo\Core\Htmlizer\Htmlizer;
@@ -163,12 +162,12 @@ class Processor
             ->getQueryComposer()
             ->compose($unionQuery);
 
-        /** @var Collection<Notification> $notificationList */
-        $notificationList = $this->entityManager
+        /** @var Collection<Notification> $notifications */
+        $notifications = $this->entityManager
             ->getRDBRepository(Notification::ENTITY_TYPE)
             ->findBySql($sql);
 
-        foreach ($notificationList as $notification) {
+        foreach ($notifications as $notification) {
             $notification->set('emailIsProcessed', true);
 
             $type = $notification->getType();
@@ -255,7 +254,7 @@ class Processor
         return $builder;
     }
 
-    protected function processNotificationMentionInPost(Entity $notification): void
+    protected function processNotificationMentionInPost(Notification $notification): void
     {
         if (!$notification->get('userId')) {
             return;
@@ -264,7 +263,7 @@ class Processor
         $userId = $notification->get('userId');
 
         /** @var ?User $user */
-        $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $userId);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
             return;
@@ -276,7 +275,7 @@ class Processor
             return;
         }
 
-        $preferences = $this->entityManager->getEntity(Preferences::ENTITY_TYPE, $userId);
+        $preferences = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $userId);
 
         if (!$preferences) {
             return;
@@ -286,12 +285,12 @@ class Processor
             return;
         }
 
-        if ($notification->get('relatedType') !== Note::ENTITY_TYPE || !$notification->get('relatedId')) {
+        if (!$notification->getRelated() || $notification->getRelated()->getEntityType() !== Note::ENTITY_TYPE) {
             return;
         }
 
         /** @var ?Note $note */
-        $note = $this->entityManager->getEntity(Note::ENTITY_TYPE, $notification->get('relatedId'));
+        $note = $this->entityManager->getEntityById(Note::ENTITY_TYPE, $notification->getRelated()->getId());
 
         if (!$note) {
             return;
@@ -299,19 +298,19 @@ class Processor
 
         $parent = null;
 
-        $parentId = $note->get('parentId');
-        $parentType = $note->get('parentType');
+        $parentId = $note->getParentId();
+        $parentType = $note->getParentType();
 
         $data = [];
 
         if ($parentId && $parentType) {
-            $parent = $this->entityManager->getEntity($parentType, $parentId);
+            $parent = $this->entityManager->getEntityById($parentType, $parentId);
 
             if (!$parent) {
                 return;
             }
 
-            $data['url'] = $this->getSiteUrl($user) . '/#' . $parentType . '/view/' . $parentId;
+            $data['url'] = "{$this->getSiteUrl($user)}/#$parentType/view/$parentId";
             $data['parentName'] = $parent->get('name');
             $data['parentType'] = $parentType;
             $data['parentId'] = $parentId;
@@ -345,15 +344,13 @@ class Processor
             ->addToAddress($emailAddress);
         $email->set('isSystem', true);
 
-
-
         if ($parentId && $parentType) {
             $email->setParent(LinkParent::create($parentType, $parentId));
         }
 
         $senderParams = SenderParams::create();
 
-        if ($parent) {
+        if ($parent && $parentType) {
             $handler = $this->getHandler('mention', $parentType);
 
             if ($handler) {
@@ -372,18 +369,18 @@ class Processor
         }
     }
 
-    protected function processNotificationNote(Entity $notification): void
+    protected function processNotificationNote(Notification $notification): void
     {
-        if ($notification->get('relatedType') !== Note::ENTITY_TYPE) {
+        if (!$notification->getRelated()) {
             return;
         }
 
-        if (!$notification->get('relatedId')) {
+        if ($notification->getRelated()->getEntityType() !== Note::ENTITY_TYPE) {
             return;
         }
 
         /** @var ?Note $note */
-        $note = $this->entityManager->getEntity(Note::ENTITY_TYPE, $notification->get('relatedId'));
+        $note = $this->entityManager->getEntityById(Note::ENTITY_TYPE, $notification->getRelated()->getId());
 
         if (!$note) {
             return;
@@ -391,30 +388,30 @@ class Processor
 
         $noteNotificationTypeList = $this->config->get('streamEmailNotificationsTypeList', []);
 
-        if (!in_array($note->get('type'), $noteNotificationTypeList)) {
+        if (!in_array($note->getType(), $noteNotificationTypeList)) {
             return;
         }
 
-        if (!$notification->get('userId')) {
+        if (!$notification->getUserId()) {
             return;
         }
 
-        $userId = $notification->get('userId');
+        $userId = $notification->getUserId();
 
         /** @var ?User $user */
-        $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $userId);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
             return;
         }
 
-        $emailAddress = $user->get('emailAddress');
+        $emailAddress = $user->getEmailAddress();
 
         if (!$emailAddress) {
             return;
         }
 
-        $preferences = $this->entityManager->getEntity(Preferences::ENTITY_TYPE, $userId);
+        $preferences = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $userId);
 
         if (!$preferences) {
             return;
@@ -643,7 +640,7 @@ class Processor
             return;
         }
 
-        $parent = $this->entityManager->getEntity($parentType, $parentId);
+        $parent = $this->entityManager->getEntityById($parentType, $parentId);
 
         if (!$parent) {
             return;

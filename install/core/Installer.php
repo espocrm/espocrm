@@ -483,7 +483,7 @@ class Installer
         $em = $this->getEntityManager();
 
         if ($id) {
-            $entity = $em->getEntity($entityType, $id);
+            $entity = $em->getEntityById($entityType, $id);
 
             if (!$entity) {
                 $selectQuery = $em->getQueryBuilder()

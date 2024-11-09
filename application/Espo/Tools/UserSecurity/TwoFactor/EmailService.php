@@ -30,40 +30,27 @@
 namespace Espo\Tools\UserSecurity\TwoFactor;
 
 use Espo\Core\Authentication\TwoFactor\Email\EmailLogin;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
-
+use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Utils\Config;
 use Espo\Core\Authentication\TwoFactor\Email\Util;
-
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\User;
 
 class EmailService
 {
-    private Util $util;
-    private User $user;
-    private EntityManager $entityManager;
-    private Config $config;
-
     public function __construct(
-        Util $util,
-        User $user,
-        EntityManager $entityManager,
-        Config $config
-    ) {
-        $this->util = $util;
-        $this->user = $user;
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-    }
+        private Util $util,
+        private User $user,
+        private EntityManager $entityManager,
+        private Config $config
+    ) {}
 
     /**
      * @throws Forbidden
      * @throws NotFound
-     * @throws Error
+     * @throws SendingError
      */
     public function sendCode(string $userId, string $emailAddress): void
     {
@@ -74,7 +61,7 @@ class EmailService
         $this->checkAllowed();
 
         /** @var ?User $user */
-        $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $userId);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
             throw new NotFound();

@@ -54,7 +54,7 @@ class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
             return false;
         }
 
-        $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
+        $campaign = $this->entityManager->getEntityById('Campaign', $campaignId);
 
         if ($campaign && $this->aclManager->checkOwnershipOwn($user, $campaign)) {
             return true;
@@ -71,7 +71,7 @@ class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
             return false;
         }
 
-        $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
+        $campaign = $this->entityManager->getEntityById('Campaign', $campaignId);
 
         if ($campaign && $this->aclManager->checkOwnershipTeam($user, $campaign)) {
             return true;

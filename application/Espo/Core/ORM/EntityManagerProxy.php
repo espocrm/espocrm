@@ -68,6 +68,7 @@ class EntityManagerProxy
      */
     public function getEntity(string $entityType, ?string $id = null): ?Entity
     {
+        /** @noinspection PhpDeprecationInspection */
         return $this->getEntityManager()->getEntity($entityType, $id);
     }
 

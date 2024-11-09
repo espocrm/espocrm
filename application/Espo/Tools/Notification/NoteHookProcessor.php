@@ -35,7 +35,6 @@ use Espo\Core\Acl\Table;
 use Espo\Tools\Stream\Service as StreamService;
 
 use Espo\ORM\EntityManager;
-use Espo\ORM\Collection;
 use Espo\ORM\SthCollection;
 use Espo\ORM\EntityCollection;
 
@@ -278,7 +277,7 @@ class NoteHookProcessor
         $notifyUserIdList = [];
 
         foreach ($targetTeamIdList as $teamId) {
-            $team = $this->entityManager->getEntity(Team::ENTITY_TYPE, $teamId);
+            $team = $this->entityManager->getEntityById(Team::ENTITY_TYPE, $teamId);
 
             if (!$team) {
                 continue;
@@ -316,7 +315,7 @@ class NoteHookProcessor
         $notifyUserIdList = [];
 
         foreach ($targetPortalIdList as $portalId) {
-            $portal = $this->entityManager->getEntity(Portal::ENTITY_TYPE, $portalId);
+            $portal = $this->entityManager->getEntityById(Portal::ENTITY_TYPE, $portalId);
 
             if (!$portal) {
                 continue;

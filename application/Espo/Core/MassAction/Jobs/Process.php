@@ -50,6 +50,9 @@ class Process implements Job
         private Language $language
     ) {}
 
+    /**
+     * @throws Error
+     */
     public function run(JobData $data): void
     {
         $id = $data->getTargetId();
@@ -59,17 +62,17 @@ class Process implements Job
         }
 
         /** @var MassActionEntity|null $entity */
-        $entity = $this->entityManager->getEntity(MassActionEntity::ENTITY_TYPE, $id);
+        $entity = $this->entityManager->getEntityById(MassActionEntity::ENTITY_TYPE, $id);
 
         if ($entity === null) {
-            throw new Error("MassAction '{$id}' not found.");
+            throw new Error("MassAction '$id' not found.");
         }
 
         /** @var User|null $user */
-        $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $entity->getCreatedBy()->getId());
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $entity->getCreatedBy()->getId());
 
         if (!$user) {
-            throw new Error("MassAction '{$id}', user not found.");
+            throw new Error("MassAction '$id', user not found.");
         }
 
         $params = $entity->getParams();

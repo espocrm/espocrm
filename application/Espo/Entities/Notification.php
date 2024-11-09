@@ -71,6 +71,11 @@ class Notification extends Entity
         return $this->get('data');
     }
 
+    public function getUserId(): ?string
+    {
+        return $this->get('userId');
+    }
+
     /**
      * @param stdClass|array<string, mixed> $data
      */

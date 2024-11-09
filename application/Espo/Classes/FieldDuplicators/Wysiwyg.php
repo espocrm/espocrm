@@ -76,7 +76,7 @@ class Wysiwyg implements FieldDuplicator
 
         foreach ($attachmentIdList as $id) {
             /** @var Attachment|null $attachment */
-            $attachment = $this->entityManager->getEntity(Attachment::ENTITY_TYPE, $id);
+            $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $id);
 
             if (!$attachment) {
                 continue;

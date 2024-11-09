@@ -61,7 +61,7 @@ class SmsService
         $this->checkAllowed();
 
         /** @var ?User $user */
-        $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $userId);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
             throw new NotFound();

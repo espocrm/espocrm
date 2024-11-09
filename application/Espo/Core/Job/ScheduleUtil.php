@@ -81,7 +81,7 @@ class ScheduleUtil
         }
 
         /** @var ScheduledJobEntity|null $scheduledJob */
-        $scheduledJob = $this->entityManager->getEntity(ScheduledJobEntity::ENTITY_TYPE, $scheduledJobId);
+        $scheduledJob = $this->entityManager->getEntityById(ScheduledJobEntity::ENTITY_TYPE, $scheduledJobId);
 
         if (!$scheduledJob) {
             return;

@@ -152,7 +152,7 @@ class Service
     public function importById(string $id, bool $startFromLastIndex = false, bool $forceResume = false): Result
     {
         /** @var ?ImportEntity $import */
-        $import = $this->entityManager->getEntity(ImportEntity::ENTITY_TYPE, $id);
+        $import = $this->entityManager->getEntityById(ImportEntity::ENTITY_TYPE, $id);
 
         if (!$import) {
             throw new NotFound("Import '$id' not found.");

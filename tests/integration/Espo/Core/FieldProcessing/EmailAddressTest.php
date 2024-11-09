@@ -50,7 +50,7 @@ class EmailAddressTest extends BaseTestCase
             'emailAddress' => 'test@test.com',
         ]);
 
-        $contact = $entityManager->getEntity('Contact', $contact->getId());
+        $contact = $entityManager->getEntityById('Contact', $contact->getId());
 
         /* @var $group1 EmailAddressGroup */
         $group1 = $contact->getEmailAddressGroup();
@@ -71,7 +71,7 @@ class EmailAddressTest extends BaseTestCase
 
         $entityManager->saveEntity($contact);
 
-        $contact = $entityManager->getEntity('Contact', $contact->getId());
+        $contact = $entityManager->getEntityById('Contact', $contact->getId());
 
         /* @var $group3 EmailAddressGroup */
         $group3 = $contact->getEmailAddressGroup();
@@ -90,7 +90,7 @@ class EmailAddressTest extends BaseTestCase
 
         $entityManager->saveEntity($contact);
 
-        $contact = $entityManager->getEntity('Contact', $contact->getId());
+        $contact = $entityManager->getEntityById('Contact', $contact->getId());
 
         /* @var $group5 EmailAddressGroup */
         $group5 = $contact->getEmailAddressGroup();
@@ -111,7 +111,7 @@ class EmailAddressTest extends BaseTestCase
             'emailAddress' => 'test@test.com',
         ]);
 
-        $contactFetched = $entityManager->getEntity('Contact', $contact->getId());
+        $contactFetched = $entityManager->getEntityById('Contact', $contact->getId());
 
         /* @var $group EmailAddressGroup */
         $group = $contactFetched->getEmailAddressGroup();

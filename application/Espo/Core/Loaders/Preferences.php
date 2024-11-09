@@ -51,6 +51,6 @@ class Preferences implements Loader
             $this->systemUser->getId();
 
         /** @var PreferencesEntity */
-        return $this->entityManager->getEntity(PreferencesEntity::ENTITY_TYPE, $id);
+        return $this->entityManager->getEntityById(PreferencesEntity::ENTITY_TYPE, $id);
     }
 }

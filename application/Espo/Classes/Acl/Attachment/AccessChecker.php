@@ -148,7 +148,7 @@ class AccessChecker implements AccessEntityCREDChecker
             return null;
         }
 
-        $parent = $this->entityManager->getEntity($note->getParentType(), $note->getParentId());
+        $parent = $this->entityManager->getEntityById($note->getParentType(), $note->getParentId());
 
         if ($parent && $this->aclManager->checkEntity($user, $parent)) {
             return true;

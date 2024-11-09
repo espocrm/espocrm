@@ -93,7 +93,7 @@ class AfterCreate implements SaveHook
         array $excludingActionList
     ): void {
 
-        $campaign = $this->entityManager->getEntity(Campaign::ENTITY_TYPE, $sourceCampaignId);
+        $campaign = $this->entityManager->getEntityById(Campaign::ENTITY_TYPE, $sourceCampaignId);
 
         if (!$campaign) {
             throw new NotFound("Campaign not found.");

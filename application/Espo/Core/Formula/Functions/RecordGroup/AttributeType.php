@@ -38,6 +38,9 @@ class AttributeType extends \Espo\Core\Formula\Functions\AttributeType implement
 {
     use Di\EntityManagerSetter;
 
+    /**
+     * @throws Error
+     */
     public function process(\stdClass $item)
     {
         if (count($item->value) < 3) {
@@ -60,7 +63,7 @@ class AttributeType extends \Espo\Core\Formula\Functions\AttributeType implement
             throw new Error("Formula record\\attribute: Empty attribute.");
         }
 
-        $entity = $this->entityManager->getEntity($entityType, $id);
+        $entity = $this->entityManager->getEntityById($entityType, $id);
 
         if (!$entity) {
             return null;

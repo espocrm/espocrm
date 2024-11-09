@@ -102,6 +102,6 @@ class RoundRobin
             }
         }
 
-        return $this->entityManager->getEntity(User::ENTITY_TYPE, $userIdList[$num]);
+        return $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userIdList[$num]);
     }
 }

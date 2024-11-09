@@ -44,7 +44,7 @@ class UserTimeZoneProvider
 
     public function get(): string
     {
-        $preferences = $this->entityManager->getEntity(Preferences::ENTITY_TYPE, $this->user->getId());
+        $preferences = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $this->user->getId());
 
         if (!$preferences) {
             return 'UTC';

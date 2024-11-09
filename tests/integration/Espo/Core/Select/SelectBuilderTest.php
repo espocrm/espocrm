@@ -42,11 +42,7 @@ use Espo\Entities\Email;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\EntityManager;
-use Espo\ORM\Query\Part\Condition;
-use Espo\ORM\Query\Part\Expression;
-use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Select;
-use Espo\ORM\Query\SelectBuilder;
 use tests\integration\Core\BaseTestCase;
 
 class SelectBuilderTest extends BaseTestCase
@@ -950,7 +946,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $em = $container->getByClass(EntityManager::class);
 
-        $user = $em->getEntity('User', $userId);
+        $user = $em->getEntityById('User', $userId);
 
         $emailAddress = $em->createEntity('EmailAddress', [
             'name' => 'test@test.com',

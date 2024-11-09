@@ -52,7 +52,7 @@ class RemoveRecoveryRequest implements Job
             throw new RuntimeException();
         }
 
-        $entity = $this->entityManager->getEntity(PasswordChangeRequest::ENTITY_TYPE, $id);
+        $entity = $this->entityManager->getEntityById(PasswordChangeRequest::ENTITY_TYPE, $id);
 
         if (!$entity) {
             return;

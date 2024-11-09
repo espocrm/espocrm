@@ -86,7 +86,7 @@ class UpdateRelationColumnType extends BaseFunction implements
             $this->throwError("Repository does not exist.");
         }
 
-        $entity = $em->getEntity($entityType, $id);
+        $entity = $em->getEntityById($entityType, $id);
 
         if (!$entity) {
             return null;

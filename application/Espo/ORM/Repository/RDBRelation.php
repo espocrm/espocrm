@@ -442,7 +442,7 @@ class RDBRelation
         $typeAttribute = $this->relationName . 'Type';
 
         if (!$fromEntity->has($idAttribute) || !$fromEntity->has($typeAttribute)) {
-            $fromEntity = $this->entityManager->getEntity($fromEntity->getEntityType(), $fromEntity->getId());
+            $fromEntity = $this->entityManager->getEntityById($fromEntity->getEntityType(), $fromEntity->getId());
         }
 
         if (!$fromEntity) {
@@ -461,7 +461,7 @@ class RDBRelation
         $idAttribute = $this->relationName . 'Id';
 
         if (!$fromEntity->has($idAttribute)) {
-            $fromEntity = $this->entityManager->getEntity($fromEntity->getEntityType(), $fromEntity->getId());
+            $fromEntity = $this->entityManager->getEntityById($fromEntity->getEntityType(), $fromEntity->getId());
         }
 
         if (!$fromEntity) {

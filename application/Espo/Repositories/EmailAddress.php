@@ -227,7 +227,7 @@ class EmailAddress extends Database implements
                     ->where(['id' => $itemEntityId])
                     ->findOne();
             } else {
-                $entity = $this->entityManager->getEntity($itemEntityType, $itemEntityId);
+                $entity = $this->entityManager->getEntityById($itemEntityType, $itemEntityId);
             }
 
             if (!$entity) {
@@ -295,7 +295,7 @@ class EmailAddress extends Database implements
                     ->where(['id' => $itemEntityId])
                     ->findOne();
             } else {
-                $entity = $this->entityManager->getEntity($itemEntityType, $itemEntityId);
+                $entity = $this->entityManager->getEntityById($itemEntityType, $itemEntityId);
             }
 
             if ($entity) {
@@ -354,7 +354,7 @@ class EmailAddress extends Database implements
                 continue;
             }
 
-            $entity = $this->entityManager->getEntity($itemEntityType, $itemEntityId);
+            $entity = $this->entityManager->getEntityById($itemEntityType, $itemEntityId);
 
             if ($entity) {
                 if ($entity instanceof UserEntity) {

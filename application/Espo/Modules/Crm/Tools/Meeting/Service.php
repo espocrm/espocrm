@@ -155,7 +155,7 @@ class Service
         }
 
         foreach ($ids as $id) {
-            $entity = $this->entityManager->getEntity($entityType, $id);
+            $entity = $this->entityManager->getEntityById($entityType, $id);
 
             if ($entity && $this->acl->checkEntityEdit($entity)) {
                 $entity->set('status', Meeting::STATUS_HELD);

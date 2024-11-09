@@ -248,7 +248,7 @@ class Service
     protected function getActivitiesUserEmailQuery(User $entity, array $statusList = [])
     {
         if ($entity->isPortal() && $entity->get('contactId')) {
-            $contact = $this->entityManager->getEntity(Contact::ENTITY_TYPE, $entity->get('contactId'));
+            $contact = $this->entityManager->getEntityById(Contact::ENTITY_TYPE, $entity->get('contactId'));
 
             if ($contact) {
                 return $this->getActivitiesEmailQuery($contact, $statusList);
@@ -767,7 +767,7 @@ class Service
             throw new Forbidden();
         }
 
-        $entity = $this->entityManager->getEntity($scope, $id);
+        $entity = $this->entityManager->getEntityById($scope, $id);
 
         if (!$entity) {
             throw new NotFound();

@@ -67,7 +67,7 @@ class Merger
         $entityType = $params->getEntityType();
         $id = $params->getId();
 
-        $entity = $this->entityManager->getEntity($entityType, $id);
+        $entity = $this->entityManager->getEntityById($entityType, $id);
 
         if (!$entity) {
             throw new NotFound("Record not found.");
@@ -167,7 +167,7 @@ class Merger
         $list = [];
 
         foreach ($sourceIdList as $sourceId) {
-            $sourceEntity = $this->entityManager->getEntity($entityType, $sourceId);
+            $sourceEntity = $this->entityManager->getEntityById($entityType, $sourceId);
 
             if (!$sourceEntity) {
                 throw new NotFound("Source record not found.");

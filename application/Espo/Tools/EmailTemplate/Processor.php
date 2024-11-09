@@ -108,7 +108,7 @@ class Processor
             $data->getParentId() &&
             $data->getParentType()
         ) {
-            $parent = $this->entityManager->getEntity($data->getParentType(), $data->getParentId());
+            $parent = $this->entityManager->getEntityById($data->getParentType(), $data->getParentId());
 
             if ($parent) {
                 $service = $this->recordServiceContainer->get($data->getParentType());
@@ -141,7 +141,7 @@ class Processor
         }
 
         if ($data->getRelatedId() && $data->getRelatedType()) {
-            $related = $this->entityManager->getEntity($data->getRelatedType(), $data->getRelatedId());
+            $related = $this->entityManager->getEntityById($data->getRelatedType(), $data->getRelatedId());
 
             if (
                 $related &&
