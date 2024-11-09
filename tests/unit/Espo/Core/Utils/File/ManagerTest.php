@@ -93,36 +93,6 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         @unlink($testPath . '/setContent.json');
     }
 
-    public function testConcatPaths()
-    {
-        $input = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
-        $result = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
-        $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
-
-        $input = array(
-            'application',
-            'Espo/Resources/metadata/',
-            'app',
-            'panel.json',
-        );
-        $result = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
-        $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
-
-        $input = array(
-            'application/Espo/Resources/metadata/app',
-            'panel.json',
-        );
-        $result = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
-        $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
-
-        $input = array(
-            'application/Espo/Resources/metadata/app/',
-            'panel.json',
-        );
-        $result = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
-        $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
-    }
-
     public function testGetDirName()
     {
         $input = 'data/logs/espo.log';

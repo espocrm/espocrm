@@ -2,7 +2,7 @@
 
 namespace tests\unit\testData\Hooks\testCase2\application\Espo\Hooks\Note;
 
-class Mentions extends \Espo\Core\Hooks\Base
+class Mentions
 {
     public static $order = 9;
 
