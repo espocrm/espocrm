@@ -154,7 +154,7 @@ class BaseEntity implements Entity
      * @param string|stdClass|array<string, mixed> $attribute
      * @param mixed $value
      */
-    public function set($attribute, $value = null): void
+    public function set($attribute, $value = null): static
     {
         $p1 = $attribute;
         $p2 = $value;
@@ -183,7 +183,7 @@ class BaseEntity implements Entity
 
             $this->populateFromArray($p1, $p2);
 
-            return;
+            return $this;
         }
 
         if (is_string($p1)) {
@@ -194,7 +194,7 @@ class BaseEntity implements Entity
             }
 
             if (!$this->hasAttribute($name)) {
-                return;
+                return $this;
             }
 
             $method = '_set' . ucfirst($name);
@@ -202,14 +202,14 @@ class BaseEntity implements Entity
             if (method_exists($this, $method)) {
                 $this->$method($value);
 
-                return;
+                return $this;
             }
 
             $this->populateFromArray([
                 $name => $value,
             ]);
 
-            return;
+            return $this;
         }
 
         throw new InvalidArgumentException();
@@ -221,9 +221,9 @@ class BaseEntity implements Entity
      * @param array<string, mixed>|stdClass $valueMap Values.
      * @since v8.1.0.
      */
-    public function setMultiple(array|stdClass $valueMap): void
+    public function setMultiple(array|stdClass $valueMap): static
     {
-        $this->set($valueMap);
+        return $this->set($valueMap);
     }
 
     /**
@@ -435,13 +435,15 @@ class BaseEntity implements Entity
      *
      * @throws RuntimeException
      */
-    public function setValueObject(string $field, ?object $value): void
+    public function setValueObject(string $field, ?object $value): static
     {
         if (!$this->valueAccessor) {
             throw new RuntimeException("No ValueAccessor.");
         }
 
         $this->valueAccessor->set($field, $value);
+
+        return $this;
     }
 
     /**
@@ -936,11 +938,13 @@ class BaseEntity implements Entity
     /**
      * Set a fetched value for a specific attribute.
      */
-    public function setFetched(string $attribute, $value): void
+    public function setFetched(string $attribute, $value): static
     {
         $preparedValue = $this->prepareAttributeValue($attribute, $value);
 
         $this->fetchedValuesContainer[$attribute] = $preparedValue;
+
+        return $this;
     }
 
     /**

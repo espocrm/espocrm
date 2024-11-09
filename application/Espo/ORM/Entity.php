@@ -31,6 +31,7 @@ namespace Espo\ORM;
 
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
+use RuntimeException;
 use stdClass;
 
 /**
@@ -64,7 +65,7 @@ interface Entity
      * Get an entity ID.
      *
      * @return non-empty-string
-     * @throws \RuntimeException If an ID is not set.
+     * @throws RuntimeException If an ID is not set.
      */
     public function getId(): string;
 
@@ -88,7 +89,7 @@ interface Entity
      * @param string|stdClass|array<string, mixed> $attribute
      * @param mixed $value
      */
-    public function set($attribute, $value = null): void;
+    public function set($attribute, $value = null): static;
 
     /**
      * Set multiple attributes.
@@ -96,7 +97,7 @@ interface Entity
      * @param array<string, mixed>|stdClass $valueMap Values.
      * @since v8.1.0.
      */
-    public function setMultiple(array|stdClass $valueMap): void;
+    public function setMultiple(array|stdClass $valueMap): static;
 
     /**
      * Get an attribute value.
@@ -192,7 +193,7 @@ interface Entity
      *
      * @param mixed $value
      */
-    public function setFetched(string $attribute, $value): void;
+    public function setFetched(string $attribute, $value): static;
 
     /**
      * Get values.

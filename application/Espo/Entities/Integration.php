@@ -77,7 +77,7 @@ class Integration extends Entity
         $this->set('data', $data);
     }
 
-    public function set($p1, $p2 = null): void
+    public function set($p1, $p2 = null): static
     {
         if (is_object($p1)) {
             $p1 = get_object_vars($p1);
@@ -90,7 +90,7 @@ class Integration extends Entity
 
             $this->populateFromArray($p1, $p2);
 
-            return;
+            return $this;
         }
 
         $name = $p1;
@@ -99,7 +99,7 @@ class Integration extends Entity
         if ($name == 'id') {
             $this->id = $value;
 
-            return;
+            return $this;
         }
 
         if ($this->hasAttribute($name)) {
@@ -111,6 +111,8 @@ class Integration extends Entity
 
             $this->set('data', $data);
         }
+
+        return $this;
     }
 
     public function isAttributeChanged(string $name): bool
