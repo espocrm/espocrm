@@ -29,26 +29,25 @@
 
 namespace tests\integration\Espo\Core\Job;
 
-use Espo\Core\{
-    Job\JobManager,
-    Job\Job\Status,
-    Job\JobSchedulerFactory,
-    Job\QueueName,
-    ORM\EntitManager,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Job\Job\Status;
+use Espo\Core\Job\JobManager;
+use Espo\Core\Job\JobSchedulerFactory;
+use Espo\Core\Job\QueueName;
 
+use Espo\ORM\EntityManager;
+use tests\integration\Core\BaseTestCase;
 use tests\integration\testClasses\Job\Job as TestJob;
 
-class JobTest extends \tests\integration\Core\BaseTestCase
+class JobTest extends BaseTestCase
 {
     /**
      * @var JobManager
      */
     private $jobManager;
 
-    /**
-     * @var EntitManager
-     */
+
+    /** @var EntityManager */
     private $entityManager;
 
     /**
@@ -62,10 +61,10 @@ class JobTest extends \tests\integration\Core\BaseTestCase
 
         $this->jobManager = $this->getContainer()->get('jobManager');
 
-        $this->entityManager = $this->getContainer()->get('entityManager');
+        $this->entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
         $this->schedulerFactory = $this->getContainer()
-            ->get('injectableFactory')
+            ->getByClass(InjectableFactory::class)
             ->create(JobSchedulerFactory::class);
     }
 
@@ -79,7 +78,7 @@ class JobTest extends \tests\integration\Core\BaseTestCase
 
         $this->jobManager->processQueue(QueueName::Q0, 10);
 
-        $jobReloaded = $this->entityManager->getEntity('Job', $job->getId());
+        $jobReloaded = $this->entityManager->getEntityById('Job', $job->getId());
 
         $this->assertEquals(Status::SUCCESS, $jobReloaded->getStatus());
     }
@@ -93,7 +92,7 @@ class JobTest extends \tests\integration\Core\BaseTestCase
 
         $this->jobManager->processQueue('q0', 10);
 
-        $jobReloaded = $this->entityManager->getEntity('Job', $job->getId());
+        $jobReloaded = $this->entityManager->getEntityById('Job', $job->getId());
 
         $this->assertEquals(Status::SUCCESS, $jobReloaded->getStatus());
     }
@@ -117,9 +116,9 @@ class JobTest extends \tests\integration\Core\BaseTestCase
 
         $this->jobManager->process();
 
-        $job1Reloaded = $this->entityManager->getEntity('Job', $job1->getId());
-        $job2Reloaded = $this->entityManager->getEntity('Job', $job2->getId());
-        $job3Reloaded = $this->entityManager->getEntity('Job', $job3->getId());
+        $job1Reloaded = $this->entityManager->getEntityById('Job', $job1->getId());
+        $job2Reloaded = $this->entityManager->getEntityById('Job', $job2->getId());
+        $job3Reloaded = $this->entityManager->getEntityById('Job', $job3->getId());
 
         $this->assertEquals(Status::SUCCESS, $job1Reloaded->getStatus());
         $this->assertEquals(Status::SUCCESS, $job2Reloaded->getStatus());
@@ -145,9 +144,9 @@ class JobTest extends \tests\integration\Core\BaseTestCase
 
         $this->jobManager->processGroup('group-1', 100);
 
-        $job1Reloaded = $this->entityManager->getEntity('Job', $job1->getId());
-        $job2Reloaded = $this->entityManager->getEntity('Job', $job2->getId());
-        $job3Reloaded = $this->entityManager->getEntity('Job', $job3->getId());
+        $job1Reloaded = $this->entityManager->getEntityById('Job', $job1->getId());
+        $job2Reloaded = $this->entityManager->getEntityById('Job', $job2->getId());
+        $job3Reloaded = $this->entityManager->getEntityById('Job', $job3->getId());
 
         $this->assertEquals(Status::PENDING, $job1Reloaded->getStatus());
         $this->assertEquals(Status::SUCCESS, $job2Reloaded->getStatus());
@@ -155,7 +154,7 @@ class JobTest extends \tests\integration\Core\BaseTestCase
 
         $this->jobManager->processGroup('group-0', 100);
 
-        $job1Reloaded2 = $this->entityManager->getEntity('Job', $job1->getId());
+        $job1Reloaded2 = $this->entityManager->getEntityById('Job', $job1->getId());
 
         $this->assertEquals(Status::SUCCESS, $job1Reloaded2->getStatus());
     }
@@ -167,9 +166,9 @@ class JobTest extends \tests\integration\Core\BaseTestCase
             'status' => Status::READY,
         ]);
 
-        $this->jobManager->runJobById($job->id);
+        $this->jobManager->runJobById($job->getId());
 
-        $jobReloaded = $this->entityManager->getEntity('Job', $job->id);
+        $jobReloaded = $this->entityManager->getEntityById('Job', $job->getId());
 
         $this->assertEquals(Status::SUCCESS, $jobReloaded->getStatus());
     }
@@ -182,7 +181,7 @@ class JobTest extends \tests\integration\Core\BaseTestCase
 
         $this->jobManager->runJob($job);
 
-        $jobReloaded = $this->entityManager->getEntity('Job', $job->id);
+        $jobReloaded = $this->entityManager->getEntityById('Job', $job->getId());
 
         $this->assertEquals(Status::SUCCESS, $jobReloaded->getStatus());
     }
@@ -198,7 +197,7 @@ class JobTest extends \tests\integration\Core\BaseTestCase
 
         $this->jobManager->runJob($job);
 
-        $jobReloaded = $this->entityManager->getEntity('Job', $job->getId());
+        $jobReloaded = $this->entityManager->getEntityById('Job', $job->getId());
 
         $this->assertEquals(Status::SUCCESS, $jobReloaded->getStatus());
     }

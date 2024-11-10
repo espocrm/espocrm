@@ -29,7 +29,10 @@
 
 namespace tests\integration\Espo\Core\Utils\FieldManager;
 
-class ArrayTypeTest extends \tests\integration\Core\BaseTestCase
+use Espo\ORM\EntityManager;
+use tests\integration\Core\BaseTestCase;
+
+class ArrayTypeTest extends BaseTestCase
 {
     private $jsonFieldDefs = '{
         "name":"testArray",
@@ -83,7 +86,8 @@ class ArrayTypeTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals('array', $savedFieldDefs['type']);
         $this->assertTrue($savedFieldDefs['isCustom']);
 
-        $entityManager = $app->getContainer()->get('entityManager');
+        $entityManager = $app->getContainer()->getByClass(EntityManager::class);
+
         $account = $entityManager->getEntity('Account');
         $account->set([
             'name' => 'Test',
@@ -92,7 +96,7 @@ class ArrayTypeTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($account);
 
-        $account = $entityManager->getEntity('Account', $account->id);
+        $account = $entityManager->getEntity('Account', $account->getId());
         $this->assertEquals(['option1', 'option3'], $account->get('cTestArray'));
     }
 
@@ -118,7 +122,7 @@ class ArrayTypeTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertTrue($savedFieldDefs['required']);
 
-        $entityManager = $app->getContainer()->get('entityManager');
+        $entityManager = $app->getContainer()->getByClass(EntityManager::class);
         $account = $entityManager->getEntity('Account');
         $account->set([
             'name' => 'Test',

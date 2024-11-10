@@ -45,17 +45,17 @@ class FormulaTest extends BaseTestCase
 {
     public function testCountRelatedAndSumRelated()
     {
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
-        $account = $entityManager->getEntity('Account');
+        $account = $entityManager->getNewEntity('Account');
         $account->set('name', 'test');
         $entityManager->saveEntity($account);
 
-        $contact = $entityManager->getEntity('Contact');
+        $contact = $entityManager->getNewEntity('Contact');
         $contact->set('name', 'test');
         $entityManager->saveEntity($contact);
 
-        $opportunity = $entityManager->getEntity('Opportunity');
+        $opportunity = $entityManager->getNewEntity('Opportunity');
         $opportunity->set([
             'name' => '1',
             'amount' => 10,
@@ -64,7 +64,7 @@ class FormulaTest extends BaseTestCase
         ]);
         $entityManager->saveEntity($opportunity);
 
-        $opportunity = $entityManager->getEntity('Opportunity');
+        $opportunity = $entityManager->getNewEntity('Opportunity');
         $opportunity->set([
             'name' => '2',
             'amount' => 20,
@@ -73,7 +73,7 @@ class FormulaTest extends BaseTestCase
         ]);
         $entityManager->saveEntity($opportunity);
 
-        $opportunity = $entityManager->getEntity('Opportunity');
+        $opportunity = $entityManager->getNewEntity('Opportunity');
         $opportunity->set([
             'name' => '3',
             'amount' => 40,
@@ -81,9 +81,10 @@ class FormulaTest extends BaseTestCase
         ]);
         $entityManager->saveEntity($opportunity);
 
-        $entityManager->getRepository('Contact')->relate($contact, 'opportunities', $opportunity);
+        $entityManager->getRelation($contact, 'opportunities')
+            ->relate($opportunity);
 
-        $formulaManager = $this->getContainer()->get('formulaManager');
+        $formulaManager = $this->getContainer()->getByClass(Manager::class);
 
         $script = "entity\countRelated('opportunities')";
         $result = $formulaManager->run($script, $account);
@@ -108,7 +109,7 @@ class FormulaTest extends BaseTestCase
 
     public function testSumRelated()
     {
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getContainer()->getByClass(EntityManager::class);
         $fm = $this->getContainer()->get('formulaManager');
 
         $contact1 = $em->createEntity('Contact', [
@@ -118,14 +119,14 @@ class FormulaTest extends BaseTestCase
             'lastName' => '2',
         ]);
 
-        $opportunity1 = $em->createEntity('Opportunity', [
+        $em->createEntity('Opportunity', [
             'name' => '1',
             'amount' => 1,
             'stage' => 'Closed Won',
             'contactsIds' => [$contact1->getId(), $contact2->getId()],
         ]);
 
-        $opportunity2 = $em->createEntity('Opportunity', [
+        $em->createEntity('Opportunity', [
             'name' => '2',
             'amount' => 1,
             'stage' => 'Closed Won',
@@ -139,7 +140,7 @@ class FormulaTest extends BaseTestCase
 
     public function testRecordExists()
     {
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $em->createEntity('Meeting', [
             'status' => 'Held',
@@ -169,7 +170,7 @@ class FormulaTest extends BaseTestCase
 
     public function testRecordCount()
     {
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $em->createEntity('Meeting', [
             'status' => 'Held',
@@ -205,7 +206,7 @@ class FormulaTest extends BaseTestCase
     public function testRecordFindOne()
     {
         $fm = $this->getContainer()->get('formulaManager');
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $m1 = $em->createEntity('Meeting', [
             'name' => '1',
@@ -296,7 +297,7 @@ class FormulaTest extends BaseTestCase
     public function testRecordFindRelatedOne1()
     {
         $fm = $this->getContainer()->get('formulaManager');
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $account = $em->createEntity('Account', [
             'name' => 'Test',
@@ -339,8 +340,8 @@ class FormulaTest extends BaseTestCase
             'lastName' => '2',
         ]);
 
-        $em->getRepository('Account')->relate($account, 'contacts', $c1);
-        $em->getRepository('Account')->relate($account, 'contacts', $c2);
+        $em->getRelation($account, 'contacts')->relate($c1);
+        $em->getRelation($account, 'contacts')->relate($c2);
 
         $script = "record\\findRelatedOne('Account', '".$account->getId()."', 'meetings', 'name', 'asc')";
         $result = $fm->run($script);
@@ -374,7 +375,7 @@ class FormulaTest extends BaseTestCase
     public function testRecordFindRelatedOne2()
     {
         $fm = $this->getContainer()->get('formulaManager');
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $a = $em->createEntity('Account', [
         ]);
@@ -453,7 +454,7 @@ class FormulaTest extends BaseTestCase
     public function testRecordAttribute()
     {
         $fm = $this->getContainer()->get('formulaManager');
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $m1 = $em->createEntity('Meeting', [
             'name' => '1',
@@ -570,12 +571,12 @@ class FormulaTest extends BaseTestCase
     public function testEntityGetLinkColumn()
     {
         $fm = $this->getContainer()->get('formulaManager');
-        $em = $this->getContainer()->get('entityManager');
+         $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $lead = $em->createEntity('Lead', []);
         $targetList = $em->createEntity('TargetList', []);
 
-        $em->getRepository('Lead')->relate($lead, 'targetLists', $targetList->getId(), [
+        $em->getRelation($lead, 'targetLists')->relateById($targetList->getId(), [
             'optedOut' => true,
         ]);
 
@@ -585,7 +586,7 @@ class FormulaTest extends BaseTestCase
         $this->assertTrue($result);
 
 
-        $em->getRepository('Lead')->relate($lead, 'targetLists', $targetList->getId(), [
+        $em->getRelation($lead, 'targetLists')->relateById($targetList->getId(), [
             'optedOut' => false,
         ]);
 
@@ -596,7 +597,7 @@ class FormulaTest extends BaseTestCase
     public function testRecordRelate()
     {
         $fm = $this->getContainer()->get('formulaManager');
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $a = $em->createEntity('Account', [
             'name' => '1',
@@ -609,13 +610,13 @@ class FormulaTest extends BaseTestCase
         $result = $fm->run($script);
 
         $this->assertTrue($result);
-        $this->assertTrue($em->getRepository('Account')->isRelated($a, 'opportunities', $o));
+        $this->assertTrue($em->getRelation($a, 'opportunities')->isRelated($o));
     }
 
     public function testRecordRelate1()
     {
         $fm = $this->getContainer()->get('formulaManager');
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $a = $em->createEntity('Account', [
             'name' => '1',
@@ -628,13 +629,13 @@ class FormulaTest extends BaseTestCase
         $result = $fm->run($script);
 
         $this->assertTrue($result);
-        $this->assertTrue($em->getRepository('Account')->isRelated($a, 'opportunities', $o));
+        $this->assertTrue($em->getRelation($a, 'opportunities')->isRelated($o));
     }
 
     public function testRecordUnrelate()
     {
         $fm = $this->getContainer()->get('formulaManager');
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $a = $em->createEntity('Account', [
             'name' => '1',
@@ -644,19 +645,19 @@ class FormulaTest extends BaseTestCase
             'name' => '1',
         ]);
 
-        $em->getRepository('Account')->relate($a, 'opportunities', $o);
+        $em->getRelation($a, 'opportunities')->relate($o);
 
         $script = "record\\unrelate('Account', '".$a->getId()."', 'opportunities', '".$o->getId()."')";
         $result = $fm->run($script);
 
         $this->assertTrue($result);
-        $this->assertFalse($em->getRepository('Account')->isRelated($a, 'opportunities', $o));
+        $this->assertFalse($em->getRelation($a, 'opportunities')->isRelated($o));
     }
 
     public function testRecordRelationColumn()
     {
         $fm = $this->getContainer()->get('formulaManager');
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $a = $em->createEntity('Account', [
             'name' => '1',
@@ -665,7 +666,7 @@ class FormulaTest extends BaseTestCase
             'lastName' => '1',
         ]);
 
-        $em->getRepository('Account')->relate($a, 'contacts', $c->getId(), ['role' => 'test']);
+        $em->getRelation($a, 'contacts')->relate($c->getId(), ['role' => 'test']);
 
         $script = "record\\relationColumn('Account', '{$a->getId()}', 'contacts', '{$c->getId()}', 'role')";
         $result = $fm->run($script);
@@ -676,7 +677,7 @@ class FormulaTest extends BaseTestCase
     public function testRecordUpdateRelationColumn()
     {
         $fm = $this->getContainer()->get('formulaManager');
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $a = $em->createEntity('Account', [
             'name' => '1',
@@ -685,12 +686,12 @@ class FormulaTest extends BaseTestCase
             'lastName' => '1',
         ]);
 
-        $em->getRepository('Account')->relate($a, 'contacts', $c->getId());
+        $em->getRelation($a, 'contacts')->relate( $c->getId());
 
         $script = "record\\updateRelationColumn('Account', '{$a->getId()}', 'contacts', '{$c->getId()}', 'role', 'test')";
         $fm->run($script);
 
-        $value = $em->getRepository('Account')->getRelationColumn($a, 'contacts', $c->getId(), 'role');
+        $value = $em->getRelation($a, 'contacts')->getColumnById($c->getId(), 'role');
 
         $this->assertEquals('test', $value);
     }
@@ -698,7 +699,7 @@ class FormulaTest extends BaseTestCase
     public function testExtAccountFindByEmailAddress()
     {
         $fm = $this->getContainer()->get('formulaManager');
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $a1 = $em->createEntity('Account', [
             'name' => '1',
@@ -748,7 +749,7 @@ class FormulaTest extends BaseTestCase
     public function testExtEmailApplyTemplate()
     {
         $fm = $this->getContainer()->get('formulaManager');
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $a = $em->createEntity('Account', [
             'name' => '1',
@@ -785,7 +786,7 @@ class FormulaTest extends BaseTestCase
         $script = "ext\\email\\applyTemplate('{$email->getId()}', '{$emailTemplate->getId()}', 'Account', '{$a->getId()}')";
         $fm->run($script);
 
-        $email = $em->getEntity('Email', $email->getId());
+        $email = $em->getEntityById('Email', $email->getId());
 
         $attachmentsIds = $email->getLinkMultipleIdList('attachments');
 
@@ -823,7 +824,7 @@ class FormulaTest extends BaseTestCase
     public function testExtPdfGenerate()
     {
         $fm = $this->getContainer()->get('formulaManager');
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $a = $em->createEntity('Account', [
             'name' => '1',

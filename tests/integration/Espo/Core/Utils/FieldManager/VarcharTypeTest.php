@@ -29,7 +29,9 @@
 
 namespace tests\integration\Espo\Core\Utils\FieldManager;
 
-class VarcharTypeTest extends \tests\integration\Core\BaseTestCase
+use tests\integration\Core\BaseTestCase;
+
+class VarcharTypeTest extends BaseTestCase
 {
     private $jsonFieldDefs = '{
         "type":"varchar",
@@ -89,7 +91,7 @@ class VarcharTypeTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($account);
 
-        $account = $entityManager->getEntity('Account', $account->id);
+        $account = $entityManager->getEntity('Account', $account->getId());
         $this->assertEquals('test-value', $account->get('cTestVarchar'));
     }
 
@@ -125,7 +127,7 @@ class VarcharTypeTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($account);
 
-        $account = $entityManager->getEntity('Account', $account->id);
+        $account = $entityManager->getEntity('Account', $account->getId());
         $this->assertEquals('default-value', $account->get('cTestVarchar'));
     }
 }

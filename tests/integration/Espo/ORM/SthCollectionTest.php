@@ -156,11 +156,11 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
         ]);
         $em->createEntity('Opportunity', [
             'name' => 'o-1',
-            'accountId' => $account->id,
+            'accountId' => $account->getId(),
         ]);
         $em->createEntity('Opportunity', [
             'name' => 'o-2',
-            'accountId' => $account->id,
+            'accountId' => $account->getId(),
         ]);
 
         $query = $em->getQueryBuilder()
@@ -200,11 +200,11 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
         ]);
         $em->createEntity('Opportunity', [
             'name' => 'o-1',
-            'contactsIds' => [$contact->id],
+            'contactsIds' => [$contact->getId()],
         ]);
         $em->createEntity('Opportunity', [
             'name' => 'o-2',
-            'contactsIds' => [$contact->id],
+            'contactsIds' => [$contact->getId()],
         ]);
 
 

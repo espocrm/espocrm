@@ -47,7 +47,7 @@ class TransactionManagerTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertNotNull($account);
 
-        $id = $account->id;
+        $id = $account->getId();
 
         $tm->commit();
 
@@ -72,7 +72,7 @@ class TransactionManagerTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertNotNull($account);
 
-        $id = $account->id;
+        $id = $account->getId();
 
         $tm->rollback();
 
@@ -95,7 +95,7 @@ class TransactionManagerTest extends \tests\integration\Core\BaseTestCase
             'name' => 'test1',
         ]);
 
-        $id1 = $account1->id;
+        $id1 = $account1->getId();
 
         $tm->start();
 
@@ -103,7 +103,7 @@ class TransactionManagerTest extends \tests\integration\Core\BaseTestCase
             'name' => 'test2',
         ]);
 
-        $id2 = $account2->id;
+        $id2 = $account2->getId();
 
         $tm->rollback();
 
@@ -128,7 +128,7 @@ class TransactionManagerTest extends \tests\integration\Core\BaseTestCase
             'name' => 'test',
         ]);
 
-        $id = $account->id;
+        $id = $account->getId();
 
         $tm->run(
             function () use ($em, $id){
@@ -156,7 +156,7 @@ class TransactionManagerTest extends \tests\integration\Core\BaseTestCase
             'name' => 'test',
         ]);
 
-        $id = $account->id;
+        $id = $account->getId();
 
         try {
             $tm->run(

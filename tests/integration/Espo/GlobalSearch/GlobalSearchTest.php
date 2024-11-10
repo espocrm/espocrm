@@ -45,16 +45,16 @@ class GlobalSearchTest extends \tests\integration\Core\BaseTestCase
 
         $contact = $em->createEntity('Contact', [
             'lastName' => '1',
-            'teamsIds' => [$team->id],
+            'teamsIds' => [$team->getId()],
         ]);
 
         $account = $em->createEntity('Account', [
             'name' => '1',
-            'teamsIds' => [$team->id],
+            'teamsIds' => [$team->getId()],
         ]);
         $account = $em->createEntity('Account', [
             'name' => '2',
-            'teamsIds' => [$team->id],
+            'teamsIds' => [$team->getId()],
         ]);
         $account = $em->createEntity('Account', [
             'name' => '1',
@@ -62,7 +62,7 @@ class GlobalSearchTest extends \tests\integration\Core\BaseTestCase
 
         $this->createUser([
             'userName' => 'tester',
-            'teamsIds' => [$team->id],
+            'teamsIds' => [$team->getId()],
         ], [
             'data' => [
                 'Account' => [

@@ -50,8 +50,8 @@ class LeadCaptureTest extends \tests\integration\Core\BaseTestCase
         $leadCaptureData = (object) [
             'name' => 'test',
             'subscribeToTargetList' => true,
-            'targetListId' => $targetList->id,
-            'targetTeamId' => $team->id,
+            'targetListId' => $targetList->getId(),
+            'targetTeamId' => $team->getId(),
             'fieldList' => ['name', 'emailAddress'],
             'leadSource' => 'Web Site'
         ];
@@ -76,8 +76,8 @@ class LeadCaptureTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertEquals('Web Site', $lead->get('source'));
 
-        $this->assertTrue($entityManager->getRepository('Lead')->isRelated($lead, 'teams', $team->id));
+        $this->assertTrue($entityManager->getRepository('Lead')->isRelated($lead, 'teams', $team->getId()));
 
-        $this->assertTrue($entityManager->getRepository('Lead')->isRelated($lead, 'targetLists', $targetList->id));
+        $this->assertTrue($entityManager->getRepository('Lead')->isRelated($lead, 'targetLists', $targetList->getId()));
     }
 }

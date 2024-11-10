@@ -29,7 +29,10 @@
 
 namespace tests\integration\Espo\Core\Utils\FieldManager;
 
-class EnumTypeTest extends \tests\integration\Core\BaseTestCase
+use Espo\ORM\EntityManager;
+use tests\integration\Core\BaseTestCase;
+
+class EnumTypeTest extends BaseTestCase
 {
     private $jsonFieldDefs = '{
         "type":"enum",
@@ -82,7 +85,7 @@ class EnumTypeTest extends \tests\integration\Core\BaseTestCase
         $this->assertTrue($savedFieldDefs['isCustom']);
         $this->assertTrue($savedFieldDefs['audited']);
 
-        $entityManager = $app->getContainer()->get('entityManager');
+        $entityManager = $app->getContainer()->getByClass(EntityManager::class);
 
         $account = $entityManager->getEntity('Account');
         $account->set([
@@ -92,7 +95,7 @@ class EnumTypeTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($account);
 
-        $account = $entityManager->getEntity('Account', $account->id);
+        $account = $entityManager->getEntity('Account', $account->getId());
         $this->assertEquals('option1', $account->get('cTestEnum'));
     }
 
@@ -122,7 +125,8 @@ class EnumTypeTest extends \tests\integration\Core\BaseTestCase
         $this->assertTrue($savedFieldDefs['audited']);
         $this->assertTrue($savedFieldDefs['readOnly']);
 
-        $entityManager = $app->getContainer()->get('entityManager');
+        $entityManager = $app->getContainer()->getByClass(EntityManager::class);
+
         $account = $entityManager->getEntity('Account');
         $account->set([
             'name' => 'New Test',
@@ -130,7 +134,7 @@ class EnumTypeTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($account);
 
-        $account = $entityManager->getEntity('Account', $account->id);
+        $account = $entityManager->getEntity('Account', $account->getId());
         $this->assertEquals('option3', $account->get('cTestEnum'));
     }
 }

@@ -31,8 +31,6 @@ namespace tests\integration\Espo\Record;
 
 use Espo\Core\Application;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Conflict;
-use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Record\UpdateParams;
@@ -103,7 +101,7 @@ class FieldValidationTest extends BaseTestCase
             ->getByClass(ServiceContainer::class)
             ->get('Account')
             ->update(
-                $entity->id,
+                $entity->getId(),
                 (object) [
                     'name' => '',
                 ],

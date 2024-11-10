@@ -29,22 +29,17 @@
 
 namespace tests\integration\Espo\Core\Notification;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    Container,
-    Utils\Config\ConfigWriter,
-};
+use Espo\Core\Container;
+use Espo\ORM\EntityManager;
+use Espo\Core\Utils\Config\ConfigWriter;
 
 use Espo\{
-    Entities\User,
-};
+    Core\InjectableFactory,
+    Entities\User};
+use tests\integration\Core\BaseTestCase;
 
-class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
+class AssignmentNotificatorTest extends BaseTestCase
 {
-    /**
-     * @var Container
-     */
-    private $container;
 
     /**
      * @var EntityManager
@@ -61,10 +56,6 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
      */
     private $user2;
 
-    /**
-     * @var User
-     */
-    private $user3;
 
     public function setUp(): void
     {
@@ -74,15 +65,14 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
 
         $application = $this->createApplication();
 
-        $this->container = $application->getContainer();
+        $container = $application->getContainer();
 
-        $this->entityManager = $this->container->get('entityManager');
+        $this->entityManager = $container->getByClass(EntityManager::class);
     }
 
     private function initTestData() : void
     {
-        /* @var $configWriter ConfigWriter */
-        $configWriter = $this->getContainer()->get('injectableFactory')->create(ConfigWriter::class);
+        $configWriter = $this->getContainer()->getByClass(InjectableFactory::class)->create(ConfigWriter::class);
 
         $this->getMetadata()->set('scopes', 'Meeting', [
             'stream' => false,
@@ -114,18 +104,18 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
         $this->user1 = $em->createEntity('User', [
             'userName' => 'test-1',
             'lastName' => 'Test 1',
-            'rolesIds' => [$role->id],
+            'rolesIds' => [$role->getId()],
             'emailAddress' => 'test1@test.com',
         ]);
 
         $this->user2 = $em->createEntity('User', [
             'userName' => 'test-2',
             'lastName' => 'Test 2',
-            'rolesIds' => [$role->id],
+            'rolesIds' => [$role->getId()],
             'emailAddress' => 'test2@test.com',
         ]);
 
-        $this->user3 = $em->createEntity('User', [
+        $em->createEntity('User', [
             'userName' => 'test-3',
             'lastName' => 'Test 3',
             'rolesIds' => [],
@@ -150,7 +140,7 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
         ]);
 
         $notification = $this->entityManager
-            ->getRepository('Notification')
+            ->getRDBRepository('Notification')
             ->where([
                 'userId' => '1',
                 'type' => 'Assign',
@@ -170,7 +160,7 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
         ]);
 
         $notification = $this->entityManager
-            ->getRepository('Notification')
+            ->getRDBRepository('Notification')
             ->where([
                 'userId' => $this->user1->getId(),
                 'type' => 'Assign',
@@ -190,7 +180,7 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
         ]);
 
         $notification = $this->entityManager
-            ->getRepository('Notification')
+            ->getRDBRepository('Notification')
             ->where([
                 'userId' => $this->user1->getId(),
                 'type' => 'Assign',
@@ -210,7 +200,7 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
         ]);
 
         $notification = $this->entityManager
-            ->getRepository('Notification')
+            ->getRDBRepository('Notification')
             ->where([
                 'userId' => $this->user1->getId(),
                 'type' => 'Assign',

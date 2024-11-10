@@ -29,29 +29,29 @@
 
 namespace tests\integration\Espo\Core\Field;
 
-use Espo\Core\Field\{
-    Currency,
-    Date,
-    DateTime,
-    DateTimeOptional,
-    Address,
-    EmailAddress,
-    EmailAddressGroup,
-    PhoneNumber,
-    PhoneNumberGroup,
-    Link,
-    LinkParent,
-    LinkMultiple,
-    LinkMultipleItem,
-};
+use Espo\Core\Field\Address;
+use Espo\Core\Field\Currency;
+use Espo\Core\Field\Date;
+use Espo\Core\Field\DateTime;
+use Espo\Core\Field\DateTimeOptional;
+use Espo\Core\Field\EmailAddress;
+use Espo\Core\Field\EmailAddressGroup;
+use Espo\Core\Field\Link;
+use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Field\LinkMultipleItem;
+use Espo\Core\Field\LinkParent;
+use Espo\Core\Field\PhoneNumber;
+use Espo\Core\Field\PhoneNumberGroup;
+use Espo\ORM\EntityManager;
+use tests\integration\Core\BaseTestCase;
 
-class ValueObjectTest extends \tests\integration\Core\BaseTestCase
+class ValueObjectTest extends BaseTestCase
 {
     public function testAddress()
     {
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
-        $entity = $entityManager->getEntity('Account');
+        $entity = $entityManager->getNewEntity('Account');
 
         $address = Address
             ::create()
@@ -62,7 +62,7 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($entity);
 
-        $entity = $entityManager->getEntity('Account', $entity->getId());
+        $entity = $entityManager->getEntityById('Account', $entity->getId());
 
         $address = $entity->getBillingAddress();
 
@@ -81,9 +81,9 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
     public function testCurrency()
     {
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
-        $opportunity = $entityManager->getEntity('Opportunity');
+        $opportunity = $entityManager->getNewEntity('Opportunity');
 
         $opportunity->set('name', 'opp-1');
 
@@ -91,7 +91,7 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($opportunity);
 
-        $opportunity = $entityManager->getEntity('Opportunity', $opportunity->getId());
+        $opportunity = $entityManager->getEntityById('Opportunity', $opportunity->getId());
 
         $currency = $opportunity->getAmount();
 
@@ -103,9 +103,9 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
     public function testDate()
     {
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
-        $opportunity = $entityManager->getEntity('Opportunity');
+        $opportunity = $entityManager->getNewEntity('Opportunity');
 
         $opportunity->set('name', 'opp-1');
 
@@ -113,7 +113,7 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($opportunity);
 
-        $opportunity = $entityManager->getEntity('Opportunity', $opportunity->getId());
+        $opportunity = $entityManager->getEntityById('Opportunity', $opportunity->getId());
 
         $closeDate = $opportunity->getCloseDate();
 
@@ -125,7 +125,7 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($opportunity);
 
-        $opportunity = $entityManager->getEntity('Opportunity', $opportunity->getId());
+        $opportunity = $entityManager->getEntityById('Opportunity', $opportunity->getId());
 
         $closeDate = $opportunity->getValueObject('closeDate');
 
@@ -134,9 +134,9 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
     public function testDateTime()
     {
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
-        $call = $entityManager->getEntity('Call');
+        $call = $entityManager->getNewEntity('Call');
 
         $call->set('name', 'call-1');
 
@@ -144,7 +144,7 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($call);
 
-        $call = $entityManager->getEntity('Call', $call->getId());
+        $call = $entityManager->getEntityById('Call', $call->getId());
 
         $dateStart = $call->getValueObject('dateStart');
 
@@ -156,7 +156,7 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($call);
 
-        $call = $entityManager->getEntity('Call', $call->getId());
+        $call = $entityManager->getEntityById('Call', $call->getId());
 
         $dateStart = $call->getValueObject('dateStart');
 
@@ -165,9 +165,9 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
     public function testDateTimeOptional()
     {
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
-        $meeting = $entityManager->getEntity('Meeting');
+        $meeting = $entityManager->getNewEntity('Meeting');
 
         $meeting->set('name', 'meeting-1');
 
@@ -175,7 +175,7 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($meeting);
 
-        $meeting = $entityManager->getEntity('Meeting', $meeting->getId());
+        $meeting = $entityManager->getEntityById('Meeting', $meeting->getId());
 
         $dateStart = $meeting->getDateStart();
 
@@ -187,7 +187,7 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($meeting);
 
-        $meeting = $entityManager->getEntity('Meeting', $meeting->getId());
+        $meeting = $entityManager->getEntityById('Meeting', $meeting->getId());
 
         $dateStart = $meeting->getValueObject('dateStart');
 
@@ -197,7 +197,7 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($meeting);
 
-        $meeting = $entityManager->getEntity('Meeting', $meeting->getId());
+        $meeting = $entityManager->getEntityById('Meeting', $meeting->getId());
 
         $dateStart = $meeting->getValueObject('dateStart');
 
@@ -208,9 +208,9 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
     public function testEmailAddress()
     {
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
-        $entity = $entityManager->getEntity('Account');
+        $entity = $entityManager->getNewEntity('Account');
 
         $group = EmailAddressGroup::create([
             EmailAddress::create('one@test.com'),
@@ -222,7 +222,7 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($entity);
 
-        $entity = $entityManager->getEntity('Account', $entity->getId());
+        $entity = $entityManager->getEntityById('Account', $entity->getId());
 
         $group = $entity->getEmailAddressGroup();
 
@@ -235,9 +235,9 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
     public function testPhoneNumber()
     {
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
-        $entity = $entityManager->getEntity('Account');
+        $entity = $entityManager->getNewEntity('Account');
 
         $group = PhoneNumberGroup::create([
             PhoneNumber::create('1')->withType('Office'),
@@ -249,7 +249,7 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($entity);
 
-        $entity = $entityManager->getEntity('Account', $entity->getId());
+        $entity = $entityManager->getEntityById('Account', $entity->getId());
 
         $group = $entity->getPhoneNumberGroup();
 
@@ -263,9 +263,9 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
     public function testLink()
     {
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
-        $entity = $entityManager->getEntity('Account');
+        $entity = $entityManager->getNewEntity('Account');
 
         $entity->setValueObject('assignedUser', Link::create('1'));
 
@@ -280,9 +280,9 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
     public function testLinkParent()
     {
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
-        $entity = $entityManager->getEntity('Task');
+        $entity = $entityManager->getNewEntity('Task');
 
         $entity->setValueObject('parent', LinkParent::create('Account', 'test-id'));
 
@@ -296,66 +296,62 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
         $this->assertNull($entity->getValueObject('parent'));
     }
 
-    public function testLinkMultiple1()
+    public function testLinkMultiple1(): void
     {
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
         $c1 = $entityManager->createEntity('Contact', []);
         $c2 = $entityManager->createEntity('Contact', []);
 
-        $entity = $entityManager->getEntity('Opportunity');
+        $entity = $entityManager->getNewEntity('Opportunity');
 
         $link = LinkMultiple::create([
-            LinkMultipleItem::create($c1->id)->withColumnValue('role', 'Decision Maker'),
-            LinkMultipleItem::create($c2->id),
+            LinkMultipleItem::create($c1->getId())->withColumnValue('role', 'Decision Maker'),
+            LinkMultipleItem::create($c2->getId()),
         ]);
 
         $entity->setValueObject('contacts', $link);
 
         $entityManager->saveEntity($entity);
 
-        $entity = $entityManager->getEntity('Opportunity', $entity->id);
+        $entity = $entityManager->getEntityById('Opportunity', $entity->getId());
 
-        /**
-         * @var LinkMultiple
-         */
+        /** @var LinkMultiple */
         $link = $entity->getValueObject('contacts');
 
         $this->assertEquals(2, $link->getCount());
 
-        $this->assertEquals('Decision Maker', $link->getById($c1->id)->getColumnValue('role'));
-        $this->assertEquals(null, $link->getById($c2->id)->getColumnValue('role'));
+        $this->assertEquals('Decision Maker', $link->getById($c1->getId())->getColumnValue('role'));
+        $this->assertEquals(null, $link->getById($c2->getId())->getColumnValue('role'));
     }
 
     public function testLinkMultiple2()
     {
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
         $c1 = $entityManager->createEntity('Contact', []);
         $c2 = $entityManager->createEntity('Contact', []);
 
-        $entity = $entityManager->getEntity('Opportunity');
+        $entity = $entityManager->getNewEntity('Opportunity');
 
         $link = LinkMultiple::create([
-            LinkMultipleItem::create($c1->id)->withColumnValue('role', 'Decision Maker'),
-            LinkMultipleItem::create($c2->id),
+            LinkMultipleItem::create($c1->getId())->withColumnValue('role', 'Decision Maker'),
+            LinkMultipleItem::create($c2->getId()),
         ]);
 
         $entity->setValueObject('contacts', $link);
 
         $entityManager->saveEntity($entity);
 
-        $entity = $entityManager->getEntity('Opportunity', $entity->id);
+        $entity = $entityManager->getEntityById('Opportunity', $entity->getId());
 
         $entity->loadLinkMultipleField('contacts');
 
-        /**
-         * @var LinkMultiple
-         */
+        /** @var LinkMultiple */
         $link = $entity->getValueObject('contacts');
 
         $this->assertEquals(2, $link->getCount());
 
-        $this->assertEquals('Decision Maker', $link->getById($c1->id)->getColumnValue('role'));
+        $this->assertEquals('Decision Maker', $link->getById($c1->getId())->getColumnValue('role'));
     }
 }

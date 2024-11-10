@@ -48,9 +48,9 @@ class RestoreDeletedTest extends \tests\integration\Core\BaseTestCase
             'name' => 'Test'
         ], CreateParams::create());
 
-        $service->delete($account->id, DeleteParams::create());
+        $service->delete($account->getId(), DeleteParams::create());
 
-        $account = $service->read($account->id, ReadParams::create());
+        $account = $service->read($account->getId(), ReadParams::create());
 
         $this->assertNotNull($account);
 
@@ -69,11 +69,11 @@ class RestoreDeletedTest extends \tests\integration\Core\BaseTestCase
             'name' => 'Test'
         ], CreateParams::create());
 
-        $service->delete($account->id, DeleteParams::create());
+        $service->delete($account->getId(), DeleteParams::create());
 
-        $service->restoreDeleted($account->id);
+        $service->restoreDeleted($account->getId());
 
-        $account = $service->read($account->id, ReadParams::create());
+        $account = $service->read($account->getId(), ReadParams::create());
 
         $this->assertNotNull($account);
 

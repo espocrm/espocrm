@@ -52,8 +52,8 @@ class AclTest extends BaseTestCase
 
         $this->createUser([
             'userName' => 'tester',
-            'portalsIds' => [$portal->id],
-            'contactId' => $contact->id,
+            'portalsIds' => [$portal->getId()],
+            'contactId' => $contact->getId(),
         ], [
             'data' => [
                 'Case' => [
@@ -66,19 +66,19 @@ class AclTest extends BaseTestCase
             ],
         ], true);
 
-        $this->auth('tester', null, $portal->id);
+        $this->auth('tester', null, $portal->getId());
 
-        $app = $this->createApplication(true, $portal->id);
+        $app = $this->createApplication(true, $portal->getId());
 
         $em = $app->getContainer()->get('entityManager');
 
         $acl = $app->getContainer()->get('acl');
 
         $case1 = $em->createEntity('Case', [
-            'contactId' => $contact->id,
+            'contactId' => $contact->getId(),
         ], ['createdById' => '1']);
         $case2 = $em->createEntity('Case', [
-            'contactsIds' => [$contact->id],
+            'contactsIds' => [$contact->getId()],
         ], ['createdById' => '1']);
         $case3 = $em->createEntity('Case', [
         ], ['createdById' => '1']);
@@ -97,12 +97,12 @@ class AclTest extends BaseTestCase
 
         $idList = [];
         foreach ($result->getCollection() as $e) {
-            $idList[] = $e->id;
+            $idList[] = $e->getId();
         }
 
-        $this->assertTrue(in_array($case1->id, $idList));
-        $this->assertTrue(in_array($case2->id, $idList));
-        $this->assertFalse(in_array($case3->id, $idList));
+        $this->assertTrue(in_array($case1->getId(), $idList));
+        $this->assertTrue(in_array($case2->getId(), $idList));
+        $this->assertFalse(in_array($case3->getId(), $idList));
     }
 
     public function testAccessAccount(): void
@@ -119,9 +119,9 @@ class AclTest extends BaseTestCase
 
         $this->createUser([
             'userName' => 'tester',
-            'portalsIds' => [$portal->id],
-            'contactId' => $contact->id,
-            'accountsIds' => [$account->id],
+            'portalsIds' => [$portal->getId()],
+            'contactId' => $contact->getId(),
+            'accountsIds' => [$account->getId()],
         ], [
             'data' => [
                 'Case' => [
@@ -134,24 +134,24 @@ class AclTest extends BaseTestCase
             ],
         ], true);
 
-        $this->auth('tester', null, $portal->id);
+        $this->auth('tester', null, $portal->getId());
 
-        $app = $this->createApplication(true, $portal->id);
+        $app = $this->createApplication(true, $portal->getId());
 
         $em = $app->getContainer()->get('entityManager');
 
         $acl = $app->getContainer()->get('acl');
 
         $case1 = $em->createEntity('Case', [
-            'contactId' => $contact->id,
+            'contactId' => $contact->getId(),
         ], ['createdById' => '1']);
         $case2 = $em->createEntity('Case', [
-            'contactsIds' => [$contact->id],
+            'contactsIds' => [$contact->getId()],
         ], ['createdById' => '1']);
         $case3 = $em->createEntity('Case', [
         ], ['createdById' => '1']);
         $case4 = $em->createEntity('Case', [
-            'accountId' => $account->id,
+            'accountId' => $account->getId(),
         ], ['createdById' => '1']);
 
         $this->assertFalse($acl->check('Case', 'create'));
@@ -168,13 +168,13 @@ class AclTest extends BaseTestCase
 
         $idList = [];
         foreach ($result->getCollection() as $e) {
-            $idList[] = $e->id;
+            $idList[] = $e->getId();
         }
 
-        $this->assertTrue(in_array($case1->id, $idList));
-        $this->assertTrue(in_array($case2->id, $idList));
-        $this->assertFalse(in_array($case3->id, $idList));
-        $this->assertTrue(in_array($case4->id, $idList));
+        $this->assertTrue(in_array($case1->getId(), $idList));
+        $this->assertTrue(in_array($case2->getId(), $idList));
+        $this->assertFalse(in_array($case3->getId(), $idList));
+        $this->assertTrue(in_array($case4->getId(), $idList));
     }
 
     public function testAccessOwn(): void
@@ -191,9 +191,9 @@ class AclTest extends BaseTestCase
 
         $this->createUser([
             'userName' => 'tester',
-            'portalsIds' => [$portal->id],
-            'contactId' => $contact->id,
-            'accountsIds' => [$account->id],
+            'portalsIds' => [$portal->getId()],
+            'contactId' => $contact->getId(),
+            'accountsIds' => [$account->getId()],
         ], [
             'data' => [
                 'Case' => [
@@ -206,9 +206,9 @@ class AclTest extends BaseTestCase
             ],
         ], true);
 
-        $this->auth('tester', null, $portal->id);
+        $this->auth('tester', null, $portal->getId());
 
-        $app = $this->createApplication(true, $portal->id);
+        $app = $this->createApplication(true, $portal->getId());
 
         $em = $app->getContainer()->get('entityManager');
 
@@ -216,19 +216,19 @@ class AclTest extends BaseTestCase
         $user = $app->getContainer()->get('user');
 
         $case1 = $em->createEntity('Case', [
-            'contactId' => $contact->id,
+            'contactId' => $contact->getId(),
         ], ['createdById' => '1']);
         $case2 = $em->createEntity('Case', [
-            'contactsIds' => [$contact->id],
+            'contactsIds' => [$contact->getId()],
         ], ['createdById' => '1']);
         $case3 = $em->createEntity('Case', [
         ], ['createdById' => '1']);
         $case4 = $em->createEntity('Case', [
-            'accountId' => $account->id,
+            'accountId' => $account->getId(),
         ], ['createdById' => '1']);
         $case5 = $em->createEntity('Case', [
-            'accountId' => $account->id,
-        ], ['createdById' => $user->id]);
+            'accountId' => $account->getId(),
+        ], ['createdById' => $user->getId()]);
 
         $this->assertFalse($acl->check('Case', 'create'));
         $this->assertFalse($acl->check('Case', 'edit'));
@@ -247,14 +247,14 @@ class AclTest extends BaseTestCase
         $idList = [];
 
         foreach ($result->getCollection() as $e) {
-            $idList[] = $e->id;
+            $idList[] = $e->getId();
         }
 
-        $this->assertFalse(in_array($case1->id, $idList));
-        $this->assertFalse(in_array($case2->id, $idList));
-        $this->assertFalse(in_array($case3->id, $idList));
-        $this->assertFalse(in_array($case4->id, $idList));
-        $this->assertTrue(in_array($case5->id, $idList));
+        $this->assertFalse(in_array($case1->getId(), $idList));
+        $this->assertFalse(in_array($case2->getId(), $idList));
+        $this->assertFalse(in_array($case3->getId(), $idList));
+        $this->assertFalse(in_array($case4->getId(), $idList));
+        $this->assertTrue(in_array($case5->getId(), $idList));
     }
 
     public function testCreateCase(): void

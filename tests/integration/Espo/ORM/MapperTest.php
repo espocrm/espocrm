@@ -72,7 +72,7 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
         $isRelated = $entityManager->getRepository('Contact')->isRelated($contact, 'account', $account);
         $this->assertTrue($isRelated);
 
-        $contact = $entityManager->getEntity('Contact', $contact->id);
+        $contact = $entityManager->getEntity('Contact', $contact->getId());
 
         $entityManager->getRepository('Contact')->unrelate($contact, 'account', $account);
 
@@ -106,7 +106,7 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertTrue($isRelated);
 
-        $contact = $entityManager->getEntity('Contact', $contact->id);
+        $contact = $entityManager->getEntity('Contact', $contact->getId());
 
         $entityManager->getRepository('Contact')
             ->getRelation($contact, 'account')
@@ -139,7 +139,7 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
         $isRelated = $entityManager->getRepository('Task')->isRelated($task, 'parent', $account);
         $this->assertTrue($isRelated);
 
-        $task = $entityManager->getEntity('Task', $task->id);
+        $task = $entityManager->getEntity('Task', $task->getId());
 
         $entityManager->getRepository('Task')->unrelate($task, 'parent', $account);
         $isRelated = $entityManager->getRepository('Task')->isRelated($task, 'parent', $account);
@@ -194,10 +194,10 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
         $isRelated = $em->getRepository('Account')->isRelated($a1, 'originalLead', $l1);
         $this->assertFalse($isRelated);
 
-        $c = $em->getRepository('Lead')->where(['createdAccountId' => $a1->id])->count();
+        $c = $em->getRepository('Lead')->where(['createdAccountId' => $a1->getId()])->count();
         $this->assertEquals(0, $c);
 
-        $c = $em->getRepository('Lead')->where(['createdAccountId' => $a2->id])->count();
+        $c = $em->getRepository('Lead')->where(['createdAccountId' => $a2->getId()])->count();
         $this->assertEquals(1, $c);
     }
 
@@ -248,10 +248,10 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
         $isRelated = $em->getRepository('Account')->isRelated($a1, 'originalLead', $l1);
         $this->assertFalse($isRelated);
 
-        $c = $em->getRepository('Lead')->where(['createdAccountId' => $a1->id])->count();
+        $c = $em->getRepository('Lead')->where(['createdAccountId' => $a1->getId()])->count();
         $this->assertEquals(0, $c);
 
-        $c = $em->getRepository('Lead')->where(['createdAccountId' => $a2->id])->count();
+        $c = $em->getRepository('Lead')->where(['createdAccountId' => $a2->getId()])->count();
         $this->assertEquals(1, $c);
     }
 
@@ -297,7 +297,7 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
         $isRelated = $em->getRepository('Lead')->isRelated($l2, 'createdAccount', $a1);
         $this->assertTrue($isRelated);
 
-        $l1 = $em->getEntity('Lead', $l1->id);
+        $l1 = $em->getEntity('Lead', $l1->getId());
 
         $isRelated = $em->getRepository('Lead')->isRelated($l1, 'createdAccount', $a1);
         $this->assertFalse($isRelated);
@@ -305,7 +305,7 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
         $isRelated = $em->getRepository('Account')->isRelated($a1, 'originalLead', $l1);
         $this->assertFalse($isRelated);
 
-        $c = $em->getRepository('Lead')->where(['createdAccountId' => $a1->id])->count();
+        $c = $em->getRepository('Lead')->where(['createdAccountId' => $a1->getId()])->count();
         $this->assertEquals(1, $c);
     }
 
@@ -337,7 +337,7 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
         $em->getRepository('Lead')->relate($l1, 'createdAccount', $a1);
         $em->getRepository('Account')->unrelate($a1, 'originalLead', $l1);
 
-        $l1 = $em->getEntity('Lead', $l1->id);
+        $l1 = $em->getEntity('Lead', $l1->getId());
 
         $isRelated = $em->getRepository('Lead')->isRelated($l1, 'createdAccount', $a1);
         $this->assertFalse($isRelated);
