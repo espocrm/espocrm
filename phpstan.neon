@@ -6,8 +6,9 @@ parameters:
 		- application
 	reportUnmatchedIgnoredErrors: false
 	excludePaths:
-		- application/Espo/Core/Select/SelectManager.php
-		- custom/Espo/Modules/*/vendor/*
+		analyse:
+			- application/Espo/Core/Select/SelectManager.php
+			- custom/Espo/Modules/*/vendor/*
 services:
 	-
 		class: EspoDev\PHPStan\Extensions\EntityManagerReturnType
