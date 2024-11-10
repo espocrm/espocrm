@@ -222,6 +222,11 @@ class Binding implements BindingProcessor
             'Espo\\Core\\ExternalAccount\\ClientManager',
             'externalAccountClientManager'
         );
+
+        $binder->bindService(
+            'Espo\\Core\\WebSocket\\Submission',
+            'webSocketSubmission'
+        );
     }
 
     private function bindCore(Binder $binder): void
