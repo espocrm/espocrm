@@ -34,6 +34,7 @@ use Espo\Core\Select\Text\Filter\Data;
 use Espo\Core\Select\Text\DefaultFilter;
 use Espo\Core\Select\Text\ConfigProvider;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
@@ -114,7 +115,7 @@ class TextFilter implements Filter
     {
         $emailAddress = $this->entityManager
             ->getRDBRepository(EmailAddress::ENTITY_TYPE)
-            ->select('id')
+            ->select(Attribute::ID)
             ->where(['lower' => strtolower($value)])
             ->findOne();
 

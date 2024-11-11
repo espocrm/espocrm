@@ -43,6 +43,7 @@ use Espo\Core\Record\DeleteParams;
 use Espo\Core\Record\UpdateParams;
 use Espo\Core\Utils\PasswordHash;
 use Espo\ORM\Entity;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Tools\User\UserUtil;
 use Espo\Tools\UserSecurity\Password\Checker as PasswordChecker;
@@ -251,7 +252,7 @@ class User extends Record implements LogAware
                     ->withDeleted()
                     ->build()
             )
-            ->where(['id' => $id])
+            ->where([Attribute::ID => $id])
             ->findOne();
 
         if ($entity) {

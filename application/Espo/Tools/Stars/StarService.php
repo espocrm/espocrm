@@ -39,6 +39,7 @@ use Espo\Entities\StarSubscription;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use PDOException;
 
 class StarService
@@ -53,7 +54,7 @@ class StarService
     {
         return (bool) $this->entityManager
             ->getRDBRepository(StarSubscription::ENTITY_TYPE)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where([
                 'userId' => $user->getId(),
                 'entityType' => $entity->getEntityType(),

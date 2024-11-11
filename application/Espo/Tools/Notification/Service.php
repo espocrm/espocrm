@@ -43,6 +43,7 @@ use Espo\Core\Utils\DateTime as DateTimeUtil;
 
 use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 
 class Service
 {
@@ -77,8 +78,8 @@ class Service
         if ($note->getRelatedType() === Email::ENTITY_TYPE) {
             $related = $this->entityManager
                 ->getRDBRepository(Email::ENTITY_TYPE)
-                ->select(['id', 'sentById', 'createdById'])
-                ->where(['id' => $note->getRelatedId()])
+                ->select([Attribute::ID, 'sentById', 'createdById'])
+                ->where([Attribute::ID => $note->getRelatedId()])
                 ->findOne();
         }
 
@@ -90,10 +91,10 @@ class Service
 
         $userList = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
-            ->select(['id', 'type'])
+            ->select([Attribute::ID, 'type'])
             ->where([
                 'isActive' => true,
-                'id' => $userIdList,
+                Attribute::ID => $userIdList,
             ])
             ->find();
 
@@ -123,7 +124,7 @@ class Service
             $notification = $this->entityManager->getNewEntity(Notification::ENTITY_TYPE);
 
             $notification->set([
-                'id' => $this->idGenerator->generate(),
+                Attribute::ID => $this->idGenerator->generate(),
                 'data' => [
                     'noteId' => $note->getId(),
                 ],

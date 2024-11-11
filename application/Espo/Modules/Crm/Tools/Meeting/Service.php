@@ -44,6 +44,7 @@ use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use LogicException;
 
 class Service
@@ -227,7 +228,7 @@ class Service
             $itemCollection = $this->entityManager
                 ->getRDBRepository($entityType)
                 ->getRelation($entity, $link)
-                ->select(['id', 'name', 'acceptanceStatus', 'emailAddress'])
+                ->select([Attribute::ID, 'name', 'acceptanceStatus', 'emailAddress'])
                 ->order('name')
                 ->find();
 

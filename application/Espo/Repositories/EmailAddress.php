@@ -35,6 +35,7 @@ use Espo\ORM\Entity;
 use Espo\Entities\EmailAddress as EmailAddressEntity;
 use Espo\Core\Di;
 
+use Espo\ORM\Name\Attribute;
 use stdClass;
 
 /**
@@ -215,7 +216,7 @@ class EmailAddress extends Database implements
             }
 
             if ($onlyName) {
-                $select = ['id', 'name'];
+                $select = [Attribute::ID, 'name'];
 
                 if ($itemEntityType === UserEntity::ENTITY_TYPE) {
                     $select[] = 'isActive';
@@ -224,7 +225,7 @@ class EmailAddress extends Database implements
                 $entity = $this->entityManager
                     ->getRDBRepository($itemEntityType)
                     ->select($select)
-                    ->where(['id' => $itemEntityId])
+                    ->where([Attribute::ID => $itemEntityId])
                     ->findOne();
             } else {
                 $entity = $this->entityManager->getEntityById($itemEntityType, $itemEntityId);
@@ -292,7 +293,7 @@ class EmailAddress extends Database implements
                 $entity = $this->entityManager
                     ->getRDBRepository($itemEntityType)
                     ->select($select)
-                    ->where(['id' => $itemEntityId])
+                    ->where([Attribute::ID => $itemEntityId])
                     ->findOne();
             } else {
                 $entity = $this->entityManager->getEntityById($itemEntityType, $itemEntityId);

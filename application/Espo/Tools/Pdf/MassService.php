@@ -46,6 +46,7 @@ use Espo\Core\Utils\Util;
 use Espo\Entities\Attachment;
 use Espo\Entities\Template as TemplateEntity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\Tools\Pdf\Data\DataLoaderManager;
 use Espo\Tools\Pdf\Jobs\RemoveMassFile;
 
@@ -146,7 +147,7 @@ class MassService
             ->getRDBRepository($entityType)
             ->clone($selectBuilder->build())
             ->where([
-                'id' => $idList,
+                Attribute::ID => $idList,
             ])
             ->find();
 

@@ -43,6 +43,7 @@ use Espo\Core\ORM\EntityManager;
 
 use Espo\Core\Utils\SystemUser;
 use Espo\Entities\User;
+use Espo\ORM\Name\Attribute;
 
 /**
  * Extended to forbid removal of own and system users.
@@ -83,7 +84,7 @@ class MassDelete implements MassAction
             ->getRDBRepository(User::ENTITY_TYPE)
             ->clone($query)
             ->sth()
-            ->select(['id', 'userName'])
+            ->select([Attribute::ID, 'userName'])
             ->find();
 
         foreach ($collection as $entity) {

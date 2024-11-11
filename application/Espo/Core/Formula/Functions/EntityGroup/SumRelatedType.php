@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Di;
 
+use Espo\ORM\Name\Attribute;
 use stdClass;
 use PDO;
 
@@ -133,7 +134,7 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
 
             $sqQueryBuilder
                 ->order([])
-                ->select(['id']);
+                ->select([Attribute::ID]);
 
             $queryBuilder->where([
                 'id=s' => $sqQueryBuilder->build(),

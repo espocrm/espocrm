@@ -38,6 +38,7 @@ use Espo\Entities\EmailAccount as EmailAccountEntity;
 use Espo\Entities\EmailAddress;
 use Espo\Entities\InboundEmail as InboundEmailEntity;
 use Espo\Entities\Settings;
+use Espo\ORM\Name\Attribute;
 use Espo\Tools\App\SettingsService as SettingsService;
 
 use Espo\Core\Acl;
@@ -314,7 +315,7 @@ class AppService
     {
         $emailAccountCollection = $this->entityManager
             ->getRDBRepositoryByClass(EmailAccountEntity::class)
-            ->select(['id', 'emailAddress'])
+            ->select([Attribute::ID, 'emailAddress'])
             ->where([
                 'assignedUserId' => $user->getId(),
                 'useSmtp' => true,

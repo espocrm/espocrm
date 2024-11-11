@@ -38,6 +38,7 @@ use Espo\Entities\AuthLogRecord;
 use Espo\ORM\EntityManager;
 
 use DateTime;
+use Espo\ORM\Name\Attribute;
 use Exception;
 use RuntimeException;
 
@@ -80,7 +81,7 @@ class FailedCodeAttemptsLimit implements BeforeLogin
 
         $wasFailed = (bool) $this->entityManager
             ->getRDBRepository(AuthLogRecord::ENTITY_TYPE)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where($where)
             ->findOne();
 

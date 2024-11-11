@@ -65,6 +65,7 @@ use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Tools\Stream\Service as StreamService;
 use Exception;
@@ -675,8 +676,8 @@ class SendService
 
         return $this->entityManager
             ->getRDBRepositoryByClass(Email::class)
-            ->select(['id', 'groupFolderId', 'messageId'])
-            ->where(['id' => $email->getReplied()->getId()])
+            ->select([Attribute::ID, 'groupFolderId', 'messageId'])
+            ->where([Attribute::ID => $email->getReplied()->getId()])
             ->findOne();
     }
 }

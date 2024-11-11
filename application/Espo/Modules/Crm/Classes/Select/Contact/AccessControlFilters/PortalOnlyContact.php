@@ -30,12 +30,12 @@
 namespace Espo\Modules\Crm\Classes\Select\Contact\AccessControlFilters;
 
 use Espo\Core\Select\AccessControl\Filter;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Entities\User;
 
 class PortalOnlyContact implements Filter
 {
-
     public function __construct(private User $user)
     {}
 
@@ -44,11 +44,11 @@ class PortalOnlyContact implements Filter
         $contactId = $this->user->getContactId();
 
         if ($contactId === null) {
-            $queryBuilder->where(['id' => null]);
+            $queryBuilder->where([Attribute::ID => null]);
 
             return;
         }
 
-        $queryBuilder->where(['id' => $contactId]);
+        $queryBuilder->where([Attribute::ID => $contactId]);
     }
 }

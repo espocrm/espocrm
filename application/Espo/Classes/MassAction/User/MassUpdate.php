@@ -47,6 +47,7 @@ use Espo\Core\Utils\SystemUser;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 
+use Espo\ORM\Name\Attribute;
 use Espo\Tools\MassUpdate\Data as MassUpdateData;
 
 class MassUpdate implements MassAction
@@ -103,7 +104,7 @@ class MassUpdate implements MassAction
             ->getRDBRepository(User::ENTITY_TYPE)
             ->clone($query)
             ->sth()
-            ->select(['id', 'userName'])
+            ->select([Attribute::ID, 'userName'])
             ->find();
 
         foreach ($collection as $entity) {

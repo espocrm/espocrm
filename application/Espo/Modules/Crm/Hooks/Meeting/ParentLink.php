@@ -35,6 +35,7 @@ use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Repository\Option\SaveOptions;
 
 /**
@@ -78,7 +79,7 @@ class ParentLink implements BeforeSave
             $parent = $this->entityManager
                 ->getRDBRepository($parentType)
                 ->select($columnList)
-                ->where(['id' => $parentId])
+                ->where([Attribute::ID => $parentId])
                 ->findOne();
         }
 
@@ -118,8 +119,8 @@ class ParentLink implements BeforeSave
         ) {
             $account = $this->entityManager
                 ->getRDBRepository(Account::ENTITY_TYPE)
-                ->select(['id', 'name'])
-                ->where(['id' => $entity->get('accountId')])
+                ->select([Attribute::ID, 'name'])
+                ->where([Attribute::ID => $entity->get('accountId')])
                 ->findOne();
 
             if ($account) {

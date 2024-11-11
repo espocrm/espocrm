@@ -39,6 +39,7 @@ use Espo\Core\Utils\Log;
 use Espo\Entities\Webhook;
 use Espo\Entities\WebhookEventQueueItem;
 
+use Espo\ORM\Name\Attribute;
 use RuntimeException;
 
 /**
@@ -142,7 +143,7 @@ class Manager
     {
         $notExists = !$this->entityManager
             ->getRDBRepository(Webhook::ENTITY_TYPE)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where([
                 'event' => $event,
                 'isActive' => true,

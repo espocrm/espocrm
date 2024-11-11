@@ -39,6 +39,7 @@ use Espo\Core\Formula\Func;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Order;
 
 class FindManyType implements Func
@@ -127,7 +128,7 @@ class FindManyType implements Func
         }
 
         $queryBuilder
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->limit(0, $limit);
 
         $collection = $this->entityManager

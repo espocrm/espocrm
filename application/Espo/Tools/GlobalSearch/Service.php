@@ -36,6 +36,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Query\Part\Expression as Expr;
@@ -116,8 +117,8 @@ class Service
         while ($row = $sth->fetch()) {
             $entity = $this->entityManager
                 ->getRDBRepository($row['entityType'])
-                ->select(['id', 'name'])
-                ->where(['id' => $row['id']])
+                ->select([Attribute::ID, 'name'])
+                ->where([Attribute::ID => $row[Attribute::ID]])
                 ->findOne();
 
             if (!$entity) {
@@ -159,7 +160,7 @@ class Service
             'name' : 'id';
 
         $selectList = [
-            'id',
+            Attribute::ID,
             $nameAttribute,
             ['VALUE:' . $entityType, 'entityType'],
             [(string) $i, 'order'],

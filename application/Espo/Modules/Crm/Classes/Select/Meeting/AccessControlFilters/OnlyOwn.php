@@ -31,6 +31,7 @@ namespace Espo\Modules\Crm\Classes\Select\Meeting\AccessControlFilters;
 
 use Espo\Core\Select\AccessControl\Filter;
 use Espo\ORM\Defs;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\Part\Condition as Cond;
 
@@ -55,9 +56,9 @@ class OnlyOwn implements Filter
 
         $queryBuilder->where(
             Cond::in(
-                Cond::column('id'),
+                Cond::column(Attribute::ID),
                 SelectBuilder::create()
-                    ->select('id')
+                    ->select(Attribute::ID)
                     ->from($this->entityType)
                     ->leftJoin($middleEntityType, 'usersMiddle', [
                         "usersMiddle.{$key1}:" => 'id',

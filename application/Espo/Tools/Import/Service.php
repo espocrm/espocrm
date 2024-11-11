@@ -30,6 +30,7 @@
 namespace Espo\Tools\Import;
 
 use Espo\Core\Name\Field;
+use Espo\ORM\Name\Attribute;
 use Exception;
 use GuzzleHttp\Psr7\Utils as Psr7Utils;
 
@@ -260,8 +261,8 @@ class Service
 
             $entity = $this->entityManager
                 ->getRDBRepository($entityType)
-                ->select(['id'])
-                ->where(['id' => $entityId])
+                ->select([Attribute::ID])
+                ->where([Attribute::ID => $entityId])
                 ->findOne();
 
             if (!$entity) {
@@ -391,8 +392,8 @@ class Service
 
             $entity = $this->entityManager
                 ->getRDBRepository($entityType)
-                ->select(['id'])
-                ->where(['id' => $entityId])
+                ->select([Attribute::ID])
+                ->where([Attribute::ID => $entityId])
                 ->findOne();
 
             if (!$entity) {

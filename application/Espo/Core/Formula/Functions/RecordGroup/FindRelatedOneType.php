@@ -31,6 +31,7 @@ namespace Espo\Core\Formula\Functions\RecordGroup;
 
 use Espo\Core\ORM\Entity as CoreEntity;
 
+use Espo\ORM\Name\Attribute;
 use Espo\Core\Formula\{
     Functions\BaseFunction,
     ArgumentList,
@@ -100,7 +101,7 @@ class FindRelatedOneType extends BaseFunction implements
             $relatedEntity = $entityManager
                 ->getRDBRepository($entityType)
                 ->getRelation($entity, $link)
-                ->select(['id'])
+                ->select([Attribute::ID])
                 ->findOne();
 
             if (!$relatedEntity) {
@@ -191,7 +192,7 @@ class FindRelatedOneType extends BaseFunction implements
         $relatedEntity = $entityManager
             ->getRDBRepository($foreignEntityType)
             ->clone($queryBuilder->build())
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->findOne();
 
         if ($relatedEntity) {

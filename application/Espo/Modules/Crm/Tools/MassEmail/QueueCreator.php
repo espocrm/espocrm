@@ -31,6 +31,7 @@ namespace Espo\Modules\Crm\Tools\MassEmail;
 
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
+use Espo\ORM\Name\Attribute;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Entities\EmailAddress;
 use Espo\Modules\Crm\Entities\TargetList;
@@ -103,7 +104,7 @@ class QueueCreator
                         ->getRDBRepositoryByClass(TargetList::class)
                         ->getRelation($excludingTargetList, $link)
                         ->sth()
-                        ->select(['id', 'emailAddress'])
+                        ->select([Attribute::ID, 'emailAddress'])
                         ->find();
 
                     foreach ($excludingList as $excludingTarget) {
@@ -131,7 +132,7 @@ class QueueCreator
                     $recordList = $this->entityManager
                         ->getRDBRepositoryByClass(TargetList::class)
                         ->getRelation($targetList, $link)
-                        ->select(['id', 'emailAddress'])
+                        ->select([Attribute::ID, 'emailAddress'])
                         ->sth()
                         ->where(['@relation.optedOut' => false])
                         ->find();

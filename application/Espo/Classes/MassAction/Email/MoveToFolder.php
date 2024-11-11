@@ -42,6 +42,7 @@ use Espo\Entities\EmailFolder;
 use Espo\Entities\GroupEmailFolder;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\Tools\Email\Folder;
 use Espo\Tools\Email\InboxService as EmailService;
 use Exception;
@@ -89,7 +90,7 @@ class MoveToFolder implements MassAction
         if ($folderId && str_starts_with($folderId, 'group:')) {
             $folder = $this->entityManager
                 ->getRDBRepositoryByClass(GroupEmailFolder::class)
-                ->where(['id' => substr($folderId, 6)])
+                ->where([Attribute::ID => substr($folderId, 6)])
                 ->findOne();
 
             if (!$folder) {
@@ -107,7 +108,7 @@ class MoveToFolder implements MassAction
             ->getRDBRepositoryByClass(Email::class)
             ->clone($query)
             ->sth()
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->find();
 
         $count = 0;

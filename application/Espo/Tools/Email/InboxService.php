@@ -47,6 +47,7 @@ use Espo\Entities\Notification;
 use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition;
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\SelectBuilder;
@@ -700,14 +701,14 @@ class InboxService
 
         $users = $this->entityManager
             ->getRDBRepositoryByClass(User::class)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where([
                 'type' => [User::TYPE_REGULAR, User::TYPE_ADMIN],
                 'isActive' => true,
             ])
             ->where(
                 Condition::in(
-                    Expression::column('id'),
+                    Expression::column(Attribute::ID),
                     SelectBuilder::create()
                         ->from(Team::RELATIONSHIP_TEAM_USER)
                         ->select('userId')

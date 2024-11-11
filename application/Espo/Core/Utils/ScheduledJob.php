@@ -35,6 +35,7 @@ use Espo\Entities\Job;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 
+use Espo\ORM\Name\Attribute;
 use Exception;
 use RuntimeException;
 use DateTime;
@@ -135,7 +136,7 @@ class ScheduledJob
         try {
             $r1From = new DateTime('-' . $this->checkingCronPeriod);
             $r1To = new DateTime('+' . $this->checkingCronPeriod);
-        } catch (Exception $e) {
+        } catch (Exception) {
             throw new RuntimeException();
         }
 
@@ -146,7 +147,7 @@ class ScheduledJob
 
         return (bool) $this->entityManager
             ->getRDBRepository(Job::ENTITY_TYPE)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->leftJoin('scheduledJob')
             ->where([
                 'OR' => [

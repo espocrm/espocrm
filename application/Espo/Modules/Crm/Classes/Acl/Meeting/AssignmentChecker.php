@@ -37,6 +37,7 @@ use Espo\Modules\Crm\Entities\Call;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 
 /**
  * @implements AssignmentCheckerInterface<Meeting|Call>
@@ -83,7 +84,7 @@ class AssignmentChecker implements AssignmentCheckerInterface
         $usersCollection = $this->entityManager
             ->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, 'users')
-            ->select('id')
+            ->select(Attribute::ID)
             ->find();
 
         foreach ($usersCollection as $user) {

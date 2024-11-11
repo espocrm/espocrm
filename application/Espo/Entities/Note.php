@@ -37,6 +37,7 @@ use Espo\Core\Field\DateTime;
 
 use Espo\ORM\Collection;
 use Espo\ORM\Entity as OrmEntity;
+use Espo\ORM\Name\Attribute;
 use RuntimeException;
 use stdClass;
 
@@ -167,10 +168,10 @@ class Note extends Entity
 
         $collection = $this->entityManager
             ->getRDBRepository(Attachment::ENTITY_TYPE)
-            ->select(['id', 'name', 'type'])
+            ->select([Attribute::ID, 'name', 'type'])
             ->order(Field::CREATED_AT)
             ->where([
-                'id' => $attachmentsIds
+                Attribute::ID => $attachmentsIds
             ])
             ->find();
 

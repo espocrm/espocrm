@@ -32,6 +32,7 @@ namespace Espo\Classes\Select\User\Where\ItemConverters;
 use Espo\Core\Select\Where\Item;
 use Espo\Core\Select\Where\ItemConverter;
 use Espo\Entities\User;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
@@ -56,7 +57,7 @@ class IsOfType implements ItemConverter
             User::TYPE_API => WhereClause::fromRaw([
                 'type' => User::TYPE_API,
             ]),
-            default => WhereClause::fromRaw(['id' => null]),
+            default => WhereClause::fromRaw([Attribute::ID => null]),
         };
     }
 }

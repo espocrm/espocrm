@@ -36,6 +36,7 @@ use Espo\Entities\User;
 use Espo\Entities\WorkingTimeRange;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 
 /**
  * @implements AssignmentCheckerInterface<WorkingTimeRange>
@@ -73,7 +74,7 @@ class AssignmentChecker implements AssignmentCheckerInterface
 
         $users = $this->entityManager
             ->getRDBRepositoryByClass(User::class)
-            ->where(['id' => $entity->getUsers()->getIdList()])
+            ->where([Attribute::ID => $entity->getUsers()->getIdList()])
             ->find();
 
         foreach ($users as $targetUser) {

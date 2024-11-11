@@ -44,6 +44,7 @@ use Espo\Entities\Email;
 use Espo\Entities\Notification;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use RuntimeException;
 
 /**
@@ -125,7 +126,7 @@ class PostUsers implements Action
         /** @var iterable<User> $users */
         $users = $this->entityManager
             ->getRDBRepositoryByClass(User::class)
-            ->where(['id' => $foreignIds])
+            ->where([Attribute::ID => $foreignIds])
             ->find();
 
         if (is_countable($users) && count($users) !== count($foreignIds)) {

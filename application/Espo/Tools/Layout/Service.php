@@ -43,6 +43,7 @@ use Espo\Entities\Portal;
 use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\Entities\LayoutRecord;
+use Espo\ORM\Name\Attribute;
 use Espo\Tools\LayoutManager\LayoutManager;
 
 use stdClass;
@@ -341,7 +342,7 @@ class Service
             $portal = $this->entityManager
                 ->getRDBRepositoryByClass(Portal::class)
                 ->select(['layoutSetId'])
-                ->where(['id' => $portalId])
+                ->where([Attribute::ID => $portalId])
                 ->findOne();
 
             if (!$portal) {
@@ -364,7 +365,7 @@ class Service
         $team = $this->entityManager
             ->getRDBRepositoryByClass(Team::class)
             ->select(['layoutSetId'])
-            ->where(['id' => $teamId])
+            ->where([Attribute::ID => $teamId])
             ->findOne();
 
         if (!$team) {

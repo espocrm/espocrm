@@ -36,6 +36,7 @@ use Espo\Entities\EmailFolder;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Lead;
+use Espo\ORM\Name\Attribute;
 use Espo\Tools\Stream\Service as StreamService;
 use Espo\Core\Notification\AssignmentNotificator;
 use Espo\Core\Notification\AssignmentNotificator\Params;
@@ -269,7 +270,7 @@ class Email implements AssignmentNotificator
                     'relatedId' => $entity->getId(),
                     'relatedType' => EmailEntity::ENTITY_TYPE,
                 ])
-                ->select(['id'])
+                ->select([Attribute::ID])
                 ->findOne();
 
             if ($existing) {

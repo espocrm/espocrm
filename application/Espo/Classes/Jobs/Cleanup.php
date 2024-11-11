@@ -49,6 +49,7 @@ use Espo\Entities\ScheduledJob;
 use Espo\Entities\ScheduledJobLogRecord;
 use Espo\Entities\UniqueId;
 use Espo\Entities\UserReaction;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\DeleteBuilder;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\Core\ORM\Entity as CoreEntity;
@@ -174,7 +175,7 @@ class Cleanup implements JobDataLess
         /** @var iterable<ScheduledJobLogRecord> $scheduledJobList */
         $scheduledJobList = $this->entityManager
             ->getRDBRepository(ScheduledJob::ENTITY_TYPE)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->find();
 
         foreach ($scheduledJobList as $scheduledJob) {
@@ -183,7 +184,7 @@ class Cleanup implements JobDataLess
             /** @var iterable<ScheduledJobLogRecord> $ignoreLogRecordList */
             $ignoreLogRecordList = $this->entityManager
                 ->getRDBRepository(ScheduledJobLogRecord::ENTITY_TYPE)
-                ->select(['id'])
+                ->select([Attribute::ID])
                 ->where([
                     'scheduledJobId' => $scheduledJobId,
                 ])
@@ -487,7 +488,7 @@ class Cleanup implements JobDataLess
             ->getRDBRepository(Email::ENTITY_TYPE)
             ->clone($query)
             ->sth()
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where([
                 'createdAt<' => $dateBefore,
                 'deleted' => true,
@@ -783,7 +784,7 @@ class Cleanup implements JobDataLess
 
             $deletedEntityList = $repository
                 ->clone($query)
-                ->select(['id', 'deleted'])
+                ->select([Attribute::ID, Attribute::DELETED])
                 ->where($whereClause)
                 ->find();
 

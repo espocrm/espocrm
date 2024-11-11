@@ -33,6 +33,7 @@ use Espo\Core\Select\Where\ItemConverter;
 use Espo\Core\Select\Where\Item;
 
 use Espo\Entities\Email;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
 use Espo\ORM\Query\Part\WhereClause;
@@ -233,7 +234,7 @@ class InFolder implements ItemConverter
         $emailAddressList = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
             ->getRelation($this->user, 'emailAddresses')
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->find();
 
         $emailAddressIdList = [];

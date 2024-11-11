@@ -33,6 +33,7 @@ use Espo\Core\AclManager as InternalAclManager;
 use Espo\Core\Acl\Table;
 
 use Espo\Core\Name\Field;
+use Espo\ORM\Name\Attribute;
 use Espo\Tools\Stream\Service as StreamService;
 
 use Espo\ORM\EntityManager;
@@ -220,7 +221,7 @@ class NoteHookProcessor
 
                 $existing = $this->entityManager
                     ->getRDBRepository(Notification::ENTITY_TYPE)
-                    ->select(['id'])
+                    ->select([Attribute::ID])
                     ->where([
                         'type' => Notification::TYPE_NOTE,
                         'relatedType' => Note::ENTITY_TYPE,
@@ -288,7 +289,7 @@ class NoteHookProcessor
                 ->where([
                     'isActive' => true,
                 ])
-                ->select('id')
+                ->select(Attribute::ID)
                 ->find();
 
             foreach ($targetUserList as $user) {
@@ -326,7 +327,7 @@ class NoteHookProcessor
                 ->where([
                     'isActive' => true,
                 ])
-                ->select(['id'])
+                ->select([Attribute::ID])
                 ->find();
 
             foreach ($targetUserList as $user) {
@@ -349,7 +350,7 @@ class NoteHookProcessor
                 'isActive' => true,
                 'type' => ['regular', 'admin'],
             ])
-            ->select('id')
+            ->select(Attribute::ID)
             ->find();
 
         $notifyUserIdList = [];

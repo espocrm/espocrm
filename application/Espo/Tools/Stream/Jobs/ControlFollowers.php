@@ -37,6 +37,7 @@ use Espo\Core\Acl\Exceptions\NotImplemented as AclNotImplemented;
 
 use Espo\ORM\EntityManager;
 
+use Espo\ORM\Name\Attribute;
 use Espo\Tools\Stream\Service as Service;
 use Espo\Entities\User;
 
@@ -71,7 +72,7 @@ class ControlFollowers implements Job
 
         $userList = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
-            ->where(['id' => $idList])
+            ->where([Attribute::ID => $idList])
             ->find();
 
         foreach ($userList as $user) {

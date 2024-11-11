@@ -884,12 +884,12 @@ class Converter
             $itemDefs = [
                 'skipRebuild' => true,
                 'attributes' => [
-                    'id' => [
+                    Attribute::ID => [
                         'type' => Entity::ID,
                         'autoincrement' => true,
                         'dbType' => Types::BIGINT, // ignored because of `skipRebuild`
                     ],
-                    'deleted' => [
+                    Attribute::DELETED => [
                         'type' => Entity::BOOL,
                     ],
                 ],

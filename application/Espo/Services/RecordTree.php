@@ -33,6 +33,7 @@ use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Order;
 use Espo\Core\Acl\Table as AclTable;
 use Espo\Core\Exceptions\Error;
@@ -189,7 +190,7 @@ class RecordTree extends Record
         $one = $this->entityManager
             ->getRDBRepository($entityType)
             ->clone($query)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->findOne();
 
         if ($one) {
@@ -380,7 +381,7 @@ class RecordTree extends Record
 
         $collection = $this->getRepository()
             ->clone($query)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->find();
 
         foreach ($collection as $entity) {

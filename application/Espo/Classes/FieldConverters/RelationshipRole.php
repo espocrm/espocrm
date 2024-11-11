@@ -33,6 +33,7 @@ use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\FieldConverter;
 use Espo\ORM\Defs\FieldDefs;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Type\AttributeType;
 use RuntimeException;
 
@@ -155,7 +156,7 @@ class RelationshipRole implements FieldConverter
                             'EXISTS' => [
                                 'from' => $entityType,
                                 'fromAlias' => 'sq',
-                                'select' => ['id'],
+                                'select' => [Attribute::ID],
                                 'leftJoins' => [
                                     [
                                         $link,
@@ -177,7 +178,7 @@ class RelationshipRole implements FieldConverter
                         'EXISTS' => [
                             'from' => $entityType,
                             'fromAlias' => 'sq',
-                            'select' => ['id'],
+                            'select' => [Attribute::ID],
                             'leftJoins' => [
                                 [
                                     $link,

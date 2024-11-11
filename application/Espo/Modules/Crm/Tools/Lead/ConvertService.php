@@ -57,6 +57,7 @@ use Espo\Modules\Crm\Tools\Lead\Convert\Values;
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Tools\Stream\Service as StreamService;
 use RuntimeException;
@@ -496,7 +497,7 @@ class ConvertService
         /** @var Collection<Meeting> $meetings */
         $meetings = $leadRepository
             ->getRelation($lead, 'meetings')
-            ->select(['id', 'parentId', 'parentType'])
+            ->select([Attribute::ID, 'parentId', 'parentType'])
             ->find();
 
         foreach ($meetings as $meeting) {
@@ -523,7 +524,7 @@ class ConvertService
         /** @var Collection<Call> $calls */
         $calls = $leadRepository
             ->getRelation($lead, 'calls')
-            ->select(['id', 'parentId', 'parentType'])
+            ->select([Attribute::ID, 'parentId', 'parentType'])
             ->find();
 
         foreach ($calls as $call) {
@@ -550,7 +551,7 @@ class ConvertService
         /** @var Collection<Email> $emails */
         $emails = $leadRepository
             ->getRelation($lead, 'emails')
-            ->select(['id', 'parentId', 'parentType'])
+            ->select([Attribute::ID, 'parentId', 'parentType'])
             ->find();
 
         foreach ($emails as $email) {
@@ -570,7 +571,7 @@ class ConvertService
         /** @var Collection<Document> $documents */
         $documents = $leadRepository
             ->getRelation($lead, 'documents')
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->find();
 
         foreach ($documents as $document) {

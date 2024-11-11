@@ -36,6 +36,7 @@ use Espo\Core\FieldProcessing\Loader;
 use Espo\Core\FieldProcessing\Loader\Params;
 use Espo\Core\ORM\EntityManager;
 
+use Espo\ORM\Name\Attribute;
 use stdClass;
 
 /**
@@ -77,9 +78,9 @@ class PhoneNumberMapLoader implements Loader
         $entityList = $this->entityManager
             ->getRDBRepository($entityType)
             ->where([
-                'id' => $idList,
+                Attribute::ID => $idList,
             ])
-            ->select(['id', 'phoneNumber'])
+            ->select([Attribute::ID, 'phoneNumber'])
             ->find();
 
         foreach ($entityList as $entity) {
@@ -89,7 +90,7 @@ class PhoneNumberMapLoader implements Loader
                 continue;
             }
 
-            if (strpos($phoneNumber, self::ERASED_PART) === 0) {
+            if (str_starts_with($phoneNumber, self::ERASED_PART)) {
                 continue;
             }
 

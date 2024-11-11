@@ -33,6 +33,7 @@ use Espo\Entities\Autofollow;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\EntityFactory;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Repository\Repository;
 use Espo\Core\Utils\Json;
 
@@ -131,9 +132,9 @@ class Preferences implements Repository,
         $select = $this->entityManager->getQueryBuilder()
             ->select()
             ->from(PreferencesEntity::ENTITY_TYPE)
-            ->select(['id', 'data'])
+            ->select([Attribute::ID, 'data'])
             ->where([
-                'id' => $id,
+                Attribute::ID => $id,
             ])
             ->limit(0, 1)
             ->build();
@@ -264,9 +265,9 @@ class Preferences implements Repository,
         $insert = $this->entityManager->getQueryBuilder()
             ->insert()
             ->into(PreferencesEntity::ENTITY_TYPE)
-            ->columns(['id', 'data'])
+            ->columns([Attribute::ID, 'data'])
             ->values([
-                'id' => $entity->getId(),
+                Attribute::ID => $entity->getId(),
                 'data' => $dataString,
             ])
             ->updateSet([

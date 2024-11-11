@@ -40,6 +40,7 @@ use Espo\Core\FieldProcessing\Loader\Params;
 use Espo\Core\ORM\EntityManager;
 
 use DateTime;
+use Espo\ORM\Name\Attribute;
 use Exception;
 
 /**
@@ -65,7 +66,7 @@ class LastAccessLoader implements Loader
 
         $authToken = $this->entityManager
             ->getRDBRepository(AuthToken::ENTITY_TYPE)
-            ->select(['id', 'lastAccess'])
+            ->select([Attribute::ID, 'lastAccess'])
             ->where([
                 'userId' => $entity->getId(),
             ])
@@ -97,7 +98,7 @@ class LastAccessLoader implements Loader
 
         $authLogRecord = $this->entityManager
             ->getRDBRepository(AuthLogRecord::ENTITY_TYPE)
-            ->select(['id', Field::CREATED_AT])
+            ->select([Attribute::ID, Field::CREATED_AT])
             ->where($where)
             ->order('requestTime', true)
             ->findOne();

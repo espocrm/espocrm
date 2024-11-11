@@ -37,6 +37,7 @@ use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Repository\Option\SaveOptions;
 use Espo\Tools\Stream\Service as StreamService;
 
@@ -75,7 +76,7 @@ class Contacts implements AfterSave
         if ($fetchedContactId) {
             $previousPortalUser = $this->entityManager
                 ->getRDBRepository(User::ENTITY_TYPE)
-                ->select(['id'])
+                ->select([Attribute::ID])
                 ->where([
                     'contactId' => $fetchedContactId,
                     'type' => User::TYPE_PORTAL,
@@ -101,7 +102,7 @@ class Contacts implements AfterSave
 
         $portalUser = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where([
                 'contactId' => $contactId,
                 'type' => User::TYPE_PORTAL,

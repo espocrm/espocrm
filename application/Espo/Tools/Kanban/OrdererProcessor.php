@@ -33,7 +33,7 @@ use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Entities\KanbanOrder;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Metadata;
-
+use Espo\ORM\Name\Attribute;
 use LogicException;
 
 class OrdererProcessor
@@ -121,7 +121,7 @@ class OrdererProcessor
 
         $first = $this->entityManager
             ->getRDBRepository(KanbanOrder::ENTITY_TYPE)
-            ->select(['id', 'order'])
+            ->select([Attribute::ID, 'order'])
             ->where([
                 'entityType' => $this->entityType,
                 'userId' => $this->userId,

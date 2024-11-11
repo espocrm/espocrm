@@ -40,6 +40,7 @@ use Espo\Entities\Note;
 use Espo\Entities\User;
 use Espo\Entities\UserReaction;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Tools\Stream\UserRecordService;
 use stdClass;
@@ -102,7 +103,7 @@ class ReactionStreamService
         }
 
         $searchParams = SearchParams::create()
-            ->withSelect(['id', 'reactionCounts', 'myReactions'])
+            ->withSelect([Attribute::ID, 'reactionCounts', 'myReactions'])
             ->withWhereAdded(
                 Item::createBuilder()
                     ->setType(Item\Type::IN)

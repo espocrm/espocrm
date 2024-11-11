@@ -33,6 +33,7 @@ use Espo\Modules\Crm\Entities\Call;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Entities\EmailAddress;
 use Espo\Entities\Email;
@@ -211,8 +212,8 @@ class IcsDataLoader implements Loader
 
         $found1 = $this->entityManager
             ->getRDBRepository(Meeting::ENTITY_TYPE)
-            ->select(['id'])
-            ->where(['id' => $id])
+            ->select([Attribute::ID])
+            ->where([Attribute::ID => $id])
             ->findOne();
 
         if ($found1) {
@@ -221,8 +222,8 @@ class IcsDataLoader implements Loader
 
         $found2 = $this->entityManager
             ->getRDBRepository(Call::ENTITY_TYPE)
-            ->select(['id'])
-            ->where(['id' => $id])
+            ->select([Attribute::ID])
+            ->where([Attribute::ID => $id])
             ->findOne();
 
         if ($found2) {

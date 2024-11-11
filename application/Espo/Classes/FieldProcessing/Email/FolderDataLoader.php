@@ -35,6 +35,7 @@ use Espo\Entities\Email;
 use Espo\Entities\EmailFolder;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 
 /**
  * @implements Loader<Email>
@@ -53,8 +54,8 @@ class FolderDataLoader implements Loader
 
         $folder = $this->entityManager
             ->getRDBRepositoryByClass(EmailFolder::class)
-            ->select(['id', 'name'])
-            ->where(['id' => $folderId])
+            ->select([Attribute::ID, 'name'])
+            ->where([Attribute::ID => $folderId])
             ->findOne();
 
         if (!$folder) {

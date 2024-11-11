@@ -32,6 +32,7 @@ namespace Espo\Modules\Crm\Tools\Opportunity\Report;
 use Espo\Core\Utils\Metadata;
 use Espo\Modules\Crm\Entities\Opportunity as OpportunityEntity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder;
 
 class Util
@@ -62,7 +63,7 @@ class Util
             ->getQueryBuilder()
             ->select()
             ->from(OpportunityEntity::ENTITY_TYPE)
-            ->select('id')
+            ->select(Attribute::ID)
             ->where($whereClause)
             ->build();
 

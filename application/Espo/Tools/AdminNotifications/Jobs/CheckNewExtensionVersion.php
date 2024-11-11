@@ -35,6 +35,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Entities\Extension;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\Tools\AdminNotifications\LatestReleaseDataRequester;
 
 /**
@@ -62,7 +63,7 @@ class CheckNewExtensionVersion implements JobDataLess
             ->getQueryBuilder()
             ->select()
             ->from(Extension::ENTITY_TYPE)
-            ->select(['id', 'name', 'version', 'checkVersionUrl'])
+            ->select([Attribute::ID, 'name', 'version', 'checkVersionUrl'])
             ->where([
                 'deleted' => false,
                 'isInstalled' => true,

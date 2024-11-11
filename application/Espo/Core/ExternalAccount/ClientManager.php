@@ -43,6 +43,7 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Name\Attribute;
 use RuntimeException;
 
 class ClientManager
@@ -399,8 +400,8 @@ class ClientManager
     {
         $account = $this->entityManager
             ->getRDBRepository(ExternalAccount::ENTITY_TYPE)
-            ->select(['id', 'isLocked'])
-            ->where(['id' => $id])
+            ->select([Attribute::ID, 'isLocked'])
+            ->where([Attribute::ID => $id])
             ->findOne();
 
         if (!$account) {

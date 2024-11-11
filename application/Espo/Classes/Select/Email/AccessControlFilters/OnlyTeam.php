@@ -34,6 +34,7 @@ use Espo\Core\Select\AccessControl\Filter;
 use Espo\Entities\Email;
 use Espo\Entities\Team;
 use Espo\Entities\User;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
@@ -45,7 +46,7 @@ class OnlyTeam implements Filter
     public function apply(QueryBuilder $queryBuilder): void
     {
         $subQuery = QueryBuilder::create()
-            ->select('id')
+            ->select(Attribute::ID)
             ->from(Email::ENTITY_TYPE)
             ->leftJoin(Team::RELATIONSHIP_ENTITY_TEAM, 'entityTeam', [
                 'entityTeam.entityId:' => 'id',
@@ -67,7 +68,7 @@ class OnlyTeam implements Filter
 
         $queryBuilder->where(
             Cond::in(
-                Cond::column('id'),
+                Cond::column(Attribute::ID),
                 $subQuery
             )
         );

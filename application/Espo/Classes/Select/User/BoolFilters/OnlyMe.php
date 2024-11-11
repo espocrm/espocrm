@@ -31,6 +31,7 @@ namespace Espo\Classes\Select\User\BoolFilters;
 
 use Espo\Core\Select\Bool\Filter;
 use Espo\Entities\User;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
@@ -42,6 +43,6 @@ class OnlyMe implements Filter
 
     public function apply(QueryBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
     {
-        $queryBuilder->where(['id' => $this->user->getId()]);
+        $queryBuilder->where([Attribute::ID => $this->user->getId()]);
     }
 }

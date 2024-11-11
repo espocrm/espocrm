@@ -40,6 +40,7 @@ use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Di;
 use Espo\Core\Select\Helpers\RandomStringGenerator;
+use Espo\ORM\Name\Attribute;
 
 class FindRelatedManyType extends BaseFunction implements
     Di\EntityManagerAware,
@@ -212,7 +213,7 @@ class FindRelatedManyType extends BaseFunction implements
         $collection = $entityManager
             ->getRDBRepository($foreignEntityType)
             ->clone($queryBuilder->build())
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->find();
 
         $idList = [];

@@ -70,7 +70,7 @@ class PortalOnlyContact implements Filter
 
                 $orBuilder->add(
                     Cond::in(
-                        Expr::column('id'),
+                        Expr::column(Attribute::ID),
                         QueryBuilder::create()
                             ->from(ucfirst($defs->getRelationshipName()), 'm')
                             ->select($defs->getMidKey())

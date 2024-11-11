@@ -34,6 +34,7 @@ use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
 use Espo\Core\Utils\Database\Orm\LinkConverter;
 use Espo\ORM\Defs\RelationDefs as LinkDefs;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
 
@@ -55,7 +56,7 @@ class HasOne implements LinkConverter
             ->withType($noJoin ? AttributeType::VARCHAR : AttributeType::FOREIGN)
             ->withNotStorable()
             ->withParam('relation', $name)
-            ->withParam('foreign', 'id');
+            ->withParam('foreign', Attribute::ID);
 
         $nameAttributeDefs = !$noForeignName ?
             (

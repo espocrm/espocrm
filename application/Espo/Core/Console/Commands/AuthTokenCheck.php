@@ -73,7 +73,7 @@ class AuthTokenCheck implements Command
             ->getRDBRepository(User::ENTITY_TYPE)
             ->select(Attribute::ID)
             ->where([
-                'id' => $userId,
+                Attribute::ID => $userId,
                 'isActive' => true,
             ])
             ->findOne();

@@ -33,6 +33,7 @@ use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Entities\Note;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use stdClass;
 
 class NoteHelper
@@ -124,8 +125,8 @@ class NoteHelper
 
         $collection = $this->entityManager
             ->getRDBRepository($foreignEntityType)
-            ->select(['id', 'name'])
-            ->where(['id' => $ids])
+            ->select([Attribute::ID, 'name'])
+            ->where([Attribute::ID => $ids])
             ->find();
 
         foreach ($collection as $entity) {

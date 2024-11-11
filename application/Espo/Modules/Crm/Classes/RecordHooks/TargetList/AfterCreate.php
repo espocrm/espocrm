@@ -40,6 +40,7 @@ use Espo\Modules\Crm\Entities\TargetList;
 use Espo\Modules\Crm\Tools\TargetList\MetadataProvider;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 
 /**
  * @implements SaveHook<TargetList>
@@ -107,7 +108,7 @@ class AfterCreate implements SaveHook
             ->getQueryBuilder()
             ->select()
             ->from(CampaignLogRecord::ENTITY_TYPE)
-            ->select(['id', 'parentId', 'parentType'])
+            ->select([Attribute::ID, 'parentId', 'parentType'])
             ->where([
                 'isTest' => false,
                 'campaignId' => $sourceCampaignId,
@@ -122,11 +123,11 @@ class AfterCreate implements SaveHook
         $queryBuilder->group([
             'parentId',
             'parentType',
-            'id',
+            Attribute::ID,
         ]);
 
         $notQueryBuilder->where(['action=' => $excludingActionList]);
-        $notQueryBuilder->select(['id']);
+        $notQueryBuilder->select([Attribute::ID]);
 
         /** @var iterable<CampaignLogRecord> $logRecords */
         $logRecords = $this->entityManager

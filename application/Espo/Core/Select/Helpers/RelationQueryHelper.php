@@ -32,6 +32,7 @@ namespace Espo\Core\Select\Helpers;
 use Espo\Core\Name\Field;
 use Espo\Entities\User;
 use Espo\ORM\Defs;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition;
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\WhereItem;
@@ -82,7 +83,7 @@ class RelationQueryHelper
         $key2 = $relationDefs->getForeignMidKey();
 
         $joinWhere = [
-            "m.$key1:" => 'id',
+            "m.$key1:" => Attribute::ID,
             'm.deleted' => false,
         ];
 
@@ -91,7 +92,7 @@ class RelationQueryHelper
         }
 
         $subQuery = QueryBuilder::create()
-            ->select('id')
+            ->select(Attribute::ID)
             ->from($entityType)
             ->leftJoin($middleEntityType, 'm', $joinWhere)
             ->where(["m.$key2" => $userId])

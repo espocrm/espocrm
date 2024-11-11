@@ -36,6 +36,7 @@ use Espo\ORM\Entity;
 use Espo\Core\FieldProcessing\Saver as SaverInterface;
 use Espo\Core\FieldProcessing\Saver\Params;
 use Espo\Core\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Repository\Option\SaveOption;
 
 /**
@@ -122,7 +123,7 @@ class Saver implements SaverInterface
 
         $previous = $this->entityManager
             ->getRDBRepository($foreignEntityType)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where([$foreignKey => $entity->getId()])
             ->findOne();
 
@@ -178,10 +179,10 @@ class Saver implements SaverInterface
 
         $anotherEntity = $this->entityManager
             ->getRDBRepository($entityType)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where([
                 $idAttribute => $entity->get($idAttribute),
-                'id!=' => $entity->getId(),
+                Attribute::ID . '!=' => $entity->getId(),
             ])
             ->findOne();
 

@@ -30,6 +30,7 @@
 namespace Espo\Classes\FieldProcessing\Email;
 
 use Espo\ORM\Entity;
+use Espo\ORM\Name\Attribute;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Core\FieldProcessing\Loader;
 use Espo\Core\FieldProcessing\Loader\Params;
@@ -63,7 +64,7 @@ class StringDataLoader implements Loader
         $emailAddressCollection = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
             ->getRelation($this->user, 'emailAddresses')
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->find();
 
         foreach ($emailAddressCollection as $emailAddress) {

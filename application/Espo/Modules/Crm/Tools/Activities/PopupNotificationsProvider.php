@@ -39,6 +39,7 @@ use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Reminder;
 use Espo\Modules\Crm\Entities\Task;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\Tools\PopupNotification\Item;
 use Espo\Tools\PopupNotification\Provider;
 use Exception;
@@ -152,7 +153,7 @@ class PopupNotificationsProvider implements Provider
             ->getQueryBuilder()
             ->delete()
             ->from(Reminder::ENTITY_TYPE)
-            ->where(['id' => $id])
+            ->where([Attribute::ID => $id])
             ->build();
 
         $this->entityManager->getQueryExecutor()->execute($deleteQuery);

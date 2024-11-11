@@ -40,6 +40,7 @@ use Espo\Entities\Note;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\Repositories\User as UserRepository;
 
 /**
@@ -74,8 +75,8 @@ class AssignmentCheck implements SaveHook
             /** @var iterable<User> $targetUserList */
             $targetUserList = $this->entityManager
                 ->getRDBRepository(User::ENTITY_TYPE)
-                ->select(['id', 'type'])
-                ->where(['id' => $userIdList])
+                ->select([Attribute::ID, 'type'])
+                ->where([Attribute::ID => $userIdList])
                 ->find();
         }
 

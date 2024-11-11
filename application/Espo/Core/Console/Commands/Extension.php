@@ -39,6 +39,7 @@ use Espo\Core\Upgrades\ExtensionManager;
 use Espo\Core\Container;
 use Espo\Core\Utils\File\Manager as FileManager;
 
+use Espo\ORM\Name\Attribute;
 use Throwable;
 
 /**
@@ -169,7 +170,7 @@ class Extension implements Command
             $record = $this->entityManager
                 ->getRDBRepository(ExtensionEntity::ENTITY_TYPE)
                 ->where([
-                    'id' => $id,
+                    Attribute::ID => $id,
                     'isInstalled' => true,
                 ])
                 ->findOne();

@@ -33,6 +33,7 @@ use Espo\Core\Select\AccessControl\Filter;
 use Espo\Entities\EmailAccount;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class OnlyOwn implements Filter
@@ -59,7 +60,7 @@ class OnlyOwn implements Filter
 
         $emailAccountList = $this->entityManager
             ->getRDBRepository(EmailAccount::ENTITY_TYPE)
-            ->select('id')
+            ->select(Attribute::ID)
             ->where([
                 'assignedUserId' => $this->user->getId(),
             ])

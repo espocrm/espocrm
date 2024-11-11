@@ -35,6 +35,7 @@ use Espo\Core\FieldValidation\Exceptions\ValidationError;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Entities\Attachment;
 use Espo\Entities\ImportError;
+use Espo\ORM\Name\Attribute;
 use Espo\Tools\Import\Jobs\RunIdle;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
@@ -684,7 +685,7 @@ class Import
 
         $found = $this->entityManager
             ->getRDBRepository($foreignEntityType)
-            ->select(['id', $foreignAttribute])
+            ->select([Attribute::ID, $foreignAttribute])
             ->where($where)
             ->findOne();
 

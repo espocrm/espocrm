@@ -34,6 +34,7 @@ use Espo\Core\Utils\Util;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Entities\Extension;
+use Espo\ORM\Name\Attribute;
 use Throwable;
 
 class Install extends \Espo\Core\Upgrades\Actions\Base\Install
@@ -92,7 +93,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
         $extensionEntity = $this->getExtensionEntity();
 
         if ($extensionEntity) {
-            $id = $extensionEntity->get('id');
+            $id = $extensionEntity->get(Attribute::ID);
         }
 
         return !isset($id);
@@ -204,7 +205,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
         }
 
         $this->executeAction(Base::UNINSTALL, [
-            'id' => $extensionEntity->get('id'),
+            'id' => $extensionEntity->get(Attribute::ID),
             'skipSystemRebuild' => true,
             'skipAfterScript' => true,
             'parentProcessId' => $this->getProcessId(),
@@ -225,7 +226,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
         }
 
         $this->executeAction(Base::DELETE, [
-            'id' => $extensionEntity->get('id'),
+            'id' => $extensionEntity->get(Attribute::ID),
             'parentProcessId' => $this->getProcessId(),
         ]);
     }

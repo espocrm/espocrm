@@ -43,6 +43,7 @@ use Espo\Entities\Notification;
 use Espo\Entities\User;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\Tools\Stream\NoteAccessControl;
 
 class RecordService
@@ -143,7 +144,7 @@ class RecordService
             ->update()
             ->in(Notification::ENTITY_TYPE)
             ->set(['read' => true])
-            ->where(['id' => $ids])
+            ->where([Attribute::ID => $ids])
             ->build();
 
         $this->entityManager->getQueryExecutor()->execute($query);

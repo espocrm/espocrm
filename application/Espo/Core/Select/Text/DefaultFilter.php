@@ -31,6 +31,7 @@ namespace Espo\Core\Select\Text;
 
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Select\Text\Filter\Data;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
@@ -65,7 +66,7 @@ class DefaultFilter implements Filter
         $orGroup = $orGroupBuilder->build();
 
         if ($orGroup->getItemCount() === 0) {
-            $queryBuilder->where(['id' => null]);
+            $queryBuilder->where([Attribute::ID => null]);
 
             return;
         }

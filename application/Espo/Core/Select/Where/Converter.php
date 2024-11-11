@@ -31,6 +31,7 @@ namespace Espo\Core\Select\Where;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Select\Where\Item\Type;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\Part\Where\Comparison;
@@ -132,14 +133,14 @@ class Converter
 
         $subQueryBuilder = QueryBuilder::create()
             ->from($entityType)
-            ->select('id');
+            ->select(Attribute::ID);
 
         $subQueryBuilder->where(
             $this->convert($subQueryBuilder, $item)
         );
 
         return Cond::in(
-            Expr::column('id'),
+            Expr::column(Attribute::ID),
             $subQueryBuilder->build()
         );
     }

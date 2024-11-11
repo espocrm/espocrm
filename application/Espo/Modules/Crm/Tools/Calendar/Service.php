@@ -55,6 +55,7 @@ use Espo\Modules\Crm\Tools\Calendar\Items\NonWorkingRange;
 use Espo\Modules\Crm\Tools\Calendar\Items\WorkingRange;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Select;
 use Espo\Tools\WorkingTime\Calendar as WorkingCalendar;
 use Espo\Tools\WorkingTime\CalendarFactory as WorkingCalendarFactory;
@@ -614,7 +615,7 @@ class Service
 
         $userList = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
-            ->select(['id', 'name'])
+            ->select([Attribute::ID, 'name'])
             ->leftJoin(Field::TEAMS)
             ->where([
                 'isActive' => true,
@@ -686,7 +687,7 @@ class Service
         $teamList = iterator_to_array(
                 $this->entityManager
                 ->getRDBRepositoryByClass(Team::class)
-                ->where(['id' => $teamIdList])
+                ->where([Attribute::ID => $teamIdList])
                 ->find()
         );
 

@@ -36,6 +36,7 @@ use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\WhereItem;
 use RuntimeException;
@@ -94,7 +95,7 @@ class Finder
             $where = Cond::and(
                 $where,
                 Cond::notEqual(
-                    Cond::column('id'),
+                    Cond::column(Attribute::ID),
                     $entity->getId()
                 )
             );
@@ -103,7 +104,7 @@ class Finder
         $duplicate = $this->entityManager
             ->getRDBRepository($entityType)
             ->where($where)
-            ->select('id')
+            ->select(Attribute::ID)
             ->findOne();
 
         return (bool) $duplicate;
@@ -122,7 +123,7 @@ class Finder
             $where = Cond::and(
                 $where,
                 Cond::notEqual(
-                    Cond::column('id'),
+                    Cond::column(Attribute::ID),
                     $entity->getId()
                 )
             );
@@ -134,7 +135,7 @@ class Finder
                 ->from($entityType)
                 ->withStrictAccessControl()
                 ->buildQueryBuilder()
-                ->select(['id'])
+                ->select([Attribute::ID])
                 ->limit(0, self::LIMIT);
         } catch (Forbidden|BadRequest $e) {
             throw new RuntimeException($e->getMessage(), 0, $e);
@@ -160,7 +161,7 @@ class Finder
         return $repository
             ->clone($baseQueryBuilder->build())
             ->select(['*'])
-            ->where(['id' => $ids])
+            ->where([Attribute::ID => $ids])
             ->find();
     }
 

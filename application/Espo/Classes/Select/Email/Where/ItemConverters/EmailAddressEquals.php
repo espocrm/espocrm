@@ -32,6 +32,7 @@ namespace Espo\Classes\Select\Email\Where\ItemConverters;
 use Espo\Core\Select\Where\Item;
 use Espo\Core\Select\Where\ItemConverter;
 use Espo\Classes\Select\Email\Helpers\EmailAddressHelper;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\Part\Where\OrGroup;
@@ -51,13 +52,13 @@ class EmailAddressEquals implements ItemConverter
         $value = $item->getValue();
 
         if (!$value) {
-            return WhereClause::fromRaw(['id' => null]);
+            return WhereClause::fromRaw([Attribute::ID => null]);
         }
 
         $emailAddressId = $this->emailAddressHelper->getEmailAddressIdByValue($value);
 
         if (!$emailAddressId) {
-            return WhereClause::fromRaw(['id' => null]);
+            return WhereClause::fromRaw([Attribute::ID => null]);
         }
 
         return OrGroup::create(

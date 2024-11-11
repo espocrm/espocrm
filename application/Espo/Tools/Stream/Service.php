@@ -36,6 +36,7 @@ use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\StreamSubscription;
 use Espo\Modules\Crm\Entities\Account;
+use Espo\ORM\Name\Attribute;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use Espo\ORM\Query\Part\Expression as Expr;
@@ -170,7 +171,7 @@ class Service
 
         return (bool) $this->entityManager
             ->getRDBRepository(StreamSubscription::ENTITY_TYPE)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where([
                 'userId' => $userId,
                 'entityType' => $entity->getEntityType(),
@@ -207,12 +208,12 @@ class Service
                 $user = $this->entityManager
                     ->getRDBRepository(User::ENTITY_TYPE)
                     ->select([
-                        'id',
+                        Attribute::ID,
                         'type',
                         'isActive',
                     ])
                     ->where([
-                        'id' => $userId,
+                        Attribute::ID => $userId,
                         'isActive' => true,
                     ])
                     ->findOne();
@@ -284,7 +285,7 @@ class Service
             $user = $this->entityManager
                 ->getRDBRepository(User::ENTITY_TYPE)
                 ->where([
-                    'id' => $userId,
+                    Attribute::ID => $userId,
                     'isActive' => true,
                 ])
                 ->findOne();
@@ -362,7 +363,7 @@ class Service
             ->getRDBRepositoryByClass(User::class)
             ->select(['name'])
             ->where([
-                'id' =>  $entity->get('assignedUserId'),
+                Attribute::ID =>  $entity->get('assignedUserId'),
             ])
             ->findOne();
 
@@ -624,7 +625,7 @@ class Service
 
             $data['assignedUsers'] = array_map(function ($it) {
                 return [
-                    'id' => $it->getId(),
+                    Attribute::ID => $it->getId(),
                     'name' => $it->getName(),
                 ];
             }, $users->getList());
@@ -719,7 +720,7 @@ class Service
 
         $existing = $this->entityManager
             ->getRDBRepository(Note::ENTITY_TYPE)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where([
                 'type' => Note::TYPE_RELATE,
                 'parentId' => $parentId,
@@ -759,7 +760,7 @@ class Service
 
         $existing = $this->entityManager
             ->getRDBRepository(Note::ENTITY_TYPE)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where([
                 'type' => Note::TYPE_UNRELATE,
                 'parentId' => $parentId,
@@ -1006,7 +1007,7 @@ class Service
     {
         $userList = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->join(
                 StreamSubscription::ENTITY_TYPE,
                 'subscription',
@@ -1045,7 +1046,7 @@ class Service
         if (!$searchParams->getOrderBy()) {
             $builder->order([]);
             $builder->order(
-                Order::createByPositionInList(Expr::column('id'), [$this->user->getId()])
+                Order::createByPositionInList(Expr::column(Attribute::ID), [$this->user->getId()])
             );
             $builder->order('name');
         }
@@ -1097,7 +1098,7 @@ class Service
 
         $userList = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
-            ->select(['id', 'name'])
+            ->select([Attribute::ID, 'name'])
             ->join(
                 StreamSubscription::ENTITY_TYPE,
                 'subscription',
@@ -1112,7 +1113,7 @@ class Service
                 'isActive' => true,
             ])
             ->order(
-                Order::createByPositionInList(Expr::column('id'), [$this->user->getId()])
+                Order::createByPositionInList(Expr::column(Attribute::ID), [$this->user->getId()])
             )
             ->order('name')
             ->find();
@@ -1179,7 +1180,7 @@ class Service
                 'isActive' => true,
                 'id=s' => $subQuery,
             ])
-            ->select(['id', 'type'])
+            ->select([Attribute::ID, 'type'])
             ->find();
     }
 

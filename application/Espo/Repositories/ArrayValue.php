@@ -34,6 +34,7 @@ use Espo\Entities\ArrayValue as ArrayValueEntity;
 use Espo\ORM\Entity;
 use Espo\Core\Repositories\Database;
 
+use Espo\ORM\Name\Attribute;
 use RuntimeException;
 use LogicException;
 
@@ -83,7 +84,7 @@ class ArrayValue extends Database
             $isTransaction = true;
 
             $existingList = $this
-                ->select(['id', 'value'])
+                ->select([Attribute::ID, 'value'])
                 ->where([
                     'entityType' => $entity->getEntityType(),
                     'entityId' => $entity->getId(),
@@ -148,7 +149,7 @@ class ArrayValue extends Database
         $this->entityManager->getTransactionManager()->start();
 
         $list = $this
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where([
                 'entityType' => $entity->getEntityType(),
                 'entityId' => $entity->getId(),

@@ -64,7 +64,7 @@ class AddSystemUser implements RebuildAction
                         ->getQueryBuilder()
                         ->delete()
                         ->from(User::ENTITY_TYPE)
-                        ->where(['id' => $user->getId()])
+                        ->where([Attribute::ID => $user->getId()])
                         ->build()
                 );
         }

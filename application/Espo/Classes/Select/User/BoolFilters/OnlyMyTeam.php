@@ -32,6 +32,7 @@ namespace Espo\Classes\Select\User\BoolFilters;
 use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\Core\Select\Bool\Filter;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition;
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
@@ -52,7 +53,7 @@ class OnlyMyTeam implements Filter
 
         if (count($teamIdList) === 0) {
             $orGroupBuilder->add(
-                WhereClause::fromRaw(['id' => null])
+                WhereClause::fromRaw([Attribute::ID => null])
             );
 
             return;
@@ -60,7 +61,7 @@ class OnlyMyTeam implements Filter
 
         $orGroupBuilder->add(
             Condition::in(
-                Expression::column('id'),
+                Expression::column(Attribute::ID),
                 SelectBuilder::create()
                     ->from(Team::RELATIONSHIP_TEAM_USER)
                     ->select('userId')
