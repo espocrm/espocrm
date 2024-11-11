@@ -46,7 +46,7 @@ class Table extends BaseTable
     protected $levelList = [
         self::LEVEL_YES,
         self::LEVEL_ALL,
-        self::LEVEL_ACCOUNT.
+        self::LEVEL_ACCOUNT,
         self::LEVEL_CONTACT,
         self::LEVEL_OWN,
         self::LEVEL_NO,
