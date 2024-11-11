@@ -121,12 +121,12 @@ class Task extends Entity
 
     public function setAssignedUser(Link|User|null $assignedUser): self
     {
-        return $this->setRelatedLinkOrEntity('assignedUser', $assignedUser);
+        return $this->setRelatedLinkOrEntity(Field::ASSIGNED_USER, $assignedUser);
     }
 
     public function setTeams(LinkMultiple $teams): self
     {
-        $this->setValueObject('teams', $teams);
+        $this->setValueObject(Field::TEAMS, $teams);
 
         return $this;
     }

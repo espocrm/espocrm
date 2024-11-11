@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 
 use Espo\Core\Field\Date;
@@ -66,7 +67,7 @@ class EmailAccount extends Entity
     public function getAssignedUser(): ?Link
     {
         /** @var ?Link */
-        return $this->getValueObject('assignedUser');
+        return $this->getValueObject(Field::ASSIGNED_USER);
     }
 
     public function getTeams(): LinkMultiple

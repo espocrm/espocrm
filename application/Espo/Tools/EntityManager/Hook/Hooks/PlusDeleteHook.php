@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\EntityManager\Hook\Hooks;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Templates\Entities\BasePlus;
 use Espo\Core\Templates\Entities\Company;
 use Espo\Core\Templates\Entities\Person;
@@ -67,11 +68,11 @@ class PlusDeleteHook implements CreateHook
         $entityTypeList = array_unique($entityTypeList);
 
         foreach ($entityTypeList as $entityType) {
-            if (!$this->metadata->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'])) {
+            if (!$this->metadata->get(['entityDefs', $entityType, 'fields', Field::PARENT, 'entityList'])) {
                 continue;
             }
 
-            $list = $this->metadata->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'], []);
+            $list = $this->metadata->get(['entityDefs', $entityType, 'fields', Field::PARENT, 'entityList'], []);
 
             if (in_array($name, $list)) {
                 $key = array_search($name, $list);

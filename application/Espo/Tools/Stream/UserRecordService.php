@@ -144,7 +144,7 @@ class UserRecordService
 
         $baseBuilder = $this->queryHelper->buildBaseQueryBuilder($searchParams)
             ->select($this->queryHelper->getUserQuerySelect())
-            ->leftJoin('createdBy')
+            ->leftJoin(Field::CREATED_BY)
             ->order('number', Order::DESC)
             ->limit(0, $offset + $maxSize + 1);
 

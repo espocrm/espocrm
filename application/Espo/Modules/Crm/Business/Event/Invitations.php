@@ -32,6 +32,7 @@ namespace Espo\Modules\Crm\Business\Event;
 use Espo\Core\Field\DateTime as DateTimeField;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Mail\Exceptions\SendingError;
+use Espo\Core\Name\Field;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 use Espo\Entities\UniqueId;
@@ -198,7 +199,7 @@ class Invitations
     {
         /** @var ?User $user */
         $user = $this->entityManager
-            ->getRelation($entity, 'assignedUser')
+            ->getRelation($entity, Field::ASSIGNED_USER)
             ->findOne();
 
         $addressList = [];

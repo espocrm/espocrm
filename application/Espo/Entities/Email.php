@@ -648,7 +648,7 @@ class Email extends Entity
     public function getParent(): ?LinkParent
     {
         /** @var ?LinkParent */
-        return $this->getValueObject('parent');
+        return $this->getValueObject(Field::PARENT);
     }
 
     public function setAccount(?Link $account): self
@@ -661,12 +661,12 @@ class Email extends Entity
     public function setParent(LinkParent|Entity|null $parent): self
     {
         if ($parent instanceof LinkParent) {
-            $this->setValueObject('parent', $parent);
+            $this->setValueObject(Field::PARENT, $parent);
 
             return $this;
         }
 
-        $this->relations->set('parent', $parent);
+        $this->relations->set(Field::PARENT, $parent);
 
         return $this;
     }
@@ -703,13 +703,13 @@ class Email extends Entity
     public function getAssignedUser(): ?Link
     {
         /** @var ?Link */
-        return $this->getValueObject('assignedUser');
+        return $this->getValueObject(Field::ASSIGNED_USER);
     }
 
     public function getCreatedBy(): ?Link
     {
         /** @var ?Link */
-        return $this->getValueObject('createdBy');
+        return $this->getValueObject(Field::CREATED_BY);
     }
 
     public function getSentBy(): ?Link

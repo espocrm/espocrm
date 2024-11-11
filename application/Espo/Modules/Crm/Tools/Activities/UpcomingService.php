@@ -33,6 +33,7 @@ use Espo\Core\Acl;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Select\Bool\Filters\OnlyMy;
@@ -180,9 +181,9 @@ class UpcomingService
 
             if (
                 $entity instanceof CoreEntity &&
-                $entity->hasLinkParentField('parent')
+                $entity->hasLinkParentField(Field::PARENT)
             ) {
-                $entity->loadParentNameField('parent');
+                $entity->loadParentNameField(Field::PARENT);
             }
 
             $this->serviceContainer->get($itemEntityType)->prepareEntityForOutput($entity);

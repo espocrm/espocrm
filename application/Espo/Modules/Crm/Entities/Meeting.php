@@ -108,7 +108,7 @@ class Meeting extends Entity
     public function getAssignedUser(): ?Link
     {
         /** @var ?Link */
-        return $this->getValueObject('assignedUser');
+        return $this->getValueObject(Field::ASSIGNED_USER);
     }
 
     public function getTeams(): LinkMultiple
@@ -138,19 +138,19 @@ class Meeting extends Entity
     public function setParent(Entity|LinkParent|null $parent): self
     {
         if ($parent instanceof LinkParent) {
-            $this->setValueObject('parent', $parent);
+            $this->setValueObject(Field::PARENT, $parent);
 
             return $this;
         }
 
-        $this->relations->set('parent', $parent);
+        $this->relations->set(Field::PARENT, $parent);
 
         return $this;
     }
 
     public function setAssignedUser(Link|User|null $assignedUser): self
     {
-        return $this->setRelatedLinkOrEntity('assignedUser', $assignedUser);
+        return $this->setRelatedLinkOrEntity(Field::ASSIGNED_USER, $assignedUser);
     }
 
     public function setTeams(LinkMultiple $teams): self

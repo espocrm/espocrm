@@ -49,8 +49,8 @@ class DefaultSidePanelType
         $list = [];
 
         if (
-            $this->metadata->get(['entityDefs', $scope, 'fields', 'assignedUser', 'type']) === FieldType::LINK &&
-            $this->metadata->get(['entityDefs', $scope, 'links', 'assignedUser', 'entity']) === User::ENTITY_TYPE
+            $this->metadata->get(['entityDefs', $scope, 'fields', Field::ASSIGNED_USER, 'type']) === FieldType::LINK &&
+            $this->metadata->get(['entityDefs', $scope, 'links', Field::ASSIGNED_USER, 'entity']) === User::ENTITY_TYPE
             ||
             $this->metadata->get(['entityDefs', $scope, 'fields', Field::ASSIGNED_USERS, 'type']) === FieldType::LINK_MULTIPLE &&
             $this->metadata->get(['entityDefs', $scope, 'links', Field::ASSIGNED_USERS, 'entity']) === User::ENTITY_TYPE

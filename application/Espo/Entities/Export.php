@@ -99,7 +99,7 @@ class Export extends Entity
 
     public function getCreatedBy(): Link
     {
-        $value = $this->getValueObject('createdBy');
+        $value = $this->getValueObject(Field::CREATED_BY);
 
         if (!$value instanceof Link) {
             throw new RuntimeException("No 'createdBy'.");

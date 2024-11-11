@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\Field\LinkParent;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 
 class CampaignLogRecord extends Entity
@@ -50,6 +51,6 @@ class CampaignLogRecord extends Entity
     public function getParent(): ?LinkParent
     {
         /** @var ?LinkParent */
-        return $this->getValueObject('parent');
+        return $this->getValueObject(Field::PARENT);
     }
 }

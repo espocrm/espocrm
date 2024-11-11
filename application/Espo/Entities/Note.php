@@ -228,12 +228,12 @@ class Note extends Entity
     public function setParent(LinkParent|Entity $parent): self
     {
         if ($parent instanceof LinkParent) {
-            $this->setValueObject('parent', $parent);
+            $this->setValueObject(Field::PARENT, $parent);
 
             return $this;
         }
 
-        $this->relations->set('parent', $parent);
+        $this->relations->set(Field::PARENT, $parent);
 
         return $this;
     }
@@ -291,7 +291,7 @@ class Note extends Entity
         }
 
         if ($this->getParentId() && $this->getParentType()) {
-            $this->loadParentNameField('parent');
+            $this->loadParentNameField(Field::PARENT);
         }
 
         if ($this->getRelatedId() && $this->getRelatedType()) {
@@ -318,7 +318,7 @@ class Note extends Entity
                 $targetType !== self::TARGET_SELF
             ) {
                 if (!$targetType || $targetType === self::TARGET_TEAMS) {
-                    $this->loadLinkMultipleField('teams');
+                    $this->loadLinkMultipleField(Field::TEAMS);
                 } else if ($targetType === self::TARGET_PORTALS) {
                     $this->loadLinkMultipleField('portals');
                 }
@@ -356,7 +356,7 @@ class Note extends Entity
 
     public function getParent(): ?OrmEntity
     {
-        return $this->relations->getOne('parent');
+        return $this->relations->getOne(Field::PARENT);
     }
 
     /**

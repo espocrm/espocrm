@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Tools\MassEmail;
 
+use Espo\Core\Name\Field;
 use Espo\Tools\EmailTemplate\Result;
 use Laminas\Mail\Message;
 
@@ -556,7 +557,7 @@ class SendingProcessor
         }
 
         if ($campaign) {
-            $email->setLinkMultipleIdList('teams', $campaign->getLinkMultipleIdList('teams'));
+            $email->setLinkMultipleIdList(Field::TEAMS, $campaign->getLinkMultipleIdList(Field::TEAMS));
         }
 
         $senderParams = $senderParams->withFromAddress(

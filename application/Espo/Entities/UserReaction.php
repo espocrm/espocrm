@@ -30,6 +30,7 @@
 namespace Espo\Entities;
 
 use Espo\Core\Field\LinkParent;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 
 class UserReaction extends Entity
@@ -44,7 +45,7 @@ class UserReaction extends Entity
     public function getParent(): LinkParent
     {
         /** @var LinkParent */
-        return $this->getValueObject('parent');
+        return $this->getValueObject(Field::PARENT);
     }
 
     public function setType(string $type): self
@@ -56,7 +57,7 @@ class UserReaction extends Entity
 
     public function setParent(Note $note): self
     {
-        $this->relations->set('parent', $note);
+        $this->relations->set(Field::PARENT, $note);
 
         return $this;
     }

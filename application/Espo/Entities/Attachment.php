@@ -99,7 +99,7 @@ class Attachment extends Entity
     public function getParent(): ?LinkParent
     {
         /** @var ?LinkParent */
-        return $this->getValueObject('parent');
+        return $this->getValueObject(Field::PARENT);
     }
 
     public function getRelated(): ?LinkParent

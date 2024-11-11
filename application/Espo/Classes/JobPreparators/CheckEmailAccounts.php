@@ -31,6 +31,7 @@ namespace Espo\Classes\JobPreparators;
 
 use Espo\Core\Job\Preparator;
 use Espo\Core\Job\Preparator\Data;
+use Espo\Core\Name\Field;
 use Espo\ORM\EntityManager;
 use Espo\Entities\EmailAccount;
 use Espo\Core\Job\Preparator\CollectionHelper;
@@ -51,7 +52,7 @@ class CheckEmailAccounts implements Preparator
     {
         $collection = $this->entityManager
             ->getRDBRepositoryByClass(EmailAccount::class)
-            ->join('assignedUser', 'assignedUserAdditional')
+            ->join(Field::ASSIGNED_USER, 'assignedUserAdditional')
             ->where([
                 'status' => EmailAccount::STATUS_ACTIVE,
                 'useImap' => true,

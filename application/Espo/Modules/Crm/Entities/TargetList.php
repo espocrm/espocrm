@@ -31,6 +31,7 @@ namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Entities\User;
 
@@ -41,23 +42,23 @@ class TargetList extends Entity
     public function getAssignedUser(): ?Link
     {
         /** @var ?Link */
-        return $this->getValueObject('assignedUser');
+        return $this->getValueObject(Field::ASSIGNED_USER);
     }
 
     public function getTeams(): LinkMultiple
     {
         /** @var LinkMultiple */
-        return $this->getValueObject('teams');
+        return $this->getValueObject(Field::TEAMS);
     }
 
     public function setAssignedUser(Link|User|null $assignedUser): self
     {
-        return $this->setRelatedLinkOrEntity('assignedUser', $assignedUser);
+        return $this->setRelatedLinkOrEntity(Field::ASSIGNED_USER, $assignedUser);
     }
 
     public function setTeams(LinkMultiple $teams): self
     {
-        $this->setValueObject('teams', $teams);
+        $this->setValueObject(Field::TEAMS, $teams);
 
         return $this;
     }

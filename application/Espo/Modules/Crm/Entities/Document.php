@@ -75,7 +75,7 @@ class Document extends Entity
     public function getAssignedUser(): ?Link
     {
         /** @var ?Link */
-        return $this->getValueObject('assignedUser');
+        return $this->getValueObject(Field::ASSIGNED_USER);
     }
 
     public function getTeams(): LinkMultiple
@@ -86,7 +86,7 @@ class Document extends Entity
 
     public function setAssignedUser(Link|User|null $assignedUser): self
     {
-        return $this->setRelatedLinkOrEntity('assignedUser', $assignedUser);
+        return $this->setRelatedLinkOrEntity(Field::ASSIGNED_USER, $assignedUser);
     }
 
     public function setTeams(LinkMultiple $teams): self
