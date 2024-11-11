@@ -382,7 +382,7 @@ class SelectManager
 
         $relDefs = $this->entityManager->getMetadata()->get($this->entityType, ['relations']);
 
-        $defs = $relDefs[$link];
+        $relationType = $seed->getRelationType($link);
 
         if ($relationType == 'manyMany') {
             $this->addLeftJoin([$link, $link . 'Filter'], $result);
@@ -631,21 +631,21 @@ class SelectManager
             $this->setDistinct(true, $result);
             $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
             $result['whereClause'][] = [
-                'assignedUsersAccess.id' => $this->getUser()->id
+                'assignedUsersAccess.id' => $this->getUser()->getId()
             ];
             return;
         }
 
         if ($this->hasAssignedUserField()) {
             $result['whereClause'][] = [
-                'assignedUserId' => $this->getUser()->id
+                'assignedUserId' => $this->getUser()->getId()
             ];
             return;
         }
 
         if ($this->hasCreatedByField()) {
             $result['whereClause'][] = [
-                'createdById' => $this->getUser()->id
+                'createdById' => $this->getUser()->getId()
             ];
         }
     }
@@ -664,7 +664,7 @@ class SelectManager
             $result['whereClause'][] = [
                 'OR' => [
                     'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
-                    'assignedUsersAccess.id' => $this->getUser()->id
+                    'assignedUsersAccess.id' => $this->getUser()->getId()
                 ]
             ];
             return;
@@ -674,9 +674,9 @@ class SelectManager
             'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams')
         ];
         if ($this->hasAssignedUserField()) {
-            $or['assignedUserId'] = $this->getUser()->id;
+            $or['assignedUserId'] = $this->getUser()->getId();
         } else if ($this->hasCreatedByField()) {
-            $or['createdById'] = $this->getUser()->id;
+            $or['createdById'] = $this->getUser()->getId();
         }
         $result['whereClause'][] = [
             'OR' => $or
@@ -687,7 +687,7 @@ class SelectManager
     {
         if ($this->getSeed()->hasAttribute('createdById')) {
             $result['whereClause'][] = [
-                'createdById' => $this->getUser()->id
+                'createdById' => $this->getUser()->getId()
             ];
         } else {
             $result['whereClause'][] = [
@@ -721,7 +721,7 @@ class SelectManager
         }
 
         if ($this->getSeed()->hasAttribute('createdById')) {
-            $or['createdById'] = $this->getUser()->id;
+            $or['createdById'] = $this->getUser()->getId();
         }
 
         if ($this->getSeed()->hasAttribute('parentId') && $this->getSeed()->hasRelation('parent')) {
@@ -799,7 +799,7 @@ class SelectManager
         }
 
         if ($this->getSeed()->hasAttribute('createdById')) {
-            $or['createdById'] = $this->getUser()->id;
+            $or['createdById'] = $this->getUser()->getId();
         }
 
         if (!empty($or)) {
@@ -852,15 +852,6 @@ class SelectManager
         return $result;
     }
 
-    /**
-     * Build select parameters for ORM from parameters in the frontend format.
-     *
-     * @param $params Parameters in front-end format.
-     * @param $withAcl To apply ACL.
-     * @param $checkWherePermission To check passed filters, whether a user has an access to use these filters.
-     * @param $forbidComplexExpressions To forbid complex expression usage.
-     * @return array Parameters for ORM.
-     */
     public function buildSelectParams(
         array $params,
         bool $withAcl = false,
@@ -1007,7 +998,7 @@ class SelectManager
     public function getUserTimeZone() : string
     {
         if (empty($this->userTimeZone)) {
-            $preferences = $this->getEntityManager()->getEntity('Preferences', $this->getUser()->id);
+            $preferences = $this->getEntityManager()->getEntity('Preferences', $this->getUser()->getId());
             if ($preferences) {
                 $timeZone = $preferences->get('timeZone');
                 $this->userTimeZone = $timeZone;
@@ -1762,7 +1753,7 @@ class SelectManager
                     $part[$alias . '.id'] = $value;
 
                 } else {
-                    break;;
+                    break;
                 }
 
                 $this->setDistinct(true, $result);
@@ -2483,10 +2474,6 @@ class SelectManager
         if (mb_strpos($textFilter, '*') !== false) {
             $skipWidlcards = true;
             $textFilter = str_replace('*', '%', $textFilter);
-        } else {
-            if (!$useFullTextSearch) {
-                //$textFilterForFullTextSearch .= '*';
-            }
         }
 
         $textFilterForFullTextSearch = str_replace('%', '*', $textFilterForFullTextSearch);
@@ -2694,34 +2681,35 @@ class SelectManager
     protected function getBoolFilterWhere(string $filterName)
     {
         $method = 'getBoolFilterWhere' . ucfirst($filterName);
+
         if (method_exists($this, $method)) {
             return $this->$method();
         }
+
+        return null;
     }
 
     protected function boolFilterOnlyMy(&$result)
     {
-        $wherePart = null;
-
         if (!$this->checkIsPortal()) {
             if ($this->hasAssignedUsersField()) {
                 $this->setDistinct(true, $result);
                 $this->addLeftJoin(['assignedUsers', 'assignedUsersOnlyMyFilter'], $result);
                 $wherePart = [
-                    'assignedUsersOnlyMyFilter.id' => $this->getUser()->id
+                    'assignedUsersOnlyMyFilter.id' => $this->getUser()->getId()
                 ];
             } else if ($this->hasAssignedUserField()) {
                 $wherePart = [
-                    'assignedUserId' => $this->getUser()->id
+                    'assignedUserId' => $this->getUser()->getId()
                 ];
             } else {
                 $wherePart = [
-                    'createdById' => $this->getUser()->id
+                    'createdById' => $this->getUser()->getId()
                 ];
             }
         } else {
             $wherePart = [
-                'createdById' => $this->getUser()->id
+                'createdById' => $this->getUser()->getId()
             ];
         }
 
@@ -2753,7 +2741,7 @@ class SelectManager
             [
                 'subscription.entityType' => $this->getEntityType(),
                 'subscription.entityId=:' => 'id',
-                'subscription.userId' => $this->getUser()->id,
+                'subscription.userId' => $this->getUser()->getId(),
             ]
         ], $result);
     }
@@ -2766,7 +2754,7 @@ class SelectManager
             [
                 'subscription.entityType' => $this->getEntityType(),
                 'subscription.entityId=:' => 'id',
-                'subscription.userId' => $this->getUser()->id,
+                'subscription.userId' => $this->getUser()->getId(),
             ]
         ], $result);
 
