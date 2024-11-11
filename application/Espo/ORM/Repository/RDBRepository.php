@@ -48,7 +48,6 @@ use Espo\ORM\Query\Part\Join;
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Mapper\BaseMapper;
-
 use Espo\ORM\Type\RelationType;
 use RuntimeException;
 
@@ -223,22 +222,19 @@ class RDBRepository implements Repository
     /**
      * Find records.
      *
-     * @param ?array<string, mixed> $params @deprecated As of v6.0. Use query building.
      * @return Collection<TEntity>
      */
-    public function find(?array $params = []): Collection
+    public function find(): Collection
     {
-        return $this->createSelectBuilder()->find($params);
+        return $this->createSelectBuilder()->find();
     }
 
     /**
      * Find one record.
-     *
-     * @param ?array<string, mixed> $params @deprecated As of v6.0. Use query building.
      */
-    public function findOne(?array $params = []): ?Entity
+    public function findOne(): ?Entity
     {
-        $collection = $this->limit(0, 1)->find($params);
+        $collection = $this->limit(0, 1)->find();
 
         foreach ($collection as $entity) {
             return $entity;
@@ -265,11 +261,11 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @param array<string, mixed> $params @deprecated Use query building.
+     * Get a number of records.
      */
-    public function count(array $params = []): int
+    public function count(): int
     {
-        return $this->createSelectBuilder()->count($params);
+        return $this->createSelectBuilder()->count();
     }
 
     /**

@@ -91,12 +91,11 @@ class RDBSelectBuilder
     }
 
     /**
-     * @param ?array<string, mixed> $params @deprecated. Omit it.
      * @return Collection<TEntity>
      */
-    public function find(?array $params = null): Collection
+    public function find(): Collection
     {
-        $query = $this->getMergedParams($params);
+        $query = $this->builder->build();
 
         /** @var Collection<TEntity> $collection */
         $collection = $this->getMapper()->select($query);
@@ -105,18 +104,11 @@ class RDBSelectBuilder
     }
 
     /**
-     * @param ?array<string, mixed> $params @deprecated
      * @return ?TEntity
      */
-    public function findOne(?array $params = null): ?Entity
+    public function findOne(): ?Entity
     {
         $cloned = $this->repository->clone($this->builder->build());
-
-        if ($params !== null) { // @todo Remove.
-            $query = $this->getMergedParams($params);
-
-            $cloned = $this->repository->clone($query);
-        }
 
         $collection = $cloned
             ->sth()
@@ -132,16 +124,9 @@ class RDBSelectBuilder
 
     /**
      * Get a number of records.
-     *
-     * @param ?array<string, mixed> $params @deprecated
      */
-    public function count(?array $params = null): int
+    public function count(): int
     {
-        if ($params) { // @todo Remove.
-            $query = $this->getMergedParams($params);
-            return $this->getMapper()->count($query);
-        }
-
         $query = $this->builder->build();
 
         return $this->getMapper()->count($query);
@@ -417,63 +402,5 @@ class RDBSelectBuilder
          * @var EntityCollection<TEntity>
          */
         return $this->entityManager->getCollectionFactory()->createFromSthCollection($collection);
-    }
-
-    /**
-     * For backward compatibility.
-     * @deprecated As of v6.0.
-     * @todo Remove.
-     * @param array<string, mixed> $params
-     */
-    protected function getMergedParams(?array $params = null): Select
-    {
-        if ($params === null || empty($params)) {
-            return $this->builder->build();
-        }
-
-        $builtParams = $this->builder->build()->getRaw();
-
-        $whereClause = $builtParams['whereClause'] ?? [];
-        $havingClause = $builtParams['havingClause'] ?? [];
-        $joins = $builtParams['joins'] ?? [];
-        $leftJoins = $builtParams['leftJoins'] ?? [];
-
-        if (!empty($params['whereClause'])) {
-            unset($builtParams['whereClause']);
-            if (count($whereClause)) {
-                $params['whereClause'][] = $whereClause;
-            }
-        }
-
-        if (!empty($params['havingClause'])) {
-            unset($builtParams['havingClause']);
-            if (count($havingClause)) {
-                $params['havingClause'][] = $havingClause;
-            }
-        }
-
-        if (empty($params['whereClause'])) {
-            unset($params['whereClause']);
-        }
-
-        if (empty($params['havingClause'])) {
-            unset($params['havingClause']);
-        }
-
-        if (!empty($params['leftJoins']) && !empty($leftJoins)) {
-            foreach ($leftJoins as $j) {
-                $params['leftJoins'][] = $j;
-            }
-        }
-
-        if (!empty($params['joins']) && !empty($joins)) {
-            foreach ($joins as $j) {
-                $params['joins'][] = $j;
-            }
-        }
-
-        $params = array_replace_recursive($builtParams, $params);
-
-        return Select::fromRaw($params);
     }
 }

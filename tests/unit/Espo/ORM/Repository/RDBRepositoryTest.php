@@ -31,33 +31,29 @@ namespace tests\unit\Espo\ORM\Repository;
 
 require_once 'tests/unit/testData/DB/Entities.php';
 
-use Espo\ORM\{
-    Mapper\BaseMapper,
-    Repository\RDBRepository as Repository,
-    Repository\RDBRelation,
-    Repository\RDBRelationSelectBuilder,
-    EntityCollection,
-    Query\Select,
-    QueryBuilder,
-    Entity,
-    EntityManager,
-    EntityFactory,
-    SthCollection,
-    CollectionFactory,
-    Metadata,
-    MetadataDataProvider,
-    Query\Part\Condition as Cond,
-    Query\Part\Expression as Expr,
-    Query\Part\Order as OrderExpr,
-};
-
+use Espo\ORM\CollectionFactory;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityFactory;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Mapper\BaseMapper;
+use Espo\ORM\Metadata;
+use Espo\ORM\MetadataDataProvider;
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\Part\Expression as Expr;
+use Espo\ORM\Query\Part\Order as OrderExpr;
+use Espo\ORM\Query\Select;
+use Espo\ORM\QueryBuilder;
+use Espo\ORM\Repository\RDBRelation;
+use Espo\ORM\Repository\RDBRelationSelectBuilder;
+use Espo\ORM\Repository\RDBRepository as Repository;
+use Espo\ORM\SthCollection;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 use tests\unit\testData\Entities\Test;
-
 use tests\unit\testData\DB as Entities;
 
-class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
+class RDBRepositoryTest extends TestCase
 {
     /**
      * @var Repository
@@ -176,14 +172,8 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
     /**
      * @deprecated
      */
-    public function testFind()
+    public function testFind(): void
     {
-        $params = [
-            'whereClause' => [
-                'name' => 'test',
-            ],
-        ];
-
         $paramsExpected = Select::fromRaw([
             'from' => 'Test',
             'whereClause' => [
@@ -197,17 +187,15 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($this->collection))
             ->with($paramsExpected);
 
-        $this->repository->find($params);
+        $this->repository
+            ->where([
+                'name' => 'test',
+            ])
+            ->find();
     }
 
-    public function testFindOne1()
+    public function testFindOne1(): void
     {
-        $params = [
-            'whereClause' => [
-                'name' => 'test',
-            ],
-        ];
-
         $paramsExpected = Select::fromRaw([
             'from' => 'Test',
             'whereClause' => [
@@ -223,7 +211,11 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($this->collection))
             ->with($paramsExpected);
 
-        $this->repository->findOne($params);
+        $this->repository
+            ->where([
+                'name' => 'test',
+            ])
+            ->findOne();
     }
 
     public function testFindOne2()
@@ -260,9 +252,9 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($this->collection))
             ->with($select);
 
-        $this->repository->distinct()->findOne([
-            'whereClause' => ['name' => 'test'],
-        ]);
+        $this->repository->distinct()
+            ->where(['name' => 'test'])
+            ->findOne();
     }
 
     /**
