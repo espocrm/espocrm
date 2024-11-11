@@ -37,7 +37,8 @@ use Espo\Core\Formula\Argument;
 use stdClass;
 
 /**
- * @deprecated Use BaseFunction instead.
+ * @deprecated Use Func interface instead.
+ * @todo Remove in v11.0.
  */
 abstract class Base
 {

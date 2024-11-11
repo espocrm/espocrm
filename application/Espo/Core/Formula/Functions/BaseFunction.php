@@ -44,7 +44,7 @@ use Espo\Core\Utils\Log;
 use stdClass;
 
 /**
- * A base abstract function.
+ * A base abstract function. Avoid extending. Use Func interface instead.
  */
 abstract class BaseFunction
 {
