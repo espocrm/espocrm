@@ -29,7 +29,10 @@
 
 namespace Espo\Core\SelectManagers;
 
-/** @deprecated */
+/**
+ * @deprecated
+ * @todo Remove in v10.0.
+ */
 class Base extends \Espo\Core\Select\SelectManager
 {
 }

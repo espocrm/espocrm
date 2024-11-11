@@ -57,8 +57,7 @@ use ReflectionMethod;
 
 /**
  * @deprecated As of v7.0. Use SelectBuilder instead.
- *
- * Used for generating and managing select parameters which subsequently will be feed to ORM.
+ * @todo Remove in v10.0.
  */
 class SelectManager
 {
