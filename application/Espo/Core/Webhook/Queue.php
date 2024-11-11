@@ -226,6 +226,13 @@ class Queue
     private function prepareItemData(WebhookQueueItem $item, ?User $user, array $forbiddenAttributeList): ?stdClass
     {
         $targetType = $item->getTargetType();
+
+        if (!$targetType) {
+            $this->deleteQueueItem($item);
+
+            return null;
+        }
+
         $target = null;
 
         if ($this->entityManager->hasRepository($targetType)) {
