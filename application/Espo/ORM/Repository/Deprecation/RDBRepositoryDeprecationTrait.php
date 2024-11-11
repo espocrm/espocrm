@@ -52,4 +52,19 @@ trait RDBRepositoryDeprecationTrait
 
         $mapper->deleteFromDb($this->entityType, $id, $onlyDeleted);
     }
+
+    /**
+     * Get an entity. If ID is NULL, a new entity is returned.
+     *
+     * @deprecated Use `getById` and `getNew`.
+     * @todo Remove in v10.0.
+     */
+    public function get(?string $id = null): ?Entity
+    {
+        if (is_null($id)) {
+            return $this->getNew();
+        }
+
+        return $this->getById($id);
+    }
 }
