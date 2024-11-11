@@ -111,6 +111,10 @@ class Preferences implements Repository,
         return $entity;
     }
 
+    /**
+     * @deprecated Use `getById`.
+     * @todo Remove in v10.0.
+     */
     public function get(?string $id = null): ?Entity
     {
         if ($id === null) {
@@ -314,7 +318,7 @@ class Preferences implements Repository,
             unset($this->data[$userId]);
         }
 
-        $entity = $this->get($userId);
+        $entity = $this->getById($userId);
 
         if ($entity) {
             return $entity->getValueMap();
