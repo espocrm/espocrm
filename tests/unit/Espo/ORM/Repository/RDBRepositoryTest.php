@@ -252,9 +252,33 @@ class RDBRepositoryTest extends TestCase
             ->will($this->returnValue($this->collection))
             ->with($select);
 
-        $this->repository->distinct()
+        $this->repository
+            ->distinct()
             ->where(['name' => 'test'])
             ->findOne();
+    }
+
+    public function testFindOneWithDeletedLegacy(): void
+    {
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
+            'whereClause' => [
+                'name' => 'test',
+            ],
+            'withDeleted' => true,
+            'offset' => 0,
+            'limit' => 1,
+        ]);
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($paramsExpected);
+
+        $this->repository
+            ->where(['name' => 'test'])
+            ->findOne(['withDeleted' => true]);
     }
 
     /**
@@ -274,9 +298,9 @@ class RDBRepositoryTest extends TestCase
             ->will($this->returnValue(1))
             ->with($select);
 
-        $this->repository->count([
-            'whereClause' => ['name' => 'test'],
-        ]);
+        $this->repository
+            ->where(['name' => 'test'])
+            ->count();
     }
 
     public function testCount2()
@@ -382,29 +406,6 @@ class RDBRepositoryTest extends TestCase
         $this->repository
             ->where(Cond::equal(Expr::column('name'), 'test'))
             ->find();
-    }
-
-    public function testWhereMerge()
-    {
-        $paramsExpected = Select::fromRaw([
-            'from' => 'Test',
-            'whereClause' => [
-                'name2' => 'test2',
-                ['name1' => 'test1'],
-            ],
-        ]);
-
-        $this->mapper
-            ->expects($this->once())
-            ->method('select')
-            ->will($this->returnValue($this->collection))
-            ->with($paramsExpected);
-
-        $this->repository
-            ->where(['name1' => 'test1'])
-            ->find([
-                'whereClause' => ['name2' => 'test2'],
-            ]);
     }
 
     public function testWhereFineOne()
@@ -987,7 +988,7 @@ class RDBRepositoryTest extends TestCase
 
         $this->expectException(RuntimeException::class);
 
-        $relationSelectBuilder = $repository->getRelation($note, 'parent')->clone($select);
+        $repository->getRelation($note, 'parent')->clone($select);
     }
 
     public function testRelationCount()

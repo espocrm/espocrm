@@ -108,7 +108,24 @@ class RDBSelectBuilder
      */
     public function findOne(): ?Entity
     {
-        $cloned = $this->repository->clone($this->builder->build());
+        $query = $this->builder->build();
+
+        $args = func_get_args();
+
+        // For bc.
+        // @todo Remove in v10.0.
+        if (
+            count($args) &&
+            is_array($args[0]) &&
+            !empty($args[0]['withDeleted'])
+        ) {
+            $query = SelectBuilder::create()
+                ->clone($query)
+                ->withDeleted()
+                ->build();
+        }
+
+        $cloned = $this->repository->clone($query);
 
         $collection = $cloned
             ->sth()
