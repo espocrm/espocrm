@@ -63,7 +63,8 @@
         "children": {
             "type": "hasMany",
             "foreign": "parent",
-            "entity": "EmailTemplateCategory"
+            "entity": "EmailTemplateCategory",
+            "readOnly": true
         },
         "emailTemplates": {
             "type": "hasMany",

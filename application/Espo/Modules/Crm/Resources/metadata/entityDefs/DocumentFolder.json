@@ -68,7 +68,8 @@
         "children": {
             "type": "hasMany",
             "foreign": "parent",
-            "entity": "DocumentFolder"
+            "entity": "DocumentFolder",
+            "readOnly": true
         },
         "documents": {
             "type": "hasMany",
