@@ -33,6 +33,7 @@ use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Entities\User;
 
@@ -90,25 +91,25 @@ class Call extends Entity
     public function getCreatedBy(): ?Link
     {
         /** @var ?Link */
-        return $this->getValueObject('createdBy');
+        return $this->getValueObject(Field::CREATED_BY);
     }
 
     public function getModifiedBy(): ?Link
     {
         /** @var ?Link */
-        return $this->getValueObject('modifiedBy');
+        return $this->getValueObject(Field::MODIFIED_BY);
     }
 
     public function getAssignedUser(): ?Link
     {
         /** @var ?Link */
-        return $this->getValueObject('assignedUser');
+        return $this->getValueObject(Field::ASSIGNED_USER);
     }
 
     public function getTeams(): LinkMultiple
     {
         /** @var LinkMultiple */
-        return $this->getValueObject('teams');
+        return $this->getValueObject(Field::TEAMS);
     }
 
     public function getUsers(): LinkMultiple

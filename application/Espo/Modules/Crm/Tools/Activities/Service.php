@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Templates\Entities\Company;
 use Espo\Core\Templates\Entities\Person;
@@ -129,7 +130,7 @@ class Service
                     'parentType',
                     'parentId',
                     'status',
-                    'createdAt',
+                    Field::CREATED_AT,
                     ['null', 'hasAttachment'],
                 ])
                 ->leftJoin(
@@ -201,7 +202,7 @@ class Service
                     'parentType',
                     'parentId',
                     'status',
-                    'createdAt',
+                    Field::CREATED_AT,
                     ['null', 'hasAttachment'],
                 ])
                 ->leftJoin(
@@ -274,7 +275,7 @@ class Service
                     'parentType',
                     'parentId',
                     'status',
-                    'createdAt',
+                    Field::CREATED_AT,
                     'hasAttachment',
                 ])
                 ->leftJoin(
@@ -347,7 +348,7 @@ class Service
                     'parentType',
                     'parentId',
                     'status',
-                    'createdAt',
+                    Field::CREATED_AT,
                     ['false', 'hasAttachment'],
                 ]);
         } catch (BadRequest|Forbidden $e) {
@@ -475,7 +476,7 @@ class Service
                     'parentType',
                     'parentId',
                     'status',
-                    'createdAt',
+                    Field::CREATED_AT,
                     'hasAttachment',
                 ]);
         } catch (BadRequest|Forbidden $e) {
@@ -689,7 +690,7 @@ class Service
         if ($scope === User::ENTITY_TYPE) {
             $maxSizeQ++;
         } else {
-            $builder->order('createdAt', 'DESC');
+            $builder->order(Field::CREATED_AT, 'DESC');
         }
 
         if ($maxSize) {
@@ -1072,7 +1073,7 @@ class Service
                     ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['null', 'parentType']),
                     ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['null', 'parentId']),
                     'status',
-                    'createdAt',
+                    Field::CREATED_AT,
                     ['false', 'hasAttachment'],
                 ]);
         } catch (BadRequest|Forbidden $e) {

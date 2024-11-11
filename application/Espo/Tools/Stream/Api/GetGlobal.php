@@ -36,6 +36,7 @@ use Espo\Core\Api\Response;
 use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Name\Field;
 use Espo\Core\Record\SearchParamsFetcher;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\Where\Item as WhereItem;
@@ -83,7 +84,7 @@ class GetGlobal implements Action
                 ->withWhereAdded(
                     WhereItem
                         ::createBuilder()
-                        ->setAttribute('createdAt')
+                        ->setAttribute(Field::CREATED_AT)
                         ->setType(WhereItem\Type::AFTER)
                         ->setValue($after)
                         ->build()

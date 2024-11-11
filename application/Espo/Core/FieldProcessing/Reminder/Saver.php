@@ -30,6 +30,7 @@
 namespace Espo\Core\FieldProcessing\Reminder;
 
 use Espo\Core\Field\DateTime;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Preferences;
@@ -177,7 +178,10 @@ class Saver implements SaverInterface
         return $entity->isNew() ||
             $this->toReCreate($entity) ||
             $entity->isAttributeChanged('assignedUserId') ||
-            ($entity->hasLinkMultipleField('assignedUsers') && $entity->isAttributeChanged('assignedUsersIds')) ||
+            (
+                $entity->hasLinkMultipleField(Field::ASSIGNED_USERS) &&
+                $entity->isAttributeChanged(Field::ASSIGNED_USERS . 'Ids')
+            ) ||
             ($entity->hasLinkMultipleField('users') && $entity->isAttributeChanged('usersIds')) ||
             $entity->isAttributeChanged($dateAttribute);
     }
@@ -248,8 +252,8 @@ class Saver implements SaverInterface
             return $entity->getLinkMultipleIdList('users');
         }
 
-        if ($entity->hasLinkMultipleField('assignedUsers')) {
-            return $entity->getLinkMultipleIdList('assignedUsers');
+        if ($entity->hasLinkMultipleField(Field::ASSIGNED_USERS)) {
+            return $entity->getLinkMultipleIdList(Field::ASSIGNED_USERS);
         }
 
         $userIdList = [];

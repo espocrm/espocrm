@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Business\Distribution\Lead;
 
+use Espo\Core\Name\Field;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\ORM\EntityManager;
 
@@ -87,7 +88,7 @@ class RoundRobin
             ->where([
                 'assignedUserId' => $userIdList
             ])
-            ->order('createdAt', 'DESC')
+            ->order(Field::CREATED_AT, 'DESC')
             ->findOne();
 
         if (empty($lead)) {

@@ -34,6 +34,7 @@ use Espo\Core\Acl\Table;
 use Espo\Core\AclManager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Name\Field;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Entities\Note;
@@ -102,7 +103,7 @@ class QueryHelper
             'relatedType',
             'relatedId',
             'targetType',
-            'createdAt',
+            Field::CREATED_AT,
             'createdById',
             'createdByName',
             'isGlobal',

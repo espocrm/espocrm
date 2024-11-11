@@ -697,7 +697,7 @@ class Email extends Entity
     public function getAssignedUsers(): LinkMultiple
     {
         /** @var LinkMultiple */
-        return $this->getValueObject('assignedUsers');
+        return $this->getValueObject(Field::ASSIGNED_USERS);
     }
 
     public function getAssignedUser(): ?Link
@@ -823,7 +823,7 @@ class Email extends Entity
 
     public function addAssignedUserId(string $assignedUserId): self
     {
-        $this->addLinkMultipleId('assignedUsers', $assignedUserId);
+        $this->addLinkMultipleId(Field::ASSIGNED_USERS, $assignedUserId);
 
         return $this;
     }

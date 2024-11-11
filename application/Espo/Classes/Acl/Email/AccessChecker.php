@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\Acl\Email;
 
+use Espo\Core\Name\Field;
 use Espo\Entities\User;
 use Espo\Entities\Email;
 use Espo\ORM\Entity;
@@ -100,12 +101,11 @@ class AccessChecker implements AccessEntityCREDSChecker
                 return true;
             }
 
-            /** @var string[] $assignedUserIdList */
-            $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers');
+            $assignedUserIdList = $entity->getLinkMultipleIdList(Field::ASSIGNED_USERS);
 
             if (
                 count($assignedUserIdList) === 1 &&
-                $entity->hasLinkMultipleId('assignedUsers', $user->getId())
+                $entity->hasLinkMultipleId(Field::ASSIGNED_USERS, $user->getId())
             ) {
                 return true;
             }

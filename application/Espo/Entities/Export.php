@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
@@ -87,7 +88,7 @@ class Export extends Entity
 
     public function getCreatedAt(): DateTime
     {
-        $value = $this->getValueObject('createdAt');
+        $value = $this->getValueObject(Field::CREATED_AT);
 
         if (!$value instanceof DateTime) {
             throw new RuntimeException("No 'createdAt'.");

@@ -372,7 +372,7 @@ class DefaultImporter implements Importer
         ]);
 
         $this->linkMultipleSaver->process($email, 'users', $saverParams);
-        $this->linkMultipleSaver->process($email, 'assignedUsers', $saverParams);
+        $this->linkMultipleSaver->process($email, Field::ASSIGNED_USERS, $saverParams);
         $this->linkMultipleSaver->process($email, Field::TEAMS, $saverParams);
 
         if ($this->notificationsEnabled()) {

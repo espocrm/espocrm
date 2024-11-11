@@ -31,6 +31,7 @@ namespace Espo\Tools\Stars;
 
 use Espo\Core\Exceptions\Error\Body;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime;
 use Espo\Core\Utils\Metadata;
@@ -86,7 +87,7 @@ class StarService
                 'entityId' => $entity->getId(),
                 'entityType' => $entity->getEntityType(),
                 'userId' => $user->getId(),
-                'createdAt' => DateTime::getSystemNowString(),
+                Field::CREATED_AT => DateTime::getSystemNowString(),
             ]);
         } catch (PDOException $e) {
             if ((int) $e->getCode() === 23000) {

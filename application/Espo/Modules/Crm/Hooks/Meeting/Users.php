@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Hooks\Meeting;
 
 use Espo\Core\Hook\Hook\BeforeSave;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Config;
 use Espo\Entities\User;
@@ -55,15 +56,15 @@ class Users implements BeforeSave
     public function beforeSave(Entity $entity, SaveOptions $options): void
     {
         if (!$this->config->get('eventAssignedUserIsAttendeeDisabled')) {
-            if ($entity->hasLinkMultipleField('assignedUsers')) {
-                $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers');
+            if ($entity->hasLinkMultipleField(Field::ASSIGNED_USERS)) {
+                $assignedUserIdList = $entity->getLinkMultipleIdList(Field::ASSIGNED_USERS);
 
                 foreach ($assignedUserIdList as $assignedUserId) {
                     $entity->addLinkMultipleId('users', $assignedUserId);
                     $entity->setLinkMultipleName(
                         'users',
                         $assignedUserId,
-                        $entity->getLinkMultipleName('assignedUsers', $assignedUserId)
+                        $entity->getLinkMultipleName(Field::ASSIGNED_USERS, $assignedUserId)
                     );
                 }
             } else {

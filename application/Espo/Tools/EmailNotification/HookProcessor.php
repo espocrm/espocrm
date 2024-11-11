@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\EmailNotification;
 
+use Espo\Core\Name\Field;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Config;
@@ -76,8 +77,8 @@ class HookProcessor
 
     private function processMultiple(CoreEntity $entity): void
     {
-        $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
-        $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds') ?? [];
+        $userIdList = $entity->getLinkMultipleIdList(Field::ASSIGNED_USERS);
+        $fetchedAssignedUserIdList = $entity->getFetched(Field::ASSIGNED_USERS . 'Ids') ?? [];
 
         foreach ($userIdList as $userId) {
             if (
@@ -99,7 +100,7 @@ class HookProcessor
 
         $hasAssignedUserField =
             $entity->has('assignedUserId') ||
-            $entity->hasLinkMultipleField('assignedUsers') &&
+            $entity->hasLinkMultipleField(Field::ASSIGNED_USERS) &&
             $entity->has('assignedUsersIds');
 
         if (!$hasAssignedUserField) {

@@ -32,6 +32,7 @@ namespace Espo\Modules\Crm\Tools\TargetList;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\HookManager;
+use Espo\Core\Name\Field;
 use Espo\Core\Record\Collection;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Record\EntityProvider;
@@ -176,7 +177,7 @@ class OptOutService
 
         $unionQuery = $builder
             ->limit($offset, $maxSize)
-            ->order('createdAt', 'DESC')
+            ->order(Field::CREATED_AT, 'DESC')
             ->build();
 
         $sth = $em->getQueryExecutor()->execute($unionQuery);
@@ -228,7 +229,7 @@ class OptOutService
             ->select([
                 'id',
                 'name',
-                'createdAt',
+                Field::CREATED_AT,
                 ["'$entityType'", 'entityType'],
             ])
             ->join(
@@ -241,7 +242,7 @@ class OptOutService
                     'j.targetListId' => $id,
                 ]
             )
-            ->order('createdAt', Order::DESC)
+            ->order(Field::CREATED_AT, Order::DESC)
             ->build();
     }
 

@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
@@ -117,7 +118,7 @@ class MassAction extends Entity
 
     public function getCreatedAt(): DateTime
     {
-        $value = $this->getValueObject('createdAt');
+        $value = $this->getValueObject(Field::CREATED_AT);
 
         if (!$value instanceof DateTime) {
             throw new RuntimeException("No 'createdAt'.");
@@ -128,7 +129,7 @@ class MassAction extends Entity
 
     public function getCreatedBy(): Link
     {
-        $value = $this->getValueObject('createdBy');
+        $value = $this->getValueObject(Field::CREATED_BY);
 
         if (!$value instanceof Link) {
             throw new RuntimeException("No 'createdBy'.");

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\Bool\Filters;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Select\Bool\Filter;
 use Espo\Core\Select\Helpers\FieldHelper;
 use Espo\Entities\User;
@@ -67,7 +68,7 @@ class OnlyMy implements Filter
         if ($this->fieldHelper->hasAssignedUsersField()) {
             $relationDefs = $this->defs
                 ->getEntity($this->entityType)
-                ->getRelation('assignedUsers');
+                ->getRelation(Field::ASSIGNED_USERS);
 
             $middleEntityType = ucfirst($relationDefs->getRelationshipName());
             $key1 = $relationDefs->getMidKey();

@@ -96,13 +96,13 @@ class Meeting extends Entity
     public function getCreatedBy(): ?Link
     {
         /** @var ?Link */
-        return $this->getValueObject('createdBy');
+        return $this->getValueObject(Field::CREATED_BY);
     }
 
     public function getModifiedBy(): ?Link
     {
         /** @var ?Link */
-        return $this->getValueObject('modifiedBy');
+        return $this->getValueObject(Field::MODIFIED_BY);
     }
 
     public function getAssignedUser(): ?Link

@@ -31,6 +31,7 @@ namespace Espo\Core\Authentication\TwoFactor\Email;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Mail\Exceptions\SendingError;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Core\Mail\EmailSender;
 use Espo\Core\Mail\EmailFactory;
@@ -244,7 +245,7 @@ class Util
                 Cond::and(
                     Cond::equal(Cond::column('method'), 'Email'),
                     Cond::equal(Cond::column('userId'), $user->getId()),
-                    Cond::greaterOrEqual(Cond::column('createdAt'), $from),
+                    Cond::greaterOrEqual(Cond::column(Field::CREATED_AT), $from),
                     Cond::lessOrEqual(Cond::column('attemptsLeft'), 0),
                 )
             )

@@ -32,6 +32,7 @@ namespace Espo\Classes\Jobs;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Job\Job\Status as JobStatus;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
@@ -186,7 +187,7 @@ class Cleanup implements JobDataLess
                 ->where([
                     'scheduledJobId' => $scheduledJobId,
                 ])
-                ->order('createdAt', 'DESC')
+                ->order(Field::CREATED_AT, 'DESC')
                 ->limit(0, 10)
                 ->find();
 
@@ -355,7 +356,7 @@ class Cleanup implements JobDataLess
                 continue;
             }
 
-            if (!$this->metadata->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) {
+            if (!$this->metadata->get(['entityDefs', $scope, 'fields', Field::MODIFIED_AT])) {
                 continue;
             }
 
@@ -767,9 +768,9 @@ class Cleanup implements JobDataLess
                 continue;
             }
 
-            if ($this->metadata->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) {
+            if ($this->metadata->get(['entityDefs', $scope, 'fields', Field::MODIFIED_AT])) {
                 $whereClause['modifiedAt<'] = $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
-            } else if ($this->metadata->get(['entityDefs', $scope, 'fields', 'createdAt'])) {
+            } else if ($this->metadata->get(['entityDefs', $scope, 'fields', Field::CREATED_AT])) {
                 $whereClause['createdAt<'] = $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
             }
 

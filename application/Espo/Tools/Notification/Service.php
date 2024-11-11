@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Notification;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Entities\Note;
 use Espo\Entities\Notification;
@@ -128,7 +129,7 @@ class Service
                 ],
                 'type' => Notification::TYPE_NOTE,
                 'userId' => $userId,
-                'createdAt' => $now,
+                Field::CREATED_AT => $now,
                 'relatedId' => $note->getId(),
                 'relatedType' => Note::ENTITY_TYPE,
                 'relatedParentId' => $note->getParentId(),

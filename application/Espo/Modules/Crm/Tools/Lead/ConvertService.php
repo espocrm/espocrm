@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\ConflictSilent;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
@@ -148,12 +149,12 @@ class ConvertService
         $entityList = $this->metadata->get('entityDefs.Lead.convertEntityList', []);
 
         $ignoreAttributeList = [
-            'createdAt',
-            'modifiedAt',
-            'modifiedById',
-            'modifiedByName',
-            'createdById',
-            'createdByName',
+            Field::CREATED_AT,
+            Field::MODIFIED_AT,
+            Field::MODIFIED_BY . 'Id',
+            Field::MODIFIED_BY . 'Name',
+            Field::CREATED_BY . 'Id',
+            Field::MODIFIED_BY . 'Name',
         ];
 
         /** @var array<string, array<string, string>> $convertFieldsDefs */

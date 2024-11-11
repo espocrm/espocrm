@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\ActionHistory;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Record\ActionHistory\Action;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Entities\ActionHistoryRecord;
@@ -71,12 +72,12 @@ class Service
                 'action' => Action::READ,
                 'targetType' => $targetTypeList,
             ])
-            ->order('MAX:createdAt', 'DESC')
+            ->order('MAX:' . Field::CREATED_AT, 'DESC')
             ->select([
                 'targetId',
                 'targetType',
                 'MAX:number',
-                ['MAX:createdAt', 'createdAt'],
+                ['MAX:createdAt', Field::CREATED_AT],
             ])
             ->group(['targetId', 'targetType'])
             ->limit($offset, $maxSize + 1)

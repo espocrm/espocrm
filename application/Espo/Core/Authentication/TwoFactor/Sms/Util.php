@@ -30,6 +30,7 @@
 namespace Espo\Core\Authentication\TwoFactor\Sms;
 
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Core\Sms\SmsSender;
 use Espo\Core\Sms\SmsFactory;
@@ -238,7 +239,7 @@ class Util
                 Cond::and(
                     Cond::equal(Cond::column('method'), self::METHOD),
                     Cond::equal(Cond::column('userId'), $user->getId()),
-                    Cond::greaterOrEqual(Cond::column('createdAt'), $from),
+                    Cond::greaterOrEqual(Cond::column(Field::CREATED_AT), $from),
                     Cond::lessOrEqual(Cond::column('attemptsLeft'), 0),
                 )
             )

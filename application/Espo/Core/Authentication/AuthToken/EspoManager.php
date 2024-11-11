@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Authentication\AuthToken;
 
+use Espo\Core\Name\Field;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\Entities\AuthToken as AuthTokenEntity;
@@ -67,9 +68,9 @@ class EspoManager implements Manager
                 'userId',
                 'portalId',
                 'hash',
-                'createdAt',
+                Field::CREATED_AT,
                 'lastAccess',
-                'modifiedAt',
+                Field::MODIFIED_AT,
             ])
             ->where(['token' => $token])
             ->findOne();

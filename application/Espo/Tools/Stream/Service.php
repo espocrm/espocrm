@@ -89,7 +89,7 @@ class Service
         'Closed Lost',
     ];
 
-    private const FIELD_ASSIGNED_USERS = 'assignedUsers';
+    private const FIELD_ASSIGNED_USERS = Field::ASSIGNED_USERS;
 
     /**
      * @var array<

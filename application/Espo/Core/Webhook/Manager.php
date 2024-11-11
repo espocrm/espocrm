@@ -29,13 +29,13 @@
 
 namespace Espo\Core\Webhook;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Log;
-
 use Espo\Entities\Webhook;
 use Espo\Entities\WebhookEventQueueItem;
 
@@ -51,8 +51,8 @@ class Manager
     /** @var string[] */
     protected $skipAttributeList = [
         'isFollowed',
-        'modifiedAt',
-        'modifiedBy'
+        Field::MODIFIED_AT,
+        Field::MODIFIED_BY,
     ];
 
     /** @var ?array<string, bool> */

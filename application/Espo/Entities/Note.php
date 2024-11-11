@@ -30,6 +30,7 @@
 namespace Espo\Entities;
 
 use Espo\Core\Field\LinkParent;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 
 use Espo\Core\Field\DateTime;
@@ -135,7 +136,7 @@ class Note extends Entity
     public function getCreatedAt(): ?DateTime
     {
         /** @var ?DateTime */
-        return $this->getValueObject('createdAt');
+        return $this->getValueObject(Field::CREATED_AT);
     }
 
     public function setAclIsProcessed(): void
@@ -167,7 +168,7 @@ class Note extends Entity
         $collection = $this->entityManager
             ->getRDBRepository(Attachment::ENTITY_TYPE)
             ->select(['id', 'name', 'type'])
-            ->order('createdAt')
+            ->order(Field::CREATED_AT)
             ->where([
                 'id' => $attachmentsIds
             ])

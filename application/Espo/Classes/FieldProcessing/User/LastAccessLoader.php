@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\FieldProcessing\User;
 
+use Espo\Core\Name\Field;
 use Espo\Entities\AuthLogRecord;
 use Espo\Entities\AuthToken;
 use Espo\Entities\User;
@@ -96,13 +97,13 @@ class LastAccessLoader implements Loader
 
         $authLogRecord = $this->entityManager
             ->getRDBRepository(AuthLogRecord::ENTITY_TYPE)
-            ->select(['id', 'createdAt'])
+            ->select(['id', Field::CREATED_AT])
             ->where($where)
             ->order('requestTime', true)
             ->findOne();
 
         if ($authLogRecord) {
-            $lastAccess = $authLogRecord->get('createdAt');
+            $lastAccess = $authLogRecord->get(Field::CREATED_AT);
         }
 
         $entity->set('lastAccess', $lastAccess);

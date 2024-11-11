@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Import;
 
+use Espo\Core\Name\Field;
 use Exception;
 use GuzzleHttp\Psr7\Utils as Psr7Utils;
 
@@ -227,7 +228,7 @@ class Service
 
         $removeFromDb = false;
 
-        $createdAt = $import->get('createdAt');
+        $createdAt = $import->get(Field::CREATED_AT);
 
         if ($createdAt) {
             $dtNow = new DateTime();

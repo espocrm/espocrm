@@ -255,7 +255,7 @@ class Service
             ($seed->hasAttribute('dateEndDate') ? ['dateEndDate', 'dateEndDate'] : ['null', 'dateEndDate']),
             ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['null', 'parentType']),
             ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['null', 'parentId']),
-            'createdAt',
+            Field::CREATED_AT,
         ];
 
         $additionalAttributeList = $this->metadata->get(
@@ -276,7 +276,7 @@ class Service
             $orGroup['usersMiddle.userId'] = $userId;
         }
 
-        if ($seed->hasRelation('assignedUsers')) {
+        if ($seed->hasRelation(Field::ASSIGNED_USERS)) {
             $orGroup['assignedUsersMiddle.userId'] = $userId;
         }
 
@@ -323,10 +323,10 @@ class Service
                 ->leftJoin('users');
         }
 
-        if ($seed->hasRelation('assignedUsers')) {
+        if ($seed->hasRelation(Field::ASSIGNED_USERS)) {
             $queryBuilder
                 ->distinct()
-                ->leftJoin('assignedUsers');
+                ->leftJoin(Field::ASSIGNED_USERS);
         }
 
         return $queryBuilder->build();
@@ -353,7 +353,7 @@ class Service
             ['dateEndDate', 'dateEndDate'],
             'parentType',
             'parentId',
-            'createdAt',
+            Field::CREATED_AT,
         ];
 
         $seed = $this->entityManager->getNewEntity(Meeting::ENTITY_TYPE);
@@ -418,7 +418,7 @@ class Service
             ['null', 'dateEndDate'],
             'parentType',
             'parentId',
-            'createdAt',
+            Field::CREATED_AT,
         ];
 
         $seed = $this->entityManager->getNewEntity(Call::ENTITY_TYPE);
@@ -483,7 +483,7 @@ class Service
             ['dateEndDate', 'dateEndDate'],
             'parentType',
             'parentId',
-            'createdAt',
+            Field::CREATED_AT,
         ];
 
         $seed = $this->entityManager->getNewEntity(Task::ENTITY_TYPE);
@@ -525,9 +525,9 @@ class Service
         }
 
         if (
-            $this->metadata->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'type']) ===
+            $this->metadata->get(['entityDefs', 'Task', 'fields', Field::ASSIGNED_USERS, 'type']) ===
                 FieldType::LINK_MULTIPLE &&
-            !$this->metadata->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'disabled'])
+            !$this->metadata->get(['entityDefs', 'Task', 'fields', Field::ASSIGNED_USERS, 'disabled'])
         ) {
             $queryBuilder->where(
                 $this->relationQueryHelper->prepareAssignedUsersWhere(Task::ENTITY_TYPE, $userId)

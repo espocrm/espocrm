@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\EntityManager\Hook\Hooks;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata;
@@ -43,9 +44,9 @@ use Espo\Tools\EntityManager\Params;
 class AssignedUsersUpdateHook implements UpdateHook
 {
     private const PARAM = 'assignedUsers';
-    private const FIELD = 'assignedUsers';
+    private const FIELD = Field::ASSIGNED_USERS;
     private const RELATION_NAME = 'entityUser';
-    private const FIELD_ASSIGNED_USER = 'assignedUser';
+    private const FIELD_ASSIGNED_USER = Field::ASSIGNED_USER;
 
     private const DEFAULT_MAX_COUNT = 10;
 

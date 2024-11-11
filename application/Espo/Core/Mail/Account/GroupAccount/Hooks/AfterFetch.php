@@ -407,8 +407,8 @@ class AfterFetch implements AfterFetchInterface
     {
         $userIdList = [];
 
-        if ($case->hasLinkMultipleField('assignedUsers')) {
-            $userIdList = $case->getLinkMultipleIdList('assignedUsers');
+        if ($case->hasLinkMultipleField(Field::ASSIGNED_USERS)) {
+            $userIdList = $case->getLinkMultipleIdList(Field::ASSIGNED_USERS);
         } else {
             $assignedUserLink = $case->getAssignedUser();
 

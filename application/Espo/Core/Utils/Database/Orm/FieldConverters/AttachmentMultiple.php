@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils\Database\Orm\FieldConverters;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
@@ -50,7 +51,7 @@ class AttachmentMultiple implements FieldConverter
                     ->withNotStorable()
                     ->withParamsMerged([
                         'orderBy' => [
-                            ['createdAt', Order::ASC],
+                            [Field::CREATED_AT, Order::ASC],
                             ['name', Order::ASC],
                         ],
                         AttributeParam::IS_LINK_MULTIPLE_ID_LIST => true,

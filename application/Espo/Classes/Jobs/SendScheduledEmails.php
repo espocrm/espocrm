@@ -37,6 +37,7 @@ use Espo\Core\Field\DateTime;
 use Espo\Core\Job\JobDataLess;
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Exceptions\SendingError;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Log;
@@ -74,7 +75,7 @@ class SendScheduledEmails implements JobDataLess
                 'sendAt<' => DateTime::createNow()->toString(),
             ])
             ->order('sendAt')
-            ->order('createdAt')
+            ->order(Field::CREATED_AT)
             ->limit(0, $this->getPortion())
             ->sth()
             ->find();

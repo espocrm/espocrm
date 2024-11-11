@@ -35,6 +35,7 @@ use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Field\DateTime;
+use Espo\Core\Name\Field;
 use Espo\Core\Record\SearchParamsFetcher;
 
 use Espo\Core\Select\SearchParams;
@@ -171,7 +172,7 @@ class Stream
                 ->withWhereAdded(
                     WhereItem
                         ::createBuilder()
-                        ->setAttribute('createdAt')
+                        ->setAttribute(Field::CREATED_AT)
                         ->setType(WhereItem\Type::AFTER)
                         ->setValue($after)
                         ->build()

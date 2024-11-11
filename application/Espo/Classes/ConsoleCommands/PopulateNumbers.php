@@ -36,6 +36,7 @@ use Espo\Core\Console\Exceptions\InvalidArgument;
 use Espo\Core\Console\IO;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\FieldProcessing\NextNumber\BeforeSaveProcessor;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\EntityManager;
@@ -62,7 +63,7 @@ class PopulateNumbers implements Command
         $entityType = $params->getArgument(0);
         $field = $params->getArgument(1);
 
-        $orderBy = $params->getOption('orderBy') ?? 'createdAt';
+        $orderBy = $params->getOption('orderBy') ?? Field::CREATED_AT;
         $order = strtoupper($params->getOption('order') ?? Order::ASC);
 
         if (!$entityType) {

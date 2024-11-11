@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\AclPortal\Note;
 
+use Espo\Core\Name\Field;
 use Espo\Entities\Note;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
@@ -137,7 +138,7 @@ class AccessChecker implements AccessEntityCREDChecker
             return false;
         }
 
-        $createdAt = $entity->get('createdAt');
+        $createdAt = $entity->get(Field::CREATED_AT);
 
         if (!$createdAt) {
             return true;
@@ -174,7 +175,7 @@ class AccessChecker implements AccessEntityCREDChecker
             return false;
         }
 
-        $createdAt = $entity->get('createdAt');
+        $createdAt = $entity->get(Field::CREATED_AT);
 
         if (!$createdAt) {
             return true;

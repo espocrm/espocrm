@@ -30,6 +30,7 @@
 namespace Espo\Core\Webhook;
 
 use Espo\Core\Field\DateTime;
+use Espo\Core\Name\Field;
 use Espo\Entities\User;
 use Espo\Entities\Webhook;
 use Espo\Entities\WebhookEventQueueItem;
@@ -99,7 +100,7 @@ class Queue
                 'event' => $item->get('event'),
                 'isActive' => true,
             ])
-            ->order('createdAt')
+            ->order(Field::CREATED_AT)
             ->find();
 
         foreach ($webhookList as $webhook) {

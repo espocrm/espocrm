@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Stream;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Metadata;
@@ -62,7 +63,7 @@ class HookProcessor
     /** @var ?array<string, ?string> */
     private $statusFields = null;
 
-    private const FIELD_ASSIGNED_USERS = 'assignedUsers';
+    private const FIELD_ASSIGNED_USERS = Field::ASSIGNED_USERS;
 
     public function __construct(
         private Metadata $metadata,
@@ -343,7 +344,7 @@ class HookProcessor
         $entityType = $entity->getEntityType();
 
         $multipleField = $this->metadata->get(['streamDefs', $entityType, 'followingUsersField']) ??
-            'assignedUsers';
+            Field::ASSIGNED_USERS;
 
         $hasAssignedUsersField = $entity->hasLinkMultipleField($multipleField);
 
@@ -447,7 +448,7 @@ class HookProcessor
         }
 
         $multipleField = $this->metadata->get(['streamDefs', $entity->getEntityType(), 'followingUsersField']) ??
-            'assignedUsers';
+            Field::ASSIGNED_USERS;
 
         if (!$entity->hasLinkMultipleField($multipleField)) {
             return;

@@ -30,6 +30,7 @@
 namespace Espo\Tools\AdminNotifications\Jobs;
 
 use Espo\Core\Job\JobDataLess;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Entities\Extension;
@@ -66,7 +67,7 @@ class CheckNewExtensionVersion implements JobDataLess
                 'deleted' => false,
                 'isInstalled' => true,
             ])
-            ->order(['createdAt'])
+            ->order([Field::CREATED_AT])
             ->build();
 
         $sth = $this->entityManager->getQueryExecutor()->execute($query);

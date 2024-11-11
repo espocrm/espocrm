@@ -217,7 +217,7 @@ class Processor
                 'isInternal',
                 'relatedType',
                 'relatedId',
-                'createdAt',
+                Field::CREATED_AT,
             ])
             ->order('number', Order::DESC)
             ->limit(0, $limit)

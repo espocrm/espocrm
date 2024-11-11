@@ -31,6 +31,7 @@ namespace Espo\Modules\Crm\Tools\MassEmail;
 
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\HookManager;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Hasher;
 use Espo\Entities\EmailAddress;
@@ -174,7 +175,7 @@ class UnsubscribeService
                     'queueItemId' => $queueItemId,
                     'action' => CampaignLogRecord::ACTION_OPTED_OUT,
                 ])
-                ->order('createdAt', true)
+                ->order(Field::CREATED_AT, true)
                 ->findOne();
 
             if ($logRecord) {

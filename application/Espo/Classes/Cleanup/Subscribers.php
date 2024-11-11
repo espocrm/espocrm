@@ -31,6 +31,7 @@ namespace Espo\Classes\Cleanup;
 
 use Espo\Core\Cleanup\Cleanup;
 use Espo\Core\Field\DateTime;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\StreamSubscription;
@@ -77,7 +78,7 @@ class Subscribers implements Cleanup
         }
 
         /** @var string $dateField */
-        $dateField = $data['dateField'] ?? 'createdAt';
+        $dateField = $data['dateField'] ?? Field::CREATED_AT;
         /** @var ?string[] $statusList */
         $statusList = $data['statusList'] ?? null;
         /** @var ?string $statusField */

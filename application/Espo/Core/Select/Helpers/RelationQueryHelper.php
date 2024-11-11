@@ -51,7 +51,7 @@ class RelationQueryHelper
         return $this->prepareRelatedUsersWhere(
             $entityType,
             $userId,
-            'assignedUsers',
+            Field::ASSIGNED_USERS,
             User::RELATIONSHIP_ENTITY_USER
         );
     }

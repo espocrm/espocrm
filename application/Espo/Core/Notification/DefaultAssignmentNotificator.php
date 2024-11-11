@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Notification;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -43,7 +44,7 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
 {
     public const OPTION_FORCE_ASSIGNED_USER = 'forceAssignedUser';
 
-    private const FIELD_ASSIGNED_USERS = 'assignedUsers';
+    private const FIELD_ASSIGNED_USERS = Field::ASSIGNED_USERS;
     private const ATTR_ASSIGNED_USER_ID = 'assignedUserId';
 
     public function __construct(

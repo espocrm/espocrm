@@ -29,6 +29,7 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Name\Field;
 use Espo\Tools\Notification\RecordService as Service;
 
 use Espo\Core\Api\Request;
@@ -70,7 +71,7 @@ class Notification extends RecordBase
                 ->withWhereAdded(
                     WhereItem
                         ::createBuilder()
-                        ->setAttribute('createdAt')
+                        ->setAttribute(Field::CREATED_AT)
                         ->setType(WhereItem\Type::AFTER)
                         ->setValue($after)
                         ->build()

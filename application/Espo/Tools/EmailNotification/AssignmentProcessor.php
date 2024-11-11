@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\EmailNotification;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\Email;
@@ -123,7 +124,7 @@ class AssignmentProcessor
 
         $this->loadParentNameFields($entity);
 
-        if (!$entity->hasLinkMultipleField('assignedUsers')) {
+        if (!$entity->hasLinkMultipleField(Field::ASSIGNED_USERS)) {
             if ($entity->get('assignedUserId') !== $userId) {
                 return;
             }

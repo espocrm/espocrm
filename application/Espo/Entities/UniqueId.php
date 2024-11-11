@@ -31,6 +31,7 @@ namespace Espo\Entities;
 
 use Espo\Core\Field\DateTime;
 use Espo\Core\Field\LinkParent;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 
 use stdClass;
@@ -59,7 +60,7 @@ class UniqueId extends Entity
     public function getCreatedAt(): DateTime
     {
         /** @var ?DateTime $value */
-        $value = $this->getValueObject('createdAt');
+        $value = $this->getValueObject(Field::CREATED_AT);
 
         if (!$value) {
             throw new LogicException();

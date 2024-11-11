@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\AdminNotifications;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\ScheduledJob;
@@ -200,7 +201,7 @@ class Manager
                 'name' => $extensionName,
                 'isInstalled' => true,
             ])
-            ->order('createdAt', true)
+            ->order(Field::CREATED_AT, true)
             ->findOne();
 
         if (!$extension) {

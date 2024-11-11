@@ -58,7 +58,7 @@ class Sms extends Entity implements SmsInterface
     public function getCreatedAt(): ?DateTime
     {
         /** @var ?DateTime */
-        return $this->getValueObject('createdAt');
+        return $this->getValueObject(Field::CREATED_AT);
     }
 
     public function getBody(): string
