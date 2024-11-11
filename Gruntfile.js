@@ -154,7 +154,7 @@ module.exports = grunt => {
         },
 
         clean: {
-            tanspiled: [
+            transpiled: [
                 'client/lib/transpiled/**',
             ],
             start: [
@@ -519,7 +519,7 @@ module.exports = grunt => {
         'less',
         'cssmin',
         'prepare-lib-original',
-        'clean:tanspiled',
+        'clean:transpiled',
         'transpile',
         'bundle',
         'bundle-templates',
