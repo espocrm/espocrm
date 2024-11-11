@@ -666,7 +666,7 @@ class FormulaTest extends BaseTestCase
             'lastName' => '1',
         ]);
 
-        $em->getRelation($a, 'contacts')->relate($c->getId(), ['role' => 'test']);
+        $em->getRelation($a, 'contacts')->relateById($c->getId(), ['role' => 'test']);
 
         $script = "record\\relationColumn('Account', '{$a->getId()}', 'contacts', '{$c->getId()}', 'role')";
         $result = $fm->run($script);
@@ -686,7 +686,7 @@ class FormulaTest extends BaseTestCase
             'lastName' => '1',
         ]);
 
-        $em->getRelation($a, 'contacts')->relate( $c->getId());
+        $em->getRelation($a, 'contacts')->relateById($c->getId());
 
         $script = "record\\updateRelationColumn('Account', '{$a->getId()}', 'contacts', '{$c->getId()}', 'role', 'test')";
         $fm->run($script);

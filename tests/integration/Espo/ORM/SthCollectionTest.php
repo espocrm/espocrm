@@ -29,15 +29,18 @@
 
 namespace tests\integration\Espo\ORM;
 
+use Espo\ORM\EntityManager;
 use Espo\ORM\SthCollection;
+use tests\integration\Core\BaseTestCase;
 
-class SthCollectionTest extends \tests\integration\Core\BaseTestCase
+class SthCollectionTest extends BaseTestCase
 {
     public function test1()
     {
         $app = $this->createApplication();
 
-        $em = $app->getContainer()->get('entityManager');
+        /** @var EntityManager $em */
+        $em = $app->getContainer()->getByClass(EntityManager::class);
 
         $em->createEntity('Account', [
             'name' => 'test-1',
@@ -71,16 +74,16 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertEquals('test-1', $list[0]->get('name'));
 
-        $array = $collection->toArray();
+        $array = $collection->getValueMapList();
 
-        $this->assertEquals('test-2', $array[1]['name']);
+        $this->assertEquals('test-2', $array[1]->name);
     }
 
-    public function test2()
+    public function test2(): void
     {
         $app = $this->createApplication();
 
-        $em = $app->getContainer()->get('entityManager');
+        $em = $app->getContainer()->getByClass(EntityManager::class);
 
         $em->createEntity('Account', [
             'name' => 'test-2',
@@ -100,7 +103,7 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
 
         $count = 0;
 
-        foreach ($collection as $e) {
+        foreach ($collection as $ignored) {
             $count++;
         }
 
@@ -111,7 +114,8 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
     {
         $app = $this->createApplication();
 
-        $em = $app->getContainer()->get('entityManager');
+        /** @var EntityManager $em */
+        $em = $app->getContainer()->getByClass(EntityManager::class);
 
         $em->createEntity('Account', [
             'name' => 'test-1',
@@ -129,7 +133,7 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
             ->where(['name' => 'test-1'])
             ->build();
 
-        $collection = $em->getRepository('Account')
+        $collection = $em->getRDBRepository('Account')
             ->clone($query)
             ->sth()
             ->find();
@@ -149,7 +153,8 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
     {
         $app = $this->createApplication();
 
-        $em = $app->getContainer()->get('entityManager');
+        /** @var EntityManager $em */
+        $em = $app->getContainer()->getByClass(EntityManager::class);
 
         $account = $em->createEntity('Account', [
             'name' => 'test-1',
@@ -169,7 +174,8 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
             ->order('name')
             ->build();
 
-        $collection = $em->getRepository('Account')->getRelation($account, 'opportunities')
+        $collection = $em
+            ->getRelation($account, 'opportunities')
             ->clone($query)
             ->sth()
             ->find();
@@ -184,9 +190,9 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertEquals(2, $count);
 
-        $array = $collection->toArray();
+        $array = $collection->getValueMapList();
 
-        $this->assertEquals($array[0]['name'], 'o-1');
+        $this->assertEquals('o-1', $array[0]->name);
     }
 
     public function testFindRelatedManyToMany()

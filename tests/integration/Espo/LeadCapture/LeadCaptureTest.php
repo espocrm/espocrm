@@ -30,21 +30,25 @@
 namespace tests\integration\Espo\LeadCapture;
 
 use Espo\Core\Record\CreateParams;
+use Espo\Core\Record\ServiceContainer;
+use Espo\Entities\LeadCapture;
+use Espo\ORM\EntityManager;
 use Espo\Tools\LeadCapture\CaptureService;
+use tests\integration\Core\BaseTestCase;
 
-class LeadCaptureTest extends \tests\integration\Core\BaseTestCase
+class LeadCaptureTest extends BaseTestCase
 {
-    public function testCaptute()
+    public function testCapture():void
     {
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
-        $targetList = $entityManager->getEntity('TargetList');
+        $targetList = $entityManager->getNewEntity('TargetList');
         $entityManager->saveEntity($targetList);
 
-        $team = $entityManager->getEntity('Team');
+        $team = $entityManager->getNewEntity('Team');
         $entityManager->saveEntity($team);
 
-        $recordService = $this->getContainer()->get('recordServiceContainer')->get('LeadCapture');
+        $recordService = $this->getContainer()->getByClass(ServiceContainer::class)->getByClass(LeadCapture::class);
         $service = $this->getInjectableFactory()->create(CaptureService::class);
 
         $leadCaptureData = (object) [
@@ -68,16 +72,15 @@ class LeadCaptureTest extends \tests\integration\Core\BaseTestCase
 
         $service->capture($leadCapture->get('apiKey'), $data);
 
-        $lead = $entityManager->getRepository('Lead')
+        $lead = $entityManager
+            ->getRDBRepository('Lead')
             ->where(['emailAddress' => 'test@tester.com'])
             ->findOne();
 
         $this->assertNotNull($lead);
 
         $this->assertEquals('Web Site', $lead->get('source'));
-
-        $this->assertTrue($entityManager->getRepository('Lead')->isRelated($lead, 'teams', $team->getId()));
-
-        $this->assertTrue($entityManager->getRepository('Lead')->isRelated($lead, 'targetLists', $targetList->getId()));
+        $this->assertTrue($entityManager->getRelation($lead, 'teams')->isRelatedById($team->getId()));
+        $this->assertTrue($entityManager->getRelation($lead, 'targetLists')->isRelatedById($targetList->getId()));
     }
 }
