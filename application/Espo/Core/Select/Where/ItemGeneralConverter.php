@@ -411,7 +411,7 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             $key => Select::fromRaw([
-                'select' => ['id'],
+                'select' => [Attribute::ID],
                 'from' => $this->entityType,
                 'whereClause' => $whereClause,
                 'leftJoins' => $rawParams['leftJoins'] ?? [],
@@ -439,7 +439,7 @@ class ItemGeneralConverter implements ItemConverter
 
         $subQueryBuilder = QueryBuilder::create()
             ->from($this->entityType)
-            ->select('id')
+            ->select(Attribute::ID)
             ->leftJoin($link);
 
         $alias = $link;
@@ -464,7 +464,7 @@ class ItemGeneralConverter implements ItemConverter
         }
 
         return Cond::in(
-            Cond::column('id'),
+            Cond::column(Attribute::ID),
             $subQueryBuilder
                 ->where($where)
                 ->build()
@@ -485,7 +485,7 @@ class ItemGeneralConverter implements ItemConverter
 
         $arrayAttribute = $attribute;
         $arrayEntityType = $this->entityType;
-        $idPart = 'id';
+        $idPart = Attribute::ID;
 
         $isForeign = str_contains($attribute, '.');
 
@@ -1359,10 +1359,10 @@ class ItemGeneralConverter implements ItemConverter
             // Trade off is that if a foreign record is deleted but the middle table
             // is not yet deleted, it will give a non-actual result.
             $subQuery = QueryBuilder::create()
-                ->select('id')
+                ->select(Attribute::ID)
                 ->from($this->entityType)
                 ->leftJoin($middleEntityType, $alias, [
-                    "$alias.$nearKey:" => 'id',
+                    "$alias.$nearKey:" => Attribute::ID,
                     "$alias.deleted" => false,
                 ])
                 ->where(["$alias.$key" => null])
@@ -1378,7 +1378,7 @@ class ItemGeneralConverter implements ItemConverter
             $relationType === Entity::HAS_CHILDREN
         ) {
             $subQuery = QueryBuilder::create()
-                ->select('id')
+                ->select(Attribute::ID)
                 ->from($this->entityType)
                 ->leftJoin($link, $alias)
                 ->where([$alias . '.id' => null])
@@ -1411,10 +1411,10 @@ class ItemGeneralConverter implements ItemConverter
             // Trade off is that if a foreign record is deleted but the middle table
             // is not yet deleted, it will give a non-actual result.
             $subQuery = QueryBuilder::create()
-                ->select('id')
+                ->select(Attribute::ID)
                 ->from($this->entityType)
                 ->leftJoin($middleEntityType, $alias, [
-                    "$alias.$nearKey:" => 'id',
+                    "$alias.$nearKey:" => Attribute::ID,
                     "$alias.deleted" => false,
                 ])
                 ->where(["$alias.$key!=" => null])
@@ -1430,7 +1430,7 @@ class ItemGeneralConverter implements ItemConverter
             $relationType == Entity::HAS_CHILDREN
         ) {
             $subQuery = QueryBuilder::create()
-                ->select('id')
+                ->select(Attribute::ID)
                 ->from($this->entityType)
                 ->leftJoin($link, $alias)
                 ->where([$alias . '.id!=' => null])
@@ -1476,16 +1476,16 @@ class ItemGeneralConverter implements ItemConverter
             // Not joining a foreign table as it affects performance in MySQL.
             // MariaDB and PostgreSQL perform fast, MySQL – slow.
             return Cond::in(
-                Cond::column('id'),
+                Cond::column(Attribute::ID),
                 QueryBuilder::create()
-                    ->select('id')
+                    ->select(Attribute::ID)
                     ->from($this->entityType)
                     ->leftJoin(
                         Join::create($link, $alias)
                             ->withConditions(
                                 Cond::equal(
                                     Cond::column("$alias.$nearKey"),
-                                    Cond::column('id')
+                                    Cond::column(Attribute::ID)
                                 )
                             )
                             ->withOnlyMiddle()
@@ -1572,7 +1572,7 @@ class ItemGeneralConverter implements ItemConverter
             return Cond::not(
                 Cond::exists(
                     QueryBuilder::create()
-                        ->select('id')
+                        ->select(Attribute::ID)
                         ->from($this->entityType, 'sq')
                         ->join($link, $alias)
                         ->where(["$alias.id" => $value])
@@ -1625,14 +1625,14 @@ class ItemGeneralConverter implements ItemConverter
                 // Only-middle join performs slower on MariaDB.
                 $sq = QueryBuilder::create()
                     ->from($this->entityType)
-                    ->select('id')
+                    ->select(Attribute::ID)
                     ->leftJoin($link)
                     ->where([
                         $link . 'Middle.' . $key => $targetId,
                     ])
                     ->build();
 
-                $whereList[] = ['id=s' => $sq];
+                $whereList[] = [Attribute::ID . '=s' => $sq];
             }
 
             return $whereList;
@@ -1644,12 +1644,12 @@ class ItemGeneralConverter implements ItemConverter
             foreach ($value as $targetId) {
                 $sq = QueryBuilder::create()
                     ->from($this->entityType)
-                    ->select('id')
+                    ->select(Attribute::ID)
                     ->leftJoin($link)
                     ->where([$link . '.id' => $targetId])
                     ->build();
 
-                $whereList[] = ['id=s' => $sq];
+                $whereList[] = [Attribute::ID . '=s' => $sq];
             }
 
             return $whereList;

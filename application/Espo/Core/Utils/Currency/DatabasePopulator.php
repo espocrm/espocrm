@@ -32,6 +32,7 @@ namespace Espo\Core\Utils\Currency;
 use Espo\Entities\Currency;
 use Espo\ORM\EntityManager;
 use Espo\Core\Utils\Config;
+use Espo\ORM\Name\Attribute;
 
 /**
  * Populates currency rates into database.
@@ -64,7 +65,7 @@ class DatabasePopulator
 
         foreach ($currencyRates as $currencyName => $rate) {
             $this->entityManager->createEntity(Currency::ENTITY_TYPE, [
-                'id' => $currencyName,
+                Attribute::ID => $currencyName,
                 'rate' => $rate,
             ]);
         }

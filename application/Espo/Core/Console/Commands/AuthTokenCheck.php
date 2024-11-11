@@ -35,6 +35,7 @@ use Espo\Core\Console\Command;
 use Espo\Core\Console\Command\Params;
 use Espo\Core\Console\IO;
 use Espo\Core\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 
 /**
  * @noinspection PhpUnused
@@ -70,7 +71,7 @@ class AuthTokenCheck implements Command
 
         $user = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
-            ->select('id')
+            ->select(Attribute::ID)
             ->where([
                 'id' => $userId,
                 'isActive' => true,

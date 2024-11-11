@@ -40,8 +40,8 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Log;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition as Cond;
-
 use Espo\ORM\Query\SelectBuilder;
 use Exception;
 use stdClass;
@@ -97,7 +97,7 @@ class Queue
         $webhookList = $this->entityManager
             ->getRDBRepository(Webhook::ENTITY_TYPE)
             ->where([
-                'event' => $item->get('event'),
+                'event' => $item->getEvent(),
                 'isActive' => true,
             ])
             ->order(Field::CREATED_AT)
@@ -106,11 +106,11 @@ class Queue
         foreach ($webhookList as $webhook) {
             $this->entityManager->createEntity(WebhookQueueItem::ENTITY_TYPE, [
                 'webhookId' => $webhook->getId(),
-                'event' => $item->get('event'),
-                'targetId' => $item->get('targetId'),
-                'targetType' => $item->get('targetType'),
+                'event' => $item->getEvent(),
+                'targetId' => $item->getTargetId(),
+                'targetType' => $item->getTargetType(),
                 'status' => WebhookQueueItem::STATUS_PENDING,
-                'data' => $item->get('data'),
+                'data' => $item->getData(),
                 'attempts' => 0,
             ]);
         }
@@ -168,8 +168,7 @@ class Queue
             ->limit(0, $batchSize)
             ->find();
 
-        /** @var ?Webhook $webhook */
-        $webhook = $this->entityManager->getEntityById(Webhook::ENTITY_TYPE, $webhookId);
+        $webhook = $this->entityManager->getRDBRepositoryByClass(Webhook::class)->getById($webhookId);
 
         if (!$webhook || !$webhook->isActive()) {
             foreach ($itemList as $item) {
@@ -226,7 +225,7 @@ class Queue
      */
     private function prepareItemData(WebhookQueueItem $item, ?User $user, array $forbiddenAttributeList): ?stdClass
     {
-        $targetType = $item->get('targetType');
+        $targetType = $item->getTargetType();
         $target = null;
 
         if ($this->entityManager->hasRepository($targetType)) {
@@ -238,7 +237,7 @@ class Queue
             $target = $this->entityManager
                 ->getRDBRepository($targetType)
                 ->clone($query)
-                ->where(['id' => $item->get('targetId')])
+                ->where([Attribute::ID => $item->getTargetId()])
                 ->findOne();
         }
 
@@ -256,7 +255,7 @@ class Queue
             }
         }
 
-        $data = $item->get('data') ?? (object) [];
+        $data = $item->getData();
 
         foreach ($forbiddenAttributeList as $attribute) {
             unset($data->$attribute);

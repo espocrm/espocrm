@@ -33,6 +33,7 @@ use Espo\Core\Select\AccessControl\Filter;
 use Espo\Core\Select\Helpers\RelationQueryHelper;
 use Espo\Core\Select\Helpers\FieldHelper;
 use Espo\Entities\User;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\WhereItem;
@@ -58,7 +59,7 @@ class OnlyOwn implements Filter
         }
 
         if (!$ownItem) {
-            $queryBuilder->where(['id' => null]);
+            $queryBuilder->where([Attribute::ID => null]);
 
             return;
         }

@@ -30,6 +30,7 @@
 namespace Espo\Core\Formula\Functions;
 
 use Espo\Core\Formula\Exceptions\Error;
+use Espo\ORM\Name\Attribute;
 
 class SetAttributeType extends Base
 {
@@ -49,7 +50,7 @@ class SetAttributeType extends Base
             throw new Error("SetAttribute: First argument is not string.");
         }
 
-        if ($name === 'id') {
+        if ($name === Attribute::ID) {
             throw new Error("Formula set-attribute: Not allowed to set `id` attribute.");
         }
 

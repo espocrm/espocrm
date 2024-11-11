@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Name\Field;
 use Espo\Core\Utils\Language\LanguageProxy;
+use Espo\ORM\Name\Attribute;
 use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
@@ -326,7 +327,7 @@ class Authentication
         ) {
             $authLogRecord = $this->entityManager
                 ->getRDBRepository(AuthLogRecord::ENTITY_TYPE)
-                ->select(['id'])
+                ->select([Attribute::ID])
                 ->where(['authTokenId' => $authToken->getId()])
                 ->order('requestTime', true)
                 ->findOne();
@@ -504,7 +505,7 @@ class Authentication
         ) {
             $concurrentAuthTokenList = $this->entityManager
                 ->getRDBRepository(AuthTokenEntity::ENTITY_TYPE)
-                ->select(['id'])
+                ->select([Attribute::ID])
                 ->where([
                     'userId' => $user->getId(),
                     'isActive' => true,
@@ -740,7 +741,7 @@ class Authentication
         $user = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
             ->select(['userName'])
-            ->where(['id' => $authToken->getUserId()])
+            ->where([Attribute::ID => $authToken->getUserId()])
             ->findOne();
 
         return $user?->getUserName();

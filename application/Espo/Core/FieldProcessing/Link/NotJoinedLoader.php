@@ -35,6 +35,7 @@ use Espo\Core\FieldProcessing\Loader as LoaderInterface;
 use Espo\Core\FieldProcessing\Loader\Params;
 use Espo\Core\ORM\EntityManager;
 use Espo\ORM\Defs as OrmDefs;
+use Espo\ORM\Name\Attribute;
 
 /**
  * @implements LoaderInterface<Entity>
@@ -80,8 +81,8 @@ class NotJoinedLoader implements LoaderInterface
 
         $foreignEntity = $this->entityManager
             ->getRDBRepository($foreignEntityType)
-            ->select(['id', 'name'])
-            ->where(['id' => $id])
+            ->select([Attribute::ID, 'name'])
+            ->where([Attribute::ID => $id])
             ->findOne();
 
         if (!$foreignEntity) {

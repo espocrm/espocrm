@@ -30,6 +30,7 @@
 namespace Espo\Entities;
 
 use Espo\Core\ORM\Entity;
+use stdClass;
 
 class WebhookEventQueueItem extends Entity
 {
@@ -40,5 +41,25 @@ class WebhookEventQueueItem extends Entity
         $this->set('isProcessed', $isProcessed);
 
         return $this;
+    }
+
+    public function getEvent(): string
+    {
+        return (string) $this->get('event');
+    }
+
+    public function getTargetType(): ?string
+    {
+        return $this->get('targetType');
+    }
+
+    public function getTargetId(): ?string
+    {
+        return $this->get('targetId');
+    }
+
+    public function getData(): stdClass
+    {
+        return $this->get('data') ?? (object) [];
     }
 }

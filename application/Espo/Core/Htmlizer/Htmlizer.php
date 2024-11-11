@@ -41,6 +41,7 @@ use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Entities\Attachment;
 use Espo\Entities\User;
+use Espo\ORM\Name\Attribute;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Core\Utils\Json;
 use Espo\Core\Acl;
@@ -905,7 +906,7 @@ class Htmlizer
         }
 
         if ($orderBy === null) {
-            $orderBy = 'id';
+            $orderBy = Attribute::ID;
         }
 
         return [[$orderBy, $order]];

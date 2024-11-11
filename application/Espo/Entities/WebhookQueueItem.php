@@ -31,6 +31,7 @@ namespace Espo\Entities;
 
 use Espo\Core\Field\DateTime;
 use Espo\Core\ORM\Entity;
+use stdClass;
 
 class WebhookQueueItem extends Entity
 {
@@ -83,5 +84,20 @@ class WebhookQueueItem extends Entity
         $this->set('processedAt', $processedAt->toString());
 
         return $this;
+    }
+
+    public function getTargetType(): ?string
+    {
+        return $this->get('targetType');
+    }
+
+    public function getTargetId(): ?string
+    {
+        return $this->get('targetId');
+    }
+
+    public function getData(): stdClass
+    {
+        return $this->get('data') ?? (object) [];
     }
 }

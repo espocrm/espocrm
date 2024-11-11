@@ -33,6 +33,7 @@ use Espo\Core\Select\AccessControl\Filter;
 use Espo\Core\Select\Helpers\FieldHelper;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Contact;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\Part\Where\OrGroup;
@@ -98,7 +99,7 @@ class PortalOnlyContact implements Filter
         $orGroup = $orBuilder->build();
 
         if ($orGroup->getItemCount() === 0) {
-            $queryBuilder->where(['id' => null]);
+            $queryBuilder->where([Attribute::ID => null]);
 
             return;
         }

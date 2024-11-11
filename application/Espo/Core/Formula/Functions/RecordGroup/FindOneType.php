@@ -35,6 +35,7 @@ use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Exceptions\Error as FormulaError;
 use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Di;
+use Espo\ORM\Name\Attribute;
 
 class FindOneType extends BaseFunction implements
     Di\EntityManagerAware,
@@ -100,7 +101,7 @@ class FindOneType extends BaseFunction implements
             $queryBuilder->order($orderBy, $order);
         }
 
-        $queryBuilder->select(['id']);
+        $queryBuilder->select([Attribute::ID]);
 
         $entity = $this->entityManager
             ->getRDBRepository($entityType)
