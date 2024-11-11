@@ -35,6 +35,7 @@ use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
 use Espo\Core\Utils\Database\Orm\LinkConverter;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Defs\RelationDefs as LinkDefs;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
 
@@ -70,8 +71,8 @@ class ManyMany implements LinkConverter
             ->withType(RelationType::MANY_MANY)
             ->withForeignEntityType($foreignEntityType)
             ->withRelationshipName($relationshipName)
-            ->withKey('id')
-            ->withForeignKey('id')
+            ->withKey(Attribute::ID)
+            ->withForeignKey(Attribute::ID)
             ->withMidKeys($key1, $key2)
             ->withForeignRelationName($foreignRelationName);
 

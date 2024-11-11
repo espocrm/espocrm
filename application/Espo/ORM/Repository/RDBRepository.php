@@ -33,6 +33,7 @@ use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\EntityManager;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\Collection;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Relation\Relations;
 use Espo\ORM\Relation\RelationsMap;
 use Espo\ORM\Repository\Deprecation\RDBRepositoryDeprecationTrait;
@@ -109,7 +110,7 @@ class RDBRepository implements Repository
             ->getQueryBuilder()
             ->select()
             ->from($this->entityType)
-            ->where(['id' => $id])
+            ->where([Attribute::ID => $id])
             ->build();
 
         /** @var ?TEntity $entity */
@@ -422,7 +423,7 @@ class RDBRepository implements Repository
      * @param (Order::ASC|Order::DESC)|bool|null $direction A direction.
      * @return RDBSelectBuilder<TEntity>
      */
-    public function order($orderBy = 'id', $direction = null): RDBSelectBuilder
+    public function order($orderBy = Attribute::ID, $direction = null): RDBSelectBuilder
     {
         return $this->createSelectBuilder()->order($orderBy, $direction);
     }

@@ -39,6 +39,7 @@ use Espo\Core\Mail\Account\Storage\LaminasStorage;
 use Espo\Core\Utils\Log;
 use Espo\Core\InjectableFactory;
 use Espo\Entities\UserData;
+use Espo\ORM\Name\Attribute;
 use Espo\Repositories\UserData as UserDataRepository;
 use Espo\ORM\EntityManager;
 
@@ -97,7 +98,7 @@ class StorageFactory implements StorageFactoryInterface
             'emailAddress' => $params->getEmailAddress(),
             'userId' => $params->getUserId(),
             'imapHandler' => $params->getImapHandlerClassName(),
-            'id' => $params->getId(),
+            Attribute::ID => $params->getId(),
         ];
 
         if ($params->getSecurity()) {

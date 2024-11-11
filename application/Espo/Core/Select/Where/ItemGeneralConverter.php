@@ -42,6 +42,7 @@ use Espo\Entities\ArrayValue;
 use Espo\Entities\User;
 use Espo\ORM\Defs as ORMDefs;
 use Espo\ORM\Entity;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Join;
 use Espo\ORM\Query\Part\WhereClause;
@@ -1499,7 +1500,7 @@ class ItemGeneralConverter implements ItemConverter
             $relationType == Entity::HAS_ONE
         ) {
             $subQuery = QueryBuilder::create()
-                ->select('id')
+                ->select(Attribute::ID)
                 ->from($this->entityType)
                 ->leftJoin($link, $alias)
                 ->where([$alias . '.id' => $value])

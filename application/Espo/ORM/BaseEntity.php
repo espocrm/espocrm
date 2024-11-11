@@ -29,6 +29,7 @@
 
 namespace Espo\ORM;
 
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Relation\EmptyRelations;
 use Espo\ORM\Relation\Relations;
 use Espo\ORM\Type\AttributeType;
@@ -106,7 +107,7 @@ class BaseEntity implements Entity
     public function getId(): string
     {
         /** @var ?string $id */
-        $id = $this->get('id');
+        $id = $this->get(Attribute::ID);
 
         if ($id === null) {
             throw new RuntimeException("Entity ID is not set.");
@@ -173,7 +174,7 @@ class BaseEntity implements Entity
         if (is_string($arg)) {
             $name = $arg;
 
-            if ($name == 'id') {
+            if ($name == Attribute::ID) {
                 $this->id = $value;
             }
 
@@ -217,7 +218,7 @@ class BaseEntity implements Entity
      */
     public function get(string $attribute): mixed
     {
-        if ($attribute === 'id') {
+        if ($attribute === Attribute::ID) {
             return $this->id;
         }
 
@@ -342,7 +343,7 @@ class BaseEntity implements Entity
      */
     public function has(string $attribute): bool
     {
-        if ($attribute == 'id') {
+        if ($attribute == Attribute::ID) {
             return (bool) $this->id;
         }
 
@@ -435,7 +436,7 @@ class BaseEntity implements Entity
 
         return $type === AttributeType::FOREIGN &&
             $this->getAttributeParam($attribute, 'relation') === substr($attribute, 0, -2) &&
-            $this->getAttributeParam($attribute, 'foreign') === 'id' &&
+            $this->getAttributeParam($attribute, 'foreign') === Attribute::ID &&
             str_ends_with($attribute, 'Id');
     }
 
@@ -675,11 +676,11 @@ class BaseEntity implements Entity
         $map = [];
 
         if (isset($this->id)) {
-            $map['id'] = $this->id;
+            $map[Attribute::ID] = $this->id;
         }
 
         foreach ($this->getAttributeList() as $attribute) {
-            if ($attribute === 'id') {
+            if ($attribute === Attribute::ID) {
                 continue;
             }
 
@@ -872,7 +873,7 @@ class BaseEntity implements Entity
      */
     public function getFetched(string $attribute)
     {
-        if ($attribute === 'id') {
+        if ($attribute === Attribute::ID) {
             return $this->id;
         }
 
@@ -888,7 +889,7 @@ class BaseEntity implements Entity
      */
     public function hasFetched(string $attribute): bool
     {
-        if ($attribute === 'id') {
+        if ($attribute === Attribute::ID) {
             return !is_null($this->id);
         }
 
@@ -1074,7 +1075,7 @@ class BaseEntity implements Entity
                 continue;
             }
 
-            if ($attribute === 'id') {
+            if ($attribute === Attribute::ID) {
                 $this->id = $data[$attribute];
 
                 continue;

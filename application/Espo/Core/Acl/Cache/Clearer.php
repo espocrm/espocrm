@@ -33,6 +33,7 @@ use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 
 /**
  * @todo Clear cache in AclManager.
@@ -72,7 +73,7 @@ class Clearer
     {
         $portals = $this->entityManager
             ->getRDBRepositoryByClass(Portal::class)
-            ->select('id')
+            ->select(Attribute::ID)
             ->find();
 
         foreach ($portals as $portal) {

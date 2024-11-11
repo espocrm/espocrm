@@ -33,6 +33,7 @@ use Espo\Core\ORM\Type\FieldType;
 use Espo\ORM\Defs;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Value\ValueFactory;
 
 use Espo\Core\Field\LinkMultiple;
@@ -121,7 +122,7 @@ class LinkMultipleFactory implements ValueFactory
 
         $columnData = (object) [];
 
-        $select = ['id'];
+        $select = [Attribute::ID];
 
         $entityDefs = $this->ormDefs->getEntity($entity->getEntityType());
 

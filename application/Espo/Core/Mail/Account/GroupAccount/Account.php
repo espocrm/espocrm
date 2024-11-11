@@ -49,6 +49,7 @@ use Espo\ORM\EntityManager;
 use Espo\Core\Mail\Account\Account as AccountInterface;
 use Espo\Core\Mail\Account\FetchData;
 
+use Espo\ORM\Name\Attribute;
 use RuntimeException;
 
 class Account implements AccountInterface
@@ -160,7 +161,7 @@ class Account implements AccountInterface
 
         $users = $this->entityManager
             ->getRDBRepositoryByClass(User::class)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->distinct()
             ->join(Field::TEAMS)
             ->where([

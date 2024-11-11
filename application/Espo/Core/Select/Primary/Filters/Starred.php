@@ -32,6 +32,7 @@ namespace Espo\Core\Select\Primary\Filters;
 use Espo\Core\Select\Primary\Filter;
 use Espo\Entities\StarSubscription;
 use Espo\Entities\User;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 /**
@@ -51,7 +52,7 @@ class Starred implements Filter
             $alias,
             [
                 "$alias.entityType" => $this->entityType,
-                "$alias.entityId=:" => 'id',
+                "$alias.entityId=:" => Attribute::ID,
                 "$alias.userId" => $this->user->getId(),
             ]
         );

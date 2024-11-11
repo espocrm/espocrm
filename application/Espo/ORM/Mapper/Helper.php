@@ -32,6 +32,7 @@ namespace Espo\ORM\Mapper;
 use Espo\ORM\Entity;
 use Espo\ORM\Metadata;
 
+use Espo\ORM\Name\Attribute;
 use RuntimeException;
 
 class Helper
@@ -68,7 +69,7 @@ class Helper
 
                 $foreignKey = $defs->hasForeignKey() ?
                     $defs->getForeignKey() :
-                    'id';
+                    Attribute::ID;
 
                 return [
                     'key' => $key,
@@ -77,7 +78,7 @@ class Helper
 
             case Entity::HAS_MANY:
             case Entity::HAS_ONE:
-                $key = $defs->hasKey() ? $defs->getKey() : 'id';
+                $key = $defs->hasKey() ? $defs->getKey() : Attribute::ID;
 
                 $foreign = $defs->hasForeignRelationName() ?
                     $defs->getForeignRelationName() :
@@ -101,7 +102,7 @@ class Helper
                 ];
 
             case Entity::HAS_CHILDREN:
-                $key = $defs->hasKey() ? $defs->getKey() : 'id';
+                $key = $defs->hasKey() ? $defs->getKey() : Attribute::ID;
 
                 $foreignKey = $defs->hasForeignKey() ?
                     $defs->getForeignKey() :
@@ -118,11 +119,11 @@ class Helper
             case Entity::MANY_MANY:
                 $key = $defs->hasKey() ?
                     $defs->getKey() :
-                    'id';
+                    Attribute::ID;
 
                 $foreignKey = $defs->hasForeignKey() ?
                     $defs->getForeignKey() :
-                    'id';
+                    Attribute::ID;
 
                 $nearKey = $defs->hasMidKey() ?
                     $defs->getMidKey() :
@@ -146,7 +147,7 @@ class Helper
                 return [
                     'key' => $key,
                     'typeKey' => $typeKey,
-                    'foreignKey' => 'id',
+                    'foreignKey' => Attribute::ID,
                 ];
         }
 

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Job;
 
+use Espo\ORM\Name\Attribute;
 use Spatie\Async\Task as AsyncTask;
 
 use Espo\Core\Application;
@@ -60,7 +61,7 @@ class JobTask extends AsyncTask
     {
         $app = new Application();
 
-        $params = RunnerParams::create()->with('id', $this->jobId);
+        $params = RunnerParams::create()->with(Attribute::ID, $this->jobId);
 
         try {
             $app->run(JobRunner::class, $params);

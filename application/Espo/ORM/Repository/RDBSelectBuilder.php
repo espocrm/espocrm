@@ -31,6 +31,7 @@ namespace Espo\ORM\Repository;
 
 use Espo\ORM\Collection;
 use Espo\ORM\EntityCollection;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\SthCollection;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -327,7 +328,7 @@ class RDBSelectBuilder
      * @param (Order::ASC|Order::DESC)|bool|null $direction A direction.
      * @return RDBSelectBuilder<TEntity>
      */
-    public function order($orderBy = 'id', $direction = null): self
+    public function order($orderBy = Attribute::ID, $direction = null): self
     {
         $this->builder->order($orderBy, $direction);
 

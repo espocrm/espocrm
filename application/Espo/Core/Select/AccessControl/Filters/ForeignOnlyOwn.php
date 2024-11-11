@@ -32,6 +32,7 @@ namespace Espo\Core\Select\AccessControl\Filters;
 use Espo\Core\Name\Field;
 use Espo\Core\Select\AccessControl\Filter;
 use Espo\ORM\Defs;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
@@ -82,6 +83,6 @@ class ForeignOnlyOwn implements Filter
             return;
         }
 
-        $queryBuilder->where(['id' => null]);
+        $queryBuilder->where([Attribute::ID => null]);
     }
 }

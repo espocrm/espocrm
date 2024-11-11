@@ -39,6 +39,7 @@ use Espo\ORM\EntityManager;
 use Espo\Entities\Job as JobEntity;
 
 use DateTimeImmutable;
+use Espo\ORM\Name\Attribute;
 
 class ProcessJobGroupPreparator implements Preparator
 {
@@ -81,7 +82,7 @@ class ProcessJobGroupPreparator implements Preparator
         foreach ($groupList as $group) {
             $existingJob = $this->entityManager
                 ->getRDBRepository(JobEntity::ENTITY_TYPE)
-                ->select('id')
+                ->select(Attribute::ID)
                 ->where([
                     'scheduledJobId' => $data->getId(),
                     'targetGroup' => $group,

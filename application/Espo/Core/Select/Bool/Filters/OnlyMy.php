@@ -34,6 +34,7 @@ use Espo\Core\Select\Bool\Filter;
 use Espo\Core\Select\Helpers\FieldHelper;
 use Espo\Entities\User;
 use Espo\ORM\Defs;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
@@ -75,10 +76,10 @@ class OnlyMy implements Filter
             $key2 = $relationDefs->getForeignMidKey();
 
             $subQuery = QueryBuilder::create()
-                ->select('id')
+                ->select(Attribute::ID)
                 ->from($this->entityType)
                 ->leftJoin($middleEntityType, 'assignedUsersMiddle', [
-                    "assignedUsersMiddle.$key1:" => 'id',
+                    "assignedUsersMiddle.$key1:" => Attribute::ID,
                     'assignedUsersMiddle.deleted' => false,
                 ])
                 ->where(["assignedUsersMiddle.$key2" => $this->user->getId()])
@@ -86,7 +87,7 @@ class OnlyMy implements Filter
 
             $orGroupBuilder->add(
                 Cond::in(
-                    Cond::column('id'),
+                    Cond::column(Attribute::ID),
                     $subQuery
                 )
             );

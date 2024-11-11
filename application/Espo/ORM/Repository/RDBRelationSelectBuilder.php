@@ -32,6 +32,7 @@ namespace Espo\ORM\Repository;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\Mapper\RDBMapper;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\SthCollection;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -368,7 +369,7 @@ class RDBRelationSelectBuilder
      * @param (Order::ASC|Order::DESC)|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.
      * @return self<TEntity>
      */
-    public function order($orderBy = 'id', $direction = null): self
+    public function order($orderBy = Attribute::ID, $direction = null): self
     {
         $this->builder->order($orderBy, $direction);
 

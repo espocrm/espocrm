@@ -27,31 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Primary\Filters;
+namespace Espo\ORM\Name;
 
-use Espo\Core\Select\Primary\Filter;
-use Espo\Entities\StreamSubscription;
-use Espo\Entities\User;
-use Espo\ORM\Name\Attribute;
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
-
-class Followed implements Filter
+interface Attribute
 {
-    public function __construct(private string $entityType, private User $user)
-    {}
-
-    public function apply(QueryBuilder $queryBuilder): void
-    {
-        $alias = 'subscriptionFollowedPrimaryFilter';
-
-        $queryBuilder->join(
-            StreamSubscription::ENTITY_TYPE,
-            $alias,
-            [
-                $alias . '.entityType' => $this->entityType,
-                $alias . '.entityId=:' => Attribute::ID,
-                $alias . '.userId' => $this->user->getId(),
-            ]
-        );
-    }
+    public const ID = 'id';
+    public const DELETED = 'deleted';
 }

@@ -35,6 +35,7 @@ use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
 use Espo\Core\Utils\Database\Orm\LinkConverter;
 use Espo\Entities\EmailAddress;
 use Espo\ORM\Defs\RelationDefs as LinkDefs;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
 
@@ -55,8 +56,8 @@ class EmailEmailAddress implements LinkConverter
         $relationDefs = RelationDefs::create($name)
             ->withType(RelationType::MANY_MANY)
             ->withForeignEntityType($foreignEntityType)
-            ->withKey('id')
-            ->withForeignKey('id')
+            ->withKey(Attribute::ID)
+            ->withForeignKey(Attribute::ID)
             ->withMidKeys($key1, $key2);
 
         return EntityDefs::create()

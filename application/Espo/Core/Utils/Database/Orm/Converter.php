@@ -44,6 +44,7 @@ use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
+use Espo\ORM\Name\Attribute;
 use LogicException;
 
 class Converter
@@ -373,14 +374,14 @@ class Converter
         ];
 
         $output = [
-            'id' => [
+            Attribute::ID => [
                 'type' => Entity::ID,
             ],
             'name' => [
                 'type' => $entityMetadata['fields']['name']['type'] ?? Entity::VARCHAR,
                 'notStorable' => true,
             ],
-            'deleted' => [
+            Attribute::DELETED => [
                 'type' => Entity::BOOL,
                 'default' => false,
             ],

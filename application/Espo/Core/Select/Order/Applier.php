@@ -31,6 +31,7 @@ namespace Espo\Core\Select\Order;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\Type\FieldType;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\OrderList;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Select\Order\Item as OrderItem;
@@ -97,7 +98,7 @@ class Applier
         $orderBy = $this->metadataProvider->getDefaultOrderBy($this->entityType);
 
         if (!$orderBy) {
-            $queryBuilder->order('id', $order);
+            $queryBuilder->order(Attribute::ID, $order);
 
             return;
         }
@@ -143,8 +144,8 @@ class Applier
                 OrderItem::create($orderBy, $order)
             );
 
-            if ($order !== 'id') {
-                $queryBuilder->order('id', $order);
+            if ($order !== Attribute::ID) {
+                $queryBuilder->order(Attribute::ID, $order);
             }
 
             return;
@@ -185,14 +186,14 @@ class Applier
         }
 
         if (
-            $orderBy !== 'id' &&
+            $orderBy !== Attribute::ID &&
             (
                 !$orderByAttribute ||
                 !$this->metadataProvider->isAttributeParamUniqueTrue($this->entityType, $orderByAttribute)
             ) &&
-            $this->metadataProvider->hasAttribute($this->entityType, 'id')
+            $this->metadataProvider->hasAttribute($this->entityType, Attribute::ID)
         ) {
-            $resultOrderBy[] = ['id', $order];
+            $resultOrderBy[] = [Attribute::ID, $order];
         }
 
         $queryBuilder->order($resultOrderBy);

@@ -56,6 +56,7 @@ use Espo\Entities\EmailFilter;
 use Espo\Entities\GroupEmailFolder;
 use Espo\Entities\Team;
 use Espo\Entities\User;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition;
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\SelectBuilder;
@@ -596,7 +597,7 @@ class DefaultImporter implements Importer
         $this->entityManager
             ->getRDBRepositoryByClass(Email::class)
             ->forUpdate()
-            ->where(['id' => $email->getId()])
+            ->where([Attribute::ID => $email->getId()])
             ->findOne();
 
         $this->entityManager->saveEntity($email, [Email::SAVE_OPTION_IS_BEING_IMPORTED => true]);
@@ -670,15 +671,15 @@ class DefaultImporter implements Importer
 
         $users = $this->entityManager
             ->getRDBRepositoryByClass(User::class)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where([
                 'type' => [User::TYPE_REGULAR, User::TYPE_ADMIN],
                 'isActive' => true,
-                'id!=' => $fetchedUserIds,
+                Attribute::ID . '!=' => $fetchedUserIds,
             ])
             ->where(
                 Condition::in(
-                    Expression::column('id'),
+                    Expression::column(Attribute::ID),
                     SelectBuilder::create()
                         ->from(Team::RELATIONSHIP_TEAM_USER)
                         ->select('userId')

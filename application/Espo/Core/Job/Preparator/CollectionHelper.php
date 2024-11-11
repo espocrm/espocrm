@@ -37,6 +37,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 use DateTimeImmutable;
+use Espo\ORM\Name\Attribute;
 
 /**
  * Creates jobs for each entity of a collection.
@@ -66,7 +67,7 @@ class CollectionHelper
     {
         $running = $this->entityManager
             ->getRDBRepository(Job::ENTITY_TYPE)
-            ->select('id')
+            ->select(Attribute::ID)
             ->where([
                 'scheduledJobId' => $data->getId(),
                 'status' => [

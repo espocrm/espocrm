@@ -32,6 +32,7 @@ namespace Espo\Core\Select\AccessControl\Filters;
 use Espo\Core\Name\Field;
 use Espo\Core\Select\AccessControl\Filter;
 use Espo\Entities\Team;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition;
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Where\OrGroup;
@@ -67,7 +68,7 @@ class ForeignOnlyTeam implements Filter
         $ownerAttribute = $this->getOwnerAttribute($link);
 
         if (!$ownerAttribute) {
-            $queryBuilder->where(['id' => null]);
+            $queryBuilder->where([Attribute::ID => null]);
 
             return;
         }

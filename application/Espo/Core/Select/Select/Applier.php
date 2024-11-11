@@ -34,6 +34,7 @@ use Espo\Core\Utils\FieldUtil;
 
 use Espo\Entities\User;
 use Espo\ORM\Entity;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class Applier
@@ -121,8 +122,8 @@ class Applier
 
         $attributeList = [];
 
-        if (!in_array('id', $passedAttributeList)) {
-            $attributeList[] = 'id';
+        if (!in_array(Attribute::ID, $passedAttributeList)) {
+            $attributeList[] = Attribute::ID;
         }
 
         foreach ($this->getAclAttributeList() as $attribute) {

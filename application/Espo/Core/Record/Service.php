@@ -66,6 +66,7 @@ use Espo\Core\Record\Select\ApplierClassNameListProvider;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Di;
 use Espo\ORM\Entity;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\ORM\Collection;
 use Espo\ORM\Query\Part\WhereClause;
@@ -251,7 +252,7 @@ class Service implements Crud,
 
         $entity = $this->getRepository()
             ->clone($query)
-            ->where(['id' => $id])
+            ->where([Attribute::ID => $id])
             ->findOne();
 
         if (!$entity && $this->user->isAdmin()) {
@@ -873,7 +874,7 @@ class Service implements Crud,
             ->select()
             ->from($this->entityType)
             ->where([
-                'id' => $id,
+                Attribute::ID => $id,
             ])
             ->withDeleted()
             ->build();

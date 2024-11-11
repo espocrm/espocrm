@@ -32,6 +32,7 @@ namespace Espo\Core\Select\AccessControl\Filters;
 use Espo\Core\Select\AccessControl\Filter;
 use Espo\Core\Select\Helpers\FieldHelper;
 use Espo\Entities\User;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class PortalOnlyOwn implements Filter
@@ -49,6 +50,6 @@ class PortalOnlyOwn implements Filter
             return;
         }
 
-        $queryBuilder->where(['id' => null]);
+        $queryBuilder->where([Attribute::ID => null]);
     }
 }

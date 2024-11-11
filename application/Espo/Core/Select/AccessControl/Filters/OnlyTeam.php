@@ -35,6 +35,7 @@ use Espo\Core\Select\Helpers\FieldHelper;
 use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\ORM\Defs;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 /**
@@ -52,16 +53,16 @@ class OnlyTeam implements Filter
     public function apply(QueryBuilder $queryBuilder): void
     {
         if (!$this->fieldHelper->hasTeamsField()) {
-            $queryBuilder->where(['id' => null]);
+            $queryBuilder->where([Attribute::ID => null]);
 
             return;
         }
 
         $subQueryBuilder = QueryBuilder::create()
-            ->select('id')
+            ->select(Attribute::ID)
             ->from($this->entityType)
             ->leftJoin(Team::RELATIONSHIP_ENTITY_TEAM, 'entityTeam', [
-                'entityTeam.entityId:' => 'id',
+                'entityTeam.entityId:' => Attribute::ID,
                 'entityTeam.entityType' => $this->entityType,
                 'entityTeam.deleted' => false,
             ]);
@@ -79,7 +80,7 @@ class OnlyTeam implements Filter
             $key2 = $relationDefs->getForeignMidKey();
 
             $subQueryBuilder->leftJoin($middleEntityType, 'assignedUsersMiddle', [
-                "assignedUsersMiddle.$key1:" => 'id',
+                "assignedUsersMiddle.$key1:" => Attribute::ID,
                 'assignedUsersMiddle.deleted' => false,
             ]);
 
@@ -100,7 +101,7 @@ class OnlyTeam implements Filter
             $key2 = $relationDefs->getForeignMidKey();
 
             $subQueryBuilder->leftJoin($middleEntityType, 'collaboratorsMiddle', [
-                "collaboratorsMiddle.$key1:" => 'id',
+                "collaboratorsMiddle.$key1:" => Attribute::ID,
                 'collaboratorsMiddle.deleted' => false,
             ]);
 

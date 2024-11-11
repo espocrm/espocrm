@@ -30,6 +30,7 @@
 namespace Espo\ORM\QueryComposer;
 
 use Espo\ORM\Entity;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Delete as DeleteQuery;
 use Espo\ORM\Query\DeleteBuilder;
 use Espo\ORM\Query\Insert as InsertQuery;
@@ -363,7 +364,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             $query->getOrder() !== []
         ) {
             $subQueryBuilder = SelectBuilder::create()
-                ->select('id')
+                ->select(Attribute::ID)
                 ->from($query->getFrom())
                 ->order($query->getOrder());
 
@@ -387,7 +388,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                 ->from($query->getFrom(), $query->getFromAlias())
                 ->where(
                     Cond::in(
-                        Cond::column('id'),
+                        Cond::column(Attribute::ID),
                         $subQueryBuilder->build()
                     )
                 );
@@ -407,7 +408,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             $query->getOrder() !== []
         ) {
             $subQueryBuilder = SelectBuilder::create()
-                ->select('id')
+                ->select(Attribute::ID)
                 ->from($query->getIn())
                 ->order($query->getOrder())
                 ->forUpdate();
@@ -433,7 +434,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                 ->set($query->getSet())
                 ->where(
                     Cond::in(
-                        Cond::column('id'),
+                        Cond::column(Attribute::ID),
                         $subQueryBuilder->build()
                     )
                 );
@@ -490,7 +491,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             }
         }
 
-        return ['id'];
+        return [Attribute::ID];
     }
 
     /**

@@ -37,6 +37,7 @@ use Espo\Core\Job\Job\Data;
 use Espo\Core\Job\Job\Status;
 use Espo\Entities\Job as JobEntity;
 
+use Espo\ORM\Name\Attribute;
 use LogicException;
 use RuntimeException;
 use Throwable;
@@ -133,7 +134,7 @@ class JobRunner
             $this->log->critical("Failed job {id}. {message}", [
                 'exception' => $e,
                 'message' => $e->getMessage(),
-                'id' => $jobId,
+                Attribute::ID => $jobId,
             ]);
 
             if ($throwException) {

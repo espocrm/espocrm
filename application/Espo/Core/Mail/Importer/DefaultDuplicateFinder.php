@@ -32,6 +32,7 @@ namespace Espo\Core\Mail\Importer;
 use Espo\Core\Mail\Message;
 use Espo\Entities\Email;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 
 class DefaultDuplicateFinder implements DuplicateFinder
 {
@@ -46,7 +47,7 @@ class DefaultDuplicateFinder implements DuplicateFinder
 
         return $this->entityManager
             ->getRDBRepositoryByClass(Email::class)
-            ->select(['id', 'status'])
+            ->select([Attribute::ID, 'status'])
             ->where([
                 'messageId' => $email->getMessageId(),
             ])

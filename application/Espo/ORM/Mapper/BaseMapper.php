@@ -32,6 +32,7 @@ namespace Espo\ORM\Mapper;
 use Espo\ORM\Entity;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Collection;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\DeleteBuilder;
 use Espo\ORM\Query\InsertBuilder;
 use Espo\ORM\Query\Part\Selection;
@@ -59,8 +60,8 @@ use const JSON_UNESCAPED_UNICODE;
  */
 class BaseMapper implements RDBMapper
 {
-    private const ATTR_ID = 'id';
-    private const ATTR_DELETED = 'deleted';
+    private const ATTR_ID = Attribute::ID;
+    private const ATTR_DELETED = Attribute::DELETED;
     private const FUNC_COUNT = 'COUNT';
 
     private Helper $helper;
@@ -119,7 +120,7 @@ class BaseMapper implements RDBMapper
      */
     public function count(Select $select): int
     {
-        return (int) $this->aggregate($select, self::FUNC_COUNT, 'id');
+        return (int) $this->aggregate($select, self::FUNC_COUNT, Attribute::ID);
     }
 
     public function max(Select $select, string $attribute): int|float
@@ -212,7 +213,7 @@ class BaseMapper implements RDBMapper
     private function convertSelectQueryToAggregation(
         Select $select,
         string $aggregation,
-        string $aggregationBy = 'id'
+        string $aggregationBy = Attribute::ID
     ): Select {
 
         $expression = "$aggregation:($aggregationBy)";
@@ -246,7 +247,7 @@ class BaseMapper implements RDBMapper
         $subQueryBuilder = SelectBuilder::create()
             ->clone($selectAggregation)
             ->select([])
-            ->select('id');
+            ->select(Attribute::ID);
 
         if ($select->isDistinct()) {
             $subQueryBuilder->distinct();
@@ -776,7 +777,7 @@ class BaseMapper implements RDBMapper
                    $selectColumns[] = ["VALUE:$value", "v$i"];
                 }
 
-                $selectColumns[] = 'id';
+                $selectColumns[] = Attribute::ID;
 
                 $subQuery = SelectBuilder::create()
                     ->clone($select)
@@ -816,7 +817,7 @@ class BaseMapper implements RDBMapper
             $id = $relEntity->getId();
         }
 
-        if (empty($id) || empty($relationName) || !$entity->get('id')) {
+        if (empty($id) || empty($relationName) || !$entity->get(Attribute::ID)) {
             throw new RuntimeException("Can't relate an empty entity or relation name.");
         }
 
@@ -840,7 +841,7 @@ class BaseMapper implements RDBMapper
         if (is_null($relEntity)) {
             $relEntity = $this->entityFactory->create($foreignEntityType);
 
-            $relEntity->set('id', $id);
+            $relEntity->set(Attribute::ID, $id);
         }
 
         $keySet = $this->helper->getRelationKeys($entity, $relationName);
@@ -1035,7 +1036,7 @@ class BaseMapper implements RDBMapper
 
                 $selectQuery = SelectBuilder::create()
                     ->from($middleName)
-                    ->select(['id'])
+                    ->select([Attribute::ID])
                     ->where($where)
                     ->withDeleted()
                     ->build();
@@ -1131,7 +1132,7 @@ class BaseMapper implements RDBMapper
         if (is_null($relEntity) && $relType !== Entity::BELONGS_TO_PARENT) {
             $relEntity = $this->entityFactory->create($foreignEntityType);
 
-            $relEntity->set('id', $id);
+            $relEntity->set(Attribute::ID, $id);
         }
 
         $keySet = $this->helper->getRelationKeys($entity, $relationName);
@@ -1146,7 +1147,7 @@ class BaseMapper implements RDBMapper
                 ];
 
                 $where = [
-                    'id' => $entity->getId(),
+                    Attribute::ID => $entity->getId(),
                 ];
 
                 if (!$all) {
@@ -1305,7 +1306,7 @@ class BaseMapper implements RDBMapper
 
         $this->queryExecutor->execute($query);
 
-        if ($this->getAttributeParam($entity, 'id', 'autoincrement')) {
+        if ($this->getAttributeParam($entity, Attribute::ID, 'autoincrement')) {
             $this->setLastInsertIdWithinConnection($entity);
         }
     }
@@ -1319,12 +1320,12 @@ class BaseMapper implements RDBMapper
             return;
         }
 
-        if ($entity->getAttributeType('id') === Entity::INT) {
+        if ($entity->getAttributeType(Attribute::ID) === Entity::INT) {
             $id = (int) $id;
         }
 
-        $entity->set('id', $id);
-        $entity->setFetched('id', $id);
+        $entity->set(Attribute::ID, $id);
+        $entity->setFetched(Attribute::ID, $id);
     }
 
     /**
@@ -1427,7 +1428,7 @@ class BaseMapper implements RDBMapper
         $valueMap = [];
 
         foreach ($this->toValueMap($entity) as $attribute => $value) {
-            if ($attribute == 'id') {
+            if ($attribute == Attribute::ID) {
                 continue;
             }
 

@@ -32,6 +32,7 @@ namespace Espo\Core\Select\Bool\Filters;
 use Espo\Core\Select\Bool\Filter;
 use Espo\Entities\StreamSubscription;
 use Espo\Entities\User;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
@@ -50,7 +51,7 @@ class Followed implements Filter
             $alias,
             [
                 $alias . '.entityType' => $this->entityType,
-                $alias . '.entityId=:' => 'id',
+                $alias . '.entityId=:' => Attribute::ID,
                 $alias . '.userId' => $this->user->getId(),
             ]
         );

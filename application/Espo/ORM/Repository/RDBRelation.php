@@ -34,6 +34,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Espo\ORM\BaseEntity;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\Part\WhereItem;
 use Espo\ORM\Query\Part\Selection;
@@ -304,7 +305,7 @@ class RDBRelation
      * @param (Order::ASC|Order::DESC)|bool|null $direction A direction.
      * @return Builder<TEntity>
      */
-    public function order($orderBy = 'id', $direction = null): Builder
+    public function order($orderBy = Attribute::ID, $direction = null): Builder
     {
         return $this->createSelectBuilder()->order($orderBy, $direction);
     }
@@ -413,8 +414,8 @@ class RDBRelation
         $this->processCheckForeignEntity($entity);
 
         return (bool) $this->createSelectBuilder()
-            ->select(['id'])
-            ->where(['id' => $entity->getId()])
+            ->select([Attribute::ID])
+            ->where([Attribute::ID => $entity->getId()])
             ->findOne();
     }
 
@@ -429,8 +430,8 @@ class RDBRelation
         }
 
         return (bool) $this->createSelectBuilder()
-            ->select(['id'])
-            ->where(['id' => $id])
+            ->select([Attribute::ID])
+            ->where([Attribute::ID => $id])
             ->findOne();
     }
 
@@ -492,7 +493,7 @@ class RDBRelation
 
         $seed = $this->entityManager->getEntityFactory()->create($foreignEntityType);
 
-        $seed->set('id', $id);
+        $seed->set(Attribute::ID, $id);
 
         $this->relate($seed, $columnData, $options);
     }
@@ -517,7 +518,7 @@ class RDBRelation
 
         $seed = $this->entityManager->getEntityFactory()->create($foreignEntityType);
 
-        $seed->set('id', $id);
+        $seed->set(Attribute::ID, $id);
 
         $this->unrelate($seed, $options);
     }
@@ -542,7 +543,7 @@ class RDBRelation
 
         $seed = $this->entityManager->getEntityFactory()->create($foreignEntityType);
 
-        $seed->set('id', $id);
+        $seed->set(Attribute::ID, $id);
 
         $this->updateColumns($seed, $columnData);
     }

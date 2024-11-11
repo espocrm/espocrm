@@ -40,6 +40,7 @@ use Espo\Entities\EmailAccount as EmailAccountEntity;
 use Espo\Entities\InboundEmail as InboundEmailEntity;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition;
 use Espo\ORM\Query\Part\Expression;
 use RuntimeException;
@@ -73,7 +74,7 @@ class SendingAccountProvider
 
             $entity = $this->entityManager
                 ->getRDBRepositoryByClass(InboundEmailEntity::class)
-                ->select(['id'])
+                ->select([Attribute::ID])
                 ->distinct()
                 ->join(Field::TEAMS)
                 ->where([
@@ -96,7 +97,7 @@ class SendingAccountProvider
         if ($level === Table::LEVEL_ALL) {
             $entity = $this->entityManager
                 ->getRDBRepositoryByClass(InboundEmailEntity::class)
-                ->select(['id'])
+                ->select([Attribute::ID])
                 ->where([
                     'status' => InboundEmailEntity::STATUS_ACTIVE,
                     'useSmtp' => true,
@@ -128,7 +129,7 @@ class SendingAccountProvider
     {
         $entity = $this->entityManager
             ->getRDBRepositoryByClass(InboundEmailEntity::class)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where([
                 'status' => InboundEmailEntity::STATUS_ACTIVE,
                 'useSmtp' => true,
@@ -170,7 +171,7 @@ class SendingAccountProvider
 
         $entity = $this->entityManager
             ->getRDBRepositoryByClass(EmailAccountEntity::class)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where([
                 'assignedUserId' => $user->getId(),
                 'status' => EmailAccountEntity::STATUS_ACTIVE,

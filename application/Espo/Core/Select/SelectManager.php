@@ -43,6 +43,7 @@ use Espo\Core\Utils\Metadata;
 
 use Espo\Entities\StreamSubscription;
 use Espo\ORM\Entity;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Select as SelectQuery;
 use Espo\ORM\QueryComposer\BaseQueryComposer as QueryComposer;
 
@@ -249,11 +250,11 @@ class SelectManager
             }
 
             if (
-                $sortBy != 'id' &&
+                $sortBy != Attribute::ID &&
                 (!$orderByAttribute || !$this->getSeed()->getAttributeParam($orderByAttribute, 'unique')) &&
-                $this->getSeed()->hasAttribute('id')
+                $this->getSeed()->hasAttribute(Attribute::ID)
             ) {
-                $result['orderBy'][] = ['id', $desc];
+                $result['orderBy'][] = [Attribute::ID, $desc];
             }
 
             return;
@@ -2931,8 +2932,8 @@ class SelectManager
         $seed = $this->getSeed();
 
         $attributeList = [];
-        if (!in_array('id', $passedAttributeList)) {
-            $attributeList[] = 'id';
+        if (!in_array(Attribute::ID, $passedAttributeList)) {
+            $attributeList[] = Attribute::ID;
         }
 
         $aclAttributeList = $this->aclAttributeList;

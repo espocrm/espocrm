@@ -34,6 +34,7 @@ use Espo\Core\Select\Helpers\FieldHelper;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\Part\Where\OrGroup;
@@ -74,7 +75,7 @@ class PortalOnlyAccount implements Filter
 
                 $orBuilder->add(
                     Cond::in(
-                        Expr::column('id'),
+                        Expr::column(Attribute::ID),
                         QueryBuilder::create()
                             ->from(ucfirst($defs->getRelationshipName()), 'm')
                             ->select($defs->getMidKey())
@@ -119,7 +120,7 @@ class PortalOnlyAccount implements Filter
 
                 $orBuilder->add(
                     Cond::in(
-                        Expr::column('id'),
+                        Expr::column(Attribute::ID),
                         QueryBuilder::create()
                             ->from(ucfirst($defs->getRelationshipName()), 'm')
                             ->select($defs->getMidKey())
@@ -139,7 +140,7 @@ class PortalOnlyAccount implements Filter
         $orGroup = $orBuilder->build();
 
         if ($orGroup->getItemCount() === 0) {
-            $queryBuilder->where(['id' => null]);
+            $queryBuilder->where([Attribute::ID => null]);
 
             return;
         }

@@ -39,6 +39,7 @@ use Espo\Entities\Job as JobEntity;
 use Espo\ORM\Collection;
 
 use DateTime;
+use Espo\ORM\Name\Attribute;
 use Exception;
 use LogicException;
 
@@ -59,8 +60,8 @@ class QueueUtil
         /** @var ?JobEntity $job */
         $job = $this->entityManager
             ->getRDBRepositoryByClass(JobEntity::class)
-            ->select(['id', 'status'])
-            ->where(['id' => $id])
+            ->select([Attribute::ID, 'status'])
+            ->where([Attribute::ID => $id])
             ->forUpdate()
             ->findOne();
 
@@ -83,7 +84,7 @@ class QueueUtil
         $builder = $this->entityManager
             ->getRDBRepositoryByClass(JobEntity::class)
             ->select([
-                'id',
+                Attribute::ID,
                 'scheduledJobId',
                 'scheduledJobJob',
                 'executeTime',
@@ -137,7 +138,7 @@ class QueueUtil
 
         return (bool) $this->entityManager
             ->getRDBRepositoryByClass(JobEntity::class)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where($where)
             ->findOne();
     }
@@ -190,7 +191,7 @@ class QueueUtil
 
         $job = $this->entityManager
             ->getRDBRepositoryByClass(JobEntity::class)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where([
                 'scheduledJobId' => $scheduledJobId,
                 'status' => [ // This forces usage of an appropriate index.
@@ -238,7 +239,7 @@ class QueueUtil
         $runningJobList = $this->entityManager
             ->getRDBRepositoryByClass(JobEntity::class)
             ->select([
-                'id',
+                Attribute::ID,
                 'scheduledJobId',
                 'executeTime',
                 'targetId',
@@ -275,7 +276,7 @@ class QueueUtil
         $failedJobList = $this->entityManager
             ->getRDBRepositoryByClass(JobEntity::class)
             ->select([
-                'id',
+                Attribute::ID,
                 'scheduledJobId',
                 'executeTime',
                 'targetId',
@@ -307,7 +308,7 @@ class QueueUtil
         $runningJobList = $this->entityManager
             ->getRDBRepositoryByClass(JobEntity::class)
             ->select([
-                'id',
+                Attribute::ID,
                 'scheduledJobId',
                 'executeTime',
                 'targetId',
@@ -364,7 +365,7 @@ class QueueUtil
                 'attempts' => 0,
             ])
             ->where([
-                'id' => $jobIdList,
+                Attribute::ID => $jobIdList,
             ])
             ->build();
 
@@ -425,7 +426,7 @@ class QueueUtil
         foreach ($scheduledJobIdList as $scheduledJobId) {
             $toRemoveJobList = $this->entityManager
                 ->getRDBRepositoryByClass(JobEntity::class)
-                ->select(['id'])
+                ->select([Attribute::ID])
                 ->where([
                     'scheduledJobId' => $scheduledJobId,
                     'status' => Status::PENDING,
@@ -448,7 +449,7 @@ class QueueUtil
                 ->getQueryBuilder()
                 ->delete()
                 ->from(JobEntity::ENTITY_TYPE)
-                ->where(['id' => $jobIdList])
+                ->where([Attribute::ID => $jobIdList])
                 ->build();
 
             $this->entityManager->getQueryExecutor()->execute($delete);
@@ -463,7 +464,7 @@ class QueueUtil
         $jobCollection = $this->entityManager
             ->getRDBRepositoryByClass(JobEntity::class)
             ->select([
-                'id',
+                Attribute::ID,
                 'attempts',
                 'failedAttempts',
             ])

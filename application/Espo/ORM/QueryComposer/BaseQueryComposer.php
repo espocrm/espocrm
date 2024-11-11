@@ -36,6 +36,7 @@ use Espo\ORM\BaseEntity;
 use Espo\ORM\EventDispatcher;
 use Espo\ORM\Metadata;
 use Espo\ORM\Mapper\Helper;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Query;
 use Espo\ORM\Query\SelectingQuery;
@@ -628,8 +629,8 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $entity = $this->getSeed($entityType);
 
-        if (!$params['withDeleted'] && $entity->hasAttribute('deleted')) {
-            $whereClause = $whereClause + ['deleted' => false];
+        if (!$params['withDeleted'] && $entity->hasAttribute(Attribute::DELETED)) {
+            $whereClause = $whereClause + [Attribute::DELETED => false];
         }
 
         $wherePart = $this->getWherePart($entity, $whereClause, 'AND', $params);
@@ -3349,7 +3350,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 $foreignKey = $keySet['foreignKey'];
                 $distantTable = $this->toDb($foreignEntityType);
 
-                $leftIdColumn = $this->quoteColumn("$fromAlias." . $this->toDb('id'));
+                $leftIdColumn = $this->quoteColumn("$fromAlias." . $this->toDb(Attribute::ID));
                 $rightIdColumn = $this->quoteColumn("$alias." . $this->toDb($foreignKey));
                 $leftDeletedColumn = $this->quoteColumn("$alias.deleted");
 
@@ -3381,7 +3382,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
                 $distantTable = $this->toDb($foreignEntityType);
 
-                $leftIdColumn = $this->quoteColumn("$fromAlias." . $this->toDb('id'));
+                $leftIdColumn = $this->quoteColumn("$fromAlias." . $this->toDb(Attribute::ID));
                 $rightIdColumn = $this->quoteColumn("$alias." . $this->toDb($foreignKey));
                 $leftTypeColumn = $this->quoteColumn("$alias." . $this->toDb($foreignType));
                 $leftDeletedColumn = $this->quoteColumn("$alias.deleted");

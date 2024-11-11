@@ -33,6 +33,7 @@ use Espo\Core\Utils\SystemUser;
 use Espo\Entities\User;
 use Espo\Core\ORM\EntityManagerProxy;
 
+use Espo\ORM\Name\Attribute;
 use RuntimeException;
 
 /**
@@ -56,14 +57,14 @@ class ApplicationUser
         $user = $this->entityManagerProxy
             ->getRDBRepository(User::ENTITY_TYPE)
             ->select([
-                'id',
+                Attribute::ID,
                 'name',
                 'userName',
                 'type',
                 'isActive',
                 'firstName',
                 'lastName',
-                'deleted',
+                Attribute::DELETED,
             ])
             ->where(['userName' => SystemUser::NAME])
             ->findOne();

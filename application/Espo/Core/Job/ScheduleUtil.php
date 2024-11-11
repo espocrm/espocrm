@@ -35,6 +35,7 @@ use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
 use Espo\Entities\ScheduledJob as ScheduledJobEntity;
 use Espo\Entities\ScheduledJobLogRecord as ScheduledJobLogRecordEntity;
+use Espo\ORM\Name\Attribute;
 
 class ScheduleUtil
 {
@@ -52,7 +53,7 @@ class ScheduleUtil
         $collection = $this->entityManager
             ->getRDBRepository(ScheduledJobEntity::ENTITY_TYPE)
             ->select([
-                'id',
+                Attribute::ID,
                 'scheduling',
                 'job',
                 'name',

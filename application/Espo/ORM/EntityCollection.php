@@ -29,6 +29,7 @@
 
 namespace Espo\ORM;
 
+use Espo\ORM\Name\Attribute;
 use Iterator;
 use Countable;
 use ArrayAccess;
@@ -317,11 +318,11 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         if (is_array($value)) {
             foreach ($this->dataList as $v) {
                 if (is_array($v)) {
-                    if ($value['id'] == $v['id']) {
+                    if ($value[Attribute::ID] == $v[Attribute::ID]) {
                         return $index;
                     }
                 } else if ($v instanceof Entity) {
-                    if ($value['id'] == $v->getId()) {
+                    if ($value[Attribute::ID] == $v->getId()) {
                         return $index;
                     }
                 }
@@ -331,7 +332,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         } else if ($value instanceof Entity) {
             foreach ($this->dataList as $v) {
                 if (is_array($v)) {
-                    if ($value->getId() == $v['id']) {
+                    if ($value->getId() == $v[Attribute::ID]) {
                         return $index;
                     }
                 } else if ($v instanceof Entity) {

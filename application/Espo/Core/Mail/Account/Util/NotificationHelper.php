@@ -37,6 +37,7 @@ use Espo\Entities\InboundEmail;
 use Espo\Entities\Notification;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 
 class NotificationHelper
 {
@@ -128,7 +129,7 @@ class NotificationHelper
     {
         $users = $this->entityManager
             ->getRDBRepositoryByClass(User::class)
-            ->select(['id'])
+            ->select([Attribute::ID])
             ->where([
                 'isActive' => true,
                 'type' => User::TYPE_ADMIN,

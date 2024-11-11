@@ -33,6 +33,7 @@ use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\ORM\BaseEntity;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
@@ -110,11 +111,11 @@ class Entity extends BaseEntity
 
         $repository = $this->entityManager->getRDBRepository($parentType);
 
-        $select = ['id', 'name'];
+        $select = [Attribute::ID, 'name'];
 
         $foreignEntity = $repository
             ->select($select)
-            ->where(['id' => $parentId])
+            ->where([Attribute::ID => $parentId])
             ->findOne();
 
         $entityName = $foreignEntity ? $foreignEntity->get('name') : null;
@@ -214,7 +215,7 @@ class Entity extends BaseEntity
             throw new LogicException("No entity-manager.");
         }
 
-        $select = ['id', 'name'];
+        $select = [Attribute::ID, 'name'];
 
         $hasType = $this->hasAttribute($field . 'Types');
 
@@ -343,7 +344,7 @@ class Entity extends BaseEntity
             throw new LogicException("No entity-manager.");
         }
 
-        $select = ['id', 'name'];
+        $select = [Attribute::ID, 'name'];
 
         $entity = $this->entityManager
             ->getRDBRepository($this->getEntityType())

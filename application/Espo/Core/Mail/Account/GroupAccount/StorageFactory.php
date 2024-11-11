@@ -39,6 +39,7 @@ use Espo\Core\Mail\Mail\Storage\Imap;
 use Espo\Core\Utils\Log;
 use Espo\Core\InjectableFactory;
 
+use Espo\ORM\Name\Attribute;
 use Laminas\Mail\Storage\Exception\RuntimeException;
 use Laminas\Mail\Storage\Exception\InvalidArgumentException;
 use Laminas\Mail\Protocol\Exception\RuntimeException as ProtocolRuntimeException;
@@ -81,7 +82,7 @@ class StorageFactory implements StorageFactoryInterface
             'username' => $params->getUsername(),
             'password' => $params->getPassword(),
             'imapHandler' => $params->getImapHandlerClassName(),
-            'id' => $params->getId(),
+            Attribute::ID => $params->getId(),
         ];
 
         if ($params->getSecurity()) {

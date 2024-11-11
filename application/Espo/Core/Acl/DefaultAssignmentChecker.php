@@ -33,6 +33,7 @@ use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Name\Attribute;
 use Espo\Repositories\User as UserRepository;
 use Espo\ORM\Defs;
 use Espo\ORM\Entity;
@@ -206,7 +207,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
             $teamCollection = $this->entityManager
                 ->getRDBRepository($entity->getEntityType())
                 ->getRelation($entity, self::FIELD_TEAMS)
-                ->select('id')
+                ->select(Attribute::ID)
                 ->find();
 
             foreach ($teamCollection as $team) {
@@ -364,7 +365,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
                     User::TYPE_REGULAR,
                     User::TYPE_ADMIN,
                 ],
-                'id' => $ids,
+                Attribute::ID => $ids,
             ])
             ->count();
 
