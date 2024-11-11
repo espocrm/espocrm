@@ -41,6 +41,7 @@ use Espo\Core\Utils\Log;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Condition as Cond;
 
+use Espo\ORM\Query\SelectBuilder;
 use Exception;
 use stdClass;
 
@@ -228,12 +229,16 @@ class Queue
         $target = null;
 
         if ($this->entityManager->hasRepository($targetType)) {
+            $query = SelectBuilder::create()
+                ->from($targetType)
+                ->withDeleted()
+                ->build();
+
             $target = $this->entityManager
                 ->getRDBRepository($targetType)
-                ->where([
-                    'id' => $item->get('targetId')
-                ])
-                ->findOne(['withDeleted' => true]);
+                ->clone($query)
+                ->where(['id' => $item->get('targetId')])
+                ->findOne();
         }
 
         if (!$target) {

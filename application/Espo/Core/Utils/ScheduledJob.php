@@ -144,10 +144,11 @@ class ScheduledJob
 
         $format = DateTimeUtil::SYSTEM_DATE_TIME_FORMAT;
 
-        $selectParams = [
-            'select' => ['id'],
-            'leftJoins' => ['scheduledJob'],
-            'whereClause' => [
+        return (bool) $this->entityManager
+            ->getRDBRepository(Job::ENTITY_TYPE)
+            ->select(['id'])
+            ->leftJoin('scheduledJob')
+            ->where([
                 'OR' => [
                     [
                         ['executedAt>=' => $r2From->format($format)],
@@ -159,9 +160,7 @@ class ScheduledJob
                         'scheduledJob.job' => 'Dummy',
                     ]
                 ]
-            ]
-        ];
-
-        return (bool) $this->entityManager->getRDBRepository(Job::ENTITY_TYPE)->findOne($selectParams);
+            ])
+            ->findOne();
     }
 }
