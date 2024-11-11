@@ -34,6 +34,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\SystemUser;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 
 class AddSystemUser implements RebuildAction
 {
@@ -73,10 +74,12 @@ class AddSystemUser implements RebuildAction
 
         $user = $repository->getNew();
 
-        $user->set('id', $this->systemUser->getId());
-        $user->set('userName', SystemUser::NAME);
-        $user->set('type', User::TYPE_SYSTEM);
-        $user->set($attributes);
+        $user
+            ->set(Attribute::ID, $this->systemUser->getId())
+            ->setUserName(SystemUser::NAME)
+            ->setType(User::TYPE_SYSTEM);
+
+        $user->setMultiple($attributes);
 
         $repository->save($user);
     }

@@ -80,6 +80,19 @@ class User extends Person
     }
 
     /**
+     * @param self::TYPE_* $type
+     */
+    public function setType(string $type): self
+    {
+        return $this->set('type', $type);
+    }
+
+    public function setUserName(?string $userName): self
+    {
+        return $this->set('userName', $userName);
+    }
+
+    /**
      * Is regular user.
      */
     public function isRegular(): bool
