@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\Applier\AdditionalAppliers;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Select\Applier\AdditionalApplier;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Utils\Metadata;
@@ -55,7 +56,7 @@ class IsStarred implements AdditionalApplier
         }
 
         $queryBuilder
-            ->select(Expr::isNotNull(Expr::column('starSubscription.id')), 'isStarred')
+            ->select(Expr::isNotNull(Expr::column('starSubscription.id')), Field::IS_STARRED)
             ->leftJoin(StarSubscription::ENTITY_TYPE, 'starSubscription', [
                 'userId' => $this->user->getId(),
                 'entityType' => $this->entityType,

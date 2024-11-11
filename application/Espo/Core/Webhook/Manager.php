@@ -50,7 +50,7 @@ class Manager
 
     /** @var string[] */
     protected $skipAttributeList = [
-        'isFollowed',
+        Field::IS_FOLLOWED,
         Field::MODIFIED_AT,
         Field::MODIFIED_BY,
     ];

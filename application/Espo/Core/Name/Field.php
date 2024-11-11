@@ -40,4 +40,7 @@ class Field
     public const COLLABORATORS = 'collaborators';
     public const TEAMS = 'teams';
     public const PARENT = 'parent';
+    public const IS_FOLLOWED = 'isFollowed';
+    public const FOLLOWERS = 'followers';
+    public const IS_STARRED = 'isStarred';
 }

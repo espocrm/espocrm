@@ -29,6 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\Stream;
 
+use Espo\Core\Name\Field;
 use Espo\ORM\Entity;
 use Espo\Core\Acl;
 use Espo\Core\FieldProcessing\Loader as LoaderInterface;
@@ -61,13 +62,13 @@ class FollowersLoader implements LoaderInterface
 
     public function processIsFollowed(Entity $entity): void
     {
-        if (!$entity->hasAttribute('isFollowed')) {
+        if (!$entity->hasAttribute(Field::IS_FOLLOWED)) {
             return;
         }
 
         $isFollowed = $this->streamService->checkIsFollowed($entity);
 
-        $entity->set('isFollowed', $isFollowed);
+        $entity->set(Field::IS_FOLLOWED, $isFollowed);
     }
 
     public function processFollowers(Entity $entity): void
@@ -88,7 +89,7 @@ class FollowersLoader implements LoaderInterface
 
         $data = $this->streamService->getEntityFollowers($entity, 0, $limit);
 
-        $entity->set('followersIds', $data['idList']);
-        $entity->set('followersNames', $data['nameMap']);
+        $entity->set(Field::FOLLOWERS . 'Ids', $data['idList']);
+        $entity->set(Field::FOLLOWERS . 'Names', $data['nameMap']);
     }
 }

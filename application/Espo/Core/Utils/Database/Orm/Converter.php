@@ -31,6 +31,7 @@ namespace Espo\Core\Utils\Database\Orm;
 
 use Doctrine\DBAL\Types\Types;
 use Espo\Core\InjectableFactory;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Database\ConfigDataProvider;
@@ -498,20 +499,20 @@ class Converter
         $scopeDefs = $this->metadata->get(['scopes', $entityType]) ?? [];
 
         if ($scopeDefs['stream'] ?? false) {
-            if (!isset($entityMetadata['fields']['isFollowed'])) {
-                $ormMetadata[$entityType]['attributes']['isFollowed'] = [
+            if (!isset($entityMetadata['fields'][Field::IS_FOLLOWED])) {
+                $ormMetadata[$entityType]['attributes'][Field::IS_FOLLOWED] = [
                     'type' => Entity::BOOL,
                     'notStorable' => true,
                     AttributeParam::NOT_EXPORTABLE => true,
                 ];
 
-                $ormMetadata[$entityType]['attributes']['followersIds'] = [
+                $ormMetadata[$entityType]['attributes'][Field::FOLLOWERS . 'Ids'] = [
                     'type' => Entity::JSON_ARRAY,
                     'notStorable' => true,
                     AttributeParam::NOT_EXPORTABLE => true,
                 ];
 
-                $ormMetadata[$entityType]['attributes']['followersNames'] = [
+                $ormMetadata[$entityType]['attributes'][Field::FOLLOWERS . 'Names'] = [
                     'type' => Entity::JSON_OBJECT,
                     'notStorable' => true,
                     AttributeParam::NOT_EXPORTABLE => true,
@@ -521,8 +522,8 @@ class Converter
 
         // @todo Refactor.
         if ($scopeDefs['stars'] ?? false) {
-            if (!isset($entityMetadata['fields']['isStarred'])) {
-                $ormMetadata[$entityType]['attributes']['isStarred'] = [
+            if (!isset($entityMetadata['fields'][Field::IS_STARRED])) {
+                $ormMetadata[$entityType]['attributes'][Field::IS_STARRED] = [
                     'type' => Entity::BOOL,
                     'notStorable' => true,
                     AttributeParam::NOT_EXPORTABLE => true,

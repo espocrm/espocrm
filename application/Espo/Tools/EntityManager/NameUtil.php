@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\EntityManager;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Route;
@@ -136,16 +137,17 @@ class NameUtil
         'deleted',
         'deleteId',
         'skipDuplicateCheck',
-        'isFollowed',
-        'isStarred',
         'versionNumber',
         'null',
         'false',
         'true',
-        'teams',
-        'assignedUser',
-        'assignedUsers',
-        'collaborators',
+        Field::IS_STARRED,
+        Field::IS_FOLLOWED,
+        Field::FOLLOWERS,
+        Field::TEAMS,
+        Field::ASSIGNED_USER,
+        Field::ASSIGNED_USERS,
+        Field::COLLABORATORS,
     ];
 
     /**
@@ -155,7 +157,6 @@ class NameUtil
         'posts',
         'stream',
         'subscription',
-        'followers',
         'starSubscription',
         'action',
         'null',
@@ -163,10 +164,11 @@ class NameUtil
         'true',
         'layout',
         'system',
-        'teams',
-        'assignedUser',
-        'assignedUsers',
-        'collaborators',
+        Field::FOLLOWERS,
+        Field::TEAMS,
+        Field::ASSIGNED_USER,
+        Field::ASSIGNED_USERS,
+        Field::COLLABORATORS,
     ];
 
     /**

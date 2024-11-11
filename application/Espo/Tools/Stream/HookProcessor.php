@@ -389,7 +389,7 @@ class HookProcessor
         }
 
         if (in_array($this->user->getId(), $userIdList)) {
-            $entity->set('isFollowed', true);
+            $entity->set(Field::IS_FOLLOWED, true);
         }
 
         $autofollowUserIdList = $this->getAutofollowUserIdList($entity->getEntityType(), $userIdList);
@@ -465,7 +465,7 @@ class HookProcessor
             $this->service->followEntity($entity, $userId);
 
             if ($this->user->getId() === $userId) {
-                $entity->set('isFollowed', true);
+                $entity->set(Field::IS_FOLLOWED, true);
             }
         }
     }
@@ -487,7 +487,7 @@ class HookProcessor
         $this->service->noteAssign($entity, $options);
 
         if ($this->user->getId() === $assignedUserId) {
-            $entity->set('isFollowed', true);
+            $entity->set(Field::IS_FOLLOWED, true);
         }
     }
 
@@ -508,7 +508,7 @@ class HookProcessor
         $this->service->noteAssign($entity, $options);
 
         if (in_array($this->user->getId(), $userIds)) {
-            $entity->set('isFollowed', true);
+            $entity->set(Field::IS_FOLLOWED, true);
         }
     }
 
