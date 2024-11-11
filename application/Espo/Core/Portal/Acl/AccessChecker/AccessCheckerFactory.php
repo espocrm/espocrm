@@ -37,7 +37,6 @@ use Espo\Core\Binding\BindingData;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Portal\Acl\DefaultAccessChecker;
 use Espo\Core\Portal\AclManager as PortalAclManager;
-use Espo\Core\Utils\ClassFinder;
 use Espo\Core\Utils\Metadata;
 
 class AccessCheckerFactory
@@ -46,7 +45,6 @@ class AccessCheckerFactory
     private $defaultClassName = DefaultAccessChecker::class;
 
     public function __construct(
-        private ClassFinder $classFinder,
         private Metadata $metadata,
         private InjectableFactory $injectableFactory
     ) {}
@@ -79,14 +77,6 @@ class AccessCheckerFactory
 
         if (!$this->metadata->get(['scopes', $scope])) {
             throw new NotImplemented();
-        }
-
-        // For backward compatibility.
-        /** @var ?class-string<AccessChecker> $className2 */
-        $className2 = $this->classFinder->find('AclPortal', $scope);
-
-        if ($className2) {
-            return $className2;
         }
 
         return $this->defaultClassName;
