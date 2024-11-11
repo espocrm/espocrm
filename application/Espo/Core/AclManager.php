@@ -315,16 +315,6 @@ class AclManager
             return $checker->$methodName($user, $entity, $data);
         }
 
-        if (method_exists($checker, $methodName)) {
-            // For backward compatibility.
-            return $checker->$methodName($user, $entity, $data);
-        }
-
-        if (method_exists($checker, 'checkEntity')) {
-            // For backward compatibility.
-            return $checker->checkEntity($user, $entity, $data, $action);
-        }
-
         throw new NotImplemented("No entity access checker for '$scope' action '$action'.");
     }
 
