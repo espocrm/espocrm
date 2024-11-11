@@ -34,6 +34,7 @@ use Espo\Core\Container;
 /**
  * @deprecated As of v7.0. Create classes that implement Espo\Core\Job\Job and Espo\Core\Job\JobDataLess
  * interfaces. Pass needed dependencies via a constructor.
+ * @todo Remove in v10.0.
  */
 abstract class Base
 {

@@ -31,7 +31,10 @@ namespace Espo\Core\EntryPoints;
 
 use Espo\Core\Container;
 
-/** @deprecated */
+/**
+ * @deprecated
+ * @todo Remove in v10.0.
+ */
 abstract class Base
 {
     /**

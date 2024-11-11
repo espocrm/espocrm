@@ -33,7 +33,7 @@ use Espo\Core\Container;
 
 /**
  * @deprecated
- * @todo Remove.
+ * @todo Remove in v10.0.
  */
 abstract class Base implements Loader
 {

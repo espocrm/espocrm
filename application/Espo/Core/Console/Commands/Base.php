@@ -31,7 +31,10 @@ namespace Espo\Core\Console\Commands;
 
 use Espo\Core\Container;
 
-/** @deprecated */
+/**
+ * @deprecated
+ * @todo Remove in v10.0.
+ */
 abstract class Base
 {
     private Container $container;

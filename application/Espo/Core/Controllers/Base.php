@@ -42,6 +42,7 @@ use Espo\Entities\User;
 
 /**
  * @deprecated Don't extend.
+ * @todo Remove in v10.0.
  */
 abstract class Base
 {
