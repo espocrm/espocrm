@@ -529,6 +529,11 @@
             "returnType": "string"
         },
         {
+            "name": "json\\prettyPrint",
+            "insertText": "json\\prettyPrint(JSON)",
+            "returnType": "string"
+        },
+        {
             "name": "ext\\email\\send",
             "insertText": "ext\\email\\send(EMAIL_ID)",
             "returnType": "bool",
