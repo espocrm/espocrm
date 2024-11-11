@@ -57,7 +57,7 @@ use Espo\ORM\Type\AttributeType;
 use ReflectionMethod;
 
 /**
- * @deprecated As of v7.0. Use SelectBuilder instead.
+ * @deprecated As of v7.0. Use Select framework and SelectBuilder instead.
  * @todo Remove in v10.0.
  */
 class SelectManager
