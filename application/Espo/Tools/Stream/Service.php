@@ -31,6 +31,7 @@ namespace Espo\Tools\Stream;
 
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\StreamSubscription;
@@ -386,8 +387,8 @@ class Service
         $note->setAclIsProcessed();
         $note->setTeamsIds([]);
 
-        if ($entity->hasLinkMultipleField('teams')) {
-            $note->setTeamsIds($entity->getLinkMultipleIdList('teams'));
+        if ($entity->hasLinkMultipleField(Field::TEAMS)) {
+            $note->setTeamsIds($entity->getLinkMultipleIdList(Field::TEAMS));
         }
 
         $userIds = array_merge(
@@ -453,7 +454,7 @@ class Service
             return [];
         }
 
-        $field = 'collaborators';
+        $field = Field::COLLABORATORS;
 
         if (!$entity->hasLinkMultipleField($field)) {
             return [];

@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Classes\Select\MassEmail\AccessControlFilters;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Select\AccessControl\Filter;
 use Espo\ORM\Query\SelectBuilder;
 
@@ -43,7 +44,7 @@ class OnlyTeam implements Filter
     {
         $queryBuilder->leftJoin('campaign', 'campaignAccess');
 
-        $teamIdList = $this->user->getLinkMultipleIdList('teams');
+        $teamIdList = $this->user->getLinkMultipleIdList(Field::TEAMS);
 
         if (count($teamIdList) === 0) {
             $queryBuilder->where([

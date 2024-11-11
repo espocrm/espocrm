@@ -32,6 +32,7 @@ namespace Espo\Modules\Crm\Entities;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Name\Field;
 use Espo\Entities\User;
 
 class Lead extends \Espo\Core\Entities\Person
@@ -111,7 +112,7 @@ class Lead extends \Espo\Core\Entities\Person
     public function getTeams(): LinkMultiple
     {
         /** @var LinkMultiple */
-        return $this->getValueObject('teams');
+        return $this->getValueObject(Field::TEAMS);
     }
 
     public function getCreatedAccount(): ?Link
@@ -159,7 +160,7 @@ class Lead extends \Espo\Core\Entities\Person
 
     public function setTeams(LinkMultiple $teams): self
     {
-        $this->setValueObject('teams', $teams);
+        $this->setValueObject(Field::TEAMS, $teams);
 
         return $this;
     }

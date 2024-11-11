@@ -30,6 +30,7 @@
 namespace Espo\Entities;
 
 use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Util;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Field\DateTime;
@@ -684,7 +685,7 @@ class Email extends Entity
     public function getTeams(): LinkMultiple
     {
         /** @var LinkMultiple */
-        return $this->getValueObject('teams');
+        return $this->getValueObject(Field::TEAMS);
     }
 
     public function getUsers(): LinkMultiple
@@ -890,14 +891,14 @@ class Email extends Entity
 
     public function addTeamId(string $teamId): self
     {
-        $this->addLinkMultipleId('teams', $teamId);
+        $this->addLinkMultipleId(Field::TEAMS, $teamId);
 
         return $this;
     }
 
     public function setTeams(LinkMultiple $teams): self
     {
-        $this->setValueObject('teams', $teams);
+        $this->setValueObject(Field::TEAMS, $teams);
 
         return $this;
     }

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\Helpers;
 
+use Espo\Core\Name\Field;
 use Espo\Entities\User;
 use Espo\ORM\Defs;
 use Espo\ORM\Query\Part\Condition;
@@ -60,7 +61,7 @@ class RelationQueryHelper
         return $this->prepareRelatedUsersWhere(
             $entityType,
             $userId,
-            'collaborators',
+            Field::COLLABORATORS,
             User::RELATIONSHIP_ENTITY_COLLABORATOR
         );
     }

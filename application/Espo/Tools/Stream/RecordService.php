@@ -32,6 +32,7 @@ namespace Espo\Tools\Stream;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Name\Field;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Collection;
@@ -255,7 +256,7 @@ class RecordService
 
         $builder
             ->distinct()
-            ->leftJoin('teams')
+            ->leftJoin(Field::TEAMS)
             ->leftJoin('users');
 
         $where[] = [
@@ -432,7 +433,7 @@ class RecordService
             $note->getParentId() && $note->getParentType() &&
             ($note->getParentId() !== $id || $note->getParentType() !== $scope)
         ) {
-            $note->loadParentNameField('parent');
+            $note->loadParentNameField(Field::PARENT);
         }
 
         if ($note->getRelatedId() && $note->getRelatedType()) {

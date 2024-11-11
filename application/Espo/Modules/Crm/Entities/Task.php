@@ -33,6 +33,7 @@ use Espo\Core\Field\DateTimeOptional;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Entities\Attachment;
 use Espo\Entities\User;
@@ -78,13 +79,13 @@ class Task extends Entity
     public function getAssignedUser(): ?Link
     {
         /** @var ?Link */
-        return $this->getValueObject('assignedUser');
+        return $this->getValueObject(Field::ASSIGNED_USER);
     }
 
     public function getTeams(): LinkMultiple
     {
         /** @var LinkMultiple */
-        return $this->getValueObject('teams');
+        return $this->getValueObject(Field::TEAMS);
     }
 
     /**
@@ -99,12 +100,12 @@ class Task extends Entity
     public function setParent(Entity|LinkParent|null $parent): self
     {
         if ($parent instanceof LinkParent) {
-            $this->setValueObject('parent', $parent);
+            $this->setValueObject(Field::PARENT, $parent);
 
             return $this;
         }
 
-        $this->relations->set('parent', $parent);
+        $this->relations->set(Field::PARENT, $parent);
 
         return $this;
     }

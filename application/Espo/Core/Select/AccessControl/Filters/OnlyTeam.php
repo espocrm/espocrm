@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\AccessControl\Filters;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Select\AccessControl\Filter;
 use Espo\Core\Select\Helpers\FieldHelper;
 use Espo\Entities\Team;
@@ -36,6 +37,9 @@ use Espo\Entities\User;
 use Espo\ORM\Defs;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
+/**
+ * @noinspection PhpUnused
+ */
 class OnlyTeam implements Filter
 {
     public function __construct(
@@ -68,7 +72,7 @@ class OnlyTeam implements Filter
         if ($this->fieldHelper->hasAssignedUsersField()) {
             $relationDefs = $this->defs
                 ->getEntity($this->entityType)
-                ->getRelation('assignedUsers');
+                ->getRelation(Field::ASSIGNED_USERS);
 
             $middleEntityType = ucfirst($relationDefs->getRelationshipName());
             $key1 = $relationDefs->getMidKey();
@@ -89,7 +93,7 @@ class OnlyTeam implements Filter
         if ($this->fieldHelper->hasCollaboratorsField()) {
             $relationDefs = $this->defs
                 ->getEntity($this->entityType)
-                ->getRelation('collaborators');
+                ->getRelation(Field::COLLABORATORS);
 
             $middleEntityType = ucfirst($relationDefs->getRelationshipName());
             $key1 = $relationDefs->getMidKey();

@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 
 use Espo\Core\Field\LinkParent;
@@ -192,12 +193,12 @@ class Attachment extends Entity
     public function setParent(LinkParent|Entity|null $parent): self
     {
         if ($parent instanceof LinkParent) {
-            $this->setValueObject('parent', $parent);
+            $this->setValueObject(Field::PARENT, $parent);
 
             return $this;
         }
 
-        $this->relations->set('parent', $parent);
+        $this->relations->set(Field::PARENT, $parent);
 
         return $this;
     }

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\AccessControl\Filters;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Select\AccessControl\Filter;
 use Espo\ORM\Defs;
 use Espo\ORM\Query\SelectBuilder;
@@ -65,7 +66,7 @@ class ForeignOnlyOwn implements Filter
 
         $foreignEntityDefs = $this->defs->getEntity($foreignEntityType);
 
-        if ($foreignEntityDefs->hasField('assignedUser')) {
+        if ($foreignEntityDefs->hasField(Field::ASSIGNED_USER)) {
             $queryBuilder->where([
                 "{$alias}.assignedUserId" => $this->user->getId(),
             ]);
@@ -73,7 +74,7 @@ class ForeignOnlyOwn implements Filter
             return;
         }
 
-        if ($foreignEntityDefs->hasField('createdBy')) {
+        if ($foreignEntityDefs->hasField(Field::CREATED_BY)) {
             $queryBuilder->where([
                 "{$alias}.createdById" => $this->user->getId(),
             ]);

@@ -34,6 +34,7 @@ use Espo\Core\ApplicationState;
 use Espo\Core\Authentication\Jwt\Token\Payload;
 use Espo\Core\Authentication\Oidc\ConfigDataProvider;
 use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Core\Utils\Util;
@@ -98,7 +99,7 @@ class Sync
         $clearAclCache = false;
 
         if ($this->configDataProvider->syncTeams()) {
-            $user->loadLinkMultipleField('teams');
+            $user->loadLinkMultipleField(Field::TEAMS);
 
             $user->set($this->getUserTeamsDataFromToken($payload));
 

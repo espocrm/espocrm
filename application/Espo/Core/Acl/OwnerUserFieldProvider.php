@@ -29,17 +29,17 @@
 
 namespace Espo\Core\Acl;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
-
 use Espo\Entities\User;
 use Espo\ORM\Defs;
 
 class OwnerUserFieldProvider
 {
-    protected const FIELD_ASSIGNED_USERS = 'assignedUsers';
-    protected const FIELD_ASSIGNED_USER = 'assignedUser';
-    protected const FIELD_CREATED_BY = 'createdBy';
+    protected const FIELD_ASSIGNED_USERS = Field::ASSIGNED_USERS;
+    protected const FIELD_ASSIGNED_USER = Field::ASSIGNED_USER;
+    protected const FIELD_CREATED_BY = Field::CREATED_BY;
 
     public function __construct(private Defs $ormDefs, private Metadata $metadata)
     {}

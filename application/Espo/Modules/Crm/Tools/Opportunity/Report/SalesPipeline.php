@@ -31,6 +31,7 @@ namespace Espo\Modules\Crm\Tools\Opportunity\Report;
 
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Name\Field;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
@@ -131,7 +132,7 @@ class SalesPipeline
             ->where($whereClause);
 
         if ($teamId) {
-            $queryBuilder->join('teams', 'teamsFilter');
+            $queryBuilder->join(Field::TEAMS, 'teamsFilter');
         }
 
         $this->util->handleDistinctReportQueryBuilder($queryBuilder, $whereClause);

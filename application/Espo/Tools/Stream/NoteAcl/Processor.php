@@ -32,6 +32,7 @@ namespace Espo\Tools\Stream\NoteAcl;
 use DateTimeImmutable;
 use Espo\Core\AclManager;
 use Espo\Core\Field\DateTime;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Config;
@@ -110,13 +111,13 @@ class Processor
             }
         }
 
-        if ($entity->hasLinkMultipleField('teams')) {
-            if ($entity->isAttributeChanged('teamsIds')) {
+        if ($entity->hasLinkMultipleField(Field::TEAMS)) {
+            if ($entity->isAttributeChanged(Field::TEAMS)) {
                 $teamsAttributeIsChanged = true;
             }
 
             if ($teamsAttributeIsChanged || $notify) {
-                $teamIdList = $entity->getLinkMultipleIdList('teams');
+                $teamIdList = $entity->getLinkMultipleIdList(Field::TEAMS);
             }
         }
 

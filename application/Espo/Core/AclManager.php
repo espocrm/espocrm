@@ -31,6 +31,7 @@ namespace Espo\Core;
 
 use Espo\Core\Acl\OwnershipSharedChecker;
 use Espo\Core\Acl\Permission;
+use Espo\Core\Name\Field;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
@@ -605,7 +606,7 @@ class AclManager
         }
 
         if ($permission === Table::LEVEL_TEAM) {
-            $teamIdList = $user->getLinkMultipleIdList('teams');
+            $teamIdList = $user->getLinkMultipleIdList(Field::TEAMS);
 
             /** @var \Espo\Repositories\User $userRepository */
             $userRepository = $this->entityManager->getRepository(User::ENTITY_TYPE);

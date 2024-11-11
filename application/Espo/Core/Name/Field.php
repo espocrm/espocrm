@@ -27,49 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Classes\Select\CampaignTrackingUrl\AccessControlFilters;
+namespace Espo\Core\Name;
 
-use Espo\Core\Name\Field;
-use Espo\Core\Select\AccessControl\Filter;
-use Espo\ORM\Query\SelectBuilder;
-
-use Espo\Entities\User;
-
-class OnlyTeam implements Filter
+class Field
 {
-    public function __construct(private User $user)
-    {}
-
-    public function apply(SelectBuilder $queryBuilder): void
-    {
-        $queryBuilder->leftJoin('campaign', 'campaignAccess');
-
-        $teamIdList = $this->user->getLinkMultipleIdList(Field::TEAMS);
-
-        if (count($teamIdList) === 0) {
-            $queryBuilder->where([
-                'campaignAccess.assignedUserId' => $this->user->getId(),
-            ]);
-
-            return;
-        }
-
-        $queryBuilder
-            ->leftJoin(
-                'EntityTeam',
-                'entityTeamAccess',
-                [
-                    'entityTeamAccess.entityType' => 'Campaign',
-                    'entityTeamAccess.entityId:' => 'campaignAccess.id',
-                    'entityTeamAccess.deleted' => false,
-                ]
-            )
-            ->where([
-                'OR' => [
-                    'entityTeamAccess.teamId' => $teamIdList,
-                    'campaignAccess.assignedUserId' => $this->user->getId(),
-                ],
-                'campaignId!=' => null,
-            ]);
-    }
+    public const CREATED_BY = 'createdBy';
+    public const CREATED_AT = 'createdAt';
+    public const MODIFIED_BY = 'modifiedBy';
+    public const MODIFIED_AT = 'modifiedAt';
+    public const ASSIGNED_USER = 'assignedUser';
+    public const ASSIGNED_USERS = 'assignedUsers';
+    public const COLLABORATORS = 'collaborators';
+    public const TEAMS = 'teams';
+    public const PARENT = 'parent';
 }

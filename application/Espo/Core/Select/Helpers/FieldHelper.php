@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\Helpers;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Team;
 use Espo\Entities\User;
@@ -51,12 +52,12 @@ class FieldHelper
     private const LINK_CONTACT = 'contact';
     private const LINK_ACCOUNTS = 'accounts';
     private const LINK_ACCOUNT = 'account';
-    private const LINK_PARENT = 'parent';
-    private const LINK_TEAMS = 'teams';
-    private const LINK_ASSIGNED_USERS = 'assignedUsers';
-    private const LINK_ASSIGNED_USER = 'assignedUser';
-    private const LINK_CREATED_BY = 'createdBy';
-    private const LINK_COLLABORATORS = 'collaborators';
+    private const LINK_PARENT = Field::PARENT;
+    private const LINK_TEAMS = Field::TEAMS;
+    private const LINK_ASSIGNED_USERS = Field::ASSIGNED_USERS;
+    private const LINK_ASSIGNED_USER = Field::ASSIGNED_USER;
+    private const LINK_CREATED_BY = Field::CREATED_BY;
+    private const LINK_COLLABORATORS = Field::COLLABORATORS;
 
     public function __construct(
         private string $entityType,

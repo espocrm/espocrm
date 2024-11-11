@@ -31,6 +31,7 @@ namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Entities\Attachment;
 use Espo\Entities\User;
@@ -80,7 +81,7 @@ class Document extends Entity
     public function getTeams(): LinkMultiple
     {
         /** @var LinkMultiple */
-        return $this->getValueObject('teams');
+        return $this->getValueObject(Field::TEAMS);
     }
 
     public function setAssignedUser(Link|User|null $assignedUser): self
@@ -90,7 +91,7 @@ class Document extends Entity
 
     public function setTeams(LinkMultiple $teams): self
     {
-        $this->setValueObject('teams', $teams);
+        $this->setValueObject(Field::TEAMS, $teams);
 
         return $this;
     }

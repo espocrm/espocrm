@@ -31,6 +31,7 @@ namespace Espo\Classes\Acl\Note;
 
 use Espo\Core\Acl\Permission;
 use Espo\Core\Acl\Table;
+use Espo\Core\Name\Field;
 use Espo\Entities\Note;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
@@ -128,7 +129,7 @@ class AccessChecker implements AccessEntityCREDChecker
         }
 
         if ($entity->getTargetType() === Note::TARGET_TEAMS) {
-            $targetTeamIdList = $entity->getLinkMultipleIdList('teams');
+            $targetTeamIdList = $entity->getLinkMultipleIdList(Field::TEAMS);
 
             foreach ($user->getTeamIdList() as $teamId) {
                 if (in_array($teamId, $targetTeamIdList)) {

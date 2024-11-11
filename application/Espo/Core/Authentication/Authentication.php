@@ -31,6 +31,7 @@ namespace Espo\Core\Authentication;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Language\LanguageProxy;
 use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Entities\Portal;
@@ -779,7 +780,7 @@ class Authentication
             return [null, FailReason::ANOTHER_USER_NOT_ALLOWED];
         }
 
-        $loggedUser->loadLinkMultipleField('teams');
+        $loggedUser->loadLinkMultipleField(Field::TEAMS);
 
         return [$loggedUser, null];
     }
@@ -791,7 +792,7 @@ class Authentication
         }
 
         if (!$this->isPortal()) {
-            $user->loadLinkMultipleField('teams');
+            $user->loadLinkMultipleField(Field::TEAMS);
         }
 
         $user->set('ipAddress', $this->util->obtainIpFromRequest($request));

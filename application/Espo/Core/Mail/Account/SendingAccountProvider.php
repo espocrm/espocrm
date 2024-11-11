@@ -34,6 +34,7 @@ use Espo\Core\AclManager;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Mail\Account\GroupAccount\AccountFactory as GroupAccountFactory;
 use Espo\Core\Mail\Account\PersonalAccount\AccountFactory as PersonalAccountFactory;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Entities\EmailAccount as EmailAccountEntity;
 use Espo\Entities\InboundEmail as InboundEmailEntity;
@@ -74,7 +75,7 @@ class SendingAccountProvider
                 ->getRDBRepositoryByClass(InboundEmailEntity::class)
                 ->select(['id'])
                 ->distinct()
-                ->join('teams')
+                ->join(Field::TEAMS)
                 ->where([
                     'status' => InboundEmailEntity::STATUS_ACTIVE,
                     'useSmtp' => true,

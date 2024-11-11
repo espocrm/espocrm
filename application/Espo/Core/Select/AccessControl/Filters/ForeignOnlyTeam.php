@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\AccessControl\Filters;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Select\AccessControl\Filter;
 use Espo\Entities\Team;
 use Espo\ORM\Query\Part\Condition;
@@ -113,11 +114,11 @@ class ForeignOnlyTeam implements Filter
 
         $foreignEntityDefs = $this->defs->getEntity($foreignEntityType);
 
-        if ($foreignEntityDefs->hasField('assignedUser')) {
+        if ($foreignEntityDefs->hasField(Field::ASSIGNED_USER)) {
             return 'assignedUserId';
         }
 
-        if ($foreignEntityDefs->hasField('createdBy')) {
+        if ($foreignEntityDefs->hasField(Field::CREATED_BY)) {
             return 'createdById';
         }
 

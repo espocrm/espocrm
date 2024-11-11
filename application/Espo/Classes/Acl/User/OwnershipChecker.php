@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\Acl\User;
 
+use Espo\Core\Name\Field;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
@@ -51,8 +52,8 @@ class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
         assert($entity instanceof CoreEntity);
 
         $intersect = array_intersect(
-            $user->getLinkMultipleIdList('teams'),
-            $entity->getLinkMultipleIdList('teams')
+            $user->getLinkMultipleIdList(Field::TEAMS),
+            $entity->getLinkMultipleIdList(Field::TEAMS)
         );
 
         if (count($intersect)) {

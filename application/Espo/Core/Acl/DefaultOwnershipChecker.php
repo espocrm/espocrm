@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Acl;
 
+use Espo\Core\Name\Field;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Entities\User;
@@ -42,12 +43,12 @@ use Espo\Entities\User;
  */
 class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker, OwnershipSharedChecker
 {
-    private const ATTR_CREATED_BY_ID = 'createdById';
-    private const ATTR_ASSIGNED_USER_ID = 'assignedUserId';
-    private const ATTR_ASSIGNED_TEAMS_IDS = 'teamsIds';
-    private const FIELD_TEAMS = 'teams';
-    private const FIELD_ASSIGNED_USERS = 'assignedUsers';
-    private const FIELD_COLLABORATORS = 'collaborators';
+    private const ATTR_CREATED_BY_ID = Field::CREATED_BY . 'Id';
+    private const ATTR_ASSIGNED_USER_ID = Field::ASSIGNED_USER . 'Id';
+    private const ATTR_ASSIGNED_TEAMS_IDS = Field::TEAMS . 'Ids';
+    private const FIELD_TEAMS = Field::TEAMS;
+    private const FIELD_ASSIGNED_USERS = Field::ASSIGNED_USERS;
+    private const FIELD_COLLABORATORS = Field::COLLABORATORS;
 
     public function checkOwn(User $user, Entity $entity): bool
     {

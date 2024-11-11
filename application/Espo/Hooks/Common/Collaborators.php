@@ -33,6 +33,7 @@ use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkMultipleItem;
 use Espo\Core\Hook\Hook\BeforeSave;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
@@ -45,9 +46,9 @@ class Collaborators implements BeforeSave
 {
     public static int $order = 7;
 
-    private const FIELD_COLLABORATORS = 'collaborators';
-    private const FIELD_ASSIGNED_USERS = 'assignedUsers';
-    private const FIELD_ASSIGNED_USER = 'assignedUser';
+    private const FIELD_COLLABORATORS = Field::COLLABORATORS;
+    private const FIELD_ASSIGNED_USERS = Field::ASSIGNED_USERS;
+    private const FIELD_ASSIGNED_USER = Field::ASSIGNED_USER;
 
     public function __construct(
         private Metadata $metadata,

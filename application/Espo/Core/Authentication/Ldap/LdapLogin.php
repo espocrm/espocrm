@@ -44,6 +44,7 @@ use Espo\Core\Authentication\Login\Data;
 use Espo\Core\Authentication\Logins\Espo;
 use Espo\Core\Authentication\Result;
 use Espo\Core\Authentication\Result\FailReason;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Config;
@@ -382,7 +383,7 @@ class LdapLogin implements Login
                 'skipLinkMultipleHooks' => true,
             ]);
 
-        $this->linkMultipleSaver->process($user, 'teams', $saverParams);
+        $this->linkMultipleSaver->process($user, Field::TEAMS, $saverParams);
         $this->linkMultipleSaver->process($user, 'portals', $saverParams);
         $this->linkMultipleSaver->process($user, 'portalRoles', $saverParams);
         $this->emailAddressSaver->process($user, $saverParams);

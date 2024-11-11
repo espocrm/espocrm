@@ -34,6 +34,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error\Body;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Name\Field;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Select\Where\Item as WhereItem;
 use Espo\Core\Utils\Config;
@@ -529,7 +530,7 @@ class InboxService
         $groupFolderList = $this->entityManager
             ->getRDBRepositoryByClass(GroupEmailFolder::class)
             ->distinct()
-            ->leftJoin('teams')
+            ->leftJoin(Field::TEAMS)
             ->where(
                 $this->user->isAdmin() ?
                     ['id!=' => null] :

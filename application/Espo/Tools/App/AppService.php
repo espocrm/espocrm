@@ -30,6 +30,7 @@
 namespace Espo\Tools\App;
 
 use Espo\Core\Authentication\Util\MethodProvider as AuthenticationMethodProvider;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\SystemUser;
 use Espo\Entities\DashboardTemplate;
 use Espo\Entities\Email;
@@ -86,7 +87,7 @@ class AppService
         $user = $this->user;
 
         if (!$user->has('teamsIds')) {
-            $user->loadLinkMultipleField('teams');
+            $user->loadLinkMultipleField(Field::TEAMS);
         }
 
         if ($user->isPortal()) {
@@ -344,7 +345,7 @@ class AppService
         }
 
         if ($groupEmailAccountPermission === Acl\Table::LEVEL_TEAM) {
-            $teamIdList = $user->getLinkMultipleIdList('teams');
+            $teamIdList = $user->getLinkMultipleIdList(Field::TEAMS);
 
             if (!count($teamIdList)) {
                 return [];
@@ -358,7 +359,7 @@ class AppService
                     'smtpIsShared' => true,
                     'teamsMiddle.teamId' => $teamIdList,
                 ])
-                ->join('teams')
+                ->join(Field::TEAMS)
                 ->distinct()
                 ->find();
 

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Acl;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
@@ -44,10 +45,10 @@ use Espo\Core\AclManager;
  */
 class DefaultAssignmentChecker implements AssignmentChecker
 {
-    protected const FIELD_ASSIGNED_USERS = 'assignedUsers';
-    protected const FIELD_TEAMS = 'teams';
+    protected const FIELD_ASSIGNED_USERS = Field::ASSIGNED_USERS;
+    protected const FIELD_TEAMS = Field::TEAMS;
     protected const ATTR_ASSIGNED_USER_ID = 'assignedUserId';
-    private const FIELD_COLLABORATORS = 'collaborators';
+    private const FIELD_COLLABORATORS = Field::COLLABORATORS;
 
     public function __construct(
         private AclManager $aclManager,

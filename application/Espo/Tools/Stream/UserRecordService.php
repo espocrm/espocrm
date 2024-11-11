@@ -32,6 +32,7 @@ namespace Espo\Tools\Stream;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Name\Field;
 use Espo\Core\Select\SearchParams;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\ORM\EntityManager;
@@ -92,7 +93,6 @@ class UserRecordService
             throw new NotFound("User not found.");
         }
 
-        /** @noinspection PhpRedundantOptionalArgumentInspection */
         if (!$this->acl->checkUserPermission($user, 'user')) {
             throw new Forbidden("No user permission access.");
         }
@@ -102,7 +102,7 @@ class UserRecordService
 
         $baseBuilder = $this->queryHelper->buildBaseQueryBuilder($searchParams)
             ->select($this->queryHelper->getUserQuerySelect())
-            ->leftJoin('createdBy')
+            ->leftJoin(Field::CREATED_BY)
             ->order('number', Order::DESC)
             ->limit(0, $offset + $maxSize + 1);
 
@@ -135,7 +135,6 @@ class UserRecordService
             throw new NotFound("User not found.");
         }
 
-        /** @noinspection PhpRedundantOptionalArgumentInspection */
         if (!$this->acl->checkUserPermission($user, 'user')) {
             throw new Forbidden("No user permission access.");
         }

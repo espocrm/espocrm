@@ -30,6 +30,7 @@
 namespace Espo\Classes\RecordHooks\Email;
 
 use Espo\Core\Mail\Sender;
+use Espo\Core\Name\Field;
 use Espo\Core\Record\Hook\SaveHook;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\SystemUser;
@@ -45,9 +46,9 @@ class BeforeUpdate implements SaveHook
 {
     /** @var string[] */
     private $allowedForUpdateFieldList = [
-        'parent',
-        'teams',
-        'assignedUser',
+        Field::PARENT,
+        Field::TEAMS,
+        Field::ASSIGNED_USER,
     ];
 
     public function __construct(

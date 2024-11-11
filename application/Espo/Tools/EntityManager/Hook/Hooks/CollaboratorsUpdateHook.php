@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\EntityManager\Hook\Hooks;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata;
@@ -43,7 +44,7 @@ use Espo\Tools\EntityManager\Params;
 class CollaboratorsUpdateHook implements UpdateHook
 {
     private const PARAM = 'collaborators';
-    private const FIELD = 'collaborators';
+    private const FIELD = Field::COLLABORATORS;
     private const RELATION_NAME = 'entityCollaborator';
 
     private const DEFAULT_MAX_COUNT = 30;

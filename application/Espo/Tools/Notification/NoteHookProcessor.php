@@ -32,6 +32,7 @@ namespace Espo\Tools\Notification;
 use Espo\Core\AclManager as InternalAclManager;
 use Espo\Core\Acl\Table;
 
+use Espo\Core\Name\Field;
 use Espo\Tools\Stream\Service as StreamService;
 
 use Espo\ORM\EntityManager;
@@ -128,9 +129,7 @@ class NoteHookProcessor
         $userIdList = null;
 
         if (!$skipAclCheck) {
-            /** @var string[] $teamIdList */
-            $teamIdList = $note->getLinkMultipleIdList('teams');
-            /** @var string[] $userIdList */
+            $teamIdList = $note->getLinkMultipleIdList(Field::TEAMS);
             $userIdList = $note->getLinkMultipleIdList('users');
         }
 
@@ -391,8 +390,7 @@ class NoteHookProcessor
                 return false;
             }
 
-            /** @var string[] $userTeamIdList */
-            $userTeamIdList = $user->getLinkMultipleIdList('teams');
+            $userTeamIdList = $user->getLinkMultipleIdList(Field::TEAMS);
 
             foreach ($teamIdList as $teamId) {
                 if (in_array($teamId, $userTeamIdList)) {

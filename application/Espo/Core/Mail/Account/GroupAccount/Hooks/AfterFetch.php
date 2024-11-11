@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Mail\Account\GroupAccount\Hooks;
 
+use Espo\Core\Name\Field;
 use Laminas\Mail\Message;
 
 use Espo\Core\Mail\Account\GroupAccount\AccountFactory as GroupAccountFactory;
@@ -420,10 +421,10 @@ class AfterFetch implements AfterFetchInterface
             $email->addLinkMultipleId('users', $userId);
         }
 
-        $teamIdList = $case->getLinkMultipleIdList('teams');
+        $teamIdList = $case->getLinkMultipleIdList(Field::TEAMS);
 
         foreach ($teamIdList as $teamId) {
-            $email->addLinkMultipleId('teams', $teamId);
+            $email->addLinkMultipleId(Field::TEAMS, $teamId);
         }
 
         $this->entityManager->saveEntity($email, [

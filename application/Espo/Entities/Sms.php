@@ -30,6 +30,7 @@
 namespace Espo\Entities;
 
 use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Sms\Sms as SmsInterface;
 use Espo\Core\Field\DateTime;
@@ -158,6 +159,6 @@ class Sms extends Entity implements SmsInterface
     public function getTeams(): LinkMultiple
     {
         /** @var LinkMultiple */
-        return $this->getValueObject('teams');
+        return $this->getValueObject(Field::TEAMS);
     }
 }

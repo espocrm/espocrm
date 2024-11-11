@@ -33,6 +33,7 @@ use Espo\Core\Field\DateTimeOptional;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Entities\User;
 
@@ -113,7 +114,7 @@ class Meeting extends Entity
     public function getTeams(): LinkMultiple
     {
         /** @var LinkMultiple */
-        return $this->getValueObject('teams');
+        return $this->getValueObject(Field::TEAMS);
     }
 
     public function getUsers(): LinkMultiple
@@ -154,7 +155,7 @@ class Meeting extends Entity
 
     public function setTeams(LinkMultiple $teams): self
     {
-        $this->setValueObject('teams', $teams);
+        $this->setValueObject(Field::TEAMS, $teams);
 
         return $this;
     }

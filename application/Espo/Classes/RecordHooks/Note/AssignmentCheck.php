@@ -34,6 +34,7 @@ use Espo\Core\Acl\Permission;
 use Espo\Core\Acl\Table as AclTable;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Name\Field;
 use Espo\Core\Record\Hook\SaveHook;
 use Espo\Entities\Note;
 use Espo\Entities\User;
@@ -64,7 +65,7 @@ class AssignmentCheck implements SaveHook
 
         $userIdList = $entity->getLinkMultipleIdList('users');
         $portalIdList = $entity->getLinkMultipleIdList('portals');
-        $teamIdList = $entity->getLinkMultipleIdList('teams');
+        $teamIdList = $entity->getLinkMultipleIdList(Field::TEAMS);
 
         /** @var iterable<User> $targetUserList */
         $targetUserList = [];

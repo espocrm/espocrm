@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\Acl\Team;
 
+use Espo\Core\Name\Field;
 use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
@@ -41,8 +42,7 @@ class OwnershipChecker implements OwnershipOwnChecker
 {
     public function checkOwn(User $user, Entity $entity): bool
     {
-        /** @var string[] $userTeamIdList */
-        $userTeamIdList = $user->getLinkMultipleIdList('teams');
+        $userTeamIdList = $user->getLinkMultipleIdList(Field::TEAMS);
 
         return in_array($entity->getId(), $userTeamIdList);
     }

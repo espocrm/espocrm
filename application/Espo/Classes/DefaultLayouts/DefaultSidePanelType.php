@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\DefaultLayouts;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Team;
@@ -58,17 +59,17 @@ class DefaultSidePanelType
         }
 
         if (
-            $this->metadata->get(['entityDefs', $scope, 'fields', 'teams', 'type']) === FieldType::LINK_MULTIPLE &&
-            $this->metadata->get(['entityDefs', $scope, 'links', 'teams', 'entity']) === Team::ENTITY_TYPE
+            $this->metadata->get(['entityDefs', $scope, 'fields', Field::TEAMS, 'type']) === FieldType::LINK_MULTIPLE &&
+            $this->metadata->get(['entityDefs', $scope, 'links', Field::TEAMS, 'entity']) === Team::ENTITY_TYPE
         ) {
-            $list[] = (object) ['name' => 'teams'];
+            $list[] = (object) ['name' => Field::TEAMS];
         }
 
         if (
             $this->metadata->get("entityDefs.$scope.fields.collaborators.type") === FieldType::LINK_MULTIPLE &&
             $this->metadata->get("entityDefs.$scope.links.collaborators.entity") === User::ENTITY_TYPE
         ) {
-            $list[] = (object) ['name' => 'collaborators'];
+            $list[] = (object) ['name' => Field::COLLABORATORS];
         }
 
         return $list;

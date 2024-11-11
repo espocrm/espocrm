@@ -37,6 +37,7 @@ use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Account\ImapParams;
 use Espo\Core\Mail\Smtp\HandlerProcessor;
 use Espo\Core\Mail\SmtpParams;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Crypt;
@@ -161,7 +162,7 @@ class Account implements AccountInterface
             ->getRDBRepositoryByClass(User::class)
             ->select(['id'])
             ->distinct()
-            ->join('teams')
+            ->join(Field::TEAMS)
             ->where([
                 'type' => [User::TYPE_REGULAR, User::TYPE_ADMIN],
                 'isActive' => true,

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Acl\Table;
 
+use Espo\Core\Name\Field;
 use Espo\Entities\Team;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
@@ -59,7 +60,7 @@ class DefaultRoleListProvider implements RoleListProvider
         /** @var iterable<Team> $teamList */
         $teamList = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
-            ->getRelation($this->user, 'teams')
+            ->getRelation($this->user, Field::TEAMS)
             ->find();
 
         foreach ($teamList as $team) {

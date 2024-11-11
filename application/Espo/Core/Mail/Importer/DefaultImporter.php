@@ -40,6 +40,7 @@ use Espo\Core\Mail\Message;
 use Espo\Core\Mail\MessageWrapper;
 use Espo\Core\Mail\Parser;
 use Espo\Core\Mail\ParserFactory;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Notification\AssignmentNotificator;
 use Espo\Core\Notification\AssignmentNotificatorFactory;
@@ -276,7 +277,7 @@ class DefaultImporter implements Importer
             return;
         }
 
-        foreach ($parent->getLinkMultipleIdList('teams') as $parentTeamId) {
+        foreach ($parent->getLinkMultipleIdList(Field::TEAMS) as $parentTeamId) {
             $email->addTeamId($parentTeamId);
         }
     }
@@ -300,8 +301,8 @@ class DefaultImporter implements Importer
         $fetchedAssignedUserIds = $email->getAssignedUsers()->getIdList();
 
         $email->setLinkMultipleIdList('users', []);
-        $email->setLinkMultipleIdList('teams', []);
-        $email->setLinkMultipleIdList('assignedUsers', []);
+        $email->setLinkMultipleIdList(Field::TEAMS, []);
+        $email->setLinkMultipleIdList(Field::ASSIGNED_USERS, []);
 
         $processNoteAcl = false;
 
@@ -372,7 +373,7 @@ class DefaultImporter implements Importer
 
         $this->linkMultipleSaver->process($email, 'users', $saverParams);
         $this->linkMultipleSaver->process($email, 'assignedUsers', $saverParams);
-        $this->linkMultipleSaver->process($email, 'teams', $saverParams);
+        $this->linkMultipleSaver->process($email, Field::TEAMS, $saverParams);
 
         if ($this->notificationsEnabled()) {
             $notificatorParams = AssignmentNotificatorParams::create()

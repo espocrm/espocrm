@@ -37,6 +37,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Field\DateTime as DateTimeField;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Select\Helpers\RelationQueryHelper;
 use Espo\Core\Select\SelectBuilderFactory;
@@ -600,7 +601,7 @@ class Service
         }
 
         if ($this->acl->getPermissionLevel(Acl\Permission::USER) === Table::LEVEL_TEAM) {
-            $userTeamIdList = $this->user->getLinkMultipleIdList('teams');
+            $userTeamIdList = $this->user->getLinkMultipleIdList(Field::TEAMS);
 
             foreach ($teamIdList as $teamId) {
                 if (!in_array($teamId, $userTeamIdList)) {
@@ -614,7 +615,7 @@ class Service
         $userList = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
             ->select(['id', 'name'])
-            ->leftJoin('teams')
+            ->leftJoin(Field::TEAMS)
             ->where([
                 'isActive' => true,
                 'teamsMiddle.teamId' => $teamIdList,

@@ -31,6 +31,7 @@ namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Name\Field;
 use Espo\Entities\Attachment;
 use Espo\Entities\User;
 use Espo\ORM\Collection;
@@ -127,7 +128,7 @@ class CaseObj extends \Espo\Core\ORM\Entity
 
     public function setTeams(LinkMultiple $teams): self
     {
-        $this->setValueObject('teams', $teams);
+        $this->setValueObject(Field::TEAMS, $teams);
 
         return $this;
     }

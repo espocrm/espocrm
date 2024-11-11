@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\Acl\Attachment;
 
+use Espo\Core\Name\Field;
 use Espo\Entities\Attachment;
 use Espo\Entities\Note;
 use Espo\Entities\Settings;
@@ -58,20 +59,18 @@ class AccessChecker implements AccessEntityCREDChecker
 
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
-        /** @var Attachment $entity */
-
-        if ($entity->get('parentType') === Settings::ENTITY_TYPE) {
+        if ($entity->getParentType() === Settings::ENTITY_TYPE) {
             // Allow the logo.
             return true;
         }
 
         $parent = null;
 
-        $parentType = $entity->get('parentType');
-        $parentId = $entity->get('parentId');
+        $parentType = $entity->getParentType();
+        $parentId = $entity->getParent()?->getId();
 
-        $relatedType = $entity->get('relatedType');
-        $relatedId = $entity->get('relatedId');
+        $relatedType = $entity->getRelatedType();
+        $relatedId = $entity->getRelated()?->getId();
 
         if ($parentId && $parentType) {
             $parent = $this->entityManager->getEntityById($parentType, $parentId);
@@ -116,8 +115,8 @@ class AccessChecker implements AccessEntityCREDChecker
     {
         if ($note->getTargetType() === Note::TARGET_TEAMS) {
             $intersect = array_intersect(
-                $note->getLinkMultipleIdList('teams'),
-                $user->getLinkMultipleIdList('teams')
+                $note->getLinkMultipleIdList(Field::TEAMS),
+                $user->getLinkMultipleIdList(Field::TEAMS)
             );
 
             if (count($intersect)) {

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Portal\Acl;
 
+use Espo\Core\Name\Field;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -61,7 +62,7 @@ class DefaultOwnershipChecker implements
     private const FIELD_CONTACTS = 'contacts';
     private const FIELD_ACCOUNT = 'account';
     private const FIELD_ACCOUNTS = 'accounts';
-    private const FIELD_PARENT = 'parent';
+    private const FIELD_PARENT = Field::PARENT;
 
     public function __construct(private EntityManager $entityManager)
     {}

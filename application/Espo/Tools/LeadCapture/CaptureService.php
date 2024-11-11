@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\LeadCapture;
 
+use Espo\Core\Name\Field;
 use Espo\Core\PhoneNumber\Sanitizer as PhoneNumberSanitizer;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Exceptions\BadRequest;
@@ -322,7 +323,7 @@ class CaptureService
             $targetTeamId = $leadCapture->getTargetTeamId();
 
             if ($targetTeamId) {
-                $lead->addLinkMultipleId('teams', $targetTeamId);
+                $lead->addLinkMultipleId(Field::TEAMS, $targetTeamId);
             }
 
             $this->entityManager->saveEntity($lead);
@@ -481,7 +482,7 @@ class CaptureService
         }
 
         if ($leadCapture->getTargetTeamId()) {
-            $lead->addLinkMultipleId('teams', $leadCapture->getTargetTeamId());
+            $lead->addLinkMultipleId(Field::TEAMS, $leadCapture->getTargetTeamId());
         }
 
         $validationParams = FieldValidationParams::create()->withTypeSkipFieldList('required', $fieldList);

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Repositories;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\SystemUser;
 use Espo\ORM\BaseEntity;
@@ -54,11 +55,11 @@ use stdClass;
 class Database extends RDBRepository
 {
     private const ATTR_ID = 'id';
-    private const ATTR_CREATED_BY_ID = 'createdById';
-    private const ATTR_MODIFIED_BY_ID = 'modifiedById';
-    private const ATTR_MODIFIED_BY_NAME = 'modifiedByName';
-    private const ATTR_CREATED_AT = 'createdAt';
-    private const ATTR_MODIFIED_AT = 'modifiedAt';
+    private const ATTR_CREATED_BY_ID = Field::CREATED_BY . 'Id';
+    private const ATTR_MODIFIED_BY_ID =  Field::MODIFIED_BY . 'Id';
+    private const ATTR_MODIFIED_BY_NAME = Field::MODIFIED_BY . 'Name';
+    private const ATTR_CREATED_AT = Field::CREATED_AT;
+    private const ATTR_MODIFIED_AT = Field::MODIFIED_AT;
 
     /**
      * Disables hook processing.

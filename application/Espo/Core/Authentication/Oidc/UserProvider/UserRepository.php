@@ -33,6 +33,7 @@ use Espo\Core\FieldProcessing\EmailAddress\Saver as EmailAddressSaver;
 use Espo\Core\FieldProcessing\PhoneNumber\Saver as PhoneNumberSaver;
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
 use Espo\Core\FieldProcessing\Saver\Params as SaverParams;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
@@ -62,7 +63,7 @@ class UserRepository
 
         $saverParams = SaverParams::create()->withRawOptions(['skipLinkMultipleHooks' => true]);
 
-        $this->linkMultipleSaver->process($user, 'teams', $saverParams);
+        $this->linkMultipleSaver->process($user, Field::TEAMS, $saverParams);
         $this->linkMultipleSaver->process($user, 'portals', $saverParams);
         $this->linkMultipleSaver->process($user, 'portalRoles', $saverParams);
         $this->emailAddressSaver->process($user, $saverParams);

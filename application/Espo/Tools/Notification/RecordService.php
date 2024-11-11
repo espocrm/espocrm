@@ -33,6 +33,7 @@ use Espo\Core\Acl;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Name\Field;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
@@ -299,7 +300,7 @@ class RecordService
 
             if ($targetType !== Note::TARGET_USERS) {
                 if (!$targetType || $targetType === Note::TARGET_TEAMS) {
-                    $note->loadLinkMultipleField('teams');
+                    $note->loadLinkMultipleField(Field::TEAMS);
                 } else if ($targetType === Note::TARGET_PORTALS) {
                     $note->loadLinkMultipleField('portals');
                 }

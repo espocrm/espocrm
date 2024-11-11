@@ -30,6 +30,7 @@
 namespace Espo\Core\Mail\Importer;
 
 use Espo\Core\Mail\Message;
+use Espo\Core\Name\Field;
 use Espo\Core\Templates\Entities\Company;
 use Espo\Core\Templates\Entities\Person;
 use Espo\Core\Utils\Config;
@@ -56,7 +57,7 @@ class DefaultParentFinder implements ParentFinder
         $this->entityTypeList = $this->entityManager
             ->getDefs()
             ->getEntity(Email::ENTITY_TYPE)
-            ->getField('parent')
+            ->getField(Field::PARENT)
             ->getParam('entityList') ?? [];
     }
 

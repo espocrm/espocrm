@@ -31,6 +31,7 @@ namespace Espo\Tools\Dashboard;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Name\Field;
 use Espo\Entities\DashboardTemplate;
 use Espo\Entities\Preferences;
 use Espo\Entities\Team;
@@ -106,10 +107,10 @@ class Service
 
         $userList = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
-            ->join('teams')
+            ->join(Field::TEAMS)
             ->distinct()
             ->where([
-                'teams.id' => $teamId,
+                Field::TEAMS . '.id' => $teamId,
             ])
             ->find();
 

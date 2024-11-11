@@ -32,6 +32,7 @@ namespace Espo\Core\Record\Defaults;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Permission;
 use Espo\Core\Acl\Table as AclTable;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Config;
@@ -70,7 +71,7 @@ class DefaultPopulator implements Populator
                 throw new RuntimeException();
             }
 
-            $entity->addLinkMultipleId('teams', $defaultTeamId);
+            $entity->addLinkMultipleId(Field::TEAMS, $defaultTeamId);
 
             $teamsNames = $entity->get('teamsNames');
 
@@ -107,7 +108,7 @@ class DefaultPopulator implements Populator
 
         $defs = $this->entityManager->getDefs()->getEntity($entityType);
 
-        if ($defs->tryGetField('assignedUser')?->getType() !== FieldType::LINK) {
+        if ($defs->tryGetField(Field::ASSIGNED_USER)?->getType() !== FieldType::LINK) {
             return false;
         }
 
@@ -118,7 +119,7 @@ class DefaultPopulator implements Populator
             return true;
         }
 
-        if (!$this->acl->checkField($entityType, 'assignedUser', AclTable::ACTION_EDIT)) {
+        if (!$this->acl->checkField($entityType, Field::ASSIGNED_USER, AclTable::ACTION_EDIT)) {
             return true;
         }
 
@@ -146,11 +147,11 @@ class DefaultPopulator implements Populator
 
         $defs = $this->entityManager->getDefs()->getEntity($entityType);
 
-        if ($defs->tryGetField('teams')?->getType() !== FieldType::LINK_MULTIPLE) {
+        if ($defs->tryGetField(Field::TEAMS)?->getType() !== FieldType::LINK_MULTIPLE) {
             return false;
         }
 
-        if ($entity->hasLinkMultipleId('teams', $this->user->getDefaultTeam()->getId())) {
+        if ($entity->hasLinkMultipleId(Field::TEAMS, $this->user->getDefaultTeam()->getId())) {
             return false;
         }
 
@@ -158,7 +159,7 @@ class DefaultPopulator implements Populator
             return true;
         }
 
-        if (!$this->acl->checkField($entityType, 'teams', AclTable::ACTION_EDIT)) {
+        if (!$this->acl->checkField($entityType, Field::TEAMS, AclTable::ACTION_EDIT)) {
             return true;
         }
 

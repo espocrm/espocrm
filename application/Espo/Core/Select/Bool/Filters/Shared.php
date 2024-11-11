@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\Bool\Filters;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Select\Bool\Filter;
 use Espo\Core\Select\Helpers\FieldHelper;
 use Espo\Entities\User;
@@ -59,7 +60,7 @@ class Shared implements Filter
 
         $relationDefs = $this->defs
             ->getEntity($this->entityType)
-            ->getRelation('collaborators');
+            ->getRelation(Field::COLLABORATORS);
 
         $middleEntityType = ucfirst($relationDefs->getRelationshipName());
         $key1 = $relationDefs->getMidKey();

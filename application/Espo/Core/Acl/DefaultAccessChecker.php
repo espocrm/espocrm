@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Acl;
 
+use Espo\Core\Name\Field;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
-
 use Espo\Core\Acl\AccessChecker\ScopeChecker;
 use Espo\Core\Acl\AccessChecker\ScopeCheckerData;
 use Espo\Core\AclManager;
@@ -57,9 +57,9 @@ class DefaultAccessChecker implements
     AccessEntityDeleteChecker,
     AccessEntityStreamChecker
 {
-    private const ATTR_CREATED_BY_ID = 'createdById';
-    private const ATTR_CREATED_AT = 'createdAt';
-    private const ATTR_ASSIGNED_USER_ID = 'assignedUserId';
+    private const ATTR_CREATED_BY_ID = Field::CREATED_BY . 'Id';
+    private const ATTR_CREATED_AT = Field::CREATED_AT;
+    private const ATTR_ASSIGNED_USER_ID = Field::ASSIGNED_USER . 'Id';
     private const ALLOW_DELETE_OWN_CREATED_PERIOD = '24 hours';
 
     public function __construct(
