@@ -177,6 +177,10 @@ class StickyBarHelper {
      * @param {HTMLElement} element
      */
     _getOffsetTop(element) {
+        if (!element) {
+            return 0;
+        }
+
         const navbarHeight = this.themeManager.getParam('navbarHeight') * this.themeManager.getFontSizeFactor();
         const withHeader = !this.isSmallWindow && !this.isModal;
 
