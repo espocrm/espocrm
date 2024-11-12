@@ -112,7 +112,7 @@ class Processor
         }
 
         if ($entity->hasLinkMultipleField(Field::TEAMS)) {
-            if ($entity->isAttributeChanged(Field::TEAMS)) {
+            if ($entity->isAttributeChanged(Field::TEAMS . 'Ids')) {
                 $teamsAttributeIsChanged = true;
             }
 
