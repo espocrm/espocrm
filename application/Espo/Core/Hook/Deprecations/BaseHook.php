@@ -27,19 +27,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-// To add aliases for backward compatibility.
-$map = [
-    'Espo\\Core\\Hook\\Deprecations\\BaseHook' => 'Espo\\Core\\Hooks\\Base',
-];
+namespace Espo\Core\Hook\Deprecations;
 
-/** @phpstan-ignore-next-line  */
-foreach ($map as $item) {
-    $className = $item[0];
-    $alias = $item[1];
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Log;
+use Espo\Entities\User;
+use Espo\ORM\EntityManager;
 
-    if (!class_exists($className)) {
-        continue;
+/**
+ * For backward compatibility.
+ *
+ * @deprecated Not to be used.
+ * @todo Remove in v10.0.
+ */
+class BaseHook
+{
+    public function __construct(
+        private EntityManager $entityManager,
+        private User $user,
+        private Log $log,
+        private Config $config,
+    ) {
+        $className = get_class($this);
+
+        $message = "Important: Your hook $className extends from Espo\\Core\\Hooks\\Base. " .
+            "This class is going to be removed. You need to fix your hooks.";
+
+        $this->log->warning($message);
     }
 
-    class_alias($className, $alias);
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->entityManager;
+    }
+
+    protected function getUser(): User
+    {
+        return $this->user;
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->config;
+    }
 }
