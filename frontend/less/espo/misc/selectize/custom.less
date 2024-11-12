@@ -20,6 +20,7 @@
             font-size: var(--font-size-small);
             padding: var(--padding-small-vertical) var(--19px) var(--padding-small-vertical) var(--padding-small-horizontal);
             min-height: var(--input-height-small);
+            max-height: var(--input-height-small);
         }
 
         height: var(--input-height-small);
@@ -82,7 +83,8 @@
     .selectize-input {
         padding-right: var(--19px);
 
-        height: var(--line-height-base);
+        //height: var(--line-height-base);
+        max-height: var(--input-height-base);
 
         &.dropdown-active:after,
         &:after {
@@ -101,7 +103,8 @@
         }
 
         > .item {
-            vertical-align: middle;
+            //display: block;
+            //vertical-align: middle;
         }
 
         > .item + input {
