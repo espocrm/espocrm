@@ -452,6 +452,17 @@ Espo.Utils = {
     },
 
     /**
+     * Deep comparison.
+     *
+     * @param {Object} a1 An argument 1.
+     * @param {Object} a2 An argument 2.
+     * @return {boolean}
+     */
+    areEqual: function (a1, a2) {
+        return _.isEqual(a1, a2);
+    },
+
+    /**
      * Compose a class name.
      *
      * @param {string} module A module.
