@@ -58,6 +58,12 @@ class DefaultRowActionsView extends View {
      */
     menuIsShown = false
 
+    /**
+     * @private
+     * @type {module:views/record/row-actions/actions~item[]}
+     */
+    lastActionList
+
     setup() {
         this.options.acl = this.options.acl || {};
         this.scope = this.options.scope || this.model.entityType;
@@ -70,7 +76,7 @@ class DefaultRowActionsView extends View {
 
         this.setupAdditionalActions();
 
-        this.listenTo(this.model, 'change', (m, /** Record */o) => {
+        const handleReRender = (/** Record */o) => {
             if (o.keepRowActions) {
                 return;
             }
@@ -82,7 +88,26 @@ class DefaultRowActionsView extends View {
             }
 
             this.reRender();
-        });
+        };
+
+        this.listenTo(this.model, 'change', (m, /** Record */o) => handleReRender(o));
+
+        if (this.model.collection && this.model.collection.parentModel) {
+            // Access to actions can be defined by a parent model.
+            this.listenTo(this.model.collection.parentModel, 'sync', (m, r, /** Record */o) => {
+                if (!this.lastActionList) {
+                    return;
+                }
+
+                setTimeout(() => {
+                    if (Espo.Utils.areEqual(this.lastActionList, this.getActionList())) {
+                        return true;
+                    }
+
+                    handleReRender(o);
+                }, 0);
+            });
+        }
     }
 
     afterRender() {
@@ -133,7 +158,7 @@ class DefaultRowActionsView extends View {
             groupIndex: 0,
         }];
 
-        if (this.options.acl.edit) {
+        if (this.checkAccess('edit')) {
             list.push({
                 action: 'quickEdit',
                 label: 'Edit',
@@ -147,7 +172,7 @@ class DefaultRowActionsView extends View {
 
         this.getAdditionalActionList().forEach(item => list.push(item));
 
-        if (this.options.acl.delete) {
+        if (this.checkAccess('delete')) {
             list.push({
                 action: 'quickRemove',
                 label: 'Remove',
@@ -193,7 +218,11 @@ class DefaultRowActionsView extends View {
         /** @type {Array<module:views/record/row-actions/actions~item[]>} */
         const dropdownGroups = [];
 
-        this.getActionList().forEach(item => {
+        const actionList = this.getActionList();
+
+        this.lastActionList = actionList;
+
+        actionList.forEach(item => {
             // For bc.
             if (item === false) {
                 return;
@@ -248,6 +277,20 @@ class DefaultRowActionsView extends View {
                 groupIndex: itemDefs.groupIndex,
             });
         });
+    }
+
+    /**
+     * @protected
+     * @param {string} action
+     * @retyrn {boolean}
+     * @since 9.0.0
+     */
+    checkAccess(action) {
+        if (typeof this.options.acl[action] === 'boolean') {
+            return this.options.acl[action];
+        }
+
+        return this.getAcl().checkModel(this.model, action);
     }
 }
 
