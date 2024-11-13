@@ -48,14 +48,13 @@ export default class extends AttendeesFieldView {
         }
     }
 
+    /**
+     * @private
+     * @param {string} id
+     * @return {string}
+     */
     getIconHtml(id) {
-        let iconHtml = this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
-
-        if (iconHtml) {
-            iconHtml += ' ';
-        }
-
-        return iconHtml;
+        return this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
     }
 
     /**

@@ -60,7 +60,7 @@ export default class CollaboratorsFieldView extends LinkMultipleFieldView {
             return html;
         }
 
-        return `${avatarHtml} ${html}`;
+        return `${avatarHtml}${html}`;
     }
 
     /** @inheritDoc */

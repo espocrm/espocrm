@@ -60,7 +60,7 @@ class AssignedUsersFieldView extends LinkMultipleFieldView {
             return html;
         }
 
-        return avatarHtml + ' ' + html;
+        return avatarHtml + html;
     }
 
     /** @inheritDoc */
