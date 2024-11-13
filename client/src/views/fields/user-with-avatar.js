@@ -112,7 +112,9 @@ class UserWithAvatarFieldView extends UserFieldView {
         img.classList.add('avatar-in-input')
         img.draggable = false;
 
-        this.element.append(img);
+        const inputGroup = this.element.querySelector('.input-group');
+
+        inputGroup.append(img);
     }
 }
 
