@@ -391,6 +391,7 @@
         "internalPostTitle": "Post is seen only by internal users",
         "done": "Done",
         "notUpdated": "Not updated",
+        "confirmMassUpdate": "Are you sure you want to mass-update selected records?",
         "confirmMassFollow": "Are you sure you want to follow selected records?",
         "confirmMassUnfollow": "Are you sure you want to unfollow selected records?",
         "massFollowResult": "{count} records now are followed",

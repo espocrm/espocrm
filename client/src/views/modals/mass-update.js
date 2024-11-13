@@ -240,6 +240,10 @@ class MassUpdateModalView extends ModalView {
      * @return {Promise<void>}
      */
     async actionUpdate() {
+        if (this.byWhere) {
+            await this.confirm(this.translate('confirmMassUpdate', 'messages'));
+        }
+
         this.disableButton('update');
 
         const attributes = {};
