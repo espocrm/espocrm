@@ -17,6 +17,32 @@
     .form-control-focus-espo();
 }
 
+input[type="text"],
+input[type="input"],
+input[type="email"],
+input[type="password"] {
+    &.form-control {
+        padding-top: calc(var(--padding-base-vertical) - 0.5px);
+
+        &.input-sm {
+            padding-top: calc(var(--padding-small-vertical) - 0.5px);
+        }
+    }
+}
+
+.form-group-sm {
+    input[type="text"],
+    input[type="input"],
+    input[type="email"],
+    input[type="password"] {
+        &.form-control {
+            &.input-sm {
+                padding-top: calc(var(--padding-small-vertical) - 0.5px);
+            }
+        }
+    }
+}
+
 .selectize-input {
     border: var(--input-border-width) solid var(--input-border);
     border-radius: var(--border-radius);
