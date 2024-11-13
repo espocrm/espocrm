@@ -217,6 +217,7 @@ class TextFieldView extends BaseFieldView {
             data.displayRawText = this.params.displayRawText;
         }
 
+        data.htmlValue = undefined;
         data.noResize = this.noResize || (!this.autoHeightDisabled && !this.params.rows);
         data.preview = this.params.preview && !this.params.displayRawText;
 

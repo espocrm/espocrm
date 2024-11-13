@@ -3,7 +3,7 @@
     class="complex-text-container{{#if isCut}} cut{{/if}}"
     {{#if cutHeight}} style="max-height: {{cutHeight}}px;"{{/if}}
 >
-    <div class="complex-text">{{#unless displayRawText}}{{complexText value}}{{else}}{{breaklines value}}{{/unless}}</div>
+    <div class="complex-text">{{#unless displayRawText}}{{#if htmlValue}}{{{htmlValue}}}{{else}}{{complexText value}}{{/if}}{{else}}{{breaklines value}}{{/unless}}</div>
 </div>
 {{#if isCut}}
 <div class="see-more-container hidden">
