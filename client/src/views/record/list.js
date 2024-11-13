@@ -1720,7 +1720,7 @@ class ListRecordView extends View {
     }
 
     // noinspection JSUnusedGlobalSymbols
-    massActionMassUpdate() {
+    async massActionMassUpdate() {
         if (!this.getAcl().check(this.entityType, 'edit')) {
             Espo.Ui.error(this.translate('Access denied'));
 
@@ -1740,7 +1740,9 @@ class ListRecordView extends View {
         const viewName = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'massUpdate']) ||
             'views/modals/mass-update';
 
-        this.createView('massUpdate', viewName, {
+        // noinspection JSValidateTypes
+        /** @type {import('views/modals/mass-update').default} view */
+        const view = await this.createView('massUpdate', viewName, {
             scope: this.scope,
             entityType: this.entityType,
             ids: ids,
@@ -1748,63 +1750,52 @@ class ListRecordView extends View {
             searchParams: this.collection.data,
             byWhere: this.allResultIsChecked,
             totalCount: this.collection.total,
-        }, view => {
-            view.render();
-
-            view.notify(false);
-
-            this.listenToOnce(view, 'after:update', (o) => {
-                if (o.idle) {
-                    this.listenToOnce(view, 'close', () => {
-                        this.collection
-                            .fetch()
-                            .then(() => {
-                                if (allResultIsChecked) {
-                                    this.selectAllResult();
-
-                                    return;
-                                }
-
-                                ids.forEach((id) => {
-                                    this.checkRecord(id);
-                                });
-                            });
-                    });
-
-                    return;
-                }
-
-                view.close();
-
-                const count = o.count;
-
-                this.collection
-                    .fetch()
-                    .then(() => {
-                        if (count) {
-                            let msg = 'massUpdateResult';
-
-                            if (count === 1) {
-                                msg = 'massUpdateResultSingle';
-                            }
-
-                            Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
-                        } else {
-                            Espo.Ui.warning(this.translate('noRecordsUpdated', 'messages'));
-                        }
-
-                        if (allResultIsChecked) {
-                            this.selectAllResult();
-
-                            return;
-                        }
-
-                        ids.forEach(id => {
-                            this.checkRecord(id);
-                        });
-                    });
-            });
         });
+
+        this.listenToOnce(view, 'after:update', async o => {
+            if (o.idle) {
+                this.listenToOnce(view, 'close', async () => {
+                    await this.collection.fetch();
+
+                    if (allResultIsChecked) {
+                        this.selectAllResult();
+
+                        return;
+                    }
+
+                    ids.forEach(id => this.checkRecord(id));
+                });
+
+                return;
+            }
+
+            view.close();
+
+            const count = o.count;
+
+            await this.collection.fetch();
+
+            if (count) {
+                const msgKey = count === 1 ? 'massUpdateResultSingle' : 'massUpdateResult';
+                const message = this.translate(msgKey, 'messages').replace('{count}', count);
+
+                Espo.Ui.success(message);
+            } else {
+                Espo.Ui.warning(this.translate('noRecordsUpdated', 'messages'));
+            }
+
+            if (allResultIsChecked) {
+                this.selectAllResult();
+
+                return;
+            }
+
+            ids.forEach(id => this.checkRecord(id));
+        });
+
+        Espo.Ui.notify();
+
+        await view.render();
     }
 
     // noinspection JSUnusedGlobalSymbols
