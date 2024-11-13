@@ -687,8 +687,8 @@ class Service
             $totalCount = $row['count'];
         }
         
-        $orderBy = $params->getOrderBy();
-        $order = $params->getOrder();
+        $orderBy = $params->getOrderBy() ?? 'dateStart';
+        $order = $params->getOrder() ?? 'DESC';
 
         $builder->order($orderBy, $order);
 
