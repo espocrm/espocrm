@@ -1061,7 +1061,8 @@ input.global-search-input {
                     &:after {
                         content: "";
                         display: block;
-                        height: var(--38px);
+                        height: var(--16px);
+                        top: var(--11px);
                         width: 0;
                         position: absolute;
                     }
@@ -1089,8 +1090,8 @@ input.global-search-input {
                 }
             }
 
-            &:hover,
-            &.being-column-resized {
+            //&:hover,
+            //&.being-column-resized {
                 > th {
                     > .column-resizer {
                         display: block;
@@ -1124,7 +1125,7 @@ input.global-search-input {
                         }
                     }
                 }
-            }
+            //}
         }
     }
 }
