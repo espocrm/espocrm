@@ -39,8 +39,6 @@ class MassUpdateModalView extends ModalView {
     layoutName = 'massUpdate'
 
     ACTION_UPDATE = 'update'
-    //ACTION_ADD = 'add'
-    //ACTION_REMOVE = 'remove'
 
     /**
      * @type {string[]}
@@ -97,6 +95,9 @@ class MassUpdateModalView extends ModalView {
         this.addedFieldList = [];
     }
 
+    /**
+     * @private
+     */
     async load() {
         this.model = await this.getModelFactory().create(this.entityType);
 
@@ -124,6 +125,7 @@ class MassUpdateModalView extends ModalView {
     }
 
     /**
+     * @private
      * @param {string} name
      */
     addField(name) {
@@ -233,7 +235,11 @@ class MassUpdateModalView extends ModalView {
         return this.getView(field);
     }
 
-    actionUpdate() {
+    /**
+     * @private
+     * @return {Promise<void>}
+     */
+    async actionUpdate() {
         this.disableButton('update');
 
         const attributes = {};
@@ -245,15 +251,14 @@ class MassUpdateModalView extends ModalView {
 
             const itemActualAttributes = {};
 
-            this.getFieldManager()
-                .getEntityTypeFieldActualAttributeList(this.entityType, field)
+            this.getFieldManager().getEntityTypeFieldActualAttributeList(this.entityType, field)
                 .forEach(attribute => {
                     actions[attribute] = action;
 
                     itemActualAttributes[attribute] = itemAttributes[attribute];
                 });
 
-            _.extend(attributes, itemActualAttributes);
+            Object.assign(attributes, itemActualAttributes);
         });
 
         this.model.set(attributes);
@@ -276,8 +281,10 @@ class MassUpdateModalView extends ModalView {
 
         Espo.Ui.notify(this.translate('saving', 'messages'));
 
-        Espo.Ajax
-            .postRequest('MassAction', {
+        let result;
+
+        try {
+            result = await Espo.Ajax.postRequest('MassAction', {
                 action: 'update',
                 entityType: this.entityType,
                 params: {
@@ -290,38 +297,33 @@ class MassUpdateModalView extends ModalView {
                     actions: actions,
                 },
                 idle: this.idle,
-            })
-            .then(result => {
-                result = result || {};
+            });
+        } catch (e) {
+            this.enableButton('update');
 
-                if (result.id) {
-                    this.helper
-                        .process(result.id, 'update')
-                        .then(view => {
-                            this.listenToOnce(view, 'close', () => this.close());
+            return;
+        }
 
-                            this.listenToOnce(view, 'success', result => {
-                                this.trigger('after:update', {
-                                    count: result.count,
-                                    idle: true,
-                                });
-                            });
-                        });
+        if (result.id) {
+            const view = await this.helper.process(result.id, 'update')
 
-                    return;
-                }
+            this.listenToOnce(view, 'close', () => this.close());
 
+            this.listenToOnce(view, 'success', result => {
                 this.trigger('after:update', {
                     count: result.count,
+                    idle: true,
                 });
-            })
-            .catch(() => {
-                this.enableButton('update');
             });
+
+            return;
+        }
+
+        this.trigger('after:update', {count: result.count});
     }
 
-
     /**
+     * @private
      * @param {string} name
      * @return {string}
      */
@@ -335,6 +337,9 @@ class MassUpdateModalView extends ModalView {
         return $dropdown.val() || this.ACTION_UPDATE;
     }
 
+    /**
+     * @private
+     */
     reset() {
         this.addedFieldList.forEach(field => {
             this.clearView(field);
