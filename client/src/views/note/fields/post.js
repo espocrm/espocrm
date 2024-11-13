@@ -154,7 +154,8 @@ class NotePostFieldView extends TextFieldView {
                     .then(data => callback(data.list));
             },
             template: mention => {
-                return this.getHelper().escapeString(mention.name) +
+                return this.getHelper().getAvatarHtml(mention.id, 'medium', 16, 'avatar-link') +
+                    this.getHelper().escapeString(mention.name) +
                     ' <span class="text-muted">@' +
                     this.getHelper().escapeString(mention.userName) + '</span>';
             },
