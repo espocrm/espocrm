@@ -107,7 +107,7 @@ class StreamView extends View {
         return this.getView('list');
     }
 
-    actionSelectFilter(data) {
+    async actionSelectFilter(data) {
         const name = data.name;
         const filter = name;
 
@@ -140,10 +140,19 @@ class StreamView extends View {
 
         Espo.Ui.notify(' ... ');
 
+        this.getRecordView().element.innerHTML = '';
+
         this.collection.abortLastFetch();
         this.collection.reset();
-        this.collection.fetch()
-            .then(() => Espo.Ui.notify(false));
+
+        try {
+            await this.collection.fetch()
+        } catch (e) {
+
+            return;
+        }
+
+        Espo.Ui.notify(false);
     }
 
     setFilter(filter) {
