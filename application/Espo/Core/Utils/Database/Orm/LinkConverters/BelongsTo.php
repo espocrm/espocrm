@@ -63,6 +63,10 @@ class BelongsTo implements LinkConverter
             ->withForeignKey('id')
             ->withForeignRelationName($foreignRelationName);
 
+        if ($linkDefs->getParam('deferredLoad')) {
+            $relationDefs = $relationDefs->withParam('deferredLoad', true);
+        }
+
         $nameAttributeDefs = !$noForeignName ?
             (
                 $noJoin ?

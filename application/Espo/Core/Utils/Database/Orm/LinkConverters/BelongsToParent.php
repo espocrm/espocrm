@@ -57,6 +57,10 @@ class BelongsToParent implements LinkConverter
             ->withKey($idName)
             ->withForeignRelationName($foreignRelationName);
 
+        if ($linkDefs->getParam('deferredLoad')) {
+            $relationDefs = $relationDefs->withParam('deferredLoad', true);
+        }
+
         return EntityDefs::create()
             ->withAttribute(
                 AttributeDefs::create($idName)
