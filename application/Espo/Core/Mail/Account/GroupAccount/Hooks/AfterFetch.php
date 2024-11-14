@@ -220,11 +220,7 @@ class AfterFetch implements AfterFetchInterface
             if ($case) {
                 $entityHash[CaseObj::ENTITY_TYPE] = $case;
 
-                $contactLink = $case->getContact();
-
-                if ($contactLink) {
-                    $contact = $this->entityManager->getEntityById(Contact::ENTITY_TYPE, $contactLink->getId());
-                }
+                $contact = $case->getContact();
             }
 
             if (!$contact) {

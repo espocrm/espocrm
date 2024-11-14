@@ -120,14 +120,7 @@ class Service
      */
     private function getAccountEmailAddress(CaseObj $entity, array $dataList): ?EmailAddressEntityPair
     {
-        $accountLink = $entity->getAccount();
-
-        if (!$accountLink) {
-            return null;
-        }
-
-        /** @var ?Account $account */
-        $account = $this->entityManager->getEntityById(Account::ENTITY_TYPE, $accountLink->getId());
+        $account = $entity->getAccount();
 
         if (!$account) {
             return null;
@@ -161,14 +154,7 @@ class Service
      */
     private function getLeadEmailAddress(CaseObj $entity, array $dataList): ?EmailAddressEntityPair
     {
-        $leadLink = $entity->getLead();
-
-        if (!$leadLink) {
-            return null;
-        }
-
-        /** @var ?Lead $lead */
-        $lead = $this->entityManager->getEntityById(Lead::ENTITY_TYPE, $leadLink->getId());
+        $lead = $entity->getLead();
 
         if (!$lead) {
             return null;
@@ -259,9 +245,9 @@ class Service
             $dataList[] = new EmailAddressEntityPair(EmailAddress::create($emailAddress), $contact);
         }
 
-        $contactLink = $entity->getContact();
+        $primaryContact = $entity->getContact();
 
-        if (!$contactLink) {
+        if (!$primaryContact) {
             return $dataList;
         }
 
@@ -270,12 +256,12 @@ class Service
             function (
                 EmailAddressEntityPair $o1,
                 EmailAddressEntityPair $o2
-            ) use ($contactLink) {
-                if ($o1->getEntity()->getId() === $contactLink->getId()) {
+            ) use ($primaryContact) {
+                if ($o1->getEntity()->getId() === $primaryContact->getId()) {
                     return -1;
                 }
 
-                if ($o2->getEntity()->getId() === $contactLink->getId()) {
+                if ($o2->getEntity()->getId() === $primaryContact->getId()) {
                     return 1;
                 }
 

@@ -32,11 +32,12 @@ namespace Espo\Modules\Crm\Entities;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Name\Field;
+use Espo\Core\ORM\Entity;
 use Espo\Entities\Attachment;
 use Espo\Entities\User;
 use Espo\ORM\Collection;
 
-class CaseObj extends \Espo\Core\ORM\Entity
+class CaseObj extends Entity
 {
     public const ENTITY_TYPE = 'Case';
 
@@ -64,19 +65,19 @@ class CaseObj extends \Espo\Core\ORM\Entity
         return $this->get('inboundEmailId');
     }
 
-    public function getAccount(): ?Link
+    public function getAccount(): ?Account
     {
-        /** @var ?Link */
-        return $this->getValueObject('account');
+        /** @var ?Account */
+        return $this->relations->getOne('account');
     }
 
     /**
      * A primary contact.
      */
-    public function getContact(): ?Link
+    public function getContact(): ?Contact
     {
-        /** @var ?Link */
-        return $this->getValueObject('contact');
+        /** @var ?Contact */
+        return $this->relations->getOne('contact');
     }
 
     public function getContacts(): LinkMultiple
@@ -85,10 +86,10 @@ class CaseObj extends \Espo\Core\ORM\Entity
         return $this->getValueObject('contacts');
     }
 
-    public function getLead(): ?Link
+    public function getLead(): ?Lead
     {
-        /** @var ?Link */
-        return $this->getValueObject('lead');
+        /** @var ?Lead */
+        return $this->relations->getOne('lead');
     }
 
     public function getAssignedUser(): ?Link
