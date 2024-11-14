@@ -30,7 +30,6 @@
 namespace Espo\ORM\Relation;
 
 use Espo\ORM\BaseEntity;
-use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
@@ -309,6 +308,10 @@ class RDBRelations implements Relations
             ->getDefs()
             ->getEntity($this->entity->getEntityType())
             ->getRelation($relation);
+
+        if (!$defs->getParam('deferredLoad')) {
+            return null;
+        }
 
         $relationType = $defs->getType();
 
