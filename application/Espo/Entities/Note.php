@@ -226,44 +226,28 @@ class Note extends Entity
         return $this->set('type', $type);
     }
 
-    public function setParent(LinkParent|OrmEntity $parent): self
+    public function setParent(LinkParent|OrmEntity|null $parent): self
     {
-        if ($parent instanceof LinkParent) {
-            $this->setValueObject(Field::PARENT, $parent);
-
-            return $this;
-        }
-
-        $this->relations->set(Field::PARENT, $parent);
-
-        return $this;
+        return $this->setRelatedLinkOrEntity(Field::PARENT, $parent);
     }
 
-    public function setRelated(LinkParent|OrmEntity $related): self
+    public function setRelated(LinkParent|OrmEntity|null $related): self
     {
-        if ($related instanceof LinkParent) {
-            $this->setValueObject('related', $related);
-
-            return $this;
-        }
-
-        $this->relations->set('related', $related);
-
-        return $this;
+        return $this->setRelatedLinkOrEntity('related', $related);
     }
 
-    public function setSuperParent(LinkParent|OrmEntity $superParent): self
+    public function setSuperParent(LinkParent|OrmEntity|null $superParent): self
     {
         if ($superParent instanceof LinkParent) {
-            $this->set('superParentId', $superParent->getId());
-            $this->set('superParentType', $superParent->getEntityType());
+            $this->setMultiple([
+                'superParentId' => $superParent->getId(),
+                'superParentType' => $superParent->getEntityType(),
+            ]);
 
             return $this;
         }
 
-        $this->relations->set('superParent', $superParent);
-
-        return $this;
+        return $this->setRelatedLinkOrEntity('superParent', $superParent);
     }
 
     public function setPost(?string $post): self

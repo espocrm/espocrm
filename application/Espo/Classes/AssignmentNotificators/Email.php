@@ -183,13 +183,8 @@ class Email implements AssignmentNotificator
             }
         }
 
-        $parent = $entity->getParent() ?
-            $this->entityManager->getEntityById($entity->getParent()->getEntityType(), $entity->getParent()->getId()) :
-            null;
-
-        $account = $entity->getAccount() ?
-            $this->entityManager->getEntityById(Account::ENTITY_TYPE, $entity->getAccount()->getId()) :
-            null;
+        $parent = $entity->getParent();
+        $account = $entity->getAccount();
 
         foreach ($userIdList as $userId) {
             if ($userIdFrom === $userId) {

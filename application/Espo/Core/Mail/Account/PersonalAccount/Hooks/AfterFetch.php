@@ -34,12 +34,10 @@ use Espo\Core\Mail\Account\Hook\BeforeFetchResult;
 use Espo\Core\Mail\Account\Hook\AfterFetch as AfterFetchInterface;
 use Espo\Tools\Stream\Service as StreamService;
 use Espo\Entities\Email;
-use Espo\ORM\EntityManager;
 
 class AfterFetch implements AfterFetchInterface
 {
     public function __construct(
-        private EntityManager $entityManager,
         private StreamService $streamService
     ) {}
 
@@ -52,18 +50,10 @@ class AfterFetch implements AfterFetchInterface
 
     private function noteAboutEmail(Email $email): void
     {
-        $parentLink = $email->getParent();
-
-        if (!$parentLink) {
+        if (!$email->getParent()) {
             return;
         }
 
-        $parent = $this->entityManager->getEntityById($parentLink->getEntityType(), $parentLink->getId());
-
-        if (!$parent) {
-            return;
-        }
-
-        $this->streamService->noteEmailReceived($parent, $email);
+        $this->streamService->noteEmailReceived($email->getParent(), $email);
     }
 }

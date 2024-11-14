@@ -250,14 +250,12 @@ class DefaultImporter implements Importer
 
     private function processEmailWithParent(Email $email): void
     {
-        $parentLink = $email->getParent();
+        $parentType = $email->get(Field::PARENT . 'Type');
+        $parentId = $email->get(Field::PARENT . 'Id');
 
-        if (!$parentLink) {
+        if (!$parentId || !$parentType) {
             return;
         }
-
-        $parentType = $parentLink->getEntityType();
-        $parentId = $parentLink->getId();
 
         $emailKeepParentTeamsEntityList = $this->config->get('emailKeepParentTeamsEntityList') ?? [];
 
@@ -268,7 +266,7 @@ class DefaultImporter implements Importer
             return;
         }
 
-        $parent = $this->entityManager->getEntityById($parentType, $parentId);
+        $parent = $email->getParent();
 
         if (!$parent) {
             return;

@@ -407,12 +407,7 @@ class Email extends Database implements
             $entity->setAccount(null);
         }
 
-        if (!$entity->getParent()) {
-            return;
-        }
-
-        $parent = $this->entityManager
-            ->getEntityById($entity->getParent()->getEntityType(), $entity->getParent()->getId());
+        $parent = $entity->getParent();
 
         if (!$parent) {
             return;

@@ -65,12 +65,12 @@ class ParentLinkChecker implements LinkChecker
             return false;
         }
 
-        $parentLink = $replied->getParent();
+        $parent = $replied->getParent();
 
         if (
-            !$parentLink ||
-            $parentLink->getId() !== $foreignEntity->getId() ||
-            $parentLink->getEntityType() !== $foreignEntity->getEntityType()
+            !$parent ||
+            $parent->getId() !== $foreignEntity->getId() ||
+            $parent->getEntityType() !== $foreignEntity->getEntityType()
         ) {
             return false;
         }

@@ -493,7 +493,7 @@ class Service
         $this->processNoteTeamsUsers($note, $email);
 
         if ($email->getAccount()) {
-            $note->setSuperParent(LinkParent::create(Account::ENTITY_TYPE, $email->getAccount()->getId()));
+            $note->setSuperParent($email->getAccount());
         }
 
         $withContent = in_array($entityType, $this->config->get('streamEmailWithContentEntityTypeList', []));
@@ -553,7 +553,7 @@ class Service
         $this->processNoteTeamsUsers($note, $email);
 
         if ($email->getAccount()) {
-            $note->setSuperParent(LinkParent::create(Account::ENTITY_TYPE, $email->getAccount()->getId()));
+            $note->setSuperParent($email->getAccount());
         }
 
         $withContent = in_array($entityType, $this->config->get('streamEmailWithContentEntityTypeList', []));

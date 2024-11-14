@@ -132,19 +132,11 @@ class AfterFetch implements AfterFetchInterface
 
     private function noteAboutEmail(Email $email): void
     {
-        $parentLink = $email->getParent();
-
-        if (!$parentLink) {
+        if (!$email->getParent()) {
             return;
         }
 
-        $parent = $this->entityManager->getEntityById($parentLink->getEntityType(), $parentLink->getId());
-
-        if (!$parent) {
-            return;
-        }
-
-        $this->streamService->noteEmailReceived($parent, $email);
+        $this->streamService->noteEmailReceived($email->getParent(), $email);
     }
 
     private function autoReply(

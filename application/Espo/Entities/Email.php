@@ -647,10 +647,10 @@ class Email extends Entity
         return $this->get('parentId');
     }
 
-    public function getParent(): ?LinkParent
+    public function getParent(): ?OrmEntity
     {
-        /** @var ?LinkParent */
-        return $this->getValueObject(Field::PARENT);
+        /** @var ?OrmEntity */
+        return $this->relations->getOne(Field::PARENT);
     }
 
     public function setAccount(Link|Account|null $account): self
@@ -668,10 +668,10 @@ class Email extends Entity
         return $this->get('status');
     }
 
-    public function getAccount(): ?Link
+    public function getAccount(): ?Account
     {
-        /** @var ?Link */
-        return $this->getValueObject('account');
+        /** @var ?Account */
+        return $this->relations->getOne('account');
     }
 
     public function getTeams(): LinkMultiple

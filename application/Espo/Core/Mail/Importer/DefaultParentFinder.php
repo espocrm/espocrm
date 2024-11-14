@@ -201,21 +201,7 @@ class DefaultParentFinder implements ParentFinder
             ->getRDBRepositoryByClass(Email::class)
             ->getById($repliedLink->getId());
 
-        if (!$repliedEmail) {
-            return null;
-        }
-
-        $parentLink = $repliedEmail->getParent();
-
-        if (!$parentLink) {
-            return null;
-        }
-
-        if (!$this->entityManager->hasRepository($parentLink->getEntityType())) {
-            return null;
-        }
-
-        return $this->entityManager->getEntityById($parentLink->getEntityType(), $parentLink->getId());
+        return $repliedEmail?->getParent();
     }
 
     private function getByReferences(Message $message): ?Entity
