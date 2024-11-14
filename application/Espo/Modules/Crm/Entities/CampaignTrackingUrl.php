@@ -38,6 +38,24 @@ class CampaignTrackingUrl extends Entity
 
     public const ACTION_SHOW_MESSAGE = 'Show Message';
 
+    public function get(string $attribute): mixed
+    {
+        if ($attribute === 'urlToUse') {
+            return $this->getUrlToUseInternal();
+        }
+
+        return parent::get($attribute);
+    }
+
+    public function has(string $attribute): bool
+    {
+        if ($attribute === 'urlToUse') {
+            return $this->hasUrlToUseInternal();
+        }
+
+        return parent::has($attribute);
+    }
+
     public function getCampaignId(): ?string
     {
         return $this->get('campaignId');
@@ -67,12 +85,12 @@ class CampaignTrackingUrl extends Entity
         return $this->get('urlToUse');
     }
 
-    protected function _getUrlToUse(): string
+    private function getUrlToUseInternal(): string
     {
-        return '{trackingUrl:' . $this->id . '}';
+        return "{trackingUrl:$this->id}";
     }
 
-    protected function _hasUrlToUse(): bool
+    private function hasUrlToUseInternal(): bool
     {
         return !$this->isNew();
     }

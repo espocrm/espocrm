@@ -62,6 +62,24 @@ class User extends Person
     public const RELATIONSHIP_ENTITY_USER = 'EntityUser';
     public const RELATIONSHIP_ENTITY_COLLABORATOR = 'EntityCollaborator';
 
+    public function get(string $attribute): mixed
+    {
+        if ($attribute === Field::NAME) {
+            return $this->getNameInternal();
+        }
+
+        return parent::get($attribute);
+    }
+
+    public function has(string $attribute): bool
+    {
+        if ($attribute === Field::NAME) {
+            return $this->hasNameInternal();
+        }
+
+        return parent::has($attribute);
+    }
+
     public function isActive(): bool
     {
         return (bool) $this->get('isActive');
@@ -294,10 +312,7 @@ class User extends Person
         return $this->get('avatarColor');
     }
 
-    /**
-     * @return ?string
-     */
-    protected function _getName()
+    private function getNameInternal(): ?string
     {
         if (!$this->hasInContainer(Field::NAME) || !$this->getFromContainer(Field::NAME)) {
             if ($this->get('userName')) {
@@ -308,10 +323,7 @@ class User extends Person
         return $this->getFromContainer(Field::NAME);
     }
 
-    /**
-     * @return bool
-     */
-    protected function _hasName()
+    private function hasNameInternal(): bool
     {
         if ($this->hasInContainer(Field::NAME)) {
             return true;

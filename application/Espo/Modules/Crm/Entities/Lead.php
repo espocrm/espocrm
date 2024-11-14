@@ -47,17 +47,32 @@ class Lead extends Person
     public const STATUS_RECYCLED = 'Recycled';
     public const STATUS_DEAD = 'Dead';
 
+    public function get(string $attribute): mixed
+    {
+        if ($attribute === Field::NAME) {
+            return $this->getNameInternal();
+        }
+
+        return parent::get($attribute);
+    }
+
+    public function has(string $attribute): bool
+    {
+        if ($attribute === Field::NAME) {
+            return $this->hasNameInternal();
+        }
+
+        return parent::has($attribute);
+    }
+
     public function getStatus(): ?string
     {
         return $this->get('status');
     }
 
-    /**
-     * @return ?string
-     */
-    protected function _getName()
+    private function getNameInternal(): ?string
     {
-        if (!$this->hasInContainer('name') || !$this->getFromContainer('name')) {
+        if (!$this->hasInContainer(Field::NAME) || !$this->getFromContainer(Field::NAME)) {
             if ($this->get('accountName')) {
                 return $this->get('accountName');
             }
@@ -71,15 +86,12 @@ class Lead extends Person
             }
         }
 
-        return $this->getFromContainer('name');
+        return $this->getFromContainer(Field::NAME);
     }
 
-    /**
-     * @return bool
-     */
-    protected function _hasName()
+    private function hasNameInternal(): bool
     {
-        if ($this->hasInContainer('name')) {
+        if ($this->hasInContainer(Field::NAME)) {
             return true;
         }
 
