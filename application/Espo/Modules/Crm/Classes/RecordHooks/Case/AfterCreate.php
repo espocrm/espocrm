@@ -30,7 +30,6 @@
 namespace Espo\Modules\Crm\Classes\RecordHooks\Case;
 
 use Espo\Core\Acl;
-use Espo\Core\Field\LinkParent;
 use Espo\Core\Record\Hook\SaveHook;
 use Espo\Entities\Email;
 use Espo\Modules\Crm\Entities\CaseObj;
@@ -63,7 +62,7 @@ class AfterCreate implements SaveHook
             return;
         }
 
-        $email->setParent(LinkParent::createFromEntity($entity));
+        $email->setParent($entity);
 
         $this->entityManager->saveEntity($email);
     }

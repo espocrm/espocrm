@@ -33,6 +33,7 @@ use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\ORM\BaseEntity;
+use Espo\ORM\Entity as OrmEntity;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Type\AttributeType;
@@ -640,7 +641,7 @@ class Entity extends BaseEntity
     /**
      * @since 9.0.0
      */
-    protected function setRelatedLinkOrEntity(string $relation, Link|LinkParent|Entity|null $related): static
+    protected function setRelatedLinkOrEntity(string $relation, Link|LinkParent|OrmEntity|null $related): static
     {
         if ($related instanceof Entity || $related === null) {
             $this->relations->set($relation, $related);

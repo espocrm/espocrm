@@ -36,7 +36,9 @@ use Espo\Core\ORM\Entity;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Field\Link;
+use Espo\Modules\Crm\Entities\Account;
 use Espo\ORM\Collection;
+use Espo\ORM\Entity as OrmEntity;
 use Espo\Repositories\Email as EmailRepository;
 use Espo\Tools\Email\Util as EmailUtil;
 
@@ -651,24 +653,14 @@ class Email extends Entity
         return $this->getValueObject(Field::PARENT);
     }
 
-    public function setAccount(?Link $account): self
+    public function setAccount(Link|Account|null $account): self
     {
-        $this->setValueObject('account', $account);
-
-        return $this;
+        return $this->setRelatedLinkOrEntity('account', $account);
     }
 
-    public function setParent(LinkParent|Entity|null $parent): self
+    public function setParent(LinkParent|OrmEntity|null $parent): self
     {
-        if ($parent instanceof LinkParent) {
-            $this->setValueObject(Field::PARENT, $parent);
-
-            return $this;
-        }
-
-        $this->relations->set(Field::PARENT, $parent);
-
-        return $this;
+        return $this->setRelatedLinkOrEntity(Field::PARENT, $parent);
     }
 
     public function getStatus(): ?string

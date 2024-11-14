@@ -434,11 +434,10 @@ class Email extends Database implements
         }
 
         if ($accountId) {
-            /** @var ?Account $account */
-            $account = $this->entityManager->getEntityById(Account::ENTITY_TYPE, $accountId);
+            $account = $this->entityManager->getRDBRepositoryByClass(Account::class)->getById($accountId);
 
             if ($account) {
-                $entity->setAccount(Link::create($accountId, $account->getName()));
+                $entity->setAccount($account);
             }
         }
     }

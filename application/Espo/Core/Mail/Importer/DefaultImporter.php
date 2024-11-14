@@ -172,7 +172,7 @@ class DefaultImporter implements Importer
         $parentFound = $this->parentFinder->find($email, $message);
 
         if ($parentFound) {
-            $email->setParent(LinkParent::createFromEntity($parentFound));
+            $email->setParent($parentFound);
         }
 
         if (!$duplicate) {
