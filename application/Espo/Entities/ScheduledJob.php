@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 
 class ScheduledJob extends Entity
@@ -39,7 +40,7 @@ class ScheduledJob extends Entity
 
     public function getName(): ?string
     {
-        return $this->get('name');
+        return $this->get(Field::NAME);
     }
 
     public function getScheduling(): ?string

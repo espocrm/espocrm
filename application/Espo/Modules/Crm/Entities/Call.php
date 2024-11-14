@@ -48,7 +48,7 @@ class Call extends Entity
 
     public function getName(): ?string
     {
-        return $this->get('name');
+        return $this->get(Field::NAME);
     }
 
     public function getStatus(): ?string

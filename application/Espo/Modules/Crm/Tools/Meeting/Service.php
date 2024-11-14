@@ -113,7 +113,7 @@ class Service
         }
 
         $actionData = [
-            'eventName' => $entity->get('name'),
+            'eventName' => $entity->get(Field::NAME),
             'eventType' => $entity->getEntityType(),
             'eventId' => $entity->getId(),
             'dateStart' => $entity->get('dateStart'),

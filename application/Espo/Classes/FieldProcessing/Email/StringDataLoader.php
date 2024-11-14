@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\FieldProcessing\Email;
 
+use Espo\Core\Name\Field;
 use Espo\ORM\Entity;
 use Espo\ORM\Name\Attribute;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
@@ -90,7 +91,7 @@ class StringDataLoader implements Loader
             foreach ($idList as $emailAddressId) {
                 $person = $this->getEmailAddressRepository()->getEntityByAddressId($emailAddressId, null, true);
 
-                $list[] = $person ? $person->get('name') : $names->$emailAddressId;
+                $list[] = $person ? $person->get(Field::NAME) : $names->$emailAddressId;
             }
 
             $entity->set('personStringData', 'To: ' . implode(', ', $list));
@@ -108,7 +109,7 @@ class StringDataLoader implements Loader
         if (!array_key_exists($fromEmailAddressId, $this->fromEmailAddressNameCache)) {
             $person = $this->getEmailAddressRepository()->getEntityByAddressId($fromEmailAddressId, null, true);
 
-            $fromName = $person?->get('name');
+            $fromName = $person?->get(Field::NAME);
 
             $this->fromEmailAddressNameCache[$fromEmailAddressId] = $fromName;
         }

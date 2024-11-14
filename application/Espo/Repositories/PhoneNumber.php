@@ -81,7 +81,7 @@ class PhoneNumber extends Database implements
 
         foreach ($phoneNumbers as $phoneNumber) {
             $ids[] = $phoneNumber->getId();
-            $exist[] = $phoneNumber->get('name');
+            $exist[] = $phoneNumber->get(Field::NAME);
         }
 
         foreach ($numberList as $number) {
@@ -133,7 +133,7 @@ class PhoneNumber extends Database implements
 
         foreach ($numberList as $number) {
             $item = (object) [
-                'phoneNumber' => $number->get('name'),
+                'phoneNumber' => $number->get(Field::NAME),
                 'type' => $number->get('type'),
                 'primary' => $number->get('primary'),
                 'optOut' => $number->get('optOut'),
@@ -265,8 +265,8 @@ class PhoneNumber extends Database implements
     {
         parent::beforeSave($entity, $options);
 
-        if ($entity->has('name')) {
-            $number = $entity->get('name');
+        if ($entity->has(Field::NAME)) {
+            $number = $entity->get(Field::NAME);
 
             if (is_string($number) && !str_starts_with($number, self::ERASED_PREFIX)) {
                 $numeric = preg_replace('/[^0-9]/', '', $number);

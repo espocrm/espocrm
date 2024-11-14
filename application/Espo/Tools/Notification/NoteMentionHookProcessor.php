@@ -32,6 +32,7 @@ namespace Espo\Tools\Notification;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Permission;
 use Espo\Core\AclManager;
+use Espo\Core\Name\Field;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
 use Espo\Entities\Note;
@@ -131,7 +132,7 @@ class NoteMentionHookProcessor
 
             $mentionData->$item = (object) [
                 'id' => $user->getId(),
-                'name' => $user->get('name'),
+                'name' => $user->get(Field::NAME),
                 'userName' => $user->get('userName'),
                 '_scope' => $user->getEntityType(),
             ];

@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Jobs;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Reminder;
@@ -135,7 +136,7 @@ class SubmitPopupReminders implements JobDataLess
                 'data' => (object) [
                     'id' => $entity->getId(),
                     'entityType' => $entityType,
-                    'name' => $entity->get('name'),
+                    'name' => $entity->get(Field::NAME),
                     'dateField' => $dateField,
                     'attributes' => (object) [
                         $dateField => $entity->get($dateField),

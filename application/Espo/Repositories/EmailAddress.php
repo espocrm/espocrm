@@ -146,7 +146,7 @@ class EmailAddress extends Database implements
 
         foreach ($emailAddressList as $emailAddress) {
             $item = (object) [
-                'emailAddress' => $emailAddress->get('name'),
+                'emailAddress' => $emailAddress->get(Field::NAME),
                 'lower' => $emailAddress->get('lower'),
                 'primary' => $emailAddress->get('primary'),
                 'optOut' => $emailAddress->get('optOut'),

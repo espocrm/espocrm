@@ -46,7 +46,7 @@ class Document extends Entity
 
     public function getName(): ?string
     {
-        return $this->get('name');
+        return $this->get(Field::NAME);
     }
 
     public function setFile(?Attachment $file): self

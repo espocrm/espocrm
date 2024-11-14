@@ -235,7 +235,7 @@ class DefaultImporter implements Importer
             'cc' => $email->get('cc'),
             'bcc' => $email->get('bcc'),
             'replyTo' => $email->get('replyTo'),
-            'name' => $email->get('name'),
+            'name' => $email->get(Field::NAME),
             'dateSent' => $email->get('dateSent'),
             'body' => $email->get('body'),
             'bodyPlain' => $email->get('bodyPlain'),

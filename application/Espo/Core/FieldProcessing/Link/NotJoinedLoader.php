@@ -29,6 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\Link;
 
+use Espo\Core\Name\Field;
 use Espo\ORM\Entity;
 
 use Espo\Core\FieldProcessing\Loader as LoaderInterface;
@@ -81,7 +82,7 @@ class NotJoinedLoader implements LoaderInterface
 
         $foreignEntity = $this->entityManager
             ->getRDBRepository($foreignEntityType)
-            ->select([Attribute::ID, 'name'])
+            ->select([Attribute::ID, Field::NAME])
             ->where([Attribute::ID => $id])
             ->findOne();
 
@@ -92,7 +93,7 @@ class NotJoinedLoader implements LoaderInterface
             return;
         }
 
-        $name = $foreignEntity->get('name');
+        $name = $foreignEntity->get(Field::NAME);
 
         if ($name === null) {
             $foreignEntity = $this->entityManager
@@ -100,7 +101,7 @@ class NotJoinedLoader implements LoaderInterface
                 ->getById($id);
 
             if ($foreignEntity) {
-                $name = $foreignEntity->get('name');
+                $name = $foreignEntity->get(Field::NAME);
             }
         }
 

@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 
 class AddressCountry extends Entity
@@ -37,7 +38,7 @@ class AddressCountry extends Entity
 
     public function getName(): string
     {
-        return $this->get('name');
+        return $this->get(Field::NAME);
     }
 
     public function getCode(): string

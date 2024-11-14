@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\EmailTemplate;
 
+use Espo\Core\Name\Field;
 use Espo\Entities\Attachment;
 
 use stdClass;
@@ -101,7 +102,7 @@ class Result
             $id = $attachment->getId();
 
             $attachmentsIds[] = $id;
-            $attachmentsNames->$id = $attachment->get('name');
+            $attachmentsNames->$id = $attachment->get(Field::NAME);
         }
 
         return (object) [

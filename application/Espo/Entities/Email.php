@@ -73,7 +73,7 @@ class Email extends Entity
     /** @noinspection PhpUnused */
     protected function _getSubject(): ?string
     {
-        return $this->get('name');
+        return $this->get(Field::NAME);
     }
 
     /** @noinspection PhpUnused */
@@ -88,7 +88,7 @@ class Email extends Entity
      */
     protected function _hasSubject(): bool
     {
-        return $this->has('name');
+        return $this->has(Field::NAME);
     }
 
     /** @noinspection PhpUnused */

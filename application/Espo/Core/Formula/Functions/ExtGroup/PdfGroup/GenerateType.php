@@ -30,6 +30,7 @@
 namespace Espo\Core\Formula\Functions\ExtGroup\PdfGroup;
 
 use Espo\Core\Field\LinkParent;
+use Espo\Core\Name\Field;
 use Espo\Entities\Attachment;
 use Espo\Entities\Template;
 use Espo\Core\Formula\ArgumentList;
@@ -110,7 +111,7 @@ class GenerateType extends BaseFunction implements
                 $fileName .= '.pdf';
             }
         } else {
-            $fileName = Util::sanitizeFileName($entity->get('name')) . '.pdf';
+            $fileName = Util::sanitizeFileName($entity->get(Field::NAME)) . '.pdf';
         }
 
         $params = Params::create()->withAcl(false);

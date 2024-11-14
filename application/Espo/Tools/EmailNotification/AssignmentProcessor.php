@@ -148,8 +148,8 @@ class AssignmentProcessor
             '/#' . $entity->getEntityType() . '/view/' . $entity->getId();
 
         $templateData = [
-            'userName' => $user->get('name'),
-            'assignerUserName' => $assignerUser->get('name'),
+            'userName' => $user->get(Field::NAME),
+            'assignerUserName' => $assignerUser->get(Field::NAME),
             'recordUrl' => $recordUrl,
             'entityType' => $this->language->translateLabel($entity->getEntityType(), 'scopeNames'),
         ];

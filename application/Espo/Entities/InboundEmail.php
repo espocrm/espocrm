@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 
 use Espo\Core\Field\Date;
@@ -89,7 +90,7 @@ class InboundEmail extends Entity
 
     public function getName(): ?string
     {
-        return $this->get('name');
+        return $this->get(Field::NAME);
     }
 
     public function getFromName(): ?string

@@ -31,6 +31,7 @@ namespace Espo\Modules\Crm\Tools\Activities;
 
 use DateInterval;
 use DateTime;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
@@ -133,7 +134,7 @@ class PopupNotificationsProvider implements Provider
             $data = (object) [
                 'id' => $entity->getId(),
                 'entityType' => $entityType,
-                'name' => $entity->get('name'),
+                'name' => $entity->get(Field::NAME),
                 'dateField' => $dateField,
                 'attributes' => (object) [
                     $dateField => $entity->get($dateField),

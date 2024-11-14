@@ -33,6 +33,7 @@ use Espo\Core\Entities\Person;
 
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Name\Field;
 use Espo\Modules\Crm\Entities\Contact;
 use RuntimeException;
 
@@ -298,13 +299,13 @@ class User extends Person
      */
     protected function _getName()
     {
-        if (!$this->hasInContainer('name') || !$this->getFromContainer('name')) {
+        if (!$this->hasInContainer(Field::NAME) || !$this->getFromContainer(Field::NAME)) {
             if ($this->get('userName')) {
                 return $this->get('userName');
             }
         }
 
-        return $this->getFromContainer('name');
+        return $this->getFromContainer(Field::NAME);
     }
 
     /**
@@ -312,7 +313,7 @@ class User extends Person
      */
     protected function _hasName()
     {
-        if ($this->hasInContainer('name')) {
+        if ($this->hasInContainer(Field::NAME)) {
             return true;
         }
 

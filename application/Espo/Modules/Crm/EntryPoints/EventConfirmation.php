@@ -37,6 +37,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\HookManager;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Client\ActionRenderer;
@@ -141,7 +142,7 @@ class EventConfirmation implements EntryPoint
 
         if (in_array($eventStatus, [Meeting::STATUS_HELD, Meeting::STATUS_NOT_HELD])) {
             $actionData = [
-                'eventName' => $event->get('name'),
+                'eventName' => $event->get(Field::NAME),
                 'translatedEntityType' => $this->language->translateLabel($eventType, 'scopeNames'),
                 'translatedStatus' => $this->language->translateOption($eventStatus, 'status', $eventType),
                 'style' => $this->metadata->get(['entityDefs', $eventType, 'fields', 'status', 'style', $eventStatus]),
@@ -164,7 +165,7 @@ class EventConfirmation implements EntryPoint
         };
 
         $actionData = [
-            'eventName' => $event->get('name'),
+            'eventName' => $event->get(Field::NAME),
             'eventType' => $event->getEntityType(),
             'eventId' => $event->getId(),
             'dateStart' => $event->get('dateStart'),

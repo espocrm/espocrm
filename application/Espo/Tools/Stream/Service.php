@@ -519,7 +519,7 @@ class Service
 
             if ($person) {
                 $data['personEntityType'] = $person->getEntityType();
-                $data['personEntityName'] = $person->get('name');
+                $data['personEntityName'] = $person->get(Field::NAME);
                 $data['personEntityId'] = $person->getId();
 
                 if (
@@ -587,7 +587,7 @@ class Service
 
         if ($person) {
             $data['personEntityType'] = $person->getEntityType();
-            $data['personEntityName'] = $person->get('name');
+            $data['personEntityName'] = $person->get(Field::NAME);
             $data['personEntityId'] = $person->getId();
         }
 
@@ -1032,7 +1032,7 @@ class Service
                     $wasParent = $this->entityManager->getEntityById($wasParentType, $wasParentId);
 
                     if ($wasParent) {
-                        $was[$field . 'Name'] = $wasParent->get('name');
+                        $was[$field . 'Name'] = $wasParent->get(Field::NAME);
                     }
                 }
             }
@@ -1202,7 +1202,7 @@ class Service
             $id = $user->getId();
 
             $data['idList'][] = $id;
-            $data['nameMap']->$id = $user->get('name');
+            $data['nameMap']->$id = $user->get(Field::NAME);
         }
 
         return $data;

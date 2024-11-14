@@ -31,6 +31,7 @@ namespace Espo\Core\ORM;
 
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkParent;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Entity as OrmEntity;
@@ -112,14 +113,14 @@ class Entity extends BaseEntity
 
         $repository = $this->entityManager->getRDBRepository($parentType);
 
-        $select = [Attribute::ID, 'name'];
+        $select = [Attribute::ID, Field::NAME];
 
         $foreignEntity = $repository
             ->select($select)
             ->where([Attribute::ID => $parentId])
             ->findOne();
 
-        $entityName = $foreignEntity ? $foreignEntity->get('name') : null;
+        $entityName = $foreignEntity ? $foreignEntity->get(Field::NAME) : null;
 
         $this->set($nameAttribute, $entityName);
 
@@ -216,7 +217,7 @@ class Entity extends BaseEntity
             throw new LogicException("No entity-manager.");
         }
 
-        $select = [Attribute::ID, 'name'];
+        $select = [Attribute::ID, Field::NAME];
 
         $hasType = $this->hasAttribute($field . 'Types');
 
@@ -276,7 +277,7 @@ class Entity extends BaseEntity
 
             $ids[] = $id;
 
-            $names->$id = $e->get('name');
+            $names->$id = $e->get(Field::NAME);
 
             if ($hasType) {
                 $types->$id = $e->get('type');
@@ -345,7 +346,7 @@ class Entity extends BaseEntity
             throw new LogicException("No entity-manager.");
         }
 
-        $select = [Attribute::ID, 'name'];
+        $select = [Attribute::ID, Field::NAME];
 
         $entity = $this->entityManager
             ->getRDBRepository($this->getEntityType())
@@ -358,7 +359,7 @@ class Entity extends BaseEntity
 
         if ($entity) {
             $entityId = $entity->getId();
-            $entityName = $entity->get('name');
+            $entityName = $entity->get(Field::NAME);
         }
 
         $idAttribute = $field . 'Id';

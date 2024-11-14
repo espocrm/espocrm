@@ -33,6 +33,7 @@ use Espo\Core\Console\Command;
 use Espo\Core\Console\Command\Params;
 use Espo\Core\Console\IO;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Name\Field;
 use Espo\Entities\Extension as ExtensionEntity;
 use Espo\ORM\EntityManager;
 use Espo\Core\Upgrades\ExtensionManager;
@@ -182,7 +183,7 @@ class Extension implements Command
                 return;
             }
 
-            $name = $record->get('name');
+            $name = $record->get(Field::NAME);
         } else {
             if (!$name) {
                 $io->writeLine("Can't uninstall. No --name or --id specified.");
@@ -269,7 +270,7 @@ class Extension implements Command
         foreach ($collection as $extension) {
             $isInstalled = $extension->get('isInstalled');
 
-            $io->writeLine(' Name: ' . $extension->get('name'));
+            $io->writeLine(' Name: ' . $extension->get(Field::NAME));
             $io->writeLine(' ID: ' . $extension->getId());
             $io->writeLine(' Version: ' . $extension->getVersion());
             $io->writeLine(' Installed: ' . ($isInstalled ? 'yes' : 'no'));

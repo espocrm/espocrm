@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 
 class Extension extends Entity
@@ -42,7 +43,7 @@ class Extension extends Entity
 
     public function getName(): string
     {
-        return (string) $this->get('name');
+        return (string) $this->get(Field::NAME);
     }
 
     public function getVersion(): string

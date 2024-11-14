@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Notification;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Notification\AssignmentNotificatorFactory;
 use Espo\Core\Notification\AssignmentNotificator;
 use Espo\Core\Notification\AssignmentNotificator\Params as AssignmentNotificatorParams;
@@ -129,7 +130,7 @@ class HookProcessor
                 'data' => [
                     'entityType' => $entity->getEntityType(),
                     'entityId' => $entity->getId(),
-                    'entityName' => $entity->get('name'),
+                    'entityName' => $entity->get(Field::NAME),
                     'userId' => $removedById,
                     'userName' => $removedByName,
                 ],
@@ -187,7 +188,7 @@ class HookProcessor
     private function getUserNameById(string $id): string
     {
         if ($id === $this->user->getId()) {
-            return $this->user->get('name');
+            return $this->user->get(Field::NAME);
         }
 
         if (!array_key_exists($id, $this->userNameHash)) {

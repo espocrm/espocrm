@@ -37,6 +37,7 @@ use Espo\Core\Exceptions\Error\Body as ErrorBody;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\InjectableFactory;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
@@ -152,7 +153,7 @@ class LinkCheck
                 $foreignEntity = $this->processLinkedRecordsCheckItem($entity, $relationDefs, $id);
 
                 if ($foreignEntity) {
-                    $names->$id = $foreignEntity->get('name');
+                    $names->$id = $foreignEntity->get(Field::NAME);
                 }
             }
 

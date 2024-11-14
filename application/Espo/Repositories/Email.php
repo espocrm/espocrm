@@ -30,6 +30,7 @@
 namespace Espo\Repositories;
 
 use Espo\Core\Field\Link;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Entities\EmailFilter;
 use Espo\Entities\InboundEmail;
@@ -271,7 +272,7 @@ class Email extends Database implements
             }
 
             if ($p) {
-                $nameHash->$address = $p->get('name');
+                $nameHash->$address = $p->get(Field::NAME);
                 $typeHash->$address = $p->getEntityType();
 
                 $idHash->$address = $p->getId();

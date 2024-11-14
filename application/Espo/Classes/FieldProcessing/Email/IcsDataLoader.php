@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\FieldProcessing\Email;
 
+use Espo\Core\Name\Field;
 use Espo\Modules\Crm\Entities\Call;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Entity;
@@ -145,7 +146,7 @@ class IcsDataLoader implements Loader
             $nameMap = $valueMap->$namesAttribute ?? (object) [];
 
             $idList[] = $personEntity->getId();
-            $nameMap->{$personEntity->getId()} = $personEntity->get('name');
+            $nameMap->{$personEntity->getId()} = $personEntity->get(Field::NAME);
 
             $valueMap->$idsAttribute = $idList;
             $valueMap->$namesAttribute = $nameMap;
@@ -198,7 +199,7 @@ class IcsDataLoader implements Loader
         $eventData->createdEvent = (object) [
             'id' => $createdEvent->getId(),
             'entityType' => $emailSameEvent->getEntityType(),
-            'name' => $createdEvent->get('name'),
+            'name' => $createdEvent->get(Field::NAME),
         ];
     }
 

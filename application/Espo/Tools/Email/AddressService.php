@@ -300,7 +300,7 @@ class AddressService
             if (!$skipPrimaryEmailAddress) {
                 $result[] = [
                     'emailAddress' => $emailAddress,
-                    'entityName' => $entity->get('name'),
+                    'entityName' => $entity->get(Field::NAME),
                     'entityType' => $entityType,
                     'entityId' => $entity->getId(),
                 ];
@@ -327,7 +327,7 @@ class AddressService
 
                 $result[] = [
                     'emailAddress' => $item->emailAddress,
-                    'entityName' => $entity->get('name'),
+                    'entityName' => $entity->get(Field::NAME),
                     'entityType' => $entityType,
                     'entityId' => $entity->getId(),
                 ];

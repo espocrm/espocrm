@@ -236,7 +236,7 @@ class Invitations
             'startDate' => strtotime($entity->get('dateStart')),
             'endDate' => strtotime($entity->get('dateEnd')),
             'uid' => $entity->getId(),
-            'summary' => $entity->get('name'),
+            'summary' => $entity->get(Field::NAME),
             'organizer' => $organizerAddress ? [$organizerAddress, $organizerName] : null,
             'attendees' => $attendees,
             'description' => $entity->get('description'),
@@ -268,7 +268,7 @@ class Invitations
             $data['isUser'] = true;
         }
 
-        $data['inviteeName'] = $invitee->get('name');
+        $data['inviteeName'] = $invitee->get(Field::NAME);
         $data['entityType'] = $this->language->translateLabel($entity->getEntityType(), 'scopeNames');
         $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
 

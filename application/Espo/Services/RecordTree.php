@@ -229,7 +229,7 @@ class RecordTree extends Record
             'upperId' => $category->get('parentId'),
             'upperName' => $category->get('parentName'),
             'id' => $id,
-            'name' => $category->get('name'),
+            'name' => $category->get(Field::NAME),
         ];
     }
 

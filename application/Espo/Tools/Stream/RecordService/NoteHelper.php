@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Stream\RecordService;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Entities\Note;
@@ -125,12 +126,12 @@ class NoteHelper
 
         $collection = $this->entityManager
             ->getRDBRepository($foreignEntityType)
-            ->select([Attribute::ID, 'name'])
+            ->select([Attribute::ID, Field::NAME])
             ->where([Attribute::ID => $ids])
             ->find();
 
         foreach ($collection as $entity) {
-            $names->{$entity->getId()} = $entity->get('name');
+            $names->{$entity->getId()} = $entity->get(Field::NAME);
         }
 
         $was->{$field . 'Names'} = $names;

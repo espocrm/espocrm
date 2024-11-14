@@ -34,6 +34,7 @@ use Espo\Core\Api\Response;
 use Espo\Core\EntryPoint\EntryPoint;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Util;
 use Espo\Entities\Template;
@@ -74,7 +75,7 @@ class Pdf implements EntryPoint
 
         $contents = $this->service->generate($entityType, $entityId, $templateId);
 
-        $fileName = Util::sanitizeFileName($entity->get('name') ?? 'unnamed');
+        $fileName = Util::sanitizeFileName($entity->get(Field::NAME) ?? 'unnamed');
 
         $fileName = $fileName . '.pdf';
 

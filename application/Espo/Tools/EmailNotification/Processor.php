@@ -501,7 +501,7 @@ class Processor
             }
 
             $data['url'] = "{$this->getSiteUrl($user)}/#$parentType/view/$parentId";
-            $data['parentName'] = $parent->get('name');
+            $data['parentName'] = $parent->get(Field::NAME);
             $data['parentType'] = $parentType;
             $data['parentId'] = $parentId;
 
@@ -650,7 +650,7 @@ class Processor
         $note->loadParentNameField('superParent');
 
         $data['url'] = "{$this->getSiteUrl($user)}/#$parentType/view/$parentId";
-        $data['parentName'] = $parent->get('name');
+        $data['parentName'] = $parent->get(Field::NAME);
         $data['parentType'] = $parentType;
         $data['parentId'] = $parentId;
         $data['superParentName'] = $note->get('superParentName');
@@ -805,7 +805,7 @@ class Processor
         }
 
         $data['url'] = "{$this->getSiteUrl($user)}/#$parentType/view/$parentId";
-        $data['parentName'] = $parent->get('name');
+        $data['parentName'] = $parent->get(Field::NAME);
         $data['parentType'] = $parentType;
         $data['parentId'] = $parentId;
 

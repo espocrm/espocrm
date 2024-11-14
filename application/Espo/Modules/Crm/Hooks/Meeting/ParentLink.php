@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Hooks\Meeting;
 
 use Espo\Core\Hook\Hook\BeforeSave;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Lead;
@@ -89,7 +90,7 @@ class ParentLink implements BeforeSave
         if ($parent) {
             if ($parent instanceof Account) {
                 $accountId = $parent->getId();
-                $accountName = $parent->get('name');
+                $accountName = $parent->get(Field::NAME);
             } else if (
                 $parent instanceof Lead &&
                 $parent->getStatus() === Lead::STATUS_CONVERTED &&
@@ -119,12 +120,12 @@ class ParentLink implements BeforeSave
         ) {
             $account = $this->entityManager
                 ->getRDBRepository(Account::ENTITY_TYPE)
-                ->select([Attribute::ID, 'name'])
+                ->select([Attribute::ID, Field::NAME])
                 ->where([Attribute::ID => $entity->get('accountId')])
                 ->findOne();
 
             if ($account) {
-                $entity->set('accountName', $account->get('name'));
+                $entity->set('accountName', $account->get(Field::NAME));
             }
         }
     }

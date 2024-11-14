@@ -30,6 +30,7 @@
 namespace Espo\Classes\AssignmentNotificators;
 
 use Espo\Core\Field\DateTime;
+use Espo\Core\Name\Field;
 use Espo\Core\Notification\DefaultAssignmentNotificator;
 use Espo\Entities\EmailAddress;
 use Espo\Entities\EmailFolder;
@@ -164,7 +165,7 @@ class Email implements AssignmentNotificator
 
             if ($person) {
                 $data['personEntityType'] = $person->getEntityType();
-                $data['personEntityName'] = $person->get('name');
+                $data['personEntityName'] = $person->get(Field::NAME);
                 $data['personEntityId'] = $person->getId();
             }
         }

@@ -32,6 +32,7 @@ namespace Espo\Tools\EmailTemplate\InsertField;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\FieldUtil;
@@ -166,7 +167,7 @@ class Service
                 'entityType' => $e->getEntityType(),
                 'id' => $e->getId(),
                 'values' => $values,
-                'name' => $e->get('name'),
+                'name' => $e->get(Field::NAME),
             ];
         }
 

@@ -43,7 +43,7 @@ class UniqueId extends Entity
 
     public function getIdValue(): ?string
     {
-        return $this->get('name');
+        return $this->get(Field::NAME);
     }
 
     public function getTerminateAt(): ?DateTime

@@ -29,6 +29,7 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\Name\Field;
 use Espo\Entities\Sms as SmsEntity;
 use Espo\Entities\PhoneNumber;
 
@@ -55,7 +56,7 @@ class Sms extends Database
                 ->getById($numberId);
 
             if ($phoneNumber) {
-                $entity->set('from', $phoneNumber->get('name'));
+                $entity->set('from', $phoneNumber->get(Field::NAME));
 
                 return;
             }

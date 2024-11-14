@@ -30,6 +30,7 @@
 namespace Espo\Tools\UserReaction;
 
 use Espo\Core\Field\LinkParent;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Entities\Note;
 use Espo\Entities\Notification;
@@ -78,7 +79,7 @@ class NotificationService
 
         if ($parent instanceof Entity) {
             $notification->setRelatedParent($parent);
-            $data['entityName'] = $parent->get('name');
+            $data['entityName'] = $parent->get(Field::NAME);
         }
 
         $notification->setData($data);

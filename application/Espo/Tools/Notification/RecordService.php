@@ -289,7 +289,7 @@ class RecordService
                 $parent = $this->entityManager->getEntityById($parentType, $parentId);
 
                 if ($parent) {
-                    $note->set('parentName', $parent->get('name'));
+                    $note->set('parentName', $parent->get(Field::NAME));
                 }
             }
         } else if (!$note->isGlobal()) {
@@ -315,7 +315,7 @@ class RecordService
             $related = $this->entityManager->getEntityById($relatedType, $relatedId);
 
             if ($related) {
-                $note->set('relatedName', $related->get('name'));
+                $note->set('relatedName', $related->get(Field::NAME));
             }
         }
 

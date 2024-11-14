@@ -342,7 +342,7 @@ class AfterFetch implements AfterFetchInterface
         }
 
         /** @noinspection RegExpRedundantEscape */
-        if (preg_match('/\[#([0-9]+)[^0-9]*\]/', $email->get('name'), $m)) {
+        if (preg_match('/\[#([0-9]+)[^0-9]*\]/', $email->get(Field::NAME), $m)) {
             $caseNumber = $m[1];
 
             $case = $this->entityManager

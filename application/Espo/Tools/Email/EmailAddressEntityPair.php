@@ -30,6 +30,7 @@
 namespace Espo\Tools\Email;
 
 use Espo\Core\Field\EmailAddress;
+use Espo\Core\Name\Field;
 use Espo\ORM\Entity;
 use stdClass;
 
@@ -60,7 +61,7 @@ class EmailAddressEntityPair
     {
         return (object) [
             'emailAddress' => $this->emailAddress->getAddress(),
-            'name' => $this->entity->get('name'),
+            'name' => $this->entity->get(Field::NAME),
             'entityId' => $this->entity->getId(),
             'entityType' => $this->entity->getEntityType(),
         ];

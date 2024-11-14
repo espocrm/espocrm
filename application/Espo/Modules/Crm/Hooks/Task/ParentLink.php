@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Hooks\Task;
 
 use Espo\Core\Hook\Hook\BeforeSave;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
@@ -104,7 +105,7 @@ class ParentLink implements BeforeSave
         if ($parent) {
             if ($parent instanceof Account) {
                 $accountId = $parent->getId();
-                $accountName = $parent->get('name');
+                $accountName = $parent->get(Field::NAME);
             } else if (
                 $parent instanceof Lead &&
                 $parent->getStatus() == Lead::STATUS_CONVERTED
@@ -120,7 +121,7 @@ class ParentLink implements BeforeSave
                 }
             } else if ($parent instanceof Contact) {
                 $contactId = $parent->getId();
-                $contactName = $parent->get('name');
+                $contactName = $parent->get(Field::NAME);
             }
 
             if (
@@ -159,7 +160,7 @@ class ParentLink implements BeforeSave
                 ->findOne();
 
             if ($account) {
-                $entity->set('accountName', $account->get('name'));
+                $entity->set('accountName', $account->get(Field::NAME));
             }
         }
 
@@ -174,7 +175,7 @@ class ParentLink implements BeforeSave
                 ->findOne();
 
             if ($contact) {
-                $entity->set('contactName', $contact->get('name'));
+                $entity->set('contactName', $contact->get(Field::NAME));
             }
         }
     }

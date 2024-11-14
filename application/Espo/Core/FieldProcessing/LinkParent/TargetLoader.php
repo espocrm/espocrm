@@ -29,11 +29,13 @@
 
 namespace Espo\Core\FieldProcessing\LinkParent;
 
+use Espo\Core\Name\Field;
 use Espo\ORM\Entity;
 
 use Espo\Core\FieldProcessing\Loader as LoaderInterface;
 use Espo\Core\FieldProcessing\Loader\Params;
 use Espo\Core\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 
 /**
  * @implements LoaderInterface<Entity>
@@ -62,7 +64,7 @@ class TargetLoader implements LoaderInterface
             ->from($targetType)
             ->withDeleted()
             ->where([
-                'id' => $targetId,
+                Attribute::ID => $targetId,
             ])
             ->build();
 
@@ -75,10 +77,10 @@ class TargetLoader implements LoaderInterface
             return;
         }
 
-        if (!$target->get('name')) {
+        if (!$target->get(Field::NAME)) {
             return;
         }
 
-        $entity->set('targetName', $target->get('name'));
+        $entity->set('targetName', $target->get(Field::NAME));
     }
 }
