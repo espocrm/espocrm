@@ -177,7 +177,7 @@ class Email implements AssignmentNotificator
         }
 
         if (empty($data['personEntityId'])) {
-            $data['fromString'] = Util::parseFromName($entity->getFromString());
+            $data['fromString'] = Util::parseFromName($entity->getFromString() ?? '');
 
             if (empty($data['fromString']) && $from) {
                 $data['fromString'] = $from;

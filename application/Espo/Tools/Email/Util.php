@@ -31,7 +31,7 @@ namespace Espo\Tools\Email;
 
 class Util
 {
-    static public function parseFromName(?string $string): string
+    static public function parseFromName(string $string): string
     {
         $fromName = '';
 
@@ -45,20 +45,22 @@ class Util
         return $fromName;
     }
 
-    static public function parseFromAddress(?string $string): string
+    static public function parseFromAddress(string $string): string
     {
-        $fromAddress = '';
-
-        if ($string) {
-            if (stripos($string, '<') !== false) {
-                if (preg_match('/<(.*)>/', $string, $matches)) {
-                    $fromAddress = trim($matches[1]);
-                }
-            } else {
-                $fromAddress = $string;
-            }
+        if (!$string) {
+            return '';
         }
 
-        return $fromAddress;
+        if (stripos($string, '<') !== false) {
+            $fromAddress = '';
+
+            if (preg_match('/<(.*)>/', $string, $matches)) {
+                $fromAddress = trim($matches[1]);
+            }
+
+            return $fromAddress;
+        }
+
+        return $string;
     }
 }

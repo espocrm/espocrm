@@ -70,10 +70,50 @@ class Email extends Entity
     public const SAVE_OPTION_IS_BEING_IMPORTED = 'isBeingImported';
     public const SAVE_OPTION_IS_JUST_SENT = 'isJustSent';
 
-    /** @noinspection PhpUnused */
-    protected function _getSubject(): ?string
+    public function get(string $attribute): mixed
     {
-        return $this->get(Field::NAME);
+        if ($attribute === 'subject') {
+            return $this->get(Field::NAME);
+        }
+
+        if ($attribute === 'fromName') {
+            return EmailUtil::parseFromName($this->get('fromString') ?? '') ?: null;
+        }
+
+        if ($attribute === 'fromAddress') {
+            return EmailUtil::parseFromAddress($this->get('fromString') ?? '') ?: null;
+        }
+
+        if ($attribute === 'replyToName') {
+            return $this->getReplyToNameInternal();
+        }
+
+        if ($attribute === 'replyToAddress') {
+            return $this->getReplyToAddressInternal();
+        }
+
+        if ($attribute === 'bodyPlain') {
+            return $this->getBodyPlain();
+        }
+
+        return parent::get($attribute);
+    }
+
+    public function has(string $attribute): bool
+    {
+        if ($attribute === 'subject') {
+            return $this->has(Field::NAME);
+        }
+
+        if ($attribute === 'fromName' || $attribute === 'fromAddress') {
+            return $this->has('fromString');
+        }
+
+        if ($attribute === 'replyToName' || $attribute === 'replyToAddress') {
+            return $this->has('replyToString');
+        }
+
+        return parent::has($attribute);
     }
 
     /** @noinspection PhpUnused */
@@ -82,67 +122,7 @@ class Email extends Entity
         $this->set(Field::NAME, $value);
     }
 
-    /**
-     * @noinspection PhpUnused
-     * @return bool
-     */
-    protected function _hasSubject(): bool
-    {
-        return $this->has(Field::NAME);
-    }
-
-    /** @noinspection PhpUnused */
-    protected function _hasFromName(): bool
-    {
-        return $this->has('fromString');
-    }
-
-    /** @noinspection PhpUnused */
-    protected function _hasFromAddress(): bool
-    {
-        return $this->has('fromString');
-    }
-
-    /** @noinspection PhpUnused */
-    protected function _hasReplyToName(): bool
-    {
-        return $this->has('replyToString');
-    }
-
-    /** @noinspection PhpUnused */
-    protected function _hasReplyToAddress(): bool
-    {
-        return $this->has('replyToString');
-    }
-
-    /** @noinspection PhpUnused */
-    protected function _getFromName(): ?string
-    {
-        if (!$this->has('fromString')) {
-            return null;
-        }
-
-        $string = EmailUtil::parseFromName($this->get('fromString'));
-
-        if ($string === '') {
-            return null;
-        }
-
-        return $string;
-    }
-
-    /** @noinspection PhpUnused */
-    protected function _getFromAddress(): ?string
-    {
-        if (!$this->has('fromString')) {
-            return null;
-        }
-
-        return EmailUtil::parseFromAddress($this->get('fromString'));
-    }
-
-    /** @noinspection PhpUnused */
-    protected function _getReplyToName(): ?string
+    private function getReplyToNameInternal(): ?string
     {
         if (!$this->has('replyToString')) {
             return null;
@@ -154,13 +134,12 @@ class Email extends Entity
             return null;
         }
 
-        return EmailUtil::parseFromName(
-            trim(explode(';', $string)[0])
-        );
+        $string = trim(explode(';', $string)[0]);
+
+        return EmailUtil::parseFromName($string);
     }
 
-    /** @noinspection PhpUnused */
-    protected function _getReplyToAddress(): ?string
+    private function getReplyToAddressInternal(): ?string
     {
         if (!$this->has('replyToString')) {
             return null;
@@ -172,9 +151,9 @@ class Email extends Entity
             return null;
         }
 
-        return EmailUtil::parseFromAddress(
-            trim(explode(';', $string)[0])
-        );
+        $string = trim(explode(';', $string)[0]);
+
+        return EmailUtil::parseFromAddress($string);
     }
 
     /** @noinspection PhpUnused */
@@ -221,12 +200,6 @@ class Email extends Entity
         }
 
         $this->entityManager->saveEntity($attachment);
-    }
-
-    /** @noinspection PhpUnused */
-    protected function _getBodyPlain(): ?string
-    {
-        return $this->getBodyPlain();
     }
 
     public function hasBodyPlain(): bool
