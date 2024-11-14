@@ -99,7 +99,7 @@ class SelectRecordsModalView extends ModalView {
      * @property {string[]} [mandatorySelectAttributeList] Mandatory attributes to select.
      * @property {function(): Promise<Record>} [createAttributesProvider] Create-attributes provider.
      * @property {Record} [createAttributes] Create-attributes.
-     * @property {function(import('model').default[])} [onSelect] On record select. As of 8.5.
+     * @property {function(import('model').default[])} [onSelect] On record select. As of 9.0.0.
      */
 
     /**

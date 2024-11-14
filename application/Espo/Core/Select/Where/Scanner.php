@@ -65,7 +65,7 @@ class Scanner
     /**
      * Check whether at least one has-many link appears in the where-clause.
      *
-     * @since 8.5.0
+     * @since 9.0.0
      */
     public function hasRelatedMany(string $entityType, Item $item): bool
     {

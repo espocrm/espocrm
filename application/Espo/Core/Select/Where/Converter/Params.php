@@ -33,7 +33,7 @@ namespace Espo\Core\Select\Where\Converter;
  * Where converter parameters.
  *
  * @immutable
- * @since 8.5.0
+ * @since 9.0.0
  */
 class Params
 {

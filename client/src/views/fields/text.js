@@ -531,7 +531,7 @@ class TextFieldView extends BaseFieldView {
     /**
      * Show the preview modal.
      *
-     * @since 8.5.0
+     * @since 9.0.0
      * @return {Promise<void>}
      */
     async preview() {

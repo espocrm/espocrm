@@ -402,7 +402,7 @@ class AclManager
      * Check whether an entity is shared with a user.
      *
      * @param Table::ACTION_* $action
-     * @since 8.5.0
+     * @since 9.0.0
      * @noinspection PhpDocSignatureInspection
      */
     public function checkOwnershipShared(User $user, Entity $entity, string $action): bool

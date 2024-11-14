@@ -80,7 +80,7 @@ class Params
     /**
      * Clone with an option.
      *
-     * @since 8.5.0
+     * @since 9.0.0
      */
     public function withOption(string $option, mixed $value): self
     {

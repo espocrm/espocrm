@@ -13,7 +13,7 @@
                     {"type": "string"}
                 ]
             },
-            "description": "Classes for additional handling of a select query. Should implement Espo\\Core\\Select\\Applier\\AdditionalApplier interface. An entity type is passed to the constructor in `$entityType` parameter. As of v8.5.0."
+            "description": "Classes for additional handling of a select query. Should implement Espo\\Core\\Select\\Applier\\AdditionalApplier interface. An entity type is passed to the constructor in `$entityType` parameter. As of v9.0."
         }
     }
 }

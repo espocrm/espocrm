@@ -36,7 +36,7 @@ use Espo\ORM\Query\Part\Condition;
 use Espo\ORM\Query\Part\Expression;
 
 /**
- * @since 8.5.0
+ * @since 9.0.0
  * @noinspection PhpUnused
  */
 class SecretProvider

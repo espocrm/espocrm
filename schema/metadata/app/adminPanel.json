@@ -47,7 +47,7 @@
                                 },
                                 "tabQuickSearch": {
                                     "type": "boolean",
-                                    "description": "Makes available in the navbar tab quick search. As if v8.5."
+                                    "description": "Makes available in the navbar tab quick search. As if v9.0."
                                 }
                             }
                         }

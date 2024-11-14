@@ -328,7 +328,7 @@ class ListRecordView extends View {
      *
      * @protected
      * @type {boolean}
-     * @since 8.5.0
+     * @since 9.0.0
      */
     columnResize = true
 
@@ -584,7 +584,7 @@ class ListRecordView extends View {
      *
      * @protected
      * @type {Object.<string, *>}
-     * @since 8.5.0
+     * @since 9.0.0
      */
     rootData
 

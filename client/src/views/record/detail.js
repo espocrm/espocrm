@@ -528,7 +528,7 @@ class DetailRecordView extends BaseRecordView {
      *
      * @protected
      * @type {Object.<string, *>}
-     * @since 8.5.0
+     * @since 9.0.0
      */
     dataObject
 
@@ -537,7 +537,7 @@ class DetailRecordView extends BaseRecordView {
      *
      * @protected
      * @type {Record}
-     * @since 8.5.0
+     * @since 9.0.0
      */
     rootData
 

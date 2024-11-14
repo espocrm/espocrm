@@ -159,7 +159,7 @@ class ListView extends MainView {
      *
      * @protected
      * @type {Object.<string, *>}
-     * @since 8.5.0
+     * @since 9.0.0
      */
     rootData
 

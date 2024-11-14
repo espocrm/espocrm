@@ -93,7 +93,7 @@ class ListSettingsHelper {
      * @param {string} name A name.
      * @param {boolean} [hidden] Is hidden by default.
      * @return {boolean}
-     * @since 8.5.0
+     * @since 9.0.0
      */
     isColumnHidden(name, hidden) {
         const hiddenMap = this.getHiddenColumnMap();
@@ -117,7 +117,7 @@ class ListSettingsHelper {
      * Is column resize enabled.
      *
      * @return {boolean}
-     * @since 8.5.0
+     * @since 9.0.0
      */
     getColumnResize() {
         if (this.columnResize === undefined) {

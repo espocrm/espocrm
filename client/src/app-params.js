@@ -29,7 +29,7 @@
 /**
  * Application parameters.
  *
- * @since 8.5.0
+ * @since 9.0.0
  */
 export default class AppParams {
 

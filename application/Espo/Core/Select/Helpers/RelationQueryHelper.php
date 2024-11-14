@@ -39,7 +39,7 @@ use Espo\ORM\Query\Part\WhereItem;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 /**
- * @since 8.5.0
+ * @since 9.0.0
  */
 class RelationQueryHelper
 {

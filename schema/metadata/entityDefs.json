@@ -303,7 +303,7 @@
                         "properties": {
                             "preview": {
                                 "type": "boolean",
-                                "description": "Show the preview button. Applicable only if Markdown is enabled. As of v8.5."
+                                "description": "Show the preview button. Applicable only if Markdown is enabled. As of v9.0."
                             },
                             "displayRawText": {
                                 "type": "boolean",
@@ -325,7 +325,7 @@
                             },
                             "attachmentField": {
                                 "type": "string",
-                                "description": "An attachment-multiple field to connect with. As of v8.5."
+                                "description": "An attachment-multiple field to connect with. As of v9.0."
                             }
                         }
                     }
@@ -1322,7 +1322,7 @@
                         "properties": {
                             "orderBy": {
                                 "type": "string",
-                                "description": "An attribute or expression to order by. Applied when getting related entities from an entity. As of v8.5."
+                                "description": "An attribute or expression to order by. Applied when getting related entities from an entity. As of v9.0."
                             },
                             "order": {
                                 "enum": ["asc", "desc"],

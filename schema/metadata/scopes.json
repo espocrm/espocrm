@@ -291,7 +291,7 @@
             "type": "boolean"
         },
         "preserveAuditLog": {
-            "description": "Disables audit log cleanup. As of v8.5.",
+            "description": "Disables audit log cleanup. As of v9.0.",
             "type": "boolean"
         },
         "exportFormatList": {
