@@ -4,6 +4,7 @@
     "createdAt",
     "createdBy",
     "modifiedAt",
+    "streamUpdatedAt",
     "type",
     "industry",
     "description",

@@ -226,7 +226,7 @@ class Note extends Entity
         return $this->set('type', $type);
     }
 
-    public function setParent(LinkParent|Entity $parent): self
+    public function setParent(LinkParent|OrmEntity $parent): self
     {
         if ($parent instanceof LinkParent) {
             $this->setValueObject(Field::PARENT, $parent);
@@ -239,7 +239,7 @@ class Note extends Entity
         return $this;
     }
 
-    public function setRelated(LinkParent|Entity $related): self
+    public function setRelated(LinkParent|OrmEntity $related): self
     {
         if ($related instanceof LinkParent) {
             $this->setValueObject('related', $related);
@@ -252,7 +252,7 @@ class Note extends Entity
         return $this;
     }
 
-    public function setSuperParent(LinkParent|Entity $superParent): self
+    public function setSuperParent(LinkParent|OrmEntity $superParent): self
     {
         if ($superParent instanceof LinkParent) {
             $this->set('superParentId', $superParent->getId());
@@ -358,6 +358,11 @@ class Note extends Entity
     public function getParent(): ?OrmEntity
     {
         return $this->relations->getOne(Field::PARENT);
+    }
+
+    public function getSuperParent(): ?OrmEntity
+    {
+        return $this->relations->getOne('superParent');
     }
 
     /**

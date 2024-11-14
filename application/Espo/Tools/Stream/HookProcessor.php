@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Stream;
 
+use Espo\Core\Field\DateTime;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Entity as CoreEntity;
@@ -45,6 +46,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\Defs\RelationDefs;
 
 use Espo\ORM\Repository\Option\RemoveOptions;
+use Espo\ORM\Repository\Option\SaveOptions;
 use Espo\Tools\Stream\Service as Service;
 use Espo\Tools\Stream\Jobs\AutoFollow as AutoFollowJob;
 use Espo\Tools\Stream\Jobs\ControlFollowers as ControlFollowersJob;
@@ -73,6 +75,19 @@ class HookProcessor
         private Preferences $preferences,
         private JobSchedulerFactory $jobSchedulerFactory
     ) {}
+
+    public function beforeSave(Entity $entity, SaveOptions $options): void
+    {
+        if (
+            !$this->checkHasStream($entity->getEntityType()) ||
+            $options->get(self::OPTION_NO_STREAM) ||
+            $options->get(SaveOption::SILENT)
+        ) {
+            return;
+        }
+
+        $this->processStreamUpdatedAt($entity);
+    }
 
     /**
      * @param array<string, mixed> $options
@@ -600,11 +615,11 @@ class HookProcessor
         $auditedForeign = $this->metadata->get(['entityDefs', $foreignEntityType, 'links', $foreignLink, 'audited']);
 
         if ($audited) {
-            $this->service->noteRelate($foreignEntity, $entityType, $entity->getId());
+            $this->service->noteRelate($foreignEntity, $entity);
         }
 
         if ($auditedForeign) {
-            $this->service->noteRelate($entity, $foreignEntity->getEntityType(), $foreignEntity->getId());
+            $this->service->noteRelate($entity, $foreignEntity);
         }
     }
 
@@ -633,14 +648,14 @@ class HookProcessor
         $auditedForeign = $this->metadata->get(['entityDefs', $foreignEntityType, 'links', $foreignLink, 'audited']);
 
         if ($audited) {
-            $this->service->noteUnrelate($foreignEntity, $entityType, $entity->getId());
+            $this->service->noteUnrelate($foreignEntity, $entity);
 
             // @todo
             // Add time period (a few minutes). If before, remove RELATE note, don't create 'unrelate' if before.
         }
 
         if ($auditedForeign) {
-            $this->service->noteUnrelate($entity, $foreignEntity->getEntityType(), $foreignEntity->getId());
+            $this->service->noteUnrelate($entity, $foreignEntity);
 
             // @todo
             // Add time period (a few minutes). If before, remove RELATE note, don't create 'unrelate' if before.
@@ -663,5 +678,14 @@ class HookProcessor
         if (!$entity->isNew()) {
             $this->service->handleAudited($entity, $options);
         }
+    }
+
+    private function processStreamUpdatedAt(Entity $entity): void
+    {
+        if (!$this->service->checkEntityNeedsUpdatedAt($entity)) {
+            return;
+        }
+
+        $entity->set(Field::STREAM_UPDATED_AT, DateTime::createNow()->toString());
     }
 }

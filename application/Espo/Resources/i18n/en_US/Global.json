@@ -478,6 +478,7 @@
         "modifiedAt": "Modified At",
         "createdBy": "Created By",
         "modifiedBy": "Modified By",
+        "streamUpdatedAt": "Stream Updated At",
         "description": "Description",
         "address": "Address",
         "phoneNumber": "Phone",

@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Stream;
 
+use Espo\Core\Field\DateTime;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
@@ -486,8 +487,8 @@ class Service
         $note = $this->getNewNote();
 
         $note->setType(Note::TYPE_EMAIL_RECEIVED);
-        $note->setParent(LinkParent::createFromEntity($entity));
-        $note->setRelated(LinkParent::create(Email::ENTITY_TYPE, $email->getId()));
+        $note->setParent($entity);
+        $note->setRelated($email);
 
         $this->processNoteTeamsUsers($note, $email);
 
@@ -534,6 +535,9 @@ class Service
         $note->setData((object) $data);
 
         $this->entityManager->saveEntity($note);
+
+        // @todo Also for the super-parent.
+        $this->updateStreamUpdatedAt($entity);
     }
 
     public function noteEmailSent(Entity $entity, Email $email): void
@@ -543,8 +547,8 @@ class Service
         $note = $this->getNewNote();
 
         $note->setType(Note::TYPE_EMAIL_SENT);
-        $note->setParent(LinkParent::createFromEntity($entity));
-        $note->setRelated(LinkParent::create(Email::ENTITY_TYPE, $email->getId()));
+        $note->setParent($entity);
+        $note->setRelated($email);
 
         $this->processNoteTeamsUsers($note, $email);
 
@@ -590,6 +594,9 @@ class Service
         $note->set('data', (object) $data);
 
         $this->entityManager->saveEntity($note);
+
+        // @todo Also for the super-parent.
+        $this->updateStreamUpdatedAt($entity);
     }
 
     /**
@@ -696,7 +703,7 @@ class Service
 
         $note->setType(Note::TYPE_CREATE_RELATED);
         $note->setParent(LinkParent::create($parentType, $parentId));
-        $note->setRelated(LinkParent::createFromEntity($entity));
+        $note->setRelated($entity);
 
         $this->processNoteTeamsUsers($note, $entity);
 
@@ -714,7 +721,7 @@ class Service
     /**
      * @param array<string, mixed> $options
      */
-    public function noteRelate(Entity $entity, string $parentType, string $parentId, array $options = []): void
+    public function noteRelate(Entity $entity, Entity $parent, array $options = []): void
     {
         $entityType = $entity->getEntityType();
 
@@ -723,8 +730,8 @@ class Service
             ->select([Attribute::ID])
             ->where([
                 'type' => Note::TYPE_RELATE,
-                'parentId' => $parentId,
-                'parentType' => $parentType,
+                'parentId' => $parent->getId(),
+                'parentType' => $parent->getEntityType(),
                 'relatedId' => $entity->getId(),
                 'relatedType' => $entityType,
             ])
@@ -737,8 +744,8 @@ class Service
         $note = $this->getNewNote();
 
         $note->setType(Note::TYPE_RELATE);
-        $note->setParent(LinkParent::create($parentType, $parentId));
-        $note->setRelated(LinkParent::createFromEntity($entity));
+        $note->setParent($parent);
+        $note->setRelated($entity);
 
         $this->processNoteTeamsUsers($note, $entity);
 
@@ -749,12 +756,14 @@ class Service
         }
 
         $this->entityManager->saveEntity($note, $noteOptions);
+
+        $this->updateStreamUpdatedAt($parent);
     }
 
     /**
      * @param array<string, mixed> $options
      */
-    public function noteUnrelate(Entity $entity, string $parentType, string $parentId, array $options = []): void
+    public function noteUnrelate(Entity $entity, Entity $parent, array $options = []): void
     {
         $entityType = $entity->getEntityType();
 
@@ -763,8 +772,8 @@ class Service
             ->select([Attribute::ID])
             ->where([
                 'type' => Note::TYPE_UNRELATE,
-                'parentId' => $parentId,
-                'parentType' => $parentType,
+                'parentId' => $parent->getId(),
+                'parentType' => $parent->getEntityType(),
                 'relatedId' => $entity->getId(),
                 'relatedType' => $entityType,
             ])
@@ -777,8 +786,8 @@ class Service
         $note = $this->getNewNote();
 
         $note->setType(Note::TYPE_UNRELATE);
-        $note->setParent(LinkParent::create($parentType, $parentId));
-        $note->setRelated(LinkParent::createFromEntity($entity));
+        $note->setParent($parent);
+        $note->setRelated($entity);
 
         $this->processNoteTeamsUsers($note, $entity);
 
@@ -789,6 +798,8 @@ class Service
         }
 
         $this->entityManager->saveEntity($note, $noteOptions);
+
+        $this->updateStreamUpdatedAt($parent);
     }
 
     /**
@@ -905,6 +916,69 @@ class Service
         $this->auditedFieldsCache[$entityType] = $auditedFields;
 
         return $this->auditedFieldsCache[$entityType];
+    }
+
+    /**
+     * @since 9.0.0
+     * @internal
+     */
+    public function checkEntityNeedsUpdatedAt(Entity $entity): bool
+    {
+        if ($entity->isNew() && $entity->get(Field::STREAM_UPDATED_AT)) {
+            return false;
+        }
+
+        return
+            $entity->isNew() ||
+            $this->hasAuditedFieldChanged($entity) ||
+            $this->hasStatusFieldChanged($entity) ||
+            $this->hasAssignedUserChanged($entity);
+    }
+
+    private function hasAssignedUserChanged(Entity $entity): bool
+    {
+        if (
+            $entity->hasAttribute(Field::ASSIGNED_USER . 'Id') &&
+            $entity->isAttributeChanged(Field::ASSIGNED_USER . 'Id')
+        ) {
+            return true;
+        }
+
+        if (
+            $entity instanceof CoreEntity &&
+            $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS) &&
+            $entity->isAttributeChanged(self::FIELD_ASSIGNED_USERS . 'Ids')
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function hasStatusFieldChanged(Entity $entity): bool
+    {
+        $field = $this->getStatusField($entity->getEntityType());
+
+        if (!$field) {
+            return false;
+        }
+
+        return $entity->isAttributeChanged($field);
+    }
+
+    private function hasAuditedFieldChanged(Entity $entity): bool
+    {
+        $auditedFields = $this->getAuditedFieldsData($entity);
+
+        foreach ($auditedFields as $item) {
+            foreach ($item['actualList'] as $attribute) {
+                if ($entity->isAttributeChanged($attribute)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -1284,5 +1358,15 @@ class Service
     public function checkIsEnabled(string $entityType): bool
     {
         return (bool) $this->metadata->get("scopes.$entityType.stream");
+    }
+
+    /**
+     * @since 9.0.0
+     */
+    public function updateStreamUpdatedAt(Entity $entity): void
+    {
+        $entity->set(Field::STREAM_UPDATED_AT, DateTime::createNow()->toString());
+
+        $this->entityManager->saveEntity($entity, [SaveOption::SKIP_ALL => true]);
     }
 }

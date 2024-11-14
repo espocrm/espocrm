@@ -27,22 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Name;
+namespace Espo\Core\Utils\Metadata\AdditionalBuilder;
 
-class Field
+use Espo\Core\Name\Field;
+use Espo\Core\ORM\Type\FieldType;
+use Espo\Core\Utils\Metadata\AdditionalBuilder;
+use stdClass;
+
+class StreamUpdatedAtField implements AdditionalBuilder
 {
-    public const ID = 'id';
-    public const CREATED_BY = 'createdBy';
-    public const CREATED_AT = 'createdAt';
-    public const MODIFIED_BY = 'modifiedBy';
-    public const MODIFIED_AT = 'modifiedAt';
-    public const STREAM_UPDATED_AT = 'streamUpdatedAt';
-    public const ASSIGNED_USER = 'assignedUser';
-    public const ASSIGNED_USERS = 'assignedUsers';
-    public const COLLABORATORS = 'collaborators';
-    public const TEAMS = 'teams';
-    public const PARENT = 'parent';
-    public const IS_FOLLOWED = 'isFollowed';
-    public const FOLLOWERS = 'followers';
-    public const IS_STARRED = 'isStarred';
+    public function build(stdClass $data): void
+    {
+        if (!isset($data->entityDefs)) {
+            return;
+        }
+
+        $field = Field::STREAM_UPDATED_AT;
+
+        foreach (get_object_vars($data->entityDefs) as $entityType => $entityDefsItem) {
+            $hasStream = $data->scopes?->$entityType?->stream;
+
+            if (!$hasStream) {
+                continue;
+            }
+
+            if (isset($entityDefsItem?->fields->$field)) {
+                continue;
+            }
+
+            $entityDefsItem->fields ??= (object) [];
+
+            $entityDefsItem->fields->$field = (object) [
+                'type' => FieldType::DATETIME,
+                'readOnly' => true,
+                'customizationReadOnlyDisabled' => true,
+            ];
+        }
+    }
 }

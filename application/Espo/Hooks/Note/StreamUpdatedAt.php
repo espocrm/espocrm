@@ -27,22 +27,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Name;
+namespace Espo\Hooks\Note;
 
-class Field
+use Espo\Core\Hook\Hook\AfterSave;
+use Espo\ORM\Entity;
+use Espo\ORM\Repository\Option\SaveOptions;
+use Espo\Entities\Note;
+use Espo\Tools\Stream\Service;
+
+/**
+ * @implements AfterSave<Note>
+ */
+class StreamUpdatedAt implements AfterSave
 {
-    public const ID = 'id';
-    public const CREATED_BY = 'createdBy';
-    public const CREATED_AT = 'createdAt';
-    public const MODIFIED_BY = 'modifiedBy';
-    public const MODIFIED_AT = 'modifiedAt';
-    public const STREAM_UPDATED_AT = 'streamUpdatedAt';
-    public const ASSIGNED_USER = 'assignedUser';
-    public const ASSIGNED_USERS = 'assignedUsers';
-    public const COLLABORATORS = 'collaborators';
-    public const TEAMS = 'teams';
-    public const PARENT = 'parent';
-    public const IS_FOLLOWED = 'isFollowed';
-    public const FOLLOWERS = 'followers';
-    public const IS_STARRED = 'isStarred';
+    public function __construct(private Service $service)
+    {}
+
+    public function afterSave(Entity $entity, SaveOptions $options): void
+    {
+        if (!$entity->isNew()) {
+            return;
+        }
+
+        if (
+            $entity->getType() !== Note::TYPE_POST ||
+            !$entity->getParentType() ||
+            !$this->service->checkIsEnabled($entity->getParentType())
+        ) {
+            return;
+        }
+
+        if (!$entity->getParent()) {
+            return;
+        }
+
+        $this->service->updateStreamUpdatedAt($entity->getParent());
+    }
 }

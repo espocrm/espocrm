@@ -109,7 +109,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'parentType' => $account->getEntityType(),
         ]);
 
-        $streamService->noteRelate($meeting, $account->getEntityType(), $account->getId());
+        $streamService->noteRelate($meeting, $account);
 
         $note2 = $em
             ->getRDBRepository('Note')

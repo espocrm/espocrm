@@ -148,6 +148,11 @@ class NameUtil
         Field::ASSIGNED_USER,
         Field::ASSIGNED_USERS,
         Field::COLLABORATORS,
+        Field::STREAM_UPDATED_AT,
+        Field::CREATED_BY,
+        Field::CREATED_AT,
+        Field::MODIFIED_BY,
+        Field::MODIFIED_AT,
     ];
 
     /**
@@ -169,6 +174,8 @@ class NameUtil
         Field::ASSIGNED_USER,
         Field::ASSIGNED_USERS,
         Field::COLLABORATORS,
+        Field::CREATED_BY,
+        Field::MODIFIED_BY,
     ];
 
     /**

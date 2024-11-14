@@ -33,6 +33,7 @@ use Espo\Core\Hook\Hook\AfterRelate;
 use Espo\Core\Hook\Hook\AfterRemove;
 use Espo\Core\Hook\Hook\AfterSave;
 use Espo\Core\Hook\Hook\AfterUnrelate;
+use Espo\Core\Hook\Hook\BeforeSave;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\Option\RelateOptions;
@@ -42,17 +43,27 @@ use Espo\ORM\Repository\Option\UnrelateOptions;
 use Espo\Tools\Stream\HookProcessor;
 
 /**
+ * @implements BeforeSave<Entity>
  * @implements AfterSave<Entity>
  * @implements AfterRemove<Entity>
  * @implements AfterRelate<Entity>
  * @implements AfterUnrelate<Entity>
  */
-class Stream implements AfterSave, AfterRemove, AfterRelate, AfterUnrelate
+class Stream implements BeforeSave, AfterSave, AfterRemove, AfterRelate, AfterUnrelate
 {
     public static int $order = 9;
 
     public function __construct(private HookProcessor $processor)
     {}
+
+    public function beforeSave(Entity $entity, SaveOptions $options): void
+    {
+        if ($options->get(SaveOption::SILENT)) {
+            return;
+        }
+
+        $this->processor->beforeSave($entity, $options);
+    }
 
     public function afterSave(Entity $entity, SaveOptions $options): void
     {
