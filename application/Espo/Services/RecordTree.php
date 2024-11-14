@@ -31,6 +31,7 @@ namespace Espo\Services;
 
 use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Name\Field;
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 use Espo\ORM\Name\Attribute;
@@ -121,7 +122,7 @@ class RecordTree extends Record
             $selectBuilder->order('order', Order::ASC);
         }
 
-        $selectBuilder->order('name', Order::ASC);
+        $selectBuilder->order(Field::NAME, Order::ASC);
 
         $filterItems = false;
 

@@ -30,6 +30,7 @@
 namespace Espo\Tools\EmailNotification;
 
 use Espo\Core\Field\LinkParent;
+use Espo\Core\Name\Field;
 use Espo\Core\Notification\EmailNotificationHandler;
 use Espo\Core\Mail\SenderParams;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
@@ -311,7 +312,7 @@ class Processor
             }
 
             $data['url'] = "{$this->getSiteUrl($user)}/#$parentType/view/$parentId";
-            $data['parentName'] = $parent->get('name');
+            $data['parentName'] = $parent->get(Field::NAME);
             $data['parentType'] = $parentType;
             $data['parentId'] = $parentId;
         } else {

@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\FieldProcessing\EmailAddress\AccessChecker as EmailAddressAccessChecker;
 use Espo\Core\FieldProcessing\PhoneNumber\AccessChecker as PhoneNumberAccessChecker;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
@@ -113,7 +114,7 @@ class Erasor implements
                         $this->emailAddressAccessChecker
                             ->checkEdit($this->user, $emailAddress, $entity)
                     ) {
-                        $emailAddress->set('name', 'ERASED:' . $emailAddress->id);
+                        $emailAddress->set(Field::NAME, 'ERASED:' . $emailAddress->id);
                         $emailAddress->set('optOut', true);
                         $this->entityManager->saveEntity($emailAddress);
                     }
@@ -131,7 +132,7 @@ class Erasor implements
                         $this->phoneNumberAccessChecker
                             ->checkEdit($this->user, $phoneNumber, $entity)
                     ) {
-                        $phoneNumber->set('name', 'ERASED:' . $phoneNumber->id);
+                        $phoneNumber->set(Field::NAME, 'ERASED:' . $phoneNumber->id);
 
                         $this->entityManager->saveEntity($phoneNumber);
                     }

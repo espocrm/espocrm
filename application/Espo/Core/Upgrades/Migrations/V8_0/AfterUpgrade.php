@@ -30,6 +30,7 @@
 namespace Espo\Core\Upgrades\Migrations\V8_0;
 
 use Espo\Core\Container;
+use Espo\Core\Name\Field;
 use Espo\Core\Upgrades\Migration\Script;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Role;
@@ -109,7 +110,7 @@ class AfterUpgrade implements Script
             $scopes->duplicateCheckFieldList = [];
 
             if ($type === 'Company' || $type === 'Person') {
-                $scopes->duplicateCheckFieldList = ['name', 'emailAddress'];
+                $scopes->duplicateCheckFieldList = [Field::NAME, 'emailAddress'];
             }
 
             $metadata->saveCustom('recordDefs', $entityType, $recordDefs);

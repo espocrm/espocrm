@@ -221,7 +221,7 @@ class AfterFetch implements AfterFetchInterface
                 $fromName = Util::parseFromName($email->getFromString() ?? '');
 
                 if (!empty($fromName)) {
-                    $contact->set('name', $fromName);
+                    $contact->set(Field::NAME, $fromName);
                 }
             }
 
@@ -431,7 +431,7 @@ class AfterFetch implements AfterFetchInterface
 
         $case->populateDefaults();
 
-        $case->set('name', $email->get('name'));
+        $case->set(Field::NAME, $email->get(Field::NAME));
 
         $bodyPlain = $email->getBodyPlain() ?? '';
 

@@ -337,12 +337,12 @@ class Service
             throw new Forbidden("No access to Import scope.");
         }
 
-        $attachment = $this->entityManager->getNewEntity(Attachment::ENTITY_TYPE);
+        $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getNew();
 
-        $attachment->set('type', 'text/csv');
-        $attachment->set('role', 'Import File');
-        $attachment->set('name', 'import-file.csv');
-        $attachment->set('contents', $contents);
+        $attachment->setType('text/csv');
+        $attachment->setRole('Import File');
+        $attachment->setName('import-file.csv');
+        $attachment->setContents($contents);
 
         $this->entityManager->saveEntity($attachment);
 

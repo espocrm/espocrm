@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils\Address;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DataCache;
 use Espo\Entities\AddressCountry;
@@ -89,8 +90,8 @@ class CountryDataProvider
         $collection = $this->entityManager
             ->getRDBRepositoryByClass(AddressCountry::class)
             ->sth()
-            ->select(['name', 'isPreferred'])
-            ->order('name', Order::ASC)
+            ->select([Field::NAME, 'isPreferred'])
+            ->order(Field::NAME, Order::ASC)
             ->limit(0, self::LIMIT)
             ->find();
 

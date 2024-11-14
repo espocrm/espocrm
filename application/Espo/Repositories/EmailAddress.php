@@ -29,6 +29,7 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Repositories\Database;
 use Espo\Entities\User as UserEntity;
 use Espo\ORM\Entity;
@@ -104,7 +105,7 @@ class EmailAddress extends Database implements
             if (!in_array(strtolower($address), $exist)) {
                 $ea = $this->getNew();
 
-                $ea->set('name', $address);
+                $ea->set(Field::NAME, $address);
 
                 $this->save($ea);
 
@@ -127,7 +128,7 @@ class EmailAddress extends Database implements
         $dataList = [];
 
         $emailAddressList = $this
-            ->select(['name', 'lower', 'invalid', 'optOut', ['ee.primary', 'primary']])
+            ->select([Field::NAME, 'lower', 'invalid', 'optOut', ['ee.primary', 'primary']])
             ->join(
                 EmailAddressEntity::RELATION_ENTITY_EMAIL_ADDRESS,
                 'ee',

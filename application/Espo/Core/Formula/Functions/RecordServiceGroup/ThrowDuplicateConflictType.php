@@ -37,6 +37,7 @@ use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\ConflictSilent;
 use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Functions\BaseFunction;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Json;
 
 class ThrowDuplicateConflictType extends BaseFunction implements
@@ -83,7 +84,7 @@ class ThrowDuplicateConflictType extends BaseFunction implements
 
             if (!$entity) {
                 $entity = $this->entityManager->getNewEntity($entityType);
-                $entity->set('name', $id);
+                $entity->set(Field::NAME, $id);
             }
 
             $list[] = $entity->getValueMap();

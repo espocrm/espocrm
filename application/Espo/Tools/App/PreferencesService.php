@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\App;
 
+use Espo\Core\Name\Field;
 use Espo\ORM\EntityManager;
 
 use Espo\Repositories\Preferences as Repository;
@@ -96,7 +97,7 @@ class PreferencesService
             throw new NotFound();
         }
 
-        $entity->set('name', $user->getName());
+        $entity->set(Field::NAME, $user->getName());
         $entity->set('isPortalUser', $user->isPortal());
 
         // @todo Remove.
@@ -148,7 +149,7 @@ class PreferencesService
 
         $this->entityManager->saveEntity($entity);
 
-        $entity->set('name', $user->getName());
+        $entity->set(Field::NAME, $user->getName());
 
         // @todo Remove.
         $entity->clear('smtpPassword');

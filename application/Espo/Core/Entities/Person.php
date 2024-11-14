@@ -32,6 +32,7 @@ namespace Espo\Core\Entities;
 use Espo\Core\Field\Address;
 use Espo\Core\Field\EmailAddressGroup;
 use Espo\Core\Field\PhoneNumberGroup;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Core\ORM\Helper;
 
@@ -72,7 +73,7 @@ class Person extends Entity
 
         $name = $this->helper->formatPersonName($this, 'name');
 
-        $this->setInContainer('name', $name);
+        $this->setInContainer(Field::NAME, $name);
     }
 
     /**
@@ -85,7 +86,7 @@ class Person extends Entity
 
         $name = $this->helper->formatPersonName($this, 'name');
 
-        $this->setInContainer('name', $name);
+        $this->setInContainer(Field::NAME, $name);
     }
 
     /**
@@ -98,7 +99,7 @@ class Person extends Entity
 
         $name = $this->helper->formatPersonName($this, 'name');
 
-        $this->setInContainer('name', $name);
+        $this->setInContainer(Field::NAME, $name);
     }
 
     /**
@@ -131,7 +132,7 @@ class Person extends Entity
 
     public function getName(): ?string
     {
-        return $this->get('name');
+        return $this->get(Field::NAME);
     }
 
     public function getFirstName(): ?string

@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\Select\AddressCountry;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Select\Order\Item;
 use Espo\Core\Select\Order\Orderer;
 use Espo\ORM\Query\Part\Order;
@@ -40,6 +41,6 @@ class PreferredNameOrderer implements Orderer
     {
         $queryBuilder
             ->order('isPreferred', $item->getOrder() === Order::ASC ? Order::DESC : Order::ASC)
-            ->order('name', $item->getOrder());
+            ->order(Field::NAME, $item->getOrder());
     }
 }

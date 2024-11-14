@@ -33,6 +33,7 @@ use Espo\Core\Acl;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Select\Text\MetadataProvider as TextMetadataProvider;
@@ -246,13 +247,13 @@ class AddressService
         }
 
         $select = [
-            'id',
+            Field::ID,
             'emailAddress',
-            'name',
+            Field::NAME,
         ];
 
         if (
-            $this->metadata->get(['entityDefs', $entityType, 'fields', 'name', 'type']) === FieldType::PERSON_NAME
+            $this->metadata->get(['entityDefs', $entityType, 'fields', Field::NAME, 'type']) === FieldType::PERSON_NAME
         ) {
             $select[] = 'firstName';
             $select[] = 'lastName';

@@ -79,7 +79,7 @@ class Email extends Entity
     /** @noinspection PhpUnused */
     protected function _setSubject(?string $value): void
     {
-        $this->set('name', $value);
+        $this->set(Field::NAME, $value);
     }
 
     /**

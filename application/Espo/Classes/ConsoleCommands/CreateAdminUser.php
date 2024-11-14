@@ -32,6 +32,7 @@ namespace Espo\Classes\ConsoleCommands;
 use Espo\Core\Console\Command;
 use Espo\Core\Console\Command\Params;
 use Espo\Core\Console\IO;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
@@ -90,7 +91,7 @@ class CreateAdminUser implements Command
 
         $user->set('userName', $userName);
         $user->set('type', User::TYPE_ADMIN);
-        $user->set('name', $userName);
+        $user->set(Field::NAME, $userName);
 
         $repository->save($user);
 

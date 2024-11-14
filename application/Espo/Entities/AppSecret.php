@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 
 class AppSecret extends Entity
@@ -37,7 +38,7 @@ class AppSecret extends Entity
 
     public function getName(): string
     {
-        return $this->get('name');
+        return $this->get(Field::NAME);
     }
 
     public function getValue(): string
@@ -47,7 +48,7 @@ class AppSecret extends Entity
 
     public function setName(string $name): self
     {
-        $this->set('name', $name);
+        $this->set(Field::NAME, $name);
 
         return $this;
     }

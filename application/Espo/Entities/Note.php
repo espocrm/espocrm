@@ -168,7 +168,7 @@ class Note extends Entity
 
         $collection = $this->entityManager
             ->getRDBRepository(Attachment::ENTITY_TYPE)
-            ->select([Attribute::ID, 'name', 'type'])
+            ->select([Attribute::ID, Field::NAME, 'type'])
             ->order(Field::CREATED_AT)
             ->where([
                 Attribute::ID => $attachmentsIds
@@ -185,7 +185,7 @@ class Note extends Entity
 
             $ids[] = $id;
 
-            $names->$id = $e->get('name');
+            $names->$id = $e->get(Field::NAME);
             $types->$id = $e->get('type');
         }
 

@@ -30,6 +30,8 @@
 namespace Espo\Tools\GlobalSearch;
 
 use Espo\Core\Acl;
+use Espo\Core\Name\Field;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\Collection;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
@@ -106,7 +108,7 @@ class Service
         }
 
         $builder->order('order', 'DESC');
-        $builder->order('name', 'ASC');
+        $builder->order(Field::NAME, 'ASC');
 
         $unionQuery = $builder->build();
 
@@ -117,7 +119,7 @@ class Service
         while ($row = $sth->fetch()) {
             $entity = $this->entityManager
                 ->getRDBRepository($row['entityType'])
-                ->select([Attribute::ID, 'name'])
+                ->select([Attribute::ID, Field::NAME])
                 ->where([Attribute::ID => $row[Attribute::ID]])
                 ->findOne();
 
@@ -174,7 +176,7 @@ class Service
         );
 
         $isPerson = $this->metadata
-            ->get(['entityDefs', $entityType, 'fields', 'name', 'type']) === 'personName';
+            ->get(['entityDefs', $entityType, 'fields', Field::NAME, 'type']) === FieldType::PERSON_NAME;
 
         if ($isPerson) {
             $selectList[] = 'firstName';

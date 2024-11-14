@@ -52,7 +52,7 @@ class AttachmentMultiple implements FieldConverter
                     ->withParamsMerged([
                         'orderBy' => [
                             [Field::CREATED_AT, Order::ASC],
-                            ['name', Order::ASC],
+                            [Field::NAME, Order::ASC],
                         ],
                         AttributeParam::IS_LINK_MULTIPLE_ID_LIST => true,
                         'relation' => $name,

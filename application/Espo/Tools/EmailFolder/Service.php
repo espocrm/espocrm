@@ -124,8 +124,8 @@ class Service
         foreach ($this->systemFolderList as $name) {
             $folder = $this->entityManager->getNewEntity(EmailFolder::ENTITY_TYPE);
 
-            $folder->set('name', $this->language->translate($name, 'presetFilters', Email::ENTITY_TYPE));
-            $folder->set('id', $name);
+            $folder->set(Field::NAME, $this->language->translate($name, 'presetFilters', Email::ENTITY_TYPE));
+            $folder->set(Field::ID, $name);
 
             $list[] = $folder;
         }
@@ -141,8 +141,8 @@ class Service
         foreach ($this->systemFolderEndList as $name) {
             $folder = $this->entityManager->getNewEntity(EmailFolder::ENTITY_TYPE);
 
-            $folder->set('name', $this->language->translate($name, 'presetFilters', Email::ENTITY_TYPE));
-            $folder->set('id', $name);
+            $folder->set(Field::NAME, $this->language->translate($name, 'presetFilters', Email::ENTITY_TYPE));
+            $folder->set(Field::ID, $name);
 
             $list[] = $folder;
         }

@@ -29,6 +29,7 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\Name\Field;
 use Espo\Entities\User as UserEntity;
 use Espo\ORM\Entity;
 use Espo\Entities\PhoneNumber as PhoneNumberEntity;
@@ -92,7 +93,7 @@ class PhoneNumber extends Database implements
 
             if (!in_array($number, $exist)) {
                 $phoneNumber = $this->getNew();
-                $phoneNumber->set('name', $number);
+                $phoneNumber->set(Field::NAME, $number);
                 $this->save($phoneNumber);
 
                 $ids[] = $phoneNumber->getId();
@@ -114,7 +115,7 @@ class PhoneNumber extends Database implements
         $dataList = [];
 
         $numberList = $this
-            ->select(['name', 'type', 'invalid', 'optOut', ['en.primary', 'primary']])
+            ->select([Field::NAME, 'type', 'invalid', 'optOut', ['en.primary', 'primary']])
             ->join(
                 PhoneNumberEntity::RELATION_ENTITY_PHONE_NUMBER,
                 'en',

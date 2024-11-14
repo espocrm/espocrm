@@ -29,6 +29,7 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\Name\Field;
 use Espo\ORM\Entity;
 
 use Espo\Core\Utils\Util;
@@ -43,7 +44,7 @@ class UniqueId extends Database
     {
         $entity = parent::getNew();
 
-        $entity->set('name', Util::generateMoreEntropyId());
+        $entity->set(Field::NAME, Util::generateMoreEntropyId());
 
         return $entity;
     }

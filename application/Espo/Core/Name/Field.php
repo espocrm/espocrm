@@ -32,6 +32,7 @@ namespace Espo\Core\Name;
 class Field
 {
     public const ID = 'id';
+    public const NAME = 'name';
     public const CREATED_BY = 'createdBy';
     public const CREATED_AT = 'createdAt';
     public const MODIFIED_BY = 'modifiedBy';

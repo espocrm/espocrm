@@ -53,7 +53,7 @@ class Account extends Entity
 
     public function setName(?string $name): self
     {
-        $this->set('name', $name);
+        $this->set(Field::NAME, $name);
 
         return $this;
     }

@@ -34,6 +34,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\HookManager;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Utils\Metadata;
@@ -228,7 +229,7 @@ class Service
             $itemCollection = $this->entityManager
                 ->getRDBRepository($entityType)
                 ->getRelation($entity, $link)
-                ->select([Attribute::ID, 'name', 'acceptanceStatus', 'emailAddress'])
+                ->select([Attribute::ID, Field::NAME, 'acceptanceStatus', 'emailAddress'])
                 ->order('name')
                 ->find();
 

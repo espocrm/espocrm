@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Name\Field;
 use InvalidArgumentException;
 
 use Espo\Core\ORM\Entity;
@@ -49,12 +50,12 @@ class PhoneNumber extends Entity
             throw new InvalidArgumentException("Phone number can't be empty");
         }
 
-        $this->setInContainer('name', $value);
+        $this->setInContainer(Field::NAME, $value);
     }
 
     public function getNumber(): string
     {
-        return $this->get('name');
+        return $this->get(Field::NAME);
     }
 
     public function isOptedOut(): bool
@@ -81,7 +82,7 @@ class PhoneNumber extends Entity
 
     public function setNumber(string $number): self
     {
-        $this->set('name', $number);
+        $this->set(Field::NAME, $number);
 
         return $this;
     }

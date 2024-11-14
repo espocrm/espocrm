@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 
 use InvalidArgumentException;
@@ -49,14 +50,14 @@ class EmailAddress extends Entity
             throw new InvalidArgumentException("Not valid email address '{$value}'");
         }
 
-        $this->setInContainer('name', $value);
+        $this->setInContainer(Field::NAME, $value);
 
         $this->set('lower', strtolower($value));
     }
 
     public function getAddress(): string
     {
-        return $this->get('name');
+        return $this->get(Field::NAME);
     }
 
     public function getLower(): string
@@ -90,7 +91,7 @@ class EmailAddress extends Entity
 
     public function setAddress(string $address): self
     {
-        $this->set('name', $address);
+        $this->set(Field::NAME, $address);
 
         return $this;
     }
