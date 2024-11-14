@@ -72,20 +72,36 @@ export default class ListColumnResizeHelper {
          */
         this.fontSizeFactor = view.getThemeManager().getFontSizeFactor();
 
-        this.onMouseUpBind = this.onMouseUp.bind(this);
-        this.onMouseMoveBind = this.onMouseMove.bind(this);
+        this.onPointerUpBind = this.onPointerUp.bind(this);
+        this.onPointerMoveBind = this.onPointerMove.bind(this);
 
-        view.addHandler('mousedown', ListColumnResizeHelper.selector, (/** MouseEvent */e, target) => {
-            this.onResizerMouseDown(e, target);
+        view.addHandler('pointerdown', ListColumnResizeHelper.selector, (/** PointerEvent */e, target) => {
+            this.onPointerDown(e, target);
         });
     }
 
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    onResizerMouseDown(event, target) {
+    onPointerDown(event, target) {
+        if (!event.isPrimary) {
+            return;
+        }
+
+        this.startResizeInit(event, target)
+
+        window.addEventListener('pointerup', this.onPointerUpBind);
+        window.addEventListener('pointermove', this.onPointerMoveBind);
+    }
+
+    /**
+     * @private
+     * @param {PointerEvent} event
+     * @param {HTMLElement} target
+     */
+    startResizeInit(event, target) {
         const th = /** @type {HTMLTableCellElement} */target.parentNode;
 
         const thElements = [...th.parentNode.querySelectorAll(':scope > th.field-header-cell')]
@@ -103,9 +119,6 @@ export default class ListColumnResizeHelper {
         };
 
         document.body.style.cursor = 'col-resize';
-
-        document.addEventListener('mouseup', this.onMouseUpBind);
-        document.addEventListener('mousemove', this.onMouseMoveBind);
 
         const trElement = this.item.thElement.closest('tr');
 
@@ -137,9 +150,9 @@ export default class ListColumnResizeHelper {
 
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {PointerEvent} event
      */
-    onMouseMove(event) {
+    onPointerMove(event) {
         let diff = event.clientX - this.item.startX;
 
         if (!this.item.onRight) {
@@ -170,9 +183,9 @@ export default class ListColumnResizeHelper {
     /**
      * @private
      */
-    onMouseUp() {
-        document.removeEventListener('mousemove', this.onMouseMoveBind);
-        document.removeEventListener('mouseup', this.onMouseUpBind);
+    onPointerUp() {
+        window.removeEventListener('pointermove', this.onPointerMoveBind);
+        window.removeEventListener('pointerup', this.onPointerUpBind);
         document.body.style.cursor = '';
 
         const width = this.item.newWidth;
