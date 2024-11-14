@@ -30,6 +30,7 @@
 namespace Espo\ORM\Relation;
 
 use Espo\ORM\BaseEntity;
+use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
@@ -225,6 +226,11 @@ class RDBRelations implements Relations
 
         $foreignEntity = $this->getPartiallyLoadedForeignEntity($relation);
 
+        if ($foreignEntity === false) {
+            // Parent type does not exist. Not throwing an error deliberately.
+            return null;
+        }
+
         if ($foreignEntity) {
             return $foreignEntity;
         }
@@ -293,28 +299,32 @@ class RDBRelations implements Relations
             ?->getType();
     }
 
-    private function getPartiallyLoadedForeignEntity(string $relation): ?BaseEntity
+    private function getPartiallyLoadedForeignEntity(string $relation): BaseEntity|false|null
     {
         if (!$this->entity) {
             throw new LogicException();
         }
 
-        $relationDefs = $this->entityManager
+        $defs = $this->entityManager
             ->getDefs()
             ->getEntity($this->entity->getEntityType())
             ->getRelation($relation);
 
-        $relationType = $relationDefs->getType();
+        $relationType = $defs->getType();
 
         $id = null;
         $foreignEntityType = null;
 
         if ($relationType === RelationType::BELONGS_TO) {
-            $foreignEntityType = $relationDefs->getForeignEntityType();
+            $foreignEntityType = $defs->getForeignEntityType();
             $id = $this->entity->get($relation . 'Id');
         } else if ($relationType === RelationType::BELONGS_TO_PARENT) {
             $foreignEntityType = $this->entity->get($relation . 'Type');
             $id = $this->entity->get($relation . 'Id');
+
+            if (!$this->entityManager->hasRepository($foreignEntityType)) {
+                return false;
+            }
         }
 
         if (!$foreignEntityType || !$id) {
