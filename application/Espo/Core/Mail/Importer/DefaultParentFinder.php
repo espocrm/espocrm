@@ -190,18 +190,9 @@ class DefaultParentFinder implements ParentFinder
 
     private function getFromReplied(Email $email): ?Entity
     {
-        $repliedLink = $email->getReplied();
+        $replied = $email->getReplied();
 
-        if (!$repliedLink) {
-            return null;
-        }
-
-        /** @var ?Email $repliedEmail */
-        $repliedEmail = $this->entityManager
-            ->getRDBRepositoryByClass(Email::class)
-            ->getById($repliedLink->getId());
-
-        return $repliedEmail?->getParent();
+        return $replied?->getParent();
     }
 
     private function getByReferences(Message $message): ?Entity
@@ -271,19 +262,15 @@ class DefaultParentFinder implements ParentFinder
             return null;
         }
 
-        $createdAccountLink = $lead->getCreatedAccount();
-
-        if ($createdAccountLink) {
-            return $this->entityManager->getEntityById(Account::ENTITY_TYPE, $createdAccountLink->getId());
+        if ($lead->getCreatedAccount()) {
+            return $lead->getCreatedAccount();
         }
-
-        $createdContactLink = $lead->getCreatedContact();
 
         if (
             $this->config->get('b2cMode') &&
-            $createdContactLink
+            $lead->getCreatedContact()
         ) {
-            return $this->entityManager->getEntityById(Contact::ENTITY_TYPE, $createdContactLink->getId());
+            return $lead->getCreatedContact();
         }
 
         return null;

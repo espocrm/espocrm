@@ -30,13 +30,11 @@
 namespace Espo\Modules\Crm\Classes\Acl\MassEmail;
 
 use Espo\Entities\User;
-use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Modules\Crm\Entities\MassEmail;
 use Espo\ORM\Entity;
 use Espo\Core\Acl\OwnershipOwnChecker;
 use Espo\Core\Acl\OwnershipTeamChecker;
 use Espo\Core\AclManager;
-use Espo\Core\ORM\EntityManager;
 
 /**
  * @implements OwnershipOwnChecker<MassEmail>
@@ -46,18 +44,11 @@ class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
 {
     public function __construct(
         private AclManager $aclManager,
-        private EntityManager $entityManager
     ) {}
 
     public function checkOwn(User $user, Entity $entity): bool
     {
-        $campaignId = $entity->getCampaignId();
-
-        if (!$campaignId) {
-            return false;
-        }
-
-        $campaign = $this->entityManager->getEntityById(Campaign::ENTITY_TYPE, $campaignId);
+        $campaign = $entity->getCampaign();
 
         if ($campaign && $this->aclManager->checkOwnershipOwn($user, $campaign)) {
             return true;
@@ -68,13 +59,7 @@ class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
 
     public function checkTeam(User $user, Entity $entity): bool
     {
-        $campaignId = $entity->getCampaignId();
-
-        if (!$campaignId) {
-            return false;
-        }
-
-        $campaign = $this->entityManager->getEntityById(Campaign::ENTITY_TYPE, $campaignId);
+        $campaign = $entity->getCampaign();
 
         if ($campaign && $this->aclManager->checkOwnershipTeam($user, $campaign)) {
             return true;

@@ -516,21 +516,16 @@ class Email extends Database implements
                 $entity->isNew()
             )
         ) {
-            $repliedId = $entity->getReplied()?->getId();
+            $replied = $entity->getReplied();
 
-            if ($repliedId) {
-                /** @var ?EmailEntity $replied */
-                $replied = $this->entityManager->getEntityById(EmailEntity::ENTITY_TYPE, $repliedId);
+            if (
+                $replied &&
+                $replied->getId() !== $entity->getId() &&
+                !$replied->getReplied()
+            ) {
+                $replied->set('isReplied', true);
 
-                if (
-                    $replied &&
-                    $replied->getId() !== $entity->getId() &&
-                    !$replied->getReplied()
-                ) {
-                    $replied->set('isReplied', true);
-
-                    $this->entityManager->saveEntity($replied, [SaveOption::SILENT => true]);
-                }
+                $this->entityManager->saveEntity($replied, [SaveOption::SILENT => true]);
             }
         }
 

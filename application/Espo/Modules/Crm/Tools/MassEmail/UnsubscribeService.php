@@ -296,24 +296,13 @@ class UnsubscribeService
             throw new NotFound("No item.");
         }
 
-        $campaign = null;
-        $massEmailId = $queueItem->getMassEmailId();
-
-        if (!$massEmailId) {
-            throw new NotFound("No Mass Email ID.");
-        }
-
-        /** @var ?MassEmail $massEmail */
-        $massEmail = $this->entityManager->getEntityById(MassEmail::ENTITY_TYPE, $massEmailId);
+        $massEmail = $queueItem->getMassEmail();
 
         if (!$massEmail) {
-            throw new NotFound("Mass Email not found.");
+            throw new NotFound("Mass Email not found or not set.");
         }
 
-        if ($massEmail->getCampaignId()) {
-            /** @var ?Campaign $campaign */
-            $campaign = $this->entityManager->getEntityById(Campaign::ENTITY_TYPE, $massEmail->getCampaignId());
-        }
+        $campaign = $massEmail->getCampaign();
 
         $targetType = $queueItem->getTargetType();
         $targetId = $queueItem->getTargetId();

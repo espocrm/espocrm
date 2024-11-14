@@ -82,33 +82,20 @@ class CampaignTrackOpened implements EntryPoint
             return;
         }
 
-        $massEmailId = $queueItem->getMassEmailId();
-
-        if (!$massEmailId) {
-            return;
-        }
-
-        /** @var ?MassEmail $massEmail */
-        $massEmail = $this->entityManager->getEntityById(MassEmail::ENTITY_TYPE, $massEmailId);
+        $massEmail = $queueItem->getMassEmail();
 
         if (!$massEmail) {
             return;
         }
 
-        $campaignId = $massEmail->getCampaignId();
-
-        if (!$campaignId) {
-            return;
-        }
-
-        $campaign = $this->entityManager->getEntityById(Campaign::ENTITY_TYPE, $campaignId);
+        $campaign = $massEmail->getCampaign();
 
         if (!$campaign) {
             return;
         }
 
         if ($this->user->isSystem()) {
-            $this->service->logOpened($campaignId, $queueItem);
+            $this->service->logOpened($campaign->getId(), $queueItem);
         }
 
         header('Content-Type: image/png');

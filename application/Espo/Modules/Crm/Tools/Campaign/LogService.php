@@ -264,14 +264,7 @@ class LogService
             return;
         }
 
-        $massEmailId = $queueItem->getMassEmailId();
-
-        if (!$massEmailId) {
-            return;
-        }
-
-        /** @var ?MassEmail $massEmail */
-        $massEmail = $this->entityManager->getEntityById(MassEmail::ENTITY_TYPE, $massEmailId);
+        $massEmail = $queueItem->getMassEmail();
 
         if (!$massEmail) {
             return;

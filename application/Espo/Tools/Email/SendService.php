@@ -65,7 +65,6 @@ use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
-use Espo\ORM\Name\Attribute;
 use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Tools\Stream\Service as StreamService;
 use Exception;
@@ -656,7 +655,7 @@ class SendService
 
     private function applyReplied(Email $entity, Message $message): void
     {
-        $replied = $this->getRepliedEmail($entity);
+        $replied = $entity->getReplied();
 
         if ($replied && $replied->getMessageId()) {
             $message->getHeaders()->addHeaderLine('In-Reply-To', $replied->getMessageId());
@@ -666,18 +665,5 @@ class SendService
         if ($replied && $replied->getGroupFolder()) {
             $entity->setGroupFolder($replied->getGroupFolder());
         }
-    }
-
-    private function getRepliedEmail(Email $email): ?Email
-    {
-        if (!$email->getReplied()) {
-            return null;
-        }
-
-        return $this->entityManager
-            ->getRDBRepositoryByClass(Email::class)
-            ->select([Attribute::ID, 'groupFolderId', 'messageId'])
-            ->where([Attribute::ID => $email->getReplied()->getId()])
-            ->findOne();
     }
 }

@@ -80,13 +80,7 @@ class AfterCreate implements SaveHook
 
     private function processCampaignLog(Lead $entity): void
     {
-        $campaignLink = $entity->getCampaign();
-
-        if (!$campaignLink) {
-            return;
-        }
-
-        $campaign = $this->entityManager->getEntityById(Campaign::ENTITY_TYPE, $campaignLink->getId());
+        $campaign = $entity->getCampaign();
 
         if (!$campaign) {
             return;

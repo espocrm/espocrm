@@ -555,7 +555,7 @@ class DefaultImporter implements Importer
             return;
         }
 
-        $email->setRepliedId($replied->getId());
+        $email->setReplied($replied);
 
         foreach ($replied->getTeams()->getIdList() as $teamId) {
             $email->addTeamId($teamId);

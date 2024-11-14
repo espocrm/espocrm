@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\ORM\Entity;
+use Espo\Entities\EmailTemplate;
 
 class MassEmail extends Entity
 {
@@ -49,6 +50,18 @@ class MassEmail extends Entity
     public function getEmailTemplateId(): ?string
     {
         return $this->get('emailTemplateId');
+    }
+
+    public function getEmailTemplate(): ?EmailTemplate
+    {
+        /** @var ?EmailTemplate */
+        return $this->relations->getOne('emailTemplate');
+    }
+
+    public function getCampaign(): ?Campaign
+    {
+        /** @var ?Campaign */
+        return $this->relations->getOne('campaign');
     }
 
     public function getCampaignId(): ?string

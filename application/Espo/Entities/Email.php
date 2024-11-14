@@ -721,10 +721,10 @@ class Email extends Entity
         return $this->getValueObject('groupFolder');
     }
 
-    public function getReplied(): ?Link
+    public function getReplied(): ?Email
     {
-        /** @var ?Link */
-        return $this->getValueObject('replied');
+        /** @var ?Email */
+        return $this->relations->getOne('replied');
     }
 
     /**
@@ -746,6 +746,15 @@ class Email extends Entity
         return $this->entityManager->getRepository(Email::ENTITY_TYPE);
     }
 
+    public function setReplied(?Email $replied): self
+    {
+        return $this->setRelatedLinkOrEntity('replied', $replied);
+    }
+
+    /**
+     * @deprecated As of v9.0.0.
+     * @todo Remove in v9.2.0.
+     */
     public function setRepliedId(?string $repliedId): self
     {
         $this->set('repliedId', $repliedId);
@@ -762,22 +771,14 @@ class Email extends Entity
 
     public function setGroupFolder(Link|GroupEmailFolder|null $groupFolder): self
     {
-        if ($groupFolder instanceof GroupEmailFolder) {
-            $this->relations->set('groupFolder', $groupFolder);
-
-            return $this;
-        }
-
-        $this->setValueObject('groupFolder', $groupFolder);
-
-        return $this;
+        return $this->setRelatedLinkOrEntity('groupFolder', $groupFolder);
     }
 
     public function setGroupFolderId(?string $groupFolderId): self
     {
-        $this->set('groupFolderId', $groupFolderId);
+        $groupFolder = $groupFolderId ? Link::create($groupFolderId) : null;
 
-        return $this;
+        return $this->setGroupFolder($groupFolder);
     }
 
     public function getGroupStatusFolder(): ?string

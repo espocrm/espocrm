@@ -29,10 +29,10 @@
 
 namespace Espo\Modules\Crm\Tools\MassEmail;
 
-use Espo\Core\Name\Field;
-use Espo\Tools\EmailTemplate\Result;
 use Laminas\Mail\Message;
 
+use Espo\Core\Name\Field;
+use Espo\Tools\EmailTemplate\Result;
 use Espo\Core\Mail\Account\GroupAccount\AccountFactory;
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\SenderParams;
@@ -94,7 +94,7 @@ class SendingProcessor
             return;
         }
 
-        $emailTemplate = $this->getEmailTemplate($massEmail);
+        $emailTemplate = $massEmail->getEmailTemplate();
 
         if (!$emailTemplate) {
             $this->setFailed($massEmail);
@@ -102,8 +102,8 @@ class SendingProcessor
             return;
         }
 
-        $campaign = $this->getCampaign($massEmail);
-        $attachmentList = $this->getAttachments($emailTemplate);
+        $campaign = $massEmail->getCampaign();
+        $attachmentList = $emailTemplate->getAttachments();
         [$smtpParams, $senderParams] = $this->getSenderParams($massEmail);
         $queueItemList = $this->getQueueItems($massEmail, $isTest, $maxSize);
 
@@ -229,7 +229,7 @@ class SendingProcessor
     }
 
     /**
-     * @param Collection<Attachment> $attachmentList
+     * @param iterable<Attachment> $attachmentList
      */
     private function sendQueueItem(
         EmailQueueItem $queueItem,
@@ -429,29 +429,6 @@ class SendingProcessor
             ->find();
     }
 
-    private function getCampaign(MassEmail $massEmail): ?Campaign
-    {
-        $campaignId = $massEmail->getCampaignId();
-
-        if (!$campaignId) {
-            return null;
-        }
-
-        return $this->entityManager->getRDBRepositoryByClass(Campaign::class)->getById($campaignId);
-    }
-
-    /**
-     * @return Collection<Attachment>
-     */
-    private function getAttachments(EmailTemplate $emailTemplate): Collection
-    {
-        /** @var Collection<Attachment> */
-        return $this->entityManager
-            ->getRDBRepositoryByClass(EmailTemplate::class)
-            ->getRelation($emailTemplate, 'attachments')
-            ->find();
-    }
-
     /**
      * @return bool Whether to skip.
      */
@@ -486,17 +463,6 @@ class SendingProcessor
         }
 
         return false;
-    }
-
-    private function getEmailTemplate(MassEmail $massEmail): ?EmailTemplate
-    {
-        $id = $massEmail->getEmailTemplateId();
-
-        if (!$id) {
-            return null;
-        }
-
-        return $this->entityManager->getRDBRepositoryByClass(EmailTemplate::class)->getById($id);
     }
 
     private function setComplete(MassEmail $massEmail): void

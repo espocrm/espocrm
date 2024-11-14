@@ -78,6 +78,12 @@ class EmailQueueItem extends Entity
         return $value;
     }
 
+    public function getMassEmail(): ?MassEmail
+    {
+        /** @var ?MassEmail */
+        return $this->relations->getOne('massEmail');
+    }
+
     public function getMassEmailId(): ?string
     {
         return $this->get('massEmailId');

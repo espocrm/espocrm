@@ -34,9 +34,7 @@ use Espo\Core\Acl\DefaultAccessChecker;
 use Espo\Core\Acl\ScopeData;
 use Espo\Core\Acl\Traits\DefaultAccessCheckerDependency;
 use Espo\Core\AclManager;
-use Espo\Core\ORM\EntityManager;
 use Espo\Entities\User;
-use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Modules\Crm\Entities\MassEmail;
 use Espo\ORM\Entity;
 
@@ -50,7 +48,6 @@ class AccessChecker implements AccessEntityCREDChecker
     public function __construct(
         DefaultAccessChecker $defaultAccessChecker,
         private AclManager $aclManager,
-        private EntityManager $entityManager,
     ) {
         $this->defaultAccessChecker = $defaultAccessChecker;
     }
@@ -71,13 +68,7 @@ class AccessChecker implements AccessEntityCREDChecker
             return true;
         }
 
-        $campaignId = $entity->getCampaignId();
-
-        if (!$campaignId) {
-            return false;
-        }
-
-        $campaign = $this->entityManager->getEntityById(Campaign::ENTITY_TYPE, $campaignId);
+        $campaign = $entity->getCampaign();
 
         if ($campaign && $this->aclManager->checkEntityEdit($user, $campaign)) {
             return true;
@@ -92,13 +83,7 @@ class AccessChecker implements AccessEntityCREDChecker
             return true;
         }
 
-        $campaignId = $entity->getCampaignId();
-
-        if (!$campaignId) {
-            return false;
-        }
-
-        $campaign = $this->entityManager->getEntityById(Campaign::ENTITY_TYPE, $campaignId);
+        $campaign = $entity->getCampaign();
 
         if ($campaign && $this->aclManager->checkEntityEdit($user, $campaign)) {
             return true;

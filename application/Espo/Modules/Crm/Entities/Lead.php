@@ -29,13 +29,14 @@
 
 namespace Espo\Modules\Crm\Entities;
 
+use Espo\Core\Entities\Person;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Name\Field;
 use Espo\Entities\User;
 
-class Lead extends \Espo\Core\Entities\Person
+class Lead extends Person
 {
     public const ENTITY_TYPE = 'Lead';
 
@@ -97,10 +98,10 @@ class Lead extends \Espo\Core\Entities\Person
         return false;
     }
 
-    public function getCampaign(): ?Link
+    public function getCampaign(): ?Campaign
     {
-        /** @var ?Link */
-        return $this->getValueObject('campaign');
+        /** @var ?Campaign */
+        return $this->relations->getOne('campaign');
     }
 
     public function getAssignedUser(): ?Link
@@ -115,22 +116,22 @@ class Lead extends \Espo\Core\Entities\Person
         return $this->getValueObject(Field::TEAMS);
     }
 
-    public function getCreatedAccount(): ?Link
+    public function getCreatedAccount(): ?Account
     {
-        /** @var ?Link */
-        return $this->getValueObject('createdAccount');
+        /** @var ?Account */
+        return $this->relations->getOne('createdAccount');
     }
 
-    public function getCreatedContact(): ?Link
+    public function getCreatedContact(): ?Contact
     {
-        /** @var ?Link */
-        return $this->getValueObject('createdContact');
+        /** @var ?Contact */
+        return $this->relations->getOne('createdContact');
     }
 
-    public function getCreatedOpportunity(): ?Link
+    public function getCreatedOpportunity(): ?Opportunity
     {
-        /** @var ?Link */
-        return $this->getValueObject('createdOpportunity');
+        /** @var ?Opportunity */
+        return $this->relations->getOne('createdOpportunity');
     }
 
     public function getConvertedAt(): ?DateTime

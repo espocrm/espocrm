@@ -35,7 +35,6 @@ use Espo\Entities\Email;
 use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityManager;
 
 /**
  * @implements LinkChecker<Email, Team>
@@ -44,7 +43,6 @@ use Espo\ORM\EntityManager;
 class TeamsLinkChecker implements LinkChecker
 {
     public function __construct(
-        private EntityManager $entityManager,
         private AclManager $aclManager
     ) {}
 
@@ -54,13 +52,7 @@ class TeamsLinkChecker implements LinkChecker
             return true;
         }
 
-        if (!$entity->getReplied()) {
-            return false;
-        }
-
-        $replied = $this->entityManager
-            ->getRepositoryByClass(Email::class)
-            ->getById($entity->getReplied()->getId());
+        $replied = $entity->getReplied();
 
         if (!$replied) {
             return false;

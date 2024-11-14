@@ -96,26 +96,13 @@ class BeforeFetch implements BeforeFetchInterface
             return false;
         }
 
-        /** @var ?EmailQueueItem $queueItem */
-        $queueItem = $this->entityManager->getEntityById(EmailQueueItem::ENTITY_TYPE, $queueItemId);
+        $queueItem = $this->entityManager->getRDBRepositoryByClass(EmailQueueItem::class)->getById($queueItemId);
 
         if (!$queueItem) {
             return false;
         }
 
-        $massEmail = null;
-        $campaignId = null;
-        $massEmailId = $queueItem->getMassEmailId();
-
-        if ($massEmailId) {
-            /** @var ?MassEmail $massEmail */
-            $massEmail = $this->entityManager->getEntityById(MassEmail::ENTITY_TYPE, $massEmailId);
-        }
-
-        if ($massEmail) {
-            $campaignId = $massEmail->getCampaignId();
-        }
-
+        $campaignId = $queueItem->getMassEmail()?->getCampaignId();
         $emailAddress = $queueItem->getEmailAddress();
 
         if (!$emailAddress) {
