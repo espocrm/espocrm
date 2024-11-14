@@ -29,9 +29,11 @@
 
 namespace Espo\ORM\Relation;
 
+use Espo\ORM\BaseEntity;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Type\RelationType;
 use LogicException;
@@ -221,6 +223,12 @@ class RDBRelations implements Relations
             return null;
         }
 
+        $foreignEntity = $this->getPartiallyLoadedForeignEntity($relation);
+
+        if ($foreignEntity) {
+            return $foreignEntity;
+        }
+
         return $this->entityManager
             ->getRelation($this->entity, $relation)
             ->findOne();
@@ -283,5 +291,46 @@ class RDBRelations implements Relations
             ->getEntity($this->entity->getEntityType())
             ->tryGetRelation($relation)
             ?->getType();
+    }
+
+    private function getPartiallyLoadedForeignEntity(string $relation): ?BaseEntity
+    {
+        if (!$this->entity) {
+            throw new LogicException();
+        }
+
+        $relationDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($this->entity->getEntityType())
+            ->getRelation($relation);
+
+        $relationType = $relationDefs->getType();
+
+        $id = null;
+        $foreignEntityType = null;
+
+        if ($relationType === RelationType::BELONGS_TO) {
+            $foreignEntityType = $relationDefs->getForeignEntityType();
+            $id = $this->entity->get($relation . 'Id');
+        } else if ($relationType === RelationType::BELONGS_TO_PARENT) {
+            $foreignEntityType = $this->entity->get($relation . 'Type');
+            $id = $this->entity->get($relation . 'Id');
+        }
+
+        if (!$foreignEntityType || !$id) {
+            return null;
+        }
+
+        $foreignEntity = $this->entityManager->getNewEntity($foreignEntityType);
+
+        if (!$foreignEntity instanceof BaseEntity) {
+            return null;
+        }
+
+        $foreignEntity->set(Attribute::ID, $id);
+        $foreignEntity->setAsFetched();
+        $foreignEntity->setAsPartiallyLoaded();
+
+        return $foreignEntity;
     }
 }

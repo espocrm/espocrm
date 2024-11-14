@@ -29,6 +29,8 @@
 
 namespace Espo\ORM;
 
+use Espo\ORM\DataLoader\EmptyLoader;
+use Espo\ORM\DataLoader\Loader;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Relation\EmptyRelations;
 use Espo\ORM\Relation\Relations;
@@ -57,6 +59,7 @@ class BaseEntity implements Entity
     protected ?EntityManager $entityManager;
     private ?ValueAccessor $valueAccessor = null;
     readonly protected Relations $relations;
+    readonly private Loader $loader;
 
     /** @var array<string, bool> */
     private array $writtenMap = [];
@@ -68,6 +71,8 @@ class BaseEntity implements Entity
     private array $fetchedValuesContainer = [];
     /** @var array<string, mixed> */
     private array $valuesContainer = [];
+
+    private bool $isPartiallyLoaded = false;
 
     /**
      * An ID.
@@ -87,6 +92,7 @@ class BaseEntity implements Entity
         ?EntityManager $entityManager = null,
         ?ValueAccessorFactory $valueAccessorFactory = null,
         ?Relations $relations = null,
+        ?Loader $loader = null,
     ) {
         $this->entityType = $entityType;
         $this->entityManager = $entityManager;
@@ -99,6 +105,7 @@ class BaseEntity implements Entity
         }
 
         $this->relations = $relations ?? new EmptyRelations();
+        $this->loader = $loader ?? new EmptyLoader();
     }
 
     /**
@@ -226,7 +233,15 @@ class BaseEntity implements Entity
         $method = '_get' . ucfirst($attribute);
 
         if (method_exists($this, $method)) {
+            if ($this->isPartiallyLoaded) {
+                $this->loadPartiallyLoaded();
+            }
+
             return $this->$method();
+        }
+
+        if ($this->checkAttributeToFullyLoad($attribute)) {
+            $this->loadPartiallyLoaded();
         }
 
         if ($this->hasAttribute($attribute) && $this->hasInContainer($attribute)) {
@@ -351,14 +366,18 @@ class BaseEntity implements Entity
         $method = '_has' . ucfirst($attribute);
 
         if (method_exists($this, $method)) {
+            if ($this->isPartiallyLoaded) {
+                $this->loadPartiallyLoaded();
+            }
+
             return (bool) $this->$method();
         }
 
-        if (array_key_exists($attribute, $this->valuesContainer)) {
-            return true;
+        if ($this->checkAttributeToFullyLoad($attribute)) {
+            $this->loadPartiallyLoaded();
         }
 
-        return false;
+        return $this->hasInContainer($attribute);
     }
 
     /**
@@ -893,6 +912,10 @@ class BaseEntity implements Entity
             return !is_null($this->id);
         }
 
+        if ($this->checkAttributeFetchedToFullyLoad($attribute)) {
+            $this->loadPartiallyLoaded();
+        }
+
         return $this->hasInFetchedContainer($attribute);
     }
 
@@ -917,6 +940,17 @@ class BaseEntity implements Entity
         }
 
         $this->writtenMap = [];
+    }
+
+    /**
+     * Set as partially loaded. For internal use.
+     *
+     * @internal
+     * @since 9.0.0
+     */
+    public function setAsPartiallyLoaded(): void
+    {
+        $this->isPartiallyLoaded = true;
     }
 
     /**
@@ -1090,5 +1124,30 @@ class BaseEntity implements Entity
 
             $this->populateFromArrayItem($attribute, $value);
         }
+    }
+
+    private function checkAttributeToFullyLoad(string $attribute): bool
+    {
+        return
+            !$this->isNew() &&
+            $this->isPartiallyLoaded &&
+            $this->hasAttribute($attribute) &&
+            !$this->hasInContainer($attribute);
+    }
+
+    private function checkAttributeFetchedToFullyLoad(string $attribute): bool
+    {
+        return
+            !$this->isNew() &&
+            $this->isPartiallyLoaded &&
+            $this->hasAttribute($attribute) &&
+            !$this->hasInFetchedContainer($attribute);
+    }
+
+    private function loadPartiallyLoaded(): void
+    {
+        $this->isPartiallyLoaded = false;
+
+        $this->loader->load($this);
     }
 }

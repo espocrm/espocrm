@@ -38,6 +38,7 @@ use Espo\Core\ORM\Entity;
 use Espo\Entities\Attachment;
 use Espo\Entities\User;
 use Espo\ORM\Collection;
+use Espo\ORM\Entity as OrmEntity;
 
 class Task extends Entity
 {
@@ -99,15 +100,7 @@ class Task extends Entity
 
     public function setParent(Entity|LinkParent|null $parent): self
     {
-        if ($parent instanceof LinkParent) {
-            $this->setValueObject(Field::PARENT, $parent);
-
-            return $this;
-        }
-
-        $this->relations->set(Field::PARENT, $parent);
-
-        return $this;
+        return $this->setRelatedLinkOrEntity(Field::PARENT, $parent);
     }
 
     /**
@@ -129,5 +122,21 @@ class Task extends Entity
         $this->setValueObject(Field::TEAMS, $teams);
 
         return $this;
+    }
+
+    public function setAccount(Link|Account|null $account): self
+    {
+        return $this->setRelatedLinkOrEntity('account', $account);
+    }
+
+    public function getAccount(): ?Account
+    {
+        /** @var ?Account */
+        return $this->relations->getOne('account');
+    }
+
+    public function getParent(): ?OrmEntity
+    {
+        return $this->relations->getOne(Field::PARENT);
     }
 }

@@ -34,6 +34,8 @@ use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Binding\BindingData;
 use Espo\Core\InjectableFactory;
+use Espo\ORM\DataLoader\Loader;
+use Espo\ORM\DataLoader\RDBLoader;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityFactory as EntityFactoryInterface;
 use Espo\ORM\EntityManager;
@@ -95,11 +97,19 @@ class EntityFactory implements EntityFactoryInterface
                 ->build()
         );
 
+        $loader = $this->injectableFactory->createWithBinding(
+            RDBLoader::class,
+            BindingContainerBuilder::create()
+                ->bindInstance(EntityManager::class, $this->entityManager)
+                ->build()
+        );
+
         $bindingContainer = $this->getBindingContainer(
             $className,
             $entityType,
             $defs,
-            $relations
+            $relations,
+            $loader,
         );
 
         $entity = $this->injectableFactory->createWithBinding($className, $bindingContainer);
@@ -131,6 +141,7 @@ class EntityFactory implements EntityFactoryInterface
         string $entityType,
         array $defs,
         Relations $relations,
+        Loader $loader,
     ): BindingContainer {
 
         if (!$this->entityManager || !$this->valueAccessorFactory) {
@@ -147,7 +158,8 @@ class EntityFactory implements EntityFactoryInterface
             ->bindInstance(EntityManager::class, $this->entityManager)
             ->bindInstance(ValueAccessorFactory::class, $this->valueAccessorFactory)
             ->bindInstance(Helper::class, $this->helper)
-            ->bindInstance(Relations::class, $relations);
+            ->bindInstance(Relations::class, $relations)
+            ->bindInstance(Loader::class, $loader);
 
         return new BindingContainer($data);
     }

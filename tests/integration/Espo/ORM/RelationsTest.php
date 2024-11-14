@@ -57,7 +57,9 @@ class RelationsTest extends BaseTestCase
         $this->assertInstanceOf(OpportunityExtended::class, $opp);
         $this->assertNull($opp->getRelatedAccount());
 
-        $account = $em->createEntity(Account::ENTITY_TYPE);
+        /** @var Account $account */
+        $account = $em->createEntity(Account::ENTITY_TYPE, ['name' => 'Account 1']);
+
         $opp = $em->createEntity(Opportunity::ENTITY_TYPE, [
             'accountId' => $account->getId(),
         ]);
@@ -76,6 +78,7 @@ class RelationsTest extends BaseTestCase
         $this->assertInstanceOf(Account::class, $account2);
         $this->assertNotSame($account1, $account2);
         $this->assertEquals($account->getId(), $account2->getId());
+        $this->assertEquals($account->getName(), $account2->getName());
 
         $em->saveEntity($opp);
 
@@ -130,7 +133,7 @@ class RelationsTest extends BaseTestCase
         $em = $this->getEntityManager();
 
         /** @var Account $account */
-        $account = $em->createEntity(Account::ENTITY_TYPE);
+        $account = $em->createEntity(Account::ENTITY_TYPE, ['name' => 'Account 1']);
 
         // belongsTo
 
@@ -140,6 +143,7 @@ class RelationsTest extends BaseTestCase
         $em->refreshEntity($opp);
 
         $this->assertEquals($account->getId(), $opp->getAccount()->getId());
+        $this->assertEquals($account->getName(), $opp->getAccount()->getName());
 
         $opp->setAccount(null);
         $em->saveEntity($opp, [SaveOption::SKIP_ALL => true]);
@@ -156,6 +160,8 @@ class RelationsTest extends BaseTestCase
 
         $this->assertEquals($account->getId(), $task->get('parentId'));
         $this->assertEquals($account->getEntityType(), $task->get('parentType'));
+        $this->assertEquals($account->getId(), $task->getParent()->getId());
+        $this->assertEquals($account->getName(), $task->getParent()->get('name'));
 
         $task = $em->getRDBRepositoryByClass(Task::class)->getNew();
         $task->setParent(null);

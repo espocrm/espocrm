@@ -107,10 +107,10 @@ class Opportunity extends Entity
         $this->set('probability', $probability);
     }
 
-    public function getAccount(): ?Link
+    public function getAccount(): ?Account
     {
-        /** @var ?Link */
-        return $this->getValueObject('account');
+        /** @var ?Account */
+        return $this->relations->getOne('account');
     }
 
     /**

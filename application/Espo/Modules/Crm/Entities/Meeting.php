@@ -36,6 +36,7 @@ use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Entities\User;
+use Espo\ORM\Entity as OrmEntity;
 
 class Meeting extends Entity
 {
@@ -158,5 +159,21 @@ class Meeting extends Entity
         $this->setValueObject(Field::TEAMS, $teams);
 
         return $this;
+    }
+
+    public function setAccount(Link|Account|null $account): self
+    {
+        return $this->setRelatedLinkOrEntity('account', $account);
+    }
+
+    public function getAccount(): ?Account
+    {
+        /** @var ?Account */
+        return $this->relations->getOne('account');
+    }
+
+    public function getParent(): ?OrmEntity
+    {
+        return $this->relations->getOne(Field::PARENT);
     }
 }
