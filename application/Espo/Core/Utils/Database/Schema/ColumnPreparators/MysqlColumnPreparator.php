@@ -37,11 +37,12 @@ use Espo\Core\Utils\Database\Schema\Column;
 use Espo\Core\Utils\Database\Schema\ColumnPreparator;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Defs\AttributeDefs;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Entity;
 
 class MysqlColumnPreparator implements ColumnPreparator
 {
-    private const PARAM_DB_TYPE = 'dbType';
+    private const PARAM_DB_TYPE = AttributeParam::DB_TYPE;
     private const PARAM_DEFAULT = 'default';
     private const PARAM_NOT_NULL = 'notNull';
     private const PARAM_AUTOINCREMENT = 'autoincrement';

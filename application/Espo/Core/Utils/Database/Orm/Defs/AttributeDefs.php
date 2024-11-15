@@ -84,7 +84,7 @@ class AttributeDefs
      */
     public function withDbType(string $dbType): self
     {
-        return $this->withParam('dbType', $dbType);
+        return $this->withParam(AttributeParam::DB_TYPE, $dbType);
     }
 
     /**

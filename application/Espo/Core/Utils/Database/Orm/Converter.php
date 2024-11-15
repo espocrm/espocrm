@@ -65,6 +65,8 @@ class Converter
         Entity::INT => 11,
     ];
 
+    private const FIELD_TYPE_BASE = 'base';
+
     /**
      * Mapping entityDefs => ORM.
      *
@@ -72,7 +74,7 @@ class Converter
      */
     private array $paramMap = [
         'type' => 'type',
-        'dbType' => 'dbType',
+        FieldParam::DB_TYPE => AttributeParam::DB_TYPE,
         'maxLength' => 'len',
         'len' => 'len',
         'notNull' => 'notNull',
@@ -117,7 +119,7 @@ class Converter
         $this->indexHelper = $indexHelperFactory->create($platform);
 
         $this->idParams['len'] = $metadataProvider->getIdLength();
-        $this->idParams['dbType'] = $metadataProvider->getIdDbType();
+        $this->idParams[AttributeParam::DB_TYPE] = $metadataProvider->getIdDbType();
     }
 
     /**
@@ -268,7 +270,7 @@ class Converter
 
                 switch ($attributeType) {
                     case Entity::ID:
-                        if (empty($attributeParams['dbType'])) {
+                        if (empty($attributeParams[AttributeParam::DB_TYPE])) {
                             $attributeParams = array_merge($this->idParams, $attributeParams);
                         }
 
@@ -281,7 +283,7 @@ class Converter
                         break;
 
                     case Entity::FOREIGN_TYPE:
-                        $attributeParams['dbType'] = Types::STRING;
+                        $attributeParams[AttributeParam::DB_TYPE] = Types::STRING;
 
                         if (empty($attributeParams['len'])) {
                             $attributeParams['len'] = $this->defaultLengthMap[Entity::VARCHAR];
@@ -296,7 +298,7 @@ class Converter
                         break;
 
                     case Entity::PASSWORD:
-                        $attributeParams['dbType'] ??= Types::STRING;
+                        $attributeParams[AttributeParam::DB_TYPE] ??= Types::STRING;
 
                         break;
 
@@ -542,7 +544,7 @@ class Converter
         if ($this->metadata->get(['entityDefs', $entityType, 'optimisticConcurrencyControl'])) {
             $ormMetadata[$entityType]['attributes']['versionNumber'] = [
                 'type' => Entity::INT,
-                'dbType' => Types::BIGINT,
+                AttributeParam::DB_TYPE => Types::BIGINT,
                 CoreAttributeParam::NOT_EXPORTABLE => true,
             ];
         }
@@ -570,7 +572,7 @@ class Converter
             $fieldParams = Util::merge($fieldParams, $fieldTypeMetadata['fieldDefs']);
         }
 
-        if ($fieldParams['type'] == 'base' && isset($fieldParams['dbType'])) {
+        if ($fieldParams['type'] == self::FIELD_TYPE_BASE && isset($fieldParams[FieldParam::DB_TYPE])) {
             $fieldParams[FieldParam::NOT_STORABLE] = false;
         }
 
@@ -892,7 +894,7 @@ class Converter
                     Attribute::ID => [
                         'type' => Entity::ID,
                         'autoincrement' => true,
-                        'dbType' => Types::BIGINT, // ignored because of `skipRebuild`
+                        AttributeParam::DB_TYPE => Types::BIGINT, // ignored because of `skipRebuild`
                     ],
                     Attribute::DELETED => [
                         'type' => Entity::BOOL,

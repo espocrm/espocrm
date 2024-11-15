@@ -31,6 +31,7 @@ namespace Espo\Classes\FieldValidators;
 
 use Doctrine\DBAL\Types\Types;
 use Espo\ORM\Defs;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Entity;
 use stdClass;
 
@@ -57,7 +58,7 @@ class IntType
         $dbType = $this->defs
             ->getEntity($entity->getEntityType())
             ->tryGetAttribute($field)
-            ?->getParam('dbType') ?? Types::INTEGER;
+            ?->getParam(AttributeParam::DB_TYPE) ?? Types::INTEGER;
 
         $ranges = [
             Types::INTEGER => [-2147483648, 2147483647],

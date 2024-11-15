@@ -35,4 +35,9 @@ class AttributeParam
      * Not stored in database.
      */
     public const NOT_STORABLE = 'notStorable';
+
+    /**
+     * A database type.
+     */
+    public const DB_TYPE = 'dbType';
 }

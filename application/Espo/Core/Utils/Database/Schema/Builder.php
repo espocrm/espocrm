@@ -38,6 +38,7 @@ use Espo\Core\Utils\Util;
 use Espo\ORM\Defs\AttributeDefs;
 use Espo\ORM\Defs\EntityDefs;
 use Espo\ORM\Defs\IndexDefs;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 
@@ -307,7 +308,7 @@ class Builder
 
         $idColumn = $this->columnPreparator->prepare(
             AttributeDefs::fromRaw([
-                'dbType' => Types::BIGINT,
+                AttributeParam::DB_TYPE => Types::BIGINT,
                 'type' => Entity::ID,
                 'len' => 20,
                 'autoincrement' => true,
@@ -334,7 +335,7 @@ class Builder
             $column = $this->columnPreparator->prepare(
                 AttributeDefs::fromRaw([
                     'type' => Entity::FOREIGN_ID,
-                    'dbType' => $this->idDbType,
+                    AttributeParam::DB_TYPE => $this->idDbType,
                     'len' => $this->idLength,
                 ], $midKey)
             );
@@ -348,7 +349,7 @@ class Builder
         foreach ($additionalColumns as $fieldName => $fieldParams) {
             if ($fieldParams['type'] === AttributeType::FOREIGN_ID) {
                 $fieldParams = array_merge([
-                    'dbType' => $this->idDbType,
+                    AttributeParam::DB_TYPE => $this->idDbType,
                     'len' => $this->idLength,
                 ], $fieldParams);
             }

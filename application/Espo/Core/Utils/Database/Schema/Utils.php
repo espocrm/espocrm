@@ -222,7 +222,7 @@ class Utils
      */
     private static function getDbFieldType(array $ormFieldDefs)
     {
-        return $ormFieldDefs['dbType'] ?? $ormFieldDefs['type'];
+        return $ormFieldDefs[AttributeParam::DB_TYPE] ?? $ormFieldDefs['type'];
     }
 
     /**

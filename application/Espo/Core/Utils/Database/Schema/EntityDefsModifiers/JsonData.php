@@ -33,6 +33,7 @@ use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Schema\EntityDefsModifier;
 use Espo\ORM\Defs\EntityDefs as OrmEntityDefs;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Type\AttributeType;
 
 /**
@@ -48,7 +49,7 @@ class JsonData implements EntityDefsModifier
             ->withType(AttributeType::ID);
 
         $length = $sourceIdAttribute->getLength();
-        $dbType = $sourceIdAttribute->getParam('dbType');
+        $dbType = $sourceIdAttribute->getParam(AttributeParam::DB_TYPE);
 
         if ($length) {
             $idAttribute = $idAttribute->withLength($length);

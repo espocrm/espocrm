@@ -38,6 +38,7 @@ use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\FieldConverter;
 use Espo\ORM\Defs\FieldDefs;
 use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Type\AttributeType;
 
@@ -72,7 +73,7 @@ class Currency implements FieldConverter
         $convertedDefs = null;
 
         if ($fieldDefs->getParam('decimal')) {
-            $dbType = $fieldDefs->getParam('dbType') ?? Types::DECIMAL;
+            $dbType = $fieldDefs->getParam(FieldParam::DB_TYPE) ?? Types::DECIMAL;
             $precision = $fieldDefs->getParam('precision') ?? self::DEFAULT_PRECISION;
             $scale = $fieldDefs->getParam('scale') ?? self::DEFAULT_SCALE;
 
