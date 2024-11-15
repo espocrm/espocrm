@@ -26,76 +26,74 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/formula/fields/attribute', ['views/fields/multi-enum', 'ui/multi-select'],
-function (Dep, /** module:ui/multi-select */MultiSelect) {
+import MultiEnumFieldView from 'views/fields/multi-enum';
+import MultiSelect from 'ui/multi-select';
 
-    return Dep.extend({
+export default class FormulaAttributeFieldView extends MultiEnumFieldView {
 
-        setupOptions: function () {
-            Dep.prototype.setupOptions.call(this);
+    setupOptions() {
+        super.setupOptions();
 
-            if (this.options.attributeList) {
-                this.params.options = this.options.attributeList;
+        if (this.options.attributeList) {
+            this.params.options = this.options.attributeList;
 
+            return;
+        }
+
+        const attributeList = this.getFieldManager()
+            .getEntityTypeAttributeList(this.options.scope)
+            .concat(['id'])
+            .sort();
+
+        const links = this.getMetadata().get(['entityDefs', this.options.scope, 'links']) || {};
+
+        const linkList = [];
+
+        Object.keys(links).forEach(link => {
+            const type = links[link].type;
+            const scope = links[link].entity;
+
+            if (!type) {
                 return;
             }
 
-            const attributeList = this.getFieldManager()
-                .getEntityTypeAttributeList(this.options.scope)
-                .concat(['id'])
+            if (!scope) {
+                return;
+            }
+
+            if (
+                links[link].disabled ||
+                links[link].utility
+            ) {
+                return;
+            }
+
+            if (~['belongsToParent', 'hasOne', 'belongsTo'].indexOf(type)) {
+                linkList.push(link);
+            }
+        });
+
+        linkList.sort();
+
+        linkList.forEach(link => {
+            const scope = links[link].entity;
+
+            const linkAttributeList = this.getFieldManager().getEntityTypeAttributeList(scope)
                 .sort();
 
-            const links = this.getMetadata().get(['entityDefs', this.options.scope, 'links']) || {};
-
-            const linkList = [];
-
-            Object.keys(links).forEach(link => {
-                const type = links[link].type;
-                const scope = links[link].entity;
-
-                if (!type) {
-                    return;
-                }
-
-                if (!scope) {
-                    return;
-                }
-
-                if (
-                    links[link].disabled ||
-                    links[link].utility
-                ) {
-                    return;
-                }
-
-                if (~['belongsToParent', 'hasOne', 'belongsTo'].indexOf(type)) {
-                    linkList.push(link);
-                }
+            linkAttributeList.forEach(item => {
+                attributeList.push(link + '.' + item);
             });
+        });
 
-            linkList.sort();
+        this.params.options = attributeList;
+    }
 
-            linkList.forEach(link => {
-                const scope = links[link].entity;
+    afterRender() {
+        super.afterRender();
 
-                let linkAttributeList = this.getFieldManager()
-                    .getEntityTypeAttributeList(scope)
-                    .sort();
-
-                linkAttributeList.forEach(item => {
-                    attributeList.push(link + '.' + item);
-                });
-            });
-
-            this.params.options = attributeList;
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.$element) {
-                MultiSelect.focus(this.$element);
-            }
-        },
-    });
-});
+        if (this.$element) {
+            MultiSelect.focus(this.$element);
+        }
+    }
+}

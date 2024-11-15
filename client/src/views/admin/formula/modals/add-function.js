@@ -25,42 +25,35 @@
  * In accordance with Section 7(b) of the GNU Affero General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
+import ModalView from 'views/modal';
 
-define('views/admin/formula/modals/add-function', ['views/modal', 'model'], function (Dep, Model) {
+export default class extends ModalView {
 
-    return Dep.extend({
+    template = 'admin/formula/modals/add-function'
 
-        template: 'admin/formula/modals/add-function',
+    backdrop = true
 
-        fitHeight: true,
+    data() {
+        let text = this.translate('formulaFunctions', 'messages', 'Admin')
+            .replace('{documentationUrl}', this.documentationUrl);
+        text = this.getHelper().transformMarkdownText(text, {linksInNewTab: true}).toString();
 
-        backdrop: true,
+        return {
+            functionDataList: this.functionDataList,
+            text: text,
+        };
+    }
 
-        events: {
-            'click [data-action="add"]': function (e) {
-                this.trigger('add', $(e.currentTarget).data('value'));
-            }
-        },
+    setup() {
+        this.addActionHandler('add', (e, target) => {
+            this.trigger('add', target.dataset.value);
+        })
 
-        data: function () {
-            var text = this.translate('formulaFunctions', 'messages', 'Admin')
-                .replace('{documentationUrl}', this.documentationUrl);
-            text = this.getHelper().transformMarkdownText(text, {linksInNewTab: true}).toString();
+        this.headerText = this.translate('Function');
 
-            return {
-                functionDataList: this.functionDataList,
-                text: text,
-            };
-        },
+        this.documentationUrl = 'https://docs.espocrm.com/administration/formula/';
 
-        setup: function () {
-            this.header = this.translate('Function');
-
-            this.documentationUrl = 'https://docs.espocrm.com/administration/formula/';
-
-            this.functionDataList = this.options.functionDataList ||
-                this.getMetadata().get('app.formula.functionList') || [];
-        },
-
-    });
-});
+        this.functionDataList = this.options.functionDataList ||
+            this.getMetadata().get('app.formula.functionList') || [];
+    }
+}

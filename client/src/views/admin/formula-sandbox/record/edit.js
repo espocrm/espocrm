@@ -26,138 +26,134 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/formula-sandbox/record/edit', ['views/record/edit'], function (Dep) {
+import EditRecordView from 'views/record/edit';
 
-    return Dep.extend({
+export default class extends EditRecordView {
 
-        scriptAreaHeight: 400,
+    scriptAreaHeight = 400
 
-        bottomView: null,
+    bottomView = null
 
-        sideView: null,
+    sideView = null
 
-        buttonList: [
+    dropdownItemList = []
+
+    isWide = true
+    accessControlDisabled = true
+    saveAndContinueEditingAction = false
+    saveAndNewAction = false
+    shortcutKeyCtrlEnterAction = 'run'
+
+    setup() {
+        this.scope = 'Formula';
+
+        this.buttonList = [
             {
                 name: 'run',
                 label: 'Run',
                 style: 'danger',
                 title: 'Ctrl+Enter',
+                onClick: () => this.actionRun(),
             },
-        ],
+        ];
 
-        dropdownItemList: [],
+        const additionalFunctionDataList = [
+            {
+                "name": "output\\print",
+                "insertText": "output\\print(VALUE)"
+            },
+            {
+                "name": "output\\printLine",
+                "insertText": "output\\printLine(VALUE)"
+            }
+        ];
 
-        isWide: true,
-
-        accessControlDisabled: true,
-
-        saveAndContinueEditingAction: false,
-
-        saveAndNewAction: false,
-
-        shortcutKeyCtrlEnterAction: 'run',
-
-        setup: function () {
-            this.scope = 'Formula';
-
-            let additionalFunctionDataList = [
-                {
-                    "name": "output\\print",
-                    "insertText": "output\\print(VALUE)"
-                },
-                {
-                    "name": "output\\printLine",
-                    "insertText": "output\\printLine(VALUE)"
-                }
-            ];
-
-            this.detailLayout = [
-                {
-                    rows: [
-                        [
-                            false,
-                            {
-                                name: 'targetType',
-                                labelText: this.translate('targetType', 'fields', 'Formula'),
-                            },
-                            {
-                                name: 'target',
-                                labelText: this.translate('target', 'fields', 'Formula'),
-                            },
-                        ]
+        this.detailLayout = [
+            {
+                rows: [
+                    [
+                        false,
+                        {
+                            name: 'targetType',
+                            labelText: this.translate('targetType', 'fields', 'Formula'),
+                        },
+                        {
+                            name: 'target',
+                            labelText: this.translate('target', 'fields', 'Formula'),
+                        },
                     ]
-                },
-                {
-                    rows: [
-                        [
-                            {
-                                name: 'script',
-                                noLabel: true,
-                                options: {
-                                    targetEntityType: this.model.get('targetType'),
-                                    height: this.scriptAreaHeight,
-                                    additionalFunctionDataList: additionalFunctionDataList,
-                                },
+                ]
+            },
+            {
+                rows: [
+                    [
+                        {
+                            name: 'script',
+                            noLabel: true,
+                            options: {
+                                targetEntityType: this.model.get('targetType'),
+                                height: this.scriptAreaHeight,
+                                additionalFunctionDataList: additionalFunctionDataList,
                             },
-                        ]
+                        },
                     ]
-                },
-                {
-                    name: 'output',
-                    rows: [
-                        [
-                            {
-                                name: 'errorMessage',
-                                labelText: this.translate('error', 'fields', 'Formula'),
-                            },
-                        ],
-                        [
-                            {
-                                name: 'output',
-                                labelText: this.translate('output', 'fields', 'Formula'),
-                            },
-                        ]
+                ]
+            },
+            {
+                name: 'output',
+                rows: [
+                    [
+                        {
+                            name: 'errorMessage',
+                            labelText: this.translate('error', 'fields', 'Formula'),
+                        },
+                    ],
+                    [
+                        {
+                            name: 'output',
+                            labelText: this.translate('output', 'fields', 'Formula'),
+                        },
                     ]
-                },
-            ];
+                ]
+            },
+        ];
 
-            Dep.prototype.setup.call(this);
+        super.setup();
 
-            if (!this.model.get('targetType')) {
-                this.hideField('target');
-            }
-            else {
-                this.showField('target');
-            }
+        if (!this.model.get('targetType')) {
+            this.hideField('target');
+        }
+        else {
+            this.showField('target');
+        }
 
-            this.controlTargetTypeField();
-            this.listenTo(this.model, 'change:targetId', () => this.controlTargetTypeField());
+        this.controlTargetTypeField();
+        this.listenTo(this.model, 'change:targetId', () => this.controlTargetTypeField());
 
-            this.controlOutputField();
-            this.listenTo(this.model, 'change', () => this.controlOutputField());
-        },
+        this.controlOutputField();
+        this.listenTo(this.model, 'change', () => this.controlOutputField());
+    }
 
-        controlTargetTypeField: function () {
-            if (this.model.get('targetId')) {
-                this.setFieldReadOnly('targetType');
+    controlTargetTypeField() {
+        if (this.model.get('targetId')) {
+            this.setFieldReadOnly('targetType');
 
-                return;
-            }
+            return;
+        }
 
-            this.setFieldNotReadOnly('targetType');
-        },
+        this.setFieldNotReadOnly('targetType');
+    }
 
-        controlOutputField: function () {
-            if (this.model.get('errorMessage')) {
-                this.showField('errorMessage');
-            }
-            else {
-                this.hideField('errorMessage');
-            }
-        },
+    controlOutputField() {
+        if (this.model.get('errorMessage')) {
+            this.showField('errorMessage');
+        }
+        else {
+            this.hideField('errorMessage');
+        }
+    }
 
-        actionRun: function () {
-            this.model.trigger('run');
-        },
-    });
-});
+    actionRun() {
+        this.model.trigger('run');
+    }
+}
