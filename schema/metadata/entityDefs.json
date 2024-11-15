@@ -1346,7 +1346,7 @@
                         "properties": {
                             "deferredLoad": {
                                 "type": "boolean",
-                                "description": "When getting a related entity from an entity, it will be returned without loaded values. Values will be loaded on accessing. The downside is that it can return an entity even if it's deleted."
+                                "description": "When getting a related entity from an entity, it will be returned without loaded values. Values will be loaded on accessing. For belongsToParent there's the downside that it can return an entity even if it's deleted."
                             }
                         }
                     }

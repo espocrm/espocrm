@@ -30,6 +30,7 @@
 namespace Espo\ORM\Relation;
 
 use Espo\ORM\BaseEntity;
+use Espo\ORM\Defs\Defs;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
@@ -57,9 +58,13 @@ class RDBRelations implements Relations
         RelationType::HAS_CHILDREN,
     ];
 
+    private Defs $defs;
+
     public function __construct(
         private EntityManager $entityManager,
-    ) {}
+    ) {
+        $this->defs = $this->entityManager->getDefs();
+    }
 
     public function setEntity(Entity $entity): void
     {
@@ -253,8 +258,7 @@ class RDBRelations implements Relations
             return new EntityCollection();
         }
 
-        $relationDefs = $this->entityManager
-            ->getDefs()
+        $relationDefs = $this->defs
             ->getEntity($this->entity->getEntityType())
             ->getRelation($relation);
 
@@ -291,8 +295,7 @@ class RDBRelations implements Relations
             throw new LogicException();
         }
 
-        return $this->entityManager
-            ->getDefs()
+        return $this->defs
             ->getEntity($this->entity->getEntityType())
             ->tryGetRelation($relation)
             ?->getType();
@@ -304,8 +307,7 @@ class RDBRelations implements Relations
             throw new LogicException();
         }
 
-        $defs = $this->entityManager
-            ->getDefs()
+        $defs = $this->defs
             ->getEntity($this->entity->getEntityType())
             ->getRelation($relation);
 
@@ -320,7 +322,26 @@ class RDBRelations implements Relations
 
         if ($relationType === RelationType::BELONGS_TO) {
             $foreignEntityType = $defs->getForeignEntityType();
+            $nameAttribute = $relation . 'Name';
             $id = $this->entity->get($relation . 'Id');
+            $name = $this->entity->get($nameAttribute);
+
+            if (
+                $id &&
+                $name === null &&
+                $this->entity->hasAttribute($nameAttribute) &&
+                $this->entity->has($nameAttribute)
+            ) {
+                $hasDeleted = $this->defs
+                    ->getEntity($foreignEntityType)
+                    ->hasAttribute(Attribute::DELETED);
+
+                if ($hasDeleted) {
+                    // Could be either soft-deleted or have name set to null.
+                    // We resort to not using a partially loaded entity.
+                    return null;
+                }
+            }
         } else if ($relationType === RelationType::BELONGS_TO_PARENT) {
             $foreignEntityType = $this->entity->get($relation . 'Type');
             $id = $this->entity->get($relation . 'Id');

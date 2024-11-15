@@ -37,7 +37,6 @@ use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\Repository\Option\SaveOption;
 use tests\integration\Core\BaseTestCase;
 use tests\integration\testClasses\Entities\Account as AccountExtended;
-use tests\integration\testClasses\Entities\Opportunity as OpportunityExtended;
 
 class RelationsTest extends BaseTestCase
 {
@@ -45,7 +44,11 @@ class RelationsTest extends BaseTestCase
     {
         $metadata = $this->getMetadata();
         $metadata->set('entityDefs', Opportunity::ENTITY_TYPE, [
-            'entityClassName' => OpportunityExtended::class,
+            'links' => [
+                'account' => [
+                    'deferredLoad' => true,
+                ],
+            ],
         ]);
         $metadata->save();
 
@@ -54,8 +57,8 @@ class RelationsTest extends BaseTestCase
         $em = $this->getEntityManager();
 
         $opp = $em->getNewEntity(Opportunity::ENTITY_TYPE);
-        $this->assertInstanceOf(OpportunityExtended::class, $opp);
-        $this->assertNull($opp->getRelatedAccount());
+        $this->assertInstanceOf(Opportunity::class, $opp);
+        $this->assertNull($opp->getAccount());
 
         /** @var Account $account */
         $account = $em->createEntity(Account::ENTITY_TYPE, ['name' => 'Account 1']);
@@ -64,16 +67,16 @@ class RelationsTest extends BaseTestCase
             'accountId' => $account->getId(),
         ]);
 
-        $this->assertInstanceOf(OpportunityExtended::class, $opp);
+        $this->assertInstanceOf(Opportunity::class, $opp);
 
-        $account1 = $opp->getRelatedAccount();
+        $account1 = $opp->getAccount();
 
         $this->assertInstanceOf(Account::class, $account1);
         $this->assertEquals($account->getId(), $account1->getId());
 
         $em->refreshEntity($opp);
 
-        $account2 = $opp->getRelatedAccount();
+        $account2 = $opp->getAccount();
 
         $this->assertInstanceOf(Account::class, $account2);
         $this->assertNotSame($account1, $account2);
@@ -82,11 +85,18 @@ class RelationsTest extends BaseTestCase
 
         $em->saveEntity($opp);
 
-        $account3 = $opp->getRelatedAccount();
+        $account3 = $opp->getAccount();
 
         $this->assertInstanceOf(Account::class, $account3);
         $this->assertNotSame($account1, $account3);
         $this->assertEquals($account->getId(), $account3->getId());
+
+        // Soft-deleted.
+
+        $em->removeEntity($account3);
+        $em->refreshEntity($opp);
+
+        $this->assertNull($opp->getAccount());
     }
 
     public function testGetMany(): void
