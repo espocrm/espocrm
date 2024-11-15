@@ -32,7 +32,7 @@ namespace tests\integration\Espo\Core\FieldProcessing;
 use Espo\Core\ORM\EntityManager;
 use Espo\Modules\Crm\Entities\Contact;
 use tests\integration\Core\BaseTestCase;
-use tests\integration\testClasses\Entities\Opportunity;
+use Espo\Modules\Crm\Entities\Opportunity;
 
 class RelationTest extends BaseTestCase
 {
