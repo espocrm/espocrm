@@ -63,4 +63,14 @@ class AttributeParam
      * A default value.
      */
     public const DEFAULT = 'default';
+
+    /**
+     * A relation. For foreign attributes.
+     */
+    public const RELATION = 'relation';
+
+    /**
+     * A foreign attribute name. For foreign attributes.
+     */
+    public const FOREIGN = 'foreign';
 }

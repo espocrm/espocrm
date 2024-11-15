@@ -30,6 +30,7 @@
 namespace Espo\Core\Select\Where;
 
 use Espo\Core\Select\Where\Item\Type;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 use Espo\ORM\BaseEntity;
@@ -192,7 +193,7 @@ class Scanner
         $attributeType = $seed->getAttributeType($attribute);
 
         if ($attributeType === Entity::FOREIGN) {
-            $relation = $this->getAttributeParam($seed, $attribute, 'relation');
+            $relation = $this->getAttributeParam($seed, $attribute, AttributeParam::RELATION);
 
             if ($relation) {
                 $queryBuilder->leftJoin($relation);

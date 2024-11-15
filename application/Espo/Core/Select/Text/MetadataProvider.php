@@ -32,6 +32,7 @@ namespace Espo\Core\Select\Text;
 use Espo\Core\Utils\Metadata;
 
 use Espo\ORM\Defs;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Defs\Params\FieldParam;
 
 class MetadataProvider
@@ -150,6 +151,6 @@ class MetadataProvider
         return $this->ormDefs
             ->getEntity($entityType)
             ->getAttribute($attribute)
-            ->getParam('relation');
+            ->getParam(AttributeParam::RELATION);
     }
 }

@@ -34,6 +34,7 @@ use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
 use Espo\Core\Utils\Database\Orm\LinkConverter;
 use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Defs\RelationDefs as LinkDefs;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
@@ -58,8 +59,8 @@ class BelongsToParent implements LinkConverter
             ->withKey($idName)
             ->withForeignRelationName($foreignRelationName);
 
-        if ($linkDefs->getParam('deferredLoad')) {
-            $relationDefs = $relationDefs->withParam('deferredLoad', true);
+        if ($linkDefs->getParam(RelationParam::DEFERRED_LOAD)) {
+            $relationDefs = $relationDefs->withParam(RelationParam::DEFERRED_LOAD, true);
         }
 
         return EntityDefs::create()

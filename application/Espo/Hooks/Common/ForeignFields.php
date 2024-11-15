@@ -32,6 +32,7 @@ namespace Espo\Hooks\Common;
 use Espo\Core\Hook\Hook\AfterSave;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\Defs;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Repository\Option\SaveOptions;
@@ -62,7 +63,8 @@ class ForeignFields implements AfterSave
         $foreignList = array_filter(
             $entity->getAttributeList(), fn ($it) => $entity->getAttributeType($it) === AttributeType::FOREIGN);
 
-        $relationList = array_map(fn ($it) => $defs->getAttribute($it)->getParam('relation'), $foreignList);
+        $relationList = array_map(
+            fn ($it) => $defs->getAttribute($it)->getParam(AttributeParam::RELATION), $foreignList);
         $relationList = array_filter($relationList, fn ($it) => $entity->isAttributeChanged($it . 'Id'));
         $relationList = array_values($relationList);
 

@@ -31,6 +31,7 @@ namespace Espo\Tools\Export\Format\Xlsx;
 
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\Tools\Export\Params;
 use Espo\Tools\Export\Processor;
@@ -107,7 +108,7 @@ class ParamsHandler implements ProcessorParamsHandler
                 continue;
             }
 
-            if ($linkType === Entity::BELONGS_TO && !empty($defs['noJoin'])) {
+            if ($linkType === Entity::BELONGS_TO && !empty($defs[RelationParam::NO_JOIN])) {
                 if ($this->metadata->get(['entityDefs', $entityType, 'fields', $link])) {
                     $linkList[] = $link;
                 }

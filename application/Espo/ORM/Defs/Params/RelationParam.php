@@ -81,7 +81,16 @@ class RelationParam
 
     /**
      * Middle keys.
-     * @todo
      */
     public const MID_KEYS = 'midKeys';
+
+    /**
+     * No join.
+     */
+    public const NO_JOIN = 'noJoin';
+
+    /**
+     * Deferred load.
+     */
+    public const DEFERRED_LOAD = 'deferredLoad';
 }

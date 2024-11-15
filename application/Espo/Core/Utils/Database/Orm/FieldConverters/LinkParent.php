@@ -71,7 +71,7 @@ class LinkParent implements FieldConverter
             ->withType(AttributeType::VARCHAR)
             ->withNotStorable()
             ->withParamsMerged([
-                'relation' => $name,
+                AttributeParam::RELATION => $name,
                 'isParentName' => true,
                 'attributeRole' => 'name',
                 'fieldType' => FieldType::LINK_PARENT,

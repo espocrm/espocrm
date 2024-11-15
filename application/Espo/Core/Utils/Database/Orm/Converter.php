@@ -85,8 +85,8 @@ class Converter
         'autoincrement' => 'autoincrement',
         'entity' => 'entity',
         FieldParam::NOT_STORABLE => AttributeParam::NOT_STORABLE,
-        'link' => 'relation',
-        'field' => 'foreign',  // @todo Change 'foreign' to 'field'.
+        'link' => AttributeParam::RELATION,
+        'field' => AttributeParam::FOREIGN,
         'unique' => 'unique',
         'index' => 'index',
         FieldParam::DEFAULT => AttributeParam::DEFAULT,
@@ -350,8 +350,8 @@ class Converter
     {
         $params = $data[$entityType][EntityParam::ATTRIBUTES][$attribute] ?? [];
 
-        $foreign = $params['foreign'] ?? null;
-        $relation = $params['relation'] ?? null;
+        $foreign = $params[AttributeParam::FOREIGN] ?? null;
+        $relation = $params[AttributeParam::RELATION] ?? null;
 
         if (!$foreign || !$relation) {
             return null;
@@ -359,7 +359,7 @@ class Converter
 
         $relationParams = $data[$entityType][EntityParam::RELATIONS][$relation] ?? [];
 
-        $foreignEntityType = $relationParams['entity'] ?? null;
+        $foreignEntityType = $relationParams[RelationParam::ENTITY] ?? null;
 
         if (!$foreignEntityType) {
             return null;

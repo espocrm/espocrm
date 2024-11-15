@@ -29,13 +29,16 @@
 
 namespace Espo\Core\Utils\Database\Orm\FieldConverters;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
 use Espo\Core\Utils\Database\Orm\FieldConverter;
 use Espo\Entities\Attachment;
 use Espo\ORM\Defs\FieldDefs;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Defs\Params\RelationParam;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
 
@@ -72,15 +75,15 @@ class File implements FieldConverter
 
         if (!$fieldDefs->isNotStorable()) {
             $nameDefs = $nameDefs->withParamsMerged([
-                'relation' => $name,
-                'foreign' => 'name',
+                AttributeParam::RELATION => $name,
+                AttributeParam::FOREIGN => Field::NAME,
             ]);
 
             $relationDefs = RelationDefs::create($name)
                 ->withType(RelationType::BELONGS_TO)
                 ->withForeignEntityType(Attachment::ENTITY_TYPE)
                 ->withKey($idName)
-                ->withForeignKey('id')
+                ->withForeignKey(Attribute::ID)
                 ->withParam(RelationParam::FOREIGN, null);
         }
 

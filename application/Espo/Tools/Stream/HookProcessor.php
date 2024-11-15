@@ -41,6 +41,7 @@ use Espo\Entities\Autofollow;
 use Espo\Entities\User;
 use Espo\Entities\Preferences;
 
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 use Espo\ORM\Defs\RelationDefs;
@@ -601,7 +602,7 @@ class HookProcessor
         $entityType = $entity->getEntityType();
         $foreignEntityType = $foreignEntity->getEntityType();
 
-        $foreignLink = $entity->getRelationParam($link, 'foreign');
+        $foreignLink = $entity->getRelationParam($link, RelationParam::FOREIGN);
 
         if (
             !empty($options[self::OPTION_NO_STREAM]) ||
@@ -634,7 +635,7 @@ class HookProcessor
 
         $entityType = $entity->getEntityType();
         $foreignEntityType = $foreignEntity->getEntityType();
-        $foreignLink = $entity->getRelationParam($link, 'foreign');
+        $foreignLink = $entity->getRelationParam($link, RelationParam::FOREIGN);
 
         if (
             !empty($options[self::OPTION_NO_STREAM]) ||

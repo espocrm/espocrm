@@ -159,7 +159,7 @@ class RDBRelationSelectBuilder
     {
         $transformedWhere = [];
 
-        $middleName = lcfirst($this->getRelationParam('relationName'));
+        $middleName = lcfirst($this->getRelationParam(RelationParam::RELATION_NAME));
 
         foreach ($where as $key => $value) {
             $transformedKey = $key;
@@ -447,7 +447,7 @@ class RDBRelationSelectBuilder
         }
 
         if (!$this->middleTableAlias) {
-            $middleName = $this->getRelationParam('relationName');
+            $middleName = $this->getRelationParam(RelationParam::RELATION_NAME);
 
             if (!$middleName) {
                 throw new RuntimeException("No relation name.");

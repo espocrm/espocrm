@@ -457,8 +457,8 @@ class BaseEntity implements Entity
         $type = $this->getAttributeType($attribute);
 
         return $type === AttributeType::FOREIGN &&
-            $this->getAttributeParam($attribute, 'relation') === substr($attribute, 0, -2) &&
-            $this->getAttributeParam($attribute, 'foreign') === Attribute::ID &&
+            $this->getAttributeParam($attribute, AttributeParam::RELATION) === substr($attribute, 0, -2) &&
+            $this->getAttributeParam($attribute, AttributeParam::FOREIGN) === Attribute::ID &&
             str_ends_with($attribute, 'Id');
     }
 
@@ -583,8 +583,8 @@ class BaseEntity implements Entity
             return null;
         }
 
-        $relation = $entityDefs->getAttribute($attribute)->getParam('relation');
-        $foreign = $entityDefs->getAttribute($attribute)->getParam('foreign');
+        $relation = $entityDefs->getAttribute($attribute)->getParam(AttributeParam::RELATION);
+        $foreign = $entityDefs->getAttribute($attribute)->getParam(AttributeParam::FOREIGN);
 
         if (!$relation) {
             return null;

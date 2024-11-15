@@ -41,6 +41,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Entities\ArrayValue;
 use Espo\Entities\User;
 use Espo\ORM\Defs as ORMDefs;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Entity;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition as Cond;
@@ -500,8 +501,8 @@ class ItemGeneralConverter implements ItemConverter
 
         if ($isForeign) {
             if ($isForeignType) {
-                $arrayLink = $entityDefs->getAttribute($attribute)->getParam('relation');
-                $arrayAttribute = $entityDefs->getAttribute($attribute)->getParam('foreign');
+                $arrayLink = $entityDefs->getAttribute($attribute)->getParam(AttributeParam::RELATION);
+                $arrayAttribute = $entityDefs->getAttribute($attribute)->getParam(AttributeParam::FOREIGN);
             } else {
                 [$arrayLink, $arrayAttribute] = explode('.', $attribute);
             }

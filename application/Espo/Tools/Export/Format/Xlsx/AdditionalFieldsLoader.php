@@ -32,6 +32,7 @@ namespace Espo\Tools\Export\Format\Xlsx;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\Tools\Export\AdditionalFieldsLoader as AdditionalFieldsLoaderInterface;
 
@@ -62,7 +63,7 @@ class AdditionalFieldsLoader implements AdditionalFieldsLoaderInterface
                 (
                     (
                         $entity->getRelationType($link) === Entity::BELONGS_TO &&
-                        $entity->getRelationParam($link, 'noJoin')
+                        $entity->getRelationParam($link, RelationParam::NO_JOIN)
                     ) ||
                     $entity->getRelationType($link) === Entity::HAS_ONE
                 ) &&

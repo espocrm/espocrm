@@ -32,6 +32,7 @@ namespace Espo\Tools\Export;
 use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\Select\ApplierClassNameListProvider;
+use Espo\ORM\Defs\Params\AttributeParam as OrmAttributeParam;
 use Espo\Tools\Export\Collection as ExportCollection;
 use Espo\Tools\Export\Processor\Params as ProcessorParams;
 use Espo\ORM\Entity;
@@ -198,7 +199,7 @@ class Export
         [$relation, $foreign] = str_contains($attribute, '_') ?
             explode('_', $attribute) :
             [
-                $this->getAttributeParam($entity, $attribute, 'relation'),
+                $this->getAttributeParam($entity, $attribute, OrmAttributeParam::RELATION),
                 $this->getAttributeParam($entity, $attribute, 'foreign')
             ];
 

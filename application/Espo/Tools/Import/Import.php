@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Import;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\PhoneNumber\Sanitizer as PhoneNumberSanitizer;
 use Espo\Core\FieldValidation\Exceptions\ValidationError;
@@ -631,8 +632,8 @@ class Import
             return;
         }
 
-        $foreignAttribute = $entity->getAttributeParam($attribute, 'foreign');
-        $relation = $entity->getAttributeParam($attribute, 'relation');
+        $foreignAttribute = $entity->getAttributeParam($attribute, AttributeParam::FOREIGN);
+        $relation = $entity->getAttributeParam($attribute, AttributeParam::RELATION);
 
         if (!$relation) {
             return;
@@ -1366,7 +1367,7 @@ class Import
 
             if (
                 $entity->getAttributeType($attribute) === Entity::FOREIGN &&
-                $entity->getAttributeParam($attribute, 'foreign') === 'name'
+                $entity->getAttributeParam($attribute, AttributeParam::FOREIGN) === Field::NAME
             ) {
                 $this->processForeignAttribute($entity, $attribute);
             }
@@ -1400,7 +1401,7 @@ class Import
 
             if (
                 $entity->getAttributeType($attribute) === Entity::FOREIGN &&
-                $entity->getAttributeParam($attribute, 'foreign') !== 'name' &&
+                $entity->getAttributeParam($attribute, AttributeParam::FOREIGN) !== Field::NAME &&
                 $this->getFieldParam($this->entityType, $attribute, 'relateOnImport')
             ) {
                 $this->processForeignAttribute($entity, $attribute);

@@ -2069,14 +2069,14 @@ abstract class BaseQueryComposer implements QueryComposer
 
                 if (
                     $entity->getAttributeType($field) == AttributeType::FOREIGN &&
-                    $this->getAttributeParam($entity, $field, 'relation')
+                    $this->getAttributeParam($entity, $field, AttributeParam::RELATION)
                 ) {
-                    $relationsToJoin[] = $this->getAttributeParam($entity, $field, 'relation');
+                    $relationsToJoin[] = $this->getAttributeParam($entity, $field, AttributeParam::RELATION);
                 } else if (
                     $this->getAttributeParam($entity, $field, 'fieldType') == FieldType::LINK_ONE &&
-                    $this->getAttributeParam($entity, $field, 'relation')
+                    $this->getAttributeParam($entity, $field, AttributeParam::RELATION)
                 ) {
-                    $relationsToJoin[] = $this->getAttributeParam($entity, $field, 'relation');
+                    $relationsToJoin[] = $this->getAttributeParam($entity, $field, AttributeParam::RELATION);
                 }
             }
         }
@@ -2088,7 +2088,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 continue;
             }
 
-            if ($this->getRelationParam($entity, $relationName, 'noJoin')) {
+            if ($this->getRelationParam($entity, $relationName, RelationParam::NO_JOIN)) {
                 continue;
             }
 
@@ -2394,13 +2394,13 @@ abstract class BaseQueryComposer implements QueryComposer
 
         switch ($attributeType) {
             case Entity::FOREIGN:
-                $relationName = $this->getAttributeParam($entity, $attribute, 'relation');
+                $relationName = $this->getAttributeParam($entity, $attribute, AttributeParam::RELATION);
 
                 if (!$relationName) {
                     return null;
                 }
 
-                $foreign = $this->getAttributeParam($entity, $attribute, 'foreign');
+                $foreign = $this->getAttributeParam($entity, $attribute, AttributeParam::FOREIGN);
 
                 if (is_array($foreign)) {
                     $wsCount = 0;
@@ -2709,8 +2709,8 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if ($attributeType === Entity::FOREIGN) {
             // @todo Add a test.
-            $relationName = $this->getAttributeParam($entity, $attribute, 'relation');
-            $foreign = $this->getAttributeParam($entity, $attribute, 'foreign');
+            $relationName = $this->getAttributeParam($entity, $attribute, AttributeParam::RELATION);
+            $foreign = $this->getAttributeParam($entity, $attribute, AttributeParam::FOREIGN);
 
             if (!$relationName) {
                 throw new RuntimeException("No 'relation' param for field $entityType.$attribute.");
@@ -3276,7 +3276,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 }
 
                 $relTable = $this->toDb(
-                    $this->getRelationParam($entity, $relationName, 'relationName')
+                    $this->getRelationParam($entity, $relationName, RelationParam::RELATION_NAME)
                 );
 
                 $distantTable = $this->toDb($foreignEntityType);

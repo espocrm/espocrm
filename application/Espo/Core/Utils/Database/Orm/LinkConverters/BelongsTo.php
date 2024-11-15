@@ -33,6 +33,8 @@ use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
 use Espo\Core\Utils\Database\Orm\LinkConverter;
+use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Defs\RelationDefs as LinkDefs;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
@@ -47,7 +49,7 @@ class BelongsTo implements LinkConverter
         $noIndex = $linkDefs->getParam('noIndex');
         $noForeignName = $linkDefs->getParam('noForeignName');
         $foreignName = $linkDefs->getParam('foreignName') ?? 'name';
-        $noJoin = $linkDefs->getParam('noJoin');
+        $noJoin = $linkDefs->getParam(RelationParam::NO_JOIN);
 
         $idName = $name . 'Id';
         $nameName = $name . 'Name';
@@ -63,8 +65,8 @@ class BelongsTo implements LinkConverter
             ->withForeignKey('id')
             ->withForeignRelationName($foreignRelationName);
 
-        if ($linkDefs->getParam('deferredLoad')) {
-            $relationDefs = $relationDefs->withParam('deferredLoad', true);
+        if ($linkDefs->getParam(RelationParam::DEFERRED_LOAD)) {
+            $relationDefs = $relationDefs->withParam(RelationParam::DEFERRED_LOAD, true);
         }
 
         $nameAttributeDefs = !$noForeignName ?
@@ -73,13 +75,13 @@ class BelongsTo implements LinkConverter
                     AttributeDefs::create($nameName)
                         ->withType(AttributeType::VARCHAR)
                         ->withNotStorable()
-                        ->withParam('relation', $name)
-                        ->withParam('foreign', $foreignName) :
+                        ->withParam(AttributeParam::RELATION, $name)
+                        ->withParam(AttributeParam::FOREIGN, $foreignName) :
                     AttributeDefs::create($nameName)
                         ->withType(AttributeType::FOREIGN)
-                        ->withNotStorable(true) // Used to be false before v7.4.
-                        ->withParam('relation', $name)
-                        ->withParam('foreign', $foreignName)
+                        ->withNotStorable() // Used to be false before v7.4.
+                        ->withParam(AttributeParam::RELATION, $name)
+                        ->withParam(AttributeParam::FOREIGN, $foreignName)
             ) : null;
 
         $entityDefs = EntityDefs::create()
