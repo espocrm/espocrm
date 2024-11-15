@@ -33,6 +33,7 @@ use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Defs\IndexDefs;
 use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\IndexParam;
 
 class Utils
 {
@@ -54,7 +55,7 @@ class Utils
             foreach ($indexes as $indexName => $indexParams) {
                 $indexDefs = IndexDefs::fromRaw($indexParams, $indexName);
 
-                $tableIndexName = $indexParams['key'] ?? null;
+                $tableIndexName = $indexParams[IndexParam::KEY] ?? null;
 
                 if (!$tableIndexName) {
                     continue;
@@ -78,16 +79,16 @@ class Utils
                         continue;
                     }
 
-                    $indexList[$entityType][$tableIndexName]['flags'] = $flags;
+                    $indexList[$entityType][$tableIndexName][IndexParam::FLAGS] = $flags;
                 }
 
                 if ($columns !== []) {
                     $indexType = self::getIndexTypeByIndexDefs($indexDefs);
 
                     // @todo Revise, may to be removed.
-                    $indexList[$entityType][$tableIndexName]['type'] = $indexType;
+                    $indexList[$entityType][$tableIndexName][IndexParam::TYPE] = $indexType;
 
-                    $indexList[$entityType][$tableIndexName]['columns'] = array_map(
+                    $indexList[$entityType][$tableIndexName][IndexParam::COLUMNS] = array_map(
                         fn ($item) => Util::toUnderScore($item),
                         $columns
                     );

@@ -40,6 +40,7 @@ use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
@@ -89,8 +90,8 @@ class RelationConverter
             $params['relationName'] = $relationshipName;
         }
 
-        $linkType = $params['type'] ?? null;
-        $foreignLinkType = $foreignParams ? $foreignParams['type'] : null;
+        $linkType = $params[RelationParam::TYPE] ?? null;
+        $foreignLinkType = $foreignParams ? $foreignParams[RelationParam::TYPE] : null;
 
         if (!$linkType) {
             $this->log->warning("Link $entityType.$name has no type.");
@@ -233,10 +234,10 @@ class RelationConverter
         $additionalColumns = &$relationDefs['additionalColumns'];
 
         foreach ($additionalColumns as &$columnDefs) {
-            $columnDefs['type'] ??= AttributeType::VARCHAR;
+            $columnDefs[AttributeParam::TYPE] ??= AttributeType::VARCHAR;
 
             if (
-                $columnDefs['type'] === AttributeType::VARCHAR &&
+                $columnDefs[AttributeParam::TYPE] === AttributeType::VARCHAR &&
                 !isset($columnDefs[AttributeParam::LEN])
             ) {
                 $columnDefs[AttributeParam::LEN] = self::DEFAULT_VARCHAR_LENGTH;

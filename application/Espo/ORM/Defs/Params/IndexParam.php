@@ -27,82 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\Defs;
-
-use Espo\ORM\Defs\Params\IndexParam;
+namespace Espo\ORM\Defs\Params;
 
 /**
- * Index definitions.
+ * An index parameter.
  */
-class IndexDefs
+class IndexParam
 {
-    /** @var array<string, mixed> */
-    private $data;
-    private string $name;
-
-    private function __construct()
-    {}
+    /**
+     * A type.
+     */
+    public const TYPE = 'type';
 
     /**
-     * @param array<string, mixed> $raw
+     * A key.
      */
-    public static function fromRaw(array $raw, string $name): self
-    {
-        $obj = new self();
-        $obj->data = $raw;
-        $obj->name = $name;
-
-        return $obj;
-    }
+    public const KEY = 'key';
 
     /**
-     * Get a name.
+     * Columns.
      */
-    public function getName(): string
-    {
-        return $this->name;
-    }
+    public const COLUMNS = 'columns';
 
     /**
-     * Get a key.
+     * Flags.
      */
-    public function getKey(): string
-    {
-        return $this->data[IndexParam::KEY] ?? '';
-    }
-
-    /**
-     * Whether is unique.
-     */
-    public function isUnique(): bool
-    {
-        // For bc.
-        if (($this->data['unique'] ?? false)) {
-            return true;
-        }
-
-        $type = $this->data[IndexParam::TYPE] ?? null;
-
-        return $type === 'unique';
-    }
-
-    /**
-     * Get a column list.
-     *
-     * @return string[]
-     */
-    public function getColumnList(): array
-    {
-        return $this->data[IndexParam::COLUMNS] ?? [];
-    }
-
-    /**
-     * Get a flag list.
-     *
-     * @return string[]
-     */
-    public function getFlagList(): array
-    {
-        return $this->data[IndexParam::FLAGS] ?? [];
-    }
+    public const FLAGS = 'flags';
 }

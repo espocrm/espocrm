@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils\Database\Orm\Defs;
 
 use Espo\Core\Utils\Util;
+use Espo\ORM\Defs\Params\IndexParam;
 
 /**
  * @immutable
@@ -95,7 +96,7 @@ class IndexDefs
     public function withUnique(): self
     {
         $obj = clone $this;
-        $obj->params['type'] = 'unique';
+        $obj->params[IndexParam::TYPE] = 'unique';
 
         return $obj;
     }
@@ -103,7 +104,7 @@ class IndexDefs
     public function withoutUnique(): self
     {
         $obj = clone $this;
-        unset($obj->params['type']);
+        unset($obj->params[IndexParam::TYPE]);
 
         return $obj;
     }
@@ -112,13 +113,13 @@ class IndexDefs
     {
         $obj = clone $this;
 
-        $flags = $obj->params['flags'] ?? [];
+        $flags = $obj->params[IndexParam::FLAGS] ?? [];
 
         if (!in_array($flag, $flags)) {
             $flags[] = $flag;
         }
 
-        $obj->params['flags'] = $flags;
+        $obj->params[IndexParam::FLAGS] = $flags;
 
         return $obj;
     }
@@ -127,7 +128,7 @@ class IndexDefs
     {
         $obj = clone $this;
 
-        $flags = $obj->params['flags'] ?? [];
+        $flags = $obj->params[IndexParam::FLAGS] ?? [];
 
         $index = array_search($flag, $flags, true);
 
@@ -136,10 +137,10 @@ class IndexDefs
             $flags = array_values($flags);
         }
 
-        $obj->params['flags'] = $flags;
+        $obj->params[IndexParam::FLAGS] = $flags;
 
         if ($flags === []) {
-            unset($obj->params['flags']);
+            unset($obj->params[IndexParam::FLAGS]);
         }
 
         return $obj;

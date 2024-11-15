@@ -42,6 +42,7 @@ use Espo\ORM\Defs\FieldDefs;
 use Espo\ORM\Defs\IndexDefs;
 use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Defs\Params\FieldParam;
+use Espo\ORM\Defs\Params\IndexParam;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
@@ -743,8 +744,8 @@ class Converter
             }
 
             $ormMetadata[$entityType]['indexes']['system_fullTextSearch'] = [
-                'columns' => $fullTextSearchColumnList,
-                'flags' => ['fulltext']
+                IndexParam::COLUMNS => $fullTextSearchColumnList,
+                IndexParam::FLAGS => ['fulltext']
             ];
         }
     }
@@ -793,24 +794,24 @@ class Converter
                 foreach (($relationData['midKeys'] ?? []) as $midKey) {
                     $indexName = $midKey;
 
-                    $indexDefs = IndexDefs::fromRaw(['columns' => [$midKey]], $indexName);
+                    $indexDefs = IndexDefs::fromRaw([IndexParam::COLUMNS => [$midKey]], $indexName);
 
                     $relationData['indexes'][$indexName] = [
-                        'columns' => $indexDefs->getColumnList(),
-                        'key' => $this->composeIndexKey($indexDefs, ucfirst($relationName)),
+                        IndexParam::COLUMNS => $indexDefs->getColumnList(),
+                        IndexParam::KEY => $this->composeIndexKey($indexDefs, ucfirst($relationName)),
                     ];
 
                     $uniqueColumnList[] = $midKey;
                 }
 
                 foreach ($relationData['indexes'] as $indexName => &$indexData) {
-                    if (!empty($indexData['key'])) {
+                    if (!empty($indexData[IndexParam::KEY])) {
                         continue;
                     }
 
                     $indexDefs = IndexDefs::fromRaw($indexData, $indexName);
 
-                    $indexData['key'] = $this->composeIndexKey($indexDefs, ucfirst($relationName));
+                    $indexData[IndexParam::KEY] = $this->composeIndexKey($indexDefs, ucfirst($relationName));
                 }
 
                 foreach (($relationData['conditions'] ?? []) as $column => $fieldParams) {
@@ -822,14 +823,14 @@ class Converter
 
                     $indexDefs = IndexDefs
                         ::fromRaw([
-                            'columns' => $uniqueColumnList,
-                            'type' => self::INDEX_TYPE_UNIQUE,
+                            IndexParam::TYPE => self::INDEX_TYPE_UNIQUE,
+                            IndexParam::COLUMNS => $uniqueColumnList,
                         ], $indexName);
 
                     $relationData['indexes'][$indexName] = [
-                        'type' => self::INDEX_TYPE_UNIQUE,
-                        'columns' => $indexDefs->getColumnList(),
-                        'key' => $this->composeIndexKey($indexDefs, ucfirst($relationName)),
+                        IndexParam::TYPE => self::INDEX_TYPE_UNIQUE,
+                        IndexParam::COLUMNS => $indexDefs->getColumnList(),
+                        IndexParam::KEY => $this->composeIndexKey($indexDefs, ucfirst($relationName)),
                     ];
                 }
             }
@@ -954,10 +955,10 @@ class Converter
     private static function convertIndexDefsToRaw(IndexDefs $indexDefs): array
     {
         return [
-            'type' => $indexDefs->isUnique() ? self::INDEX_TYPE_UNIQUE : self::INDEX_TYPE_INDEX,
-            'columns' => $indexDefs->getColumnList(),
-            'flags' => $indexDefs->getFlagList(),
-            'key' => $indexDefs->getKey(),
+            IndexParam::TYPE => $indexDefs->isUnique() ? self::INDEX_TYPE_UNIQUE : self::INDEX_TYPE_INDEX,
+            IndexParam::COLUMNS => $indexDefs->getColumnList(),
+            IndexParam::FLAGS => $indexDefs->getFlagList(),
+            IndexParam::KEY => $indexDefs->getKey(),
         ];
     }
 
@@ -986,11 +987,11 @@ class Converter
             $keyValue = $attributeDefs->getParam($indexType);
 
             if ($keyValue === true) {
-                $indexList[$indexName]['type'] = $indexType;
-                $indexList[$indexName]['columns'] = [$attributeName];
+                $indexList[$indexName][IndexParam::TYPE] = $indexType;
+                $indexList[$indexName][IndexParam::COLUMNS] = [$attributeName];
             } else if (is_string($keyValue)) {
-                $indexList[$indexName]['type'] = $indexType;
-                $indexList[$indexName]['columns'][] = $attributeName;
+                $indexList[$indexName][IndexParam::TYPE] = $indexType;
+                $indexList[$indexName][IndexParam::COLUMNS][] = $attributeName;
             }
         }
 
