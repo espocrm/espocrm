@@ -612,7 +612,7 @@ class Cleanup implements JobDataLess
                     continue;
                 }
 
-                $midKey = $entity->getRelationParam($relation, 'midKeys')[0];
+                $midKey = $entity->getRelationParam($relation, RelationParam::MID_KEYS)[0];
 
                 if (!$midKey) {
                     continue;

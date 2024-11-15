@@ -211,14 +211,14 @@ class OptOutService
         }
 
         $linkEntityType = ucfirst(
-            $seed->getRelationParam($link, 'relationName') ?? ''
+            $seed->getRelationParam($link, RelationParam::RELATION_NAME) ?? ''
         );
 
         if ($linkEntityType === '') {
             throw new RuntimeException();
         }
 
-        $key = $seed->getRelationParam($link, 'midKeys')[1] ?? null;
+        $key = $seed->getRelationParam($link, RelationParam::MID_KEYS)[1] ?? null;
 
         if (!$key) {
             throw new RuntimeException();

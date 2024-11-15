@@ -203,7 +203,7 @@ class RelationDefs
      */
     public function hasForeignKey(): bool
     {
-        return isset($this->data['foreignKey']);
+        return isset($this->data[RelationParam::FOREIGN_KEY]);
     }
 
     /**
@@ -217,7 +217,7 @@ class RelationDefs
             throw new RuntimeException("No 'foreignKey' parameter defined in the relation '{$this->name}'.");
         }
 
-        return $this->data['foreignKey'];
+        return $this->data[RelationParam::FOREIGN_KEY];
     }
 
     /**
@@ -225,7 +225,7 @@ class RelationDefs
      */
     public function hasKey(): bool
     {
-        return isset($this->data['key']);
+        return isset($this->data[RelationParam::KEY]);
     }
 
     /**
@@ -238,7 +238,7 @@ class RelationDefs
             throw new RuntimeException("No 'key' parameter defined in the relation '{$this->name}'.");
         }
 
-        return $this->data['key'];
+        return $this->data[RelationParam::KEY];
     }
 
     /**
@@ -246,7 +246,7 @@ class RelationDefs
      */
     public function hasMidKey(): bool
     {
-        return !is_null($this->data['midKeys'][0] ?? null);
+        return !is_null($this->data[RelationParam::MID_KEYS][0] ?? null);
     }
 
     /**
@@ -260,7 +260,7 @@ class RelationDefs
             throw new RuntimeException("No 'midKey' parameter defined in the relation '{$this->name}'.");
         }
 
-        return $this->data['midKeys'][0];
+        return $this->data[RelationParam::MID_KEYS][0];
     }
 
     /**
@@ -270,7 +270,7 @@ class RelationDefs
      */
     public function hasForeignMidKey(): bool
     {
-        return !is_null($this->data['midKeys'][1] ?? null);
+        return !is_null($this->data[RelationParam::MID_KEYS][1] ?? null);
     }
 
     /**
@@ -284,7 +284,7 @@ class RelationDefs
             throw new RuntimeException("No 'foreignMidKey' parameter defined in the relation '{$this->name}'.");
         }
 
-        return $this->data['midKeys'][1];
+        return $this->data[RelationParam::MID_KEYS][1];
     }
 
     /**

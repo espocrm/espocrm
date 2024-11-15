@@ -127,7 +127,7 @@ class RelationDefs
      */
     public function withKey(string $key): self
     {
-        return $this->withParam('key', $key);
+        return $this->withParam(RelationParam::KEY, $key);
     }
 
     /**
@@ -135,7 +135,7 @@ class RelationDefs
      */
     public function getKey(): ?string
     {
-        return $this->getParam('key');
+        return $this->getParam(RelationParam::KEY);
     }
 
     /**
@@ -143,7 +143,7 @@ class RelationDefs
      */
     public function withForeignKey(string $foreignKey): self
     {
-        return $this->withParam('foreignKey', $foreignKey);
+        return $this->withParam(RelationParam::FOREIGN_KEY, $foreignKey);
     }
 
     /**
@@ -151,7 +151,7 @@ class RelationDefs
      */
     public function getForeignKey(): ?string
     {
-        return $this->getParam('foreignKey');
+        return $this->getParam(RelationParam::FOREIGN_KEY);
     }
 
     /**
@@ -159,7 +159,7 @@ class RelationDefs
      */
     public function withMidKeys(string $midKey, string $foreignMidKey): self
     {
-        return $this->withParam('midKeys', [$midKey, $foreignMidKey]);
+        return $this->withParam(RelationParam::MID_KEYS, [$midKey, $foreignMidKey]);
     }
 
     /**

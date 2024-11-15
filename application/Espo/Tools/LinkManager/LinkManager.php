@@ -38,6 +38,8 @@ use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Route;
 use Espo\Core\Utils\Util;
+use Espo\ORM\Defs\Params\EntityParam;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\ORM\Type\RelationType;
@@ -510,23 +512,23 @@ class LinkManager
                 }
 
                 if ($entityForeign == $entity) {
-                    $dataLeft['links'][$link]['midKeys'] = ['leftId', 'rightId'];
-                    $dataRight['links'][$linkForeign]['midKeys'] = ['rightId', 'leftId'];
+                    $dataLeft['links'][$link][RelationParam::MID_KEYS] = ['leftId', 'rightId'];
+                    $dataRight['links'][$linkForeign][RelationParam::MID_KEYS] = ['rightId', 'leftId'];
                 }
 
                 break;
 
             case self::CHILDREN_TO_PARENT:
                 $dataLeft = [
-                    'fields' => [
+                    EntityParam::FIELDS => [
                         $link => [
-                            'type' => FieldType::LINK_PARENT,
+                            FieldParam::TYPE => FieldType::LINK_PARENT,
                             'entityList' => $params['parentEntityTypeList'] ?? null,
                         ],
                     ],
                     'links' => [
                         $link => [
-                            'type' => Entity::BELONGS_TO_PARENT,
+                            RelationParam::TYPE => Entity::BELONGS_TO_PARENT,
                             'foreign' => $linkForeign,
                             'isCustom' => true,
                         ],

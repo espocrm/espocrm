@@ -31,6 +31,7 @@ namespace Espo\Core\Upgrades\Migrations\V8_4;
 
 use Espo\Core\Upgrades\Migration\Script;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Type\RelationType;
 
 class AfterUpgrade implements Script
@@ -58,7 +59,7 @@ class AfterUpgrade implements Script
             foreach ($item['links'] as $link => $linkDefs) {
                 $type = $linkDefs['type'] ?? null;
                 $foreignEntityType = $linkDefs['entity'] ?? null;
-                $midKeys = $linkDefs['midKeys'] ?? null;
+                $midKeys = $linkDefs[RelationParam::MID_KEYS] ?? null;
                 $isCustom = $linkDefs['isCustom'] ?? false;
 
                 if ($type !== RelationType::HAS_MANY) {
@@ -84,7 +85,7 @@ class AfterUpgrade implements Script
                 $this->metadata->set('entityDefs', $entityType, [
                     'links' => [
                         $link => [
-                            'midKeys' => array_reverse($midKeys),
+                            RelationParam::MID_KEYS => array_reverse($midKeys),
                             '_keysSwappedAfterUpgrade' => true,
                         ]
                     ]

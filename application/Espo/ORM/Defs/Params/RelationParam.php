@@ -68,15 +68,14 @@ class RelationParam
      * Additional columns.
      */
     public const ADDITIONAL_COLUMNS = 'additionalColumns';
+
     /**
      * A key.
-     * @todo
      */
     public const KEY = 'key';
 
     /**
      * A foreign key.
-     * @todo
      */
     public const FOREIGN_KEY = 'foreignKey';
 

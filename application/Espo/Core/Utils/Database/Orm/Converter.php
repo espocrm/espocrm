@@ -793,7 +793,7 @@ class Converter
 
                 $uniqueColumnList = [];
 
-                foreach (($relationData['midKeys'] ?? []) as $midKey) {
+                foreach (($relationData[RelationParam::MID_KEYS] ?? []) as $midKey) {
                     $indexName = $midKey;
 
                     $indexDefs = IndexDefs::fromRaw([IndexParam::COLUMNS => [$midKey]], $indexName);
