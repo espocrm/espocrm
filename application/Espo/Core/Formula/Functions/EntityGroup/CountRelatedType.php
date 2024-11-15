@@ -32,6 +32,7 @@ namespace Espo\Core\Formula\Functions\EntityGroup;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Formula\Exceptions\Error;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\EntityManager;
 use Espo\Core\Di;
 use stdClass;
@@ -74,7 +75,7 @@ class CountRelatedType extends \Espo\Core\Formula\Functions\Base implements
 
         $entityManager = $this->entityManager;
 
-        $foreignEntityType = $entity->getRelationParam($link, 'entity');
+        $foreignEntityType = $entity->getRelationParam($link, RelationParam::ENTITY);
 
         if (empty($foreignEntityType)) {
             throw new Error();

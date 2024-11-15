@@ -30,6 +30,7 @@
 namespace Espo\Tools\EntityManager\Hook\Hooks;
 
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Type\RelationType;
 use Espo\Tools\EntityManager\Hook\DeleteHook;
 use Espo\Tools\EntityManager\Params;
@@ -54,8 +55,8 @@ class DeleteHasChildrenLinks implements DeleteHook
 
             foreach ($links as $link => $linkDefs) {
                 $isCustom = $linkDefs['isCustom'] ?? false;
-                $foreignEntityType = $linkDefs['entity'] ?? null;
-                $type = $linkDefs['type'] ?? null;
+                $foreignEntityType = $linkDefs[RelationParam::ENTITY] ?? null;
+                $type = $linkDefs[RelationParam::TYPE] ?? null;
 
                 if (
                     !$isCustom ||

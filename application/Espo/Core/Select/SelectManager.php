@@ -42,6 +42,7 @@ use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Metadata;
 
 use Espo\Entities\StreamSubscription;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Select as SelectQuery;
@@ -705,14 +706,14 @@ class SelectManager
         if ($contactId) {
             if (
                 $this->getSeed()->hasAttribute('contactId') &&
-                $this->getSeed()->getRelationParam('contact', 'entity') === 'Contact'
+                $this->getSeed()->getRelationParam('contact', RelationParam::ENTITY) === 'Contact'
             ) {
                 $or['contactId'] = $contactId;
             }
 
             if (
                 $this->getSeed()->hasRelation('contacts') &&
-                $this->getSeed()->getRelationParam('contacts', 'entity') === 'Contact'
+                $this->getSeed()->getRelationParam('contacts', RelationParam::ENTITY) === 'Contact'
             ) {
                 $this->addLeftJoin(['contacts', 'contactsAccess'], $result);
                 $this->setDistinct(true, $result);
@@ -755,13 +756,13 @@ class SelectManager
         if (count($accountIdList)) {
             if (
                 $this->getSeed()->hasAttribute('accountId') &&
-                $this->getSeed()->getRelationParam('account', 'entity') === 'Account'
+                $this->getSeed()->getRelationParam('account', RelationParam::ENTITY) === 'Account'
             ) {
                 $or['accountId'] = $accountIdList;
             }
             if (
                 $this->getSeed()->hasRelation('accounts') &&
-                $this->getSeed()->getRelationParam('accounts', 'entity') === 'Account'
+                $this->getSeed()->getRelationParam('accounts', RelationParam::ENTITY) === 'Account'
             ) {
                 $this->addLeftJoin(['accounts', 'accountsAccess'], $result);
                 $this->setDistinct(true, $result);
@@ -784,13 +785,13 @@ class SelectManager
         if ($contactId) {
             if (
                 $this->getSeed()->hasAttribute('contactId') &&
-                $this->getSeed()->getRelationParam('contact', 'entity') === 'Contact'
+                $this->getSeed()->getRelationParam('contact', RelationParam::ENTITY) === 'Contact'
             ) {
                 $or['contactId'] = $contactId;
             }
             if (
                 $this->getSeed()->hasRelation('contacts') &&
-                $this->getSeed()->getRelationParam('contacts', 'entity') === 'Contact'
+                $this->getSeed()->getRelationParam('contacts', RelationParam::ENTITY) === 'Contact'
             ) {
                 $this->addLeftJoin(['contacts', 'contactsAccess'], $result);
                 $this->setDistinct(true, $result);
@@ -968,7 +969,7 @@ class SelectManager
                 // TODO allow alias
                 throw new Forbidden("SelectManager::checkWhere: Unknown relation '{$link}' in where.");
             }
-            $entityType = $this->getSeed()->getRelationParam($link, 'entity');
+            $entityType = $this->getSeed()->getRelationParam($link, RelationParam::ENTITY);
             if (!$entityType) {
                 throw new Forbidden("SelectManager::checkWhere: Bad relation.");
             }
@@ -1834,7 +1835,7 @@ class SelectManager
                         list($arrayAttributeLink, $arrayAttribute) = explode('.', $attribute);
                     }
 
-                    $arrayEntityType = $seed->getRelationParam($arrayAttributeLink, 'entity');
+                    $arrayEntityType = $seed->getRelationParam($arrayAttributeLink, RelationParam::ENTITY);
 
                     $arrayLinkAlias = $arrayAttributeLink . 'Filter' . rand(10000, 99999);
                     $idPart = $arrayLinkAlias . '.id';

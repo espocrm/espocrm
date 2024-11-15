@@ -79,7 +79,7 @@ class RelationDefs
      */
     public function withForeignEntityType(string $entityType): self
     {
-        return $this->withParam('entity', $entityType);
+        return $this->withParam(RelationParam::ENTITY, $entityType);
     }
 
     /**
@@ -87,7 +87,7 @@ class RelationDefs
      */
     public function getForeignEntityType(): ?string
     {
-        return $this->getParam('entity');
+        return $this->getParam(RelationParam::ENTITY);
     }
 
     /**

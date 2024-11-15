@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Di;
 
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
 use stdClass;
 use PDO;
@@ -77,7 +78,7 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
 
         $entityManager = $this->entityManager;
 
-        $foreignEntityType = $entity->getRelationParam($link, 'entity');
+        $foreignEntityType = $entity->getRelationParam($link, RelationParam::ENTITY);
 
         if (empty($foreignEntityType)) {
             throw new Error();

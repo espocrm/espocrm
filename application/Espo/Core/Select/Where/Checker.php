@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Acl;
 use Espo\Core\Select\Where\Item\Type;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\QueryComposer\BaseQueryComposer as QueryComposer;
 use Espo\ORM\QueryComposer\Util as QueryUtil;
 use Espo\ORM\EntityManager;
@@ -149,14 +150,14 @@ class Checker
 
         if (in_array($type, $this->linkTypeList)) {
             if (!$this->getSeed()->hasRelation($attribute)) {
-                throw new BadRequest("Not existing relation '{$attribute}' in where.");
+                throw new BadRequest("Not existing relation '$attribute' in where.");
             }
 
             return;
         }
 
         if (!$this->getSeed()->hasAttribute($attribute)) {
-            throw new BadRequest("Not existing attribute '{$attribute}' in where.");
+            throw new BadRequest("Not existing attribute '$attribute' in where.");
         }
     }
 
@@ -172,24 +173,24 @@ class Checker
 
             if (!$this->getSeed()->hasRelation($link)) {
                 // TODO allow alias
-                throw new Forbidden("Bad relation '{$link}' in where.");
+                throw new Forbidden("Bad relation '$link' in where.");
             }
 
-            $foreignEntityType = $this->getRelationParam($this->getSeed(), $link, 'entity');
+            $foreignEntityType = $this->getRelationParam($this->getSeed(), $link, RelationParam::ENTITY);
 
             if (!$foreignEntityType) {
-                throw new Forbidden("Bad relation '{$link}' in where.");
+                throw new Forbidden("Bad relation '$link' in where.");
             }
 
             if (
                 !$this->acl->checkScope($foreignEntityType) ||
                 in_array($link, $this->acl->getScopeForbiddenLinkList($entityType))
             ) {
-                throw new Forbidden("Forbidden relation '{$link}' in where.");
+                throw new Forbidden("Forbidden relation '$link' in where.");
             }
 
             if (in_array($attribute, $this->acl->getScopeForbiddenAttributeList($foreignEntityType))) {
-                throw new Forbidden("Forbidden attribute '{$link}.{$attribute}' in where.");
+                throw new Forbidden("Forbidden attribute '$link.{$attribute}' in where.");
             }
 
             return;
@@ -199,13 +200,13 @@ class Checker
             $link = $attribute;
 
             if (!$this->getSeed()->hasRelation($link)) {
-                throw new Forbidden("Bad relation '{$link}' in where.");
+                throw new Forbidden("Bad relation '$link' in where.");
             }
 
-            $foreignEntityType = $this->getRelationParam($this->getSeed(), $link, 'entity');
+            $foreignEntityType = $this->getRelationParam($this->getSeed(), $link, RelationParam::ENTITY);
 
             if (!$foreignEntityType) {
-                throw new Forbidden("Bad relation '{$link}' in where.");
+                throw new Forbidden("Bad relation '$link' in where.");
             }
 
             if (
@@ -213,14 +214,14 @@ class Checker
                 !$this->acl->checkScope($foreignEntityType) ||
                 in_array($link, $this->acl->getScopeForbiddenLinkList($entityType))
             ) {
-                throw new Forbidden("Forbidden relation '{$link}' in where.");
+                throw new Forbidden("Forbidden relation '$link' in where.");
             }
 
             return;
         }
 
         if (in_array($attribute, $this->acl->getScopeForbiddenAttributeList($entityType))) {
-            throw new Forbidden("Forbidden attribute '{$attribute}' in where.");
+            throw new Forbidden("Forbidden attribute '$attribute' in where.");
         }
     }
 

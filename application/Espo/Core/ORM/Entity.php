@@ -34,6 +34,7 @@ use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\ORM\BaseEntity;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Order;
@@ -142,12 +143,12 @@ class Entity extends BaseEntity
 
         $idsAttribute = $field . 'Ids';
 
-        $foreignEntityType = $this->getRelationParam($field, 'entity');
+        $foreignEntityType = $this->getRelationParam($field, RelationParam::ENTITY);
 
         if ($this->getAttributeParam($idsAttribute, 'orderBy')) {
             $defs = [
                 'orderBy' => $this->getAttributeParam($idsAttribute, 'orderBy'),
-                'order' => 'ASC',
+                'order' => Order::ASC,
             ];
 
             if ($this->getAttributeParam($idsAttribute, 'orderDirection')) {

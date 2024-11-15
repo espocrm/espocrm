@@ -300,7 +300,7 @@ class BaseMapper implements RDBMapper
         $entityType = $entity->getEntityType();
         $relType = $entity->getRelationType($relationName);
 
-        $relEntityType = $this->getRelationParam($entity, $relationName, 'entity');
+        $relEntityType = $this->getRelationParam($entity, $relationName, RelationParam::ENTITY);
 
         $relEntity = null;
 
@@ -738,7 +738,7 @@ class BaseMapper implements RDBMapper
 
         $relType = $entity->getRelationType($relationName);
 
-        $foreignEntityType = $this->getRelationParam($entity, $relationName, 'entity');
+        $foreignEntityType = $this->getRelationParam($entity, $relationName, RelationParam::ENTITY);
 
         if (!$foreignEntityType || !$relType) {
             throw new LogicException(
@@ -833,7 +833,7 @@ class BaseMapper implements RDBMapper
             throw new RuntimeException("Bad foreign passed.");
         }
 
-        $foreignEntityType = $this->getRelationParam($entity, $relationName, 'entity');
+        $foreignEntityType = $this->getRelationParam($entity, $relationName, RelationParam::ENTITY);
 
         if (!$relType || !$foreignEntityType && $relType !== Entity::BELONGS_TO_PARENT) {
             throw new LogicException(
@@ -1119,7 +1119,7 @@ class BaseMapper implements RDBMapper
             throw new RuntimeException("Bad foreign passed.");
         }
 
-        $foreignEntityType = $this->getRelationParam($entity, $relationName, 'entity');
+        $foreignEntityType = $this->getRelationParam($entity, $relationName, RelationParam::ENTITY);
 
         if ($relType === Entity::BELONGS_TO_PARENT && $relEntity) {
             $foreignEntityType = $relEntity->getEntityType();
@@ -1685,9 +1685,9 @@ class BaseMapper implements RDBMapper
     private function getManyManyAdditionalSelect(Entity $entity, string $relationName): array
     {
         $foreign = $this->getRelationParam($entity, $relationName, 'foreign');
-        $foreignEntityType = $this->getRelationParam($entity, $relationName, 'entity');
+        $foreignEntityType = $this->getRelationParam($entity, $relationName, RelationParam::ENTITY);
 
-        $middleName = lcfirst($this->getRelationParam($entity, $relationName, 'relationName'));
+        $middleName = lcfirst($this->getRelationParam($entity, $relationName, RelationParam::RELATION_NAME));
 
         if (!$foreign || !$foreignEntityType) {
             return [];

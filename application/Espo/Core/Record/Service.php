@@ -65,6 +65,7 @@ use Espo\Core\Record\Duplicator\EntityDuplicator;
 use Espo\Core\Record\Select\ApplierClassNameListProvider;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Di;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Repository\RDBRepository;
@@ -1072,7 +1073,7 @@ class Service implements Crud,
 
         $this->getLinkCheck()->processLink($entity, $link);
 
-        $foreignEntityType = $entity->getRelationParam($link, 'entity');
+        $foreignEntityType = $entity->getRelationParam($link, RelationParam::ENTITY);
 
         if (!$foreignEntityType) {
             throw new LogicException("Entity '$this->entityType' has not relation '$link'.");
@@ -1126,7 +1127,7 @@ class Service implements Crud,
 
         $this->getLinkCheck()->processUnlink($entity, $link);
 
-        $foreignEntityType = $entity->getRelationParam($link, 'entity');
+        $foreignEntityType = $entity->getRelationParam($link, RelationParam::ENTITY);
 
         if (!$foreignEntityType) {
             throw new LogicException("Entity '$this->entityType' has not relation '$link'.");
@@ -1184,7 +1185,7 @@ class Service implements Crud,
             throw new LogicException("Only core entities are supported.");
         }
 
-        $foreignEntityType = $entity->getRelationParam($link, 'entity');
+        $foreignEntityType = $entity->getRelationParam($link, RelationParam::ENTITY);
 
         if (!$foreignEntityType) {
             throw new LogicException("Link '$link' has no 'entity'.");

@@ -38,6 +38,7 @@ use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Record\EntityProvider;
 use Espo\Core\Select\SearchParams;
 use Espo\Modules\Crm\Entities\TargetList;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Order;
@@ -203,7 +204,7 @@ class OptOutService
     {
         $seed = $this->entityManager->getRDBRepositoryByClass(TargetList::class)->getNew();
 
-        $entityType = $seed->getRelationParam($link, 'entity');
+        $entityType = $seed->getRelationParam($link, RelationParam::ENTITY);
 
         if (!$entityType) {
             throw new RuntimeException();

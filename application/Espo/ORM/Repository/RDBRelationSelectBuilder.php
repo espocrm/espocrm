@@ -30,6 +30,7 @@
 namespace Espo\ORM\Repository;
 
 use Espo\ORM\Collection;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\Mapper\RDBMapper;
 use Espo\ORM\Name\Attribute;
@@ -72,7 +73,7 @@ class RDBRelationSelectBuilder
         $entityType = $entity->getEntityType();
 
         if ($entity instanceof BaseEntity) {
-            $this->foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+            $this->foreignEntityType = $entity->getRelationParam($relationName, RelationParam::ENTITY);
         } else {
             $this->foreignEntityType = $this->entityManager
                 ->getDefs()

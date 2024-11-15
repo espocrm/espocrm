@@ -43,6 +43,7 @@ use Espo\Entities\Portal;
 use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\Entities\LayoutRecord;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
 use Espo\Tools\LayoutManager\LayoutManager;
 
@@ -148,7 +149,8 @@ class Service
                     $link = $item->name ?? null;
                 }
 
-                $foreignEntityType = $this->metadata->get(['entityDefs', $scope, 'links', $link, 'entity']);
+                $foreignEntityType = $this->metadata
+                    ->get(['entityDefs', $scope, 'links', $link, RelationParam::ENTITY]);
 
                 if (
                     $foreignEntityType &&

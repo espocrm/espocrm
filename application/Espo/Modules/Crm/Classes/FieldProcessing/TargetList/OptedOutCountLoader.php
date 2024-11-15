@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Classes\FieldProcessing\TargetList;
 
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\Modules\Crm\Entities\TargetList;
 use Espo\Core\Utils\Metadata;
@@ -64,7 +65,7 @@ class OptedOutCountLoader implements Loader
         $count = 0;
 
         foreach ($this->targetLinkList as $link) {
-            $foreignEntityType = $entity->getRelationParam($link, 'entity');
+            $foreignEntityType = $entity->getRelationParam($link, RelationParam::ENTITY);
 
             $count += $this->entityManager
                 ->getRDBRepository($foreignEntityType)

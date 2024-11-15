@@ -34,6 +34,8 @@ use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Team;
 use Espo\Entities\User;
+use Espo\ORM\Defs\Params\FieldParam;
+use Espo\ORM\Defs\Params\RelationParam;
 use stdClass;
 
 class DefaultSidePanelType
@@ -49,18 +51,24 @@ class DefaultSidePanelType
         $list = [];
 
         if (
-            $this->metadata->get(['entityDefs', $scope, 'fields', Field::ASSIGNED_USER, 'type']) === FieldType::LINK &&
-            $this->metadata->get(['entityDefs', $scope, 'links', Field::ASSIGNED_USER, 'entity']) === User::ENTITY_TYPE
+            $this->metadata->get(['entityDefs', $scope, 'fields', Field::ASSIGNED_USER, FieldParam::TYPE]) ===
+                FieldType::LINK &&
+            $this->metadata->get(['entityDefs', $scope, 'links', Field::ASSIGNED_USER, RelationParam::ENTITY]) ===
+                User::ENTITY_TYPE
             ||
-            $this->metadata->get(['entityDefs', $scope, 'fields', Field::ASSIGNED_USERS, 'type']) === FieldType::LINK_MULTIPLE &&
-            $this->metadata->get(['entityDefs', $scope, 'links', Field::ASSIGNED_USERS, 'entity']) === User::ENTITY_TYPE
+            $this->metadata->get(['entityDefs', $scope, 'fields', Field::ASSIGNED_USERS, FieldParam::TYPE]) ===
+                FieldType::LINK_MULTIPLE &&
+            $this->metadata->get(['entityDefs', $scope, 'links', Field::ASSIGNED_USERS, RelationParam::ENTITY]) ===
+                User::ENTITY_TYPE
         ) {
             $list[] = (object) ['name' => ':assignedUser'];
         }
 
         if (
-            $this->metadata->get(['entityDefs', $scope, 'fields', Field::TEAMS, 'type']) === FieldType::LINK_MULTIPLE &&
-            $this->metadata->get(['entityDefs', $scope, 'links', Field::TEAMS, 'entity']) === Team::ENTITY_TYPE
+            $this->metadata->get(['entityDefs', $scope, 'fields', Field::TEAMS, FieldParam::TYPE]) ===
+                FieldType::LINK_MULTIPLE &&
+            $this->metadata->get(['entityDefs', $scope, 'links', Field::TEAMS, RelationParam::ENTITY]) ===
+                Team::ENTITY_TYPE
         ) {
             $list[] = (object) ['name' => Field::TEAMS];
         }

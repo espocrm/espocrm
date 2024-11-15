@@ -40,6 +40,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\Tools\Export\Collection;
 use Espo\Tools\Export\Format\CellValuePreparator;
@@ -527,7 +528,8 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
 
             if ($idValue && $foreignField) {
                 if (!$foreignLink) {
-                    $foreignEntity = $this->metadata->get(['entityDefs', $entityType, 'links', $name, 'entity']);
+                    $foreignEntity =
+                        $this->metadata->get(['entityDefs', $entityType, 'links', $name, RelationParam::ENTITY]);
                 } else {
                     $foreignEntity1 = $this->metadata
                         ->get(['entityDefs', $entityType, 'links', $foreignLink, 'entity']);

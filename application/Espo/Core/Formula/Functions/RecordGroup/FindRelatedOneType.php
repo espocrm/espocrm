@@ -31,6 +31,7 @@ namespace Espo\Core\Formula\Functions\RecordGroup;
 
 use Espo\Core\ORM\Entity as CoreEntity;
 
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
 use Espo\Core\Formula\{
     Functions\BaseFunction,
@@ -121,16 +122,16 @@ class FindRelatedOneType extends BaseFunction implements
             $order = $order ?? 'ASC';
         }
 
-        $foreignEntityType = $entity->getRelationParam($link, 'entity');
+        $foreignEntityType = $entity->getRelationParam($link, RelationParam::ENTITY);
 
         if (!$foreignEntityType) {
-            $this->throwError("Bad or not supported link '{$link}'.");
+            $this->throwError("Bad or not supported link '$link'.");
         }
 
         $foreignLink = $entity->getRelationParam($link, 'foreign');
 
         if (!$foreignLink) {
-            $this->throwError("Not supported link '{$link}'.");
+            $this->throwError("Not supported link '$link'.");
         }
 
         $builder = $this->selectBuilderFactory

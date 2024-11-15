@@ -37,6 +37,7 @@ use Espo\Entities\InboundEmail;
 use Espo\Entities\User as UserEntity;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\ORM\Collection;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Repositories\Database;
@@ -424,7 +425,7 @@ class Email extends Database implements
             !$accountId &&
             $parent->get('accountId') &&
             $parent instanceof CoreEntity &&
-            $parent->getRelationParam('account', 'entity') === Account::ENTITY_TYPE
+            $parent->getRelationParam('account', RelationParam::ENTITY) === Account::ENTITY_TYPE
         ) {
             $accountId = $parent->get('accountId');
         }

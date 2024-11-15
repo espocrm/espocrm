@@ -1330,7 +1330,7 @@ abstract class BaseQueryComposer implements QueryComposer
         if ($relName) {
             $part = $this->quoteColumn($relName . '.' . $part);
 
-            $foreignEntityType = $this->getRelationParam($entity, $relName, 'entity');
+            $foreignEntityType = $this->getRelationParam($entity, $relName, RelationParam::ENTITY);
 
             if ($foreignEntityType) {
                 $foreignSeed = $this->getSeed($foreignEntityType);
@@ -1994,7 +1994,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return null;
         }
 
-        $foreignEntityType = $this->getRelationParam($entity, $relationName, 'entity');
+        $foreignEntityType = $this->getRelationParam($entity, $relationName, RelationParam::ENTITY);
 
         $table = $this->toDb($foreignEntityType);
 
@@ -3254,7 +3254,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $alias = $this->sanitize($alias);
 
         $relationConditions = $this->getRelationParam($entity, $relationName, 'conditions');
-        $foreignEntityType = $this->getRelationParam($entity, $relationName, 'entity');
+        $foreignEntityType = $this->getRelationParam($entity, $relationName, RelationParam::ENTITY);
 
         if ($relationConditions) {
             $conditions = array_merge($conditions, $relationConditions);

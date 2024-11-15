@@ -34,6 +34,7 @@ use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Lead;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
@@ -103,7 +104,7 @@ class ParentLink implements BeforeSave
             if (
                 !$accountId && $parent->get('accountId') &&
                 $parent instanceof CoreEntity &&
-                $parent->getRelationParam('account', 'entity') === Account::ENTITY_TYPE
+                $parent->getRelationParam('account', RelationParam::ENTITY) === Account::ENTITY_TYPE
             ) {
                 $accountId = $parent->get('accountId');
             }

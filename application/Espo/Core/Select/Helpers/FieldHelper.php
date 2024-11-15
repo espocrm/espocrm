@@ -35,6 +35,7 @@ use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
@@ -202,6 +203,6 @@ class FieldHelper
 
     private function getRelationEntityType(string $relation): ?string
     {
-        return $this->getRelationParam($this->getSeed(), $relation, 'entity');
+        return $this->getRelationParam($this->getSeed(), $relation, RelationParam::ENTITY);
     }
 }

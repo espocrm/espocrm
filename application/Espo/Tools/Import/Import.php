@@ -36,6 +36,7 @@ use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Entities\Attachment;
 use Espo\Entities\ImportError;
 use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
 use Espo\Tools\Import\Jobs\RunIdle;
 use Espo\ORM\Entity;
@@ -669,7 +670,7 @@ class Import
             return;
         }
 
-        $foreignEntityType = $entity->getRelationParam($relation, 'entity');
+        $foreignEntityType = $entity->getRelationParam($relation, RelationParam::ENTITY);
 
         if (!$foreignEntityType) {
             return;

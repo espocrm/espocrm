@@ -33,6 +33,7 @@ use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\SystemUser;
 use Espo\ORM\BaseEntity;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\ORM\Relation\RelationsMap;
 use Espo\ORM\Repository\RDBRepository;
@@ -248,7 +249,7 @@ class Database extends RDBRepository
         if (is_string($foreign)) {
             $foreignId = $foreign;
 
-            $foreignEntityType = $this->getRelationParam($entity, $relationName, 'entity');
+            $foreignEntityType = $this->getRelationParam($entity, $relationName, RelationParam::ENTITY);
 
             if ($foreignEntityType) {
                 $foreign = $this->entityManager->getNewEntity($foreignEntityType);
@@ -288,7 +289,7 @@ class Database extends RDBRepository
         if (is_string($foreign)) {
             $foreignId = $foreign;
 
-            $foreignEntityType = $this->getRelationParam($entity, $relationName, 'entity');
+            $foreignEntityType = $this->getRelationParam($entity, $relationName, RelationParam::ENTITY);
 
             if ($foreignEntityType) {
                 $foreign = $this->entityManager->getNewEntity($foreignEntityType);

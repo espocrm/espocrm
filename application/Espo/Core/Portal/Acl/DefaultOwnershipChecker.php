@@ -31,6 +31,7 @@ namespace Espo\Core\Portal\Acl;
 
 use Espo\Core\Name\Field;
 use Espo\ORM\BaseEntity;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -91,7 +92,7 @@ class DefaultOwnershipChecker implements
 
         if (
             $entity->hasAttribute(self::ATTR_ACCOUNT_ID) &&
-            $this->getRelationParam($entity, self::FIELD_ACCOUNT, 'entity') === self::ENTITY_ACCOUNT
+            $this->getRelationParam($entity, self::FIELD_ACCOUNT, RelationParam::ENTITY) === self::ENTITY_ACCOUNT
         ) {
             if (in_array($entity->get(self::ATTR_ACCOUNT_ID), $accountIdList)) {
                 return true;
@@ -100,7 +101,7 @@ class DefaultOwnershipChecker implements
 
         if (
             $entity->hasRelation(self::FIELD_ACCOUNTS) &&
-            $this->getRelationParam($entity, self::FIELD_ACCOUNTS, 'entity') === self::ENTITY_ACCOUNT
+            $this->getRelationParam($entity, self::FIELD_ACCOUNTS, RelationParam::ENTITY) === self::ENTITY_ACCOUNT
         ) {
             $repository = $this->entityManager->getRDBRepository($entity->getEntityType());
 
@@ -137,7 +138,7 @@ class DefaultOwnershipChecker implements
 
         if (
             $entity->hasAttribute(self::ATTR_CONTACT_ID) &&
-            $this->getRelationParam($entity, self::FIELD_CONTACT, 'entity') === self::ENTITY_CONTACT
+            $this->getRelationParam($entity, self::FIELD_CONTACT, RelationParam::ENTITY) === self::ENTITY_CONTACT
         ) {
             if ($entity->get(self::ATTR_CONTACT_ID) === $contactId) {
                 return true;
@@ -146,7 +147,7 @@ class DefaultOwnershipChecker implements
 
         if (
             $entity->hasRelation(self::FIELD_CONTACTS) &&
-            $this->getRelationParam($entity, self::FIELD_CONTACTS, 'entity') === self::ENTITY_CONTACT
+            $this->getRelationParam($entity, self::FIELD_CONTACTS, RelationParam::ENTITY) === self::ENTITY_CONTACT
         ) {
             $repository = $this->entityManager->getRDBRepository($entity->getEntityType());
 

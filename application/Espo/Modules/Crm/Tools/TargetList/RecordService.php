@@ -102,7 +102,7 @@ class RecordService
             throw new BadRequest("Not supported link.");
         }
 
-        $foreignEntityType = $entity->getRelationParam($link, 'entity');
+        $foreignEntityType = $entity->getRelationParam($link, RelationParam::ENTITY);
 
         if (!$foreignEntityType) {
             throw new RuntimeException();

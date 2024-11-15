@@ -38,6 +38,7 @@ use Espo\Entities\Template;
 use Espo\Modules\Crm\Entities\Campaign as CampaignEntity;
 use Espo\Modules\Crm\Entities\TargetList;
 use Espo\ORM\Collection;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
@@ -93,7 +94,7 @@ class MailMergeService
         }
 
         /** @var string $targetEntityType */
-        $targetEntityType = $campaign->getRelationParam($link, 'entity');
+        $targetEntityType = $campaign->getRelationParam($link, RelationParam::ENTITY);
 
         if ($checkAcl && !$this->acl->check($targetEntityType, Acl\Table::ACTION_READ)) {
             throw new Forbidden("Could not mail merge campaign because access to target entity type is forbidden.");

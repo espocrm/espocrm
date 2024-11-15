@@ -40,6 +40,7 @@ use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Di;
 use Espo\Core\Select\Helpers\RandomStringGenerator;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
 
 class FindRelatedManyType extends BaseFunction implements
@@ -139,7 +140,7 @@ class FindRelatedManyType extends BaseFunction implements
             $this->throwError("Not supported link type '$relationType'.");
         }
 
-        $foreignEntityType = $entity->getRelationParam($link, 'entity');
+        $foreignEntityType = $entity->getRelationParam($link, RelationParam::ENTITY);
 
         if (!$foreignEntityType) {
             $this->throwError("Bad or not supported link '$link'.");

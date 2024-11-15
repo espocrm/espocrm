@@ -48,4 +48,9 @@ class RelationParam
      * A relation name.
      */
     public const RELATION_NAME = 'relationName';
+
+    /**
+     * A foreign entity type.
+     */
+    public const ENTITY = 'entity';
 }

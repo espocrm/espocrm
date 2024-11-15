@@ -129,11 +129,11 @@ class RelationDefs
     }
 
     /**
-     * Whether has a foreign entity type is defined.
+     * Whether it has a foreign entity type is defined.
      */
     public function hasForeignEntityType(): bool
     {
-        return isset($this->data['entity']);
+        return isset($this->data[RelationParam::ENTITY]);
     }
 
     /**
@@ -147,7 +147,7 @@ class RelationDefs
             throw new RuntimeException("No 'entity' parameter defined in the relation '{$this->name}'.");
         }
 
-        return $this->data['entity'];
+        return $this->data[RelationParam::ENTITY];
     }
 
     /**
