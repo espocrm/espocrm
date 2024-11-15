@@ -75,15 +75,15 @@ class Converter
     private array $paramMap = [
         'type' => 'type',
         FieldParam::DB_TYPE => AttributeParam::DB_TYPE,
-        'maxLength' => 'len',
-        'len' => 'len',
+        'maxLength' => AttributeParam::LEN,
+        'len' => AttributeParam::LEN, // @todo Revise.
         'notNull' => 'notNull',
         'exportDisabled' => CoreAttributeParam::NOT_EXPORTABLE,
         'autoincrement' => 'autoincrement',
         'entity' => 'entity',
         FieldParam::NOT_STORABLE => AttributeParam::NOT_STORABLE,
         'link' => 'relation',
-        'field' => 'foreign',  // @todo change "foreign" to "field"
+        'field' => 'foreign',  // @todo Change 'foreign' to 'field'.
         'unique' => 'unique',
         'index' => 'index',
         'default' => 'default',
@@ -118,7 +118,7 @@ class Converter
 
         $this->indexHelper = $indexHelperFactory->create($platform);
 
-        $this->idParams['len'] = $metadataProvider->getIdLength();
+        $this->idParams[AttributeParam::LEN] = $metadataProvider->getIdLength();
         $this->idParams[AttributeParam::DB_TYPE] = $metadataProvider->getIdDbType();
     }
 
@@ -285,8 +285,8 @@ class Converter
                     case Entity::FOREIGN_TYPE:
                         $attributeParams[AttributeParam::DB_TYPE] = Types::STRING;
 
-                        if (empty($attributeParams['len'])) {
-                            $attributeParams['len'] = $this->defaultLengthMap[Entity::VARCHAR];
+                        if (empty($attributeParams[AttributeParam::LEN])) {
+                            $attributeParams[AttributeParam::LEN] = $this->defaultLengthMap[Entity::VARCHAR];
                         }
 
                         break;
@@ -597,10 +597,10 @@ class Converter
 
         if (
             $type &&
-            !isset($fieldDefs['len']) &&
+            !isset($fieldDefs[AttributeParam::LEN]) &&
             array_key_exists($type, $this->defaultLengthMap)
         ) {
-            $fieldDefs['len'] = $this->defaultLengthMap[$type];
+            $fieldDefs[AttributeParam::LEN] = $this->defaultLengthMap[$type];
         }
 
         return $fieldDefs;
@@ -928,7 +928,7 @@ class Converter
                 ];
 
                 if ($attributeDefs->getLength()) {
-                    $columnDefs['len'] = $attributeDefs->getLength();
+                    $columnDefs[AttributeParam::LEN] = $attributeDefs->getLength();
                 }
 
                 if ($attributeDefs->getParam('default') !== null) {

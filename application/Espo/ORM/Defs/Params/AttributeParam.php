@@ -40,4 +40,9 @@ class AttributeParam
      * A database type.
      */
     public const DB_TYPE = 'dbType';
+
+    /**
+     * A length.
+     */
+    public const LEN = 'len';
 }

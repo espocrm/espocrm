@@ -310,7 +310,7 @@ class Builder
             AttributeDefs::fromRaw([
                 AttributeParam::DB_TYPE => Types::BIGINT,
                 'type' => Entity::ID,
-                'len' => 20,
+                AttributeParam::LEN => 20,
                 'autoincrement' => true,
             ], self::ATTR_ID)
         );
@@ -336,7 +336,7 @@ class Builder
                 AttributeDefs::fromRaw([
                     'type' => Entity::FOREIGN_ID,
                     AttributeParam::DB_TYPE => $this->idDbType,
-                    'len' => $this->idLength,
+                    AttributeParam::LEN => $this->idLength,
                 ], $midKey)
             );
 
@@ -350,7 +350,7 @@ class Builder
             if ($fieldParams['type'] === AttributeType::FOREIGN_ID) {
                 $fieldParams = array_merge([
                     AttributeParam::DB_TYPE => $this->idDbType,
-                    'len' => $this->idLength,
+                    AttributeParam::LEN => $this->idLength,
                 ], $fieldParams);
             }
 

@@ -30,6 +30,7 @@
 namespace Espo\Entities;
 
 use Espo\Core\ORM\Entity;
+use Espo\ORM\Defs\Params\AttributeParam;
 
 class AppLogRecord extends Entity
 {
@@ -58,7 +59,7 @@ class AppLogRecord extends Entity
 
     public function setExceptionClass(?string $exceptionClass): self
     {
-        $len = $this->getAttributeParam('exceptionClass', 'len');
+        $len = $this->getAttributeParam('exceptionClass', AttributeParam::LEN);
 
         if ($exceptionClass && strlen($exceptionClass) > $len) {
             $exceptionClass = substr($exceptionClass, $len);
@@ -71,7 +72,7 @@ class AppLogRecord extends Entity
 
     public function setFile(?string $file): self
     {
-        $len = $this->getAttributeParam('file', 'len');
+        $len = $this->getAttributeParam('file', AttributeParam::LEN);
 
         if ($file && strlen($file) > $len) {
             $file = substr($file, $len);
@@ -98,7 +99,7 @@ class AppLogRecord extends Entity
 
     public function setRequestResourcePath(?string $requestResourcePath): self
     {
-        $len = $this->getAttributeParam('requestResourcePath', 'len');
+        $len = $this->getAttributeParam('requestResourcePath', AttributeParam::LEN);
 
         if ($requestResourcePath && strlen($requestResourcePath) > $len) {
             $requestResourcePath = substr($requestResourcePath, $len);

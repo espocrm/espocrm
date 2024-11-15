@@ -100,7 +100,7 @@ class AttributeDefs
      */
     public function withLength(int $length): self
     {
-        return $this->withParam('len', $length);
+        return $this->withParam(AttributeParam::LEN, $length);
     }
 
     /**

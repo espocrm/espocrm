@@ -39,6 +39,7 @@ use Espo\Core\Utils\Database\Orm\LinkConverters\ManyMany;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
@@ -236,9 +237,9 @@ class RelationConverter
 
             if (
                 $columnDefs['type'] === AttributeType::VARCHAR &&
-                !isset($columnDefs['len'])
+                !isset($columnDefs[AttributeParam::LEN])
             ) {
-                $columnDefs['len'] = self::DEFAULT_VARCHAR_LENGTH;
+                $columnDefs[AttributeParam::LEN] = self::DEFAULT_VARCHAR_LENGTH;
             }
         }
 

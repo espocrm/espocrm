@@ -35,6 +35,7 @@ use Espo\Core\FieldValidation\Exceptions\ValidationError;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Entities\Attachment;
 use Espo\Entities\ImportError;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Name\Attribute;
 use Espo\Tools\Import\Jobs\RunIdle;
 use Espo\ORM\Entity;
@@ -1043,7 +1044,7 @@ class Import
     private function prepareAttributeValue(CoreEntity $entity, string $attribute, $value)
     {
         if ($entity->getAttributeType($attribute) === $entity::VARCHAR) {
-            $maxLength = $entity->getAttributeParam($attribute, 'len');
+            $maxLength = $entity->getAttributeParam($attribute, AttributeParam::LEN);
 
             if ($maxLength && mb_strlen($value) > $maxLength) {
                 $value = substr($value, 0, $maxLength);

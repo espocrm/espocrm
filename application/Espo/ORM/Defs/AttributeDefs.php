@@ -76,7 +76,7 @@ class AttributeDefs
      */
     public function getLength(): ?int
     {
-        return $this->data['len'] ?? null;
+        return $this->data[AttributeParam::LEN] ?? null;
     }
 
     /**
