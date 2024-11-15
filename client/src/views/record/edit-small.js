@@ -28,8 +28,11 @@
 
 import EditRecordView from 'views/record/edit';
 
-class EditSmallRecordView extends EditRecordView {
-
-}
+/**
+ * For bc.
+ *
+ * @deprecated As of v9.0.0. Extend from EditRecordView instead.
+ */
+class EditSmallRecordView extends EditRecordView {}
 
 export default EditSmallRecordView;

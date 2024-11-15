@@ -26,101 +26,105 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/integrations/index', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+export default class IntegrationsIndexView extends View {
 
-        template: 'admin/integrations/index',
+    template = 'admin/integrations/index'
 
-        integrationList: null,
-        integration: null,
+    integrationList = null
+    integration = null
 
-        data: function () {
-            return {
-                integrationList: this.integrationList,
-                integration: this.integration,
-            };
+    data() {
+        return {
+            integrationList: this.integrationList,
+            integration: this.integration,
+        };
+    }
+
+    events = {
+        /** @this IntegrationsIndexView */
+        'click #integrations-menu a.integration-link': function (e) {
+            const name = $(e.currentTarget).data('name');
+
+            this.openIntegration(name);
         },
+    }
 
-        events: {
-            'click #integrations-menu a.integration-link': function (e) {
-                let name = $(e.currentTarget).data('name');
+    setup () {
+        this.integrationList = Object
+            .keys(this.getMetadata().get('integrations') || {})
+            .sort((v1, v2) => this.translate(v1, 'titles', 'Integration')
+                .localeCompare(this.translate(v2, 'titles', 'Integration'))
+            );
 
-                this.openIntegration(name);
-            },
-        },
+        this.integration = this.options.integration || null;
 
-        setup: function () {
-            this.integrationList = Object
-                .keys(this.getMetadata().get('integrations') || {})
-                .sort((v1, v2) => this.translate(v1, 'titles', 'Integration')
-                    .localeCompare(this.translate(v2, 'titles', 'Integration'))
-                );
+        this.on('after:render', () => {
+            this.renderHeader();
 
-            this.integration = this.options.integration || null;
-
-            this.on('after:render', () => {
-                this.renderHeader();
-
-                if (!this.integration) {
-                    this.renderDefaultPage();
-                } else {
-                    this.openIntegration(this.integration);
-                }
-            });
-        },
-
-        openIntegration: function (integration) {
-            this.integration = integration;
-
-            this.getRouter().navigate('#Admin/integrations/name=' + integration, {trigger: false});
-
-            var viewName = this.getMetadata().get('integrations.' + integration + '.view') ||
-                'views/admin/integrations/' +
-                Espo.Utils.camelCaseToHyphen(this.getMetadata().get('integrations.' + integration + '.authMethod'));
-
-            Espo.Ui.notify(' ... ');
-
-            this.createView('content', viewName, {
-                fullSelector: '#integration-content',
-                integration: integration,
-            }, view => {
-                this.renderHeader();
-
-                view.render();
-
-                Espo.Ui.notify(false);
-
-                $(window).scrollTop(0);
-            });
-        },
-
-        renderDefaultPage: function () {
-            $('#integration-header').html('').hide();
-
-            let msg;
-
-            if (this.integrationList.length) {
-                msg = this.translate('selectIntegration', 'messages', 'Integration');
-            } else {
-                msg = '<p class="lead">' + this.translate('noIntegrations', 'messages', 'Integration') + '</p>';
-            }
-
-            $('#integration-content').html(msg);
-        },
-
-        renderHeader: function () {
             if (!this.integration) {
-                $('#integration-header').html('');
-
-                return;
+                this.renderDefaultPage();
+            } else {
+                this.openIntegration(this.integration);
             }
+        });
+    }
 
-            $('#integration-header').show().html(this.translate(this.integration, 'titles', 'Integration'));
-        },
+    openIntegration(integration) {
+        this.integration = integration;
 
-        updatePageTitle: function () {
-            this.setPageTitle(this.getLanguage().translate('Integrations', 'labels', 'Admin'));
-        },
-    });
-});
+        this.getRouter().navigate('#Admin/integrations/name=' + integration, {trigger: false});
+
+        const viewName = this.getMetadata().get('integrations.' + integration + '.view') ||
+            'views/admin/integrations/' +
+            Espo.Utils.camelCaseToHyphen(this.getMetadata().get('integrations.' + integration + '.authMethod'));
+
+        Espo.Ui.notify(' ... ');
+
+        this.createView('content', viewName, {
+            fullSelector: '#integration-content',
+            integration: integration,
+        }, view => {
+            this.renderHeader();
+
+            view.render();
+
+            Espo.Ui.notify(false);
+
+            $(window).scrollTop(0);
+        });
+    }
+
+    afterRender() {
+        this.$header = $('#integration-header');
+    }
+
+    renderDefaultPage() {
+        this.$header.html('').hide();
+
+        let msg;
+
+        if (this.integrationList.length) {
+            msg = this.translate('selectIntegration', 'messages', 'Integration');
+        } else {
+            msg = '<p class="lead">' + this.translate('noIntegrations', 'messages', 'Integration') + '</p>';
+        }
+
+        $('#integration-content').html(msg);
+    }
+
+    renderHeader() {
+        if (!this.integration) {
+            this.$header.html('');
+
+            return;
+        }
+
+        this.$header.show().html(this.translate(this.integration, 'titles', 'Integration'));
+    }
+
+    updatePageTitle() {
+        this.setPageTitle(this.getLanguage().translate('Integrations', 'labels', 'Admin'));
+    }
+}

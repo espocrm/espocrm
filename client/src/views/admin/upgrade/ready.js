@@ -26,48 +26,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/upgrade/ready', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+export default class extends ModalView {
 
-        cssName: 'ready-modal',
+    template = 'admin/upgrade/ready'
 
-        header: false,
+    cssName = 'ready-modal'
+    createButton = true
 
-        template: 'admin/upgrade/ready',
+    data() {
+        return {
+            version: this.upgradeData.version,
+            text: this.translate('upgradeVersion', 'messages', 'Admin')
+                .replace('{version}', this.upgradeData.version)
+        };
+    }
 
-        createButton: true,
+    setup() {
+        this.buttonList = [
+            {
+                name: 'run',
+                label: this.translate('Run Upgrade', 'labels', 'Admin'),
+                style: 'danger',
+                onClick: () => this.actionRun(),
+            },
+            {
+                name: 'cancel',
+                label: 'Cancel',
+            },
+        ]
 
-        data: function () {
-            return {
-                version: this.upgradeData.version,
-                text: this.translate('upgradeVersion', 'messages', 'Admin')
-                    .replace('{version}', this.upgradeData.version)
-            };
-        },
+        this.upgradeData = this.options.upgradeData;
 
-        setup: function () {
-            this.buttonList = [
-                {
-                    name: 'run',
-                    label: this.translate('Run Upgrade', 'labels', 'Admin'),
-                    style: 'danger',
-                },
-                {
-                    name: 'cancel',
-                    label: 'Cancel',
-                },
-            ];
+        this.headerText = this.getLanguage().translate('Ready for upgrade', 'labels', 'Admin');
+    }
 
-            this.upgradeData = this.options.upgradeData;
-
-            this.header = this.getLanguage().translate('Ready for upgrade', 'labels', 'Admin');
-
-        },
-
-        actionRun: function () {
-            this.trigger('run');
-            this.remove();
-        },
-    });
-});
+    actionRun() {
+        this.trigger('run');
+        this.remove();
+    }
+}

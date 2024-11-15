@@ -26,43 +26,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/upgrade/done', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+export default class extends ModalView {
 
-        cssName: 'done-modal',
-        header: false,
-        createButton: true,
+    template ='admin/upgrade/done'
 
-        template: 'admin/upgrade/done',
+    cssName = 'done-modal'
 
-        data: function () {
-            return {
-                version: this.options.version,
-                text: this.translate('upgradeDone', 'messages', 'Admin').replace('{version}', this.options.version),
-            };
-        },
+    data() {
+        return {
+            version: this.options.version,
+            text: this.translate('upgradeDone', 'messages', 'Admin')
+                .replace('{version}', this.options.version),
+        };
+    }
 
-        setup: function () {
-            this.on('remove', () => {
-                window.location.reload();
-            });
+    setup() {
+        this.on('remove', () => window.location.reload());
 
-            this.buttonList = [
-                {
-                    name: 'close',
-                    label: 'Close',
-                    onClick: (dialog) => {
-                        setTimeout(() => {
-                            this.getRouter().navigate('#Admin', {trigger: true});
-                        }, 500);
+        this.buttonList = [
+            {
+                name: 'close',
+                label: 'Close',
+                onClick: dialog => {
+                    setTimeout(() => {
+                        this.getRouter().navigate('#Admin', {trigger: true});
+                    }, 500);
 
-                        dialog.close();
-                    },
-                }
-            ];
+                    dialog.close();
+                },
+            }
+        ]
 
-            this.header = this.getLanguage().translate('Upgraded successfully', 'labels', 'Admin');
-        },
-    });
-});
+        this.headerText = this.getLanguage().translate('Upgraded successfully', 'labels', 'Admin');
+    }
+}

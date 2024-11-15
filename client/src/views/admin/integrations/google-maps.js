@@ -26,8 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/integrations/google-maps', ['views/admin/integrations/edit'], function (Dep) {
+import IntegrationsEditView from 'views/admin/integrations/edit';
 
-    return Dep.extend({
-    });
-});
+export default class extends IntegrationsEditView {}

@@ -28,8 +28,11 @@
 
 import DetailRecordView from 'views/record/detail';
 
-class DetailSmallRecordView extends DetailRecordView {
-
-}
+/**
+ * For bc.
+ *
+ * @deprecated As of v9.0.0. Extend from DetailRecordView instead.
+ */
+class DetailSmallRecordView extends DetailRecordView {}
 
 export default DetailSmallRecordView;
