@@ -29,16 +29,15 @@
 
 namespace tests\integration\Espo\Core\Mail;
 
-
-
 use Espo\Core\Mail\Importer\DefaultParentFinder;
 use Espo\Core\Mail\Message;
 use Espo\Entities\Email;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Lead;
+use tests\integration\Core\BaseTestCase;
 
-class ParentFinderTest extends \tests\integration\Core\BaseTestCase
+class ParentFinderTest extends BaseTestCase
 {
     public function testReplied(): void
     {
@@ -48,7 +47,7 @@ class ParentFinderTest extends \tests\integration\Core\BaseTestCase
             'name' => 'Test'
         ]);
 
-        $email1 = $em->createEntity(Email::ENTITY_TYPE, [
+        $emailOne = $em->createEntity(Email::ENTITY_TYPE, [
             'parentId' => $account->getId(),
             'parentType' => $account->getEntityType(),
             'status' => Email::STATUS_ARCHIVED,
@@ -58,7 +57,7 @@ class ParentFinderTest extends \tests\integration\Core\BaseTestCase
         $email = $em->getNewEntity(Email::ENTITY_TYPE);
 
         $email->set([
-            'repliedId' => $email1->getId(),
+            'repliedId' => $emailOne->getId(),
         ]);
 
         $finder = $this->getInjectableFactory()->create(DefaultParentFinder::class);

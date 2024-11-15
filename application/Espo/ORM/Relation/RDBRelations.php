@@ -35,6 +35,7 @@ use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Mapper\RDBMapper;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Type\RelationType;
@@ -225,7 +226,7 @@ class RDBRelations implements Relations
             throw new LogicException();
         }
 
-        if (!$this->entity->hasId()) {
+        if (!$this->entity->hasId() && $this->getRelationType($relation) === RelationType::HAS_ONE) {
             return null;
         }
 
@@ -240,9 +241,26 @@ class RDBRelations implements Relations
             return $foreignEntity;
         }
 
-        return $this->entityManager
-            ->getRelation($this->entity, $relation)
-            ->findOne();
+        $mapper = $this->entityManager->getMapper();
+
+        /** @noinspection PhpConditionAlreadyCheckedInspection */
+        if (!$mapper instanceof RDBMapper) {
+            throw new RuntimeException("Non RDB mapper.");
+        }
+
+        // We use the Mapper as RDBRelation requires an entity with ID.
+
+        $entity = $mapper->selectRelated($this->entity, $relation);
+
+        if (!$entity) {
+            return null;
+        }
+
+        if (!$entity instanceof Entity) {
+            throw new LogicException("Bad mapper return.");
+        }
+
+        return $entity;
     }
 
     /**
