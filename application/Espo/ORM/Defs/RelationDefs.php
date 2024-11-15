@@ -163,11 +163,11 @@ class RelationDefs
     }
 
     /**
-     * Whether has a foreign relation name.
+     * Whether it has a foreign relation name.
      */
     public function hasForeignRelationName(): bool
     {
-        return isset($this->data['foreign']);
+        return isset($this->data[RelationParam::FOREIGN]);
     }
 
     /**
@@ -195,7 +195,7 @@ class RelationDefs
             throw new RuntimeException("No 'foreign' parameter defined in the relation '{$this->name}'.");
         }
 
-        return $this->data['foreign'];
+        return $this->data[RelationParam::FOREIGN];
     }
 
     /**
@@ -341,7 +341,7 @@ class RelationDefs
             throw new RuntimeException("Can't get conditions for non many-many relationship.");
         }
 
-        return $this->getParam('conditions') ?? [];
+        return $this->getParam(RelationParam::CONDITIONS) ?? [];
     }
 
     /**

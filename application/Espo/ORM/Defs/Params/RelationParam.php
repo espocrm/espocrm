@@ -53,4 +53,36 @@ class RelationParam
      * A foreign entity type.
      */
     public const ENTITY = 'entity';
+
+    /**
+     * A foreign relation name.
+     */
+    public const FOREIGN = 'foreign';
+
+    /**
+     * Conditions.
+     */
+    public const CONDITIONS = 'conditions';
+
+    /**
+     * Additional columns.
+     */
+    public const ADDITIONAL_COLUMNS = 'additionalColumns';
+    /**
+     * A key.
+     * @todo
+     */
+    public const KEY = 'key';
+
+    /**
+     * A foreign key.
+     * @todo
+     */
+    public const FOREIGN_KEY = 'foreignKey';
+
+    /**
+     * Middle keys.
+     * @todo
+     */
+    public const MID_KEYS = 'midKeys';
 }

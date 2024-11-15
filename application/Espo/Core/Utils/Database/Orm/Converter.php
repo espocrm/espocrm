@@ -816,7 +816,7 @@ class Converter
                     $indexData[IndexParam::KEY] = $this->composeIndexKey($indexDefs, ucfirst($relationName));
                 }
 
-                foreach (($relationData['conditions'] ?? []) as $column => $fieldParams) {
+                foreach (($relationData[RelationParam::CONDITIONS] ?? []) as $column => $fieldParams) {
                     $uniqueColumnList[] = $column;
                 }
 
@@ -920,7 +920,7 @@ class Converter
                 ];
             }
 
-            foreach ($relationDefs->getParam('additionalColumns') ?? [] as $columnName => $columnItem) {
+            foreach ($relationDefs->getParam(RelationParam::ADDITIONAL_COLUMNS) ?? [] as $columnName => $columnItem) {
                 $columnItem[AttributeParam::TYPE] ??= Entity::VARCHAR;
 
                 $attributeDefs = AttributeDefs::fromRaw($columnItem, $columnName);

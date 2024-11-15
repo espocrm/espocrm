@@ -128,7 +128,7 @@ class FindRelatedOneType extends BaseFunction implements
             $this->throwError("Bad or not supported link '$link'.");
         }
 
-        $foreignLink = $entity->getRelationParam($link, 'foreign');
+        $foreignLink = $entity->getRelationParam($link, RelationParam::FOREIGN);
 
         if (!$foreignLink) {
             $this->throwError("Not supported link '$link'.");

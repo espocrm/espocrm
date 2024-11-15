@@ -40,6 +40,7 @@ use Espo\ORM\Defs\EntityDefs;
 use Espo\ORM\Defs\IndexDefs;
 use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Defs\Params\EntityParam;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 
@@ -345,7 +346,7 @@ class Builder
         }
 
         /** @var array<string, array<string, mixed>> $additionalColumns */
-        $additionalColumns = $relationDefs->getParam('additionalColumns') ?? [];
+        $additionalColumns = $relationDefs->getParam(RelationParam::ADDITIONAL_COLUMNS) ?? [];
 
         foreach ($additionalColumns as $fieldName => $fieldParams) {
             if ($fieldParams['type'] === AttributeType::FOREIGN_ID) {

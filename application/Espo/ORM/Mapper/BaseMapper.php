@@ -384,7 +384,7 @@ class BaseMapper implements RDBMapper
                     $builder->where([$foreignType => $entity->getEntityType()]);
                 }
 
-                $relConditions = $this->getRelationParam($entity, $relationName, 'conditions');
+                $relConditions = $this->getRelationParam($entity, $relationName, RelationParam::CONDITIONS);
 
                 if ($relConditions) {
                     $builder->where($relConditions);
@@ -622,7 +622,7 @@ class BaseMapper implements RDBMapper
                     self::ATTR_DELETED => false,
                 ];
 
-                $conditions = $this->getRelationParam($entity, $relationName, 'conditions') ?? [];
+                $conditions = $this->getRelationParam($entity, $relationName, RelationParam::CONDITIONS) ?? [];
 
                 foreach ($conditions as $k => $value) {
                     $where[$k] = $value;
@@ -673,7 +673,7 @@ class BaseMapper implements RDBMapper
             throw new RuntimeException("Bad relation key.");
         }
 
-        $additionalColumns = $this->getRelationParam($entity, $relationName, 'additionalColumns') ?? [];
+        $additionalColumns = $this->getRelationParam($entity, $relationName, RelationParam::ADDITIONAL_COLUMNS) ?? [];
 
         if (!isset($additionalColumns[$column])) {
             return null;
@@ -687,7 +687,7 @@ class BaseMapper implements RDBMapper
             self::ATTR_DELETED => false,
         ];
 
-        $conditions = $this->getRelationParam($entity, $relationName, 'conditions') ?? [];
+        $conditions = $this->getRelationParam($entity, $relationName, RelationParam::CONDITIONS) ?? [];
 
         foreach ($conditions as $k => $value) {
             $where[$k] = $value;
@@ -757,12 +757,12 @@ class BaseMapper implements RDBMapper
                     throw new RuntimeException("Bad relation key.");
                 }
 
-                $middleName = ucfirst($this->getRelationParam($entity, $relationName, 'relationName'));
+                $middleName = ucfirst($this->getRelationParam($entity, $relationName, RelationParam::RELATION_NAME));
 
                 $valueList = [];
                 $valueList[] = $entity->getId();
 
-                $conditions = $this->getRelationParam($entity, $relationName, 'conditions') ?? [];
+                $conditions = $this->getRelationParam($entity, $relationName, RelationParam::CONDITIONS) ?? [];
 
                 $columns = [$nearKey];
 
@@ -851,7 +851,7 @@ class BaseMapper implements RDBMapper
         switch ($relType) {
             case Entity::BELONGS_TO:
                 $key = $relationName . 'Id';
-                $foreignRelationName = $this->getRelationParam($entity, $relationName, 'foreign');
+                $foreignRelationName = $this->getRelationParam($entity, $relationName, RelationParam::FOREIGN);
 
                 if (
                     $foreignRelationName &&
@@ -1017,13 +1017,13 @@ class BaseMapper implements RDBMapper
                     return false;
                 }
 
-                if (!$this->getRelationParam($entity, $relationName, 'relationName')) {
+                if (!$this->getRelationParam($entity, $relationName, RelationParam::RELATION_NAME)) {
                     throw new LogicException("Bad relation '$relationName' in '$entityType'.");
                 }
 
-                $middleName = ucfirst($this->getRelationParam($entity, $relationName, 'relationName'));
+                $middleName = ucfirst($this->getRelationParam($entity, $relationName, RelationParam::RELATION_NAME));
                 /** @var array<string, ?scalar> $conditions */
-                $conditions = $this->getRelationParam($entity, $relationName, 'conditions') ?? [];
+                $conditions = $this->getRelationParam($entity, $relationName, RelationParam::CONDITIONS) ?? [];
 
                 $data = $data ?? [];
 
@@ -1239,12 +1239,12 @@ class BaseMapper implements RDBMapper
                     throw new RuntimeException("Bad relation key.");
                 }
 
-                if (!$this->getRelationParam($entity, $relationName, 'relationName')) {
+                if (!$this->getRelationParam($entity, $relationName, RelationParam::RELATION_NAME)) {
                     throw new LogicException("Bad relation '$relationName' in '$entityType'.");
                 }
 
-                $middleName = ucfirst($this->getRelationParam($entity, $relationName, 'relationName'));
-                $conditions = $this->getRelationParam($entity, $relationName, 'conditions') ?? [];
+                $middleName = ucfirst($this->getRelationParam($entity, $relationName, RelationParam::RELATION_NAME));
+                $conditions = $this->getRelationParam($entity, $relationName, RelationParam::CONDITIONS) ?? [];
 
                 $where = [$nearKey => $entity->getId()];
 
@@ -1641,7 +1641,7 @@ class BaseMapper implements RDBMapper
      */
     private function getManyManyJoin(Entity $entity, string $relationName, ?array $conditions = null): array
     {
-        $middleName = $this->getRelationParam($entity, $relationName, 'relationName');
+        $middleName = $this->getRelationParam($entity, $relationName, RelationParam::RELATION_NAME);
 
         $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
@@ -1668,7 +1668,7 @@ class BaseMapper implements RDBMapper
 
         $conditions = $conditions ?? [];
 
-        $relationConditions = $this->getRelationParam($entity, $relationName, 'conditions');
+        $relationConditions = $this->getRelationParam($entity, $relationName, RelationParam::CONDITIONS);
 
         if ($relationConditions) {
             $conditions = array_merge($conditions, $relationConditions);
@@ -1684,7 +1684,7 @@ class BaseMapper implements RDBMapper
      */
     private function getManyManyAdditionalSelect(Entity $entity, string $relationName): array
     {
-        $foreign = $this->getRelationParam($entity, $relationName, 'foreign');
+        $foreign = $this->getRelationParam($entity, $relationName, RelationParam::FOREIGN);
         $foreignEntityType = $this->getRelationParam($entity, $relationName, RelationParam::ENTITY);
 
         $middleName = lcfirst($this->getRelationParam($entity, $relationName, RelationParam::RELATION_NAME));

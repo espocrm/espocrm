@@ -61,7 +61,7 @@ class RelationDefs
     public function getType(): ?string
     {
         /** @var ?RelationType::* */
-        return $this->getParam('type');
+        return $this->getParam(RelationParam::TYPE);
     }
 
     /**
@@ -71,7 +71,7 @@ class RelationDefs
      */
     public function withType(string $type): self
     {
-        return $this->withParam('type', $type);
+        return $this->withParam(RelationParam::TYPE, $type);
     }
 
     /**
@@ -95,7 +95,7 @@ class RelationDefs
      */
     public function withForeignRelationName(?string $name): self
     {
-        return $this->withParam('foreign', $name);
+        return $this->withParam(RelationParam::FOREIGN, $name);
     }
 
     /**
@@ -103,7 +103,7 @@ class RelationDefs
      */
     public function getForeignRelationName(): ?string
     {
-        return $this->getParam('foreign');
+        return $this->getParam(RelationParam::FOREIGN);
     }
 
     /**
@@ -209,7 +209,7 @@ class RelationDefs
     {
         $obj = clone $this;
 
-        return $obj->withParam('conditions', $conditions);
+        return $obj->withParam(RelationParam::CONDITIONS, $conditions);
     }
 
     /**
@@ -220,11 +220,11 @@ class RelationDefs
         $obj = clone $this;
 
         /** @var array<string, array<string, mixed>> $list */
-        $list = $obj->getParam('additionalColumns') ?? [];
+        $list = $obj->getParam(RelationParam::ADDITIONAL_COLUMNS) ?? [];
 
         $list[$attributeDefs->getName()] = $attributeDefs->toAssoc();
 
-        return $obj->withParam('additionalColumns', $list);
+        return $obj->withParam(RelationParam::ADDITIONAL_COLUMNS, $list);
     }
 
     /**

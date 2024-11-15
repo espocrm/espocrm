@@ -35,6 +35,7 @@ use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
 use Espo\Core\Utils\Database\Orm\FieldConverter;
 use Espo\Entities\Attachment;
 use Espo\ORM\Defs\FieldDefs;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
 
@@ -80,7 +81,7 @@ class File implements FieldConverter
                 ->withForeignEntityType(Attachment::ENTITY_TYPE)
                 ->withKey($idName)
                 ->withForeignKey('id')
-                ->withParam('foreign', null);
+                ->withParam(RelationParam::FOREIGN, null);
         }
 
         $entityDefs = EntityDefs::create()

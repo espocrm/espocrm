@@ -34,6 +34,7 @@ use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\FieldProcessing\Saver\Params;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ORM\Repository\Option\SaveOption;
+use Espo\ORM\Defs\Params\RelationParam;
 
 /**
  * Saves a link-multiple field or has-many relation set in a link stub attribute.
@@ -112,7 +113,7 @@ class LinkMultipleSaver
         $allColumns = $columns;
 
         if (is_array($columns)) {
-            $additionalColumns = $defs->getRelation($name)->getParam('additionalColumns') ?? [];
+            $additionalColumns = $defs->getRelation($name)->getParam(RelationParam::ADDITIONAL_COLUMNS) ?? [];
 
             foreach ($columns as $column => $field) {
                 if (!array_key_exists($column, $additionalColumns)) {

@@ -33,6 +33,7 @@ use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Templates\Entities\Company;
 use Espo\Core\Templates\Entities\Person;
 use Espo\ORM\Defs\Params\FieldParam;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Type\AttributeType;
 use Espo\Tools\LinkManager\Hook\CreateHook;
 use Espo\Tools\LinkManager\Params;
@@ -92,7 +93,7 @@ class TargetListCreate implements CreateHook
         $this->metadata->set('entityDefs', TargetList::ENTITY_TYPE, [
             'links' => [
                 $foreignLink => [
-                    'additionalColumns' => [
+                    RelationParam::ADDITIONAL_COLUMNS => [
                         'optedOut' => [
                             'type' => AttributeType::BOOL,
                         ]

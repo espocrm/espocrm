@@ -3253,7 +3253,7 @@ abstract class BaseQueryComposer implements QueryComposer
         /** @noinspection PhpDeprecationInspection */
         $alias = $this->sanitize($alias);
 
-        $relationConditions = $this->getRelationParam($entity, $relationName, 'conditions');
+        $relationConditions = $this->getRelationParam($entity, $relationName, RelationParam::CONDITIONS);
         $foreignEntityType = $this->getRelationParam($entity, $relationName, RelationParam::ENTITY);
 
         if ($relationConditions) {

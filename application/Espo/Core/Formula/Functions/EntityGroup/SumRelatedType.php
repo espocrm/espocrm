@@ -84,7 +84,7 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
             throw new Error();
         }
 
-        $foreignLink = $entity->getRelationParam($link, 'foreign');
+        $foreignLink = $entity->getRelationParam($link, RelationParam::FOREIGN);
         $foreignLinkAlias = $foreignLink . 'SumRelated';
 
         if (empty($foreignLink)) {

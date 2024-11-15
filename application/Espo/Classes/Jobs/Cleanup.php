@@ -622,7 +622,7 @@ class Cleanup implements JobDataLess
                     $midKey => $entity->getId(),
                 ];
 
-                $conditions = $entity->getRelationParam($relation, 'conditions') ?? [];
+                $conditions = $entity->getRelationParam($relation, RelationParam::CONDITIONS) ?? [];
 
                 foreach ($conditions as $key => $value) {
                     $where[$key] = $value;

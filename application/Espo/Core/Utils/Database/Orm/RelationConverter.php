@@ -55,8 +55,8 @@ class RelationConverter
     /** @var string[] */
     private $mergeParams = [
         RelationParam::RELATION_NAME,
-        'conditions',
-        'additionalColumns',
+        RelationParam::CONDITIONS,
+        RelationParam::ADDITIONAL_COLUMNS,
         'noJoin',
         RelationParam::INDEXES,
     ];
@@ -75,8 +75,8 @@ class RelationConverter
      */
     public function process(string $name, array $params, string $entityType): ?array
     {
-        $foreignEntityType = $params['entity'] ?? null;
-        $foreignLinkName = $params['foreign'] ?? null;
+        $foreignEntityType = $params[RelationParam::ENTITY] ?? null;
+        $foreignLinkName = $params[RelationParam::FOREIGN] ?? null;
 
         /** @var ?array<string, mixed> $foreignParams */
         $foreignParams = $foreignEntityType && $foreignLinkName ?
@@ -227,12 +227,12 @@ class RelationConverter
      */
     private function correct(array &$relationDefs): void
     {
-        if (!isset($relationDefs['additionalColumns'])) {
+        if (!isset($relationDefs[RelationParam::ADDITIONAL_COLUMNS])) {
             return;
         }
 
         /** @var array<string, array<string, mixed>> $additionalColumns */
-        $additionalColumns = &$relationDefs['additionalColumns'];
+        $additionalColumns = &$relationDefs[RelationParam::ADDITIONAL_COLUMNS];
 
         foreach ($additionalColumns as &$columnDefs) {
             $columnDefs[AttributeParam::TYPE] ??= AttributeType::VARCHAR;
@@ -245,6 +245,6 @@ class RelationConverter
             }
         }
 
-        $relationDefs['additionalColumns'] = $additionalColumns;
+        $relationDefs[RelationParam::ADDITIONAL_COLUMNS] = $additionalColumns;
     }
 }
