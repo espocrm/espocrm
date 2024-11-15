@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils\Metadata;
 
 use Espo\Core\Utils\Util;
+use Espo\ORM\Defs\Params\FieldParam;
 
 class BuilderHelper
 {
@@ -41,7 +42,7 @@ class BuilderHelper
     private array $copiedDefParams = [
         'readOnly',
         'disabled',
-        'notStorable',
+        FieldParam::NOT_STORABLE,
         'layoutListDisabled',
         'layoutDetailDisabled',
         'layoutMassUpdateDisabled',

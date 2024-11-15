@@ -30,6 +30,7 @@
 namespace Espo\ORM\QueryComposer;
 
 use Espo\Core\ORM\Type\FieldType;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\BaseEntity;
@@ -1881,7 +1882,7 @@ abstract class BaseQueryComposer implements QueryComposer
             }
 
             if (
-                $this->getAttributeParam($entity, $attribute0, 'notStorable') &&
+                $this->getAttributeParam($entity, $attribute0, AttributeParam::NOT_STORABLE) &&
                 $entity->getAttributeType($attribute0) !== Entity::FOREIGN
             ) {
                 return null;
@@ -1916,7 +1917,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (
-            $this->getAttributeParam($entity, $attribute, 'notStorable') &&
+            $this->getAttributeParam($entity, $attribute, AttributeParam::NOT_STORABLE) &&
             $attributeType !== Entity::FOREIGN
         ) {
             return null;
@@ -2382,7 +2383,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (
-            $this->getAttributeParam($entity, $attribute, 'notStorable') &&
+            $this->getAttributeParam($entity, $attribute, AttributeParam::NOT_STORABLE) &&
             $attributeType !== Entity::FOREIGN
         ) {
             return null;

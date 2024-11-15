@@ -62,7 +62,7 @@ class MetadataProvider
     public function isFieldNotStorable(string $entityType, string $field): bool
     {
         return (bool) $this->metadata->get([
-            'entityDefs', $entityType, 'fields', $field, 'notStorable'
+            'entityDefs', $entityType, 'fields', $field, Defs\Params\FieldParam::NOT_STORABLE
         ]);
     }
 

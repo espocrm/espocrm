@@ -29,6 +29,8 @@
 
 namespace Espo\ORM\Defs;
 
+use Espo\ORM\Defs\Params\AttributeParam;
+
 /**
  * Attribute definitions.
  */
@@ -82,7 +84,7 @@ class AttributeDefs
      */
     public function isNotStorable(): bool
     {
-        return $this->data['notStorable'] ?? false;
+        return $this->data[AttributeParam::NOT_STORABLE] ?? false;
     }
 
     /**

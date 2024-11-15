@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils\Database\Orm\Defs;
 
 use Espo\Core\Utils\Util;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Type\AttributeType;
 
 /**
@@ -91,7 +92,7 @@ class AttributeDefs
      */
     public function withNotStorable(bool $value = true): self
     {
-        return $this->withParam('notStorable', $value);
+        return $this->withParam(AttributeParam::NOT_STORABLE, $value);
     }
 
     /**

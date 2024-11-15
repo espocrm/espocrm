@@ -37,6 +37,7 @@ use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\FieldConverter;
 use Espo\ORM\Defs\FieldDefs;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Type\AttributeType;
 
@@ -192,7 +193,7 @@ class Currency implements FieldConverter
                         ],
                     ],
                 ],
-                'notStorable' => true,
+                AttributeParam::NOT_STORABLE => true,
                 'order' => [
                     'order' => [
                         [$expr, '{direction}'],
@@ -323,7 +324,7 @@ class Currency implements FieldConverter
                         'whereClause' => [$name . '!=' => null],
                     ],
                 ],
-                'notStorable' => true,
+                AttributeParam::NOT_STORABLE => true,
                 'order' => [
                     'order' => [
                         [$mulExpression, '{direction}'],

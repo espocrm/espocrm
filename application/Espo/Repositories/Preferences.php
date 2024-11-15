@@ -30,6 +30,7 @@
 namespace Espo\Repositories;
 
 use Espo\Entities\Autofollow;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\EntityFactory;
@@ -255,7 +256,7 @@ class Preferences implements Repository,
         $data = [];
 
         foreach ($this->data[$entity->getId()] as $field => $value) {
-            if (empty($fields[$field]['notStorable'])) {
+            if (empty($fields[$field][FieldParam::NOT_STORABLE])) {
                 $data[$field] = $value;
             }
         }

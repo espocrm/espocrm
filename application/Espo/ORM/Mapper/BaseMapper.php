@@ -29,6 +29,7 @@
 
 namespace Espo\ORM\Mapper;
 
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Entity;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Collection;
@@ -1561,7 +1562,7 @@ class BaseMapper implements RDBMapper
             if (
                 $onlyStorable &&
                 (
-                    $this->getAttributeParam($entity, $attribute, 'notStorable') ||
+                    $this->getAttributeParam($entity, $attribute, AttributeParam::NOT_STORABLE) ||
                     $this->getAttributeParam($entity, $attribute, 'autoincrement') ||
                     (
                         $this->getAttributeParam($entity, $attribute, 'source') &&

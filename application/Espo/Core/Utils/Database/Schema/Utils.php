@@ -32,6 +32,7 @@ namespace Espo\Core\Utils\Database\Schema;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Defs\IndexDefs;
+use Espo\ORM\Defs\Params\AttributeParam;
 
 class Utils
 {
@@ -188,7 +189,7 @@ class Utils
     {
         $length = 0;
 
-        if (isset($ormFieldDefs['notStorable']) && $ormFieldDefs['notStorable']) {
+        if (isset($ormFieldDefs[AttributeParam::NOT_STORABLE]) && $ormFieldDefs[AttributeParam::NOT_STORABLE]) {
             return $length;
         }
 

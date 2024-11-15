@@ -32,7 +32,7 @@ namespace Espo\Core\Utils\Database\Orm;
 use Doctrine\DBAL\Types\Types;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Name\Field;
-use Espo\Core\ORM\Defs\AttributeParam;
+use Espo\Core\ORM\Defs\AttributeParam as CoreAttributeParam;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Database\ConfigDataProvider;
 use Espo\Core\Utils\Database\MetadataProvider;
@@ -40,6 +40,8 @@ use Espo\Core\Utils\Util;
 use Espo\ORM\Defs\AttributeDefs;
 use Espo\ORM\Defs\FieldDefs;
 use Espo\ORM\Defs\IndexDefs;
+use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Metadata;
@@ -74,10 +76,10 @@ class Converter
         'maxLength' => 'len',
         'len' => 'len',
         'notNull' => 'notNull',
-        'exportDisabled' => AttributeParam::NOT_EXPORTABLE,
+        'exportDisabled' => CoreAttributeParam::NOT_EXPORTABLE,
         'autoincrement' => 'autoincrement',
         'entity' => 'entity',
-        'notStorable' => 'notStorable',
+        FieldParam::NOT_STORABLE => AttributeParam::NOT_STORABLE,
         'link' => 'relation',
         'field' => 'foreign',  // @todo change "foreign" to "field"
         'unique' => 'unique',
@@ -252,7 +254,10 @@ class Converter
                 // Remove fields without type.
                 if (
                     !isset($attributeParams['type']) &&
-                    (!isset($attributeParams['notStorable']) || $attributeParams['notStorable'] === false)
+                    (
+                        !isset($attributeParams[AttributeParam::NOT_STORABLE]) ||
+                        $attributeParams[AttributeParam::NOT_STORABLE] === false
+                    )
                 ) {
                     unset($entityParams['attributes'][$attribute]);
 
@@ -379,7 +384,7 @@ class Converter
             ],
             'name' => [
                 'type' => $entityMetadata['fields']['name']['type'] ?? Entity::VARCHAR,
-                'notStorable' => true,
+                AttributeParam::NOT_STORABLE => true,
             ],
             Attribute::DELETED => [
                 'type' => Entity::BOOL,
@@ -503,20 +508,20 @@ class Converter
             if (!isset($entityMetadata['fields'][Field::IS_FOLLOWED])) {
                 $ormMetadata[$entityType]['attributes'][Field::IS_FOLLOWED] = [
                     'type' => Entity::BOOL,
-                    'notStorable' => true,
-                    AttributeParam::NOT_EXPORTABLE => true,
+                    AttributeParam::NOT_STORABLE => true,
+                    CoreAttributeParam::NOT_EXPORTABLE => true,
                 ];
 
                 $ormMetadata[$entityType]['attributes'][Field::FOLLOWERS . 'Ids'] = [
                     'type' => Entity::JSON_ARRAY,
-                    'notStorable' => true,
-                    AttributeParam::NOT_EXPORTABLE => true,
+                    AttributeParam::NOT_STORABLE => true,
+                    CoreAttributeParam::NOT_EXPORTABLE => true,
                 ];
 
                 $ormMetadata[$entityType]['attributes'][Field::FOLLOWERS . 'Names'] = [
                     'type' => Entity::JSON_OBJECT,
-                    'notStorable' => true,
-                    AttributeParam::NOT_EXPORTABLE => true,
+                    AttributeParam::NOT_STORABLE => true,
+                    CoreAttributeParam::NOT_EXPORTABLE => true,
                 ];
             }
         }
@@ -526,8 +531,8 @@ class Converter
             if (!isset($entityMetadata['fields'][Field::IS_STARRED])) {
                 $ormMetadata[$entityType]['attributes'][Field::IS_STARRED] = [
                     'type' => Entity::BOOL,
-                    'notStorable' => true,
-                    AttributeParam::NOT_EXPORTABLE => true,
+                    AttributeParam::NOT_STORABLE => true,
+                    CoreAttributeParam::NOT_EXPORTABLE => true,
                     'readOnly' => true,
                 ];
             }
@@ -538,7 +543,7 @@ class Converter
             $ormMetadata[$entityType]['attributes']['versionNumber'] = [
                 'type' => Entity::INT,
                 'dbType' => Types::BIGINT,
-                AttributeParam::NOT_EXPORTABLE => true,
+                CoreAttributeParam::NOT_EXPORTABLE => true,
             ];
         }
 
@@ -566,7 +571,7 @@ class Converter
         }
 
         if ($fieldParams['type'] == 'base' && isset($fieldParams['dbType'])) {
-            $fieldParams['notStorable'] = false;
+            $fieldParams[FieldParam::NOT_STORABLE] = false;
         }
 
         if (!empty($fieldTypeMetadata['skipOrmDefs']) || !empty($fieldParams['skipOrmDefs'])) {
@@ -583,7 +588,7 @@ class Converter
         $fieldDefs = $this->getInitValues($fieldParams);
 
         if (isset($fieldParams['db']) && $fieldParams['db'] === false) {
-            $fieldDefs['notStorable'] = true;
+            $fieldDefs[AttributeParam::NOT_STORABLE] = true;
         }
 
         $type = $fieldDefs['type'] ?? null;
@@ -704,7 +709,7 @@ class Converter
 
             $fieldType = $defs['type'];
 
-            if (!empty($defs['notStorable'])) {
+            if (!empty($defs[FieldParam::NOT_STORABLE])) {
                 continue;
             }
 

@@ -31,6 +31,7 @@ namespace Espo\Repositories;
 
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Entities\ArrayValue as ArrayValueEntity;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Entity;
 use Espo\Core\Repositories\Database;
 
@@ -51,7 +52,7 @@ class ArrayValue extends Database
             throw new LogicException("ArrayValue: Can't store non array attribute.");
         }
 
-        if ($entity->getAttributeType('notStorable')) {
+        if ($entity->getAttributeParam($attribute, AttributeParam::NOT_STORABLE)) {
             return;
         }
 
