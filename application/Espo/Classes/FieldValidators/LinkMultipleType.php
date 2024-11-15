@@ -31,6 +31,7 @@ namespace Espo\Classes\FieldValidators;
 
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Defs;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 
@@ -219,7 +220,7 @@ class LinkMultipleType
             return false;
         }
 
-        $maxLength = $fieldDefs->getParam('maxLength');
+        $maxLength = $fieldDefs->getParam(FieldParam::MAX_LENGTH);
         $pattern = $fieldDefs->getParam('pattern');
 
         if ($maxLength && mb_strlen($value) > $maxLength) {

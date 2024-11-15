@@ -35,6 +35,7 @@ use Espo\Core\PhoneNumber\Util;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Defs;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Entity;
 
 use stdClass;
@@ -119,7 +120,7 @@ class PhoneType
         $value = $entity->get($field);
 
         /** @var int $maxLength */
-        $maxLength = $this->metadata->get(['entityDefs', 'PhoneNumber', 'fields', 'name', 'maxLength']) ??
+        $maxLength = $this->metadata->get(['entityDefs', 'PhoneNumber', 'fields', 'name', FieldParam::MAX_LENGTH]) ??
             self::DEFAULT_MAX_LENGTH;
 
         if ($value && mb_strlen($value) > $maxLength) {

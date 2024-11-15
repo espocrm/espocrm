@@ -31,6 +31,7 @@ namespace Espo\Classes\FieldValidators;
 
 use Espo\Core\Name\Field;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Entity;
 
 use stdClass;
@@ -107,7 +108,8 @@ class EmailType
         $value = $entity->get($field);
 
         /** @var int $maxLength */
-        $maxLength = $this->metadata->get(['entityDefs', 'EmailAddress', 'fields', Field::NAME, 'maxLength']) ??
+        $maxLength = $this->metadata
+                ->get(['entityDefs', 'EmailAddress', 'fields', Field::NAME, FieldParam::MAX_LENGTH]) ??
             self::DEFAULT_MAX_LENGTH;
 
         if ($value && mb_strlen($value) > $maxLength) {

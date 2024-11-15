@@ -40,6 +40,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
 use Espo\Core\Utils\Util;
 
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Type\AttributeType;
 use Espo\Tools\EntityManager\NameUtil;
 use RuntimeException;
@@ -58,7 +59,7 @@ class FieldManager
     /** @var array<string, array<string, mixed>> */
     private array $defaultParams = [
         FieldType::ENUM => [
-            'maxLength' => 100,
+            FieldParam::MAX_LENGTH => 100,
         ],
     ];
 

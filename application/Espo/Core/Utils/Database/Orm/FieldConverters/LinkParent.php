@@ -34,6 +34,7 @@ use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\FieldConverter;
 use Espo\ORM\Defs\FieldDefs;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Type\AttributeType;
 
 class LinkParent implements FieldConverter
@@ -58,7 +59,7 @@ class LinkParent implements FieldConverter
 
         $typeDefs = AttributeDefs::create($typeName)
             ->withType(AttributeType::FOREIGN_TYPE)
-            ->withParam('notNull', false)
+            ->withParam(AttributeParam::NOT_NULL, false)
             ->withParam('index', $name)
             ->withLength(self::TYPE_LENGTH)
             ->withParamsMerged([

@@ -32,6 +32,7 @@ namespace Espo\Repositories;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Entities\ArrayValue as ArrayValueEntity;
 use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Entity;
 use Espo\Core\Repositories\Database;
 
@@ -109,7 +110,7 @@ class ArrayValue extends Database
             ->getDefs()
             ->getEntity(ArrayValueEntity::ENTITY_TYPE)
             ->getField('value')
-            ->getParam('maxLength') ?? self::ITEM_MAX_LENGTH;
+            ->getParam(FieldParam::MAX_LENGTH) ?? self::ITEM_MAX_LENGTH;
 
         foreach ($valueList as $value) {
             if (in_array($value, $toSkipValueList)) {

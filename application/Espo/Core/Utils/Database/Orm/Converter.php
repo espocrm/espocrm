@@ -75,9 +75,9 @@ class Converter
     private array $paramMap = [
         'type' => 'type',
         FieldParam::DB_TYPE => AttributeParam::DB_TYPE,
-        'maxLength' => AttributeParam::LEN,
+        FieldParam::MAX_LENGTH => AttributeParam::LEN,
         'len' => AttributeParam::LEN, // @todo Revise.
-        'notNull' => 'notNull',
+        FieldParam::NOT_NULL => AttributeParam::NOT_NULL,
         'exportDisabled' => CoreAttributeParam::NOT_EXPORTABLE,
         'autoincrement' => 'autoincrement',
         'entity' => 'entity',
@@ -278,7 +278,7 @@ class Converter
 
                     case Entity::FOREIGN_ID:
                         $attributeParams = array_merge($this->idParams, $attributeParams);
-                        $attributeParams['notNull'] = false;
+                        $attributeParams[AttributeParam::NOT_NULL] = false;
 
                         break;
 
@@ -581,10 +581,10 @@ class Converter
         }
 
         if (
-            isset($fieldParams['notNull']) && !$fieldParams['notNull'] &&
+            isset($fieldParams[FieldParam::NOT_NULL]) && !$fieldParams[FieldParam::NOT_NULL] &&
             isset($fieldParams['required']) && $fieldParams['required']
         ) {
-            unset($fieldParams['notNull']);
+            unset($fieldParams[FieldParam::NOT_NULL]);
         }
 
         $fieldDefs = $this->getInitValues($fieldParams);

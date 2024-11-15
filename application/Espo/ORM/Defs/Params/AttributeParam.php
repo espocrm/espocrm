@@ -45,4 +45,9 @@ class AttributeParam
      * A length.
      */
     public const LEN = 'len';
+
+    /**
+     * Not null.
+     */
+    public const NOT_NULL = 'notNull';
 }

@@ -33,6 +33,7 @@ use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
 use Espo\Core\Utils\Database\Orm\LinkConverter;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Defs\RelationDefs as LinkDefs;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
@@ -70,7 +71,7 @@ class BelongsToParent implements LinkConverter
             ->withAttribute(
                 AttributeDefs::create($typeName)
                     ->withType(AttributeType::FOREIGN_TYPE)
-                    ->withParam('notNull', false) // Revise whether needed.
+                    ->withParam(AttributeParam::NOT_NULL, false) // Revise whether needed.
                     ->withParam('index', $name)
                     ->withLength(self::TYPE_LENGTH)
             )

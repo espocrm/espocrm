@@ -40,4 +40,14 @@ class FieldParam
      * A database type.
      */
     public const DB_TYPE = 'dbType';
+
+    /**
+     * A max length.
+     */
+    public const MAX_LENGTH = 'maxLength';
+
+    /**
+     * Not null.
+     */
+    public const NOT_NULL = 'notNull';
 }
