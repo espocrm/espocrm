@@ -119,7 +119,7 @@ class PostgresqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             'UPDATE "comment" SET "name" = \'1\' WHERE "comment"."id" IN ' .
             '(SELECT "comment"."id" AS "id" FROM "comment" ' .
-            'JOIN "post" AS "post" ON "comment"."post_id" = "post"."id" ' .
+            'JOIN "post" AS "post" ON "comment"."post_id" = "post"."id" AND "post"."deleted" = false ' .
             'WHERE "comment"."name" = \'post.name\' AND "comment"."deleted" = false ' .
             'ORDER BY "comment"."name" ASC LIMIT 1 OFFSET 0 FOR UPDATE)';
 
@@ -138,6 +138,7 @@ class PostgresqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             'SELECT "comment"."name" AS "name", "comment"."post_id" AS "postId", "post"."name" AS "postName" ' .
             'FROM "comment" LEFT JOIN "post" AS "post" ON "comment"."post_id" = "post"."id" ' .
+            'AND "post"."deleted" = false ' .
             'WHERE "comment"."deleted" = false';
 
         $this->assertEquals($expectedSql, $sql);
@@ -191,7 +192,7 @@ class PostgresqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             'DELETE FROM "comment" WHERE "comment"."id" IN ' .
             '(SELECT "comment"."id" AS "id" FROM "comment" ' .
-            'JOIN "post" AS "post" ON "comment"."post_id" = "post"."id" ' .
+            'JOIN "post" AS "post" ON "comment"."post_id" = "post"."id" AND "post"."deleted" = false ' .
             'WHERE "comment"."name" = \'post.name\' AND "comment"."deleted" = false ' .
             'ORDER BY "comment"."name" ASC LIMIT 1 OFFSET 0)';
 

@@ -290,7 +290,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "UPDATE `comment` " .
-            "JOIN `post` AS `post` ON comment.post_id = post.id ".
+            "JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 ".
             "SET comment.name = post.name ".
             "WHERE comment.name = 'test'";
 
@@ -360,7 +360,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "UPDATE `comment` " .
-            "JOIN `post` AS `post` ON comment.post_id = post.id ".
+            "JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 ".
             "SET comment.name = post.name";
 
         $this->assertEquals($expectedSql, $sql);
@@ -580,7 +580,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `postName`, ".
             "comment.name AS `name`, comment.deleted AS `deleted` FROM `comment` " .
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE comment.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
@@ -608,31 +608,27 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT comment.id AS `id`, comment.name AS `name`, post.name AS `postName` FROM `comment` " .
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE comment.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
 
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
-            'select' => array('id', 'name', 'postName'),
-            'leftJoins' => array('post'),
+            'select' => ['id', 'name', 'postName'],
+            'leftJoins' => ['post'],
         ]));
-        $expectedSql =
-            "SELECT comment.id AS `id`, comment.name AS `name`, post.name AS `postName` FROM `comment` " .
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
-            "WHERE comment.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
 
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
-            'select' => array('id', 'name'),
-            'leftJoins' => array('post')
+            'select' => ['id', 'name'],
+            'leftJoins' => ['post']
         ]));
         $expectedSql =
             "SELECT comment.id AS `id`, comment.name AS `name` FROM `comment` " .
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE comment.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
@@ -716,14 +712,15 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
     {
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
-            'select' => array('id', 'postId', 'post.name', 'COUNT:id'),
-            'leftJoins' => array('post'),
-            'groupBy' => array('postId', 'post.name')
+            'select' => ['id', 'postId', 'post.name', 'COUNT:id'],
+            'leftJoins' => ['post'],
+            'groupBy' => ['postId', 'post.name']
         ]));
+
         $expectedSql =
             "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `post.name`, ".
             "COUNT(comment.id) AS `COUNT:id` FROM `comment` " .
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE comment.deleted = 0 " .
             "GROUP BY comment.post_id, post.name";
         $this->assertEquals($expectedSql, $sql);
@@ -731,16 +728,18 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
-            'select' => array('id', 'COUNT:id', 'MONTH:post.createdAt'),
-            'leftJoins' => array('post'),
-            'groupBy' => array('MONTH:post.createdAt')
+            'select' => ['id', 'COUNT:id', 'MONTH:post.createdAt'],
+            'leftJoins' => ['post'],
+            'groupBy' => ['MONTH:post.createdAt']
         ]));
+
         $expectedSql =
             "SELECT comment.id AS `id`, COUNT(comment.id) AS `COUNT:id`, ".
             "DATE_FORMAT(post.created_at, '%Y-%m') AS `MONTH:post.createdAt` FROM `comment` " .
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE comment.deleted = 0 " .
             "GROUP BY DATE_FORMAT(post.created_at, '%Y-%m')";
+
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -1507,7 +1506,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt` FROM `comment` " .
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE comment.deleted = 0 " .
             "GROUP BY YEAR(post.created_at) ".
             "ORDER BY 2 ASC";
@@ -1523,7 +1522,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:id`, post.name AS `post.name` FROM `comment` " .
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE comment.deleted = 0 " .
             "GROUP BY post.name ".
             "ORDER BY FIELD(post.name, 'Hello', 'Test') DESC";
@@ -1531,19 +1530,19 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
-            'select' => array('COUNT:id', 'YEAR:post.createdAt', 'post.name'),
-            'leftJoins' => array('post'),
-            'groupBy' => array('YEAR:post.createdAt', 'post.name'),
-            'orderBy' => array(
-                array(2, 'DESC'),
-                array('LIST:post.name:Test,Hello')
-            )
+            'select' => ['COUNT:id', 'YEAR:post.createdAt', 'post.name'],
+            'leftJoins' => ['post'],
+            'groupBy' => ['YEAR:post.createdAt', 'post.name'],
+            'orderBy' => [
+                [2, 'DESC'],
+                ['LIST:post.name:Test,Hello']
+            ]
         ]));
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt`, ".
             "post.name AS `post.name` ".
             "FROM `comment` " .
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE comment.deleted = 0 " .
             "GROUP BY YEAR(post.created_at), post.name ".
             "ORDER BY 2 DESC, FIELD(post.name, 'Hello', 'Test') DESC";
@@ -1564,7 +1563,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT DISTINCT comment.id AS `id`, post.name AS `post.name` FROM `comment` " .
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE comment.deleted = 0 " .
             "ORDER BY FIELD(post.name, 'Hello', 'Test') DESC";
 
@@ -1592,7 +1591,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE comment.deleted = 0 " .
             "ORDER BY FIELD(post.name, 'Hello', 'Test') DESC";
 
@@ -1695,7 +1694,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:comment.id`, comment.post_id AS `postId`, post.name AS `postName` ".
             "FROM `comment` " .
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE post.created_by_id = 'id_1' AND comment.deleted = 0 " .
             "GROUP BY comment.post_id";
         $this->assertEquals($expectedSql, $sql);
@@ -2069,7 +2068,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:comment.id`, comment.post_id AS `postId`, post.name AS `postName` " .
-            "FROM `comment` LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+            "FROM `comment` LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE post.created_by_id = 'id_1' AND comment.deleted = 0 " .
             "GROUP BY comment.post_id " .
             "HAVING COUNT(comment.id) > 1";
@@ -3235,7 +3234,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
                 "post.name AS `postName`, comment.name AS `name`, " .
             "comment.deleted AS `deleted` ".
             "FROM `comment` AS `comment` ".
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id ".
+            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 ".
             "WHERE comment.deleted = 0";
 
         $query = Select::fromRaw([

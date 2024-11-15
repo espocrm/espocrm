@@ -1999,9 +1999,24 @@ abstract class BaseQueryComposer implements QueryComposer
         $leftColumnPart = $this->quoteColumn("$fromAlias." . $this->toDb($key));
         $rightColumnPart = $this->quoteColumn("$alias." . $this->toDb($foreignKey));
 
-        return
-            "JOIN " . $this->quoteIdentifier($table) . " AS " . $this->quoteIdentifier($alias) . " ON ".
-            "$leftColumnPart = $rightColumnPart";
+        $hasDeleted = $this->metadata
+            ->getDefs()
+            ->tryGetEntity($foreignEntityType)
+            ?->hasAttribute(Attribute::DELETED);
+
+        $tablePart = $this->quoteIdentifier($table);
+        $aliasPart = $this->quoteIdentifier($alias);
+
+        $part = "JOIN $tablePart AS $aliasPart ON $leftColumnPart = $rightColumnPart";
+
+        if ($hasDeleted) {
+            $deletedColumnPart = $this->quoteColumn("$alias." . Attribute::DELETED);
+            $deletedValuePart = $this->quote(false);
+
+            $part .= " AND $deletedColumnPart = $deletedValuePart";
+        }
+
+        return $part;
     }
 
     /**
