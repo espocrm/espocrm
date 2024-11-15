@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\ORM\Defs\Params\FieldParam;
+
 class FieldUtil
 {
     /** @var array<string, array<string, string[]>> */
@@ -113,7 +115,7 @@ class FieldUtil
             return [];
         }
 
-        $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $name, 'type']);
+        $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $name, FieldParam::TYPE]);
 
         if (!$type) {
             return [];

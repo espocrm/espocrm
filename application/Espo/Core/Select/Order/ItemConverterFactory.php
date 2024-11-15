@@ -36,6 +36,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Binding\ContextualBinder;
 
+use Espo\ORM\Defs\Params\FieldParam;
 use RuntimeException;
 
 class ItemConverterFactory
@@ -84,7 +85,7 @@ class ItemConverterFactory
         }
 
         $type = $this->metadata->get([
-            'entityDefs', $entityType, 'fields', $field, 'type'
+            'entityDefs', $entityType, 'fields', $field, FieldParam::TYPE
         ]);
 
         if (!$type) {

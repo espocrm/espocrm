@@ -29,6 +29,7 @@
 
 namespace Espo\ORM\Defs;
 
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 
 use RuntimeException;
@@ -70,7 +71,7 @@ class RelationDefs
      */
     public function getType(): string
     {
-        $type = $this->data['type'] ?? null;
+        $type = $this->data[RelationParam::TYPE] ?? null;
 
         if ($type === null) {
             throw new RuntimeException("Relation '{$this->name}' has no type.");

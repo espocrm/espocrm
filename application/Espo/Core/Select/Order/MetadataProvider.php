@@ -30,6 +30,7 @@
 namespace Espo\Core\Select\Order;
 
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\EntityManager;
 
 class MetadataProvider
@@ -40,7 +41,7 @@ class MetadataProvider
     public function getFieldType(string $entityType, string $field): ?string
     {
         return $this->metadata->get([
-            'entityDefs', $entityType, 'fields', $field, 'type'
+            'entityDefs', $entityType, 'fields', $field, FieldParam::TYPE
         ]) ?? null;
     }
 

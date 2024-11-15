@@ -42,6 +42,7 @@ use Espo\ORM\Defs\FieldDefs;
 use Espo\ORM\Defs\IndexDefs;
 use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Defs\Params\FieldParam;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Metadata;
@@ -73,7 +74,7 @@ class Converter
      * @var array<string, string>
      */
     private array $paramMap = [
-        'type' => 'type',
+        FieldParam::TYPE => AttributeParam::TYPE,
         FieldParam::DB_TYPE => AttributeParam::DB_TYPE,
         FieldParam::MAX_LENGTH => AttributeParam::LEN,
         'len' => AttributeParam::LEN, // @todo Revise.
@@ -255,7 +256,7 @@ class Converter
 
                 // Remove fields without type.
                 if (
-                    !isset($attributeParams['type']) &&
+                    !isset($attributeParams[AttributeParam::TYPE]) &&
                     (
                         !isset($attributeParams[AttributeParam::NOT_STORABLE]) ||
                         $attributeParams[AttributeParam::NOT_STORABLE] === false
@@ -266,7 +267,7 @@ class Converter
                     continue;
                 }
 
-                $attributeType = $attributeParams['type'] ?? null;
+                $attributeType = $attributeParams[AttributeParam::TYPE] ?? null;
 
                 switch ($attributeType) {
                     case Entity::ID:
@@ -306,7 +307,7 @@ class Converter
                         $constName = strtoupper(Util::toUnderScore($attributeType));
 
                         if (!defined('Espo\\ORM\\Type\\AttributeType::' . $constName)) {
-                            $attributeParams['type'] = $this->defaultAttributeType;
+                            $attributeParams[AttributeParam::TYPE] = $this->defaultAttributeType;
                         }
 
                         break;
@@ -325,7 +326,7 @@ class Converter
     {
         foreach ($ormMetadata as $entityType => &$entityParams) {
             foreach ($entityParams['attributes'] as $attribute => &$attributeParams) {
-                $attributeType = $attributeParams['type'] ?? null;
+                $attributeType = $attributeParams[AttributeParam::TYPE] ?? null;
 
                 switch ($attributeType) {
                     case Entity::FOREIGN:
@@ -364,7 +365,7 @@ class Converter
 
         $foreignParams = $data[$foreignEntityType]['attributes'][$foreign] ?? [];
 
-        return $foreignParams['type'] ?? null;
+        return $foreignParams[AttributeParam::TYPE] ?? null;
     }
 
     /**
@@ -376,30 +377,28 @@ class Converter
         $entityMetadata['fields'] ??= [];
 
         // List of unmerged fields with default field definitions in $output.
-        $unmergedFields = [
-            'name',
-        ];
+        $unmergedFields = [Field::NAME];
 
         $output = [
             Attribute::ID => [
-                'type' => Entity::ID,
+                AttributeParam::TYPE => Entity::ID,
             ],
             'name' => [
-                'type' => $entityMetadata['fields']['name']['type'] ?? Entity::VARCHAR,
+                AttributeParam::TYPE => $entityMetadata['fields'][Field::NAME][FieldParam::TYPE] ?? Entity::VARCHAR,
                 AttributeParam::NOT_STORABLE => true,
             ],
             Attribute::DELETED => [
-                'type' => Entity::BOOL,
+                AttributeParam::TYPE => Entity::BOOL,
                 'default' => false,
             ],
         ];
 
         if ($entityMetadata['noDeletedAttribute'] ?? false) {
-            unset($output['deleted']);
+            unset($output[Attribute::DELETED]);
         }
 
         foreach ($entityMetadata['fields'] as $attribute => $attributeParams) {
-            if (empty($attributeParams['type'])) {
+            if (empty($attributeParams[AttributeParam::TYPE])) {
                 continue;
             }
 
@@ -450,7 +449,7 @@ class Converter
         $entityMetadata = $ormMetadata[$entityType];
 
         foreach ($entityMetadata['attributes'] as $field => $itemParams) {
-            $type = $itemParams['type'] ?? null;
+            $type = $itemParams[AttributeParam::TYPE] ?? null;
 
             if (!$type) {
                 continue;
@@ -509,19 +508,19 @@ class Converter
         if ($scopeDefs['stream'] ?? false) {
             if (!isset($entityMetadata['fields'][Field::IS_FOLLOWED])) {
                 $ormMetadata[$entityType]['attributes'][Field::IS_FOLLOWED] = [
-                    'type' => Entity::BOOL,
+                    AttributeParam::TYPE => Entity::BOOL,
                     AttributeParam::NOT_STORABLE => true,
                     CoreAttributeParam::NOT_EXPORTABLE => true,
                 ];
 
                 $ormMetadata[$entityType]['attributes'][Field::FOLLOWERS . 'Ids'] = [
-                    'type' => Entity::JSON_ARRAY,
+                    AttributeParam::TYPE => Entity::JSON_ARRAY,
                     AttributeParam::NOT_STORABLE => true,
                     CoreAttributeParam::NOT_EXPORTABLE => true,
                 ];
 
                 $ormMetadata[$entityType]['attributes'][Field::FOLLOWERS . 'Names'] = [
-                    'type' => Entity::JSON_OBJECT,
+                    AttributeParam::TYPE => Entity::JSON_OBJECT,
                     AttributeParam::NOT_STORABLE => true,
                     CoreAttributeParam::NOT_EXPORTABLE => true,
                 ];
@@ -532,7 +531,7 @@ class Converter
         if ($scopeDefs['stars'] ?? false) {
             if (!isset($entityMetadata['fields'][Field::IS_STARRED])) {
                 $ormMetadata[$entityType]['attributes'][Field::IS_STARRED] = [
-                    'type' => Entity::BOOL,
+                    AttributeParam::TYPE => Entity::BOOL,
                     AttributeParam::NOT_STORABLE => true,
                     CoreAttributeParam::NOT_EXPORTABLE => true,
                     'readOnly' => true,
@@ -543,7 +542,7 @@ class Converter
         // @todo Refactor.
         if ($this->metadata->get(['entityDefs', $entityType, 'optimisticConcurrencyControl'])) {
             $ormMetadata[$entityType]['attributes']['versionNumber'] = [
-                'type' => Entity::INT,
+                AttributeParam::TYPE => Entity::INT,
                 AttributeParam::DB_TYPE => Types::BIGINT,
                 CoreAttributeParam::NOT_EXPORTABLE => true,
             ];
@@ -572,7 +571,7 @@ class Converter
             $fieldParams = Util::merge($fieldParams, $fieldTypeMetadata['fieldDefs']);
         }
 
-        if ($fieldParams['type'] == self::FIELD_TYPE_BASE && isset($fieldParams[FieldParam::DB_TYPE])) {
+        if ($fieldParams[FieldParam::TYPE] == self::FIELD_TYPE_BASE && isset($fieldParams[FieldParam::DB_TYPE])) {
             $fieldParams[FieldParam::NOT_STORABLE] = false;
         }
 
@@ -593,7 +592,7 @@ class Converter
             $fieldDefs[AttributeParam::NOT_STORABLE] = true;
         }
 
-        $type = $fieldDefs['type'] ?? null;
+        $type = $fieldDefs[FieldParam::TYPE] ?? null;
 
         if (
             $type &&
@@ -611,7 +610,7 @@ class Converter
      */
     private function prepareFieldParamsBeforeConvert(array &$fieldParams): void
     {
-        $type = $fieldParams['type'] ?? null;
+        $type = $fieldParams[FieldParam::TYPE] ?? null;
 
         if ($type === FieldType::ENUM) {
             if (($fieldParams['default'] ?? null) === '') {
@@ -681,8 +680,8 @@ class Converter
             }
         }
 
-        if (isset($attributeParams['type'])) {
-            $values['fieldType'] = $attributeParams['type'];
+        if (isset($attributeParams[AttributeParam::TYPE])) {
+            $values['fieldType'] = $attributeParams[AttributeParam::TYPE];
         }
 
         return $values;
@@ -705,11 +704,11 @@ class Converter
         foreach ($fieldList as $field) {
             $defs = $this->metadata->get(['entityDefs', $entityType, 'fields', $field], []);
 
-            if (empty($defs['type'])) {
+            if (empty($defs[FieldParam::TYPE])) {
                 continue;
             }
 
-            $fieldType = $defs['type'];
+            $fieldType = $defs[FieldParam::TYPE];
 
             if (!empty($defs[FieldParam::NOT_STORABLE])) {
                 continue;
@@ -779,7 +778,7 @@ class Converter
 
         if (isset($defs['relations'])) {
             foreach ($defs['relations'] as &$relationData) {
-                $type = $relationData['type'] ?? null;
+                $type = $relationData[RelationParam::TYPE] ?? null;
 
                 if ($type !== Entity::MANY_MANY) {
                     continue;
@@ -892,12 +891,12 @@ class Converter
                 'skipRebuild' => true,
                 'attributes' => [
                     Attribute::ID => [
-                        'type' => Entity::ID,
+                        AttributeParam::TYPE => Entity::ID,
                         'autoincrement' => true,
                         AttributeParam::DB_TYPE => Types::BIGINT, // ignored because of `skipRebuild`
                     ],
                     Attribute::DELETED => [
-                        'type' => Entity::BOOL,
+                        AttributeParam::TYPE => Entity::BOOL,
                     ],
                 ],
             ];
@@ -914,17 +913,17 @@ class Converter
 
             foreach ($midKeys as $key) {
                 $itemDefs['attributes'][$key] = [
-                    'type' => Entity::FOREIGN_ID,
+                    AttributeParam::TYPE => Entity::FOREIGN_ID,
                 ];
             }
 
             foreach ($relationDefs->getParam('additionalColumns') ?? [] as $columnName => $columnItem) {
-                $columnItem['type'] ??= Entity::VARCHAR;
+                $columnItem[AttributeParam::TYPE] ??= Entity::VARCHAR;
 
                 $attributeDefs = AttributeDefs::fromRaw($columnItem, $columnName);
 
                 $columnDefs = [
-                    'type' => $attributeDefs->getType(),
+                    AttributeParam::TYPE => $attributeDefs->getType(),
                 ];
 
                 if ($attributeDefs->getLength()) {

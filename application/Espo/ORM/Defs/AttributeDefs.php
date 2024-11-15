@@ -68,7 +68,7 @@ class AttributeDefs
      */
     public function getType(): string
     {
-        return $this->data['type'];
+        return $this->data[AttributeParam::TYPE];
     }
 
     /**

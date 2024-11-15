@@ -29,8 +29,16 @@
 
 namespace Espo\ORM\Defs\Params;
 
+/**
+ * A field parameter.
+ */
 class FieldParam
 {
+    /**
+     * A type.
+     */
+    public const TYPE = 'type';
+
     /**
      * Not stored in database.
      */

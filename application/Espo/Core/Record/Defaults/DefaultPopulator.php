@@ -38,6 +38,7 @@ use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Entities\User;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use RuntimeException;
@@ -85,7 +86,7 @@ class DefaultPopulator implements Populator
         }
 
         foreach ($this->fieldUtil->getEntityTypeFieldList($entityType) as $field) {
-            $type = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
+            $type = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, FieldParam::TYPE);
 
             if (
                 $type === FieldType::CURRENCY &&

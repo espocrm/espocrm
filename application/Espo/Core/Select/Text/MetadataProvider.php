@@ -32,6 +32,7 @@ namespace Espo\Core\Select\Text;
 use Espo\Core\Utils\Metadata;
 
 use Espo\ORM\Defs;
+use Espo\ORM\Defs\Params\FieldParam;
 
 class MetadataProvider
 {
@@ -69,7 +70,7 @@ class MetadataProvider
     public function isFullTextSearchSupportedForField(string $entityType, string $field): bool
     {
         $fieldType = $this->metadata->get([
-            'entityDefs', $entityType, 'fields', $field, 'type'
+            'entityDefs', $entityType, 'fields', $field, FieldParam::TYPE
         ]);
 
         return (bool) $this->metadata->get([

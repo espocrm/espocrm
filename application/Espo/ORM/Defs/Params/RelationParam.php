@@ -30,32 +30,12 @@
 namespace Espo\ORM\Defs\Params;
 
 /**
- * An attribute parameter.
+ * A relation parameter.
  */
-class AttributeParam
+class RelationParam
 {
     /**
      * A type.
      */
     public const TYPE = 'type';
-
-    /**
-     * Not stored in database.
-     */
-    public const NOT_STORABLE = 'notStorable';
-
-    /**
-     * A database type.
-     */
-    public const DB_TYPE = 'dbType';
-
-    /**
-     * A length.
-     */
-    public const LEN = 'len';
-
-    /**
-     * Not null.
-     */
-    public const NOT_NULL = 'notNull';
 }

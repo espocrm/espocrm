@@ -69,7 +69,7 @@ class FieldDefs
      */
     public function getType(): string
     {
-        $type = $this->data['type'] ?? null;
+        $type = $this->data[FieldParam::TYPE] ?? null;
 
         if ($type === null) {
             throw new RuntimeException("Field '$this->name' has no type.");

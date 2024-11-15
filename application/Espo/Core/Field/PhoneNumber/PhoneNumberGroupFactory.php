@@ -31,6 +31,7 @@ namespace Espo\Core\Field\PhoneNumber;
 
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\PhoneNumber as PhoneNumberEntity;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\Repositories\PhoneNumber as Repository;
 
 use Espo\ORM\Entity;
@@ -63,7 +64,7 @@ class PhoneNumberGroupFactory implements ValueFactory
 
     public function isCreatableFromEntity(Entity $entity, string $field): bool
     {
-        $type = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
+        $type = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields', $field, FieldParam::TYPE]);
 
         if ($type !== FieldType::PHONE) {
             return false;

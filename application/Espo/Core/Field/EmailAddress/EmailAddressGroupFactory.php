@@ -31,6 +31,7 @@ namespace Espo\Core\Field\EmailAddress;
 
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\EmailAddress as EmailAddressEntity;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\Repositories\EmailAddress as Repository;
 
 use Espo\ORM\Entity;
@@ -63,7 +64,7 @@ class EmailAddressGroupFactory implements ValueFactory
 
     public function isCreatableFromEntity(Entity $entity, string $field): bool
     {
-        $type = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
+        $type = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields', $field, FieldParam::TYPE]);
 
         if ($type !== FieldType::EMAIL) {
             return false;

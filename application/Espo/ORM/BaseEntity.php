@@ -31,6 +31,8 @@ namespace Espo\ORM;
 
 use Espo\ORM\DataLoader\EmptyLoader;
 use Espo\ORM\DataLoader\Loader;
+use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Relation\EmptyRelations;
 use Espo\ORM\Relation\Relations;
@@ -720,7 +722,7 @@ class BaseEntity implements Entity
             return null;
         }
 
-        return $this->attributesDefs[$attribute]['type'] ?? null;
+        return $this->attributesDefs[$attribute][AttributeParam::TYPE] ?? null;
     }
 
     /**
@@ -732,7 +734,7 @@ class BaseEntity implements Entity
             return null;
         }
 
-        return $this->relationsDefs[$relation]['type'] ?? null;
+        return $this->relationsDefs[$relation][RelationParam::TYPE] ?? null;
     }
 
     /**

@@ -64,7 +64,7 @@ class AttributeDefs
     public function getType(): ?string
     {
         /** @var ?AttributeType::* $value */
-        $value = $this->getParam('type');
+        $value = $this->getParam(AttributeParam::TYPE);
 
         return $value;
     }
@@ -76,7 +76,7 @@ class AttributeDefs
      */
     public function withType(string $type): self
     {
-        return $this->withParam('type', $type);
+        return $this->withParam(AttributeParam::TYPE, $type);
     }
 
     /**

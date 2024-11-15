@@ -30,6 +30,7 @@
 namespace Espo\ORM\Mapper;
 
 use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Collection;
@@ -678,7 +679,7 @@ class BaseMapper implements RDBMapper
             return null;
         }
 
-        $columnType = $additionalColumns[$column]['type'] ?? Entity::VARCHAR;
+        $columnType = $additionalColumns[$column][AttributeParam::TYPE] ?? Entity::VARCHAR;
 
         $where = [
             $nearKey => $entity->getId(),
@@ -854,7 +855,7 @@ class BaseMapper implements RDBMapper
 
                 if (
                     $foreignRelationName &&
-                    $this->getRelationParam($relEntity, $foreignRelationName, 'type') === Entity::HAS_ONE
+                    $this->getRelationParam($relEntity, $foreignRelationName, RelationParam::TYPE) === Entity::HAS_ONE
                 ) {
                     $where = [
                         self::ATTR_ID . '!=' => $entity->getId(),
