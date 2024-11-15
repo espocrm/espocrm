@@ -682,7 +682,7 @@ class LinkFieldView extends BaseFieldView {
             this.$elementName.on('blur', e => {
                 setTimeout(() => {
                     if (this.mode === this.MODE_EDIT && this.model.has(this.nameName)) {
-                        e.currentTarget.value = this.model.get(this.nameName);
+                        e.currentTarget.value = this.model.get(this.nameName) || this.model.get(this.idName);
                     }
                 }, 100);
             });
