@@ -26,69 +26,68 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/notifications', ['views/settings/record/edit'], function (Dep) {
+import SettingsEditRecordView from 'views/settings/record/edit';
 
-    return Dep.extend({
+export default class extends SettingsEditRecordView {
 
-        layoutName: 'notifications',
+    layoutName = 'notifications'
 
-        saveAndContinueEditingAction: false,
+    saveAndContinueEditingAction = false
 
-        dynamicLogicDefs: {
-            fields: {
-                assignmentEmailNotificationsEntityList: {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                type: 'isTrue',
-                                attribute: 'assignmentEmailNotifications',
-                            }
-                        ],
-                    },
+    dynamicLogicDefs = {
+        fields: {
+            assignmentEmailNotificationsEntityList: {
+                visible: {
+                    conditionGroup: [
+                        {
+                            type: 'isTrue',
+                            attribute: 'assignmentEmailNotifications',
+                        }
+                    ],
                 },
-                adminNotificationsNewVersion: {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                type: 'isTrue',
-                                attribute: 'adminNotifications',
-                            }
-                        ],
-                    },
+            },
+            adminNotificationsNewVersion: {
+                visible: {
+                    conditionGroup: [
+                        {
+                            type: 'isTrue',
+                            attribute: 'adminNotifications',
+                        }
+                    ],
                 },
-                adminNotificationsNewExtensionVersion: {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                type: 'isTrue',
-                                attribute: 'adminNotifications',
-                            }
-                        ],
-                    },
+            },
+            adminNotificationsNewExtensionVersion: {
+                visible: {
+                    conditionGroup: [
+                        {
+                            type: 'isTrue',
+                            attribute: 'adminNotifications',
+                        }
+                    ],
                 },
             },
         },
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.controlStreamEmailNotificationsEntityList();
-            this.listenTo(this.model, 'change', function (model) {
-                if (model.hasChanged('streamEmailNotifications') || model.hasChanged('portalStreamEmailNotifications')) {
-                    this.controlStreamEmailNotificationsEntityList();
-                }
-            }, this);
-        },
+        this.controlStreamEmailNotificationsEntityList();
 
-        controlStreamEmailNotificationsEntityList: function () {
-            if (this.model.get('streamEmailNotifications') || this.model.get('portalStreamEmailNotifications')) {
-                this.showField('streamEmailNotificationsEntityList');
-                this.showField('streamEmailNotificationsTypeList');
-            } else {
-                this.hideField('streamEmailNotificationsEntityList');
-                this.hideField('streamEmailNotificationsTypeList');
+        this.listenTo(this.model, 'change', (model) => {
+            if (model.hasChanged('streamEmailNotifications') || model.hasChanged('portalStreamEmailNotifications')) {
+                this.controlStreamEmailNotificationsEntityList();
             }
-        }
+        });
+    }
 
-    });
-});
+    controlStreamEmailNotificationsEntityList() {
+        if (this.model.get('streamEmailNotifications') || this.model.get('portalStreamEmailNotifications')) {
+            this.showField('streamEmailNotificationsEntityList');
+            this.showField('streamEmailNotificationsTypeList');
+        } else {
+            this.hideField('streamEmailNotificationsEntityList');
+            this.hideField('streamEmailNotificationsTypeList');
+        }
+    }
+}

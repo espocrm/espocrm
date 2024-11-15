@@ -26,56 +26,54 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/currency', ['views/settings/record/edit'], function (Dep) {
+import SettingsEditRecordView from 'views/settings/record/edit';
 
-    return Dep.extend({
+export default class extends SettingsEditRecordView {
 
-        layoutName: 'currency',
+    layoutName = 'currency'
 
-        saveAndContinueEditingAction: false,
+    saveAndContinueEditingAction = false
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.listenTo(this.model, 'change:currencyList', function (model, value, o) {
-                if (!o.ui) {
-                    return;
-                }
+        this.listenTo(this.model, 'change:currencyList', (model, value, o) => {
+            if (!o.ui) {
+                return;
+            }
 
-                var currencyList = Espo.Utils.clone(model.get('currencyList'));
+            const currencyList = Espo.Utils.clone(model.get('currencyList'));
 
-                this.setFieldOptionList('defaultCurrency', currencyList);
-                this.setFieldOptionList('baseCurrency', currencyList);
-
-                this.controlCurrencyRatesVisibility();
-            }, this);
-
-            this.listenTo(this.model, 'change', function (model, o) {
-                if (!o.ui) {
-                    return;
-                }
-
-                if (model.hasChanged('currencyList') || model.hasChanged('baseCurrency')) {
-                    var currencyRatesField = this.getFieldView('currencyRates');
-
-                    if (currencyRatesField) {
-                        currencyRatesField.reRender();
-                    }
-                }
-            }, this);
+            this.setFieldOptionList('defaultCurrency', currencyList);
+            this.setFieldOptionList('baseCurrency', currencyList);
 
             this.controlCurrencyRatesVisibility();
-        },
+        });
 
-        controlCurrencyRatesVisibility: function () {
-            var currencyList = this.model.get('currencyList');
-
-            if (currencyList.length < 2) {
-                this.hideField('currencyRates');
-            } else {
-                this.showField('currencyRates');
+        this.listenTo(this.model, 'change', (model, o) => {
+            if (!o.ui) {
+                return;
             }
-        },
 
-    });
-});
+            if (model.hasChanged('currencyList') || model.hasChanged('baseCurrency')) {
+                const currencyRatesField = this.getFieldView('currencyRates');
+
+                if (currencyRatesField) {
+                    currencyRatesField.reRender();
+                }
+            }
+        });
+
+        this.controlCurrencyRatesVisibility();
+    }
+
+    controlCurrencyRatesVisibility() {
+        const currencyList = this.model.get('currencyList');
+
+        if (currencyList.length < 2) {
+            this.hideField('currencyRates');
+        } else {
+            this.showField('currencyRates');
+        }
+    }
+}

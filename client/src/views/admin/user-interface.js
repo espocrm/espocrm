@@ -26,38 +26,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/user-interface', ['views/settings/record/edit'], function (Dep) {
+import SettingsEditRecordView from 'views/settings/record/edit';
 
-    return Dep.extend({
+export default class extends SettingsEditRecordView {
 
-        layoutName: 'userInterface',
+    layoutName = 'userInterface'
 
-        saveAndContinueEditingAction: false,
+    saveAndContinueEditingAction = false
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.controlColorsField();
-            this.listenTo(this.model, 'change:scopeColorsDisabled', this.controlColorsField, this);
+        this.controlColorsField();
+        this.listenTo(this.model, 'change:scopeColorsDisabled', () => this.controlColorsField());
 
-            this.on('save', (initialAttributes) => {
-                if (
-                    this.model.get('theme') !== initialAttributes.theme ||
-                    (this.model.get('themeParams').navbar || {}) !== (initialAttributes.themeParams).navbar
-                ) {
-                    this.setConfirmLeaveOut(false);
+        this.on('save', initialAttributes => {
+            if (
+                this.model.get('theme') !== initialAttributes.theme ||
+                (this.model.get('themeParams').navbar || {}) !== (initialAttributes.themeParams).navbar
+            ) {
+                this.setConfirmLeaveOut(false);
 
-                    window.location.reload();
-                }
-            });
-        },
-
-        controlColorsField: function () {
-            if (this.model.get('scopeColorsDisabled')) {
-                this.hideField('tabColorsDisabled');
-            } else {
-                this.showField('tabColorsDisabled');
+                window.location.reload();
             }
-        },
-    });
-});
+        });
+    }
+
+    controlColorsField() {
+        if (this.model.get('scopeColorsDisabled')) {
+            this.hideField('tabColorsDisabled');
+        } else {
+            this.showField('tabColorsDisabled');
+        }
+    }
+}

@@ -26,112 +26,113 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/template-manager/index', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+export default class TemplateManagerIndexView extends View {
 
-        template: 'admin/template-manager/index',
+    template = 'admin/template-manager/index'
 
-        data: function () {
-            return {
-                templateDataList: this.templateDataList,
+    data() {
+        return {
+            templateDataList: this.templateDataList,
+        };
+    }
+
+    events = {
+        /** @this TemplateManagerIndexView */
+        'click [data-action="selectTemplate"]': function (e) {
+            const name = $(e.currentTarget).data('name');
+
+            this.getRouter().checkConfirmLeaveOut(() => {
+                this.selectTemplate(name);
+            });
+        }
+    }
+
+    setup() {
+        this.templateDataList = [];
+
+        const templateList = Object.keys(this.getMetadata().get(['app', 'templates']) || {});
+
+        templateList.sort((v1, v2) => {
+            return this.translate(v1, 'templates', 'Admin')
+                .localeCompare(this.translate(v2, 'templates', 'Admin'));
+        });
+
+        templateList.forEach(template =>{
+            const defs = /** @type {Record} */
+                this.getMetadata().get(['app', 'templates', template]);
+
+            if (defs.scopeListConfigParam || defs.scopeList) {
+                const scopeList = Espo.Utils
+                    .clone(defs.scopeList || this.getConfig().get(defs.scopeListConfigParam) || []);
+
+                scopeList.sort((v1, v2) => {
+                    return this.translate(v1, 'scopeNames')
+                        .localeCompare(this.translate(v2, 'scopeNames'));
+                });
+
+                scopeList.forEach(scope => {
+                    const o = {
+                        name: `${template}_${scope}`,
+                        text: this.translate(template, 'templates', 'Admin') + ' · ' +
+                            this.translate(scope, 'scopeNames'),
+                    };
+
+                    this.templateDataList.push(o);
+                });
+
+                return;
+            }
+
+            const o = {
+                name: template,
+                text: this.translate(template, 'templates', 'Admin'),
             };
-        },
 
-        events: {
-            'click [data-action="selectTemplate"]': function (e) {
-                var name = $(e.currentTarget).data('name');
+            this.templateDataList.push(o);
+        });
 
-                this.getRouter().checkConfirmLeaveOut(() => {
-                    this.selectTemplate(name);
-                });
-            }
-        },
+        this.selectedTemplate = this.options.name;
 
-        setup: function () {
-            this.templateDataList = [];
-
-            var templateList = Object.keys(this.getMetadata().get(['app', 'templates']) || {});
-
-            templateList.sort((v1, v2) => {
-                return this.translate(v1, 'templates', 'Admin')
-                    .localeCompare(this.translate(v2, 'templates', 'Admin'));
+        if (this.selectedTemplate) {
+            this.once('after:render', () => {
+                this.selectTemplate(this.selectedTemplate, true);
             });
+        }
+    }
 
-            templateList.forEach(template =>{
-                var defs = this.getMetadata().get(['app', 'templates', template]);
+    selectTemplate(name) {
+        this.selectedTemplate = name;
 
-                if (defs.scopeListConfigParam || defs.scopeList) {
-                    var scopeList = Espo.Utils.clone(
-                        defs.scopeList || this.getConfig().get(defs.scopeListConfigParam) || []);
+        this.getRouter().navigate('#Admin/templateManager/name=' + this.selectedTemplate, {trigger: false});
 
-                    scopeList.sort((v1, v2) => {
-                        return this.translate(v1, 'scopeNames')
-                            .localeCompare(this.translate(v2, 'scopeNames'));
-                    });
+        this.createRecordView();
 
-                    scopeList.forEach(scope => {
-                        let o = {
-                            name: template + '_' + scope,
-                            text: this.translate(template, 'templates', 'Admin') + ' :: ' +
-                                this.translate(scope, 'scopeNames'),
-                        };
+        this.$el.find('[data-action="selectTemplate"]')
+            .removeClass('disabled')
+            .removeAttr('disabled');
 
-                        this.templateDataList.push(o);
-                    });
+        this.$el.find(`[data-name="${name}"][data-action="selectTemplate"]`)
+            .addClass('disabled')
+            .attr('disabled', 'disabled');
+    }
 
-                    return;
-                }
+    createRecordView() {
+        Espo.Ui.notify(' ... ');
 
-                var o = {
-                    name: template,
-                    text: this.translate(template, 'templates', 'Admin'),
-                };
+        this.createView('record', 'views/admin/template-manager/edit', {
+            selector: '.template-record',
+            name: this.selectedTemplate,
+        }, (view) => {
+            view.render();
 
-                this.templateDataList.push(o);
-            });
+            Espo.Ui.notify(false);
+            $(window).scrollTop(0);
+        });
+    }
 
-            this.selectedTemplate = this.options.name;
-
-            if (this.selectedTemplate) {
-                this.once('after:render', () => {
-                    this.selectTemplate(this.selectedTemplate, true);
-                });
-            }
-        },
-
-        selectTemplate: function (name) {
-            this.selectedTemplate = name;
-
-            this.getRouter().navigate('#Admin/templateManager/name=' + this.selectedTemplate, {trigger: false});
-
-            this.createRecordView();
-
-            this.$el.find('[data-action="selectTemplate"]')
-                .removeClass('disabled')
-                .removeAttr('disabled');
-
-            this.$el.find('[data-name="'+name+'"][data-action="selectTemplate"]')
-                .addClass('disabled')
-                .attr('disabled', 'disabled');
-        },
-
-        createRecordView: function () {
-            Espo.Ui.notify(' ... ');
-
-            this.createView('record', 'views/admin/template-manager/edit', {
-                selector: '.template-record',
-                name: this.selectedTemplate,
-            }, (view) => {
-                view.render();
-
-                Espo.Ui.notify(false);
-                $(window).scrollTop(0);
-            });
-        },
-
-        updatePageTitle: function () {
-            this.setPageTitle(this.getLanguage().translate('Template Manager', 'labels', 'Admin'));
-        },
-    });
-});
+    updatePageTitle() {
+        this.setPageTitle(this.getLanguage().translate('Template Manager', 'labels', 'Admin'));
+    }
+}

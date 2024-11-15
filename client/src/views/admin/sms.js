@@ -26,10 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/sms', ['views/settings/record/edit'], function (Dep) {
+import SettingsEditRecordView from 'views/settings/record/edit';
 
-    return Dep.extend({
+export default class extends SettingsEditRecordView {
 
-        layoutName: 'sms',
-    });
-});
+    layoutName = 'sms'
+}

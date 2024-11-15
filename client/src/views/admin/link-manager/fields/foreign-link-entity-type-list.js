@@ -26,50 +26,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/link-manager/fields/foreign-link-entity-type-list', ['views/fields/checklist'], function (Dep) {
+import ChecklistFieldView from 'views/fields/checklist';
 
-    return Dep.extend({
+export default class extends ChecklistFieldView {
 
-        setup: function () {
-            this.params.translation = 'Global.scopeNames';
+    setup() {
+        this.params.translation = 'Global.scopeNames';
 
-            Dep.prototype.setup.call(this);
-        },
+        super.setup();
+    }
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+    afterRender () {
+        super.afterRender();
 
-            this.controlOptionsAvailability();
-        },
+        this.controlOptionsAvailability();
+    }
 
-        controlOptionsAvailability: function () {
-            this.params.options.forEach(item => {
-                var link = this.model.get('link');
-                var linkForeign = this.model.get('linkForeign');
-                var entityType = this.model.get('entity');
+    controlOptionsAvailability() {
+        this.params.options.forEach(item => {
+            const link = this.model.get('link');
+            const linkForeign = this.model.get('linkForeign');
+            const entityType = this.model.get('entity');
 
-                var linkDefs = this.getMetadata().get(['entityDefs', item, 'links']) || {};
+            const linkDefs = this.getMetadata().get(['entityDefs', item, 'links']) || {};
 
-                var isFound = false;
+            let isFound = false;
 
-                for (let i in linkDefs) {
-                    if (
-                        linkDefs[i].foreign === link &&
-                        !linkDefs[i].isCustom &&
-                        linkDefs[i].entity === entityType
-                    ) {
-                        isFound = true;
-                    } else if (i === linkForeign && linkDefs[i].type !== 'hasChildren') {
-                        isFound = true;
-                    }
+            for (const i in linkDefs) {
+                if (
+                    linkDefs[i].foreign === link &&
+                    !linkDefs[i].isCustom &&
+                    linkDefs[i].entity === entityType
+                ) {
+                    isFound = true;
+                } else if (i === linkForeign && linkDefs[i].type !== 'hasChildren') {
+                    isFound = true;
                 }
+            }
 
-                if (isFound) {
-                    this.$el
-                        .find('input[data-name="checklistItem-foreignLinkEntityTypeList-'+item+'"]')
-                        .attr('disabled', 'disabled');
-                }
-            });
-        },
-    });
-});
+            if (isFound) {
+                this.$el.find(`input[data-name="checklistItem-foreignLinkEntityTypeList-${item}"]`)
+                    .attr('disabled', 'disabled');
+            }
+        });
+    }
+}

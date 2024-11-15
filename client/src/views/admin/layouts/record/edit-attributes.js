@@ -26,57 +26,56 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/record/edit-attributes', ['views/record/base'], function (Dep) {
+import BaseRecordView from 'views/record/base';
 
-    return Dep.extend({
+export default class extends BaseRecordView {
 
-        template: 'admin/layouts/record/edit-attributes',
+    template = 'admin/layouts/record/edit-attributes'
 
-        /** @internal Important for dynamic logic working. */
-        mode: 'edit',
+    /** @internal Important for dynamic logic working. */
+    mode = 'edit'
 
-        data: function () {
-            return {
-                attributeDataList: this.getAttributeDataList()
-            };
-        },
+    data() {
+        return {
+            attributeDataList: this.getAttributeDataList()
+        };
+    }
 
-        getAttributeDataList: function () {
-            const list = [];
+    getAttributeDataList() {
+        const list = [];
 
-            this.attributeList.forEach(attribute => {
-                const defs = this.attributeDefs[attribute] || {};
+        this.attributeList.forEach(attribute => {
+            const defs = this.attributeDefs[attribute] || {};
 
-                const type = defs.type;
+            const type = defs.type;
 
-                const isWide = !['enum', 'bool', 'int', 'float', 'varchar'].includes(type) &&
-                    attribute !== 'widthComplex';
+            const isWide = !['enum', 'bool', 'int', 'float', 'varchar'].includes(type) &&
+                attribute !== 'widthComplex';
 
-                list.push({
-                    name: attribute,
-                    viewKey: attribute + 'Field',
-                    isWide: isWide,
-                    label: this.translate(defs.label || attribute, 'fields', 'LayoutManager'),
-                });
+            list.push({
+                name: attribute,
+                viewKey: attribute + 'Field',
+                isWide: isWide,
+                label: this.translate(defs.label || attribute, 'fields', 'LayoutManager'),
             });
+        });
 
-            return list;
-        },
+        return list;
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.attributeList = this.options.attributeList || [];
-            this.attributeDefs = this.options.attributeDefs || {};
+        this.attributeList = this.options.attributeList || [];
+        this.attributeDefs = this.options.attributeDefs || {};
 
-            this.attributeList.forEach(field => {
-                const params = this.attributeDefs[field] || {};
-                const type = params.type || 'base';
+        this.attributeList.forEach(field => {
+            const params = this.attributeDefs[field] || {};
+            const type = params.type || 'base';
 
-                const viewName = params.view || this.getFieldManager().getViewName(type);
+            const viewName = params.view || this.getFieldManager().getViewName(type);
 
-                this.createField(field, viewName, params);
-            });
-        },
-    });
-});
+            this.createField(field, viewName, params);
+        });
+    }
+}

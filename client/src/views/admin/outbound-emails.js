@@ -26,117 +26,113 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/outbound-emails', ['views/settings/record/edit'], function (Dep) {
+import SettingsEditRecordView from 'views/settings/record/edit';
 
-    return Dep.extend({
+export default class extends SettingsEditRecordView {
 
-        layoutName: 'outboundEmails',
+    layoutName = 'outboundEmails'
 
-        saveAndContinueEditingAction: false,
+    saveAndContinueEditingAction = false
 
-        dynamicLogicDefs: {
-            fields: {
-                smtpUsername: {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                type: 'isNotEmpty',
-                                attribute: 'smtpServer',
-                            },
-                            {
-                                type: 'isTrue',
-                                attribute: 'smtpAuth',
-                            }
-                        ]
-                    },
-                    required: {
-                        conditionGroup: [
-                            {
-                                type: 'isNotEmpty',
-                                attribute: 'smtpServer',
-                            },
-                            {
-                                type: 'isTrue',
-                                attribute: 'smtpAuth',
-                            }
-                        ]
-                    }
+    dynamicLogicDefs = {
+        fields: {
+            smtpUsername: {
+                visible: {
+                    conditionGroup: [
+                        {
+                            type: 'isNotEmpty',
+                            attribute: 'smtpServer',
+                        },
+                        {
+                            type: 'isTrue',
+                            attribute: 'smtpAuth',
+                        }
+                    ]
                 },
-                smtpPassword: {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                type: 'isNotEmpty',
-                                attribute: 'smtpServer',
-                            },
-                            {
-                                type: 'isTrue',
-                                attribute: 'smtpAuth',
-                            }
-                        ]
-                    }
+                required: {
+                    conditionGroup: [
+                        {
+                            type: 'isNotEmpty',
+                            attribute: 'smtpServer',
+                        },
+                        {
+                            type: 'isTrue',
+                            attribute: 'smtpAuth',
+                        }
+                    ]
+                }
+            },
+            smtpPassword: {
+                visible: {
+                    conditionGroup: [
+                        {
+                            type: 'isNotEmpty',
+                            attribute: 'smtpServer',
+                        },
+                        {
+                            type: 'isTrue',
+                            attribute: 'smtpAuth',
+                        }
+                    ]
+                }
+            },
+            smtpPort: {
+                visible: {
+                    conditionGroup: [
+                        {
+                            type: 'isNotEmpty',
+                            attribute: 'smtpServer',
+                        },
+                    ]
                 },
-                smtpPort: {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                type: 'isNotEmpty',
-                                attribute: 'smtpServer',
-                            },
-                        ]
-                    },
-                    required: {
-                        conditionGroup: [
-                            {
-                                type: 'isNotEmpty',
-                                attribute: 'smtpServer',
-                            },
-                        ]
-                    }
-                },
-                smtpSecurity: {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                type: 'isNotEmpty',
-                                attribute: 'smtpServer',
-                            },
-                        ]
-                    }
-                },
-                smtpAuth: {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                type: 'isNotEmpty',
-                                attribute: 'smtpServer',
-                            },
-                        ]
-                    }
-                },
+                required: {
+                    conditionGroup: [
+                        {
+                            type: 'isNotEmpty',
+                            attribute: 'smtpServer',
+                        },
+                    ]
+                }
+            },
+            smtpSecurity: {
+                visible: {
+                    conditionGroup: [
+                        {
+                            type: 'isNotEmpty',
+                            attribute: 'smtpServer',
+                        },
+                    ]
+                }
+            },
+            smtpAuth: {
+                visible: {
+                    conditionGroup: [
+                        {
+                            type: 'isNotEmpty',
+                            attribute: 'smtpServer',
+                        },
+                    ]
+                }
             },
         },
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+    afterRender() {
+        super.afterRender();
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+        const smtpSecurityField = this.getFieldView('smtpSecurity');
 
-            const smtpSecurityField = this.getFieldView('smtpSecurity');
+        this.listenTo(smtpSecurityField, 'change', () => {
+            const smtpSecurity = smtpSecurityField.fetch()['smtpSecurity'];
 
-            this.listenTo(smtpSecurityField, 'change', () => {
-                const smtpSecurity = smtpSecurityField.fetch()['smtpSecurity'];
+            if (smtpSecurity === 'SSL') {
+                this.model.set('smtpPort', 465);
+            } else if (smtpSecurity === 'TLS') {
+                this.model.set('smtpPort', 587);
+            } else {
+                this.model.set('smtpPort', 25);
+            }
+        });
+    }
+}
 
-                if (smtpSecurity === 'SSL') {
-                    this.model.set('smtpPort', 465);
-                } else if (smtpSecurity === 'TLS') {
-                    this.model.set('smtpPort', 587);
-                } else {
-                    this.model.set('smtpPort', 25);
-                }
-            });
-        },
-    });
-});

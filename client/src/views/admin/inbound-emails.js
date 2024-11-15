@@ -26,21 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/inbound-emails', ['views/settings/record/edit'], function (Dep) {
+import SettingsEditRecordView from 'views/settings/record/edit';
 
-    return Dep.extend({
+export default class extends SettingsEditRecordView {
 
-        layoutName: 'inboundEmails',
-
-        saveAndContinueEditingAction: false,
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-        },
-
-    });
-});
+    layoutName = 'inboundEmails'
+    saveAndContinueEditingAction = false
+}

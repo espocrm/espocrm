@@ -26,28 +26,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/panels/notifications', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+export default class extends View {
 
-        template: 'admin/panels/notifications',
+    template = 'admin/panels/notifications'
 
-        data: function () {
-            return {
-                notificationList: this.notificationList,
-            };
-        },
+    data() {
+        return {
+            notificationList: this.notificationList,
+        };
+    }
 
-        setup: function () {
-            this.notificationList = [];
+    setup() {
+        this.notificationList = [];
 
-            Espo.Ajax.getRequest('Admin/action/adminNotificationList').then(notificationList => {
-                this.notificationList = notificationList;
+        Espo.Ajax.getRequest('Admin/action/adminNotificationList').then(notificationList => {
+            this.notificationList = notificationList;
 
-                if (this.isRendered() || this.isBeingRendered()) {
-                    this.reRender();
-                }
-            });
-        },
-    });
-});
+            if (this.isRendered() || this.isBeingRendered()) {
+                this.reRender();
+            }
+        });
+    }
+}

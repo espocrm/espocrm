@@ -26,42 +26,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/jobs-settings', ['views/settings/record/edit'], function (Dep) {
+import SettingsEditRecordView from 'views/settings/record/edit';
 
-    return Dep.extend({
+export default class extends SettingsEditRecordView {
 
-        layoutName: 'jobsSettings',
+    layoutName = 'jobsSettings'
+    saveAndContinueEditingAction = false
 
-        saveAndContinueEditingAction: false,
-
-        dynamicLogicDefs: {
-            fields: {
-                jobPoolConcurrencyNumber: {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                type: 'isTrue',
-                                attribute: 'jobRunInParallel'
-                            }
-                        ]
-                    }
+    dynamicLogicDefs = {
+        fields: {
+            jobPoolConcurrencyNumber: {
+                visible: {
+                    conditionGroup: [
+                        {
+                            type: 'isTrue',
+                            attribute: 'jobRunInParallel'
+                        }
+                    ]
                 }
             }
-        },
+        }
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            if (this.getHelper().getAppParam('isRestrictedMode') && !this.getUser().isSuperAdmin()) {
-
-                this.setFieldReadOnly('jobRunInParallel');
-                this.setFieldReadOnly('jobMaxPortion');
-                this.setFieldReadOnly('jobPoolConcurrencyNumber');
-                this.setFieldReadOnly('daemonInterval');
-                this.setFieldReadOnly('daemonMaxProcessNumber');
-                this.setFieldReadOnly('daemonProcessTimeout');
-            }
-        },
-
-    });
-});
+        if (this.getHelper().getAppParam('isRestrictedMode') && !this.getUser().isSuperAdmin()) {
+            this.setFieldReadOnly('jobRunInParallel');
+            this.setFieldReadOnly('jobMaxPortion');
+            this.setFieldReadOnly('jobPoolConcurrencyNumber');
+            this.setFieldReadOnly('daemonInterval');
+            this.setFieldReadOnly('daemonMaxProcessNumber');
+            this.setFieldReadOnly('daemonProcessTimeout');
+        }
+    }
+}
