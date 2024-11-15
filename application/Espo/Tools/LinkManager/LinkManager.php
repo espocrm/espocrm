@@ -306,14 +306,14 @@ class LinkManager
                     $dataLeft = [
                         'fields' => [
                             $link => [
-                                'type' => FieldType::LINK_ONE,
+                                FieldParam::TYPE => FieldType::LINK_ONE,
                             ],
                         ],
                         'links' => [
                             $link => [
-                                'type' => Entity::HAS_ONE,
-                                'foreign' => $linkForeign,
-                                'entity' => $entityForeign,
+                                RelationParam::TYPE => Entity::HAS_ONE,
+                                RelationParam::FOREIGN => $linkForeign,
+                                RelationParam::ENTITY => $entityForeign,
                                 'isCustom' => true,
                             ],
                         ],
@@ -322,14 +322,14 @@ class LinkManager
                     $dataRight = [
                         'fields' => [
                             $linkForeign => [
-                                'type' => FieldType::LINK,
+                                FieldParam::TYPE => FieldType::LINK,
                             ],
                         ],
                         'links' => [
                             $linkForeign => [
-                                'type' => Entity::BELONGS_TO,
-                                'foreign' => $link,
-                                'entity' => $entity,
+                                RelationParam::TYPE => Entity::BELONGS_TO,
+                                RelationParam::FOREIGN => $link,
+                                RelationParam::ENTITY => $entity,
                                 'isCustom' => true,
                             ],
                         ],
@@ -338,14 +338,14 @@ class LinkManager
                     $dataLeft = [
                         'fields' => [
                             $link => [
-                                'type' => FieldType::LINK,
+                                FieldParam::TYPE => FieldType::LINK,
                             ],
                         ],
                         'links' => [
                             $link => [
-                                'type' => Entity::BELONGS_TO,
-                                'foreign' => $linkForeign,
-                                'entity' => $entityForeign,
+                                FieldParam::TYPE => Entity::BELONGS_TO,
+                                RelationParam::FOREIGN => $linkForeign,
+                                RelationParam::ENTITY => $entityForeign,
                                 'isCustom' => true,
                             ],
                         ],
@@ -354,14 +354,14 @@ class LinkManager
                     $dataRight = [
                         'fields' => [
                             $linkForeign => [
-                                'type' => FieldType::LINK_ONE,
+                                FieldParam::TYPE => FieldType::LINK_ONE,
                             ],
                         ],
                         'links' => [
                             $linkForeign => [
-                                'type' => Entity::HAS_ONE,
-                                'foreign' => $link,
-                                'entity' => $entity,
+                                FieldParam::TYPE => Entity::HAS_ONE,
+                                RelationParam::FOREIGN => $link,
+                                RelationParam::ENTITY => $entity,
                                 'isCustom' => true,
                             ],
                         ],
@@ -383,9 +383,9 @@ class LinkManager
                 $dataLeft = [
                     'links' => [
                         $link => [
-                            'type' => Entity::HAS_MANY,
-                            'foreign' => $linkForeign,
-                            'entity' => $entityForeign,
+                            FieldParam::TYPE => Entity::HAS_MANY,
+                            RelationParam::FOREIGN => $linkForeign,
+                            RelationParam::ENTITY => $entityForeign,
                             'audited' => $auditedForeign,
                             'isCustom' => true,
                         ],
@@ -395,7 +395,7 @@ class LinkManager
                 if ($linkMultipleField) {
                     $dataLeft['fields'] = [
                         $link => [
-                            'type' => FieldType::LINK_MULTIPLE,
+                            FieldParam::TYPE => FieldType::LINK_MULTIPLE,
                         ],
                     ];
                 }
@@ -403,13 +403,13 @@ class LinkManager
                 $dataRight = [
                     'fields' => [
                         $linkForeign => [
-                            'type' => FieldType::LINK,
+                            FieldParam::TYPE => FieldType::LINK,
                         ],
                     ],
                     'links' => [
                         $linkForeign => [
-                            'type' => Entity::BELONGS_TO,
-                            'foreign' => $link,
+                            FieldParam::TYPE => Entity::BELONGS_TO,
+                            RelationParam::FOREIGN => $link,
                             'entity' => $entity,
                             'audited' => $audited,
                             'isCustom' => true,
@@ -432,13 +432,13 @@ class LinkManager
                 $dataLeft = [
                     'fields' => [
                         $link => [
-                            'type' => FieldType::LINK,
+                            FieldParam::TYPE => FieldType::LINK,
                         ],
                     ],
                     'links' => [
                         $link => [
-                            'type' => Entity::BELONGS_TO,
-                            'foreign' => $linkForeign,
+                            RelationParam::TYPE => Entity::BELONGS_TO,
+                            RelationParam::FOREIGN => $linkForeign,
                             'entity' => $entityForeign,
                             'audited' => $auditedForeign,
                             'isCustom' => true,
@@ -449,8 +449,8 @@ class LinkManager
                 $dataRight = [
                     'links' => [
                         $linkForeign => [
-                            'type' => Entity::HAS_MANY,
-                            'foreign' => $link,
+                            FieldParam::TYPE => Entity::HAS_MANY,
+                            RelationParam::FOREIGN => $link,
                             'entity' => $entity,
                             'audited' => $audited,
                             'isCustom' => true,
@@ -461,7 +461,7 @@ class LinkManager
                 if ($linkMultipleFieldForeign) {
                     $dataRight['fields'] = [
                         $linkForeign => [
-                            'type' => FieldType::LINK_MULTIPLE,
+                            FieldParam::TYPE => FieldType::LINK_MULTIPLE,
                         ],
                     ];
                 }
@@ -472,9 +472,9 @@ class LinkManager
                 $dataLeft = [
                     'links' => [
                         $link => [
-                            'type' => Entity::HAS_MANY,
+                            RelationParam::TYPE => Entity::HAS_MANY,
                             RelationParam::RELATION_NAME => $relationName,
-                            'foreign' => $linkForeign,
+                            RelationParam::FOREIGN => $linkForeign,
                             'entity' => $entityForeign,
                             'audited' => $auditedForeign,
                             'isCustom' => true,
@@ -485,7 +485,7 @@ class LinkManager
                 if ($linkMultipleField) {
                     $dataLeft['fields'] = [
                         $link => [
-                            'type' => FieldType::LINK_MULTIPLE,
+                            FieldParam::TYPE => FieldType::LINK_MULTIPLE,
                         ],
                     ];
                 }
@@ -493,9 +493,9 @@ class LinkManager
                 $dataRight = [
                     'links' => [
                         $linkForeign => [
-                            'type' => Entity::HAS_MANY,
+                            RelationParam::TYPE => Entity::HAS_MANY,
                             RelationParam::RELATION_NAME => $relationName,
-                            'foreign' => $link,
+                            RelationParam::FOREIGN => $link,
                             'entity' => $entity,
                             'audited' => $audited,
                             'isCustom' => true,
@@ -506,7 +506,7 @@ class LinkManager
                 if ($linkMultipleFieldForeign) {
                     $dataRight['fields'] = [
                         $linkForeign => [
-                            'type' => FieldType::LINK_MULTIPLE,
+                            FieldParam::TYPE => FieldType::LINK_MULTIPLE,
                         ],
                     ];
                 }
@@ -529,7 +529,7 @@ class LinkManager
                     'links' => [
                         $link => [
                             RelationParam::TYPE => Entity::BELONGS_TO_PARENT,
-                            'foreign' => $linkForeign,
+                            RelationParam::FOREIGN => $linkForeign,
                             'isCustom' => true,
                         ],
                     ],
@@ -1016,7 +1016,7 @@ class LinkManager
                 }
 
                 if ($kLink == $linkForeign) {
-                    if ($defs['type'] !== Entity::HAS_CHILDREN) {
+                    if ($defs[RelationParam::TYPE] !== Entity::HAS_CHILDREN) {
                         continue 2;
                     }
                 }
@@ -1038,7 +1038,7 @@ class LinkManager
 
                 if (
                     $kForeign === $link && $kIsCustom && $kEntity == $entityType &&
-                    $defs['type'] == Entity::HAS_CHILDREN && $kLink === $linkForeign
+                    $defs[RelationParam::TYPE] == Entity::HAS_CHILDREN && $kLink === $linkForeign
                 ) {
                     if (!in_array($itemEntityType, $toCreateList)) {
                         $this->metadata->delete('entityDefs', $itemEntityType, [
@@ -1057,9 +1057,9 @@ class LinkManager
             $this->metadata->set('entityDefs', $itemEntityType, [
                 'links' => [
                     $linkForeign => [
-                        'type' => Entity::HAS_CHILDREN,
-                        'foreign' => $link,
-                        'entity' => $entityType,
+                        RelationParam::TYPE => Entity::HAS_CHILDREN,
+                        RelationParam::FOREIGN => $link,
+                        RelationParam::ENTITY => $entityType,
                         'isCustom' => true,
                     ],
                 ],
@@ -1171,7 +1171,7 @@ class LinkManager
 
             $data['fields'] = [
                 $link => [
-                    'type' => FieldType::LINK_MULTIPLE,
+                    FieldParam::TYPE => FieldType::LINK_MULTIPLE,
                 ],
             ];
 
