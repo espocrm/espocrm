@@ -127,7 +127,7 @@ class EntityDefs
                 $attributesData[$name] = $attributeDefs->toAssoc();
             }
 
-            $data['attributes'] = $attributesData;
+            $data[EntityParam::ATTRIBUTES] = $attributesData;
         }
 
         if (count($this->relations)) {

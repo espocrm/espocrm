@@ -40,6 +40,11 @@ class EntityParam
     public const FIELDS = 'fields';
 
     /**
+     * Attributes.
+     */
+    public const ATTRIBUTES = 'attributes';
+
+    /**
      * Relations.
      */
     public const RELATIONS = 'relations';

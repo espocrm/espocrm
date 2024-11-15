@@ -77,7 +77,7 @@ class EntityDefs
     public function getAttributeNameList(): array
     {
         /** @var string[] */
-        return array_keys($this->data['attributes'] ?? []);
+        return array_keys($this->data[EntityParam::ATTRIBUTES] ?? []);
     }
 
     /**
@@ -360,7 +360,7 @@ class EntityDefs
 
     private function loadAttribute(string $name): ?AttributeDefs
     {
-        $raw = $this->data['attributes'][$name] ?? $this->data['fields'][$name] ?? null;
+        $raw = $this->data[EntityParam::ATTRIBUTES][$name] ?? $this->data['fields'][$name] ?? null;
 
         if (!$raw) {
             return null;
