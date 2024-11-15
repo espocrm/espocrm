@@ -108,7 +108,7 @@ class AttributeDefs
      */
     public function withDefault(mixed $value): self
     {
-        return $this->withParam('default', $value);
+        return $this->withParam(AttributeParam::DEFAULT, $value);
     }
 
     /**

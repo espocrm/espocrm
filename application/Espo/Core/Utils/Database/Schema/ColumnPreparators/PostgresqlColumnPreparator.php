@@ -40,7 +40,7 @@ use Espo\ORM\Entity;
 class PostgresqlColumnPreparator implements ColumnPreparator
 {
     private const PARAM_DB_TYPE = AttributeParam::DB_TYPE;
-    private const PARAM_DEFAULT = 'default';
+    private const PARAM_DEFAULT = AttributeParam::DEFAULT;
     private const PARAM_NOT_NULL = AttributeParam::NOT_NULL;
     private const PARAM_AUTOINCREMENT = 'autoincrement';
     private const PARAM_PRECISION = 'precision';

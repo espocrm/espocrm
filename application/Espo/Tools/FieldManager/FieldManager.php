@@ -697,30 +697,30 @@ class FieldManager
     {
         $additionalParamList = [
             'type' => [
-                'type' => AttributeType::VARCHAR,
+                FieldParam::TYPE => FieldType::VARCHAR,
             ],
             'isCustom' => [
-                'type' => AttributeType::BOOL,
-                'default' => false,
+                FieldParam::TYPE => FieldType::BOOL,
+                FieldParam::DEFAULT => false,
             ],
             'isPersonalData' => [
-                'type' => AttributeType::BOOL,
-                'default' => false,
+                FieldParam::TYPE  => FieldType::BOOL,
+                FieldParam::DEFAULT => false,
             ],
             'tooltip' => [
-                'type' => AttributeType::BOOL,
-                'default' => false,
+                FieldParam::TYPE => FieldType::BOOL,
+                FieldParam::DEFAULT => false,
             ],
             'inlineEditDisabled' => [
-                'type' => AttributeType::BOOL,
-                'default' => false,
+                FieldParam::TYPE => FieldType::BOOL,
+                FieldParam::DEFAULT => false,
             ],
             'defaultAttributes' => [
-                'type' => AttributeType::JSON_OBJECT,
+                FieldParam::TYPE => FieldType::JSON_OBJECT,
             ],
         ];
 
-        $type = $fieldDefs['type'] ?? null;
+        $type = $fieldDefs[FieldParam::TYPE] ?? null;
 
         if (!$type) {
             throw new RuntimeException("No type.");
@@ -768,7 +768,7 @@ class FieldManager
 
             $defaultParamValue = null;
 
-            $paramType = $params[$paramName]['type'] ?? null;
+            $paramType = $params[$paramName][FieldParam::TYPE] ?? null;
 
             if ($paramType === FieldType::BOOL) {
                 $defaultParamValue = false;

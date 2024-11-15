@@ -89,7 +89,7 @@ class Converter
         'field' => 'foreign',  // @todo Change 'foreign' to 'field'.
         'unique' => 'unique',
         'index' => 'index',
-        'default' => 'default',
+        FieldParam::DEFAULT => AttributeParam::DEFAULT,
         'select' => 'select',
         'order' => 'order',
         'where' => 'where',
@@ -295,8 +295,8 @@ class Converter
                         break;
 
                     case Entity::BOOL:
-                        $attributeParams['default'] ??= false;
-                        $attributeParams['default'] = (bool) $attributeParams['default'];
+                        $attributeParams[AttributeParam::DEFAULT] ??= false;
+                        $attributeParams[AttributeParam::DEFAULT] = (bool) $attributeParams[AttributeParam::DEFAULT];
 
                         break;
 
@@ -392,7 +392,7 @@ class Converter
             ],
             Attribute::DELETED => [
                 AttributeParam::TYPE => Entity::BOOL,
-                'default' => false,
+                AttributeParam::DEFAULT => false,
             ],
         ];
 
@@ -493,7 +493,7 @@ class Converter
                     $entityType => [
                         EntityParam::ATTRIBUTES => [
                             $field => [
-                                'default' => $defaultAttributes[$field],
+                                AttributeParam::DEFAULT => $defaultAttributes[$field],
                             ]
                         ]
                     ]
@@ -616,8 +616,8 @@ class Converter
         $type = $fieldParams[FieldParam::TYPE] ?? null;
 
         if ($type === FieldType::ENUM) {
-            if (($fieldParams['default'] ?? null) === '') {
-                $fieldParams['default'] = null;
+            if (($fieldParams[FieldParam::DEFAULT] ?? null) === '') {
+                $fieldParams[FieldParam::DEFAULT] = null;
             }
         }
     }
@@ -665,7 +665,7 @@ class Converter
             }
 
             switch ($espoType) {
-                case 'default':
+                case AttributeParam::DEFAULT:
                     if (
                         is_null($attributeParams[$espoType]) ||
                         is_array($attributeParams[$espoType]) ||
@@ -933,8 +933,8 @@ class Converter
                     $columnDefs[AttributeParam::LEN] = $attributeDefs->getLength();
                 }
 
-                if ($attributeDefs->getParam('default') !== null) {
-                    $columnDefs['default'] = $attributeDefs->getParam('default');
+                if ($attributeDefs->getParam(AttributeParam::DEFAULT) !== null) {
+                    $columnDefs[AttributeParam::DEFAULT] = $attributeDefs->getParam(AttributeParam::DEFAULT);
                 }
 
                 $itemDefs[EntityParam::ATTRIBUTES][$columnName] = $columnDefs;

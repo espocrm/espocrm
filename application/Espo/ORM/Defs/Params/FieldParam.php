@@ -58,4 +58,9 @@ class FieldParam
      * Not null.
      */
     public const NOT_NULL = 'notNull';
+
+    /**
+     * A default value.
+     */
+    public const DEFAULT = 'default';
 }

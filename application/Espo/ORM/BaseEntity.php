@@ -993,13 +993,13 @@ class BaseEntity implements Entity
     public function populateDefaults(): void
     {
         foreach ($this->attributesDefs as $attribute => $defs) {
-            if (!array_key_exists('default', $defs)) {
+            if (!array_key_exists(AttributeParam::DEFAULT, $defs)) {
                 continue;
             }
 
             $wasSet = $this->hasInContainer($attribute);
 
-            $this->setInContainer($attribute, $defs['default']);
+            $this->setInContainer($attribute, $defs[AttributeParam::DEFAULT]);
 
             $this->writtenMap[$attribute] = $wasSet;
         }

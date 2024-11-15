@@ -61,4 +61,6 @@ class FieldType
     public const ATTACHMENT_MULTIPLE = 'attachmentMultiple';
     public const FOREIGN = 'foreign';
     public const WYSIWYG = 'wysiwyg';
+    public const JSON_ARRAY = 'jsonArray';
+    public const JSON_OBJECT = 'jsonObject';
 }
