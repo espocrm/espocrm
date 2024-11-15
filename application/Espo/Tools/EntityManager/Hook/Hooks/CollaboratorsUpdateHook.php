@@ -34,6 +34,7 @@ use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Type\RelationType;
 use Espo\Tools\EntityManager\Hook\UpdateHook;
 use Espo\Tools\EntityManager\Params;
@@ -92,7 +93,7 @@ class CollaboratorsUpdateHook implements UpdateHook
                 self::FIELD => [
                     'type' => RelationType::HAS_MANY,
                     'entity' => User::ENTITY_TYPE,
-                    'relationName' => self::RELATION_NAME,
+                    RelationParam::RELATION_NAME => self::RELATION_NAME,
                     'layoutRelationshipsDisabled' => true,
                 ],
             ],

@@ -33,6 +33,7 @@ use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Defs\IndexDefs;
 use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\EntityParam;
 use Espo\ORM\Defs\Params\IndexParam;
 
 class Utils
@@ -50,7 +51,7 @@ class Utils
         $indexList = [];
 
         foreach ($defs as $entityType => $entityParams) {
-            $indexes = $entityParams['indexes'] ?? [];
+            $indexes = $entityParams[EntityParam::INDEXES] ?? [];
 
             foreach ($indexes as $indexName => $indexParams) {
                 $indexDefs = IndexDefs::fromRaw($indexParams, $indexName);

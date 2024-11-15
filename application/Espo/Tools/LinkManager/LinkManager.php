@@ -38,6 +38,7 @@ use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Route;
 use Espo\Core\Utils\Util;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\ORM\Type\RelationType;
 use Espo\Tools\LinkManager\Hook\HookProcessor as LinkHookProcessor;
@@ -470,7 +471,7 @@ class LinkManager
                     'links' => [
                         $link => [
                             'type' => Entity::HAS_MANY,
-                            'relationName' => $relationName,
+                            RelationParam::RELATION_NAME => $relationName,
                             'foreign' => $linkForeign,
                             'entity' => $entityForeign,
                             'audited' => $auditedForeign,
@@ -491,7 +492,7 @@ class LinkManager
                     'links' => [
                         $linkForeign => [
                             'type' => Entity::HAS_MANY,
-                            'relationName' => $relationName,
+                            RelationParam::RELATION_NAME => $relationName,
                             'foreign' => $link,
                             'entity' => $entity,
                             'audited' => $audited,
@@ -874,8 +875,8 @@ class LinkManager
             $type = LinkType::ONE_TO_ONE_RIGHT;
         }
 
-        $name = $this->metadata->get(['entityDefs', $entity, $link, 'relationName']) ??
-            $this->metadata->get(['entityDefs', $entityForeign, $linkForeign, 'relationName']);
+        $name = $this->metadata->get(['entityDefs', $entity, $link, RelationParam::RELATION_NAME]) ??
+            $this->metadata->get(['entityDefs', $entityForeign, $linkForeign, RelationParam::RELATION_NAME]);
 
         $linkParams = null;
 

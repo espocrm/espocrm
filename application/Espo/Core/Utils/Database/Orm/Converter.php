@@ -41,6 +41,7 @@ use Espo\ORM\Defs\AttributeDefs;
 use Espo\ORM\Defs\FieldDefs;
 use Espo\ORM\Defs\IndexDefs;
 use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\EntityParam;
 use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Defs\Params\IndexParam;
 use Espo\ORM\Defs\Params\RelationParam;
@@ -103,7 +104,7 @@ class Converter
     private array $idParams = [];
 
     /** @var string[] */
-    private array $copyEntityProperties = ['indexes'];
+    private array $copyEntityProperties = [EntityParam::INDEXES];
 
     private IndexHelper $indexHelper;
 
@@ -200,7 +201,7 @@ class Converter
 
         $ormMetadata[$entityType] = [
             'attributes' => [],
-            'relations' => [],
+            EntityParam::RELATIONS => [],
         ];
 
         foreach ($this->copyEntityProperties as $optionName) {
@@ -356,7 +357,7 @@ class Converter
             return null;
         }
 
-        $relationParams = $data[$entityType]['relations'][$relation] ?? [];
+        $relationParams = $data[$entityType][EntityParam::RELATIONS][$relation] ?? [];
 
         $foreignEntityType = $relationParams['entity'] ?? null;
 
@@ -375,7 +376,7 @@ class Converter
      */
     private function convertFields(string $entityType, array &$entityMetadata): array
     {
-        $entityMetadata['fields'] ??= [];
+        $entityMetadata[EntityParam::FIELDS] ??= [];
 
         // List of unmerged fields with default field definitions in $output.
         $unmergedFields = [Field::NAME];
@@ -385,7 +386,8 @@ class Converter
                 AttributeParam::TYPE => Entity::ID,
             ],
             'name' => [
-                AttributeParam::TYPE => $entityMetadata['fields'][Field::NAME][FieldParam::TYPE] ?? Entity::VARCHAR,
+                AttributeParam::TYPE => $entityMetadata[EntityParam::FIELDS][Field::NAME][FieldParam::TYPE] ??
+                    Entity::VARCHAR,
                 AttributeParam::NOT_STORABLE => true,
             ],
             Attribute::DELETED => [
@@ -398,7 +400,7 @@ class Converter
             unset($output[Attribute::DELETED]);
         }
 
-        foreach ($entityMetadata['fields'] as $attribute => $attributeParams) {
+        foreach ($entityMetadata[EntityParam::FIELDS] as $attribute => $attributeParams) {
             if (empty($attributeParams[AttributeParam::TYPE])) {
                 continue;
             }
@@ -507,7 +509,7 @@ class Converter
         $scopeDefs = $this->metadata->get(['scopes', $entityType]) ?? [];
 
         if ($scopeDefs['stream'] ?? false) {
-            if (!isset($entityMetadata['fields'][Field::IS_FOLLOWED])) {
+            if (!isset($entityMetadata[EntityParam::FIELDS][Field::IS_FOLLOWED])) {
                 $ormMetadata[$entityType]['attributes'][Field::IS_FOLLOWED] = [
                     AttributeParam::TYPE => Entity::BOOL,
                     AttributeParam::NOT_STORABLE => true,
@@ -530,7 +532,7 @@ class Converter
 
         // @todo Refactor.
         if ($scopeDefs['stars'] ?? false) {
-            if (!isset($entityMetadata['fields'][Field::IS_STARRED])) {
+            if (!isset($entityMetadata[EntityParam::FIELDS][Field::IS_STARRED])) {
                 $ormMetadata[$entityType]['attributes'][Field::IS_STARRED] = [
                     AttributeParam::TYPE => Entity::BOOL,
                     AttributeParam::NOT_STORABLE => true,
@@ -698,7 +700,7 @@ class Converter
         }
 
         $fieldList = $this->metadata
-            ->get(['entityDefs', $entityType, 'collection', 'textFilterFields'], ['name']);
+            ->get(['entityDefs', $entityType, 'collection', 'textFilterFields'], [Field::NAME]);
 
         $fullTextSearchColumnList = [];
 
@@ -739,11 +741,11 @@ class Converter
         if (!empty($fullTextSearchColumnList)) {
             $ormMetadata[$entityType]['fullTextSearchColumnList'] = $fullTextSearchColumnList;
 
-            if (!array_key_exists('indexes', $ormMetadata[$entityType])) {
-                $ormMetadata[$entityType]['indexes'] = [];
+            if (!array_key_exists(EntityParam::INDEXES, $ormMetadata[$entityType])) {
+                $ormMetadata[$entityType][EntityParam::INDEXES] = [];
             }
 
-            $ormMetadata[$entityType]['indexes']['system_fullTextSearch'] = [
+            $ormMetadata[$entityType][EntityParam::INDEXES]['system_fullTextSearch'] = [
                 IndexParam::COLUMNS => $fullTextSearchColumnList,
                 IndexParam::FLAGS => ['fulltext']
             ];
@@ -757,37 +759,37 @@ class Converter
     {
         $defs = &$ormMetadata[$entityType];
 
-        $defs['indexes'] ??= [];
+        $defs[EntityParam::INDEXES] ??= [];
 
         if (isset($defs['attributes'])) {
             $indexList = self::getEntityIndexListFromAttributes($defs['attributes']);
 
             foreach ($indexList as $indexName => $indexParams) {
-                if (!isset($defs['indexes'][$indexName])) {
-                    $defs['indexes'][$indexName] = $indexParams;
+                if (!isset($defs[EntityParam::INDEXES][$indexName])) {
+                    $defs[EntityParam::INDEXES][$indexName] = $indexParams;
                 }
             }
         }
 
-        foreach ($defs['indexes'] as $indexName => &$indexData) {
+        foreach ($defs[EntityParam::INDEXES] as $indexName => &$indexData) {
             $indexDefs = IndexDefs::fromRaw($indexData, $indexName);
 
             if (!$indexDefs->getKey()) {
-                $indexData['key'] = $this->composeIndexKey($indexDefs, $entityType);
+                $indexData[IndexParam::KEY] = $this->composeIndexKey($indexDefs, $entityType);
             }
         }
 
-        if (isset($defs['relations'])) {
-            foreach ($defs['relations'] as &$relationData) {
+        if (isset($defs[EntityParam::RELATIONS])) {
+            foreach ($defs[EntityParam::RELATIONS] as &$relationData) {
                 $type = $relationData[RelationParam::TYPE] ?? null;
 
                 if ($type !== Entity::MANY_MANY) {
                     continue;
                 }
 
-                $relationName = $relationData['relationName'] ?? '';
+                $relationName = $relationData[RelationParam::RELATION_NAME] ?? '';
 
-                $relationData['indexes'] ??= [];
+                $relationData[RelationParam::INDEXES] ??= [];
 
                 $uniqueColumnList = [];
 
@@ -796,7 +798,7 @@ class Converter
 
                     $indexDefs = IndexDefs::fromRaw([IndexParam::COLUMNS => [$midKey]], $indexName);
 
-                    $relationData['indexes'][$indexName] = [
+                    $relationData[RelationParam::INDEXES][$indexName] = [
                         IndexParam::COLUMNS => $indexDefs->getColumnList(),
                         IndexParam::KEY => $this->composeIndexKey($indexDefs, ucfirst($relationName)),
                     ];
@@ -804,7 +806,7 @@ class Converter
                     $uniqueColumnList[] = $midKey;
                 }
 
-                foreach ($relationData['indexes'] as $indexName => &$indexData) {
+                foreach ($relationData[RelationParam::INDEXES] as $indexName => &$indexData) {
                     if (!empty($indexData[IndexParam::KEY])) {
                         continue;
                     }
@@ -827,7 +829,7 @@ class Converter
                             IndexParam::COLUMNS => $uniqueColumnList,
                         ], $indexName);
 
-                    $relationData['indexes'][$indexName] = [
+                    $relationData[RelationParam::INDEXES][$indexName] = [
                         IndexParam::TYPE => self::INDEX_TYPE_UNIQUE,
                         IndexParam::COLUMNS => $indexDefs->getColumnList(),
                         IndexParam::KEY => $this->composeIndexKey($indexDefs, ucfirst($relationName)),
@@ -879,7 +881,7 @@ class Converter
     {
         $result = [];
 
-        foreach ($defs['relations'] as $name => $relationParams) {
+        foreach ($defs[EntityParam::RELATIONS] as $name => $relationParams) {
             $relationDefs = RelationDefs::fromRaw($relationParams, $name);
 
             if ($relationDefs->getType() !== Entity::MANY_MANY) {
@@ -939,8 +941,8 @@ class Converter
             }
 
             foreach ($relationDefs->getIndexList() as $indexDefs) {
-                $itemDefs['indexes'] ??= [];
-                $itemDefs['indexes'][] = self::convertIndexDefsToRaw($indexDefs);
+                $itemDefs[EntityParam::INDEXES] ??= [];
+                $itemDefs[EntityParam::INDEXES][] = self::convertIndexDefsToRaw($indexDefs);
             }
 
             $result[$relationEntityType] = $itemDefs;

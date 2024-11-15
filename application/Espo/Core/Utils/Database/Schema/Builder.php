@@ -39,6 +39,7 @@ use Espo\ORM\Defs\AttributeDefs;
 use Espo\ORM\Defs\EntityDefs;
 use Espo\ORM\Defs\IndexDefs;
 use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\EntityParam;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 
@@ -104,7 +105,7 @@ class Builder
         }
 
         foreach ($ormMeta as $entityType => $entityParams) {
-            foreach (($entityParams['relations'] ?? []) as $relationName => $relationParams) {
+            foreach (($entityParams[EntityParam::RELATIONS] ?? []) as $relationName => $relationParams) {
                 $relationDefs = RelationDefs::fromRaw($relationParams, $relationName);
 
                 if ($relationDefs->getType() !== Entity::MANY_MANY) {

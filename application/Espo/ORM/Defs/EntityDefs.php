@@ -29,6 +29,7 @@
 
 namespace Espo\ORM\Defs;
 
+use Espo\ORM\Defs\Params\EntityParam;
 use RuntimeException;
 
 class EntityDefs
@@ -87,7 +88,7 @@ class EntityDefs
     public function getRelationNameList(): array
     {
         /** @var string[] */
-        return array_keys($this->data['relations'] ?? []);
+        return array_keys($this->data[EntityParam::RELATIONS] ?? []);
     }
 
     /**
@@ -98,7 +99,7 @@ class EntityDefs
     public function getIndexNameList(): array
     {
         /** @var string[] */
-        return array_keys($this->data['indexes'] ?? []);
+        return array_keys($this->data[EntityParam::INDEXES] ?? []);
     }
 
     /**
@@ -109,7 +110,7 @@ class EntityDefs
     public function getFieldNameList(): array
     {
         /** @var string[] */
-        return array_keys($this->data['fields'] ?? []);
+        return array_keys($this->data[EntityParam::FIELDS] ?? []);
     }
 
     /**
@@ -379,7 +380,7 @@ class EntityDefs
 
     private function loadRelation(string $name): ?RelationDefs
     {
-        $raw = $this->data['relations'][$name] ?? null;
+        $raw = $this->data[EntityParam::RELATIONS][$name] ?? null;
 
         if (!$raw) {
             return null;
@@ -399,7 +400,7 @@ class EntityDefs
 
     private function loadIndex(string $name): ?IndexDefs
     {
-        $raw = $this->data['indexes'][$name] ?? null;
+        $raw = $this->data[EntityParam::INDEXES][$name] ?? null;
 
         if (!$raw) {
             return null;
@@ -419,7 +420,7 @@ class EntityDefs
 
     private function loadField(string $name): ?FieldDefs
     {
-        $raw = $this->data['fields'][$name] ?? null;
+        $raw = $this->data[EntityParam::FIELDS][$name] ?? null;
 
         if (!$raw) {
             return null;

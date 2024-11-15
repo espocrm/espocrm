@@ -292,7 +292,7 @@ class RelationDefs
      */
     public function hasRelationshipName(): bool
     {
-        return isset($this->data['relationName']);
+        return isset($this->data[RelationParam::RELATION_NAME]);
     }
 
     /**
@@ -306,7 +306,7 @@ class RelationDefs
             throw new RuntimeException("No 'relationName' parameter defined in the relation '{$this->name}'.");
         }
 
-        return $this->data['relationName'];
+        return $this->data[RelationParam::RELATION_NAME];
     }
 
     /**
@@ -323,7 +323,7 @@ class RelationDefs
 
         $list = [];
 
-        foreach (($this->data['indexes'] ?? []) as $name => $item) {
+        foreach (($this->data[RelationParam::INDEXES] ?? []) as $name => $item) {
             $list[] = IndexDefs::fromRaw($item, $name);
         }
 

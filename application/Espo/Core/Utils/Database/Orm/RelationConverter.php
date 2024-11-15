@@ -40,6 +40,7 @@ use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\EntityParam;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Type\AttributeType;
@@ -53,11 +54,11 @@ class RelationConverter
 
     /** @var string[] */
     private $mergeParams = [
-        'relationName',
+        RelationParam::RELATION_NAME,
         'conditions',
         'additionalColumns',
         'noJoin',
-        'indexes',
+        RelationParam::INDEXES,
     ];
 
     public function __construct(
@@ -83,11 +84,11 @@ class RelationConverter
             null;
 
         /** @var ?string $relationshipName */
-        $relationshipName = $params['relationName'] ?? null;
+        $relationshipName = $params[RelationParam::RELATION_NAME] ?? null;
 
         if ($relationshipName) {
             $relationshipName = lcfirst($relationshipName);
-            $params['relationName'] = $relationshipName;
+            $params[RelationParam::RELATION_NAME] = $relationshipName;
         }
 
         $linkType = $params[RelationParam::TYPE] ?? null;
@@ -110,9 +111,9 @@ class RelationConverter
 
         $raw = $convertedEntityDefs->toAssoc();
 
-        if (isset($raw['relations'][$name])) {
-            $this->mergeParams($raw['relations'][$name], $params, $foreignParams ?? []);
-            $this->correct($raw['relations'][$name]);
+        if (isset($raw[EntityParam::RELATIONS][$name])) {
+            $this->mergeParams($raw[EntityParam::RELATIONS][$name], $params, $foreignParams ?? []);
+            $this->correct($raw[EntityParam::RELATIONS][$name]);
         }
 
         return [$entityType => $raw];

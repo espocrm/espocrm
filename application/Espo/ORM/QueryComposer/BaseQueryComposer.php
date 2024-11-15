@@ -31,7 +31,9 @@ namespace Espo\ORM\QueryComposer;
 
 use Espo\Core\ORM\Type\FieldType;
 use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\EntityParam;
 use Espo\ORM\Defs\Params\IndexParam;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\BaseEntity;
@@ -725,7 +727,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         foreach ($indexList as $indexName) {
-            $indexKey = $this->metadata->get($entityType, ['indexes', $indexName, IndexParam::KEY]);
+            $indexKey = $this->metadata->get($entityType, [EntityParam::INDEXES, $indexName, IndexParam::KEY]);
 
             if ($indexKey) {
                 $indexKeyList[] = $indexKey;
@@ -3298,7 +3300,7 @@ abstract class BaseQueryComposer implements QueryComposer
                     foreach ($indexList as $indexName) {
                         $indexKey = $this->metadata->get(
                             $entity->getEntityType(),
-                            ['relations', $relationName, 'indexes', $indexName, IndexParam::KEY]
+                            [EntityParam::RELATIONS, $relationName, RelationParam::INDEXES, $indexName, IndexParam::KEY]
                         );
 
                         if ($indexKey) {

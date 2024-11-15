@@ -596,7 +596,7 @@ class BaseMapper implements RDBMapper
         switch ($relType) {
             case Entity::MANY_MANY:
 
-                $middleName = ucfirst($this->getRelationParam($entity, $relationName, 'relationName'));
+                $middleName = ucfirst($this->getRelationParam($entity, $relationName, RelationParam::RELATION_NAME));
 
                 $nearKey = $keySet['nearKey'] ?? null;
                 $distantKey = $keySet['distantKey'] ?? null;
@@ -662,7 +662,7 @@ class BaseMapper implements RDBMapper
             throw new RuntimeException("Empty ID passed to 'getRelationColumn'.");
         }
 
-        $middleName = ucfirst($this->getRelationParam($entity, $relationName, 'relationName'));
+        $middleName = ucfirst($this->getRelationParam($entity, $relationName, RelationParam::RELATION_NAME));
 
         $keySet = $this->helper->getRelationKeys($entity, $relationName);
 

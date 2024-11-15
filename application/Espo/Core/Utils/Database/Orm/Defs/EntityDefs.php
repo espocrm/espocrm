@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils\Database\Orm\Defs;
 
+use Espo\ORM\Defs\Params\EntityParam;
+
 /**
  * @immutable
  */
@@ -135,7 +137,7 @@ class EntityDefs
                 $relationsData[$name] = $relationDefs->toAssoc();
             }
 
-            $data['relations'] = $relationsData;
+            $data[EntityParam::RELATIONS] = $relationsData;
         }
 
         if (count($this->indexes)) {
@@ -145,7 +147,7 @@ class EntityDefs
                 $indexesData[$name] = $indexDefs->toAssoc();
             }
 
-            $data['indexes'] = $indexesData;
+            $data[EntityParam::INDEXES] = $indexesData;
         }
 
         return $data;

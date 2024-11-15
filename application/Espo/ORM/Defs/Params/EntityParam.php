@@ -30,22 +30,22 @@
 namespace Espo\ORM\Defs\Params;
 
 /**
- * A relation parameter.
+ * An entity parameter.
  */
-class RelationParam
+class EntityParam
 {
     /**
-     * A type.
+     * Fields.
      */
-    public const TYPE = 'type';
+    public const FIELDS = 'fields';
+
+    /**
+     * Relations.
+     */
+    public const RELATIONS = 'relations';
 
     /**
      * Indexes.
      */
     public const INDEXES = 'indexes';
-
-    /**
-     * A relation name.
-     */
-    public const RELATION_NAME = 'relationName';
 }

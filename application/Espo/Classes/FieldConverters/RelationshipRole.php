@@ -33,6 +33,7 @@ use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\FieldConverter;
 use Espo\ORM\Defs\FieldDefs;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Type\AttributeType;
 use RuntimeException;
@@ -66,7 +67,7 @@ class RelationshipRole implements FieldConverter
         /** @var ?string $link */
         $link = $data['link'] ?? null;
         /** @var ?string $relationName */
-        $relationName = $data['relationName'] ?? null;
+        $relationName = $data[RelationParam::RELATION_NAME] ?? null;
         /** @var ?string $nearKey */
         $nearKey = $data['nearKey'] ?? null;
 

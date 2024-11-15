@@ -35,6 +35,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Route;
 use Espo\Core\Utils\Util;
 use Espo\Core\ServiceFactory;
+use Espo\ORM\Defs\Params\EntityParam;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 
@@ -329,7 +330,7 @@ class NameUtil
         foreach ($scopeList as $entityType) {
             $relationsDefs = $this->entityManager
                 ->getMetadata()
-                ->get($entityType, 'relations');
+                ->get($entityType, EntityParam::RELATIONS);
 
             if (empty($relationsDefs)) {
                 continue;

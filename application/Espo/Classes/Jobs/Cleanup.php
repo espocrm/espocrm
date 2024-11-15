@@ -49,6 +49,7 @@ use Espo\Entities\ScheduledJob;
 use Espo\Entities\ScheduledJobLogRecord;
 use Espo\Entities\UniqueId;
 use Espo\Entities\UserReaction;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\DeleteBuilder;
 use Espo\ORM\Repository\RDBRepository;
@@ -605,7 +606,7 @@ class Cleanup implements JobDataLess
             }
 
             try {
-                $relationName = $entity->getRelationParam($relation, 'relationName');
+                $relationName = $entity->getRelationParam($relation, RelationParam::RELATION_NAME);
 
                 if (!$relationName) {
                     continue;

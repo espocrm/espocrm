@@ -36,6 +36,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\HookManager;
 use Espo\Modules\Crm\Entities\TargetList;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\EntityManager;
 use RuntimeException;
 
@@ -107,7 +108,7 @@ class RecordService
             throw new RuntimeException();
         }
 
-        $linkEntityType = ucfirst($entity->getRelationParam($link, 'relationName') ?? '');
+        $linkEntityType = ucfirst($entity->getRelationParam($link, RelationParam::RELATION_NAME) ?? '');
 
         if ($linkEntityType === '') {
             throw new RuntimeException();

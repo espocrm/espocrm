@@ -32,6 +32,7 @@ namespace Espo\ORM;
 use Espo\ORM\DataLoader\EmptyLoader;
 use Espo\ORM\DataLoader\Loader;
 use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\EntityParam;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Relation\EmptyRelations;
@@ -100,7 +101,7 @@ class BaseEntity implements Entity
         $this->entityManager = $entityManager;
 
         $this->attributesDefs = $defs['attributes'] ?? $this->attributesDefs;
-        $this->relationsDefs = $defs['relations'] ?? $this->relationsDefs;
+        $this->relationsDefs = $defs[EntityParam::RELATIONS] ?? $this->relationsDefs;
 
         if ($valueAccessorFactory) {
             $this->valueAccessor = $valueAccessorFactory->create($this);

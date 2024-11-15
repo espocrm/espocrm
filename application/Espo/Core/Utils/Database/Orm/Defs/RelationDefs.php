@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils\Database\Orm\Defs;
 
 use Espo\Core\Utils\Util;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Type\RelationType;
 
 class RelationDefs
@@ -110,7 +111,7 @@ class RelationDefs
      */
     public function withRelationshipName(string $name): self
     {
-        return $this->withParam('relationName', $name);
+        return $this->withParam(RelationParam::RELATION_NAME, $name);
     }
 
     /**
@@ -118,7 +119,7 @@ class RelationDefs
      */
     public function getRelationshipName(): ?string
     {
-        return $this->getParam('relationName');
+        return $this->getParam(RelationParam::RELATION_NAME);
     }
 
     /**
