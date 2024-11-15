@@ -148,17 +148,20 @@
         "account": {
             "type": "belongsTo",
             "entity": "Account",
-            "foreign": "cases"
+            "foreign": "cases",
+            "deferredLoad": true
         },
         "lead": {
             "type": "belongsTo",
             "entity": "Lead",
-            "foreign": "cases"
+            "foreign": "cases",
+            "deferredLoad": true
         },
         "contact": {
             "type": "belongsTo",
             "entity": "Contact",
-            "foreign": "casesPrimary"
+            "foreign": "casesPrimary",
+            "deferredLoad": true
         },
         "contacts": {
             "type": "hasMany",

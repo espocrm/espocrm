@@ -51,10 +51,10 @@ class Contact extends Person
     /**
      * A primary account.
      */
-    public function getAccount(): ?Link
+    public function getAccount(): ?Account
     {
-        /** @var ?Link */
-        return $this->getValueObject('account');
+        /** @var ?Account */
+        return $this->relations->getOne('account');
     }
 
     /**

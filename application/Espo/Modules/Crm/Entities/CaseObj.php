@@ -133,4 +133,14 @@ class CaseObj extends Entity
 
         return $this;
     }
+
+    public function setAccount(Account|Link|null $account): self
+    {
+        return $this->setRelatedLinkOrEntity('account', $account);
+    }
+
+    public function setContact(Contact|Link|null $contact): self
+    {
+        return $this->setRelatedLinkOrEntity('contact', $contact);
+    }
 }

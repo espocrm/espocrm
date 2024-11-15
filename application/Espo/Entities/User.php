@@ -30,7 +30,6 @@
 namespace Espo\Entities;
 
 use Espo\Core\Entities\Person;
-
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Name\Field;
@@ -278,12 +277,10 @@ class User extends Person
         return $this->get('contactId');
     }
 
-    public function getContact(): ?Link
+    public function getContact(): ?Contact
     {
-        /** @var ?Link $value */
-        $value = $this->getValueObject('contact');
-
-        return $value;
+        /** @var ?Contact */
+        return $this->relations->getOne('contact');
     }
 
     /**

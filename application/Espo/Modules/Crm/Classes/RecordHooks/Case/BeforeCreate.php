@@ -32,9 +32,7 @@ namespace Espo\Modules\Crm\Classes\RecordHooks\Case;
 use Espo\Core\Record\Hook\SaveHook;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\CaseObj;
-use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityManager;
 
 /**
  * @implements SaveHook<CaseObj>
@@ -43,7 +41,6 @@ use Espo\ORM\EntityManager;
 class BeforeCreate implements SaveHook
 {
     public function __construct(
-        private EntityManager $entityManager,
         private User $user
     ) {}
 
@@ -53,17 +50,18 @@ class BeforeCreate implements SaveHook
             return;
         }
 
-        if (!$entity->has('accountId') && $this->user->getContactId()) {
-            /** @var ?Contact $contact */
-            $contact = $this->entityManager->getEntityById(Contact::ENTITY_TYPE, $this->user->getContactId());
+        $userContact = $this->user->getContact();
 
-            if ($contact && $contact->getAccount()) {
-                $entity->set('accountId', $contact->getAccount()->getId());
-            }
+        if (!$userContact) {
+            return;
         }
 
-        if (!$entity->has('contactId') && $this->user->getContactId()) {
-            $entity->set('contactId', $this->user->getContactId());
+        if (!$entity->getAccount() && $userContact->getAccount()) {
+            $entity->setAccount($userContact->getAccount());
+        }
+
+        if (!$entity->getContact()) {
+            $entity->setContact($userContact);
         }
     }
 }

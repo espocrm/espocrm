@@ -571,7 +571,8 @@
         },
         "account": {
             "type": "belongsTo",
-            "entity": "Account"
+            "entity": "Account",
+            "deferredLoad": true
         },
         "accounts": {
             "type": "hasMany",

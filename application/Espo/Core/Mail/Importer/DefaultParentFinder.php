@@ -111,23 +111,18 @@ class DefaultParentFinder implements ParentFinder
 
     private function getByAddress(string $emailAddress): ?Entity
     {
-        /** @var ?Contact $contact */
         $contact = $this->entityManager
-            ->getRDBRepository(Contact::ENTITY_TYPE)
-            ->where([
-                'emailAddress' => $emailAddress
-            ])
+            ->getRDBRepositoryByClass(Contact::class)
+            ->where(['emailAddress' => $emailAddress])
             ->findOne();
 
         if ($contact) {
-            $accountLink = $contact->getAccount();
-
             if (
                 !$this->config->get('b2cMode') &&
-                $accountLink &&
-                $this->isEntityTypeAllowed(Account::ENTITY_TYPE)
+                $this->isEntityTypeAllowed(Account::ENTITY_TYPE) &&
+                $contact->getAccount()
             ) {
-                return $this->entityManager->getEntityById(Account::ENTITY_TYPE, $accountLink->getId());
+                return $contact->getAccount();
             }
 
             if ($this->isEntityTypeAllowed(Contact::ENTITY_TYPE)) {
@@ -137,10 +132,8 @@ class DefaultParentFinder implements ParentFinder
 
         if ($this->isEntityTypeAllowed(Account::ENTITY_TYPE)) {
             $account = $this->entityManager
-                ->getRDBRepository(Account::ENTITY_TYPE)
-                ->where([
-                    'emailAddress' => $emailAddress
-                ])
+                ->getRDBRepositoryByClass(Account::class)
+                ->where(['emailAddress' => $emailAddress])
                 ->findOne();
 
             if ($account) {
@@ -150,7 +143,7 @@ class DefaultParentFinder implements ParentFinder
 
         if ($this->isEntityTypeAllowed(Lead::ENTITY_TYPE)) {
             $lead = $this->entityManager
-                ->getRDBRepository(Lead::ENTITY_TYPE)
+                ->getRDBRepositoryByClass(Lead::class)
                 ->where(['emailAddress' => $emailAddress])
                 ->findOne();
 
