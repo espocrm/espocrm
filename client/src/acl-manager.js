@@ -338,7 +338,7 @@ class AclManager {
      *
      * @param {string} permission A permission name.
      * @param {module:models/user} user A user.
-     * @returns {boolean} True if access allowed.
+     * @returns {boolean|null} True if access allowed. Null if not enough data loaded to know for sure.
      */
     checkPermission(permission, user) {
         if (this.getUser().isAdmin()) {
@@ -357,7 +357,7 @@ class AclManager {
 
         if (level === 'team') {
             if (!user.has('teamsIds')) {
-                return false;
+                return null;
             }
 
             let result = false;

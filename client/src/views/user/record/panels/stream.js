@@ -47,34 +47,36 @@ export default class extends PanelStreamView {
 
     /**
      * @private
-     * @param {import('model').default} model
+     * @param {import('models/user').default} model
      */
     setupPermission(model) {
-        let assignmentPermission = this.getAcl().checkPermission('message', model);
+        const permission = this.getAcl().checkPermission('message', model);
 
-        if (assignmentPermission) {
+        if (permission) {
             return;
         }
 
         this.postDisabled = true;
 
-        if (this.getAcl().getPermissionLevel('message') !== 'team') {
+        if (permission !== null) {
             return;
         }
 
-        if (!this.model.has('teamsIds')) {
-            this.listenToOnce(this.model, 'sync', () => {
-                assignmentPermission = this.getAcl().checkUserPermission(model);
+        this.listenToOnce(this.model, 'sync', async () => {
+            if (!this.getAcl().checkPermission('message', model)) {
+                return;
+            }
 
-                if (assignmentPermission) {
-                    this.postDisabled = false;
+            this.postDisabled = false;
 
-                    if (this.$postContainer) {
-                        this.$postContainer.removeClass('hidden');
-                    }
-                }
-            });
-        }
+            await this.whenRendered();
+
+            const container = this.element.querySelector('.post-container');
+
+            if (container) {
+                container.classList.remove('hidden');
+            }
+        });
     }
 
     prepareNoteForPost(model) {
