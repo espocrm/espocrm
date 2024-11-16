@@ -10,7 +10,7 @@
     </div>
     <div class="stream-head-text-container">
         <span
-            class="{{emailIconClassName}} action icon"
+            class="{{emailIconClassName}} text-muted action icon"
             style="cursor: pointer;"
             title="{{translate 'View'}}"
             data-action="quickView"

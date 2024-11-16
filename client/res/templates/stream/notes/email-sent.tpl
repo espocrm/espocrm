@@ -9,7 +9,7 @@
         {{{avatar}}}
     </div>
     <div class="stream-head-text-container">
-       <span
+        <span
             class="{{emailIconClassName}} text-muted action icon"
             style="cursor: pointer;"
             title="{{translate 'View'}}"
