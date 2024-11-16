@@ -84,7 +84,8 @@
     {
         "label": "Stream",
         "rows": [
-            [{"name": "availableReactions"}, {"name": "followCreatedEntities"}]
+            [{"name": "availableReactions"}, {"name": "followCreatedEntities"}],
+            [{"name": "streamEmailWithContentEntityTypeList"}, false]
         ]
     }
 ]

@@ -71,6 +71,7 @@
         "portalStreamEmailNotifications": "Notifications about updates in Stream for portal users",
         "streamEmailNotificationsEntityList": "Stream email notifications scopes",
         "streamEmailNotificationsTypeList": "What to notify about",
+        "streamEmailWithContentEntityTypeList": "Entities with email body in stream notes",
         "emailNotificationsDelay": "Delay of email notifications (in seconds)",
         "b2cMode": "B2C Mode",
         "avatarsDisabled": "Disable Avatars",

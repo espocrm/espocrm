@@ -159,6 +159,9 @@
         },
         "emailScheduledBatchCount": {
             "level": "admin"
+        },
+        "streamEmailWithContentEntityTypeList": {
+            "level": "admin"
         }
     }
 }

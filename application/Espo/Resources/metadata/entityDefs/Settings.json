@@ -507,6 +507,10 @@
             "type": "multiEnum",
             "options": ["Post", "Status", "EmailReceived"]
         },
+        "streamEmailWithContentEntityTypeList": {
+            "type": "multiEnum",
+            "view": "views/settings/fields/stream-email-with-content-entity-type-list"
+        },
         "newNotificationCountInTitle": {
             "type": "bool"
         },
