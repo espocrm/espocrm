@@ -26,18 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/modals/select-followers', ['views/modals/select-records'], function (Dep) {
+import SelectRecordsModalView from 'views/modals/select-records';
 
-    return Dep.extend({
+export default class extends SelectRecordsModalView {
 
-        setup: function () {
-            this.filterList = ['active'];
+    setup() {
+        this.filterList = ['active'];
 
-            if (this.getAcl().getPermissionLevel('portalPermission')) {
-                this.filterList.push('activePortal');
-            }
+        if (this.getAcl().getPermissionLevel('portalPermission')) {
+            this.filterList.push('activePortal');
+        }
 
-            Dep.prototype.setup.call(this);
-        },
-    });
-});
+        super.setup();
+    }
+}

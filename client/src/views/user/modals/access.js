@@ -26,93 +26,92 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/modals/access', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+export default class extends ModalView {
 
-        cssName: 'user-access',
-        multiple: false,
-        template: 'user/modals/access',
-        backdrop: true,
+    cssName = 'user-access'
+    multiple = false
+    template = 'user/modals/access'
+    backdrop = true
 
-        styleMap: {
-            yes: 'success',
-            all: 'success',
-            account: 'info',
-            contact: 'info',
-            team: 'info',
-            own: 'warning',
-            no: 'danger',
-            enabled: 'success',
-            disabled: 'danger',
-            'not-set': 'default',
-        },
+    styleMap = {
+        yes: 'success',
+        all: 'success',
+        account: 'info',
+        contact: 'info',
+        team: 'info',
+        own: 'warning',
+        no: 'danger',
+        enabled: 'success',
+        disabled: 'danger',
+        'not-set': 'default',
+    }
 
-        data: function () {
-            return {
-                valuePermissionDataList: this.getValuePermissionList(),
-                levelListTranslation: this.getLanguage().get('Role', 'options', 'levelList') || {},
-                styleMap: this.styleMap,
-            };
-        },
+    data() {
+        return {
+            valuePermissionDataList: this.getValuePermissionList(),
+            levelListTranslation: this.getLanguage().get('Role', 'options', 'levelList') || {},
+            styleMap: this.styleMap,
+        };
+    }
 
-        getValuePermissionList: function () {
-            const list = this.getMetadata().get(['app', 'acl', 'valuePermissionList'], []);
-            const dataList = [];
+    getValuePermissionList() {
+        const list = this.getMetadata().get(['app', 'acl', 'valuePermissionList'], []);
+        const dataList = [];
 
-            list.forEach(item => {
-                const o = {};
-                o.name = item;
-                o.value = this.options.aclData[item];
+        list.forEach(item => {
+            const o = {};
+            o.name = item;
+            o.value = this.options.aclData[item];
 
-                dataList.push(o);
-            });
+            dataList.push(o);
+        });
 
-            return dataList;
-        },
+        return dataList;
+    }
 
-        setup: function () {
-            this.buttonList = [
-                {
-                    name: 'cancel',
-                    label: 'Cancel'
+    setup() {
+        this.buttonList = [
+            {
+                name: 'cancel',
+                label: 'Cancel',
+            }
+        ];
+
+        const fieldTable = Espo.Utils.cloneDeep(this.options.aclData.fieldTable || {});
+
+        for (const scope in fieldTable) {
+            const scopeData = fieldTable[scope] || {};
+
+            for (const field in scopeData) {
+                if (
+                    this.getMetadata()
+                        .get(['app', 'acl', 'mandatory', 'scopeFieldLevel', scope, field]) !== null
+                ) {
+                    delete scopeData[field];
                 }
-            ];
 
-            const fieldTable = Espo.Utils.cloneDeep(this.options.aclData.fieldTable || {});
-
-            for (const scope in fieldTable) {
-                const scopeData = fieldTable[scope] || {};
-
-                for (const field in scopeData) {
-                    if (
-                        this.getMetadata()
-                            .get(['app', 'acl', 'mandatory', 'scopeFieldLevel', scope, field]) !== null
-                    ) {
+                if (
+                    scopeData[field] &&
+                    this.getMetadata().get(['entityDefs', scope, 'fields', field, 'readOnly'])
+                ) {
+                    if (scopeData[field].edit === 'no' && scopeData[field].read === 'yes') {
                         delete scopeData[field];
-                    }
-
-                    if (
-                        scopeData[field] &&
-                        this.getMetadata().get(['entityDefs', scope, 'fields', field, 'readOnly'])
-                    ) {
-                        if (scopeData[field].edit === 'no' && scopeData[field].read === 'yes') {
-                            delete scopeData[field];
-                        }
                     }
                 }
             }
+        }
 
-            this.createView('table', 'views/role/record/table', {
-                acl: {
-                    data: this.options.aclData.table,
-                    fieldData: fieldTable,
-                },
-                final: true,
-                selector: '.user-access-table',
-            });
+        this.createView('table', 'views/role/record/table', {
+            acl: {
+                data: this.options.aclData.table,
+                fieldData: fieldTable,
+            },
+            final: true,
+            selector: '.user-access-table',
+        });
 
-            this.headerText = this.translate('Access');
-        },
-    });
-});
+        this.headerText = this.translate('Access');
+    }
+}
