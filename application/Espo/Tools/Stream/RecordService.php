@@ -424,7 +424,8 @@ class RecordService
     {
         if (
             $note->getType() === Note::TYPE_POST ||
-            $note->getType() === Note::TYPE_EMAIL_RECEIVED
+            $note->getType() === Note::TYPE_EMAIL_RECEIVED ||
+            $note->getType() === Note::TYPE_EMAIL_SENT
         ) {
             $note->loadAttachments();
         }

@@ -90,6 +90,10 @@ class EmailBodyFieldView extends WysiwygFieldView {
     afterRender() {
         super.afterRender();
 
+        if (!this.element) {
+            return;
+        }
+
         this.controlInsertFieldButton();
 
         if (this.isReadMode() && this.replyPart) {

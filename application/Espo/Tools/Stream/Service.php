@@ -496,20 +496,18 @@ class Service
             $note->setSuperParent($email->getAccount());
         }
 
-        $withContent = in_array($entityType, $this->config->get('streamEmailWithContentEntityTypeList', []));
+        $data = [
+            'emailId' => $email->getId(),
+            'emailName' => $email->getSubject(),
+            'isInitial' => $isInitial,
+            'hasAttachment' => count($email->getAttachmentIdList()) > 0,
+        ];
+
+        $withContent = $this->toStoreEmailContent($entityType);
 
         if ($withContent) {
             $note->setPost($email->getBodyPlain());
-        }
-
-        $data = [];
-
-        $data['emailId'] = $email->getId();
-        $data['emailName'] = $email->getSubject();
-        $data['isInitial'] = $isInitial;
-
-        if ($withContent) {
-            $data['attachmentsIds'] = $email->get('attachmentsIds');
+            $data['attachmentsIds'] = $email->getAttachmentIdList();
         }
 
         $from = $email->getFromAddress();
@@ -532,7 +530,7 @@ class Service
             }
         }
 
-        $note->setData((object) $data);
+        $note->setData($data);
 
         $this->entityManager->saveEntity($note);
 
@@ -556,19 +554,17 @@ class Service
             $note->setSuperParent($email->getAccount());
         }
 
-        $withContent = in_array($entityType, $this->config->get('streamEmailWithContentEntityTypeList', []));
+        $data = [
+            'emailId' => $email->getId(),
+            'emailName' => $email->getSubject(),
+            'hasAttachment' => count($email->getAttachmentIdList()) > 0,
+        ];
+
+        $withContent = $this->toStoreEmailContent($entityType);
 
         if ($withContent) {
             $note->setPost($email->getBodyPlain());
-        }
-
-        $data = [];
-
-        $data['emailId'] = $email->getId();
-        $data['emailName'] = $email->getSubject();
-
-        if ($withContent) {
-            $data['attachmentsIds'] = $email->get('attachmentsIds');
+            $data['attachmentsIds'] = $email->getAttachmentIdList();
         }
 
         $user = $this->user;
@@ -578,7 +574,7 @@ class Service
         if (!$user->isSystem()) {
             $person = $user;
         } else {
-            $from = $email->get('from');
+            $from = $email->getFromAddress();
 
             if ($from) {
                 $person = $this->getEmailAddressRepository()->getEntityByAddress($from);
@@ -591,7 +587,7 @@ class Service
             $data['personEntityId'] = $person->getId();
         }
 
-        $note->set('data', (object) $data);
+        $note->setData($data);
 
         $this->entityManager->saveEntity($note);
 
@@ -1368,5 +1364,10 @@ class Service
         $entity->set(Field::STREAM_UPDATED_AT, DateTime::createNow()->toString());
 
         $this->entityManager->saveEntity($entity, [SaveOption::SKIP_ALL => true]);
+    }
+
+    private function toStoreEmailContent(string $entityType): bool
+    {
+        return in_array($entityType, $this->config->get('streamEmailWithContentEntityTypeList', []));
     }
 }

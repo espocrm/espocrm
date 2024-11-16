@@ -27,27 +27,66 @@
  ************************************************************************/
 
 import NoteStreamView from 'views/stream/note';
+import EmailBodyFieldView from 'views/email/fields/body';
+import AttachmentMultipleFieldView from 'views/fields/attachment-multiple';
 
 class EmailSentNoteStreamView extends NoteStreamView {
 
     template = 'stream/notes/email-sent'
     isRemovable = false
 
+    /**
+     * @private
+     * @type {import('views/fields/base').default}
+     */
+    bodyFieldView
+
+    /**
+     * @private
+     * @type {import('views/fields/attachment-multiple').default}
+     */
+    attachmentsFieldView
+
+    /**
+     * @private
+     * @type {import('model').default}
+     */
+    formModel
+
+    /**
+     * @private
+     * @type {string}
+     */
+    emailId
+
     data() {
         return {
             ...super.data(),
             emailId: this.emailId,
             emailName: this.emailName,
-            hasPost: this.hasPost,
+            hasPost: this.hasPost && !this.detailsIsShown,
             hasAttachments: this.hasAttachments,
             emailIconClassName: this.getMetadata().get(['clientDefs', 'Email', 'iconClass']) || '',
             isPinned: this.isThis && this.model.get('isPinned') && this.model.collection &&
                 !this.model.collection.pinnedList,
+            detailsIsShown: this.detailsIsShown,
         };
     }
 
     setup() {
-        const data = /** @type {Record} */this.model.get('data') || {};
+        this.addActionHandler('expandDetails', () => this.toggleDetails());
+
+        const data =
+            /**
+             * @type {{
+             *      emailId: string,
+             *      emailName: string,
+             *      personEntityType?: string,
+             *      personEntityId?: string,
+             *      personEntityName?: string,
+             *      isInitial?: boolean,
+             * }} */
+            this.model.get('data') || {};
 
         this.emailId = data.emailId;
         this.emailName = data.emailName;
@@ -101,6 +140,70 @@ class EmailSentNoteStreamView extends NoteStreamView {
         }
 
         this.createMessage();
+    }
+
+    /**
+     * @private
+     * Warning: The same method exists in email-received.
+     */
+    async toggleDetails() {
+        this.detailsIsShown = !this.detailsIsShown;
+
+        if (!this.detailsIsShown && this.formModel) {
+            this.formModel.abortLastFetch();
+
+            Espo.Ui.notify();
+        }
+
+        await this.reRender();
+
+        if (!this.detailsIsShown || !this.emailId) {
+            return;
+        }
+
+        if (this.bodyFieldView) {
+            this.bodyFieldView.toShowQuotePart = false;
+
+            await this.bodyFieldView.reRender();
+
+            return;
+        }
+
+        this.formModel = await this.getModelFactory().create('Email');
+
+        this.formModel.id = this.emailId;
+
+        Espo.Ui.notify(' ... ');
+
+        await this.formModel.fetch();
+
+        this.bodyFieldView = new EmailBodyFieldView({
+            name: 'body',
+            model: this.formModel,
+            mode: 'detail',
+            readOnly: true,
+        });
+
+        await this.assignView('bodyField', this.bodyFieldView, '[data-name="body"]');
+
+        if (
+            !this.hasAttachments &&
+            this.formModel.attributes.attachmentsIds &&
+            this.formModel.attributes.attachmentsIds.length
+        ) {
+            this.attachmentsFieldView = new AttachmentMultipleFieldView({
+                name: 'attachments',
+                model: this.formModel,
+                mode: 'detail',
+                readOnly: true,
+            });
+
+            await this.assignView('attachmentsField', this.attachmentsFieldView, '[data-name="attachments"]');
+        }
+
+        Espo.Ui.notify();
+
+        await this.reRender();
     }
 }
 
