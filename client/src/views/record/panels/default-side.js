@@ -33,6 +33,18 @@ import SidePanelView from 'views/record/panels/side';
  */
 class DefaultSidePanelView extends SidePanelView {
 
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    complexCreatedDisabled
+
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    complexModifiedDisabled
+
     data() {
         const data = super.data();
 

@@ -26,49 +26,65 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/record/panels/stream', ['views/stream/panel'], function (Dep) {
+import PanelStreamView from 'views/stream/panel';
 
-    return Dep.extend({
+export default class extends PanelStreamView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        const model = /** @type import('models/user').default */this.model;
 
-            let assignmentPermission = this.getAcl().checkPermission('message', this.model);
+        if (this.model.id === this.getUser().id) {
+            this.placeholderText = this.translate('writeMessageToSelf', 'messages');
+        } else {
+            this.placeholderText = this.translate('writeMessageToUser', 'messages')
+                .replace('{user}', this.model.get('name'));
+        }
 
-            if (this.model.id === this.getUser().id) {
-                this.placeholderText = this.translate('writeMessageToSelf', 'messages');
-            } else {
-                this.placeholderText = this.translate('writeMessageToUser', 'messages')
-                    .replace('{user}', this.model.get('name'));
-            }
+        super.setup();
 
-            if (!assignmentPermission) {
-                this.postDisabled = true;
+        this.setupPermission(model);
+    }
 
-                if (this.getAcl().getPermissionLevel('message') === 'team') {
-                    if (!this.model.has('teamsIds')) {
-                        this.listenToOnce(this.model, 'sync', () => {
-                            assignmentPermission = this.getAcl().checkUserPermission(this.model);
+    /**
+     * @private
+     * @param {import('model').default} model
+     */
+    setupPermission(model) {
+        let assignmentPermission = this.getAcl().checkPermission('message', model);
 
-                            if (assignmentPermission) {
-                                this.postDisabled = false;
-                                this.$el.find('.post-container').removeClass('hidden');
-                            }
-                        });
+        if (assignmentPermission) {
+            return;
+        }
+
+        this.postDisabled = true;
+
+        if (this.getAcl().getPermissionLevel('message') !== 'team') {
+            return;
+        }
+
+        if (!this.model.has('teamsIds')) {
+            this.listenToOnce(this.model, 'sync', () => {
+                assignmentPermission = this.getAcl().checkUserPermission(model);
+
+                if (assignmentPermission) {
+                    this.postDisabled = false;
+
+                    if (this.$postContainer) {
+                        this.$postContainer.removeClass('hidden');
                     }
                 }
-            }
-        },
+            });
+        }
+    }
 
-        prepareNoteForPost: function (model) {
-            var userIdList = [this.model.id];
-            var userNames = {};
+    prepareNoteForPost(model) {
+        const userIdList = [this.model.id];
+        const userNames = {};
 
-            userNames[userIdList] = this.model.get('name');
+        userNames[userIdList] = this.model.get('name');
 
-            model.set('usersIds', userIdList);
-            model.set('usersNames', userNames);
-            model.set('targetType', 'users');
-        },
-    });
-});
+        model.set('usersIds', userIdList);
+        model.set('usersNames', userNames);
+        model.set('targetType', 'users');
+    }
+}

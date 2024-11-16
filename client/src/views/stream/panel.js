@@ -52,6 +52,12 @@ class PanelStreamView extends RelationshipPanelView {
     pinnedCollection
 
     /**
+     * @protected
+     * @type {string}
+     */
+    placeholderText
+
+    /**
      * @private
      * @type {import('model').default}
      */
@@ -197,7 +203,7 @@ class PanelStreamView extends RelationshipPanelView {
 
         this.setupTitle();
 
-        this.placeholderText = this.translate('writeYourCommentHere', 'messages');
+        this.placeholderText = this.placeholderText || this.translate('writeYourCommentHere', 'messages');
         this.allowInternalNotes = false;
 
         if (!this.getUser().isPortal()) {
@@ -722,6 +728,10 @@ class PanelStreamView extends RelationshipPanelView {
         });
     }
 
+    /**
+     * @protected
+     * @param {import('model').default} model
+     */
     prepareNoteForPost(model) {
         model.set('parentId', this.model.id);
         model.set('parentType', this.model.entityType);

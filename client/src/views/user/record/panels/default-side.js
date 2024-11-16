@@ -26,13 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/record/panels/default-side', ['views/record/panels/default-side'], function (Dep) {
+import DefaultSidePanelView from 'views/record/panels/default-side';
 
-    return Dep.extend({
+export default class extends DefaultSidePanelView {
 
-        complexCreatedDisabled: true,
-
-        complexModifiedDisabled: true,
-
-    });
-});
+    complexCreatedDisabled = true
+    complexModifiedDisabled = true
+}
