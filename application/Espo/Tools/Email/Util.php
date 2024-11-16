@@ -63,4 +63,35 @@ class Util
 
         return $string;
     }
+
+    static public function stripBodyPlainQuotePart(string $body): string
+    {
+        if (!$body) {
+            return '';
+        }
+
+        $lines = preg_split("/\r\n|\n|\r/", $body);
+
+        if (!is_array($lines)) {
+            return '';
+        }
+
+        $endIndex = count($lines) - 1;
+
+        for ($i = count($lines) - 1; $i >= 0; $i--) {
+            $line = $lines[$i];
+
+            if (str_starts_with($line, '>')) {
+                $endIndex = $i;
+
+                continue;
+            }
+
+            break;
+        }
+
+        $lines = array_slice($lines, 0, $endIndex);
+
+        return implode("\r\n", $lines);
+    }
 }

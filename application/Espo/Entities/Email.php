@@ -207,6 +207,20 @@ class Email extends Entity
         return $this->hasInContainer('bodyPlain') && $this->getFromContainer('bodyPlain');
     }
 
+    /**
+     * @since 9.0.0
+     */
+    public function getBodyPlainWithReplyPart(): ?string
+    {
+        $body = $this->getBodyPlain();
+
+        if (!$body) {
+            return null;
+        }
+
+        return EmailUtil::stripBodyPlainQuotePart($body) ?: null;
+    }
+
     public function getBodyPlain(): ?string
     {
         if ($this->getFromContainer('bodyPlain')) {

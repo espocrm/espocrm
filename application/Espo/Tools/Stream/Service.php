@@ -506,7 +506,7 @@ class Service
         $withContent = $this->toStoreEmailContent($entityType);
 
         if ($withContent) {
-            $note->setPost($email->getBodyPlain());
+            $note->setPost($email->getBodyPlainWithReplyPart());
             $data['attachmentsIds'] = $email->getAttachmentIdList();
         }
 
@@ -563,7 +563,7 @@ class Service
         $withContent = $this->toStoreEmailContent($entityType);
 
         if ($withContent) {
-            $note->setPost($email->getBodyPlain());
+            $note->setPost($email->getBodyPlainWithReplyPart());
             $data['attachmentsIds'] = $email->getAttachmentIdList();
         }
 

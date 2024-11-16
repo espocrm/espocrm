@@ -30,6 +30,7 @@
 namespace tests\unit\Espo\Entities;
 
 use Espo\Entities\Email;
+use Espo\Tools\Email\Util;
 
 class EmailTest extends \PHPUnit\Framework\TestCase
 {
@@ -475,11 +476,22 @@ class EmailTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('test <img src="cid:Id01">', $body);
     }
 
-    function testBodyPlain()
+    public function testBodyPlain(): void
     {
         $this->email->set('body', '<br />&nbsp;&amp;');
         $bodyPlain = $this->email->getBodyPlain();
         $this->assertEquals("\r\n &", $bodyPlain);
+    }
+
+    public function testBodyPlainWithoutQuotePart(): void
+    {
+        $body = "Test\nHello\n> Test\n> Test\r\n>> Test";
+
+        $this->email->set('bodyPlain', $body);
+
+        $expected = "Test\r\nHello";
+
+        $this->assertEquals($expected, $this->email->getBodyPlainWithReplyPart());
     }
 
     public function testSubjectBody(): void
