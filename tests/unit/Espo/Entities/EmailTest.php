@@ -485,7 +485,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
 
     public function testBodyPlainWithoutQuotePart(): void
     {
-        $body = "Test\nHello\n> Test\n> Test\r\n>> Test";
+        $body = "Test\r\nHello\r\n\r\nOn {date} {one} wrote:\r\n> Test\n> Test\r\n>> Test\r\n";
 
         $this->email->set('bodyPlain', $body);
 

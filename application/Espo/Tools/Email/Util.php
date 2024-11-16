@@ -81,7 +81,7 @@ class Util
         for ($i = count($lines) - 1; $i >= 0; $i--) {
             $line = $lines[$i];
 
-            if (str_starts_with($line, '>')) {
+            if (str_starts_with($line, '>') || $line === '') {
                 $endIndex = $i;
 
                 continue;
@@ -91,6 +91,14 @@ class Util
         }
 
         $lines = array_slice($lines, 0, $endIndex);
+
+        if (count($lines) > 2) {
+            $lastIndex = count($lines) - 1;
+
+            if (str_ends_with($lines[$lastIndex], ':') && $lines[$lastIndex - 1] === '') {
+                $lines = array_slice($lines, 0, count($lines) - 2);
+            }
+        }
 
         return implode("\r\n", $lines);
     }
