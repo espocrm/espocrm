@@ -33,8 +33,23 @@ import AttachmentMultipleFieldView from 'views/fields/attachment-multiple';
 class EmailReceivedNoteStreamView extends NoteStreamView {
 
     template = 'stream/notes/email-received'
+
+    /**
+     * @protected
+     * @type {boolean}
+     */
     isRemovable = false
+
+    /**
+     * @protected
+     * @type {boolean}
+     */
     isSystemAvatar = true
+
+    /**
+     * @private
+     * @type {boolean}
+     */
     detailsIsShown = false
 
     /**
@@ -96,16 +111,16 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
         if (
             this.parentModel &&
             (
-                this.model.get('parentType') === this.parentModel.entityType &&
-                this.model.get('parentId') === this.parentModel.id
+                this.model.attributes.parentType === this.parentModel.entityType &&
+                this.model.attributes.parentId === this.parentModel.id
             )
         ) {
-            if (this.model.get('post')) {
+            if (this.model.attributes.post) {
                 this.createField('post', null, null, 'views/stream/fields/post');
                 this.hasPost = true;
             }
 
-            if ((this.model.get('attachmentsIds') || []).length) {
+            if ((this.model.attributes.attachmentsIds || []).length) {
                 this.createField(
                     'attachments',
                     'attachmentMultiple',
@@ -128,6 +143,20 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
                 .attr('data-scope', 'Email')
                 .attr('data-id', data.emailId);
 
+        this.setupEmailMessage(data);
+
+        if (this.isThis) {
+            this.messageName += 'This';
+        }
+
+        this.createMessage();
+    }
+
+    /**
+     * @protected
+     * @param {Record} data
+     */
+    setupEmailMessage(data) {
         this.messageName = 'emailReceived';
 
         if (data.isInitial) {
@@ -146,22 +175,15 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
         }
 
         if (
-            this.model.get('parentType') === data.personEntityType &&
-            this.model.get('parentId') === data.personEntityId
+            this.model.attributes.parentType === data.personEntityType &&
+            this.model.attributes.parentId === data.personEntityId
         ) {
             this.isThis = true;
         }
-
-        if (this.isThis) {
-            this.messageName += 'This';
-        }
-
-        this.createMessage();
     }
 
     /**
      * @private
-     * Warning: The same method exists in email-sent.
      */
     async toggleDetails() {
         this.detailsIsShown = !this.detailsIsShown;
