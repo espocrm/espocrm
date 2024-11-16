@@ -157,8 +157,9 @@ class Avatar extends Image
         $color = $this->getColor($user);
         $textColor = $this->isDark($color) ? $textColors[0] : $textColors[1];
 
-        $avatar = (new InitialAvatar())
-            ->name($user->getName() ?? $user->getUserName() ?? $userId);
+        $name = $this->getName($user, $userId);
+
+        $avatar = (new InitialAvatar())->name($name);
 
         if ($user->getName() && !self::isAllowedLanguage($avatar)) {
             $avatar = $avatar->name($user->getUserName() ?? $userId);
@@ -286,5 +287,16 @@ class Avatar extends Image
         $dark = $this->metadata->get("app.avatars.darkTextColor") ?? $this->darkTextColor;
 
         return [$light, $dark];
+    }
+
+    private function getName(User $user, string $userId): string
+    {
+        $name = $user->getName() ?? $user->getUserName() ?? $userId;
+
+        if ($user->getUserName() === SystemUser::NAME) {
+            $name = SystemUser::NAME;
+        }
+
+        return $name;
     }
 }
