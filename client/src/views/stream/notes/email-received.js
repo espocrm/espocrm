@@ -76,12 +76,19 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
      */
     emailId
 
+    /**
+     * @private
+     * @type {boolean}
+     */
+    emailNotLoaded = false
+
     data() {
         return {
             ...super.data(),
             emailId: this.emailId,
             emailName: this.emailName,
-            hasPost: this.hasPost && !this.detailsIsShown,
+            hasPost: this.hasPost && (!this.detailsIsShown || !this.bodyFieldView),
+            mutedPost: this.hasPost && this.detailsIsShown && !this.bodyFieldView && !this.emailNotLoaded,
             hasAttachments: this.hasAttachments,
             emailIconClassName: this.getMetadata().get(['clientDefs', 'Email', 'iconClass']) || '',
             isPinned: this.isThis && this.model.get('isPinned') && this.model.collection &&
@@ -214,7 +221,15 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
 
         Espo.Ui.notify(' ... ');
 
-        await this.formModel.fetch();
+        try {
+            await this.formModel.fetch();
+        } catch (e) {
+            this.emailNotLoaded = true;
+
+            await this.reRender();
+
+            return;
+        }
 
         this.bodyFieldView = new EmailBodyFieldView({
             name: 'body',

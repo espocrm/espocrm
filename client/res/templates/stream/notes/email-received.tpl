@@ -46,7 +46,7 @@
 
 {{#if hasPost}}
 <div class="stream-post-container">
-    <span class="cell cell-post">{{{post}}}</span>
+    <span class="cell cell-post {{#if mutedPost}} text-muted {{/if}}">{{{post}}}</span>
 </div>
 {{/if}}
 
