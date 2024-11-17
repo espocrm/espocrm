@@ -54,6 +54,7 @@ class Manager
         Field::IS_FOLLOWED,
         Field::MODIFIED_AT,
         Field::MODIFIED_BY,
+        Field::STREAM_UPDATED_AT,
     ];
 
     /** @var ?array<string, bool> */
