@@ -34,9 +34,13 @@ use Espo\Entities\User;
 use Espo\ORM\Defs;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Expression as Expr;
+use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\WhereItem;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Type\RelationType;
 
 /**
  * @since 9.0.0
@@ -102,5 +106,61 @@ class RelationQueryHelper
             Expression::column('id'),
             $subQuery
         );
+    }
+
+    /**
+     * @param string|string[] $id
+     */
+    public function prepareLinkWhere(
+        Defs\RelationDefs $defs,
+        string $entityType,
+        string|array $id,
+        QueryBuilder $queryBuilder
+    ): ?WhereItem {
+
+        $type = $defs->getType();
+        $link = $defs->getName();
+
+        if (
+            $type === RelationType::BELONGS_TO ||
+            $type === RelationType::HAS_ONE
+        ) {
+            if ($type === RelationType::HAS_ONE) {
+                $queryBuilder->leftJoin($link);
+            }
+
+            return WhereClause::fromRaw([$link . 'Id' => $id]);
+        }
+
+        if ($type === RelationType::BELONGS_TO_PARENT) {
+            return WhereClause::fromRaw([
+                'parentType' => $entityType,
+                'parentId' => $id,
+            ]);
+        }
+
+        if ($type === RelationType::MANY_MANY) {
+            return Cond::in(
+                Expr::column(Attribute::ID),
+                QueryBuilder::create()
+                    ->from(ucfirst($defs->getRelationshipName()), 'm')
+                    ->select($defs->getMidKey())
+                    ->where([$defs->getForeignMidKey() => $id])
+                    ->build()
+            );
+        }
+
+        if ($type === RelationType::HAS_MANY) {
+            return Cond::in(
+                Expr::column(Attribute::ID),
+                QueryBuilder::create()
+                    ->from($entityType, 's')
+                    ->select($defs->getForeignKey())
+                    ->where([Attribute::ID => $id])
+                    ->build()
+            );
+        }
+
+        return null;
     }
 }

@@ -118,12 +118,13 @@ class EntityManagerEditView extends View {
             );
 
             for (const param in this.additionalParams) {
-                /** @type {{fieldDefs: Object, location?: string}} */
+                /** @type {{fieldDefs: Object, location?: string, param?: string}} */
                 const defs = this.additionalParams[param];
                 const location = defs.location || this.defaultParamLocation;
                 const defaultValue = defs.fieldDefs.type === 'bool' ? false : null;
+                const actualParam = defs.param || param;
 
-                const value = this.getMetadata().get([location, scope, param]) || defaultValue;
+                const value = this.getMetadata().get([location, scope, actualParam]) || defaultValue;
 
                 this.model.set(param, value);
             }

@@ -29,15 +29,18 @@
 
 namespace Espo\Core\Portal\Acl;
 
+use Espo\Core\Field\Link;
+use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
-use Espo\ORM\BaseEntity;
-use Espo\ORM\Defs\Params\RelationParam;
+use Espo\Core\ORM\Type\FieldType;
+use Espo\Core\Portal\Acl\OwnershipChecker\MetadataProvider;
+use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\User;
-
 use Espo\Core\Acl\OwnershipOwnChecker;
+use Espo\ORM\Type\RelationType;
 
 /**
  * A default implementation for ownership checking for portal.
@@ -51,22 +54,12 @@ class DefaultOwnershipChecker implements
     OwnershipAccountChecker,
     OwnershipContactChecker
 {
-    private const ENTITY_ACCOUNT = 'Account';
-    private const ENTITY_CONTACT = 'Contact';
+    private const ATTR_CREATED_BY_ID = Field::CREATED_AT . 'Id';
 
-    private const ATTR_CREATED_BY_ID = 'createdById';
-    private const ATTR_ACCOUNT_ID = 'accountId';
-    private const ATTR_CONTACT_ID = 'contactId';
-    private const ATTR_PARENT_ID = 'parentId';
-    private const ATTR_PARENT_TYPE = 'parentType';
-    private const FIELD_CONTACT = 'contact';
-    private const FIELD_CONTACTS = 'contacts';
-    private const FIELD_ACCOUNT = 'account';
-    private const FIELD_ACCOUNTS = 'accounts';
-    private const FIELD_PARENT = Field::PARENT;
-
-    public function __construct(private EntityManager $entityManager)
-    {}
+    public function __construct(
+        private EntityManager $entityManager,
+        private MetadataProvider $metadataProvider,
+    ) {}
 
     public function checkOwn(User $user, Entity $entity): bool
     {
@@ -84,43 +77,57 @@ class DefaultOwnershipChecker implements
 
     public function checkAccount(User $user, Entity $entity): bool
     {
-        $accountIdList = $user->getLinkMultipleIdList(self::FIELD_ACCOUNTS);
+        $linkDefs = $this->metadataProvider->getAccountLink($entity->getEntityType());
 
-        if (!count($accountIdList)) {
+        if (!$linkDefs) {
             return false;
         }
 
+        $link = $linkDefs->getName();
+
+        $accountIds = $user->getAccounts()->getIdList();
+
+        if ($accountIds === []) {
+            return false;
+        }
+
+        $fieldDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType())
+            ->tryGetField($link);
+
         if (
-            $entity->hasAttribute(self::ATTR_ACCOUNT_ID) &&
-            $this->getRelationParam($entity, self::FIELD_ACCOUNT, RelationParam::ENTITY) === self::ENTITY_ACCOUNT
+            $linkDefs->getType() === RelationType::BELONGS_TO &&
+            $fieldDefs?->getType() === FieldType::LINK
         ) {
-            if (in_array($entity->get(self::ATTR_ACCOUNT_ID), $accountIdList)) {
-                return true;
+            $setAccountLink = $entity->getValueObject($link);
+
+            if (!$setAccountLink instanceof Link) {
+                return false;
             }
+
+            return in_array($setAccountLink->getId(), $accountIds);
         }
 
         if (
-            $entity->hasRelation(self::FIELD_ACCOUNTS) &&
-            $this->getRelationParam($entity, self::FIELD_ACCOUNTS, RelationParam::ENTITY) === self::ENTITY_ACCOUNT
+            $linkDefs->getType() === RelationType::BELONGS_TO_PARENT &&
+            $fieldDefs?->getType() === FieldType::LINK_PARENT
         ) {
-            $repository = $this->entityManager->getRDBRepository($entity->getEntityType());
+            $setLink = $entity->getValueObject($link);
 
-            foreach ($accountIdList as $accountId) {
-                if (
-                    $repository
-                        ->getRelation($entity, self::FIELD_ACCOUNTS)
-                        ->isRelatedById($accountId)
-                ) {
-                    return true;
-                }
+            if (!$setLink instanceof LinkParent || $setLink->getEntityType() !== Account::ENTITY_TYPE) {
+                return false;
             }
+
+            return in_array($setLink->getId(), $accountIds);
         }
 
-        if ($entity->hasAttribute(self::ATTR_PARENT_ID) && $entity->hasRelation(self::FIELD_PARENT)) {
-            if (
-                $entity->get(self::ATTR_PARENT_TYPE) === self::ENTITY_ACCOUNT &&
-                in_array($entity->get(self::ATTR_PARENT_ID), $accountIdList)
-            ) {
+        foreach ($accountIds as $accountId) {
+            $isRelated = $this->entityManager
+                ->getRelation($entity, $link)
+                ->isRelatedById($accountId);
+
+            if ($isRelated) {
                 return true;
             }
         }
@@ -130,65 +137,53 @@ class DefaultOwnershipChecker implements
 
     public function checkContact(User $user, Entity $entity): bool
     {
-        $contactId = $user->get(self::ATTR_CONTACT_ID);
+        $linkDefs = $this->metadataProvider->getContactLink($entity->getEntityType());
+
+        if (!$linkDefs) {
+            return false;
+        }
+
+        $link = $linkDefs->getName();
+
+        $contactId = $user->getContactId();
 
         if (!$contactId) {
             return false;
         }
 
-        if (
-            $entity->hasAttribute(self::ATTR_CONTACT_ID) &&
-            $this->getRelationParam($entity, self::FIELD_CONTACT, RelationParam::ENTITY) === self::ENTITY_CONTACT
-        ) {
-            if ($entity->get(self::ATTR_CONTACT_ID) === $contactId) {
-                return true;
-            }
-        }
-
-        if (
-            $entity->hasRelation(self::FIELD_CONTACTS) &&
-            $this->getRelationParam($entity, self::FIELD_CONTACTS, RelationParam::ENTITY) === self::ENTITY_CONTACT
-        ) {
-            $repository = $this->entityManager->getRDBRepository($entity->getEntityType());
-
-            if (
-                $repository
-                    ->getRelation($entity, self::FIELD_CONTACTS)
-                    ->isRelatedById($contactId)
-            ) {
-                return true;
-            }
-        }
-
-        if ($entity->hasAttribute(self::ATTR_PARENT_ID) && $entity->hasRelation(self::FIELD_PARENT)) {
-            if (
-                $entity->get(self::ATTR_PARENT_TYPE) === self::ENTITY_CONTACT &&
-                $entity->get(self::ATTR_PARENT_ID) === $contactId
-            ) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @return mixed
-     */
-    private function getRelationParam(Entity $entity, string $relation, string $param)
-    {
-        if ($entity instanceof BaseEntity) {
-            return $entity->getRelationParam($relation, $param);
-        }
-
-        $entityDefs = $this->entityManager
+        $fieldDefs = $this->entityManager
             ->getDefs()
-            ->getEntity($entity->getEntityType());
+            ->getEntity($entity->getEntityType())
+            ->tryGetField($link);
 
-        if (!$entityDefs->hasRelation($relation)) {
-            return null;
+        if (
+            $linkDefs->getType() === RelationType::BELONGS_TO &&
+            $fieldDefs?->getType() === FieldType::LINK
+        ) {
+            $setContactLink = $entity->getValueObject($link);
+
+            if (!$setContactLink instanceof Link) {
+                return false;
+            }
+
+            return $setContactLink->getId() === $contactId;
         }
 
-        return $entityDefs->getRelation($relation)->getParam($param);
+        if (
+            $linkDefs->getType() === RelationType::BELONGS_TO_PARENT &&
+            $fieldDefs?->getType() === FieldType::LINK_PARENT
+        ) {
+            $setLink = $entity->getValueObject($link);
+
+            if (!$setLink instanceof LinkParent || $setLink->getEntityType() !== Contact::ENTITY_TYPE) {
+                return false;
+            }
+
+            return $setLink->getId() === $contactId;
+        }
+
+        return$this->entityManager
+            ->getRelation($entity, $link)
+            ->isRelatedById($contactId);
     }
 }

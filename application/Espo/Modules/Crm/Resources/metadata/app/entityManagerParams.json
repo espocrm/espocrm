@@ -325,6 +325,24 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "aclContactLink": {
+            "location": "aclDefs",
+            "param": "contactLink",
+            "fieldDefs": {
+                "type": "enum",
+                "tooltip": true,
+                "view": "views/admin/entity-manager/fields/acl-contact-link"
+            }
+        },
+        "aclAccountLink": {
+            "location": "aclDefs",
+            "param": "accountLink",
+            "fieldDefs": {
+                "type": "enum",
+                "tooltip": true,
+                "view": "views/admin/entity-manager/fields/acl-account-link"
+            }
         }
     }
 }

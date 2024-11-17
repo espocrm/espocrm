@@ -39,6 +39,14 @@
         "link": {
             "type": "string",
             "description": "A link name to check access to a related record instead of an actual record. Actual if access checker is Espo\\Core\\Acl\\AccessChecker\\AccessCheckers\\Foreign."
+        },
+        "accountLink": {
+            "type": "string",
+            "description": "A link with Account that will be used when access control applied for portal users. As of v9.0.0."
+        },
+        "contactLink": {
+            "type": "string",
+            "description": "A link with Contact that will be used when access control applied for portal users. As of v9.0.0."
         }
     }
 }

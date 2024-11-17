@@ -31,15 +31,18 @@ namespace tests\unit\Espo\Core\Select\AccessControl;
 
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkMultipleItem;
+use Espo\Core\Portal\Acl\OwnershipChecker\MetadataProvider;
 use Espo\Core\Select\AccessControl\Filter as AccessControlFilter;
 use Espo\Core\Select\AccessControl\Filters\No;
 use Espo\Core\Select\AccessControl\Filters\PortalOnlyAccount;
 use Espo\Core\Select\AccessControl\Filters\PortalOnlyContact;
 use Espo\Core\Select\AccessControl\Filters\PortalOnlyOwn;
 use Espo\Core\Select\Helpers\FieldHelper;
+use Espo\Core\Select\Helpers\RelationQueryHelper;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
+use Espo\ORM\Defs;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
@@ -69,7 +72,7 @@ class FiltersTest extends TestCase
             ->willReturn(['team-id']);
     }
 
-    public function testNo()
+    public function testNo(): void
     {
         $filter = $this->createFilter(No::class);
 
@@ -83,9 +86,42 @@ class FiltersTest extends TestCase
         $filter->apply($this->queryBuilder);
     }
 
-    public function testPortalOnlyAccount1()
+    public function testPortalOnlyAccount1(): void
     {
-        $filter = $this->createFilter(PortalOnlyAccount::class);
+        $defs = $this->createMock(Defs::class);
+        $metadataProvider = $this->createMock(MetadataProvider::class);
+
+        $queryHelper = new RelationQueryHelper($defs);
+
+        $filter = new PortalOnlyAccount(
+            'Test',
+            $this->user,
+            $this->fieldHelper,
+            $metadataProvider,
+            $queryHelper
+        );
+
+        $metadataProvider
+            ->expects($this->any())
+            ->method('getContactLink')
+            ->willReturn(
+                RelationDefs::fromRaw([
+                    'type' => RelationType::BELONGS_TO_PARENT,
+                    'entityList' => [Contact::ENTITY_TYPE],
+                ], 'contact')
+            );
+
+        $metadataProvider
+            ->expects($this->any())
+            ->method('getAccountLink')
+            ->willReturn(
+                RelationDefs::fromRaw([
+                    'type' => RelationType::MANY_MANY,
+                    'entity' => [Account::ENTITY_TYPE],
+                    'midKeys' => ['nId', 'fId'],
+                    'relationName' => 'TestAccount'
+                ], 'account')
+            );
 
         $this->user
             ->expects($this->any())
@@ -100,58 +136,23 @@ class FiltersTest extends TestCase
             ->willReturn('contact-id');
 
         $this->initHelperMethods([
-            ['hasAccountField', true],
-            ['hasAccountsRelation', true],
-            ['hasParentField', true],
-            ['hasContactField', true],
-            ['hasContactsRelation', true],
             ['hasCreatedByField', true],
         ]);
 
-        $this->fieldHelper
-            ->expects($this->any())
-            ->method('getRelationDefs')
-            ->willReturnMap([
-                [
-                    'accounts',
-                    RelationDefs::fromRaw([
-                        'type' => RelationType::MANY_MANY,
-                        'entity' => Account::ENTITY_TYPE,
-                        'midKeys' => ['nId', 'fId'],
-                        'relationName' => 'TestAccount'
-                    ], 'accounts')
-                ],
-                [
-                    'contacts',
-                    RelationDefs::fromRaw([
-                        'type' => RelationType::MANY_MANY,
-                        'entity' => Contact::ENTITY_TYPE,
-                        'midKeys' => ['nId', 'fId'],
-                        'relationName' => 'TestContact'
-                    ], 'contacts')
-                ],
-                [
-                    'account',
-                    RelationDefs::fromRaw([
-                        'type' => RelationType::BELONGS_TO,
-                        'entity' => Account::ENTITY_TYPE,
-                    ], 'account')
-                ],
-                [
-                    'contact',
-                    RelationDefs::fromRaw([
-                        'type' => RelationType::BELONGS_TO,
-                        'entity' => Contact::ENTITY_TYPE,
-                    ], 'contact')
-                ],
-            ]);
-
-        $this->queryBuilder
+       $this->queryBuilder
             ->expects($this->once())
             ->method('where')
             ->with(
                 $this->callback(function ($where) {
-                    return $where instanceof OrGroup;
+                    if (!$where instanceof OrGroup) {
+                        return false;
+                    }
+
+                    if (!isset($where->getRawValue()[0]['id=s'])) {
+                        return false;
+                    }
+
+                    return $where->getItemCount() === 3;
                 })
             )
             ->willReturn($this->queryBuilder);
@@ -159,9 +160,20 @@ class FiltersTest extends TestCase
         $filter->apply($this->queryBuilder);
     }
 
-    public function testPortalOnlyAccount2()
+    public function testPortalOnlyAccount2(): void
     {
-        $filter = $this->createFilter(PortalOnlyAccount::class);
+        $defs = $this->createMock(Defs::class);
+        $metadataProvider = $this->createMock(MetadataProvider::class);
+
+        $queryHelper = new RelationQueryHelper($defs);
+
+        $filter = new PortalOnlyAccount(
+            'Test',
+            $this->user,
+            $this->fieldHelper,
+            $metadataProvider,
+            $queryHelper
+        );
 
         $this->user
             ->expects($this->any())
@@ -189,9 +201,20 @@ class FiltersTest extends TestCase
         $filter->apply($this->queryBuilder);
     }
 
-    public function testPortalOnlyContact1()
+    public function testPortalOnlyContact1(): void
     {
-        $filter = $this->createFilter(PortalOnlyContact::class);
+        $defs = $this->createMock(Defs::class);
+        $metadataProvider = $this->createMock(MetadataProvider::class);
+
+        $queryHelper = new RelationQueryHelper($defs);
+
+        $filter = new PortalOnlyContact(
+            'Test',
+            $this->user,
+            $this->fieldHelper,
+            $metadataProvider,
+            $queryHelper
+        );
 
         $this->user
             ->expects($this->any())
@@ -199,48 +222,26 @@ class FiltersTest extends TestCase
             ->willReturn('contact-id');
 
         $this->initHelperMethods([
-            ['hasContactField', true],
-            ['hasContactsRelation', true],
-            ['hasParentField', true],
             ['hasCreatedByField', true],
         ]);
 
-
-        $this->fieldHelper
-            ->expects($this->any())
-            ->method('getRelationDefs')
-            ->willReturnMap([
-                [
-                    'contacts',
-                    RelationDefs::fromRaw([
-                        'type' => RelationType::MANY_MANY,
-                        'entity' => Contact::ENTITY_TYPE,
-                        'midKeys' => ['nId', 'fId'],
-                        'relationName' => 'TestContact'
-                    ], 'contacts')
-                ],
-                [
-                    'account',
-                    RelationDefs::fromRaw([
-                        'type' => RelationType::BELONGS_TO,
-                        'entity' => Account::ENTITY_TYPE,
-                    ], 'account')
-                ],
-                [
-                    'contact',
-                    RelationDefs::fromRaw([
-                        'type' => RelationType::BELONGS_TO,
-                        'entity' => Contact::ENTITY_TYPE,
-                    ], 'contact')
-                ],
-            ]);
+        $metadataProvider
+            ->expects($this->once())
+            ->method('getContactLink')
+            ->willReturn(
+                RelationDefs::fromRaw([
+                    'type' => RelationType::BELONGS_TO,
+                    'entity' => Contact::ENTITY_TYPE,
+                ], 'contact')
+            );
 
         $this->queryBuilder
             ->expects($this->once())
             ->method('where')
             ->with(
                 $this->callback(function ($where) {
-                    return $where instanceof OrGroup;
+                    return $where instanceof OrGroup &&
+                        $where->getItemCount() === 2;
                 })
             )
             ->willReturn($this->queryBuilder);
@@ -250,7 +251,18 @@ class FiltersTest extends TestCase
 
     public function testPortalOnlyContact2()
     {
-        $filter = $this->createFilter(PortalOnlyContact::class);
+        $defs = $this->createMock(Defs::class);
+        $metadataProvider = $this->createMock(MetadataProvider::class);
+
+        $queryHelper = new RelationQueryHelper($defs);
+
+        $filter = new PortalOnlyContact(
+            'Test',
+            $this->user,
+            $this->fieldHelper,
+            $metadataProvider,
+            $queryHelper
+        );
 
         $this->user
             ->expects($this->any())
@@ -321,12 +333,11 @@ class FiltersTest extends TestCase
         }
     }
 
-    protected function createFilter(string $className) : AccessControlFilter
+    protected function createFilter(string $className): AccessControlFilter
     {
         return new $className(
             $this->user,
             $this->fieldHelper
         );
     }
-
 }

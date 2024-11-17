@@ -53,7 +53,9 @@
         "version": "Version",
         "primaryFilters": "Primary Filters",
         "assignedUsers": "Multiple Assigned Users",
-        "collaborators": "Collaborators"
+        "collaborators": "Collaborators",
+        "aclContactLink": "ACL Contact Link",
+        "aclAccountLink": "ACL Account Link"
     },
     "options": {
         "type": {
@@ -96,6 +98,8 @@
         "beforeSaveApiScript": "A script called on create and update API requests before an entity is saved. Use for custom validation and duplicate checking."
     },
     "tooltips": {
+        "aclContactLink": "The link with Contact to use when applying access control for portal users.",
+        "aclAccountLink": "The link with Account to use when applying access control for portal users.",
         "collaborators": "The ability to share records with specific users.",
         "assignedUsers": "The ability to assign multiple users to a record.\n\nNote that after enabling the parameter, existing assigned users won't be transferred to the new *Assigned Users* field.",
         "duplicateCheckFieldList": "Which fields to check when performing checking for duplicates.",

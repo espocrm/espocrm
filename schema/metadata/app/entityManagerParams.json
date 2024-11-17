@@ -23,8 +23,13 @@
                         "scopes",
                         "entityDefs",
                         "clientDefs",
-                        "recordDefs"
+                        "recordDefs",
+                        "aclDefs"
                     ]
+                },
+                "param": {
+                    "type": "string",
+                    "description": "An actual parameter name in metadata. If omitted, the object item key will be used."
                 },
                 "fieldDefs": {
                     "description": "Field definitions. The defined field will be rendered on the entity manager edit view.",

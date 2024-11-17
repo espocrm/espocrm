@@ -56,6 +56,15 @@ class EntityManager
 {
     private const DEFAULT_PARAM_LOCATION = 'scopes';
 
+    /** @var string[] */
+    private const ALLOWED_PARAM_LOCATIONS = [
+        'scopes',
+        'entityDefs',
+        'clientDefs',
+        'recordDefs',
+        'aclDefs',
+    ];
+
     public function __construct(
         private Metadata $metadata,
         private Language $language,
@@ -717,8 +726,10 @@ class EntityManager
             'collection.fullTextSearch',
         ]);
 
-        foreach ($this->getAdditionalParamLocationMap($name) as $param => $location) {
-            $this->metadata->delete($location, $name, [$param]);
+        foreach ($this->getAdditionalParamLocationMap($name) as $it) {
+            ['location' => $location, 'param' => $actualParam] = $it;
+
+            $this->metadata->delete($location, $name, [$actualParam]);
         }
 
         $this->metadata->save();
@@ -739,16 +750,16 @@ class EntityManager
      */
     private function setAdditionalParamsInMetadata(string $entityType, array $data): void
     {
-        $params = $this->getAdditionalParamLocationMap($entityType);
+        foreach ($this->getAdditionalParamLocationMap($entityType) as $param => $it) {
+            ['location' => $location, 'param' => $actualParam] = $it;
 
-        foreach ($params as $param => $location) {
             if (!array_key_exists($param, $data)) {
                 continue;
             }
 
             $value = $data[$param];
 
-            $this->metadata->setParam($location, $entityType, $param, $value);
+            $this->metadata->setParam($location, $entityType, $actualParam, $value);
         }
     }
 
@@ -759,8 +770,10 @@ class EntityManager
     {
         $data = [];
 
-        foreach ($this->getAdditionalParamLocationMap($entityType) as $param => $location) {
-            $data[$param] = $this->metadata->get([$location, $entityType, $param]);
+        foreach ($this->getAdditionalParamLocationMap($entityType) as $param => $item) {
+            ['location' => $location, 'param' => $actualParam] = $item;
+
+            $data[$param] = $this->metadata->get([$location, $entityType, $actualParam]);
         }
 
         $data['statusField'] = $this->metadata->get(['scopes', $entityType, 'statusField']);
@@ -771,7 +784,7 @@ class EntityManager
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, array{location: string, param: string}>
      */
     private function getAdditionalParamLocationMap(string $entityType): array
     {
@@ -781,27 +794,23 @@ class EntityManager
         $map2 = $this->metadata->get(['app', 'entityManagerParams', '@' . ($templateType ?? '_')]) ?? [];
         $map3 = $this->metadata->get(['app', 'entityManagerParams', $entityType]) ?? [];
 
-        if (version_compare(PHP_VERSION, '8.1.0') < 0) {
-            // @todo Remove.
-            /** @var array<string, array<string, mixed>> $params */
-            $params = array_merge($map1, $map2, $map3);
-        } else {
-            /** @var array<string, array<string, mixed>> $params */
-            $params = [...$map1, ...$map2, ...$map3];
-        }
+        /** @var array<string, array<string, mixed>> $params */
+        $params = [...$map1, ...$map2, ...$map3];
 
         $result = [];
 
         foreach ($params as $param => $defs) {
-            $defs['location'] ??= self::DEFAULT_PARAM_LOCATION;
-
             $location = $defs['location'] ?? self::DEFAULT_PARAM_LOCATION;
+            $actualParam = $defs['param'] ?? $param;
 
-            if (!in_array($location, ['scopes', 'entityDefs', 'clientDefs', 'recordDefs'])) {
+            if (!in_array($location, self::ALLOWED_PARAM_LOCATIONS)) {
                 throw new RuntimeException("Param location `$location` is not supported.");
             }
 
-            $result[$param] = $location;
+            $result[$param] = [
+                'location' => $location,
+                'param' => $actualParam,
+            ];
         }
 
         return $result;

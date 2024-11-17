@@ -1,3 +1,4 @@
 {
-    "portalOwnershipCheckerClassName": "Espo\\Modules\\Crm\\Classes\\AclPortal\\Contact\\OwnershipChecker"
+    "portalOwnershipCheckerClassName": "Espo\\Modules\\Crm\\Classes\\AclPortal\\Contact\\OwnershipChecker",
+    "accountLink": "accounts"
 }
