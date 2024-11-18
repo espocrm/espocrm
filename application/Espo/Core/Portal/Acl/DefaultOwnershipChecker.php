@@ -54,7 +54,7 @@ class DefaultOwnershipChecker implements
     OwnershipAccountChecker,
     OwnershipContactChecker
 {
-    private const ATTR_CREATED_BY_ID = Field::CREATED_AT . 'Id';
+    private const ATTR_CREATED_BY_ID = Field::CREATED_BY . 'Id';
 
     public function __construct(
         private EntityManager $entityManager,
