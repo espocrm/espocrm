@@ -152,6 +152,7 @@ class EditModalView extends ModalView {
                 label: 'Save',
                 style: 'primary',
                 title: 'Ctrl+Enter',
+                onClick: () => this.actionSave(),
             });
         }
 
@@ -163,6 +164,7 @@ class EditModalView extends ModalView {
             this.buttonList.push({
                 name: 'fullForm',
                 label: 'Full Form',
+                onClick: () => this.actionFullForm(),
             });
         }
 
@@ -322,9 +324,11 @@ class EditModalView extends ModalView {
         return html;
     }
 
-    actionSave(data) {
-        data = data || {};
-
+    /**
+     * @protected
+     * @param {{bypassClose?: boolean}} [data]
+     */
+    actionSave(data = {}) {
         const editView = this.getRecordView();
 
         const model = editView.model;
@@ -374,7 +378,6 @@ class EditModalView extends ModalView {
         this.actionSave({bypassClose: true});
     }
 
-    // noinspection JSUnusedGlobalSymbols
     actionFullForm() {
         let url;
         const router = this.getRouter();
