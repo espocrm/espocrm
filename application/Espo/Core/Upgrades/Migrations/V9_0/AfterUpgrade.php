@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Upgrades\Migrations\V9_0;
 
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Upgrades\Migration\Script;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Preferences;
@@ -54,12 +55,21 @@ class AfterUpgrade implements Script
 
     private function createScheduledJob(): void
     {
+        $found = $this->entityManager
+            ->getRDBRepositoryByClass(ScheduledJob::class)
+            ->where(['job' => 'SendScheduledEmails'])
+            ->findOne();
+
+        if ($found) {
+            return;
+        }
+
         $this->entityManager->createEntity(ScheduledJob::ENTITY_TYPE, [
             'name' => 'Send Scheduled Emails',
             'job' => 'SendScheduledEmails',
             'status' => 'Active',
             'scheduling' => '*/10 * * * *',
-        ]);
+        ], [SaveOption::SKIP_ALL => true]);
     }
 
     private function setReactionNotifications(): void
@@ -107,8 +117,6 @@ class AfterUpgrade implements Script
             ->getDefs()
             ->getEntity($entityType)
             ->getRelationList();
-
-        echo $entityType;
 
         $contactLink = null;
         $accountLink = null;
