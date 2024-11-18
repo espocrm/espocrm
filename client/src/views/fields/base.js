@@ -1310,32 +1310,27 @@ class BaseFieldView extends View {
     addInlineEditLinks() {
         const $cell = this.get$cell();
 
-        const $saveLink = $('<a>')
-            .attr('role', 'button')
-            .attr('tabindex', '-1')
-            .addClass('pull-right inline-save-link')
-            .attr('title', 'Ctrl+Enter')
-            .text(this.translate('Update'));
+        const saveLink = document.createElement('a');
+        saveLink.role = 'button';
+        saveLink.tabIndex = -1;
+        saveLink.title = this.translate('Update') + ' · ' + 'Ctrl+Enter';
+        saveLink.innerHTML = `<span class="fas fa-check"></span>`;
+        saveLink.classList.add('inline-save-link');
 
-        const $cancelLink = $('<a>')
-            .attr('role', 'button')
-            .attr('tabindex', '-1')
-            .addClass('pull-right inline-cancel-link')
-            .attr('title', 'Esc')
-            .text(this.translate('Cancel'));
+        const cancelLink = document.createElement('a');
+        cancelLink.role = 'button';
+        cancelLink.tabIndex = -1;
+        cancelLink.title = this.translate('Cancel') + ' · ' + 'Esc';
+        cancelLink.innerHTML = `<span class="fas fa-arrow-right-to-bracket"></span>`;
+        cancelLink.classList.add('inline-cancel-link');
 
-        $cell.prepend($saveLink);
-        $cell.prepend($cancelLink);
+        $cell.prepend(saveLink);
+        $cell.prepend(cancelLink);
 
         $cell.find('.inline-edit-link').addClass('hidden');
 
-        $saveLink.click(() => {
-            this.inlineEditSave();
-        });
-
-        $cancelLink.click(() => {
-            this.inlineEditClose();
-        });
+        saveLink.onclick = () => this.inlineEditSave();
+        cancelLink.onclick = () => this.inlineEditClose();
     }
 
     /**
