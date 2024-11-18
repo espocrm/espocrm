@@ -30,18 +30,39 @@
 namespace Espo\Core\Upgrades\Migrations\V9_0;
 
 use Espo\Core\Upgrades\Migration\Script;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\Preferences;
 use Espo\Entities\ScheduledJob;
 use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\EntityManager;
 
 class AfterUpgrade implements Script
 {
     public function __construct(
         private EntityManager $entityManager,
+        private Metadata $metadata,
     ) {}
 
     public function run(): void
+    {
+        $this->setReactionNotifications();
+        $this->createScheduledJob();
+        $this->setAclLinks();
+    }
+
+    private function createScheduledJob(): void
+    {
+        $this->entityManager->createEntity(ScheduledJob::ENTITY_TYPE, [
+            'name' => 'Send Scheduled Emails',
+            'job' => 'SendScheduledEmails',
+            'status' => 'Active',
+            'scheduling' => '*/10 * * * *',
+        ]);
+    }
+
+    private function setReactionNotifications(): void
     {
         $users = $this->entityManager
             ->getRDBRepositoryByClass(User::class)
@@ -66,17 +87,75 @@ class AfterUpgrade implements Script
             $preferences->set('reactionNotifications', true);
             $this->entityManager->saveEntity($preferences);
         }
-
-        $this->createScheduledJob();
     }
 
-    private function createScheduledJob(): void
+    private function setAclLinks(): void
     {
-        $this->entityManager->createEntity(ScheduledJob::ENTITY_TYPE, [
-            'name' => 'Send Scheduled Emails',
-            'job' => 'SendScheduledEmails',
-            'status' => 'Active',
-            'scheduling' => '*/10 * * * *',
-        ]);
+        /** @var array<string, array<string, mixed>> $scopes */
+        $scopes = $this->metadata->get('scopes', []);
+
+        foreach ($scopes as $scope => $defs) {
+            if (($defs['entity'] ?? false) && ($defs['isCustom'] ?? false)) {
+                $this->setAclLinksForEntityType($scope);
+            }
+        }
+    }
+
+    private function setAclLinksForEntityType(string $entityType): void
+    {
+        $relations = $this->entityManager
+            ->getDefs()
+            ->getEntity($entityType)
+            ->getRelationList();
+
+        echo $entityType;
+
+        $contactLink = null;
+        $accountLink = null;
+
+        foreach ($relations as $relation) {
+            if (
+                $relation->getName() === 'contact' &&
+                $relation->tryGetForeignEntityType() === Contact::ENTITY_TYPE
+            ) {
+                $contactLink = $relation->getName();
+            }
+        }
+
+        if (!$contactLink) {
+            foreach ($relations as $relation) {
+                if (
+                    $relation->getName() === 'contacts' &&
+                    $relation->tryGetForeignEntityType() === Contact::ENTITY_TYPE
+                ) {
+                    $contactLink = $relation->getName();
+                }
+            }
+        }
+
+        foreach ($relations as $relation) {
+            if (
+                $relation->getName() === 'account' &&
+                $relation->tryGetForeignEntityType() === Account::ENTITY_TYPE
+            ) {
+                $accountLink = $relation->getName();
+            }
+        }
+
+        if (!$accountLink) {
+            foreach ($relations as $relation) {
+                if (
+                    $relation->getName() === 'accounts' &&
+                    $relation->tryGetForeignEntityType() === Account::ENTITY_TYPE
+                ) {
+                    $accountLink = $relation->getName();
+                }
+            }
+        }
+
+        $this->metadata->set('aclDefs', $entityType, ['contactLink' => $contactLink]);
+        $this->metadata->set('aclDefs', $entityType, ['accountLink' => $accountLink]);
+
+        $this->metadata->save();
     }
 }
