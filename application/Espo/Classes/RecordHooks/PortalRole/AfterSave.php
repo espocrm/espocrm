@@ -47,7 +47,7 @@ class AfterSave implements SaveHook
 
     public function process(Entity $entity): void
     {
-        $this->clearer->clearForAllInternalUsers();
+        $this->clearer->clearForAllPortalUsers();
         $this->dataManager->updateCacheTimestamp();
     }
 }
