@@ -635,7 +635,7 @@ class DetailRecordView extends BaseRecordView {
             options.rootUrl = this.options.rootUrl;
         }
 
-        this.getRouter().navigate('#' + this.scope + '/edit/' + this.model.id, {trigger: false});
+        this.getRouter().navigate(`#${this.scope}/edit/${this.model.id}`, {trigger: false});
         this.getRouter().dispatch(this.scope, 'edit', options);
     }
 

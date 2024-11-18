@@ -721,22 +721,6 @@ class BaseRecordView extends View {
     }
 
     /**
-     * Set model attribute values.
-     *
-     * @param {Object.<string,*>} setAttributes Values.
-     * @param {Object.<string,*>} [options] Options.
-     */
-    setModelAttributes(setAttributes, options) {
-        for (const item in this.model.attributes) {
-            if (!(item in setAttributes)) {
-                this.model.unset(item);
-            }
-        }
-
-        this.model.set(setAttributes, options || {});
-    }
-
-    /**
      * Init dynamic logic.
      *
      * @protected
@@ -987,6 +971,54 @@ class BaseRecordView extends View {
     }
 
     /**
+     * Get changed attribute values. For new record, returns all attributes.
+     *
+     * @protected
+     * @param {string[]} [attributeList]
+     * @return {Record}
+     */
+    getChangedAttributes(attributeList = null) {
+        const attributes = this.model.getClonedAttributes();
+
+        if (this.model.isNew()) {
+            return attributes;
+        }
+
+        const setAttributes = {};
+
+        for (const attr in attributes) {
+            if (Espo.Utils.areEqual(this.attributes[attr], attributes[attr])) {
+                continue;
+            }
+
+            setAttributes[attr] = attributes[attr];
+        }
+
+        /** @type {Record.<string, string[]>} */
+        const map = this.forcePatchAttributeDependencyMap || {};
+
+        for (const attr in map) {
+            if (attr in setAttributes) {
+                continue;
+            }
+
+            if (attributeList && !attributeList.includes(attr)) {
+                continue;
+            }
+
+            const depAttributes = map[attr];
+
+            const treatAsChanged = !!depAttributes.find(attr => attr in setAttributes);
+
+            if (treatAsChanged) {
+                setAttributes[attr] = attributes[attr];
+            }
+        }
+
+        return setAttributes;
+    }
+
+    /**
      * Save options.
      *
      * @typedef {Object} module:views/record/base~saveOptions
@@ -1014,50 +1046,15 @@ class BaseRecordView extends View {
 
         this.beforeBeforeSave();
 
+        // A model is supposed to always contain actual values.
+        // Fetch may not be needed, but some field views may not have data sync implemented.
+        // We resort to fetching the entire form.
+
         const fetchedAttributes = this.fetch();
-        const initialAttributes = this.attributes;
-        const beforeSaveAttributes = this.model.getClonedAttributes();
 
-        const attributes = _.extend(
-            Espo.Utils.cloneDeep(beforeSaveAttributes),
-            fetchedAttributes
-        );
+        this.model.set(fetchedAttributes, {silent: true});
 
-        let setAttributes = {};
-
-        if (model.isNew()) {
-            setAttributes = attributes;
-        }
-
-        if (!model.isNew()) {
-            for (const attr in attributes) {
-                if (_.isEqual(initialAttributes[attr], attributes[attr])) {
-                    continue;
-                }
-
-                setAttributes[attr] = attributes[attr];
-            }
-
-            const forcePatchAttributeDependencyMap = this.forcePatchAttributeDependencyMap || {};
-
-            for (const attr in forcePatchAttributeDependencyMap) {
-                if (attr in setAttributes) {
-                    continue;
-                }
-
-                if (!(attr in fetchedAttributes)) {
-                    continue;
-                }
-
-                const depAttributeList = forcePatchAttributeDependencyMap[attr];
-
-                const treatAsChanged = !!depAttributeList.find(attr => attr in setAttributes);
-
-                if (treatAsChanged) {
-                    setAttributes[attr] = attributes[attr];
-                }
-            }
-        }
+        const setAttributes = this.getChangedAttributes(Object.keys(fetchedAttributes));
 
         if (Object.keys(setAttributes).length === 0) {
             if (!options.skipNotModifiedWarning) {
@@ -1071,11 +1068,7 @@ class BaseRecordView extends View {
             return Promise.reject('notModified');
         }
 
-        model.set(setAttributes, {silent: true});
-
         if (this.validate()) {
-            model.attributes = beforeSaveAttributes;
-
             this.afterNotValid();
 
             this.lastSaveCancelReason = 'invalid';
@@ -1105,39 +1098,14 @@ class BaseRecordView extends View {
         this.trigger('before:save');
         model.trigger('before:save');
 
-        const onError = (xhr, reject, resolve) => {
-            this.handleSaveError(xhr, options, resolve, reject)
-                .then(skipReject => {
-                    if (skipReject) {
-                        return;
-                    }
-
-                    reject('error');
-                });
-
-            this.afterSaveError();
-
-            if (!options.bypassClose) {
-                this.setModelAttributes(beforeSaveAttributes);
-            }
-
-            this.lastSaveCancelReason = 'error';
-
-            this.trigger('error:save');
-            this.trigger('cancel:save', {reason: 'error'});
-        };
-
         return new Promise((resolve, reject) => {
             model
-                .save(
-                    setAttributes,
-                    {
-                        patch: !model.isNew(),
-                        headers: headers,
-                    },
-                )
+                .save(setAttributes, {
+                    patch: !model.isNew(),
+                    headers: headers,
+                })
                 .then(() => {
-                    this.trigger('save', initialAttributes, Object.keys(setAttributes));
+                    this.trigger('save', this.attributes, Object.keys(setAttributes));
 
                     this.afterSave();
 
@@ -1151,7 +1119,21 @@ class BaseRecordView extends View {
                     resolve();
                 })
                 .catch(xhr => {
-                    onError(xhr, reject, resolve);
+                    this.handleSaveError(xhr, options, resolve, reject)
+                        .then(skipReject => {
+                            if (skipReject) {
+                                return;
+                            }
+
+                            reject('error');
+                        });
+
+                    this.afterSaveError();
+
+                    this.lastSaveCancelReason = 'error';
+
+                    this.trigger('error:save');
+                    this.trigger('cancel:save', {reason: 'error'});
                 });
         });
     }
