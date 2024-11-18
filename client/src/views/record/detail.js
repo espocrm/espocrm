@@ -628,11 +628,17 @@ class DetailRecordView extends BaseRecordView {
 
         const options = {
             id: this.model.id,
-            model: this.model,
+            model: this.model.clone(),
         };
 
         if (this.options.rootUrl) {
             options.rootUrl = this.options.rootUrl;
+        }
+
+        if (this.inlineEditModeIsOn) {
+            options.attributes = this.getChangedAttributes();
+
+            this.resetModelChanges();
         }
 
         this.getRouter().navigate(`#${this.scope}/edit/${this.model.id}`, {trigger: false});
