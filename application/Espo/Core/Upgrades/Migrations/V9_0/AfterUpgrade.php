@@ -67,7 +67,7 @@ class AfterUpgrade implements Script
         $this->entityManager->createEntity(ScheduledJob::ENTITY_TYPE, [
             'name' => 'Send Scheduled Emails',
             'job' => 'SendScheduledEmails',
-            'status' => 'Active',
+            'status' => ScheduledJob::STATUS_ACTIVE,
             'scheduling' => '*/10 * * * *',
         ], [SaveOption::SKIP_ALL => true]);
     }
