@@ -182,7 +182,7 @@ class DurationFieldView extends EnumFieldView {
 
                 this.updateDateEnd();
 
-                setTimeout(() => this.updateDuration(), 50);
+                setTimeout(() => this.updateDuration(), 110);
 
                 return;
             }
