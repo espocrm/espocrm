@@ -100,7 +100,10 @@ class DurationFieldView extends EnumFieldView {
                 const option = document.createElement('option');
                 option.value = duration.toString();
                 option.text = this.stringifyDuration(duration);
-                option.selected = duration === this.seconds;
+
+                if (duration === this.seconds) {
+                    option.setAttribute('selected', 'selected');
+                }
 
                 this.durationOptions += option.outerHTML;
             });
