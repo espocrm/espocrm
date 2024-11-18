@@ -761,15 +761,6 @@ class BaseRecordView extends View {
     }
 
     /**
-     * @deprecated
-     * @private
-     * For bc.
-     */
-    initDependancy() {
-        this.initDependency();
-    }
-
-    /**
      * Set up a field level security.
      *
      * @protected
