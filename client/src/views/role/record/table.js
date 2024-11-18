@@ -1050,6 +1050,8 @@ class RoleRecordTableView extends View {
 
         $window.off('resize.' + type + '-' + this.cid);
         $window.on('resize.' + type + '-' + this.cid, handle);
+
+        handle();
     }
 
     /**
