@@ -467,6 +467,13 @@ input[type="radio"].form-radio {
 }
 
 .cell {
+    .inline-edit-link {
+        color: var(--gray-soft);
+        &:hover {
+            color: var(--btn-text-color);
+        }
+    }
+
     .inline-save-link {
         float: right;
         margin-left: var(--8px);
@@ -475,5 +482,30 @@ input[type="radio"].form-radio {
     .inline-cancel-link {
         float: right;
         margin-left: var(--26px);
+
+        color: var(--gray-soft);
+        &:hover {
+            color: var(--btn-text-color);
+        }
+    }
+}
+
+.link-container {
+    a[data-action="clearLink"] {
+        color: var(--gray-soft);
+        &:hover {
+            color: var(--btn-text-color);
+        }
+    }
+}
+
+.link-container {
+    > .list-group-item {
+        a[data-action="removeValue"] {
+            color: var(--gray-soft);
+            &:hover {
+                color: var(--btn-text-color);
+            }
+        }
     }
 }
