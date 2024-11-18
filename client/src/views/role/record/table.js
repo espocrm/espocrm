@@ -865,7 +865,7 @@ class RoleRecordTableView extends View {
             .filter(item => this.levelList.indexOf(item) >= this.levelList.indexOf(limitValue));
 
         if (!dontChange) {
-            this.formModel.set(attribute, value);
+            setTimeout(() => this.formModel.set(attribute, value), 0);
         }
 
         this.formRecordHelper.setFieldOptionList(attribute, options);
@@ -1127,6 +1127,8 @@ class RoleRecordTableView extends View {
 
         this.showScopeActions(scope);
 
+        const attributes = {};
+
         this.actionList.forEach(action => {
             const memoryData = this.scopeLevelMemory[scope] || {};
             const levelInMemory = memoryData[action];
@@ -1141,8 +1143,11 @@ class RoleRecordTableView extends View {
                 level = [...this.getLevelList(scope, action)].pop();
             }
 
-            this.formModel.set(`${scope}-${action}`, level);
+            attributes[`${scope}-${action}`] = level;
         });
+
+        // Need a timeout as it's processed within a change callback.
+        setTimeout(() => this.formModel.set(attributes), 0);
     }
 
     /**
