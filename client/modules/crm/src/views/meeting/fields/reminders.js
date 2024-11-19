@@ -201,7 +201,7 @@ class MeetingRemindersField extends BaseFieldView {
 
         const $remove = $('<button>')
             .addClass('btn')
-            .addClass('btn-text')
+            .addClass('btn-link')
             .css('margin-left', '5px')
             .attr('type', 'button')
             .attr('data-action', 'removeReminder')

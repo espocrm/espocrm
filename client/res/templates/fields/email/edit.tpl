@@ -43,7 +43,7 @@
                 <span class="fas fa-exclamation-circle{{#unless invalid}} text-muted{{/unless}}"></span>
             </button>
             <button
-                class="btn btn-text btn-icon hidden"
+                class="btn btn-link btn-icon hidden"
                 type="button"
                 tabindex="-1"
                 data-action="removeEmailAddress"
