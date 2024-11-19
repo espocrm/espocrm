@@ -107,6 +107,7 @@
         "passwordStrengthLength": "Must be at least {length} characters long.",
         "passwordStrengthLetterCount": "Must contain at least {count} letter(s).",
         "passwordStrengthNumberCount": "Must contain at least {count} digit(s).",
+        "passwordStrengthSpecialCharacterCount": "Must contain at least {count} special character(s).",
         "passwordStrengthBothCases": "Must contain letters of both upper and lower case.",
         "passwordWillBeSent": "Password will be sent to user's email address.",
         "passwordChanged": "Password has been changed",

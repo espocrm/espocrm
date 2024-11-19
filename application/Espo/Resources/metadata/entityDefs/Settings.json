@@ -332,6 +332,11 @@
             "max": 150,
             "min": 0
         },
+        "passwordStrengthSpecialCharacterCount": {
+            "type": "int",
+            "max": 50,
+            "min": 0
+        },
         "passwordStrengthBothCases": {
             "type": "bool"
         },

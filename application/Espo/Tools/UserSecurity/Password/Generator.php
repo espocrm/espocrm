@@ -29,7 +29,6 @@
 
 namespace Espo\Tools\UserSecurity\Password;
 
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Util;
 
 /**
@@ -39,30 +38,27 @@ use Espo\Core\Utils\Util;
  */
 class Generator
 {
-    private Config $config;
-
     public function __construct(
-        Config $config
-    ) {
-        $this->config = $config;
-    }
+        private ConfigProvider $configProvider,
+    ) {}
 
     /**
      * Generate a password.
      */
     public function generate(): string
     {
-        $length = $this->config->get('passwordStrengthLength');
-        $letterCount = $this->config->get('passwordStrengthLetterCount');
-        $numberCount = $this->config->get('passwordStrengthNumberCount');
+        $length = $this->configProvider->getStrengthLength();
+        $letterCount = $this->configProvider->getStrengthLetterCount();
+        $numberCount = $this->configProvider->getStrengthNumberCount();
+        $specialCharacterCount = $this->configProvider->getStrengthSpecialCharacterCount() ?? 0;
 
-        $generateLength = $this->config->get('passwordGenerateLength', 10);
-        $generateLetterCount = $this->config->get('passwordGenerateLetterCount', 4);
-        $generateNumberCount = $this->config->get('passwordGenerateNumberCount', 2);
+        $generateLength = $this->configProvider->getGenerateLength() ?? 10;
+        $generateLetterCount = $this->configProvider->getGenerateLetterCount() ?? 4;
+        $generateNumberCount = $this->configProvider->getGenerateNumberCount() ?? 2;
 
         $length = is_null($length) ? $generateLength : $length;
         $letterCount = is_null($letterCount) ? $generateLetterCount : $letterCount;
-        $numberCount = is_null($letterCount) ? $generateNumberCount : $numberCount;
+        $numberCount = is_null($numberCount) ? $generateNumberCount : $numberCount;
 
         if ($length < $generateLength) {
             $length = $generateLength;
@@ -76,6 +72,6 @@ class Generator
             $numberCount = $generateNumberCount;
         }
 
-        return Util::generatePassword($length, $letterCount, $numberCount, true);
+        return Util::generatePassword($length, $letterCount, $numberCount, true, $specialCharacterCount);
     }
 }

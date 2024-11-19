@@ -27,20 +27,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\PasswordGroup;
+namespace Espo\Tools\UserSecurity\Password;
 
-use Espo\Core\Formula\EvaluatedArgumentList;
-use Espo\Core\Formula\Func;
-use Espo\Tools\UserSecurity\Password\Generator;
+use Espo\Core\Utils\Config;
 
-class GenerateType implements Func
+class ConfigProvider
 {
+
     public function __construct(
-        private Generator $generator,
+        private Config $config,
     ) {}
 
-    public function process(EvaluatedArgumentList $arguments): string
+    public function getStrengthLength(): ?int
     {
-        return $this->generator->generate();
+        return $this->config->get('passwordStrengthLength');
+    }
+
+    public function getStrengthLetterCount(): ?int
+    {
+        return $this->config->get('passwordStrengthLetterCount');
+    }
+
+    public function getStrengthNumberCount(): ?int
+    {
+        return $this->config->get('passwordStrengthNumberCount');
+    }
+
+    public function getStrengthSpecialCharacterCount(): ?int
+    {
+        return $this->config->get('passwordStrengthSpecialCharacterCount');
+    }
+
+    public function getStrengthBothCases(): bool
+    {
+        return (bool) $this->config->get('passwordStrengthBothCases');
+    }
+
+    public function getGenerateLength(): ?int
+    {
+        return $this->config->get('passwordGenerateLength');
+    }
+    public function getGenerateLetterCount(): ?int
+    {
+        return $this->config->get('passwordGenerateLetterCount');
+    }
+
+    public function getGenerateNumberCount(): ?int
+    {
+        return $this->config->get('passwordGenerateNumberCount');
     }
 }

@@ -72,6 +72,9 @@ class UserGeneratePasswordFieldView extends BaseFieldView {
         this.passwordStrengthNumberCount = this.strengthParams.passwordStrengthNumberCount ||
             this.getConfig().get('passwordStrengthNumberCount');
 
+        this.passwordStrengthSpecialCharacterCount = this.strengthParams.passwordStrengthSpecialCharacterCount ||
+            this.getConfig().get('passwordStrengthSpecialCharacterCount');
+
         this.passwordGenerateLength = this.strengthParams.passwordGenerateLength ||
             this.getConfig().get('passwordGenerateLength');
 
@@ -90,6 +93,7 @@ class UserGeneratePasswordFieldView extends BaseFieldView {
         let length = this.passwordStrengthLength;
         let letterCount = this.passwordStrengthLetterCount;
         let numberCount = this.passwordStrengthNumberCount;
+        const specialCharacterCount = this.passwordStrengthSpecialCharacterCount;
 
         const generateLength = this.passwordGenerateLength || 10;
         const generateLetterCount = this.passwordGenerateLetterCount || 4;
@@ -111,7 +115,7 @@ class UserGeneratePasswordFieldView extends BaseFieldView {
             numberCount = generateNumberCount;
         }
 
-        const password = this.generatePassword(length, letterCount, numberCount, true);
+        const password = this.generatePassword(length, letterCount, numberCount, true, specialCharacterCount);
 
         this.model.set({
             password: password,
@@ -120,13 +124,23 @@ class UserGeneratePasswordFieldView extends BaseFieldView {
         }, {isGenerated: true});
     }
 
-    generatePassword(length, letters, numbers, bothCases) {
+    /**
+     * @private
+     * @param {number} length
+     * @param {number} letters
+     * @param {number} numbers
+     * @param {boolean} bothCases
+     * @param {number} specialCharacters
+     * @return {string}
+     */
+    generatePassword(length, letters, numbers, bothCases, specialCharacters) {
         const chars = [
             'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
             '0123456789',
             'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
             'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
             'abcdefghijklmnopqrstuvwxyz',
+            "'-!\"#$%&()*,./:;?@[]^_`{|}~+<=>",
         ];
 
         let upperCase = 0;
@@ -143,13 +157,13 @@ class UserGeneratePasswordFieldView extends BaseFieldView {
             }
         }
 
-        let either = length - (letters + numbers + upperCase + lowerCase);
+        let either = length - (letters + numbers + upperCase + lowerCase + specialCharacters);
 
         if (either < 0) {
             either = 0;
         }
 
-        const setList = [letters, numbers, either, upperCase, lowerCase];
+        const setList = [letters, numbers, either, upperCase, lowerCase, specialCharacters];
 
         const shuffle = function (array) {
             let currentIndex = array.length, temporaryValue, randomIndex;

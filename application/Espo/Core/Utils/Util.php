@@ -983,13 +983,13 @@ class Util
      * @param int $letters A number of letters.
      * @param int $digits A number of digits.
      * @param bool $bothCases Use upper and lower case letters.
-     * @return string
      */
     public static function generatePassword(
         int $length = 8,
         int $letters = 5,
         int $digits = 3,
-        bool $bothCases = false
+        bool $bothCases = false,
+        int $specialCharacters = 0
     ): string {
 
         $chars = [
@@ -998,6 +998,7 @@ class Util
             'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
             'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
             'abcdefghijklmnopqrstuvwxyz',
+            "'-!\"#$%&()*,./:;?@[]^_`{|}~+<=>",
         ];
 
         $shuffle = function ($array) {
@@ -1030,7 +1031,7 @@ class Util
             }
         }
 
-        $either = $length - ($letters + $digits + $upperCase + $lowerCase);
+        $either = $length - ($letters + $digits + $upperCase + $lowerCase + $specialCharacters);
 
         if ($either < 0) {
             $either = 0;
@@ -1038,7 +1039,7 @@ class Util
 
         $array = [];
 
-        foreach ([$letters, $digits, $either, $upperCase, $lowerCase] as $i => $len) {
+        foreach ([$letters, $digits, $either, $upperCase, $lowerCase, $specialCharacters] as $i => $len) {
             $set = $chars[$i];
             $subArray = [];
 

@@ -29,21 +29,17 @@
 
 namespace Espo\Tools\UserSecurity\Password;
 
-use Espo\Core\Utils\Config;
-
 class Checker
 {
-    private Config $config;
+    private const SPECIAL_CHARACTERS = "'-!\"#$%&()*,./:;?@[]^_`{|}~+<=>";
 
     public function __construct(
-        Config $config
-    ) {
-        $this->config = $config;
-    }
+        private ConfigProvider $configProvider,
+    ) {}
 
     public function checkStrength(string $password): bool
     {
-        $minLength = $this->config->get('passwordStrengthLength');
+        $minLength = $this->configProvider->getStrengthLength();
 
         if ($minLength) {
             if (mb_strlen($password) < $minLength) {
@@ -51,7 +47,7 @@ class Checker
             }
         }
 
-        $requiredLetterCount = $this->config->get('passwordStrengthLetterCount');
+        $requiredLetterCount = $this->configProvider->getStrengthLetterCount();
 
         if ($requiredLetterCount) {
             $letterCount = 0;
@@ -67,7 +63,7 @@ class Checker
             }
         }
 
-        $requiredNumberCount = $this->config->get('passwordStrengthNumberCount');
+        $requiredNumberCount = $this->configProvider->getStrengthNumberCount();
 
         if ($requiredNumberCount) {
             $numberCount = 0;
@@ -83,7 +79,7 @@ class Checker
             }
         }
 
-        $bothCases = $this->config->get('passwordStrengthBothCases');
+        $bothCases = $this->configProvider->getStrengthBothCases();
 
         if ($bothCases) {
             $ucCount = 0;
@@ -99,6 +95,22 @@ class Checker
                 }
             }
             if (!$ucCount || !$lcCount) {
+                return false;
+            }
+        }
+
+        $specialCharacterCount = $this->configProvider->getStrengthSpecialCharacterCount();
+
+        if ($specialCharacterCount) {
+            $realSpecialCharacterCount = 0;
+
+            foreach (str_split($password) as $c) {
+                if (str_contains(self::SPECIAL_CHARACTERS, $c)) {
+                    $realSpecialCharacterCount++;
+                }
+            }
+
+            if ($realSpecialCharacterCount < $specialCharacterCount) {
                 return false;
             }
         }

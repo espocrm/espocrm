@@ -26,9 +26,11 @@
         "tabLabel": "$label:Passwords",
         "label": "Strength",
         "rows": [
-            [{"name": "passwordGenerateLength"}, false],
-            [{"name": "passwordStrengthLength"}, {"name": "passwordStrengthLetterCount"}],
-            [{"name": "passwordStrengthBothCases"}, {"name": "passwordStrengthNumberCount"}]
+            [{"name": "passwordGenerateLength"}, {"name": "passwordStrengthLength"}],
+            [false, {"name": "passwordStrengthLetterCount"}],
+            [false, {"name": "passwordStrengthBothCases"}],
+            [false, {"name": "passwordStrengthNumberCount"}],
+            [false, {"name": "passwordStrengthSpecialCharacterCount"}]
         ]
     },
     {

@@ -44,6 +44,7 @@ class UserPasswordFieldView extends PasswordFieldView {
             passwordStrengthLetterCount: this.getConfig().get('passwordStrengthLetterCount'),
             passwordStrengthNumberCount: this.getConfig().get('passwordStrengthNumberCount'),
             passwordStrengthBothCases: this.getConfig().get('passwordStrengthBothCases'),
+            passwordStrengthSpecialCharacterCount: this.getConfig().get('passwordStrengthSpecialCharacterCount'),
         };
 
         const minLength = this.strengthParams.passwordStrengthLength;
@@ -78,6 +79,13 @@ class UserPasswordFieldView extends PasswordFieldView {
         if (bothCases) {
             tooltipItemList.push(
                 '* ' + this.translate('passwordStrengthBothCases', 'messages', 'User')
+            );
+        }
+
+        if (this.strengthParams.passwordStrengthSpecialCharacterCount) {
+            tooltipItemList.push(
+                '* ' + this.translate('passwordStrengthSpecialCharacterCount', 'messages', 'User')
+                    .replace('{count}', this.strengthParams.passwordStrengthSpecialCharacterCount.toString())
             );
         }
 
@@ -172,6 +180,27 @@ class UserPasswordFieldView extends PasswordFieldView {
 
             if (!ucCount || !lcCount) {
                 const msg = this.translate('passwordStrengthBothCases', 'messages', 'User');
+
+                this.showValidationMessage(msg);
+
+                return true;
+            }
+        }
+
+        const requiredSpecialCharacterCount = this.strengthParams.passwordStrengthSpecialCharacterCount;
+
+        if (requiredSpecialCharacterCount) {
+            let count = 0;
+
+            password.split('').forEach(c => {
+                if ("'-!\"#$%&()*,./:;?@[]^_`{|}~+<=>".includes(c)) {
+                    count++;
+                }
+            });
+
+            if (count < requiredSpecialCharacterCount) {
+                const msg = this.translate('passwordStrengthSpecialCharacterCount', 'messages', 'User')
+                    .replace('{count}', requiredSpecialCharacterCount.toString());
 
                 this.showValidationMessage(msg);
 

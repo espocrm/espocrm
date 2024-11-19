@@ -27,20 +27,52 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\PasswordGroup;
+namespace tests\unit\Espo\Tools\UserSecurity\Password;
 
-use Espo\Core\Formula\EvaluatedArgumentList;
-use Espo\Core\Formula\Func;
+use Espo\Tools\UserSecurity\Password\ConfigProvider;
 use Espo\Tools\UserSecurity\Password\Generator;
+use PHPUnit\Framework\TestCase;
 
-class GenerateType implements Func
+class GeneratorTest extends TestCase
 {
-    public function __construct(
-        private Generator $generator,
-    ) {}
-
-    public function process(EvaluatedArgumentList $arguments): string
+    public function testGenerate(): void
     {
-        return $this->generator->generate();
+        $configProvider = $this->createMock(ConfigProvider::class);
+
+        $configProvider
+            ->expects($this->any())
+            ->method('getGenerateLength')
+            ->willReturn(8);
+
+        $configProvider
+            ->expects($this->any())
+            ->method('getStrengthLength')
+            ->willReturn(6);
+
+        $configProvider
+            ->expects($this->any())
+            ->method('getStrengthLetterCount')
+            ->willReturn(2);
+
+        $configProvider
+            ->expects($this->any())
+            ->method('getStrengthNumberCount')
+            ->willReturn(1);
+
+        $configProvider
+            ->expects($this->any())
+            ->method('getStrengthBothCases')
+            ->willReturn(true);
+
+        $configProvider
+            ->expects($this->any())
+            ->method('getStrengthSpecialCharacterCount')
+            ->willReturn(1);
+
+        $generator = new Generator($configProvider);
+
+        $password = $generator->generate();
+
+        $this->assertEquals(8, strlen($password));
     }
 }

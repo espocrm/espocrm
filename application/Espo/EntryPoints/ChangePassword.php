@@ -34,19 +34,19 @@ use Espo\Entities\PasswordChangeRequest;
 use Espo\Core\Utils\Client\ActionRenderer;
 use Espo\Core\EntryPoint\EntryPoint;
 use Espo\Core\EntryPoint\Traits\NoAuth;
-use Espo\Core\Utils\Config;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\ORM\EntityManager;
+use Espo\Tools\UserSecurity\Password\ConfigProvider;
 
 class ChangePassword implements EntryPoint
 {
     use NoAuth;
 
     public function __construct(
-        private Config $config,
         private EntityManager $entityManager,
-        private ActionRenderer $actionRenderer
+        private ActionRenderer $actionRenderer,
+        private ConfigProvider $configProvider,
     ) {}
 
     public function run(Request $request, Response $response): void
@@ -65,13 +65,14 @@ class ChangePassword implements EntryPoint
             ->findOne();
 
         $strengthParams = [
-            'passwordGenerateLength' => $this->config->get('passwordGenerateLength'),
-            'passwordGenerateLetterCount' => $this->config->get('passwordGenerateLetterCount'),
-            'generateNumberCount' => $this->config->get('generateNumberCount'),
-            'passwordStrengthLength' => $this->config->get('passwordStrengthLength'),
-            'passwordStrengthLetterCount' => $this->config->get('passwordStrengthLetterCount'),
-            'passwordStrengthNumberCount' => $this->config->get('passwordStrengthNumberCount'),
-            'passwordStrengthBothCases' => $this->config->get('passwordStrengthBothCases'),
+            'passwordGenerateLength' => $this->configProvider->getGenerateLength(),
+            'passwordGenerateLetterCount' => $this->configProvider->getGenerateLetterCount(),
+            'generateNumberCount' => $this->configProvider->getGenerateNumberCount(),
+            'passwordStrengthLength' => $this->configProvider->getStrengthLength(),
+            'passwordStrengthLetterCount' => $this->configProvider->getStrengthLetterCount(),
+            'passwordStrengthNumberCount' => $this->configProvider->getStrengthNumberCount(),
+            'passwordStrengthBothCases' => $this->configProvider->getStrengthBothCases(),
+            'passwordStrengthSpecialCharacterCount' => $this->configProvider->getStrengthSpecialCharacterCount(),
         ];
 
         $options = [
