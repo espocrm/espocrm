@@ -38,6 +38,9 @@ use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\StreamSubscription;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\ORM\Name\Attribute;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use Espo\ORM\Query\Part\Expression as Expr;
@@ -353,6 +356,39 @@ class Service
                 'entityId' => $entity->getId(),
                 'entityType' => $entity->getEntityType(),
             ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($delete);
+    }
+
+    /**
+     * Unfollow all portal users from an entity.
+     *
+     * @since 9.0.0
+     */
+    public function unfollowPortalUsersFromEntity(Entity $entity): void
+    {
+        if (!$entity->hasId()) {
+            return;
+        }
+
+        $delete = $this->entityManager->getQueryBuilder()
+            ->delete()
+            ->from(StreamSubscription::ENTITY_TYPE)
+            ->where([
+                'entityId' => $entity->getId(),
+                'entityType' => $entity->getEntityType(),
+            ])
+            ->where(
+                Condition::in(
+                    Expression::column('userId'),
+                    SelectBuilder::create()
+                        ->from(User::ENTITY_TYPE)
+                        ->select('id')
+                        ->where(['type' => User::TYPE_PORTAL])
+                        ->build()
+                )
+            )
             ->build();
 
         $this->entityManager->getQueryExecutor()->execute($delete);

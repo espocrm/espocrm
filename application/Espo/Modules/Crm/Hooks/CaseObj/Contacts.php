@@ -34,7 +34,6 @@ use Espo\Core\Hook\Hook\AfterSave;
 use Espo\Core\InjectableFactory;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\CaseObj;
-use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
@@ -48,6 +47,9 @@ class Contacts implements AfterSave
 {
     private ?StreamService $streamService = null;
 
+    private const ATTR_CONTACT_ID = 'contactId';
+    private const RELATION_CONTACTS = 'contacts';
+
     public function __construct(
         private EntityManager $entityManager,
         private InjectableFactory $injectableFactory,
@@ -59,23 +61,20 @@ class Contacts implements AfterSave
      */
     public function afterSave(Entity $entity, SaveOptions $options): void
     {
-        if (!$entity->isAttributeChanged('contactId')) {
+        if (!$entity->isAttributeChanged(self::ATTR_CONTACT_ID)) {
             return;
         }
 
-        /** @var ?string $contactId */
-        $contactId = $entity->get('contactId');
-        $contactIdList = $entity->get('contactsIds') ?? [];
-        /** @var ?string $fetchedContactId */
-        $fetchedContactId = $entity->getFetched('contactId');
+        $contact = $entity->getContact();
 
-        $relation = $this->entityManager
-            ->getRDBRepositoryByClass(CaseObj::class)
-            ->getRelation($entity, 'contacts');
+        /** @var ?string $fetchedContactId */
+        $fetchedContactId = $entity->getFetched(self::ATTR_CONTACT_ID);
+
+        $contactsRelation = $this->entityManager->getRelation($entity, self::RELATION_CONTACTS);
 
         if ($fetchedContactId) {
             $previousPortalUser = $this->entityManager
-                ->getRDBRepository(User::ENTITY_TYPE)
+                ->getRDBRepositoryByClass(User::class)
                 ->select([Attribute::ID])
                 ->where([
                     'contactId' => $fetchedContactId,
@@ -90,25 +89,17 @@ class Contacts implements AfterSave
             }
         }
 
-        if (!$contactId && $fetchedContactId) {
-            $relation->unrelateById($fetchedContactId);
+        if (!$contact && $fetchedContactId) {
+            $contactsRelation->unrelateById($fetchedContactId);
 
             return;
         }
 
-        if (!$contactId) {
+        if (!$contact) {
             return;
         }
 
-        $portalUser = $this->entityManager
-            ->getRDBRepository(User::ENTITY_TYPE)
-            ->select([Attribute::ID])
-            ->where([
-                'contactId' => $contactId,
-                'type' => User::TYPE_PORTAL,
-                'isActive' => true,
-            ])
-            ->findOne();
+        $portalUser = $this->getPortalUser($contact->getId());
 
         if ($portalUser) {
             // @todo Solve ACL check issue when a user is in multiple portals.
@@ -119,21 +110,15 @@ class Contacts implements AfterSave
             }
         }
 
-        if (in_array($contactId, $contactIdList)) {
+        if (in_array($contact->getId(), $entity->getContacts()->getIdList())) {
             return;
         }
 
-        $contact = $this->entityManager->getEntityById(Contact::ENTITY_TYPE, $contactId);
-
-        if (!$contact) {
+        if ($contactsRelation->isRelatedById($contact->getId())) {
             return;
         }
 
-        if ($relation->isRelated($contact)) {
-            return;
-        }
-
-        $relation->relateById($contactId);
+        $contactsRelation->relateById($contact->getId());
     }
 
     private function getStreamService(): StreamService
@@ -143,5 +128,18 @@ class Contacts implements AfterSave
         }
 
         return $this->streamService;
+    }
+
+    private function getPortalUser(?string $contactId): ?User
+    {
+        return $this->entityManager
+            ->getRDBRepositoryByClass(User::class)
+            ->select([Attribute::ID])
+            ->where([
+                'contactId' => $contactId,
+                'type' => User::TYPE_PORTAL,
+                'isActive' => true,
+            ])
+            ->findOne();
     }
 }
