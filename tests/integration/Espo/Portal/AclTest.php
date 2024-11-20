@@ -82,6 +82,10 @@ class AclTest extends BaseTestCase
         ], ['createdById' => '1']);
         $case3 = $em->createEntity('Case', [
         ], ['createdById' => '1']);
+        $case4 = $em->createEntity('Case', [
+            'contactsIds' => [$contact->getId()],
+            'isInternal' => true,
+        ], ['createdById' => '1']);
 
         $this->assertFalse($acl->check('Case', 'create'));
         $this->assertFalse($acl->check('Case', 'edit'));
@@ -90,6 +94,7 @@ class AclTest extends BaseTestCase
         $this->assertTrue($acl->check($case1, 'read'));
         $this->assertTrue($acl->check($case2, 'read'));
         $this->assertFalse($acl->check($case3, 'read'));
+        $this->assertFalse($acl->check($case4, 'read'));
 
         $service = $app->getContainer()->get('recordServiceContainer')->get('Case');
 
@@ -103,6 +108,7 @@ class AclTest extends BaseTestCase
         $this->assertTrue(in_array($case1->getId(), $idList));
         $this->assertTrue(in_array($case2->getId(), $idList));
         $this->assertFalse(in_array($case3->getId(), $idList));
+        $this->assertFalse(in_array($case4->getId(), $idList));
     }
 
     public function testAccessAccount(): void
@@ -153,6 +159,10 @@ class AclTest extends BaseTestCase
         $case4 = $em->createEntity('Case', [
             'accountId' => $account->getId(),
         ], ['createdById' => '1']);
+        $case5 = $em->createEntity('Case', [
+            'accountId' => $account->getId(),
+            'isInternal' => true,
+        ], ['createdById' => '1']);
 
         $this->assertFalse($acl->check('Case', 'create'));
         $this->assertFalse($acl->check('Case', 'edit'));
@@ -162,6 +172,7 @@ class AclTest extends BaseTestCase
         $this->assertTrue($acl->check($case2, 'read'));
         $this->assertFalse($acl->check($case3, 'read'));
         $this->assertTrue($acl->check($case4, 'read'));
+        $this->assertFalse($acl->check($case5, 'read'));
 
         $service = $app->getContainer()->get('recordServiceContainer')->get('Case');
         $result = $service->find(SearchParams::create());
@@ -175,6 +186,7 @@ class AclTest extends BaseTestCase
         $this->assertTrue(in_array($case2->getId(), $idList));
         $this->assertFalse(in_array($case3->getId(), $idList));
         $this->assertTrue(in_array($case4->getId(), $idList));
+        $this->assertFalse(in_array($case5->getId(), $idList));
     }
 
     public function testAccessOwn(): void
@@ -229,6 +241,10 @@ class AclTest extends BaseTestCase
         $case5 = $em->createEntity('Case', [
             'accountId' => $account->getId(),
         ], ['createdById' => $user->getId()]);
+        $case6 = $em->createEntity('Case', [
+            'accountId' => $account->getId(),
+            'isInternal' => true,
+        ], ['createdById' => '1']);
 
         $this->assertFalse($acl->check('Case', 'create'));
         $this->assertFalse($acl->check('Case', 'edit'));
@@ -239,6 +255,7 @@ class AclTest extends BaseTestCase
         $this->assertFalse($acl->check($case3, 'read'));
         $this->assertFalse($acl->check($case4, 'read'));
         $this->assertTrue($acl->check($case5, 'read'));
+        $this->assertFalse($acl->check($case6, 'read'));
 
         $service = $app->getContainer()->get('recordServiceContainer')->get('Case');
 
@@ -255,6 +272,7 @@ class AclTest extends BaseTestCase
         $this->assertFalse(in_array($case3->getId(), $idList));
         $this->assertFalse(in_array($case4->getId(), $idList));
         $this->assertTrue(in_array($case5->getId(), $idList));
+        $this->assertFalse(in_array($case6->getId(), $idList));
     }
 
     public function testCreateCase(): void

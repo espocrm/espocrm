@@ -84,6 +84,9 @@
             "layoutAvailabilityList": [],
             "directAccessDisabled": true
         },
+        "isInternal": {
+            "type": "bool"
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true,

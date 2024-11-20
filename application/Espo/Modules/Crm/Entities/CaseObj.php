@@ -143,4 +143,20 @@ class CaseObj extends Entity
     {
         return $this->setRelatedLinkOrEntity('contact', $contact);
     }
+
+    /**
+     * @since 9.0.0
+     */
+    public function isInternal(): bool
+    {
+        return (bool) $this->get('isInternal');
+    }
+
+    /**
+     * @since 9.0.0
+     */
+    public function setIsInternal(bool $isInternal): self
+    {
+        return $this->set('isInternal', $isInternal);
+    }
 }

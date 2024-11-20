@@ -5,6 +5,7 @@
         "contact": "Espo\\Modules\\Crm\\Classes\\Acl\\Case\\LinkCheckers\\ContactLinkChecker",
         "contacts": "Espo\\Modules\\Crm\\Classes\\Acl\\Case\\LinkCheckers\\ContactLinkChecker"
     },
+    "portalOwnershipCheckerClassName": "Espo\\Modules\\Crm\\Classes\\AclPortal\\Case\\OwnershipChecker",
     "contactLink": "contacts",
     "accountLink": "account"
 }

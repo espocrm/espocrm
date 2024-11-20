@@ -12,7 +12,8 @@
         "inboundEmail": "Group Email Account",
         "lead": "Lead",
         "attachments": "Attachments",
-        "originalEmail": "Original Email"
+        "originalEmail": "Original Email",
+        "isInternal": "Internal"
     },
     "links": {
         "inboundEmail": "Group Email Account",

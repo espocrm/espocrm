@@ -5,6 +5,11 @@
             "CampaignLogRecord": "Campaign",
             "CampaignTrackingUrl": "Campaign",
             "EmailQueueItem": false
+        },
+        "scopeFieldLevel": {
+            "Case": {
+                "isInternal": false
+            }
         }
     },
     "strictDefault": {

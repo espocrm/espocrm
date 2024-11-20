@@ -6,6 +6,9 @@
     "boolFilterClassNameMap": {
         "open": "Espo\\Modules\\Crm\\Classes\\Select\\CaseObj\\BoolFilters\\Open"
     },
+    "accessControlFilterClassNameMap": {
+        "mandatory": "Espo\\Modules\\Crm\\Classes\\Select\\Case\\AccessControlFilters\\Mandatory"
+    },
     "selectAttributesDependencyMap": {
         "contactsIds": ["contactId"]
     }
