@@ -13,7 +13,7 @@
         "lead": "Lead",
         "attachments": "Attachments",
         "originalEmail": "Original Email",
-        "isInternal": "Internal"
+        "isInternal": "Hidden from Portal"
     },
     "links": {
         "inboundEmail": "Group Email Account",
