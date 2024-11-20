@@ -47,9 +47,6 @@ class IsInternal implements AfterSave
         private FollowersLoader $followersLoader,
     ) {}
 
-    /**
-     * @param CaseObj $entity
-     */
     public function afterSave(Entity $entity, SaveOptions $options): void
     {
         $this->processUnfollowPortalUsers($entity);

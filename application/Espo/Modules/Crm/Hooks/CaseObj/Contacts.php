@@ -31,7 +31,6 @@ namespace Espo\Modules\Crm\Hooks\CaseObj;
 
 use Espo\Core\FieldProcessing\Stream\FollowersLoader;
 use Espo\Core\Hook\Hook\AfterSave;
-use Espo\Core\InjectableFactory;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\ORM\Entity;
@@ -45,20 +44,15 @@ use Espo\Tools\Stream\Service as StreamService;
  */
 class Contacts implements AfterSave
 {
-    private ?StreamService $streamService = null;
-
     private const ATTR_CONTACT_ID = 'contactId';
     private const RELATION_CONTACTS = 'contacts';
 
     public function __construct(
         private EntityManager $entityManager,
-        private InjectableFactory $injectableFactory,
         private FollowersLoader $followersLoader,
+        private StreamService $streamService,
     ) {}
 
-    /**
-     * @param CaseObj $entity
-     */
     public function afterSave(Entity $entity, SaveOptions $options): void
     {
         if (!$entity->isAttributeChanged(self::ATTR_CONTACT_ID)) {
@@ -83,7 +77,7 @@ class Contacts implements AfterSave
                 ->findOne();
 
             if ($previousPortalUser) {
-                $this->getStreamService()->unfollowEntity($entity, $previousPortalUser->getId());
+                $this->streamService->unfollowEntity($entity, $previousPortalUser->getId());
 
                 $this->followersLoader->processFollowers($entity);
             }
@@ -101,9 +95,9 @@ class Contacts implements AfterSave
 
         $portalUser = $this->getPortalUser($contact->getId());
 
-        if ($portalUser) {
+        if ($portalUser && !$entity->isInternal()) {
             // @todo Solve ACL check issue when a user is in multiple portals.
-            $this->getStreamService()->followEntity($entity, $portalUser->getId());
+            $this->streamService->followEntity($entity, $portalUser->getId());
 
             if (!$entity->isNew()) {
                 $this->followersLoader->processFollowers($entity);
@@ -119,15 +113,6 @@ class Contacts implements AfterSave
         }
 
         $contactsRelation->relateById($contact->getId());
-    }
-
-    private function getStreamService(): StreamService
-    {
-        if (!$this->streamService) {
-            $this->streamService = $this->injectableFactory->create(StreamService::class);
-        }
-
-        return $this->streamService;
     }
 
     private function getPortalUser(?string $contactId): ?User
