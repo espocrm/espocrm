@@ -46,6 +46,10 @@ export default class extends EnumFieldView {
         data.valueIsSet = true;
         data.isNotEmpty = true;
 
+        data.value = this.getValueForDisplay();
+
+        data.valueTranslated = data.value != null ? this.translatedOptions[data.value] : undefined;
+
         return data;
     }
 
@@ -55,7 +59,7 @@ export default class extends EnumFieldView {
         this.params.options = [];
         this.translatedOptions = {};
 
-        this.params.options.push('system');
+        this.params.options.push('');
 
         if (!this.loadedOptionList) {
             if (this.model.get('inboundEmailId')) {
@@ -77,21 +81,21 @@ export default class extends EnumFieldView {
             });
         }
 
-        this.translatedOptions['system'] =
+        this.translatedOptions[''] =
             this.getConfig().get('outboundEmailFromAddress') +
             ' (' + this.translate('system', 'labels', 'MassEmail') + ')';
     }
 
     getValueForDisplay() {
-        if (!this.model.has(this.name) && this.isReadMode()) {
+        if (!this.model.has(this.name)) {
             if (this.model.has('inboundEmailId')) {
                 if (this.model.get('inboundEmailId')) {
                     return 'inboundEmail:' + this.model.get('inboundEmailId');
                 } else {
-                    return 'system';
+                    return '';
                 }
             } else {
-                return '...';
+                return '';
             }
         }
 
@@ -136,7 +140,7 @@ export default class extends EnumFieldView {
 
         data[this.name] = value;
 
-        if (!value || value === 'system') {
+        if (!value || value === '') {
             data.inboundEmailId = null;
             data.inboundEmailName = null;
         } else {
