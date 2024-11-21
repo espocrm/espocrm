@@ -227,6 +227,11 @@ class Binding implements BindingProcessor
             'Espo\\Core\\WebSocket\\Submission',
             'webSocketSubmission'
         );
+
+        $binder->bindService(
+            'Espo\\Tools\\Stream\\Service',
+            'streamService'
+        );
     }
 
     private function bindCore(Binder $binder): void

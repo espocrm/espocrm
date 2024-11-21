@@ -85,5 +85,8 @@
     },
     "user": {
         "settable": true
+    },
+    "streamService": {
+        "className": "Espo\\Tools\\Stream\\Service"
     }
 }
