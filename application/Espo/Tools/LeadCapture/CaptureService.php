@@ -614,20 +614,23 @@ class CaptureService
      */
     private function setFields(array $fieldList, stdClass $data, Lead $lead): void
     {
+        $this->unsetAttributes($data);
+
         $isEmpty = true;
 
         foreach ($fieldList as $field) {
-            if ($field === 'name') {
-                if (property_exists($data, 'name') && $data->name) {
-                    $value = trim($data->name);
+            if ($field === Field::NAME) {
+                $name = $data->{Field::NAME} ?? null;
 
-                    $parts = explode(' ', $value);
+                if (is_string($name)) {
+                    $name = trim($name);
+                    $parts = explode(' ', $name);
 
                     $lastName = array_pop($parts);
                     $firstName = implode(' ', $parts);
 
-                    $lead->set('firstName', $firstName);
-                    $lead->set('lastName', $lastName);
+                    $lead->setFirstName($firstName);
+                    $lead->setLastName($lastName);
 
                     $isEmpty = false;
                 }
@@ -636,10 +639,6 @@ class CaptureService
             }
 
             $attributeList = $this->fieldUtil->getActualAttributeList(Lead::ENTITY_TYPE, $field);
-
-            if (empty($attributeList)) {
-                continue;
-            }
 
             foreach ($attributeList as $attribute) {
                 if (!property_exists($data, $attribute)) {
@@ -678,5 +677,16 @@ class CaptureService
 
         $data->phoneNumber = $this->phoneNumberSanitizer
             ->sanitize($data->phoneNumber, $leadCapture->getPhoneNumberCountry());
+    }
+
+    private function unsetAttributes(stdClass $data): void
+    {
+        unset($data->{Field::EMAIL_ADDRESS . 'Data'});
+        unset($data->{Field::EMAIL_ADDRESS . 'IsInvalid'});
+        unset($data->{Field::EMAIL_ADDRESS . 'IsOptedOut'});
+
+        unset($data->{Field::PHONE_NUMBER . 'Data'});
+        unset($data->{Field::PHONE_NUMBER . 'IsInvalid'});
+        unset($data->{Field::PHONE_NUMBER . 'IsOptedOut'});
     }
 }

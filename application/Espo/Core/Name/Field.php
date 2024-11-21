@@ -46,4 +46,6 @@ class Field
     public const IS_FOLLOWED = 'isFollowed';
     public const FOLLOWERS = 'followers';
     public const IS_STARRED = 'isStarred';
+    public const EMAIL_ADDRESS = 'emailAddress';
+    public const PHONE_NUMBER = 'phoneNumber';
 }

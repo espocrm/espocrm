@@ -30,6 +30,7 @@
             "ignoreFieldList": [
                 "targetList",
                 "targetLists",
+                "acceptanceStatus",
                 "acceptanceStatusMeetings",
                 "acceptanceStatusCalls",
                 "campaign",
@@ -37,7 +38,13 @@
                 "teams",
                 "createdOpportunity",
                 "createdAccount",
-                "createdContact"
+                "createdContact",
+                "emailAddressIsOptedOut",
+                "emailAddressIsInvalid",
+                "phoneNumberIsOptedOut",
+                "phoneNumberIsInvalid",
+                "opportunityAmountCurrency",
+                "originalEmail"
             ]
         },
         "duplicateCheck": {

@@ -34,6 +34,7 @@ export default class extends MultiEnumFieldView {
         this.params.options = [];
         this.translatedOptions = {};
 
+        /** @type {Record.<string, Record>} */
         const fields = this.getMetadata().get(['entityDefs', 'Lead', 'fields']) || {};
 
         /** @type {string[]} */
@@ -43,11 +44,7 @@ export default class extends MultiEnumFieldView {
         for (const field in fields) {
             const defs = fields[field];
 
-            if (defs.disabled) {
-                continue;
-            }
-
-            if (defs.readOnly) {
+            if (defs.disabled || defs.utility || defs.readOnly) {
                 continue;
             }
 
