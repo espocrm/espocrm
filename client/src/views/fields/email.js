@@ -67,6 +67,10 @@ class EmailFieldView extends VarcharFieldView {
     detailTemplate = 'fields/email/detail'
     listTemplate = 'fields/email/list'
 
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = ['required', 'emailData']
 
     events = {
@@ -262,6 +266,28 @@ class EmailFieldView extends VarcharFieldView {
                 return true;
             }
         }
+    }
+
+    validateMaxCount() {
+        /** @type {number|null} */
+        const maxCount = this.getConfig().get('emailAddressMaxCount');
+
+        if (!maxCount) {
+            return false;
+        }
+
+        const items = this.model.attributes[this.dataFieldName] || [];
+
+        if (items.length <= maxCount) {
+            return false;
+        }
+
+        const msg = this.translate('fieldExceedsMaxCount', 'messages')
+            .replace('{maxCount}', maxCount.toString());
+
+        this.showValidationMessage(msg, 'div.email-address-block:last-child input');
+
+        return true;
     }
 
     data() {
@@ -587,6 +613,8 @@ class EmailFieldView extends VarcharFieldView {
 
         this.itemMaxLength = this.getMetadata()
             .get(['entityDefs', 'EmailAddress', 'fields', 'name', 'maxLength']) || 255;
+
+        this.validations.push(() => this.validateMaxCount());
     }
 
     fetchEmailAddressData() {

@@ -71,6 +71,10 @@ class PhoneFieldView extends VarcharFieldView {
     detailTemplate = 'fields/phone/detail'
     listTemplate = 'fields/phone/list'
 
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = ['required', 'phoneData']
 
     maxExtensionLength = 6
@@ -258,6 +262,28 @@ class PhoneFieldView extends VarcharFieldView {
         });
 
         return notValid;
+    }
+
+    validateMaxCount() {
+        /** @type {number|null} */
+        const maxCount = this.getConfig().get('phoneNumberMaxCount');
+
+        if (!maxCount) {
+            return false;
+        }
+
+        const items = this.model.attributes[this.dataFieldName] || [];
+
+        if (items.length <= maxCount) {
+            return false;
+        }
+
+        const msg = this.translate('fieldExceedsMaxCount', 'messages')
+            .replace('{maxCount}', maxCount.toString());
+
+        this.showValidationMessage(msg, 'div.phone-number-block:last-child input.phone-number');
+
+        return true;
     }
 
     /**
@@ -665,6 +691,8 @@ class PhoneFieldView extends VarcharFieldView {
 
             this.intlTelInputMap.clear();
         });
+
+        this.validations.push(() => this.validateMaxCount());
     }
 
     /**

@@ -46,6 +46,7 @@ use stdClass;
 class PhoneType
 {
     private const DEFAULT_MAX_LENGTH = 36;
+    private const MAX_COUNT = 10;
 
     public function __construct(
         private Metadata $metadata,
@@ -232,6 +233,19 @@ class PhoneType
         }
 
         return $numberObj->isPossibleNumber();
+    }
+
+    public function checkMaxCount(Entity $entity, string $field): bool
+    {
+        $maxCount = $this->config->get('phoneNumberMaxCount') ?? self::MAX_COUNT;
+
+        $dataList = $entity->get($field . 'Data');
+
+        if (!is_array($dataList)) {
+            return true;
+        }
+
+        return count($dataList) <= $maxCount;
     }
 
     protected function isNotEmpty(Entity $entity, string $field): bool

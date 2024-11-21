@@ -30,6 +30,7 @@
 namespace Espo\Classes\FieldValidators;
 
 use Espo\Core\Name\Field;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Entity;
@@ -38,14 +39,14 @@ use stdClass;
 
 class EmailType
 {
-    private Metadata $metadata;
-
     private const DEFAULT_MAX_LENGTH = 255;
+    private const MAX_COUNT = 10;
 
-    public function __construct(Metadata $metadata)
-    {
-        $this->metadata = $metadata;
-    }
+    public function __construct(
+        private Metadata $metadata,
+        private Config $config,
+    ) {}
+
     public function checkRequired(Entity $entity, string $field): bool
     {
         if ($this->isNotEmpty($entity, $field)) {
@@ -131,6 +132,19 @@ class EmailType
         }
 
         return true;
+    }
+
+    public function checkMaxCount(Entity $entity, string $field): bool
+    {
+        $maxCount = $this->config->get('emailAddressMaxCount') ?? self::MAX_COUNT;
+
+        $dataList = $entity->get($field . 'Data');
+
+        if (!is_array($dataList)) {
+            return true;
+        }
+
+        return count($dataList) <= $maxCount;
     }
 
     protected function isNotEmpty(Entity $entity, string $field): bool

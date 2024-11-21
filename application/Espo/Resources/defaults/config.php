@@ -316,5 +316,7 @@ return [
     'availableReactions' => ['Like'],
     'streamReactionsCheckMaxSize' => 50,
     'emailScheduledBatchCount' => 50,
+    'emailAddressMaxCount' => 10,
+    'phoneNumberMaxCount' => 10,
     'isInstalled' => false,
 ];

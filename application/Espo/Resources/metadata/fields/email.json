@@ -47,7 +47,8 @@
     ],
     "mandatoryValidationList": [
         "emailAddress",
-        "maxLength"
+        "maxLength",
+        "maxCount"
     ],
     "notCreatable": true,
     "filter": true,
