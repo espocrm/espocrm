@@ -347,7 +347,7 @@ class ClientManager
         }
 
         return $this->getTabHtml() .
-            "<script type=\"text/javascript\" src=\"$src\" data-base-path=\"$this->basePath\"$noncePart></script>";
+            "<script src=\"$src\" data-base-path=\"$this->basePath\"$noncePart></script>";
     }
 
     private function getCssItemHtml(string $file, int $appTimestamp): string

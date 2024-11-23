@@ -12,7 +12,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link rel="alternate icon" href="{{basePath}}{{faviconAlternate}}" type="image/x-icon">
         <link rel="icon" href="{{basePath}}{{favicon}}" type="{{faviconType}}">
-        <script type="text/javascript" nonce="{{nonce}}">
+        <script nonce="{{nonce}}">
             window.addEventListener('DOMContentLoaded', () => {
                 require('{{appClientClassName}}', App => {
                     new App({

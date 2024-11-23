@@ -847,8 +847,6 @@
             src = this._basePath + src;
 
             const scriptEl = document.createElement('script');
-
-            scriptEl.setAttribute('type', 'text/javascript')
             scriptEl.setAttribute('src', src);
 
             scriptEl.addEventListener('error', event => {
