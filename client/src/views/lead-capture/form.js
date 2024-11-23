@@ -92,6 +92,7 @@ export default class LeadCaptureFormView extends View {
         this.getConfig().setMultiple(this.formData.config);
         this.getHelper().appParams.setAll(this.formData.appParams);
         this.getHelper().fieldManager.defs = this.getMetadata().get('fields');
+        this.getDateTime().setSettingsAndPreferences(this.getConfig(), this.getPreferences());
 
         if (this.formData.captchaKey) {
             // noinspection JSUnresolvedReference

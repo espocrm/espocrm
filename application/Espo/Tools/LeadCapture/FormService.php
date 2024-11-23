@@ -226,6 +226,10 @@ class FormService
             'currencyList',
             'currencyDecimalPlaces',
             'addressFormat',
+            'dateFormat',
+            'timeFormat',
+            'timeZone',
+            'weekStart',
         ];
 
         $data = [];
