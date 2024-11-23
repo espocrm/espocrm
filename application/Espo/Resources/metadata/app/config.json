@@ -155,7 +155,7 @@
             "level": "superAdmin"
         },
         "availableReactions": {
-            "level": "global"
+            "level": "default"
         },
         "emailScheduledBatchCount": {
             "level": "admin"
