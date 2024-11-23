@@ -34,5 +34,7 @@ class Script
     public function __construct(
         readonly public string $source,
         readonly public bool $cacheBusting = false,
+        readonly public bool $async = false,
+        readonly public bool $defer = false,
     ) {}
 }

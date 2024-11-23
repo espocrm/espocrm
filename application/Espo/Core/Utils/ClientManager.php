@@ -204,7 +204,15 @@ class ClientManager
         );
 
         foreach ($additionalScripts as $it) {
-            $scriptsHtml .= $this->getScriptItemHtml(null, $appTimestamp, true, $it->cacheBusting, $it->source);
+            $scriptsHtml .= $this->getScriptItemHtml(
+                file: null,
+                appTimestamp: $appTimestamp,
+                withNonce: true,
+                cache: $it->cacheBusting,
+                source: $it->source,
+                async: $it->async,
+                defer: $it->defer,
+            );
         }
 
         $additionalStyleSheetsHtml = implode('',
@@ -332,6 +340,8 @@ class ClientManager
         bool $withNonce = false,
         bool $cache = true,
         ?string $source = null,
+        bool $async = false,
+        bool $defer = false,
     ): string {
 
         $src = $source ?? $this->basePath . $file;
@@ -346,8 +356,18 @@ class ClientManager
             $noncePart = " nonce=\"$this->nonce\"";
         }
 
+        $paramsPart = '';
+
+        if ($async) {
+            $paramsPart .= ' async';
+        }
+
+        if ($defer) {
+            $paramsPart .= ' defer';
+        }
+
         return $this->getTabHtml() .
-            "<script src=\"$src\" data-base-path=\"$this->basePath\"$noncePart></script>";
+            "<script src=\"$src\" data-base-path=\"$this->basePath\"$noncePart$paramsPart></script>";
     }
 
     private function getCssItemHtml(string $file, int $appTimestamp): string
