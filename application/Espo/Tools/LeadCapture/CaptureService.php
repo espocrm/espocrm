@@ -662,7 +662,7 @@ class CaptureService
             if ($field === Field::NAME) {
                 $name = $data->{Field::NAME} ?? null;
 
-                if (is_string($name)) {
+                if (is_string($name) && !isset($data->firstName) && !isset($data->lastName)) {
                     $name = trim($name);
                     $parts = explode(' ', $name);
 
@@ -673,9 +673,9 @@ class CaptureService
                     $lead->setLastName($lastName);
 
                     $isEmpty = false;
-                }
 
-                continue;
+                    continue;
+                }
             }
 
             $attributeList = $this->fieldUtil->getActualAttributeList(Lead::ENTITY_TYPE, $field);

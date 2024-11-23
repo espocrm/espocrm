@@ -279,8 +279,20 @@ class FormService
                 $field . 'City',
             ];
 
-            foreach ($subList as $susField) {
-                $fieldDefs[$susField] = $this->metadata->get("entityDefs.Lead.fields.$susField");
+            foreach ($subList as $sub) {
+                $fieldDefs[$sub] = $this->metadata->get("entityDefs.Lead.fields.$sub");
+            }
+        }
+        if ($type === FieldType::PERSON_NAME) {
+            $subList = [
+                'first' . ucfirst($field),
+                'middle' . ucfirst($field),
+                'last' . ucfirst($field),
+                'salutation' . ucfirst($field),
+            ];
+
+            foreach ($subList as $sub) {
+                $fieldDefs[$sub] = $this->metadata->get("entityDefs.Lead.fields.$sub");
             }
         }
 
