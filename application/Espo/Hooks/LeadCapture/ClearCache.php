@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,44 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import DetailRecordView from 'views/record/detail';
+namespace Espo\Hooks\LeadCapture;
 
-export default class extends DetailRecordView {
+use Espo\Core\Hook\Hook\AfterSave;
+use Espo\Core\Utils\DataCache;
+use Espo\Entities\LeadCapture;
+use Espo\ORM\Entity;
+use Espo\ORM\Repository\Option\SaveOptions;
 
-    setupActionItems() {
-        super.setupActionItems();
+/**
+ * @implements AfterSave<LeadCapture>
+ */
+class ClearCache implements AfterSave
+{
+    private const CACHE_KEY_PREFIX = 'leadCaptureForm';
 
-        this.addDropdownItem({
-            label: 'Generate New API Key',
-            name: 'generateNewApiKey',
-            onClick: () => this.actionGenerateNewApiKey(),
-        });
+    public function __construct(
+        private DataCache $dataCache,
+    ) {}
 
-        this.addDropdownItem({
-            label: 'Generate New Form ID',
-            name: 'generateNewFormId',
-            onClick: () => this.actionGenerateNewFormId(),
-        });
+    public function afterSave(Entity $entity, SaveOptions $options): void
+    {
+        if ($entity->isNew()) {
+            return;
+        }
+
+        $this->dataCache->clear($this->getCacheKey($entity));
     }
 
-    actionGenerateNewApiKey() {
-        this.confirm(this.translate('confirmation', 'messages'), () => {
-            Espo.Ajax.postRequest('LeadCapture/action/generateNewApiKey', {id: this.model.id})
-                .then(data => {
-                    this.model.set(data);
-
-                    Espo.Ui.success(this.translate('Done'));
-                });
-        });
-    }
-
-    async actionGenerateNewFormId() {
-        await this.confirm(this.translate('confirmation', 'messages'));
-
-        const data = await Espo.Ajax.postRequest('LeadCapture/action/generateNewFormId', {id: this.model.id});
-
-        this.model.set(data);
-
-        Espo.Ui.success(this.translate('Done'));
+    private function getCacheKey(LeadCapture $leadCapture): string
+    {
+        return self::CACHE_KEY_PREFIX . '/' . $leadCapture->getId();
     }
 }

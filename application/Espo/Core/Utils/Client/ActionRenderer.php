@@ -52,19 +52,30 @@ class ActionRenderer
             $params->getController(),
             $params->getAction(),
             $params->getData(),
-            $params->initAuth()
+            $params->initAuth(),
+            $params->getScripts(),
         );
 
-        $this->clientManager->writeHeaders($response);
+        $securityParams = new SecurityParams(
+            frameAncestors: $params->getFrameAncestors(),
+        );
+
+        $this->clientManager->writeHeaders($response, $securityParams);
         $response->writeBody($body);
     }
 
     /**
-     * @deprecated Use`write`.
      * @param ?array<string, mixed> $data
+     * @param Script[] $scripts
      */
-    public function render(string $controller, string $action, ?array $data = null, bool $initAuth = false): string
-    {
+    private function render(
+        string $controller,
+        string $action,
+        ?array $data,
+        bool $initAuth,
+        array $scripts,
+    ): string {
+
         $encodedData = Json::encode($data);
 
         $initAuthPart = $initAuth ? "app.initAuth();" : '';
@@ -73,12 +84,17 @@ class ActionRenderer
             "
                 {$initAuthPart}
                 app.doAction({
-                    controllerClassName: '{$controller}',
-                    action: '{$action}',
-                    options: {$encodedData},
+                    controllerClassName: '$controller',
+                    action: '$action',
+                    options: $encodedData,
                 });
             ";
 
-        return $this->clientManager->render($script);
+        $params = new RenderParams(
+            runScript: $script,
+            scripts: $scripts,
+        );
+
+        return $this->clientManager->render($params);
     }
 }

@@ -49,6 +49,7 @@ class EmailFieldView extends VarcharFieldView {
     /**
      * @typedef {Object} module:views/fields/email~params
      * @property {boolean} [required] Required.
+     * @property {boolean} [onlyPrimary] Only primary.
      */
 
     /**
@@ -270,7 +271,7 @@ class EmailFieldView extends VarcharFieldView {
 
     validateMaxCount() {
         /** @type {number|null} */
-        const maxCount = this.getConfig().get('emailAddressMaxCount');
+        const maxCount = this.maxCount;
 
         if (!maxCount) {
             return false;
@@ -355,6 +356,7 @@ class EmailFieldView extends VarcharFieldView {
         }
 
         data.itemMaxLength = this.itemMaxLength;
+        data.onlyPrimary = this.params.onlyPrimary;
 
         return data;
     }
@@ -610,6 +612,7 @@ class EmailFieldView extends VarcharFieldView {
         this.erasedPlaceholder = 'ERASED:';
 
         this.emailAddressOptedOutByDefault = this.getConfig().get('emailAddressIsOptedOutByDefault');
+        this.maxCount = this.getConfig().get('emailAddressMaxCount');
 
         this.itemMaxLength = this.getMetadata()
             .get(['entityDefs', 'EmailAddress', 'fields', 'name', 'maxLength']) || 255;
@@ -617,6 +620,15 @@ class EmailFieldView extends VarcharFieldView {
         this.validations.push(() => this.validateMaxCount());
     }
 
+    /**
+     * @return {{
+     *     emailAddress: string,
+     *     primary: boolean,
+     *     optOut: boolean,
+     *     invalid: boolean,
+     *     lower: string,
+     * }[]}
+     */
     fetchEmailAddressData() {
         const data = [];
 
@@ -649,7 +661,27 @@ class EmailFieldView extends VarcharFieldView {
     fetch() {
         const data = {};
 
-        const addressData = this.fetchEmailAddressData() || [];
+        const addressData = this.fetchEmailAddressData();
+
+        if (this.params.onlyPrimary) {
+            if (addressData.length > 0) {
+                data[this.name] = addressData[0].emailAddress;
+
+                data[this.dataFieldName] = [
+                    {
+                        emailAddress: addressData[0].emailAddress,
+                        lower: addressData[0].lower,
+                        primary: true,
+                    }
+                ];
+            } else {
+                data[this.name] = null;
+                data[this.dataFieldName] = null;
+
+            }
+
+            return data;
+        }
 
         data[this.dataFieldName] = addressData;
         data[this.name] = null;

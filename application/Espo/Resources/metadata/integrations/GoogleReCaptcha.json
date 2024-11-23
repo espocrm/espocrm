@@ -1,0 +1,23 @@
+{
+    "fields": {
+        "siteKey": {
+            "type": "varchar",
+            "maxLength": 255,
+            "required": true
+        },
+        "secretKey": {
+            "type": "password",
+            "maxLength": 255,
+            "required": true
+        },
+        "scoreThreshold": {
+            "type": "float",
+            "min": 0.0,
+            "max": 1.0,
+            "default": 0.3,
+            "required": true
+        }
+    },
+    "allowUserAccounts": false,
+    "view": "views/admin/integrations/edit"
+}

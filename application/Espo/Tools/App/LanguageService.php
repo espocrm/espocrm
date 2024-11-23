@@ -62,23 +62,15 @@ class LanguageService
     /**
      * @return array<string, mixed>
      */
-    public function getDataForFrontend(bool $default = false): array
+    public function getDataForFrontendFromLanguage(LanguageUtil $language): array
     {
-        if ($default) {
-            $languageObj = $this->getDefaultLanguage();
-        } else {
-            $languageObj = $this->getLanguage();
-        }
-
-        $data = $languageObj->getAll();
+        $data = $language->getAll();
 
         if ($this->user->isSystem()) {
             unset($data['Global']['scopeNames']);
             unset($data['Global']['scopeNamesPlural']);
             unset($data['Global']['dashlets']);
             unset($data['Global']['links']);
-            unset($data['Global']['fields']);
-            unset($data['Global']['options']);
 
             foreach ($data as $k => $item) {
                 if (
@@ -145,18 +137,32 @@ class LanguageService
             }
 
             if (!$this->user->isAdmin()) {
-                $this->prepareDataNonAdmin($data, $languageObj);
+                $this->prepareDataNonAdmin($data, $language);
             }
         }
 
         $data['User']['fields'] = $data['User']['fields'] ?? [];
 
-        $data['User']['fields']['password'] = $languageObj->translate('password', 'fields', 'User');
-        $data['User']['fields']['passwordConfirm'] = $languageObj->translate('passwordConfirm', 'fields', 'User');
-        $data['User']['fields']['newPassword'] = $languageObj->translate('newPassword', 'fields', 'User');
-        $data['User']['fields']['newPasswordConfirm'] = $languageObj->translate('newPasswordConfirm', 'fields', 'User');
+        $data['User']['fields']['password'] = $language->translate('password', 'fields', 'User');
+        $data['User']['fields']['passwordConfirm'] = $language->translate('passwordConfirm', 'fields', 'User');
+        $data['User']['fields']['newPassword'] = $language->translate('newPassword', 'fields', 'User');
+        $data['User']['fields']['newPasswordConfirm'] = $language->translate('newPasswordConfirm', 'fields', 'User');
 
         return $data;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getDataForFrontend(bool $default = false): array
+    {
+        if ($default) {
+            $languageObj = $this->getDefaultLanguage();
+        } else {
+            $languageObj = $this->getLanguage();
+        }
+
+        return $this->getDataForFrontendFromLanguage($languageObj);
     }
 
     /**

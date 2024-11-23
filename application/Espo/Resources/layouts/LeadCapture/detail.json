@@ -5,9 +5,20 @@
             [{"name": "subscribeToTargetList", "inlineEditDisabled": true}, {"name": "campaign"}],
             [{"name": "subscribeContactToTargetList"}, {"name": "targetList"}],
             [{"name": "targetTeam"}, {"name": "leadSource"}],
-            [{"name": "fieldList"}],
-            [{"name": "duplicateCheck"}, {"name": "phoneNumberCountry"}],
-            [{"name": "apiKey"}, false]
+            [{"name": "duplicateCheck"}, {"name": "phoneNumberCountry"}]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "fieldList"}, {"name": "apiKey"}]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "formEnabled"}, false],
+            [{"name": "formText"}, {"name": "formSuccessText"}],
+            [{"name": "formSuccessRedirectUrl"}, {"name": "formLanguage"}],
+            [{"name": "formFrameAncestors"}, {"name": "formCaptcha"}]
         ]
     },
     {

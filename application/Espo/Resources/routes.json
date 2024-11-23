@@ -79,6 +79,12 @@
         "actionClassName": "Espo\\Tools\\GlobalSearch\\Api\\Get"
     },
     {
+        "route": "/LeadCapture/form/:id",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\LeadCapture\\Api\\PostForm",
+        "noAuth": true
+    },
+    {
         "route": "/LeadCapture/:apiKey",
         "method": "post",
         "params": {

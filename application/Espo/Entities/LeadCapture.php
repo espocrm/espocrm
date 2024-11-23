@@ -31,6 +31,7 @@ namespace Espo\Entities;
 
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
+use stdClass;
 
 class LeadCapture extends Entity
 {
@@ -44,12 +45,65 @@ class LeadCapture extends Entity
         return $this->get('subscribeToTargetList') && $this->get('subscribeContactToTargetList');
     }
 
+    public function hasFormCaptcha(): bool
+    {
+        return (bool) $this->get('formCaptcha');
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getFormFrameAncestors(): array
+    {
+        return $this->get('formFrameAncestors') ?? [];
+    }
+
+    public function getFormText(): ?string
+    {
+        return $this->get('formText');
+    }
+
+    public function getFormSuccessText(): ?string
+    {
+        return $this->get('formSuccessText');
+    }
+
+    public function getFormLanguage(): ?string
+    {
+        return $this->get('formLanguage');
+    }
+
+    public function getFormSuccessRedirectUrl(): ?string
+    {
+        $url = $this->get('formSuccessRedirectUrl');
+
+        if (!$url) {
+            return null;
+        }
+
+        if (!str_contains($url, '://')) {
+            $url = 'https://' . $url;
+        }
+
+        return $url;
+    }
+
     /**
      * @return string[]
      */
     public function getFieldList(): array
     {
         return $this->get('fieldList') ?? [];
+    }
+
+    public function isFieldRequired(string $field): bool
+    {
+        /** @var stdClass $fieldParams */
+        $fieldParams = $this->get('fieldParams') ?? (object) [];
+        /** @var stdClass $itParams */
+        $itParams = $fieldParams->$field ?? (object) [];
+
+        return (bool) ($itParams->required ?? false);
     }
 
     public function getOptInConfirmationSuccessMessage(): ?string
@@ -90,6 +144,16 @@ class LeadCapture extends Entity
     public function subscribeContactToTargetList(): bool
     {
         return (bool) $this->get('subscribeContactToTargetList');
+    }
+
+    public function getFormId(): ?string
+    {
+        return $this->get('formId');
+    }
+
+    public function setFormId(string $apiKey): self
+    {
+        return $this->set('formId', $apiKey);
     }
 
     public function getApiKey(): ?string
@@ -145,5 +209,10 @@ class LeadCapture extends Entity
     public function getPhoneNumberCountry(): ?string
     {
         return $this->get('phoneNumberCountry');
+    }
+
+    public function hasFormEnabled(): bool
+    {
+        return (bool) $this->get('formEnabled');
     }
 }

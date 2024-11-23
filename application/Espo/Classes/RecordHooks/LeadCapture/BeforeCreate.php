@@ -46,8 +46,7 @@ class BeforeCreate implements SaveHook
 
     public function process(Entity $entity): void
     {
-        $apiKey = $this->service->generateApiKey();
-
-        $entity->setApiKey($apiKey);
+        $entity->setApiKey($this->service->generateApiKey());
+        $entity->setFormId($this->service->generateFormId());
     }
 }

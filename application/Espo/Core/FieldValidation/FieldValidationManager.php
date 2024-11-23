@@ -166,9 +166,21 @@ class FieldValidationManager
 
     /**
      * Check a specific field for a specific validation type.
+     *
+     * @param Entity $entity An entity to check.
+     * @param string $field A field to check.
+     * @param string $type A validation type.
+     * @param ?stdClass $data A payload.
+     * @param mixed $value To override a validation value.
      */
-    public function check(Entity $entity, string $field, string $type, ?stdClass $data = null): bool
-    {
+    public function check(
+        Entity $entity,
+        string $field,
+        string $type,
+        ?stdClass $data = null,
+        mixed $value = null
+    ): bool {
+
         $data ??= (object) [];
         $entityType = $entity->getEntityType();
 
@@ -178,7 +190,7 @@ class FieldValidationManager
             return false;
         }
 
-        $validationValue = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, $type);
+        $validationValue = $value ?? $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, $type);
         $isMandatory = in_array($type, $this->getMandatoryValidationList($entityType, $field));
 
         $skip = !$isMandatory && (is_null($validationValue) || $validationValue === false);

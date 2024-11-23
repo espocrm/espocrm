@@ -613,6 +613,11 @@ class ArrayFieldView extends BaseFieldView {
         return list.join(', ');
     }
 
+    /**
+     * @protected
+     * @param {string} value
+     * @return {string}
+     */
     getItemHtml(value) {
         // Do not use the `html` method to avoid XSS.
 

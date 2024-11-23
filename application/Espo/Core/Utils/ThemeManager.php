@@ -54,4 +54,9 @@ class ThemeManager
     {
         return $this->metadata->get(['themes', $this->getName(), 'logo']) ?? $this->defaultLogoSrc;
     }
+
+    public function isDark(): bool
+    {
+        return (bool) $this->metadata->get("themes.{$this->getName()}.isDark");
+    }
 }

@@ -317,6 +317,17 @@ class Language {
 
         return pointer;
     }
+
+    /**
+     * Do not use.
+     *
+     * @param {string} [scope]
+     * @param {Record} [data]
+     * @internal
+     */
+    setScopeData(scope, data) {
+        this.data[scope] = data;
+    }
 }
 
 Object.assign(Language.prototype, Events);

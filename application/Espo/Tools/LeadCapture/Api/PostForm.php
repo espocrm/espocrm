@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,44 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import DetailRecordView from 'views/record/detail';
+namespace Espo\Tools\LeadCapture\Api;
 
-export default class extends DetailRecordView {
+use Espo\Core\Api\Action;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Tools\LeadCapture\CaptureService;
 
-    setupActionItems() {
-        super.setupActionItems();
+/**
+ * @noinspection PhpUnused
+ */
+class PostForm implements Action
+{
+    public function __construct(
+        private CaptureService $service,
+    ) {}
 
-        this.addDropdownItem({
-            label: 'Generate New API Key',
-            name: 'generateNewApiKey',
-            onClick: () => this.actionGenerateNewApiKey(),
-        });
+    public function process(Request $request): Response
+    {
+        $data = $request->getParsedBody();
+        $id = $request->getRouteParam('id') ?? throw new BadRequest();
+        $captchaToken = $request->getHeader('X-Captcha-Token');
 
-        this.addDropdownItem({
-            label: 'Generate New Form ID',
-            name: 'generateNewFormId',
-            onClick: () => this.actionGenerateNewFormId(),
-        });
-    }
+        $result = $this->service->captureForm($id, $data, $captchaToken);
 
-    actionGenerateNewApiKey() {
-        this.confirm(this.translate('confirmation', 'messages'), () => {
-            Espo.Ajax.postRequest('LeadCapture/action/generateNewApiKey', {id: this.model.id})
-                .then(data => {
-                    this.model.set(data);
-
-                    Espo.Ui.success(this.translate('Done'));
-                });
-        });
-    }
-
-    async actionGenerateNewFormId() {
-        await this.confirm(this.translate('confirmation', 'messages'));
-
-        const data = await Espo.Ajax.postRequest('LeadCapture/action/generateNewFormId', {id: this.model.id});
-
-        this.model.set(data);
-
-        Espo.Ui.success(this.translate('Done'));
+        return ResponseComposer::json([
+            'redirectUrl' => $result->redirectUrl,
+        ]);
     }
 }

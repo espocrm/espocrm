@@ -33,6 +33,9 @@ use Espo\Core\Api\Response;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\Utils\Client\DevModeJsFileListProvider;
 use Espo\Core\Utils\Client\LoaderParamsProvider;
+use Espo\Core\Utils\Client\RenderParams;
+use Espo\Core\Utils\Client\Script;
+use Espo\Core\Utils\Client\SecurityParams;
 use Espo\Core\Utils\File\Manager as FileManager;
 
 use Slim\Psr7\Response as Psr7Response;
@@ -62,7 +65,7 @@ class ClientManager
         private FileManager $fileManager,
         private DevModeJsFileListProvider $devModeJsFileListProvider,
         private Module $module,
-        private LoaderParamsProvider $loaderParamsProvider
+        private LoaderParamsProvider $loaderParamsProvider,
     ) {
         $this->nonce = Util::generateKey();
     }
@@ -80,43 +83,45 @@ class ClientManager
     /**
      * @todo Move to a separate class.
      */
-    public function writeHeaders(Response $response): void
+    public function writeHeaders(Response $response, ?SecurityParams $params = null): void
     {
         if ($this->config->get('clientSecurityHeadersDisabled')) {
             return;
         }
 
+        $params ??= new SecurityParams();
+
         $response->setHeader('X-Content-Type-Options', 'nosniff');
 
-        $this->writeXFrameOptionsHeader($response);
-        $this->writeContentSecurityPolicyHeader($response);
+        $this->writeContentSecurityPolicyHeader($response, $params);
         $this->writeStrictTransportSecurityHeader($response);
     }
 
-    private function writeXFrameOptionsHeader(Response $response): void
-    {
-        if ($this->config->get('clientXFrameOptionsHeaderDisabled')) {
-            return;
-        }
-
-        $response->setHeader('X-Frame-Options', 'SAMEORIGIN');
-    }
-
-    private function writeContentSecurityPolicyHeader(Response $response): void
+    private function writeContentSecurityPolicyHeader(Response $response, SecurityParams $params): void
     {
         if ($this->config->get('clientCspDisabled')) {
             return;
         }
 
-        $scriptSrc = "script-src 'self' 'nonce-$this->nonce' 'unsafe-eval'";
+        $string = "script-src 'self' 'nonce-$this->nonce' 'unsafe-eval'";
 
+        /** @var string[] $scriptSourceList */
         $scriptSourceList = $this->config->get('clientCspScriptSourceList') ?? [];
 
         foreach ($scriptSourceList as $src) {
-            $scriptSrc .= ' ' . $src;
+            $string .= ' ' . $src;
         }
 
-        $response->setHeader('Content-Security-Policy', $scriptSrc);
+        // Checking the parameter for bc.
+        if (!$this->config->get('clientXFrameOptionsHeaderDisabled')) {
+            $string .= '; frame-ancestors';
+
+            foreach (["'self'", ...$params->frameAncestors] as $item) {
+                $string .= ' ' . $item;
+            }
+        }
+
+        $response->setHeader('Content-Security-Policy', $string);
     }
 
     private function writeStrictTransportSecurityHeader(Response $response): void
@@ -137,7 +142,7 @@ class ClientManager
      */
     public function display(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []): void
     {
-        $body = $this->render($runScript, $htmlFilePath, $vars);
+        $body = $this->renderInternal($runScript, $htmlFilePath, $vars);
 
         $response = new ResponseWrapper(new Psr7Response());
 
@@ -148,10 +153,32 @@ class ClientManager
     }
 
     /**
-     * @param array<string, mixed> $vars
+     * Render.
+     *
+     * @param RenderParams $params Parameters.
+     * @return string A result HTML.
      */
-    public function render(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []): string
+    public function render(RenderParams $params): string
     {
+        return $this->renderInternal(
+            $params->runScript,
+            null,
+            [],
+            $params->scripts
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $vars
+     * @param Script[] $additionalScripts
+     */
+    private function renderInternal(
+        ?string $runScript = null,
+        ?string $htmlFilePath = null,
+        array $vars = [],
+        array $additionalScripts = []
+    ): string {
+
         $runScript ??= $this->runScript;
         $htmlFilePath ??= $this->mainHtmlFilePath;
 
@@ -175,6 +202,10 @@ class ClientManager
         $scriptsHtml = implode('',
             array_map(fn ($file) => $this->getScriptItemHtml($file, $appTimestamp), $jsFileList)
         );
+
+        foreach ($additionalScripts as $it) {
+            $scriptsHtml .= $this->getScriptItemHtml(null, $appTimestamp, true, $it->cacheBusting, $it->source);
+        }
 
         $additionalStyleSheetsHtml = implode('',
             array_map(fn ($file) => $this->getCssItemHtml($file, $appTimestamp), $cssFileList)
@@ -295,12 +326,28 @@ class ClientManager
         return $this->config->get('appTimestamp', 0);
     }
 
-    private function getScriptItemHtml(string $file, int $appTimestamp): string
-    {
-        $src = $this->basePath . $file . '?r=' . $appTimestamp;
+    private function getScriptItemHtml(
+        ?string $file,
+        int $appTimestamp,
+        bool $withNonce = false,
+        bool $cache = true,
+        ?string $source = null,
+    ): string {
+
+        $src = $source ?? $this->basePath . $file;
+
+        if ($cache) {
+            $src .= '?r=' . $appTimestamp;
+        }
+
+        $noncePart = '';
+
+        if ($withNonce) {
+            $noncePart = " nonce=\"$this->nonce\"";
+        }
 
         return $this->getTabHtml() .
-            "<script type=\"text/javascript\" src=\"$src\" data-base-path=\"$this->basePath\"></script>";
+            "<script type=\"text/javascript\" src=\"$src\" data-base-path=\"$this->basePath\"$noncePart></script>";
     }
 
     private function getCssItemHtml(string $file, int $appTimestamp): string

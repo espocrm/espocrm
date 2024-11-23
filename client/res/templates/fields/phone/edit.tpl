@@ -1,13 +1,15 @@
 <div class="phone-number-block-container">
 {{#each phoneNumberData}}
-    <div class="input-group phone-number-block">
+    <div class="input-group phone-number-block {{#if ../onlyPrimary}} only-primary {{/if}}">
+        {{#unless ../onlyPrimary}}
         <span class="input-group-item">
             <select
                 data-property-type="type"
                 class="form-control radius-left"
             >{{options ../params.typeList type scope=../scope field=../name}}</select>
         </span>
-        <span class="input-group-item input-group-item-middle">
+        {{/unless}}
+        <span class="input-group-item input-group-item-middle input-phone-number-item">
             <input
                 type="text"
                 class="form-control phone-number numeric-text no-margin-shifting {{#if optOut}} text-strikethrough {{/if}} {{#if invalid}} text-danger {{/if}}"
@@ -16,6 +18,7 @@
                 maxlength={{../itemMaxLength}}
             >
         </span>
+        {{#unless ../onlyPrimary}}
         <span class="input-group-btn">
             <button
                 class="btn btn-default btn-icon phone-property{{#if primary}} active{{/if}} hidden"
@@ -62,8 +65,15 @@
                 <span class="fas fa-times"></span>
             </button>
         </span>
+        {{/unless}}
     </div>
 {{/each}}
 </div>
 
-<button class="btn btn-default btn-icon" type="button" data-action="addPhoneNumber"><span class="fas fa-plus"></span></button>
+{{#unless onlyPrimary}}
+    <button
+        class="btn btn-default btn-icon"
+        type="button"
+        data-action="addPhoneNumber"
+    ><span class="fas fa-plus"></span></button>
+{{/unless}}

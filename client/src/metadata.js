@@ -259,6 +259,16 @@ class Metadata {
 
         return scopeList;
     }
+
+    /**
+     * Do not use.
+     *
+     * @internal
+     * @param {Record} data
+     */
+    setData(data) {
+        this.data = data;
+    }
 }
 
 Object.assign(Metadata.prototype, Events);

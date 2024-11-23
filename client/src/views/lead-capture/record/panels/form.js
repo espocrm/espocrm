@@ -26,44 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import DetailRecordView from 'views/record/detail';
+import SidePanelView from 'views/record/panels/side';
 
-export default class extends DetailRecordView {
+export default class extends SidePanelView {
 
-    setupActionItems() {
-        super.setupActionItems();
-
-        this.addDropdownItem({
-            label: 'Generate New API Key',
-            name: 'generateNewApiKey',
-            onClick: () => this.actionGenerateNewApiKey(),
-        });
-
-        this.addDropdownItem({
-            label: 'Generate New Form ID',
-            name: 'generateNewFormId',
-            onClick: () => this.actionGenerateNewFormId(),
-        });
-    }
-
-    actionGenerateNewApiKey() {
-        this.confirm(this.translate('confirmation', 'messages'), () => {
-            Espo.Ajax.postRequest('LeadCapture/action/generateNewApiKey', {id: this.model.id})
-                .then(data => {
-                    this.model.set(data);
-
-                    Espo.Ui.success(this.translate('Done'));
-                });
-        });
-    }
-
-    async actionGenerateNewFormId() {
-        await this.confirm(this.translate('confirmation', 'messages'));
-
-        const data = await Espo.Ajax.postRequest('LeadCapture/action/generateNewFormId', {id: this.model.id});
-
-        this.model.set(data);
-
-        Espo.Ui.success(this.translate('Done'));
-    }
+    fieldList = [
+        'formUrl'
+    ]
 }

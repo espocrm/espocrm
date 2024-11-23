@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,44 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import DetailRecordView from 'views/record/detail';
+namespace Espo\Core\Utils\Language;
 
-export default class extends DetailRecordView {
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Language;
 
-    setupActionItems() {
-        super.setupActionItems();
+class LanguageFactory
+{
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private Config $config,
+    ) {}
 
-        this.addDropdownItem({
-            label: 'Generate New API Key',
-            name: 'generateNewApiKey',
-            onClick: () => this.actionGenerateNewApiKey(),
-        });
-
-        this.addDropdownItem({
-            label: 'Generate New Form ID',
-            name: 'generateNewFormId',
-            onClick: () => this.actionGenerateNewFormId(),
-        });
-    }
-
-    actionGenerateNewApiKey() {
-        this.confirm(this.translate('confirmation', 'messages'), () => {
-            Espo.Ajax.postRequest('LeadCapture/action/generateNewApiKey', {id: this.model.id})
-                .then(data => {
-                    this.model.set(data);
-
-                    Espo.Ui.success(this.translate('Done'));
-                });
-        });
-    }
-
-    async actionGenerateNewFormId() {
-        await this.confirm(this.translate('confirmation', 'messages'));
-
-        const data = await Espo.Ajax.postRequest('LeadCapture/action/generateNewFormId', {id: this.model.id});
-
-        this.model.set(data);
-
-        Espo.Ui.success(this.translate('Done'));
+    public function create(string $language): Language
+    {
+        return $this->injectableFactory->createWith(Language::class, [
+            'language' => $language,
+            'useCache' => $this->config->get('useCache') ?? false,
+        ]);
     }
 }

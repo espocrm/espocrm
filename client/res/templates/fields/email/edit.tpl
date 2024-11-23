@@ -1,13 +1,13 @@
-
 <div>
 {{#each emailAddressData}}
-    <div class="input-group email-address-block">
+    <div class="input-group email-address-block {{#if ../onlyPrimary}} only-primary {{/if}}">
         <input
             type="email"
             class="form-control email-address{{#if optOut}} text-strikethrough{{/if}}{{#if invalid}} text-danger{{/if}}"
             value="{{emailAddress}}" autocomplete="espo-{{../name}}"
             maxlength={{../itemMaxLength}}
         >
+        {{#unless ../onlyPrimary}}
         <span class="input-group-btn">
             <button
                 class="btn btn-default btn-icon email-property{{#if primary}} active{{/if}} hidden"
@@ -54,8 +54,15 @@
                 <span class="fas fa-times"></span>
             </button>
         </span>
+        {{/unless}}
     </div>
 {{/each}}
 </div>
 
-<button class="btn btn-default btn-icon" type="button" data-action="addEmailAddress"><span class="fas fa-plus"></span></button>
+{{#unless onlyPrimary}}
+    <button
+        class="btn btn-default btn-icon"
+        type="button"
+        data-action="addEmailAddress"
+    ><span class="fas fa-plus"></span></button>
+{{/unless}}

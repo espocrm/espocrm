@@ -23,7 +23,17 @@
         "smtpAccount": "SMTP Account",
         "inboundEmail": "Group Email Account",
         "duplicateCheck": "Duplicate Check",
-        "phoneNumberCountry": "Telephone country code"
+        "phoneNumberCountry": "Telephone country code",
+        "fieldParams": "Field Params",
+        "formId": "Form ID",
+        "formEnabled": "Web Form",
+        "formUrl": "Form URL",
+        "formSuccessText": "Text to display after form submission",
+        "formText": "Text to display on form",
+        "formSuccessRedirectUrl": "URL to redirect to after form submission",
+        "formLanguage": "Language used on form",
+        "formFrameAncestors": "Allowed hosts for form embedding",
+        "formCaptcha": "Use Captcha"
     },
     "links": {
         "targetList": "Target List",
@@ -37,7 +47,9 @@
         "Create LeadCapture": "Create Entry Point",
         "Generate New API Key": "Generate New API Key",
         "Request": "Request",
-        "Confirm Opt-In": "Confirm Opt-In"
+        "Confirm Opt-In": "Confirm Opt-In",
+        "Generate New Form ID": "Generate New Form ID",
+        "Web Form": "Web Form"
     },
     "messages": {
         "generateApiKey": "Create new API Key",
@@ -45,6 +57,7 @@
         "optInIsConfirmed": "Opt-in is confirmed."
     },
     "tooltips": {
+        "formCaptcha": "To be able to use Captcha, you need to configure it under **Administration** > **Integrations**.",
         "optInConfirmationSuccessMessage": "Markdown is supported."
     }
 }

@@ -60,6 +60,7 @@ class ExampleLoader implements Loader
 
         $this->processRequestUrl($entity);
         $this->processRequestPayload($entity);
+        $this->processFormUrl($entity);
     }
 
     private function processRequestUrl(LeadCapture $entity): void
@@ -120,5 +121,22 @@ class ExampleLoader implements Loader
         $requestPayload .= "}\n```";
 
         $entity->set('exampleRequestPayload', $requestPayload);
+    }
+
+    private function processFormUrl(LeadCapture $entity): void
+    {
+        $formId = $entity->getFormId();
+        $siteUrl = $this->config->getSiteUrl();
+
+        if (!$entity->hasFormEnabled() || !$formId) {
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
+            $entity->set('formUrl', null);
+
+            return;
+        }
+
+        $formUrl = "$siteUrl?entryPoint=leadCaptureForm&id=$formId";
+
+        $entity->set('formUrl', $formUrl);
     }
 }

@@ -111,6 +111,24 @@ class LeadCapture extends Record
     }
 
     /**
+     * @throws BadRequest
+     * @throws NotFound
+     * @throws Forbidden
+     */
+    public function postActionGenerateNewFormId(Request $request): stdClass
+    {
+        $data = $request->getParsedBody();
+
+        if (empty($data->id)) {
+            throw new BadRequest();
+        }
+
+        return $this->getLeadCaptureService()
+            ->generateNewFormIdForEntity($data->id)
+            ->getValueMap();
+    }
+
+    /**
      * @return stdClass[]
      * @throws Forbidden
      */

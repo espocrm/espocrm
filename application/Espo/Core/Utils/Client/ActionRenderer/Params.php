@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils\Client\ActionRenderer;
 
+use Espo\Core\Utils\Client\Script;
+
 /**
  * @immutable
  */
@@ -37,6 +39,10 @@ class Params
     /** @var ?array<string, mixed> */
     private ?array $data;
     private bool $initAuth = false;
+    /** @var string[] */
+    private array $frameAncestors = [];
+    /** @var Script[] */
+    private array $scripts = [];
 
     /**
      * @param ?array<string, mixed> $data
@@ -76,6 +82,30 @@ class Params
         return $obj;
     }
 
+    /**
+     * @param string[] $frameAncestors
+     * @since 9.0.0
+     */
+    public function withFrameAncestors(array $frameAncestors): self
+    {
+        $obj = clone $this;
+        $obj->frameAncestors = $frameAncestors;
+
+        return $obj;
+    }
+
+    /**
+     * @param Script[] $scripts
+     * @since 9.0.0
+     */
+    public function withScripts(array $scripts): self
+    {
+        $obj = clone $this;
+        $obj->scripts = $scripts;
+
+        return $obj;
+    }
+
     public function getController(): string
     {
         return $this->controller;
@@ -97,5 +127,23 @@ class Params
     public function initAuth(): bool
     {
         return $this->initAuth;
+    }
+
+    /**
+     * @return string[]
+     * @since 9.0.0
+     */
+    public function getFrameAncestors(): array
+    {
+        return $this->frameAncestors;
+    }
+
+    /**
+     * @return Script[]
+     * @since 9.0.0
+     */
+    public function getScripts(): array
+    {
+        return $this->scripts;
     }
 }

@@ -177,4 +177,14 @@ class Lead extends Person
 
         return $this;
     }
+
+    public function setSource(?string $source): self
+    {
+        return $this->set('source', $source);
+    }
+
+    public function setCampaign(Link|Campaign|null $campaign): self
+    {
+        return $this->setRelatedLinkOrEntity('campaign', $campaign);
+    }
 }

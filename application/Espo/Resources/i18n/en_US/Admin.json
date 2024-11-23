@@ -301,7 +301,7 @@
         "authLog": "Login history.",
         "appLog": "Application log.",
         "appSecrets": "Store sensitive information like API keys, passwords, and other secrets.",
-        "leadCapture": "API entry points for Web-to-Lead.",
+        "leadCapture": "Lead capture endpoints and web forms.",
         "attachments": "All file attachments stored in the system.",
         "systemRequirements": "System Requirements for EspoCRM.",
         "apiUsers": "Separate users for integration purposes.",

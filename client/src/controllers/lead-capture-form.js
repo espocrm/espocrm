@@ -26,44 +26,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import DetailRecordView from 'views/record/detail';
+import Controller from 'controller';
+import LeadCaptureFormView from 'views/lead-capture/form';
 
-export default class extends DetailRecordView {
+// noinspection JSUnusedGlobalSymbols
+export default class LeadCaptureFormController extends Controller {
 
-    setupActionItems() {
-        super.setupActionItems();
+    // noinspection JSUnusedGlobalSymbols
+    actionShow(data) {
+        this.prepareContainer();
 
-        this.addDropdownItem({
-            label: 'Generate New API Key',
-            name: 'generateNewApiKey',
-            onClick: () => this.actionGenerateNewApiKey(),
-        });
+        const view = new LeadCaptureFormView({formData: data});
+        view.setSelector('body > .content');
 
-        this.addDropdownItem({
-            label: 'Generate New Form ID',
-            name: 'generateNewFormId',
-            onClick: () => this.actionGenerateNewFormId(),
-        });
+        this.viewFactory.prepare(view, () => view.render());
     }
 
-    actionGenerateNewApiKey() {
-        this.confirm(this.translate('confirmation', 'messages'), () => {
-            Espo.Ajax.postRequest('LeadCapture/action/generateNewApiKey', {id: this.model.id})
-                .then(data => {
-                    this.model.set(data);
+    /**
+     * @private
+     */
+    prepareContainer() {
+        // Prevents recaptcha removal.
 
-                    Espo.Ui.success(this.translate('Done'));
-                });
-        });
-    }
+        const existingContainer = document.body.querySelector('.container');
+        existingContainer.remove();
 
-    async actionGenerateNewFormId() {
-        await this.confirm(this.translate('confirmation', 'messages'));
+        const container = document.createElement('div');
+        container.classList.add('container', 'content');
 
-        const data = await Espo.Ajax.postRequest('LeadCapture/action/generateNewFormId', {id: this.model.id});
-
-        this.model.set(data);
-
-        Espo.Ui.success(this.translate('Done'));
+        document.body.prepend(container);
     }
 }

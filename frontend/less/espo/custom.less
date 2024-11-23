@@ -3858,6 +3858,18 @@ body:has(.modal-backdrop) {
     }
 }
 
+.email-address-block.only-primary,
+.phone-number-block.only-primary {
+    input.form-control {
+        border-top-left-radius: var(--border-radius);
+        border-top-right-radius: var(--border-radius);
+        border-bottom-left-radius: var(--border-radius);
+        border-bottom-right-radius: var(--border-radius);
+    }
+
+    display: block;
+}
+
 .input-group-currency {
     display: flex;
 
@@ -3925,7 +3937,7 @@ body > .autocomplete-suggestions.text-search-suggestions {
     }
 }
 
-.input-group-item > .iti {
+.input-phone-number-item > .iti {
     //top: 3px;
     position: unset;
     display: block;

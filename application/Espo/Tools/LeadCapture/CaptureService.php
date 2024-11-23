@@ -29,6 +29,10 @@
 
 namespace Espo\Tools\LeadCapture;
 
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Field\Link;
+use Espo\Core\FieldValidation\Exceptions\ValidationError;
+use Espo\Core\FieldValidation\Failure;
 use Espo\Core\Name\Field;
 use Espo\Core\PhoneNumber\Sanitizer as PhoneNumberSanitizer;
 use Espo\Core\Job\JobSchedulerFactory;
@@ -36,7 +40,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\FieldValidation\FieldValidationManager;
-use Espo\Core\FieldValidation\FieldValidationParams;
+use Espo\Core\FieldValidation\FieldValidationParams as ValidationParams;
 use Espo\Core\HookManager;
 use Espo\Core\Job\QueueName;
 use Espo\Core\ORM\EntityManager;
@@ -47,7 +51,7 @@ use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Log;
 use Espo\ORM\Entity;
 use Espo\Entities\UniqueId;
-use Espo\Entities\LeadCapture as LeadCaptureEntity;
+use Espo\Entities\LeadCapture;
 use Espo\Entities\LeadCaptureLogRecord;
 use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Modules\Crm\Entities\TargetList;
@@ -55,6 +59,7 @@ use Espo\Modules\Crm\Tools\Campaign\LogService as CampaignService;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\Tools\LeadCapture\Jobs\OptInConfirmation;
+use Espo\Tools\Captcha\Checker as CaptchaChecker;
 use stdClass;
 use DateTime;
 
@@ -70,8 +75,41 @@ class CaptureService
         private JobSchedulerFactory $jobSchedulerFactory,
         private CampaignService $campaignService,
         private PhoneNumberSanitizer $phoneNumberSanitizer,
-        private ServiceContainer $serviceContainer
+        private ServiceContainer $serviceContainer,
+        private CaptchaChecker $captchaChecker,
     ) {}
+
+    /**
+     * Capture a lead from a web form.
+     *
+     * @param string $id A form ID.
+     * @param stdClass $data A payload.
+     * @param ?string $captchaToken A captcha token.
+     * @throws BadRequest
+     * @throws Error
+     * @throws NotFound
+     * @throws Forbidden
+     */
+    public function captureForm(string $id, stdClass $data, ?string $captchaToken = null): FormResult
+    {
+        $leadCapture = $this->getLeadCaptureByFormId($id);
+
+        $apiKey = $leadCapture->getApiKey();
+
+        if (!$apiKey) {
+            throw new Error("No API key.");
+        }
+
+        if ($leadCapture->hasFormCaptcha()) {
+            $this->captchaChecker->check($captchaToken ?? '', 'leadCaptureSubmit');
+        }
+
+        $this->capture($apiKey, $data);
+
+        return new FormResult(
+            redirectUrl: $leadCapture->getFormSuccessRedirectUrl(),
+        );
+    }
 
     /**
      * Capture a lead. A main entry method.
@@ -84,18 +122,7 @@ class CaptureService
      */
     public function capture(string $apiKey, stdClass $data): void
     {
-        /** @var ?LeadCaptureEntity $leadCapture */
-        $leadCapture = $this->entityManager
-            ->getRDBRepositoryByClass(LeadCaptureEntity::class)
-            ->where([
-                'apiKey' => $apiKey,
-                'isActive' => true,
-            ])
-            ->findOne();
-
-        if (!$leadCapture) {
-            throw new NotFound('Api key is not valid.');
-        }
+        $leadCapture = $this->getLeadCapture($apiKey);
 
         if (!$leadCapture->optInConfirmation()) {
             $this->proceed($leadCapture, $data);
@@ -199,7 +226,7 @@ class CaptureService
      * @throws Error
      */
     private function proceed(
-        LeadCaptureEntity $leadCapture,
+        LeadCapture $leadCapture,
         stdClass $data,
         ?string $leadId = null,
         bool $isLogged = false
@@ -307,7 +334,7 @@ class CaptureService
             (!$isContactOptedIn || !$leadCapture->subscribeToTargetList()) &&
             $leadCapture->subscribeContactToTargetList()
         ) {
-            $this->hookManager->process(LeadCaptureEntity::ENTITY_TYPE, 'afterLeadCapture', $leadCapture, [], [
+            $this->hookManager->process(LeadCapture::ENTITY_TYPE, 'afterLeadCapture', $leadCapture, [], [
                'targetId' => $contact->getId(),
                'targetType' => Contact::ENTITY_TYPE,
             ]);
@@ -357,7 +384,7 @@ class CaptureService
 
         if ($toRelateLead  || !$leadCapture->subscribeToTargetList()) {
             $this->hookManager->process(
-                LeadCaptureEntity::ENTITY_TYPE,
+                LeadCapture::ENTITY_TYPE,
                 'afterLeadCapture',
                 $leadCapture,
                 [],
@@ -424,12 +451,12 @@ class CaptureService
             return new ConfirmResult(
                 ConfirmResult::STATUS_EXPIRED,
                 $this->defaultLanguage
-                    ->translateLabel('optInConfirmationExpired', 'messages', LeadCaptureEntity::ENTITY_TYPE)
+                    ->translateLabel('optInConfirmationExpired', 'messages', LeadCapture::ENTITY_TYPE)
             );
         }
 
-        /** @var ?LeadCaptureEntity $leadCapture */
-        $leadCapture = $this->entityManager->getEntityById(LeadCaptureEntity::ENTITY_TYPE, $leadCaptureId);
+        /** @var ?LeadCapture $leadCapture */
+        $leadCapture = $this->entityManager->getEntityById(LeadCapture::ENTITY_TYPE, $leadCaptureId);
 
         if (!$leadCapture) {
             throw new Error("LeadCapture Confirm: LeadCapture not found.");
@@ -457,10 +484,9 @@ class CaptureService
      * @throws BadRequest
      * @throws Error
      */
-    private function getLeadWithPopulatedData(LeadCaptureEntity $leadCapture, stdClass $data): Lead
+    private function getLeadWithPopulatedData(LeadCapture $leadCapture, stdClass $data): Lead
     {
-        /** @var Lead $lead */
-        $lead = $this->entityManager->getNewEntity(Lead::ENTITY_TYPE);
+        $lead = $this->entityManager->getRDBRepositoryByClass(Lead::class)->getNew();
 
         $fieldList = $leadCapture->getFieldList();
 
@@ -474,20 +500,34 @@ class CaptureService
         $this->setFields($fieldList, $data, $lead);
 
         if ($leadCapture->getLeadSource()) {
-            $lead->set('source', $leadCapture->getLeadSource());
+            $lead->setSource($leadCapture->getLeadSource());
         }
 
         if ($leadCapture->getCampaignId()) {
-            $lead->set('campaignId', $leadCapture->getCampaignId());
+            $lead->setCampaign(Link::create($leadCapture->getCampaignId()));
         }
 
         if ($leadCapture->getTargetTeamId()) {
             $lead->addLinkMultipleId(Field::TEAMS, $leadCapture->getTargetTeamId());
         }
 
-        $validationParams = FieldValidationParams::create()->withTypeSkipFieldList('required', $fieldList);
+        $validationParams = ValidationParams::create()->withTypeSkipFieldList('required', $fieldList);
 
         $this->fieldValidationManager->process($lead, $data, $validationParams);
+
+        foreach ($fieldList as $field) {
+            if (!$leadCapture->isFieldRequired($field)) {
+                continue;
+            }
+
+            $notValid = $this->fieldValidationManager->check($lead, $field, 'required', $data, true);
+
+            if (!$notValid) {
+                $failure = new Failure(Lead::ENTITY_TYPE, $field, 'required');
+
+                throw ValidationError::create($failure);
+            }
+        }
 
         return $lead;
     }
@@ -498,7 +538,7 @@ class CaptureService
      *   lead: ?Lead,
      * }
      */
-    private function findLeadDuplicates(LeadCaptureEntity $leadCapture, Lead $lead): array
+    private function findLeadDuplicates(LeadCapture $leadCapture, Lead $lead): array
     {
         $duplicate = null;
         $contact = null;
@@ -585,7 +625,7 @@ class CaptureService
     }
 
     private function log(
-        LeadCaptureEntity $leadCapture,
+        LeadCapture $leadCapture,
         Entity $target,
         stdClass $data,
         bool $isNew = true
@@ -654,7 +694,7 @@ class CaptureService
         }
 
         if ($isEmpty) {
-            throw new BadRequest('noRequiredFields');
+            throw new BadRequest('empty');
         }
     }
 
@@ -664,7 +704,7 @@ class CaptureService
     private function sanitizePhoneNumber(
         array $fieldList,
         stdClass $data,
-        LeadCaptureEntity $leadCapture
+        LeadCapture $leadCapture
     ): void {
 
         if (
@@ -688,5 +728,45 @@ class CaptureService
         unset($data->{Field::PHONE_NUMBER . 'Data'});
         unset($data->{Field::PHONE_NUMBER . 'IsInvalid'});
         unset($data->{Field::PHONE_NUMBER . 'IsOptedOut'});
+    }
+
+    /**
+     * @throws NotFound
+     */
+    private function getLeadCapture(string $apiKey): LeadCapture
+    {
+        $leadCapture = $this->entityManager
+            ->getRDBRepositoryByClass(LeadCapture::class)
+            ->where([
+                'apiKey' => $apiKey,
+                'isActive' => true,
+            ])
+            ->findOne();
+
+        if (!$leadCapture) {
+            throw new NotFound('Form ID is not valid.');
+        }
+
+        return $leadCapture;
+    }
+
+    /**
+     * @throws NotFound
+     */
+    private function getLeadCaptureByFormId(string $id): LeadCapture
+    {
+        $leadCapture = $this->entityManager
+            ->getRDBRepositoryByClass(LeadCapture::class)
+            ->where([
+                'formId' => $id,
+                'isActive' => true,
+            ])
+            ->findOne();
+
+        if (!$leadCapture) {
+            throw new NotFound('API key is not valid.');
+        }
+
+        return $leadCapture;
     }
 }

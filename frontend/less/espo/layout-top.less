@@ -390,11 +390,13 @@ body:not([data-navbar="side"]) {
         }
     }
 
-    .stick-sub {
-        margin-top: var(--navbar-height);
+    &:has(> #header > #navbar) {
+        .stick-sub {
+            margin-top: var(--navbar-height);
 
-        @media screen and (max-width: @screen-xs-max) {
-            margin-top: 0;
+            @media screen and (max-width: @screen-xs-max) {
+                margin-top: 0;
+            }
         }
     }
 

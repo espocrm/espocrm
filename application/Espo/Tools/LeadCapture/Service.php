@@ -37,7 +37,6 @@ use Espo\Core\Utils\Util;
 use Espo\Entities\InboundEmail;
 use Espo\Entities\LeadCapture as LeadCaptureEntity;
 use Espo\Entities\User;
-use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use stdClass;
 
@@ -71,9 +70,9 @@ class Service
      * @throws NotFound
      * @throws Forbidden
      */
-    public function generateNewApiKeyForEntity(string $id): Entity
+    public function generateNewApiKeyForEntity(string $id): LeadCaptureEntity
     {
-        $service = $this->recordServiceContainer->get(LeadCaptureEntity::ENTITY_TYPE);
+        $service = $this->recordServiceContainer->getByClass(LeadCaptureEntity::class);
 
         $entity = $service->getEntity($id);
 
@@ -81,7 +80,31 @@ class Service
             throw new NotFound();
         }
 
-        $entity->set('apiKey', $this->generateApiKey());
+        $entity->setApiKey($this->generateApiKey());
+
+        $this->entityManager->saveEntity($entity);
+
+        $service->prepareEntityForOutput($entity);
+
+        return $entity;
+    }
+
+    /**
+     * @throws ForbiddenSilent
+     * @throws NotFound
+     * @throws Forbidden
+     */
+    public function generateNewFormIdForEntity(string $id): LeadCaptureEntity
+    {
+        $service = $this->recordServiceContainer->getByClass(LeadCaptureEntity::class);
+
+        $entity = $service->getEntity($id);
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        $entity->setFormId($this->generateFormId());
 
         $this->entityManager->saveEntity($entity);
 
@@ -93,6 +116,11 @@ class Service
     public function generateApiKey(): string
     {
         return Util::generateApiKey();
+    }
+
+    public function generateFormId(): string
+    {
+        return Util::generateId();
     }
 
     /**

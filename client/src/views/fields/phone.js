@@ -53,6 +53,7 @@ class PhoneFieldView extends VarcharFieldView {
     /**
      * @typedef {Object} module:views/fields/phone~params
      * @property {boolean} [required] Required.
+     * @property {boolean} [onlyPrimary] Only primary.
      */
 
     /**
@@ -266,7 +267,7 @@ class PhoneFieldView extends VarcharFieldView {
 
     validateMaxCount() {
         /** @type {number|null} */
-        const maxCount = this.getConfig().get('phoneNumberMaxCount');
+        const maxCount = this.maxCount;
 
         if (!maxCount) {
             return false;
@@ -453,6 +454,7 @@ class PhoneFieldView extends VarcharFieldView {
         }
 
         data.itemMaxLength = this.itemMaxLength;
+        data.onlyPrimary = this.params.onlyPrimary;
 
         // noinspection JSValidateTypes
         return data;
@@ -655,6 +657,7 @@ class PhoneFieldView extends VarcharFieldView {
         this.useInternational = this.getConfig().get('phoneNumberInternational') || false;
         this.allowExtensions = this.getConfig().get('phoneNumberExtensions') || false;
         this.preferredCountryList = this.getConfig().get('phoneNumberPreferredCountryList') || [];
+        this.maxCount = this.getConfig().get('phoneNumberMaxCount');
 
         if (this.useInternational && !this.isListMode() && !this.isSearchMode()) {
             this._codeNames = intlTelInputGlobals.getCountryData()
@@ -754,7 +757,25 @@ class PhoneFieldView extends VarcharFieldView {
     fetch() {
         const data = {};
 
-        const addressData = this.fetchPhoneNumberData() || [];
+        const addressData = this.fetchPhoneNumberData();
+
+        if (this.params.onlyPrimary) {
+            if (addressData.length > 0) {
+                data[this.name] = addressData[0].phoneNumber;
+
+                data[this.dataFieldName] = [
+                    {
+                        phoneNumber: addressData[0].phoneNumber,
+                        primary: true,
+                    }
+                ];
+            } else {
+                data[this.name] = null;
+                data[this.dataFieldName] = null;
+            }
+
+            return data;
+        }
 
         data[this.dataFieldName] = addressData;
         data[this.name] = null;

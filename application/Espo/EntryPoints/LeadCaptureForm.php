@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,44 +27,51 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import DetailRecordView from 'views/record/detail';
+namespace Espo\EntryPoints;
 
-export default class extends DetailRecordView {
+use Espo\Core\Utils\Client\Script;
+use Espo\Tools\LeadCapture\FormService;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\EntryPoint\EntryPoint;
+use Espo\Core\EntryPoint\Traits\NoAuth;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Utils\Client\ActionRenderer;
 
-    setupActionItems() {
-        super.setupActionItems();
+/**
+ * @noinspection PhpUnused
+ */
+class LeadCaptureForm implements EntryPoint
+{
+    use NoAuth;
 
-        this.addDropdownItem({
-            label: 'Generate New API Key',
-            name: 'generateNewApiKey',
-            onClick: () => this.actionGenerateNewApiKey(),
-        });
+    public function __construct(
+        private ActionRenderer $actionRenderer,
+        private FormService $service,
+    ) {}
 
-        this.addDropdownItem({
-            label: 'Generate New Form ID',
-            name: 'generateNewFormId',
-            onClick: () => this.actionGenerateNewFormId(),
-        });
-    }
+    /**
+     * @throws BadRequest
+     * @throws NotFound
+     */
+    public function run(Request $request, Response $response): void
+    {
+        $id = $request->getQueryParam('id');
 
-    actionGenerateNewApiKey() {
-        this.confirm(this.translate('confirmation', 'messages'), () => {
-            Espo.Ajax.postRequest('LeadCapture/action/generateNewApiKey', {id: this.model.id})
-                .then(data => {
-                    this.model.set(data);
+        if (!$id) {
+            throw new BadRequest("No ID.");
+        }
 
-                    Espo.Ui.success(this.translate('Done'));
-                });
-        });
-    }
+        [$leadCapture, $data, $captchaScript] = $this->service->getData($id);
 
-    async actionGenerateNewFormId() {
-        await this.confirm(this.translate('confirmation', 'messages'));
+        $params = new ActionRenderer\Params('controllers/lead-capture-form', 'show', $data);
+        $params = $params->withFrameAncestors($leadCapture->getFormFrameAncestors());
 
-        const data = await Espo.Ajax.postRequest('LeadCapture/action/generateNewFormId', {id: this.model.id});
+        if ($captchaScript) {
+            $params = $params->withScripts([new Script(source: $captchaScript)]);
+        }
 
-        this.model.set(data);
-
-        Espo.Ui.success(this.translate('Done'));
+        $this->actionRenderer->write($response, $params);
     }
 }

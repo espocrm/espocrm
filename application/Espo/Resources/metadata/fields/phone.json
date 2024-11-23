@@ -26,6 +26,11 @@
         {
             "name": "audited",
             "type": "bool"
+        },
+        {
+            "name": "onlyPrimary",
+            "type": "bool",
+            "hidden": true
         }
     ],
     "actualFields": [

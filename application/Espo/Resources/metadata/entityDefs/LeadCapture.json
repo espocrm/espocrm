@@ -5,27 +5,33 @@
             "maxLength": 100
         },
         "campaign": {
-            "type": "link"
+            "type": "link",
+            "audited": true
         },
         "isActive": {
             "type": "bool",
-            "default": true
+            "default": true,
+            "audited": true
         },
         "subscribeToTargetList": {
             "type": "bool",
-            "default": true
+            "default": true,
+            "audited": true
         },
         "subscribeContactToTargetList": {
             "type": "bool",
-            "default": true
+            "default": true,
+            "audited": true
         },
         "targetList": {
-            "type": "link"
+            "type": "link",
+            "audited": true
         },
         "fieldList": {
             "type": "multiEnum",
             "default": ["firstName", "lastName", "emailAddress"],
             "view": "views/lead-capture/fields/field-list",
+            "displayAsList": true,
             "required": true,
             "ignoreFieldList": [
                 "targetList",
@@ -45,47 +51,117 @@
                 "phoneNumberIsInvalid",
                 "opportunityAmountCurrency",
                 "originalEmail"
-            ]
+            ],
+            "webFormFieldTypeList": [
+                "varchar",
+                "email",
+                "phone",
+                "text",
+                "personName",
+                "enum",
+                "multiEnum",
+                "array",
+                "checklist",
+                "int",
+                "float",
+                "currency",
+                "date",
+                "datetime",
+                "boolean",
+                "url",
+                "urlMultiple",
+                "address"
+            ],
+            "audited": true
+        },
+        "fieldParams": {
+            "type": "jsonObject",
+            "audited": true
         },
         "duplicateCheck": {
             "type": "bool",
-            "default": true
+            "default": true,
+            "audited": true
         },
         "optInConfirmation": {
-            "type": "bool"
+            "type": "bool",
+            "audited": true
         },
         "optInConfirmationEmailTemplate": {
-            "type": "link"
+            "type": "link",
+            "audited": true
         },
         "optInConfirmationLifetime": {
             "type": "int",
             "default": 48,
-            "min": 1
+            "min": 1,
+            "audited": true
         },
         "optInConfirmationSuccessMessage": {
             "type": "text",
-            "tooltip": true
+            "tooltip": true,
+            "audited": true
         },
         "createLeadBeforeOptInConfirmation": {
-            "type": "bool"
+            "type": "bool",
+            "audited": true
         },
         "skipOptInConfirmationIfSubscribed": {
-            "type": "bool"
+            "type": "bool",
+            "audited": true
         },
         "leadSource": {
             "type": "enum",
             "customizationOptionsDisabled": true,
             "optionsPath": "entityDefs.Lead.fields.source.options",
             "translation": "Lead.options.source",
-            "default": "Web Site"
+            "default": "Web Site",
+            "audited": true
         },
         "apiKey": {
             "type": "varchar",
             "maxLength": 36,
             "readOnly": true
         },
+        "formId": {
+            "type": "varchar",
+            "maxLength": 17,
+            "readOnly": true
+        },
+        "formEnabled": {
+            "type": "bool",
+            "audited": true
+        },
+        "formText": {
+            "type": "text",
+            "tooltip": "optInConfirmationSuccessMessage"
+        },
+        "formSuccessText": {
+            "type": "text",
+            "tooltip": "optInConfirmationSuccessMessage"
+        },
+        "formSuccessRedirectUrl": {
+            "type": "url",
+            "audited": true
+        },
+        "formLanguage": {
+            "type": "enum",
+            "maxLength": 5,
+            "view": "views/preferences/fields/language",
+            "audited": true
+        },
+        "formFrameAncestors": {
+            "type": "urlMultiple",
+            "audited": true
+        },
+        "formCaptcha": {
+            "type": "bool",
+            "audited": true,
+            "tooltip": true
+        },
         "targetTeam": {
-            "type": "link"
+            "type": "link",
+            "audited": true
         },
         "exampleRequestUrl": {
             "type": "varchar",
@@ -109,8 +185,16 @@
             "notStorable": true,
             "readOnly": true
         },
+        "formUrl": {
+            "type": "url",
+            "notStorable": true,
+            "readOnly": true,
+            "copyToClipboard": true,
+            "index": true
+        },
         "inboundEmail": {
-            "type": "link"
+            "type": "link",
+            "audited": true
         },
         "smtpAccount": {
             "type": "base",

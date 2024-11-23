@@ -52,8 +52,8 @@ class DetailRecordView extends BaseRecordView {
      * @property {boolean} [editModeDisabled]
      * @property {boolean} [confirmLeaveDisabled]
      * @property {boolean} [isWide]
-     * @property {string} [sideView]
-     * @property {string} [bottomView]
+     * @property {string|null} [sideView]
+     * @property {string|null} [bottomView]
      * @property {string} [inlineEditDisabled] Disable inline edit.
      * @property {boolean} [buttonsDisabled] Disable buttons.
      * @property {string} [navigateButtonsDisabled]
@@ -64,6 +64,7 @@ class DetailRecordView extends BaseRecordView {
      * @property {module:views/record/detail~dropdownItem[]} [dropdownItemList] Dropdown items.
      * @property {Object.<string, *>} [dataObject] Additional data.
      * @property {Record} [rootData] Data from the root view.
+     * @property {boolean} [shortcutKeysEnabled] Enable shortcut keys.
      */
 
     /**

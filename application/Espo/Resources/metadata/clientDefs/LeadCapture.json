@@ -143,6 +143,82 @@
                         }
                     ]
                 }
+            },
+            "formSuccessText": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "formEnabled"
+                        }
+                    ]
+                }
+            },
+            "formText": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "formEnabled"
+                        }
+                    ]
+                }
+            },
+            "formSuccessRedirectUrl": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "formEnabled"
+                        }
+                    ]
+                }
+            },
+            "formLanguage": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "formEnabled"
+                        }
+                    ]
+                }
+            },
+            "formFrameAncestors": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "formEnabled"
+                        }
+                    ]
+                }
+            },
+            "formCaptcha": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "formEnabled"
+                        }
+                    ]
+                }
+            }
+        },
+        "panels": {
+            "form": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "id"
+                        },
+                        {
+                            "type": "isTrue",
+                            "attribute": "formEnabled"
+                        }
+                    ]
+                }
             }
         }
     },
@@ -152,7 +228,15 @@
                 "name": "request",
                 "label": "Request",
                 "isForm": true,
-                "view": "views/lead-capture/record/panels/request"
+                "view": "views/lead-capture/record/panels/request",
+                "notRefreshable": true
+            },
+            {
+                "name": "form",
+                "label": "Web Form",
+                "isForm": true,
+                "view": "views/lead-capture/record/panels/form",
+                "notRefreshable": true
             }
         ]
     },
