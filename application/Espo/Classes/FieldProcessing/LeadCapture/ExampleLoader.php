@@ -38,6 +38,7 @@ use Espo\Entities\LeadCapture;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Type\AttributeType;
 
 /**
  * @implements Loader<LeadCapture>
@@ -105,7 +106,16 @@ class ExampleLoader implements Loader
         foreach ($attributeList as $i => $attribute) {
             $value = strtoupper(Util::camelCaseToUnderscore($attribute));
 
-            if (in_array($seed->getAttributeType($attribute), [Entity::VARCHAR, Entity::TEXT])) {
+            if (
+                in_array(
+                    $seed->getAttributeType($attribute), [
+                        Entity::VARCHAR,
+                        Entity::TEXT,
+                        AttributeType::DATETIME,
+                        AttributeType::DATE,
+                    ]
+                )
+            ) {
                 $value = '"' . $value . '"';
             }
 
