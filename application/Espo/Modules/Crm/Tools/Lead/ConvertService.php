@@ -60,7 +60,6 @@ use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Tools\Stream\Service as StreamService;
-use RuntimeException;
 
 class ConvertService
 {
@@ -446,11 +445,7 @@ class ConvertService
             return null;
         }
 
-        try {
-            $opportunity = $service->create($values, CreateParams::create()->withSkipDuplicateCheck());
-        } catch (BadRequest|Conflict $e) {
-            throw new RuntimeException($e->getMessage());
-        }
+        $opportunity = $service->create($values, CreateParams::create()->withSkipDuplicateCheck());
 
         if ($contact) {
             $this->entityManager
