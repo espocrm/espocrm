@@ -44,6 +44,8 @@ let onSuccess;
 let onError;
 /** @type {Espo.Ajax~Handler} */
 let onTimeout;
+/** @type {function()} */
+let onOffline;
 
 /**
  * @callback Espo.Ajax~Handler
@@ -144,6 +146,12 @@ const Ajax = Espo.Ajax = {
                     if (onTimeout) {
                         onTimeout(xhr, options);
                     }
+
+                    return;
+                }
+
+                if (!navigator.onLine && onOffline) {
+                    onOffline();
 
                     return;
                 }
@@ -291,6 +299,7 @@ const Ajax = Espo.Ajax = {
      *     onSuccess: Espo.Ajax~Handler,
      *     onError: Espo.Ajax~Handler,
      *     onTimeout: Espo.Ajax~Handler,
+     *     onOffline?: function(),
      * }} options Options.
      */
     configure: function (options) {
@@ -304,6 +313,7 @@ const Ajax = Espo.Ajax = {
         onSuccess = options.onSuccess;
         onError = options.onError;
         onTimeout = options.onTimeout;
+        onOffline = options.onOffline;
 
         isConfigured = true;
     },

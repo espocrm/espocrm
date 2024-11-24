@@ -1165,7 +1165,7 @@ class App {
          * @param {module:ajax.Xhr} xhr
          * @param {Object.<string, *>} options
          */
-        const onError = (xhr, options) => {
+        const onError = (xhr, options = {}) => {
             setTimeout(() => {
                 if (xhr.errorIsHandled) {
                     return;
@@ -1255,6 +1255,10 @@ class App {
             Ui.error(this.language.translate('Timeout'), true);
         };
 
+        const onOffline = () => {
+            Ui.error(this.language.translate('No internet'));
+        };
+
         Ajax.configure({
             apiUrl: this.basePath + this.apiUrl,
             timeout: this.ajaxTimeout,
@@ -1262,6 +1266,7 @@ class App {
             onSuccess: onSuccess,
             onError: onError,
             onTimeout: onTimeout,
+            onOffline: onOffline,
         });
     }
 

@@ -156,6 +156,8 @@
         "Access denied": "Access denied",
         "Not found": "Not found",
         "Access": "Access",
+        "Timeout": "Timeout",
+        "No internet": "No internet",
         "Are you sure?": "Are you sure?",
         "Record has been removed": "Record has been removed",
         "Wrong username/password": "Wrong username/password",
