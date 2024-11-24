@@ -40,6 +40,15 @@ class ApiKey
 
     public static function hash(string $secretKey, string $string = ''): string
     {
+        return hash_hmac('sha256', $string, $secretKey);
+    }
+
+    /**
+     * @deprecated
+     * @internal
+     */
+    public static function hashLegacy(string $secretKey, string $string = ''): string
+    {
         return hash_hmac('sha256', $string, $secretKey, true);
     }
 
