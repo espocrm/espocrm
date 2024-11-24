@@ -150,7 +150,7 @@ const Ajax = Espo.Ajax = {
                     return;
                 }
 
-                if (!navigator.onLine && onOffline) {
+                if (xhr.status === 0 && !navigator.onLine && onOffline) {
                     onOffline();
 
                     return;
