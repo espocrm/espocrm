@@ -31,7 +31,7 @@ namespace Espo\Classes\FieldProcessing\LeadCapture;
 
 use Espo\Core\FieldProcessing\Loader;
 use Espo\Core\FieldProcessing\Loader\Params;
-use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Util;
 use Espo\Entities\LeadCapture;
@@ -47,7 +47,7 @@ class ExampleLoader implements Loader
 {
     public function __construct(
         private FieldUtil $fieldUtil,
-        private Config $config,
+        private ApplicationConfig $applicationConfig,
         private EntityManager $entityManager
     ) {}
 
@@ -67,7 +67,7 @@ class ExampleLoader implements Loader
     private function processRequestUrl(LeadCapture $entity): void
     {
         $apiKey = $entity->getApiKey();
-        $siteUrl = $this->config->get('siteUrl');
+        $siteUrl = $this->applicationConfig->getSiteUrl();
 
         if (!$apiKey) {
             return;
@@ -136,7 +136,7 @@ class ExampleLoader implements Loader
     private function processFormUrl(LeadCapture $entity): void
     {
         $formId = $entity->getFormId();
-        $siteUrl = $this->config->getSiteUrl();
+        $siteUrl = $this->applicationConfig->getSiteUrl();
 
         if (!$entity->hasFormEnabled() || !$formId) {
             /** @noinspection PhpRedundantOptionalArgumentInspection */

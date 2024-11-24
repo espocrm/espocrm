@@ -61,6 +61,7 @@ class ConverterTest extends TestCase
         $this->user = $this->createMock(User::class);
 
         $this->config = $this->createMock(Config::class);
+        $this->applicationConfig = $this->createMock(Config\ApplicationConfig::class);
         $this->metadata = $this->createMock(Metadata::class);
 
         $this->scanner = $this->createMock(Scanner::class);
@@ -91,7 +92,12 @@ class ConverterTest extends TestCase
             ->method('generate')
             ->willReturn('Random');
 
-        $this->dateTimeItemTransformer = new DefaultDateTimeItemTransformer($this->config);
+        $this->applicationConfig
+            ->expects($this->any())
+            ->method('getTimeZone')
+            ->willReturn('UTC');
+
+        $this->dateTimeItemTransformer = new DefaultDateTimeItemTransformer($this->config, $this->applicationConfig);
 
         $this->itemConverter = new ItemGeneralConverter(
             $this->entityType,
@@ -102,7 +108,8 @@ class ConverterTest extends TestCase
             $this->randomStringGenerator,
             $this->ormDefs,
             $this->config,
-            $this->metadata
+            $this->metadata,
+            $this->applicationConfig,
         );
 
         $this->converter = new Converter(

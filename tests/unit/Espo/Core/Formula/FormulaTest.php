@@ -29,6 +29,7 @@
 
 namespace tests\unit\Espo\Core\Formula;
 
+use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Formula\AttributeFetcher;
 use Espo\Core\Formula\Parser\Ast\Attribute;
 use Espo\Core\Formula\Parser\Ast\Node;
@@ -36,29 +37,23 @@ use Espo\Core\Formula\Parser\Ast\Value;
 use Espo\Core\Formula\Parser\Ast\Variable;
 use Espo\Core\Formula\Processor;
 use Espo\Core\Formula\Argument;
-
 use Espo\Core\Utils\DateTime;
 use Espo\Core\Utils\NumberUtil;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
-
 use Espo\Core\Repositories\Database as DatabaseRepository;
 use Espo\Core\ORM\EntityManager;
-
 use Espo\Entities\User;
-
 use Espo\ORM\Entity as Entity;
-
 use Espo\Core\ORM\Entity as CoreEntity;
-
 use Espo\Core\InjectableFactory;
-
 use Espo\ORM\Repository\RDBRelation;
 use Espo\ORM\Repository\RDBRepository;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 use tests\unit\ContainerMocker;
 
-class FormulaTest extends \PHPUnit\Framework\TestCase
+class FormulaTest extends TestCase
 {
     protected function setUp() : void
     {
@@ -72,13 +67,19 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
         $this->number = new NumberUtil();
 
-        $this->config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
+        $this->config = $this->createMock(Config::class);
         $this->config
             ->expects($this->any())
             ->method('get')
             ->will($this->returnValueMap([
                 ['timeZone', null, 'UTC']
             ]));
+
+        $this->applicationConfig = $this->createMock(Config\ApplicationConfig::class);
+        $this->applicationConfig
+            ->expects($this->any())
+            ->method('getTimeZone')
+            ->willReturn('UTC');
 
         $this->user = $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock();
 
@@ -134,7 +135,13 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     protected function createProcessor($variables = null, ?Entity $entity = null)
     {
-        $injectableFactory = new InjectableFactory($this->container);
+        $injectableFactory = new InjectableFactory(
+            $this->container,
+            BindingContainerBuilder::create()
+                ->bindInstance(Config\ApplicationConfig::class, $this->applicationConfig)
+                ->build()
+        );
+
         $attributeFetcher = new AttributeFetcher($this->entityManager);
 
         return new Processor(

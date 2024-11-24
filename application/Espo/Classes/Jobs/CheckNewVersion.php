@@ -40,16 +40,11 @@ use DateTimeZone;
 
 class CheckNewVersion implements JobDataLess
 {
-    /** @var Config */
-    protected $config;
-    /** @var EntityManager */
-    protected $entityManager;
-
-    public function __construct(Config $config, EntityManager $entityManager)
-    {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        protected Config $config,
+        protected EntityManager $entityManager,
+        private Config\ApplicationConfig $applicationConfig,
+    ) {}
 
     public function run(): void
     {
@@ -78,11 +73,7 @@ class CheckNewVersion implements JobDataLess
         $nextDay = new DateTime('+ 1 day');
         $time = $nextDay->format(DateTimeUtil::SYSTEM_DATE_FORMAT) . ' ' . $hour . ':' . $minute . ':00';
 
-        $timeZone = $this->config->get('timeZone');
-
-        if (empty($timeZone)) {
-            $timeZone = 'UTC';
-        }
+        $timeZone = $this->applicationConfig->getTimeZone();
 
         $datetime = new DateTime($time, new DateTimeZone($timeZone));
 

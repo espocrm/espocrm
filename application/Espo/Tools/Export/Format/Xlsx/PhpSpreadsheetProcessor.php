@@ -33,6 +33,7 @@ use Espo\Core\Field\Currency;
 use Espo\Core\Field\Date;
 use Espo\Core\Field\DateTime as DateTimeValue;
 use Espo\Core\ORM\Type\FieldType;
+use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Entities\Attachment;
 use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\ORM\EntityManager;
@@ -110,7 +111,8 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
         private EntityManager $entityManager,
         private FileStorageManager $fileStorageManager,
         private FieldHelper $fieldHelper,
-        private CellValuePreparatorFactory $cellValuePreparatorFactory
+        private CellValuePreparatorFactory $cellValuePreparatorFactory,
+        private ApplicationConfig $applicationConfig,
     ) {}
 
     /**
@@ -511,7 +513,7 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
             [$foreignLink, $foreignField] = explode('_', $name);
         }
 
-        $siteUrl = $this->config->getSiteUrl();
+        $siteUrl = $this->applicationConfig->getSiteUrl();
 
         if ($name === 'name') {
             if ($entity->hasId()) {

@@ -60,10 +60,11 @@ class TeamCalendar implements Calendar
     public function __construct(
         private Team $team,
         private EntityManager $entityManager,
-        private Config $config
+        private Config $config,
+        Config\ApplicationConfig $applicationConfig,
     ) {
         try {
-            $this->timezone = new DateTimeZone($config->get('timeZone'));
+            $this->timezone = new DateTimeZone($applicationConfig->getTimeZone());
         } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }

@@ -72,7 +72,8 @@ class UpcomingService
         private Metadata $metadata,
         private Acl $acl,
         private EntityManager $entityManager,
-        private ServiceContainer $serviceContainer
+        private ServiceContainer $serviceContainer,
+        private Config\ApplicationConfig $applicationConfig,
     ) {}
 
     /**
@@ -250,7 +251,7 @@ class UpcomingService
             }
         }
 
-        return $this->config->get('timeZone') ?? 'UTC';
+        return $this->applicationConfig->getTimeZone();
     }
 
     /**

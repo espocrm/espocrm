@@ -39,6 +39,7 @@ use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Mail\SmtpParams;
+use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Core\Utils\Util;
 use Espo\Entities\Email;
 use Espo\Entities\SystemData;
@@ -77,7 +78,8 @@ class RecoveryService
         private JobSchedulerFactory $jobSchedulerFactory,
         private ApplicationState $applicationState,
         private AuthenticationMethodProvider $authenticationMethodProvider,
-        private UrlValidator $urlValidator
+        private UrlValidator $urlValidator,
+        private ApplicationConfig $applicationConfig,
     ) {}
 
     /**
@@ -404,7 +406,7 @@ class RecoveryService
         $subjectTpl = $this->templateFileManager->getTemplate('passwordChangeLink', 'subject', 'User');
         $bodyTpl = $this->templateFileManager->getTemplate('passwordChangeLink', 'body', 'User');
 
-        $siteUrl = $this->config->getSiteUrl();
+        $siteUrl = $this->applicationConfig->getSiteUrl();
 
         if ($user->isPortal()) {
             /** @var ?Portal $portal */

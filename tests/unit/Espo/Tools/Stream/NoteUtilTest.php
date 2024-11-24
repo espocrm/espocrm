@@ -64,7 +64,7 @@ class NoteUtilTest extends TestCase
 
     private function initText(string $post, string $newPost): void
     {
-        $config = $this->createMock(Config::class);
+        $config = $this->createMock(Config\ApplicationConfig::class);
         $note = $this->createMock(Note::class);
 
         $config->expects($this->once())

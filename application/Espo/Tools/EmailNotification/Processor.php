@@ -33,6 +33,7 @@ use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
 use Espo\Core\Notification\EmailNotificationHandler;
 use Espo\Core\Mail\SenderParams;
+use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Entities\Note;
 use Espo\ORM\Collection;
@@ -84,7 +85,8 @@ class Processor
         private Metadata $metadata,
         private Language $language,
         private Log $log,
-        private NoteAccessControl $noteAccessControl
+        private NoteAccessControl $noteAccessControl,
+        private ApplicationConfig $applicationConfig,
     ) {}
 
     public function process(): void
@@ -583,7 +585,7 @@ class Processor
         $portal = null;
 
         if (!$user->isPortal()) {
-            return $this->config->getSiteUrl();
+            return $this->applicationConfig->getSiteUrl();
         }
 
         if (!array_key_exists($user->getId(), $this->userIdPortalCacheMap)) {
@@ -619,7 +621,7 @@ class Processor
             return rtrim($portal->get('url'), '/');
         }
 
-        return $this->config->getSiteUrl();
+        return $this->applicationConfig->getSiteUrl();
     }
 
     protected function processNotificationNoteStatus(Note $note, User $user): void

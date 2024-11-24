@@ -27,35 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Stream;
+namespace Espo\Core\Utils\Config;
 
-use Espo\Core\Utils\Config\ApplicationConfig;
-use Espo\Entities\Note;
+use Espo\Core\Utils\Config;
 
 /**
- * @internal
+ * @since 9.0.0
  */
-class NoteUtil
+class ApplicationConfig
 {
-    public function __construct(private ApplicationConfig $applicationConfig) {}
+    public function __construct(
+        private Config $config,
+    ) {}
 
-    public function handlePostText(Note $entity): void
+    public function getSiteUrl(): string
     {
-        $post = $entity->getPost();
+        return rtrim($this->config->get('siteUrl'), '/');
+    }
 
-        if (!$post) {
-            return;
-        }
+    public function getDateFormat(): string
+    {
+        return $this->config->get('dateFormat') ?? 'DD.MM.YYYY';
+    }
 
-        $siteUrl = $this->applicationConfig->getSiteUrl();
+    public function getTimeFormat(): string
+    {
+        return $this->config->get('timeFormat') ?? 'HH:mm';
+    }
 
-        // PhpStorm inspection highlights RegExpRedundantEscape by a mistake.
-        /** @noinspection RegExpRedundantEscape */
-        $regexp = '/(\s|^)' . preg_quote($siteUrl, '/') .
-            '(\/portal|\/portal\/[a-zA-Z0-9]*)?\/#([A-Z][a-zA-Z0-9]*)\/view\/([a-zA-Z0-9-]*)/';
+    public function getTimeZone(): string
+    {
+        return $this->config->get('timeZone') ?? 'UTC';
+    }
 
-        $post = preg_replace($regexp, '\1[\3/\4](#\3/view/\4)', $post);
-
-        $entity->setPost($post);
+    public function getLanguage(): string
+    {
+        return $this->config->get('language') ?? 'en_US';
     }
 }

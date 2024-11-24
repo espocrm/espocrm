@@ -42,8 +42,10 @@ use RuntimeException;
 
 class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 {
-    public function __construct(private Config $config)
-    {}
+    public function __construct(
+        private Config $config,
+        private Config\ApplicationConfig $applicationConfig,
+    ) {}
 
     /**
      * @throws BadRequest
@@ -61,7 +63,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
             throw new BadRequest("Bad where item.");
         }
 
-        $timeZone = $data->getTimeZone() ?? $this->config->get('timeZone') ?? 'UTC';
+        $timeZone = $data->getTimeZone() ?? $this->applicationConfig->getTimeZone();
 
         if (!$attribute) {
             throw new BadRequest("Bad datetime where item. Empty 'attribute'.");

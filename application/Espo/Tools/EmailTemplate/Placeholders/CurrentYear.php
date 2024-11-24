@@ -43,13 +43,13 @@ use RuntimeException;
 class CurrentYear implements Placeholder
 {
     public function __construct(
-        private Config $config
+        private Config\ApplicationConfig $applicationConfig,
     ) {}
 
     public function get(Data $data): string
     {
         try {
-            $now = new DateTime('now', new DateTimezone($this->config->get('timeZone')));
+            $now = new DateTime('now', new DateTimezone($this->applicationConfig->getTimeZone()));
         } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }

@@ -420,8 +420,7 @@ class Config
     }
 
     /**
-     * @todo Move to another class `Espo\Core\Utils\Config\ApplicationConfigProvider`.
-     * @deprecated
+     * @deprecated Use Espo\Core\Config\ApplicationConfig
      */
     public function getSiteUrl(): string
     {

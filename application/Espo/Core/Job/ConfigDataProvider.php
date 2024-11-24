@@ -35,7 +35,10 @@ class ConfigDataProvider
 {
     private const MAX_PORTION = 15;
 
-    public function __construct(private Config $config) {}
+    public function __construct(
+        private Config $config,
+        private Config\ApplicationConfig $applicationConfig,
+    ) {}
 
     public function runInParallel(): bool
     {
@@ -63,6 +66,6 @@ class ConfigDataProvider
             return 'UTC';
         }
 
-        return $this->config->get('timeZone') ?? 'UTC';
+        return $this->applicationConfig->getTimeZone();
     }
 }

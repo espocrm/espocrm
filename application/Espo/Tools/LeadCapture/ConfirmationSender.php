@@ -35,7 +35,7 @@ use Espo\Core\Mail\EmailSender;
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Templates\Entities\Person;
-use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Core\Utils\DateTime;
 use Espo\Core\Utils\Language;
 use Espo\Entities\Email;
@@ -50,31 +50,16 @@ use Espo\Tools\EmailTemplate\Processor as EmailTemplateProcessor;
 
 class ConfirmationSender
 {
-    private EntityManager $entityManager;
-    private Config $config;
-    private Language $defaultLanguage;
-    private EmailSender $emailSender;
-    private AccountFactory $accountFactory;
-    private DateTime $dateTime;
-    private EmailTemplateProcessor $emailTemplateProcessor;
 
     public function __construct(
-        EntityManager $entityManager,
-        Config $config,
-        Language $defaultLanguage,
-        EmailSender $emailSender,
-        AccountFactory $accountFactory,
-        DateTime $dateTime,
-        EmailTemplateProcessor $emailTemplateProcessor
-    ) {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-        $this->defaultLanguage = $defaultLanguage;
-        $this->emailSender = $emailSender;
-        $this->accountFactory = $accountFactory;
-        $this->dateTime = $dateTime;
-        $this->emailTemplateProcessor = $emailTemplateProcessor;
-    }
+        private EntityManager $entityManager,
+        private Language $defaultLanguage,
+        private EmailSender $emailSender,
+        private AccountFactory $accountFactory,
+        private DateTime $dateTime,
+        private EmailTemplateProcessor $emailTemplateProcessor,
+        private ApplicationConfig $appConfig,
+    ) {}
 
     /**
      * Send opt-in confirmation email.
@@ -181,7 +166,7 @@ class ConfirmationSender
             }
         }
 
-        $url = $this->config->getSiteUrl() . '/?entryPoint=confirmOptIn&id=' . $uniqueId->getIdValue();
+        $url = $this->appConfig->getSiteUrl() . '/?entryPoint=confirmOptIn&id=' . $uniqueId->getIdValue();
 
         $linkHtml =
             '<a href='.$url.'>' .
@@ -194,8 +179,8 @@ class ConfirmationSender
         $createdAt = $uniqueId->getCreatedAt()->toString();
 
         if ($createdAt) {
-            $dateString = $this->dateTime->convertSystemDateTime($createdAt, null, $this->config->get('dateFormat'));
-            $timeString = $this->dateTime->convertSystemDateTime($createdAt, null, $this->config->get('timeFormat'));
+            $dateString = $this->dateTime->convertSystemDateTime($createdAt, null, $this->appConfig->getDateFormat());
+            $timeString = $this->dateTime->convertSystemDateTime($createdAt, null, $this->appConfig->getTimeFormat());
             $dateTimeString = $this->dateTime->convertSystemDateTime($createdAt);
 
             $body = str_replace('{optInDate}', $dateString, $body);

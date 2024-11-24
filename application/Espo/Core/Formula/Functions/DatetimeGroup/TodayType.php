@@ -33,7 +33,7 @@ use DateTimeZone;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Formula\EvaluatedArgumentList;
 use Espo\Core\Formula\Func;
-use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Exception;
 use RuntimeException;
@@ -44,17 +44,15 @@ use RuntimeException;
 class TodayType implements Func
 {
     public function __construct(
-        private Config $config
+        private ApplicationConfig $applicationConfig
     ) {}
 
     public function process(EvaluatedArgumentList $arguments): string
     {
-        /** @var string $timezone */
-        $timezone = $this->config->get('timeZone') ?? 'UTC';
+        $timezone = $this->applicationConfig->getTimeZone();
 
         try {
-            $today = DateTime::createNow()
-                ->withTimezone(new DateTimeZone($timezone));
+            $today = DateTime::createNow()->withTimezone(new DateTimeZone($timezone));
         } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }

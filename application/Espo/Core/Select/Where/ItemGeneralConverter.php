@@ -68,7 +68,8 @@ class ItemGeneralConverter implements ItemConverter
         private RandomStringGenerator $randomStringGenerator,
         private ORMDefs $ormDefs,
         private Config $config,
-        private Metadata $metadata
+        private Metadata $metadata,
+        private Config\ApplicationConfig $applicationConfig,
     ) {}
 
     /**
@@ -1661,7 +1662,7 @@ class ItemGeneralConverter implements ItemConverter
 
     private function getSystemTimeZone(): DateTimeZone
     {
-        $timeZone = $this->config->get('timeZone') ?? 'UTC';
+        $timeZone = $this->applicationConfig->getTimeZone();
 
         try {
             return new DateTimeZone($timeZone);

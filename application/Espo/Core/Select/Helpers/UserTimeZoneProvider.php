@@ -29,17 +29,17 @@
 
 namespace Espo\Core\Select\Helpers;
 
+use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\Entities\Preferences;
-use Espo\Core\Utils\Config;
 
 class UserTimeZoneProvider
 {
     public function __construct(
         private User $user,
         private EntityManager $entityManager,
-        private Config $config
+        private ApplicationConfig $applicationConfig,
     ) {}
 
     public function get(): string
@@ -51,7 +51,7 @@ class UserTimeZoneProvider
         }
 
         if ($preferences->get('timeZone') === null || $preferences->get('timeZone') === '') {
-            return $this->config->get('timeZone');
+            return $this->applicationConfig->getTimeZone();
         }
 
         return $preferences->get('timeZone');

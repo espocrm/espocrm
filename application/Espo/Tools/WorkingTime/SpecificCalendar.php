@@ -29,7 +29,7 @@
 
 namespace Espo\Tools\WorkingTime;
 
-use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Entities\WorkingTimeCalendar;
 use Espo\Entities\WorkingTimeRange;
 use Espo\ORM\EntityManager;
@@ -59,11 +59,11 @@ class SpecificCalendar implements Calendar
 
     public function __construct(
         private EntityManager $entityManager,
-        Config $config,
         private WorkingTimeCalendar $workingTimeCalendar,
+        ApplicationConfig $applicationConfig,
     ) {
         try {
-            $this->timezone = new DateTimeZone($config->get('timeZone'));
+            $this->timezone = new DateTimeZone($applicationConfig->getTimeZone());
         } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }

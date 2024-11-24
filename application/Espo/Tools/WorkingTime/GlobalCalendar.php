@@ -51,6 +51,7 @@ class GlobalCalendar implements Calendar
         private EntityManager $entityManager,
         private Config $config,
         private InjectableFactory $injectableFactory,
+        private Config\ApplicationConfig $applicationConfig,
     ) {
         $this->initDefault();
 
@@ -92,7 +93,7 @@ class GlobalCalendar implements Calendar
         }
 
         try {
-            return new DateTimeZone($this->config->get('timeZone'));
+            return new DateTimeZone($this->applicationConfig->getTimeZone());
         } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }

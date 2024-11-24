@@ -82,6 +82,7 @@ class Service
         private User $user,
         private ServiceFactory $serviceFactory,
         private RelationQueryHelper $relationQueryHelper,
+        private Config\ApplicationConfig $applicationConfig,
     ) {}
 
     /**
@@ -1036,6 +1037,6 @@ class Service
             return $preferences->getTimeZone();
         }
 
-        return $this->config->get('timeZone') ?? 'UTC';
+        return $this->applicationConfig->getTimeZone();
     }
 }

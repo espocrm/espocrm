@@ -63,6 +63,7 @@ class SendScheduledEmails implements JobDataLess
         private SendService $sendService,
         private Language $language,
         private AclManager $aclManager,
+        private Config\ApplicationConfig $applicationConfig,
     ) {}
 
     public function run(): void
@@ -136,7 +137,7 @@ class SendScheduledEmails implements JobDataLess
 
     private function getEmailLink(Email $email): string
     {
-        return rtrim($this->config->getSiteUrl()) . '#Email/view/' . $email->getId();
+        return rtrim($this->applicationConfig->getSiteUrl()) . '#Email/view/' . $email->getId();
     }
 
     private function getUser(Email $email): User

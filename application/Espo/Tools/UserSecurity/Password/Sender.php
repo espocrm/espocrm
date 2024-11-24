@@ -35,7 +35,7 @@ use Espo\Core\Mail\EmailSender;
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Mail\Sender as EmailSenderSender;
-use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Core\Utils\TemplateFileManager;
 use Espo\Entities\Email;
 use Espo\Entities\PasswordChangeRequest;
@@ -47,11 +47,11 @@ use Espo\Repositories\Portal as PortalRepository;
 class Sender
 {
     public function __construct(
-        private Config $config,
         private EmailSender $emailSender,
         private EntityManager $entityManager,
         private HtmlizerFactory $htmlizerFactory,
-        private TemplateFileManager $templateFileManager
+        private TemplateFileManager $templateFileManager,
+        private ApplicationConfig $applicationConfig,
     ) {}
 
     /**
@@ -156,7 +156,7 @@ class Sender
             $urlSuffix = '?entryPoint=changePassword&id=' . $passwordChangeRequest->getRequestId();
         }
 
-        $siteUrl = $this->config->getSiteUrl() . '/' . $urlSuffix;
+        $siteUrl = $this->applicationConfig->getSiteUrl() . '/' . $urlSuffix;
 
         if ($user->isPortal()) {
             $subjectTpl = $this->templateFileManager
