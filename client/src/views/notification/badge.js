@@ -180,6 +180,10 @@ class NotificationBadgeView extends View {
         audioElement.play();
     }
 
+    /**
+     * @private
+     * @param {number} count
+     */
     showNotRead(count) {
         this.$badge.attr('title', this.translate('New notifications') + ': ' + count);
 
@@ -188,6 +192,9 @@ class NotificationBadgeView extends View {
         this.getHelper().pageTitle.setNotificationNumber(count);
     }
 
+    /**
+     * @private
+     */
     hideNotRead() {
         this.$badge.attr('title', this.translate('Notifications'));
         this.$number.addClass('hidden').html('');
@@ -195,6 +202,9 @@ class NotificationBadgeView extends View {
         this.getHelper().pageTitle.setNotificationNumber(0);
     }
 
+    /**
+     * @private
+     */
     checkBypass() {
         const last = this.getRouter().getLast() || {};
 
@@ -203,7 +213,7 @@ class NotificationBadgeView extends View {
         if (
             last.controller === 'Admin' &&
             last.action === 'page' &&
-            ~['upgrade', 'extensions'].indexOf(pageAction)
+            ['upgrade', 'extensions'].includes(pageAction)
         ) {
             return true;
         }
@@ -211,39 +221,41 @@ class NotificationBadgeView extends View {
         return false;
     }
 
-    checkUpdates(isFirstCheck) {
+    /**
+     * @private
+     * @param {boolean} [isFirstCheck]
+     */
+    async checkUpdates(isFirstCheck) {
         if (this.checkBypass()) {
             return;
         }
 
-        Espo.Ajax
-            .getRequest('Notification/action/notReadCount')
-            .then(count => {
-                if (!isFirstCheck && count > this.unreadCount) {
-                    const messageBlockPlayNotificationSound =
-                        localStorage.getItem('messageBlockPlayNotificationSound');
+        /** @type {number} */
+        const count = await Espo.Ajax.getRequest('Notification/action/notReadCount');
 
-                    if (!messageBlockPlayNotificationSound) {
-                        this.playSound();
+        if (!isFirstCheck && count > this.unreadCount) {
+            const blockSound = localStorage.getItem('messageBlockPlayNotificationSound');
 
-                        localStorage.setItem('messageBlockPlayNotificationSound', 'true');
+            if (!blockSound) {
+                this.playSound();
 
-                        setTimeout(() => {
-                            delete localStorage['messageBlockPlayNotificationSound'];
-                        }, this.notificationsCheckInterval * 1000);
-                    }
-                }
+                localStorage.setItem('messageBlockPlayNotificationSound', 'true');
 
-                this.unreadCount = count;
+                setTimeout(() => {
+                    delete localStorage['messageBlockPlayNotificationSound'];
+                }, this.notificationsCheckInterval * 1000);
+            }
+        }
 
-                if (count) {
-                    this.showNotRead(count);
+        this.unreadCount = count;
 
-                    return;
-                }
+        if (count) {
+            this.showNotRead(count);
 
-                this.hideNotRead();
-            });
+            return;
+        }
+
+        this.hideNotRead();
     }
 
     runCheckUpdates(isFirstCheck) {
