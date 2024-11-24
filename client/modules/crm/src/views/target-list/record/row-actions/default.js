@@ -37,7 +37,7 @@ define('crm:views/target-list/record/row-actions/default', ['views/record/row-ac
                 if (this.model.get('targetListIsOptedOut')) {
                     list.push({
                         action: 'cancelOptOut',
-                        label: 'Cancel Opt-Out',
+                        text: this.translate('Cancel Opt-Out', 'labels', 'TargetList'),
                         data: {
                             id: this.model.id,
                             type: this.model.entityType,
@@ -46,7 +46,7 @@ define('crm:views/target-list/record/row-actions/default', ['views/record/row-ac
                 } else {
                     list.push({
                         action: 'optOut',
-                        label: 'Opt-Out',
+                        text: this.translate('Opt-Out', 'labels', 'TargetList'),
                         data: {
                             id: this.model.id,
                             type: this.model.entityType,
