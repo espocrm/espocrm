@@ -54,11 +54,13 @@ class Sender
         $payload = Json::encode($dataList);
 
         $signature = null;
+        $legacySignature = null;
 
         $secretKey = $webhook->getSecretKey();
 
         if ($secretKey) {
             $signature = $this->buildSignature($webhook, $payload, $secretKey);
+            $legacySignature = $this->buildSignatureLegacy($webhook, $payload, $secretKey);
         }
 
         $connectTimeout = $this->config->get('webhookConnectTimeout', self::CONNECT_TIMEOUT);
@@ -70,7 +72,11 @@ class Sender
         $headerList[] = 'Content-Length: ' . strlen($payload);
 
         if ($signature) {
-            $headerList[] = 'X-Signature: ' . $signature;
+            $headerList[] = 'Signature: ' . $signature;
+        }
+
+        if ($legacySignature) {
+            $headerList[] = 'X-Signature: ' . $legacySignature;
         }
 
         $url = $webhook->getUrl();
@@ -124,6 +130,17 @@ class Sender
     }
 
     private function buildSignature(Webhook $webhook, string $payload, string $secretKey): string
+    {
+        $webhookId = $webhook->getId();
+        $hash = hash_hmac('sha256', $payload, $secretKey);
+
+        return base64_encode("$webhookId:$hash");
+    }
+
+    /**
+     * @todo Remove in v11.0.
+     */
+    private function buildSignatureLegacy(Webhook $webhook, string $payload, string $secretKey): string
     {
         return base64_encode($webhook->getId() . ':' . hash_hmac('sha256', $payload, $secretKey, true));
     }
