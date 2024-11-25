@@ -2954,18 +2954,16 @@ class ListRecordView extends View {
      * Compose a cell selector for a layout item.
      *
      * @param {module:model} model A model.
-     * @param {Object} item An item.
+     * @param {Record} item An item.
      * @return {string}
      */
-    getItemEl(model, item) {
-        return this.getSelector() +
-            ' tr[data-id="' + model.id + '"]' +
-            ' td.cell[data-name="' + item.columnName + '"]';
+    getCellSelector(model, item) {
+        return `${this.getSelector()} ${this.getRowSelector(model.id)} .cell[data-name="${item.columnName}"]`;
     }
 
     prepareInternalLayout(internalLayout, model) {
-        internalLayout.forEach((item) => {
-            item.el = this.getItemEl(model, item);
+        internalLayout.forEach(item => {
+            item.el = this.getCellSelector(model, item);
         });
     }
 
@@ -2995,7 +2993,7 @@ class ListRecordView extends View {
                 model: model,
                 acl: acl,
                 rowActionHandlers: this._rowActionHandlers || {},
-                selector: '.list-row[data-id="' + key + '"]',
+                selector: this.getRowSelector(key),
                 optionsToPass: ['acl', 'rowActionHandlers'],
                 layoutDefs: {
                     type: this._internalLayoutType,
@@ -3371,7 +3369,7 @@ class ListRecordView extends View {
      * @return {string}
      */
     getRowSelector(id) {
-        return 'tr[data-id="' + id + '"]';
+        return `tr.list-row[data-id="${id}"]`;
     }
 
     // noinspection JSUnusedGlobalSymbols

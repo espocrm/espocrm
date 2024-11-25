@@ -218,9 +218,8 @@ class ListTreeRecordView extends ListRecordView {
         return 'li[data-id="' + id + '"]';
     }
 
-    getItemEl(model, item) {
-        return this.getSelector() +
-            ' li[data-id="' + model.id + '"] span.cell[data-name="' + item.name + '"]';
+    getCellSelector(model, item) {
+        return `${this.getSelector() + this.getRowSelector(model.id)} span.cell[data-name="${item.name}"]`;
     }
 
     getCreateAttributes() {

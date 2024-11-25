@@ -175,10 +175,10 @@ class ListExpandedRecordView extends ListRecordView {
         return 'li[data-id="' + id + '"]';
     }
 
-    getItemEl(model, item) {
+    getCellSelector(model, item) {
         const name = item.field || item.columnName;
 
-        return this.getSelector() + ' li[data-id="' + model.id + '"] .cell[data-name="' + name+ '"]';
+        return `${this.getSelector()} ${this.getRowSelector(model.id)} .cell[data-name="${name}"]`;
     }
 
     getRowContainerHtml(id) {
@@ -193,12 +193,12 @@ class ListExpandedRecordView extends ListRecordView {
 
         rows.forEach((row) => {
             row.forEach((col) => {
-                col.el = this.getItemEl(model, col);
+                col.el = this.getCellSelector(model, col);
             });
         });
 
         if (internalLayout.right) {
-            internalLayout.right.el = this.getItemEl(model, internalLayout.right);
+            internalLayout.right.el = this.getCellSelector(model, internalLayout.right);
         }
     }
 
