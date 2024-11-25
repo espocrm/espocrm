@@ -404,6 +404,7 @@ class App {
         this.metadata = new Metadata(this.cache);
         this.fieldManager = new FieldManager();
 
+        container.set(AppParams, this.appParams);
         container.set(Storage, this.storage);
         container.set(SessionStorage, this.sessionStorage);
         container.set(Settings, this.settings);
