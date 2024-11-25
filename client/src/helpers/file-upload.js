@@ -28,21 +28,20 @@
 
 /** @module helpers/file-upload */
 
+import {inject} from 'di';
+import Settings from 'models/settings';
+
 /**
  * A file-upload helper.
  */
 class FileUploadExport {
 
     /**
-     * @param {module:models/settings} config A config.
+     * @private
+     * @type {Settings}
      */
-    constructor(config) {
-        /**
-         * @private
-         * @type {module:models/settings}
-         */
-        this.config = config;
-    }
+    @inject(Settings)
+    config
 
     /**
      * @typedef {Object} module:helpers/file-upload~Options
@@ -81,8 +80,7 @@ class FileUploadExport {
             fileReader.onload = (e) => {
                 attachment.set('file', e.target.result);
 
-                attachment
-                    .save({}, {timeout: 0})
+                attachment.save({}, {timeout: 0})
                     .then(() => resolve())
                     .catch(() => reject());
             };

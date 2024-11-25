@@ -26,10 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+import {inject} from 'di';
+import Settings from 'models/settings';
+import User from 'models/user';
+
 /**
  * A mass-action helper.
  */
 class MassActionHelper {
+
+    /**
+     * @private
+     * @type {Settings}
+     */
+    @inject(Settings)
+    config
+
+    /**
+     * @private
+     * @type {User}
+     */
+    @inject(User)
+    user
 
     /**
      * @param {module:view} view A view.
@@ -40,12 +58,6 @@ class MassActionHelper {
          * @type {module:view}
          */
         this.view = view;
-
-        /**
-         * @private
-         * @type {module:models/settings}
-         */
-        this.config = view.getConfig();
     }
 
     /**
@@ -55,7 +67,7 @@ class MassActionHelper {
      * @returns {boolean}
      */
     checkIsIdle(totalCount) {
-        if (this.view.getUser().isPortal()) {
+        if (this.user.isPortal()) {
             return false;
         }
 
@@ -82,11 +94,13 @@ class MassActionHelper {
         Espo.Ui.notify(false);
 
         return new Promise(resolve => {
+            const entityType = this.view.scope || this.view.entityType;
+
             this.view
                 .createView('dialog', 'views/modals/mass-action', {
                     id: id,
                     action: action,
-                    scope: this.view.scope || this.view.entityType,
+                    scope: entityType,
                 })
                 .then(view => {
                     view.render();

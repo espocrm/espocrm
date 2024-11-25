@@ -249,12 +249,7 @@ class DetailModalView extends ModalView {
 
     /** @private */
     setupActionItems() {
-        const actionItemSetup = new ActionItemSetup(
-            this.getMetadata(),
-            this.getHelper(),
-            this.getAcl(),
-            this.getLanguage()
-        );
+        const actionItemSetup = new ActionItemSetup();
 
         actionItemSetup.setup(
             this,

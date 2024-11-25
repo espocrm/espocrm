@@ -339,7 +339,7 @@ class VarcharFieldView extends BaseFieldView {
             return false;
         }
 
-        const helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
+        const helper = new RegExpPattern();
         const result = helper.validate(pattern, value, name, this.entityType);
 
         if (!result) {

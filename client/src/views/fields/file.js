@@ -583,7 +583,7 @@ class FileFieldView extends LinkFieldView {
 
         this.isUploading = true;
 
-        const uploadHelper = new FileUpload(this.getConfig());
+        const uploadHelper = new FileUpload();
 
         this.getModelFactory().create('Attachment', attachment => {
             const $attachmentBox = this.addAttachmentBox(file.name, file.type);

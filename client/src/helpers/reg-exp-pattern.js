@@ -26,27 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+import {inject} from 'di';
+import Metadata from 'metadata';
+import Language from 'language';
+
 /**
  * A regular expression pattern helper.
  */
 class RegExpPatternHelper {
 
     /**
-     * @param {module:metadata} metadata
-     * @param {module:language} language
+     * @private
+     * @type {Metadata}
      */
-    constructor(metadata, language) {
-        /**
-         * @private
-         * @type {module:metadata}
-         */
-        this.metadata = metadata;
-        /**
-         * @private
-         * @type {module:language}
-         */
-        this.language = language;
-    }
+    @inject(Metadata)
+    metadata
+
+    /**
+     * @private
+     * @type {Language}
+     */
+    @inject(Language)
+    language
 
     /**
      *

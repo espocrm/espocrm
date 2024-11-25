@@ -583,7 +583,7 @@ class EmailFromAddressVarchar extends BaseFieldView {
     }
 
     quickView(data) {
-        const helper = new RecordModal(this.getMetadata(), this.getAcl());
+        const helper = new RecordModal();
 
         helper.showDetail(this, {
             id: data.id,

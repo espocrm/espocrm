@@ -26,27 +26,60 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+import {inject} from 'di';
+import Metadata from 'metadata';
+import ViewHelper from 'view-helper';
+import Settings from 'models/settings';
+import User from 'models/user';
+import AclManager from 'acl-manager';
+import Preferences from 'models/preferences';
+
 /**
  * Defaults populator.
  */
 class DefaultsPopulator {
 
     /**
-     * @param {module:models/user} user
-     * @param {module:models/preferences} preferences
-     * @param {module:acl-manager} acl
-     * @param {module:models/settings} config
-     * @param {module:metadata} metadata
-     * @param {module:view-helper} viewHelper
+     * @private
+     * @type {Metadata}
      */
-    constructor(user, preferences, acl, config, metadata, viewHelper) {
-        this.user = user;
-        this.preferences = preferences;
-        this.acl = acl;
-        this.config = config;
-        this.metadata = metadata;
-        this.viewHelper = viewHelper;
-    }
+    @inject(Metadata)
+    metadata
+
+    /**
+     * @private
+     * @type {ViewHelper}
+     */
+    @inject(ViewHelper)
+    viewHelper
+
+    /**
+     * @private
+     * @type {Settings}
+     */
+    @inject(Settings)
+    config
+
+    /**
+     * @private
+     * @type {User}
+     */
+    @inject(User)
+    user
+
+    /**
+     * @private
+     * @type {Preferences}
+     */
+    @inject(Preferences)
+    preferences
+
+    /**
+     * @private
+     * @type {AclManager}
+     */
+    @inject(AclManager)
+    acl
 
     /**
      * Populate default values.

@@ -603,7 +603,7 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
         const field = this.columnsDefs[column].field;
         const scope = this.columnsDefs[column].scope;
 
-        const helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
+        const helper = new RegExpPattern();
 
         const result = helper.validate(pattern, value, field, scope);
 

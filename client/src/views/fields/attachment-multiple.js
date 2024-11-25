@@ -614,9 +614,7 @@ class AttachmentMultipleFieldView extends BaseFieldView {
                 totalCount++;
             }
 
-
-            /** @type module:helpers/file-upload */
-            const uploadHelper = new FileUpload(this.getConfig());
+            const uploadHelper = new FileUpload();
 
             fileList.forEach(file => {
                 const $attachmentBox = this.addAttachmentBox(file.name, file.type);

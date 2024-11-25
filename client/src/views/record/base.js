@@ -1267,14 +1267,7 @@ class BaseRecordView extends View {
      * @return {Promise|undefined}
      */
     populateDefaults() {
-        const populator = new DefaultsPopulator(
-            this.getUser(),
-            this.getPreferences(),
-            this.getAcl(),
-            this.getConfig(),
-            this.getMetadata(),
-            this.getHelper(),
-        );
+        const populator = new DefaultsPopulator();
 
         return populator.populate(this.model);
     }

@@ -26,21 +26,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+import {inject} from 'di';
+import Metadata from 'metadata';
+import ViewHelper from 'view-helper';
+import AclManager from 'acl-manager';
+import Language from 'language';
+
 /** @module helpers/action-item-setup */
 
 class ActionItemSetupHelper {
+
     /**
-     * @param {module:metadata} metadata
-     * @param {module:view-helper} viewHelper
-     * @param {module:acl-manager} acl
-     * @param {module:language} language
+     * @private
+     * @type {Metadata}
      */
-    constructor(metadata, viewHelper, acl, language) {
-        this.metadata = metadata;
-        this.viewHelper = viewHelper;
-        this.acl = acl;
-        this.language = language;
-    }
+    @inject(Metadata)
+    metadata
+
+    /**
+     * @private
+     * @type {ViewHelper}
+     */
+    @inject(ViewHelper)
+    viewHelper
+
+    /**
+     * @private
+     * @type {AclManager}
+     */
+    @inject(AclManager)
+    acl
+
+    /**
+     * @private
+     * @type {Language}
+     */
+    @inject(Language)
+    language
 
     /**
      * @param {module:view} view

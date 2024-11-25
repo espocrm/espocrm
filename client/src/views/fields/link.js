@@ -1094,7 +1094,7 @@ class LinkFieldView extends BaseFieldView {
 
         const entityType = this.foreignScope;
 
-        const helper = new RecordModal(this.getMetadata(), this.getAcl());
+        const helper = new RecordModal();
 
         helper.showDetail(this, {
             id: id,

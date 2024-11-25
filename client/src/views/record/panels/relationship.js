@@ -728,7 +728,7 @@ class RelationshipPanelView extends BottomPanelView {
 
         const scope = model.entityType;
 
-        const helper = new RecordModal(this.getMetadata(), this.getAcl());
+        const helper = new RecordModal();
 
         helper
             .showDetail(this, {

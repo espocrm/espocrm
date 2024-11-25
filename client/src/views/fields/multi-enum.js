@@ -219,7 +219,7 @@ class MultiEnumFieldView extends ArrayFieldView {
         }
 
         if (this.params.pattern) {
-            const helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
+            const helper = new RegExpPattern();
 
             const result = helper.validate(this.params.pattern, input, this.name, this.entityType);
 

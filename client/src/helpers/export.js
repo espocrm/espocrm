@@ -26,10 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+import {inject} from 'di';
+import Settings from 'models/settings';
+import User from 'models/user';
+
 /**
  * An export helper.
  */
 class ExportHelper {
+
+    /**
+     * @private
+     * @type {Settings}
+     */
+    @inject(Settings)
+    config
+
+    /**
+     * @private
+     * @type {User}
+     */
+    @inject(User)
+    user
 
     /**
      * @param {module:view} view A view.
@@ -40,12 +58,6 @@ class ExportHelper {
          * @type {module:view}
          */
         this.view = view;
-
-        /**
-         * @private
-         * @type {module:models/settings}
-         */
-        this.config = view.getConfig();
     }
 
     /**
@@ -55,7 +67,7 @@ class ExportHelper {
      * @returns {boolean}
      */
     checkIsIdle(totalCount) {
-        if (this.view.getUser().isPortal()) {
+        if (this.user.isPortal()) {
             return false;
         }
 

@@ -26,10 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+import {inject} from 'di';
+import Metadata from 'metadata';
+
 /**
  * @internal
  */
 class SelectRelatedHelper {
+
+    /**
+     * @private
+     * @type {Metadata}
+     */
+    @inject(Metadata)
+    metadata
 
     /**
      * @param {import('view').default} view
@@ -37,8 +47,6 @@ class SelectRelatedHelper {
     constructor(view) {
         /** @private */
         this.view = view;
-        /** @private */
-        this.metadata = view.getMetadata();
     }
 
     /**

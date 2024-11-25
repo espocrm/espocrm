@@ -26,18 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+import {inject} from 'di';
+import Metadata from 'metadata';
+import AclManager from 'acl-manager';
+
 /**
  * A record-modal helper.
  */
 class RecordModalHelper {
+
     /**
-     * @param {module:metadata} metadata
-     * @param {module:acl-manager} acl
+     * @private
+     * @type {Metadata}
      */
-    constructor(metadata, acl) {
-        this.metadata = metadata;
-        this.acl = acl;
-    }
+    @inject(Metadata)
+    metadata
+
+    /**
+     * @private
+     * @type {AclManager}
+     */
+    @inject(AclManager)
+    acl
 
     /**
      * @param {module:view} view
