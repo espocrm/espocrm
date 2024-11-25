@@ -45,7 +45,7 @@ export default class extends ArrayFieldView {
     reactionsHelper
 
     setup() {
-        this.reactionsHelper = new ReactionsHelper(this.getConfig(), this.getMetadata());
+        this.reactionsHelper = new ReactionsHelper();
 
         this.iconClassMap = this.reactionsHelper.getDefinitionList().reduce((o, it) => {
             return {

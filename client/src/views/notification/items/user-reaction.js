@@ -88,7 +88,7 @@ export default class UserReactionNotificationItemView extends BaseNotificationIt
 
         this.messageData['type'] = this.translate(data.type, 'reactions');
 
-        const reactionsHelper = new ReactionsHelper(this.getConfig(), this.getMetadata());
+        const reactionsHelper = new ReactionsHelper();
         this.reactionIconClass = reactionsHelper.getIconClass(data.type);
 
         const userElement = document.createElement('a');

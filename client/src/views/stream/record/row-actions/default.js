@@ -62,7 +62,7 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
         }
 
         // @todo Use service.
-        this.reactionHelper = new ReactionsHelper(this.getConfig(), this.getMetadata());
+        this.reactionHelper = new ReactionsHelper();
 
         this.availableReactions = this.reactionHelper.getAvailableReactions();
     }

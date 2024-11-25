@@ -26,68 +26,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import {inject, register} from 'di';
-import Settings from 'models/settings';
-import Metadata from 'metadata';
+const registry = new Map();
+const container = new Map();
 
-@register()
-class ReactionsHelper {
+/**
+ * A DI container.
+ */
+export {container};
 
-    /**
-     * @type Settings
-     */
-    @inject(Settings)
-    config
-
-    /**
-     * @type Metadata
-     */
-    @inject(Metadata)
-    metadata
-
-    /**
-     * @private
-     * @type {{
-     *     type: string,
-     *     iconClass: string,
-     * }[]}
-     */
-    list
-
-    /**
-     * @return {{
-     *     type: string,
-     *     iconClass: string,
-     * }[]}
-     */
-    getDefinitionList() {
-        if (!this.list) {
-            this.list = this.metadata.get('app.reactions.list') || [];
-        }
-
-        return this.list;
-    }
-
-    /**
-     * @return {string[]}
-     */
-    getAvailableReactions() {
-        return this.config.get('availableReactions') || []
-    }
-
-    /**
-     * @param {string|null} type
-     * @return {string|null}
-     */
-    getIconClass(type) {
-        const item = this.getDefinitionList().find(it => it.type === type);
-
-        if (!item) {
-            return null;
-        }
-
-        return item.iconClass;
-    }
+/**
+ * A 'register' decorator.
+ *
+ * @param {*[]} argumentList Arguments.
+ * @return {function(typeof Object)}
+ */
+export function register(argumentList = []) {
+    return function(classObject) {
+        registry.set(classObject, argumentList);
+    };
 }
 
-export default ReactionsHelper;
+/**
+ * An 'inject' decorator.
+ *
+ * @param {typeof Object} classObject A class.
+ * @return {(function(*, Object): void)}
+ */
+export function inject(classObject) {
+    /**
+     * @param {{addInitializer: function(function())}} context
+     */
+    return function(value, context) {
+        context.addInitializer(function() {
+            let instance = container.get(classObject);
+
+            if (!instance) {
+                instance = Reflect.construct(classObject, registry.get(classObject));
+
+                container.set(classObject, instance);
+            }
+
+            this[context.name] = instance;
+        });
+    };
+}

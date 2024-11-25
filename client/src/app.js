@@ -59,6 +59,7 @@ import PageTitle from 'page-title';
 import BroadcastChannel from 'broadcast-channel';
 import uiAppInit from 'ui/app-init';
 import AppParams from 'app-params';
+import {container} from 'di';
 
 /**
  * A main application class.
@@ -403,6 +404,13 @@ class App {
         this.metadata = new Metadata(this.cache);
         this.fieldManager = new FieldManager();
 
+        container.set(Storage, this.storage);
+        container.set(SessionStorage, this.sessionStorage);
+        container.set(Settings, this.settings);
+        container.set(Language, this.language);
+        container.set(Metadata, this.metadata);
+        container.set(FieldManager, this.fieldManager);
+
         this.initBroadcastChannel();
 
         Promise
@@ -431,6 +439,14 @@ class App {
                 if (this.settings.get('useWebSocket')) {
                     this.webSocketManager = new WebSocketManager(this.settings);
                 }
+
+                container.set(AclManager, this.acl);
+                container.set(User, this.user);
+                container.set(Preferences, this.preferences);
+                container.set(ThemeManager, this.themeManager);
+                container.set(ModelFactory, this.modelFactory);
+                container.set(CollectionFactory, this.collectionFactory);
+                container.set(WebSocketManager, this.webSocketManager);
 
                 this.initUtils();
                 this.initView();
@@ -549,6 +565,8 @@ class App {
         const routes = this.metadata.get(['app', 'clientRoutes']) || {};
 
         this.router = new Router({routes: routes});
+
+        container.set(Router, this.router);
 
         this.viewHelper.router = this.router;
 
@@ -714,6 +732,9 @@ class App {
         this.modelFactory.dateTime = this.dateTime;
         this.dateTime.setSettingsAndPreferences(this.settings, this.preferences);
         this.numberUtil = new NumberUtil(this.settings, this.preferences);
+
+        container.set(DateTime, this.dateTime);
+        container.set(NumberUtil, this.numberUtil);
     }
 
     /**
@@ -754,6 +775,9 @@ class App {
         helper.basePath = this.basePath;
         helper.appParams = this.appParams;
         helper.broadcastChannel = this.broadcastChannel;
+
+        container.set(ViewHelper, this.viewHelper);
+        container.set(LayoutManager, helper.layoutManager);
 
         this.viewLoader = (viewName, callback) => {
             this.loader.require(Utils.composeViewClassName(viewName), callback);
@@ -1422,6 +1446,8 @@ class App {
                 this.logout(true);
             }
         });
+
+        container.set(BroadcastChannel, this.broadcastChannel);
     }
 
     /**

@@ -97,7 +97,7 @@ export default class NoteReactionsView extends View {
     }
 
     setup() {
-        const reactionsHelper = new ReactionsHelper(this.getConfig(), this.getMetadata());
+        const reactionsHelper = new ReactionsHelper();
 
         this.availableReactions = reactionsHelper.getAvailableReactions();
 
