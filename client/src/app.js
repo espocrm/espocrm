@@ -779,6 +779,7 @@ class App {
 
         container.set(ViewHelper, this.viewHelper);
         container.set(LayoutManager, helper.layoutManager);
+        container.set(PageTitle, helper.pageTitle);
 
         this.viewLoader = (viewName, callback) => {
             this.loader.require(Utils.composeViewClassName(viewName), callback);
