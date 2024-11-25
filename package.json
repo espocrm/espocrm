@@ -47,7 +47,7 @@
     "bootstrap": "github:yurikuzn/espo-bootstrap#0.1.1",
     "bootstrap-colorpicker": "^2.5.2",
     "bootstrap-datepicker": "^1.9.0",
-    "bullbone": "github:yurikuzn/bull#1.2.16",
+    "bullbone": "github:yurikuzn/bull#1.2.17",
     "cronstrue": "^1.114.0",
     "cropper": "^0.7.9",
     "devbridge-autocomplete": "^1.4.11",
