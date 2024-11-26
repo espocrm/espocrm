@@ -121,6 +121,11 @@ class CollaboratorsUpdateHook implements UpdateHook
             return;
         }
 
+        $this->metadata->delete('entityDefs', $entityType, [
+            'fields.' . self::FIELD,
+            'links.' . self::FIELD,
+        ]);
+
         $this->metadata->delete('entityAcl', $entityType, [
             'links.' . self::FIELD,
         ]);
