@@ -364,7 +364,7 @@ class EditModalView extends ModalView {
                     return;
                 }
 
-                this.$el.find('.modal-header .modal-title-text')
+                $(this.containerElement).find('.modal-header .modal-title-text')
                     .html(this.composeHeaderHtml());
 
                 $buttons.removeClass('disabled').removeAttr('disabled');

@@ -117,7 +117,7 @@ class Dialog {
         this.buttonList = [];
         /**
          * @private
-         * @type {module:ui.Dialog~Button[]}
+         * @type {Array<module:ui.Dialog~Button|false>}
          */
         this.dropdownItemList = [];
         /** @private */
@@ -357,7 +357,7 @@ class Dialog {
      * Set action items.
      *
      * @param {module:ui.Dialog~Button[]} buttonList
-     * @param {module:ui.Dialog~Button[]} dropdownItemList
+     * @param {Array<module:ui.Dialog~Button|false>} dropdownItemList
      */
     setActionItems(buttonList, dropdownItemList) {
         this.buttonList = buttonList;

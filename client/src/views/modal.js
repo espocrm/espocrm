@@ -275,6 +275,13 @@ class ModalView extends View {
     shortcutKeys = null
 
     /**
+     * @protected
+     * @type {HTMLElement}
+     * @since 9.0.0
+     */
+    containerElement
+
+    /**
      * @inheritDoc
      */
     init() {
@@ -362,6 +369,8 @@ class ModalView extends View {
                 onBackdropClick: () => this.onBackdropClick(),
             });
 
+            this.containerElement = document.querySelector(this.containerSelector);
+
             this.setElement(this.containerSelector + ' .body');
 
             this.bodyElement = this.element;
@@ -388,6 +397,8 @@ class ModalView extends View {
             if (this.getParentView()) {
                 this.getParentView().trigger('modal-shown');
             }
+
+            //this.setElement(this.containerSelector);
         });
 
         this.once('remove', () => {
@@ -653,7 +664,11 @@ class ModalView extends View {
             return;
         }
 
-        this.$el.find('footer button[data-name="'+name+'"]')
+        if (!this.containerElement) {
+            return;
+        }
+
+        $(this.containerElement).find(`footer button[data-name="${name}"]`)
             .addClass('disabled')
             .attr('disabled', 'disabled');
     }
@@ -676,7 +691,11 @@ class ModalView extends View {
             return;
         }
 
-        this.$el.find('footer button[data-name="'+name+'"]')
+        if (!this.containerElement) {
+            return;
+        }
+
+        $(this.containerElement).find('footer button[data-name="'+name+'"]')
             .removeClass('disabled')
             .removeAttr('disabled');
     }
@@ -773,7 +792,7 @@ class ModalView extends View {
 
         const $footer = this.dialog.getFooter();
 
-        this.$el.find('footer.modal-footer')
+        $(this.containerElement).find('footer.modal-footer')
             .empty()
             .append($footer);
 
@@ -810,7 +829,7 @@ class ModalView extends View {
         }
 
         if (this.isRendered()) {
-            this.$el.find('.modal-footer [data-name="'+name+'"]').remove();
+            $(this.containerElement).find(`.modal-footer [data-name="${name}"]`).remove();
         }
 
         if (!doNotReRender && this.isRendered()) {
@@ -837,7 +856,11 @@ class ModalView extends View {
             return;
         }
 
-        this.$el.find('footer button[data-name="' + name + '"]').removeClass('hidden');
+        if (!this.containerElement) {
+            return;
+        }
+
+        $(this.containerElement).find(`footer button[data-name="${name}"]`).removeClass('hidden');
 
         this.adjustButtons();
     }
@@ -861,7 +884,11 @@ class ModalView extends View {
             return;
         }
 
-        this.$el.find('footer button[data-name="'+name+'"]').addClass('hidden');
+        if (!this.containerElement) {
+            return;
+        }
+
+        $(this.containerElement).find(`footer button[data-name="${name}"]`).addClass('hidden');
 
         this.adjustButtons();
     }
@@ -892,11 +919,17 @@ class ModalView extends View {
             return;
         }
 
-        this.$el.find('footer button[data-name="'+name+'"]').removeClass('hidden');
-        this.$el.find('footer li > a[data-name="'+name+'"]').parent().removeClass('hidden');
+        if (!this.containerElement) {
+            return;
+        }
+
+        const $el = $(this.containerElement);
+
+        $el.find(`footer button[data-name="${name}"]`).removeClass('hidden');
+        $el.find(`footer li > a[data-name="${name}"]`).parent().removeClass('hidden');
 
         if (!this.isDropdownItemListEmpty()) {
-            const $dropdownGroup = this.$el.find('footer .main-btn-group > .btn-group');
+            const $dropdownGroup = $el.find('footer .main-btn-group > .btn-group');
 
             $dropdownGroup.removeClass('hidden');
             $dropdownGroup.find('> button').removeClass('hidden');
@@ -931,11 +964,13 @@ class ModalView extends View {
             return;
         }
 
-        this.$el.find('footer button[data-name="'+name+'"]').addClass('hidden');
-        this.$el.find('footer li > a[data-name="'+name+'"]').parent().addClass('hidden');
+        const $el = $(this.containerElement);
+
+        $el.find(`footer button[data-name="${name}"]`).addClass('hidden');
+        $el.find(`footer li > a[data-name="${name}"]`).parent().addClass('hidden');
 
         if (this.isDropdownItemListEmpty()) {
-            const $dropdownGroup = this.$el.find('footer .main-btn-group > .btn-group');
+            const $dropdownGroup = $el.find('footer .main-btn-group > .btn-group');
 
             $dropdownGroup.addClass('hidden');
             $dropdownGroup.find('> button').addClass('hidden');
@@ -1009,7 +1044,11 @@ class ModalView extends View {
             this.fontSizePercentage = 100;
         }
 
-        const $titleText = this.$el.find('.modal-title > .modal-title-text');
+        if (!this.containerElement) {
+            return;
+        }
+
+        const $titleText = $(this.containerElement).find('.modal-title > .modal-title-text');
 
         const containerWidth = $titleText.parent().width();
         let textWidth = 0;
@@ -1020,7 +1059,7 @@ class ModalView extends View {
 
         if (containerWidth < textWidth) {
             if (step > 5) {
-                const $title = this.$el.find('.modal-title');
+                const $title = $(this.containerElement).find('.modal-title');
 
                 $title.attr('title', $titleText.text());
                 $title.addClass('overlapped');
@@ -1034,7 +1073,7 @@ class ModalView extends View {
 
             this.fontSizePercentage -= 4;
 
-            this.$el.find('.modal-title .font-size-flexible')
+            $(this.containerElement).find('.modal-title .font-size-flexible')
                 .css('font-size', this.fontSizePercentage + '%');
 
             this.adjustHeaderFontSize(step + 1);
@@ -1058,9 +1097,8 @@ class ModalView extends View {
 
             if (data.title) {
                 title = data.title;
-            }
-            else {
-                const $title = this.$el.find('.modal-header .modal-title .modal-title-text');
+            } else {
+                const $title = $(this.containerElement).find('.modal-header .modal-title .modal-title-text');
 
                 title = $title.text();
             }
@@ -1118,7 +1156,8 @@ class ModalView extends View {
 
     /** @private */
     adjustLeftButtons() {
-        const $buttons = this.$el.find('footer.modal-footer > .main-btn-group button.btn');
+        const $buttons = $(this.containerElement)
+            .find('footer.modal-footer > .main-btn-group button.btn');
 
         $buttons
             .removeClass('radius-left')
@@ -1132,7 +1171,8 @@ class ModalView extends View {
 
     /** @private */
     adjustRightButtons() {
-        const $buttons = this.$el.find('footer.modal-footer > .additional-btn-group button.btn:not(.btn-text)');
+        const $buttons = $(this.containerElement)
+            .find('footer.modal-footer > .additional-btn-group button.btn:not(.btn-text)');
 
         $buttons
             .removeClass('radius-left')
@@ -1150,10 +1190,10 @@ class ModalView extends View {
     }
 
     /**
-     * @protected
+     * @private
      */
     initBodyScrollListener() {
-        const $body = this.$el.find('> .dialog > .modal-dialog > .modal-content > .modal-body');
+        const $body = $(this.containerElement).find('> .dialog > .modal-dialog > .modal-content > .modal-body');
         const $footer = $body.parent().find('> .modal-footer');
 
         if (!$footer.length) {
