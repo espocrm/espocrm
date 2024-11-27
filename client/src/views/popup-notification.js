@@ -55,6 +55,8 @@ class PopupNotificationView extends View {
             (this.getConfig().get('popupNotificationSound') || this.soundPath);
 
         this.on('render', () => {
+            this.element = undefined;
+
             $(containerSelector).remove();
 
             const className = 'popup-notification-' + Espo.Utils.toDom(this.type);

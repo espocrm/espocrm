@@ -314,6 +314,9 @@ class ModalView extends View {
                 this.dialog.close();
             }
 
+            // Otherwise, re-render won't work.
+            this.element = undefined;
+
             this.isCollapsed = false;
 
             $(this.containerSelector).remove();
@@ -372,7 +375,6 @@ class ModalView extends View {
             this.containerElement = document.querySelector(this.containerSelector);
 
             this.setElement(this.containerSelector + ' .body');
-
             this.bodyElement = this.element;
 
             // @todo Review that the element is set back to the container afterwards.
@@ -380,6 +382,10 @@ class ModalView extends View {
         });
 
         this.on('after:render', () => {
+            // Trick to delegate events for the whole modal.
+            this.element = undefined;
+            this.setElement(this.containerSelector);
+
             $(this.containerSelector).show();
 
             this.dialog.show();
@@ -397,8 +403,6 @@ class ModalView extends View {
             if (this.getParentView()) {
                 this.getParentView().trigger('modal-shown');
             }
-
-            //this.setElement(this.containerSelector);
         });
 
         this.once('remove', () => {
