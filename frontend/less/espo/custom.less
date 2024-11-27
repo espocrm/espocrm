@@ -322,8 +322,7 @@ img.image-preview {
 }
 
 div.list-expanded > ul > li > div.expanded-row > .cell {
-    padding-left: var(--5px);
-    padding-right: var(--5px);
+    padding-right: var(--10px);
 
     &.small.pull-right {
         position: relative;
@@ -331,10 +330,13 @@ div.list-expanded > ul > li > div.expanded-row > .cell {
     }
 
     &:first-child {
-        padding-left: 0;
         > .fas {
             width: var(--18px);
         }
+    }
+
+    &:empty {
+        display: none;
     }
 }
 
