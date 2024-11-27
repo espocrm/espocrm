@@ -34,6 +34,8 @@ class NotificationReadWithMenuFieldView extends BaseFieldView {
     listTemplate = 'notification/fields/read-with-menu'
     detailTemplate = 'notification/fields/read-with-menu'
 
+    inlineEditDisabled = true
+
     data() {
         return {
             isRead: this.model.get('read'),

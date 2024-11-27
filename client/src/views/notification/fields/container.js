@@ -44,6 +44,8 @@ class NotificationContainerFieldView extends BaseFieldView {
         'UserReaction',
     ]
 
+    inlineEditDisabled = true;
+
     setup() {
         switch (this.model.attributes.type) {
             case 'Note':

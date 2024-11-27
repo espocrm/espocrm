@@ -34,6 +34,8 @@ class NotificationReadFieldView extends BaseFieldView {
     listTemplate = 'notification/fields/read'
     detailTemplate = 'notification/fields/read'
 
+    inlineEditDisabled = true
+
     data() {
         return {
             isRead: this.model.get('read'),
