@@ -14,16 +14,12 @@
                     {{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}}
                     {{#if title}}title="{{title}}"{{/if}}
                 >
-                {{#if iconHtml}}
+                {{#if iconHtml~}}
                     {{{iconHtml}}}
-                {{else}}
-                    {{#if iconClass}}
-                        <span class="{{iconClass}}"></span>
-                    {{/if}}
-                {{/if}}
-                <span>
-                {{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}
-                </span>
+                {{~else~}}
+                    {{#if iconClass}}<span class="{{iconClass}}"></span>{{/if~}}
+                {{~/if~}}
+                    <span>{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}</span>
                 </a>
             {{/each}}
 
