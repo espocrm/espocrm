@@ -31,7 +31,8 @@
             "view": "views/fields/link-category-tree"
         },
         "assignedUser": {
-            "type": "link"
+            "type": "link",
+            "view": "views/fields/assigned-user"
         },
         "teams": {
             "type": "linkMultiple"
