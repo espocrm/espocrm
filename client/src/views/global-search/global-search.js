@@ -236,12 +236,15 @@ class GlobalSearchView extends SiteNavbarItemView {
         }
 
         if (
-            this.containerElement !== target &&
-            !this.containerElement.contains(target) &&
-            !target.classList.contains('modal')
+            this.containerElement === target ||
+            this.containerElement.contains(target) ||
+            target.classList.contains('modal') ||
+            target.closest('.dialog.modal')
         ) {
-            return this.closePanel();
+            return;
         }
+
+        return this.closePanel();
     }
 
     /**
