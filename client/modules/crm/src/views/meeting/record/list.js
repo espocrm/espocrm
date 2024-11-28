@@ -35,7 +35,10 @@ define('crm:views/meeting/record/list', ['views/record/list'], function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            if (this.getAcl().checkScope(this.entityType, 'edit')) {
+            if (
+                this.getAcl().checkScope(this.entityType, 'edit') &&
+                this.getAcl().checkField(this.entityType, 'status', 'edit')
+            ) {
                 this.massActionList.push('setHeld');
                 this.massActionList.push('setNotHeld');
             }

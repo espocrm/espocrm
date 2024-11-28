@@ -38,7 +38,11 @@ define('crm:views/meeting/record/row-actions/default', ['views/record/row-action
                 item.data.scope = this.model.entityType;
             });
 
-            if (this.options.acl.edit && !~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
+            if (
+                this.options.acl.edit &&
+                !['Held', 'Not Held'].includes(this.model.get('status')) &&
+                this.getAcl().checkField(this.model.entityType, 'status', 'edit')
+            ) {
                 actionList.push({
                     action: 'setHeld',
                     label: 'Set Held',

@@ -35,7 +35,10 @@ define('crm:views/call/record/detail', ['views/record/detail'], function (Dep) {
         setupActionItems: function () {
             Dep.prototype.setupActionItems.call(this);
 
-            if (this.getAcl().checkModel(this.model, 'edit')) {
+            if (
+                this.getAcl().checkModel(this.model, 'edit') &&
+                this.getAcl().checkField(this.entityType, 'status', 'edit')
+            ) {
                 if (['Held', 'Not Held'].indexOf(this.model.get('status')) === -1) {
                     this.dropdownItemList.push({
                         'label': 'Set Held',

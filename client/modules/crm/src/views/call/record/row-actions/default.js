@@ -31,9 +31,13 @@ define('crm:views/call/record/row-actions/default', ['views/record/row-actions/v
     return Dep.extend({
 
         getActionList: function () {
-            var actionList = Dep.prototype.getActionList.call(this);
+            const actionList = Dep.prototype.getActionList.call(this);
 
-            if (this.options.acl.edit && !~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
+            if (
+                this.options.acl.edit &&
+                !['Held', 'Not Held'].includes(this.model.get('status')) &&
+                this.getAcl().checkField(this.model.entityType, 'status', 'edit')
+            ) {
                 actionList.push({
                     action: 'setHeld',
                     label: 'Set Held',
