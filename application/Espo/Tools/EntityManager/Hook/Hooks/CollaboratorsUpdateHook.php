@@ -29,6 +29,8 @@
 
 namespace Espo\Tools\EntityManager\Hook\Hooks;
 
+use Espo\Core\DataManager;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Log;
@@ -53,8 +55,12 @@ class CollaboratorsUpdateHook implements UpdateHook
     public function __construct(
         private Metadata $metadata,
         private Log $log,
+        private DataManager $dataManager,
     ) {}
 
+    /**
+     * @throws Error
+     */
     public function process(Params $params, Params $previousParams): void
     {
         if ($params->get(self::PARAM) && !$previousParams->get(self::PARAM)) {
@@ -64,6 +70,9 @@ class CollaboratorsUpdateHook implements UpdateHook
         }
     }
 
+    /**
+     * @throws Error
+     */
     private function add(string $entityType): void
     {
         if ($this->metadata->get("entityDefs.$entityType.links." . self::FIELD . ".isCustom")) {
@@ -108,6 +117,8 @@ class CollaboratorsUpdateHook implements UpdateHook
         ]);
 
         $this->metadata->save();
+
+        $this->dataManager->rebuild([$entityType]);
     }
 
     private function remove(string $entityType): void
