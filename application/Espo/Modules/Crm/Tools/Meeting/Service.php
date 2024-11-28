@@ -156,14 +156,20 @@ class Service
             throw new Forbidden();
         }
 
+        if (!$this->acl->checkField($entityType, 'status', Acl\Table::ACTION_EDIT)) {
+            throw new Forbidden("No edit access to 'status' field.");
+        }
+
         foreach ($ids as $id) {
             $entity = $this->entityManager->getEntityById($entityType, $id);
 
-            if ($entity && $this->acl->checkEntityEdit($entity)) {
-                $entity->set('status', Meeting::STATUS_HELD);
-
-                $this->entityManager->saveEntity($entity);
+            if (!$entity || !$this->acl->checkEntityEdit($entity)) {
+                continue;
             }
+
+            $entity->set('status', Meeting::STATUS_HELD);
+
+            $this->entityManager->saveEntity($entity);
         }
     }
 
@@ -177,14 +183,20 @@ class Service
             throw new Forbidden();
         }
 
+        if (!$this->acl->checkField($entityType, 'status', Acl\Table::ACTION_EDIT)) {
+            throw new Forbidden("No edit access to 'status' field.");
+        }
+
         foreach ($ids as $id) {
             $entity = $this->entityManager->getEntityById($entityType, $id);
 
-            if ($entity && $this->acl->checkEntityEdit($entity)) {
-                $entity->set('status', Meeting::STATUS_NOT_HELD);
-
-                $this->entityManager->saveEntity($entity);
+            if (!$entity || !$this->acl->checkEntityEdit($entity)) {
+                continue;
             }
+
+            $entity->set('status', Meeting::STATUS_NOT_HELD);
+
+            $this->entityManager->saveEntity($entity);
         }
     }
 
