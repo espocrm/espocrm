@@ -27,18 +27,49 @@
  ************************************************************************/
 
 import BaseFieldView from 'views/fields/base';
+import RecordModal from 'helpers/record-modal';
 
 class GlobalSearchNameFieldView extends BaseFieldView {
 
     listTemplate = 'global-search/name-field'
 
     data() {
+        const scope = this.model.attributes._scope;
+
         return {
-            scope: this.model.get('_scope'),
-            name: this.model.get('name') || this.translate('None'),
+            scope: scope,
+            name: this.model.attributes.name || this.translate('None'),
             id: this.model.id,
-            iconHtml: this.getHelper().getScopeColorIconHtml(this.model.get('_scope')),
+            iconHtml: this.getHelper().getScopeColorIconHtml(scope),
         };
+    }
+
+    setup() {
+        this.addHandler('auxclick', 'a[href]:not([role="button"])', (/** MouseEvent */e) => {
+            if (!this.isReadMode()) {
+                return;
+            }
+
+            const isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+
+            if (!isCombination) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.quickView();
+        });
+    }
+
+    quickView() {
+        const helper = new RecordModal();
+
+        helper.showDetail(this, {
+            id: this.model.id,
+            scope: this.model.attributes._scope,
+        });
     }
 }
 
