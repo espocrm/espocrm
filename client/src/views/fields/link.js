@@ -245,7 +245,7 @@ class LinkFieldView extends BaseFieldView {
 
         let iconHtml = null;
 
-        if (this.isDetailMode()) {
+        if (this.isDetailMode() || this.isListMode()) {
             iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
         }
 
