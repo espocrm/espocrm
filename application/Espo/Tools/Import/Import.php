@@ -753,7 +753,7 @@ class Import
                 }
             }
 
-            if ($value === '' && $attributeType !== Entity::BOOL) {
+            if ($value === '' && $attributeType !== Entity::BOOL && $entity->isNew()) {
                 return;
             }
 
@@ -793,9 +793,13 @@ class Import
 
         $type = $entity->getAttributeType($attribute);
 
-        if ($type !== Entity::BOOL && strtolower($value) === 'null') {
+        if ($type !== Entity::BOOL && $value === '') {
             return null;
         }
+
+        /*if ($type !== Entity::BOOL && strtolower($value) === 'null') {
+            return null;
+        }*/
 
         $fieldDefs = $this->entityManager
             ->getDefs()
