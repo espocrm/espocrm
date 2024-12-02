@@ -720,11 +720,9 @@ class Import
 
         $action = $params->getAction() ?? self::DEFAULT_ACTION;
 
-        if ($attribute === 'id') {
-            if ($action === Params::ACTION_CREATE) {
-                if ($value !== '') {
-                    $entity->set('id', $value);
-                }
+        if ($attribute === Attribute::ID) {
+            if ($action === Params::ACTION_CREATE && $value !== '') {
+                $entity->set(Attribute::ID, $value);
             }
 
             return;
@@ -737,85 +735,25 @@ class Import
                 $type = $this->getFieldType($this->entityType, $attribute);
 
                 if ($attribute === 'emailAddress' && $type === FieldType::EMAIL) {
-                    $emailAddressData = $entity->get('emailAddressData');
-                    $emailAddressData = $emailAddressData ?? [];
-
-                    $o = (object) [
-                        'emailAddress' => $value,
-                        'primary' => true,
-                    ];
-
-                    $emailAddressData[] = $o;
-
-                    $entity->set('emailAddressData', $emailAddressData);
+                    $this->processFieldEmail($entity, $value);
 
                     return;
                 }
 
                 if ($attribute === 'phoneNumber' && $type === FieldType::PHONE) {
-                    $phoneNumberData = $entity->get('phoneNumberData');
-                    $phoneNumberData = $phoneNumberData ?? [];
-
-                    if (str_starts_with($value, "'+")) {
-                        $value = substr($value, 1);
-                    }
-
-                    $o = (object) [
-                        'phoneNumber' => $this->formatPhoneNumber($value, $params),
-                        'primary' => true,
-                    ];
-
-                    $phoneNumberData[] = $o;
-                    $entity->set('phoneNumberData', $phoneNumberData);
+                    $this->processFieldPhone($params, $entity, $value);
 
                     return;
                 }
 
-                if ($type === 'personName') {
-                    $firstNameAttribute = 'first' . ucfirst($attribute);
-                    $lastNameAttribute = 'last' . ucfirst($attribute);
-                    $middleNameAttribute = 'middle' . ucfirst($attribute);
-
-                    $personNameData = $this->parsePersonName($value, $params->getPersonNameFormat() ?? '');
-
-                    if (!$entity->get($firstNameAttribute) && isset($personNameData['firstName'])) {
-                        $personNameData['firstName'] = $this->prepareAttributeValue(
-                            $entity,
-                            $firstNameAttribute,
-                            $personNameData['firstName']
-                        );
-
-                        $entity->set($firstNameAttribute, $personNameData['firstName']);
-                    }
-
-                    if (!$entity->get($lastNameAttribute)) {
-                        $personNameData['lastName'] = $this->prepareAttributeValue(
-                            $entity,
-                            $lastNameAttribute,
-                            $personNameData['lastName']
-                        );
-
-                        $entity->set($lastNameAttribute, $personNameData['lastName']);
-                    }
-
-                    if (!$entity->get($middleNameAttribute) && isset($personNameData['middleName'])) {
-                        $personNameData['middleName'] = $this->prepareAttributeValue(
-                            $entity,
-                            $middleNameAttribute,
-                            $personNameData['middleName']
-                        );
-
-                        $entity->set($middleNameAttribute, $personNameData['middleName']);
-                    }
+                if ($type === FieldType::PERSON_NAME) {
+                    $this->processFieldPersonName($params, $entity, $attribute, $value);
 
                     return;
                 }
             }
 
-            if (
-                $value === '' &&
-                $attributeType != Entity::BOOL
-            ) {
+            if ($value === '' && $attributeType !== Entity::BOOL) {
                 return;
             }
 
@@ -824,81 +762,13 @@ class Import
             return;
         }
 
-        $phoneFieldList = [];
+        $toExit = $this->processFieldPhoneMulti($params, $entity, $attribute, $value, $valueMap);
 
-        if (
-            $entity->hasAttribute('phoneNumber') &&
-            $entity->getAttributeParam('phoneNumber', 'fieldType') === FieldType::PHONE
-        ) {
-            $typeList = $this->metadata
-                ->get(['entityDefs', $this->entityType, 'fields', 'phoneNumber', 'typeList']) ?? [];
-
-            foreach ($typeList as $type) {
-                $phoneFieldList[] = 'phoneNumber' . str_replace(' ', '_', ucfirst($type));
-            }
-        }
-
-        if (in_array($attribute, $phoneFieldList) && !empty($value)) {
-            $phoneNumberData = $entity->get('phoneNumberData');
-            $isPrimary = false;
-
-            if (empty($phoneNumberData)) {
-                $phoneNumberData = [];
-
-                if (empty($valueMap->phoneNumber)) {
-                    $isPrimary = true;
-                }
-            }
-
-            $type = str_replace('phoneNumber', '', $attribute);
-            $type = str_replace('_', ' ', $type);
-
-            if (str_starts_with($value, "'+")) {
-                $value = substr($value, 1);
-            }
-
-            $o = (object) [
-                'phoneNumber' => $this->formatPhoneNumber($value, $params),
-                'type' => $type,
-                'primary' => $isPrimary,
-            ];
-
-            $phoneNumberData[] = $o;
-
-            $entity->set('phoneNumberData', $phoneNumberData);
-
+        if ($toExit) {
             return;
         }
 
-        if (
-            str_starts_with($attribute, 'emailAddress') && $attribute !== 'emailAddress' &&
-            $entity->hasAttribute('emailAddress') &&
-            $entity->hasAttribute('emailAddressData') &&
-            is_numeric(substr($attribute, 12)) &&
-            intval(substr($attribute, 12)) >= 2 &&
-            intval(substr($attribute, 12)) <= 4 &&
-            !empty($value)
-        ) {
-            $emailAddressData = $entity->get('emailAddressData');
-            $isPrimary = false;
-
-            if (empty($emailAddressData)) {
-                $emailAddressData = [];
-
-                if (empty($valueMap->emailAddress)) {
-                    $isPrimary = true;
-                }
-            }
-
-            $o = (object) [
-                'emailAddress' => $value,
-                'primary' => $isPrimary,
-            ];
-
-            $emailAddressData[] = $o;
-
-            $entity->set('emailAddressData', $emailAddressData);
-        }
+        $this->processFieldEmailMulti($entity, $attribute, $value, $valueMap);
     }
 
     /**
@@ -1406,6 +1276,178 @@ class Import
             ) {
                 $this->processForeignAttribute($entity, $attribute);
             }
+        }
+    }
+
+    private function processFieldPersonName(
+        Params $params,
+        CoreEntity $entity,
+        string $attribute,
+        string $value
+    ): void {
+
+        $firstNameAttribute = 'first' . ucfirst($attribute);
+        $lastNameAttribute = 'last' . ucfirst($attribute);
+        $middleNameAttribute = 'middle' . ucfirst($attribute);
+
+        $personNameData = $this->parsePersonName($value, $params->getPersonNameFormat() ?? '');
+
+        if (!$entity->get($firstNameAttribute) && isset($personNameData['firstName'])) {
+            $personNameData['firstName'] = $this->prepareAttributeValue(
+                $entity,
+                $firstNameAttribute,
+                $personNameData['firstName']
+            );
+
+            $entity->set($firstNameAttribute, $personNameData['firstName']);
+        }
+
+        if (!$entity->get($lastNameAttribute)) {
+            $personNameData['lastName'] = $this->prepareAttributeValue(
+                $entity,
+                $lastNameAttribute,
+                $personNameData['lastName']
+            );
+
+            $entity->set($lastNameAttribute, $personNameData['lastName']);
+        }
+
+        if (!$entity->get($middleNameAttribute) && isset($personNameData['middleName'])) {
+            $personNameData['middleName'] = $this->prepareAttributeValue(
+                $entity,
+                $middleNameAttribute,
+                $personNameData['middleName']
+            );
+
+            $entity->set($middleNameAttribute, $personNameData['middleName']);
+        }
+    }
+
+    private function processFieldPhone(Params $params, CoreEntity $entity, string $value): void
+    {
+        $phoneNumberData = $entity->get('phoneNumberData');
+        $phoneNumberData = $phoneNumberData ?? [];
+
+        if (str_starts_with($value, "'+")) {
+            $value = substr($value, 1);
+        }
+
+        $o = (object)[
+            'phoneNumber' => $this->formatPhoneNumber($value, $params),
+            'primary' => true,
+        ];
+
+        $phoneNumberData[] = $o;
+        $entity->set('phoneNumberData', $phoneNumberData);
+    }
+
+    private function processFieldEmail(CoreEntity $entity, string $value): void
+    {
+        $emailAddressData = $entity->get('emailAddressData');
+        $emailAddressData = $emailAddressData ?? [];
+
+        $o = (object)[
+            'emailAddress' => $value,
+            'primary' => true,
+        ];
+
+        $emailAddressData[] = $o;
+
+        $entity->set('emailAddressData', $emailAddressData);
+    }
+
+    private function processFieldPhoneMulti(
+        Params $params,
+        CoreEntity $entity,
+        string $attribute,
+        string $value,
+        stdClass $valueMap
+    ): bool {
+
+        assert(is_string($this->entityType));
+
+        $phoneFieldList = [];
+
+        if (
+            $entity->hasAttribute('phoneNumber') &&
+            $entity->getAttributeParam('phoneNumber', 'fieldType') === FieldType::PHONE
+        ) {
+            $typeList = $this->metadata
+                ->get(['entityDefs', $this->entityType, 'fields', 'phoneNumber', 'typeList']) ?? [];
+
+            foreach ($typeList as $type) {
+                $phoneFieldList[] = 'phoneNumber' . str_replace(' ', '_', ucfirst($type));
+            }
+        }
+
+        if (in_array($attribute, $phoneFieldList) && !empty($value)) {
+            $phoneNumberData = $entity->get('phoneNumberData');
+            $isPrimary = false;
+
+            if (empty($phoneNumberData)) {
+                $phoneNumberData = [];
+
+                if (empty($valueMap->phoneNumber)) {
+                    $isPrimary = true;
+                }
+            }
+
+            $type = str_replace('phoneNumber', '', $attribute);
+            $type = str_replace('_', ' ', $type);
+
+            if (str_starts_with($value, "'+")) {
+                $value = substr($value, 1);
+            }
+
+            $phoneNumberData[] = (object)[
+                'phoneNumber' => $this->formatPhoneNumber($value, $params),
+                'type' => $type,
+                'primary' => $isPrimary,
+            ];
+
+            $entity->set('phoneNumberData', $phoneNumberData);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private function processFieldEmailMulti(
+        CoreEntity $entity,
+        string $attribute,
+        string $value,
+        stdClass $valueMap
+    ): void {
+
+        if (
+            str_starts_with($attribute, 'emailAddress') && $attribute !== 'emailAddress' &&
+            $entity->hasAttribute('emailAddress') &&
+            $entity->hasAttribute('emailAddressData') &&
+            is_numeric(substr($attribute, 12)) &&
+            intval(substr($attribute, 12)) >= 2 &&
+            intval(substr($attribute, 12)) <= 4 &&
+            !empty($value)
+        ) {
+            $emailAddressData = $entity->get('emailAddressData');
+            $isPrimary = false;
+
+            if (empty($emailAddressData)) {
+                $emailAddressData = [];
+
+                if (empty($valueMap->emailAddress)) {
+                    $isPrimary = true;
+                }
+            }
+
+            $o = (object)[
+                'emailAddress' => $value,
+                'primary' => $isPrimary,
+            ];
+
+            $emailAddressData[] = $o;
+
+            $entity->set('emailAddressData', $emailAddressData);
         }
     }
 }
