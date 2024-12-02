@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import View from 'view';
+import Select from 'ui/select';
 
 class Step2ImportView extends View {
 
@@ -166,6 +167,8 @@ class Step2ImportView extends View {
 
         $tbody.append($row);
 
+        const selectList = [];
+
         this.mapping.forEach((d, i) => {
             $row = $('<tr>');
 
@@ -187,6 +190,8 @@ class Step2ImportView extends View {
             }
 
             const $select = this.getFieldDropdown(i, selectedName);
+
+            selectList.push($select.get(0))
 
             $cell = $('<td>').append($select);
 
@@ -242,6 +247,8 @@ class Step2ImportView extends View {
         this.$fieldQuickSearch = this.$el.find('input.add-field-quick-search-input');
 
         this.initQuickSearchUi();
+
+        selectList.forEach(select => Select.init(select));
     }
 
     resetFieldFilterQuickSearch() {
