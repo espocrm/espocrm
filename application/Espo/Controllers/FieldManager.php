@@ -29,7 +29,6 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Utils\Config;
 use Espo\Entities\User;
 use Espo\Tools\FieldManager\FieldManager as FieldManagerTool;
 use Espo\Core\Api\Request;
@@ -51,7 +50,6 @@ class FieldManager
         private User $user,
         private DataManager $dataManager,
         private FieldManagerTool $fieldManagerTool,
-        private Config $config
     ) {
         $this->checkControllerAccess();
     }
@@ -206,8 +204,6 @@ class FieldManager
      */
     private function rebuild(string $scope): void
     {
-        $argument = $this->config->get('database.platform') === 'Postgresql' ? null : [$scope];
-
-        $this->dataManager->rebuild($argument);
+        $this->dataManager->rebuild([$scope]);
     }
 }

@@ -118,6 +118,12 @@ class DataManager
      */
     public function rebuildDatabase(?array $entityTypeList = null, string $mode = RebuildMode::SOFT): void
     {
+        if ($entityTypeList && $this->config->get('database.platform') === 'Postgresql') {
+            // Prevents sequences from being dropped.
+            // @todo Refactor.
+            $entityTypeList = null;
+        }
+
         $schemaManager = $this->schemaManager;
 
         try {
