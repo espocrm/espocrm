@@ -70,6 +70,12 @@ class LayoutManager {
 
         /** @private */
         this.ajax = Espo.Ajax;
+
+        /**
+         * @private
+         * @type {Object.<string, module:ajax~AjaxPromise>}
+         */
+        this.fetchPromises = {};
     }
 
     /**
@@ -133,12 +139,14 @@ class LayoutManager {
             cache = true;
         }
 
+        if (!callback) {
+            callback = () => {};
+        }
+
         const key = this.getKey(scope, type);
 
         if (cache && key in this.data) {
-            if (typeof callback === 'function') {
-                callback(this.data[key]);
-            }
+            callback(this.data[key]);
 
             return;
         }
@@ -147,9 +155,7 @@ class LayoutManager {
             const cached = this.cache.get('app-layout', key);
 
             if (cached) {
-                if (typeof callback === 'function') {
-                    callback(cached);
-                }
+                callback(cached);
 
                 this.data[key] = cached;
 
@@ -157,18 +163,26 @@ class LayoutManager {
             }
         }
 
-        this.ajax
-            .getRequest(this.getUrl(scope, type))
+        if (key in this.fetchPromises) {
+            this.fetchPromises[key].then(layout => {
+                callback(layout);
+            });
+
+            return;
+        }
+
+        this.fetchPromises[key] = this.ajax.getRequest(this.getUrl(scope, type))
             .then(layout => {
-                if (typeof callback === 'function') {
-                    callback(layout);
-                }
+                callback(layout);
 
                 this.data[key] = layout;
 
                 if (this.cache) {
                     this.cache.set('app-layout', key, layout);
                 }
+            })
+            .finally(() => {
+                delete this.fetchPromises[key];
             });
     }
 
