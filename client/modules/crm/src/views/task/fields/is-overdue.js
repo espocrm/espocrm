@@ -29,6 +29,7 @@
 import BaseFieldView from 'views/fields/base';
 import moment from 'moment';
 
+// noinspection JSUnusedGlobalSymbols
 export default class extends BaseFieldView {
 
     readOnly = true
@@ -49,7 +50,7 @@ export default class extends BaseFieldView {
 
                     if (value) {
                         const d = this.getDateTime().toMoment(value);
-                        const now = moment().tz(this.getDateTime().timeZone || 'UTC');
+                        const now = moment.tz(this.getDateTime().timeZone || 'UTC');
 
                         if (d.unix() < now.unix()) {
                             isOverdue = true;
