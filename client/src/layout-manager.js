@@ -91,10 +91,10 @@ class LayoutManager {
      */
     getKey(scope, type) {
         if (this.userId) {
-            return this.applicationId + '-' + this.userId + '-' + scope + '-' + type;
+            return `${this.applicationId}-${this.userId}-${scope}-${type}`;
         }
 
-        return this.applicationId + '-' + scope + '-' + type;
+        return `${this.applicationId}-${scope}-${type}`;
     }
 
     /**
@@ -105,10 +105,10 @@ class LayoutManager {
      * @returns {string}
      */
     getUrl(scope, type, setId) {
-        let url = scope + '/layout/' + type;
+        let url = `${scope}/layout/${type}`;
 
         if (setId) {
-            url += '/' + setId;
+            url += `/${setId}`;
         }
 
         return url;
@@ -135,14 +135,12 @@ class LayoutManager {
 
         const key = this.getKey(scope, type);
 
-        if (cache) {
-            if (key in this.data) {
-                if (typeof callback === 'function') {
-                    callback(this.data[key]);
-                }
-
-                return;
+        if (cache && key in this.data) {
+            if (typeof callback === 'function') {
+                callback(this.data[key]);
             }
+
+            return;
         }
 
         if (this.cache && cache) {
@@ -161,19 +159,17 @@ class LayoutManager {
 
         this.ajax
             .getRequest(this.getUrl(scope, type))
-            .then(
-                layout => {
-                    if (typeof callback === 'function') {
-                        callback(layout);
-                    }
-
-                    this.data[key] = layout;
-
-                    if (this.cache) {
-                        this.cache.set('app-layout', key, layout);
-                    }
+            .then(layout => {
+                if (typeof callback === 'function') {
+                    callback(layout);
                 }
-            );
+
+                this.data[key] = layout;
+
+                if (this.cache) {
+                    this.cache.set('app-layout', key, layout);
+                }
+            });
     }
 
     /**
@@ -191,15 +187,12 @@ class LayoutManager {
             url += '&setId=' + setId;
         }
 
-        Espo.Ajax
-            .getRequest(url)
-            .then(
-                layout => {
-                    if (typeof callback === 'function') {
-                        callback(layout);
-                    }
+        Espo.Ajax.getRequest(url)
+            .then(layout => {
+                if (typeof callback === 'function') {
+                    callback(layout);
                 }
-            );
+            });
     }
 
     /**
@@ -213,25 +206,22 @@ class LayoutManager {
      * @returns {Promise}
      */
     set(scope, type, layout, callback, setId) {
-        return Espo.Ajax
-            .putRequest(this.getUrl(scope, type, setId), layout)
-            .then(
-                () => {
-                    const key = this.getKey(scope, type);
+        return Espo.Ajax.putRequest(this.getUrl(scope, type, setId), layout)
+            .then(() => {
+                const key = this.getKey(scope, type);
 
-                    if (this.cache && key) {
-                        this.cache.clear('app-layout', key);
-                    }
-
-                    delete this.data[key];
-
-                    this.trigger('sync');
-
-                    if (typeof callback === 'function') {
-                        callback();
-                    }
+                if (this.cache && key) {
+                    this.cache.clear('app-layout', key);
                 }
-            );
+
+                delete this.data[key];
+
+                this.trigger('sync');
+
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            });
     }
 
     /**
@@ -249,23 +239,21 @@ class LayoutManager {
                 name: type,
                 setId: setId,
             })
-            .then(
-                () => {
-                    const key = this.getKey(scope, type);
+            .then(() => {
+                const key = this.getKey(scope, type);
 
-                    if (this.cache) {
-                        this.cache.clear('app-layout', key);
-                    }
-
-                    delete this.data[key];
-
-                    this.trigger('sync');
-
-                    if (typeof callback === 'function') {
-                        callback();
-                    }
+                if (this.cache) {
+                    this.cache.clear('app-layout', key);
                 }
-            );
+
+                delete this.data[key];
+
+                this.trigger('sync');
+
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            });
     }
 
     /**
