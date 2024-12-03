@@ -486,7 +486,7 @@ class App {
             this.settings.defs = this.metadata.get('entityDefs.Settings') || {};
             this.user.defs = this.metadata.get('entityDefs.User');
             this.preferences.defs = this.metadata.get('entityDefs.Preferences');
-            this.viewHelper.layoutManager.userId = this.user.id;
+            this.viewHelper.layoutManager.setUserId(this.user.id);
 
             if (this.themeManager.isUserTheme()) {
                 this.loadStylesheet();

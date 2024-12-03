@@ -76,7 +76,7 @@ class LayoutManager {
      * Set a user ID. To be used for the cache purpose.
      *
      * @param {string} userId A user ID.
-     *
+     * @internal
      * @todo Throw an exception if already set.
      */
     setUserId(userId) {
