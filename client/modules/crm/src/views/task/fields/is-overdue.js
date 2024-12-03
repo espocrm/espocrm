@@ -33,9 +33,9 @@ define('crm:views/task/fields/is-overdue', ['views/fields/base'], function (Dep)
         readOnly: true,
 
         templateContent: `
-            {{#if isOverdue}}
+            {{~#if isOverdue}}
             <span class="label label-danger">{{translate "overdue" scope="Task"}}</span>
-            {{/if}}
+            {{/if~}}
         `,
 
         data: function () {
