@@ -50,6 +50,11 @@ class FieldParam
     public const DB_TYPE = 'dbType';
 
     /**
+     * Autoincrement.
+     */
+    public const AUTOINCREMENT = 'autoincrement';
+
+    /**
      * A max length.
      */
     public const MAX_LENGTH = 'maxLength';

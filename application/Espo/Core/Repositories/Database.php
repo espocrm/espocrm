@@ -33,6 +33,7 @@ use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\SystemUser;
 use Espo\ORM\BaseEntity;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\ORM\Relation\RelationsMap;
@@ -129,7 +130,7 @@ class Database extends RDBRepository
         if (
             $entity->isNew() &&
             !$entity->has(self::ATTR_ID) &&
-            !$this->getAttributeParam($entity, self::ATTR_ID, 'autoincrement')
+            !$this->getAttributeParam($entity, self::ATTR_ID, AttributeParam::AUTOINCREMENT)
         ) {
             $entity->set(self::ATTR_ID, $this->recordIdGenerator->generate());
         }

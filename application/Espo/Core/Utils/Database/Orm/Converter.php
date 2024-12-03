@@ -82,7 +82,7 @@ class Converter
         'len' => AttributeParam::LEN, // @todo Revise.
         FieldParam::NOT_NULL => AttributeParam::NOT_NULL,
         'exportDisabled' => CoreAttributeParam::NOT_EXPORTABLE,
-        'autoincrement' => 'autoincrement',
+        FieldParam::AUTOINCREMENT => AttributeParam::AUTOINCREMENT,
         'entity' => 'entity',
         FieldParam::NOT_STORABLE => AttributeParam::NOT_STORABLE,
         'link' => AttributeParam::RELATION,

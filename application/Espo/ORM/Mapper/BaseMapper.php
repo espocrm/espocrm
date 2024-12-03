@@ -1308,7 +1308,7 @@ class BaseMapper implements RDBMapper
 
         $this->queryExecutor->execute($query);
 
-        if ($this->getAttributeParam($entity, Attribute::ID, 'autoincrement')) {
+        if ($this->getAttributeParam($entity, Attribute::ID, AttributeParam::AUTOINCREMENT)) {
             $this->setLastInsertIdWithinConnection($entity);
         }
     }
@@ -1564,7 +1564,7 @@ class BaseMapper implements RDBMapper
                 $onlyStorable &&
                 (
                     $this->getAttributeParam($entity, $attribute, AttributeParam::NOT_STORABLE) ||
-                    $this->getAttributeParam($entity, $attribute, 'autoincrement') ||
+                    $this->getAttributeParam($entity, $attribute, AttributeParam::AUTOINCREMENT) ||
                     (
                         $this->getAttributeParam($entity, $attribute, 'source') &&
                         $this->getAttributeParam($entity, $attribute, 'source') !== 'db'

@@ -60,6 +60,11 @@ class AttributeParam
     public const NOT_NULL = 'notNull';
 
     /**
+     * Autoincrement.
+     */
+    public const AUTOINCREMENT = 'autoincrement';
+
+    /**
      * A default value.
      */
     public const DEFAULT = 'default';

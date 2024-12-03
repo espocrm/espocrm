@@ -92,7 +92,7 @@ class AttributeDefs
      */
     public function isAutoincrement(): bool
     {
-        return $this->data['autoincrement'] ?? false;
+        return $this->data[AttributeParam::AUTOINCREMENT] ?? false;
     }
 
     /**
