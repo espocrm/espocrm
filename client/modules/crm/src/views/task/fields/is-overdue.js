@@ -26,67 +26,66 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/task/fields/is-overdue', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
+import moment from 'moment';
 
-    return Dep.extend({
+export default class extends BaseFieldView {
 
-        readOnly: true,
+    readOnly = true
 
-        templateContent: `
-            {{~#if isOverdue}}
-            <span class="label label-danger">{{translate "overdue" scope="Task"}}</span>
-            {{/if~}}
-        `,
+    templateContent = `
+        {{~#if isOverdue}}
+        <span class="label label-danger">{{translate "overdue" scope="Task"}}</span>
+        {{/if~}}
+    `
 
-        data: function () {
-            var isOverdue = false;
+    data() {
+        let isOverdue = false;
 
-            if (['Completed', 'Canceled'].indexOf(this.model.get('status')) === -1) {
-                if (this.model.has('dateEnd')) {
-                    if (!this.isDate()) {
-                        let value = this.model.get('dateEnd');
+        if (['Completed', 'Canceled'].indexOf(this.model.get('status')) === -1) {
+            if (this.model.has('dateEnd')) {
+                if (!this.isDate()) {
+                    const value = this.model.get('dateEnd');
 
-                        if (value) {
-                            let d = this.getDateTime().toMoment(value);
-                            let now = moment().tz(this.getDateTime().timeZone || 'UTC');
+                    if (value) {
+                        const d = this.getDateTime().toMoment(value);
+                        const now = moment().tz(this.getDateTime().timeZone || 'UTC');
 
-                            if (d.unix() < now.unix()) {
-                                isOverdue = true;
-                            }
-                        }
-                    } else {
-                        let value = this.model.get('dateEndDate');
-
-                        if (value) {
-                            let d = moment.utc(value + ' 23:59', this.getDateTime().internalDateTimeFormat);
-                            let now = this.getDateTime().getNowMoment();
-
-                            if (d.unix() < now.unix()) {
-                                isOverdue = true;
-                            }
+                        if (d.unix() < now.unix()) {
+                            isOverdue = true;
                         }
                     }
+                } else {
+                    const value = this.model.get('dateEndDate');
 
+                    if (value) {
+                        const d = moment.utc(value + ' 23:59', this.getDateTime().internalDateTimeFormat);
+                        const now = this.getDateTime().getNowMoment();
+
+                        if (d.unix() < now.unix()) {
+                            isOverdue = true;
+                        }
+                    }
                 }
             }
+        }
 
-            return {
-                isOverdue: isOverdue,
-            };
-        },
+        return {
+            isOverdue: isOverdue,
+        };
+    }
 
-        setup: function () {
-            this.mode = 'detail';
-        },
+    setup() {
+        this.mode = 'detail';
+    }
 
-        isDate: function () {
-            var dateValue = this.model.get('dateEnd');
+    isDate() {
+        const dateValue = this.model.get('dateEnd');
 
-            if (dateValue) {
-                return true;
-            }
+        if (dateValue) {
+            return true;
+        }
 
-            return false;
-        },
-    });
-});
+        return false;
+    }
+}
