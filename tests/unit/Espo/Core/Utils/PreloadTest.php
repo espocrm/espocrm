@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\Espo\Core\Utils;
+namespace tests\unit\Espo\Core\Utils;
 
 use Espo\Core\Utils\Preload;
 

@@ -58,6 +58,7 @@ class Preload
     protected $ignoreList = [
         'application/Espo/Core/Mail/Parsers/PhpMimeMailParser/',
         'vendor/nikic/fast-route/test/',
+        'vendor/slim/psr7/tests/',
     ];
 
     public function process(): void
