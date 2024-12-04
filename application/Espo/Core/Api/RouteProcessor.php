@@ -248,6 +248,9 @@ class RouteProcessor
         }
     }
 
+    /**
+     * @param MiddlewareDispatcher<null> $dispatcher
+     */
     private function addControllerMiddlewares(
         MiddlewareDispatcher $dispatcher,
         string $method,

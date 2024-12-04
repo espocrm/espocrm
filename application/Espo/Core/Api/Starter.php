@@ -34,6 +34,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Route as RouteUtil;
 use Espo\Core\Utils\Log;
 
+use Psr\Container\ContainerInterface;
 use Slim\App as SlimApp;
 use Slim\Factory\AppFactory as SlimAppFactory;
 
@@ -76,6 +77,9 @@ class Starter
         $slim->run();
     }
 
+    /**
+     * @param SlimApp<ContainerInterface|null> $slim
+     */
     private function addGlobalMiddlewares(SlimApp $slim): void
     {
         foreach ($this->middlewareProvider->getGlobalMiddlewareList() as $middleware) {
@@ -83,6 +87,9 @@ class Starter
         }
     }
 
+    /**
+     * @param SlimApp<ContainerInterface|null> $slim
+     */
     private function addRoutes(SlimApp $slim): void
     {
         $routeList = $this->routeUtil->getFullList();
@@ -92,6 +99,9 @@ class Starter
         }
     }
 
+    /**
+     * @param SlimApp<ContainerInterface|null> $slim
+     */
     private function addRoute(SlimApp $slim, Route $item): void
     {
         $slimRoute = $slim->map(
