@@ -48,6 +48,14 @@ class AbsType extends BaseFunction
             return null;
         }
 
+        if (is_string($value)) {
+            if (str_contains($value, '.')) {
+                $value = (float) $value;
+            } else {
+                $value = (int) $value;
+            }
+        }
+
         return abs($value);
     }
 }
