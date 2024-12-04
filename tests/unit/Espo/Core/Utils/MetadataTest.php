@@ -346,9 +346,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
     public function testGetObjects()
     {
         $this->assertEquals('System', $this->object->getObjects('app.adminPanel.system.label'));
-
-        $this->assertObjectHasAttribute('fields', $this->object->getObjects('entityDefs.User'));
-
-        $this->assertObjectHasAttribute('type', $this->object->getObjects('entityDefs.User.fields.name'));
+        $this->assertObjectHasProperty('fields', $this->object->getObjects('entityDefs.User'));
+        $this->assertObjectHasProperty('type', $this->object->getObjects('entityDefs.User.fields.name'));
     }
 }

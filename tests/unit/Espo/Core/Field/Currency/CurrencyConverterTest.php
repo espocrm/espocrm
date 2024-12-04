@@ -58,13 +58,13 @@ class CurrencyConverterTest extends \PHPUnit\Framework\TestCase
 
         $value = new Currency(2.0, 'USD');
 
-        $converer = new CurrencyConverter($currencyConfigDataProvider);
+        $converter = new CurrencyConverter($currencyConfigDataProvider);
 
-        $convertedValue = $converer->convert($value, 'EUR');
+        $convertedValue = $converter->convert($value, 'EUR');
 
         $this->assertEquals('EUR', $convertedValue->getCode());
 
-        $this->assertEquals(2.0 / 1.2, $convertedValue->getAmount());
+        $this->assertEquals(round(2.0 / 1.2, 10), round($convertedValue->getAmount(), 10));
     }
 
     public function testConvert2()
@@ -88,13 +88,13 @@ class CurrencyConverterTest extends \PHPUnit\Framework\TestCase
 
         $value = new Currency(2.0, 'UAH');
 
-        $converer = new CurrencyConverter($currencyConfigDataProvider);
+        $converter = new CurrencyConverter($currencyConfigDataProvider);
 
-        $convertedValue = $converer->convert($value, 'EUR');
+        $convertedValue = $converter->convert($value, 'EUR');
 
         $this->assertEquals('EUR', $convertedValue->getCode());
 
-        $this->assertEquals(2.0 * 0.035 / 1.2, $convertedValue->getAmount());
+        $this->assertEquals(round(2.0 * 0.035 / 1.2, 10), round($convertedValue->getAmount(), 10));
     }
 
     public function testConvertToDefault()
@@ -122,13 +122,13 @@ class CurrencyConverterTest extends \PHPUnit\Framework\TestCase
 
         $value = new Currency(2.0, 'EUR');
 
-        $converer = new CurrencyConverter($currencyConfigDataProvider);
+        $converter = new CurrencyConverter($currencyConfigDataProvider);
 
-        $convertedValue = $converer->convertToDefault($value);
+        $convertedValue = $converter->convertToDefault($value);
 
         $this->assertEquals('USD', $convertedValue->getCode());
 
-        $this->assertEquals(2.0 * 1.2, $convertedValue->getAmount());
+        $this->assertEquals(round(2.0 * 1.2, 10), round($convertedValue->getAmount(), 10));
     }
 
     public function testConvertWithRates()
@@ -143,12 +143,12 @@ class CurrencyConverterTest extends \PHPUnit\Framework\TestCase
 
         $value = new Currency(2.0, 'UAH');
 
-        $converer = new CurrencyConverter($currencyConfigDataProvider);
+        $converter = new CurrencyConverter($currencyConfigDataProvider);
 
-        $convertedValue = $converer->convertWithRates($value, 'EUR', $rates);
+        $convertedValue = $converter->convertWithRates($value, 'EUR', $rates);
 
         $this->assertEquals('EUR', $convertedValue->getCode());
 
-        $this->assertEquals(2.0 * 0.035 / 1.2, $convertedValue->getAmount());
+        $this->assertEquals(round(2.0 * 0.035 / 1.2, 10), round($convertedValue->getAmount(), 10));
     }
 }

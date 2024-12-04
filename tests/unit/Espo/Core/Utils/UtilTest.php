@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\Espo\Core\Utils;
+namespace tests\unit\Espo\Core\Utils;
 
 use Espo\Core\Utils\Util;
 
@@ -1385,7 +1385,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($result, Util::unsetInArray($input, $unsets, true));
     }
 
-    public function testGetValueByKey()
+    public function testGetValueByKey1()
     {
         $inputArray = [
             'Account' => [
@@ -1409,13 +1409,13 @@ class UtilTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('125', Util::getValueByKey($inputArray, 'Account.sub.subV'));
 
-        $result = array('useCache' => true,    );
+        $result = ['useCache' => true];
         $this->assertEquals($result, Util::getValueByKey($inputArray, 'Contact'));
 
         $this->assertNull(Util::getValueByKey($inputArray, 'Contact.notExists'));
 
         $this->assertEquals('customReturns', Util::getValueByKey($inputArray, 'Contact.notExists', 'customReturns'));
-        $this->assertNotEquals('customReturns', Util::getValueByKey($inputArray, 'Contact.useCache', 'customReturns'));
+        $this->assertTrue(Util::getValueByKey($inputArray, 'Contact.useCache', 'customReturns'));
     }
 
     public function testGetValueByKey2()
@@ -1487,7 +1487,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $this->assertNull(Util::getValueByKey($inputObject, 'Contact.notExists'));
 
         $this->assertEquals('customReturns', Util::getValueByKey($inputObject, 'Contact.notExists', 'customReturns'));
-        $this->assertNotEquals('customReturns', Util::getValueByKey($inputObject, 'Contact.useCache', 'customReturns'));
+        $this->assertTrue(Util::getValueByKey($inputObject, 'Contact.useCache', 'customReturns'));
     }
 
     public function testUnsetInArrayByValue()
