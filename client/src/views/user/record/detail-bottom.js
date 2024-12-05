@@ -53,7 +53,7 @@ class UserDetailBottomRecordView extends  DetailBottomRecordView {
             "name": "stream",
             "label": "Stream",
             "view": "views/user/record/panels/stream",
-            "sticked": true,
+            "sticked": false,
             "hidden": !streamAllowed,
         });
 

@@ -75,7 +75,7 @@ class LayoutBottomPanelsDetail extends LayoutSidePanelsDetailView {
 
             params['stream'] = {
                 name: 'stream',
-                sticked: true,
+                sticked: false,
                 index: 2,
             };
         }
