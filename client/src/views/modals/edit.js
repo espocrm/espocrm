@@ -178,8 +178,6 @@ class EditModalView extends ModalView {
         this.entityType = this.options.entityType || this.scope;
         this.id = this.options.id;
 
-        this.headerHtml = this.composeHeaderHtml();
-
         if (this.options.headerText !== undefined) {
             this.headerHtml = undefined;
             this.headerText = this.options.headerText;
@@ -189,20 +187,22 @@ class EditModalView extends ModalView {
 
         this.waitForView('edit');
 
-        this.getModelFactory().create(this.entityType, (model) => {
+        this.getModelFactory().create(this.entityType, model => {
             if (this.id) {
                 if (this.sourceModel) {
                     model = this.model = this.sourceModel.clone();
-                }
-                else {
+                } else {
                     this.model = model;
 
                     model.id = this.id;
                 }
 
-                model
-                    .fetch()
+                model.fetch()
                     .then(() => {
+                        if (!this.headerText) {
+                            this.headerHtml = this.composeHeaderHtml();
+                        }
+
                         this.createRecordView(model);
                     });
 
@@ -217,6 +217,10 @@ class EditModalView extends ModalView {
 
             if (this.options.attributes) {
                 model.set(this.options.attributes);
+            }
+
+            if (!this.headerText) {
+                this.headerHtml = this.composeHeaderHtml();
             }
 
             this.createRecordView(model);
@@ -294,14 +298,29 @@ class EditModalView extends ModalView {
             html = $('<span>')
                 .text(this.getLanguage().translate('Create ' + this.scope, 'labels', this.scope))
                 .get(0).outerHTML;
-        }
-        else {
+        } else {
+            const wrapper = document.createElement('span');
+
+            const scope = document.createElement('span');
+            scope.textContent = this.getLanguage().translate(this.scope, 'scopeNames');
+
+            const separator = document.createElement('span');
+            separator.classList.add('chevron-right');
+
+            const name = this.model.attributes.name || this.model.attributes.id;
+
+            wrapper.append(
+                scope,
+                ' ',
+                separator,
+                ' ',
+                name
+            );
+
             const text = this.getLanguage().translate('Edit') + ' · ' +
                 this.getLanguage().translate(this.scope, 'scopeNames');
 
-            html = $('<span>')
-                .text(text)
-                .get(0).outerHTML;
+            html = wrapper.outerHTML;
         }
 
         if (!this.fullFormDisabled) {
