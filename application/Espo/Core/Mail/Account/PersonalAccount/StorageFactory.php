@@ -38,14 +38,12 @@ use Espo\Core\Mail\Mail\Storage\Imap;
 use Espo\Core\Mail\Account\Storage\LaminasStorage;
 use Espo\Core\Utils\Log;
 use Espo\Core\InjectableFactory;
-use Espo\Entities\UserData;
 use Espo\ORM\Name\Attribute;
-use Espo\Repositories\UserData as UserDataRepository;
-use Espo\ORM\EntityManager;
 
 use Laminas\Mail\Protocol\Exception\RuntimeException as ProtocolRuntimeException;
 use Laminas\Mail\Storage\Exception\InvalidArgumentException;
 use Laminas\Mail\Storage\Exception\RuntimeException;
+
 use LogicException;
 use Throwable;
 
@@ -54,7 +52,6 @@ class StorageFactory implements StorageFactoryInterface
     public function __construct(
         private Log $log,
         private InjectableFactory $injectableFactory,
-        private EntityManager $entityManager
     ) {}
 
     public function create(Account $account): LaminasStorage
@@ -105,8 +102,6 @@ class StorageFactory implements StorageFactoryInterface
             $rawParams['security'] = $params->getSecurity();
         }
 
-        $emailAddress = $rawParams['emailAddress'] ?? null;
-        $userId = $rawParams['userId'] ?? null;
         /** @var ?class-string $handlerClassName */
         $handlerClassName = $rawParams['imapHandler'] ?? null;
 
@@ -130,35 +125,6 @@ class StorageFactory implements StorageFactoryInterface
             }
         }
 
-        if ($emailAddress && $userId && !$handlerClassName) {
-            $emailAddress = strtolower($emailAddress);
-
-            $userData = $this->getUserDataRepository()->getByUserId($userId);
-
-            if ($userData) {
-                $imapHandlers = $userData->get('imapHandlers') ?? (object) [];
-
-                if (isset($imapHandlers->$emailAddress)) {
-                    /** @var class-string $handlerClassName */
-                    $handlerClassName = $imapHandlers->$emailAddress;
-
-                    try {
-                        $handler = $this->injectableFactory->create($handlerClassName);
-                    } catch (Throwable $e) {
-                        $this->log->error(
-                            "EmailAccount: Could not create Imap Handler for {$emailAddress}. Error: " .
-                            $e->getMessage()
-                        );
-                    }
-
-                    if ($handler && method_exists($handler, 'prepareProtocol')) {
-                        // @todo Incorporate an interface `LaminasProtocolPreparator`.
-                        $imapParams = $handler->prepareProtocol($userId, $emailAddress, $rawParams);
-                    }
-                }
-            }
-        }
-
         if (!$imapParams) {
             $imapParams = [
                 'host' => $rawParams['host'],
@@ -179,11 +145,5 @@ class StorageFactory implements StorageFactoryInterface
         }
 
         return new LaminasStorage($storage);
-    }
-
-    private function getUserDataRepository(): UserDataRepository
-    {
-        /** @var UserDataRepository */
-        return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
     }
 }

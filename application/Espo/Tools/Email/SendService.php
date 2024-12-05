@@ -36,7 +36,6 @@ use Espo\Core\Exceptions\ErrorSilent;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\FieldValidation\FieldValidationManager;
-use Espo\Core\InjectableFactory;
 use Espo\Core\Mail\Account\Account;
 use Espo\Core\Mail\Account\GroupAccount\Account as GroupAccount;
 use Espo\Core\Mail\Account\GroupAccount\AccountFactory as GroupAccountFactory;
@@ -60,17 +59,14 @@ use Espo\Entities\EmailAccount;
 use Espo\Entities\EmailAddress;
 use Espo\Entities\InboundEmail;
 use Espo\Entities\User;
-use Espo\Entities\UserData;
 use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
-use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Tools\Stream\Service as StreamService;
 use Exception;
 use Laminas\Mail\Message;
 use LogicException;
-use Throwable;
 
 use const FILTER_VALIDATE_EMAIL;
 
@@ -94,7 +90,6 @@ class SendService
         private StreamService $streamService,
         private Config $config,
         private Log $log,
-        private InjectableFactory $injectableFactory,
         private Acl $acl,
         private SendingAccountProvider $accountProvider,
         private PersonalAccountService $personalAccountService,
@@ -171,9 +166,6 @@ class SendService
         }
 
         if ($user && $smtpParams) {
-            // For bc.
-            $smtpParams = $this->applyUserHandler($user, $smtpParams, $fromAddress);
-
             $emailSender->withSmtpParams($smtpParams);
         }
 
@@ -377,19 +369,6 @@ class SendService
         return [$smtpParams, $groupAccount];
     }
 
-    private function applyUserHandler(User $user, SmtpParams $smtpParams, string $emailAddress): SmtpParams
-    {
-        $raw = $smtpParams->toArray();
-
-        $applied = $this->applyUserHandlerInternal($user->getId(), $emailAddress, $raw);
-
-        if ($applied) {
-            return SmtpParams::fromArray($raw);
-        }
-
-        return $smtpParams;
-    }
-
     /**
      * @throws Forbidden
      * @throws Error
@@ -408,8 +387,6 @@ class SendService
                 $this->obtainSendTestEmailPassword($type, $id)
             );
         }
-
-        $fromAddress = $params->getFromAddress();
 
         if (
             $userId &&
@@ -456,10 +433,6 @@ class SendService
 
         if ($handlerClassName && $id) {
             $params = $this->handlerProcessor->handle($handlerClassName, $params, $id);
-        }
-
-        if ($user && $fromAddress) {
-            $params = $this->applyUserHandler($user, $params, $fromAddress);
         }
 
         try {
@@ -541,61 +514,10 @@ class SendService
 
         $smtpParams = $account->getSmtpParams();
 
-        if (!$smtpParams) {
-            return null;
-        }
-
-        // For bc.
-        $smtpParams = $this->applyUserHandler($user, $smtpParams, strtolower($address));
-
         return $smtpParams
-            ->withFromName($user->getName())
+            ?->withFromName($user->getName())
             ->withFromAddress($address);
-    }
 
-    /**
-     * @internal For bc.
-     * @param array<string, mixed> $params
-     */
-    private function applyUserHandlerInternal(string $userId, string $emailAddress, array &$params): bool
-    {
-        $userData = $this->getUserDataRepository()->getByUserId($userId);
-
-        if (!$userData) {
-            return false;
-        }
-
-        $smtpHandlers = $userData->get('smtpHandlers') ?? (object) [];
-
-        if (!is_object($smtpHandlers)) {
-            return false;
-        }
-
-        if (!isset($smtpHandlers->$emailAddress)) {
-            return false;
-        }
-
-        /** @var class-string<object> $handlerClassName */
-        $handlerClassName = $smtpHandlers->$emailAddress;
-
-        try {
-            $handler = $this->injectableFactory->create($handlerClassName);
-        } catch (Throwable $e) {
-            $this->log->error(
-                "Email sending: Could not create Smtp Handler for $emailAddress. Error: " .
-                $e->getMessage() . "."
-            );
-
-            return false;
-        }
-
-        if (method_exists($handler, 'applyParams')) {
-            $handler->applyParams($userId, $emailAddress, $params);
-
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -645,12 +567,6 @@ class SendService
         }
 
         return $this->config->get('smtpPassword');
-    }
-
-    private function getUserDataRepository(): UserDataRepository
-    {
-        /** @var UserDataRepository */
-        return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
     }
 
     private function applyReplied(Email $entity, Message $message): void

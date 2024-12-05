@@ -1,11 +1,5 @@
 {
     "fields": {
-        "imapHandlers": {
-            "type": "jsonObject"
-        },
-        "smtpHandlers": {
-            "type": "jsonObject"
-        },
         "auth2FA": {
             "type": "bool"
         },
