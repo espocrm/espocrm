@@ -4,7 +4,7 @@
 	    	<h3>
 	    	{{#if fromAdmin}}
     		<a href="#Admin">{{translate 'Administration' scope='Admin'}}</a>
-    		<span class="breadcrumb-separator"><span class="chevron-right"></span></span>
+    		<span class="breadcrumb-separator"><span></span></span>
 		   	{{/if}}
 		   	{{translate 'Import' category='scopeNames'}}
 	   		</h3>

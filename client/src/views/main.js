@@ -377,7 +377,7 @@ class MainView extends View {
                 $('<div>')
                     .addClass('breadcrumb-separator')
                     .append(
-                        $('<span>').addClass('chevron-right')
+                        $('<span>')
                     )
             )
         });

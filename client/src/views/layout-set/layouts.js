@@ -102,7 +102,7 @@ class LayoutsView extends LayoutIndexView {
     }
 
     getHeaderHtml() {
-        const separatorHtml = ' <span class="breadcrumb-separator"><span class="chevron-right"></span></span> ';
+        const separatorHtml = ' <span class="breadcrumb-separator"><span></span></span> ';
 
         return $('<span>')
             .append(

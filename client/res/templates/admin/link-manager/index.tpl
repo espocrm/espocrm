@@ -1,11 +1,11 @@
 <div class="page-header">
     <h3>
         <a href="#Admin">{{translate 'Administration'}}</a>
-        <span class="breadcrumb-separator"><span class="chevron-right"></span></span>
+        <span class="breadcrumb-separator"><span></span></span>
         <a href="#Admin/entityManager">{{translate 'Entity Manager' scope='Admin'}}</a>
-        <span class="breadcrumb-separator"><span class="chevron-right"></span></span>
+        <span class="breadcrumb-separator"><span></span></span>
         <a href="#Admin/entityManager/scope={{scope}}">{{translate scope category='scopeNames'}}</a>
-        <span class="breadcrumb-separator"><span class="chevron-right"></span></span>
+        <span class="breadcrumb-separator"><span></span></span>
         {{translate 'Relationships' scope='EntityManager'}}
     </h3>
 </div>

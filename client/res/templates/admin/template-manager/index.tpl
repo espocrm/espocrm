@@ -1,5 +1,5 @@
 <div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a>
-<span class="breadcrumb-separator"><span class="chevron-right"></span></span>
+<span class="breadcrumb-separator"><span></span></span>
 {{translate 'Template Manager' scope='Admin'}}</h3></div>
 
 <div class="row">

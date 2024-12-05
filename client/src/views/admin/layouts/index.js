@@ -346,7 +346,7 @@ class LayoutIndexView extends View {
 
         const list = [];
 
-        const separatorHtml = '<span class="breadcrumb-separator"><span class="chevron-right"></span></span>';
+        const separatorHtml = '<span class="breadcrumb-separator"><span></span></span>';
 
         if (!this.em) {
             list.push(
@@ -368,7 +368,7 @@ class LayoutIndexView extends View {
     }
 
     getHeaderHtml() {
-        const separatorHtml = '<span class="breadcrumb-separator"><span class="chevron-right"></span></span>';
+        const separatorHtml = '<span class="breadcrumb-separator"><span></span></span>';
 
         const list = [];
 
