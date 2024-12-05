@@ -307,18 +307,21 @@ class EditModalView extends ModalView {
             const separator = document.createElement('span');
             separator.classList.add('chevron-right');
 
-            const name = this.model.attributes.name || this.model.attributes.id;
+            const name = this.model.attributes.name;
 
             wrapper.append(
-                scope,
-                ' ',
-                separator,
-                ' ',
-                name
+                document.createTextNode(this.getLanguage().translate('Edit') + ' · '),
+                scope
             );
 
-            const text = this.getLanguage().translate('Edit') + ' · ' +
-                this.getLanguage().translate(this.scope, 'scopeNames');
+            if (name) {
+                wrapper.append(
+                    ' ',
+                    separator,
+                    ' ',
+                    name
+                );
+            }
 
             html = wrapper.outerHTML;
         }
