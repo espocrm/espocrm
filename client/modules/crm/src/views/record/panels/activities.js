@@ -126,7 +126,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
 
         this.filterList = [];
 
-        this.scopeList.forEach(item => {
+        /*this.scopeList.forEach(item => {
             if (!this.getAcl().check(item)) {
                 return;
             }
@@ -140,7 +140,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
             }
 
             this.filterList.push(item);
-        });
+        });*/
 
         if (this.filterList.length) {
             this.filterList.unshift('all');
@@ -284,8 +284,6 @@ class ActivitiesPanelView extends RelationshipPanelView {
                 action: 'viewRelatedList',
                 html: $('<span>')
                     .append(
-                        $('<span>').text(this.translate('View List')),
-                        ' &middot; ',
                         $('<span>').text(this.translate(scope, 'scopeNamesPlural')),
                     )
                     .get(0).innerHTML,
