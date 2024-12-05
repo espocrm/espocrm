@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d9345a73eb5b433793b5a9268be4d50c",
+    "content-hash": "310ec20056303abdf489f48a819c2351",
     "packages": [
         {
             "name": "async-aws/core",
@@ -1793,25 +1793,19 @@
         },
         {
             "name": "laminas/laminas-mail",
-            "version": "2.25.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/laminas/laminas-mail.git",
-                "reference": "110e04497395123998220e244cceecb167cc6dda"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-mail/zipball/110e04497395123998220e244cceecb167cc6dda",
-                "reference": "110e04497395123998220e244cceecb167cc6dda",
-                "shasum": ""
+                "url": "https://github.com/yurikuzn/laminas-mail.git",
+                "reference": "3befe2ed6193c10fb045369bd6473bd70fb9ceac"
             },
             "require": {
                 "ext-iconv": "*",
                 "laminas/laminas-loader": "^2.9.0",
-                "laminas/laminas-mime": "^2.11.0",
+                "laminas/laminas-mime": "dev-master#25659453400e0b2970e490dd0e4045f62acf5371",
                 "laminas/laminas-stdlib": "^3.17.0",
                 "laminas/laminas-validator": "^2.31.0",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
                 "symfony/polyfill-intl-idn": "^1.27.0",
                 "symfony/polyfill-mbstring": "^1.27.0",
                 "webmozart/assert": "^1.11.0"
@@ -1822,12 +1816,13 @@
                 "laminas/laminas-servicemanager": "^3.22.1",
                 "phpunit/phpunit": "^10.4.2",
                 "psalm/plugin-phpunit": "^0.18.4",
-                "symfony/process": "^6.3.4",
+                "symfony/process": "^6.3.4 || ^7.0.0",
                 "vimeo/psalm": "^5.15"
             },
             "suggest": {
                 "laminas/laminas-servicemanager": "^3.21 when using SMTP to deliver messages"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "laminas": {
@@ -1840,7 +1835,33 @@
                     "Laminas\\Mail\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "LaminasTest\\Mail\\": "test/"
+                }
+            },
+            "scripts": {
+                "check": [
+                    "@cs-check",
+                    "@static-analysis",
+                    "@test"
+                ],
+                "cs-check": [
+                    "phpcs"
+                ],
+                "cs-fix": [
+                    "phpcbf"
+                ],
+                "static-analysis": [
+                    "psalm --shepherd --stats"
+                ],
+                "test": [
+                    "phpunit --colors=always"
+                ],
+                "test-coverage": [
+                    "phpunit --colors=always --coverage-clover clover.xml"
+                ]
+            },
             "license": [
                 "BSD-3-Clause"
             ],
@@ -1851,39 +1872,27 @@
                 "mail"
             ],
             "support": {
-                "chat": "https://laminas.dev/chat",
-                "docs": "https://docs.laminas.dev/laminas-mail/",
-                "forum": "https://discourse.laminas.dev",
                 "issues": "https://github.com/laminas/laminas-mail/issues",
-                "rss": "https://github.com/laminas/laminas-mail/releases.atom",
-                "source": "https://github.com/laminas/laminas-mail"
+                "forum": "https://discourse.laminas.dev",
+                "chat": "https://laminas.dev/chat",
+                "source": "https://github.com/laminas/laminas-mail",
+                "docs": "https://docs.laminas.dev/laminas-mail/",
+                "rss": "https://github.com/laminas/laminas-mail/releases.atom"
             },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
             "abandoned": "symfony/mailer",
-            "time": "2023-11-02T10:32:34+00:00"
+            "time": "2024-12-05T11:07:50+00:00"
         },
         {
             "name": "laminas/laminas-mime",
-            "version": "2.12.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/laminas/laminas-mime.git",
-                "reference": "08cc544778829b7d68d27a097885bd6e7130135e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-mime/zipball/08cc544778829b7d68d27a097885bd6e7130135e",
-                "reference": "08cc544778829b7d68d27a097885bd6e7130135e",
-                "shasum": ""
+                "url": "https://github.com/yurikuzn/laminas-mime.git",
+                "reference": "25659453400e0b2970e490dd0e4045f62acf5371"
             },
             "require": {
                 "laminas/laminas-stdlib": "^2.7 || ^3.0",
-                "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0"
+                "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0"
             },
             "conflict": {
                 "zendframework/zend-mime": "*"
@@ -1896,13 +1905,39 @@
             "suggest": {
                 "laminas/laminas-mail": "Laminas\\Mail component"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "Laminas\\Mime\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "files": [
+                    "test/TestAsset/Mail/Headers.php"
+                ],
+                "psr-4": {
+                    "LaminasTest\\Mime\\": "test/"
+                }
+            },
+            "scripts": {
+                "check": [
+                    "@cs-check",
+                    "@test"
+                ],
+                "cs-check": [
+                    "phpcs"
+                ],
+                "cs-fix": [
+                    "phpcbf"
+                ],
+                "test": [
+                    "phpunit --colors=always"
+                ],
+                "test-coverage": [
+                    "phpunit --colors=always --coverage-clover clover.xml"
+                ]
+            },
             "license": [
                 "BSD-3-Clause"
             ],
@@ -1913,21 +1948,15 @@
                 "mime"
             ],
             "support": {
-                "chat": "https://laminas.dev/chat",
                 "docs": "https://docs.laminas.dev/laminas-mime/",
-                "forum": "https://discourse.laminas.dev",
                 "issues": "https://github.com/laminas/laminas-mime/issues",
+                "source": "https://github.com/laminas/laminas-mime",
                 "rss": "https://github.com/laminas/laminas-mime/releases.atom",
-                "source": "https://github.com/laminas/laminas-mime"
+                "chat": "https://laminas.dev/chat",
+                "forum": "https://discourse.laminas.dev"
             },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
             "abandoned": "symfony/mime",
-            "time": "2023-11-02T16:47:19+00:00"
+            "time": "2024-12-05T10:39:00+00:00"
         },
         {
             "name": "laminas/laminas-servicemanager",
@@ -8844,6 +8873,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "laminas/laminas-mail": 20,
+        "laminas/laminas-mime": 20,
         "zordius/lightncandy": 20
     },
     "prefer-stable": false,

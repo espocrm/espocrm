@@ -22,9 +22,9 @@
         "slim/slim": "^4.14",
         "slim/psr7": "^1",
         "dragonmantank/cron-expression": "^3.4",
-        "laminas/laminas-mail": "^2.25.1",
+        "laminas/laminas-mail": "dev-master#3befe2ed6193c10fb045369bd6473bd70fb9ceac",
+        "laminas/laminas-mime": "dev-master#25659453400e0b2970e490dd0e4045f62acf5371",
         "laminas/laminas-ldap": "^2.18",
-        "laminas/laminas-servicemanager": "^3.23",
         "monolog/monolog": "~3.8",
         "zordius/lightncandy": "dev-espo#v1.2.5e",
         "composer/semver": "^3",
@@ -90,6 +90,14 @@
         {
             "type": "git",
             "url": "https://github.com/yurikuzn/lightncandy.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/yurikuzn/laminas-mail.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/yurikuzn/laminas-mime.git"
         }
     ],
     "provide": {
