@@ -61,6 +61,7 @@ class ComplexExpressionFieldView extends TextFieldView {
         super.setup();
 
         this.height = this.options.height || this.params.height || this.height;
+        this.smallFont = this.options.smallFont || this.params.smallFont || this.smallFont;
 
         this.maxLineDetailCount =
             this.options.maxLineDetailCount ||
