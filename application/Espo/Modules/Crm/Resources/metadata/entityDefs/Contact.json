@@ -624,7 +624,6 @@
             "type": "hasMany",
             "entity": "Meeting",
             "foreign": "contacts",
-            "layoutRelationshipsDisabled": true,
             "audited": true,
             "columnAttributeMap": {
                 "status": "acceptanceStatus"
@@ -634,7 +633,6 @@
             "type": "hasMany",
             "entity": "Call",
             "foreign": "contacts",
-            "layoutRelationshipsDisabled": true,
             "audited": true,
             "columnAttributeMap": {
                 "status": "acceptanceStatus"
@@ -644,7 +642,6 @@
             "type": "hasChildren",
             "entity": "Task",
             "foreign": "parent",
-            "layoutRelationshipsDisabled": true,
             "audited": true
         },
         "emails": {

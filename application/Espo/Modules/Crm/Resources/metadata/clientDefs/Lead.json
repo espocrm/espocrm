@@ -79,18 +79,13 @@
     "bottomPanels": {
         "detail": [
             {
-                "name": "activitiesExpanded",
+                "name": "activities",
                 "reference": "activities",
                 "disabled": true
             },
             {
-                "name": "historyExpanded",
+                "name": "history",
                 "reference": "history",
-                "disabled": true
-            },
-            {
-                "name": "tasksExpanded",
-                "reference": "tasks",
                 "disabled": true
             }
         ]

@@ -20,16 +20,12 @@
     "bottomPanels": {
         "detail": [
             {
-                "name": "activitiesExpanded",
+                "name": "activities",
                 "reference": "activities"
             },
             {
-                "name": "historyExpanded",
+                "name": "history",
                 "reference": "history"
-            },
-            {
-                "name": "tasksExpanded",
-                "reference": "tasks"
             }
         ]
     }
