@@ -1252,6 +1252,10 @@
                 "reference": {
                     "type": "string",
                     "description": "A panel reference name. Panels are defined in app > clientRecord > panels. As of v9.0."
+                },
+                "disabled": {
+                    "type": "boolean",
+                    "description": "Disabled in the layout by default."
                 }
             }
         }
