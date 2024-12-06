@@ -121,6 +121,14 @@ export default class TasksRelationshipPanelView extends RelationshipPanelView {
                 this.collection.fetch();
             }
         });
+
+        let events = `update-related:${this.link} update-all`;
+
+        if (this.parentScope === 'Account') {
+            events += ' update-related:tasks';
+        }
+
+        this.listenTo(this.model, events, () => this.collection.fetch());
     }
 
     afterRender() {
@@ -180,7 +188,7 @@ export default class TasksRelationshipPanelView extends RelationshipPanelView {
             view.notify(false);
 
             this.listenToOnce(view, 'after:save', () => {
-                this.collection.fetch();
+                this.model.trigger(`update-related:${this.link}`);
                 this.model.trigger('after:relate');
             });
         });
