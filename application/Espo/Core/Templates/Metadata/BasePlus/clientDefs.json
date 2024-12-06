@@ -21,11 +21,13 @@
         "detail": [
             {
                 "name": "activities",
-                "reference": "activities"
+                "reference": "activities",
+                "disabled": true
             },
             {
                 "name": "history",
-                "reference": "history"
+                "reference": "history",
+                "disabled": true
             }
         ]
     }

@@ -56,11 +56,13 @@
             {
                 "name": "activities",
                 "reference": "activities",
-                "view": "crm:views/case/record/panels/activities"
+                "view": "crm:views/case/record/panels/activities",
+                "disabled": true
             },
             {
                 "name": "history",
-                "reference": "history"
+                "reference": "history",
+                "disabled": true
             }
         ]
     },
