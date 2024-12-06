@@ -133,6 +133,11 @@ class LayoutRowsView extends LayoutBaseView {
         return layout;
     }
 
+    /**
+     * @protected
+     * @param {Object|Array} layout
+     * @return {boolean}
+     */
     validate(layout) {
         if (layout.length === 0) {
             Espo.Ui.error(this.translate('cantBeEmpty', 'messages', 'LayoutManager'));

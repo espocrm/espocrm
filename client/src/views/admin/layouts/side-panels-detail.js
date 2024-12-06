@@ -133,23 +133,56 @@ class LayoutSidePanelsDetailView extends LayoutRowsView {
         });
     }
 
-    readDataFromLayout(layout) {
+
+    /**
+     * @protected
+     * @param {Record.<string, Record>} layout
+     * @param {string} type
+     * @param {function(): {panelListAll?: string[], params?: Record, labels?: Record}} [hook]
+     * @return {{
+     *     panelListAll: *[],
+     *     disabledFields: *[],
+     *     rowLayout: *[],
+     *     params: {},
+     *     itemsData: {},
+     *     labels: {},
+     * }}
+     */
+    getDataFromLayout(layout, type, hook) {
         const panelListAll = [];
         const labels = {};
         const params = {};
+        const disabledFields = [];
+        const rowLayout = []
+        const itemsData = {};
 
         layout = Espo.Utils.cloneDeep(layout);
 
-        if (
-            this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.viewType]) !== false &&
-            !this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])
-        ) {
-            panelListAll.push('default');
-
-            labels['default'] = 'Default';
+        if (!layout) {
+            layout = {};
         }
 
-        (this.getMetadata().get(['clientDefs', this.scope, 'sidePanels', this.viewType]) || [])
+        if (hook) {
+            const additional = hook();
+
+            if (additional.panelListAll) {
+                additional.panelListAll.forEach(it => panelListAll.push(it));
+            }
+
+            if (additional.params) {
+                for (const [key, it] of Object.entries(additional.params)) {
+                    params[key] = it;
+                }
+            }
+
+            if (additional.labels) {
+                for (const [key, it] of Object.entries(additional.labels)) {
+                    labels[key] = it;
+                }
+            }
+        }
+
+        (this.getMetadata().get(['clientDefs', this.scope, type, this.viewType]) || [])
             .forEach(/** Record */item => {
                 if (item.reference) {
                     item = {
@@ -164,6 +197,11 @@ class LayoutSidePanelsDetailView extends LayoutRowsView {
 
                 panelListAll.push(item.name);
 
+                if (item.labelText) {
+                    // @todo Revise.
+                    labels[item.name] = item.labelText;
+                }
+
                 if (item.label) {
                     labels[item.name] = item.label;
                 }
@@ -171,18 +209,10 @@ class LayoutSidePanelsDetailView extends LayoutRowsView {
                 params[item.name] = item;
             });
 
-        this.disabledFields = [];
-
-        layout = layout || {};
-
-        this.rowLayout = [];
-
         panelListAll.push('_delimiter_');
 
         if (!layout['_delimiter_']) {
-            layout['_delimiter_'] = {
-                disabled: true,
-            };
+            layout['_delimiter_'] = {disabled: true, index: 10000};
         }
 
         panelListAll.forEach((item, index) => {
@@ -214,14 +244,14 @@ class LayoutSidePanelsDetailView extends LayoutRowsView {
                 };
 
                 if (o.name[0] === '_') {
-                    o.notEditable = true;
 
                     if (o.name === '_delimiter_') {
+                        o.notEditable = true;
                         o.labelText = '. . .';
                     }
                 }
 
-                this.disabledFields.push(o);
+                disabledFields.push(o);
 
                 return;
             }
@@ -232,8 +262,8 @@ class LayoutSidePanelsDetailView extends LayoutRowsView {
             };
 
             if (o.name[0] === '_') {
-                o.notEditable = true;
                 if (o.name === '_delimiter_') {
+                    o.notEditable = true;
                     o.labelText = '. . .';
                 }
             }
@@ -258,14 +288,61 @@ class LayoutSidePanelsDetailView extends LayoutRowsView {
 
             o.index = ('index' in itemData) ? itemData.index : index;
 
-            this.rowLayout.push(o);
+            rowLayout.push(o);
 
-            this.itemsData[o.name] = Espo.Utils.cloneDeep(o);
+            itemsData[o.name] = Espo.Utils.cloneDeep(o);
         });
 
-        this.rowLayout.sort((v1, v2) => {
-            return v1.index - v2.index;
+        rowLayout.sort((v1, v2) => v1.index - v2.index);
+
+        disabledFields.sort((v1, v2) => {
+            console.log(v1.name);
+            if (v1.name === '_delimiter_') {
+                return 1;
+            }
+
+            /** @type {string} */
+            const label1 = labels[v1.name] || v1.name;
+            /** @type {string} */
+            const label2 = labels[v2.name] || v2.name;
+
+            return label1.localeCompare(label2);
         });
+
+        return {
+            panelListAll,
+            labels,
+            params,
+            disabledFields,
+            rowLayout,
+            itemsData,
+        };
+    }
+
+    /**
+     * @protected
+     * @param {Record.<string, Record>} layout
+     */
+    readDataFromLayout(layout) {
+        const data = this.getDataFromLayout(layout, 'sidePanels', () => {
+            const panelListAll = [];
+            const labels = {};
+
+            if (
+                this.getMetadata().get(`clientDefs.${this.scope}.defaultSidePanel.${this.viewType}`) !== false &&
+                !this.getMetadata().get(`clientDefs.${this.scope}.defaultSidePanelDisabled`)
+            ) {
+                panelListAll.push('default');
+
+                labels['default'] = 'Default';
+            }
+
+            return {panelListAll, labels};
+        });
+
+        this.disabledFields = data.disabledFields;
+        this.rowLayout = data.rowLayout;
+        this.itemsData = data.itemsData;
     }
 
     fetch() {

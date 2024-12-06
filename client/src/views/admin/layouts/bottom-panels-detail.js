@@ -58,7 +58,115 @@ class LayoutBottomPanelsDetail extends LayoutSidePanelsDetailView {
         return label;
     }
 
+    /**
+     * @protected
+     * @param {Record.<string, Record>} layout
+     */
     readDataFromLayout(layout) {
+        const data = this.getDataFromLayout(layout, 'bottomPanels', () => {
+            const panelListAll = [];
+            const labels = {};
+            const params = {};
+
+            if (
+                this.hasStream &&
+                (this.getMetadata().get(`scopes.${this.scope}.stream`) || this.scope === 'User')
+            ) {
+                panelListAll.push('stream');
+
+                labels['stream'] = this.translate('Stream');
+
+                params['stream'] = {
+                    name: 'stream',
+                    sticked: false,
+                    index: 2,
+                };
+            }
+
+            this.links = {};
+
+            if (this.hasRelationships) {
+                /** @type {Record<string, Record>} */
+                const linkDefs = this.getMetadata().get(`entityDefs.${this.scope}.links`) || {};
+
+                Object.keys(linkDefs).forEach(link => {
+                    if (
+                        linkDefs[link].disabled ||
+                        linkDefs[link].utility ||
+                        linkDefs[link].layoutRelationshipsDisabled
+                    ) {
+                        return;
+                    }
+
+                    if (!['hasMany', 'hasChildren'].includes(linkDefs[link].type)) {
+                        return;
+                    }
+
+                    panelListAll.push(link);
+
+                    labels[link] = this.translate(link, 'links', this.scope);
+
+                    const item = {
+                        name: link,
+                        index: 5,
+                    };
+
+                    this.dataAttributeList.forEach(attribute => {
+                        if (attribute in item) {
+                            return;
+                        }
+
+                        const value = this.getMetadata()
+                            .get(['clientDefs', this.scope, 'relationshipPanels', item.name, attribute]);
+
+                        if (value === null) {
+                            return;
+                        }
+
+                        item[attribute] = value;
+                    });
+
+                    this.links[link] = true;
+
+                    params[item.name] = item;
+
+                    if (!(item.name in layout)) {
+                        item.disabled = true;
+                    }
+                });
+            }
+
+            panelListAll.push(this.TAB_BREAK_KEY);
+
+            labels[this.TAB_BREAK_KEY] = '. . . ' + this.translate('tabBreak', 'fields', 'LayoutManager');
+            params[this.TAB_BREAK_KEY] = {disabled: true};
+
+            for (const name in layout) {
+                const item = layout[name];
+
+                if (item.tabBreak) {
+                    panelListAll.push(name);
+
+                    labels[name] = this.composeTabBreakLabel(item);
+
+                    params[name] = {
+                        name: item.name,
+                        index: item.index,
+                        tabBreak: true,
+                        tabLabel: item.tabLabel || null,
+                    };
+                }
+            }
+
+            return {panelListAll, labels, params};
+        });
+
+        this.disabledFields = data.disabledFields;
+        this.rowLayout = data.rowLayout;
+        this.itemsData = data.itemsData;
+    }
+
+    readDataFromLayout1(layout) {
         let panelListAll = [];
         const labels = {};
         const params = {};
@@ -342,7 +450,7 @@ class LayoutBottomPanelsDetail extends LayoutSidePanelsDetailView {
         }
 
         if ($tabBreak) {
-            $tabBreak.appendTo(this.$el.find('ul.disabled'));
+            $tabBreak.prependTo(this.$el.find('ul.disabled'));
         }
     }
 
@@ -395,6 +503,16 @@ class LayoutBottomPanelsDetail extends LayoutSidePanelsDetailView {
         delete newLayout[this.TAB_BREAK_KEY];
 
         return newLayout;
+    }
+
+
+    validate(layout) {
+        if (!super.validate(layout)) {
+            return false;
+        }
+
+
+        return true;
     }
 }
 
