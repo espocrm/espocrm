@@ -54,16 +54,16 @@
     "bottomPanels": {
         "detail": [
             {
-                "name": "activities",
+                "name": "activitiesExpanded",
                 "reference": "activities",
                 "view": "crm:views/case/record/panels/activities"
             },
             {
-                "name": "history",
+                "name": "historyExpanded",
                 "reference": "history"
             },
             {
-                "name": "tasks",
+                "name": "tasksExpanded",
                 "reference": "tasks"
             }
         ]
