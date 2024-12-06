@@ -1,0 +1,18 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/clientRecord.json",
+    "title": "app/navbar",
+    "description": "Client record definitions.",
+    "type": "object",
+    "properties": {
+        "panels": {
+            "description": "Detail view panels. Can be references from clientDefs > sidePanels/bottomPanels. As of v9.0.",
+            "type": "object",
+            "additionalProperties": {
+                "description": "A panel.",
+                "type": "object",
+                "$ref": "../clientDefs.json#/definitions/panel"
+            }
+        }
+    }
+}

@@ -186,6 +186,12 @@
         },
         {
             "fileMatch": [
+                "*/Resources/metadata/app/clientRecord.json"
+            ],
+            "url": "./schema/metadata/app/clientRecord.json"
+        },
+        {
+            "fileMatch": [
                 "*/Resources/metadata/app/clientRoutes.json"
             ],
             "url": "./schema/metadata/app/clientRoutes.json"

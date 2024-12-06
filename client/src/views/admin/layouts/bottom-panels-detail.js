@@ -82,7 +82,14 @@ class LayoutBottomPanelsDetail extends LayoutSidePanelsDetailView {
 
         (this.getMetadata()
             .get(['clientDefs', this.scope, 'bottomPanels', this.viewType]) || []
-        ).forEach(item => {
+        ).forEach(/** Record */item => {
+            if (item.reference) {
+                item = {
+                    ...this.getMetadata().get(`app.clientRecord.panels.${item.reference}`),
+                    ...item,
+                };
+            }
+
             if (!item.name) {
                 return;
             }

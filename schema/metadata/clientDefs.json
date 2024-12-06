@@ -330,59 +330,7 @@
                     "anyOf": [
                         {"const": "__APPEND__"},
                         {
-                            "type": "object",
-                            "properties": {
-                                "name": {
-                                    "description": "A name.",
-                                    "type": "string"
-                                },
-                                "label": {
-                                    "description": "A translatable label.",
-                                    "type": "string"
-                                },
-                                "view": {
-                                    "description": "A view class.",
-                                    "type": "string"
-                                },
-                                "options": {
-                                    "description": "Options to be passed to the view.",
-                                    "type": "object"
-                                },
-                                "isForm": {
-                                    "description": "Whether the panel should display a form.",
-                                    "type": "boolean"
-                                },
-                                "notRefreshable": {
-                                    "description": "Disable the ability to refresh the panel.",
-                                    "type": "boolean"
-                                },
-                                "style": {
-                                    "description": "A style.",
-                                    "enum": ["default", "success", "warning", "danger"]
-                                },
-                                "hidden": {
-                                    "description": "Hidden by default.",
-                                    "type": "boolean"
-                                },
-                                "aclScope": {
-                                    "description": "A scope access to which is required for the panel being visible.",
-                                    "type": "string"
-                                },
-                                "acl": {
-                                    "description": "An ACL action access to which is required for the panel being visible.",
-                                    "type": "string",
-                                    "enum": [
-                                        "create",
-                                        "read",
-                                        "edit",
-                                        "delete",
-                                        "stream"
-                                    ]
-                                },
-                                "accessDataList": {
-                                    "$ref": "#/definitions/accessDataList"
-                                }
-                            }
+                            "$ref": "#/definitions/panel"
                         }
                     ]
                 }
@@ -1245,6 +1193,65 @@
                         "type": "boolean",
                         "description": "Allow for admin users only."
                     }
+                }
+            }
+        },
+        "panel": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "A name.",
+                    "type": "string"
+                },
+                "label": {
+                    "description": "A translatable label.",
+                    "type": "string"
+                },
+                "view": {
+                    "description": "A view class.",
+                    "type": "string"
+                },
+                "options": {
+                    "description": "Options to be passed to the view.",
+                    "type": "object"
+                },
+                "isForm": {
+                    "description": "Whether the panel should display a form.",
+                    "type": "boolean"
+                },
+                "notRefreshable": {
+                    "description": "Disable the ability to refresh the panel.",
+                    "type": "boolean"
+                },
+                "style": {
+                    "description": "A style.",
+                    "enum": ["default", "success", "warning", "danger"]
+                },
+                "hidden": {
+                    "description": "Hidden by default.",
+                    "type": "boolean"
+                },
+                "aclScope": {
+                    "description": "A scope access to which is required for the panel being visible.",
+                    "type": "string"
+                },
+                "acl": {
+                    "description": "An ACL action access to which is required for the panel being visible.",
+                    "type": "string",
+                    "enum": [
+                        "create",
+                        "read",
+                        "edit",
+                        "delete",
+                        "stream"
+                    ]
+                },
+                "accessDataList": {
+                    "$ref": "#/definitions/accessDataList"
+                },
+                "reference": {
+                    "type": "string",
+                    "description": "A panel reference name. Panels are defined in app > clientRecord > panels. As of v9.0."
                 }
             }
         }

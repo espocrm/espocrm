@@ -10,46 +10,36 @@
       "list":"crm:views/opportunity/record/list",
       "kanban": "crm:views/opportunity/record/kanban"
    },
-   "sidePanels":{
-      "detail":[
-         {
-            "name":"activities",
-            "label":"Activities",
-            "view":"crm:views/opportunity/record/panels/activities",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"history",
-            "label":"History",
-            "view":"crm:views/record/panels/history",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"tasks",
-            "label":"Tasks",
-            "view":"crm:views/record/panels/tasks",
-            "aclScope": "Task"
-         }
+   "sidePanels": {
+      "detail": [
+          {
+              "name": "activities",
+              "reference": "activities",
+              "view": "crm:views/opportunity/record/panels/activities"
+          },
+          {
+              "name": "history",
+              "reference": "history"
+          },
+          {
+              "name": "tasks",
+              "reference": "tasks"
+          }
       ],
-      "detailSmall":[
-         {
-            "name":"activities",
-            "label":"Activities",
-            "view":"crm:views/record/panels/activities",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"history",
-            "label":"History",
-            "view":"crm:views/record/panels/history",
-            "aclScope": "Activities"
-         },
-         {
-            "name":"tasks",
-            "label":"Tasks",
-            "view":"crm:views/record/panels/tasks",
-            "aclScope": "Task"
-         }
+      "detailSmall": [
+          {
+              "name": "activities",
+              "reference": "activities",
+              "view": "crm:views/opportunity/record/panels/activities"
+          },
+          {
+              "name": "history",
+              "reference": "history"
+          },
+          {
+              "name": "tasks",
+              "reference": "tasks"
+          }
       ]
    },
    "filterList": [

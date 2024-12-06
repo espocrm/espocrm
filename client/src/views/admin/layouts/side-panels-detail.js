@@ -150,7 +150,14 @@ class LayoutSidePanelsDetailView extends LayoutRowsView {
         }
 
         (this.getMetadata().get(['clientDefs', this.scope, 'sidePanels', this.viewType]) || [])
-            .forEach(item => {
+            .forEach(/** Record */item => {
+                if (item.reference) {
+                    item = {
+                        ...this.getMetadata().get(`app.clientRecord.panels.${item.reference}`),
+                        ...item,
+                    };
+                }
+
                 if (!item.name) {
                     return;
                 }

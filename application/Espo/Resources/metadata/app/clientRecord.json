@@ -1,0 +1,22 @@
+{
+    "panels": {
+        "activities": {
+            "name": "activities",
+            "label": "Activities",
+            "view": "crm:views/record/panels/activities",
+            "aclScope": "Activities"
+        },
+        "history": {
+            "name": "history",
+            "label": "History",
+            "view": "crm:views/record/panels/history",
+            "aclScope": "Activities"
+        },
+        "tasks": {
+            "name": "tasks",
+            "label": "Tasks",
+            "view": "crm:views/record/panels/tasks",
+            "aclScope": "Task"
+        }
+    }
+}

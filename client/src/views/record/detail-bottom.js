@@ -50,9 +50,23 @@ class DetailBottomRecordView extends PanelsContainerRecordView {
     setupPanels() {
         const scope = this.scope;
 
-        this.panelList = Espo.Utils.clone(
-            this.getMetadata()
-                .get(['clientDefs', scope, 'bottomPanels', this.type]) || this.panelList || []);
+        this.panelList = this.getMetadata().get(['clientDefs', scope, 'bottomPanels', this.type]) ||
+            this.panelList || [];
+
+        this.panelList = [...this.panelList].map(item => {
+            if ('reference' in item && item.reference) {
+                // noinspection UnnecessaryLocalVariableJS
+                /** @type {module:views/record/panels-container~panel} */
+                const newItem = {
+                    ...this.getMetadata().get(`app.clientRecord.panels.${item.reference}`),
+                    ...item,
+                };
+
+                return newItem;
+            }
+
+            return item;
+        });
 
         this.panelList.forEach(item => {
             if ('index' in item) {

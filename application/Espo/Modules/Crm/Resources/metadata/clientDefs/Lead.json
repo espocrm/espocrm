@@ -6,8 +6,8 @@
     "recordViews":{
         "detail":"crm:views/lead/record/detail"
     },
-    "sidePanels":{
-        "detail":[
+    "sidePanels": {
+        "detail": [
             {
                 "name":"convertedTo",
                 "label":"Converted To",
@@ -18,22 +18,16 @@
                 "isForm": true
             },
             {
-                "name":"activities",
-                "label":"Activities",
-                "view":"crm:views/record/panels/activities",
-                "aclScope":"Activities"
+                "name": "activities",
+                "reference": "activities"
             },
             {
-                "name":"history",
-                "label":"History",
-                "view":"crm:views/record/panels/history",
-                "aclScope":"Activities"
+                "name": "history",
+                "reference": "history"
             },
             {
-                "name":"tasks",
-                "label":"Tasks",
-                "view":"crm:views/record/panels/tasks",
-                "aclScope":"Task"
+                "name": "tasks",
+                "reference": "tasks"
             }
         ],
         "edit":[
@@ -47,7 +41,7 @@
                 "isForm": true
             }
         ],
-        "detailSmall":[
+        "detailSmall": [
             {
                 "name":"convertedTo",
                 "label":"Converted To",
@@ -58,22 +52,16 @@
                 "isForm": true
             },
             {
-                "name":"activities",
-                "label":"Activities",
-                "view":"crm:views/record/panels/activities",
-                "aclScope":"Activities"
+                "name": "activities",
+                "reference": "activities"
             },
             {
-                "name":"history",
-                "label":"History",
-                "view":"crm:views/record/panels/history",
-                "aclScope":"Activities"
+                "name": "history",
+                "reference": "history"
             },
             {
-                "name":"tasks",
-                "label":"Tasks",
-                "view":"crm:views/record/panels/tasks",
-                "aclScope":"Task"
+                "name": "tasks",
+                "reference": "tasks"
             }
         ],
         "editSmall":[

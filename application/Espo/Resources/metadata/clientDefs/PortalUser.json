@@ -32,29 +32,21 @@
         "detail": [
             {
                 "name": "activities",
-                "label": "Activities",
-                "view": "crm:views/record/panels/activities",
-                "aclScope": "Activities"
+                "reference": "activities"
             },
             {
                 "name": "history",
-                "label": "History",
-                "view": "crm:views/record/panels/history",
-                "aclScope": "Activities"
+                "reference": "history"
             }
         ],
         "detailSmall": [
             {
                 "name": "activities",
-                "label": "Activities",
-                "view": "crm:views/record/panels/activities",
-                "aclScope": "Activities"
+                "reference": "activities"
             },
             {
                 "name": "history",
-                "label": "History",
-                "view": "crm:views/record/panels/history",
-                "aclScope": "Activities"
+                "reference": "history"
             }
         ]
     },
