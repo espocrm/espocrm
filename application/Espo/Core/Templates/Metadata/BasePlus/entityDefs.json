@@ -58,20 +58,17 @@
         "meetings": {
             "type": "hasMany",
             "entity": "Meeting",
-            "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "foreign": "parent"
         },
         "calls": {
             "type": "hasMany",
             "entity": "Call",
-            "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "foreign": "parent"
         },
         "tasks": {
             "type": "hasChildren",
             "entity": "Task",
-            "foreign": "parent",
-            "layoutRelationshipsDisabled": true
+            "foreign": "parent"
         },
         "emails": {
             "type": "hasChildren",
