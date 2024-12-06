@@ -161,7 +161,23 @@ class ActivitiesPanelView extends RelationshipPanelView {
         this.collection.order = this.order;
         this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
-        this.listenTo(this.model, 'update-all', () => this.collection.fetch());
+        let events = `update-related:activities update-all`;
+
+        for (const entityType of this.scopeList) {
+            const link = this.entityTypeLinkMap[entityType];
+
+            if (!link) {
+                continue;
+            }
+
+            events += ` update-related:${link}`;
+        }
+
+        if (this.name === 'history') {
+            events += ' update-related:emails';
+        }
+
+        this.listenTo(this.model, events, () => this.collection.fetch());
 
         this.setFilter(this.filter);
 
@@ -322,8 +338,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
                 view.render();
 
                 this.listenTo(view, 'after:save', () => {
-                    this.fetchActivities();
-                    this.fetchHistory();
+                    this.model.trigger('update-related:activities')
                 });
             });
         };
@@ -339,30 +354,6 @@ class ActivitiesPanelView extends RelationshipPanelView {
                     .fetch()
                     .then(() => afterFetch())
             });
-        }
-    }
-
-    fetchHistory() {
-        const parentView = this.getParentView();
-
-        if (parentView && parentView.hasView('history')) {
-            const collection = parentView.getView('history').collection;
-
-            if (collection) {
-                collection.fetch();
-            }
-        }
-    }
-
-    fetchActivities() {
-        const parentView = this.getParentView();
-
-        if (parentView && parentView.hasView('activities')) {
-            const collection = parentView.getView('activities').collection;
-
-            if (collection) {
-                collection.fetch();
-            }
         }
     }
 
@@ -463,8 +454,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
         if (link) {
             scope = this.model.getLinkParam(link, 'entity');
             foreignLink = this.model.getLinkParam(link, 'foreign');
-        }
-        else {
+        } else {
             scope = data.scope;
         }
 
@@ -492,9 +482,8 @@ class ActivitiesPanelView extends RelationshipPanelView {
                 view.notify(false);
 
                 this.listenToOnce(view, 'after:save', () => {
+                    this.model.trigger(`update-related:${link}`);
                     this.model.trigger('after:relate');
-                    this.collection.fetch();
-                    this.fetchHistory();
                 });
             });
         });
@@ -635,9 +624,8 @@ class ActivitiesPanelView extends RelationshipPanelView {
                 view.notify(false);
 
                 this.listenToOnce(view, 'after:save', () => {
-                    this.collection.fetch();
+                    this.model.trigger(`update-related:emails`);
                     this.model.trigger('after:relate');
-                    this.fetchHistory();
                 });
             });
         });
@@ -658,8 +646,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
 
         model.save({status: 'Held'}, {patch: true})
             .then(() => {
-                this.collection.fetch();
-                this.fetchHistory();
+                this.model.trigger(`update-related:activities`);
             });
     }
 
@@ -674,8 +661,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
 
         model.save({status: 'Not Held'}, {patch: true})
             .then(() => {
-                this.collection.fetch();
-                this.fetchHistory();
+                this.model.trigger(`update-related:activities`);
             });
     }
 
