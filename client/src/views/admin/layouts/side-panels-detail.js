@@ -296,7 +296,6 @@ class LayoutSidePanelsDetailView extends LayoutRowsView {
         rowLayout.sort((v1, v2) => v1.index - v2.index);
 
         disabledFields.sort((v1, v2) => {
-            console.log(v1.name);
             if (v1.name === '_delimiter_') {
                 return 1;
             }
