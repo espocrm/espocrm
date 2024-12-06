@@ -29,6 +29,8 @@
 
 namespace Espo\Tools\UserSecurity\Password;
 
+use SensitiveParameter;
+
 class Checker
 {
     private const SPECIAL_CHARACTERS = "'-!\"#$%&()*,./:;?@[]^_`{|}~+<=>";
@@ -37,7 +39,7 @@ class Checker
         private ConfigProvider $configProvider,
     ) {}
 
-    public function checkStrength(string $password): bool
+    public function checkStrength(#[SensitiveParameter] string $password): bool
     {
         $minLength = $this->configProvider->getStrengthLength();
 

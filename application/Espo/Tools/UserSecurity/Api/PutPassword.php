@@ -36,6 +36,7 @@ use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Entities\User;
 use Espo\Tools\UserSecurity\Password\Service;
+use SensitiveParameter;
 
 /**
  * Changes own user password.
@@ -47,7 +48,7 @@ class PutPassword implements Action
         private User $user
     ) {}
 
-    public function process(Request $request): Response
+    public function process(#[SensitiveParameter] Request $request): Response
     {
         $data = $request->getParsedBody();
 

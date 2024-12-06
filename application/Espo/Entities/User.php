@@ -309,6 +309,14 @@ class User extends Person
         return $this->get('avatarColor');
     }
 
+    /**
+     * Get a password hash.
+     */
+    public function getPassword(): string
+    {
+        return $this->get('password') ?? '';
+    }
+
     private function getNameInternal(): ?string
     {
         if (!$this->hasInContainer(Field::NAME) || !$this->getFromContainer(Field::NAME)) {

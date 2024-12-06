@@ -65,7 +65,7 @@ class Espo implements Login
         } else {
             $user = $this->userFinder->find($username);
 
-            if ($user && !$this->passwordHash->verify($password, $user->get('password'))) {
+            if ($user && !$this->passwordHash->verify($password, $user->getPassword())) {
                 $user = null;
             }
         }

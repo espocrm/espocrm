@@ -480,8 +480,7 @@ class Authentication
             $request->getHeader(self::HEADER_CREATE_TOKEN_SECRET) === 'true' &&
             !$this->configDataProvider->isAuthTokenSecretDisabled();
 
-        /** @var ?string $password */
-        $password = $user->get('password');
+        $password = $user->getPassword();
         $ipAddress = $this->util->obtainIpFromRequest($request);
 
         $authTokenData = AuthTokenData::create([

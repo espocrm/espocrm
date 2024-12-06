@@ -50,6 +50,7 @@ use Espo\Tools\UserSecurity\Password\Checker as PasswordChecker;
 use Espo\Tools\UserSecurity\Password\Generator as PasswordGenerator;
 use Espo\Tools\UserSecurity\Password\Sender as PasswordSender;
 use Espo\Tools\UserSecurity\Password\Service as PasswordService;
+use SensitiveParameter;
 use stdClass;
 use Exception;
 
@@ -83,7 +84,7 @@ class User extends Record implements LogAware
         return $entity;
     }
 
-    private function hashPassword(string $password): string
+    private function hashPassword(#[SensitiveParameter] string $password): string
     {
         $passwordHash = $this->injectableFactory->create(PasswordHash::class);
 
@@ -108,7 +109,7 @@ class User extends Record implements LogAware
     /**
      * @throws BadRequest
      */
-    private function fetchPassword(stdClass $data): ?string
+    private function fetchPassword(#[SensitiveParameter] stdClass $data): ?string
     {
         $password = $data->password ?? null;
 

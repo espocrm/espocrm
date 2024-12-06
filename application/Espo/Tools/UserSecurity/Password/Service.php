@@ -43,6 +43,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use SensitiveParameter;
 
 class Service
 {
@@ -107,7 +108,7 @@ class Service
      * @throws Forbidden
      * @throws NotFound
      */
-    public function changePasswordByRecovery(string $requestId, string $password): ?string
+    public function changePasswordByRecovery(string $requestId, #[SensitiveParameter] string $password): ?string
     {
         $request = $this->recovery->getRequest($requestId);
 
@@ -124,8 +125,12 @@ class Service
      * @throws NotFound
      * @throws Error
      */
-    public function changePasswordWithCheck(string $userId, string $password, string $currentPassword): void
-    {
+    public function changePasswordWithCheck(
+        string $userId,
+        #[SensitiveParameter] string $password,
+        #[SensitiveParameter] string $currentPassword
+    ): void {
+
         $this->changePasswordInternal($userId, $password, true, $currentPassword);
     }
 
@@ -136,7 +141,7 @@ class Service
      * @throws NotFound
      * @throws Error
      */
-    private function changePassword(string $userId, string $password): void
+    private function changePassword(string $userId, #[SensitiveParameter] string $password): void
     {
         $this->changePasswordInternal($userId, $password);
     }
@@ -148,9 +153,9 @@ class Service
      */
     private function changePasswordInternal(
         string $userId,
-        string $password,
+        #[SensitiveParameter] string $password,
         bool $checkCurrentPassword = false,
-        ?string $currentPassword = null
+        #[SensitiveParameter] ?string $currentPassword = null
     ): void {
 
         /** @var ?User $user */
@@ -178,15 +183,15 @@ class Service
         }
 
         if ($checkCurrentPassword) {
-            $u = $this->entityManager
-                ->getRDBRepository(User::ENTITY_TYPE)
-                ->where([
-                    'id' => $user->getId(),
-                    'password' => $this->passwordHash->hash($currentPassword ?? ''),
-                ])
-                ->findOne();
+            $userFound = $this->entityManager
+                ->getRDBRepositoryByClass(User::class)
+                ->getById($user->getId());
 
-            if (!$u) {
+            if (!$userFound) {
+                throw new NotFound("User not found");
+            }
+
+            if (!$this->passwordHash->verify($currentPassword ?? '', $userFound->getPassword())) {
                 throw new Forbidden("Wrong password.");
             }
         }
@@ -291,14 +296,14 @@ class Service
         $this->savePassword($user, $password);
     }
 
-    private function savePassword(User $user, string $password): void
+    private function savePassword(User $user, #[SensitiveParameter] string $password): void
     {
         $user->set('password', $this->passwordHash->hash($password));
 
         $this->entityManager->saveEntity($user);
     }
 
-    private function savePasswordSilent(User $user, string $password): void
+    private function savePasswordSilent(User $user, #[SensitiveParameter] string $password): void
     {
         $user->set('password', $this->passwordHash->hash($password));
 

@@ -317,7 +317,7 @@ class LdapLogin implements Login
     private function adminLogin(string $username, #[SensitiveParameter] string $password): ?User
     {
         $user = $this->entityManager
-            ->getRDBRepository(User::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(User::class)
             ->where([
                 'userName' => $username,
                 'type' => [User::TYPE_ADMIN, User::TYPE_SUPER_ADMIN],
@@ -328,7 +328,7 @@ class LdapLogin implements Login
             return null;
         }
 
-        if (!$this->passwordHash->verify($password, $user->get('password'))) {
+        if (!$this->passwordHash->verify($password, $user->getPassword())) {
             return null;
         }
 
