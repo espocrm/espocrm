@@ -26,193 +26,188 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/record/panels/tasks', ['views/record/panels/relationship'], function (Dep) {
+import RelationshipPanelView from 'views/record/panels/relationship';
 
-    return Dep.extend({
+export default class TasksRelationshipPanelView extends RelationshipPanelView {
 
-        name: 'tasks',
+    name = 'tasks'
+    entityType = 'Task'
+    filterList = ['all', 'actual', 'completed']
 
-        entityType: 'Task',
+    orderBy = 'createdAt'
+    orderDirection = 'desc'
 
-        filterList: ['all', 'actual', 'completed'],
+    rowActionsView = 'crm:views/record/row-actions/tasks'
 
-        defaultTab: 'actual',
+    buttonList = [
+        {
+            action: 'createTask',
+            title: 'Create Task',
+            acl: 'create',
+            aclScope: 'Task',
+            html: '<span class="fas fa-plus"></span>',
+        },
+    ]
 
-        orderBy: 'createdAt',
+    actionList = [
+        {
+            label: 'View List',
+            action: 'viewRelatedList'
+        }
+    ]
 
-        orderDirection: 'desc',
-
-        rowActionsView: 'crm:views/record/row-actions/tasks',
-
-        buttonList: [
-            {
-                action: 'createTask',
-                title: 'Create Task',
-                acl: 'create',
-                aclScope: 'Task',
-                html: '<span class="fas fa-plus"></span>',
-            },
-        ],
-
-        actionList: [
-            {
-                label: 'View List',
-                action: 'viewRelatedList'
-            }
-        ],
-
-        listLayout: {
-            rows: [
-                [
-                    {
-                        name: 'name',
-                        link: true,
-                    },
-                ],
-                [
-                    {
-                        name: 'isOverdue'
-                    },
-                    {name: 'assignedUser'},
-                    {
-                        name: 'dateEnd',
-                        soft: true
-                    },
-                    {name: 'status'},
-                ]
+    listLayout = {
+        rows: [
+            [
+                {
+                    name: 'name',
+                    link: true,
+                },
+            ],
+            [
+                {
+                    name: 'isOverdue'
+                },
+                {name: 'assignedUser'},
+                {
+                    name: 'dateEnd',
+                    soft: true
+                },
+                {name: 'status'},
             ]
-        },
+        ]
+    }
 
-        setup: function () {
-            this.parentScope = this.model.entityType;
-            this.link = 'tasks';
+    setup() {
+        this.parentScope = this.model.entityType;
+        this.link = 'tasks';
 
-            this.panelName = 'tasksSide';
+        this.panelName = 'tasksSide';
 
-            this.defs.create = true;
+        this.defs.create = true;
 
-            if (this.parentScope === 'Account') {
-                this.link = 'tasksPrimary';
+        if (this.parentScope === 'Account') {
+            this.link = 'tasksPrimary';
+        }
+
+        this.url = this.model.entityType + '/' + this.model.id + '/' + this.link;
+
+        this.setupSorting();
+
+        if (this.filterList && this.filterList.length) {
+            this.filter = this.getStoredFilter();
+        }
+
+        this.setupFilterActions();
+
+        this.setupTitle();
+
+        this.wait(true);
+
+        this.getCollectionFactory().create('Task', (collection) => {
+            this.collection = collection;
+            collection.seeds = this.seeds;
+            collection.url = this.url;
+            collection.orderBy = this.defaultOrderBy;
+            collection.order = this.defaultOrder;
+            collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+
+            this.setFilter(this.filter);
+            this.wait(false);
+        });
+
+        this.once('show', () => {
+            if (!this.isRendered() && !this.isBeingRendered()) {
+                this.collection.fetch();
             }
+        });
+    }
 
-            this.url = this.model.entityType + '/' + this.model.id + '/' + this.link;
-
-            this.setupSorting();
-
-            if (this.filterList && this.filterList.length) {
-                this.filter = this.getStoredFilter();
-            }
-
-            this.setupFilterActions();
-
-            this.setupTitle();
-
-            this.wait(true);
-
-            this.getCollectionFactory().create('Task', (collection) => {
-                this.collection = collection;
-                collection.seeds = this.seeds;
-                collection.url = this.url;
-                collection.orderBy = this.defaultOrderBy;
-                collection.order = this.defaultOrder;
-                collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
-
-                this.setFilter(this.filter);
-                this.wait(false);
-            });
-
-            this.once('show', () => {
-                if (!this.isRendered() && !this.isBeingRendered()) {
-                    this.collection.fetch();
+    afterRender() {
+        this.createView('list', 'views/record/list-expanded', {
+            selector: '> .list-container',
+            pagination: false,
+            type: 'listRelationship',
+            rowActionsView: this.defs.rowActionsView || this.rowActionsView,
+            checkboxes: false,
+            collection: this.collection,
+            listLayout: this.listLayout,
+            skipBuildRows: true,
+        }, (view) => {
+            view.getSelectAttributeList(selectAttributeList => {
+                if (selectAttributeList) {
+                    this.collection.data.select = selectAttributeList.join(',');
                 }
-            });
-        },
 
-        afterRender: function () {
-            this.createView('list', 'views/record/list-expanded', {
-                selector: '> .list-container',
-                pagination: false,
-                type: 'listRelationship',
-                rowActionsView: this.defs.rowActionsView || this.rowActionsView,
-                checkboxes: false,
-                collection: this.collection,
-                listLayout: this.listLayout,
-                skipBuildRows: true,
-            }, (view) => {
-                view.getSelectAttributeList(selectAttributeList => {
-                    if (selectAttributeList) {
-                        this.collection.data.select = selectAttributeList.join(',');
-                    }
-
-                    if (!this.disabled) {
-                        this.collection.fetch();
-
-                        return;
-                    }
-
-                    this.once('show', () => this.collection.fetch());
-                });
-            });
-        },
-
-        actionCreateRelated: function () {
-            this.actionCreateTask();
-        },
-
-        actionCreateTask: function (data) {
-            let link = this.link;
-
-            if (this.parentScope === 'Account') {
-                link = 'tasks';
-            }
-
-            let scope = 'Task';
-            let foreignLink = this.model.defs['links'][link].foreign;
-
-            Espo.Ui.notify(' ... ');
-
-            let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
-                'views/modals/edit';
-
-            this.createView('quickCreate', viewName, {
-                scope: scope,
-                relate: {
-                    model: this.model,
-                    link: foreignLink,
-                }
-            }, (view) => {
-                view.render();
-                view.notify(false);
-
-                this.listenToOnce(view, 'after:save', () => {
+                if (!this.disabled) {
                     this.collection.fetch();
-                    this.model.trigger('after:relate');
-                });
+
+                    return;
+                }
+
+                this.once('show', () => this.collection.fetch());
             });
-        },
+        });
+    }
 
-        actionRefresh: function () {
-            this.collection.fetch();
-        },
+    actionCreateRelated() {
+        this.actionCreateTask();
+    }
 
-        actionComplete: function (data) {
-            let id = data.id;
+    actionCreateTask() {
+        let link = this.link;
 
-            if (!id) {
-                return;
+        if (this.parentScope === 'Account') {
+            link = 'tasks';
+        }
+
+        const scope = 'Task';
+        const foreignLink = this.model.defs['links'][link].foreign;
+
+        Espo.Ui.notify(' ... ');
+
+        const viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.edit`) ||
+            'views/modals/edit';
+
+        this.createView('quickCreate', viewName, {
+            scope: scope,
+            relate: {
+                model: this.model,
+                link: foreignLink,
             }
+        }, (view) => {
+            view.render();
+            view.notify(false);
 
-            let model = this.collection.get(id);
+            this.listenToOnce(view, 'after:save', () => {
+                this.collection.fetch();
+                this.model.trigger('after:relate');
+            });
+        });
+    }
 
-            model.save({status: 'Completed'}, {patch: true})
-                .then(() => this.collection.fetch());
-        },
+    actionRefresh() {
+        this.collection.fetch();
+    }
 
-        actionViewRelatedList: function (data) {
-            data.viewOptions = data.viewOptions || {};
-            data.viewOptions.massUnlinkDisabled = true;
+    // noinspection JSUnusedGlobalSymbols
+    actionComplete(data) {
+        const id = data.id;
 
-            Dep.prototype.actionViewRelatedList.call(this, data);
-        },
-    });
-});
+        if (!id) {
+            return;
+        }
+
+        const model = this.collection.get(id);
+
+        model.save({status: 'Completed'}, {patch: true})
+            .then(() => this.collection.fetch());
+    }
+
+    actionViewRelatedList(data) {
+        data.viewOptions = data.viewOptions || {};
+        data.viewOptions.massUnlinkDisabled = true;
+
+        super.actionViewRelatedList(data);
+    }
+}
