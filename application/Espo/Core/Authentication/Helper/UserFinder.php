@@ -39,15 +39,32 @@ class UserFinder
     public function __construct(private EntityManager $entityManager)
     {}
 
-    public function find(string $username, string $hash): ?User
+    public function find(string $username): ?User
     {
         return $this->entityManager
             ->getRDBRepositoryByClass(User::class)
             ->where([
                 'userName' => $username,
-                'password' => $hash,
                 'type!=' => [User::TYPE_API, User::TYPE_SYSTEM],
             ])
+            ->findOne();
+    }
+
+    public function findByIdAndHash(string $username, string $id, ?string $hash): ?User
+    {
+        $where = [
+            'userName' => $username,
+            'id' => $id,
+            'type!=' => [User::TYPE_API, User::TYPE_SYSTEM],
+        ];
+
+        if ($hash) {
+            $where['password'] = $hash;
+        }
+
+        return $this->entityManager
+            ->getRDBRepositoryByClass(User::class)
+            ->where($where)
             ->findOne();
     }
 

@@ -30,6 +30,7 @@
 namespace Espo\Core\Authentication\Login;
 
 use Espo\Core\Authentication\AuthToken\AuthToken;
+use SensitiveParameter;
 
 /**
  * Login data to be passed to the 'login' method.
@@ -40,8 +41,11 @@ class Data
     private ?string $password;
     private ?AuthToken $authToken;
 
-    public function __construct(?string $username, ?string $password, ?AuthToken $authToken = null)
-    {
+    public function __construct(
+        ?string $username,
+        #[SensitiveParameter] ?string $password,
+        ?AuthToken $authToken = null
+    ) {
         $this->username = $username;
         $this->password = $password;
         $this->authToken = $authToken;

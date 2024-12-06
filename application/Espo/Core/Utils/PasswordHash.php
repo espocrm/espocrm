@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils;
 
 use RuntimeException;
+use SensitiveParameter;
 
 class PasswordHash
 {
@@ -44,17 +45,23 @@ class PasswordHash
     /**
      * Hash a password.
      */
-    public function hash(string $password, bool $useMd5 = true): string
+    public function hash(#[SensitiveParameter] string $password): string
     {
         $salt = $this->getSalt();
 
-        if ($useMd5) {
-            $password = md5($password);
-        }
+        $password = md5($password);
 
         $hash = crypt($password, $salt);
 
         return str_replace($salt, '', $hash);
+    }
+
+    public function verify(
+        #[SensitiveParameter] string $password,
+        #[SensitiveParameter] string $hash
+    ): bool {
+
+        return $this->hash($password) === $hash;
     }
 
     /**

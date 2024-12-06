@@ -37,8 +37,6 @@ use Espo\Core\Authentication\Result;
 use Espo\Core\Authentication\Result\FailReason;
 use Espo\Core\Utils\PasswordHash;
 
-use RuntimeException;
-
 class Espo implements Login
 {
     public const NAME = 'Espo';
@@ -62,15 +60,15 @@ class Espo implements Login
             return Result::fail(FailReason::NO_PASSWORD);
         }
 
-        $hash = $authToken ?
-            $authToken->getHash() :
-            $this->passwordHash->hash($password);
+        if ($authToken) {
+            $user = $this->userFinder->findByIdAndHash($username, $authToken->getUserId(), $authToken->getHash());
+        } else {
+            $user = $this->userFinder->find($username);
 
-        if (!$hash) {
-            throw new RuntimeException("No hash.");
+            if ($user && !$this->passwordHash->verify($password, $user->get('password'))) {
+                $user = null;
+            }
         }
-
-        $user = $this->userFinder->find($username, $hash);
 
         if (!$user) {
             return Result::fail(FailReason::WRONG_CREDENTIALS);

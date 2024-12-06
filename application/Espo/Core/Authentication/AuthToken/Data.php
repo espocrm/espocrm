@@ -30,6 +30,7 @@
 namespace Espo\Core\Authentication\AuthToken;
 
 use RuntimeException;
+use SensitiveParameter;
 
 /**
  * An auth token data. Used for auth token creation.
@@ -96,7 +97,7 @@ class Data
      *     createSecret?: ?bool,
      * } $data
      */
-    public static function create(array $data): self
+    public static function create(#[SensitiveParameter] array $data): self
     {
         $obj = new self();
 

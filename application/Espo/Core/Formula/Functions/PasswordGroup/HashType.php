@@ -29,13 +29,12 @@
 
 namespace Espo\Core\Formula\Functions\PasswordGroup;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-    Processor,
-};
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Functions\BaseFunction;
+use Espo\Core\Formula\Processor;
 
 use Espo\Core\Utils\PasswordHash;
+use SensitiveParameter;
 
 class HashType extends BaseFunction
 {
@@ -47,7 +46,7 @@ class HashType extends BaseFunction
         $this->passwordHash = $passwordHash;
     }
 
-    public function process(ArgumentList $args)
+    public function process(#[SensitiveParameter] ArgumentList $args)
     {
         if (count($args) < 1) {
             $this->throwTooFewArguments();
@@ -59,8 +58,6 @@ class HashType extends BaseFunction
             $this->throwBadArgumentType(1, 'string');
         }
 
-        $hash = $this->passwordHash->hash($password);
-
-        return $hash;
+        return $this->passwordHash->hash($password);
     }
 }

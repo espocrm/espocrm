@@ -55,6 +55,7 @@ use Espo\Entities\User;
 use Exception;
 use Laminas\Ldap\Exception\LdapException;
 use Laminas\Ldap\Ldap;
+use SensitiveParameter;
 
 /**
  * @noinspection PhpUnused
@@ -313,18 +314,25 @@ class LdapLogin implements Login
             ->findOne();
     }
 
-    private function adminLogin(string $username, string $password): ?User
+    private function adminLogin(string $username, #[SensitiveParameter] string $password): ?User
     {
-        $hash = $this->passwordHash->hash($password);
-
-        return $this->entityManager
+        $user = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
                 'userName' => $username,
-                'password' => $hash,
                 'type' => [User::TYPE_ADMIN, User::TYPE_SUPER_ADMIN],
             ])
             ->findOne();
+
+        if (!$user) {
+            return null;
+        }
+
+        if (!$this->passwordHash->verify($password, $user->get('password'))) {
+            return null;
+        }
+
+        return $user;
     }
 
     /**
