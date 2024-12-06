@@ -42,6 +42,26 @@
           }
       ]
    },
+    "bottomPanels": {
+        "detail": [
+            {
+                "name": "activities",
+                "reference": "activities",
+                "disabled": true,
+                "view": "crm:views/opportunity/record/panels/activities"
+            },
+            {
+                "name": "history",
+                "reference": "history",
+                "disabled": true
+            },
+            {
+                "name": "tasks",
+                "reference": "tasks",
+                "disabled": true
+            }
+        ]
+    },
    "filterList": [
       {
          "name":"open"

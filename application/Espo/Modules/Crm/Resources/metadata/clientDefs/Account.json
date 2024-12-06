@@ -34,6 +34,25 @@
             }
         ]
     },
+    "bottomPanels": {
+        "detail": [
+            {
+                "name": "activities",
+                "reference": "activities",
+                "disabled": true
+            },
+            {
+                "name": "history",
+                "reference": "history",
+                "disabled": true
+            },
+            {
+                "name": "tasks",
+                "reference": "tasks",
+                "disabled": true
+            }
+        ]
+    },
     "relationshipPanels": {
         "contacts": {
             "filterList": [

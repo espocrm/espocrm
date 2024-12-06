@@ -38,6 +38,22 @@
             }
         ]
     },
+    "bottomPanels": {
+        "detail": [
+            {
+                "name": "activities",
+                "reference": "activities"
+            },
+            {
+                "name": "history",
+                "reference": "history"
+            },
+            {
+                "name": "tasks",
+                "reference": "tasks"
+            }
+        ]
+    },
     "relationshipPanels": {
         "campaignLogRecords": {
             "rowActionsView": "views/record/row-actions/empty",

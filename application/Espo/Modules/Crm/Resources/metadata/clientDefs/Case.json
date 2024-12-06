@@ -51,6 +51,23 @@
             }
         ]
     },
+    "bottomPanels": {
+        "detail": [
+            {
+                "name": "activities",
+                "reference": "activities",
+                "view": "crm:views/case/record/panels/activities"
+            },
+            {
+                "name": "history",
+                "reference": "history"
+            },
+            {
+                "name": "tasks",
+                "reference": "tasks"
+            }
+        ]
+    },
     "filterList": [
         {
             "name":"open"
