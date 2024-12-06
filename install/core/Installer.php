@@ -394,7 +394,6 @@ class Installer
             'database' => array_merge($databaseDefaults, $saveData['database']),
             'language' => $saveData['language'] ?? 'en_US',
             'siteUrl' => $siteUrl,
-            'passwordSalt' => $this->getPasswordHash()->generateSalt(),
             'cryptKey' => Util::generateSecretKey(),
             'hashSecretKey' => Util::generateSecretKey(),
             'theme' => $saveData['theme'] ?? 'Light',
