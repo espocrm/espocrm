@@ -5,15 +5,15 @@
     "createdAt": "Data",
     "target": "Destinazione",
     "targetType": "Entità",
-    "authToken": "Token di Autenticazione",
+    "authToken": "Token di autenticazione",
     "ipAddress": "Indirizzo IP",
-    "authLogRecord": "Record Registro Autenticazioni",
-    "userType": "Tipo Utente"
+    "authLogRecord": "Record registro autenticazioni",
+    "userType": "Tipo utente"
   },
   "links": {
-    "authToken": "Token di Autenticazione",
+    "authToken": "Token di autenticazione",
     "target": "Destinazione",
-    "authLogRecord": "Record Registro Autenticazioni"
+    "authLogRecord": "Record registro autenticazioni"
   },
   "presetFilters": {
     "onlyMy": "Solo il mio"
