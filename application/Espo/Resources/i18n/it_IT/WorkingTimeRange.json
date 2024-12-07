@@ -1,12 +1,12 @@
 {
   "labels": {
     "Calendars": "Calendari",
-    "Create WorkingTimeRange": "Crea Eccezione"
+    "Create WorkingTimeRange": "Crea eccezione"
   },
   "fields": {
     "timeRanges": "Orario",
-    "dateStart": "Data Inizio",
-    "dateEnd": "Data Fine",
+    "dateStart": "Data inizio",
+    "dateEnd": "Data fine",
     "type": "Tipo",
     "calendars": "Calendari",
     "users": "Utenti"

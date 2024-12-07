@@ -1,7 +1,7 @@
 {
   "labels": {
-    "Create AddressCountry": "Crea Indirizzo Paese",
-    "Populate": "RIempi"
+    "Create AddressCountry": "Crea indirizzo paese",
+    "Populate": "Riempi"
   },
   "fields": {
     "code": "Codice",
@@ -12,7 +12,7 @@
     "isPreferred": "I paesi preferenziali appaiono per primi nell'elenco."
   },
   "messages": {
-    "confirmPopulateDefaults": "Tutti i Paesi esistenti verranno eliminati e verrà generato l'elenco dei Paesi predefinito. Non sarà possibile annullare l'operazione.\n\nVuoi procedere?"
+    "confirmPopulateDefaults": "Tutti i paesi esistenti verranno eliminati e verrà generato l'elenco dei paesi predefinito. Non sarà possibile annullare l'operazione.\n\nVuoi procedere?"
   },
   "strings": {
     "populateDefaults": "Riempire con l'elenco dei paesi predefinito"
