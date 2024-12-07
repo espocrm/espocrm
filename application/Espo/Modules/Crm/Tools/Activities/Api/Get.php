@@ -74,9 +74,12 @@ class Get implements Action
         $offset = $searchParams->getOffset();
         $maxSize = $searchParams->getMaxSize();
 
+        $orderBy = $searchParams->getOrderBy();
+        $order = $searchParams->getOrder();
+
         $targetEntityType = $request->getQueryParam('entityType');
 
-        $fetchParams = new ActivitiesFetchParams($maxSize, $offset, $targetEntityType);
+        $fetchParams = new ActivitiesFetchParams($maxSize, $offset, $targetEntityType, $orderBy, $order);
 
         $recordCollection = $type === 'history' ?
             $this->service->getHistory($parentType, $id, $fetchParams) :
