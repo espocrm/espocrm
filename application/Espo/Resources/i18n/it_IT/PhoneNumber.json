@@ -1,7 +1,7 @@
 {
   "fields": {
     "type": "Tipo",
-    "optOut": "Escluso",
+    "optOut": "Cancellato",
     "invalid": "Invalido",
     "numeric": "Valore Numerico"
   },

@@ -1,6 +1,6 @@
 {
   "labels": {
-    "Revert Import": "Ripristina import",
+    "Revert Import": "Rimuovi Importazione",
     "Return to Import": "Ritorna a import",
     "Run Import": "Esegui import",
     "Back": "Indietro",
@@ -93,7 +93,7 @@
   },
   "tooltips": {
     "manualMode": "Se questa opzione è selezionata, sarà necessario eseguire l'importazione manualmente da CLI. Il comando verrà mostrato dopo aver impostato l'importazione.",
-    "silentMode": "La maggior parte degli script after-save verrà saltata, le note dello stream non verranno create. L'importazione sarà più veloce."
+    "silentMode": "La maggior parte degli script after-save verrà saltata, le note del flusso attività non verranno create. L'importazione sarà più veloce."
   },
   "links": {
     "errors": "Errori"

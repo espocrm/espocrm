@@ -18,7 +18,7 @@
     "action": {
       "Sent": "Inviato",
       "Opened": "Aperto",
-      "Opted Out": "Escluso",
+      "Opted Out": "Cancella",
       "Bounced": "Respinto",
       "Clicked": "Cliccato",
       "Lead Created": "Lead Creato",
@@ -31,7 +31,7 @@
   "presetFilters": {
     "sent": "Inviato",
     "opened": "Aperto",
-    "optedOut": "Escluso",
+    "optedOut": "Cancellati",
     "bounced": "Respinto",
     "clicked": "Cliccato",
     "leadCreated": "Lead Creato",

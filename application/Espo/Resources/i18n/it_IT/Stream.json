@@ -2,7 +2,7 @@
   "messages": {
     "infoMention": "Digita **@nome utente** per menzionare l'utente nel post.",
     "infoSyntax": "Sintassi di markdown disponibile",
-    "couldNotAddFollowerUserHasNoAccessToStream": "Impossibile aggiungere l'utente '{userName}' ai follower. L'utente non ha accesso allo 'stream' del record."
+    "couldNotAddFollowerUserHasNoAccessToStream": "Impossibile aggiungere l'utente '{userName}' ai follower. L'utente non ha accesso al 'flusso attività' del record."
   },
   "syntaxItems": {
     "code": "Codice",
@@ -10,7 +10,6 @@
     "strongText": "Testo forte",
     "emphasizedText": "Testo enfatizzato",
     "deletedText": "Testo cancellato",
-    "blockquote": "Blockquote",
-    "link": "Link"
+    "blockquote": "Blockquote"
   }
 }

@@ -4,8 +4,8 @@
     "Create Contact": "Crea Contatto",
     "Create Task": "Crea Compito",
     "Create Case": "Crea Caso",
-    "Add to Contact": "Aggiungi al Contatto",
-    "Add to Lead": "Aggiungi al Lead"
+    "Add to Contact": "Aggiungi a Contatto",
+    "Add to Lead": "Aggiungi a Lead"
   },
   "fields": {
     "tasks": "Compiti"

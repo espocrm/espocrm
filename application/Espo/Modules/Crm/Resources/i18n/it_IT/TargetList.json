@@ -2,9 +2,9 @@
   "fields": {
     "name": "Nome",
     "description": "Descrizione",
-    "entryCount": "Contatore iniziale",
+    "entryCount": "Conteggio Ingressi",
     "campaigns": "Campagne",
-    "endDate": "Data termine",
+    "endDate": "Data Fine",
     "targetLists": "Lista di Destinazione",
     "includingActionList": "Include",
     "excludingActionList": "Esclude",
@@ -30,7 +30,7 @@
   },
   "labels": {
     "Create TargetList": "Crea Lista di Destinazione",
-    "Opted Out": "Escluso",
+    "Opted Out": "Cancellazioni",
     "Cancel Opt-Out": "Cancella Rinuncia",
     "Opt-Out": "Rinuncia"
   }

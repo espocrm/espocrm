@@ -5,27 +5,27 @@
     "status": "Stato",
     "type": "Tipo",
     "startDate": "Data inizio",
-    "endDate": "Data termine",
+    "endDate": "Data Fine",
     "targetLists": "Liste di Destinazione",
     "excludingTargetLists": "Liste di Destinazione Escluse",
     "sentCount": "Inviato",
     "openedCount": "Aperto",
     "clickedCount": "Cliccato",
-    "optedOutCount": "Escluso",
+    "optedOutCount": "Cancellato",
     "bouncedCount": "Respinto",
     "hardBouncedCount": "Respinto Pesante",
     "softBouncedCount": "Respinto Leggero",
     "leadCreatedCount": "Lead Creati",
-    "revenue": "Entrata",
-    "revenueConverted": "Entrata (convertita)",
+    "revenue": "Entrate",
+    "revenueConverted": "Entrate (convertito)",
     "budgetConverted": "Budget (convertito)",
     "contactsTemplate": "Modello Contatti",
     "leadsTemplate": "Modello Leads",
     "accountsTemplate": "Modello Account",
-    "usersTemplate": "Modello utenti",
+    "usersTemplate": "Modello Utenti",
     "mailMergeOnlyWithAddress": "Salta record senza indirizzo",
     "optedInCount": "Iscritto",
-    "budgetCurrency": "Valuta di bilancio"
+    "budgetCurrency": "Valuta Budget"
   },
   "links": {
     "targetLists": "Liste di Destinazione",
@@ -46,13 +46,13 @@
     },
     "status": {
       "Planning": "Pianificazione",
-      "Active": "Attivo",
-      "Inactive": "Inattivo",
-      "Complete": "Completo"
+      "Active": "Attiva",
+      "Inactive": "Inattiva",
+      "Complete": "Completa"
     }
   },
   "labels": {
-    "Create Campaign": "Crea campagna",
+    "Create Campaign": "Crea Campagna",
     "Target Lists": "Liste di Destinazione",
     "Statistics": "Statistiche",
     "hard": "Pesante",
@@ -60,16 +60,18 @@
     "Unsubscribe": "Annulla l'iscrizione",
     "Mass Emails": "Email Massive",
     "Email Templates": "Modelli Email",
+    "Unsubscribe again": "Disiscrivi di nuovo",
     "Subscribe again": "Iscriviti di nuovo",
     "Create Target List": "Crea Lista di Destinazione",
     "Mail Merge": "Unione Mail",
     "Generate Mail Merge PDF": "Genera Stampa unione pdf"
   },
   "presetFilters": {
-    "active": "Attivo"
+    "active": "Attiva"
   },
   "messages": {
-    "unsubscribed": "Sei stato rimosso dalla nostra mailing list."
+    "unsubscribed": "Sei stato rimosso dalla nostra mailing list.",
+    "subscribedAgain": "Sei di nuovo iscritto."
   },
   "tooltips": {
     "targetLists": "Obiettivi che devono ricevere messaggi.",

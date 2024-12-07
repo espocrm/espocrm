@@ -86,7 +86,6 @@
   "tooltips": {
     "statusField": "Gli aggiornamenti a questo campo verranno registrati nel flusso attività.",
     "textFilterFields": "Campi utilizzati dalla ricerca testuale.",
-    "stream": "Se l'entità ha un flusso attività.",
     "disabled": "Spunta, se non hai bisogno di questa entità nel tuo sistema.",
     "linkAudited": "La creazione di record correlati ed il collegamento con il record esistente verranno registrati nelle attività.",
     "linkMultipleField": "Collegare un campo multiplo è una via pratica per modificare le relazioni. Non utilizzarlo se prevedi un elevato numero di record correlati.",

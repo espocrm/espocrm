@@ -67,10 +67,6 @@
     "sentBy": "Inviata da",
     "attachments": "Allegati",
     "fromEmailAddress": "Indirizzo email mittente",
-    "toEmailAddresses": "A Indirizzo email",
-    "ccEmailAddresses": "CC Indirizzi Email",
-    "bccEmailAddresses": "CCN Indirizzi email",
-    "replyToEmailAddresses": "Rispondi A (IndirizzI Email)",
     "groupFolder": "Cartella di Gruppo",
     "createdEvent": "Evento Creato"
   },
@@ -128,6 +124,7 @@
     "savedAsDraft": "Salvato come bozza.",
     "confirmInsertTemplate": "Il corpo dell'email andrà perso. Sei sicuro di voler inserire il modello?",
     "noSmtpSetup": "SMTP non configurato: {link}",
+    "confirmSend": "Invia email?",
     "sendConfirm": "Invia email?",
     "removeSelectedRecordsConfirmation": "Sei sicuro di voler rimuovere le mail selezionate?\n\nSaranno rimosse anche per gli altri utenti.",
     "removeRecordConfirmation": "Sei sicuro di voler rimuovere la mail selezionata?\n\nSarà rimossa anche per gli altri utenti.",

@@ -1,11 +1,11 @@
 {
   "labels": {
     "Primary": "Primario",
-    "Opted Out": "Escluso",
+    "Opted Out": "Cancellato",
     "Invalid": "Non valido"
   },
   "fields": {
-    "optOut": "Escluso",
+    "optOut": "Cancellato",
     "invalid": "Invalido"
   },
   "presetFilters": {
