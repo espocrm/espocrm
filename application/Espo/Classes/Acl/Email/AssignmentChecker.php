@@ -29,19 +29,30 @@
 
 namespace Espo\Classes\Acl\Email;
 
+use Espo\Core\Acl\AssignmentChecker as AssignmentCheckerInterface;
+use Espo\Entities\Email;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
-use Espo\Core\Acl\DefaultAssignmentChecker;
 
-class AssignmentChecker extends DefaultAssignmentChecker
+/**
+ * @implements AssignmentCheckerInterface<Email>
+ */
+class AssignmentChecker implements AssignmentCheckerInterface
 {
-    protected function isPermittedAssignedUser(User $user, Entity $entity): bool
-    {
-        return true;
-    }
+    public function __construct(
+        private AssignmentCheckerInterface\Helper $helper,
+    ) {}
 
-    protected function isPermittedAssignedUsers(User $user, Entity $entity): bool
+    public function check(User $user, Entity $entity): bool
     {
+        if ($entity->getAssignedUser() && !$this->helper->checkAssignedUser($user, $entity)) {
+            return false;
+        }
+
+        if ($entity->getTeams()->getIdList() !== [] && !$this->helper->checkTeams($user, $entity)) {
+            return false;
+        }
+
         return true;
     }
 }
