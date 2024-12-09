@@ -33,7 +33,6 @@ use Espo\ORM\Query\Select as SelectQuery;
 
 use IteratorAggregate;
 use Countable;
-use stdClass;
 use Traversable;
 use PDO;
 use PDOStatement;

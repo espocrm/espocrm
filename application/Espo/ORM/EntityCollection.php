@@ -37,7 +37,6 @@ use SeekableIterator;
 use RuntimeException;
 use OutOfBoundsException;
 use InvalidArgumentException;
-use stdClass;
 
 /**
  * A standard collection of entities. It allocates a memory for all entities.
@@ -50,7 +49,7 @@ use stdClass;
  */
 class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, SeekableIterator
 {
-    private ?EntityFactory $entityFactory = null;
+    private ?EntityFactory $entityFactory;
     private ?string $entityType;
     private int $position = 0;
     private bool $isFetched = false;
