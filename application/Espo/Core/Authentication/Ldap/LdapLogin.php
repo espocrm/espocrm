@@ -62,6 +62,8 @@ use SensitiveParameter;
  */
 class LdapLogin implements Login
 {
+    public const NAME = 'LDAP';
+
     private LDAPUtils $utils;
     private ?Client $client = null;
 

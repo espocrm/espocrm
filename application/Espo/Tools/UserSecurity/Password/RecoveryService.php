@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\UserSecurity\Password;
 
+use Espo\Core\Authentication\Ldap\LdapLogin;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
@@ -168,7 +169,8 @@ class RecoveryService
 
         if (
             !$user->isAdmin() &&
-            $this->authenticationMethodProvider->get() !== EspoLogin::NAME
+            $this->authenticationMethodProvider->get() !== EspoLogin::NAME &&
+            !$this->isPortalLdapDisabled()
         ) {
             $this->fail("User $userId is not allowed, authentication method is not 'Espo'.");
 
@@ -555,5 +557,12 @@ class RecoveryService
         $data->set('lastPasswordRecoveryDate', DateTime::createNow()->toString());
 
         $this->entityManager->saveEntity($data);
+    }
+
+    private function isPortalLdapDisabled(): bool
+    {
+        return $this->applicationState->isPortal() &&
+            $this->authenticationMethodProvider->get() === LdapLogin::NAME &&
+            !$this->config->get('ldapPortalUserLdapAuth');
     }
 }
