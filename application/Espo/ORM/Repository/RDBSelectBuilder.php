@@ -45,6 +45,7 @@ use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Mapper\BaseMapper;
 
+use LogicException;
 use RuntimeException;
 
 /**
@@ -92,9 +93,9 @@ class RDBSelectBuilder
     }
 
     /**
-     * @return Collection<TEntity>
+     * @return EntityCollection<TEntity>|SthCollection<TEntity>
      */
-    public function find(): Collection
+    public function find(): EntityCollection|SthCollection
     {
         $query = $this->builder->build();
 
@@ -404,11 +405,15 @@ class RDBSelectBuilder
 
     /**
      * @param Collection<TEntity> $collection
-     * @return Collection<TEntity>|SthCollection<TEntity>
+     * @return EntityCollection<TEntity>|SthCollection<TEntity>
      */
-    protected function handleReturnCollection(Collection $collection): Collection
+    protected function handleReturnCollection(Collection $collection): EntityCollection|SthCollection
     {
         if (!$collection instanceof SthCollection) {
+            if (!$collection instanceof EntityCollection) {
+                throw new LogicException();
+            }
+
             return $collection;
         }
 
@@ -416,9 +421,7 @@ class RDBSelectBuilder
             return $collection;
         }
 
-        /**
-         * @var EntityCollection<TEntity>
-         */
+        /** @var EntityCollection<TEntity> */
         return $this->entityManager->getCollectionFactory()->createFromSthCollection($collection);
     }
 }

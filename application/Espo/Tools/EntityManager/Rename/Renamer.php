@@ -614,7 +614,6 @@ class Renamer
 
     private function changeValuesInDbRoles(string $from, string $to): void
     {
-        /** @var iterable<Role> $roleList */
         $roleList = $this->entityManager
             ->getRDBRepositoryByClass(Role::class)
             ->find();

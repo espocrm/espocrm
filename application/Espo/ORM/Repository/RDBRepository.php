@@ -30,6 +30,7 @@
 namespace Espo\ORM\Repository;
 
 use Espo\ORM\Defs\RelationDefs;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\Collection;
@@ -223,9 +224,9 @@ class RDBRepository implements Repository
     /**
      * Find records.
      *
-     * @return Collection<TEntity>
+     * @return EntityCollection<TEntity>|SthCollection<TEntity>
      */
-    public function find(): Collection
+    public function find(): EntityCollection|SthCollection
     {
         return $this->createSelectBuilder()->find();
     }
