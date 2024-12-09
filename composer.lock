@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "310ec20056303abdf489f48a819c2351",
+    "content-hash": "c71fbf8961a0a000e8e902a0bf78bd6c",
     "packages": [
         {
             "name": "async-aws/core",
@@ -1670,21 +1670,15 @@
         },
         {
             "name": "laminas/laminas-ldap",
-            "version": "2.18.1",
+            "version": "2.19.x-dev",
             "source": {
                 "type": "git",
-                "url": "https://github.com/laminas/laminas-ldap.git",
-                "reference": "c337026c6c3555d06bcae37e95ffe92cafcea08a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-ldap/zipball/c337026c6c3555d06bcae37e95ffe92cafcea08a",
-                "reference": "c337026c6c3555d06bcae37e95ffe92cafcea08a",
-                "shasum": ""
+                "url": "https://github.com/yurikuzn/laminas-ldap.git",
+                "reference": "e7b9fe0e295f3898fb97d08b320654c92849918a"
             },
             "require": {
                 "ext-ldap": "*",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0"
+                "php": "~8.2.0 || ~8.3.0 || ~8.4.0"
             },
             "conflict": {
                 "zendframework/zend-ldap": "*"
@@ -1702,13 +1696,39 @@
             "suggest": {
                 "laminas/laminas-eventmanager": "Laminas\\EventManager component"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "Laminas\\Ldap\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "LaminasTest\\Ldap\\": "test/"
+                }
+            },
+            "scripts": {
+                "check": [
+                    "@cs-check",
+                    "@test"
+                ],
+                "cs-check": [
+                    "phpcs"
+                ],
+                "cs-fix": [
+                    "phpcbf"
+                ],
+                "static-analysis": [
+                    "psalm --shepherd --stats"
+                ],
+                "test": [
+                    "phpunit --colors=always"
+                ],
+                "test-coverage": [
+                    "phpunit --colors=always --coverage-clover clover.xml"
+                ]
+            },
             "license": [
                 "BSD-3-Clause"
             ],
@@ -1719,20 +1739,14 @@
                 "ldap"
             ],
             "support": {
-                "chat": "https://laminas.dev/chat",
                 "docs": "https://docs.laminas.dev/laminas-ldap/",
-                "forum": "https://discourse.laminas.dev",
                 "issues": "https://github.com/laminas/laminas-ldap/issues",
+                "source": "https://github.com/laminas/laminas-ldap",
                 "rss": "https://github.com/laminas/laminas-ldap/releases.atom",
-                "source": "https://github.com/laminas/laminas-ldap"
+                "chat": "https://laminas.dev/chat",
+                "forum": "https://discourse.laminas.dev"
             },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "time": "2023-12-06T11:19:05+00:00"
+            "time": "2024-12-09T17:21:39+00:00"
         },
         {
             "name": "laminas/laminas-loader",
@@ -8875,6 +8889,7 @@
     "stability-flags": {
         "laminas/laminas-mail": 20,
         "laminas/laminas-mime": 20,
+        "laminas/laminas-ldap": 20,
         "zordius/lightncandy": 20
     },
     "prefer-stable": false,
