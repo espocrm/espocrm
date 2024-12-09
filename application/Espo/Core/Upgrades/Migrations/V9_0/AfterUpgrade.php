@@ -31,6 +31,7 @@ namespace Espo\Core\Upgrades\Migrations\V9_0;
 
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Upgrades\Migration\Script;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Preferences;
 use Espo\Entities\ScheduledJob;
@@ -44,6 +45,8 @@ class AfterUpgrade implements Script
     public function __construct(
         private EntityManager $entityManager,
         private Metadata $metadata,
+        private Config $config,
+        private Config\ConfigWriter $configWriter,
     ) {}
 
     public function run(): void
@@ -51,6 +54,7 @@ class AfterUpgrade implements Script
         $this->setReactionNotifications();
         $this->createScheduledJob();
         $this->setAclLinks();
+        $this->fixTimezone();
     }
 
     private function createScheduledJob(): void
@@ -165,5 +169,23 @@ class AfterUpgrade implements Script
         $this->metadata->set('aclDefs', $entityType, ['accountLink' => $accountLink]);
 
         $this->metadata->save();
+    }
+
+    private function fixTimezone(): void
+    {
+        $map = [
+            'Europe/Kiev' => 'Europe/Kyiv',
+            'Europe/Uzhgorod' => 'Europe/Uzhhorod',
+            'Europe/Zaporozhye' => 'Europe/Zaporozhye',
+        ];
+
+        $timeZone = $this->config->get('timeZone');
+
+        if (in_array($timeZone, array_keys($map))) {
+            $timeZone = $map[$timeZone];
+
+            $this->configWriter->set('timeZone', $timeZone);
+            $this->configWriter->save();
+        }
     }
 }
