@@ -43,6 +43,7 @@
         ["aclDefs"]
     ],
     "additionalBuilderClassNameList": [
+        "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\FilterFields",
         "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\Fields",
         "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\DeleteIdField",
         "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\StreamUpdatedAtField"
