@@ -96,10 +96,8 @@ class RecoveryService
         }
 
         $request = $this->entityManager
-            ->getRDBRepository(PasswordChangeRequest::ENTITY_TYPE)
-            ->where([
-                'requestId' => $id,
-            ])
+            ->getRDBRepositoryByClass(PasswordChangeRequest::class)
+            ->where(['requestId' => $id])
             ->findOne();
 
         if (!$request) {
@@ -118,10 +116,8 @@ class RecoveryService
     public function removeRequest(string $id): void
     {
         $request = $this->entityManager
-            ->getRDBRepository(PasswordChangeRequest::ENTITY_TYPE)
-            ->where([
-                'requestId' => $id,
-            ])
+            ->getRDBRepositoryByClass(PasswordChangeRequest::class)
+            ->where(['requestId' => $id])
             ->findOne();
 
         if ($request) {
@@ -148,9 +144,8 @@ class RecoveryService
             $this->urlValidator->validate($url);
         }
 
-        /** @var ?User $user */
         $user = $this->entityManager
-            ->getRDBRepository(User::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(User::class)
             ->where([
                 'userName' => $userName,
                 'emailAddress' => $emailAddress,
@@ -158,7 +153,7 @@ class RecoveryService
             ->findOne();
 
         if (!$user) {
-            $this->fail("User {$emailAddress} not found.", 404);
+            $this->fail("User $emailAddress not found.", 404);
 
             return false;
         }
@@ -166,7 +161,7 @@ class RecoveryService
         $userId = $user->getId();
 
         if (!$user->isActive()) {
-            $this->fail("User {$userId} is not active.");
+            $this->fail("User $userId is not active.");
 
             return false;
         }
@@ -175,20 +170,20 @@ class RecoveryService
             !$user->isAdmin() &&
             $this->authenticationMethodProvider->get() !== EspoLogin::NAME
         ) {
-            $this->fail("User {$userId} is not allowed, authentication method is not 'Espo'.");
+            $this->fail("User $userId is not allowed, authentication method is not 'Espo'.");
 
             return false;
         }
 
         if ($user->isApi() || $user->isSystem() || $user->isSuperAdmin()) {
-            $this->fail("User {$userId} is not allowed.");
+            $this->fail("User $userId is not allowed.");
 
             return false;
         }
 
         if ($config->get('passwordRecoveryForInternalUsersDisabled')) {
             if ($user->isRegular() || $user->isAdmin()) {
-                $this->fail("User {$userId} is not allowed, disabled for internal users.");
+                $this->fail("User $userId is not allowed, disabled for internal users.");
 
                 return false;
             }
@@ -196,7 +191,7 @@ class RecoveryService
 
         if ($config->get('passwordRecoveryForAdminDisabled')) {
             if ($user->isAdmin()) {
-                $this->fail("User {$userId} is not allowed, disabled for admin users.");
+                $this->fail("User $userId is not allowed, disabled for admin users.");
 
                 return false;
             }
@@ -204,7 +199,7 @@ class RecoveryService
 
         if ($this->applicationState->isPortal()) {
             if (!$user->isPortal()) {
-                $this->fail("User {$userId} is not allowed, as it's not portal user.");
+                $this->fail("User $userId is not allowed, as it's not portal user.");
 
                 return false;
             }
@@ -212,17 +207,15 @@ class RecoveryService
             $portalId = $this->applicationState->getPortalId();
 
             if (!$user->getPortals()->hasId($portalId)) {
-                $this->fail("User {$userId} is from another portal.");
+                $this->fail("User $userId is from another portal.");
 
                 return false;
             }
         }
 
         $existingRequest = $this->entityManager
-            ->getRDBRepository(PasswordChangeRequest::ENTITY_TYPE)
-            ->where([
-                'userId' => $user->getId(),
-            ])
+            ->getRDBRepositoryByClass(PasswordChangeRequest::class)
+            ->where(['userId' => $user->getId()])
             ->findOne();
 
         if ($existingRequest) {
@@ -230,7 +223,7 @@ class RecoveryService
                 throw new ForbiddenSilent('Already-Sent');
             }
 
-            $this->fail("Denied for {$userId}, already sent.");
+            $this->fail("Denied for $userId, already sent.");
 
             return false;
         }
@@ -271,8 +264,7 @@ class RecoveryService
     {
         $this->checkUser($user);
 
-        /** @var PasswordChangeRequest $entity */
-        $entity = $this->entityManager->getNewEntity(PasswordChangeRequest::ENTITY_TYPE);
+        $entity = $this->entityManager->getRDBRepositoryByClass(PasswordChangeRequest::class)->getNew();
 
         $entity->set([
             'userId' => $user->getId(),
@@ -283,6 +275,9 @@ class RecoveryService
         return $entity;
     }
 
+    /**
+     * @throws Error
+     */
     public function createRequestForNewUser(User $user, ?string $url = null): PasswordChangeRequest
     {
         $this->checkUser($user);
@@ -316,8 +311,7 @@ class RecoveryService
 
         $this->entityManager->saveEntity($entity);
 
-        $lifetime =
-            $this->config->get('passwordChangeRequestExistingUserLifetime') ??
+        $lifetime = $this->config->get('passwordChangeRequestExistingUserLifetime') ??
             self::EXISTING_USER_REQUEST_LIFETIME;
 
         $this->createCleanupRequestJob($entity->getId(), $lifetime);
@@ -390,8 +384,7 @@ class RecoveryService
             return;
         }
 
-        /** @var Email $email */
-        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
+        $email = $this->entityManager->getRDBRepositoryByClass(Email::class)->getNew();
 
         if (!$this->emailSender->hasSystemSmtp() && !$this->config->get('internalSmtpServer')) {
             throw new Error("Password recovery: SMTP credentials are not defined.");
@@ -409,9 +402,8 @@ class RecoveryService
         $siteUrl = $this->applicationConfig->getSiteUrl();
 
         if ($user->isPortal()) {
-            /** @var ?Portal $portal */
             $portal = $this->entityManager
-                ->getRDBRepository(Portal::ENTITY_TYPE)
+                ->getRDBRepositoryByClass(Portal::class)
                 ->distinct()
                 ->join('users')
                 ->where([
@@ -461,8 +453,7 @@ class RecoveryService
                 throw new NoSmtp("No internal SMTP");
             }
 
-            $smtpParams = SmtpParams
-                ::create($server, $port)
+            $smtpParams = SmtpParams::create($server, $port)
                 ->withAuth($this->config->get('internalSmtpAuth'))
                 ->withUsername($this->config->get('internalSmtpUsername'))
                 ->withPassword($this->config->get('internalSmtpPassword'))
