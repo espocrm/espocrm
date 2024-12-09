@@ -116,10 +116,10 @@ class Opportunity extends Entity
     /**
      * A primary contact.
      */
-    public function getContact(): ?Link
+    public function getContact(): ?Contact
     {
-        /** @var ?Link */
-        return $this->getValueObject('contact');
+        /** @var ?Contact */
+        return $this->relations->getOne('contact');
     }
 
     public function getContacts(): LinkMultiple

@@ -33,6 +33,7 @@ use Espo\Core\Entities\Person;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Name\Field;
+use Espo\Core\Record\Collection;
 use Espo\Entities\User;
 
 class Contact extends Person
@@ -58,12 +59,22 @@ class Contact extends Person
     }
 
     /**
-     * Accounts.
+     * Get accounts.
+     *
+     * @return Collection<Account>
      */
-    public function getAccounts(): LinkMultiple
+    public function getAccounts(): Collection
     {
-        /** @var LinkMultiple */
-        return $this->getValueObject('accounts');
+        /** @var Collection<Account> */
+        return $this->relations->getMany('accounts');
+    }
+
+    /**
+     * Set a primary account.
+     */
+    public function setAccount(Account|Link|null $account): self
+    {
+        return $this->setRelatedLinkOrEntity('account', $account);
     }
 
     /**

@@ -189,9 +189,9 @@ class Service
             $dataList[] = new EmailAddressEntityPair(EmailAddress::create($emailAddress), $contact);
         }
 
-        $contactLink = $entity->getContact();
+        $contact = $entity->getContact();
 
-        if (!$contactLink) {
+        if (!$contact) {
             return $dataList;
         }
 
@@ -200,12 +200,12 @@ class Service
             function (
                 EmailAddressEntityPair $o1,
                 EmailAddressEntityPair $o2
-            ) use ($contactLink) {
-                if ($o1->getEntity()->getId() === $contactLink->getId()) {
+            ) use ($contact) {
+                if ($o1->getEntity()->getId() === $contact->getId()) {
                     return -1;
                 }
 
-                if ($o2->getEntity()->getId() === $contactLink->getId()) {
+                if ($o2->getEntity()->getId() === $contact->getId()) {
                     return 1;
                 }
 
