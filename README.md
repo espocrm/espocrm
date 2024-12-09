@@ -2,8 +2,8 @@
 
 [![PHPStan level 8](https://img.shields.io/badge/PHPStan-level%208-brightgreen)](#espocrm)
 
-[EspoCRM](https://www.espocrm.com) is a free, open-source CRM platform designed to help organizations build and maintain strong customer relationships. 
-It provides a wide range of tools to store, organize, and manage leads, contacts, sales opportunities, marketing campaigns, 
+[EspoCRM](https://www.espocrm.com) is a free, open-source CRM platform designed to help organizations build and maintain strong customer relationships.
+It provides a wide range of tools to store, organize, and manage leads, contacts, sales opportunities, marketing campaigns,
 support cases, and more – all business information in a simple and intuitive interface.
 
 ![Screenshot](https://user-images.githubusercontent.com/1006792/226094559-995dfd2a-a18f-4619-a21b-79a4e671990a.png)
@@ -19,9 +19,9 @@ You can try the CRM on an online [demo](https://www.espocrm.com/demo/).
 
 ### Requirements
 
-* PHP 8.1 - 8.3;
+* PHP 8.2 - 8.3;
 * MySQL 5.7 (and later), or MariaDB 10.2 (and later);
-* PostgreSQL 15 (and later) (beta, official support soon).
+* PostgreSQL 15 (and later).
 
 For more information about server configuration, see [this article](https://docs.espocrm.com/administration/server-configuration/).
 
