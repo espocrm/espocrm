@@ -103,5 +103,9 @@
         "customers": "Customers",
         "partners": "Partners",
         "recentlyCreated": "Recently Created"
+    },
+    "tabs": {
+        "Account": "Account",
+        "Support": "Support"
     }
 }

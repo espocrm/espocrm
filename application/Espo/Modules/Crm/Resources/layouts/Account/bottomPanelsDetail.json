@@ -1,0 +1,33 @@
+{
+    "_tabBreak_0": {
+        "index": 0,
+        "tabBreak": true,
+        "tabLabel": "$Stream"
+    },
+    "stream": {
+        "sticked": false,
+        "index": 1
+    },
+    "_tabBreak_1": {
+        "index": 2,
+        "tabBreak": true,
+        "tabLabel": "$Account"
+    },
+    "contacts": {
+        "index": 3
+    },
+    "opportunities": {
+        "index": 4
+    },
+    "documents": {
+        "index": 5
+    },
+    "_tabBreak_2": {
+        "index": 6,
+        "tabBreak": true,
+        "tabLabel": "$Support"
+    },
+    "cases": {
+        "index": 7
+    }
+}

@@ -1013,5 +1013,8 @@
         "edit": "Edit",
         "delete": "Delete",
         "stream": "Stream"
+    },
+    "tabs": {
+        "Stream": "Stream"
     }
 }
