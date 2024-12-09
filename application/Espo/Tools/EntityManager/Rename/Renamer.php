@@ -39,7 +39,8 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Log;
-
+use Espo\Entities\PortalRole;
+use Espo\Entities\Role;
 use Espo\ORM\EntityManager;
 
 use Espo\Tools\EntityManager\NameUtil;
@@ -613,50 +614,53 @@ class Renamer
 
     private function changeValuesInDbRoles(string $from, string $to): void
     {
+        /** @var iterable<Role> $roleList */
         $roleList = $this->entityManager
-            ->getRDBRepository(\Espo\Entities\Role::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(Role::class)
             ->find();
 
         foreach ($roleList as $role) {
-            /** @var \stdClass $data */
-            $data = $role->get('data');
-            /** @var \stdClass $fieldData */
-            $fieldData = $role->get('fieldData');
+            $data = $role->getRawData();
+            $fieldData = $role->getRawFieldData();
 
             if (isset($data->$from)) {
                 $data->$to = $data->$from;
                 unset($data->$from);
+
+
                 $role->set('data', $data);
             }
 
             if (isset($fieldData->$from)) {
                 $fieldData->$to = $fieldData->$from;
                 unset($fieldData->$from);
+
                 $role->set('fieldData', $fieldData);
             }
 
             $this->entityManager->saveEntity($role);
         }
 
+        /** @var iterable<PortalRole> $portalRoleList */
         $portalRoleList = $this->entityManager
-            ->getRDBRepository(\Espo\Entities\PortalRole::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(PortalRole::class)
             ->find();
 
         foreach ($portalRoleList as $role) {
-            /** @var \stdClass $data */
-            $data = $role->get('data');
-            /** @var \stdClass $fieldData */
-            $fieldData = $role->get('fieldData');
+            $data = $role->getRawData();
+            $fieldData = $role->getRawFieldData();
 
             if (isset($data->$from)) {
                 $data->$to = $data->$from;
                 unset($data->$from);
+
                 $role->set('data', $data);
             }
 
             if (isset($fieldData->$from)) {
                 $fieldData->$to = $fieldData->$from;
                 unset($fieldData->$from);
+
                 $role->set('fieldData', $fieldData);
             }
 

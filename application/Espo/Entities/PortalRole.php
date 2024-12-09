@@ -30,8 +30,19 @@
 namespace Espo\Entities;
 
 use Espo\Core\ORM\Entity;
+use stdClass;
 
 class PortalRole extends Entity
 {
     public const ENTITY_TYPE = 'PortalRole';
+
+    public function getRawData(): stdClass
+    {
+        return $this->get('data') ?? (object) [];
+    }
+
+    public function getRawFieldData(): stdClass
+    {
+        return $this->get('fieldData') ?? (object) [];
+    }
 }
