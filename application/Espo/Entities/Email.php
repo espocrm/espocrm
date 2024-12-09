@@ -37,8 +37,8 @@ use Espo\Core\Field\DateTime;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Field\Link;
 use Espo\Modules\Crm\Entities\Account;
-use Espo\ORM\Collection;
 use Espo\ORM\Entity as OrmEntity;
+use Espo\ORM\EntityCollection;
 use Espo\Repositories\Email as EmailRepository;
 use Espo\Tools\Email\Util as EmailUtil;
 
@@ -884,11 +884,11 @@ class Email extends Entity
     }
 
     /**
-     * @return iterable<Attachment>
+     * @return EntityCollection<Attachment>
      */
     public function getAttachments(): iterable
     {
-        /** @var Collection<Attachment> */
+        /** @var EntityCollection<Attachment> */
         return $this->relations->getMany('attachments');
     }
 

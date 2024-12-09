@@ -32,12 +32,11 @@ namespace Espo\Entities;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
-
 use Espo\Core\Field\DateTime;
-
-use Espo\ORM\Collection;
 use Espo\ORM\Entity as OrmEntity;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\Name\Attribute;
+
 use RuntimeException;
 use stdClass;
 
@@ -350,11 +349,11 @@ class Note extends Entity
     }
 
     /**
-     * @return iterable<Attachment>
+     * @return EntityCollection<Attachment>
      */
-    public function getAttachments(): iterable
+    public function getAttachments(): EntityCollection
     {
-        /** @var Collection<Attachment> */
+        /** @var EntityCollection<Attachment> */
         return $this->relations->getMany('attachments');
     }
 }

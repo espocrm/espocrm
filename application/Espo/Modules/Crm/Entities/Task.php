@@ -37,8 +37,8 @@ use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Entities\Attachment;
 use Espo\Entities\User;
-use Espo\ORM\Collection;
 use Espo\ORM\Entity as OrmEntity;
+use Espo\ORM\EntityCollection;
 
 class Task extends Entity
 {
@@ -104,11 +104,11 @@ class Task extends Entity
     }
 
     /**
-     * @return iterable<Attachment>
+     * @return EntityCollection<Attachment>
      */
-    public function getAttachments(): iterable
+    public function getAttachments(): EntityCollection
     {
-        /** @var Collection<Attachment> */
+        /** @var EntityCollection<Attachment> */
         return $this->relations->getMany('attachments');
     }
 

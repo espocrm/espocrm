@@ -30,7 +30,7 @@
 namespace Espo\Entities;
 
 use Espo\Core\ORM\Entity;
-use Espo\ORM\Collection;
+use Espo\ORM\EntityCollection;
 
 class EmailTemplate extends Entity
 {
@@ -61,11 +61,11 @@ class EmailTemplate extends Entity
     }
 
     /**
-     * @return iterable<Attachment>
+     * @return EntityCollection<Attachment>
      */
-    public function getAttachments(): iterable
+    public function getAttachments(): EntityCollection
     {
-        /** @var Collection<Attachment> */
+        /** @var EntityCollection<Attachment> */
         return $this->relations->getMany('attachments');
     }
 }

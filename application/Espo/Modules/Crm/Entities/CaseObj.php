@@ -35,7 +35,7 @@ use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Entities\Attachment;
 use Espo\Entities\User;
-use Espo\ORM\Collection;
+use Espo\ORM\EntityCollection;
 
 class CaseObj extends Entity
 {
@@ -114,11 +114,11 @@ class CaseObj extends Entity
     }
 
     /**
-     * @return iterable<Attachment>
+     * @return EntityCollection<Attachment>
      */
-    public function getAttachments(): iterable
+    public function getAttachments(): EntityCollection
     {
-        /** @var Collection<Attachment> */
+        /** @var EntityCollection<Attachment> */
         return $this->relations->getMany('attachments');
     }
 

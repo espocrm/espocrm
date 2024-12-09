@@ -33,8 +33,8 @@ use Espo\Core\Entities\Person;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Name\Field;
-use Espo\Core\Record\Collection;
 use Espo\Entities\User;
+use Espo\ORM\EntityCollection;
 
 class Contact extends Person
 {
@@ -61,11 +61,11 @@ class Contact extends Person
     /**
      * Get accounts.
      *
-     * @return Collection<Account>
+     * @return EntityCollection<Account>
      */
-    public function getAccounts(): Collection
+    public function getAccounts(): EntityCollection
     {
-        /** @var Collection<Account> */
+        /** @var EntityCollection<Account> */
         return $this->relations->getMany('accounts');
     }
 
