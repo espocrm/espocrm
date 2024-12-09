@@ -116,7 +116,7 @@ class ActionManager
      * @param ?string $actionName
      * @throws Error
      */
-    protected function getObject(string $actionName = null): ActionBase
+    protected function getObject(?string $actionName = null): ActionBase
     {
         $managerName = $this->getManagerName();
 

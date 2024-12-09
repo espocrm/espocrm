@@ -69,7 +69,7 @@ class SystemRequirements
     }
 
     /**
-     * @param array<string, mixed> $additionalData
+     * @param ?array<string, mixed> $additionalData
      * @return array{
      *   php?: array<string, array<string, mixed>>,
      *   database?: array<string, array<string, mixed>>,
@@ -79,7 +79,7 @@ class SystemRequirements
     public function getRequiredListByType(
         string $type,
         bool $requiredOnly = false,
-        array $additionalData = null
+        ?array $additionalData = null
     ): array {
 
         return match ($type) {

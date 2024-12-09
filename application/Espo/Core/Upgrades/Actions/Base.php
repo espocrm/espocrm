@@ -614,14 +614,14 @@ abstract class Base
     }
 
     /**
-     * @param string[] $fileList
+     * @param ?string[] $fileList
      * @throws Error
      */
     protected function copy(
         string $sourcePath,
         string $destPath,
         bool $recursively = false,
-        array $fileList = null,
+        ?array $fileList = null,
         bool $copyOnlyFiles = false
     ): bool {
 

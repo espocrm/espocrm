@@ -92,7 +92,7 @@ class Language
         $this->currentLanguage = $language;
     }
 
-    private function getCacheKey(string $language = null): string
+    private function getCacheKey(?string $language = null): string
     {
         return 'languages/' . ($language ?? $this->currentLanguage);
     }

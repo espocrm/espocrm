@@ -96,9 +96,9 @@ class Permission
     ];
 
     /**
-     * @param array<string, mixed> $params
+     * @param ?array<string, mixed> $params
      */
-    public function __construct(private Manager $fileManager, array $params = null)
+    public function __construct(private Manager $fileManager, ?array $params = null)
     {
         if ($params) {
             foreach ($params as $paramName => $paramValue) {

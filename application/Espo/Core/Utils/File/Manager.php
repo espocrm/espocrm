@@ -546,7 +546,7 @@ class Manager
      * @param string $sourcePath
      * @param string $destPath
      * @param bool $recursively
-     * @param string[] $fileList List of files that should be copied.
+     * @param ?string[] $fileList List of files that should be copied.
      * @param bool $copyOnlyFiles Copy only files, instead of full path with directories.
      *   Example:
      *   $sourcePath = 'data/uploads/extensions/file.json',
@@ -558,7 +558,7 @@ class Manager
         string $sourcePath,
         string $destPath,
         bool $recursively = false,
-        array $fileList = null,
+        ?array $fileList = null,
         bool $copyOnlyFiles = false
     ): bool {
 

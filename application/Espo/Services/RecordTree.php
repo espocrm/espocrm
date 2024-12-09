@@ -70,7 +70,7 @@ class RecordTree extends Record
      * @throws BadRequest
      */
     public function getTree(
-        string $parentId = null,
+        ?string $parentId = null,
         array $params = [],
         ?int $maxDepth = null
     ): ?Collection {
@@ -90,7 +90,7 @@ class RecordTree extends Record
      * @throws Forbidden
      */
     private function getTreeInternal(
-        string $parentId = null,
+        ?string $parentId = null,
         array $params = [],
         ?int $maxDepth = null,
         int $level = 0

@@ -107,7 +107,7 @@ class Utils
         'Principal' => 4,
     ];
 
-    public function __construct(Config $config = null)
+    public function __construct(?Config $config = null)
     {
         if (isset($config)) {
             $this->config = $config;

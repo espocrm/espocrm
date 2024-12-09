@@ -44,7 +44,7 @@ class BadRequest extends Exception implements HasBody, HasLogLevel
     protected $code = 400;
     protected ?string $body = null;
 
-    final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
+    final public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

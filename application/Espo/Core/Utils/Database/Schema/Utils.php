@@ -126,7 +126,7 @@ class Utils
     public static function getFieldListExceededIndexMaxLength(
         array $ormMeta,
         $indexMaxLength = 1000,
-        array $indexList = null,
+        ?array $indexList = null,
         $characterLength = 4
     ) {
 
