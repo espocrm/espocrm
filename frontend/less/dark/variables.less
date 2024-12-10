@@ -96,15 +96,14 @@
 
 @btn-text-color-value: #b7b7b7;
 
-@popover-bg-value: #2b2d30;
+@popover-bg-value: @navbar-inverse-bg-value;
 
 @dropdown-bg-value: @popover-bg-value;
 @dropdown-link-color-value: @text-color-value;
 @dropdown-link-hover-color-value: lighten(@text-color-value, 5%);
-@dropdown-link-hover-bg-value: #313336;
+@dropdown-link-hover-bg-value: @navbar-inverse-link-hover-bg-value;
 @dropdown-divider-bg-value: @default-border-color-value;
-@dropdown-border-value: transparent;
-@dropdown-border-width-value: 0;
+@dropdown-border-value: @default-border-color-value;
 
 @select-item-bg-value: @table-bg-accent-value;
 @select-item-border-value: @btn-default-border-value;
@@ -137,6 +136,7 @@
 
 @panel-border-width-value: var(--1px);
 @navbar-border-width-value: var(--1px);
+@dropdown-border-width-value: var(--1px);
 
 @border-radius-value: var(--6px);
 @border-radius-small-value: var(--3px);
