@@ -1445,11 +1445,24 @@ section {
     }
 }
 
-.panel.dashlet > .panel-body > .list-container > .list > .list-group {
-    > li.list-group-item:last-child {
-        border-bottom-width: var(--1px);
-        border-bottom-left-radius: 0 !important;
-        border-bottom-right-radius: 0 !important;
+.panel.dashlet > .panel-body > .list-container > .list {
+    > .list-group {
+        > li.list-group-item:last-child {
+            border-bottom-width: var(--1px);
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
+    }
+
+    > .show-more {
+        margin-top: var(--minus-1px);
+
+        > .btn-block {
+            &,
+            &:hover {
+                border-top: 0;
+            }
+        }
     }
 }
 
@@ -1459,7 +1472,7 @@ section {
 
 .list-expanded > .show-more {
     padding: 0;
-    margin-top: var(--minus-1px);
+    //margin-top: var(--minus-1px);
 }
 
 .list-expanded > li.show-more > .btn {
@@ -1850,6 +1863,11 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 .show-more > .btn-block {
     text-align: left;
     padding: var(--7px) var(--10px) var(--7px) var(--panel-padding);
+
+    &,
+    &:hover {
+        border-top: var(--1px) solid var(--default-border-color);
+    }
 }
 
 label.attach-file-label {
