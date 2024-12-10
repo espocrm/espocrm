@@ -158,6 +158,41 @@
             "returnType": "int"
         },
         {
+            "name": "TIMESTAMPDIFF_YEAR",
+            "insertText": "TIMESTAMPDIFF_YEAR:(DATE_FROM, DATE_TO)",
+            "returnType": "int"
+        },
+        {
+            "name": "TIMESTAMPDIFF_MONTH",
+            "insertText": "TIMESTAMPDIFF_MONTH:(DATE_FROM, DATE_TO)",
+            "returnType": "int"
+        },
+        {
+            "name": "TIMESTAMPDIFF_WEEK",
+            "insertText": "TIMESTAMPDIFF_WEEK:(DATE_FROM, DATE_TO)",
+            "returnType": "int"
+        },
+        {
+            "name": "TIMESTAMPDIFF_DAY",
+            "insertText": "TIMESTAMPDIFF_DAY:(DATE_FROM, DATE_TO)",
+            "returnType": "int"
+        },
+        {
+            "name": "TIMESTAMPDIFF_HOUR",
+            "insertText": "TIMESTAMPDIFF_HOUR:(DATE_FROM, DATE_TO)",
+            "returnType": "int"
+        },
+        {
+            "name": "TIMESTAMPDIFF_MINUTE",
+            "insertText": "TIMESTAMPDIFF_MINUTE:(DATE_FROM, DATE_TO)",
+            "returnType": "int"
+        },
+        {
+            "name": "TIMESTAMPDIFF_SECOND",
+            "insertText": "TIMESTAMPDIFF_SECOND:(DATE_FROM, DATE_TO)",
+            "returnType": "int"
+        },
+        {
             "name": "CONCAT",
             "insertText": "CONCAT:(STRING1, STRING2)",
             "returnType": "string"
