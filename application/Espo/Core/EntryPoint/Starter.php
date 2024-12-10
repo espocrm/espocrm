@@ -88,6 +88,11 @@ class Starter
             throw new BadRequest("No 'entryPoint' param.");
         }
 
+        /**
+         * @todo
+         *     Consider supporting portal detection when it's run through the `portals/` directory.
+         *     E.g. ChangePassword is not run through the portal unless the ID is set in ENV.
+         */
         $portalId = Url::getPortalIdFromEnv();
 
         if ($portalId && !$final) {
