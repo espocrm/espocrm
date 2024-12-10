@@ -11,10 +11,10 @@
     "chartColorAlternativeList": ["#7492cc", "#c29c4a", "#a1404a", "#6a5f96", "#b07e53"],
     "calendarColors": {
         "": "#a58dc7a0",
-        "bg": "#3e485ab3",
-        "Meeting": "#697da5",
-        "Call": "#a1404a",
-        "Task": "#5d8a55"
+        "bg": "#374050b3",
+        "Meeting": "#4c5972",
+        "Call": "#9b4260",
+        "Task": "#52744c"
     },
     "isDark": true
 }
