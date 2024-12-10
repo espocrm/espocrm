@@ -388,6 +388,7 @@ class GlobalSearchView extends SiteNavbarItemView {
             Object.entries(panels)
                 .map(it => it[1])
                 .sort((a, b) => a.order - b.order)
+                .filter(it => it.itemList) // For bc.
                 .forEach(it => {
                     it.itemList
                         .filter(it => it.tabQuickSearch && it.label)
