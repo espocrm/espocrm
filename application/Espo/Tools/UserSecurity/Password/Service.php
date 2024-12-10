@@ -29,6 +29,8 @@
 
 namespace Espo\Tools\UserSecurity\Password;
 
+use Espo\Core\ApplicationState;
+use Espo\Core\Authentication\Ldap\LdapLogin;
 use Espo\Core\Authentication\Logins\Espo;
 use Espo\Core\Authentication\Util\MethodProvider as AuthenticationMethodProvider;
 use Espo\Core\Exceptions\Error;
@@ -59,7 +61,8 @@ class Service
         private RecoveryService $recovery,
         private FieldValidationManager $fieldValidationManager,
         private Checker $checker,
-        private AuthenticationMethodProvider $authenticationMethodProvider
+        private AuthenticationMethodProvider $authenticationMethodProvider,
+        private ApplicationState $applicationState,
     ) {}
 
     /**
@@ -174,7 +177,11 @@ class Service
 
         $authenticationMethod = $this->authenticationMethodProvider->get();
 
-        if (!$user->isAdmin() && $authenticationMethod !== Espo::NAME) {
+        if (
+            !$user->isAdmin() &&
+            $authenticationMethod !== Espo::NAME &&
+            !$this->isPortalLdapDisabled()
+        ) {
             throw new Forbidden("Authentication method is not `Espo`.");
         }
 
@@ -315,5 +322,12 @@ class Service
         return
             $this->emailSender->hasSystemSmtp() ||
             $this->config->get('internalSmtpServer');
+    }
+
+    private function isPortalLdapDisabled(): bool
+    {
+        return $this->applicationState->isPortal() &&
+            $this->authenticationMethodProvider->get() === LdapLogin::NAME &&
+            !$this->config->get('ldapPortalUserLdapAuth');
     }
 }
