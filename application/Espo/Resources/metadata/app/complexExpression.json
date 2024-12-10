@@ -130,17 +130,17 @@
         {
             "name": "MONTH",
             "insertText": "MONTH:(DATE_VALUE)",
-            "returnType": "int"
+            "returnType": "string"
         },
         {
             "name": "QUARTER",
             "insertText": "QUARTER:(DATE_VALUE)",
-            "returnType": "int"
+            "returnType": "string"
         },
         {
             "name": "WEEK",
             "insertText": "WEEK:(DATE_VALUE)",
-            "returnType": "int"
+            "returnType": "string"
         },
         {
             "name": "NOW",
