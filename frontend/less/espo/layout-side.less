@@ -29,8 +29,13 @@ body[data-navbar="side"] {
             border-right: var(--navbar-border-width) solid var(--navbar-inverse-border);
 
             > .navbar-body {
-                > ul > li.tab > a {
-                    margin-right: var(--navbar-border-width);
+                > ul {
+                    > li.tab,
+                    > li.more {
+                        > a {
+                            margin-right: var(--navbar-border-width);
+                        }
+                    }
                 }
             }
         }
