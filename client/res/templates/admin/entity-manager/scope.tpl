@@ -33,7 +33,7 @@
             <div class="panel panel-default">
                 <div class="panel-body panel-body-form">
                     <div class="row">
-                        <div class="cell col-sm-4 form-group">
+                        <div class="cell col-sm-6 form-group">
                             {{#if hasFields}}
                             <div>
                                 <a
@@ -46,7 +46,7 @@
                             </div>
                             {{/if}}
                         </div>
-                        <div class="cell col-sm-4 form-group">
+                        <div class="cell col-sm-6 form-group">
                             {{#if hasRelationships}}
                             <div>
                                 <a
@@ -59,7 +59,7 @@
                             </div>
                             {{/if}}
                         </div>
-                        <div class="cell col-sm-4 form-group">
+                        <div class="cell col-sm-6 form-group">
                             {{#if hasLayouts}}
                             <div>
                                 <a
@@ -72,19 +72,17 @@
                             </div>
                             {{/if}}
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="cell col-sm-4 form-group">
+                        <div class="cell col-sm-6 form-group">
                             {{#if hasFormula}}
-                            <div>
-                                <a
-                                    class="btn btn-default btn-lg action btn-full-wide"
-                                    data-action="editFormula"
-                                >
-                                    <span class="fas fa-code"></span>
-                                    {{translate 'Formula' scope='EntityManager'}}
-                                </a>
-                            </div>
+                                <div>
+                                    <a
+                                        class="btn btn-default btn-lg action btn-full-wide"
+                                        data-action="editFormula"
+                                    >
+                                        <span class="fas fa-code"></span>
+                                        {{translate 'Formula' scope='EntityManager'}}
+                                    </a>
+                                </div>
                             {{/if}}
                         </div>
                     </div>
