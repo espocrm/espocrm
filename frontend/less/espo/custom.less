@@ -1323,9 +1323,13 @@ section {
     padding-bottom: var(--table-cell-padding);
 }
 
-.modal-body > ul.no-side-margin > li {
+.modal-body > ul.no-side-margin {
     border-left-width: 0;
-    border-right-width: 0;
+
+    > li {
+        border-left-width: 0;
+        border-right-width: 0;
+    }
 }
 
 @media screen and (min-width: @screen-sm-min) {
