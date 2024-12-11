@@ -85,7 +85,7 @@ export default class TemplateManagerEditView extends View {
 
         this.title = this.translate(this.name, 'templates', 'Admin');
         if (this.scope) {
-            this.title += ' :: ' + this.translate(this.scope, 'scopeNames');
+            this.title += ' · ' + this.translate(this.scope, 'scopeNames');
         }
 
         this.attributes = {};
