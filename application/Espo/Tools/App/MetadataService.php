@@ -196,7 +196,7 @@ class MetadataService
 
             foreach ($targetArr as $i => $k) {
                 if ($i === count($targetArr) - 1) {
-                    $pointer->$k = $this->metadata->get($targetArr);
+                    $pointer->$k = $this->metadata->getObjects($targetArr);
 
                     break;
                 }
