@@ -49,11 +49,12 @@ export default class extends EnumFieldView {
             return;
         }
 
+        /** @type {Record<string, Record>} */
         const fieldDefs = this.getMetadata().get(`entityDefs.${scope}.fields`) || {};
 
         const orderableFieldList = Object.keys(fieldDefs)
             .filter(item => {
-                if (fieldDefs[item].orderDisabled) {
+                if (fieldDefs[item].orderDisabled || fieldDefs[item].utility) {
                     return false;
                 }
 
