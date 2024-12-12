@@ -71,6 +71,10 @@ export default class extends EnumFieldView {
 
         this.params.options.unshift('all');
 
+        if (this.getMetadata().get(`scopes.${entityType}.stars`)) {
+            this.params.options.push('starred');
+        }
+
         this.translatedOptions = {};
 
         this.params.options.forEach(item => {
