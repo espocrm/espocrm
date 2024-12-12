@@ -2003,8 +2003,15 @@ label.attach-file-label {
 
 .stick-sub.button-container {
     background-color: var(--navbar-bg);
-    padding: var(--padding-small-vertical) var(--container-padding) var(--padding-small-vertical) var(--container-padding);
+    //padding: var(--padding-small-vertical) var(--container-padding) var(--padding-small-vertical) var(--container-padding);
+    padding: var(--padding-small-vertical) 0 var(--padding-small-vertical) 0;
     width: 100%;
+}
+
+.stick-sub > .sub-container {
+    max-width: var(--container-max-width);
+    padding: 0 var(--container-padding) 0 var(--container-padding);
+    margin: 0 auto;
 }
 
 @media screen and (max-width: @screen-xs-max) {
