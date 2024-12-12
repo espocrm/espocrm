@@ -820,7 +820,7 @@ class Collection {
         options.data.offset = options.more ? (this.offset + length) : this.offset;
         options.data.orderBy = this.orderBy;
         options.data.order = this.order;
-        options.data.where = this.getWhere();
+        options.data.whereGroup = this.getWhere();
 
         if (options.data.select) {
             options.data.attributeSelect = options.data.select;

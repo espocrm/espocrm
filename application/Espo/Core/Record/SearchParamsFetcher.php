@@ -100,7 +100,9 @@ class SearchParamsFetcher
     {
         $params = [];
 
-        $params['where'] = $request->getQueryParams()['where'] ?? null;
+        $queryParams = $request->getQueryParams();
+
+        $params['where'] = $queryParams['whereGroup'] ?? $queryParams['where'] ?? null;
 
         if ($params['where'] !== null && !is_array($params['where'])) {
             $params['where'] = null;
@@ -154,12 +156,12 @@ class SearchParamsFetcher
             $params['primaryFilter'] = $request->getQueryParam('primaryFilter');
         }
 
-        if ($request->getQueryParams()['boolFilterList'] ?? null) {
-            $params['boolFilterList'] = (array) $request->getQueryParams()['boolFilterList'];
+        if ($queryParams['boolFilterList'] ?? null) {
+            $params['boolFilterList'] = (array) $queryParams['boolFilterList'];
         }
 
-        if ($request->getQueryParams()['filterList'] ?? null) {
-            $params['filterList'] = (array) $request->getQueryParams()['filterList'];
+        if ($queryParams['filterList'] ?? null) {
+            $params['filterList'] = (array) $queryParams['filterList'];
         }
 
         $select = $request->getQueryParam('attributeSelect') ?? $request->getQueryParam('select');
