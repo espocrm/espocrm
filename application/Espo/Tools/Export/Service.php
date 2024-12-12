@@ -29,7 +29,9 @@
 
 namespace Espo\Tools\Export;
 
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
@@ -56,6 +58,9 @@ class Service
         private JobSchedulerFactory $jobSchedulerFactory
     ) {}
 
+    /**
+     * @throws Forbidden
+     */
     public function process(Params $params, ServiceParams $serviceParams): ServiceResult
     {
         if ($this->config->get('exportDisabled') && !$this->user->isAdmin()) {
@@ -73,7 +78,7 @@ class Service
         }
 
         if ($this->metadata->get(['recordDefs', $entityType, 'exportDisabled'])) {
-            throw new ForbiddenSilent("Export disabled for '{$entityType}'.");
+            throw new ForbiddenSilent("Export disabled for '$entityType'.");
         }
 
         if ($serviceParams->isIdle()) {
@@ -93,6 +98,10 @@ class Service
         return ServiceResult::createWithResult($result);
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function getStatusData(string $id): stdClass
     {
         /** @var ?ExportEntity $entity */
@@ -112,6 +121,10 @@ class Service
         ];
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function subscribeToNotificationOnSuccess(string $id): void
     {
         /** @var ?ExportEntity $entity */
