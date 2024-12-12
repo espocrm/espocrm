@@ -67,7 +67,20 @@ class SearchParamsFetcherTest extends \PHPUnit\Framework\TestCase
 
         $params = $fetcher->fetch(new RequestWrapper($request));
 
-        $this->assertEquals($params->getTextFilter(), $raw['textFilter']);
-        $this->assertEquals($params->getMaxSize(), $raw['maxSize']);
+        $this->assertEquals($raw['textFilter'], $params->getTextFilter());
+        $this->assertEquals($raw['maxSize'], $params->getMaxSize());
+    }
+
+    public function testFetchQuery(): void
+    {
+        $q = http_build_query(['attributeSelect' => 'a,b']);
+
+        $request = (new RequestFactory)->createRequest('GET', 'http://localhost/?' . $q);
+
+        $fetcher = new SearchParamsFetcher($this->config, $this->textMetadataProvider);
+
+        $params = $fetcher->fetch(new RequestWrapper($request));
+
+        $this->assertEquals(['a', 'b'], $params->getSelect());
     }
 }

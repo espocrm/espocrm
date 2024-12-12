@@ -822,6 +822,12 @@ class Collection {
         options.data.order = this.order;
         options.data.where = this.getWhere();
 
+        if (options.data.select) {
+            options.data.attributeSelect = options.data.select;
+
+            delete options.data.select;
+        }
+
         options = {prepare: true, ...options};
 
         const success = options.success;

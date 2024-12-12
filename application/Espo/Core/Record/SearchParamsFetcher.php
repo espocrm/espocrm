@@ -162,8 +162,10 @@ class SearchParamsFetcher
             $params['filterList'] = (array) $request->getQueryParams()['filterList'];
         }
 
-        if ($request->getQueryParam('select')) {
-            $params['select'] = explode(',', $request->getQueryParam('select'));
+        $select = $request->getQueryParam('attributeSelect') ?? $request->getQueryParam('select');
+
+        if ($select) {
+            $params['select'] = explode(',', $select);
         }
 
         return $params;
