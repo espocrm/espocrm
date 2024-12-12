@@ -31,6 +31,7 @@ namespace Espo\Tools\App;
 
 use Espo\Core\Acl;
 use Espo\Core\Utils\Metadata as MetadataUtil;
+use Espo\Core\Utils\ObjectUtil;
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Reminder;
@@ -61,6 +62,8 @@ class MetadataService
         if ($this->user->isAdmin()) {
             return $data;
         }
+
+        $data = ObjectUtil::clone($data);
 
         $hiddenPathList = $this->metadata->get(['app', 'metadata', 'frontendNonAdminHiddenPathList'], []);
 
