@@ -1311,7 +1311,7 @@ class App {
 
         const obj = {
             msg: msg,
-            closeButton: false,
+            closeButton: true,
         };
 
         let isMessageDone = false;
