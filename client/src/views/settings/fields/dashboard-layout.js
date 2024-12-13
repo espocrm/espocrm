@@ -37,6 +37,7 @@ export default class SettingsDashboardLayoutFieldView extends BaseFieldView {
     validationElementSelector = 'button[data-action="addDashlet"]'
 
     WIDTH_MULTIPLIER = 3
+    HEIGHT_MULTIPLIER = 4
 
     data() {
         return {
@@ -170,7 +171,7 @@ export default class SettingsDashboardLayoutFieldView extends BaseFieldView {
                 x: 0,
                 y: 0,
                 w: 2 * this.WIDTH_MULTIPLIER,
-                h: 2,
+                h: 2 * this.HEIGHT_MULTIPLIER,
             }
         );
     }
@@ -383,9 +384,9 @@ export default class SettingsDashboardLayoutFieldView extends BaseFieldView {
                 id: $el.data('id'),
                 name: $el.data('name'),
                 x: x / this.WIDTH_MULTIPLIER,
-                y: y,
+                y: y / this.HEIGHT_MULTIPLIER,
                 width: w / this.WIDTH_MULTIPLIER,
-                height: h,
+                height: h / this.HEIGHT_MULTIPLIER,
             };
         });
 
@@ -398,7 +399,7 @@ export default class SettingsDashboardLayoutFieldView extends BaseFieldView {
 
             const grid = this.grid = GridStack.init({
                 minWidth: 4,
-                cellHeight: 60,
+                cellHeight: 20,
                 margin: 10,
                 column: 12,
                 resizable: {
@@ -421,9 +422,9 @@ export default class SettingsDashboardLayoutFieldView extends BaseFieldView {
                     $item.get(0),
                     {
                         x: o.x * this.WIDTH_MULTIPLIER,
-                        y: o.y,
+                        y: o.y * this.HEIGHT_MULTIPLIER,
                         w: o.width * this.WIDTH_MULTIPLIER,
-                        h: o.height,
+                        h: o.height * this.HEIGHT_MULTIPLIER,
                     }
                 );
             });

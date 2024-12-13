@@ -38,7 +38,14 @@ class DashboardView extends View {
     dashboardLayout = null
     currentTab = null
 
+    /**
+     * @private
+     * @type {number}
+     */
+    cellHeight
+
     WIDTH_MULTIPLIER = 3
+    HEIGHT_MULTIPLIER = 4
 
     events = {
         /** @this DashboardView */
@@ -143,6 +150,8 @@ class DashboardView extends View {
     setup() {
         this.currentTab = this.getStorage().get('state', 'dashboardTab') || 0;
         this.setupCurrentTabLayout();
+
+        this.cellHeight = this.getThemeManager().getParam('dashboardCellHeight');
 
         this.dashletIdList = [];
 
@@ -343,7 +352,7 @@ class DashboardView extends View {
             disableResize = true;
         }
 
-        const paramCellHeight = this.getThemeManager().getParam('dashboardCellHeight');
+        const paramCellHeight = this.cellHeight;
         const paramCellMargin = this.getThemeManager().getParam('dashboardCellMargin');
 
         const factor = this.getThemeManager().getFontSizeFactor();
@@ -386,9 +395,9 @@ class DashboardView extends View {
                 $item.get(0),
                 {
                     x: o.x * this.WIDTH_MULTIPLIER,
-                    y: o.y,
+                    y: o.y * this.HEIGHT_MULTIPLIER,
                     w: o.width * this.WIDTH_MULTIPLIER,
-                    h: o.height,
+                    h: o.height * this.HEIGHT_MULTIPLIER,
                 }
             );
         });
@@ -448,9 +457,9 @@ class DashboardView extends View {
                     id: $el.data('id'),
                     name: $el.data('name'),
                     x: x / this.WIDTH_MULTIPLIER,
-                    y: y,
+                    y: y / this.HEIGHT_MULTIPLIER,
                     width: w / this.WIDTH_MULTIPLIER,
-                    height: h,
+                    height: h / this.HEIGHT_MULTIPLIER,
                 };
             });
     }
@@ -480,8 +489,7 @@ class DashboardView extends View {
         $container.attr('data-y', o.y);
         $container.attr('data-height', o.height);
         $container.attr('data-width', o.width);
-        $container.css('height', (o.height *
-            this.getThemeManager().getParam('dashboardCellHeight')) + 'px');
+        $container.css('height', (o.height * this.cellHeight) + 'px');
 
         $item.attr('data-id', o.id);
         $item.attr('data-name', o.name);

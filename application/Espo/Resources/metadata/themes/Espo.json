@@ -21,7 +21,7 @@
             }
         }
     },
-    "dashboardCellHeight": 155,
+    "dashboardCellHeight": 40,
     "dashboardCellMargin": 16,
     "navbarHeight": 43,
     "modalFooterAtTheTop": true,

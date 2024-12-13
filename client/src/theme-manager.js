@@ -70,8 +70,8 @@ class ThemeManager {
      */
     defaultParams = {
         screenWidthXs: 768,
-        dashboardCellHeight: 155,
-        dashboardCellMargin: 19,
+        dashboardCellHeight: 40,
+        dashboardCellMargin: 16,
     }
 
     /**
