@@ -79,6 +79,7 @@ class PreferencesEditRecordView extends EditRecordView {
             name: 'reset',
             text: this.getLanguage().translate('Reset to Default', 'labels', 'Admin'),
             style: 'danger',
+            onClick: () => this.actionReset(),
         });
 
         const forbiddenEditFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
@@ -86,7 +87,8 @@ class PreferencesEditRecordView extends EditRecordView {
         if (!forbiddenEditFieldList.includes('dashboardLayout') && !model.isPortal()) {
             this.addDropdownItem({
                 name: 'resetDashboard',
-                text: this.getLanguage().translate('Reset Dashboard to Default', 'labels', 'Preferences')
+                text: this.getLanguage().translate('Reset Dashboard to Default', 'labels', 'Preferences'),
+                onClick: () => this.actionResetDashboard(),
             });
         }
 
@@ -209,7 +211,6 @@ class PreferencesEditRecordView extends EditRecordView {
         }
     }
 
-    // noinspection JSUnusedGlobalSymbols
     actionReset() {
         this.confirm(this.translate('resetPreferencesConfirmation', 'messages'), () => {
             Espo.Ajax
@@ -231,11 +232,12 @@ class PreferencesEditRecordView extends EditRecordView {
         });
     }
 
-    // noinspection JSUnusedGlobalSymbols
     actionResetDashboard() {
         this.confirm(this.translate('confirmation', 'messages'), () => {
             Espo.Ajax.postRequest('Preferences/action/resetDashboard', {id: this.model.id})
                 .then(data =>  {
+                    const isChanged = this.isChanged;
+
                     Espo.Ui.success(this.translate('Done'));
 
                     this.model.set(data);
@@ -246,6 +248,10 @@ class PreferencesEditRecordView extends EditRecordView {
 
                     this.getPreferences().set(this.model.getClonedAttributes());
                     this.getPreferences().trigger('update');
+
+                    if (!isChanged) {
+                        this.setIsNotChanged();
+                    }
                 });
         });
     }
