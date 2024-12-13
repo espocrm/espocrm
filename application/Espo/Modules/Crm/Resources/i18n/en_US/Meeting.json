@@ -19,9 +19,7 @@
         "sourceEmail": "Source Email",
         "uid": "UID"
     },
-    "links": {
-        "sourceEmail": "Source Email"
-    },
+    "links": {},
     "options": {
         "status": {
             "Planned": "Planned",

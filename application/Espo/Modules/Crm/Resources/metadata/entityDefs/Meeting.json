@@ -301,7 +301,7 @@
             "layoutFiltersDisabled": true,
             "exportDisabled": true,
             "importDisabled": true,
-            "entity": "TargetList",
+            "entity": "Email",
             "directAccessDisabled": true
         },
         "createdAt": {
@@ -411,11 +411,6 @@
         "parent": {
             "type": "belongsToParent",
             "foreign": "meetings"
-        },
-        "sourceEmail": {
-            "type": "belongsTo",
-            "entity": "Email",
-            "noJoin": true
         }
     },
     "collection": {

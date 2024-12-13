@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Classes\FieldProcessing\Meeting;
 
+use Espo\Entities\Email;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -55,7 +56,7 @@ class SourceEmailSaver implements Saver
             return;
         }
 
-        $email = $entity->getSourceEmail();
+        $email = $this->getEmail($entity);
 
         if (!$email) {
             return;
@@ -78,5 +79,16 @@ class SourceEmailSaver implements Saver
         $email->set('icsEventUid', $espoEvent->getUid());
 
         $this->entityManager->saveEntity($email);
+    }
+
+    private function getEmail(Meeting $entity): ?Email
+    {
+        $emailId = $entity->get('sourceEmailId');
+
+        if (!$emailId) {
+            return null;
+        }
+
+        return $this->entityManager->getRDBRepositoryByClass(Email::class)->getById($emailId);
     }
 }

@@ -32,8 +32,10 @@ namespace Espo\Modules\Crm\Hooks\Meeting;
 use Espo\Core\Hook\Hook\BeforeSave;
 use Espo\Core\Mail\Event\EventFactory;
 use Espo\Core\Utils\Util;
+use Espo\Entities\Email;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 use Espo\ORM\Repository\Option\SaveOptions;
 use ICal\ICal;
 
@@ -42,7 +44,7 @@ use ICal\ICal;
  */
 class Uid implements BeforeSave
 {
-    public function __construct() {}
+    public function __construct(private EntityManager $entityManager) {}
 
     public function beforeSave(Entity $entity, SaveOptions $options): void
     {
@@ -68,7 +70,7 @@ class Uid implements BeforeSave
 
     private function getIcsUid(Meeting $entity): ?string
     {
-        $email = $entity->getSourceEmail();
+        $email = $this->getEmail($entity);
 
         if (!$email) {
             return null;
@@ -87,5 +89,16 @@ class Uid implements BeforeSave
         $espoEvent = EventFactory::createFromU01jmg3Ical($ical);
 
         return $espoEvent->getUid();
+    }
+
+    private function getEmail(Meeting $entity): ?Email
+    {
+        $emailId = $entity->get('sourceEmailId');
+
+        if (!$emailId) {
+            return null;
+        }
+
+        return $this->entityManager->getRDBRepositoryByClass(Email::class)->getById($emailId);
     }
 }

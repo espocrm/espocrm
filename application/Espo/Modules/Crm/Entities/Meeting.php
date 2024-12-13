@@ -187,10 +187,4 @@ class Meeting extends Entity
     {
         return $this->set('uid', $uid);
     }
-
-    public function getSourceEmail(): ?Email
-    {
-        /** @var ?Email */
-        return $this->relations->getOne('sourceEmail');
-    }
 }
