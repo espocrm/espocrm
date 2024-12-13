@@ -16,7 +16,8 @@
         "dateStartDate": "Date Start (all day)",
         "dateEndDate": "Date End (all day)",
         "isAllDay": "Is All-Day",
-        "sourceEmail": "Source Email"
+        "sourceEmail": "Source Email",
+        "uid": "UID"
     },
     "links": {
     },

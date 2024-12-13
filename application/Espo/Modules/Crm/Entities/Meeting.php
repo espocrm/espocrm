@@ -35,6 +35,7 @@ use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
+use Espo\Entities\Email;
 use Espo\Entities\User;
 use Espo\ORM\Entity as OrmEntity;
 
@@ -175,5 +176,21 @@ class Meeting extends Entity
     public function getParent(): ?OrmEntity
     {
         return $this->relations->getOne(Field::PARENT);
+    }
+
+    public function getUid(): ?string
+    {
+        return $this->get('uid');
+    }
+
+    public function setUid(?string $uid): self
+    {
+        return $this->set('uid', $uid);
+    }
+
+    public function getSourceEmail(): ?Email
+    {
+        /** @var ?Email */
+        return $this->relations->getOne('sourceEmail');
     }
 }

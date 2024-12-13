@@ -27,44 +27,57 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Classes\FieldProcessing\Meeting;
+namespace Espo\Modules\Crm\Hooks\Meeting;
 
+use Espo\Core\Hook\Hook\BeforeSave;
+use Espo\Core\Mail\Event\EventFactory;
+use Espo\Core\Utils\Util;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityManager;
-use Espo\Core\FieldProcessing\Saver;
-use Espo\Core\FieldProcessing\Saver\Params;
-use Espo\Core\Mail\Event\EventFactory;
-
+use Espo\ORM\Repository\Option\SaveOptions;
 use ICal\ICal;
 
 /**
- * @implements Saver<Meeting>
+ * @implements BeforeSave<Meeting>
  */
-class SourceEmailSaver implements Saver
+class Uid implements BeforeSave
 {
-    public function __construct(private EntityManager $entityManager)
-    {}
+    public function __construct() {}
 
-    /**
-     * @param Meeting $entity
-     */
-    public function process(Entity $entity, Params $params): void
+    public function beforeSave(Entity $entity, SaveOptions $options): void
     {
-        if (!$entity->isNew()) {
+        if (!$entity->isNew() || $entity->getUid()) {
             return;
         }
 
+        $uid = $this->getUid($entity);
+
+        $entity->setUid($uid);
+    }
+
+    private function getUid(Meeting $entity): string
+    {
+        $uid = $this->getIcsUid($entity);
+
+        if ($uid) {
+            return $uid;
+        }
+
+        return Util::generateUuid4();
+    }
+
+    private function getIcsUid(Meeting $entity): ?string
+    {
         $email = $entity->getSourceEmail();
 
         if (!$email) {
-            return;
+            return null;
         }
 
         $icsContents = $email->getIcsContents();
 
-        if ($icsContents === null) {
-            return;
+        if (!$icsContents) {
+            return null;
         }
 
         $ical = new ICal();
@@ -73,10 +86,6 @@ class SourceEmailSaver implements Saver
 
         $espoEvent = EventFactory::createFromU01jmg3Ical($ical);
 
-        $email->set('createdEventId', $entity->getId());
-        $email->set('createdEventType', $entity->getEntityType());
-        $email->set('icsEventUid', $espoEvent->getUid());
-
-        $this->entityManager->saveEntity($email);
+        return $espoEvent->getUid();
     }
 }

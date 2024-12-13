@@ -9,6 +9,12 @@
         "scopeFieldLevel": {
             "Case": {
                 "isInternal": false
+            },
+            "Meeting": {
+                "uid": false
+            },
+            "Call": {
+                "uid": false
             }
         }
     },

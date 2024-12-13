@@ -904,4 +904,9 @@ class Email extends Entity
 
         return $this;
     }
+
+    public function getIcsContents(): ?string
+    {
+        return $this->get('icsContents');
+    }
 }

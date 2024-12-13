@@ -171,4 +171,14 @@ class Call extends Entity
     {
         return $this->relations->getOne(Field::PARENT);
     }
+
+    public function getUid(): ?string
+    {
+        return $this->get('uid');
+    }
+
+    public function setUid(?string $uid): self
+    {
+        return $this->set('uid', $uid);
+    }
 }

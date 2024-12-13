@@ -13,7 +13,8 @@
         "leads": "Leads",
         "reminders": "Reminders",
         "account": "Account",
-        "acceptanceStatus": "Acceptance Status"
+        "acceptanceStatus": "Acceptance Status",
+        "uid": "UID"
     },
     "links": {
     },

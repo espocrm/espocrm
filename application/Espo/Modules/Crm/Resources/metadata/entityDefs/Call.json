@@ -77,6 +77,13 @@
             "readOnly": true,
             "customizationReadOnlyDisabled": true
         },
+        "uid": {
+            "type": "varchar",
+            "maxLength": 255,
+            "index": true,
+            "readOnly": true,
+            "duplicateIgnore": true
+        },
         "acceptanceStatus": {
             "type": "enum",
             "notStorable": true,

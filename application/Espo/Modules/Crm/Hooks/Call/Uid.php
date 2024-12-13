@@ -27,56 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Classes\FieldProcessing\Meeting;
+namespace Espo\Modules\Crm\Hooks\Call;
 
-use Espo\Modules\Crm\Entities\Meeting;
+use Espo\Core\Hook\Hook\BeforeSave;
+use Espo\Core\Utils\Util;
+use Espo\Modules\Crm\Entities\Call;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityManager;
-use Espo\Core\FieldProcessing\Saver;
-use Espo\Core\FieldProcessing\Saver\Params;
-use Espo\Core\Mail\Event\EventFactory;
-
-use ICal\ICal;
+use Espo\ORM\Repository\Option\SaveOptions;
 
 /**
- * @implements Saver<Meeting>
+ * @implements BeforeSave<Call>
  */
-class SourceEmailSaver implements Saver
+class Uid implements BeforeSave
 {
-    public function __construct(private EntityManager $entityManager)
-    {}
+    public function __construct() {}
 
-    /**
-     * @param Meeting $entity
-     */
-    public function process(Entity $entity, Params $params): void
+    public function beforeSave(Entity $entity, SaveOptions $options): void
     {
-        if (!$entity->isNew()) {
+        if (!$entity->isNew() || $entity->getUid()) {
             return;
         }
 
-        $email = $entity->getSourceEmail();
+        $uid = Util::generateUuid4();
 
-        if (!$email) {
-            return;
-        }
-
-        $icsContents = $email->getIcsContents();
-
-        if ($icsContents === null) {
-            return;
-        }
-
-        $ical = new ICal();
-
-        $ical->initString($icsContents);
-
-        $espoEvent = EventFactory::createFromU01jmg3Ical($ical);
-
-        $email->set('createdEventId', $entity->getId());
-        $email->set('createdEventType', $entity->getEntityType());
-        $email->set('icsEventUid', $espoEvent->getUid());
-
-        $this->entityManager->saveEntity($email);
+        $entity->setUid($uid);
     }
 }

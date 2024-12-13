@@ -226,8 +226,12 @@ class Invitations
 
         $attendees = [];
 
+        $uid = $entity->getId();
+
         if ($entity instanceof Meeting || $entity instanceof Call) {
             $attendees = $this->getAttendees($entity, $addressList);
+
+            $uid = $entity->getUid() ?? $uid;
         }
 
         $ics = new Ics('//EspoCRM//EspoCRM Calendar//EN', [
@@ -235,7 +239,7 @@ class Invitations
             'status' => $status,
             'startDate' => strtotime($entity->get('dateStart')),
             'endDate' => strtotime($entity->get('dateEnd')),
-            'uid' => $entity->getId(),
+            'uid' => $uid,
             'summary' => $entity->get(Field::NAME),
             'organizer' => $organizerAddress ? [$organizerAddress, $organizerName] : null,
             'attendees' => $attendees,
