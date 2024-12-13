@@ -411,6 +411,11 @@
         "parent": {
             "type": "belongsToParent",
             "foreign": "meetings"
+        },
+        "sourceEmail": {
+            "type": "belongsTo",
+            "entity": "Email",
+            "noJoin": true
         }
     },
     "collection": {

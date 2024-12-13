@@ -20,6 +20,7 @@
         "uid": "UID"
     },
     "links": {
+        "sourceEmail": "Source Email"
     },
     "options": {
         "status": {
