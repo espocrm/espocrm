@@ -6,5 +6,15 @@
             "CampaignTrackingUrl": "Campaign",
             "EmailQueueItem": "Campaign"
         }
+    },
+    "strictDefault": {
+        "scopeFieldLevel": {
+            "Meeting": {
+                "uid": false
+            },
+            "Call": {
+                "uid": false
+            }
+        }
     }
 }
