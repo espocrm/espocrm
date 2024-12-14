@@ -16,6 +16,14 @@
             "crossorigin": true
         },
         {
+            "href": "client/fonts/inter/Inter-Medium.woff2",
+            "as": "font",
+            "type": "font/woff2",
+            "rel": "preload",
+            "noTimestamp": true,
+            "crossorigin": true
+        },
+        {
             "href": "client/fonts/inter/Inter-SemiBold.woff2",
             "as": "font",
             "type": "font/woff2",
