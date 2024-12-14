@@ -36,9 +36,12 @@
                 "Expired"
             ],
             "style": {
+                "Active": "primary",
                 "Canceled": "info",
                 "Expired": "danger"
             },
+            "displayAsLabel": true,
+            "labelType": "state",
             "default": "Active",
             "audited": true,
             "fieldManagerAdditionalParamList": [

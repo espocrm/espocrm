@@ -15,9 +15,12 @@
             ],
             "default": "Planning",
             "style": {
+                "Active": "primary",
                 "Inactive": "info",
                 "Complete": "success"
             },
+            "displayAsLabel": true,
+            "labelType": "state",
             "customizationOptionsDisabled": true,
             "customizationOptionsReferenceDisabled": true
         },

@@ -14,10 +14,11 @@
                 "Archived"
             ],
             "style": {
-                "In Review": "primary",
-                "Published": "success",
+                "Published": "primary",
                 "Archived": "info"
             },
+            "displayAsLabel": true,
+            "labelType": "state",
             "view": "crm:views/knowledge-base-article/fields/status",
             "default": "Draft",
             "fieldManagerAdditionalParamList": [
