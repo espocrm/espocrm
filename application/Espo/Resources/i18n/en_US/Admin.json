@@ -330,7 +330,8 @@
         "templateManager": "notifications",
         "jobs": "cron",
         "labelManager": "language,translation",
-        "appSecrets": "key,keys,password"
+        "appSecrets": "key,keys,password",
+        "leadCapture": "web forms"
     },
     "options": {
         "previewSize": {
