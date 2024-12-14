@@ -199,7 +199,7 @@ class AdminIndexView extends View {
                     }
 
                     if (!matched) {
-                        if (text.length > 3) {
+                        if (text.length >= 3) {
                             row.keywords.forEach((word) => {
                                 if (word.indexOf(text) === 0) {
                                     matched = true;
