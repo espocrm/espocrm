@@ -325,22 +325,29 @@ img.image-preview {
     }
 }
 
-div.list-expanded > ul > li > div.expanded-row > .cell {
-    padding-right: var(--10px);
+div.list-expanded > ul > li > div.expanded-row {
+    > .cell {
+        padding-right: var(--10px);
 
-    &.small.pull-right {
-        position: relative;
-        top: var(--2px);
-    }
-
-    &:first-child {
-        > .fas {
-            width: var(--18px);
+        &.small.pull-right {
+            position: relative;
+            top: var(--2px);
         }
-    }
 
-    &:empty {
-        display: none;
+        &:first-child {
+            > .fas {
+                width: var(--18px);
+            }
+
+            &[data-name="ico"] {
+                padding-right: var(--6px);
+            }
+        }
+
+        &:empty {
+            display: none;
+        }
+
     }
 }
 
