@@ -164,9 +164,7 @@ class LayoutManager {
         }
 
         if (key in this.fetchPromises) {
-            this.fetchPromises[key].then(layout => {
-                callback(layout);
-            });
+            this.fetchPromises[key].then(layout => callback(layout));
 
             return;
         }
@@ -180,10 +178,10 @@ class LayoutManager {
                 if (this.cache) {
                     this.cache.set('app-layout', key, layout);
                 }
+
+                return layout;
             })
-            .finally(() => {
-                delete this.fetchPromises[key];
-            });
+            .finally(() => delete this.fetchPromises[key]);
     }
 
     /**
