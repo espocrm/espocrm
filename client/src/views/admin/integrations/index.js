@@ -32,68 +32,90 @@ export default class IntegrationsIndexView extends View {
 
     template = 'admin/integrations/index'
 
-    integrationList = null
+    /**
+     * @private
+     * @type {string[]}
+     */
+    integrationList
+
     integration = null
 
     data() {
         return {
-            integrationList: this.integrationList,
+            integrationDataList: this.getIntegrationDataList(),
             integration: this.integration,
         };
     }
 
-    events = {
-        /** @this IntegrationsIndexView */
-        'click #integrations-menu a.integration-link': function (e) {
-            const name = $(e.currentTarget).data('name');
-
-            this.openIntegration(name);
-        },
-    }
-
     setup () {
-        this.integrationList = Object
-            .keys(this.getMetadata().get('integrations') || {})
+        this.addHandler('click', 'a.integration-link', (e, target) => {
+            this.openIntegration(target.dataset.name);
+        });
+
+        this.integrationList = Object.keys(this.getMetadata().get('integrations') || {})
             .sort((v1, v2) => this.translate(v1, 'titles', 'Integration')
                 .localeCompare(this.translate(v2, 'titles', 'Integration'))
             );
 
         this.integration = this.options.integration || null;
 
+        if (this.integration) {
+            this.createIntegrationView(this.integration);
+        }
+
         this.on('after:render', () => {
             this.renderHeader();
 
             if (!this.integration) {
                 this.renderDefaultPage();
-            } else {
-                this.openIntegration(this.integration);
             }
         });
     }
 
-    openIntegration(integration) {
+    /**
+     * @return {{name: string, active: boolean}[]}
+     */
+    getIntegrationDataList() {
+        return this.integrationList.map(it => {
+            return {
+                name: it,
+                active: this.integration === it,
+            };
+        })
+    }
+
+    /**
+     * @param {string} integration
+     * @return {Promise<Bull.View>}
+     */
+    createIntegrationView(integration) {
+        const viewName = this.getMetadata().get(`integrations.${integration}.view`) ||
+            'views/admin/integrations/' +
+            Espo.Utils.camelCaseToHyphen(this.getMetadata().get(`integrations.${integration}.authMethod`));
+
+        return this.createView('content', viewName, {
+            fullSelector: '#integration-content',
+            integration: integration,
+        });
+    }
+
+    /**
+     * @param {string} integration
+     */
+    async openIntegration(integration) {
         this.integration = integration;
 
-        this.getRouter().navigate('#Admin/integrations/name=' + integration, {trigger: false});
-
-        const viewName = this.getMetadata().get('integrations.' + integration + '.view') ||
-            'views/admin/integrations/' +
-            Espo.Utils.camelCaseToHyphen(this.getMetadata().get('integrations.' + integration + '.authMethod'));
+        this.getRouter().navigate(`#Admin/integrations/name=${integration}`, {trigger: false});
 
         Espo.Ui.notify(' ... ');
 
-        this.createView('content', viewName, {
-            fullSelector: '#integration-content',
-            integration: integration,
-        }, view => {
-            this.renderHeader();
+        await this.createIntegrationView(integration);
 
-            view.render();
+        this.renderHeader();
+        await this.reRender();
 
-            Espo.Ui.notify(false);
-
-            $(window).scrollTop(0);
-        });
+        Espo.Ui.notify(false);
+        $(window).scrollTop(0);
     }
 
     afterRender() {

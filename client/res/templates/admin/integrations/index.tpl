@@ -9,15 +9,15 @@
 <div class="row">
     <div id="integrations-menu" class="col-sm-3">
         <ul class="list-group list-group-panel">
-        {{#each integrationList}}
+        {{#each integrationDataList}}
             <li
                 class="list-group-item"
             ><a
                 role="button"
                 tabindex="0"
-                class="integration-link"
-                data-name="{{./this}}"
-            >{{{translate ./this scope='Integration' category='titles'}}}</a></li>
+                class="integration-link {{#if active}} disabled text-muted {{/if}}"
+                data-name="{{name}}"
+            >{{{translate name scope='Integration' category='titles'}}}</a></li>
         {{/each}}
         </ul>
     </div>
