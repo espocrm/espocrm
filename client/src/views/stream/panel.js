@@ -663,7 +663,10 @@ class PanelStreamView extends RelationshipPanelView {
      * @private
      */
     post() {
-        const message = /** @type {string} */this.seed.attributes.post || '';
+        this.postFieldView.fetchToModel();
+
+        /** @type {string} */
+        const message = this.seed.attributes.post || '';
 
         this.disablePostButton();
 
