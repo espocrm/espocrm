@@ -270,11 +270,11 @@ class Installer
     public function getThemeList(): array
     {
         return [
-            'Light',
-            'Violet',
-            'Dark',
-            'Glass',
             'Espo',
+            'Dark',
+            'Light',
+            'Glass',
+            'Violet',
             'Sakura',
             'Hazyblue',
         ];
@@ -396,7 +396,7 @@ class Installer
             'siteUrl' => $siteUrl,
             'cryptKey' => Util::generateSecretKey(),
             'hashSecretKey' => Util::generateSecretKey(),
-            'theme' => $saveData['theme'] ?? 'Light',
+            'theme' => $saveData['theme'] ?? 'Espo',
         ];
 
         if (empty($saveData['defaultPermissions']['user'])) {

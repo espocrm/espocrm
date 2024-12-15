@@ -195,7 +195,7 @@ $smarty->assign('action', ucfirst($action));
 $smarty->assign('config', $config);
 $smarty->assign('installerConfig', $installer->getInstallerConfigData());
 
-$theme = $_SESSION['install']['theme'] ?? 'Light';
+$theme = $_SESSION['install']['theme'] ?? 'Espo';
 $stylesheet = $installer->getMetadata()->get(['themes', $theme, 'stylesheet']);
 
 $smarty->assign('stylesheet', $stylesheet);
