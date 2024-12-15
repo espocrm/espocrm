@@ -94,7 +94,23 @@ class ExternalAccountIndex extends View {
             Espo.Ui.notify(false);
 
             $(window).scrollTop(0);
+
+            this.controlCurrentLink(id);
         });
+    }
+
+    controlCurrentLink() {
+        const id = this.integration;
+
+        this.element.querySelectorAll('.external-account-link').forEach(element => {
+            element.classList.remove('disabled', 'text-muted');
+        });
+
+        const currentLink = this.element.querySelector(`.external-account-link[data-id="${id}"]`);
+
+        if (currentLink) {
+            currentLink.classList.add('disabled', 'text-muted');
+        }
     }
 
     renderDefaultPage() {
