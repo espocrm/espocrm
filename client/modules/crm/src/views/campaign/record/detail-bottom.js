@@ -37,7 +37,6 @@ define('crm:views/campaign/record/detail-bottom', ['views/record/detail-bottom']
                 name: 'massEmails',
                 label: this.translate('massEmails', 'links', 'Campaign'),
                 view: 'views/record/panels/relationship',
-                sticked: true,
                 hidden: true,
                 select: false,
                 recordListView: 'crm:views/mass-email/record/list-for-campaign',
@@ -49,7 +48,6 @@ define('crm:views/campaign/record/detail-bottom', ['views/record/detail-bottom']
                 name: 'trackingUrls',
                 label: this.translate('trackingUrls', 'links', 'Campaign'),
                 view: 'views/record/panels/relationship',
-                sticked: true,
                 hidden: true,
                 select: false,
                 rowActionsView: 'views/record/row-actions/relationship-no-unlink',
@@ -68,7 +66,7 @@ define('crm:views/campaign/record/detail-bottom', ['views/record/detail-bottom']
         },
 
         manageMassEmails: function () {
-            var parentView = this.getParentView();
+            const parentView = this.getParentView();
 
             if (!parentView) {
                 return;
@@ -82,6 +80,5 @@ define('crm:views/campaign/record/detail-bottom', ['views/record/detail-bottom']
                 parentView.hidePanel('trackingUrls');
             }
         },
-
     });
 });
