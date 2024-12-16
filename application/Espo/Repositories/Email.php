@@ -345,7 +345,6 @@ class Email extends Database implements
 
                             if ($user && $entity->getStatus() !== EmailEntity::STATUS_DRAFT) {
                                 $entity->setSentBy($user);
-                                $entity->set('sentById', $user->getId());
                             }
                         }
                     }
