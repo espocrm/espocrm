@@ -186,7 +186,8 @@ class ModalView extends View {
     buttons = []
 
     /**
-     * A width.
+     * A width. Do not use.
+     * @todo Consider removing.
      *
      * @protected
      * @type {number|null}
