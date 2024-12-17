@@ -30,6 +30,8 @@ import WysiwygFieldView from 'views/fields/wysiwyg';
 
 class EmailTemplateBodyFieldView extends WysiwygFieldView {
 
+    // To allow the iterate attribute.
+    htmlPurificationForEditDisabled = true
     hasBodyPlainField = true
 }
 
