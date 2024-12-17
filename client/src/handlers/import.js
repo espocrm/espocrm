@@ -31,7 +31,7 @@ import ActionHandler from 'action-handler';
 class ImportHandler extends ActionHandler {
 
     // noinspection JSUnusedGlobalSymbols
-    actionErrorExport() {
+    errorExport() {
         Espo.Ajax
             .postRequest(`Import/${this.view.model.id}/exportErrors`)
             .then(data => {

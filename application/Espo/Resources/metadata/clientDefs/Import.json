@@ -45,11 +45,9 @@
             "actionList": [
                 {
                     "name": "export",
-                    "action": "errorExport",
                     "label": "Export",
-                    "data": {
-                        "handler": "handlers/import"
-                    }
+                    "handler": "handlers/import",
+                    "actionFunction": "errorExport"
                 }
             ]
         }
