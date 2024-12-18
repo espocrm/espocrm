@@ -35,23 +35,23 @@ class LayoutTemplateBundler {
      * @return {string}
      */
     bundle() {
-        let path = 'client/res/layout-types';
+        const path = 'client/res/layout-types';
 
         /** @var {string[]} */
-        let files = globSync(path + '/*.tpl')
+        const files = globSync(path + '/*.tpl')
             .map(file => file.replaceAll('\\', '/'));
 
-        let map = {};
+        const map = {};
 
         files.forEach(file => {
-            let name = file
+            const name = file
                 .substring(path.length + 1)
                 .slice(0, -4);
 
             map[name] = fs.readFileSync(file, 'utf8');
         });
 
-        let mapPart = JSON.stringify(map);
+        const mapPart = JSON.stringify(map);
 
         return `\nEspo.layoutTemplates = ${mapPart};\n`;
     }
