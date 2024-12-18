@@ -1511,8 +1511,11 @@ class App {
                             text.split(delimiter).forEach(item => {
                                 const index = item.indexOf('\n');
 
-                                const file = item.slice(0, index);
-                                const content = item.slice(index + 1);
+                                const file = item.slice(0, index).trim();
+                                let content = item.slice(index + 1);
+
+                                // noinspection RegExpDuplicateCharacterInClass
+                                content = content.replace(/[\r|\n|\r\n]$/, '');
 
                                 const url = baseUrl + this.basePath + 'client/' + file;
 
