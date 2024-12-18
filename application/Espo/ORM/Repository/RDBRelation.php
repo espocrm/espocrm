@@ -495,6 +495,11 @@ class RDBRelation
         $seed = $this->entityManager->getEntityFactory()->create($foreignEntityType);
 
         $seed->set(Attribute::ID, $id);
+        $seed->setAsFetched();
+
+        if ($seed instanceof BaseEntity) {
+            $seed->setAsPartiallyLoaded();
+        }
 
         $this->relate($seed, $columnData, $options);
     }
@@ -520,6 +525,11 @@ class RDBRelation
         $seed = $this->entityManager->getEntityFactory()->create($foreignEntityType);
 
         $seed->set(Attribute::ID, $id);
+        $seed->setAsFetched();
+
+        if ($seed instanceof BaseEntity) {
+            $seed->setAsPartiallyLoaded();
+        }
 
         $this->unrelate($seed, $options);
     }
@@ -545,6 +555,11 @@ class RDBRelation
         $seed = $this->entityManager->getEntityFactory()->create($foreignEntityType);
 
         $seed->set(Attribute::ID, $id);
+        $seed->setAsFetched();
+
+        if ($seed instanceof BaseEntity) {
+            $seed->setAsPartiallyLoaded();
+        }
 
         $this->updateColumns($seed, $columnData);
     }

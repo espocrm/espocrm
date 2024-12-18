@@ -257,6 +257,10 @@ class Database extends RDBRepository
 
                 $foreign->set(self::ATTR_ID, $foreignId);
                 $foreign->setAsFetched();
+
+                if ($foreign instanceof BaseEntity) {
+                    $foreign->setAsPartiallyLoaded();
+                }
             }
         }
 
@@ -297,6 +301,10 @@ class Database extends RDBRepository
 
                 $foreign->set(self::ATTR_ID, $foreignId);
                 $foreign->setAsFetched();
+
+                if ($foreign instanceof BaseEntity) {
+                    $foreign->setAsPartiallyLoaded();
+                }
             }
         }
 
