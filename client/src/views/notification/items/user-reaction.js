@@ -83,8 +83,10 @@ export default class UserReactionNotificationItemView extends BaseNotificationIt
         const relatedParentId = this.model.attributes.relatedParentId;
         const relatedParentType = this.model.attributes.relatedParentType;
 
-        this.userId = this.model.attributes.createdById;
+        this.userId = this.model.attributes.createdById || data.userId;
         this.noteId = this.model.attributes.relatedId;
+
+        const userName = data.userName || this.model.attributes.createdByName;
 
         this.messageData['type'] = this.translate(data.type, 'reactions');
 
@@ -95,7 +97,7 @@ export default class UserReactionNotificationItemView extends BaseNotificationIt
         userElement.href = `#User/view/${this.model.attributes.createdById}`;
         userElement.dataset.id = this.model.attributes.createdById;
         userElement.dataset.scope = 'User';
-        userElement.textContent = this.model.attributes.createdByName;
+        userElement.textContent = userName;
 
         this.messageData['user'] = userElement;
 

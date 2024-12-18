@@ -70,6 +70,7 @@ class NotificationService
         $data = [
             'type' => $type,
             'userId' => $this->user->getId(),
+            'userName' => $this->user->getName(),
         ];
 
         $notification
