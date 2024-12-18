@@ -909,4 +909,14 @@ class Email extends Entity
     {
         return $this->get('icsContents');
     }
+
+    public function isReplied(): bool
+    {
+        return (bool) $this->get('isReplied');
+    }
+
+    public function setIsReplied(bool $isReplied = true): self
+    {
+        return $this->set('isReplied', $isReplied);
+    }
 }

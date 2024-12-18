@@ -522,9 +522,9 @@ class Email extends Database implements
             if (
                 $replied &&
                 $replied->getId() !== $entity->getId() &&
-                !$replied->getReplied()
+                !$replied->isReplied()
             ) {
-                $replied->set('isReplied', true);
+                $replied->setIsReplied();
 
                 $this->entityManager->saveEntity($replied, [SaveOption::SILENT => true]);
             }
