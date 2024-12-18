@@ -6,5 +6,6 @@
     "aclActionList": ["read"],
     "aclLevelList": ["all", "team", "no"],
     "importable": true,
-    "customizable": false
+    "customizable": false,
+    "preserveAuditLog": true
 }

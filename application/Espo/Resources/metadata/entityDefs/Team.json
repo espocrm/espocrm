@@ -3,16 +3,19 @@
         "name": {
             "type": "varchar",
             "maxLength": 100,
-            "pattern": "$noBadCharacters"
+            "pattern": "$noBadCharacters",
+            "audited": true
         },
         "roles": {
             "type": "linkMultiple",
-            "tooltip": true
+            "tooltip": true,
+            "audited": true
         },
         "positionList": {
             "type": "array",
             "displayAsList": true,
-            "tooltip": true
+            "tooltip": true,
+            "audited": true
         },
         "userRole": {
             "type": "varchar",
@@ -21,11 +24,13 @@
         },
         "layoutSet": {
             "type": "link",
-            "tooltip": true
+            "tooltip": true,
+            "audited": true
         },
         "workingTimeCalendar": {
             "type": "link",
-            "tooltip": true
+            "tooltip": true,
+            "audited": true
         },
         "createdAt": {
             "type": "datetime",

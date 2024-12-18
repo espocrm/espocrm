@@ -3,5 +3,6 @@
     "layouts": false,
     "tab": false,
     "acl": false,
-    "customizable": false
+    "customizable": false,
+    "preserveAuditLog": true
 }

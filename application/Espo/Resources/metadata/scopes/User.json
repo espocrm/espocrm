@@ -8,5 +8,6 @@
         "edit": ["own", "no"]
     },
 	"customizable": true,
-    "object": true
+    "object": true,
+    "preserveAuditLog": true
 }
