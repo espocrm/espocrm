@@ -96,7 +96,7 @@ export default class extends ModalView {
      * @return {import('views/record/edit').default}
      */
     getRecordView() {
-        this.getView('record');
+        return this.getView('record');
     }
 
     actionApply() {
