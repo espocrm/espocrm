@@ -38,12 +38,16 @@ export default class extends DetailView {
         }
 
         if (this.model.id === this.getUser().id || this.getUser().isAdmin()) {
-            if (this.getUserModel().isRegular() || this.getUserModel().isAdmin() || this.getUserModel().isPortal()) {
+            if (
+                this.getUserModel().isRegular() ||
+                this.getUserModel().isAdmin() ||
+                this.getUserModel().isPortal()
+            ) {
                 this.addMenuItem('dropdown', {
                     name: 'preferences',
                     label: 'Preferences',
                     action: 'preferences',
-                    link: `#Preferences/edit/${this.getUser().id}`,
+                    link: `#Preferences/edit/${this.model.id}`,
                     onClick: () => this.actionPreferences(),
                 });
             }
