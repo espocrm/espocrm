@@ -17,6 +17,14 @@
     .form-control-focus-espo();
 }
 
+input.form-control {
+    min-height: var(--input-height-base);
+
+    &.input-sm {
+        min-height: var(--input-height-small);
+    }
+}
+
 .selectize-input {
     border: var(--input-border-width) solid var(--input-border);
     border-radius: var(--border-radius);
