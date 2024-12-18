@@ -1432,12 +1432,10 @@ section {
 }
 
 .list > {
-    table > tbody {
-        > tr.list-row.starred {
-            td {
-                //background-color: var(--warning-bg);
-            }
-
+    table > tbody,
+    ul.list-group {
+        > tr.list-row.starred,
+        > li.list-row.starred {
             .cell[data-name="name"] {
                 &:has(> a.link) {
                     &::before {

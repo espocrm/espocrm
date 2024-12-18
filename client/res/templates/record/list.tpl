@@ -221,7 +221,7 @@
             {{#each rowDataList}}
                 <tr
                     data-id="{{id}}"
-                    class="list-row{{#if isStarred}} starred{{/if}}"
+                    class="list-row {{#if isStarred}} starred {{~/if}}"
                 >{{{var id ../this}}}</tr>
             {{/each}}
             </tbody>

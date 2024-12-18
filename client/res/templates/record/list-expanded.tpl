@@ -54,7 +54,7 @@
         {{#each rowDataList}}
             <li
                 data-id="{{id}}"
-                class="list-group-item list-row"
+                class="list-group-item list-row {{#if isStarred}} starred {{~/if}}"
             >{{{var id ../this}}}</li>
         {{/each}}
         </ul>
