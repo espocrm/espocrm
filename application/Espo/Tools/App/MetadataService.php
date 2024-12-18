@@ -197,9 +197,16 @@ class MetadataService
 
             $pointer = $data;
 
+            $value = $this->metadata->getObjects($targetArr);
+
+            if ($value === null) {
+                // Important.
+                continue;
+            }
+
             foreach ($targetArr as $i => $k) {
                 if ($i === count($targetArr) - 1) {
-                    $pointer->$k = $this->metadata->getObjects($targetArr);
+                    $pointer->$k = $value;
 
                     break;
                 }
