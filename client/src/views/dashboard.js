@@ -585,7 +585,7 @@ class DashboardView extends View {
                 x: 0,
                 y: 0,
                 w: 2 * this.WIDTH_MULTIPLIER,
-                h: 2,
+                h: 2 * this.HEIGHT_MULTIPLIER,
             }
         );
 
