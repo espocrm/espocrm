@@ -192,8 +192,7 @@ class DashboardView extends View {
 
         if (window.innerWidth >= this.screenWidthXs) {
             this.initGridstack();
-        }
-        else {
+        } else {
             this.initFallbackMode();
         }
 
@@ -489,7 +488,7 @@ class DashboardView extends View {
         $container.attr('data-y', o.y);
         $container.attr('data-height', o.height);
         $container.attr('data-width', o.width);
-        $container.css('height', (o.height * this.cellHeight) + 'px');
+        $container.css('height', (o.height * this.cellHeight * this.HEIGHT_MULTIPLIER) + 'px');
 
         $item.attr('data-id', o.id);
         $item.attr('data-name', o.name);
