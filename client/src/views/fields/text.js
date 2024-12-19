@@ -80,7 +80,12 @@ class TextFieldView extends BaseFieldView {
     editTemplate = 'fields/text/edit'
     searchTemplate = 'fields/text/search'
 
+    /**
+     * Show-more is applied.
+     * @type {boolean}
+     */
     seeMoreText = false
+
     rowsDefault = 50000
     rowsMin = 2
     seeMoreDisabled = false
@@ -103,12 +108,6 @@ class TextFieldView extends BaseFieldView {
 
     events = {
         /** @this TextFieldView */
-        'click a[data-action="seeMoreText"]': function () {
-            this.seeMoreText = true;
-
-            this.reRender();
-        },
-        /** @this TextFieldView */
         'click [data-action="mailTo"]': function (e) {
             this.mailTo($(e.currentTarget).data('email-address'));
         },
@@ -128,6 +127,8 @@ class TextFieldView extends BaseFieldView {
 
     setup() {
         super.setup();
+
+        this.addActionHandler('seeMoreText', () => this.seeMore());
 
         this.maxRows = this.params.rows || this.rowsDefault;
         this.noResize = this.options.noResize || this.params.noResize || this.noResize;
@@ -567,6 +568,16 @@ class TextFieldView extends BaseFieldView {
 
             this.recordHelper.trigger('upload-files:' + this.params.attachmentField, [blob]);
         }
+    }
+
+    /**
+     * @return {Promise}
+     * @since 9.0.0
+     */
+    async seeMore() {
+        this.seeMoreText = true;
+
+        await this.reRender();
     }
 }
 
