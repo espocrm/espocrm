@@ -365,7 +365,7 @@ class WysiwygFieldView extends TextFieldView {
         /** @type {HTMLIFrameElement} */
         const iframeElement = this.iframe = $iframe.get(0);
 
-        if (!iframeElement) {
+        if (!iframeElement || !iframeElement.contentWindow) {
             return;
         }
 
