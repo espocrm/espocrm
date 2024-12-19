@@ -62,6 +62,11 @@ class SaveOption
      */
     public const KEEP_DIRTY = BaseSaveOption::KEEP_DIRTY;
     /**
+     * Keep an entity relations map. Boolean.
+     * @since 9.0.0
+     */
+    public const KEEP_RELATIONS = BaseSaveOption::KEEP_RELATIONS;
+    /**
      * Skip hooks. Boolean.
      */
     public const SKIP_HOOKS = 'skipHooks';

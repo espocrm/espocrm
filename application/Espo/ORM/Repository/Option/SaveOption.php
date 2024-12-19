@@ -34,4 +34,5 @@ class SaveOption
     public const SKIP_ALL = 'skipAll';
     public const KEEP_NEW = 'keepNew';
     public const KEEP_DIRTY = 'keepDirty';
+    public const KEEP_RELATIONS = 'keepRelations';
 }
