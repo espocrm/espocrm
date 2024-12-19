@@ -1275,7 +1275,7 @@ class NavbarSiteView extends View {
 
         const shortLabel = label.substring(0, 2);
 
-        if (!params.colorsDisabled && !isGroup && !isDivider) {
+        if (!params.colorsDisabled && !isGroup && !isDivider && !isUrl) {
             color = this.getMetadata().get(['clientDefs', tab, 'color']);
         }
 
