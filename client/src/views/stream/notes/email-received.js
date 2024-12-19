@@ -210,14 +210,14 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
 
         const postView = this.getPostView();
 
-        if (postView) {
-            postView.seeMoreText = false;
-        }
-
         await this.reRender();
 
         if (!this.detailsIsShown || !this.emailId) {
             return;
+        }
+
+        if (postView) {
+            postView.seeMoreText = false;
         }
 
         if (this.bodyFieldView) {
