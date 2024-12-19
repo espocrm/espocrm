@@ -30,6 +30,7 @@
 
 import View from 'view';
 import GridStack from 'gridstack';
+import _ from 'underscore';
 
 class DashboardView extends View {
 
@@ -59,9 +60,7 @@ class DashboardView extends View {
             this.createView('addDashlet', 'views/modals/add-dashlet', {}, view => {
                 view.render();
 
-                this.listenToOnce(view, 'add', name => {
-                    this.addDashlet(name);
-                });
+                this.listenToOnce(view, 'add', name => this.addDashlet(name));
             });
         },
         /** @this DashboardView */
@@ -125,22 +124,26 @@ class DashboardView extends View {
         this.currentTabLayout = tabLayout;
     }
 
+    /**
+     * @param {number} tab
+     */
     storeCurrentTab(tab) {
         this.getStorage().set('state', 'dashboardTab', tab);
     }
 
+    /**
+     * @param {number} tab
+     */
     selectTab(tab) {
         this.$el.find('.page-header button[data-action="selectTab"]').removeClass('active');
-        this.$el.find('.page-header button[data-action="selectTab"][data-tab="'+tab+'"]').addClass('active');
+        this.$el.find(`.page-header button[data-action="selectTab"][data-tab="${tab}"]`).addClass('active');
 
         this.currentTab = tab;
         this.storeCurrentTab(tab);
 
         this.setupCurrentTabLayout();
 
-        this.dashletIdList.forEach(id => {
-            this.clearView('dashlet-'+id);
-        });
+        this.dashletIdList.forEach(id => this.clearView(`dashlet-${id}`));
 
         this.dashletIdList = [];
 
@@ -160,16 +163,14 @@ class DashboardView extends View {
         if (this.getUser().isPortal()) {
             this.layoutReadOnly = true;
             this.dashletsReadOnly = true;
-        }
-        else {
-            const forbiddenPreferencesFieldList = this.getAcl()
-                .getScopeForbiddenFieldList('Preferences', 'edit');
+        } else {
+            const forbiddenPreferencesFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
 
-            if (~forbiddenPreferencesFieldList.indexOf('dashboardLayout')) {
+            if (forbiddenPreferencesFieldList.includes('dashboardLayout')) {
                 this.layoutReadOnly = true;
             }
 
-            if (~forbiddenPreferencesFieldList.indexOf('dashletsOptions')) {
+            if (forbiddenPreferencesFieldList.includes('dashletsOptions')) {
                 this.dashletsReadOnly = true;
             }
         }
@@ -203,8 +204,7 @@ class DashboardView extends View {
     onResize() {
         if (this.isFallbackMode() && window.innerWidth >= this.screenWidthXs) {
             this.initGridstack();
-        }
-        else if (!this.isFallbackMode() && window.innerWidth < this.screenWidthXs) {
+        } else if (!this.isFallbackMode() && window.innerWidth < this.screenWidthXs) {
             this.initFallbackMode();
         }
     }
@@ -218,7 +218,7 @@ class DashboardView extends View {
         this.preservedDashletElements = {};
 
         this.currentTabLayout.forEach(o => {
-            const key = 'dashlet-' + o.id;
+            const key = `dashlet-${o.id}`;
             const view = this.getView(key);
 
             this.unchainView(key);
@@ -233,13 +233,16 @@ class DashboardView extends View {
         });
     }
 
+    /**
+     * @param {string} id
+     */
     addPreservedDashlet(id) {
         const view = this.preservedDashletViews[id];
         const $el = this.preservedDashletElements[id];
 
-        this.$el.find('.dashlet-container[data-id="'+id+'"]').append($el);
+        this.$el.find(`.dashlet-container[data-id="${id}"]`).append($el);
 
-        this.setView('dashlet-' + id, view);
+        this.setView(`dashlet-${id}`, view);
     }
 
     clearPreservedDashlets() {
@@ -304,7 +307,7 @@ class DashboardView extends View {
 
     fallbackControlHeights() {
         this.currentTabLayout.forEach(o => {
-            const $container = this.$dashboard.find('.dashlet-container[data-id="' + o.id + '"]');
+            const $container = this.$dashboard.find(`.dashlet-container[data-id="${o.id}"]`);
 
             const headerHeight = $container.find('.panel-heading').outerHeight();
 
@@ -319,13 +322,11 @@ class DashboardView extends View {
             if (bodyEl.scrollHeight > bodyEl.offsetHeight) {
                 const height = bodyEl.scrollHeight + headerHeight;
 
-                $container.css('height', height + 'px');
+                $container.css('height', `${height}px`);
             }
         });
 
-        this.fallbackModeTimeout = setTimeout(() => {
-            this.fallbackControlHeights();
-        }, 300);
+        this.fallbackModeTimeout = setTimeout(() => this.fallbackControlHeights(), 300);
     }
 
     initGridstack() {
@@ -408,8 +409,8 @@ class DashboardView extends View {
                 return;
             }
 
-            if (!this.getMetadata().get(['dashlets', o.name])) {
-                console.error("Dashlet " + o.name + " doesn't exist or not available.");
+            if (!this.getMetadata().get(`dashlets.${o.name}`)) {
+                console.error(`Dashlet ${o.name} doesn't exist or not available.`);
 
                 return;
             }
@@ -433,11 +434,12 @@ class DashboardView extends View {
         // noinspection SpellCheckingInspection
         this.grid.on('resizestop', e => {
             const id = $(e.target).data('id');
-            const view = this.getView('dashlet-' + id);
+            const view = this.getView(`dashlet-${id}`);
 
             if (!view) {
                 return;
             }
+
             view.trigger('resize');
         });
     }
@@ -463,6 +465,11 @@ class DashboardView extends View {
             });
     }
 
+    /**
+     * @param {string} id
+     * @param {string} name
+     * @return {JQuery}
+     */
     prepareGridstackItem(id, name) {
         const $item = $('<div>').addClass('grid-stack-item');
         const $container = $('<div class="grid-stack-item-content dashlet-container"></div>');
@@ -478,6 +485,10 @@ class DashboardView extends View {
         return $item;
     }
 
+    /**
+     * @param {Record} o
+     * @return {JQuery}
+     */
     prepareFallbackItem(o) {
         const $item = $('<div>');
         const $container = $('<div class="dashlet-container">');
@@ -498,6 +509,9 @@ class DashboardView extends View {
         return $item;
     }
 
+    /**
+     * @param {Record} [attributes]
+     */
     saveLayout(attributes) {
         if (this.layoutReadOnly) {
             return;
@@ -513,6 +527,9 @@ class DashboardView extends View {
         this.getPreferences().trigger('update');
     }
 
+    /**
+     * @param {string} id
+     */
     removeDashlet(id) {
         let revertToFallback = false;
 
@@ -565,6 +582,9 @@ class DashboardView extends View {
         }
     }
 
+    /**
+     * @param {string} name
+     */
     addDashlet(name) {
         let revertToFallback = false;
 
@@ -594,8 +614,8 @@ class DashboardView extends View {
 
             this.setupCurrentTabLayout();
 
-            if (view.getView('body') && view.getView('body').afterAdding) {
-                view.getView('body').afterAdding.call(view.getView('body'));
+            if (view.getBodyView() && view.getBodyView().afterAdding) {
+                view.getBodyView().afterAdding();
             }
 
             if (revertToFallback) {
@@ -604,6 +624,13 @@ class DashboardView extends View {
         });
     }
 
+    /**
+     * @param {string} id
+     * @param {string} name
+     * @param {string} [label]
+     * @param {function(import('views/dashlet').default)} [callback]
+     * @return {Promise<import('views/dashlet').default>}
+     */
     createDashletView(id, name, label, callback) {
         const o = {
             id: id,
@@ -614,11 +641,11 @@ class DashboardView extends View {
             o.label = label;
         }
 
-        return this.createView('dashlet-' + id, 'views/dashlet', {
+        return this.createView(`dashlet-${id}`, 'views/dashlet', {
             label: name,
             name: name,
             id: id,
-            selector: '> .dashlets .dashlet-container[data-id="' + id + '"]',
+            selector: `> .dashlets .dashlet-container[data-id="${id}"]`,
             readOnly: this.dashletsReadOnly,
             locked: this.getPreferences().get('dashboardLocked'),
         }, view => {
@@ -685,7 +712,7 @@ class DashboardView extends View {
                 });
 
                 this.dashletIdList.forEach(item => {
-                    this.clearView('dashlet-' + item);
+                    this.clearView(`dashlet-${item}`);
                 });
 
                 this.dashboardLayout = dashboardLayout;

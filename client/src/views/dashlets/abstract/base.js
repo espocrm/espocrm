@@ -331,6 +331,8 @@ class BaseDashletView extends View {
 
         return itemList;
     }
+
+    afterAdding() {}
 }
 
 export default BaseDashletView;
