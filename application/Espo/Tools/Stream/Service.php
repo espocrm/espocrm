@@ -41,6 +41,7 @@ use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition;
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\SelectBuilder;
+use Espo\ORM\Query\UpdateBuilder;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use Espo\ORM\Query\Part\Expression as Expr;
@@ -1397,9 +1398,22 @@ class Service
      */
     public function updateStreamUpdatedAt(Entity $entity): void
     {
-        $entity->set(Field::STREAM_UPDATED_AT, DateTime::createNow()->toString());
+        if (!$entity->hasAttribute(Field::STREAM_UPDATED_AT)) {
+            return;
+        }
 
-        $this->entityManager->saveEntity($entity, [SaveOption::SKIP_ALL => true]);
+        $now = DateTime::createNow()->toString();
+
+        $updateQuery = UpdateBuilder::create()
+            ->in($entity->getEntityType())
+            ->where([Attribute::ID => $entity->getId()])
+            ->set([Field::STREAM_UPDATED_AT => $now])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($updateQuery);
+
+        $entity->set(Field::STREAM_UPDATED_AT, $now);
+        $entity->setFetched(Field::STREAM_UPDATED_AT, $now);
     }
 
     private function toStoreEmailContent(string $entityType): bool
