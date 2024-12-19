@@ -48,6 +48,18 @@ class DashboardView extends View {
     WIDTH_MULTIPLIER = 3
     HEIGHT_MULTIPLIER = 4
 
+    /**
+     * @private
+     * @type {Object.<string, import('views/dashlet').default>|null}
+     */
+    preservedDashletViews = null
+
+    /**
+     * @private
+     * @type {Object.<string, HTMLElement>|null}
+     */
+    preservedDashletElements = null
+
     events = {
         /** @this DashboardView */
         'click button[data-action="selectTab"]': function (e) {
@@ -225,24 +237,39 @@ class DashboardView extends View {
 
             this.preservedDashletViews[o.id] = view;
 
-            const $el = view.$el.children(0);
+            const element = view.element;
 
-            this.preservedDashletElements[o.id] = $el;
+            this.preservedDashletElements[o.id] = element;
 
-            $el.detach();
+            const parent = element.parentNode;
+            parent.removeChild(element);
         });
     }
 
     /**
      * @param {string} id
      */
-    addPreservedDashlet(id) {
+    async addPreservedDashlet(id) {
+        /** @type {import('view').default} */
         const view = this.preservedDashletViews[id];
-        const $el = this.preservedDashletElements[id];
+        /** @type {HTMLElement} */
+        const element = this.preservedDashletElements[id];
 
-        this.$el.find(`.dashlet-container[data-id="${id}"]`).append($el);
+        if (!element || !view) {
+            return;
+        }
 
-        this.setView(`dashlet-${id}`, view);
+        const container = this.element.querySelector(`.dashlet-container[data-id="${id}"]`);
+
+        if (!container) {
+            return;
+        }
+
+        container.append(...element.childNodes);
+
+        view.element = undefined;
+
+        await this.setView(`dashlet-${id}`, view);
     }
 
     clearPreservedDashlets() {
@@ -279,8 +306,8 @@ class DashboardView extends View {
                 return;
             }
 
-            if (!this.getMetadata().get(['dashlets', o.name])) {
-                console.error("Dashlet " + o.name + " doesn't exist or not available.");
+            if (!this.getMetadata().get(`dashlets.${o.name}`)) {
+                console.error(`Dashlet ${o.name} doesn't exist or not available.`);
 
                 return;
             }
