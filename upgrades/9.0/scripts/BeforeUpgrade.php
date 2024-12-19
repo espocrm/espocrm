@@ -115,7 +115,7 @@ class BeforeUpgrade
         $errorMessageList = [];
 
         $this->processCheckExtension('VoIP Integration', '2.0.0', $errorMessageList);
-        $this->processCheckExtension('Real Estate', '1.8.3', $errorMessageList);
+        $this->processCheckExtension('Real Estate', '1.8.2', $errorMessageList);
 
         if (!count($errorMessageList)) {
             return;
