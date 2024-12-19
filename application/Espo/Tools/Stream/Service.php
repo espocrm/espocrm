@@ -790,6 +790,10 @@ class Service
 
         $this->entityManager->saveEntity($note, $noteOptions);
 
+        if (!$this->checkIsEnabled($parent->getEntityType())) {
+            return;
+        }
+
         $this->updateStreamUpdatedAt($parent);
     }
 
@@ -831,6 +835,10 @@ class Service
         }
 
         $this->entityManager->saveEntity($note, $noteOptions);
+
+        if (!$this->checkIsEnabled($parent->getEntityType())) {
+            return;
+        }
 
         $this->updateStreamUpdatedAt($parent);
     }
@@ -965,7 +973,8 @@ class Service
             $entity->isNew() ||
             $this->hasAuditedFieldChanged($entity) ||
             $this->hasStatusFieldChanged($entity) ||
-            $this->hasAssignedUserChanged($entity);
+            $this->hasAssignedUserChanged($entity) &&
+            $this->checkIsEnabled($entity->getEntityType());
     }
 
     private function hasAssignedUserChanged(Entity $entity): bool
