@@ -160,6 +160,13 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
     }
 
     /**
+     * @return {import('views/fields/text').default}
+     */
+    getPostView() {
+        return this.getView('post');
+    }
+
+    /**
      * @protected
      * @param {Record} data
      */
@@ -200,6 +207,8 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
 
             Espo.Ui.notify();
         }
+
+        this.getPostView().seeMoreText = false;
 
         await this.reRender();
 
