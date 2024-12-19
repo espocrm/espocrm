@@ -208,7 +208,11 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
             Espo.Ui.notify();
         }
 
-        this.getPostView().seeMoreText = false;
+        const postView = this.getPostView();
+
+        if (postView) {
+            postView.seeMoreText = false;
+        }
 
         await this.reRender();
 
@@ -266,7 +270,19 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
 
         Espo.Ui.notify();
 
+        const minHeight = postView && postView.element ? postView.element.offsetHeight : null;
+
         await this.reRender();
+
+        if (minHeight) {
+            const iframe = this.bodyFieldView.element.querySelector('iframe');
+
+            if (iframe) {
+                iframe.style.minHeight = minHeight + 'px';
+
+                setTimeout(() => iframe.style.minHeight = '', 200);
+            }
+        }
     }
 }
 
