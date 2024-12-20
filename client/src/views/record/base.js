@@ -1089,6 +1089,8 @@ class BaseRecordView extends View {
         this.trigger('before:save');
         model.trigger('before:save');
 
+        const initialAttributes = this.attributes;
+
         return new Promise((resolve, reject) => {
             model
                 .save(setAttributes, {
@@ -1096,7 +1098,7 @@ class BaseRecordView extends View {
                     headers: headers,
                 })
                 .then(() => {
-                    this.trigger('save', this.attributes, Object.keys(setAttributes));
+                    this.trigger('save', initialAttributes, Object.keys(setAttributes));
 
                     this.afterSave();
 
