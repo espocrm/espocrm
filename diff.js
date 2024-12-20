@@ -51,7 +51,7 @@ const path = require('path');
 const fs = require('fs');
 const process = require('process');
 
-let versionFrom = process.argv[2];
+const versionFrom = process.argv[2];
 
 let acceptedVersionName = versionFrom;
 let isDev = false;
@@ -61,7 +61,7 @@ let forceScripts = false;
 let isClosest = false;
 
 if (process.argv.length > 1) {
-    for (let i in process.argv) {
+    for (const i in process.argv) {
         if (process.argv[i] === '--dev') {
             isDev = true;
             withVendor = false;
@@ -89,13 +89,13 @@ if (process.argv.length > 1) {
     }
 }
 
-let espoPath = path.dirname(fs.realpathSync(__filename));
+const espoPath = path.dirname(fs.realpathSync(__filename));
 
 if (isAll || isClosest) {
     acceptedVersionName = null;
 }
 
-let diff = new Diff(espoPath, {
+const diff = new Diff(espoPath, {
     isDev: isDev,
     withVendor: withVendor,
     forceScripts: forceScripts,
