@@ -285,13 +285,15 @@ class Diff
             fileList.push('client/lib/espo.js');
             fileList.push('client/lib/espo.js.map');
             fileList.push('client/lib/templates.tpl');
+            fileList.push('client/lib/original/espo.js');
 
             Object.keys(bundleConfig.chunks)
                 .map(name => {
-                    const namePart = 'espo-' + name;
+                    const namePart = `espo-${name}`;
 
                     fileList.push(`client/lib/${namePart}.js`);
                     fileList.push(`client/lib/${namePart}.js.map`);
+                    fileList.push(`client/lib/original/${namePart}.js`);
                 });
 
             fs.readdirSync('client/css/espo/').forEach(file => {
