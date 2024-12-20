@@ -49,7 +49,10 @@
                 data-action="refresh"
                 class="action"
                 title="{{translate 'Refresh'}}"
-            >{{#if title}}{{title}}{{else}}&nbsp;{{/if}}</span>
+            >
+                {{~#if color}}<span class="color-icon fas fa-square" style="color: {{color}}"></span><span>&nbsp;</span>{{/if~}}
+                {{~#if title}}{{title}}{{else}}&nbsp;{{/if~}}
+            </span>
         </h4>
     </div>
     <div class="dashlet-body panel-body{{#if noPadding}} no-padding{{/if}}">{{{body}}}</div>

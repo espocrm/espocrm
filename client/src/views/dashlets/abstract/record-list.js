@@ -220,6 +220,14 @@ class RecordListDashletView extends BaseDashletView {
     }
 
     getCreateAttributes() {}
+
+    getColor() {
+        if (!this.scope) {
+            return null;
+        }
+
+        return this.getMetadata().get(`clientDefs.${this.scope}.color`);
+    }
 }
 
 export default RecordListDashletView;

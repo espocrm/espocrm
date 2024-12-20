@@ -332,6 +332,14 @@ class BaseDashletView extends View {
         return itemList;
     }
 
+    /**
+     * @return {string|null}
+     * @since 9.0.0
+     */
+    getColor() {
+        return null;
+    }
+
     afterAdding() {}
 }
 

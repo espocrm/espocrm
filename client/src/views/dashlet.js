@@ -71,6 +71,7 @@ class DashletView extends View {
             actionList: bodyView ? bodyView.getActionItemDataList() : [],
             buttonList: bodyView ? bodyView.buttonList : [],
             noPadding: bodyView ? bodyView.noPadding : false,
+            color: bodyView ? bodyView.getColor() : null,
         };
     }
 
