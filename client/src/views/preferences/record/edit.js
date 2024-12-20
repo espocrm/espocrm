@@ -118,7 +118,7 @@ class PreferencesEditRecordView extends EditRecordView {
         this.listenTo(this.model, 'change:followCreatedEntities', this.controlFollowCreatedEntityListVisibility);
 
         this.controlColorsField();
-        this.listenTo(this.model, 'change:scopeColorsDisabled', this.controlColorsField, this);
+        this.listenTo(this.model, 'change:scopeColorsDisabled', () => this.controlColorsField());
 
         let hideNotificationPanel = true;
 
@@ -258,7 +258,7 @@ class PreferencesEditRecordView extends EditRecordView {
 
     exit(after) {
         if (after === 'cancel') {
-            let url = '#User/view/' + this.model.id;
+            let url = `#User/view/${this.model.id}`;
 
             if (!this.getAcl().checkModel(this.getUser())) {
                 url = '#';
