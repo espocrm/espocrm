@@ -80,7 +80,7 @@
     },
     "collection": {
         "orderBy": "dateStart",
-        "order": "asc"
+        "order": "desc"
     },
     "indexes": {
         "typeRange": {
