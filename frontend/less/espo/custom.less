@@ -4012,6 +4012,18 @@ body > .autocomplete-suggestions.text-search-suggestions {
         &:has(> .list > table) {
             padding: 0;
         }
+
+        > .list > table > tbody {
+            > tr {
+                > td:first-child {
+                    padding-left: var(--14px);
+                }
+
+                > td:last-child {
+                    padding-right: var(--14px);
+                }
+            }
+        }
     }
 }
 
