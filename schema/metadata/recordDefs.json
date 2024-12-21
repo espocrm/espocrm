@@ -198,6 +198,13 @@
                 "type": "string"
             }
         },
+        "earlyBeforeCreateHookClassNameList": {
+            "description": "Early-before-create hooks. Run before validation. Should implement the Espo\\Core\\Record\\Hook\\CreateHook or Espo\\Core\\Record\\Hook\\SaveHook interface. As of v9.0.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
         "beforeCreateHookClassNameList": {
             "description": "Before-create hooks. Should implement the Espo\\Core\\Record\\Hook\\CreateHook or Espo\\Core\\Record\\Hook\\SaveHook interface.",
             "type": "array",
@@ -207,6 +214,13 @@
         },
         "afterCreateHookClassNameList": {
             "description": "After-create hooks. Should implement the Espo\\Core\\Record\\Hook\\CreateHook or Espo\\Core\\Record\\Hook\\SaveHook interface. As of v8.2.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "earlyBeforeUpdateHookClassNameList": {
+            "description": "Early-before-update hooks. Run before validation. Should implement the Espo\\Core\\Record\\Hook\\UpdateHook or Espo\\Core\\Record\\Hook\\SaveHook interface. As of v9.0.",
             "type": "array",
             "items": {
                 "type": "string"

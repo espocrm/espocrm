@@ -635,6 +635,8 @@ class Service implements Crud,
         $entity->set($data);
         $this->populateDefaults($entity, $data);
 
+        $this->getRecordHookManager()->processEarlyBeforeCreate($entity, $params);
+
         $this->processValidation($entity, $data);
         $this->checkEntityCreateAccess($entity);
         $this->processAssignmentCheck($entity);
@@ -718,6 +720,8 @@ class Service implements Crud,
         }
 
         $entity->set($data);
+
+        $this->getRecordHookManager()->processEarlyBeforeUpdate($entity, $params);
 
         $this->processValidation($entity, $data);
         $this->processAssignmentCheck($entity);

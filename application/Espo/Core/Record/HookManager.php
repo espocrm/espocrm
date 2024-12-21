@@ -53,6 +53,24 @@ class HookManager
      * @throws Forbidden
      * @throws Conflict
      */
+    public function processEarlyBeforeCreate(Entity $entity, CreateParams $params): void
+    {
+        foreach ($this->getEarlyBeforeCreateHookList($entity->getEntityType()) as $hook) {
+            if ($hook instanceof SaveHook) {
+                $hook->process($entity);
+
+                continue;
+            }
+
+            $hook->process($entity, $params);
+        }
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Conflict
+     */
     public function processBeforeCreate(Entity $entity, CreateParams $params): void
     {
         foreach ($this->getBeforeCreateHookList($entity->getEntityType()) as $hook) {
@@ -87,6 +105,24 @@ class HookManager
     public function processBeforeRead(Entity $entity, ReadParams $params): void
     {
         foreach ($this->getBeforeReadHookList($entity->getEntityType()) as $hook) {
+            $hook->process($entity, $params);
+        }
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Conflict
+     */
+    public function processEarlyBeforeUpdate(Entity $entity, UpdateParams $params): void
+    {
+        foreach ($this->getEarlyBeforeUpdateHookList($entity->getEntityType()) as $hook) {
+            if ($hook instanceof SaveHook) {
+                $hook->process($entity);
+
+                continue;
+            }
+
             $hook->process($entity, $params);
         }
     }
@@ -191,6 +227,15 @@ class HookManager
     /**
      * @return (CreateHook<Entity>|SaveHook<Entity>)[]
      */
+    private function getEarlyBeforeCreateHookList(string $entityType): array
+    {
+        /** @var (CreateHook<Entity>|SaveHook<Entity>)[] */
+        return $this->provider->getList($entityType, Type::EARLY_BEFORE_CREATE);
+    }
+
+    /**
+     * @return (CreateHook<Entity>|SaveHook<Entity>)[]
+     */
     private function getBeforeCreateHookList(string $entityType): array
     {
         /** @var (CreateHook<Entity>|SaveHook<Entity>)[] */
@@ -204,6 +249,15 @@ class HookManager
     {
         /** @var (CreateHook<Entity>|SaveHook<Entity>)[] */
         return $this->provider->getList($entityType, Type::AFTER_CREATE);
+    }
+
+    /**
+     * @return (UpdateHook<Entity>|SaveHook<Entity>)[]
+     */
+    private function getEarlyBeforeUpdateHookList(string $entityType): array
+    {
+        /** @var (UpdateHook<Entity>|SaveHook<Entity>)[] */
+        return $this->provider->getList($entityType, Type::EARLY_BEFORE_UPDATE);
     }
 
     /**

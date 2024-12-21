@@ -33,6 +33,9 @@ class Type
 {
     public const BEFORE_READ = 'beforeRead';
 
+    public const EARLY_BEFORE_CREATE = 'earlyBeforeCreate';
+    public const EARLY_BEFORE_UPDATE = 'earlyBeforeUpdate';
+
     public const BEFORE_CREATE = 'beforeCreate';
     public const BEFORE_UPDATE = 'beforeUpdate';
     public const BEFORE_DELETE = 'beforeDelete';
