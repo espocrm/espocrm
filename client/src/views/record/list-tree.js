@@ -261,10 +261,10 @@ class ListTreeRecordView extends ListRecordView {
         }, view => {
             view.render();
 
-            this.listenToOnce(view, 'after:save', model => {
+            this.listenToOnce(view, 'after:save', /** import('model').default */model => {
                 view.close();
 
-                const collection = /** @type module:collections/tree */ this.collection;
+                const collection = /** @type import('collections/tree').default */ this.collection;
 
                 model.set('childCollection', collection.createSeed());
 
@@ -274,8 +274,7 @@ class ListTreeRecordView extends ListRecordView {
                     while (1) {
                         if (v.level) {
                             v = v.getParentView().getParentView();
-                        }
-                        else {
+                        } else {
                             break;
                         }
                     }
@@ -285,11 +284,13 @@ class ListTreeRecordView extends ListRecordView {
                     return;
                 }
 
-                this.collection.push(model);
+                this.collection.fetch();
+
+                /*this.collection.push(model);
 
                 this.buildRows(() => {
                     this.render();
-                });
+                });*/
             });
         });
     }
