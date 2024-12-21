@@ -72,6 +72,10 @@ class ViewHelper {
                     node.targetBlank = false;
                 }
             }
+
+            if (node instanceof HTMLOListElement && node.start && node.start > 99) {
+                node.removeAttribute('start');
+            }
         });
 
         DOMPurify.addHook('afterSanitizeAttributes', function (node) {
