@@ -32,7 +32,9 @@ namespace Espo\Modules\Crm\Classes\RecordHooks\Case;
 use Espo\Core\Acl;
 use Espo\Core\Record\Hook\SaveHook;
 use Espo\Entities\Email;
+use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\CaseObj;
+use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -58,7 +60,14 @@ class AfterCreate implements SaveHook
 
         $email = $this->entityManager->getRDBRepositoryByClass(Email::class)->getById($emailId);
 
-        if (!$email || $email->getParentId() || !$this->acl->checkEntityRead($email)) {
+        if (!$email || !$this->acl->checkEntityRead($email)) {
+            return;
+        }
+
+        if (
+            $email->getParentId() &&
+            !in_array($email->getParentType(), [Account::ENTITY_TYPE, Contact::ENTITY_TYPE])
+        ) {
             return;
         }
 
