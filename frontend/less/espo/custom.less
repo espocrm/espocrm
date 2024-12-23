@@ -2685,19 +2685,20 @@ table.table td.cell .html-container {
 .alert,
 .alert > .message,
 .popover-content {
-    h1:first-child,
-    h2:first-child,
-    h3:first-child,
-    h4:first-child,
-    h5:first-child,
-    h6:first-child,
-    p:first-child,
-    > ul:first-child,
-    > ol:first-child,
-    pre:first-child,
-    blockquote:first-child {
-        margin-top: 0 !important;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    > ul,
+    > ol {
+        &:first-child {
+            margin-top: 0 !important;
+        }
     }
+
     h1 {
         font-weight: 600;
         margin-top: var(--line-height-computed);
@@ -2731,20 +2732,41 @@ table.table td.cell .html-container {
         margin-top: var(--line-height-computed-half);
     }
 
-    p:last-child,
-    > ul:last-child,
-    > ol:last-child,
-    blockquote:last-child,
-    pre:last-child {
-        margin-bottom: 0;
+    pre,
+    blockquote {
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+
+    p,
+    > ul,
+    > ol,
+    blockquote,
+    pre {
+        &:last-child {
+            margin-bottom: 0;
+        }
+
     }
 
     ul,
     ol {
         > li {
             ul, ol{
-                margin-top: 4px;
-                margin-bottom: 4px;
+                margin-top: var(--4px);
+                margin-bottom: var(--4px);
+            }
+
+            pre,
+            blockquote {
+                &:first-child {
+                    margin-top: var(--2px);
+                }
+
+                &:last-child {
+                    margin-bottom: var(--2px);
+                }
             }
         }
     }
@@ -2781,13 +2803,15 @@ table.table td.cell .html-container {
         margin-bottom: var(--line-height-computed-half);
     }
 
-    > p:last-child,
-    > ul:last-child,
-    > ol:last-child,
-    > pre:last-child,
-    > blockquote:last-child,
-    > table:last-child {
-        margin-bottom: 0;
+    > p,
+    > ul,
+    > ol,
+    > pre,
+    > blockquote,
+    > table {
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 
     ul > li {
