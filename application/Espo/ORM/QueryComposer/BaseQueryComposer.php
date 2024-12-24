@@ -2938,7 +2938,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * Sanitize a string.
-     * @todo Make protected in 9.0.
+     * @todo Make protected in v10.0.
      * @deprecated As of v6.0. Not to be used outside.
      */
     public function sanitize(string $string): string
@@ -2948,7 +2948,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * Sanitize an alias for a SELECT statement.
-     * @todo Make protected in 9.0.
+     * @todo Make protected in v10.0.
      * @deprecated As of v6.0. Not to be used outside.
      */
     public function sanitizeSelectAlias(string $string): string
