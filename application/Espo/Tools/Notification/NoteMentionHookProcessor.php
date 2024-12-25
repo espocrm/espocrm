@@ -32,7 +32,6 @@ namespace Espo\Tools\Notification;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Permission;
 use Espo\Core\AclManager;
-use Espo\Core\Name\Field;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
 use Espo\Entities\Note;
@@ -60,21 +59,17 @@ class NoteMentionHookProcessor
 
     private function process(Note $note): void
     {
-        $post = $note->getPost() ?? '';
-
         $mentionData = (object) [];
 
         $previousMentionList = [];
 
         if (!$note->isNew()) {
-            $previousMentionList = array_keys(
-                get_object_vars($note->getData()->mentions ?? (object) [])
-            );
+            $previousMentionList = array_keys(get_object_vars($note->getData()->mentions ?? (object) []));
         }
 
         $matches = null;
 
-        preg_match_all('/(@[\w@.-]+)/', $post, $matches);
+        preg_match_all('/(@[\w@.-]+)/', $note->getPost() ?? '', $matches);
 
         $mentionCount = 0;
 
@@ -90,7 +85,7 @@ class NoteMentionHookProcessor
             unset($data->mentions);
         }
 
-        $note->set('data', $data);
+        $note->setData($data);
     }
 
     /**
@@ -113,9 +108,8 @@ class NoteMentionHookProcessor
         foreach ($matchList as $item) {
             $userName = substr($item, 1);
 
-            /** @var ?User $user */
             $user = $this->entityManager
-                ->getRDBRepository(User::ENTITY_TYPE)
+                ->getRDBRepositoryByClass(User::class)
                 ->where([
                     'userName' => $userName,
                     'isActive' => true,
@@ -132,8 +126,8 @@ class NoteMentionHookProcessor
 
             $mentionData->$item = (object) [
                 'id' => $user->getId(),
-                'name' => $user->get(Field::NAME),
-                'userName' => $user->get('userName'),
+                'name' => $user->getName(),
+                'userName' => $user->getUserName(),
                 '_scope' => $user->getEntityType(),
             ];
 

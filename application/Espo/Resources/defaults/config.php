@@ -54,7 +54,7 @@ return [
     'recordsPerPageSelect' => 10,
     'recordsPerPageKanban' => 5,
     'applicationName' => 'EspoCRM',
-    'version' => '@@version',
+    'version' => '9.0.0',
     'timeZone' => 'UTC',
     'dateFormat' => 'DD.MM.YYYY',
     'timeFormat' => 'HH:mm',
