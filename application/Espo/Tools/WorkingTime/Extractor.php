@@ -390,14 +390,19 @@ class Extractor
             $start = $range->getStart();
             $end = $range->getEnd();
 
-            $list[] = [
-                DateTime::fromDateTime(
-                    $pointer->setTime($start->getHour(), $start->getMinute())
-                ),
-                DateTime::fromDateTime(
-                    $pointer->setTime($end->getHour(), $end->getMinute())
-                )
-            ];
+            $startDateTime = DateTime::fromDateTime(
+                $pointer->setTime($start->getHour(), $start->getMinute())
+            );
+
+            $endDateTime = DateTime::fromDateTime(
+                $pointer->setTime($end->getHour(), $end->getMinute())
+            );
+
+            if ($end->getHour() === 0 && $end->getMinute() === 0) {
+                $endDateTime = $endDateTime->addDays(1);
+            }
+
+            $list[] = [$startDateTime, $endDateTime];
         }
 
         return $list;

@@ -315,9 +315,13 @@ export default class extends BaseFieldView {
                 continue;
             }
 
-            const prevItem = item[i - 1];
+            const prevItem = itemList[i - 1];
 
             if (this.isRangeInvalid(prevItem[1], item[0])) {
+                return true;
+            }
+
+            if (prevItem[1] === '00:00') {
                 return true;
             }
         }
@@ -328,9 +332,9 @@ export default class extends BaseFieldView {
     /**
      * @param {string|null} from
      * @param {string|null} to
-     * @param {boolean} [noEmpty]
+     * @param {boolean} [isRange]
      */
-    isRangeInvalid(from, to, noEmpty) {
+    isRangeInvalid(from, to, isRange = false) {
         if (from === null || to === null) {
             return true;
         }
@@ -338,8 +342,12 @@ export default class extends BaseFieldView {
         const fromNumber = parseFloat(from.replace(':', '.'));
         const toNumber = parseFloat(to.replace(':', '.'));
 
-        if (noEmpty && fromNumber === toNumber) {
+        if (isRange && fromNumber === toNumber && to !== '00:00') {
             return true;
+        }
+
+        if (isRange && to === '00:00' && fromNumber) {
+            return false;
         }
 
         return fromNumber > toNumber;

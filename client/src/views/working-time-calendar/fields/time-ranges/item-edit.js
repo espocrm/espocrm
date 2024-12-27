@@ -110,6 +110,10 @@ export default class extends View  {
         return m.format(this.getDateTime().timeFormat);
     }
 
+    /**
+     * @param {string} value
+     * @return {string|null}
+     */
     convertTimeFromDisplay(value) {
         if (!value) {
             return null;
@@ -139,7 +143,13 @@ export default class extends View  {
     setMinTime() {
         const value = this.$start.val();
 
-        this.$end.timepicker('option', 'maxTime', this.convertTimeToDisplay('23:59'));
+        const parsedValue = this.convertTimeFromDisplay(value);
+
+        if (parsedValue !== '00:00') {
+            this.$end.timepicker('option', 'maxTime', this.convertTimeToDisplay('24:00'));
+        } else {
+            this.$end.timepicker('option', 'maxTime', null);
+        }
 
         if (!value) {
             this.$end.timepicker('option', 'minTime', null);
@@ -147,7 +157,11 @@ export default class extends View  {
             return;
         }
 
-        this.$end.timepicker('option', 'minTime', value);
+        const minValue = moment(parsedValue, 'HH:mm')
+            .add(this.minuteStep, 'minute')
+            .format(this.getDateTime().timeFormat);
+
+        this.$end.timepicker('option', 'minTime', minValue);
     }
 
     initTimepicker($el) {
