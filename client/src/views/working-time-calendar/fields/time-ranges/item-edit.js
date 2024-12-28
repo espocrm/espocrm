@@ -28,9 +28,9 @@
 
 import View from 'view';
 import moment from 'moment';
+import Timepicker from 'ui/timepicker';
 
-export default class extends View  {
-
+export default class TimeRangeItemEdit extends View  {
 
     // language=Handlebars
     templateContent = `
@@ -80,6 +80,30 @@ export default class extends View  {
 
     minuteStep = 30
 
+    /**
+     * @private
+     * @type {HTMLInputElement}
+     */
+    startElement
+
+    /**
+     * @private
+     * @type {HTMLInputElement}
+     */
+    endElement
+
+    /**
+     * @private
+     * @type {import('ui/timepicker').default}
+     */
+    startTimepicker
+
+    /**
+     * @private
+     * @type {import('ui/timepicker').default}
+     */
+    endTimepicker
+
     data () {
         const data = {};
 
@@ -94,6 +118,8 @@ export default class extends View  {
     setup () {
         this.value = this.options.value || [null, null];
         this.key = this.options.key;
+
+        this.on('remove', () => this.destroyTimepickers());
     }
 
     convertTimeToDisplay(value) {
@@ -129,30 +155,32 @@ export default class extends View  {
     }
 
     afterRender() {
-        this.$start = this.$el.find('[data-name="start"]');
-        this.$end = this.$el.find('[data-name="end"]');
+        this.startElement = this.element.querySelector('[data-name="start"]');
+        this.endElement = this.element.querySelector('[data-name="end"]');
 
-        this.initTimepicker(this.$start);
-        this.initTimepicker(this.$end);
+        if (this.startElement) {
+            this.startTimepicker = this.initTimepicker(this.startElement);
+            this.endTimepicker = this.initTimepicker(this.endElement);
 
-        this.setMinTime();
+            this.setMinTime();
 
-        this.$start.on('change', () => this.setMinTime());
+            this.startTimepicker.addChangeEventListener(() => this.setMinTime());
+        }
     }
 
     setMinTime() {
-        const value = this.$start.val();
+        const value = this.startElement.value;
 
         const parsedValue = this.convertTimeFromDisplay(value);
 
         if (parsedValue !== '00:00') {
-            this.$end.timepicker('option', 'maxTime', this.convertTimeToDisplay('24:00'));
+            this.endTimepicker.setMaxTime(this.convertTimeToDisplay('24:00'));
         } else {
-            this.$end.timepicker('option', 'maxTime', null);
+            this.endTimepicker.setMaxTime(null);
         }
 
         if (!value) {
-            this.$end.timepicker('option', 'minTime', null);
+            this.endTimepicker.setMinTime(null);
 
             return;
         }
@@ -161,23 +189,41 @@ export default class extends View  {
             .add(this.minuteStep, 'minute')
             .format(this.getDateTime().timeFormat);
 
-        this.$end.timepicker('option', 'minTime', minValue);
+        this.endTimepicker.setMinTime(minValue);
     }
 
-    initTimepicker($el) {
-        $el.timepicker({
+    /**
+     * @private
+     * @param {HTMLInputElement} element
+     * @return {Timepicker}
+     */
+    initTimepicker(element) {
+        const timepicker = new Timepicker(element, {
             step: this.minuteStep,
             timeFormat: this.timeFormatMap[this.getDateTime().timeFormat],
-        });
+        })
 
-        $el.on('change', () => this.trigger('change'));
-        $el.attr('autocomplete', 'espo-time-range-item');
+        timepicker.addChangeEventListener(() => this.trigger('change'));
+
+        element.setAttribute('autocomplete', 'espo-time-range-item');
+
+        return timepicker;
+    }
+
+    destroyTimepickers() {
+        if (this.startTimepicker) {
+            this.startTimepicker.destroy();
+        }
+
+        if (this.endTimepicker) {
+            this.endTimepicker.destroy();
+        }
     }
 
     fetch() {
         return [
-            this.convertTimeFromDisplay(this.$start.val()),
-            this.convertTimeFromDisplay(this.$end.val()),
+            this.convertTimeFromDisplay(this.startElement.value),
+            this.convertTimeFromDisplay(this.endElement.value),
         ];
     }
 }
