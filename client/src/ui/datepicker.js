@@ -67,7 +67,7 @@ class Datepicker {
          */
         this.$element = $(element);
 
-        if (element instanceof HTMLInputElement && 0) {
+        if (element instanceof HTMLInputElement) {
             let wait = false;
 
             this.$element.on('change', /** Record */e => {
