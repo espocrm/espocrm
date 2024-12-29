@@ -180,7 +180,7 @@ class DurationFieldView extends EnumFieldView {
                 this.blockDateEndChangeListener = true;
                 setTimeout(() => this.blockDateEndChangeListener = false, 100);
 
-                this.updateDateEnd();
+                this.updateDateEnd(this.startField);
 
                 setTimeout(() => this.updateDuration(), 110);
 
@@ -267,8 +267,7 @@ class DurationFieldView extends EnumFieldView {
                 if (this.endFieldView) {
                     if (this.endFieldView.isRendered()) {
                         this.updateDateEnd();
-                    }
-                    else {
+                    } else {
                         this.endFieldView.once('after:render', () => {
                             this.updateDateEnd();
                         });
@@ -399,13 +398,17 @@ class DurationFieldView extends EnumFieldView {
 
     /**
      * @private
+     * @param {string} [fromField]
      */
-    updateDateEnd() {
+    updateDateEnd(fromField) {
         if (this.model.attributes.isAllDay && this.hasAllDay) {
             const end = this._getDateEndDate();
 
             setTimeout(() => {
-                this.model.set(this.endDateField, end, {updatedByDuration: true});
+                this.model.set(this.endDateField, end, {
+                    updatedByDuration: true,
+                    fromField: fromField,
+                });
             }, 1);
 
             return;
@@ -415,10 +418,13 @@ class DurationFieldView extends EnumFieldView {
 
         // Smaller timeouts produce a js error in timepicker.
         setTimeout(() => {
-            this.model.set(this.endField, end, {updatedByDuration: true});
+            this.model.set(this.endField, end, {
+                updatedByDuration: true,
+                fromField: fromField,
+            });
 
             if (this.hasAllDay) {
-                this.model.set(this.endDateField, null);
+                this.model.set(this.endDateField, null, {fromField: fromField});
             }
         }, 100);
     }
