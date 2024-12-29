@@ -444,6 +444,10 @@ class Permission
      */
     protected function chownReal(string $path, $user): bool
     {
+        if (!function_exists('chown')) {
+            return true;
+        }
+
         return @chown($path, $user);
     }
 
@@ -455,6 +459,10 @@ class Permission
      */
     protected function chgrpReal(string $path, $group): bool
     {
+        if (!function_exists('chgrp')) {
+            return true;
+        }
+
         return @chgrp($path, $group);
     }
 
