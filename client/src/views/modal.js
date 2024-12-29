@@ -499,7 +499,7 @@ class ModalView extends View {
                 o.html = o.iconHtml + ' <span>' + this.getHelper().escapeString(o.text) + '</span>';
             }
             else if (o.iconClass && !o.html) {
-                o.html = `<span class="${o.iconClass}"></span> ` +
+                o.html = `<span class="${o.iconClass}"></span>` +
                     '<span>' + this.getHelper().escapeString(o.text) + '</span>';
             }
 
