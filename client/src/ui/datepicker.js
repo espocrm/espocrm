@@ -30,6 +30,7 @@ import $ from 'jquery';
 import Language from 'language';
 import Settings from 'models/settings';
 import {inject} from 'di';
+import DateTime from 'date-time';
 
 /**
  * A datepicker.
@@ -40,21 +41,30 @@ class Datepicker {
 
 
     /**
+     * @private
      * @type {Language}
      */
     @inject(Language)
     language
 
     /**
+     * @private
      * @type {Settings}
      */
     @inject(Settings)
     config
 
     /**
+     * @private
+     * @type {DateTime}
+     */
+    @inject(DateTime)
+    dateTime
+
+    /**
      * @param {HTMLElement} element
      * @param {{
-     *     format: string,
+     *     format?: string,
      *     weekStart: number,
      *     todayButton?: boolean,
      *     startDate?: string|undefined,
@@ -92,16 +102,18 @@ class Datepicker {
 
         const language = this.config.get('language');
 
+        const format = options.format || this.dateTime.getDateFormat();
+
         const datepickerOptions = {
             autoclose: true,
             todayHighlight: true,
             keyboardNavigation: true,
             assumeNearbyYear: true,
 
-            format: options.format.toLowerCase(),
+            format: format.toLowerCase(),
             weekStart: options.weekStart,
             todayBtn: options.todayButton || false,
-            startDate: options.startDate,
+            startDate: options.startDate || this.dateTime.toMomentDate('1970-01-01').format(format),
             orientation: 'bottom auto',
             templates: {
                 leftArrow: '<span class="fas fa-chevron-left fa-sm"></span>',
