@@ -30,6 +30,7 @@
 
 import BaseFieldView from 'views/fields/base';
 import moment from 'moment';
+import Datepicker from 'ui/datepicker';
 
 /**
  * A date field.
@@ -112,6 +113,12 @@ class DateFieldView extends BaseFieldView {
 
     initialSearchIsNotIdle = true
 
+    /**
+     * @private
+     * @type {import('ui/datepicker').default}
+     */
+    datepicker
+
     setup() {
         super.setup();
 
@@ -137,8 +144,7 @@ class DateFieldView extends BaseFieldView {
 
                 // Timeout prevents the picker popping one when the duration field adjusts the date end.
                 setTimeout(() => {
-                    // noinspection JSUnresolvedReference
-                    this.$element.datepicker('setStartDate', this.getStartDateForDatePicker());
+                    this.datepicker.setStartDate(this.getStartDateForDatePicker());
                 }, 100);
             });
         }
@@ -296,85 +302,43 @@ class DateFieldView extends BaseFieldView {
 
     afterRender() {
         if (this.mode === this.MODE_EDIT || this.mode === this.MODE_SEARCH) {
-            this.$element = this.$el.find('[data-name="' + this.name + '"]');
+            this.$element = this.$el.find(`[data-name="${this.name}"]`);
 
-            let wait = false;
-
-            // @todo Introduce ui/date-picker.
-
-            this.$element.on('change', /** Record */e => {
-                if (!wait) {
-                    this.trigger('change');
-                    wait = true;
-                    setTimeout(() => wait = false, 100);
-                }
-
-                if (e.isTrigger) {
-                    if (document.activeElement !== this.$element.get(0)) {
-                        this.$element.focus();
-                    }
-                }
-            });
-
-            this.$element.on('click', () => {
-                // noinspection JSUnresolvedReference
-                this.$element.datepicker('show');
-            });
+            /** @type {HTMLElement} */
+            const element = this.$element.get(0);
 
             const options = {
-                format: this.getDateTime().dateFormat.toLowerCase(),
+                format: this.getDateTime().dateFormat,
                 weekStart: this.getDateTime().weekStart,
-                autoclose: true,
-                todayHighlight: true,
-                keyboardNavigation: true,
-                assumeNearbyYear: true,
-                todayBtn: this.getConfig().get('datepickerTodayButton') || false,
-                orientation: 'bottom auto',
-                templates: {
-                    leftArrow: '<span class="fas fa-chevron-left fa-sm"></span>',
-                    rightArrow: '<span class="fas fa-chevron-right fa-sm"></span>',
-                },
-                container: this.$el.closest('.modal-body').length ?
-                    this.$el.closest('.modal-body') :
-                    'body',
                 startDate: this.getStartDateForDatePicker(),
+                todayButton: this.getConfig().get('datepickerTodayButton') || false,
             };
 
-            const language = this.getConfig().get('language');
+            this.datepicker = undefined;
 
-            // noinspection JSUnresolvedReference
-            if (!(language in $.fn.datepicker.dates)) {
-                // noinspection JSUnresolvedReference
-                $.fn.datepicker.dates[language] = {
-                    days: this.translate('dayNames', 'lists'),
-                    daysShort: this.translate('dayNamesShort', 'lists'),
-                    daysMin: this.translate('dayNamesMin', 'lists'),
-                    months: this.translate('monthNames', 'lists'),
-                    monthsShort: this.translate('monthNamesShort', 'lists'),
-                    today: this.translate('Today'),
-                    clear: this.translate('Clear'),
-                };
+            if (element) {
+                this.datepicker = new Datepicker(element, {
+                    ...options,
+                    onChange: () => this.trigger('change'),
+                });
             }
-
-            options.language = language;
-
-            // noinspection JSUnresolvedReference
-            this.$element.datepicker(options);
 
             if (this.mode === this.MODE_SEARCH) {
                 this.$el.find('select.search-type').on('change', () => this.trigger('change'));
                 this.$el.find('input.number').on('change', () => this.trigger('change'));
 
-                // noinspection JSUnresolvedReference
-                this.$el.find('.input-group.additional').datepicker(options);
+                const element = this.$el.find('.input-group.additional').get(0);
 
-                this.initDatePickerEventHandlers('input.filter-from');
-                this.initDatePickerEventHandlers('input.filter-to');
+                if (element) {
+                    new Datepicker(element, options)
+
+                    this.initDatePickerEventHandlers('input.filter-from');
+                    this.initDatePickerEventHandlers('input.filter-to');
+                }
             }
 
             this.$element.parent().find('button.date-picker-btn').on('click', () => {
-                // noinspection JSUnresolvedReference
-                this.$element.datepicker('show');
+                this.datepicker.show();
             });
 
             if (this.mode === this.MODE_SEARCH) {
@@ -400,11 +364,6 @@ class DateFieldView extends BaseFieldView {
                     $input.focus();
                 }
             }
-        });
-
-        $input.on('click', () => {
-            // noinspection JSUnresolvedReference
-            $input.datepicker('show');
         });
     }
 
