@@ -265,11 +265,15 @@ const Select = {
     /**
      * Set value.
      *
-     * @param {JQuery} $el An element.
+     * @param {HTMLElement|JQuery} element An element.
      * @param {string} value A value.
      */
-    setValue: function ($el, value) {
-        const selectize = $el.get(0).selectize;
+    setValue: function (element, value) {
+        if (!(element instanceof HTMLElement)) {
+            element = $(element).get(0);
+        }
+
+        const selectize = element.selectize;
 
         selectize.setValue(value, true);
     },
@@ -277,14 +281,22 @@ const Select = {
     /**
      * Destroy.
      *
-     * @param {JQuery} $el An element.
+     * @param {HTMLElement|JQuery} element An element.
      */
-    destroy: function ($el) {
-        if (!$el.length || !$el[0].selectize) {
+    destroy: function (element) {
+        if (!element) {
             return;
         }
 
-        $el[0].selectize.destroy();
+        if (!(element instanceof HTMLElement)) {
+            element = $(element).get(0);
+        }
+
+        if (!element || !element.selectize) {
+            return;
+        }
+
+        element.selectize.destroy();
     },
 
     /**
