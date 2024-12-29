@@ -55,16 +55,9 @@ class Datepicker {
     config
 
     /**
-     * @private
-     * @type {DateTime}
-     */
-    @inject(DateTime)
-    dateTime
-
-    /**
      * @param {HTMLElement} element
      * @param {{
-     *     format?: string,
+     *     format: string,
      *     weekStart: number,
      *     todayButton?: boolean,
      *     startDate?: string|undefined,
@@ -102,7 +95,7 @@ class Datepicker {
 
         const language = this.config.get('language');
 
-        const format = options.format || this.dateTime.getDateFormat();
+        const format = options.format;
 
         const datepickerOptions = {
             autoclose: true,
@@ -113,7 +106,7 @@ class Datepicker {
             format: format.toLowerCase(),
             weekStart: options.weekStart,
             todayBtn: options.todayButton || false,
-            startDate: options.startDate || this.dateTime.toMomentDate('1970-01-01').format(format),
+            startDate: options.startDate,
             orientation: 'bottom auto',
             templates: {
                 leftArrow: '<span class="fas fa-chevron-left fa-sm"></span>',
