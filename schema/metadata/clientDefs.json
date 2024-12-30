@@ -273,7 +273,20 @@
         },
         "defaultFilterData": {
             "description": "A default filter data.",
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "primary": {
+                    "type": "string",
+                    "default": "A primary filter."
+                },
+                "bool": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "boolean"
+                    },
+                    "description": "Bool filters."
+                }
+            }
         },
         "selectDefaultFilters": {
             "description": "A default filter on the select-records modal.",
