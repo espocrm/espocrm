@@ -62,6 +62,9 @@ class Datepicker {
      *     todayButton?: boolean,
      *     startDate?: string|undefined,
      *     onChange?: function(),
+     *     hasDay?: function(Date): boolean,
+     *     hasMonth?: function(Date): boolean,
+     *     hasYear?: function(Date): boolean,
      * }} options
      */
     constructor(element, options) {
@@ -114,7 +117,32 @@ class Datepicker {
             },
             container: modalBodyElement ? $(modalBodyElement) : 'body',
             language: language,
+            maxViewMode: 2,
         };
+
+        if (options.hasDay) {
+            datepickerOptions.beforeShowDay = (/** Date */date) => {
+                return {
+                    enabled: options.hasDay(date),
+                };
+            };
+        }
+
+        if (options.hasMonth) {
+            datepickerOptions.beforeShowMonth = (/** Date */date) => {
+                return {
+                    enabled: options.hasMonth(date),
+                };
+            };
+        }
+
+        if (options.hasYear) {
+            datepickerOptions.beforeShowYear = (/** Date */date) => {
+                return {
+                    enabled: options.hasYear(date),
+                };
+            };
+        }
 
         // noinspection JSUnresolvedReference
         if (!(language in $.fn.datepicker.dates)) {
