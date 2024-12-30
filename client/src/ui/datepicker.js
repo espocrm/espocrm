@@ -30,7 +30,7 @@ import $ from 'jquery';
 import Language from 'language';
 import Settings from 'models/settings';
 import {inject} from 'di';
-import DateTime from 'date-time';
+import moment from 'moment';
 
 /**
  * A datepicker.
@@ -60,11 +60,13 @@ class Datepicker {
      *     format: string,
      *     weekStart: number,
      *     todayButton?: boolean,
+     *     date?: string,
      *     startDate?: string|undefined,
      *     onChange?: function(),
-     *     hasDay?: function(Date): boolean,
-     *     hasMonth?: function(Date): boolean,
-     *     hasYear?: function(Date): boolean,
+     *     hasDay?: function(string): boolean,
+     *     hasMonth?: function(string): boolean,
+     *     hasYear?: function(string): boolean,
+     *     onChangeDate?: function(),
      * }} options
      */
     constructor(element, options) {
@@ -73,7 +75,17 @@ class Datepicker {
          */
         this.$element = $(element);
 
+        /**
+         * @private
+         * @type {string}
+         */
+        this.format = options.format;
+
         if (element instanceof HTMLInputElement) {
+            if (options.date) {
+                element.value = options.date;
+            }
+
             let wait = false;
 
             this.$element.on('change', /** Record */e => {
@@ -92,6 +104,10 @@ class Datepicker {
             });
 
             this.$element.on('click', () => this.show());
+        } else {
+            if (options.date) {
+                element.dataset.date = options.date;
+            }
         }
 
         const modalBodyElement = element.closest('.modal-body');
@@ -122,24 +138,30 @@ class Datepicker {
 
         if (options.hasDay) {
             datepickerOptions.beforeShowDay = (/** Date */date) => {
+                const stringDate = moment(date).format(this.format);
+
                 return {
-                    enabled: options.hasDay(date),
+                    enabled: options.hasDay(stringDate),
                 };
             };
         }
 
         if (options.hasMonth) {
             datepickerOptions.beforeShowMonth = (/** Date */date) => {
+                const stringDate = moment(date).format(this.format);
+
                 return {
-                    enabled: options.hasMonth(date),
+                    enabled: options.hasMonth(stringDate),
                 };
             };
         }
 
         if (options.hasYear) {
             datepickerOptions.beforeShowYear = (/** Date */date) => {
+                const stringDate = moment(date).format(this.format);
+
                 return {
-                    enabled: options.hasYear(date),
+                    enabled: options.hasYear(stringDate),
                 };
             };
         }
@@ -158,7 +180,12 @@ class Datepicker {
             };
         }
 
-        this.$element.datepicker(datepickerOptions);
+        this.$element.datepicker(datepickerOptions)
+            .on('changeDate', () => {
+                if (options.onChangeDate) {
+                    options.onChangeDate();
+                }
+            });
 
         if (element.classList.contains('input-group') && !(element instanceof HTMLInputElement)) {
             element.querySelectorAll('input').forEach(input => {
@@ -181,6 +208,22 @@ class Datepicker {
      */
     show() {
         this.$element.datepicker('show');
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Get the value.
+     *
+     * @return {string|null}
+     */
+    getDate() {
+        const date = this.$element.datepicker('getDate');
+
+        if (!date) {
+            return null;
+        }
+
+        return moment(date).format(this.format);
     }
 }
 
