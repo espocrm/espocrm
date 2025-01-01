@@ -55,16 +55,13 @@ class Permission
         'data' => [
             'recursive' => true,
         ],
-        'application/Espo/Modules' => [
-            'recursive' => false,
-        ],
         'client/custom' => [
             'recursive' => true,
         ],
-        'client/modules' => [
-            'recursive' => false,
-        ],
         'custom/Espo/Custom' => [
+            'recursive' => true,
+        ],
+        'custom/Espo/Modules' => [
             'recursive' => true,
         ],
     ];
