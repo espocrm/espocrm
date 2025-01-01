@@ -110,10 +110,7 @@ class PermissionTest extends \PHPUnit\Framework\TestCase
             ['application/Espo/Core/Application.php', '0755', '0644'],
             ['custom/Espo/Custom/Resources/metadata/entityDefs', '0775', '0664'],
             ['custom/Espo/Custom/Resources/metadata/entityDefs/Account.json', '0775', '0664'],
-            ['application/Espo/Modules', '0775', '0664'],
-            ['application/Espo/Modules/Crm/Resources', '0755', '0644'],
-            ['application/Espo/Modules/Crm/Resources/layouts/Account/detail.json', '0755', '0644'],
-            ['client/modules', '0775', '0664'],
+            ['custom/Espo/Modules', '0775', '0664'],
             ['client/modules/crm/src', '0755', '0644'],
             ['client/modules/crm/src/views/account/detail.js', '0755', '0644'],
         ];
