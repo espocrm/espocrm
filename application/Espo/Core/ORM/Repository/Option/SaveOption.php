@@ -38,6 +38,7 @@ class SaveOption
 {
     /**
      * Silent. Boolean.
+     * Skip stream notes, notifications, webhooks.
      */
     public const SILENT = 'silent';
     /**
@@ -97,4 +98,14 @@ class SaveOption
      * @since 8.4.0
      */
     public const MASS_UPDATE = 'massUpdate';
+    /**
+     * Skip stream notes. Boolean.
+     * @since 9.0.0
+     */
+    public const NO_STREAM = 'noStream';
+    /**
+     * Skip notification. Boolean.
+     * @since 9.0.0
+     */
+    public const NO_NOTIFICATIONS = 'noNotifications';
 }

@@ -49,7 +49,7 @@ class AssignmentEmailNotification
     {
         if (
             !empty($options[SaveOption::SILENT]) ||
-            !empty($options['noNotifications'])
+            !empty($options[SaveOption::NO_NOTIFICATIONS])
         ) {
             return;
         }

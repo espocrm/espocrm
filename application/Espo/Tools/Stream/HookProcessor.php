@@ -57,8 +57,6 @@ use Espo\Tools\Stream\Jobs\ControlFollowers as ControlFollowersJob;
  */
 class HookProcessor
 {
-    private const OPTION_NO_STREAM = 'noStream';
-
     /** @var array<string, bool> */
     private $hasStreamCache = [];
     /** @var array<string, bool> */
@@ -81,7 +79,7 @@ class HookProcessor
     {
         if (
             !$this->checkHasStream($entity->getEntityType()) ||
-            $options->get(self::OPTION_NO_STREAM) ||
+            $options->get(SaveOption::NO_STREAM) ||
             $options->get(SaveOption::SILENT)
         ) {
             return;
@@ -107,7 +105,7 @@ class HookProcessor
 
         if (
             $entity->isNew() &&
-            empty($options[self::OPTION_NO_STREAM]) &&
+            empty($options[SaveOption::NO_STREAM]) &&
             empty($options[SaveOption::SILENT]) &&
             $this->metadata->get(['scopes', $entity->getEntityType(), 'object'])
         ) {
@@ -172,7 +170,7 @@ class HookProcessor
                 continue;
             }
 
-            if ($type === Entity::HAS_MANY) {
+            if ($type === Entity::HAS_MANY || $type === Entity::MANY_MANY) {
                 $this->handleCreateRelatedHasMany($entity, $relation, $notifiedEntityTypeList, $options);
 
                 /** @noinspection PhpUnnecessaryStopStatementInspection */
@@ -400,7 +398,7 @@ class HookProcessor
             $this->service->followEntityMass($entity, $userIdList);
         }
 
-        if (empty($options[self::OPTION_NO_STREAM]) && empty($options[SaveOption::SILENT])) {
+        if (empty($options[SaveOption::NO_STREAM]) && empty($options[SaveOption::SILENT])) {
             $this->service->noteCreate($entity, $options);
         }
 
@@ -438,7 +436,7 @@ class HookProcessor
      */
     private function afterSaveStreamNotNew1(CoreEntity $entity, array $options): void
     {
-        if (!empty($options[self::OPTION_NO_STREAM]) || !empty($options[SaveOption::SILENT])) {
+        if (!empty($options[SaveOption::NO_STREAM]) || !empty($options[SaveOption::SILENT])) {
             return;
         }
 
@@ -605,7 +603,7 @@ class HookProcessor
         $foreignLink = $entity->getRelationParam($link, RelationParam::FOREIGN);
 
         if (
-            !empty($options[self::OPTION_NO_STREAM]) ||
+            !empty($options[SaveOption::NO_STREAM]) ||
             !empty($options[SaveOption::SILENT]) ||
             !$this->metadata->get(['scopes', $entityType, 'object'])
         ) {
@@ -638,7 +636,7 @@ class HookProcessor
         $foreignLink = $entity->getRelationParam($link, RelationParam::FOREIGN);
 
         if (
-            !empty($options[self::OPTION_NO_STREAM]) ||
+            !empty($options[SaveOption::NO_STREAM]) ||
             !empty($options[SaveOption::SILENT]) ||
             !$this->metadata->get(['scopes', $entityType, 'object'])
         ) {
@@ -672,7 +670,7 @@ class HookProcessor
             return;
         }
 
-        if (!empty($options[self::OPTION_NO_STREAM]) || !empty($options[SaveOption::SILENT])) {
+        if (!empty($options[SaveOption::NO_STREAM]) || !empty($options[SaveOption::SILENT])) {
             return;
         }
 

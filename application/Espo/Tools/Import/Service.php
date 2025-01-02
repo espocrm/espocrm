@@ -274,8 +274,8 @@ class Service
             }
 
             $this->entityManager->removeEntity($entity, [
-                'noStream' => true,
-                'noNotifications' => true,
+                SaveOption::NO_STREAM => true,
+                SaveOption::NO_NOTIFICATIONS => true,
                 SaveOption::SILENT => true,
                 SaveOption::IMPORT => true,
             ]);
@@ -403,8 +403,8 @@ class Service
             $this->deleteRelations($entity);
 
             $this->entityManager->removeEntity($entity, [
-                'noStream' => true,
-                'noNotifications' => true,
+                SaveOption::NO_STREAM => true,
+                SaveOption::NO_NOTIFICATIONS => true,
                 SaveOption::SILENT => true,
                 SaveOption::IMPORT => true,
             ]);

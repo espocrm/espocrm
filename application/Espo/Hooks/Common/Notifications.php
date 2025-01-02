@@ -49,7 +49,7 @@ class Notifications
      */
     public function afterSave(Entity $entity, array $options): void
     {
-        if (!empty($options[SaveOption::SILENT]) || !empty($options['noNotifications'])) {
+        if (!empty($options[SaveOption::SILENT]) || !empty($options[SaveOption::NO_NOTIFICATIONS])) {
             return;
         }
 
@@ -61,7 +61,7 @@ class Notifications
      */
     public function beforeRemove(Entity $entity, array $options): void
     {
-        if (!empty($options[SaveOption::SILENT]) || !empty($options['noNotifications'])) {
+        if (!empty($options[SaveOption::SILENT]) || !empty($options[SaveOption::NO_NOTIFICATIONS])) {
             return;
         }
 

@@ -578,8 +578,8 @@ class Import
             }
 
             $this->entityManager->saveEntity($entity, [
-                'noStream' => true,
-                'noNotifications' => true,
+                SaveOption::NO_STREAM => true,
+                SaveOption::NO_NOTIFICATIONS => true,
                 SaveOption::IMPORT => true,
                 SaveOption::SILENT => $params->isSilentMode(),
             ]);

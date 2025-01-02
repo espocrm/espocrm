@@ -217,6 +217,7 @@ class LinkMultipleSaver
 
             $repository->getRelation($entity, $name)->relateById($id, $data, [
                 SaveOption::SKIP_HOOKS => $skipHooks,
+                SaveOption::SILENT => $entity->isNew(),
                 self::RELATE_OPTION => $entity->hasLinkMultipleField($name),
             ]);
         }

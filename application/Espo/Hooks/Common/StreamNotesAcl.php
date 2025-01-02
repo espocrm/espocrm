@@ -54,7 +54,7 @@ class StreamNotesAcl
      */
     public function afterSave(Entity $entity, array $options): void
     {
-        if (!empty($options['noStream'])) {
+        if (!empty($options[SaveOption::NO_STREAM])) {
             return;
         }
 
