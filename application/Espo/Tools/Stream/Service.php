@@ -692,6 +692,12 @@ class Service
         }
 
         $this->entityManager->saveEntity($note, $noteOptions);
+
+        $superParent = $note->getSuperParent();
+
+        if ($superParent && $superParent->getEntityType() !== $entity->getEntityType()) {
+            $this->updateStreamUpdatedAt($superParent);
+        }
     }
 
     /**
