@@ -749,6 +749,12 @@ class Service
         }
 
         $this->entityManager->saveEntity($note, $noteOptions);
+
+        $parent = $this->entityManager->getEntityById($parentType, $parentId);
+
+        if ($parent) {
+            $this->updateStreamUpdatedAt($parent);
+        }
     }
 
     /**
