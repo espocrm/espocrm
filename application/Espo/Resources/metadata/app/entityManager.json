@@ -10,6 +10,7 @@
     ],
     "updateHookClassNameList": [
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\AssignedUsersUpdateHook",
-        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\CollaboratorsUpdateHook"
+        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\CollaboratorsUpdateHook",
+        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\StreamUpdateHook"
     ]
 }
