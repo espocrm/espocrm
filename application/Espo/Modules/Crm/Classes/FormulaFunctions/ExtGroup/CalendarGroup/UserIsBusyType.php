@@ -34,15 +34,23 @@ use Espo\Core\Formula\EvaluatedArgumentList;
 use Espo\Core\Formula\Exceptions\BadArgumentType;
 use Espo\Core\Formula\Exceptions\TooFewArguments;
 use Espo\Core\Formula\Func;
-use Espo\Modules\Crm\Tools\Calendar\FetchParams;
+use Espo\Entities\User;
+use Espo\Modules\Crm\Tools\Calendar\FreeBusy\FetchParams;
+use Espo\Modules\Crm\Tools\Calendar\FreeBusy\Service;
 use Espo\Modules\Crm\Tools\Calendar\Items\Event;
-use Espo\Modules\Crm\Tools\Calendar\Service;
+use Espo\ORM\EntityManager;
 use Exception;
 use RuntimeException;
 
+/**
+ * @noinspection PhpUnused
+ */
 class UserIsBusyType implements Func
 {
-    public function __construct(private Service $service) {}
+    public function __construct(
+        private Service $service,
+        private EntityManager $entityManager,
+    ) {}
 
     public function process(EvaluatedArgumentList $arguments): bool
     {
@@ -76,17 +84,26 @@ class UserIsBusyType implements Func
             throw BadArgumentType::create(5, 'string');
         }
 
-        $params = FetchParams::create(DateTime::fromString($from), DateTime::fromString($to))
-            ->withSkipAcl();
-
         $ignoreList = [];
 
         if ($entityType && $id) {
             $ignoreList[] = (new Event(null, null, $entityType, []))->withId($id);
         }
 
+        $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
+
+        if (!$user) {
+            throw new RuntimeException("User $userId not found.");
+        }
+
+        $busyParams = new FetchParams(
+            from: DateTime::fromString($from),
+            to: DateTime::fromString($to),
+            ignoreEventList: $ignoreList,
+        );
+
         try {
-            $ranges = $this->service->fetchBusyRanges($userId, $params, $ignoreList);
+            $ranges = $this->service->fetchRanges($user, $busyParams);
         } catch (Exception $e) {
             throw new RuntimeException($e->getMessage());
         }

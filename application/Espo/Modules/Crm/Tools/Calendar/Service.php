@@ -49,6 +49,7 @@ use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Call;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Task;
+use Espo\Modules\Crm\Tools\Calendar\FreeBusy\FetchParams as FetchBusyParams;
 use Espo\Modules\Crm\Tools\Calendar\Items\BusyRange;
 use Espo\Modules\Crm\Tools\Calendar\Items\Event;
 use Espo\Modules\Crm\Tools\Calendar\Items\NonWorkingRange;
@@ -94,19 +95,32 @@ class Service
      */
     public function fetch(string $userId, FetchParams $fetchParams): array
     {
-        $from = $fetchParams->getFrom()->toString();
-        $to = $fetchParams->getTo()->toString();
-        $scopeList = $fetchParams->getScopeList();
-        $skipAcl = $fetchParams->skipAcl();
-
-        /** @var ?User $user */
-        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
+        $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
 
         if (!$user) {
             throw new NotFound();
         }
 
-        $this->accessCheck($user);
+        return $this->fetchInternal($user, $fetchParams);
+
+    }
+
+    /**
+     * Fetch events and ranges.
+     *
+     * @return (Event|NonWorkingRange|WorkingRange)[]
+     * @throws Forbidden
+     */
+    private function fetchInternal(User $user, FetchParams $fetchParams, bool $skipAccessCheck = false): array
+    {
+        $from = $fetchParams->getFrom()->toString();
+        $to = $fetchParams->getTo()->toString();
+        $scopeList = $fetchParams->getScopeList();
+        $skipAcl = $fetchParams->skipAcl();
+
+        if (!$skipAccessCheck) {
+            $this->accessCheck($user);
+        }
 
         $calendarEntityList = $this->config->get('calendarEntityList', []);
 
@@ -139,7 +153,7 @@ class Service
             }
 
             $subItem = [
-                $this->getCalendarQuery($scope, $userId, $from, $to, $skipAcl)
+                $this->getCalendarQuery($scope, $user->getId(), $from, $to, $skipAcl)
             ];
 
             $queryList = array_merge($queryList, $subItem);
@@ -569,13 +583,22 @@ class Service
 
         foreach ($userIdList as $userId) {
             try {
-                $eventList = $this->fetch($userId, $itemFetchParams);
+                $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
 
-                $busyRangeList = $this->fetchBusyRanges(
-                    $userId,
-                    $fetchParams->withScopeList($brScopeList),
-                    array_filter($eventList, fn (Item $item) => $item instanceof Event)
+                if (!$user) {
+                    throw new NotFound("User $userId not found.");
+                }
+
+                $eventList = $this->fetchInternal($user, $itemFetchParams);
+
+                $busyParams = new FetchBusyParams(
+                    from: $fetchParams->getFrom(),
+                    to: $fetchParams->getTo(),
+                    accessCheck: true,
+                    ignoreEventList: array_filter($eventList, fn (Item $item) => $item instanceof Event),
                 );
+
+                $busyRangeList = $this->fetchBusyRanges($user, $busyParams, $fetchParams->withScopeList($brScopeList));
             } catch (Exception $e) {
                 if ($e instanceof Forbidden) {
                     continue;
@@ -615,7 +638,7 @@ class Service
         $userIdList = [];
 
         $userList = $this->entityManager
-            ->getRDBRepository(User::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(User::class)
             ->select([Attribute::ID, 'name'])
             ->leftJoin(Field::TEAMS)
             ->where([
@@ -759,21 +782,25 @@ class Service
     }
 
     /**
-     * @param Event[] $ignoreEventList
+     * @internal Use FreeBusyService instead.
+     *
      * @return BusyRange[]
      * @throws NotFound
      * @throws Forbidden
      */
-    public function fetchBusyRanges(string $userId, FetchParams $fetchParams, array $ignoreEventList = []): array
+    public function fetchBusyRanges(User $user, FetchBusyParams $params, FetchParams $fetchParams): array
     {
         $rangeList = [];
 
-        /** @noinspection PhpRedundantOptionalArgumentInspection */
-        $eventList = $this->fetch($userId, $fetchParams->withSkipAcl(true));
+        $fetchParams = $fetchParams
+            ->withFrom($params->from)
+            ->withTo($params->to);
+
+        $eventList = $this->fetchInternal($user, $fetchParams->withSkipAcl(), !$params->accessCheck);
 
         $ignoreHash = (object) [];
 
-        foreach ($ignoreEventList as $event) {
+        foreach ($params->ignoreEventList as $event) {
             $id = $event->getId();
 
             if ($id) {
@@ -977,9 +1004,7 @@ class Service
             ->withScopeList($scopeList);
 
         foreach ($userIdList as $userId) {
-            $user = $this->entityManager
-                ->getRDBRepositoryByClass(User::class)
-                ->getById($userId);
+            $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
 
             if (!$user) {
                 continue;
@@ -997,10 +1022,16 @@ class Service
                 ) :
                 [];
 
+            $busyParams = new FetchBusyParams(
+                from: $fetchParams->getFrom(),
+                to: $fetchParams->getTo(),
+                accessCheck: true,
+                ignoreEventList: $ignoreList,
+            );
+
             try {
                 $busyRangeList = $toReturn ?
-                    $this->fetchBusyRanges($userId, $fetchParams, $ignoreList) :
-                    [];
+                    $this->fetchBusyRanges($user, $busyParams, $fetchParams) : [];
             } catch (Exception $e) {
                 if ($e instanceof Forbidden) {
                     continue;

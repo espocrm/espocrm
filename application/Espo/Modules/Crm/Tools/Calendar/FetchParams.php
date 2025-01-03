@@ -53,6 +53,22 @@ class FetchParams
         return new self($from, $to);
     }
 
+    public function withFrom(DateTime $from): self
+    {
+        $obj = clone $this;
+        $obj->from = $from;
+
+        return $obj;
+    }
+
+    public function withTo(DateTime $to): self
+    {
+        $obj = clone $this;
+        $obj->to = $to;
+
+        return $obj;
+    }
+
     public function withIsAgenda(bool $isAgenda = true): self
     {
         $obj = clone $this;
