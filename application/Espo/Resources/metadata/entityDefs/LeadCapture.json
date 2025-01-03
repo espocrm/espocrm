@@ -189,8 +189,7 @@
             "type": "url",
             "notStorable": true,
             "readOnly": true,
-            "copyToClipboard": true,
-            "index": true
+            "copyToClipboard": true
         },
         "inboundEmail": {
             "type": "link",
