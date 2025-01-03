@@ -782,7 +782,7 @@ class Service
     }
 
     /**
-     * @internal Use FreeBusyService instead.
+     * @internal Use FreeBusy/Service instead.
      *
      * @return BusyRange[]
      * @throws NotFound
