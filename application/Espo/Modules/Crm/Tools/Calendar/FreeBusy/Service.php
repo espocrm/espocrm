@@ -30,7 +30,6 @@
 namespace Espo\Modules\Crm\Tools\Calendar\FreeBusy;
 
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Tools\Calendar\FetchParams as CalendarFetchParams;
 use Espo\Modules\Crm\Tools\Calendar\Items\BusyRange;
@@ -49,7 +48,6 @@ class Service
      * Fetch busy-ranges for user. Access is not checked by default.
      *
      * @return BusyRange[]
-     * @throws NotFound
      * @throws Forbidden
      */
     public function fetchRanges(User $user, FetchParams $params): array

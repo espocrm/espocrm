@@ -785,7 +785,6 @@ class Service
      * @internal Use FreeBusy/Service instead.
      *
      * @return BusyRange[]
-     * @throws NotFound
      * @throws Forbidden
      */
     public function fetchBusyRanges(User $user, FetchBusyParams $params, FetchParams $fetchParams): array
