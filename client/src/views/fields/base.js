@@ -54,7 +54,6 @@ class BaseFieldView extends View {
 
     /**
      * @typedef {Object} module:views/fields/base~params
-     * @property {boolean} [inlineEditDisabled] Disable inline edit.
      * @property {boolean} [readOnly] Read-only.
      */
 
