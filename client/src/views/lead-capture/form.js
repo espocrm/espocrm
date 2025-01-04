@@ -34,7 +34,7 @@ export default class LeadCaptureFormView extends View {
 
     // language=Handlebars
     templateContent = `
-        <div class="block-center-md">
+        <div class="block-center-md margin-top">
             {{#if isPosted}}
                 <div class="panel paned-default">
                     <div class="panel-body">
