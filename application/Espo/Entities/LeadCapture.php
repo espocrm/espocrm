@@ -45,6 +45,11 @@ class LeadCapture extends Entity
         return $this->get('subscribeToTargetList') && $this->get('subscribeContactToTargetList');
     }
 
+    public function isActive(): bool
+    {
+        return (bool) $this->get('isActive');
+    }
+
     public function hasFormCaptcha(): bool
     {
         return (bool) $this->get('formCaptcha');

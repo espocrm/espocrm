@@ -360,7 +360,7 @@ class FormService
             ->where(['formId' => $id])
             ->findOne();
 
-        if (!$leadCapture || !$leadCapture->hasFormEnabled()) {
+        if (!$leadCapture || !$leadCapture->hasFormEnabled() || !$leadCapture->isActive()) {
             throw new NotFound();
         }
 
