@@ -67,6 +67,7 @@ class Datepicker {
      *     hasMonth?: function(string): boolean,
      *     hasYear?: function(string): boolean,
      *     onChangeDate?: function(),
+     *     onChangeMonth?: function(string),
      * }} options
      */
     constructor(element, options) {
@@ -184,6 +185,13 @@ class Datepicker {
             .on('changeDate', () => {
                 if (options.onChangeDate) {
                     options.onChangeDate();
+                }
+            })
+            .on('changeMonth', (/** {date: Date} */event) => {
+                if (options.onChangeMonth) {
+                    const dateString = moment(event.date).startOf('month').format(options.format);
+
+                    options.onChangeMonth(dateString);
                 }
             });
 
