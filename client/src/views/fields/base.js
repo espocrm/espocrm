@@ -54,6 +54,7 @@ class BaseFieldView extends View {
 
     /**
      * @typedef {Object} module:views/fields/base~params
+     * @property {boolean} [inlineEditDisabled] Disable inline edit.
      * @property {boolean} [readOnly] Read-only.
      */
 
@@ -177,6 +178,14 @@ class BaseFieldView extends View {
      * @type {string}
      */
     name
+
+    /**
+     * A field parameter list. To be used for custom fields not defined in metadata > fields.
+     *
+     * @type {string[]}
+     * @since 9.0.0
+     */
+    paramList
 
     /**
      * Definitions.
@@ -719,15 +728,17 @@ class BaseFieldView extends View {
             this.labelText = this.translate(this.name, 'fields', this.entityType);
         }
 
-        this.getFieldManager().getParamList(this.type).forEach(d => {
-            const name = d.name;
+        const paramList = this.paramList || this.getFieldManager().getParamList(this.type).map(it => it.name);
 
-            if (!(name in this.params)) {
-                this.params[name] = this.model.getFieldParam(this.name, name);
+        paramList.forEach(name => {
+            if (name in this.params) {
+                return;
+            }
 
-                if (typeof this.params[name] === 'undefined') {
-                    this.params[name] = null;
-                }
+            this.params[name] = this.model.getFieldParam(this.name, name);
+
+            if (typeof this.params[name] === 'undefined') {
+                this.params[name] = null;
             }
         });
 
