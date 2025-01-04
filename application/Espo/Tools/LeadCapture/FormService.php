@@ -461,6 +461,6 @@ class FormService
             return null;
         }
 
-        return 'https://www.google.com/recaptcha/api.js?data-theme=dark&render=' . $siteKey;
+        return 'https://www.google.com/recaptcha/api.js?render=' . $siteKey;
     }
 }
