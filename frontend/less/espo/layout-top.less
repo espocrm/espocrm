@@ -184,7 +184,7 @@ body:not([data-navbar="side"]) {
         @media screen and (min-width: @screen-sm-min) {
             input.global-search-input {
                 width: calc(var(--190px));
-                height: var(--30px);
+                max-height: var(--30px);
                 padding-bottom: var(--4px);
                 padding-top: var(--4px);
             }
@@ -195,6 +195,10 @@ body:not([data-navbar="side"]) {
 
             .global-search-button {
                 margin-top: calc(var(--1px) * -1);
+
+                > span.icon {
+                    line-height: var(--24px);
+                }
             }
 
             .navbar-right {
@@ -310,7 +314,7 @@ body:not([data-navbar="side"]) {
             }
 
             .navbar-form {
-                padding-top: var(--4px);
+                padding-top: var(--2px);
                 margin-top: 0;
                 margin-bottom: 0;
             }
