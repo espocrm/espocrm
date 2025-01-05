@@ -40,7 +40,7 @@ use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Utils\Json;
 use Espo\Modules\Crm\Entities\Call as CallEntity;
 use Espo\Modules\Crm\Tools\Meeting\InvitationService;
-use Espo\Modules\Crm\Tools\Meeting\Invitee;
+use Espo\Modules\Crm\Tools\Meeting\Invitation\Invitee;
 use Espo\Modules\Crm\Tools\Meeting\Service;
 use stdClass;
 
@@ -96,7 +96,7 @@ class Call extends Record
 
     /**
      * @param Request $request
-     * @return ?Invitee[]
+     * @return ?\Espo\Modules\Crm\Tools\Meeting\Invitation\Invitee[]
      * @throws BadRequest
      */
     private function fetchInvitees(Request $request): ?array

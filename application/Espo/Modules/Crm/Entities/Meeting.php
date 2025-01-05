@@ -35,7 +35,6 @@ use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
-use Espo\Entities\Email;
 use Espo\Entities\User;
 use Espo\ORM\Entity as OrmEntity;
 

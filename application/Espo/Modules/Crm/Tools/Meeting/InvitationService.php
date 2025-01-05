@@ -30,22 +30,16 @@
 namespace Espo\Modules\Crm\Tools\Meeting;
 
 use Espo\Core\Acl;
-use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\InjectableFactory;
 use Espo\Core\Mail\Exceptions\SendingError;
-use Espo\Core\Mail\SmtpParams;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Metadata;
-use Espo\Entities\User;
-use Espo\Modules\Crm\Business\Event\Invitations;
+use Espo\Modules\Crm\Entities\Call;
 use Espo\Modules\Crm\Entities\Meeting;
+use Espo\Modules\Crm\Tools\Meeting\Invitation\Sender;
+use Espo\Modules\Crm\Tools\Meeting\Invitation\Invitee;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityManager;
-use Espo\Tools\Email\SendService;
 
 class InvitationService
 {
@@ -54,13 +48,8 @@ class InvitationService
 
     public function __construct(
         private RecordServiceContainer $recordServiceContainer,
-        private SendService $sendService,
-        private User $user,
-        private InjectableFactory $injectableFactory,
         private Acl $acl,
-        private EntityManager $entityManager,
-        private Config $config,
-        private Metadata $metadata
+        private Sender $invitationSender,
     ) {}
 
     /**
@@ -75,7 +64,7 @@ class InvitationService
      */
     public function send(string $entityType, string $id, ?array $targets = null): array
     {
-        return $this->sendInternal($entityType, $id, $targets);
+        return $this->sendInternal($entityType, $id, $targets, self::TYPE_INVITATION);
     }
 
     /**
@@ -104,8 +93,8 @@ class InvitationService
     private function sendInternal(
         string $entityType,
         string $id,
-        ?array $targets = null,
-        string $type = self::TYPE_INVITATION
+        ?array $targets,
+        string $type,
     ): array {
 
         $entity = $this->recordServiceContainer
@@ -120,110 +109,14 @@ class InvitationService
             throw new Forbidden("No edit access.");
         }
 
-        $this->checkStatus($entity);
-
-        $linkList = [
-            'users',
-            'contacts',
-            'leads',
-        ];
-
-        $sender = $this->getSender();
-
-        $sentAddressList = [];
-        $resultEntityList = [];
-
-        foreach ($linkList as $link) {
-            $builder = $this->entityManager
-                ->getRDBRepository($entityType)
-                ->getRelation($entity, $link);
-
-            if ($targets === null && $type === self::TYPE_INVITATION) {
-                $builder->where([
-                    '@relation.status=' => Meeting::ATTENDEE_STATUS_NONE,
-                ]);
-            }
-
-            $collection = $builder->find();
-
-            foreach ($collection as $attendee) {
-                if ($targets && !self::isInTargets($attendee, $targets)) {
-                    continue;
-                }
-
-                $emailAddress = $attendee->get('emailAddress');
-
-                if (!$emailAddress || in_array($emailAddress, $sentAddressList)) {
-                    continue;
-                }
-
-                if ($type === self::TYPE_INVITATION) {
-                    $sender->sendInvitation($entity, $attendee, $link);
-                }
-
-                if ($type === self::TYPE_CANCELLATION) {
-                    $sender->sendCancellation($entity, $attendee, $link);
-                }
-
-                $sentAddressList[] = $emailAddress;
-                $resultEntityList[] = $attendee;
-
-                $this->entityManager
-                    ->getRDBRepository($entityType)
-                    ->getRelation($entity, $link)
-                    ->updateColumns($attendee, ['status' => Meeting::ATTENDEE_STATUS_NONE]);
-            }
+        if (!$entity instanceof Meeting && !$entity instanceof Call) {
+            throw new Error("Not supported entity type.");
         }
 
-        return $resultEntityList;
-    }
-
-    /**
-     * @param Invitee[] $targets
-     */
-    private static function isInTargets(Entity $entity, array $targets): bool
-    {
-        foreach ($targets as $target) {
-            if (
-                $entity->getEntityType() === $target->getEntityType() &&
-                $entity->getId() === $target->getId()
-            ) {
-                return true;
-            }
+        if ($type === self::TYPE_CANCELLATION) {
+            return $this->invitationSender->sendCancellation($entity, $targets);
         }
 
-        return false;
-    }
-
-    private function getSender(): Invitations
-    {
-        $smtpParams = !$this->config->get('eventInvitationForceSystemSmtp') ?
-            $this->sendService->getUserSmtpParams($this->user->getId()) :
-            null;
-
-        $builder = BindingContainerBuilder::create();
-
-        if ($smtpParams) {
-            $builder->bindInstance(SmtpParams::class, $smtpParams);
-        }
-
-        return $this->injectableFactory->createWithBinding(Invitations::class, $builder->build());
-    }
-
-    /**
-     * @throws Forbidden
-     */
-    private function checkStatus(Entity $entity): void
-    {
-        $entityType = $entity->getEntityType();
-
-        $notActualStatusList = [
-            ...($this->metadata->get("scopes.$entityType.completedStatusList") ?? []),
-            ...($this->metadata->get("scopes.$entityType.canceledStatusList") ?? []),
-        ];
-
-        if (in_array($entity->get('status'), $notActualStatusList)) {
-            throw new Forbidden("Can't send invitation for not actual event.");
-        }
+        return $this->invitationSender->sendInvitation($entity, $targets);
     }
 }

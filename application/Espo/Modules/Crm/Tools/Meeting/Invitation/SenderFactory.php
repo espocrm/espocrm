@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2024 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,20 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Templates\Entities;
+namespace Espo\Modules\Crm\Tools\Meeting\Invitation;
 
-use Espo\Core\ORM\Entity;
+use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\InjectableFactory;
+use Espo\Entities\User;
 
-class Event extends Entity
+/**
+ * @since 9.0.0
+ */
+class SenderFactory
 {
-    public const TEMPLATE_TYPE = 'Event';
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+    ) {}
 
-    public const STATUS_PLANNED = 'Planned';
-    public const STATUS_HELD = 'Held';
-    public const STATUS_NOT_HELD = 'Not Held';
-
-    public function getStatus(): string
+    /**
+     * Create a sender for a user. The SMTP of the user will be used (if not disabled in the config).
+     */
+    public function createForUser(User $user): Sender
     {
-        return $this->get('status');
+        return $this->injectableFactory->createWithBinding(
+            Sender::class,
+            BindingContainerBuilder::create()
+                ->bindInstance(User::class, $user)
+                ->build()
+        );
     }
 }

@@ -27,12 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Tools\Meeting;
+namespace Espo\Modules\Crm\Tools\Meeting\Invitation;
 
 class Invitee
 {
-    public function __construct(private string $entityType, private string $id)
-    {}
+    public function __construct(
+        private string $entityType,
+        private string $id
+    ) {}
 
     public function getEntityType(): string
     {
