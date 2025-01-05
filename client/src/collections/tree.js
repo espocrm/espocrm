@@ -32,6 +32,9 @@ import Collection from 'collection';
 
 class TreeCollection extends Collection {
 
+    /**
+     * @return {TreeCollection}
+     */
     createSeed() {
         const seed = new this.constructor();
 
@@ -61,37 +64,40 @@ class TreeCollection extends Collection {
          */
         this.categoryData = response.data || null;
 
-        const f = (l, depth) => {
-            l.forEach(d => {
-                d.depth = depth;
+        const prepare = (list, depth) => {
+            list.forEach(data => {
+                data.depth = depth;
 
-                const c = this.createSeed();
+                const childCollection = this.createSeed();
 
-                if (d.childList) {
-                    if (d.childList.length) {
-                        f(d.childList, depth + 1);
-                        c.set(d.childList);
-                        d.childCollection = c;
+                childCollection.parentId = data.id;
+
+                if (data.childList) {
+                    if (data.childList.length) {
+                        prepare(data.childList, depth + 1);
+
+                        childCollection.set(data.childList);
+                        data.childCollection = childCollection;
 
                         return;
                     }
 
-                    d.childCollection = c;
+                    data.childCollection = childCollection;
 
                     return;
                 }
 
-                if (d.childList === null) {
-                    d.childCollection = null;
+                if (data.childList === null) {
+                    data.childCollection = null;
 
                     return;
                 }
 
-                d.childCollection = c;
+                data.childCollection = childCollection;
             });
         };
 
-        f(list, 0);
+        prepare(list, 0);
 
         return list;
     }
@@ -103,8 +109,6 @@ class TreeCollection extends Collection {
         if (this.parentId) {
             options.data.parentId = this.parentId;
         }
-
-        options.data.maxDepth = this.maxDepth;
 
         return super.fetch(options);
     }

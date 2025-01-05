@@ -285,12 +285,6 @@ class ListTreeRecordView extends ListRecordView {
                 }
 
                 this.collection.fetch();
-
-                /*this.collection.push(model);
-
-                this.buildRows(() => {
-                    this.render();
-                });*/
             });
         });
     }

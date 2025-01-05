@@ -233,7 +233,6 @@ class ListTreeRecordItemView extends View {
         this.getCollectionFactory().create(this.scope, collection => {
             collection.url = this.collection.url;
             collection.parentId = this.model.id;
-            collection.maxDepth = null;
 
             Espo.Ui.notify(' ... ');
 

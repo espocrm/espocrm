@@ -500,7 +500,6 @@ class ListWithCategories extends ListView {
 
             collection.setOrder(null, null);
             collection.url = `${collection.entityType}/action/listTree`;
-            collection.maxDepth = null;
             collection.data.checkIfEmpty = true;
 
             if (!this.getAcl().checkScope(this.scope, 'create')) {
