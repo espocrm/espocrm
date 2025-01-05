@@ -233,6 +233,19 @@ class Datepicker {
 
         return moment(date).format(this.format);
     }
+
+    /**
+     * Refresh.
+     */
+    refresh() {
+        const picker = this.$element.data('datepicker');
+
+        if (!picker) {
+            return;
+        }
+
+        picker.fill();
+    }
 }
 
 export default Datepicker;
