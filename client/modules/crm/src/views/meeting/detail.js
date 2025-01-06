@@ -61,6 +61,8 @@ class MeetingDetailView extends DetailView {
             onClick: () => this.actionSetAcceptanceStatus(),
         });
 
+        this.setupCancellationPeriod();
+
         this.controlSendInvitationsButton();
         this.controlAcceptanceStatusButton();
         this.controlSendCancellationButton();
@@ -71,8 +73,6 @@ class MeetingDetailView extends DetailView {
         });
 
         this.listenTo(this.model, 'sync', () => this.controlAcceptanceStatusButton());
-
-        this.setupCancellationPeriod();
     }
 
     setupStatuses() {
@@ -218,7 +218,7 @@ class MeetingDetailView extends DetailView {
                 dateEnd &&
                 this.getDateTime()
                     .toMoment(dateEnd)
-                    .subtract(this.cancellationPeriodAmount, this.cancellationPeriodUnits)
+                    .add(this.cancellationPeriodAmount, this.cancellationPeriodUnits)
                     .isBefore(moment.now())
             ) {
                 show = false;
