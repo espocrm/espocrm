@@ -59,7 +59,7 @@ class ParentLinkChecker implements LinkChecker
         }
 
         /** @var ?string $emailId */
-        $emailId = $entity->get('emailId');
+        $emailId = $entity->get('originalEmailId');
 
         if (!$emailId) {
             return false;
