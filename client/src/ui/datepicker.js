@@ -68,6 +68,7 @@ class Datepicker {
      *     hasYear?: function(string): boolean,
      *     onChangeDate?: function(),
      *     onChangeMonth?: function(string),
+     *     defaultViewDate?: string,
      * }} options
      */
     constructor(element, options) {
@@ -135,6 +136,7 @@ class Datepicker {
             container: modalBodyElement ? $(modalBodyElement) : 'body',
             language: language,
             maxViewMode: 2,
+            defaultViewDate: options.defaultViewDate,
         };
 
         if (options.hasDay) {
