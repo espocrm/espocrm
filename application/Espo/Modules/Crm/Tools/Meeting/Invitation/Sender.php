@@ -99,7 +99,7 @@ class Sender
      */
     private function sendInternal(Meeting|Call $entity, string $type, ?array $targets): array
     {
-        $this->checkStatus($entity);
+        $this->checkStatus($entity, $type);
 
         $linkList = [
             'users',
@@ -187,17 +187,33 @@ class Sender
     /**
      * @throws Forbidden
      */
-    private function checkStatus(Meeting|Call $entity): void
+    private function checkStatus(Meeting|Call $entity, string $type): void
     {
         $entityType = $entity->getEntityType();
 
+        if ($type === self::TYPE_CANCELLATION) {
+            if (!in_array($entity->getStatus(), $this->getCanceledStatusList($entityType))) {
+                throw new Forbidden("Can't send invitation for not canceled event.");
+            }
+
+            return;
+        }
+
         $notActualStatusList = [
             ...($this->metadata->get("scopes.$entityType.completedStatusList") ?? []),
-            ...($this->metadata->get("scopes.$entityType.canceledStatusList") ?? []),
+            ...$this->getCanceledStatusList($entityType),
         ];
 
         if (in_array($entity->getStatus(), $notActualStatusList)) {
             throw new Forbidden("Can't send invitation for not actual event.");
         }
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getCanceledStatusList(string $entityType): array
+    {
+        return $this->metadata->get("scopes.$entityType.canceledStatusList") ?? [];
     }
 }
