@@ -1,0 +1,26 @@
+@supports not selector(::-webkit-scrollbar) {
+    .dashlet > .dashlet-body,
+    .list-kanban-container {
+        scrollbar-width: thin;
+    }
+
+    * {
+        scrollbar-width: auto;
+        scrollbar-color: var(--scroll-thumb-bg) var(--scroll-bg);
+    }
+}
+
+*::-webkit-scrollbar {
+    height: var(--scroll-width);
+    width: var(--scroll-width);
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--scroll-bg);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-thumb-bg);
+    border-radius: 0;
+    border: var(--scroll-border-width) solid var(--scroll-bg);
+}
