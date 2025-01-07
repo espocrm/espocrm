@@ -192,7 +192,7 @@ class CalendarView extends View {
 
         this.colors = {...this.colors, ...this.getHelper().themeManager.getParam('calendarColors')};
 
-        this.isCustomViewAvailable = this.getAcl().getPermissionLevel('userPermission') !== 'no';
+        this.isCustomViewAvailable = this.getAcl().getPermissionLevel('userCalendar') !== 'no';
 
         if (this.options.userId) {
             this.isCustomViewAvailable = false;

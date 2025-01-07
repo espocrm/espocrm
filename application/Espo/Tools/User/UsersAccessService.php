@@ -102,8 +102,8 @@ class UsersAccessService
         }
 
         if (
-            $this->acl->getPermissionLevel('user') !== Acl\Table::LEVEL_TEAM &&
-            $this->acl->getPermissionLevel('user') !== Acl\Table::LEVEL_ALL
+            $this->acl->getPermissionLevel(Acl\Permission::USER) !== Acl\Table::LEVEL_TEAM &&
+            $this->acl->getPermissionLevel(Acl\Permission::USER) !== Acl\Table::LEVEL_ALL
         ) {
             throw new Forbidden("No user permission.");
         }
@@ -129,7 +129,7 @@ class UsersAccessService
                 ]
             ]);
 
-        if ($this->acl->getPermissionLevel('user') === Acl\Table::LEVEL_TEAM) {
+        if ($this->acl->getPermissionLevel(Acl\Permission::USER) === Acl\Table::LEVEL_TEAM) {
             $queryBuilder
                 ->where(
                     Condition::in(

@@ -34,7 +34,7 @@ class CalendarUsersFieldView extends LinkMultipleFieldView {
     sortable = true
 
     getSelectBoolFilterList() {
-        if (this.getAcl().getPermissionLevel('userPermission') === 'team') {
+        if (this.getAcl().getPermissionLevel('userCalendar') === 'team') {
             return ['onlyMyTeam'];
         }
     }

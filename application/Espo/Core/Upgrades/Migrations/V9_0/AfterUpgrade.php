@@ -34,11 +34,14 @@ use Espo\Core\Upgrades\Migration\Script;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Preferences;
+use Espo\Entities\Role;
 use Espo\Entities\ScheduledJob;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\UpdateBuilder;
 
 class AfterUpgrade implements Script
 {
@@ -51,10 +54,21 @@ class AfterUpgrade implements Script
 
     public function run(): void
     {
+        $this->updateRoles();
         $this->setReactionNotifications();
         $this->createScheduledJob();
         $this->setAclLinks();
         $this->fixTimezone();
+    }
+
+    private function updateRoles(): void
+    {
+        $query = UpdateBuilder::create()
+            ->in(Role::ENTITY_TYPE)
+            ->set(['userCalendarPermission' => Expression::column('userPermission')])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($query);
     }
 
     private function createScheduledJob(): void

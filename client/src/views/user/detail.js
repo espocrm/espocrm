@@ -83,15 +83,15 @@ export default class extends DetailView {
             this.getAcl().checkScope('Calendar') &&
             (this.getUserModel().isRegular() || this.getUserModel().isAdmin())
         ) {
-            const showActivities = this.getAcl().checkUserPermission(this.getUserModel());
+            const showActivities = this.getAcl().checkPermission('userCalendar', this.getUserModel());
 
             if (
                 !showActivities &&
-                this.getAcl().getPermissionLevel('userPermission') === 'team' &&
+                this.getAcl().getPermissionLevel('userCalendar') === 'team' &&
                 !this.model.has('teamsIds')
             ) {
                 this.listenToOnce(this.model, 'sync', () => {
-                    if (this.getAcl().checkUserPermission(this.getUserModel())) {
+                    if (this.getAcl().checkPermission('userCalendar', this.getUserModel())) {
                         this.showHeaderActionItem('calendar');
                     }
                 });

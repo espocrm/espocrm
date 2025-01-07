@@ -33,15 +33,17 @@ class UserDetailBottomRecordView extends  DetailBottomRecordView {
     setupPanels() {
        super.setupPanels();
 
-        let streamAllowed = this.getAcl().checkUserPermission(this.model);
+       const userModel = /** @type {import('models/user').default} */ this.model;
+
+        const streamAllowed = this.getAcl().checkPermission('userCalendar', userModel);
 
         if (
             !streamAllowed &&
-            this.getAcl().getPermissionLevel('userPermission') === 'team' &&
+            this.getAcl().getPermissionLevel('userCalendar') === 'team' &&
             !this.model.has('teamsIds')
         ) {
             this.listenToOnce(this.model, 'sync', () => {
-                if (this.getAcl().checkUserPermission(this.model)) {
+                if (this.getAcl().checkPermission('userCalendar', userModel)) {
                     this.onPanelsReady(() => {
                         this.showPanel('stream', 'acl');
                     });

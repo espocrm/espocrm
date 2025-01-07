@@ -13,6 +13,7 @@
         "dataPrivacyPermission": "Data Privacy Permission",
         "auditPermission": "Audit Permission",
         "mentionPermission": "Mention Permission",
+        "userCalendarPermission": "User Calendar Permission",
         "data": "Data",
         "fieldData": "Field Data"
     },
@@ -23,7 +24,8 @@
     "tooltips": {
         "messagePermission": "Allows to send messages to other users.\n\n* all – can send to all\n* team – can send only to teammates\n* no – cannot send",
         "assignmentPermission": "Allows to assign records to other users.\n\n* all – no restriction\n* team – can assign only to teammates\n* no – can assign only to self",
-        "userPermission": "Allows view activities, calendar and stream of other users.\n\n* all – can view all\n* team – can view activities of teammates only\n* no – can't view",
+        "userPermission": "Allows to view stream of other users. Allows users to view the access levels other users have for specific records.",
+        "userCalendarPermission": "Allows to view calendars of other users.",
         "portalPermission": "Access to portal information, the ability to post messages to portal users.",
         "groupEmailAccountPermission": "Access to group email accounts, the ability to send emails from group SMTP.",
         "exportPermission": "Allows to export records.",

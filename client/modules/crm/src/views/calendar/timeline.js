@@ -157,7 +157,7 @@ class TimelineView extends View {
 
         this.colors = {...this.colors, ...this.getHelper().themeManager.getParam('calendarColors')};
 
-        this.isCustomViewAvailable = this.getAcl().getPermissionLevel('userPermission') !== 'no';
+        this.isCustomViewAvailable = this.getAcl().getPermissionLevel('userCalendar') !== 'no';
 
         if (this.options.userId) {
             this.isCustomViewAvailable = false;
@@ -201,7 +201,7 @@ class TimelineView extends View {
             }
         }
 
-        if (this.getAcl().getPermissionLevel('userPermission') === 'no') {
+        if (this.getAcl().getPermissionLevel('userCalendar') === 'no') {
             if (this.calendarType === 'shared') {
                 this.calendarType = 'single';
             }
@@ -249,7 +249,7 @@ class TimelineView extends View {
             return list;
         }
 
-        if (this.getAcl().getPermissionLevel('userPermission') !== 'no') {
+        if (this.getAcl().getPermissionLevel('userCalendar') !== 'no') {
             list.push({
                 type: 'shared',
                 label: this.getCalendarTypeLabel('shared'),
@@ -997,7 +997,7 @@ class TimelineView extends View {
     actionAddUser() {
         const boolFilterList = [];
 
-        if (this.getAcl().getPermissionLevel('userPermission') === 'team') {
+        if (this.getAcl().getPermissionLevel('userCalendar') === 'team') {
             boolFilterList.push('onlyMyTeam');
         }
 

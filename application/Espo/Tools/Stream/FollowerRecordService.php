@@ -221,7 +221,7 @@ class FollowerRecordService
         if (
             !$user->isPortal() &&
             $this->user->getId() !== $user->getId() &&
-            !$this->acl->checkUserPermission($user, 'followerManagement')
+            !$this->acl->checkUserPermission($user, Acl\Permission::FOLLOWER_MANAGEMENT)
         ) {
             throw new Forbidden("No 'followerManagement' permission.");
         }

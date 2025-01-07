@@ -260,7 +260,7 @@ class UpcomingService
     private function accessCheck(Entity $entity): void
     {
         if ($entity instanceof User) {
-            if (!$this->acl->checkUserPermission($entity)) {
+            if (!$this->acl->checkUserPermission($entity, Acl\Permission::USER_CALENDAR)) {
                 throw new Forbidden();
             }
 

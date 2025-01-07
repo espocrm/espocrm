@@ -52,7 +52,7 @@ define('crm:views/dashlets/options/calendar', ['views/dashlets/options/base'], f
             }
 
             if (
-                this.getAcl().get('userPermission') !== 'no'
+                this.getAcl().getPermissionLevel('userCalendar') !== 'no'
                 &&
                 ~['basicWeek', 'month', 'basicDay'].indexOf(this.model.get('mode'))
             ) {

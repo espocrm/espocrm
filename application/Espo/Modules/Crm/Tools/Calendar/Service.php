@@ -197,8 +197,7 @@ class Service
     private function accessCheck(Entity $entity): void
     {
         if ($entity instanceof User) {
-            /** @noinspection PhpRedundantOptionalArgumentInspection */
-            if (!$this->acl->checkUserPermission($entity, Acl\Permission::USER)) {
+            if (!$this->acl->checkUserPermission($entity, Acl\Permission::USER_CALENDAR)) {
                 throw new Forbidden();
             }
 
@@ -621,16 +620,16 @@ class Service
      */
     public function fetchForTeams(array $teamIdList, FetchParams $fetchParams): array
     {
-        if ($this->acl->getPermissionLevel(Acl\Permission::USER) === Table::LEVEL_NO) {
-            throw new Forbidden("User Permission not allowing to view calendars of other users.");
+        if ($this->acl->getPermissionLevel(Acl\Permission::USER_CALENDAR) === Table::LEVEL_NO) {
+            throw new Forbidden("User Calendar Permission not allowing to view calendars of other users.");
         }
 
-        if ($this->acl->getPermissionLevel(Acl\Permission::USER) === Table::LEVEL_TEAM) {
+        if ($this->acl->getPermissionLevel(Acl\Permission::USER_CALENDAR) === Table::LEVEL_TEAM) {
             $userTeamIdList = $this->user->getLinkMultipleIdList(Field::TEAMS);
 
             foreach ($teamIdList as $teamId) {
                 if (!in_array($teamId, $userTeamIdList)) {
-                    throw new Forbidden("User Permission not allowing to view calendars of other teams.");
+                    throw new Forbidden("User Calendar Permission not allowing to view calendars of other teams.");
                 }
             }
         }

@@ -42,24 +42,27 @@ define('views/user/record/detail-side', ['views/record/detail-side'], function (
                 return;
             }
 
-            var showActivities = this.getAcl().checkUserPermission(this.model);
+            const showActivities = this.getAcl().checkPermission('userCalendar', this.model);
 
-            if (!showActivities) {
-                if (this.getAcl().get('userPermission') === 'team') {
-                    if (!this.model.has('teamsIds')) {
-                        this.listenToOnce(this.model, 'sync', function () {
-                            if (this.getAcl().checkUserPermission(this.model)) {
-                                this.onPanelsReady(function () {
-                                    this.showPanel('activities', 'acl');
-                                    this.showPanel('history', 'acl');
-                                    if (!this.model.isPortal()) {
-                                        this.showPanel('tasks', 'acl');
-                                    }
-                                });
-                            }
-                        }, this);
+            if (
+                !showActivities &&
+                this.getAcl().getPermissionLevel('userCalendar') === 'team' &&
+                !this.model.has('teamsIds')
+            ) {
+                this.listenToOnce(this.model, 'sync', () => {
+                    if (!this.getAcl().checkPermission('userCalendar', this.model)) {
+                        return;
                     }
-                }
+
+                    this.onPanelsReady(() => {
+                        this.showPanel('activities', 'acl');
+                        this.showPanel('history', 'acl');
+
+                        if (!this.model.isPortal()) {
+                            this.showPanel('tasks', 'acl');
+                        }
+                    });
+                });
             }
 
             if (!showActivities) {

@@ -93,7 +93,8 @@ class UserRecordService
             throw new NotFound("User not found.");
         }
 
-        if (!$this->acl->checkUserPermission($user, 'user')) {
+        /** @noinspection PhpRedundantOptionalArgumentInspection */
+        if (!$this->acl->checkUserPermission($user, Acl\Permission::USER)) {
             throw new Forbidden("No user permission access.");
         }
 
@@ -135,7 +136,8 @@ class UserRecordService
             throw new NotFound("User not found.");
         }
 
-        if (!$this->acl->checkUserPermission($user, 'user')) {
+        /** @noinspection PhpRedundantOptionalArgumentInspection */
+        if (!$this->acl->checkUserPermission($user, Acl\Permission::USER)) {
             throw new Forbidden("No user permission access.");
         }
 

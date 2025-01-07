@@ -12,13 +12,13 @@
         "rows": [
             [
                 {"name": "exportPermission"},
-                {"name": "userPermission"},
+                {"name": "mentionPermission"},
                 {"name": "assignmentPermission"}
             ],
             [
                 {"name": "portalPermission"},
                 {"name": "groupEmailAccountPermission"},
-                {"name": "dataPrivacyPermission"}
+                {"name": "userCalendarPermission"}
             ],
             [
                 {"name": "massUpdatePermission"},
@@ -27,8 +27,8 @@
             ],
             [
                 {"name": "auditPermission"},
-                {"name": "mentionPermission"},
-                false
+                {"name": "userPermission"},
+                {"name": "dataPrivacyPermission"}
             ]
         ]
     }

@@ -40,4 +40,7 @@ class Permission
     public const DATA_PRIVACY = 'dataPrivacy';
     public const MESSAGE = 'message';
     public const MENTION = 'mention';
+    public const USER_CALENDAR = 'userCalendar';
+    public const FOLLOWER_MANAGEMENT = 'followerManagement';
+    public const GROUP_EMAIL_ACCOUNT = 'groupEmailAccount';
 }

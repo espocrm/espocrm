@@ -33,7 +33,7 @@ define('crm:views/calendar/fields/teams', ['views/fields/link-multiple'], functi
         foreignScope: 'Team',
 
         getSelectBoolFilterList: function () {
-            if (this.getAcl().get('userPermission') === 'team') {
+            if (this.getAcl().getPermissionLevel('userCalendar') === 'team') {
                 return ['onlyMy'];
             }
         }

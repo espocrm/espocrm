@@ -160,16 +160,17 @@
     },
     "valuePermissionList": [
         "assignmentPermission",
-        "userPermission",
         "messagePermission",
-        "portalPermission",
-        "groupEmailAccountPermission",
+        "mentionPermission",
+        "userCalendarPermission",
+        "auditPermission",
         "exportPermission",
         "massUpdatePermission",
+        "userPermission",
+        "portalPermission",
+        "groupEmailAccountPermission",
         "followerManagementPermission",
-        "dataPrivacyPermission",
-        "auditPermission",
-        "mentionPermission"
+        "dataPrivacyPermission"
     ],
     "valuePermissionHighestLevels": {
         "assignmentPermission": "all",
@@ -182,7 +183,8 @@
         "followerManagementPermission": "all",
         "dataPrivacyPermission": "yes",
         "auditPermission": "yes",
-        "mentionPermission": "yes"
+        "mentionPermission": "yes",
+        "userCalendarPermission": "all"
     },
     "permissionsStrictDefaults": {
         "assignmentPermission": "no",
@@ -195,6 +197,7 @@
         "followerManagementPermission": "no",
         "dataPrivacyPermission": "no",
         "auditPermission": "no",
-        "mentionPermission": "no"
+        "mentionPermission": "no",
+        "userCalendarPermission": "no"
     }
 }
