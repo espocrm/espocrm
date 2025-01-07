@@ -616,9 +616,6 @@ class PanelsContainerRecordView extends View {
      * @param [callback] Not to be used.
      */
     showPanel(name, softLockedType, callback) {
-        if (!this.hasPanel(name)) {
-            return;
-        }
 
         if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) {
             return;
@@ -658,10 +655,6 @@ class PanelsContainerRecordView extends View {
      * @param [callback] Not to be used.
      */
     hidePanel(name, locked, softLockedType, callback) {
-        if (!this.hasPanel(name)) {
-            return;
-        }
-
         this.recordHelper.setPanelStateParam(name, 'hidden', true);
 
         if (locked) {
