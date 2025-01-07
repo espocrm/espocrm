@@ -50,6 +50,11 @@ class Task extends Entity
     public const STATUS_CANCELED = 'Canceled';
     public const STATUS_DEFERRED = 'Deferred';
 
+    public function setName(?string $name): self
+    {
+        return $this->set(Field::NAME, $name);
+    }
+
     public function getStatus(): ?string
     {
         return $this->get('status');

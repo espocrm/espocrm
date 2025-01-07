@@ -46,6 +46,11 @@ class Call extends Entity
     public const STATUS_HELD = 'Held';
     public const STATUS_NOT_HELD = 'Not Held';
 
+    public function setName(?string $name): self
+    {
+        return $this->set(Field::NAME, $name);
+    }
+
     public function getName(): ?string
     {
         return $this->get(Field::NAME);
