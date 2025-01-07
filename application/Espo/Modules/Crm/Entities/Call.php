@@ -146,6 +146,21 @@ class Call extends Entity
         return $this->getValueObject('leads');
     }
 
+    public function setUsers(LinkMultiple $users): self
+    {
+        return $this->setValueObject('users', $users);
+    }
+
+    public function setContacts(LinkMultiple $contacts): self
+    {
+        return $this->setValueObject('contacts', $contacts);
+    }
+
+    public function setLeads(LinkMultiple $leads): self
+    {
+        return $this->setValueObject('leads', $leads);
+    }
+
     public function setParent(Entity|LinkParent|null $parent): self
     {
         if ($parent instanceof LinkParent) {
