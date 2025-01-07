@@ -26,55 +26,55 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/record/detail-side', ['views/record/detail-side'], function (Dep) {
+import DetailSideRecordView from 'views/record/detail-side';
 
-    return Dep.extend({
+export default class UserDetailSideRecordView extends DetailSideRecordView {
 
-        setupPanels: function () {
-            Dep.prototype.setupPanels.call(this);
+    setupPanels() {
+        super.setupPanels();
 
-            if (this.model.isApi() || this.model.isSystem()) {
-                this.hidePanel('activities', true);
-                this.hidePanel('history', true);
-                this.hidePanel('tasks', true);
-                this.hidePanel('stream', true);
+        const userModel = /** @type {import('modules/user').default} */this.model;
 
-                return;
-            }
+        if (userModel.isApi() || userModel.isSystem()) {
+            this.hidePanel('activities', true);
+            this.hidePanel('history', true);
+            this.hidePanel('tasks', true);
+            this.hidePanel('stream', true);
 
-            const showActivities = this.getAcl().checkPermission('userCalendar', this.model);
+            return;
+        }
 
-            if (
-                !showActivities &&
-                this.getAcl().getPermissionLevel('userCalendar') === 'team' &&
-                !this.model.has('teamsIds')
-            ) {
-                this.listenToOnce(this.model, 'sync', () => {
-                    if (!this.getAcl().checkPermission('userCalendar', this.model)) {
-                        return;
+        const showActivities = this.getAcl().checkPermission('userCalendar', userModel);
+
+        if (
+            !showActivities &&
+            this.getAcl().getPermissionLevel('userCalendar') === 'team' &&
+            !this.model.has('teamsIds')
+        ) {
+            this.listenToOnce(this.model, 'sync', () => {
+                if (!this.getAcl().checkPermission('userCalendar', userModel)) {
+                    return;
+                }
+
+                this.onPanelsReady(() => {
+                    this.showPanel('activities', 'acl');
+                    this.showPanel('history', 'acl');
+
+                    if (!userModel.isPortal()) {
+                        this.showPanel('tasks', 'acl');
                     }
-
-                    this.onPanelsReady(() => {
-                        this.showPanel('activities', 'acl');
-                        this.showPanel('history', 'acl');
-
-                        if (!this.model.isPortal()) {
-                            this.showPanel('tasks', 'acl');
-                        }
-                    });
                 });
-            }
+            });
+        }
 
-            if (!showActivities) {
-                this.hidePanel('activities', false, 'acl');
-                this.hidePanel('history', false, 'acl');
-                this.hidePanel('tasks', false, 'acl');
-            }
+        if (!showActivities) {
+            this.hidePanel('activities', false, 'acl');
+            this.hidePanel('history', false, 'acl');
+            this.hidePanel('tasks', false, 'acl');
+        }
 
-            if (this.model.isPortal()) {
-                this.hidePanel('tasks', true);
-            }
-        },
-
-    });
-});
+        if (userModel) {
+            this.hidePanel('tasks', true);
+        }
+    }
+}

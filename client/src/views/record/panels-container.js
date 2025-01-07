@@ -610,6 +610,11 @@ class PanelsContainerRecordView extends View {
         }
     }
 
+    /**
+     * @param {string} name
+     * @param {string} [softLockedType]
+     * @param [callback] Not to be used.
+     */
     showPanel(name, softLockedType, callback) {
         if (!this.hasPanel(name)) {
             return;
@@ -646,6 +651,12 @@ class PanelsContainerRecordView extends View {
         this.processShowPanel(name, callback, wasShown);
     }
 
+    /**
+     * @param {string} name
+     * @param {boolean} [locked=false]
+     * @param {string} [softLockedType]
+     * @param [callback] Not to be used.
+     */
     hidePanel(name, locked, softLockedType, callback) {
         if (!this.hasPanel(name)) {
             return;
