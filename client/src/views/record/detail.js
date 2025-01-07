@@ -899,12 +899,7 @@ class DetailRecordView extends BaseRecordView {
         }
 
         if (this.type === this.TYPE_DETAIL) {
-            const actionItemSetup = new ActionItemSetup(
-                this.getMetadata(),
-                this.getHelper(),
-                this.getAcl(),
-                this.getLanguage()
-            );
+            const actionItemSetup = new ActionItemSetup();
 
             actionItemSetup.setup(
                 this,
@@ -2868,6 +2863,7 @@ class DetailRecordView extends BaseRecordView {
             this.dropdownItemList.push(o);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Add an 'edit' mode button.
      *
