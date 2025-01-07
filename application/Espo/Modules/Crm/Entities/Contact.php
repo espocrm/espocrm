@@ -105,4 +105,14 @@ class Contact extends Person
 
         return $this;
     }
+
+    public function setDescription(?string $description): self
+    {
+        return $this->set('description', $description);
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->get('description');
+    }
 }

@@ -65,6 +65,16 @@ class Lead extends Person
         return parent::has($attribute);
     }
 
+    public function setDescription(?string $description): self
+    {
+        return $this->set('description', $description);
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->get('description');
+    }
+
     public function getStatus(): ?string
     {
         return $this->get('status');

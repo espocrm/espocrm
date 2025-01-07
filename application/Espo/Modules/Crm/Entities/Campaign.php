@@ -50,6 +50,23 @@ class Campaign extends Entity
         return $this->get(Field::NAME);
     }
 
+    public function setName(?string $name): self
+    {
+        $this->set(Field::NAME, $name);
+
+        return $this;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        return $this->set('description', $description);
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->get('description');
+    }
+
     public function getType(): ?string
     {
         return $this->get('type');
