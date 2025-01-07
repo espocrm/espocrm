@@ -45,10 +45,10 @@ export default class extends EditRecordView {
         super.setup();
     }
 
-    setupBeforeFinal() {
+    setupDynamicBehavior() {
         this.dynamicLogicDefs = this.helper.setupMethods();
 
-        super.setupBeforeFinal();
+        super.setupDynamicBehavior();
 
         this.helper.setupPanelsVisibility(() => {
             this.processDynamicLogic();

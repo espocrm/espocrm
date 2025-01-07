@@ -136,6 +136,7 @@ class EditRecordView extends DetailRecordView {
         }
 
         if (!promise) {
+            // Attributes are yet not ready.
             super.setupBeforeFinal();
         }
 

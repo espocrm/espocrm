@@ -1969,6 +1969,7 @@ class DetailRecordView extends BaseRecordView {
 
         this.setupActionItems();
         this.setupBeforeFinal();
+        this.setupDynamicBehavior();
 
         this.on('after:render', () => {
             this.initElementReferences();
@@ -2032,9 +2033,14 @@ class DetailRecordView extends BaseRecordView {
                 this.setIsChanged();
             }
         });
+    }
 
-        const dependencyDefs = Espo.Utils.clone(
-            this.getMetadata().get(['clientDefs', this.entityType, 'formDependency']) || {});
+    /**
+     * @protected
+     */
+    setupDynamicBehavior() {
+        const dependencyDefs =
+            Espo.Utils.clone(this.getMetadata().get(['clientDefs', this.entityType, 'formDependency']) || {});
 
         // noinspection JSDeprecatedSymbols
         this.dependencyDefs = _.extend(dependencyDefs, this.dependencyDefs);

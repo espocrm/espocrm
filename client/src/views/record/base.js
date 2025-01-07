@@ -601,6 +601,7 @@ class BaseRecordView extends View {
 
     /**
      * @inheritDoc
+     * Warning. Is not called by record/detail.
      */
     setup() {
         if (typeof this.model === 'undefined') {
