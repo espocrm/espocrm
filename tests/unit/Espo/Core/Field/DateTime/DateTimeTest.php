@@ -249,6 +249,30 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
                 $value->modify('+1 minute')
             )
         );
+
+        $this->assertTrue(
+            $value->isGreaterThanOrEqualTo(
+                $value
+            )
+        );
+
+        $this->assertTrue(
+            $value->isLessThanOrEqualTo(
+                $value
+            )
+        );
+
+        $this->assertTrue(
+            $value->isGreaterThanOrEqualTo(
+                $value->modify('-1 minute')
+            )
+        );
+
+        $this->assertTrue(
+            $value->isLessThanOrEqualTo(
+                $value->modify('+1 minute')
+            )
+        );
     }
 
     public function testAddDays(): void

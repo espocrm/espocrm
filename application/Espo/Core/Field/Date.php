@@ -228,6 +228,24 @@ class Date implements DateTimeable
     }
 
     /**
+     * Whether less than or equals to a given value.
+     * @since 9.0.0
+     */
+    public function isLessThanOrEqualTo(DateTimeable $other): bool
+    {
+        return $this->isLessThan($other) || $this->isEqualTo($other);
+    }
+
+    /**
+     * Whether greater than or equals to a given value.
+     * @since 9.0.0
+     */
+    public function isGreaterThanOrEqualTo(DateTimeable $other): bool
+    {
+        return $this->isGreaterThan($other) || $this->isEqualTo($other);
+    }
+
+    /**
      * Create a today.
      */
     public static function createToday(?DateTimeZone $timezone = null): self

@@ -187,6 +187,30 @@ class DateTest extends \PHPUnit\Framework\TestCase
                 $value->modify('+1 day')
             )
         );
+
+        $this->assertTrue(
+            $value->isGreaterThanOrEqualTo(
+                $value
+            )
+        );
+
+        $this->assertTrue(
+            $value->isLessThanOrEqualTo(
+                $value
+            )
+        );
+
+        $this->assertTrue(
+            $value->isGreaterThanOrEqualTo(
+                $value->modify('-1 day')
+            )
+        );
+
+        $this->assertTrue(
+            $value->isLessThanOrEqualTo(
+                $value->modify('+1 day')
+            )
+        );
     }
 
     public function testAddDays(): void
