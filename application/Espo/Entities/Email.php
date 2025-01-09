@@ -210,7 +210,7 @@ class Email extends Entity
     /**
      * @since 9.0.0
      */
-    public function getBodyPlainWithReplyPart(): ?string
+    public function getBodyPlainWithoutReplyPart(): ?string
     {
         $body = $this->getBodyPlain();
 

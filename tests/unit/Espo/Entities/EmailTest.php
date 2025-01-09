@@ -491,7 +491,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
 
         $expected = "Test\r\nHello";
 
-        $this->assertEquals($expected, $this->email->getBodyPlainWithReplyPart());
+        $this->assertEquals($expected, $this->email->getBodyPlainWithoutReplyPart());
     }
 
     public function testSubjectBody(): void
