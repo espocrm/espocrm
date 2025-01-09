@@ -275,12 +275,12 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
         await this.reRender();
 
         if (minHeight) {
-            const iframe = this.bodyFieldView.element.querySelector('iframe');
+            const bodyContainer = this.bodyFieldView.element;
 
-            if (iframe) {
-                iframe.style.minHeight = minHeight + 'px';
+            if (bodyContainer) {
+                bodyContainer.style.minHeight = minHeight + 'px';
 
-                setTimeout(() => iframe.style.minHeight = '', 200);
+                setTimeout(() => bodyContainer.style.minHeight = '', 200);
             }
         }
     }
