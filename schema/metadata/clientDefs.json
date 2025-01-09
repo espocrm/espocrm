@@ -454,6 +454,11 @@
                             "type": "string"
                         }
                     },
+                    "mandatoryAttributeList": {
+                        "description": "Mandatory attributes to be selected in the list. As of v9.0.",
+                        "type": "array",
+                        "items": {"type": "string"}
+                    },
                     "orderBy": {
                         "description": "An order-by field.",
                         "type": "string"

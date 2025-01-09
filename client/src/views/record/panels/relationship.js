@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2024 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -273,10 +273,10 @@ class RelationshipPanelView extends BottomPanelView {
 
         if (layout) {
             if (typeof layout === 'string') {
-                 layoutName = layout;
+                layoutName = layout;
             } else {
-                 layoutName = 'listRelationshipCustom';
-                 listLayout = layout;
+                layoutName = 'listRelationshipCustom';
+                listLayout = layout;
             }
         }
 
@@ -368,8 +368,16 @@ class RelationshipPanelView extends BottomPanelView {
                     displayTotalCount: false,
                     additionalRowActionList: this.defs.rowActionList,
                 }, view => {
-                    view.getSelectAttributeList((selectAttributeList) => {
+                    view.getSelectAttributeList(selectAttributeList => {
                         if (selectAttributeList) {
+                            if (this.defs.mandatoryAttributeList) {
+                                selectAttributeList = [...selectAttributeList, ...this.defs.mandatoryAttributeList];
+
+                                selectAttributeList = selectAttributeList
+                                    .filter((it, i) => selectAttributeList.indexOf(it) === i);
+
+                            }
+
                             collection.data.select = selectAttributeList.join(',');
                         }
 
