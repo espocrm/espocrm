@@ -196,8 +196,10 @@ class DefaultRowActionsView extends View {
                 return;
             }
 
-            if (item.acl && item.acl !== 'read' && !this.options.acl[item.acl]) {
-                return;
+            if (item.acl && item.acl !== 'read') {
+                if (!this.getAcl().checkModel(this.model, item.acl)) {
+                    return;
+                }
             }
 
             list.push({
