@@ -271,6 +271,10 @@ class EmailBodyFieldView extends WysiwygFieldView {
             data[this.name] += this.replyPart;
         }
 
+        if (this.model.attributes.isHtml) {
+            data[this.name + 'Plain'] = this.htmlToPlain(data[this.name]);
+        }
+
         return data;
     }
 }

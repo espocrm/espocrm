@@ -767,7 +767,50 @@ class WysiwygFieldView extends TextFieldView {
         return html.replace(/\n/g, '<br>');
     }
 
-    htmlToPlain(text) {
+    /**
+     * @protected
+     * @param {string} html
+     * @return {string}
+     */
+    htmlToPlain(html) {
+        const div = document.createElement('div');
+        div.innerHTML = html;
+
+        /**
+         * @param {Node|HTMLElement} node
+         * @return {string}
+         */
+        function processNode(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                return node.nodeValue;
+            }
+
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                if (node instanceof HTMLAnchorElement) {
+                    return `${node.textContent} (${node.href})`;
+                }
+
+                if (node instanceof HTMLQuoteElement) {
+                    return `> ${node.textContent.trim()}`;
+                }
+
+                switch (node.tagName.toLowerCase()) {
+                    case 'br':
+                    case 'p':
+                    case 'div':
+                        return `\n${Array.from(node.childNodes).map(processNode).join('')}\n`;
+                }
+
+                return Array.from(node.childNodes).map(processNode).join('');
+            }
+
+            return '';
+        }
+
+        return processNode(div).replace(/\n{2,}/g, '\n\n').trim();
+    }
+
+    /*htmlToPlain(text) {
         text = text || '';
 
         let value = text
@@ -782,7 +825,7 @@ class WysiwygFieldView extends TextFieldView {
         value = $div.text();
 
         return value;
-    }
+    }*/
 
     disableWysiwygMode() {
         this.destroySummernote();
