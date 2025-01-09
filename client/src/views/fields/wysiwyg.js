@@ -810,23 +810,6 @@ class WysiwygFieldView extends TextFieldView {
         return processNode(div).replace(/\n{2,}/g, '\n\n').trim();
     }
 
-    /*htmlToPlain(text) {
-        text = text || '';
-
-        let value = text
-            .replace(/<br\s*\/?>/mg, '\n')
-            .replace(/<\/p\s*\/?>/mg, '\n\n');
-
-        const $div = $('<div>').html(value);
-
-        $div.find('style').remove();
-        $div.find('link[ref="stylesheet"]').remove();
-
-        value = $div.text();
-
-        return value;
-    }*/
-
     disableWysiwygMode() {
         this.destroySummernote();
 
