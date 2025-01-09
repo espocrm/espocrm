@@ -48,7 +48,14 @@ class LayoutWidthComplexFieldView extends BaseFieldView {
         this.auxModel = new Model();
 
         this.syncAuxModel();
-        this.listenTo(this.model, 'change', () => this.syncAuxModel());
+
+        this.listenTo(this.model, 'change', (m, /** Record */o) => {
+            if (o.ui) {
+                return;
+            }
+
+            this.syncAuxModel();
+        });
 
         const unitView = new EnumFieldView({
             name: 'unit',
@@ -105,7 +112,7 @@ class LayoutWidthComplexFieldView extends BaseFieldView {
             return {
                 width: null,
                 widthPx: this.auxModel.attributes.value,
-            }
+            };
         }
 
         return {
