@@ -29,7 +29,6 @@
 
 namespace Espo\ORM\Repository;
 
-use Espo\ORM\Collection;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -45,6 +44,7 @@ use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Repository\RDBRelationSelectBuilder as Builder;
 
+use Espo\ORM\SthCollection;
 use LogicException;
 use RuntimeException;
 
@@ -149,9 +149,9 @@ class RDBRelation
     /**
      * Find related records.
      *
-     * @return Collection<TEntity>
+     * @return EntityCollection<TEntity>|SthCollection<TEntity>
      */
-    public function find(): Collection
+    public function find(): EntityCollection|SthCollection
     {
         if ($this->isBelongsToParentType()) {
             /** @var EntityCollection<TEntity> $collection */

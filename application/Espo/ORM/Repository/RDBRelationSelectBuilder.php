@@ -187,9 +187,9 @@ class RDBRelationSelectBuilder
     /**
      * Find related records by a criteria.
      *
-     * @return Collection<TEntity>
+     * @return EntityCollection<TEntity>|SthCollection<TEntity>
      */
-    public function find(): Collection
+    public function find(): EntityCollection|SthCollection
     {
         $query = $this->builder->build();
 
@@ -198,6 +198,7 @@ class RDBRelationSelectBuilder
         if ($related instanceof Collection) {
             /** @var Collection<TEntity> $related */
 
+            /** @var EntityCollection<TEntity>|SthCollection<TEntity> */
             return $this->handleReturnCollection($related);
         }
 
