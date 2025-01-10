@@ -273,6 +273,10 @@ class BaseRecordView extends View {
 
         this.recordHelper.setFieldStateParam(name, 'readOnly', false);
 
+        if (this.readOnly) {
+            return;
+        }
+
         const view = this.getFieldView(name);
 
         if (view && view.readOnly) {
