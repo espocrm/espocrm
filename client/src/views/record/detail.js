@@ -1209,14 +1209,15 @@ class DetailRecordView extends BaseRecordView {
 
         softLockedType = softLockedType || 'default';
 
-        this.recordHelper
-            .setPanelStateParam(name,
-                'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', false);
+        const softLockedParam = 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked'
 
-        if (softLockedType === 'dynamicLogic') {
-            if (this.recordHelper.getPanelStateParam(name, 'hidden') === false) {
-                return;
-            }
+        this.recordHelper.setPanelStateParam(name, softLockedParam, false);
+
+        if (
+            softLockedType === 'dynamicLogic' &&
+            this.recordHelper.getPanelStateParam(name, 'hidden') === false
+        ) {
+            return;
         }
 
         for (let i = 0; i < this.panelSoftLockedTypeList.length; i++) {
@@ -1245,8 +1246,7 @@ class DetailRecordView extends BaseRecordView {
             if ('showPanel' in bottomView) {
                 bottomView.showPanel(name);
             }
-        }
-        else if (this.bottomView) {
+        } else if (this.bottomView) {
             this.once('ready', () => {
                 const view = this.getBottomView();
 
@@ -1270,8 +1270,7 @@ class DetailRecordView extends BaseRecordView {
             if ('showPanel' in sideView) {
                 sideView.showPanel(name);
             }
-        }
-        else if (this.sideView) {
+        } else if (this.sideView) {
             this.once('ready', () => {
                 const view = this.getSideView();
 
@@ -1315,16 +1314,15 @@ class DetailRecordView extends BaseRecordView {
             this.recordHelper.setPanelStateParam(name, 'hiddenLocked', true);
         }
 
-        if (softLockedType) {
-            this.recordHelper
-                .setPanelStateParam(name,
-                    'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', true);
-        }
+        const softLockedParam = 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked'
 
-        if (softLockedType === 'dynamicLogic') {
-            if (this.recordHelper.getPanelStateParam(name, 'hidden') === true) {
-                return;
-            }
+        this.recordHelper.setPanelStateParam(name, softLockedParam, true);
+
+        if (
+            softLockedType === 'dynamicLogic' &&
+            this.recordHelper.getPanelStateParam(name, 'hidden') === true
+        ) {
+            return;
         }
 
         const middleView = this.getMiddleView();
@@ -1339,8 +1337,7 @@ class DetailRecordView extends BaseRecordView {
             if ('hidePanel' in bottomView) {
                 bottomView.hidePanel(name);
             }
-        }
-        else if (this.bottomView) {
+        } else if (this.bottomView) {
             this.once('ready', () => {
                 const view = this.getBottomView();
 
@@ -1364,8 +1361,7 @@ class DetailRecordView extends BaseRecordView {
             if ('hidePanel' in sideView) {
                 sideView.hidePanel(name);
             }
-        }
-        else if (this.sideView) {
+        } else if (this.sideView) {
             this.once('ready', () => {
                 const view = this.getSideView();
 
