@@ -94,6 +94,7 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
             isPinned: this.isThis && this.model.get('isPinned') && this.model.collection &&
                 !this.model.collection.pinnedList,
             detailsIsShown: this.detailsIsShown,
+            hasExpand: !this.options.isNotification,
         };
     }
 

@@ -17,11 +17,13 @@
             data-id="{{emailId}}"
             data-scope="Email"
         ></span><span class="message text-muted">{{{message}}}</span>
-        <a
-            role="button"
-            tabindex="0"
-            data-action="expandDetails"
-        ><span class="fas {{#if detailsIsShown}} fa-chevron-up {{else}} fa-chevron-down {{/if}} "></span></a>
+        {{#if hasExpand}}
+            <a
+                role="button"
+                tabindex="0"
+                data-action="expandDetails"
+            ><span class="fas {{#if detailsIsShown}} fa-chevron-up {{else}} fa-chevron-down {{/if}} "></span></a>
+        {{/if}}
     </div>
 </div>
 
