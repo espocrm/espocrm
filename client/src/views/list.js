@@ -882,7 +882,7 @@ class ListView extends MainView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlSpace(e) {
         if (!this.createButton) {
@@ -911,7 +911,7 @@ class ListView extends MainView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlSlash(e) {
         if (!this.searchPanel) {
@@ -933,7 +933,7 @@ class ListView extends MainView {
     // noinspection JSUnusedLocalSymbols
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlComma(e) {
         if (!this.getSearchView()) {
@@ -946,7 +946,7 @@ class ListView extends MainView {
     // noinspection JSUnusedLocalSymbols
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlPeriod(e) {
         if (!this.getSearchView()) {
@@ -959,7 +959,7 @@ class ListView extends MainView {
     // noinspection JSUnusedLocalSymbols
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyControlArrowLeft(e) {
         this.getRecordView().trigger('request-page', 'previous');
@@ -968,7 +968,7 @@ class ListView extends MainView {
     // noinspection JSUnusedLocalSymbols
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyControlArrowRight(e) {
         this.getRecordView().trigger('request-page', 'next');
