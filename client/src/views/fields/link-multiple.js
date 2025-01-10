@@ -74,6 +74,18 @@ class LinkMultipleFieldView extends BaseFieldView {
     editTemplate = 'fields/link-multiple/edit'
     searchTemplate = 'fields/link-multiple/search'
 
+
+    // noinspection JSUnusedGlobalSymbols
+    listLinkTemplateContent = `
+        {{#if value}}
+            <a
+                href="#{{scope}}/view/{{model.id}}"
+                class="link"
+                data-id="{{model.id}}"
+            >{{{value}}}</a>
+        {{/if}}
+    `
+
     /**
      * @inheritDoc
      * @type {Array<(function (): boolean)|string>}
@@ -840,6 +852,20 @@ class LinkMultipleFieldView extends BaseFieldView {
     getValueForDisplay() {
         if (!this.isDetailMode() && !this.isListMode()) {
             return null;
+        }
+
+        if (this.mode === this.MODE_LIST_LINK) {
+            const div = document.createElement('div');
+
+            this.ids.forEach(id => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('link-multiple-item');
+                itemDiv.textContent = this.nameHash[id] || id;
+
+                div.append(itemDiv);
+            });
+
+            return div.outerHTML;
         }
 
         const itemList = [];
