@@ -2584,6 +2584,10 @@ class ListRecordView extends View {
         let emptyWidthMet = false;
 
         const visibleColumns = this.listLayout.filter(it => {
+            if (!this._listSettingsHelper && it.hidden) {
+                return false;
+            }
+
             if (!this._listSettingsHelper) {
                 return true;
             }
@@ -2744,6 +2748,10 @@ class ListRecordView extends View {
                 if (this._listSettingsHelper.isColumnHidden(col.name, col.hidden)) {
                     continue;
                 }
+            }
+
+            if (!this._listSettingsHelper && col.hidden) {
+                continue;
             }
 
             layout.push(item);
