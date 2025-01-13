@@ -64,8 +64,13 @@ class BeforeUpgrade
      */
     private function checkBadClasses(array $badList): void
     {
+        $skipPathRegexList = [
+            '^custom\/Espo\/Modules\/[^\/]+\/vendor',
+            '^application\/Espo\/Modules\/[^\/]+\/vendor',
+        ];
+
         foreach (['custom', 'application/Espo/Modules'] as $dir) {
-            $this->loadFromDir($dir);
+            $this->loadFromDir($dir, $skipPathRegexList);
         }
 
         $ignoreList = [
@@ -96,15 +101,32 @@ class BeforeUpgrade
         }
     }
 
-    private function loadFromDir(string $dir): void
+    private function loadFromDir(string $dir, array $skipPathRegexList): void
     {
         $directory = new \RecursiveDirectoryIterator($dir);
         $fullTree = new \RecursiveIteratorIterator($directory);
         $phpFiles = new \RegexIterator($fullTree, '/^.+\.php$/i', \RecursiveRegexIterator::GET_MATCH);
 
-        foreach ($phpFiles as $file) {
-            require_once($file[0]);
+        foreach ($phpFiles as $path) {
+            $file = $path[0];
+
+            if ($this->isSkip($file, $skipPathRegexList)) {
+                continue;
+            }
+
+            require_once($file);
         }
+    }
+
+    private function isSkip(string $file, array $skipPathRegexList): bool
+    {
+        foreach ($skipPathRegexList as $pattern) {
+            if (preg_match('/' . $pattern . '/', $file)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
