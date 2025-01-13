@@ -110,7 +110,7 @@ class BeforeUpgrade
         foreach ($phpFiles as $path) {
             $file = $path[0];
 
-            if ($this->isSkip($file, $skipPathRegexList)) {
+            if ($this->toSkip($file, $skipPathRegexList)) {
                 continue;
             }
 
@@ -118,7 +118,7 @@ class BeforeUpgrade
         }
     }
 
-    private function isSkip(string $file, array $skipPathRegexList): bool
+    private function toSkip(string $file, array $skipPathRegexList): bool
     {
         foreach ($skipPathRegexList as $pattern) {
             if (preg_match('/' . $pattern . '/', $file)) {
