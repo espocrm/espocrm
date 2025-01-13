@@ -217,6 +217,25 @@ class ClientManager
             'expiresAt' => $account->getExpiresAt() ? $account->getExpiresAt()->toString() : null,
         ];
 
+        $authType = $this->metadata->get("integrations.$integration.authType");
+        $tokenType = $this->metadata->get("integrations.$integration.tokenType");
+
+        if ($authType === 'Uri') {
+            $oauth2Client->setAuthType(OAuth2Client::AUTH_TYPE_URI);
+        } else if ($authType === 'Basic') {
+            $oauth2Client->setAuthType(OAuth2Client::AUTH_TYPE_AUTHORIZATION_BASIC);
+        } else if ($authType === 'Form') {
+            $oauth2Client->setAuthType(OAuth2Client::AUTH_TYPE_FORM);
+        }
+
+        if ($tokenType === 'Bearer') {
+            $oauth2Client->setTokenType(OAuth2Client::TOKEN_TYPE_BEARER);
+        } else if ($authType === 'Uri') {
+            $oauth2Client->setTokenType(OAuth2Client::TOKEN_TYPE_URI);
+        } else if ($authType === 'OAuth') {
+            $oauth2Client->setTokenType(OAuth2Client::TOKEN_TYPE_OAUTH);
+        }
+
         foreach (get_object_vars($integrationEntity->getValueMap()) as $k => $v) {
             if (array_key_exists($k, $params)) {
                 continue;
