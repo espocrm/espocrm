@@ -38,6 +38,7 @@ use Espo\Core\Utils\Log;
 
 use Exception;
 use DateTime;
+use LogicException;
 
 abstract class OAuth2Abstract implements IClient
 {
@@ -259,7 +260,10 @@ abstract class OAuth2Abstract implements IClient
     /**
      * @return string
      */
-    abstract protected function getPingUrl();
+    protected function getPingUrl()
+    {
+        throw new LogicException("Ping is not implemented.");
+    }
 
     /**
      * @return bool
