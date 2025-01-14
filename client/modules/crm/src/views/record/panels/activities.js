@@ -666,16 +666,20 @@ class ActivitiesPanelView extends RelationshipPanelView {
     }
 
     actionViewRelatedList(data) {
-        data.url = 'Activities/' + this.model.entityType + '/' +
-            this.model.id + '/' + this.name + '/list/' + data.scope;
+        data.url = `Activities/${this.model.entityType}/${this.model.id}/${this.name}/list/${data.scope}`;
 
         data.title = this.translate(this.defs.label) +
             ' @right ' + this.translate(data.scope, 'scopeNamesPlural');
 
-        data.viewOptions = data.viewOptions || {};
-        data.viewOptions.massUnlinkDisabled = true;
-        data.viewOptions.fullFormUrl = '#' + this.model.entityType + '/' + this.name + '/' +
-            this.model.id + '/' + data.scope;
+        const viewOptions = /** @type {Record.<string, *>} */data.viewOptions || {};
+
+        const fullFormUrl = `#${this.model.entityType}/${this.name}/${this.model.id}/${data.scope}`;
+
+        viewOptions.massUnlinkDisabled = true;
+        viewOptions.fullFormUrl = fullFormUrl;
+        viewOptions.createDisabled = true;
+
+        data.viewOptions = viewOptions;
 
         super.actionViewRelatedList(data);
     }
