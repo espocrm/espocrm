@@ -92,7 +92,9 @@
             "maxLength": 320,
             "readOnly": true,
             "copyToClipboard": true,
-            "duplicateIgnore": true
+            "duplicateIgnore": true,
+            "default": null,
+            "customizationDefaultDisabled": true
         },
         "acceptanceStatus": {
             "type": "enum",
