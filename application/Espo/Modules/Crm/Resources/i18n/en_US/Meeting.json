@@ -17,7 +17,8 @@
         "dateEndDate": "Date End (all day)",
         "isAllDay": "Is All-Day",
         "sourceEmail": "Source Email",
-        "uid": "UID"
+        "uid": "UID",
+        "joinUrl": "Join URL"
     },
     "links": {},
     "options": {

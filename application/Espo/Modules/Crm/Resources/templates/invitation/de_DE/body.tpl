@@ -10,6 +10,11 @@
     <a href="{{tentativeLink}}" style="font-size: 1.2em">mit Vorbehalt</a> &middot;
     <a href="{{declineLink}}" style="font-size: 1.2em">Ablehnen</a>
 </p>
+{{#if joinUrl}}
+    <p>
+        <a href="{{joinUrl}}">Beitreten</a>
+    </p>
+{{/if}}
 {{#if isUser}}
 <p><a href="{{recordUrl}}">Eintrag öffnen</a></p>
 {{/if}}

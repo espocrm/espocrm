@@ -86,6 +86,14 @@
             "readOnly": true,
             "duplicateIgnore": true
         },
+        "joinUrl": {
+            "type": "url",
+            "dbType": "text",
+            "maxLength": 320,
+            "readOnly": true,
+            "copyToClipboard": true,
+            "duplicateIgnore": true
+        },
         "acceptanceStatus": {
             "type": "enum",
             "notStorable": true,

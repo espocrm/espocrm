@@ -10,6 +10,11 @@
     <a href="{{tentativeLink}}" style="font-size: 1.2em">Tentative</a> &middot;
     <a href="{{declineLink}}" style="font-size: 1.2em">Decline</a>
 </p>
+{{#if joinUrl}}
+    <p>
+        <a href="{{joinUrl}}">Join</a>
+    </p>
+{{/if}}
 {{#if isUser}}
 <p><a href="{{recordUrl}}">View record</a></p>
 {{/if}}

@@ -207,13 +207,35 @@ class Meeting extends Entity
         return $this->relations->getOne(Field::PARENT);
     }
 
+    /**
+     * @since 9.0.0
+     */
     public function getUid(): ?string
     {
         return $this->get('uid');
     }
 
+    /**
+     * @since 9.0.0
+     */
     public function setUid(?string $uid): self
     {
         return $this->set('uid', $uid);
+    }
+
+    /**
+     * @since 9.0.0
+     */
+    public function setJoinUrl(?string $joinUrl): self
+    {
+        return $this->set('joinUrl', $joinUrl);
+    }
+
+    /**
+     * @since 9.0.0
+     */
+    public function getJoinUrl(): ?string
+    {
+        return $this->get('joinUrl');
     }
 }
