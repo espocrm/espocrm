@@ -175,6 +175,20 @@ class Client
      */
     public function setTokenType($tokenType)
     {
+        $lower = strtolower($tokenType);
+
+        if ($lower === 'bearer') {
+            $tokenType = self::TOKEN_TYPE_BEARER;
+        }
+
+        if ($lower === 'uri') {
+            $tokenType = self::TOKEN_TYPE_URI;
+        }
+
+        if ($lower === 'oauth') {
+            $tokenType = self::TOKEN_TYPE_OAUTH;
+        }
+
         $this->tokenType = $tokenType;
     }
 
