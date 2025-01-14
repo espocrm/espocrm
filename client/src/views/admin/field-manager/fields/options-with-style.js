@@ -53,7 +53,7 @@ export default class extends OptionsView {
     }
 
     changeStyle(value, style) {
-        const val = value.replace(/"/g, '\\"');
+        const val = CSS.escape(value);
 
         this.$el
             .find(`[data-action="selectOptionItemStyle"][data-value="${val}"] .check-icon`)

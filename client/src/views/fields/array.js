@@ -664,6 +664,9 @@ class ArrayFieldView extends BaseFieldView {
             .outerHTML;
     }
 
+    /**
+     * @param {string} value
+     */
     addValue(value) {
         if (this.selected.indexOf(value) === -1) {
             const html = this.getItemHtml(value);
@@ -674,8 +677,11 @@ class ArrayFieldView extends BaseFieldView {
         }
     }
 
+    /**
+     * @param {string} value
+     */
     removeValue(value) {
-        const valueInternal = value.replace(/"/g, '\\"');
+        const valueInternal = CSS.escape(value);
 
         this.$list.children('[data-value="' + valueInternal + '"]').remove();
 

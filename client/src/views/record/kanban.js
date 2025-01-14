@@ -466,7 +466,7 @@ class KanbanRecordView extends ListRecordView {
         this.plusElementMap = {};
 
         this.groupDataList.forEach(item => {
-            const value = item.name.replace(/"/g, '\\"');
+            const value = CSS.escape(item.name);
 
             this.plusElementMap[item.name] = this.$el.find(`.kanban-head .create-button[data-group="${value}"]`);
         });

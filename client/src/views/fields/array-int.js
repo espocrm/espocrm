@@ -65,11 +65,11 @@ class ArrayIntFieldView extends ArrayFieldView {
             return;
         }
 
-        let valueInternal = value.toString().replace(/"/g, '\\"');
+        const valueInternal = CSS.escape(value.toString());
 
         this.$list.children('[data-value="' + valueInternal + '"]').remove();
 
-        let index = this.selected.indexOf(value);
+        const index = this.selected.indexOf(value);
 
         this.selected.splice(index, 1);
         this.trigger('change');

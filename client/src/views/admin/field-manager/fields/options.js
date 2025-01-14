@@ -112,7 +112,7 @@ export default class FieldManagerOptionsFieldView extends ArrayFieldView {
         data.translatedOptions = {};
 
         (data[this.name] || []).forEach(value => {
-            const valueInternal = value.replace(/"/g, '\\"');
+            const valueInternal = CSS.escape(value);
 
             const translatedValue = this.$el
                 .find(`input[data-name="translatedValue"][data-value="${valueInternal}"]`).val() || value;

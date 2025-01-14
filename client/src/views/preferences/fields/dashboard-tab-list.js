@@ -125,7 +125,7 @@ export default class extends ArrayFieldView {
         data.translatedOptions = {};
 
         (data[this.name] || []).forEach(value => {
-            const valueInternal = value.replace(/"/g, '\\"');
+            const valueInternal = CSS.escape(value);
 
             data.translatedOptions[value] = this.$el
                 .find(`input[data-name="translatedValue"][data-value="${valueInternal}"]`)
