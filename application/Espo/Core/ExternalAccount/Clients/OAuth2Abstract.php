@@ -477,6 +477,8 @@ abstract class OAuth2Abstract implements IClient
             $reasonPart = '; Reason: ' . $result['error']['message'];
         }
 
+        $this->log->debug("OAuth response: " . Json::encode($response));
+
         throw new Error("Oauth: Error after requesting $httpMethod $url$reasonPart.", (int) $code);
     }
 
