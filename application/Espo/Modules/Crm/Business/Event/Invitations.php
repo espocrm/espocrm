@@ -33,8 +33,10 @@ use Espo\Core\Field\DateTime as DateTimeField;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Name\Field;
+use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
+use Espo\Entities\Preferences;
 use Espo\Entities\UniqueId;
 use Espo\Modules\Crm\Entities\Call;
 use Espo\Modules\Crm\Entities\Contact;
@@ -47,7 +49,6 @@ use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
 use Espo\Core\Mail\EmailSender;
 use Espo\Core\Mail\SmtpParams;
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\TemplateFileManager;
@@ -66,10 +67,10 @@ class Invitations
         private EntityManager $entityManager,
         private ?SmtpParams $smtpParams,
         private EmailSender $emailSender,
-        private Config $config,
         private Language $language,
         private TemplateFileManager $templateFileManager,
-        private HtmlizerFactory $htmlizerFactory
+        private HtmlizerFactory $htmlizerFactory,
+        private ApplicationConfig $applicationConfig,
     ) {}
 
     /**
@@ -256,7 +257,7 @@ class Invitations
     {
         $data = [];
 
-        $siteUrl = rtrim($this->config->get('siteUrl'), '/');
+        $siteUrl = $this->applicationConfig->getSiteUrl();
 
         $data['recordUrl'] = "$siteUrl/#{$entity->getEntityType()}/view/{$entity->getId()}";
 
@@ -275,6 +276,8 @@ class Invitations
         $data['inviteeName'] = $invitee->get(Field::NAME);
         $data['entityType'] = $this->language->translateLabel($entity->getEntityType(), 'scopeNames');
         $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
+
+        $data['timeZone'] = $this->getTimeZone($invitee);
 
         return $data;
     }
@@ -324,5 +327,20 @@ class Invitations
         }
 
         return $attendees;
+    }
+
+    private function getTimeZone(Entity $invitee): string
+    {
+        $timeZone = $this->applicationConfig->getTimeZone();
+
+        if ($invitee instanceof User) {
+            $preferences = $this->entityManager->getRepositoryByClass(Preferences::class)->getById($invitee->getId());
+
+            if ($preferences && $preferences->getTimeZone()) {
+                $timeZone = $preferences->getTimeZone();
+            }
+        }
+
+        return $timeZone;
     }
 }
