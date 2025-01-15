@@ -11,7 +11,19 @@
     </div>
 </div>
 
-{{#if hasSubject}}
-<div class="subject-field">{{{subjectField}}}</div>
-{{/if}}
-<div class="body-field">{{{bodyField}}}</div>
+<div class="panel panel-default">
+    <div class="panel-body panel-body-form">
+        {{#if hasSubject}}
+            <div class="row">
+                <div class="cell col-sm-12 form-group">
+                    <div class="field subject-field">{{{subjectField}}}</div>
+                </div>
+            </div>
+        {{/if}}
+        <div class="row">
+            <div class="cell col-sm-12 form-group">
+                <div class="field body-field">{{{bodyField}}}</div>
+            </div>
+        </div>
+    </div>
+</div>
