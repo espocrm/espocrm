@@ -82,6 +82,7 @@ class GetUpcoming implements Action
             maxSize: $searchParams->getMaxSize(),
             futureDays: $futureDays,
             entityTypeList: $entityTypeList,
+            includeShared: $request->getQueryParam('includeShared') === 'true',
         );
     }
 

@@ -25,13 +25,17 @@
                 "type": "int",
                 "min": 0,
                 "required": true
+            },
+            "includeShared": {
+                "type": "bool"
             }
         },
         "defaults": {
             "displayRecords": 10,
             "autorefreshInterval": 0.5,
             "futureDays": 3,
-            "enabledScopeList": ["Meeting", "Call", "Task"]
+            "enabledScopeList": ["Meeting", "Call", "Task"],
+            "includeShared": false
         },
         "layout": [
             {
@@ -46,7 +50,7 @@
                     ],
                     [
                         {"name": "futureDays"},
-                        false
+                        {"name": "includeShared"}
                     ]
                 ]
             }

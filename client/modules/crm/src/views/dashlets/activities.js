@@ -154,6 +154,10 @@ class ActivitiesDashletView extends BaseDashletView {
         this.collection.data.entityTypeList = this.scopeList;
         this.collection.data.futureDays = this.getOption('futureDays');
 
+        if (this.getOption('includeShared')) {
+            this.collection.data.includeShared = true;
+        }
+
         this.listenToOnce(this.collection, 'sync', () => {
             this.createView('list', 'crm:views/record/list-activities-dashlet', {
                 selector: '> .list-container',

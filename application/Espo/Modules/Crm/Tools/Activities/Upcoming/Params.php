@@ -38,6 +38,7 @@ class Params
         readonly public ?int $offset = null,
         readonly public ?int $maxSize = null,
         readonly public ?int $futureDays = null,
-        readonly public ?array $entityTypeList = null
+        readonly public ?array $entityTypeList = null,
+        readonly public bool $includeShared = false,
     ) {}
 }

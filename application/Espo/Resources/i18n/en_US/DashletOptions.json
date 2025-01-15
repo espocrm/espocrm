@@ -19,7 +19,8 @@
         "url": "URL",
         "dateFilter": "Date Filter",
         "text": "Text",
-        "folder": "Folder"
+        "folder": "Folder",
+        "includeShared": "Include Shared"
     },
     "options": {
     	"mode": {

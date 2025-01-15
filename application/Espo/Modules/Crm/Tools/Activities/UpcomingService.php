@@ -37,6 +37,7 @@ use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Select\Bool\Filters\OnlyMy;
+use Espo\Core\Select\Bool\Filters\Shared;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Metadata;
@@ -57,8 +58,10 @@ use Espo\Core\Select\Where\ConverterFactory as WhereConverterFactory;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Query\SelectBuilder;
 
+use Exception;
 use PDO;
 use DateTime;
+use RuntimeException;
 
 class UpcomingService
 {
@@ -118,7 +121,7 @@ class UpcomingService
                 continue;
             }
 
-            $queryList[] = $this->getEntityTypeQuery($entityType, $user, $futureDays);
+            $queryList[] = $this->getEntityTypeQuery($entityType, $user, $futureDays, $params->includeShared);
         }
 
         if ($queryList === []) {
@@ -200,10 +203,14 @@ class UpcomingService
      * @throws Forbidden
      * @throws BadRequest
      */
-    private function getEntityTypeQuery(string $entityType, User $user, int $futureDays): Select
+    private function getEntityTypeQuery(string $entityType, User $user, int $futureDays, bool $includeShared): Select
     {
-        $beforeString = (new DateTime())->modify('+' . $futureDays . ' days')
-            ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
+        try {
+            $beforeString = (new DateTime())->modify('+' . $futureDays . ' days')
+                ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
+        } catch (Exception $e) {
+            throw new RuntimeException($e->getMessage(), 0, $e);
+        }
 
         $builder = $this->selectBuilderFactory
             ->create()
@@ -211,6 +218,10 @@ class UpcomingService
             ->forUser($user)
             ->withBoolFilter(OnlyMy::NAME)
             ->withStrictAccessControl();
+
+        if ($includeShared && $this->metadata->get("scopes.$entityType.collaborators")) {
+            $builder->withBoolFilter(Shared::NAME);
+        }
 
         $orderField = 'dateStart';
         $primaryFilter = Planned::NAME;
