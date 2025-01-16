@@ -319,7 +319,8 @@
         "View User Access": "View User Access",
         "Reacted": "Reacted",
         "Reaction Removed": "Reaction Removed",
-        "Reactions": "Reactions"
+        "Reactions": "Reactions",
+        "Send": "Send"
     },
     "messages": {
         "pleaseWait": "Please wait...",
