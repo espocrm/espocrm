@@ -94,6 +94,10 @@ class PostUsers implements Action
 
             $relation->relate($user);
 
+            if ($this->user->getId() === $user->getId()) {
+                continue;
+            }
+
             $this->processNotify($email, $user);
         }
 
