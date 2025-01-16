@@ -137,7 +137,7 @@ class Cleanup implements JobDataLess
         $delete = $this->entityManager->getQueryBuilder()->delete()
             ->from(Job::ENTITY_TYPE)
             ->where([
-                'DATE:modifiedAt<' => $this->getCleanupJobFromDate(),
+                'modifiedAt<' => $this->getCleanupJobFromDate(),
                 'status!=' => JobStatus::PENDING,
             ])
             ->build();
@@ -147,7 +147,7 @@ class Cleanup implements JobDataLess
         $delete = $this->entityManager->getQueryBuilder()->delete()
             ->from(Job::ENTITY_TYPE)
             ->where([
-                'DATE:modifiedAt<' => $this->getCleanupJobFromDate(),
+                'modifiedAt<' => $this->getCleanupJobFromDate(),
                 'status=' => JobStatus::PENDING,
                 'deleted' => true,
             ])
@@ -213,7 +213,7 @@ class Cleanup implements JobDataLess
                 ->from(ScheduledJobLogRecord::ENTITY_TYPE)
                 ->where([
                     'scheduledJobId' => $scheduledJobId,
-                    'DATE:createdAt<' => $this->getCleanupJobFromDate(),
+                    'createdAt<' => $this->getCleanupJobFromDate(),
                     'id!=' => $ignoreIdList,
                 ])
                 ->build();
@@ -233,7 +233,7 @@ class Cleanup implements JobDataLess
             ->delete()
             ->from(ActionHistoryRecord::ENTITY_TYPE)
             ->where([
-                'DATE:createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                'createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
             ])
             ->build();
 
@@ -251,7 +251,7 @@ class Cleanup implements JobDataLess
             ->delete()
             ->from(AuthToken::ENTITY_TYPE)
             ->where([
-                'DATE:modifiedAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                'modifiedAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
                 'isActive' => false,
             ])
             ->build();
@@ -270,7 +270,7 @@ class Cleanup implements JobDataLess
             ->delete()
             ->from(AuthLogRecord::ENTITY_TYPE)
             ->where([
-                'DATE:createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                'createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
             ])
             ->build();
 
@@ -283,7 +283,7 @@ class Cleanup implements JobDataLess
 
         $datetime = $this->createDateTimeFromPeriod($period);
 
-        return $datetime->format(DateTimeUtil::SYSTEM_DATE_FORMAT);
+        return $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
     }
 
     private function cleanupAttachments(): void
@@ -546,7 +546,7 @@ class Cleanup implements JobDataLess
         $notifications = $this->entityManager
             ->getRDBRepository(Notification::ENTITY_TYPE)
             ->sth()
-            ->where(['DATE:createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_FORMAT)])
+            ->where(['createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT)])
             ->find();
 
         foreach ($notifications as $notification) {
