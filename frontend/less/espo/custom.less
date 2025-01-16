@@ -1262,22 +1262,29 @@ section {
     padding-right: var(--panel-padding);
 }
 
-.modal-body > div > .list {
-    margin-left: calc(0rem - var(--panel-padding));
-    margin-right: calc(0rem - var(--panel-padding));
-}
-.modal-body > div > .list > table td:first-child,
-.modal-body > div > .list > table th:first-child {
-     padding-left: var(--panel-padding);
-}
-.modal-body > div > .list > table td:last-child,
-.modal-body > div > .list > table th:last-child {
-    padding-right: var(--panel-padding);
-}
+.modal-body {
+    &,
+    div.list-no-side-margin-wrapper {
+        > div > .list {
+            margin-left: calc(0rem - var(--panel-padding));
+            margin-right: calc(0rem - var(--panel-padding));
+        }
 
-.modal-body > div > .list-expanded > ul > li {
-    border-left-width: 0;
-    border-right-width: 0;
+        > div > .list > table td:first-child,
+        > div > .list > table th:first-child {
+            padding-left: var(--panel-padding);
+        }
+
+        > div > .list > table td:last-child,
+        > div > .list > table th:last-child {
+            padding-right: var(--panel-padding);
+        }
+
+        > div > .list-expanded > ul > li {
+            border-left-width: 0;
+            border-right-width: 0;
+        }
+    }
 }
 
 #main > .list-container > .list {
