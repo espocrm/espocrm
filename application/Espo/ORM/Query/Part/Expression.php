@@ -531,6 +531,17 @@ class Expression implements WhereItem
     }
 
     /**
+     * 'UNIX_TIMESTAMP' function. Seconds.
+     *
+     * @param Expression $dateTime
+     * @since 9.0.0
+     */
+    public static function unixTimestamp(Expression $dateTime): self
+    {
+        return self::composeFunction('UNIX_TIMESTAMP', $dateTime);
+    }
+
+    /**
      * 'NOW' function. A current date and time.
      */
     public static function now(): self
