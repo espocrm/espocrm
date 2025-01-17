@@ -30,6 +30,9 @@
 namespace Espo\Modules\Crm\Classes\FieldProcessing\Call;
 
 use Espo\Modules\Crm\Entities\Call;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Lead;
+use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\FieldProcessing\Loader;
@@ -55,16 +58,16 @@ class PhoneNumberMapLoader implements Loader
 
         assert($entity instanceof CoreEntity);
 
-        $contactIdList = $entity->getLinkMultipleIdList('contacts');
+        $contactIdList = $entity->getLinkMultipleIdList(Meeting::LINK_CONTACTS);
 
         if (count($contactIdList)) {
-            $this->populate($map, 'Contact', $contactIdList);
+            $this->populate($map, Contact::ENTITY_TYPE, $contactIdList);
         }
 
-        $leadIdList = $entity->getLinkMultipleIdList('leads');
+        $leadIdList = $entity->getLinkMultipleIdList(Meeting::LINK_LEADS);
 
         if (count($leadIdList)) {
-            $this->populate($map, 'Lead', $leadIdList);
+            $this->populate($map, Lead::ENTITY_TYPE, $leadIdList);
         }
 
         $entity->set('phoneNumbersMap', $map);

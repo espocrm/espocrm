@@ -30,7 +30,6 @@
 namespace Espo\Modules\Crm\Tools\Meeting\Invitation;
 
 use Espo\Core\Binding\BindingContainerBuilder;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Mail\Exceptions\SendingError;
@@ -67,7 +66,6 @@ class Sender
      * @param Meeting|Call $entity
      * @param ?Invitee[] $targets
      * @return Entity[] Entities an invitation was sent to.
-     * @throws Error
      * @throws SendingError
      * @throws Forbidden
      */
@@ -80,7 +78,6 @@ class Sender
      * @param Meeting|Call $entity
      * @param ?Invitee[] $targets
      * @return Entity[] Entities an invitation was sent to.
-     * @throws Error
      * @throws SendingError
      * @throws Forbidden
      */
@@ -93,7 +90,6 @@ class Sender
     /**
      * @param ?Invitee[] $targets
      * @return Entity[]
-     * @throws Error
      * @throws SendingError
      * @throws Forbidden
      */
@@ -102,9 +98,9 @@ class Sender
         $this->checkStatus($entity, $type);
 
         $linkList = [
-            'users',
-            'contacts',
-            'leads',
+            Meeting::LINK_USERS,
+            Meeting::LINK_CONTACTS,
+            Meeting::LINK_LEADS,
         ];
 
         $sender = $this->getSender();

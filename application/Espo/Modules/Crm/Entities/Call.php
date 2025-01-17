@@ -131,34 +131,34 @@ class Call extends Entity
     public function getUsers(): LinkMultiple
     {
         /** @var LinkMultiple */
-        return $this->getValueObject('users');
+        return $this->getValueObject(Meeting::LINK_USERS);
     }
 
     public function getContacts(): LinkMultiple
     {
         /** @var LinkMultiple */
-        return $this->getValueObject('contacts');
+        return $this->getValueObject(Meeting::LINK_CONTACTS);
     }
 
     public function getLeads(): LinkMultiple
     {
         /** @var LinkMultiple */
-        return $this->getValueObject('leads');
+        return $this->getValueObject(Meeting::LINK_LEADS);
     }
 
     public function setUsers(LinkMultiple $users): self
     {
-        return $this->setValueObject('users', $users);
+        return $this->setValueObject(Meeting::LINK_USERS, $users);
     }
 
     public function setContacts(LinkMultiple $contacts): self
     {
-        return $this->setValueObject('contacts', $contacts);
+        return $this->setValueObject(Meeting::LINK_CONTACTS, $contacts);
     }
 
     public function setLeads(LinkMultiple $leads): self
     {
-        return $this->setValueObject('leads', $leads);
+        return $this->setValueObject(Meeting::LINK_LEADS, $leads);
     }
 
     public function setParent(Entity|LinkParent|null $parent): self

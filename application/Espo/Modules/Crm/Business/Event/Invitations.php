@@ -291,7 +291,9 @@ class Invitations
         $attendees = [];
 
         /** @var iterable<User> $users */
-        $users = $this->entityManager->getRelation($entity, 'users')->find();
+        $users = $this->entityManager
+            ->getRelation($entity, Meeting::LINK_USERS)
+            ->find();
 
         foreach ($users as $it) {
             $address = $it->getEmailAddress();
@@ -303,7 +305,9 @@ class Invitations
         }
 
         /** @var iterable<Contact> $contacts */
-        $contacts = $this->entityManager->getRelation($entity, 'contacts')->find();
+        $contacts = $this->entityManager
+            ->getRelation($entity, Meeting::LINK_CONTACTS)
+            ->find();
 
         foreach ($contacts as $it) {
             $address = $it->getEmailAddress();
@@ -315,7 +319,9 @@ class Invitations
         }
 
         /** @var iterable<Lead> $leads */
-        $leads = $this->entityManager->getRelation($entity, 'leads')->find();
+        $leads = $this->entityManager
+            ->getRelation($entity, Meeting::LINK_LEADS)
+            ->find();
 
         foreach ($leads as $it) {
             $address = $it->getEmailAddress();
@@ -334,7 +340,9 @@ class Invitations
         $timeZone = $this->applicationConfig->getTimeZone();
 
         if ($invitee instanceof User) {
-            $preferences = $this->entityManager->getRepositoryByClass(Preferences::class)->getById($invitee->getId());
+            $preferences = $this->entityManager
+                ->getRepositoryByClass(Preferences::class)
+                ->getById($invitee->getId());
 
             if ($preferences && $preferences->getTimeZone()) {
                 $timeZone = $preferences->getTimeZone();

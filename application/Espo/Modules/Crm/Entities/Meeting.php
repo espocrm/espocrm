@@ -51,6 +51,10 @@ class Meeting extends Entity
     public const STATUS_HELD = 'Held';
     public const STATUS_NOT_HELD = 'Not Held';
 
+    public const LINK_USERS = 'users';
+    public const LINK_CONTACTS = 'contacts';
+    public const LINK_LEADS = 'leads';
+
     public function setName(?string $name): self
     {
         return $this->set(Field::NAME, $name);
@@ -136,34 +140,34 @@ class Meeting extends Entity
     public function getUsers(): LinkMultiple
     {
         /** @var LinkMultiple */
-        return $this->getValueObject('users');
+        return $this->getValueObject(self::LINK_USERS);
     }
 
     public function getContacts(): LinkMultiple
     {
         /** @var LinkMultiple */
-        return $this->getValueObject('contacts');
+        return $this->getValueObject(self::LINK_CONTACTS);
     }
 
     public function getLeads(): LinkMultiple
     {
         /** @var LinkMultiple */
-        return $this->getValueObject('leads');
+        return $this->getValueObject(self::LINK_LEADS);
     }
 
     public function setUsers(LinkMultiple $users): self
     {
-        return $this->setValueObject('users', $users);
+        return $this->setValueObject(self::LINK_USERS, $users);
     }
 
     public function setContacts(LinkMultiple $contacts): self
     {
-        return $this->setValueObject('contacts', $contacts);
+        return $this->setValueObject(self::LINK_CONTACTS, $contacts);
     }
 
     public function setLeads(LinkMultiple $leads): self
     {
-        return $this->setValueObject('leads', $leads);
+        return $this->setValueObject(self::LINK_LEADS, $leads);
     }
 
     public function setParent(Entity|LinkParent|null $parent): self

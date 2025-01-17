@@ -30,7 +30,10 @@
 namespace Espo\Classes\FieldProcessing\Email;
 
 use Espo\Core\Name\Field;
+use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Call;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Lead;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -57,9 +60,9 @@ class IcsDataLoader implements Loader
 {
     /** @var array<string, string> */
     private $entityTypeLinkMap = [
-        'User' => 'users',
-        'Contact' => 'contacts',
-        'Lead' => 'leads',
+        User::ENTITY_TYPE => Meeting::LINK_USERS,
+        Contact::ENTITY_TYPE => Meeting::LINK_CONTACTS,
+        Lead::ENTITY_TYPE => Meeting::LINK_LEADS,
     ];
 
     public function __construct(private EntityManager $entityManager, private Log $log)
