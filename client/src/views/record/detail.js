@@ -3487,6 +3487,12 @@ class DetailRecordView extends BaseRecordView {
             if (after === 'delete') {
                 url = this.options.rootUrl || '#' + this.scope;
 
+                if (this.options.rootUrl) {
+                    this.getRouter().navigate(url, {trigger: true});
+
+                    return;
+                }
+
                 this.getRouter().navigate(url, {trigger: false});
                 this.getRouter().dispatch(this.scope, null, {isReturn: true});
 
