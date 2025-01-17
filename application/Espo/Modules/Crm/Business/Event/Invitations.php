@@ -55,6 +55,10 @@ use Espo\Core\Utils\TemplateFileManager;
 
 use DateTime;
 
+/**
+ * Do not use. Use `Espo\Modules\Crm\Tools\Meeting\Invitation\Sender`.
+ * @internal
+ */
 class Invitations
 {
     private const TYPE_INVITATION = 'invitation';
@@ -76,17 +80,17 @@ class Invitations
     /**
      * @throws SendingError
      */
-    public function sendInvitation(Entity $entity, Entity $invitee, string $link): void
+    public function sendInvitation(Entity $entity, Entity $invitee, string $link, ?string $emailAddress = null): void
     {
-        $this->sendInternal($entity, $invitee, $link);
+        $this->sendInternal($entity, $invitee, $link, self::TYPE_INVITATION, $emailAddress);
     }
 
     /**
      * @throws SendingError
      */
-    public function sendCancellation(Entity $entity, Entity $invitee, string $link): void
+    public function sendCancellation(Entity $entity, Entity $invitee, string $link, ?string $emailAddress = null): void
     {
-        $this->sendInternal($entity, $invitee, $link, self::TYPE_CANCELLATION);
+        $this->sendInternal($entity, $invitee, $link, self::TYPE_CANCELLATION, $emailAddress);
     }
 
     /**
@@ -96,13 +100,14 @@ class Invitations
         Entity $entity,
         Entity $invitee,
         string $link,
-        string $type = self::TYPE_INVITATION
+        string $type,
+        ?string $emailAddress,
     ): void {
 
         $uid = $type === self::TYPE_INVITATION ? $this->createUniqueId($entity, $invitee, $link) : null;
 
         /** @var ?string $emailAddress */
-        $emailAddress = $invitee->get('emailAddress');
+        $emailAddress ??= $invitee->get(Field::EMAIL_ADDRESS);
 
         if (!$emailAddress) {
             return;

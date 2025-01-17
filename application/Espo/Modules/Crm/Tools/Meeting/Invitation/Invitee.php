@@ -29,11 +29,12 @@
 
 namespace Espo\Modules\Crm\Tools\Meeting\Invitation;
 
-class Invitee
+readonly class Invitee
 {
     public function __construct(
         private string $entityType,
-        private string $id
+        private string $id,
+        private ?string $emailAddress = null,
     ) {}
 
     public function getEntityType(): string
@@ -44,5 +45,10 @@ class Invitee
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function getEmailAddress(): ?string
+    {
+        return $this->emailAddress;
     }
 }

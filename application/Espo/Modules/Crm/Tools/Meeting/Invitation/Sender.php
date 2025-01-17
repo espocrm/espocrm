@@ -118,22 +118,30 @@ class Sender
             $collection = $builder->find();
 
             foreach ($collection as $attendee) {
-                if ($targets && !self::isInTargets($attendee, $targets)) {
-                    continue;
-                }
-
                 $emailAddress = $attendee->get(Field::EMAIL_ADDRESS);
+
+                if ($targets) {
+                    $target = self::findTarget($attendee, $targets);
+
+                    if (!$target) {
+                        continue;
+                    }
+
+                    if ($target->getEmailAddress()) {
+                        $emailAddress = $target->getEmailAddress();
+                    }
+                }
 
                 if (!$emailAddress || in_array($emailAddress, $sentAddressList)) {
                     continue;
                 }
 
                 if ($type === self::TYPE_INVITATION) {
-                    $sender->sendInvitation($entity, $attendee, $link);
+                    $sender->sendInvitation($entity, $attendee, $link, $emailAddress);
                 }
 
                 if ($type === self::TYPE_CANCELLATION) {
-                    $sender->sendCancellation($entity, $attendee, $link);
+                    $sender->sendCancellation($entity, $attendee, $link, $emailAddress);
                 }
 
                 $sentAddressList[] = $emailAddress;
@@ -151,18 +159,18 @@ class Sender
     /**
      * @param Invitee[] $targets
      */
-    private static function isInTargets(Entity $entity, array $targets): bool
+    private static function findTarget(Entity $entity, array $targets): ?Invitee
     {
         foreach ($targets as $target) {
             if (
                 $entity->getEntityType() === $target->getEntityType() &&
                 $entity->getId() === $target->getId()
             ) {
-                return true;
+                return $target;
             }
         }
 
-        return false;
+        return null;
     }
 
     private function getSender(): Invitations
