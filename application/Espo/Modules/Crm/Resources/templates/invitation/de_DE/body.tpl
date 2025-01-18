@@ -1,5 +1,5 @@
 <p>Betreff: {{name}}</p>
-<p>Beginn: {{#if isAllDay}}{{dateStartDate}}{{else}}{{dateStart}}{{/if}}</p>
+<p>Beginn: {{#if isAllDay}}{{dateStartDate}}{{else}}{{dateStart}} ({{timeZone}}){{/if}}</p>
 {{#if isUser}}
     {{#if description}}
     <p>{{{description}}}</p>
