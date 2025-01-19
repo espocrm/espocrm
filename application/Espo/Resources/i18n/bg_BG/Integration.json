@@ -4,7 +4,8 @@
     "clientId": "Клиент ID",
     "clientSecret": "Клиент Secret",
     "redirectUri": "URL за пренасочване",
-    "apiKey": "API ключ"
+    "apiKey": "API ключ",
+    "scoreThreshold": "Праг на резултата"
   },
   "messages": {
     "selectIntegration": "Изберете интеграция от менюто.",
@@ -12,6 +13,7 @@
   },
   "help": {
     "Google": "**Получете идентификационни данни за OAuth 2.0 от Google Developers Console.**\n\nПосетете [Google Developers Console](https://console.developers.google.com/project), за да получите идентификационни данни за OAuth 2.0, като Client ID и Client Secret, които са известни както на Google, така и на приложението EspoCRM.",
-    "GoogleMaps": "Получете API ключ [тук](https://developers.google.com/maps/documentation/javascript/get-api-key)."
+    "GoogleMaps": "Получете API ключ [тук](https://developers.google.com/maps/documentation/javascript/get-api-key).",
+    "GoogleReCaptcha": "Вземете ключа на сайта и секретния ключ от [Google](https://www.google.com/recaptcha/)."
   }
 }

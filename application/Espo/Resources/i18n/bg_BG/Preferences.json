@@ -35,7 +35,8 @@
     "calendarSlotDuration": "Продължителност на календарния слот",
     "calendarScrollHour": "Календар - Скролване до час",
     "defaultRemindersTask": "Напомняния по подразбиране за задачи",
-    "addCustomTabs": "Добавете персонализирани табове"
+    "addCustomTabs": "Добавете персонализирани табове",
+    "reactionNotifications": "Известия в приложението за реакции"
   },
   "options": {
     "weekStart": {

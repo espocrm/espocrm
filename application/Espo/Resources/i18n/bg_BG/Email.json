@@ -27,6 +27,7 @@
     "isReplied": "Е отговорил",
     "isNotReplied": "Не е отговорено",
     "folder": "Папка",
+    "folderString": "Папка",
     "inboundEmails": "Групови имейл акаунти",
     "emailAccounts": "Лични имейл акаунти",
     "hasAttachment": "Има прикачен файл",
@@ -53,7 +54,11 @@
     "createdEvent": "Създадено събитие",
     "event": "Събитие",
     "icsEventDateStart": "ICS събитие начална дата",
-    "groupFolder": "Групова папка"
+    "groupFolder": "Групова папка",
+    "isUsersSent": "Изпратено е от потребителя",
+    "inArchive": "В архива",
+    "groupStatusFolder": "Папка за статус на групата",
+    "sendAt": "Изпрати на"
   },
   "links": {
     "replied": "Отговорено",
@@ -64,21 +69,25 @@
     "sentBy": "Изпратен от",
     "attachments": "Прикачени файлове",
     "fromEmailAddress": "От имейл адрес",
+    "groupFolder": "Групова папка",
+    "createdEvent": "Създадено събитие",
     "toEmailAddresses": "До имейл адреси",
     "ccEmailAddresses": "CC имейл адреси",
     "bccEmailAddresses": "BCC имейл адреси",
-    "replyToEmailAddresses": "Reply-To имейл адреси",
-    "groupFolder": "Групова папка",
-    "createdEvent": "Създадено събитие"
+    "replyToEmailAddresses": "Имейл адреси за отговор"
   },
   "options": {
     "status": {
       "Draft": "Чернова",
       "Sending": "Изпраща се",
       "Sent": "Изпратено",
-      "Archived": "Архивирано",
       "Received": "Получени",
-      "Failed": "Неуспешни"
+      "Failed": "Неуспешни",
+      "Archived": "Импортирани"
+    },
+    "groupStatusFolder": {
+      "Archive": "Архив",
+      "Trash": "Кошче"
     }
   },
   "labels": {
@@ -112,9 +121,14 @@
     "No Subject": "Без заглавие",
     "Insert Field": "Добавяне на поле",
     "Event": "Събитие",
-    "Moving to folder": "Преместване в папка",
     "Group Folders": "Групови папки",
-    "View Attachments": "Преглед на прикачените файлове"
+    "View Attachments": "Преглед на прикачените файлове",
+    "Import EML": "Импорт на EML",
+    "Moved to Archive": "Преместени в Архив",
+    "Moved to Trash": "Преместени в Кошче",
+    "Retrieved from Trash": "Върнати от кошчето",
+    "No Records Moved": "Няма преместени записи",
+    "Schedule Send": "Изпращане по график"
   },
   "messages": {
     "testEmailSent": "Тестовия имейл е изпратен",
@@ -122,20 +136,30 @@
     "savedAsDraft": "Запазено като чернова",
     "confirmInsertTemplate": "Съдържанието на имейла ще бъде загубено. Наистина ли искате да вмъкнете шаблона?",
     "noSmtpSetup": "SMTP не е конфигуриран: {link}",
+    "confirmSend": "Изпращане на имейла?",
     "sendConfirm": "Изпращане на имейла?",
     "removeSelectedRecordsConfirmation": "Наистина ли искате да премахнете избраните имейли?\n\nТе ще бъдат премахнати и за други потребители.",
     "removeRecordConfirmation": "Наистина ли искате да премахнете имейла?\n\nЩе бъде премахнат и за други потребители.",
     "invalidCredentials": "Невалидни данни за вход.",
     "unknownError": "Неустановена грешка. Свържете се с администратор.",
-    "recipientAddressRejected": "Адресът на получателя е отхвърлен."
+    "recipientAddressRejected": "Адресът на получателя е отхвърлен.",
+    "alreadyImported": "[Имейлът]({link}) вече съществува в системата.",
+    "couldNotSentScheduledEmail": "Неуспешно изпращане на планиран [email]({link})",
+    "notEditAccess": "Нямате достъп за редактиране на имейл.",
+    "groupFolderNoAccess": "Нямате достъп до груповата папка.",
+    "groupMoveOutNoEditAccess": "Не може да се премести от груповата папка. Няма достъп за редактиране на имейл.",
+    "groupMoveToNoEditAccess": "Не може да се премести в групова папка. Няма достъп за редактиране на имейл.",
+    "groupMoveToTrashNoEditAccess": "Не може да се премести имейл от папката на групата в кошчето. Няма достъп за редактиране на имейл.",
+    "groupMoveToArchiveNoEditAccess": "Не може да се премести от групова папка в архив. Няма достъп за редактиране на имейл."
   },
   "presetFilters": {
     "sent": "Изпратено",
-    "archived": "Архив",
     "inbox": "Входящи",
     "drafts": "Чернови",
     "trash": "Кошче",
-    "important": "Важни"
+    "important": "Важни",
+    "archived": "Импортнат",
+    "archive": "Архив"
   },
   "massActions": {
     "markAsRead": "Маркирай като прочетено",
@@ -144,9 +168,17 @@
     "markAsNotImportant": "Размаркирай като важно",
     "moveToTrash": "Преместване в кошчето",
     "moveToFolder": "Премести в папка",
-    "retrieveFromTrash": "Премахване от кошчето"
+    "retrieveFromTrash": "Премахване от кошчето",
+    "moveToArchive": "Архивиране"
   },
   "strings": {
-    "sendingFailed": "Изпращането на имейла се провали"
+    "sendingFailed": "Изпращането на имейла се провали",
+    "group": "Група"
+  },
+  "actions": {
+    "moveToArchive": "Архивиране"
+  },
+  "otherFields": {
+    "file": "Файл"
   }
 }

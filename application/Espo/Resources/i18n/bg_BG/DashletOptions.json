@@ -28,6 +28,10 @@
       "basicDay": "Ден",
       "agendaDay": "Ден (календар)",
       "timeline": "Хронология"
+    },
+    "sortDirection": {
+      "asc": "Възходящо",
+      "desc": "Низходящо"
     }
   },
   "messages": {

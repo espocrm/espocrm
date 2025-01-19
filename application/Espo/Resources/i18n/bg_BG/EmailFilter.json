@@ -9,7 +9,8 @@
     "emailFolder": "Папка",
     "groupEmailFolder": "Групова имейл папка",
     "markAsRead": "Отбележи като прочетено",
-    "bodyContainsAll": "В съдържанието се съдържа"
+    "bodyContainsAll": "В съдържанието се съдържа",
+    "skipNotification": "Пропускане на известие"
   },
   "labels": {
     "Create EmailFilter": "Създаване на имейл филтър",

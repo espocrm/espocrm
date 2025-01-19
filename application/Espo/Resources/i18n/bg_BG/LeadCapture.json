@@ -21,7 +21,17 @@
     "smtpAccount": "SMTP профил",
     "inboundEmail": "Групов имейл акаунт",
     "exampleRequestHeaders": "HTTP Хедъри",
-    "phoneNumberCountry": "Телефонен код на държавата"
+    "phoneNumberCountry": "Телефонен код на държавата",
+    "fieldParams": "Параметри на полето",
+    "formId": "ID на форма",
+    "formEnabled": "Уеб форма",
+    "formUrl": "URL на форма",
+    "formSuccessText": "Текст за показване след изпращане на формата",
+    "formText": "Текст за показване във формата",
+    "formSuccessRedirectUrl": "URL адрес за пренасочване след изпращане на формата",
+    "formLanguage": "Език, използван във формата",
+    "formFrameAncestors": "Разрешени хостове за вграждане на формуляр (iframe)",
+    "formCaptcha": "Активиране на Captcha"
   },
   "links": {
     "targetList": "Целеви списък",
@@ -35,7 +45,9 @@
     "Create LeadCapture": "Създаване на Web-to-Lead",
     "Generate New API Key": "Генериране на нов API ключ",
     "Request": "Заявка",
-    "Confirm Opt-In": "Потвърждаване за включване"
+    "Confirm Opt-In": "Потвърждаване за включване",
+    "Generate New Form ID": "Генериране на нов ID на формата",
+    "Web Form": "Уеб форма"
   },
   "messages": {
     "generateApiKey": "Създаване на нов API ключ",
@@ -43,6 +55,7 @@
     "optInIsConfirmed": "Включването е потвърдено."
   },
   "tooltips": {
-    "optInConfirmationSuccessMessage": "Markdown се поддържа."
+    "optInConfirmationSuccessMessage": "Markdown се поддържа.",
+    "formCaptcha": "За да можете да използвате Captcha, трябва да го конфигурирате в **Администриране** > **Интеграции**."
   }
 }

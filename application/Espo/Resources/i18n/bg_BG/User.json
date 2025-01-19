@@ -134,10 +134,12 @@
     "failedToLogIn": "Неуспешно влизане",
     "2faMethodNotConfigured": "Методът за двуфакторно оторизиране не е напълно конфигуриран в системата.",
     "loginError": "Възникна неочаквана грешка",
-    "defaultTeamIsNotUsers": "Екипът по подразбиране трябва да бъде един от избраните екипи на потребителя"
+    "defaultTeamIsNotUsers": "Екипът по подразбиране трябва да бъде един от избраните екипи на потребителя",
+    "passwordStrengthSpecialCharacterCount": "Трябва да съдържа поне {count} специални знак(а)."
   },
   "boolFilters": {
-    "onlyMyTeam": "Само моя отдел"
+    "onlyMyTeam": "Само моя отдел",
+    "onlyMe": "Само мои"
   },
   "presetFilters": {
     "active": "Активен",
@@ -160,5 +162,8 @@
     "authMethod": {
       "ApiKey": "API ключ"
     }
+  },
+  "actions": {
+    "changePosition": "Промяна на позицията"
   }
 }

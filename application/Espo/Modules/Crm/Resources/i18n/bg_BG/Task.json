@@ -14,7 +14,8 @@
     "dateCompleted": "Дата на завършване",
     "attachments": "Прикачени файлове",
     "reminders": "Напомняния",
-    "contact": "Контакт"
+    "contact": "Контакт",
+    "originalEmail": "Оригинален имейл"
   },
   "links": {
     "attachments": "Прикачени файлове",
@@ -43,11 +44,11 @@
     "overdue": "просрочена"
   },
   "presetFilters": {
-    "actual": "Актуални",
     "completed": "Завършени",
     "todays": "Днешните",
     "overdue": "Просрочени",
-    "deferred": "Разсрочено"
+    "deferred": "Разсрочено",
+    "actual": "Отворени"
   },
   "nameOptions": {
     "replyToEmail": "Отговор до имейл"

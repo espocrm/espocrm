@@ -65,7 +65,7 @@
   },
   "presetFilters": {
     "active": "Активен",
-    "actual": "Актуален",
-    "converted": "Конвертиран"
+    "converted": "Конвертиран",
+    "actual": "Отворени"
   }
 }

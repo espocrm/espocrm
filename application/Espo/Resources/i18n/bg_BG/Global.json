@@ -62,7 +62,8 @@
     "WebhookQueueItem": "Обект в опашка на Webhook",
     "AppLogRecord": "Логове на приложението",
     "WorkingTimeRange": "Изключение от работното време",
-    "AddressCountry": "Адрес Държава"
+    "AddressCountry": "Адрес Държава",
+    "AppSecret": "Тайнa на приложението (API)"
   },
   "scopeNamesPlural": {
     "Email": "Имейли",
@@ -114,7 +115,8 @@
     "WebhookQueueItem": "Обекти в опашка на Webhook",
     "AppLogRecord": "Логове на приложението",
     "WorkingTimeRange": "Изключения от работното време",
-    "AddressCountry": "Адрес Държави"
+    "AddressCountry": "Адрес Държави",
+    "AppSecret": "Тайни на приложението (API)"
   },
   "labels": {
     "Misc": "Разни",
@@ -283,8 +285,7 @@
     "Log in as": "Вход като",
     "Sign in": "Вход",
     "Global Search": "Глобална търсачка",
-    "Show Navigation Panel": "Показване на страничния панел",
-    "Hide Navigation Panel": "Скриване на страничния панел",
+    "Navigation Panel": "Показване на страничния панел",
     "Print": "Принтиране",
     "Copy to Clipboard": "Бутон за копиране",
     "Copied to clipboard": "Копирано в клипборда",
@@ -297,7 +298,24 @@
     "Page": "Страница",
     "Star": "Добави в любими",
     "Unstar": "Махни от любими",
-    "Starred": "Добавено в любими"
+    "Starred": "Добавено в любими",
+    "Remove Filter": "Премахни филтъра",
+    "Ready": "Готово",
+    "Column Resize": "Оразмеряване на колоните",
+    "General": "Общи",
+    "Send": "Изпрати",
+    "Timeout": "Таймаут",
+    "No internet": "Няма интернет",
+    "Scheduled": "Планиран",
+    "Now": "Сега",
+    "Expanded": "Разширен",
+    "Collapsed": "Сгънат",
+    "Top Level": "Най-високо ниво",
+    "Fields": "Полета",
+    "View User Access": "Преглед на достъпа",
+    "Reacted": "Реагира",
+    "Reaction Removed": "Реакцията е премахната",
+    "Reactions": "Реакции"
   },
   "messages": {
     "pleaseWait": "Моля изчакайте...",
@@ -407,12 +425,17 @@
     "select2OrMoreRecords": "Изберете 2 или повече записа",
     "selectNotMoreThanNumberRecords": "Изберете не повече от {number} записа",
     "selectAtLeastOneRecord": "Изберете поне един запис",
-    "fieldNotMatchingPattern$phoneNumberLoose": "{field} съдържа знаци, които не са разрешени в телефонен номер"
+    "fieldNotMatchingPattern$phoneNumberLoose": "{field} съдържа знаци, които не са разрешени в телефонен номер",
+    "duplicateConflict": "Записът вече съществува.",
+    "confirmMassUpdate": "Сигурни ли сте, че искате масово да актуализирате избраните записи?",
+    "cannotRemoveCategoryWithChildCategory": "Не може да се премахне категория, която има дъщерна категория.",
+    "cannotRemoveNotEmptyCategory": "Не може да се премахне непразна категория."
   },
   "boolFilters": {
     "onlyMy": "Само мои",
     "followed": "Следван",
-    "onlyMyTeam": "Моят отдел"
+    "onlyMyTeam": "Моят отдел",
+    "shared": "Споделен"
   },
   "presetFilters": {
     "followed": "Следвани",
@@ -471,7 +494,9 @@
     "emailAddressIsInvalid": "Имейл адреса е невалиден",
     "phoneNumberIsInvalid": "Телефонния номер е невалиден",
     "users": "Потребители",
-    "childList": "Дъщерен списък"
+    "childList": "Дъщерен списък",
+    "collaborators": "Сътрудници",
+    "streamUpdatedAt": "Потокът е актуализиран на"
   },
   "links": {
     "assignedUser": "Назначен потребител",
@@ -482,7 +507,9 @@
     "teams": "Отдели",
     "users": "Потребители",
     "parent": "Родител",
-    "children": "Деца"
+    "children": "Деца",
+    "assignedUsers": "Назначени потребители",
+    "collaborators": "Сътрудници"
   },
   "dashlets": {
     "Stream": "Дейности",
@@ -493,7 +520,10 @@
   "notificationMessages": {
     "assign": "{entityType} {entity} беше назначено към теб",
     "emailReceived": "Беше получен имейл от {from}",
-    "entityRemoved": "{user} премахна {entityType} {entity}"
+    "entityRemoved": "{user} премахна {entityType} {entity}",
+    "emailInbox": "{user} добави имейл {entity} към пощенската ви кутия",
+    "userPostReaction": "{user} реагира на вашия запис {post}",
+    "userPostInParentReaction": "{user} реагира на вашия запис {post} в {entityType} {entity}"
   },
   "streamMessages": {
     "post": "{user} публикува в {entityType} {entity}",
@@ -520,6 +550,7 @@
     "createAssigned": "{user} създаде {entityType} {entity} и назначи към {assignee}",
     "assign": "{user} назначи {entityType} {entity} към {assignee}",
     "assignThis": "{user} назначи {entityType} към {assignee}",
+    "assignMultiAddThis": "{user} назначи {entityType} към {assignee}",
     "postThis": "{user} публикува",
     "attachThis": "{user} прикачи файл",
     "statusThis": "{user} обнови {field}",
@@ -550,7 +581,12 @@
     "assignThisSelf": "{user} самоназначи {entityType}",
     "assignSelf": "{user} самоназначи {entityType} {entity}",
     "unrelate": "{user} Отсвърза {relatedEntityType} {relatedEntity} от {entityType} {entity}",
-    "unrelateThis": "{user} отсвърза {relatedEntityType} {relatedEntity} от този {entityType}"
+    "unrelateThis": "{user} отсвърза {relatedEntityType} {relatedEntity} от този {entityType}",
+    "assignMultiAdd": "{user} възложи {entity} на {assignee}",
+    "assignMultiRemove": "{user} отсвърза {entity} от {removedAssignee}",
+    "assignMultiAddRemove": "{user} възложи {entity} на {assignee} и отсвърза {removedAssignee}",
+    "assignMultiRemoveThis": "{user} отсвързва {entityType} от {removedAssignee}",
+    "assignMultiAddRemoveThis": "{user} възложи {entityType} на {assignee} и отсвърза {removedAssignee}"
   },
   "lists": {
     "monthNamesShort": [
@@ -762,11 +798,12 @@
       "color": {
         "recent": "Последно Цвят",
         "more": "По Цвят",
-        "foreground": "FONTCOLOR",
         "transparent": "прозрачен",
         "setTransparent": "Комплект прозрачен",
         "reset": "Нулиране",
-        "resetToDefault": "Обновявам до първоначалното"
+        "resetToDefault": "Обновявам до първоначалното",
+        "background": "Цвят на задната част",
+        "foreground": "Цвят на шрифт"
       },
       "shortcut": {
         "shortcuts": "Комбинация от клавиши",
@@ -857,5 +894,31 @@
       "middle": "В средата",
       "bottom": "Долу"
     }
+  },
+  "detailViewModes": {
+    "detail": "Детайли"
+  },
+  "strings": {
+    "yesterdayShort": "Да"
+  },
+  "reactions": {
+    "Smile": "Усмивка",
+    "Surprise": "Изненада",
+    "Laugh": "Смях",
+    "Meh": "Все тая",
+    "Sad": "Тъжно",
+    "Love": "Обич",
+    "Like": "Харесване",
+    "Dislike": "Нехаресване"
+  },
+  "recordActions": {
+    "create": "Създаване",
+    "read": "Четене",
+    "edit": "Редактиране",
+    "delete": "Изтриване",
+    "stream": "Коментар"
+  },
+  "tabs": {
+    "Stream": "Коментари"
   }
 }

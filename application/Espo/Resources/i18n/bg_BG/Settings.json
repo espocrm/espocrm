@@ -134,7 +134,11 @@
     "quickSearchFullTextAppendWildcard": "Добавяне на * при бързо търсене",
     "authIpAddressCheck": "Ограничаване на достъпа по IP адрес",
     "authIpAddressWhitelist": "Списък с позволени IP адреси",
-    "authIpAddressCheckExcludedUsers": "Потребители с изключение от проверката"
+    "authIpAddressCheckExcludedUsers": "Потребители с изключение от проверката",
+    "streamEmailWithContentEntityTypeList": "Обекти с оригинален имейл в коментарите",
+    "emailScheduledBatchCount": "Максимален брой планирани имейли, изпратени на наведнъж",
+    "passwordStrengthSpecialCharacterCount": "Брой специални символи, необходими в паролата",
+    "availableReactions": "Налични реакции"
   },
   "tooltips": {
     "recordsPerPage": "Брой записи, които да се показват в лист UI",
@@ -237,7 +241,8 @@
     "Phone Numbers": "Телефонни номера",
     "Access": "Достъп",
     "Strength": "Сила",
-    "Recovery": "Възстановяване"
+    "Recovery": "Възстановяване",
+    "Scheduled Send": "Планирано изпращане"
   },
   "messages": {
     "ldapTestConnection": "Връзката беше успешна."

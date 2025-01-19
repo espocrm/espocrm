@@ -12,7 +12,8 @@
     "lead": "Потенциална продажба",
     "attachments": "Прикачени файлове",
     "inboundEmail": "Групов имейл акаунт",
-    "originalEmail": "Оригинален имейл"
+    "originalEmail": "Оригинален имейл",
+    "isInternal": "Скрит от портала"
   },
   "links": {
     "account": "Клиент",

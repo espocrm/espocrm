@@ -103,5 +103,9 @@
     "customers": "Клиенти",
     "partners": "Партньори",
     "recentlyCreated": "Наскоро създадени"
+  },
+  "tabs": {
+    "Account": "Клиент",
+    "Support": "Съпорт"
   }
 }

@@ -4,5 +4,8 @@
     "Connected": "Свързано",
     "Disconnect": "Изклюване",
     "Disconnected": "Изключен"
+  },
+  "messages": {
+    "externalAccountNoConnectDisabled": "Външен акаунт за интеграция „{integration}“ е деактивиран поради невъзможност за свързване."
   }
 }

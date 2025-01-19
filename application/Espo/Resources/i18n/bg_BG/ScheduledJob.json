@@ -20,7 +20,8 @@
       "SendEmailReminders": "Изпращане на имейл напомняния",
       "AuthTokenControl": "Управление на сесии и токъни за достъп",
       "SendEmailNotifications": "Изпращане на имейл известия",
-      "CheckNewVersion": "Проверка за нова версия"
+      "CheckNewVersion": "Проверка за нова версия",
+      "SendScheduledEmails": "Изпращане на планирани имейли"
     },
     "cronSetup": {
       "linux": "Забележка: Добавете този ред към файла crontab, за да стартирате Espo планираните задачи:",

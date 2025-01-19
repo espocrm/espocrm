@@ -85,7 +85,8 @@
     "Authentication Providers": "Доставчици на удостоверяване",
     "Setup": "Инсталация",
     "App Log": "Логове на приложението",
-    "Address Countries": "Списък с държави"
+    "Address Countries": "Списък с държави",
+    "App Secrets": "API кодове в приложението"
   },
   "layouts": {
     "list": "Лист",
@@ -208,7 +209,9 @@
     "aclScope": "ACL обхват",
     "onlyAdmin": "Само за администратори",
     "activeOptions": "Активни опции",
-    "labelType": "Тип заглавие"
+    "labelType": "Тип заглавие",
+    "preview": "Преглед",
+    "attachmentField": "Поле за прикачени файлове"
   },
   "messages": {
     "selectEntityType": "Изберете вида обект от лявото меню.",
@@ -231,8 +234,8 @@
     "newVersionIsAvailable": "Налична е нова версия на EspoCRM {latestVersion}. Моля, следвайте [инструкциите](https://www.espocrm.com/documentation/administration/upgrading/), за да обновите вашата инстанция.",
     "formulaFunctions": "Още функции можете да намерите в [документацията]({documentationUrl}).",
     "rebuildRequired": "Трябва да регенерирате кеша на системата от CLI.",
-    "cacheIsDisabled": "Кешът е деактивиран, приложението ще работи бавно. Активирайте кеширането в [настройки](#Admin/settings).",
-    "cronIsDisabled": "Cron е деактивиран, приложението не работи напълно. Активирайте cron в [настройки](#Admin/settings)."
+    "cronIsDisabled": "Cron е деактивиран, приложението не работи напълно. Активирайте cron в [настройки](#Admin/settings).",
+    "cacheIsDisabled": "Кешът е деактивиран, приложението ще работи по-бавно. Активирайте кеша в [настройки](#Admin/settings)."
   },
   "descriptions": {
     "settings": "Системни настройки на платформата.",
@@ -265,7 +268,6 @@
     "actionHistory": "Логове от действията на потребителите.",
     "labelManager": "Управление на езици и текстове на форми и обекти.",
     "authLog": "История на влизане и удостоверяване",
-    "leadCapture": "API параметри за Web-to-Lead форма.",
     "attachments": "Всички прикачени файлове, съхранявани в системата.",
     "templateManager": "Персонализиране на шаблонни съобщения.",
     "systemRequirements": "Системни изисквания за EspoCRM.",
@@ -284,7 +286,9 @@
     "groupEmailFolders": "Споделени имейл акаунти с другите потребители.",
     "authenticationProviders": "Допълнителни доставчици на удостоверяване за порталите.",
     "appLog": "Логове на приложението.",
-    "addressCountries": "Държави, налични в адресни полета."
+    "addressCountries": "Държави, налични в адресни полета.",
+    "appSecrets": "Съхранявайте чувствителна информация като API ключове, пароли и други тайни.",
+    "leadCapture": "Линкове за получаване на потенциални клиенти и уеб форми."
   },
   "options": {
     "previewSize": {
@@ -330,6 +334,8 @@
   },
   "keywords": {
     "settings": "Система",
-    "labelManager": "език,превод"
+    "labelManager": "език,превод",
+    "appSecrets": "ключ, ключове, парола",
+    "leadCapture": "Уеб форми"
   }
 }
