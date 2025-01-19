@@ -4,5 +4,8 @@
     "Connected": "Verbonden",
     "Disconnect": "Ontkoppel",
     "Disconnected": "Ontkoppeld"
+  },
+  "messages": {
+    "externalAccountNoConnectDisabled": "Extern account voor integratie '{integration}' is uitgeschakeld omdat er geen verbinding kan worden gemaakt."
   }
 }

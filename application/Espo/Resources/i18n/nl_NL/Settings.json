@@ -162,7 +162,11 @@
     "quickSearchFullTextAppendWildcard": "Wildcard toevoegen aan snel zoeken",
     "authIpAddressCheck": "Toegang beperken op IP-adres",
     "authIpAddressWhitelist": "Whitelist IP-adres",
-    "authIpAddressCheckExcludedUsers": "Users uitgezonderd van controle"
+    "authIpAddressCheckExcludedUsers": "Users uitgezonderd van controle",
+    "streamEmailWithContentEntityTypeList": "Entiteiten met e-mail body in stream notes",
+    "emailScheduledBatchCount": "Max. aantal geplande e-mails per batch",
+    "passwordStrengthSpecialCharacterCount": "Aantal speciale tekens vereist in wachtwoord",
+    "availableReactions": "Beschikbare reacties"
   },
   "tooltips": {
     "recordsPerPage": "Aantal zichtbare records in lijsten.",
@@ -278,7 +282,8 @@
     "Phone Numbers": "Telefoonnummers",
     "Access": "Toegang",
     "Strength": "Sterkte",
-    "Recovery": "Herstel"
+    "Recovery": "Herstel",
+    "Scheduled Send": "Geplande verzending"
   },
   "messages": {
     "ldapTestConnection": "De verbinding is succesvol tot stand gebracht."

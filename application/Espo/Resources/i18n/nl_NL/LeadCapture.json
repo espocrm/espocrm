@@ -21,7 +21,17 @@
     "smtpAccount": "SMTP-account",
     "inboundEmail": "Groep e-mailaccount",
     "exampleRequestHeaders": "Koppen",
-    "phoneNumberCountry": "Telefoon landcode "
+    "phoneNumberCountry": "Telefoon landcode ",
+    "fieldParams": "Veldparameters",
+    "formId": "Formulier ID",
+    "formEnabled": "Webformulier",
+    "formUrl": "Formulier URL",
+    "formSuccessText": "Tekst die moet worden weergegeven na verzenden van formulier",
+    "formText": "Weer te geven tekst op formulier",
+    "formSuccessRedirectUrl": "URL om naar door te verwijzen na verzenden van formulier",
+    "formLanguage": "Gebruikte taal op formulier",
+    "formFrameAncestors": "Toegestane hosts voor formulierinsluiting",
+    "formCaptcha": "Captcha gebruiken"
   },
   "links": {
     "targetList": "Doellijst",
@@ -34,7 +44,9 @@
     "Create LeadCapture": "Creëer Startpunt",
     "Generate New API Key": "Genereer nieuwe API-sleutel",
     "Request": "Verzoek",
-    "Confirm Opt-In": "Inschrijving bevestigen"
+    "Confirm Opt-In": "Inschrijving bevestigen",
+    "Generate New Form ID": "Nieuw formulier-ID genereren",
+    "Web Form": "Webformulier"
   },
   "messages": {
     "generateApiKey": "Creëer nieuwe API-sleutel",
@@ -42,6 +54,7 @@
     "optInIsConfirmed": "Inschrijving is bevestigd."
   },
   "tooltips": {
-    "optInConfirmationSuccessMessage": "Markdown wordt ondersteund."
+    "optInConfirmationSuccessMessage": "Markdown wordt ondersteund.",
+    "formCaptcha": "Om Captcha te kunnen gebruiken, moet je dit configureren onder **Beheer** > **Integraties**."
   }
 }

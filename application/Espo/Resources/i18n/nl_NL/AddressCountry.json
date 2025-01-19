@@ -8,7 +8,7 @@
   },
   "tooltips": {
     "code": "ISO 3166-1 land code.",
-    "isPreferred": "Voorkeuren verschijnen als eerste in de lijst."
+    "isPreferred": "Voorkeurslanden verschijnen als eerste in lijst."
   },
   "messages": {
     "confirmPopulateDefaults": "Alle bestaande landen worden verwijderd, de standaard land lijst wordt aangemaakt. Het is niet mogelijk om de actie terug te draaien.\n\nWeet je het zeker?"

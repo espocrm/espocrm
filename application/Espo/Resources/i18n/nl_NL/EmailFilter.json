@@ -9,7 +9,8 @@
     "emailFolder": "Map",
     "groupEmailFolder": "Groep e-mail map",
     "markAsRead": "Markeer als gelezen",
-    "bodyContainsAll": "Inhoud bevat alles"
+    "bodyContainsAll": "Inhoud bevat alles",
+    "skipNotification": "Melding overslaan"
   },
   "labels": {
     "Create EmailFilter": "Creëer E-mail Filter",

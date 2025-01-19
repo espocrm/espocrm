@@ -25,6 +25,10 @@
       "basicDay": "Dag",
       "agendaDay": "Dag (agenda)",
       "timeline": "Tijdlijn"
+    },
+    "sortDirection": {
+      "asc": "Oplopend",
+      "desc": "Aflopend"
     }
   },
   "messages": {

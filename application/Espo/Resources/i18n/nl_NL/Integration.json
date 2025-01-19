@@ -4,7 +4,10 @@
     "clientId": "Cliënt ID",
     "clientSecret": "Geheime Code",
     "redirectUri": "Omleiding URL",
-    "apiKey": "API sleutel"
+    "apiKey": "API sleutel",
+    "siteKey": "Site sleutel",
+    "secretKey": "Geheime sleutel",
+    "scoreThreshold": "Drempel Score"
   },
   "messages": {
     "selectIntegration": "Selecteer een integratie in het menu.",
@@ -12,6 +15,7 @@
   },
   "help": {
     "Google": "**Bevat OAuth 2.0 referenties van de Google Developers Console.**\n\nBezoek [Google Developers Console](https://console.developers.google.com/project) om OAuth 2.0 referenties te verkrijgen zoals een Cliënt ID en Geheime Code die bekend zijn bij zowel Google als EspoCRM applicatie.",
-    "GoogleMaps": "Verkrijg de API-sleutel [hier](https://developers.google.com/maps/documentation/javascript/get-api-key)."
+    "GoogleMaps": "Verkrijg de API-sleutel [hier](https://developers.google.com/maps/documentation/javascript/get-api-key).",
+    "GoogleReCaptcha": "Verkrijg de sitesleutel en geheime sleutel van [Google] (https://www.google.com/recaptcha/)."
   }
 }

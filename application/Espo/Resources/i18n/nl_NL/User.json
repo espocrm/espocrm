@@ -129,10 +129,12 @@
     "failedToLogIn": "Aanmelden mislukt",
     "2faMethodNotConfigured": "De 2FA-methode is niet volledig geconfigureerd in het systeem.",
     "loginError": "Fout opgetreden",
-    "defaultTeamIsNotUsers": "Standaard Team moet een van de Teams van de gebruiker zijn"
+    "defaultTeamIsNotUsers": "Standaard Team moet een van de Teams van de gebruiker zijn",
+    "passwordStrengthSpecialCharacterCount": "Moet minstens {count} speciale teken(s) bevatten."
   },
   "boolFilters": {
-    "onlyMyTeam": "Alleen mijn groep"
+    "onlyMyTeam": "Alleen mijn groep",
+    "onlyMe": "Alleen ik"
   },
   "presetFilters": {
     "active": "Actief",
@@ -156,5 +158,8 @@
     "authMethod": {
       "ApiKey": "API sleutel"
     }
+  },
+  "actions": {
+    "changePosition": "Positie wijzigen"
   }
 }

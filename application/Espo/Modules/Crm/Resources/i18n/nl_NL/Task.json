@@ -12,7 +12,8 @@
     "account": "Relatie",
     "dateCompleted": "Datum voltooid",
     "attachments": "Bijlagen",
-    "reminders": "Herinneringen"
+    "reminders": "Herinneringen",
+    "originalEmail": "Originele e-mail"
   },
   "links": {
     "attachments": "Bijlagen",
@@ -39,7 +40,6 @@
     "overdue": "verstreken"
   },
   "presetFilters": {
-    "actual": "Actueel",
     "completed": "Voltooid",
     "todays": "Vandaag",
     "overdue": "Verstreken",

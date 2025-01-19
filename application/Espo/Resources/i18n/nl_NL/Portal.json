@@ -19,7 +19,8 @@
     "layoutSet": "Lay-out set",
     "authenticationProvider": "Authenticatie aanbieder",
     "authTokenLifetime": "Auth Token duur (uren)",
-    "authTokenMaxIdleTime": "Auth Token Max idle tijd (uren)"
+    "authTokenMaxIdleTime": "Auth Token Max idle tijd (uren)",
+    "applicationName": "Naam toepassing"
   },
   "links": {
     "users": "Gebruikers",

@@ -16,7 +16,8 @@
       "AuthTokenControl": "Auth sleutel control",
       "SendEmailNotifications": "Verzend e-mailmeldingen",
       "CheckNewVersion": "Controleer op nieuwe versie",
-      "ProcessWebhookQueue": "Wachtrij proces Webhook"
+      "ProcessWebhookQueue": "Wachtrij proces Webhook",
+      "SendScheduledEmails": "Geplande e-mails verzenden"
     },
     "cronSetup": {
       "linux": "Opgelet: Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",

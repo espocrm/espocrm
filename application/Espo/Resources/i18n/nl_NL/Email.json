@@ -51,7 +51,11 @@
     "createdEvent": "Gecreëerd evenement",
     "event": "Evenement",
     "icsEventDateStart": "ICS-gebeurtenis Startdatum",
-    "groupFolder": "Groepsmap"
+    "groupFolder": "Groepsmap",
+    "isUsersSent": "Is door gebruiker verzonden",
+    "inArchive": "In Archief",
+    "groupStatusFolder": "Groeps Status map",
+    "sendAt": "Verzenden naar"
   },
   "links": {
     "replied": "Beantwoord",
@@ -62,12 +66,12 @@
     "sentBy": "Verzonden door",
     "attachments": "Bijlagen",
     "fromEmailAddress": "Van e-mailadres",
-    "toEmailAddresses": "Naar e-mailadressen",
-    "ccEmailAddresses": "CC e-mailadressen",
-    "bccEmailAddresses": "BCC e-mail Adressen",
-    "replyToEmailAddresses": "Antwoord Aan e-mail adressen",
     "groupFolder": "Groepsmap",
-    "createdEvent": "Gecreëerd evenement"
+    "createdEvent": "Gecreëerd evenement",
+    "toEmailAddresses": "Aan e-mailadressen",
+    "ccEmailAddresses": "CC e-mailadressen",
+    "bccEmailAddresses": "BCC e-mailadressen",
+    "replyToEmailAddresses": "Antwoord aan e-mailadressen"
   },
   "options": {
     "status": {
@@ -75,7 +79,12 @@
       "Sending": "Verzenden",
       "Sent": "Verzonden",
       "Received": "Ontvangen",
-      "Failed": "Mislukt"
+      "Failed": "Mislukt",
+      "Archived": "Geïmporteerd"
+    },
+    "groupStatusFolder": {
+      "Archive": "Archief",
+      "Trash": "Prullenbak"
     }
   },
   "labels": {
@@ -109,7 +118,12 @@
     "Insert Field": "Veld invoegen",
     "Event": "Evenement",
     "Group Folders": "Groepsmappen",
-    "View Attachments": "Bijlagen bekijken"
+    "View Attachments": "Bijlagen bekijken",
+    "Moved to Archive": "Verplaatst naar Archief",
+    "Moved to Trash": "Verplaatst naar Prullenbak",
+    "Retrieved from Trash": "Opgehaald uit Prullenbak",
+    "No Records Moved": "Geen records verplaatst",
+    "Schedule Send": "Plan verzenden"
   },
   "messages": {
     "testEmailSent": "Test e-mail is verzonden",
@@ -117,18 +131,29 @@
     "savedAsDraft": "Opslaan als concept",
     "confirmInsertTemplate": "Het e-mail opmaak gaat verloren. Weet je zeker dat je de sjabloon wilt invoegen?",
     "noSmtpSetup": "SMTP is niet geconfigureerd: {link}",
+    "confirmSend": "De e-mail verzenden?",
     "sendConfirm": "De e-mail verzenden?",
     "removeSelectedRecordsConfirmation": "Weet u zeker dat u geselecteerde e-mails wilt verwijderen?\n\nZe zullen ook voor andere gebruikers worden verwijderd.",
     "removeRecordConfirmation": "Weet u zeker dat u de e-mail wilt verwijderen?\n\nHij zal ook voor andere gebruikers worden verwijderd.",
     "invalidCredentials": "Ongeldige gegevens.",
     "unknownError": "Onbekende fout.",
-    "recipientAddressRejected": "Adres ontvanger geweigerd."
+    "recipientAddressRejected": "Adres ontvanger geweigerd.",
+    "alreadyImported": "De [email]({link}) bestaat al in het systeem.",
+    "couldNotSentScheduledEmail": "Kan geplande [e-mail]({link}) niet verzenden",
+    "notEditAccess": "Geen bewerkingstoegang tot e-mail.",
+    "groupFolderNoAccess": "Geen toegang tot groepsmap.",
+    "groupMoveOutNoEditAccess": "Kan niet uit groepsmap verplaatsen. Geen bewerkingstoegang tot e-mail.",
+    "groupMoveToNoEditAccess": "Kan niet naar groepsmap verplaatsen. Geen bewerkingstoegang tot e-mail.",
+    "groupMoveToTrashNoEditAccess": "Kan e-mail niet verplaatsen van groepsmap naar prullenbak. Geen bewerkingstoegang tot e-mail",
+    "groupMoveToArchiveNoEditAccess": "Kan niet verplaatsen van groepsmap naar Archief. Geen bewerkingstoegang tot e-mail."
   },
   "presetFilters": {
     "sent": "Verzend",
     "drafts": "Concepten",
     "trash": "Prullenbak",
-    "important": "Belangrijk"
+    "important": "Belangrijk",
+    "archived": "Geïmporteerd",
+    "archive": "Archief"
   },
   "massActions": {
     "markAsRead": "Markeer als gelezen",
@@ -137,9 +162,17 @@
     "markAsNotImportant": "Verwijder markering",
     "moveToTrash": "Verplaats naar de prullenbak",
     "moveToFolder": "Verplaats naar map",
-    "retrieveFromTrash": "Herstel uit prullenbak"
+    "retrieveFromTrash": "Herstel uit prullenbak",
+    "moveToArchive": "Archief"
   },
   "strings": {
-    "sendingFailed": "E-mail verzenden mislukt"
+    "sendingFailed": "E-mail verzenden mislukt",
+    "group": "Groep"
+  },
+  "actions": {
+    "moveToArchive": "Archief"
+  },
+  "otherFields": {
+    "file": "Bestand"
   }
 }

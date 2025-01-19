@@ -22,5 +22,9 @@
   },
   "presetFilters": {
     "actual": "Actueel"
+  },
+  "tooltips": {
+    "calendars": "Kalenders om de uitzondering op toe te passen. De uitzondering wordt toegepast op alle gebruikers van de geselecteerde kalenders.\n\nLaat het veld leeg als je de uitzondering alleen wilt toepassen op specifieke gebruikers.",
+    "users": "Specifieke gebruikers om de uitzondering op toe te passen."
   }
 }

@@ -57,7 +57,8 @@
     "WebhookQueueItem": "Webhook wachtrij item",
     "AppLogRecord": "App Log regel",
     "WorkingTimeRange": "Werktijd uitzondering",
-    "AddressCountry": "Adres Land"
+    "AddressCountry": "Adres Land",
+    "AppSecret": "App Geheim"
   },
   "scopeNamesPlural": {
     "Email": "E-mails",
@@ -105,7 +106,8 @@
     "GlobalStream": "Globale stroming",
     "WebhookQueueItem": "Webhook wachtrij items",
     "WorkingTimeRange": "Werktijd uitzonderingen",
-    "AddressCountry": "Adres Landen"
+    "AddressCountry": "Adres Landen",
+    "AppSecret": "App Geheimen"
   },
   "labels": {
     "Misc": "Overig",
@@ -260,8 +262,7 @@
     "Log in as": "Log in als",
     "Sign in": "Aanmelden",
     "Global Search": "Uitgebreid zoeken",
-    "Show Navigation Panel": "Toon navigatiepaneel",
-    "Hide Navigation Panel": "Verberg navigatiepaneel",
+    "Navigation Panel": "Toon navigatiepaneel",
     "Copy to Clipboard": "Kopiëren naar klembord",
     "Copied to clipboard": "Gekopieerd naar klembord",
     "Audit Log": "Controlelog",
@@ -273,7 +274,23 @@
     "Page": "Pagina",
     "Star": "Ster",
     "Unstar": "Ontster",
-    "Starred": "Sterren"
+    "Starred": "Sterren",
+    "Remove Filter": "Verwijder filter",
+    "Column Resize": "Kolom wijzigen",
+    "General": "Algemeen",
+    "Send": "Stuur",
+    "Timeout": "Time-out",
+    "No internet": "Geen internet",
+    "Scheduled": "Gepland",
+    "Now": "Nu",
+    "Expanded": "Uitgebreid",
+    "Collapsed": "Ingestort",
+    "Top Level": "Topniveau",
+    "Fields": "Velden",
+    "View User Access": "Toegang gebruiker weergeven",
+    "Reacted": "Gereageerd",
+    "Reaction Removed": "Reactie verwijderd",
+    "Reactions": "Reacties"
   },
   "messages": {
     "pleaseWait": "Even geduld...",
@@ -383,12 +400,17 @@
     "select2OrMoreRecords": "Selecteer 2 of meer records",
     "selectNotMoreThanNumberRecords": "Selecteer niet meer dan {number} records",
     "selectAtLeastOneRecord": "Selecteer ten minste één record",
-    "fieldNotMatchingPattern$phoneNumberLoose": "{field} bevat tekens die niet zijn toegestaan in telefoonnummer"
+    "fieldNotMatchingPattern$phoneNumberLoose": "{field} bevat tekens die niet zijn toegestaan in telefoonnummer",
+    "duplicateConflict": "Er bestaat al een record.",
+    "confirmMassUpdate": "Weet je zeker dat je geselecteerde records massaal wilt bijwerken?",
+    "cannotRemoveCategoryWithChildCategory": "Kan geen categorie verwijderen die een subcategorie heeft.",
+    "cannotRemoveNotEmptyCategory": "Kan een niet-lege categorie niet verwijderen."
   },
   "boolFilters": {
     "onlyMy": "Alleen mijn",
     "followed": "Gevolgd",
-    "onlyMyTeam": "Mijn groep"
+    "onlyMyTeam": "Mijn groep",
+    "shared": "Gedeeld"
   },
   "presetFilters": {
     "followed": "Gevolgd",
@@ -444,7 +466,9 @@
     "emailAddressIsInvalid": "E-mailadres is ongeldig",
     "phoneNumberIsInvalid": "Telefoonnummer is ongeldig",
     "users": "Gebruikers",
-    "childList": "Sublijst"
+    "childList": "Sublijst",
+    "collaborators": "Medewerkers",
+    "streamUpdatedAt": "Stream bijgewerkt op"
   },
   "links": {
     "assignedUser": "Toegewezen gebruiker",
@@ -455,7 +479,9 @@
     "teams": "Groepen",
     "users": "Gebruikers",
     "parent": "Behorende bij",
-    "children": "Onderliggend"
+    "children": "Onderliggend",
+    "assignedUsers": "Toegewezen gebruikers",
+    "collaborators": "Medewerkers"
   },
   "dashlets": {
     "Emails": "Mijn inbox",
@@ -464,7 +490,10 @@
   "notificationMessages": {
     "assign": "{entityType} {entity} is aan jou toegewezen",
     "emailReceived": "E-mail ontvangen van {from}",
-    "entityRemoved": "{user} verwijderde {entityType} {entity}"
+    "entityRemoved": "{user} verwijderde {entityType} {entity}",
+    "emailInbox": "{user} voegde e-mail {entiteit} toe aan je inbox",
+    "userPostReaction": "{user} reageerde op je {post}",
+    "userPostInParentReaction": "{user} reageerde op je {post} in {entityType} {entity}"
   },
   "streamMessages": {
     "post": "{user} geplaatst op {entityType} {entity}",
@@ -491,6 +520,7 @@
     "createAssigned": "{user} creëerde {entityType} {entity} en wees toe aan {assignee}",
     "assign": "{user} wees {entityType} {entity} toe aan {assignee}",
     "assignThis": "{user} wees deze {entityType} toe aan {assignee}",
+    "assignMultiAddThis": "{user} wees deze {entityType} toe aan {assignee}",
     "postThis": "{user} gepost",
     "attachThis": "{user} toegevoegd",
     "statusThis": "{user} heeft {field} bijgewerkt",
@@ -520,7 +550,11 @@
     "assignVoid": "{user} niet-toegewezen {entityType} {entity}",
     "assignThisSelf": "{user} heeft dit {entityType} zelf toegewezen",
     "assignSelf": "{user} zichzelf toegewezen {entityType} {entity}",
-    "unrelateThis": "{user} unlinked {relatedEntityType} {relatedEntity} van deze {entityType}"
+    "unrelateThis": "{user} unlinked {relatedEntityType} {relatedEntity} van deze {entityType}",
+    "assignMultiAdd": "{user} heeft {entity} toegewezen aan {assignee}",
+    "assignMultiAddRemove": "{user} heeft {entity} toegewezen aan {assignee} en niet toegewezen aan {removedAssignee}",
+    "assignMultiRemoveThis": "{user} heeft deze {entityType} toegewezen aan {removedAssignee}",
+    "assignMultiAddRemoveThis": "{user} heeft deze {entityType} toegewezen aan {assignee} en niet toegewezen aan {removedAssignee}"
   },
   "lists": {
     "monthNames": [
@@ -743,11 +777,11 @@
       "color": {
         "recent": "Recente kleur",
         "more": "Meer kleur",
-        "background": "Achtergrondkleur",
-        "foreground": "Tekstkleur",
         "transparent": "Transparant",
         "setTransparent": "Transparant instellen",
-        "resetToDefault": "Standaardinstellingen terugzetten"
+        "resetToDefault": "Standaardinstellingen terugzetten",
+        "background": "Achtergrondkleur",
+        "foreground": "Letterkleur"
       },
       "shortcut": {
         "shortcuts": "Keyboard snelkoppelingen",
@@ -841,5 +875,15 @@
       "middle": "Midden",
       "bottom": "Onder"
     }
+  },
+  "recordActions": {
+    "create": "Maak",
+    "read": "Lees",
+    "edit": "Bewerk",
+    "delete": "Verwijder",
+    "stream": "Stroom"
+  },
+  "tabs": {
+    "Stream": "Stroom"
   }
 }

@@ -35,7 +35,8 @@
     "calendarSlotDuration": "Kalender duur",
     "calendarScrollHour": "Kalender blader naar uur",
     "defaultRemindersTask": "Standaard herinneringen voor taken",
-    "addCustomTabs": "Aangepaste Tabs toevoegen"
+    "addCustomTabs": "Aangepaste Tabs toevoegen",
+    "reactionNotifications": "In-app meldingen over reacties"
   },
   "options": {
     "weekStart": {

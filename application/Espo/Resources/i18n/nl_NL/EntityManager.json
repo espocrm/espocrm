@@ -42,7 +42,11 @@
     "version": "Versie",
     "selectFilter": "Select filter",
     "primaryFilters": "Primaire filters",
-    "stars": "Sterren"
+    "stars": "Sterren",
+    "preserveAuditLog": "Auditlogboek bewaren",
+    "assignedUsers": "Meerdere toegewezen gebruikers",
+    "collaborators": "Medewerkers",
+    "aclContactLink": "ACL contact link"
   },
   "options": {
     "type": {
@@ -87,7 +91,6 @@
   "tooltips": {
     "statusField": "Updates van dit veld zijn gelogd in stream.",
     "textFilterFields": "Velden die worden gebruikt door tekst zoeken.",
-    "stream": "Of entiteit een stream heeft.",
     "disabled": "Controleer of u deze entiteit niet nodig hebt in uw systeem.",
     "linkAudited": "Het maken van gerelateerde records en het linken met bestaande records worden vastgelegd in Stream.",
     "linkMultipleField": "Link Multiple field biedt een handige manier om relaties te bewerken. Gebruik het niet als u een groot aantal gerelateerde records kunt hebben.",
@@ -98,6 +101,13 @@
     "duplicateCheckFieldList": "Welke velden te controleren bij het controleren op duplicaten.",
     "updateDuplicateCheck": "Controleren op duplicaten bij het bijwerken van een record.",
     "linkSelectFilter": "Een primair filter dat standaard wordt toegepast bij het selecteren van een record.",
-    "stars": "De optie om records te voorzien van sterren. Gebruikers kunnen sterren gebruiken om een bladwijzer voor records te maken."
+    "stars": "De optie om records te voorzien van sterren. Gebruikers kunnen sterren gebruiken om een bladwijzer voor records te maken.",
+    "aclContactLink": "De link met Contact om te gebruiken bij het toepassen van toegangscontrole voor portaalgebruikers.",
+    "aclAccountLink": "De link met Account om te gebruiken bij het toepassen van toegangscontrole voor portaalgebruikers.",
+    "collaborators": "De mogelijkheid om records te delen met specifieke gebruikers.",
+    "assignedUsers": "De mogelijkheid om meerdere gebruikers aan een record toe te wijzen.\n\nMerk op dat na het inschakelen van de parameter, bestaande toegewezen gebruikers niet worden overgezet naar het nieuwe veld *Toegewezen gebruikers*.",
+    "preserveAuditLog": "Schakelt het opschonen van het auditlogboek uit. Deze parameter is alleen van toepassing als Stream is uitgeschakeld. Als Stream is ingeschakeld, worden audit log records niet verwijderd.",
+    "stream": "Of de entiteit de Stream heeft.",
+    "linkParamReadOnly": "Een alleen-lezen link kan niet worden bewerkt via de *link* en *unlink* API-verzoeken. Het zal niet mogelijk zijn om records te relateren en te unrelateren via het relatiepaneel. Het is nog steeds mogelijk om alleen-lezen links te bewerken via link en link-multiple velden."
   }
 }

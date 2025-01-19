@@ -9,6 +9,7 @@
     "strongText": "vette tekst",
     "emphasizedText": "benadrukte tekst",
     "deletedText": "verwijderde tekst",
-    "blockquote": "blokquote"
+    "blockquote": "blokquote",
+    "link": "linktekst"
   }
 }

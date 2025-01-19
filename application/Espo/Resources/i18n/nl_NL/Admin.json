@@ -79,7 +79,8 @@
     "Working Time Calendars": "Werktijd kalenders",
     "Group Email Folders": "Groep e-mailmappen",
     "Authentication Providers": "Authenticatieproviders",
-    "Address Countries": "Landen"
+    "Address Countries": "Landen",
+    "App Secrets": "App geheimen"
   },
   "layouts": {
     "list": "Lijst",
@@ -207,7 +208,9 @@
     "aclScope": "ACL Toepassing",
     "onlyAdmin": "Alleen voor Admin",
     "activeOptions": "Actieve opties",
-    "labelType": "Type label"
+    "labelType": "Type label",
+    "preview": "Voorbeeld",
+    "attachmentField": "Bijlage veld"
   },
   "messages": {
     "selectEntityType": "Selecteer de eenheid soort in het linker menu.",
@@ -230,7 +233,8 @@
     "newVersionIsAvailable": "Nieuwe EspoCRM-versie {latestVersion} is beschikbaar. Volg de [instructions](https://www.espocrm.com/documentation/administration/upgrading/) om uw installatie te upgraden.",
     "formulaFunctions": "Meer functies zijn te vinden in [documentation]({documentationUrl}).",
     "rebuildRequired": "Je moet de heropbouw via CLI uitvoeren.",
-    "cronIsDisabled": "Als cron is uitgeschakeld, werkt de toepassing niet volledig. Schakel cron in bij [instellingen](#Admin/instellingen)."
+    "cronIsDisabled": "Als cron is uitgeschakeld, werkt de toepassing niet volledig. Schakel cron in bij [instellingen](#Admin/instellingen).",
+    "cacheIsDisabled": "Als cache is uitgeschakeld, zal de applicatie traag werken. Schakel cache in bij [instellingen](#Admin/instellingen)."
   },
   "descriptions": {
     "settings": "Systeeminstellingen van de applicatie.",
@@ -262,7 +266,6 @@
     "actionHistory": "Log van gebruikersacties.",
     "labelManager": "Applicatie labels aanpassen.",
     "authLog": "Login geschiedenis.",
-    "leadCapture": "API-startpunten voor Web-naar-lead.",
     "attachments": "Alle bestandsbijlagen opgeslagen in het systeem.",
     "templateManager": "Aanpassen van berichtsjablonen.",
     "systemRequirements": "Systeem eisen voor EspoCRM.",
@@ -281,7 +284,9 @@
     "groupEmailFolders": "E-mailmappen gedeeld voor teams.",
     "authenticationProviders": "Extra authenticatieproviders voor portalen.",
     "appLog": "Logboek toepassing.",
-    "addressCountries": "Landen beschikbaar voor adresvelden."
+    "addressCountries": "Landen beschikbaar voor adresvelden.",
+    "appSecrets": "Sla gevoelige informatie op zoals API-sleutels, wachtwoorden en andere geheimen.",
+    "leadCapture": "Webformulieren voor het vastleggen van leads."
   },
   "options": {
     "previewSize": {
@@ -331,6 +336,8 @@
     "userInterface": "ui, thema, tabbladen, logo, dashboard",
     "templateManager": "meldingen",
     "authentication": "wachtwoord, beveiliging, ldap",
-    "labelManager": "taal, vertaling"
+    "labelManager": "taal, vertaling",
+    "appSecrets": "sleutel,sleutels,wachtwoord",
+    "leadCapture": "webformulieren"
   }
 }

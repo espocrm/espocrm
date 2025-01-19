@@ -37,7 +37,8 @@
     "security": "Beveiliging",
     "groupEmailFolder": "Groep e-mail map",
     "connectedAt": "Verbonden op",
-    "excludeFromReply": "Uitsluiten van beantwoorden"
+    "excludeFromReply": "Uitsluiten van beantwoorden",
+    "isSystem": "Is Systeem"
   },
   "tooltips": {
     "reply": "E-mail afzenders melden dat hun e-mails zijn ontvangen.\n\nEr wordt gedurende een bepaalde periode slechts één e-mail naar een bepaalde ontvanger gestuurd om looping te voorkomen.",
@@ -55,7 +56,8 @@
     "storeSentEmails": "Verzonden e-mails worden opgeslagen op de IMAP-server.",
     "useSmtp": "De mogelijkheid om e-mails te verzenden.",
     "groupEmailFolder": "Zet inkomende e-mails in een groepsmap.",
-    "excludeFromReply": "Bij het beantwoorden van e-mails die naar het e-mailadres van dit account zijn verzonden, wordt het e-mailadres niet toegevoegd aan CC.\n\nMerk op dat door deze parameter in te schakelen, het e-mailadres van deze account zichtbaar wordt voor gebruikers die toegang hebben tot het verzenden van e-mails."
+    "excludeFromReply": "Bij het beantwoorden van e-mails die naar het e-mailadres van dit account zijn verzonden, wordt het e-mailadres niet toegevoegd aan CC.\n\nMerk op dat door deze parameter in te schakelen, het e-mailadres van deze account zichtbaar wordt voor gebruikers die toegang hebben tot het verzenden van e-mails.",
+    "isSystem": "Is het e-mailaccount van systeem."
   },
   "options": {
     "status": {

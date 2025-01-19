@@ -32,7 +32,8 @@
       "IS_NOT_PORTAL_USER": "Geen portaalgebruiker",
       "USER_IS_NOT_IN_PORTAL": "Gebruiker is niet gerelateerd aan de portaal",
       "IS_SYSTEM_USER": "Is systeemgebruiker",
-      "FORBIDDEN": "Verboden"
+      "FORBIDDEN": "Verboden",
+      "WRONG_CODE": "Verkeerde code"
     }
   }
 }

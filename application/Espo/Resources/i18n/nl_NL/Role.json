@@ -14,7 +14,8 @@
     "fieldData": "Veldgegevens",
     "messagePermission": "Toestemming voor berichten",
     "auditPermission": "Controle Toestemming",
-    "mentionPermission": "Vermeld toestemming"
+    "mentionPermission": "Vermeld toestemming",
+    "userCalendarPermission": "Gebruiker Kalendermachtiging"
   },
   "links": {
     "users": "Gebruikers",
@@ -56,12 +57,13 @@
     "followerManagementPermission": "Maakt het mogelijk om volgers van specifieke records te beheren.",
     "messagePermission": "Berichten naar andere gebruikers sturen.\n\n* all - naar iedereen sturen\n* team - alleen naar teamleden sturen\n* nee - niet sturen",
     "assignmentPermission": "Records aan andere gebruikers toewijzen.\n\n* alle - geen beperking\n* team - alleen aan teamgenoten toewijzen\n* no - alleen aan zichzelf toewijzen",
-    "userPermission": "Activiteiten, agenda en stream van andere gebruikers bekijken.\n\n* alles - alles bekijken\n* team - alleen activiteiten van teamgenoten bekijken\n* nee - niet bekijken",
     "portalPermission": "Toegang tot portaalinformatie, de mogelijkheid om berichten te posten voor portaalgebruikers.",
     "groupEmailAccountPermission": "Toegang tot e-mailaccounts van groepen, de mogelijkheid om e-mails te versturen via SMTP van groepen.",
     "exportPermission": "Het kunnen exporteren van records.",
     "massUpdatePermission": "Het uitvoeren van massale updates van records.",
     "auditPermission": "Hiermee kan het auditlogboek worden bekeken.",
-    "mentionPermission": "Hiermee kunnen andere gebruikers in de stream worden genoemd.\n\n* all - kan iedereen vermelden\n* team - kan alleen teamgenoten noemen\n* nee - kan niet vermelden"
+    "mentionPermission": "Hiermee kunnen andere gebruikers in de stream worden genoemd.\n\n* all - kan iedereen vermelden\n* team - kan alleen teamgenoten noemen\n* nee - kan niet vermelden",
+    "userPermission": "Bekijken van streams van andere gebruikers. Stelt gebruikers in staat rechten te bekijken van  gebruikers  voor specifieke records.",
+    "userCalendarPermission": "Sta toe om agenda's van andere gebruikers te bekijken."
   }
 }
