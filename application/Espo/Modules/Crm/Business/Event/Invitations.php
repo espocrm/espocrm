@@ -66,6 +66,7 @@ class Invitations
 
     /**
      * Some dependencies are unused to keep backward compatibility.
+     * @todo Revise.
      */
     public function __construct(
         private EntityManager $entityManager,
@@ -75,6 +76,7 @@ class Invitations
         private TemplateFileManager $templateFileManager,
         private HtmlizerFactory $htmlizerFactory,
         private ApplicationConfig $applicationConfig,
+        private DateTimeUtil $dateTime,
     ) {}
 
     /**
@@ -282,7 +284,10 @@ class Invitations
         $data['entityType'] = $this->language->translateLabel($entity->getEntityType(), 'scopeNames');
         $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
 
-        $data['timeZone'] = $this->getTimeZone($invitee);
+        [$timeZone, $language] = $this->getTimeZoneAndLanguage($invitee);
+
+        $data['timeZone'] = $timeZone;
+        $data['dateStartFull'] = $this->prepareDateStartFull($entity, $timeZone, $language);
 
         return $data;
     }
@@ -340,9 +345,13 @@ class Invitations
         return $attendees;
     }
 
-    private function getTimeZone(Entity $invitee): string
+    /**
+     * @return array{string, string}
+     */
+    private function getTimeZoneAndLanguage(Entity $invitee): array
     {
         $timeZone = $this->applicationConfig->getTimeZone();
+        $language = $this->applicationConfig->getLanguage();
 
         if ($invitee instanceof User) {
             $preferences = $this->entityManager
@@ -352,8 +361,36 @@ class Invitations
             if ($preferences && $preferences->getTimeZone()) {
                 $timeZone = $preferences->getTimeZone();
             }
+
+            if ($preferences && $preferences->getLanguage()) {
+                $language = $preferences->getLanguage();
+            }
         }
 
-        return $timeZone;
+        return [$timeZone, $language];
+    }
+
+    /**
+     * @todo Take into account the invitees time format if a user.
+     */
+    private function prepareDateStartFull(Entity $entity, string $timeZone, string $language): ?string
+    {
+        $format = "dddd, MMMM Do, YYYY";
+
+        if ($entity->get('dateStartDate')) {
+            $value = $entity->get('dateStartDate');
+
+            return $this->dateTime->convertSystemDate($value, $format, $language);
+        }
+
+        $value = $entity->get('dateStart');
+
+        if (!$value) {
+            return null;
+        }
+
+        $format = $this->applicationConfig->getTimeFormat() . ", " . $format;
+
+        return $this->dateTime->convertSystemDateTime($value, $timeZone, $format, $language);
     }
 }

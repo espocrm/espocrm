@@ -47,4 +47,9 @@ class Preferences extends \Espo\Core\ORM\Entity
     {
         return $this->get('timeZone');
     }
+
+    public function getLanguage(): ?string
+    {
+        return $this->get('language');
+    }
 }

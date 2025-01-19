@@ -1,5 +1,5 @@
 <p>Название: {{name}}</p>
-<p>Начало: {{#if isAllDay}}{{dateStartDate}}{{else}}{{dateStart}} ({{timeZone}}){{/if}}</p>
+<p>Начало: {{#if isAllDay}}{{dateStartFull}}{{else}}{{dateStartFull}} ({{timeZone}}){{/if}}</p>
 {{#if isUser}}
     {{#if description}}
     <p>{{{description}}}</p>
