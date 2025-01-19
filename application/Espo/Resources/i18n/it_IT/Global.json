@@ -110,7 +110,8 @@
     "WebhookQueueItem": "Elementi Coda Webhook",
     "AppLogRecord": "Log Applicazione",
     "WorkingTimeRange": "Eccezioni Lavorative",
-    "AddressCountry": "Indirizzi Paesi"
+    "AddressCountry": "Indirizzi Paesi",
+    "AppSecret": "App Secret"
   },
   "labels": {
     "Misc": "Varie",
@@ -287,7 +288,21 @@
     "Unstar": "Rimuovi",
     "Starred": "Preferiti",
     "Remove Filter": "Rimuovi Filtro",
-    "Ready": "Pronto"
+    "Ready": "Pronto",
+    "Column Resize": "Ridimensiona colonne",
+    "General": "Generali",
+    "Send": "Invia",
+    "No internet": "Assenza connessione",
+    "Scheduled": "Programmata",
+    "Now": "Adesso",
+    "Expanded": "Espanso",
+    "Collapsed": "Collassato",
+    "Top Level": "Livello superiore",
+    "Fields": "Campi",
+    "View User Access": "Vedi accesso utente",
+    "Reacted": "Reagito",
+    "Reaction Removed": "Reazione rimossa",
+    "Reactions": "Reazioni"
   },
   "messages": {
     "pleaseWait": "Attendere...",
@@ -398,12 +413,16 @@
     "selectNotMoreThanNumberRecords": "Seleziona non più di {number} record",
     "selectAtLeastOneRecord": "Seleziona almeno un record",
     "fieldNotMatchingPattern$phoneNumberLoose": "{field} contiene caratteri non permessi in un numero di telefono",
-    "duplicateConflict": "Esiste già un record."
+    "duplicateConflict": "Esiste già un record.",
+    "confirmMassUpdate": "Sei sicuro di voler aggiornare in massa i record selezionati?",
+    "cannotRemoveCategoryWithChildCategory": "Non è possibile rimuovere una categoria che ha una categoria figlio.",
+    "cannotRemoveNotEmptyCategory": "Impossibile rimuovere una categoria non vuota."
   },
   "boolFilters": {
     "onlyMy": "Solo i miei",
     "followed": "Seguiti",
-    "onlyMyTeam": "My team"
+    "onlyMyTeam": "My team",
+    "shared": "Condiviso"
   },
   "presetFilters": {
     "followed": "Seguito",
@@ -461,7 +480,9 @@
     "emailAddressIsInvalid": "L'Indirizzo Email non è valido",
     "phoneNumberIsInvalid": "Il Numero di Telefono non è valido",
     "users": "Utenti",
-    "childList": "Lista Figli"
+    "childList": "Lista Figli",
+    "collaborators": "Collaboratori",
+    "streamUpdatedAt": "Flusso aggiornato il"
   },
   "links": {
     "assignedUser": "Utente Assegnato",
@@ -471,7 +492,9 @@
     "teams": "Team",
     "users": "Utenti",
     "parent": "Genitore",
-    "children": "Figli"
+    "children": "Figli",
+    "assignedUsers": "Utenti Assegnati",
+    "collaborators": "Collaboratori"
   },
   "dashlets": {
     "Stream": "Flusso Attività",
@@ -481,7 +504,10 @@
   "notificationMessages": {
     "assign": "{entityType} {entity} è stato assegnato a te",
     "emailReceived": "Email ricevuta da {from}",
-    "entityRemoved": "{user} ha rimosso {entityType} {entity}"
+    "entityRemoved": "{user} ha rimosso {entityType} {entity}",
+    "emailInbox": "{user} ha aggiunto l'email {entity} alla tua posta in arrivo",
+    "userPostReaction": "{user} ha reagito al tuo {post}",
+    "userPostInParentReaction": "{user} ha reagito al tuo {post} in {entityType} {entity}"
   },
   "streamMessages": {
     "post": "{user} ha scritto {entityType} {entity}",
@@ -539,7 +565,12 @@
     "assignThisSelf": "{user} ha auto-assegnato {entityType}",
     "assignSelf": "{user} ha auto-assegnato {entityType} {entity}",
     "unrelate": "{user} ha scollegato {relatedEntityType} {relatedEntity} da {entityType} {entity}",
-    "unrelateThis": "{user} ha scollegato {relatedEntityType} {relatedEntity} da questa {entityType}"
+    "unrelateThis": "{user} ha scollegato {relatedEntityType} {relatedEntity} da questa {entityType}",
+    "assignMultiAdd": "{user} ha assegnato {entity} a {assignee}",
+    "assignMultiRemove": "{user} ha tolto {entity} a {removedAssignee}",
+    "assignMultiAddRemove": "{user} ha assegnato {entity} a {assignee} e tolto a {removedAssignee}",
+    "assignMultiRemoveThis": "{user} ha tolto questo {entityType} da {removedAssignee}",
+    "assignMultiAddRemoveThis": "{user} ha assegnato questo {entityType} a {assignee} e tolto a {removedAssignee}"
   },
   "lists": {
     "monthNames": [
@@ -762,7 +793,9 @@
         "more": "Altri Colori",
         "transparent": "Trasparente",
         "setTransparent": "Imposta Trasparente",
-        "resetToDefault": "Ripristina Valori Predefiniti"
+        "resetToDefault": "Ripristina Valori Predefiniti",
+        "background": "Colore sfondo",
+        "foreground": "Colore carattere"
       },
       "shortcut": {
         "shortcuts": "Tasti rapidi",
@@ -861,5 +894,27 @@
   },
   "detailViewModes": {
     "detail": "Dettaglio"
+  },
+  "strings": {
+    "yesterdayShort": "Ieri"
+  },
+  "reactions": {
+    "Smile": "Sorriso",
+    "Surprise": "Sorpreso",
+    "Laugh": "Risata",
+    "Sad": "Triste",
+    "Love": "Amore",
+    "Like": "Mi piace",
+    "Dislike": "Non mi piace"
+  },
+  "recordActions": {
+    "create": "Creazione",
+    "read": "Visualizzazione",
+    "edit": "Modifica",
+    "delete": "Eliminazione",
+    "stream": "Flusso Attività"
+  },
+  "tabs": {
+    "Stream": "Flusso attività"
   }
 }

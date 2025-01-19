@@ -3,7 +3,8 @@
     "Fields": "Campi",
     "Relationships": "Relazioni",
     "Schedule": "Programma",
-    "Layouts": "Layout"
+    "Layouts": "Layout",
+    "Parameters": "Parametri"
   },
   "fields": {
     "name": "Nome",
@@ -43,7 +44,12 @@
     "version": "Versione",
     "selectFilter": "Filtro Selezione",
     "primaryFilters": "Filtri Primari",
-    "stars": "Preferiti"
+    "stars": "Preferiti",
+    "preserveAuditLog": "Conserva storico modifiche",
+    "assignedUsers": "Utenti assegnati multipli",
+    "collaborators": "Collaboratori",
+    "aclContactLink": "Collegamento ACL Contatto",
+    "aclAccountLink": "Collegamento ACL Account"
   },
   "options": {
     "type": {
@@ -96,6 +102,13 @@
     "duplicateCheckFieldList": "Quali campi controllare quando viene eseguito il controllo duplicati.",
     "updateDuplicateCheck": "Esegui il controllo duplicati quando un record viene aggiornato.",
     "linkSelectFilter": "Un filtro primario da applicare di default quando si seleziona un record.",
-    "stars": "La possibilità di aggiungere record ai preferiti. I preferiti possono essere utilizzati dagli utenti per salvare i record."
+    "stars": "La possibilità di aggiungere record ai preferiti. I preferiti possono essere utilizzati dagli utenti per salvare i record.",
+    "aclContactLink": "Il collegamento con Contatto da utilizzare quando si applica il controllo degli accessi per gli utenti del portale.",
+    "aclAccountLink": "Il collegamento con Account da utilizzare quando si applica il controllo degli accessi per gli utenti del portale.",
+    "collaborators": "La possibilità di condividere i record con utenti specifici.",
+    "assignedUsers": "La possibilità di assegnare più utenti a un record.\n\nNota: dopo aver abilitato il parametro, gli utenti assegnati esistenti non saranno trasferiti al nuovo campo *Utenti assegnati*.",
+    "preserveAuditLog": "Disabilita la pulizia del log di audit. Questo parametro è applicabile solo se il flusso è disabilitato. Se il flusso è abilitato, i record del log di audit non vengono eliminati.",
+    "stream": "Se l'entità ha un flusso attività.",
+    "linkParamReadOnly": "Un collegamento di sola lettura non può essere modificato tramite le richieste API *link* e *unlink*. Non sarà possibile collegare e scollegare i record tramite il pannello delle relazioni. È ancora possibile modificare i collegamenti di sola lettura tramite i campi link e link-multiplo."
   }
 }

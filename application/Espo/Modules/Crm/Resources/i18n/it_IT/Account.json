@@ -98,5 +98,8 @@
     "customers": "Clienti",
     "partners": "Partner",
     "recentlyCreated": "Creati Recentemente"
+  },
+  "tabs": {
+    "Support": "Supporto"
   }
 }

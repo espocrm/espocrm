@@ -35,7 +35,8 @@
     "calendarSlotDuration": "Durata Slot Calendario",
     "calendarScrollHour": "Orario Predefinito Scorrimento Calendario",
     "defaultRemindersTask": "Promemoria Predefiniti per i Compiti",
-    "addCustomTabs": "Aggiungi Schede Personalizzate"
+    "addCustomTabs": "Aggiungi Schede Personalizzate",
+    "reactionNotifications": "Notifiche in-app per le reazioni"
   },
   "options": {
     "weekStart": {

@@ -17,7 +17,8 @@
     "dateFilter": "Filtro data",
     "skipOwn": "Non mostrare i propri record",
     "text": "Testo",
-    "folder": "Cartella"
+    "folder": "Cartella",
+    "includeShared": "Includi condivisi"
   },
   "options": {
     "mode": {

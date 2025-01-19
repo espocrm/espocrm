@@ -13,7 +13,8 @@
     "dateCompleted": "Completato in data",
     "attachments": "Allegati",
     "reminders": "Promemoria",
-    "contact": "Contatto"
+    "contact": "Contatto",
+    "originalEmail": "Email originale"
   },
   "links": {
     "attachments": "Allegati",
@@ -40,11 +41,11 @@
     "overdue": "In Ritardo"
   },
   "presetFilters": {
-    "actual": "In Corso",
     "completed": "Completato",
     "todays": "Di Oggi",
     "overdue": "In Ritardo",
-    "deferred": "Prorogato"
+    "deferred": "Prorogato",
+    "actual": "Aperto"
   },
   "nameOptions": {
     "replyToEmail": "Rispondi all'email"

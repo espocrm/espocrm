@@ -14,7 +14,8 @@
     "dateStartDate": "Data Inizio (tutto il giorno)",
     "dateEndDate": "Data Fine (tutto il giorno)",
     "isAllDay": "È tutto il giorno",
-    "sourceEmail": "Sorgente Email"
+    "sourceEmail": "Sorgente Email",
+    "joinUrl": "URL Ingresso"
   },
   "options": {
     "status": {

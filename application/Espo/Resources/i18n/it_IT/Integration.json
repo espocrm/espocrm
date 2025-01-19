@@ -2,7 +2,8 @@
   "fields": {
     "enabled": "Abilitato",
     "clientId": "Identificativo cliente",
-    "redirectUri": "URI di Reindirizzamento"
+    "redirectUri": "URI di Reindirizzamento",
+    "scoreThreshold": "Soglia punteggio"
   },
   "messages": {
     "selectIntegration": "Seleziona un'integrazione dal menù.",
@@ -10,6 +11,7 @@
   },
   "help": {
     "Google": "** Ottieni le credenziali di OAuth 2.0 dalla Google Developers Console. **\n\nVisita [Google Developers Console](https://console.developers.google.com/project) per ottenere credenziali OAuth 2.0 come un ID cliente e un Client Secret  noti sia a Google che a EspoCRM.",
-    "GoogleMaps": "Ottieni una chiave API [qui](https://developers.google.com/maps/documentation/javascript/get-api-key)."
+    "GoogleMaps": "Ottieni una chiave API [qui](https://developers.google.com/maps/documentation/javascript/get-api-key).",
+    "GoogleReCaptcha": "Ottieni la Site Key e la Secret Key da [Google](https://www.google.com/recaptcha/)."
   }
 }

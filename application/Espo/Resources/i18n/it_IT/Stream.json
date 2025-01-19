@@ -10,6 +10,7 @@
     "strongText": "Testo forte",
     "emphasizedText": "Testo enfatizzato",
     "deletedText": "Testo cancellato",
-    "blockquote": "Blockquote"
+    "blockquote": "Blockquote",
+    "link": "testo link"
   }
 }

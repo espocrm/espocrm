@@ -131,7 +131,8 @@
     "failedToLogIn": "Accesso non riuscito",
     "2faMethodNotConfigured": "Il metodo 2FA non è stato configurato interamente nel sistema.",
     "loginError": "Si è verificato un errore",
-    "defaultTeamIsNotUsers": "Il team predefinito deve essere uno dei team dell'utente"
+    "defaultTeamIsNotUsers": "Il team predefinito deve essere uno dei team dell'utente",
+    "passwordStrengthSpecialCharacterCount": "Deve contenere almeno {count} carattere/i speciale/i."
   },
   "boolFilters": {
     "onlyMyTeam": "Solo il mio Team",

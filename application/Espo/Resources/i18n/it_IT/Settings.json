@@ -90,7 +90,7 @@
     "tabIconsDisabled": "Disabilita icone schede",
     "textFilterUseContainsForVarchar": "Utilizza l'operatore ' Contains ' quando si filtrano i campi varchar",
     "emailAddressIsOptedOutByDefault": "Segna i nuovi indirizzi email come esclusi",
-    "outboundEmailBccAddress": "CCN indirizzi per client esterni",
+    "outboundEmailBccAddress": "Indirizzi CCN per client esterni",
     "adminNotificationsNewExtensionVersion": "Mostra una notifica quando sono disponibili nuove versioni delle estensioni",
     "cleanupDeletedRecords": "Pulisci i record eliminati",
     "ldapPortalUserLdapAuth": "Utilizza l'autenticazione LDAP per gli utenti del portale",
@@ -150,7 +150,11 @@
     "quickSearchFullTextAppendWildcard": "Aggiungi la wildcard nella ricerca rapida",
     "authIpAddressCheck": "Restringi l'accesso per indirizzo IP",
     "authIpAddressWhitelist": "Whitelist Indirizzi IP",
-    "authIpAddressCheckExcludedUsers": "Utenti esclusi dal controllo"
+    "authIpAddressCheckExcludedUsers": "Utenti esclusi dal controllo",
+    "streamEmailWithContentEntityTypeList": "Entità con il corpo dell'email nelle note",
+    "emailScheduledBatchCount": "Numero massimo di email programmate inviate per ogni gruppo",
+    "passwordStrengthSpecialCharacterCount": "Numero di caratteri speciali richiesti nella password",
+    "availableReactions": "Reazioni disponibili"
   },
   "tooltips": {
     "recordsPerPage": "Numero di record inizialmente mostrati in vista lista.",
@@ -264,7 +268,8 @@
     "Phone Numbers": "Numeri di Telefono",
     "Access": "Accesso",
     "Strength": "Robustezza",
-    "Recovery": "Recupero"
+    "Recovery": "Recupero",
+    "Scheduled Send": "Invio Programmato"
   },
   "messages": {
     "ldapTestConnection": "La connessione è stata stabilita con successo"
@@ -272,7 +277,7 @@
   "options": {
     "currencyFormat": {
       "1": "10 EUR",
-      "2": "€ 10"
+      "2": "€10"
     },
     "streamEmailNotificationsTypeList": {
       "Post": "Articoli",

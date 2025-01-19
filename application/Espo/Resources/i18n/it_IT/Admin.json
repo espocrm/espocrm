@@ -83,7 +83,8 @@
     "Authentication Providers": "Provider di Autenticazione",
     "Setup": "Configurazione",
     "App Log": "Log Applicazione",
-    "Address Countries": "Indirizzo Paesi"
+    "Address Countries": "Indirizzo Paesi",
+    "App Secrets": "App Secret"
   },
   "layouts": {
     "list": "Lista",
@@ -208,7 +209,9 @@
     "aclScope": "Entità ACL",
     "onlyAdmin": "Solo Admin",
     "activeOptions": "Opzioni Attive",
-    "labelType": "Tipo Etichetta"
+    "labelType": "Tipo Etichetta",
+    "preview": "Anteprima",
+    "attachmentField": "Campo allegato"
   },
   "messages": {
     "selectEntityType": "Scegli il tipo di entità dal menu di sinistra.",
@@ -283,7 +286,9 @@
     "groupEmailFolders": "Cartelle email condivise per i team.",
     "authenticationProviders": "Provider di autenticazione aggiuntivi per i portali.",
     "appLog": "Log applicazione.",
-    "addressCountries": "Paesi disponibili per i campi indirizzo."
+    "addressCountries": "Paesi disponibili per i campi indirizzo.",
+    "appSecrets": "Conserva informazioni sensibili come chiavi API, password e altri segreti.",
+    "leadCapture": "Punti di ingresso API per Web-to-Lead e moduli web."
   },
   "logicalOperators": {
     "and": "And"
@@ -321,7 +326,9 @@
     "entityManager": "campi,relazioni,rapporti",
     "templateManager": "notifiche",
     "authentication": "password,sicurezza,ldap",
-    "labelManager": "lingua,traduzione"
+    "labelManager": "lingua,traduzione",
+    "appSecrets": "chiave,chiavi,password",
+    "leadCapture": "moduli web"
   },
   "options": {
     "labelType": {

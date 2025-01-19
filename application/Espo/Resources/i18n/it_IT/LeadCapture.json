@@ -20,7 +20,17 @@
     "skipOptInConfirmationIfSubscribed": "Salta la conferma se il lead è già nella lista di destinazione",
     "smtpAccount": "Account SMTP",
     "inboundEmail": "Account e-mail di gruppo",
-    "phoneNumberCountry": "Prefisso telefonico"
+    "phoneNumberCountry": "Prefisso telefonico",
+    "fieldParams": "Parametri Campo",
+    "formId": "ID Modulo",
+    "formEnabled": "Modulo Web",
+    "formUrl": "URL Modulo",
+    "formSuccessText": "Testo da visualizzare dopo l'invio del modulo",
+    "formText": "Testo da visualizzare nel modulo",
+    "formSuccessRedirectUrl": "URL a cui reindirizzare dopo l'invio del modulo",
+    "formLanguage": "Lingua utilizzata nel modulo",
+    "formFrameAncestors": "Host consentiti per l'embedding del modulo",
+    "formCaptcha": "Usa captcha"
   },
   "links": {
     "targetList": "Lista di Destinazione",
@@ -33,7 +43,9 @@
     "Create LeadCapture": "Crea Punto D'ingresso",
     "Generate New API Key": "Genera una nuova chiave API",
     "Request": "Richiesta",
-    "Confirm Opt-In": "Conferma Iscrizione"
+    "Confirm Opt-In": "Conferma Iscrizione",
+    "Generate New Form ID": "Genera nuovo ID modulo",
+    "Web Form": "Modulo Web"
   },
   "messages": {
     "generateApiKey": "Crea nuova API Key",
@@ -41,6 +53,7 @@
     "optInIsConfirmed": "L'iscrizione è confermata."
   },
   "tooltips": {
-    "optInConfirmationSuccessMessage": "Il Markdown è supportato."
+    "optInConfirmationSuccessMessage": "Il Markdown è supportato.",
+    "formCaptcha": "Per poter utilizzare Captcha, è necessario configurarlo in **Amministrazione** > **Integrazioni**."
   }
 }

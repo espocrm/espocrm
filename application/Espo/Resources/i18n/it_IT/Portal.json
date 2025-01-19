@@ -18,7 +18,8 @@
     "layoutSet": "Layout",
     "authenticationProvider": "Provider di Autenticazione",
     "authTokenLifetime": "Vita del token di autenticazione (ore)",
-    "authTokenMaxIdleTime": "Inattività massima del token di autenticazione (ore)"
+    "authTokenMaxIdleTime": "Inattività massima del token di autenticazione (ore)",
+    "applicationName": "Nome dell'applicazione"
   },
   "links": {
     "users": "Utenti",

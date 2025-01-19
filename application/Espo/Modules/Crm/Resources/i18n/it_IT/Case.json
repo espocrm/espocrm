@@ -10,7 +10,8 @@
     "description": "Descrizione",
     "attachments": "Allegati",
     "inboundEmail": "Account Email di Gruppo",
-    "originalEmail": "Email Originale"
+    "originalEmail": "Email Originale",
+    "isInternal": "Nascosto dal portale"
   },
   "links": {
     "contact": "Contatto (Primario)",

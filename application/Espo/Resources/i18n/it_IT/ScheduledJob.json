@@ -17,7 +17,8 @@
       "AuthTokenControl": "Controllo Token di Autenticazione",
       "SendEmailNotifications": "Invio Notifiche Email",
       "CheckNewVersion": "Controllo Nuove Versioni",
-      "ProcessWebhookQueue": "Elaborazione Coda Webhook"
+      "ProcessWebhookQueue": "Elaborazione Coda Webhook",
+      "SendScheduledEmails": "Invia email programmate"
     },
     "cronSetup": {
       "linux": "Nota: aggiungi questa riga al file crontab per eseguire le attività pianificate di EspoCRM:",

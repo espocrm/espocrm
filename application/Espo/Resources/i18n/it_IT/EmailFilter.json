@@ -9,7 +9,8 @@
     "emailFolder": "Cartella",
     "groupEmailFolder": "Cartella Email di Gruppo",
     "markAsRead": "Segna come Letto",
-    "bodyContainsAll": "Corpo Contiene Tutto"
+    "bodyContainsAll": "Corpo Contiene Tutto",
+    "skipNotification": "Salta notifica"
   },
   "labels": {
     "Create EmailFilter": "Crea Filtro Email",
