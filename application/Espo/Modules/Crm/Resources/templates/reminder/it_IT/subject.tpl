@@ -1,0 +1,1 @@
+Promemoria per {{{entityTypeLowerFirst}}} '{{{name}}}'
