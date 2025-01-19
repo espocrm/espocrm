@@ -51,7 +51,7 @@
     "dashboardLayout": "Dashboard Übersicht (Standard)",
     "siteUrl": "Webadresse",
     "addressPreview": "Adressvorschau",
-    "addressFormat": "AddressFormat",
+    "addressFormat": "Format der Adresse",
     "notificationSoundsDisabled": "Benachrichtigungstöne deaktivieren",
     "applicationName": "Name der Applikation",
     "ldapUsername": "Vollständiger Benutzer-DN",
@@ -105,8 +105,8 @@
     "daemonInterval": "Daemon Intervall",
     "daemonMaxProcessNumber": "Daemon max. Prozessnummer",
     "daemonProcessTimeout": "Daemon-Prozess-Timeout",
-    "addressCityList": "Adresse Stadt Autovervollständigungsliste",
-    "addressStateList": "Adresse Bundesland Autovervollständigungsliste",
+    "addressCityList": "Autovervollständigungsliste für Adressfeld: Stadt",
+    "addressStateList": "Autovervollständigungsliste für Adressfeld: Bundesland",
     "cronDisabled": "Cron deaktivieren",
     "maintenanceMode": "Wartungsmodus",
     "useWebSocket": "WebSocket verwenden",
@@ -165,7 +165,11 @@
     "quickSearchFullTextAppendWildcard": "Platzhalter in der Schnellsuche einfügen",
     "authIpAddressCheck": "Zugriff nach IP-Adresse einschränken",
     "authIpAddressWhitelist": "IP-Adressen-Whitelist",
-    "authIpAddressCheckExcludedUsers": "Von der Überprüfung ausgeschlossene Benutzer"
+    "authIpAddressCheckExcludedUsers": "Von der Überprüfung ausgeschlossene Benutzer",
+    "streamEmailWithContentEntityTypeList": "Entitäten mit E-Mail-Text in Ereignis-Notizen",
+    "emailScheduledBatchCount": "Maximale Anzahl von geplanten E-Mails pro Stapel",
+    "passwordStrengthSpecialCharacterCount": "Anzahl der erforderlichen Sonderzeichen im Passwort",
+    "availableReactions": "Verfügbare Reaktionen"
   },
   "tooltips": {
     "recordsPerPage": "Anzahl Sätze In Listenansichten (Standard) ",
@@ -220,13 +224,13 @@
     "displayListViewRecordCount": "Eine Gesamtzahl von Datensätzen wird in der Listenansicht angezeigt.",
     "currencyList": "Welche Währungen im System verfügbar sein werden.",
     "activitiesEntityList": "Welche Aufzeichnungen werden im Aktivitäten-Panel zur Verfügung stehen.",
-    "historyEntityList": "Welche Aufzeichnungen im Geschichtspanel verfügbar sein werden.",
-    "calendarEntityList": "Welche Datensätze im Kalender verfügbar sein werden.",
-    "addressStateList": "Nennen Sie Vorschläge für Adressfelder.",
-    "addressCityList": "Stadtvorschläge für Adressfelder.",
-    "addressCountryList": "Ländervorschläge für Adressfelder.",
+    "historyEntityList": "Welche Aufzeichnungen im Verlaufspanel verfügbar sein werden.",
+    "calendarEntityList": "Welche Datensätze werden im Kalender verfügbar sein.",
+    "addressStateList": "Vorschläge für Adressfeld: Bundesland",
+    "addressCityList": "Vorschläge für Adressfeld: Stadt",
+    "addressCountryList": "Vorschläge für Adresssfeld: Land",
     "exportDisabled": "Benutzer können keine Datensätze exportieren. Nur der Administrator erhält die Erlaubnis.",
-    "globalSearchEntityList": "Welche Datensätze mit der Globalen Suche durchsucht werden können.",
+    "globalSearchEntityList": "Welche Datensätze können mit der Globalen Suche durchsucht werden.",
     "siteUrl": "Eine URL dieser EspoCRM-Instanz. Sie müssen sie ändern, wenn Sie in eine andere Domäne umziehen.",
     "useCache": "Eine Deaktivierung wird nicht empfohlen, es sei denn zu Entwicklungszwecken.",
     "useWebSocket": "WebSocket ermöglicht die interaktive Zwei-Wege-Kommunikation zwischen einem Server und einem Browser. Erfordert die Einrichtung des WebSocket-Daemons auf Ihrem Server. Weitere Informationen finden Sie in der Dokumentation.",
@@ -280,13 +284,15 @@
     "Phone Numbers": "Telefonnummern",
     "Access": "Zugriff",
     "Strength": "Stärke",
-    "Recovery": "Wiederherstellung"
+    "Recovery": "Wiederherstellung",
+    "Scheduled Send": "Geplanter Versand"
   },
   "messages": {
     "ldapTestConnection": "Die Verbindung wurde erfolgreich hergestellt."
   },
   "options": {
     "streamEmailNotificationsTypeList": {
+      "Post": "Notizen",
       "Status": "Statusaktualisierungen",
       "EmailReceived": "Empfangene E-Mails"
     },

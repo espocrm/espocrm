@@ -9,7 +9,8 @@
     "emailFolder": "Ordner",
     "groupEmailFolder": "E-Mail Gruppenordner",
     "markAsRead": "Als gelesen markieren",
-    "bodyContainsAll": "E-Mail-Text enthält alle"
+    "bodyContainsAll": "E-Mail-Text enthält alle",
+    "skipNotification": "Benachrichtigung überspringen"
   },
   "labels": {
     "Create EmailFilter": "E-Mail Filter erstellen",

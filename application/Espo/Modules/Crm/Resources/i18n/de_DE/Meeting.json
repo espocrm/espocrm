@@ -14,7 +14,8 @@
     "dateStartDate": "Startdatum (ganztägig)",
     "dateEndDate": "Enddatum (ganztägig)",
     "isAllDay": "Ist ganztägig",
-    "sourceEmail": "Quell E-Mail"
+    "sourceEmail": "Quell E-Mail",
+    "joinUrl": "Teilnahme-URL"
   },
   "options": {
     "status": {

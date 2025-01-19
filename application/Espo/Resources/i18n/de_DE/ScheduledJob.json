@@ -18,7 +18,8 @@
       "AuthTokenControl": "Auth Token-Überwachung",
       "SendEmailNotifications": "E-Mail-Benachrichtigungen senden",
       "CheckNewVersion": "Nach neuer Version suchen",
-      "ProcessWebhookQueue": "Webhook-Warteschlange verarbeiten"
+      "ProcessWebhookQueue": "Webhook-Warteschlange verarbeiten",
+      "SendScheduledEmails": "Geplante E-Mails senden"
     },
     "cronSetup": {
       "linux": "Hinweis: Fügen Sie diese Zeile zu Ihrer Crontab Datei hinzu, um geplante Aufgaben durchführen zu können:",

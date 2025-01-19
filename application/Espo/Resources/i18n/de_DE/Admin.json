@@ -76,7 +76,8 @@
     "Group Email Folders": "E-Mail Gruppenordner",
     "Authentication Providers": "Authentifizierungsanbieter",
     "Setup": "Einrichtung",
-    "Address Countries": "Länderliste"
+    "Address Countries": "Länderliste",
+    "App Secrets": "App-Geheimnisse"
   },
   "layouts": {
     "list": "Liste",
@@ -209,7 +210,9 @@
     "aclScope": "ACL Geltungsbereich",
     "onlyAdmin": "Nur für Administrator",
     "activeOptions": "Aktive Optionen",
-    "labelType": "Bezeichnungstyp"
+    "labelType": "Bezeichnungstyp",
+    "preview": "Vorschau",
+    "attachmentField": "Feld für Anhänge"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
@@ -232,8 +235,8 @@
     "newVersionIsAvailable": "Es ist eine neue EspoCRM-Version {latestVersion} verfügbar. Bitte folgen Sie den [Instruktionen](https://www.espocrm.com/documentation/administration/upgrading/), um Ihre Instanz zu aktualisieren.",
     "formulaFunctions": "Weitere Funktionen finden Sie in [documentation]({documentationUrl}).",
     "rebuildRequired": "Sie müssen Rebuild aus CLI ausführen.",
-    "cronIsDisabled": "Cron ist deaktiviert, die Anwendung ist nicht voll funktionsfähig. Aktivieren Sie Cron in den [settings](#Admin/settings).",
-    "cacheIsDisabled": "Wenn der Cache deaktiviert ist, wird die Anwendung langsam laufen. Aktivieren Sie den Cache in den [settings](#Administration/Einstellungen)."
+    "cronIsDisabled": "Cron ist deaktiviert, die Anwendung ist nicht voll funktionsfähig. Aktivieren Sie Cron in den [Einstellungen](#Admin/settings).",
+    "cacheIsDisabled": "Wenn der Cache deaktiviert ist, wird die Anwendung langsam laufen. Aktivieren Sie den Cache in den [Einstellungen](#Admin/settings)."
   },
   "descriptions": {
     "settings": "Systemeinstellungen der Applikation.",
@@ -266,7 +269,6 @@
     "actionHistory": "Protokoll der Benutzeraktionen.",
     "labelManager": "Bezeichnungen der Applikation anpassen",
     "authLog": "Anmeldeverlauf",
-    "leadCapture": "API-Einstiegspunkte für Web-zu-Interessent.",
     "attachments": "Alle Dateianhänge, die im System gespeichert sind.",
     "templateManager": "Nachrichten Templates anpassen",
     "systemRequirements": "Systemanforderungen für EspoCRM",
@@ -285,7 +287,9 @@
     "groupEmailFolders": "E-Mail Ordner, die mit Teams geteilt sind.",
     "authenticationProviders": "Zusätzliche Authentifizierungsanbieter für Portale.",
     "appLog": "Anwendungsprotokoll.",
-    "addressCountries": "Verfügbare Länder für Adressfelder."
+    "addressCountries": "Verfügbare Länder für Adressfelder.",
+    "appSecrets": "Speichert sensible Informationen wie API-Schlüssel, Kennwörter und andere Geheimnisse.",
+    "leadCapture": "Endpunkte zur Interessenten-Erfassung und Webformulare."
   },
   "options": {
     "previewSize": {
@@ -327,6 +331,8 @@
     "settings": "System",
     "templateManager": "Benachrichtigungen",
     "authentication": "Passwort,Sicherheit,LDAP",
-    "labelManager": "Sprache,Übersetzung"
+    "labelManager": "Sprache,Übersetzung",
+    "appSecrets": "Schlüssel,Passwort",
+    "leadCapture": "Webformulare"
   }
 }

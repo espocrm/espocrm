@@ -16,6 +16,7 @@
   },
   "filters": {
     "all": "Alle",
+    "posts": "Notizen",
     "updates": "Aktualisierungen",
     "activity": "Aktivität"
   },
@@ -54,6 +55,7 @@
     "View Activity": "Aktivitäten anzeigen",
     "Pin": "Anheften",
     "Unpin": "Lösen",
-    "Pinned": "Angeheftet"
+    "Pinned": "Angeheftet",
+    "Quote Reply": "Antwort zitieren"
   }
 }

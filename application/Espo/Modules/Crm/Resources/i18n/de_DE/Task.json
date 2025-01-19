@@ -12,7 +12,8 @@
     "dateCompleted": "Datum erledigt",
     "attachments": "Anhänge",
     "reminders": "Erinnerungen",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "originalEmail": "Original E-Mail"
   },
   "links": {
     "attachments": "Anhänge",
@@ -40,11 +41,11 @@
     "overdue": "überfällig"
   },
   "presetFilters": {
-    "actual": "Aktuell",
     "completed": "Abgeschlossen",
     "todays": "Heutige",
     "overdue": "Überfällig",
-    "deferred": "Zurückgestellt"
+    "deferred": "Zurückgestellt",
+    "actual": "Offen"
   },
   "nameOptions": {
     "replyToEmail": "Antworten an E-Mail"

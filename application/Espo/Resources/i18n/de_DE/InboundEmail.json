@@ -50,7 +50,7 @@
     "addAllTeamUsers": "E-Mails werden im Posteingang aller Benutzer bestimmter Teams angezeigt.",
     "targetUserPosition": "Bestimmen Sie die Position der Benutzer, die Fälle zugewiesen bekommen.",
     "monitoredFolders": "Mehrere Ordner sollten durch ein Komma getrennt sein.",
-    "smtpIsShared": "Wenn diese Option aktiviert ist, können Benutzer E-Mails über dieses SMTP senden. Die Verfügbarkeit wird von Rollen über die Gruppen-E-Mail-Konto-Berechtigung gesteuert.",
+    "smtpIsShared": "Wenn diese Option aktiviert ist, können Benutzer E-Mails über dieses SMTP-Konto senden. Die Verfügbarkeit wird von Rollen über die Gruppen-E-Mail-Konto-Berechtigung gesteuert.",
     "smtpIsForMassEmail": "Wenn diese Option aktiviert ist, steht SMTP für Massen-E-Mail zur Verfügung.",
     "storeSentEmails": "Gesendete E-Mails werden auf dem IMAP-Server gespeichert.",
     "useSmtp": "Die Möglichkeit, E-Mails zu versenden.",

@@ -17,7 +17,8 @@
     "layoutSet": "Layout-Set",
     "authenticationProvider": "Authentifizierungsanbieter",
     "authTokenLifetime": "Auth Token-Lebensdauer (Stunden)",
-    "authTokenMaxIdleTime": "Auth Token Maximale Leerlaufzeit (Stunden)"
+    "authTokenMaxIdleTime": "Auth Token Maximale Leerlaufzeit (Stunden)",
+    "applicationName": "Name der Anwendung"
   },
   "links": {
     "users": "Benutzer",

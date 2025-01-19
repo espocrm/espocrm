@@ -16,7 +16,8 @@
     "sortDirection": "Reihenfolge (Richtung)",
     "dateFilter": "Datumsfilter",
     "skipOwn": "Eigene Einträge nicht zeigen",
-    "folder": "Ordner"
+    "folder": "Ordner",
+    "includeShared": "Gemeinsame miteinbeziehen"
   },
   "options": {
     "mode": {

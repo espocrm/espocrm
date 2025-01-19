@@ -52,7 +52,8 @@
     "WebhookQueueItem": "Webhook-Warteschlangeelement",
     "AppLogRecord": "App Log Datensatz",
     "WorkingTimeRange": "Arbeitszeitausnahme",
-    "AddressCountry": "Adresse Land"
+    "AddressCountry": "Adresse Land",
+    "AppSecret": "App-Geheimnis"
   },
   "scopeNamesPlural": {
     "Email": "E-Mails",
@@ -99,7 +100,8 @@
     "GlobalStream": "Globale Ereignisse",
     "WebhookQueueItem": "Webhook-Warteschlangenelemente",
     "WorkingTimeRange": "Arbeitszeitausnahmen",
-    "AddressCountry": "Adresse Länder"
+    "AddressCountry": "Adresse Länder",
+    "AppSecret": "App-Geheimnisse"
   },
   "labels": {
     "Misc": "Verschiedenes",
@@ -233,7 +235,7 @@
     "Return to Application": "Zurück zur Applikation",
     "Select All Results": "Alle auswählen",
     "Expand": "Erweitern",
-    "Collapse": "Zusammenfall",
+    "Collapse": "Zusammenklappen",
     "New notifications": "Neue Benachrichtigungen",
     "Manage Categories": "Kategorien verwalten",
     "Manage Folders": "Ordner verwalten",
@@ -261,8 +263,7 @@
     "Log in as": "Anmelden als",
     "Sign in": "Anmelden",
     "Global Search": "Globale Suche",
-    "Show Navigation Panel": "Navigationsleiste anzeigen",
-    "Hide Navigation Panel": "Navigationsleiste verstecken",
+    "Navigation Panel": "Navigationsleiste anzeigen",
     "Print": "Drucken",
     "Copy to Clipboard": "In Zwischenablage kopieren",
     "Copied to clipboard": "In Zwischenablage kopiert",
@@ -277,7 +278,22 @@
     "Unstar": "Stern entfernen",
     "Starred": "Mit Stern markiert",
     "Remove Filter": "Entferne Filter",
-    "Ready": "Bereit"
+    "Ready": "Bereit",
+    "Column Resize": "Spaltengröße ändern",
+    "General": "Allgemein",
+    "Send": "Senden",
+    "Timeout": "Zeitüberschreitung",
+    "No internet": "Keine Internetverbindung",
+    "Scheduled": "Geplant",
+    "Now": "Jetzt",
+    "Expanded": "Erweitert",
+    "Collapsed": "Zusammengeklappt",
+    "Top Level": "Oberste Ebene",
+    "Fields": "Felder",
+    "View User Access": "Benutzerzugriff anzeigen",
+    "Reacted": "Reagierte",
+    "Reaction Removed": "Reaktion entfernt",
+    "Reactions": "Reaktionen"
   },
   "messages": {
     "pleaseWait": "Bitte warten...",
@@ -388,12 +404,16 @@
     "selectNotMoreThanNumberRecords": "Wählen Sie nicht mehr als {number} Datensätze aus",
     "selectAtLeastOneRecord": "Wählen Sie mindestens einen Datensatz aus",
     "fieldNotMatchingPattern$phoneNumberLoose": "{field} enthält Zeichen, die in einer Telefonnummer nicht erlaubt sind",
-    "duplicateConflict": "Ein Datensatz existiert bereits."
+    "duplicateConflict": "Ein Datensatz existiert bereits.",
+    "confirmMassUpdate": "Sind Sie sicher, dass Sie eine Massenaktualisierung ausgewählter Datensätze durchführen wollen?",
+    "cannotRemoveCategoryWithChildCategory": "Eine Kategorie, die eine untergeordnete Kategorie hat, kann nicht entfernt werden.",
+    "cannotRemoveNotEmptyCategory": "Eine nicht leere Kategorie kann nicht entfernt werden."
   },
   "boolFilters": {
     "onlyMy": "Nur meine",
     "followed": "Abonniert",
-    "onlyMyTeam": "Mein Team"
+    "onlyMyTeam": "Mein Team",
+    "shared": "Geteilt"
   },
   "presetFilters": {
     "followed": "Abonniert",
@@ -449,7 +469,9 @@
     "emailAddressIsInvalid": "E-Mail-Adresse ist ungültig",
     "phoneNumberIsInvalid": "Telefonnummer ist ungültig",
     "users": "Benutzer",
-    "childList": "Untergeordnete Liste"
+    "childList": "Untergeordnete Liste",
+    "collaborators": "Mitarbeiter",
+    "streamUpdatedAt": "Ereignisverlauf aktualisiert um"
   },
   "links": {
     "assignedUser": "Zugewiesener Benutzer",
@@ -458,7 +480,9 @@
     "roles": "Rollen",
     "users": "Benutzer",
     "parent": "Bezieht sich auf",
-    "children": "Kinder"
+    "children": "Kinder",
+    "assignedUsers": "Zugewiesene Benutzer",
+    "collaborators": "Mitarbeiter"
   },
   "dashlets": {
     "Stream": "Ereignisse",
@@ -468,7 +492,10 @@
   "notificationMessages": {
     "assign": "{entityType} {entity} wurde Ihnen zugewiesen",
     "emailReceived": "E-Mail empfangen von {from}",
-    "entityRemoved": "{user} hat {entityType} {entity} entfernt"
+    "entityRemoved": "{user} hat {entityType} {entity} entfernt",
+    "emailInbox": "{user} hat E-Mail {entity} zu Ihrem Posteingang hinzugefügt",
+    "userPostReaction": "{user} reagierte auf Ihre {post}",
+    "userPostInParentReaction": "{user} reagierte auf Ihre {post} in {entityType} {entity}"
   },
   "streamMessages": {
     "post": "{user} hat zu {entityType} {entity} notiert",
@@ -495,6 +522,7 @@
     "createAssigned": "{user} hat {entityType} {entity} erstellt und an {assignee} zugewiesen",
     "assign": "{user} hat {entityType} {entity} an {assignee} zugewiesen",
     "assignThis": "{user} hat {entityType} an {assignee} zugewiesen",
+    "assignMultiAddThis": "{user} hat {entityType} an {assignee} zugewiesen",
     "postThis": "{user} hat notiert",
     "attachThis": "{user} hat hinzugefügt",
     "statusThis": "{user} hat {field} aktualisiert",
@@ -525,7 +553,12 @@
     "assignThisSelf": "{user} hat sich selbst {entityType} zugewiesen",
     "assignSelf": "{user} hat sich {entityType} {entity} selbst zugewiesen",
     "unrelate": "{user} hat die Verknüpfung von {relatedEntityType} {relatedEntity} zu {entityType} {entity} gelöscht",
-    "unrelateThis": "{user} hat die Verknüpfung von {relatedEntityType} {relatedEntity} zu {entityType} gelöscht"
+    "unrelateThis": "{user} hat die Verknüpfung von {relatedEntityType} {relatedEntity} zu {entityType} gelöscht",
+    "assignMultiAdd": "{user} hat {entity} {assignee} zugewiesen",
+    "assignMultiRemove": "{user} hat die Zuweisung von {entity} an {removedAssignee} entfernt",
+    "assignMultiAddRemove": "{user} hat {entity} an {assignee} zugewiesen und die Zuweisung an {removedAssignee} aufgehoben",
+    "assignMultiRemoveThis": "{user} hat die Zuweisung von {entityType} an {removedAssignee} aufgehoben",
+    "assignMultiAddRemoveThis": "{user} hat {entityType} an {assignee} zugewiesen und die Zuweisung an {removedAssignee} aufgehoben"
   },
   "lists": {
     "monthNames": [
@@ -750,12 +783,12 @@
       "color": {
         "recent": "Letzte Farbe",
         "more": "Mehr Farben",
-        "background": "Hintergrundfarbe",
-        "foreground": "Schriftfarbe",
         "transparent": "Transparenz",
         "setTransparent": "Transparenz setzen",
         "reset": "Zurücksetzen",
-        "resetToDefault": "Zurücksetzen auf Standard"
+        "resetToDefault": "Zurücksetzen auf Standard",
+        "background": "Hintergrundfarbe",
+        "foreground": "Schriftfarbe"
       },
       "shortcut": {
         "shortcuts": "Tastaturkürzel",
@@ -854,5 +887,28 @@
       "middle": "Mitte",
       "bottom": "Unten"
     }
+  },
+  "strings": {
+    "yesterdayShort": "Gestern"
+  },
+  "reactions": {
+    "Smile": "Lächeln",
+    "Surprise": "Überrascht",
+    "Laugh": "Lacht",
+    "Meh": "Bah",
+    "Sad": "Traurig",
+    "Love": "Liebe",
+    "Like": "Mag ich",
+    "Dislike": "Mag ich nicht"
+  },
+  "recordActions": {
+    "create": "Erstellen",
+    "read": "Lesen",
+    "edit": "Ändern",
+    "delete": "Löschen",
+    "stream": "Ereignis"
+  },
+  "tabs": {
+    "Stream": "Ereignisse"
   }
 }

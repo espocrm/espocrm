@@ -10,7 +10,8 @@
     "lead": "Interessent",
     "attachments": "Anhänge",
     "inboundEmail": "Gruppen E-Mail Konto",
-    "originalEmail": "Ursprüngliche E-Mail"
+    "originalEmail": "Ursprüngliche E-Mail",
+    "isInternal": "Vor dem Portal verborgen"
   },
   "links": {
     "account": "Firma",

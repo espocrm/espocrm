@@ -4,8 +4,8 @@
     "data": "Daten",
     "target": "Ziel",
     "leadCapture": "Erfassung des Interessenten",
-    "createdAt": "Eingegeben bei",
-    "isCreated": "Ist einen Interessenten erstellt"
+    "createdAt": "Eingegeben am",
+    "isCreated": "Interessent wurde erstellt"
   },
   "links": {
     "leadCapture": "Erfassung des Interessenten",

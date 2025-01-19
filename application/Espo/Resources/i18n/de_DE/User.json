@@ -128,7 +128,8 @@
     "failedToLogIn": "Anmeldung fehlgeschlagen",
     "2faMethodNotConfigured": "Die 2FA-Methode ist im System nicht vollständig konfiguriert.",
     "loginError": "Ein Fehler ist aufgetreten",
-    "defaultTeamIsNotUsers": "Das Standardteam sollte eines der Teams des Benutzers sein"
+    "defaultTeamIsNotUsers": "Das Standardteam sollte eines der Teams des Benutzers sein",
+    "passwordStrengthSpecialCharacterCount": "Muss mindestens {count} Sonderzeichen enthalten."
   },
   "boolFilters": {
     "onlyMyTeam": "Nur mein Team",

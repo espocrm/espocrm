@@ -20,7 +20,17 @@
     "smtpAccount": "SMTP-Konto",
     "inboundEmail": "Gruppen-E-Mail-Konto",
     "exampleRequestHeaders": "Kopfzeilen",
-    "phoneNumberCountry": "Landesvorwahl"
+    "phoneNumberCountry": "Landesvorwahl",
+    "fieldParams": "Feld-Parameter",
+    "formId": "Formular-ID",
+    "formEnabled": "Webformular",
+    "formUrl": "Formular-URL",
+    "formSuccessText": "Text, der nach dem Absenden des Formulars angezeigt wird",
+    "formText": "Text, der im Formular angezeigt werden soll",
+    "formSuccessRedirectUrl": "URL, zu der nach dem Absenden des Formulars umgeleitet wird",
+    "formLanguage": "Verwendete Sprache im Formular",
+    "formFrameAncestors": "Erlaubte Hosts für die Formulareinbettung",
+    "formCaptcha": "Captcha verwenden"
   },
   "links": {
     "targetList": "Kontaktliste",
@@ -34,7 +44,9 @@
     "Create LeadCapture": "Einstiegspunkt erstellen",
     "Generate New API Key": "Eines neuen API Key generieren",
     "Request": "Anforderung",
-    "Confirm Opt-In": "Opt-In bestätigen"
+    "Confirm Opt-In": "Opt-In bestätigen",
+    "Generate New Form ID": "Neue Formular-ID generieren",
+    "Web Form": "Webformular"
   },
   "messages": {
     "generateApiKey": "Eines neuen API Key erstellen",
@@ -42,6 +54,7 @@
     "optInIsConfirmed": "Die Bestätigung ist bestätigt."
   },
   "tooltips": {
-    "optInConfirmationSuccessMessage": "Markdown ist unterstützt."
+    "optInConfirmationSuccessMessage": "Markdown ist unterstützt.",
+    "formCaptcha": "Um Captcha verwenden zu können, müssen Sie es unter **Administration** > **Integrationen** konfigurieren."
   }
 }

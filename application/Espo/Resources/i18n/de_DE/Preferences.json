@@ -34,7 +34,8 @@
     "calendarSlotDuration": "Kalender - Dauer des Zeitfensters",
     "calendarScrollHour": "Kalender - Zur Stunde springen",
     "defaultRemindersTask": "Standard-Erinnerungen für Aufgaben",
-    "addCustomTabs": "Benutzerdefinierte Registerkarten hinzufügen"
+    "addCustomTabs": "Benutzerdefinierte Registerkarten hinzufügen",
+    "reactionNotifications": "In-App-Benachrichtigungen über Reaktionen"
   },
   "options": {
     "weekStart": {

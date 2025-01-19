@@ -3,7 +3,8 @@
     "Fields": "Felder",
     "Relationships": "Beziehungen",
     "Schedule": "Geplant",
-    "Formula": "Formel"
+    "Formula": "Formel",
+    "Parameters": "Parameter"
   },
   "fields": {
     "type": "Typ",
@@ -42,7 +43,12 @@
     "module": "Modul",
     "selectFilter": "Filter auswählen",
     "primaryFilters": "Primäre Filter",
-    "stars": "Sterne"
+    "stars": "Sterne",
+    "preserveAuditLog": "Audit-Protokoll aufbewahren",
+    "assignedUsers": "Mehrere zugewiesene Benutzer",
+    "collaborators": "Mitarbeiter",
+    "aclContactLink": "ACL-Kontakt-Link",
+    "aclAccountLink": "ACL-Konto-Link"
   },
   "options": {
     "type": {
@@ -85,7 +91,6 @@
   "tooltips": {
     "statusField": "Updates dieses Feldes werden im Ereignisverlauf protokolliert.",
     "textFilterFields": "Von der Textsuche verwendete Felder.",
-    "stream": "Ob die Entität über einen Ereignisverlauf verfügt.",
     "disabled": "Überprüfen Sie, ob Sie diese Entität nicht in Ihrem System benötigen.",
     "linkAudited": "Das Erstellen eines verknüpften Datensatzes und das Verknüpfen mit dem vorhandenen Datensatz wird in Ereignisverlauf protokolliert.",
     "linkMultipleField": "Mehrere Felder verlinken bietet eine praktische Möglichkeit Beziehungen zu bearbeiten. Verwenden Sie es nicht, wenn Sie eine große Anzahl von Verknüpfungen haben.",
@@ -96,6 +101,13 @@
     "duplicateCheckFieldList": "Welche Felder bei der Überprüfung auf Duplikate zu prüfen sind.",
     "updateDuplicateCheck": "Prüfung auf Duplikate beim Aktualisieren eines Datensatzes.",
     "linkSelectFilter": "Ein primärer Filter, der standardmäßig bei der Auswahl eines Datensatzes angewendet wird.",
-    "stars": "Die Möglichkeit, Datensätze mit Sternen zu versehen. Sterne können von Benutzern als Lesezeichen für Datensätze verwendet werden."
+    "stars": "Die Möglichkeit, Datensätze mit Sternen zu versehen. Sterne können von Benutzern als Lesezeichen für Datensätze verwendet werden.",
+    "aclContactLink": "Die Verknüpfung mit Kontakt, die bei der Anwendung der Zugriffskontrolle für Portalbenutzer zu verwenden ist.",
+    "aclAccountLink": "Die Verknüpfung mit Konto, die bei der Anwendung der Zugriffskontrolle für Portalbenutzer verwendet werden soll.",
+    "collaborators": "Die Möglichkeit, Datensätze für bestimmte Benutzer freizugeben.",
+    "assignedUsers": "Die Möglichkeit, einem Datensatz mehrere Benutzer zuzuweisen.\n\nBeachten Sie, dass nach der Aktivierung des Parameters vorhandene zugewiesene Benutzer nicht in das neue Feld *Zugewiesene Benutzer* übertragen werden.",
+    "preserveAuditLog": "Deaktiviert die Bereinigung des Audit-Protokolls. Dieser Parameter ist nur anwendbar, wenn Ereignisse deaktiviert sind. Wenn Ereignisse aktiviert sind, werden die Audit-Protokollsätze nicht gelöscht.",
+    "stream": "Ob die Entität über einen Ereignisverlauf verfügt.",
+    "linkParamReadOnly": "Eine schreibgeschützte Verknüpfung kann nicht über die API-Anfragen *verknüpfen* und *entknüpfen* bearbeitet werden. Es wird nicht möglich sein, Datensätze über das Beziehungspanel zu verknüpfen und zu entverknüpfen. Es ist weiterhin möglich, schreibgeschützte Verknüpfungen über Verknüpfungs- und Mehrfachlinks-Felder zu bearbeiten."
   }
 }

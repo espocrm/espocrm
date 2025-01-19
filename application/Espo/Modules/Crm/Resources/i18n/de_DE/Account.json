@@ -97,5 +97,8 @@
     "customers": "Kunden",
     "partners": "Partner",
     "recentlyCreated": "Kürzlich erstellt"
+  },
+  "tabs": {
+    "Account": "Konto"
   }
 }

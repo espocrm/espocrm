@@ -9,8 +9,8 @@
     "Field Level": "Feldebene"
   },
   "fields": {
-    "exportPermission": "Exportberechtigung",
-    "massUpdatePermission": "Massenänderungen Berechtigung",
+    "exportPermission": "Berechtigung: Export",
+    "massUpdatePermission": "Berechtigung: Massenänderungen",
     "data": "Daten",
     "fieldData": "Felddaten"
   }

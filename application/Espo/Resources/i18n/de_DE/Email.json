@@ -53,7 +53,9 @@
     "icsEventDateStart": "ICS Event Startdatum",
     "groupFolder": "Gruppenordner",
     "isUsersSent": "Ist Benutzer gesendet",
-    "inArchive": "Im Archiv"
+    "inArchive": "Im Archiv",
+    "groupStatusFolder": "Gruppenstatus-Ordner",
+    "sendAt": "Senden um"
   },
   "links": {
     "replied": "Beantwortet",
@@ -64,12 +66,12 @@
     "sentBy": "Gesendet von",
     "attachments": "Anhänge",
     "fromEmailAddress": "Von der E-Mail Adresse",
-    "toEmailAddresses": "An E-Mail Adressen",
-    "ccEmailAddresses": "CC E-Mail Adressen",
-    "bccEmailAddresses": "BCC E-Mail Adressen",
-    "replyToEmailAddresses": "Antwort-an E-Mail Adressen",
     "groupFolder": "Gruppenordner",
-    "createdEvent": "Erstelltes Event"
+    "createdEvent": "Erstelltes Event",
+    "toEmailAddresses": "An E-Mail-Adressen",
+    "ccEmailAddresses": "CC-E-Mail-Adressen",
+    "bccEmailAddresses": "BCC-E-Mail-Addressen",
+    "replyToEmailAddresses": "E-Mail-Antwort-Adressen"
   },
   "options": {
     "status": {
@@ -79,6 +81,10 @@
       "Received": "Empfangen",
       "Failed": "Fehlgeschlagen",
       "Archived": "Importiert"
+    },
+    "groupStatusFolder": {
+      "Archive": "Archiv",
+      "Trash": "Papierkorb"
     }
   },
   "labels": {
@@ -116,7 +122,9 @@
     "Import EML": "EML importieren",
     "Moved to Archive": "Ins Archiv verschoben",
     "Moved to Trash": "In Papierkorb verschoben",
-    "Retrieved from Trash": "Aus dem Papierkorb geholt"
+    "Retrieved from Trash": "Aus dem Papierkorb geholt",
+    "No Records Moved": "Keine Datensätze verschoben",
+    "Schedule Send": "Versand planen"
   },
   "messages": {
     "testEmailSent": "Eine Test E-Mail wurde gesendet",
@@ -124,13 +132,21 @@
     "savedAsDraft": "Als Entwurf gepeichert",
     "confirmInsertTemplate": "Der E-Mail Text wird gelöscht. Möchten Sie die Vorlage wirklich einfügen?",
     "noSmtpSetup": "SMTP ist nicht konfiguriert: {link}",
+    "confirmSend": "Die E-Mail senden?",
     "sendConfirm": "Die E-Mail senden?",
     "removeSelectedRecordsConfirmation": "Sind Sie sicher, dass Sie ausgewählte E-Mails entfernen möchten?\n\nSie werden auch für andere Benutzer entfernt.",
     "removeRecordConfirmation": "Sind Sie sicher, dass Sie die E-Mail entfernen möchten?\n\nSie wird auch für andere Benutzer entfernt.",
     "invalidCredentials": "Ungültige Zugangsdaten.",
     "unknownError": "Unbekannter Fehler.",
     "recipientAddressRejected": "Empfängeradresse wurde abgelehnt.",
-    "alreadyImported": "Die [email]({link}) existiert bereits im System."
+    "alreadyImported": "Die [email]({link}) existiert bereits im System.",
+    "couldNotSentScheduledEmail": "Geplante [email]({link}) konnte nicht gesendet werden",
+    "notEditAccess": "Kein Bearbeitungszugriff auf E-Mails.",
+    "groupFolderNoAccess": "Kein Zugriff auf Gruppenordner.",
+    "groupMoveOutNoEditAccess": "Kann nicht aus dem Gruppenordner verschoben werden. Kein Bearbeitungszugriff auf E-Mails.",
+    "groupMoveToNoEditAccess": "Kann nicht in den Gruppenordner verschoben werden. Kein Bearbeitungszugriff auf E-Mails.",
+    "groupMoveToTrashNoEditAccess": "E-Mails können nicht aus dem Gruppenordner in den Papierkorb verschoben werden. Kein Bearbeitungszugriff auf E-Mails.",
+    "groupMoveToArchiveNoEditAccess": "Kann nicht vom Gruppenordner ins Archiv verschoben werden. Kein Bearbeitungszugriff auf E-Mails."
   },
   "presetFilters": {
     "sent": "Gesendet",
@@ -152,7 +168,8 @@
     "moveToArchive": "Archiv"
   },
   "strings": {
-    "sendingFailed": "E-Mail-Versand fehlgeschlagen"
+    "sendingFailed": "E-Mail-Versand fehlgeschlagen",
+    "group": "Gruppe"
   },
   "actions": {
     "moveToArchive": "Archiv"
