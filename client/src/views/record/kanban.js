@@ -694,7 +694,6 @@ class KanbanRecordView extends ListRecordView {
     }
 
     /**
-     * @protected
      * @param {string} group
      * @param {string} [id] Prepend. To be used after save.
      * @return {Promise}
