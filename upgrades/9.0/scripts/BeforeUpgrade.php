@@ -67,6 +67,7 @@ class BeforeUpgrade
         $skipPathRegexList = [
             '^custom\/Espo\/Modules\/[^\/]+\/vendor',
             '^application\/Espo\/Modules\/[^\/]+\/vendor',
+            "^application\/Espo\/Modules\/Sales\/",
         ];
 
         foreach (['custom', 'application/Espo/Modules'] as $dir) {
