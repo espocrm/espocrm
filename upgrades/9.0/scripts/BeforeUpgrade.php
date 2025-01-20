@@ -103,9 +103,9 @@ class BeforeUpgrade
 
     private function loadFromDir(string $dir, array $skipPathRegexList): void
     {
-        $directory = new \RecursiveDirectoryIterator($dir);
-        $fullTree = new \RecursiveIteratorIterator($directory);
-        $phpFiles = new \RegexIterator($fullTree, '/^.+\.php$/i', \RecursiveRegexIterator::GET_MATCH);
+        $directory = new RecursiveDirectoryIterator($dir);
+        $fullTree = new RecursiveIteratorIterator($directory);
+        $phpFiles = new RegexIterator($fullTree, '/^.+\.php$/i', RegexIterator::GET_MATCH);
 
         foreach ($phpFiles as $path) {
             $file = $path[0];
