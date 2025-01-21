@@ -2772,6 +2772,10 @@ class ListRecordView extends View {
      * @param {boolean} [isSilent] Do not trigger the `check` event.
      */
     checkRecord(id, $target, isSilent) {
+        if (this._disabledCheckboxes) {
+            return;
+        }
+
         if (!this.collection.get(id)) {
             return;
         }
@@ -3746,6 +3750,16 @@ class ListRecordView extends View {
         if (this.$selectAllCheckbox) {
             this.$selectAllCheckbox.removeAttr('disabled');
         }
+    }
+
+    /**
+     * Checkboxes are disabled.
+     *
+     * @since 9.0.1
+     * @return {boolean}
+     */
+    checkboxesAreDisabled() {
+        return this._disabledCheckboxes || !this.checkboxes;
     }
 
     /**
