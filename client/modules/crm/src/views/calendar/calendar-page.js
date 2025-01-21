@@ -58,7 +58,7 @@ class CalendarPage extends View {
      * A shortcut-key => action map.
      *
      * @protected
-     * @type {?Object.<string,function (JQueryKeyEventObject): void>}
+     * @type {?Object.<string, function (KeyboardEvent): void>}
      */
     shortcutKeys = {
         /** @this CalendarPage */
@@ -344,7 +344,7 @@ class CalendarPage extends View {
 
     /**
      * @private
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyHome(e) {
         e.preventDefault();
@@ -354,7 +354,7 @@ class CalendarPage extends View {
 
     /**
      * @private
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyArrowLeft(e) {
         e.preventDefault();
@@ -364,7 +364,7 @@ class CalendarPage extends View {
 
     /**
      * @private
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyArrowRight(e) {
         e.preventDefault();
@@ -374,7 +374,7 @@ class CalendarPage extends View {
 
     /**
      * @private
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyMinus(e) {
         if (!this.getCalendarView().actionZoomOut) {
@@ -388,7 +388,7 @@ class CalendarPage extends View {
 
     /**
      * @private
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyPlus(e) {
         if (!this.getCalendarView().actionZoomIn) {
@@ -402,7 +402,7 @@ class CalendarPage extends View {
 
     /**
      * @private
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      * @param {Number} digit
      */
     handleShortcutKeyDigit(e, digit) {
@@ -432,7 +432,7 @@ class CalendarPage extends View {
 
     /**
      * @private
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyControlSpace(e) {
         if (!this.getCalendarView().createEvent) {

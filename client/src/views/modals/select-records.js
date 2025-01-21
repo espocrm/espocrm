@@ -486,7 +486,7 @@ class SelectRecordsModalView extends ModalView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlSlash(e) {
         if (!this.searchPanel) {
@@ -507,7 +507,7 @@ class SelectRecordsModalView extends ModalView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlEnter(e) {
         if (!this.multiple) {
@@ -526,7 +526,7 @@ class SelectRecordsModalView extends ModalView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlSpace(e) {
         if (!this.createButton) {

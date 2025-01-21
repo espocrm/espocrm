@@ -224,7 +224,7 @@ class EditRecordView extends DetailRecordView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyEscape(e) {
         if (this.buttonsDisabled) {
@@ -256,7 +256,7 @@ class EditRecordView extends DetailRecordView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlAltEnter(e) {
         if (this.buttonsDisabled) {

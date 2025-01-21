@@ -639,7 +639,7 @@ class RelatedListModalView extends ModalView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlSlash(e) {
         if (!this.searchPanel) {
@@ -660,7 +660,7 @@ class RelatedListModalView extends ModalView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlSpace(e) {
         if (this.createDisabled) {

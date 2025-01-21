@@ -663,7 +663,7 @@ class EmailDetailRecordView extends DetailRecordView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlS(e) {
         if (this.inlineEditModeIsOn || this.buttonsDisabled) {

@@ -546,7 +546,7 @@ class DetailRecordView extends BaseRecordView {
      * A shortcut-key => action map.
      *
      * @protected
-     * @type {?Object.<string, string|function (JQueryKeyEventObject): void>}
+     * @type {?Object.<string, string|function (KeyboardEvent): void>}
      */
     shortcutKeys = {
         /** @this DetailRecordView */
@@ -3970,7 +3970,7 @@ class DetailRecordView extends BaseRecordView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlEnter(e) {
         const action = this.shortcutKeyCtrlEnterAction;
@@ -3997,7 +3997,7 @@ class DetailRecordView extends BaseRecordView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlS(e) {
         if (this.inlineEditModeIsOn || this.buttonsDisabled) {
@@ -4024,7 +4024,7 @@ class DetailRecordView extends BaseRecordView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlSpace(e) {
         if (this.inlineEditModeIsOn || this.buttonsDisabled) {
@@ -4057,7 +4057,7 @@ class DetailRecordView extends BaseRecordView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyEscape(e) {
         if (this.inlineEditModeIsOn || this.buttonsDisabled) {
@@ -4086,13 +4086,13 @@ class DetailRecordView extends BaseRecordView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlAltEnter(e) {}
 
     /**
      * @public
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyControlBackslash(e) {
         if (!this.hasTabs()) {
@@ -4140,7 +4140,7 @@ class DetailRecordView extends BaseRecordView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyControlArrowLeft(e) {
         if (this.inlineEditModeIsOn || this.buttonsDisabled) {
@@ -4173,7 +4173,7 @@ class DetailRecordView extends BaseRecordView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyControlArrowRight(e) {
         if (this.inlineEditModeIsOn || this.buttonsDisabled) {

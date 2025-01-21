@@ -271,7 +271,7 @@ class ModalView extends View {
      * A shortcut-key => action map.
      *
      * @protected
-     * @type {?Object.<string,string|function (JQueryKeyEventObject): void>}
+     * @type {?Object.<string, string|function (KeyboardEvent): void>}
      */
     shortcutKeys = null
 

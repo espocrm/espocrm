@@ -753,7 +753,7 @@ class DetailModalView extends ModalView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyControlArrowLeft(e) {
         if (!this.model.collection) {
@@ -776,7 +776,7 @@ class DetailModalView extends ModalView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyControlArrowRight(e) {
         if (!this.model.collection) {

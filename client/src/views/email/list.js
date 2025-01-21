@@ -741,7 +741,7 @@ class EmailListView extends ListView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
+     * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlSpace(e) {
         if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
