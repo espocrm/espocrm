@@ -310,7 +310,7 @@ class DateFieldView extends BaseFieldView {
             const options = {
                 format: this.getDateTime().dateFormat,
                 weekStart: this.getDateTime().weekStart,
-                startDate: this.getStartDateForDatePicker() || this.getDateTime().toDisplayDate('1970-01-01'),
+                startDate: this.getStartDateForDatePicker(),
                 todayButton: this.getConfig().get('datepickerTodayButton') || false,
             };
 
