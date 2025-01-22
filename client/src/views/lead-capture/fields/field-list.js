@@ -224,4 +224,25 @@ export default class extends ArrayFieldView {
 
         this.reRender();
     }
+
+    addValue(value) {
+        /** @type {string[]} */
+        const items = this.model.get(this.name);
+
+        let isAdded = false;
+
+        if (items && !items.includes(value)) {
+            isAdded = true;
+        }
+
+        super.addValue(value);
+
+        if (
+            isAdded &&
+            this.getMetadata().get(`entityDefs.Lead.fields.${value}.required`) &&
+            !this.isFieldRequired(value)
+        ) {
+            this.toggleRequired(value);
+        }
+    }
 }
