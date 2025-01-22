@@ -77,6 +77,7 @@ class HtmlComposer
         return "
             <head>
                 {$titleHtml}
+                <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
             </head>
             <style>
             @page {
