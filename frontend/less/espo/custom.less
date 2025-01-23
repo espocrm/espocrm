@@ -3705,6 +3705,13 @@ a.field-info > span.fa-info-circle {
 .btn:not(.btn-icon) > .far:first-child:has(+ span),
 .btn:not(.btn-icon) > .fas:first-child:has(+ span) {
     padding-right: var(--5px);
+
+    &.fas,
+    &.far {
+        &:not(.fa-sm) {
+            line-height: var(--21px);
+        }
+    }
 }
 
 .transform-flip,
