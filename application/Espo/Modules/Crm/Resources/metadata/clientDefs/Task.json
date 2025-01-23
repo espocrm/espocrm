@@ -11,6 +11,16 @@
     "modalViews": {
         "detail": "crm:views/task/modals/detail"
     },
+    "viewSetupHandlers": {
+        "record/detail": [
+            "__APPEND__",
+            "crm:handlers/task/reminders-handler"
+        ],
+        "record/edit": [
+            "__APPEND__",
+            "crm:handlers/task/reminders-handler"
+        ]
+    },
     "menu": {
         "detail": {
             "buttons": [
