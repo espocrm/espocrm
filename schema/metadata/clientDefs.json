@@ -470,7 +470,7 @@
                     },
                     "selectHandler": {
                         "type": "string",
-                        "description": "A select handler for providing filters when selecting related records. Should have a method *getFilters* returning a promise."
+                        "description": "A select handler for providing filters when selecting related records. Should have a method *getFilters* returning a promise. \n\nPromise value:\n```{bool?: string[], primary?: string, orderBy?: string, order?: 'asc'|'desc', advanced: Record}```"
                     },
                     "createHandler": {
                         "type": "string",
