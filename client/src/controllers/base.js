@@ -216,6 +216,16 @@ class BaseController extends Controller {
 
         this.entire(view);
     }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionError404() {
+        this.error404();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionError403() {
+        this.error403();
+    }
 }
 
 export default BaseController;
