@@ -66,6 +66,7 @@ class BeforeUpgrade
     {
         $skipPathRegexList = [
             '^custom\/Espo\/Modules\/[^\/]+\/vendor',
+            '^custom\/Espo\/Custom\/vendor',
             '^application\/Espo\/Modules\/[^\/]+\/vendor',
             "^custom\/Espo\/Modules\/Sales\/",
         ];
