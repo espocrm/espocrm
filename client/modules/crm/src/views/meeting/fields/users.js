@@ -68,7 +68,11 @@ export default class extends AttendeesFieldView {
         if (avatarHtml) {
             const img = new DOMParser().parseFromString(avatarHtml, 'text/html').body.childNodes[0];
 
-            itemElement.children[0].querySelector('.link-item-name').prepend(img);
+            const nameElement = itemElement.children[0].querySelector('.link-item-name');
+
+            if (nameElement) {
+                nameElement.prepend(img);
+            }
         }
 
         return itemElement;
