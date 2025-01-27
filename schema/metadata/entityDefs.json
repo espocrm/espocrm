@@ -853,6 +853,10 @@
                     "type": "boolean",
                     "description": "Disables the field."
                 },
+                "notNull": {
+                    "type": "boolean",
+                    "default": "Non-null."
+                },
                 "utility": {
                     "type": "boolean",
                     "description": "The field will be hidden from a user on the UI but not disabled."
@@ -1214,6 +1218,10 @@
                                         ]
                                     }
                                 ]
+                            },
+                            "notNull": {
+                                "type": "boolean",
+                                "default": "Non-null."
                             }
                         }
                     }
