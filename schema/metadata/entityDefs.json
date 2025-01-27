@@ -1182,16 +1182,38 @@
                         "type": "object",
                         "properties": {
                             "type": {
-                                "enum": ["varchar", "int", "float", "bool", "foreignId"]
+                                "enum": ["varchar", "int", "float", "bool", "foreignId"],
+                                "description": "A column type."
                             },
                             "maxLength": {
-                                "type": "integer"
+                                "type": "integer",
+                                "default": "Max length."
                             },
                             "default": {
-                                "type": ["integer", "string", "boolean", "null", "number"]
+                                "type": ["integer", "string", "boolean", "null", "number"],
+                                "description": "A default value."
                             },
                             "dbType": {
-                                "type": "string"
+                                "type": "string",
+                                "description": "Overrides the type of the DB column.",
+                                "anyOf": [
+                                    {"type": "string"},
+                                    {
+                                        "enum": [
+                                            "string",
+                                            "decimal",
+                                            "float",
+                                            "smallint",
+                                            "integer",
+                                            "bigint",
+                                            "text",
+                                            "date",
+                                            "datetime",
+                                            "boolean",
+                                            "binary"
+                                        ]
+                                    }
+                                ]
                             }
                         }
                     }
