@@ -63,19 +63,28 @@ input[type=radio]:focus-visible{
     outline-offset: var(--3px);
 }
 
-.block-center {
+.block-center,
+.block-center-8 {
     max-width: calc(var(--8px) * 100);
     margin-left: auto;
     margin-right: auto;
 }
 
-.block-center-sm {
+.block-center-sm,
+.block-center-4 {
     max-width: calc(var(--4px) * 100);
     margin-left: auto;
     margin-right: auto;
 }
 
-.block-center-md {
+.block-center-5 {
+    max-width: calc(var(--5px) * 100);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.block-center-md,
+.block-center-6 {
     max-width: calc(var(--6px) * 100);
     margin-left: auto;
     margin-right: auto;
@@ -2025,6 +2034,23 @@ label.attach-file-label {
     max-width: var(--container-max-width);
     padding: 0 var(--container-padding) 0 var(--container-padding);
     margin: 0 auto;
+
+    @media screen and (min-width: @screen-sm-min) {
+        &.sub-container-center-4 {
+            max-width: calc(var(--5px) * 100);
+            padding: 0 0;
+        }
+
+        &.sub-container-center-5 {
+            max-width: calc(var(--5px) * 100);
+            padding: 0 0;
+        }
+
+        &.sub-container-center-6 {
+            max-width: calc(var(--6px) * 100);
+            padding: 0 0;
+        }
+    }
 }
 
 @media screen and (max-width: @screen-xs-max) {
