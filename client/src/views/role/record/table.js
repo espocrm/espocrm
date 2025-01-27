@@ -424,7 +424,7 @@ class RoleRecordTableView extends View {
                 defs.fields[name] = {
                     type: 'enum',
                     options: actionItem.levelList,
-                    translation: 'Role.options.accessList',
+                    translation: 'Role.options.levelList',
                     style: this.styleMap,
                 };
 
@@ -508,7 +508,7 @@ class RoleRecordTableView extends View {
             defs.fields[name] = {
                 type: 'enum',
                 options: ['yes', 'no'],
-                translation: 'Role.options.accessList',
+                translation: 'Role.options.levelList',
                 style: this.styleMap,
             };
 
