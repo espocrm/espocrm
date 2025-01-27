@@ -34,7 +34,7 @@ export default class LeadCaptureFormView extends View {
 
     // language=Handlebars
     templateContent = `
-        <div class="block-center-md margin-top">
+        <div class="block-center-5 margin-top">
             {{#if isPosted}}
                 <div class="panel paned-default">
                     <div class="panel-body">
@@ -136,6 +136,11 @@ export default class LeadCaptureFormView extends View {
         });
 
         this.assignView('record', this.recordView, '.record');
+    }
+
+    afterRender() {
+        const subContainer = this.element.querySelector('.detail-button-container .sub-container');
+        subContainer.classList.add('sub-container-center-5');
     }
 
     async actionCreate() {
