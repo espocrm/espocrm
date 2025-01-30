@@ -107,6 +107,18 @@
             border-top-left-radius: 0;
             border-top-right-radius: 0;
         }
+
+        .tabs {
+            margin-bottom: var(--vertical-gap);
+        }
+    }
+
+    .record-grid {
+        > .left:has(> .tabs) {
+            .bottom:not(:has(> .tabs)) {
+                margin-top: calc(2 * var(--vertical-gap));
+            }
+        }
     }
 }
 
