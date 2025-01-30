@@ -14,7 +14,7 @@
                             autocapitalize="off"
                             spellcheck="false"
                             tabindex="1"
-                            autocomplete="new-password"
+                            autocomplete="one-time-code"
                             maxlength="7"
                         >
                     </div>
