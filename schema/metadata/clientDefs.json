@@ -515,7 +515,7 @@
                         "properties": {
                             "name": {
                                 "type": "string",
-                                "default": "A name."
+                                "description": "A name."
                             },
                             "acl": {
                                 "description": "An ACL action access to which is required for the action.",
