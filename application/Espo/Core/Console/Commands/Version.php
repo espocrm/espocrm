@@ -36,16 +36,12 @@ use Espo\Core\Utils\Config;
 
 class Version implements Command
 {
-    public function __construct(private Config $config)
+    public function __construct(private Config\SystemConfig $config)
     {}
 
     public function run(Params $params, IO $io): void
     {
-        $version = $this->config->get('version');
-
-        if (is_null($version)) {
-            return;
-        }
+        $version = $this->config->getVersion();
 
         $io->writeLine($version);
     }

@@ -45,4 +45,9 @@ class SystemConfig
     {
         return (bool) $this->config->get('useCache');
     }
+
+    public function getVersion(): string
+    {
+        return (string) $this->config->get('version');
+    }
 }

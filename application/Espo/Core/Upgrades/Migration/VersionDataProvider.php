@@ -38,15 +38,15 @@ class VersionDataProvider
     private string $defaultConfigPath = 'application/Espo/Resources/defaults/config.php';
 
     public function __construct(
-        private Config $config,
-        private Manager $fileManager
+        private Manager $fileManager,
+        private Config\SystemConfig $systemConfig,
     ) {}
 
     public function getPreviousVersion(): string
     {
-        $version = $this->config->get('version');
+        $version = $this->systemConfig->getVersion();
 
-        if (!is_string($version) || !$version) {
+        if (!$version) {
             throw new RuntimeException("No or bad 'version' in config.");
         }
 

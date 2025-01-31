@@ -43,7 +43,7 @@ class GetAbout implements Action
 {
     public function __construct(
         private FileReader $fileReader,
-        private Config $config
+        private Config\SystemConfig $systemConfig,
     ) {}
 
     public function process(Request $request): Response
@@ -52,7 +52,7 @@ class GetAbout implements Action
 
         return ResponseComposer::json([
             'text' => $text,
-            'version' => $this->config->get('version'),
+            'version' => $this->systemConfig->getVersion(),
         ]);
     }
 }

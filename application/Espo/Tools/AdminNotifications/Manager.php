@@ -148,7 +148,7 @@ class Manager
             return null;
         }
 
-        $currentVersion = $this->config->get('version');
+        $currentVersion = $this->systemConfig->getVersion();
 
         if ($currentVersion === 'dev') {
             return null;
