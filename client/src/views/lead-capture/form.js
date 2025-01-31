@@ -136,6 +136,8 @@ export default class LeadCaptureFormView extends View {
         });
 
         this.assignView('record', this.recordView, '.record');
+
+        this.whenReady().then(() => this.initAutocomplete());
     }
 
     afterRender() {
@@ -198,5 +200,80 @@ export default class LeadCaptureFormView extends View {
                 resolve(token);
             });
         })
+    }
+
+    /**
+     * @private
+     */
+    initAutocomplete() {
+        const emailAddressView = this.recordView.getFieldView('emailAddress');
+
+        if (emailAddressView) {
+            this.listenTo(emailAddressView, 'after:render', () => {
+                /** @type {HTMLInputElement} */
+                const element = emailAddressView.element.querySelector('input');
+
+                if (element) {
+                    element.autocomplete = 'email';
+                }
+            });
+        }
+
+        const phoneNumberView = this.recordView.getFieldView('phoneNumber');
+
+        if (phoneNumberView) {
+            this.listenTo(phoneNumberView, 'after:render', () => {
+                /** @type {HTMLInputElement} */
+                const element = phoneNumberView.element.querySelector('input');
+
+                if (element) {
+                    element.autocomplete = 'tel';
+                }
+            });
+        }
+
+        const nameView = this.recordView.getFieldView('name');
+
+        this.listenTo(nameView, 'after:render', () => {
+            /** @type {HTMLInputElement} */
+            const elementFirst = nameView.element.querySelector('input[data-name="firstName"]');
+
+            if (elementFirst) {
+                elementFirst.autocomplete = 'given-name';
+            }
+
+            /** @type {HTMLInputElement} */
+            const elementLast = nameView.element.querySelector('input[data-name="lastName"]');
+
+            if (elementLast) {
+                elementLast.autocomplete = 'family-name';
+            }
+        });
+
+        const firstName = this.recordView.getFieldView('firstName');
+
+        if (firstName) {
+            this.listenTo(firstName, 'after:render', () => {
+                /** @type {HTMLInputElement} */
+                const element = firstName.element.querySelector('input');
+
+                if (element) {
+                    element.autocomplete = 'given-name';
+                }
+            });
+        }
+
+        const lastName = this.recordView.getFieldView('lastName');
+
+        if (lastName) {
+            this.listenTo(lastName, 'after:render', () => {
+                /** @type {HTMLInputElement} */
+                const element = lastName.element.querySelector('input');
+
+                if (element) {
+                    element.autocomplete = 'family-name';
+                }
+            });
+        }
     }
 }
