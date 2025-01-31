@@ -46,7 +46,8 @@ class Manager
         private EntityManager $entityManager,
         private Config $config,
         private Language $language,
-        private ScheduledJob $scheduledJob
+        private ScheduledJob $scheduledJob,
+        private Config\SystemConfig $systemConfig,
     ) {}
 
     /**
@@ -60,7 +61,7 @@ class Manager
             return [];
         }
 
-        if (!$this->config->get('useCache')) {
+        if (!$this->systemConfig->useCache()) {
             $notificationList[] = [
                 'id' => 'cacheIsDisabled',
                 'type' => 'cacheIsDisabled',

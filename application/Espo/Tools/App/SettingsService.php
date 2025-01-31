@@ -68,7 +68,8 @@ class SettingsService
         private InjectableFactory $injectableFactory,
         private Access $access,
         private AuthenticationMethodProvider $authenticationMethodProvider,
-        private ThemeManager $themeManager
+        private ThemeManager $themeManager,
+        private Config\SystemConfig $systemConfig,
     ) {}
 
     /**
@@ -222,7 +223,7 @@ class SettingsService
 
         if (
             isset($data->useCache) &&
-            $data->useCache !== $this->config->get('useCache')
+            $data->useCache !== $this->systemConfig->useCache()
         ) {
             $this->dataManager->clearCache();
         }

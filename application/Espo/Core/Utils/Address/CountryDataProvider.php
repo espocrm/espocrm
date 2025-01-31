@@ -47,10 +47,10 @@ class CountryDataProvider
 
     public function __construct(
         private DataCache $dataCache,
-        private Config $config,
-        private EntityManager $entityManager
+        private EntityManager $entityManager,
+        Config\SystemConfig $systemConfig,
     ) {
-        $this->useCache = (bool) $this->config->get('useCache');
+        $this->useCache = $systemConfig->useCache();
     }
 
     /**

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Acl\Table;
 
+use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Entities\User;
 
 use Espo\Core\Acl\FieldData;
@@ -37,7 +38,6 @@ use Espo\Core\Acl\Table;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\Metadata;
-
 use stdClass;
 use RuntimeException;
 
@@ -96,7 +96,7 @@ class DefaultTable implements Table
         private RoleListProvider $roleListProvider,
         CacheKeyProvider $cacheKeyProvider,
         protected User $user,
-        Config $config,
+        SystemConfig $systemConfig,
         protected Metadata $metadata,
         DataCache $dataCache,
     ) {
@@ -116,7 +116,7 @@ class DefaultTable implements Table
 
         $this->cacheKey = $cacheKeyProvider->get();
 
-        if ($config->get('useCache') && $dataCache->has($this->cacheKey)) {
+        if ($systemConfig->useCache() && $dataCache->has($this->cacheKey)) {
             /** @var stdClass $cachedData */
             $cachedData = $dataCache->get($this->cacheKey);
 
@@ -124,7 +124,7 @@ class DefaultTable implements Table
         } else {
             $this->load();
 
-            if ($config->get('useCache')) {
+            if ($systemConfig->useCache()) {
                 $dataCache->store($this->cacheKey, $this->data);
             }
         }

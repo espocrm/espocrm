@@ -29,31 +29,33 @@
 
 namespace tests\unit\Espo\Core;
 
+use PHPUnit\Framework\TestCase;
 use tests\unit\ReflectionHelper;
 
-use Espo\Core\{
-    Hook\GeneralInvoker,
-    HookManager,
-    InjectableFactory,
-    Utils\Metadata,
-    Utils\Config,
-    Utils\File\Manager as FileManager,
-    Utils\DataCache,
-    Utils\Log,
-    Utils\Module\PathProvider};
+use Espo\Core\Hook\GeneralInvoker;
+use Espo\Core\HookManager;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Module\PathProvider;
 
-class HookManagerTest extends \PHPUnit\Framework\TestCase
+class HookManagerTest extends TestCase
 {
     private $hookManager;
 
     private $filesPath = 'tests/unit/testData/Hooks';
+
+    private ?Config\SystemConfig $systemConfig = null;
 
     protected function setUp(): void
     {
         $this->metadata = $this->createMock(Metadata::class);
             $this->getMockBuilder(Metadata::class)->disableOriginalConstructor()->getMock();
 
-        $this->config = $this->createMock(Config::class);
+        $this->systemConfig = $this->createMock(Config\SystemConfig::class);
 
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
         $this->dataCache = $this->createMock(DataCache::class);
@@ -65,11 +67,11 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
             $this->injectableFactory,
             $this->fileManager,
             $this->metadata,
-            $this->config,
             $this->dataCache,
             $this->createMock(Log::class),
             $this->pathProvider,
-            $this->generalInvoker
+            $this->generalInvoker,
+            $this->systemConfig,
         );
 
         $this->reflection = new ReflectionHelper($this->hookManager);
@@ -255,9 +257,9 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
     {
         $this->initPathProvider('testCase1');
 
-        $this->config
+        $this->systemConfig
             ->expects($this->exactly(2))
-            ->method('get')
+            ->method('useCache')
             ->will($this->returnValue(false));
 
         $this->metadata
@@ -290,9 +292,9 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
     {
         $this->initPathProvider('testCase2');
 
-        $this->config
+        $this->systemConfig
             ->expects($this->exactly(2))
-            ->method('get')
+            ->method('useCache')
             ->will($this->returnValue(false));
 
         $this->metadata
@@ -326,9 +328,9 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
     {
         $this->initPathProvider('testCase2');
 
-        $this->config
+        $this->systemConfig
             ->expects($this->exactly(2))
-            ->method('get')
+            ->method('useCache')
             ->will($this->returnValue(false));
 
         $this->metadata
@@ -362,9 +364,9 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
     {
         $this->initPathProvider('testCase3');
 
-        $this->config
+        $this->systemConfig
             ->expects($this->exactly(2))
-            ->method('get')
+            ->method('useCache')
             ->will($this->returnValue(false));
 
         $this->metadata

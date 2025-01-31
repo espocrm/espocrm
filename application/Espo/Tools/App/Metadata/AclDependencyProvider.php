@@ -54,10 +54,10 @@ class AclDependencyProvider
     public function __construct(
         private DataCache $dataCache,
         private Metadata $metadata,
-        Config $config,
-        private Defs $ormDefs
+        private Defs $ormDefs,
+        Config\SystemConfig $systemConfig,
     ) {
-        $this->useCache = $config->get('useCache');
+        $this->useCache = $systemConfig->useCache();
     }
 
     /**

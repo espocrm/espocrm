@@ -31,6 +31,7 @@ namespace Espo\Core\Utils;
 
 use Espo\Core\Api\Action;
 use Espo\Core\Api\Route as RouteItem;
+use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Resource\PathProvider;
 
@@ -52,11 +53,11 @@ class Route
     private string $routesFileName = 'routes.json';
 
     public function __construct(
-        private Config $config,
         private Metadata $metadata,
         private FileManager $fileManager,
         private DataCache $dataCache,
-        private PathProvider $pathProvider
+        private PathProvider $pathProvider,
+        private SystemConfig $systemConfig,
     ) {}
 
     /**
@@ -89,7 +90,7 @@ class Route
 
     private function init(): void
     {
-        $useCache = $this->config->get('useCache');
+        $useCache = $this->systemConfig->useCache();
 
         if ($this->dataCache->has($this->cacheKey) && $useCache) {
             /** @var ?(RouteArrayShape[]) $data  */

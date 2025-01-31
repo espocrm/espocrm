@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Utils\Autoload;
 
-use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Log;
@@ -68,10 +68,10 @@ class NamespaceLoader
     private ClassLoader $classLoader;
 
     public function __construct(
-        private Config $config,
         private DataCache $dataCache,
         private FileManager $fileManager,
-        private Log $log
+        private Log $log,
+        private SystemConfig $systemConfig,
     ) {
 
         $this->classLoader = new ClassLoader();
@@ -231,7 +231,7 @@ class NamespaceLoader
      */
     private function getVendorNamespaces(string $path): array
     {
-        $useCache = $this->config->get('useCache');
+        $useCache = $this->systemConfig->useCache();
 
         if (!isset($this->vendorNamespaces)) {
             $this->vendorNamespaces = [];

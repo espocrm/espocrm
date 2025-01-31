@@ -33,7 +33,7 @@ use Espo\Core\Authentication\Jwt\Exceptions\UnsupportedKey;
 use Espo\Core\Authentication\Jwt\Key;
 use Espo\Core\Authentication\Jwt\KeyFactory;
 use Espo\Core\Field\DateTime;
-use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Log;
@@ -48,10 +48,10 @@ class KeysProvider
 
     public function __construct(
         private DataCache $dataCache,
-        private Config $config,
         private ConfigDataProvider $configDataProvider,
         private KeyFactory $factory,
-        private Log $log
+        private Log $log,
+        private SystemConfig $systemConfig,
     ) {}
 
     /**
@@ -147,7 +147,7 @@ class KeysProvider
      */
     private function getRawFromCache(): ?array
     {
-        if (!$this->config->get('useCache')) {
+        if (!$this->systemConfig->useCache()) {
             return null;
         }
 
@@ -189,7 +189,7 @@ class KeysProvider
      */
     private function storeRawToCache(array $raw): void
     {
-        if (!$this->config->get('useCache')) {
+        if (!$this->systemConfig->useCache()) {
             return;
         }
 

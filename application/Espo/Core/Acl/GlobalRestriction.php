@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Acl;
 
-use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Metadata;
@@ -91,10 +91,10 @@ class GlobalRestriction
         private Metadata $metadata,
         private DataCache $dataCache,
         private FieldUtil $fieldUtil,
-        Config $config
+        SystemConfig $systemConfig,
     ) {
 
-        $useCache = $config->get('useCache');
+        $useCache = $systemConfig->useCache();
 
         if ($useCache && $this->dataCache->has($this->cacheKey)) {
             /** @var stdClass $cachedData */

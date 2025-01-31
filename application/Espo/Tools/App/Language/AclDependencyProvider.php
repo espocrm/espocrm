@@ -31,6 +31,7 @@ namespace Espo\Tools\App\Language;
 
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Defs;
@@ -54,10 +55,10 @@ class AclDependencyProvider
     public function __construct(
         private DataCache $dataCache,
         private Metadata $metadata,
-        Config $config,
-        private Defs $ormDefs
+        private Defs $ormDefs,
+        SystemConfig $systemConfig,
     ) {
-        $this->useCache = $config->get('useCache');
+        $this->useCache = $systemConfig->useCache();
     }
 
     /**

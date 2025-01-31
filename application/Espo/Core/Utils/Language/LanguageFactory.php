@@ -37,14 +37,14 @@ class LanguageFactory
 {
     public function __construct(
         private InjectableFactory $injectableFactory,
-        private Config $config,
+        private Config\SystemConfig $systemConfig,
     ) {}
 
     public function create(string $language): Language
     {
         return $this->injectableFactory->createWith(Language::class, [
             'language' => $language,
-            'useCache' => $this->config->get('useCache') ?? false,
+            'useCache' => $this->systemConfig->useCache(),
         ]);
     }
 }

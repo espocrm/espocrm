@@ -45,11 +45,10 @@ class OrmMetadataData
 
     public function __construct(
         private DataCache $dataCache,
-        private Config $config,
-        private InjectableFactory $injectableFactory
+        private InjectableFactory $injectableFactory,
+        Config\SystemConfig $systemConfig,
     ) {
-
-        $this->useCache = (bool) $this->config->get('useCache', false);
+        $this->useCache = $systemConfig->useCache();
     }
 
     private function getConverter(): Converter

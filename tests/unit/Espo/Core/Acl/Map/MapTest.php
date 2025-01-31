@@ -29,8 +29,6 @@
 
 namespace tests\unit\Espo\Core\Acl\Map;
 
-use Espo\Entities\User;
-
 use Espo\Core\Acl\FieldData;
 use Espo\Core\Acl\Map\CacheKeyProvider;
 use Espo\Core\Acl\Map\DataBuilder;
@@ -42,31 +40,30 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\FieldUtil;
 
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class MapTest extends \PHPUnit\Framework\TestCase
+class MapTest extends TestCase
 {
     private $fieldUtil;
-    private $config;
+    private $systemConfig;
     private $table;
     private $metadataProvider;
     private $cacheKeyProvider;
 
     protected function setUp(): void
     {
-        $this->config = $this->createMock(Config::class);
+        $this->systemConfig = $this->createMock(Config\SystemConfig::class);
         $this->fieldUtil = $this->createMock(FieldUtil::class);
         $this->table = $this->createMock(Table::class);
         $this->dataCache = $this->createMock(DataCache::class);
         $this->metadataProvider = $this->createMock(MetadataProvider::class);
         $this->cacheKeyProvider = $this->createMock(CacheKeyProvider::class);
 
-        $this->config
+        $this->systemConfig
             ->expects($this->any())
-            ->method('get')
-            ->willReturnMap([
-                ['useCache', false]
-            ]);
+            ->method('useCache')
+            ->willReturn(false);
     }
 
     private function mockTableData(array $scopeData, array $fieldData, array $permissionData): void
@@ -206,9 +203,9 @@ class MapTest extends \PHPUnit\Framework\TestCase
         $map = new Map(
             $this->table,
             $dataBuilder,
-            $this->config,
             $this->dataCache,
-            $this->cacheKeyProvider
+            $this->cacheKeyProvider,
+            $this->systemConfig,
         );
 
         $this->assertEquals($expectedData, $map->getData());

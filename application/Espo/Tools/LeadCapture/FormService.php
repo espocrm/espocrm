@@ -59,6 +59,7 @@ class FormService
         private Language\LanguageFactory $languageFactory,
         private DataCache $dataCache,
         private ThemeManager $themeManager,
+        private Config\SystemConfig $systemConfig,
     ) {}
 
     /**
@@ -86,7 +87,7 @@ class FormService
     {
         $cacheKey = $this->getCacheKey($leadCapture);
 
-        if ($this->config->get('useCache') && $this->dataCache->has($cacheKey)) {
+        if ($this->systemConfig->useCache() && $this->dataCache->has($cacheKey)) {
             return $this->getFromCache($cacheKey);
         }
 

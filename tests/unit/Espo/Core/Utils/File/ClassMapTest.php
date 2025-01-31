@@ -29,18 +29,16 @@
 
 namespace tests\unit\Espo\Core\Utils\File;
 
+use PHPUnit\Framework\TestCase;
 use tests\unit\ReflectionHelper;
-
 use Espo\Core\Utils\File\ClassMap;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\File\Manager as FileManager;
-
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Module;
-
 use Espo\Core\Utils\Module\PathProvider;
 
-class ClassMapTest extends \PHPUnit\Framework\TestCase
+class ClassMapTest extends TestCase
 {
     /**
      * @var ClassMap
@@ -50,9 +48,7 @@ class ClassMapTest extends \PHPUnit\Framework\TestCase
     protected $reflection;
 
     private $customPath = 'tests/unit/testData/EntryPoints/Espo/Custom/';
-
     private $corePath = 'tests/unit/testData/EntryPoints/Espo/';
-
     private $modulePath = 'tests/unit/testData/EntryPoints/Espo/Modules/{*}/';
 
     /**
@@ -64,7 +60,7 @@ class ClassMapTest extends \PHPUnit\Framework\TestCase
     {
         $this->fileManager = new FileManager();
 
-        $this->config = $this->createMock(Config::class);
+        $this->systemConfig = $this->createMock(Config\SystemConfig::class);
         $this->module = $this->createMock(Module::class);
 
         $this->dataCache = $this->createMock(DataCache::class);
@@ -97,10 +93,10 @@ class ClassMapTest extends \PHPUnit\Framework\TestCase
 
         $this->classMap = new ClassMap(
             $this->fileManager,
-            $this->config,
             $this->module,
             $this->dataCache,
-            $pathProvider
+            $pathProvider,
+            $this->systemConfig,
         );
 
         $this->reflection = new ReflectionHelper($this->classMap);
@@ -125,9 +121,9 @@ class ClassMapTest extends \PHPUnit\Framework\TestCase
             ->with('entryPoints')
             ->willReturn(true);
 
-        $this->config
+        $this->systemConfig
             ->expects($this->exactly(2))
-            ->method('get')
+            ->method('useCache')
             ->will($this->returnValue(false));
 
         $this->module
@@ -157,9 +153,9 @@ class ClassMapTest extends \PHPUnit\Framework\TestCase
             'Download' => 'tests\\unit\\testData\\EntryPoints\\Espo\\EntryPoints\\Download',
         ];
 
-        $this->config
+        $this->systemConfig
             ->expects($this->once())
-            ->method('get')
+            ->method('useCache')
             ->will($this->returnValue(true));
 
         $cacheKey = 'entryPoints';
@@ -185,10 +181,9 @@ class ClassMapTest extends \PHPUnit\Framework\TestCase
 
     public function testGetDataWithNoCacheString(): void
     {
-        $this->config
+        $this->systemConfig
             ->expects($this->exactly(2))
-            ->method('get')
-            ->with('useCache')
+            ->method('useCache')
             ->will($this->returnValue(true));
 
         $this->module

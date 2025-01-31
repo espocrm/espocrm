@@ -30,7 +30,7 @@
 namespace Espo\Core;
 
 use Espo\Core\Hook\GeneralInvoker;
-use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Log;
@@ -72,11 +72,11 @@ class HookManager
         private InjectableFactory $injectableFactory,
         private FileManager $fileManager,
         private Metadata $metadata,
-        private Config $config,
         private DataCache $dataCache,
         private Log $log,
         private PathProvider $pathProvider,
-        private GeneralInvoker $generalInvoker
+        private GeneralInvoker $generalInvoker,
+        private SystemConfig $systemConfig,
     ) {}
 
     /**
@@ -143,7 +143,7 @@ class HookManager
 
     private function loadHooks(): void
     {
-        if ($this->config->get('useCache') && $this->dataCache->has($this->cacheKey)) {
+        if ($this->systemConfig->useCache() && $this->dataCache->has($this->cacheKey)) {
             /** @var array<string, array<string, mixed>> $cachedData */
             $cachedData = $this->dataCache->get($this->cacheKey);
 
@@ -166,7 +166,7 @@ class HookManager
 
         $this->data = $this->sortHooks($data);
 
-        if ($this->config->get('useCache')) {
+        if ($this->systemConfig->useCache()) {
             $this->dataCache->store($this->cacheKey, $this->data);
         }
     }

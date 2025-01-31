@@ -27,38 +27,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Portal\Api;
+namespace Espo\Core\Utils\Config;
 
-use Espo\Core\Api\MiddlewareProvider;
-use Espo\Core\Api\Starter as StarterBase;
-use Espo\Core\ApplicationState;
-use Espo\Core\Portal\Utils\Route as RouteUtil;
-use Espo\Core\Api\RouteProcessor;
-use Espo\Core\Api\Route\RouteParamsFetcher;
-use Espo\Core\Utils\Config\SystemConfig;
-use Espo\Core\Utils\Log;
 
-class Starter extends StarterBase
+use Espo\Core\Utils\Config;
+
+/**
+ * @since 9.1.0
+ */
+class SystemConfig
 {
     public function __construct(
-        RouteProcessor $requestProcessor,
-        RouteUtil $routeUtil,
-        RouteParamsFetcher $routeParamsFetcher,
-        MiddlewareProvider $middlewareProvider,
-        Log $log,
-        SystemConfig $systemConfig,
-        ApplicationState $applicationState
-    ) {
-        $routeCacheFile = 'data/cache/application/slim-routes-portal-' . $applicationState->getPortalId() . '.php';
+        private Config $config,
+    ) {}
 
-        parent::__construct(
-            $requestProcessor,
-            $routeUtil,
-            $routeParamsFetcher,
-            $middlewareProvider,
-            $log,
-            $systemConfig,
-            $routeCacheFile
-        );
+    public function useCache(): bool
+    {
+        return (bool) $this->config->get('useCache');
     }
 }

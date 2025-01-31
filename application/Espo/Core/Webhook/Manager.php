@@ -33,6 +33,7 @@ use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Log;
@@ -65,7 +66,8 @@ class Manager
         private DataCache $dataCache,
         private EntityManager $entityManager,
         private FieldUtil $fieldUtil,
-        private Log $log
+        private Log $log,
+        private SystemConfig $systemConfig,
     ) {
 
         $this->loadData();
@@ -73,7 +75,7 @@ class Manager
 
     private function loadData(): void
     {
-        if ($this->config->get('useCache') && $this->dataCache->has($this->cacheKey)) {
+        if ($this->systemConfig->useCache() && $this->dataCache->has($this->cacheKey)) {
             /** @var array<string, bool> $data */
             $data = $this->dataCache->get($this->cacheKey);
 
@@ -83,7 +85,7 @@ class Manager
         if (is_null($this->data)) {
             $this->data = $this->buildData();
 
-            if ($this->config->get('useCache')) {
+            if ($this->systemConfig->useCache()) {
                 $this->storeDataToCache();
             }
         }
@@ -132,7 +134,7 @@ class Manager
     {
         $this->data[$event] = true;
 
-        if ($this->config->get('useCache')) {
+        if ($this->systemConfig->useCache()) {
             $this->storeDataToCache();
         }
     }
@@ -154,7 +156,7 @@ class Manager
         if ($notExists) {
             unset($this->data[$event]);
 
-            if ($this->config->get('useCache')) {
+            if ($this->systemConfig->useCache()) {
                 $this->storeDataToCache();
             }
         }

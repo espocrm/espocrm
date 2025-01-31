@@ -29,21 +29,22 @@
 
 namespace tests\unit\Espo\Core\Utils;
 
-use Espo\Core\{
-    Utils\Autoload,
-    Utils\Config,
-    Utils\Metadata,
-    Utils\Autoload\Loader,
-    Utils\DataCache,
-    Utils\File\Manager as FileManager,
-    Utils\Resource\PathProvider,
-};
+use Espo\Core\Utils\Autoload;
+use Espo\Core\Utils\Autoload\Loader;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Resource\PathProvider;
+use PHPUnit\Framework\TestCase;
 
-class AutoloadTest extends \PHPUnit\Framework\TestCase
+class AutoloadTest extends TestCase
 {
+    private ?Config\SystemConfig $systemConfig = null;
+
     protected function setUp(): void
     {
-        $this->config = $this->createMock(Config::class);
+        $this->systemConfig = $this->createMock(Config\SystemConfig::class);
         $this->metadata = $this->createMock(Metadata::class);
         $this->dataCache = $this->createMock(DataCache::class);
         $this->fileManager = $this->createMock(FileManager::class);
@@ -53,12 +54,12 @@ class AutoloadTest extends \PHPUnit\Framework\TestCase
         $this->initPathProvider();
 
         $this->autoload = new Autoload(
-            $this->config,
             $this->metadata,
             $this->dataCache,
             $this->fileManager,
             $this->loader,
-            $this->pathProvider
+            $this->pathProvider,
+            $this->systemConfig,
         );
     }
 
@@ -94,10 +95,9 @@ class AutoloadTest extends \PHPUnit\Framework\TestCase
             ->method('getModuleList')
             ->willReturn(['M1', 'M2']);
 
-        $this->config
+        $this->systemConfig
             ->expects($this->once())
-            ->method('get')
-            ->with('useCache')
+            ->method('useCache')
             ->willReturn(false);
 
         $this->fileManager

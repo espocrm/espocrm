@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils;
 
 use Espo\Core\Utils\Autoload\Loader;
+use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Resource\PathProvider;
 
@@ -44,12 +45,12 @@ class Autoload
     private string $autoloadFileName = 'autoload.json';
 
     public function __construct(
-        private Config $config,
         private Metadata $metadata,
         private DataCache $dataCache,
         private FileManager $fileManager,
         private Loader $loader,
-        private PathProvider $pathProvider
+        private PathProvider $pathProvider,
+        private SystemConfig $systemConfig,
     ) {}
 
     /**
@@ -68,7 +69,7 @@ class Autoload
 
     private function init(): void
     {
-        $useCache = $this->config->get('useCache');
+        $useCache = $this->systemConfig->useCache();
 
         if ($useCache && $this->dataCache->has($this->cacheKey)) {
             /** @var ?array<string, mixed> $data */

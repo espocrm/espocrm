@@ -36,6 +36,8 @@ use Espo\Core\Utils\Client\LoaderParamsProvider;
 use Espo\Core\Utils\Client\RenderParams;
 use Espo\Core\Utils\Client\Script;
 use Espo\Core\Utils\Client\SecurityParams;
+use Espo\Core\Utils\Config\ApplicationConfig;
+use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Core\Utils\File\Manager as FileManager;
 
 use Slim\Psr7\Response as Psr7Response;
@@ -66,6 +68,8 @@ class ClientManager
         private DevModeJsFileListProvider $devModeJsFileListProvider,
         private Module $module,
         private LoaderParamsProvider $loaderParamsProvider,
+        private SystemConfig $systemConfig,
+        private ApplicationConfig $applicationConfig,
     ) {
         $this->nonce = Util::generateKey();
     }
@@ -130,7 +134,7 @@ class ClientManager
             return;
         }
 
-        $siteUrl = $this->config->get('siteUrl') ?? '';
+        $siteUrl = $this->applicationConfig->getSiteUrl();
 
         if (str_starts_with($siteUrl, 'https://')) {
             $response->setHeader('Strict-Transport-Security', 'max-age=10368000');
@@ -308,7 +312,7 @@ class ClientManager
 
     private function useCache(): bool
     {
-        return (bool) $this->config->get('useCache');
+        return $this->systemConfig->useCache();
     }
 
     private function useCacheInDeveloperMode(): bool

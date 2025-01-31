@@ -42,7 +42,7 @@ class ApplicationConfig
 
     public function getSiteUrl(): string
     {
-        return rtrim($this->config->get('siteUrl'), '/');
+        return rtrim($this->config->get('siteUrl') ?? '', '/');
     }
 
     public function getDateFormat(): string

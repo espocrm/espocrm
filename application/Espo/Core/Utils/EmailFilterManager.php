@@ -31,6 +31,7 @@ namespace Espo\Core\Utils;
 
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Mail\FiltersMatcher;
+use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Entities\Email;
 use Espo\Entities\EmailFilter;
 use Espo\Entities\User;
@@ -54,9 +55,9 @@ class EmailFilterManager
         private EntityManager $entityManager,
         private FiltersMatcher $filtersMatcher,
         private DataCache $dataCache,
-        Config $config
+        SystemConfig $systemConfig,
     ) {
-        $this->useCache = (bool) $config->get('useCache');
+        $this->useCache = $systemConfig->useCache();
     }
 
     public function getMatchingFilter(Email $email, string $userId): ?EmailFilter

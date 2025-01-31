@@ -42,10 +42,10 @@ class ClassMap
 {
     public function __construct(
         private FileManager $fileManager,
-        private Config $config,
         private Module $module,
         private DataCache $dataCache,
-        private PathProvider $pathProvider
+        private PathProvider $pathProvider,
+        private Config\SystemConfig $systemConfig,
     ) {}
 
     /**
@@ -66,7 +66,7 @@ class ClassMap
         if (
             $cacheKey &&
             $this->dataCache->has($cacheKey) &&
-            $this->config->get('useCache')
+            $this->systemConfig->useCache()
         ) {
             /** @var array<string,class-string> $data */
             $data = $this->dataCache->get($cacheKey);
@@ -102,7 +102,7 @@ class ClassMap
             )
         );
 
-        if ($cacheKey && $this->config->get('useCache')) {
+        if ($cacheKey && $this->systemConfig->useCache()) {
             $this->dataCache->store($cacheKey, $data);
         }
 

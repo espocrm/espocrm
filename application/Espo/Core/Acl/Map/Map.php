@@ -57,14 +57,14 @@ class Map
     public function __construct(
         Table $table,
         private DataBuilder $dataBuilder,
-        private Config $config,
         private DataCache $dataCache,
-        CacheKeyProvider $cacheKeyProvider
+        CacheKeyProvider $cacheKeyProvider,
+        Config\SystemConfig $systemConfig,
     ) {
 
         $this->cacheKey = $cacheKeyProvider->get();
 
-        if ($this->config->get('useCache') && $this->dataCache->has($this->cacheKey)) {
+        if ($systemConfig->useCache() && $this->dataCache->has($this->cacheKey)) {
             /** @var stdClass $cachedData */
             $cachedData = $this->dataCache->get($this->cacheKey);
 
@@ -72,7 +72,7 @@ class Map
         } else {
             $this->data = $this->dataBuilder->build($table);
 
-            if ($this->config->get('useCache')) {
+            if ($systemConfig->useCache()) {
                 $this->dataCache->store($this->cacheKey, $this->data);
             }
         }
