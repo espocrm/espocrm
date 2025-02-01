@@ -33,7 +33,6 @@ use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Espo\ORM\EntityFactory;
-use Espo\ORM\Collection;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Relation\Relations;
 use Espo\ORM\Relation\RelationsMap;
@@ -755,5 +754,16 @@ class RDBRepository implements Repository
         }
 
         $this->getRelation($entity, $name)->relate($related);
+    }
+
+    public function deleteFromDb(string $id, bool $onlyDeleted = false): void
+    {
+        $mapper = $this->getMapper();
+
+        if (!$mapper instanceof BaseMapper) {
+            throw new RuntimeException("Not supported 'deleteFromDb'.");
+        }
+
+        $mapper->deleteFromDb($this->entityType, $id, $onlyDeleted);
     }
 }
