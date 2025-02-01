@@ -30,7 +30,6 @@
 namespace Espo\ORM\Repository\Deprecation;
 
 use Espo\ORM\Entity;
-use Espo\ORM\Mapper\BaseMapper;
 
 /**
  * @internal
@@ -38,21 +37,6 @@ use Espo\ORM\Mapper\BaseMapper;
  */
 trait RDBRepositoryDeprecationTrait
 {
-    /**
-     * @deprecated Use QueryBuilder instead.
-     * @todo Rewrite usages.
-     */
-    public function deleteFromDb(string $id, bool $onlyDeleted = false): void
-    {
-        $mapper = $this->getMapper();
-
-        if (!$mapper instanceof BaseMapper) {
-            throw new \RuntimeException("Not supported 'deleteFromDb'.");
-        }
-
-        $mapper->deleteFromDb($this->entityType, $id, $onlyDeleted);
-    }
-
     /**
      * Get an entity. If ID is NULL, a new entity is returned.
      *
