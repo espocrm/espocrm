@@ -32,6 +32,7 @@ namespace Espo\Core\Upgrades\Migrations\V7_5;
 use Espo\Core\Upgrades\Migration\Script;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\DeleteBuilder;
 
 class Prepare implements Script
@@ -44,7 +45,7 @@ class Prepare implements Script
     {
         $query = DeleteBuilder::create()
             ->from(User::ENTITY_TYPE)
-            ->where(['deleted' => true])
+            ->where([Attribute::DELETED => true])
             ->build();
 
         $this->entityManager->getQueryExecutor()->execute($query);

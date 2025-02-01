@@ -622,7 +622,7 @@ class ItemGeneralConverter implements ItemConverter
                             'value' => $arrayValue,
                             'attribute' => $arrayAttribute,
                             'entityType' => $arrayEntityType,
-                            'deleted' => false,
+                            Attribute::DELETED => false,
                         ])
                         ->build()
                 ];

@@ -65,7 +65,7 @@ class CheckNewExtensionVersion implements JobDataLess
             ->from(Extension::ENTITY_TYPE)
             ->select([Attribute::ID, Field::NAME, 'version', 'checkVersionUrl'])
             ->where([
-                'deleted' => false,
+                Attribute::DELETED => false,
                 'isInstalled' => true,
             ])
             ->order([Field::CREATED_AT])

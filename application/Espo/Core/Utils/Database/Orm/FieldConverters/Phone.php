@@ -37,6 +37,7 @@ use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
 use Espo\Core\Utils\Database\Orm\FieldConverter;
 use Espo\Entities\PhoneNumber;
 use Espo\ORM\Defs\FieldDefs;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
 
@@ -178,7 +179,7 @@ class Phone implements FieldConverter
                                 ],
                             ],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                                 'phoneNumber.name*' => '{value}',
                             ],
@@ -201,7 +202,7 @@ class Phone implements FieldConverter
                                 ],
                             ],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                                 'phoneNumber.name*' => '{value}',
                             ],
@@ -230,7 +231,7 @@ class Phone implements FieldConverter
                                 ],
                             ],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                                 'phoneNumber.name' => '{value}',
                             ],
@@ -253,7 +254,7 @@ class Phone implements FieldConverter
                                 ],
                             ],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                                 'phoneNumber.name' => '{value}',
                             ],
@@ -276,7 +277,7 @@ class Phone implements FieldConverter
                                 ],
                             ],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                                 'phoneNumber.name!=' => '{value}',
                             ],
@@ -295,7 +296,7 @@ class Phone implements FieldConverter
                             'from' => 'EntityPhoneNumber',
                             'select' => ['entityId'],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                             ],
                         ],
@@ -456,7 +457,7 @@ class Phone implements FieldConverter
                                 ],
                             ],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                                 'phoneNumber.numeric*' => '{value}',
                             ],
@@ -479,7 +480,7 @@ class Phone implements FieldConverter
                                 ]
                             ],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                                 'phoneNumber.numeric*' => '{value}',
                             ],
@@ -502,7 +503,7 @@ class Phone implements FieldConverter
                                 ],
                             ],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                                 'phoneNumber.numeric' => '{value}',
                             ],
@@ -525,7 +526,7 @@ class Phone implements FieldConverter
                                 ],
                             ],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                                 'phoneNumber.numeric' => '{value}',
                             ],
@@ -548,7 +549,7 @@ class Phone implements FieldConverter
                                 ],
                             ],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                                 'phoneNumber.numeric' => '{value}',
                             ],
@@ -571,7 +572,7 @@ class Phone implements FieldConverter
                                 ],
                             ],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                                 'phoneNumber.numeric' => '{value}',
                             ],
@@ -590,7 +591,7 @@ class Phone implements FieldConverter
                             'from' => 'EntityPhoneNumber',
                             'select' => ['entityId'],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                             ],
                         ],

@@ -149,7 +149,7 @@ class Cleanup implements JobDataLess
             ->where([
                 'modifiedAt<' => $this->getCleanupJobFromDate(),
                 'status=' => JobStatus::PENDING,
-                'deleted' => true,
+                Attribute::DELETED => true,
             ])
             ->build();
 
@@ -412,7 +412,7 @@ class Cleanup implements JobDataLess
                 ->from($scope)
                 ->withDeleted()
                 ->where([
-                    'deleted' => true,
+                    Attribute::DELETED => true,
                     'modifiedAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
                     'modifiedAt>' => $datetimeFrom->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
                 ])
@@ -465,7 +465,7 @@ class Cleanup implements JobDataLess
             ->delete()
             ->from(Attachment::ENTITY_TYPE)
             ->where([
-                'deleted' => true,
+                Attribute::DELETED => true,
                 'createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
             ])
             ->build();
@@ -492,7 +492,7 @@ class Cleanup implements JobDataLess
             ->select([Attribute::ID])
             ->where([
                 'createdAt<' => $dateBefore,
-                'deleted' => true,
+                Attribute::DELETED => true,
             ])
             ->find();
 
@@ -516,8 +516,8 @@ class Cleanup implements JobDataLess
                 ->delete()
                 ->from(Email::ENTITY_TYPE)
                 ->where([
-                    'deleted' => true,
-                    'id' => $id,
+                    Attribute::DELETED => true,
+                    Attribute::ID => $id,
                 ])
                 ->build();
 
@@ -584,7 +584,7 @@ class Cleanup implements JobDataLess
     {
         $scope = $entity->getEntityType();
 
-        if (!$entity->get('deleted')) {
+        if (!$entity->get(Attribute::DELETED)) {
             return;
         }
 
@@ -675,7 +675,7 @@ class Cleanup implements JobDataLess
         foreach ($noteList as $note) {
             $this->entityManager->removeEntity($note);
 
-            $note->set('deleted', true);
+            $note->set(Attribute::DELETED, true);
 
             $this->cleanupDeletedEntity($note);
         }
@@ -759,13 +759,13 @@ class Cleanup implements JobDataLess
 
             $service = $this->recordServiceContainer->get($scope);
 
-            $whereClause = ['deleted' => true];
+            $whereClause = [Attribute::DELETED => true];
 
             if (
                 !$this->entityManager
                     ->getDefs()
                     ->getEntity($scope)
-                    ->hasAttribute('deleted')
+                    ->hasAttribute(Attribute::DELETED)
             ) {
                 continue;
             }

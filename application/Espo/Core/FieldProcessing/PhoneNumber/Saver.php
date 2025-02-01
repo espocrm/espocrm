@@ -32,6 +32,7 @@ namespace Espo\Core\FieldProcessing\PhoneNumber;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\PhoneNumber;
+use Espo\ORM\Name\Attribute;
 use Espo\Repositories\PhoneNumber as PhoneNumberRepository;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -337,7 +338,7 @@ class Saver implements SaverInterface
                 'entityType' => $entity->getEntityType(),
                 'phoneNumberId' => $phoneNumber->getId(),
                 'primary' => $number === $primary,
-                'deleted' => false,
+                Attribute::DELETED => false,
             ]);
 
             /** @var BaseMapper $mapper */
@@ -345,7 +346,7 @@ class Saver implements SaverInterface
 
             $mapper->insertOnDuplicateUpdate($entityPhoneNumber, [
                 'primary',
-                'deleted',
+                Attribute::DELETED,
             ]);
         }
 
@@ -364,7 +365,7 @@ class Saver implements SaverInterface
                         'entityId' => $entity->getId(),
                         'entityType' => $entity->getEntityType(),
                         'primary' => true,
-                        'deleted' => false,
+                        Attribute::DELETED => false,
                     ])
                     ->build();
 
@@ -379,7 +380,7 @@ class Saver implements SaverInterface
                         'entityId' => $entity->getId(),
                         'entityType' => $entity->getEntityType(),
                         'phoneNumberId' => $phoneNumber->getId(),
-                        'deleted' => false,
+                        Attribute::DELETED => false,
                     ])
                     ->build();
 

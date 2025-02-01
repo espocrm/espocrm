@@ -38,6 +38,7 @@ use Espo\Core\HookManager;
 use Espo\Modules\Crm\Entities\TargetList;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use RuntimeException;
 
 class RecordService
@@ -65,7 +66,7 @@ class RecordService
         $updateQuery = $this->entityManager->getQueryBuilder()
             ->update()
             ->in($linkEntityType)
-            ->set(['deleted' => true])
+            ->set([Attribute::DELETED => true])
             ->where(['targetListId' => $entity->getId()])
             ->build();
 

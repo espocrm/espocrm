@@ -37,6 +37,7 @@ use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
 use Espo\Core\Utils\Database\Orm\FieldConverter;
 use Espo\Entities\EmailAddress;
 use Espo\ORM\Defs\FieldDefs;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
 
@@ -166,7 +167,7 @@ class Email implements FieldConverter
                                 ]
                             ],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                                 "LIKE:(emailAddress.lower, LOWER:({value})):" => null,
                             ],
@@ -189,7 +190,7 @@ class Email implements FieldConverter
                                 ]
                             ],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                                 "LIKE:(emailAddress.lower, LOWER:({value})):" => null,
                             ],
@@ -218,7 +219,7 @@ class Email implements FieldConverter
                                 ]
                             ],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                                 "EQUAL:(emailAddress.lower, LOWER:({value})):" => null,
                             ],
@@ -241,7 +242,7 @@ class Email implements FieldConverter
                                 ]
                             ],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                                 "emailAddress.lower" => '{value}',
                             ],
@@ -264,7 +265,7 @@ class Email implements FieldConverter
                                 ]
                             ],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                                 "emailAddress.lower" => '{value}',
                             ],
@@ -283,7 +284,7 @@ class Email implements FieldConverter
                             'from' => 'EntityEmailAddress',
                             'select' => ['entityId'],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 'entityType' => $entityType,
                             ],
                         ],

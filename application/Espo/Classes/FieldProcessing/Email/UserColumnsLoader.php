@@ -35,6 +35,7 @@ use Espo\Core\FieldProcessing\Loader;
 use Espo\Core\FieldProcessing\Loader\Params;
 use Espo\Core\ORM\EntityManager;
 use Espo\Entities\User;
+use Espo\ORM\Name\Attribute;
 
 /**
  * @implements Loader<Email>
@@ -57,7 +58,7 @@ class UserColumnsLoader implements Loader
                 Email::USERS_COLUMN_IN_ARCHIVE,
             ])
             ->where([
-                'deleted' => false,
+                Attribute::DELETED => false,
                 'userId' => $this->user->getId(),
                 'emailId' => $entity->getId(),
             ])

@@ -33,6 +33,7 @@ use Espo\Core\Hook\Hook\BeforeRemove;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Repository\Option\RemoveOptions;
 use Espo\ORM\Repository\Option\SaveOptions;
 use Espo\Core\Hook\Hook\BeforeSave;
@@ -46,7 +47,7 @@ use Espo\Core\Hook\Hook\BeforeSave;
 class DeleteId implements BeforeSave, BeforeRemove
 {
     private const ID_ATTR = 'deleteId';
-    private const DELETED_ATTR = 'deleted';
+    private const DELETED_ATTR = Attribute::DELETED;
 
     public function __construct(
         private Metadata $metadata,

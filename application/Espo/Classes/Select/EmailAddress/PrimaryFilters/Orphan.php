@@ -30,6 +30,7 @@
 namespace Espo\Classes\Select\EmailAddress\PrimaryFilters;
 
 use Espo\Core\Select\Primary\Filter;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder;
 
 class Orphan implements Filter
@@ -42,24 +43,24 @@ class Orphan implements Filter
                 'EntityEmailAddress',
                 'entityEmailAddress',
                 [
-                    'emailAddressId:' => 'id',
-                    'deleted' => false,
+                    'emailAddressId:' => Attribute::ID,
+                    Attribute::DELETED => false,
                 ]
             )
             ->leftJoin(
                 'EmailEmailAddress',
                 'emailEmailAddress',
                 [
-                    'emailAddressId:' => 'id',
-                    'deleted' => false,
+                    'emailAddressId:' => Attribute::ID,
+                    Attribute::DELETED => false,
                 ]
             )
             ->leftJoin(
                 'Email',
                 'email',
                 [
-                    'fromEmailAddressId:' => 'id',
-                    'deleted' => false,
+                    'fromEmailAddressId:' => Attribute::ID,
+                    Attribute::DELETED => false,
                 ]
             )
             ->where([

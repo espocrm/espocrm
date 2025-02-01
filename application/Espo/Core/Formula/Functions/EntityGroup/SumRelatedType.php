@@ -113,7 +113,7 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
                     $foreignLinkAlias,
                     [
                          $foreignLinkAlias . '.id:' => $foreignLink . 'Id',
-                        'deleted' => false,
+                        Attribute::DELETED => false,
                         $foreignLinkAlias . '.id!=' => null,
                     ]
                 )

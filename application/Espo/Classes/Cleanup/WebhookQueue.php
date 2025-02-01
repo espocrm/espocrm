@@ -31,42 +31,40 @@ namespace Espo\Classes\Cleanup;
 
 use Espo\Core\Cleanup\Cleanup;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Entities\WebhookEventQueueItem;
+use Espo\Entities\WebhookQueueItem;
 use Espo\ORM\EntityManager;
-
 use DateTime;
+use Espo\ORM\Name\Attribute;
 
+/**
+ * @noinspection PhpUnused
+ */
 class WebhookQueue implements Cleanup
 {
     private string $cleanupWebhookQueuePeriod = '10 days';
 
-    private $config;
-
-    private $entityManager;
-
-    public function __construct(Config $config, EntityManager $entityManager)
-    {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private Config $config, private EntityManager $entityManager)
+    {}
 
     public function process(): void
     {
         $period = '-' . $this->config->get('cleanupWebhookQueuePeriod', $this->cleanupWebhookQueuePeriod);
 
         $datetime = new DateTime();
-
         $datetime->modify($period);
-        $from = $datetime->format('Y-m-d H:i:s');
+        $from = $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
         $query1 = $this->entityManager
             ->getQueryBuilder()
             ->delete()
-            ->from('WebhookQueueItem')
+            ->from(WebhookQueueItem::ENTITY_TYPE)
             ->where([
                 'DATE:(createdAt)<' => $from,
                 'OR' => [
-                    'status!=' => 'Pending',
-                    'deleted' => true,
+                    'status!=' => WebhookQueueItem::STATUS_PENDING,
+                    Attribute::DELETED => true,
                 ],
             ])
             ->build();
@@ -76,12 +74,12 @@ class WebhookQueue implements Cleanup
         $query2 = $this->entityManager
             ->getQueryBuilder()
             ->delete()
-            ->from('WebhookEventQueueItem')
+            ->from(WebhookEventQueueItem::ENTITY_TYPE)
             ->where([
                 'DATE:(createdAt)<' => $from,
                 'OR' => [
                     'isProcessed' => true,
-                    'deleted' => true,
+                    Attribute::DELETED => true,
                 ],
             ])
             ->build();

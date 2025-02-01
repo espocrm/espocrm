@@ -33,6 +33,7 @@ use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\Select\ApplierClassNameListProvider;
 use Espo\ORM\Defs\Params\AttributeParam as OrmAttributeParam;
+use Espo\ORM\Name\Attribute;
 use Espo\Tools\Export\Collection as ExportCollection;
 use Espo\Tools\Export\Processor\Params as ProcessorParams;
 use Espo\ORM\Entity;
@@ -334,7 +335,7 @@ class Export
                 GlobalRestriction::TYPE_INTERNAL,
             ]);
 
-        $attributeListToSkip[] = 'deleted';
+        $attributeListToSkip[] = Attribute::DELETED;
 
         $initialAttributeList = $params->getAttributeList();
 

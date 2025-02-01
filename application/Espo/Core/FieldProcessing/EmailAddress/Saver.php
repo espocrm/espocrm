@@ -32,6 +32,7 @@ namespace Espo\Core\FieldProcessing\EmailAddress;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\EmailAddress;
+use Espo\ORM\Name\Attribute;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\ORM\Entity;
 use Espo\Core\ApplicationState;
@@ -332,14 +333,14 @@ class Saver implements SaverInterface
                 'entityType' => $entity->getEntityType(),
                 'emailAddressId' => $emailAddress->getId(),
                 'primary' => $address === $primary,
-                'deleted' => false,
+                Attribute::DELETED => false,
             ]);
 
             $mapper = $this->entityManager->getMapper();
 
             $mapper->insertOnDuplicateUpdate($entityEmailAddress, [
                 'primary',
-                'deleted',
+                Attribute::DELETED,
             ]);
         }
 
@@ -358,7 +359,7 @@ class Saver implements SaverInterface
                         'entityId' => $entity->getId(),
                         'entityType' => $entity->getEntityType(),
                         'primary' => true,
-                        'deleted' => false,
+                        Attribute::DELETED => false,
                     ])
                     ->build();
 
@@ -373,7 +374,7 @@ class Saver implements SaverInterface
                         'entityId' => $entity->getId(),
                         'entityType' => $entity->getEntityType(),
                         'emailAddressId' => $emailAddress->getId(),
-                        'deleted' => false,
+                        Attribute::DELETED => false,
                     ])
                     ->build();
 

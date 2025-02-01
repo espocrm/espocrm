@@ -140,7 +140,7 @@ class InboxService
                 'inArchive' => false,
             ])
             ->where([
-                'deleted' => false,
+                Attribute::DELETED => false,
                 'userId' => $userId,
                 'emailId' => $id,
             ])
@@ -245,7 +245,7 @@ class InboxService
             ->in(Email::RELATIONSHIP_EMAIL_USER)
             ->set(['inTrash' => true])
             ->where([
-                'deleted' => false,
+                Attribute::DELETED => false,
                 'userId' => $userId,
                 'emailId' => $id,
             ])
@@ -297,7 +297,7 @@ class InboxService
             ->in(Email::RELATIONSHIP_EMAIL_USER)
             ->set(['inTrash' => false])
             ->where([
-                'deleted' => false,
+                Attribute::DELETED => false,
                 'userId' => $userId,
                 'emailId' => $id,
             ])
@@ -336,7 +336,7 @@ class InboxService
             ->in(Email::RELATIONSHIP_EMAIL_USER)
             ->set(['isRead' => true])
             ->where([
-                'deleted' => false,
+                Attribute::DELETED => false,
                 'userId' => $userId,
                 'emailId' => $id,
             ])
@@ -357,7 +357,7 @@ class InboxService
             ->in(Email::RELATIONSHIP_EMAIL_USER)
             ->set(['isRead' => false])
             ->where([
-                'deleted' => false,
+                Attribute::DELETED => false,
                 'userId' => $userId,
                 'emailId' => $id,
             ])
@@ -396,7 +396,7 @@ class InboxService
             ->in(Email::RELATIONSHIP_EMAIL_USER)
             ->set(['isImportant' => true])
             ->where([
-                'deleted' => false,
+                Attribute::DELETED => false,
                 'userId' => $userId,
                 'emailId' => $id,
             ])
@@ -415,7 +415,7 @@ class InboxService
             ->in(Email::RELATIONSHIP_EMAIL_USER)
             ->set(['isImportant' => false])
             ->where([
-                'deleted' => false,
+                Attribute::DELETED => false,
                 'userId' => $userId,
                 'emailId' => $id,
             ])
@@ -434,7 +434,7 @@ class InboxService
             ->in(Email::RELATIONSHIP_EMAIL_USER)
             ->set(['isRead' => true])
             ->where([
-                'deleted' => false,
+                Attribute::DELETED => false,
                 'userId' => $userId,
                 'isRead' => false,
             ])
@@ -449,7 +449,7 @@ class InboxService
             ->in(Notification::ENTITY_TYPE)
             ->set(['read' => true])
             ->where([
-                'deleted' => false,
+                Attribute::DELETED => false,
                 'userId' => $userId,
                 'relatedType' => Email::ENTITY_TYPE,
                 'read' => false,
@@ -604,7 +604,7 @@ class InboxService
                 'inTrash' => false,
             ])
             ->where([
-                'deleted' => false,
+                Attribute::DELETED => false,
                 'userId' => $user->getId(),
                 'emailId' => $email->getId(),
             ])
@@ -624,7 +624,7 @@ class InboxService
                 'inArchive' => false,
             ])
             ->where([
-                'deleted' => false,
+                Attribute::DELETED => false,
                 'userId' => $user->getId(),
                 'emailId' => $email->getId(),
             ])

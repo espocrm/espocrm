@@ -38,6 +38,7 @@ use Espo\Core\ServiceFactory;
 use Espo\ORM\Defs\Params\EntityParam;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
+use Espo\ORM\Name\Attribute;
 
 class NameUtil
 {
@@ -134,8 +135,8 @@ class NameUtil
      * @var string[]
      */
     public const FIELD_FORBIDDEN_NAME_LIST = [
-        'id',
-        'deleted',
+        Attribute::ID,
+        Attribute::DELETED,
         'deleteId',
         'skipDuplicateCheck',
         'versionNumber',

@@ -30,6 +30,7 @@
 namespace Espo\Classes\Select\PhoneNumber\PrimaryFilters;
 
 use Espo\Core\Select\Primary\Filter;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder;
 
 class Orphan implements Filter
@@ -44,8 +45,8 @@ class Orphan implements Filter
             'EntityPhoneNumber',
             'entityPhoneNumber',
             [
-                'phoneNumberId:' => 'id',
-                'deleted' => false,
+                'phoneNumberId:' => Attribute::ID,
+                Attribute::DELETED => false,
             ]
         );
 

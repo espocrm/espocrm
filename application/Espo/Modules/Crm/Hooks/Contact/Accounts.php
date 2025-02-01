@@ -33,6 +33,7 @@ use Espo\Core\Hook\Hook\AfterSave;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Repository\Option\SaveOptions;
 
 /**
@@ -79,7 +80,7 @@ class Accounts implements AfterSave
             ->where([
                 'accountId' => $accountId,
                 'contactId' => $entity->getId(),
-                'deleted' => false,
+                Attribute::DELETED => false,
             ])
             ->findOne();
 

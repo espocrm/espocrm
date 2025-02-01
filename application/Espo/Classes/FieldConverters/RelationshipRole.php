@@ -85,7 +85,7 @@ class RelationshipRole implements FieldConverter
                             'from' => $midTable,
                             'select' => [$nearKey],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 $column => '{value}',
                             ],
                         ],
@@ -97,7 +97,7 @@ class RelationshipRole implements FieldConverter
                             'from' => $midTable,
                             'select' => [$nearKey],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 $column => '{value}',
                             ],
                         ],
@@ -109,7 +109,7 @@ class RelationshipRole implements FieldConverter
                             'from' => $midTable,
                             'select' => [$nearKey],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 $column => '{value}',
                             ],
                         ],
@@ -121,7 +121,7 @@ class RelationshipRole implements FieldConverter
                             'from' => $midTable,
                             'select' => [$nearKey],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 $column => '{value}',
                             ],
                         ],
@@ -133,7 +133,7 @@ class RelationshipRole implements FieldConverter
                             'from' => $midTable,
                             'select' => [$nearKey],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 "$column*" => '{value}',
                             ],
                         ],
@@ -145,7 +145,7 @@ class RelationshipRole implements FieldConverter
                             'from' => $midTable,
                             'select' => [$nearKey],
                             'whereClause' => [
-                                'deleted' => false,
+                                Attribute::DELETED => false,
                                 "$column*" => '{value}',
                             ],
                         ],

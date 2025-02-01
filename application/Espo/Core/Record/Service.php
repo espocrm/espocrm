@@ -907,7 +907,7 @@ class Service implements Crud,
             throw new NotFound();
         }
 
-        if (!$entity->get('deleted')) {
+        if (!$entity->get(Attribute::DELETED)) {
             throw new Forbidden("No 'deleted' attribute.");
         }
 

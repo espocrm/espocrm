@@ -29,8 +29,10 @@
 
 namespace Espo\Repositories;
 
+use Espo\Entities\Team;
 use Espo\ORM\Entity;
 use Espo\Core\Repositories\Database;
+use Espo\ORM\Name\Attribute;
 use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Entities\UserData;
 use Espo\Entities\User as UserEntity;
@@ -124,9 +126,9 @@ class User extends Database
         }
 
         return (bool) $this->entityManager
-            ->getRDBRepository('TeamUser')
+            ->getRDBRepository(Team::RELATIONSHIP_TEAM_USER)
             ->where([
-                'deleted' => false,
+                Attribute::DELETED => false,
                 'userId' => $userId,
                 'teamId' => $teamIds,
             ])
