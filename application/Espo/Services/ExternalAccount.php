@@ -81,7 +81,7 @@ class ExternalAccount extends Record implements Di\HookManagerAware
 
     /**
      * @return bool
-     * @todo In v9.0. Move to Tools. Fix all usages.
+     * @todo In v9.1. Move to Tools. Fix all usages.
      */
     public function ping(string $integration, string $userId)
     {
@@ -102,11 +102,10 @@ class ExternalAccount extends Record implements Di\HookManagerAware
      * @throws NotFound
      * @throws Error
      * @throws Exception
-     * @todo In v9.0. Return void. Move to Tools. Fix all usages.
+     * @todo In v9.1. Return void. Move to Tools. Fix all usages.
      */
     public function authorizationCode(string $integration, string $userId, string $code)
     {
-        /** @noinspection PhpDeprecationInspection */
         $entity = $this->getExternalAccountEntity($integration, $userId);
 
         if (!$entity) {
