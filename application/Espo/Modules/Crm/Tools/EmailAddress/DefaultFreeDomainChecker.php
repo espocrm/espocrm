@@ -27,23 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm;
+namespace Espo\Modules\Crm\Tools\EmailAddress;
 
-use Espo\Core\Binding\Binder;
-use Espo\Core\Binding\BindingProcessor;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Json;
+use RuntimeException;
 
-class Binding implements BindingProcessor
+/**
+ * @since 9.0.3
+ */
+class DefaultFreeDomainChecker implements FreeDomainChecker
 {
-    public function process(Binder $binder): void
-    {
-        $binder->bindImplementation(
-            'Espo\\Modules\\Crm\\Tools\\MassEmail\\MessageHeadersPreparator',
-            'Espo\\Modules\\Crm\\Tools\\MassEmail\\DefaultMessageHeadersPreparator'
-        );
+    private string $file = 'application/Espo/Modules/Crm/Resources/data/freeEmailProviderDomains.json';
 
-        $binder->bindImplementation(
-            'Espo\\Modules\\Crm\\Tools\\EmailAddress\\FreeDomainChecker',
-            'Espo\\Modules\\Crm\\Tools\\EmailAddress\\DefaultFreeDomainChecker'
-        );
+    public function __construct(
+        private FileManager $fileManager
+    ) {}
+
+    public function check(string $domain): bool
+    {
+        $list = Json::decode($this->fileManager->getContents($this->file));
+
+        if (!is_array($list)) {
+            throw new RuntimeException("Bad data in freeEmailProviderDomains file.");
+        }
+
+        return in_array($domain, $list);
     }
 }

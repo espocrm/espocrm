@@ -27,23 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm;
+namespace Espo\Modules\Crm\Tools\EmailAddress;
 
-use Espo\Core\Binding\Binder;
-use Espo\Core\Binding\BindingProcessor;
-
-class Binding implements BindingProcessor
+/**
+ * @since 9.0.3
+ */
+interface FreeDomainChecker
 {
-    public function process(Binder $binder): void
-    {
-        $binder->bindImplementation(
-            'Espo\\Modules\\Crm\\Tools\\MassEmail\\MessageHeadersPreparator',
-            'Espo\\Modules\\Crm\\Tools\\MassEmail\\DefaultMessageHeadersPreparator'
-        );
-
-        $binder->bindImplementation(
-            'Espo\\Modules\\Crm\\Tools\\EmailAddress\\FreeDomainChecker',
-            'Espo\\Modules\\Crm\\Tools\\EmailAddress\\DefaultFreeDomainChecker'
-        );
-    }
+    /**
+     * Check whether the domain belongs to a free email provider.
+     */
+    public function check(string $domain): bool;
 }
