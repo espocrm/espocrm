@@ -175,6 +175,11 @@ class RecordTree extends Record
     {
         $entityType = $this->getSubjectEntityType();
 
+        // If used without an actual subject entity.
+        if (!$this->entityManager->hasRepository($entityType)) {
+            return true;
+        }
+
         $query = $this->selectBuilderFactory
             ->create()
             ->from($entityType)
