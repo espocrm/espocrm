@@ -629,3 +629,11 @@ body {
         border-bottom-right-radius: var(--panel-border-radius);
     }
 }
+
+.panel {
+    &:has(> .panel-heading) {
+        > .panel-body:has(> .list-container.hidden:only-child) {
+            padding-top: 0;
+        }
+    }
+}
