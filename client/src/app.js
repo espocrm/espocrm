@@ -1303,10 +1303,12 @@ class App {
      * @param {boolean} [noDetail]
      */
     _processErrorAlert(xhr, label, noDetail) {
-        let msg = this.language.translate('Error') + ' ' + xhr.status;
+        let msg = '';
 
-        if (label) {
-            msg += ': ' + this.language.translate(label);
+        if (!label) {
+            msg += this.language.translate('Error') + ' ' + xhr.status;
+        } else {
+            msg += this.language.translate(label);
         }
 
         const obj = {
