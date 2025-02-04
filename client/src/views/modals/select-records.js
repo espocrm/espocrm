@@ -104,7 +104,7 @@ class SelectRecordsModalView extends ModalView {
 
     /**
      *
-     * @param {module:views/modals/select-records~Options & module:views/modal~Options} options
+     * @param {module:views/modals/select-records~Options | module:views/modal~Options} options
      */
     constructor(options) {
         super(options);
