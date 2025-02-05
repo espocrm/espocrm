@@ -929,6 +929,8 @@ class Htmlizer
 
         $xml = new DOMDocument();
 
+        $template = "<!DOCTYPE html><meta charset=\"UTF-8\">" . $template;
+
         $loadResult = $xml->loadHTML($template);
 
         if ($loadResult === false) {
