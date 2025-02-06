@@ -27,47 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Repositories;
+namespace Espo\Modules\Crm\Tools\EmailAddress;
 
-use Espo\Core\ORM\Repository\Option\SaveOption;
-use Espo\Entities\User as UserEntity;
-use Espo\Entities\UserData as UserDataEntity;
-use Espo\Core\Repositories\Database;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Json;
+use RuntimeException;
 
 /**
- * @internal Use Espo\Tools\User\UserDataProvider.
- * @extends Database<UserDataEntity>
+ * @since 9.0.3
  */
-class UserData extends Database
+class DefaultFreeDomainChecker implements FreeDomainChecker
 {
-    public function getByUserId(string $userId): ?UserDataEntity
+    private string $file = 'application/Espo/Modules/Crm/Resources/data/freeEmailProviderDomains.json';
+
+    public function __construct(
+        private FileManager $fileManager
+    ) {}
+
+    public function check(string $domain): bool
     {
-        /** @var ?UserDataEntity $userData */
-        $userData = $this
-            ->where(['userId' => $userId])
-            ->findOne();
+        $list = Json::decode($this->fileManager->getContents($this->file));
 
-        if ($userData) {
-            return $userData;
+        if (!is_array($list)) {
+            throw new RuntimeException("Bad data in freeEmailProviderDomains file.");
         }
 
-        $user = $this->entityManager
-            ->getRepository(UserEntity::ENTITY_TYPE)
-            ->getById($userId);
-
-        if (!$user) {
-            return null;
-        }
-
-        $userData = $this->getNew();
-
-        $userData->set('userId', $userId);
-
-        $this->save($userData, [
-            SaveOption::SILENT => true,
-            SaveOption::SKIP_HOOKS => true,
-        ]);
-
-        return $userData;
+        return in_array($domain, $list);
     }
 }

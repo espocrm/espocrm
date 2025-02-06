@@ -21,7 +21,8 @@
             "view": "views/user/fields/name",
             "dependeeAttributeList": [
                 "userName"
-            ]
+            ],
+            "dynamicLogicVisibleDisabled": true
         },
         "type": {
             "type": "enum",
@@ -79,7 +80,8 @@
             "fieldManagerParamList": [
                 "tooltipText"
             ],
-            "copyToClipboard": true
+            "copyToClipboard": true,
+            "dynamicLogicVisibleDisabled": true
         },
         "secretKey": {
             "type": "varchar",
@@ -94,7 +96,8 @@
             "fieldManagerParamList": [
                 "tooltipText"
             ],
-            "copyToClipboard": true
+            "copyToClipboard": true,
+            "dynamicLogicVisibleDisabled": true
         },
         "salutationName": {
             "type": "enum",
@@ -123,7 +126,8 @@
             "type": "varchar",
             "maxLength": 100,
             "pattern": "$noBadCharacters",
-            "customizationAuditedDisabled": true
+            "customizationAuditedDisabled": true,
+            "dynamicLogicVisibleDisabled": true
         },
         "position": {
             "type": "varchar",
@@ -238,12 +242,14 @@
         "emailAddress": {
             "type": "email",
             "required": false,
-            "layoutMassUpdateDisabled": true
+            "layoutMassUpdateDisabled": true,
+            "dynamicLogicVisibleDisabled": true
         },
         "phoneNumber": {
             "type": "phone",
             "typeList": ["Mobile", "Office", "Home", "Fax", "Other"],
-            "defaultType": "Mobile"
+            "defaultType": "Mobile",
+            "dynamicLogicVisibleDisabled": true
         },
         "token": {
             "type": "varchar",
@@ -282,7 +288,8 @@
             "validatorClassNameList": [
                 "Espo\\Classes\\FieldValidators\\User\\DefaultTeam\\IsUserTeam"
             ],
-            "view": "views/user/fields/default-team"
+            "view": "views/user/fields/default-team",
+            "dynamicLogicVisibleDisabled": true
         },
         "acceptanceStatus": {
             "type": "varchar",
@@ -341,20 +348,23 @@
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "tooltip": true,
-            "audited": true
+            "audited": true,
+            "dynamicLogicVisibleDisabled": true
         },
         "portals": {
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "tooltip": true,
-            "audited": true
+            "audited": true,
+            "dynamicLogicVisibleDisabled": true
         },
         "portalRoles": {
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "tooltip": true,
-            "audited": true
+            "audited": true,
+            "dynamicLogicVisibleDisabled": true
         },
         "contact": {
             "type": "link",
@@ -364,7 +374,8 @@
                 "inlineEditDisabled",
                 "tooltipText"
             ],
-            "audited": true
+            "audited": true,
+            "dynamicLogicVisibleDisabled": true
         },
         "accounts": {
             "type": "linkMultiple",
@@ -374,7 +385,8 @@
                 "inlineEditDisabled",
                 "tooltipText"
             ],
-            "audited": true
+            "audited": true,
+            "dynamicLogicVisibleDisabled": true
         },
         "account": {
             "type": "link",
@@ -419,7 +431,8 @@
         },
         "gender": {
             "type": "enum",
-            "options": ["", "Male", "Female", "Neutral"]
+            "options": ["", "Male", "Female", "Neutral"],
+            "dynamicLogicVisibleDisabled": true
         },
         "createdAt": {
             "type": "datetime",
@@ -527,7 +540,8 @@
             "layoutRelationshipsDisabled": true,
             "columnAttributeMap": {
                 "role": "teamRole"
-            }
+            },
+            "dynamicLogicVisibleDisabled": true
         },
         "createdBy": {
             "type": "belongsTo",

@@ -71,6 +71,9 @@ class RecordListDashletView extends BaseDashletView {
         this.name = this.options.name || this.name;
         this.scope = this.getMetadata().get(['dashlets', this.name, 'entityType']) || this.scope;
 
+        this.additionalRowActionList = this.getMetadata().get(`dashlets.${this.name}.rowActionList`) ||
+            this.additionalRowActionList;
+
         super.init();
     }
 

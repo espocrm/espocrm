@@ -40,6 +40,7 @@ use Espo\Core\Mail\Message\MailMimeParser\Part as WrapperPart;
 use Psr\Http\Message\StreamInterface;
 
 use ZBateson\MailMimeParser\Header\AddressHeader;
+use ZBateson\MailMimeParser\Header\HeaderConsts;
 use ZBateson\MailMimeParser\IMessage;
 use ZBateson\MailMimeParser\MailMimeParser as WrappeeParser;
 use ZBateson\MailMimeParser\Message\MessagePart;
@@ -67,6 +68,9 @@ class MailMimeParser implements Parser
     private const FIELD_ATTACHMENTS = 'attachments';
 
     private const DISPOSITION_INLINE = 'inline';
+
+    public const TYPE_MESSAGE_RFC822 = 'message/rfc822';
+    public const TYPE_OCTET_STREAM  = 'application/octet-stream';
 
     /** @var array<string, IMessage> */
     private array $messageHash = [];
@@ -269,7 +273,7 @@ class MailMimeParser implements Parser
         }
 
         if ($bodyHtml) {
-            $email->setIsHtml(true);
+            $email->setIsHtml();
             $email->setBody($bodyHtml);
 
             if ($bodyPlain) {
@@ -289,24 +293,16 @@ class MailMimeParser implements Parser
 
         $inlineAttachmentMap = [];
 
-        foreach ($attachmentPartList as $attachmentPart) {
+        foreach ($attachmentPartList as $i => $attachmentPart) {
             if (!$attachmentPart instanceof MimePart) {
                 continue;
             }
 
-            /** @var Attachment $attachment */
-            $attachment = $this->entityManager->getNewEntity(Attachment::ENTITY_TYPE);
+            $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getNew();
 
-            $contentType = $this->detectAttachmentContentType($attachmentPart);
-
-            $disposition = $attachmentPart->getHeaderValue('Content-Disposition');
-
-            /** @var ?string $filename */
-            $filename = $attachmentPart->getHeaderParameter('Content-Disposition', 'filename', null);
-
-            if ($filename === null) {
-                $filename = $attachmentPart->getHeaderParameter('Content-Type', 'name', 'unnamed');
-            }
+            $filename = $this->extractFileName($attachmentPart, $i);
+            $contentType = $this->detectAttachmentContentType($attachmentPart, $filename);
+            $disposition = $attachmentPart->getHeaderValue(HeaderConsts::CONTENT_DISPOSITION);
 
             if ($contentType) {
                 $contentType = strtolower($contentType);
@@ -414,15 +410,19 @@ class MailMimeParser implements Parser
         return $inlineAttachmentList;
     }
 
-    private function detectAttachmentContentType(MimePart $part): ?string
+    private function detectAttachmentContentType(MimePart $part, ?string $filename): ?string
     {
-        $contentType = $part->getHeaderValue('Content-Type');
+        $contentType = $part->getHeaderValue(HeaderConsts::CONTENT_TYPE);
 
-        if ($contentType && strtolower($contentType) !== 'application/octet-stream') {
+        if ($contentType && strtolower($contentType) !== self::TYPE_OCTET_STREAM) {
             return $contentType;
         }
 
-        $ext = $this->getAttachmentFilenameExtension($part);
+        if (!$filename) {
+            return null;
+        }
+
+        $ext = $this->getAttachmentFilenameExtension($filename);
 
         if (!$ext) {
             return null;
@@ -431,15 +431,8 @@ class MailMimeParser implements Parser
         return $this->extMimeTypeMap[$ext] ?? null;
     }
 
-    private function getAttachmentFilenameExtension(MimePart $part): ?string
+    private function getAttachmentFilenameExtension(string $filename): ?string
     {
-        /** @var ?string $filename */
-        $filename = $part->getHeaderParameter('Content-Disposition', 'filename', null);
-
-        if ($filename === null) {
-            $filename = $part->getHeaderParameter('Content-Type', 'name', 'unnamed');
-        }
-
         if (!$filename) {
             return null;
         }
@@ -451,5 +444,24 @@ class MailMimeParser implements Parser
         }
 
         return strtolower($ext);
+    }
+
+    private function extractFileName(MimePart $attachmentPart, int $i): string
+    {
+        $filename = $attachmentPart->getHeaderParameter(HeaderConsts::CONTENT_DISPOSITION, 'filename');
+
+        if ($filename === null) {
+            $filename = $attachmentPart->getHeaderParameter(HeaderConsts::CONTENT_TYPE, 'name');
+        }
+
+        if ($filename === null && $attachmentPart->getContentType() === self::TYPE_MESSAGE_RFC822) {
+            $filename = 'message-' . ($i + 1) . '.eml';
+        }
+
+        if ($filename === null) {
+            $filename = 'unnamed';
+        }
+
+        return $filename;
     }
 }

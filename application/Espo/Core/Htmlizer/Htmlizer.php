@@ -929,7 +929,9 @@ class Htmlizer
 
         $xml = new DOMDocument();
 
-        $loadResult = $xml->loadHTML($template);
+        $templateModified = "<!DOCTYPE html><meta charset=\"UTF-8\"><body>" . $template . "</body>";
+
+        $loadResult = $xml->loadHTML($templateModified);
 
         if ($loadResult === false) {
             $this->log->warning("HTML template parsing error.");

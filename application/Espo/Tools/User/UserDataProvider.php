@@ -27,47 +27,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Repositories;
+namespace Espo\Tools\User;
 
-use Espo\Core\ORM\Repository\Option\SaveOption;
-use Espo\Entities\User as UserEntity;
-use Espo\Entities\UserData as UserDataEntity;
-use Espo\Core\Repositories\Database;
+use Espo\Entities\UserData;
+use Espo\ORM\EntityManager;
+use Espo\Repositories\UserData as UserDataRepository;
+use RuntimeException;
 
-/**
- * @internal Use Espo\Tools\User\UserDataProvider.
- * @extends Database<UserDataEntity>
- */
-class UserData extends Database
+class UserDataProvider
 {
-    public function getByUserId(string $userId): ?UserDataEntity
+    public function __construct(
+        private EntityManager $entityManager,
+    ) {}
+
+    public function get(string $userId): ?UserData
     {
-        /** @var ?UserDataEntity $userData */
-        $userData = $this
-            ->where(['userId' => $userId])
-            ->findOne();
+        return $this->getRepository()->getByUserId($userId);
+    }
 
-        if ($userData) {
-            return $userData;
+    private function getRepository(): UserDataRepository
+    {
+        $repository = $this->entityManager->getRepository(UserData::ENTITY_TYPE);
+
+        if (!$repository instanceof UserDataRepository) {
+            throw new RuntimeException();
         }
 
-        $user = $this->entityManager
-            ->getRepository(UserEntity::ENTITY_TYPE)
-            ->getById($userId);
-
-        if (!$user) {
-            return null;
-        }
-
-        $userData = $this->getNew();
-
-        $userData->set('userId', $userId);
-
-        $this->save($userData, [
-            SaveOption::SILENT => true,
-            SaveOption::SKIP_HOOKS => true,
-        ]);
-
-        return $userData;
+        return $repository;
     }
 }

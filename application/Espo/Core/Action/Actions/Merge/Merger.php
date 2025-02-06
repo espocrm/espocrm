@@ -34,16 +34,19 @@ use Espo\Core\Acl\Table;
 use Espo\Core\Action\Params;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\ActionHistory\Action;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\ObjectUtil;
+use Espo\Entities\Note;
 use Espo\ORM\Entity;
 use Espo\Entities\EmailAddress;
 use Espo\Entities\PhoneNumber;
 
+use Espo\ORM\Type\RelationType;
 use stdClass;
 
 class Merger
@@ -94,12 +97,12 @@ class Merger
         $entityDefs = $this->entityManager->getDefs()->getEntity($entityType);
 
         $hasPhoneNumber =
-            $entityDefs->hasField('phoneNumber') &&
-            $entityDefs->getField('phoneNumber')->getType() === FieldType::PHONE;
+            $entityDefs->hasField(Field::PHONE_NUMBER) &&
+            $entityDefs->getField(Field::PHONE_NUMBER)->getType() === FieldType::PHONE;
 
         $hasEmailAddress =
-            $entityDefs->hasField('emailAddress') &&
-            $entityDefs->getField('emailAddress')->getType() === FieldType::EMAIL;
+            $entityDefs->hasField(Field::EMAIL_ADDRESS) &&
+            $entityDefs->getField(Field::EMAIL_ADDRESS)->getType() === FieldType::EMAIL;
 
         if ($hasPhoneNumber) {
             $phoneNumberToRelateList = $this->fetchEntityPhoneNumberList($entity);
@@ -196,7 +199,6 @@ class Merger
 
         /** @var iterable<PhoneNumber> $collection */
         $collection = $this->entityManager
-            ->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, 'phoneNumbers')
             ->find();
 
@@ -216,7 +218,6 @@ class Merger
 
         /** @var iterable<EmailAddress> $collection */
         $collection = $this->entityManager
-            ->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, 'emailAddresses')
             ->find();
 
@@ -232,13 +233,17 @@ class Merger
         $updateQuery = $this->entityManager
             ->getQueryBuilder()
             ->update()
-            ->in('Note')
+            ->in(Note::ENTITY_TYPE)
             ->set([
                 'parentId' => $targetEntity->getId(),
                 'parentType' => $targetEntity->getEntityType(),
             ])
             ->where([
-                'type' => ['Post', 'EmailSent', 'EmailReceived'],
+                'type' => [
+                    Note::TYPE_POST,
+                    Note::TYPE_EMAIL_SENT,
+                    Note::TYPE_EMAIL_RECEIVED,
+                ],
                 'parentId' => $sourceEntity->getId(),
                 'parentType' => $sourceEntity->getEntityType(),
             ])
@@ -251,16 +256,24 @@ class Merger
 
     private function updateRelations(Entity $sourceEntity, Entity $targetEntity, string $link): void
     {
-        $repository = $this->entityManager->getRDBRepository($targetEntity->getEntityType());
+        $entityType = $sourceEntity->getEntityType();
 
-        $collection = $repository
+        $columnAttributeMap = $this->getLinkColumnAttributeMap($entityType, $link);
+
+        $collection = $this->entityManager
             ->getRelation($sourceEntity, $link)
             ->find();
 
         foreach ($collection as $relatedEntity) {
-            $repository
+            $map = null;
+
+            if ($columnAttributeMap) {
+                $map = array_map(fn ($attribute) => $relatedEntity->get($attribute), $columnAttributeMap);
+            }
+
+            $this->entityManager
                 ->getRelation($targetEntity, $link)
-                ->relate($relatedEntity);
+                ->relate($relatedEntity, $map);
         }
     }
 
@@ -382,5 +395,36 @@ class Merger
                 $entity->clear($field . 'Name');
             }
         }
+    }
+
+    /**
+     * @return ?array<string, string>
+     */
+    private function getLinkColumnAttributeMap(string $entityType, string $link): ?array
+    {
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entityType);
+
+        $columnAttributeMap = null;
+
+        $relationDefs = $entityDefs->tryGetRelation($link);
+
+        if (
+            $relationDefs &&
+            $relationDefs->getType() === RelationType::MANY_MANY &&
+            $relationDefs->hasForeignEntityType() &&
+            $relationDefs->hasForeignRelationName()
+        ) {
+            $foreignRelationDefs = $this->entityManager
+                ->getDefs()
+                ->getEntity($relationDefs->getForeignEntityType())
+                ->getRelation($relationDefs->getForeignRelationName());
+
+            /** ?@var array<string, string> $columnAttributeMap */
+            $columnAttributeMap = $foreignRelationDefs->getParam('columnAttributeMap');
+        }
+
+        return $columnAttributeMap;
     }
 }

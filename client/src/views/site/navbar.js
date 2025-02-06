@@ -40,6 +40,12 @@ class NavbarSiteView extends View {
      */
     currentTab = null
 
+    /**
+     * @private
+     * @type {HTMLElement}
+     */
+    navbarHeaderElement
+
     events = {
         /** @this NavbarSiteView */
         'click .navbar-collapse.in a.nav-link': function (e) {
@@ -625,7 +631,7 @@ class NavbarSiteView extends View {
             $navbar.css('overflow', 'visible');
         }
 
-        const navbarBaseWidth = this.getFontSizeFactor() * (this.getThemeManager().getParam('navbarBaseWidth') || 550);
+        const navbarBaseWidth = this.navbarHeaderElement.clientWidth + this.$navbarRight.width();
 
         const tabCount = this.tabList.length;
 
@@ -756,7 +762,6 @@ class NavbarSiteView extends View {
             const windowHeight = window.innerHeight;
             const windowWidth = window.innerWidth;
 
-            const t = new Date().getMilliseconds();
             const navbarStaticItemsHeight = this.getStaticItemsHeight();
 
             this.$minimizer.removeClass('hidden');
@@ -959,6 +964,8 @@ class NavbarSiteView extends View {
         this.$navbar = this.$el.find('> .navbar');
         this.$navbarRightContainer = this.$navbar.find('> .navbar-body > .navbar-right-container');
         this.$navbarRight = this.$navbarRightContainer.children();
+
+        this.navbarHeaderElement = this.element.querySelector('.navbar-header');
 
         const handlerClassName = this.getThemeManager().getParam('navbarAdjustmentHandler');
 

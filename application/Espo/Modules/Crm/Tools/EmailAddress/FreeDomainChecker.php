@@ -27,47 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Repositories;
-
-use Espo\Core\ORM\Repository\Option\SaveOption;
-use Espo\Entities\User as UserEntity;
-use Espo\Entities\UserData as UserDataEntity;
-use Espo\Core\Repositories\Database;
+namespace Espo\Modules\Crm\Tools\EmailAddress;
 
 /**
- * @internal Use Espo\Tools\User\UserDataProvider.
- * @extends Database<UserDataEntity>
+ * @since 9.0.3
  */
-class UserData extends Database
+interface FreeDomainChecker
 {
-    public function getByUserId(string $userId): ?UserDataEntity
-    {
-        /** @var ?UserDataEntity $userData */
-        $userData = $this
-            ->where(['userId' => $userId])
-            ->findOne();
-
-        if ($userData) {
-            return $userData;
-        }
-
-        $user = $this->entityManager
-            ->getRepository(UserEntity::ENTITY_TYPE)
-            ->getById($userId);
-
-        if (!$user) {
-            return null;
-        }
-
-        $userData = $this->getNew();
-
-        $userData->set('userId', $userId);
-
-        $this->save($userData, [
-            SaveOption::SILENT => true,
-            SaveOption::SKIP_HOOKS => true,
-        ]);
-
-        return $userData;
-    }
+    /**
+     * Check whether the domain belongs to a free email provider.
+     */
+    public function check(string $domain): bool;
 }

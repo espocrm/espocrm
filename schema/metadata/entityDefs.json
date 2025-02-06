@@ -1179,6 +1179,13 @@
                     "type": "string",
                     "description": "A relationship name. Defines how a middle table will be named (for a many-to-many relationships). Available for hasMany"
                 },
+                "columnAttributeMap": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "description": "The mapping of relationship columns to attributes of the foreign entity type."
+                },
                 "additionalColumns": {
                     "type": "object",
                     "description": "Additional columns to be created in a middle table (for a many-to-many relationships).",

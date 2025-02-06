@@ -40,5 +40,10 @@ class Binding implements BindingProcessor
             'Espo\\Modules\\Crm\\Tools\\MassEmail\\MessageHeadersPreparator',
             'Espo\\Modules\\Crm\\Tools\\MassEmail\\DefaultMessageHeadersPreparator'
         );
+
+        $binder->bindImplementation(
+            'Espo\\Modules\\Crm\\Tools\\EmailAddress\\FreeDomainChecker',
+            'Espo\\Modules\\Crm\\Tools\\EmailAddress\\DefaultFreeDomainChecker'
+        );
     }
 }
