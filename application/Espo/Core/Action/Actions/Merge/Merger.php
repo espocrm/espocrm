@@ -46,6 +46,7 @@ use Espo\ORM\Entity;
 use Espo\Entities\EmailAddress;
 use Espo\Entities\PhoneNumber;
 
+use Espo\ORM\Type\RelationType;
 use stdClass;
 
 class Merger
@@ -255,14 +256,24 @@ class Merger
 
     private function updateRelations(Entity $sourceEntity, Entity $targetEntity, string $link): void
     {
+        $entityType = $sourceEntity->getEntityType();
+
+        $columnAttributeMap = $this->getLinkColumnAttributeMap($entityType, $link);
+
         $collection = $this->entityManager
             ->getRelation($sourceEntity, $link)
             ->find();
 
         foreach ($collection as $relatedEntity) {
+            $map = null;
+
+            if ($columnAttributeMap) {
+                $map = array_map(fn ($attribute) => $relatedEntity->get($attribute), $columnAttributeMap);
+            }
+
             $this->entityManager
                 ->getRelation($targetEntity, $link)
-                ->relate($relatedEntity);
+                ->relate($relatedEntity, $map);
         }
     }
 
@@ -384,5 +395,36 @@ class Merger
                 $entity->clear($field . 'Name');
             }
         }
+    }
+
+    /**
+     * @return ?array<string, string>
+     */
+    private function getLinkColumnAttributeMap(string $entityType, string $link): ?array
+    {
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entityType);
+
+        $columnAttributeMap = null;
+
+        $relationDefs = $entityDefs->tryGetRelation($link);
+
+        if (
+            $relationDefs &&
+            $relationDefs->getType() === RelationType::MANY_MANY &&
+            $relationDefs->hasForeignEntityType() &&
+            $relationDefs->hasForeignRelationName()
+        ) {
+            $foreignRelationDefs = $this->entityManager
+                ->getDefs()
+                ->getEntity($relationDefs->getForeignEntityType())
+                ->getRelation($relationDefs->getForeignRelationName());
+
+            /** ?@var array<string, string> $columnAttributeMap */
+            $columnAttributeMap = $foreignRelationDefs->getParam('columnAttributeMap');
+        }
+
+        return $columnAttributeMap;
     }
 }

@@ -38,9 +38,11 @@ use Espo\Core\Field\EmailAddress;
 use Espo\Core\Field\PhoneNumber;
 use Espo\Core\ORM\EntityManager;
 
+use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
+use tests\integration\Core\BaseTestCase;
 
-class ActionTest extends \tests\integration\Core\BaseTestCase
+class ActionTest extends BaseTestCase
 {
     /** @var Application */
     private $app;
@@ -270,6 +272,47 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals(
             2,
             count($contact1Reloaded->getLinkMultipleIdList('accounts'))
+        );
+    }
+
+    public function testMergeRelationshipColumns(): void
+    {
+        $em = $this->getEntityManager();
+
+        $account = $em->getRDBRepositoryByClass(Account::class)->getNew();
+        $accountSource = $em->getRDBRepositoryByClass(Account::class)->getNew();
+        $contact = $em->getRDBRepositoryByClass(Contact::class)->getNew();
+
+        $em->saveEntity($account);
+        $em->saveEntity($accountSource);
+        $em->saveEntity($contact);
+
+        $em->getRelation($accountSource, 'contacts')
+            ->relate($contact, [
+                'role' => 'Tester',
+                'isInactive' => true,
+            ]);
+
+        $merger = $this->getInjectableFactory()->create(Merger::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $merger->process(
+            new Params(Account::ENTITY_TYPE, $account->getId()),
+            [$accountSource->getId()],
+            (object) []
+        );
+
+        $em->refreshEntity($account);
+
+        $relation = $em->getRelation($account, 'contacts');
+
+        $this->assertEquals(
+            'Tester',
+            $relation->getColumn($contact, 'role')
+        );
+
+        $this->assertTrue(
+            $relation->getColumn($contact, 'isInactive')
         );
     }
 
