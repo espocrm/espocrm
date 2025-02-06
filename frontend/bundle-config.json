@@ -2,11 +2,11 @@
     "order": [
         "main",
         "admin",
+        "extra",
         "crm",
         "chart",
         "calendar",
-        "timeline",
-        "extra"
+        "timeline"
     ],
     "basePath": "client",
     "transpiledPath": "client/lib/transpiled",
@@ -21,35 +21,50 @@
                 "src/loader.js"
             ],
             "patterns": [
-                "src/*.js",
-                "src/ui/**/*.js",
-                "src/views/*.js",
-                "src/views/site/*.js",
-                "src/views/fields/*.js",
-                "src/views/record/**/*.js",
-                "src/views/search/**/*.js",
-                "src/views/modals/*.js",
-                "src/views/dashlets/**/*.js",
-                "src/views/global-search/*.js",
-                "src/views/stream/**/*.js",
-                "src/views/note/**/*.js",
-                "src/views/notification/*.js",
-                "src/controllers/!(admin|inbound-email|layout-set|api-user|role|portal-role).js",
-                "src/models/*.js",
-                "src/collections/*.js",
-                "src/acl/*.js"
+                "src/**/*.js"
+            ],
+            "ignorePatterns": [
+                "src/views/admin/**/*.js",
+                "src/views/settings/**/*.js",
+                "src/views/authentication-provider/**/*.js",
+                "src/views/webhooks/**/*.js",
+                "src/views/templates/**/*.js",
+                "src/views/layout-set/**/*.js",
+                "src/views/role/**/*.js",
+                "src/views/portal-role/**/*.js",
+                "src/views/scheduled-job/**/*.js",
+                "src/views/lead-capture-log-record/**/*.js",
+                "src/views/inbound-email/**/*.js",
+                "src/views/extension/**/*.js",
+                "src/views/api-user/**/*.js",
+
+                "src/controllers/admin.js",
+                "src/controllers/role.js",
+                "src/controllers/portal-role.js",
+
+                "src/views/outbound-email/**/*.js",
+                "src/views/personal-data/**/*.js",
+                "src/views/portal/**/*.js",
+                "src/views/import/**/*.js",
+                "src/views/import-error/**/*.js",
+                "src/views/group-email-folder/**/*.js",
+                "src/views/external-account/**/*.js",
+                "src/views/email-account/**/*.js"
             ]
         },
         "admin": {
             "patterns": [
                 "src/views/admin/**/*.js",
+                "src/views/settings/**/*.js",
+                "src/views/api-user/**/*.js",
+                "src/views/extension/**/*.js",
                 "src/views/authentication-provider/**/*.js",
                 "src/views/inbound-email/**/*.js",
                 "src/views/templates/**/*.js",
                 "src/views/role/**/*.js",
                 "src/views/portal-role/**/*.js",
+                "src/views/portal/**/*.js",
                 "src/views/scheduled-job/**/*.js",
-                "src/views/lead-capture/**/*.js",
                 "src/views/lead-capture-log-record/**/*.js",
                 "src/views/webhooks/**/*.js",
                 "src/views/layout-set/**/*.js",
@@ -67,7 +82,8 @@
             ],
             "lookupPatterns": [
                 "modules/crm/src/**/*.js"
-            ]
+            ],
+            "noDuplicates": true
         },
         "chart": {
             "patterns": [
