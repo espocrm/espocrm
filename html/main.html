@@ -13,22 +13,40 @@
         <link rel="alternate icon" href="{{basePath}}{{faviconAlternate}}" type="image/x-icon">
         <link rel="icon" href="{{basePath}}{{favicon}}" type="{{faviconType}}">
         <script nonce="{{nonce}}">
-            window.addEventListener('DOMContentLoaded', () => {
+            let loadedApp;
+
+            const run = app => {
+                {{runScript}}
+            };
+
+            const init = () => {
                 require('{{appClientClassName}}', App => {
                     new App({
                         id: '{{applicationId}}',
                         useCache: {{useCache}},
-                        cacheTimestamp: {{cacheTimestamp}},
-                        appTimestamp: {{appTimestamp}},
-                        basePath: '{{basePath}}',
-                        apiUrl: '{{apiUrl}}',
-                        ajaxTimeout: {{ajaxTimeout}},
-                        internalModuleList: {{internalModuleList}},
-                        bundledModuleList: {{bundledModuleList}},
-                    }, app => {
-                        {{runScript}}
+                    cacheTimestamp: {{cacheTimestamp}},
+                    appTimestamp: {{appTimestamp}},
+                    basePath: '{{basePath}}',
+                    apiUrl: '{{apiUrl}}',
+                    ajaxTimeout: {{ajaxTimeout}},
+                    internalModuleList: {{internalModuleList}},
+                    bundledModuleList: {{bundledModuleList}},
+                }, app => {
+                        loadedApp = app;
+
+                        run(app);
                     });
                 });
+            };
+
+            window.addEventListener('pageshow', event => {
+                if (event.persisted && loadedApp) {
+                    run(loadedApp);
+
+                    return;
+                }
+
+                init();
             });
         </script>
     </head>
