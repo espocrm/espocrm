@@ -183,11 +183,14 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
         $manifest = $this->getManifest();
         $extensionEntity = $this->getExtensionEntity();
 
-        if (isset($extensionEntity)) {
-            $comparedVersion = version_compare($manifest['version'], $extensionEntity->get('version'), '>=');
-            if ($comparedVersion <= 0) {
-                $this->throwErrorAndRemovePackage('You cannot install an older version of this extension.');
-            }
+        if (!$extensionEntity) {
+            return;
+        }
+
+        $comparedVersion = version_compare($manifest['version'], $extensionEntity->getVersion(), '>=');
+
+        if ($comparedVersion <= 0) {
+            $this->throwErrorAndRemovePackage('You cannot install an older version of this extension.');
         }
     }
 
