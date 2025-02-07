@@ -185,10 +185,13 @@ class ContainerBuilder
             new $this->moduleClassName($fileManager, $dataCache, $useCache)
         );
 
+        $systemConfig = new Config\SystemConfig($config);
+
         $this->services['config'] = $config;
         $this->services['fileManager'] = $fileManager;
         $this->services['dataCache'] = $dataCache;
         $this->services['module'] = $module;
+        $this->services['systemConfig'] = $systemConfig;
 
         $bindingLoader = $this->bindingLoader ?? (
             new EspoBindingLoader($module)
