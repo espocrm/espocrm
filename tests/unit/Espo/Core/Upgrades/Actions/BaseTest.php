@@ -47,6 +47,7 @@ class BaseTest extends TestCase
     protected $objects;
     protected $fileManager;
     protected $reflection;
+    private $systemConfig;
 
     protected $actionManagerParams = [
         'name' => 'Extension',
@@ -73,11 +74,14 @@ class BaseTest extends TestCase
         $this->configWriter = $this->createMock(ConfigWriter::class);
         $this->log = $this->createMock(Log::class);
 
+        $this->systemConfig = $this->createMock(Config\SystemConfig::class);
+
         $map = [
             [Config::class, $this->config],
             [FileManager::class, $this->fileManager],
             [InjectableFactory::class, $this->injectableFactory],
             [Log::class, $this->log],
+            [Config\SystemConfig::class, $this->systemConfig]
         ];
 
         $idGenerator = $this->createMock(RecordIdGenerator::class);
