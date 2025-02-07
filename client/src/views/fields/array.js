@@ -176,6 +176,8 @@ class ArrayFieldView extends BaseFieldView {
             this.selected = [];
         }
 
+        this.styleMap = this.params.style || {};
+
         let optionsPath = this.params.optionsPath;
         /** @type {?string} */
         const optionsReference = this.params.optionsReference;
@@ -184,13 +186,15 @@ class ArrayFieldView extends BaseFieldView {
             const [refEntityType, refField] = optionsReference.split('.');
 
             optionsPath = `entityDefs.${refEntityType}.fields.${refField}.options`;
+
+            if (Object.keys(this.styleMap).length === 0) {
+                this.styleMap = this.getMetadata().get(`entityDefs.${refEntityType}.fields.${refField}.style`) || {};
+            }
         }
 
         if (optionsPath) {
             this.params.options = Espo.Utils.clone(this.getMetadata().get(optionsPath)) || [];
         }
-
-        this.styleMap = this.params.style || {};
 
         this.setupOptions();
 

@@ -5,6 +5,6 @@
         field=name
         translatedOptions=translatedOptions
         includeMissingOption=true
-        styleMap=params.style
+        styleMap=styleMap
     }}
 </select>

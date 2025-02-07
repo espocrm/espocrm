@@ -110,6 +110,8 @@ class EnumFieldView extends BaseFieldView {
             data.style = this.styleMap[value || ''] || 'default';
         }
 
+        data.styleMap = this.styleMap;
+
         if (this.isReadMode()) {
             if (!this.params.displayAsLabel) {
                 data.class = 'text';
@@ -160,6 +162,8 @@ class EnumFieldView extends BaseFieldView {
             }
         }
 
+        this.styleMap = this.params.style || this.model.getFieldParam(this.name, 'style') || {};
+
         let optionsPath = this.params.optionsPath;
         /** @type {?string} */
         const optionsReference = this.params.optionsReference;
@@ -168,13 +172,15 @@ class EnumFieldView extends BaseFieldView {
             const [refEntityType, refField] = optionsReference.split('.');
 
             optionsPath = `entityDefs.${refEntityType}.fields.${refField}.options`;
+
+            if (Object.keys(this.styleMap).length === 0) {
+                this.styleMap = this.getMetadata().get(`entityDefs.${refEntityType}.fields.${refField}.style`) || {};
+            }
         }
 
         if (optionsPath) {
             this.params.options = Espo.Utils.clone(this.getMetadata().get(optionsPath)) || [];
         }
-
-        this.styleMap = this.params.style || this.model.getFieldParam(this.name, 'style') || {};
 
         this.setupOptions();
 
