@@ -50,14 +50,14 @@ class Company extends Entity
         return $this->getValueObject('phoneNumber');
     }
 
-    public function setEmailAddressGroup(EmailAddressGroup $group): void
+    public function setEmailAddressGroup(EmailAddressGroup $group): static
     {
-        $this->setValueObject('emailAddress', $group);
+        return $this->setValueObject('emailAddress', $group);
     }
 
-    public function setPhoneNumberGroup(PhoneNumberGroup $group): void
+    public function setPhoneNumberGroup(PhoneNumberGroup $group): static
     {
-        $this->setValueObject('phoneNumber', $group);
+        return  $this->setValueObject('phoneNumber', $group);
     }
 
     public function getBillingAddress(): Address
@@ -66,9 +66,9 @@ class Company extends Entity
         return $this->getValueObject('billingAddress');
     }
 
-    public function setBillingAddress(Address $address): void
+    public function setBillingAddress(Address $address): static
     {
-        $this->setValueObject('billingAddress', $address);
+        return $this->setValueObject('billingAddress', $address);
     }
 
     public function getShippingAddress(): Address
@@ -77,9 +77,9 @@ class Company extends Entity
         return $this->getValueObject('shippingAddress');
     }
 
-    public function setShippingAddress(Address $address): void
+    public function setShippingAddress(Address $address): static
     {
-        $this->setValueObject('shippingAddress', $address);
+        return $this->setValueObject('shippingAddress', $address);
     }
 }
 
