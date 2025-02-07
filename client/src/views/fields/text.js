@@ -125,6 +125,12 @@ class TextFieldView extends BaseFieldView {
      */
     previewButtonElement
 
+    /**
+     * @private
+     * @type {HTMLTextAreaElement}
+     */
+    textAreaElement
+
     setup() {
         super.setup();
 
@@ -148,6 +154,10 @@ class TextFieldView extends BaseFieldView {
 
         this.on('remove', () => {
             $(window).off('resize.see-more-' + this.cid);
+
+            if (this.textAreaElement) {
+                this.textAreaElement.removeEventListener('keydown', this.onKeyDownMarkdownBind);
+            }
         });
 
         if (this.params.preview) {
@@ -172,6 +182,8 @@ class TextFieldView extends BaseFieldView {
         this.controlSeeMoreBind = this.controlSeeMore.bind(this);
         /** @private */
         this.onPasteBind = this.onPaste.bind(this);
+        /** @private */
+        this.onKeyDownMarkdownBind = this.onKeyDownMarkdown.bind(this);
     }
 
     setupSearch() {
@@ -385,11 +397,17 @@ class TextFieldView extends BaseFieldView {
             this.previewButtonElement = this.element ?
                 this.element.querySelector('a[data-action="previewText"]') : undefined;
 
-            const textAreaElement = /** @type {HTMLTextAreaElement} */this.$element.get(0);
+            this.textAreaElement = this.element ? this.element.querySelector('textarea') : undefined;
+
+            const textAreaElement = this.textAreaElement
 
             if (this.params.attachmentField && textAreaElement) {
                 textAreaElement.removeEventListener('paste', this.onPasteBind);
                 textAreaElement.addEventListener('paste', this.onPasteBind);
+            }
+
+            if (!this.params.displayRawText) {
+                this.initTextareaMarkdownHelper();
             }
         }
 
@@ -578,6 +596,65 @@ class TextFieldView extends BaseFieldView {
         this.seeMoreText = true;
 
         await this.reRender();
+    }
+
+    /**
+     * @private
+     */
+    initTextareaMarkdownHelper() {
+        if (!this.textAreaElement) {
+            return;
+        }
+
+        this.textAreaElement.addEventListener('keydown', this.onKeyDownMarkdownBind);
+    }
+
+    /**
+     * @private
+     * @param {KeyboardEvent} event
+     */
+    onKeyDownMarkdown(event) {
+        if (Espo.Utils.getKeyFromKeyEvent(event) !== 'Enter') {
+            return;
+        }
+
+        const target = event.target;
+
+        if (!(target instanceof HTMLTextAreaElement)) {
+            return;
+        }
+
+        const {selectionStart, selectionEnd, value} = target;
+
+        const before = value.substring(0, selectionStart);
+        const after = value.substring(selectionEnd);
+
+        // Last line, a list item syntax.
+        const match = before.match(/(^|\n)( *[-*]|\d+\.)[^\n]*$/);
+
+        if (!match) {
+            return;
+        }
+
+        event.preventDefault();
+
+        let itemPart = match[2];
+
+        const matchPart = itemPart.match(/( *)(\d+)/);
+
+        if (matchPart) {
+            const number = parseInt(matchPart[2]);
+
+            if (!isNaN(number)) {
+                itemPart = matchPart[1] + (number + 1).toString() + '.';
+            }
+        }
+
+        const newLine = "\n" + itemPart + " ";
+
+        target.value = before + newLine + after;
+
+        this.controlTextareaHeight();
     }
 }
 
