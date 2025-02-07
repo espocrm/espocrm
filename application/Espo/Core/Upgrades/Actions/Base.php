@@ -137,6 +137,11 @@ abstract class Base
         return $this->getContainer()->getByClass(Config::class);
     }
 
+    protected function getSystemConfig(): Config\SystemConfig
+    {
+        return $this->getContainer()->getByClass(Config\SystemConfig::class);
+    }
+
     protected function getEntityManager(): EntityManager
     {
         return $this->getContainer()->getByClass(EntityManager::class);
@@ -238,7 +243,6 @@ abstract class Base
 
         $res = $this->checkPackageType();
 
-        // check php version
         if (isset($manifest['php'])) {
             $res &= $this->checkVersions(
                 $manifest['php'], System::getPhpVersion(),
@@ -246,7 +250,6 @@ abstract class Base
             );
         }
 
-        // check database version
         if (isset($manifest['database'])) {
             $databaseHelper = $this->getDatabaseHelper();
             $databaseType = $databaseHelper->getType();
@@ -266,10 +269,10 @@ abstract class Base
             }
         }
 
-        // check acceptableVersions
-        if (isset($manifest['acceptableVersions'])) {
-            $version = $this->getConfig()->get('version');
+        $version = $this->getSystemConfig()->getVersion();
 
+        // Skip @@version for extension development.
+        if (isset($manifest['acceptableVersions']) && $version !== '@@version') {
             $res &= $this->checkVersions(
                 $manifest['acceptableVersions'],
                 $version,
@@ -277,7 +280,6 @@ abstract class Base
             );
         }
 
-        // check dependencies
         if (!empty($manifest['dependencies'])) {
             $res &= $this->checkDependencies($manifest['dependencies']);
         }
