@@ -29,12 +29,21 @@
 /** @module acl-portal */
 
 import Acl from 'acl';
+import {inject} from 'di';
+import Metadata from 'metadata';
 
 /**
  * Internal class for portal access checking. Can be extended to customize access checking
  * for a specific scope.
  */
 class AclPortal extends Acl {
+
+    /**
+     * @private
+     * @type {Metadata}
+     */
+    @inject(Metadata)
+    metadata
 
     /** @inheritDoc */
     checkScope(data, action, precise, entityAccessData) {
@@ -171,20 +180,81 @@ class AclPortal extends Acl {
     /**
      * Check if a user in an account of a model.
      *
-     * @param {module:model} model A model.
+     * @param {import('model').default} model A model.
      * @returns {boolean|null} True if in an account, null if not clear.
      */
     checkInAccount(model) {
-        const accountIdList = this.getUser().getLinkMultipleIdList('accounts');
+        const accountsIds = this.getUser().getLinkMultipleIdList('accounts');
 
-        if (!accountIdList.length) {
+        if (!accountsIds.length) {
+            return false;
+        }
+
+        const link = this.metadata.get(`aclDefs.${model.entityType}.accountLink`);
+
+        if (link) {
+            const linkType = model.getLinkType(link);
+
+            if (linkType === 'belongsTo' || linkType === 'hasOne') {
+                const idAttribute = link + 'Id';
+
+                if (!model.has(idAttribute)) {
+                    return null;
+                }
+
+                const id = model.get(idAttribute);
+
+                if (!id) {
+                    return false;
+                }
+
+                return accountsIds.includes(id);
+            }
+
+            if (linkType === 'belongsToParent') {
+                const idAttribute = link + 'Id';
+                const typeAttribute = link + 'Type';
+
+                if (!model.has(idAttribute) || !model.has(typeAttribute)) {
+                    return null;
+                }
+
+                const id = model.get(idAttribute);
+
+                if (model.get(typeAttribute) !== 'Account' || !id) {
+                    return false;
+                }
+
+                return accountsIds.includes(id);
+            }
+
+            if (linkType === 'hasMany') {
+                if (!model.hasField(link) || model.getFieldType(link) !== 'linkMultiple') {
+                    return true;
+                }
+
+                if (!model.has(link + 'Ids')) {
+                    return null;
+                }
+
+                const ids = model.getLinkMultipleIdList(link);
+
+                for (const id of ids) {
+                    if (accountsIds.includes(id)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
             return false;
         }
 
         if (
             model.hasField('account') &&
             model.get('accountId') &&
-            accountIdList.includes(model.get('accountId'))
+            accountsIds.includes(model.get('accountId'))
         ) {
             return true;
         }
@@ -197,7 +267,7 @@ class AclPortal extends Acl {
             }
 
             (model.getLinkMultipleIdList('accounts')).forEach(id => {
-                if (accountIdList.includes(id)) {
+                if (accountsIds.includes(id)) {
                     result = true;
                 }
             });
@@ -207,7 +277,7 @@ class AclPortal extends Acl {
             model.hasField('parent') &&
             model.hasLink('parent') &&
             model.get('parentType') === 'Account' &&
-            accountIdList.includes(model.get('parentId'))
+            accountsIds.includes(model.get('parentId'))
         ) {
             return true;
         }
@@ -231,6 +301,53 @@ class AclPortal extends Acl {
         const contactId = this.getUser().get('contactId');
 
         if (!contactId) {
+            return false;
+        }
+
+        const link = this.metadata.get(`aclDefs.${model.entityType}.contactLink`);
+
+        if (link) {
+            const linkType = model.getLinkType(link);
+
+            if (linkType === 'belongsTo' || linkType === 'hasOne') {
+                const idAttribute = link + 'Id';
+
+                if (!model.has(idAttribute)) {
+                    return null;
+                }
+
+                return model.get(idAttribute) === contactId;
+            }
+
+            if (linkType === 'belongsToParent') {
+                const idAttribute = link + 'Id';
+                const typeAttribute = link + 'Type';
+
+                if (!model.has(idAttribute) || !model.has(typeAttribute)) {
+                    return null;
+                }
+
+                if (model.get(typeAttribute) !== 'Contact') {
+                    return false;
+                }
+
+                return model.get(idAttribute) === contactId;
+            }
+
+            if (linkType === 'hasMany') {
+                if (!model.hasField(link) || model.getFieldType(link) !== 'linkMultiple') {
+                    return true;
+                }
+
+                if (!model.has(link + 'Ids')) {
+                    return null;
+                }
+
+                const ids = model.getLinkMultipleIdList(link);
+
+                return ids.includes(contactId);
+            }
+
             return false;
         }
 

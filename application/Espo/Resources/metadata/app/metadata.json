@@ -36,11 +36,16 @@
         ["selectDefs"],
         ["pdfDefs"],
         ["notificationDefs", "__ANY__", "assignmentNotificatorClassName"],
-        ["authenticationMethods", "__ANY__", "implementationClassName"]
+        ["authenticationMethods", "__ANY__", "implementationClassName"],
+        ["aclDefs", "__ANY__", "accessCheckerClassName"],
+        ["aclDefs", "__ANY__", "portalAccessCheckerClassName"],
+        ["aclDefs", "__ANY__", "ownershipCheckerClassName"],
+        ["aclDefs", "__ANY__", "portalOwnershipCheckerClassName"],
+        ["aclDefs", "__ANY__", "assignmentCheckerClassName"],
+        ["aclDefs", "__ANY__", "linkCheckerClassNameMap"]
     ],
     "frontendNonAdminHiddenPathList": [
-        ["recordDefs"],
-        ["aclDefs"]
+        ["recordDefs"]
     ],
     "additionalBuilderClassNameList": [
         "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\FilterFields",
