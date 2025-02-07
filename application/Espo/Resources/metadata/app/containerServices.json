@@ -88,5 +88,11 @@
     },
     "streamService": {
         "className": "Espo\\Tools\\Stream\\Service"
+    },
+    "systemConfig": {
+        "className": "Espo\\Core\\Utils\\Config\\SystemConfig"
+    },
+    "applicationConfig": {
+        "className": "Espo\\Core\\Utils\\Config\\ApplicationConfig"
     }
 }

@@ -232,6 +232,16 @@ class Binding implements BindingProcessor
             'Espo\\Tools\\Stream\\Service',
             'streamService'
         );
+
+        $binder->bindService(
+            'Espo\\Core\\Utils\\Config\\SystemConfig',
+            'systemConfig'
+        );
+
+        $binder->bindService(
+            'Espo\\Core\\Utils\\Config\\ApplicationConfig',
+            'applicationConfig'
+        );
     }
 
     private function bindCore(Binder $binder): void
