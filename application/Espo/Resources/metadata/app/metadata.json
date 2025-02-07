@@ -42,7 +42,6 @@
         ["aclDefs", "__ANY__", "ownershipCheckerClassName"],
         ["aclDefs", "__ANY__", "portalOwnershipCheckerClassName"],
         ["aclDefs", "__ANY__", "assignmentCheckerClassName"],
-        ["aclDefs", "__ANY__", "linkCheckerClassNameMap"],
         ["aclDefs", "__ANY__", "linkCheckerClassNameMap"]
     ],
     "frontendNonAdminHiddenPathList": [
