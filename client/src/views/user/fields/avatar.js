@@ -62,7 +62,7 @@ class UserAvatarFieldView extends ImageFieldView {
         syncModels();
 
         this.listenTo(this.model, 'change:avatarColor', (m, v, o) => {
-            if (!o.ui) {
+            if (o.fromView !== this) {
                 syncModels();
             }
         });

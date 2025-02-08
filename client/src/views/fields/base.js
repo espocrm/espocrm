@@ -937,7 +937,10 @@ class BaseFieldView extends View {
             this.listenTo(this, 'change', () => {
                 const attributes = this.fetch();
 
-                this.model.set(attributes, {ui: true});
+                this.model.set(attributes, {
+                    ui: true,
+                    fromView: this,
+                });
             });
         }
     }
