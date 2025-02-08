@@ -38,24 +38,39 @@ interface RDBMapper extends Mapper
     /**
      * Relate an entity with another entity.
      *
-     * @param array<string, mixed>|null $columnData
+     * @param Entity $entity An entity.
+     * @param string $relationName A relation name.
+     * @param Entity $foreignEntity A foreign entity.
+     * @param array<string, mixed>|null $columnData Column values.
+     * @return bool True if the row was affected.
      */
     public function relate(Entity $entity, string $relationName, Entity $foreignEntity, ?array $columnData): bool;
 
     /**
      * Unrelate an entity from another entity.
+     *
+     * @param Entity $entity An entity.
+     * @param string $relationName A relation name.
+     * @param Entity $foreignEntity A foreign entity.
      */
     public function unrelate(Entity $entity, string $relationName, Entity $foreignEntity): void;
 
     /**
-     * Unrelate an entity from another entity by a given ID.
+     * Relate an entity from another entity by a given ID.
      *
-     * @param array<string, mixed>|null $columnData
+     * @param Entity $entity An entity.
+     * @param string $relationName A relation name.
+     * @param string $id A foreign ID.
+     * @param array<string, mixed>|null $columnData Column values.
      */
     public function relateById(Entity $entity, string $relationName, string $id, ?array $columnData = null): bool;
 
     /**
      * Unrelate an entity from another entity by a given ID.
+     *
+     * @param Entity $entity An entity.
+     * @param string $relationName A relation name.
+     * @param string $id A foreign ID.
      */
     public function unrelateById(Entity $entity, string $relationName, string $id): void;
 

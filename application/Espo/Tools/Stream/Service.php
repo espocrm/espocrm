@@ -768,24 +768,6 @@ class Service
      */
     public function noteRelate(Entity $entity, Entity $parent, array $options = []): void
     {
-        $entityType = $entity->getEntityType();
-
-        $existing = $this->entityManager
-            ->getRDBRepository(Note::ENTITY_TYPE)
-            ->select([Attribute::ID])
-            ->where([
-                'type' => Note::TYPE_RELATE,
-                'parentId' => $parent->getId(),
-                'parentType' => $parent->getEntityType(),
-                'relatedId' => $entity->getId(),
-                'relatedType' => $entityType,
-            ])
-            ->findOne();
-
-        if ($existing) {
-            return;
-        }
-
         $note = $this->getNewNote();
 
         $note->setType(Note::TYPE_RELATE);
@@ -814,24 +796,6 @@ class Service
      */
     public function noteUnrelate(Entity $entity, Entity $parent, array $options = []): void
     {
-        $entityType = $entity->getEntityType();
-
-        $existing = $this->entityManager
-            ->getRDBRepository(Note::ENTITY_TYPE)
-            ->select([Attribute::ID])
-            ->where([
-                'type' => Note::TYPE_UNRELATE,
-                'parentId' => $parent->getId(),
-                'parentType' => $parent->getEntityType(),
-                'relatedId' => $entity->getId(),
-                'relatedType' => $entityType,
-            ])
-            ->findOne();
-
-        if ($existing) {
-            return;
-        }
-
         $note = $this->getNewNote();
 
         $note->setType(Note::TYPE_UNRELATE);

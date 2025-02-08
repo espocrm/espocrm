@@ -996,7 +996,11 @@ class BaseMapper implements RDBMapper
                     ->set($set)
                     ->build();
 
-                $this->queryExecutor->execute($query);
+                $sth = $this->queryExecutor->execute($query);
+
+                if ($sth->rowCount() === 0) {
+                    return false;
+                }
 
                 return true;
 
@@ -1047,7 +1051,7 @@ class BaseMapper implements RDBMapper
 
                 // @todo Leave one INSERT for better performance.
 
-                if ($sth->rowCount() == 0) {
+                if ($sth->rowCount() === 0) {
                     $values = $where;
                     $columns = array_keys($values);
 
@@ -1066,7 +1070,7 @@ class BaseMapper implements RDBMapper
                         ->updateSet($update)
                         ->build();
 
-                    $this->queryExecutor->execute($insertQuery);
+                    $sth = $this->queryExecutor->execute($insertQuery);
 
                     return true;
                 }
@@ -1083,7 +1087,11 @@ class BaseMapper implements RDBMapper
                     ->set($update)
                     ->build();
 
-                $this->queryExecutor->execute($updateQuery);
+                $sth = $this->queryExecutor->execute($updateQuery);
+
+                if ($sth->rowCount() === 0) {
+                    return false;
+                }
 
                 return true;
         }
