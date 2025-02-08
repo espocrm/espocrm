@@ -1084,15 +1084,6 @@ class Service
 
     /**
      * @return string[]
-     * @deprecated Use `getEntityFollowerIdList`.
-     */
-    public function getEntityFolowerIdList(Entity $entity): array
-    {
-        return $this->getEntityFollowerIdList($entity);
-    }
-
-    /**
-     * @return string[]
      * @internal Must be left for backward compatibility.
      */
     public function getEntityFollowerIdList(Entity $entity): array
@@ -1216,7 +1207,6 @@ class Service
         ];
 
         foreach ($userList as $user) {
-            /** @var string $id */
             $id = $user->getId();
 
             $data['idList'][] = $id;
