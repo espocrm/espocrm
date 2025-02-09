@@ -363,7 +363,7 @@ class GlobalSearchView extends SiteNavbarItemView {
                 continue;
             }
 
-            if (this.tabsHelper.isTabGroup(item)) {
+            if (this.tabsHelper.isTabGroup(item) && item.itemList) {
                 for (const subItem of item.itemList) {
                     if (checkTab(subItem)) {
                         list.push(toData(subItem));
