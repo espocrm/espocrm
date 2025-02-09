@@ -164,6 +164,7 @@ class Collection {
      *     orderBy?: string|null,
      *     urlRoot?: string,
      *     url?: string,
+     *     maxSize?: number,
      * }} [options] Options.
      */
     constructor(models, options) {
@@ -171,6 +172,10 @@ class Collection {
 
         if (options.model) {
             this.model = options.model;
+        }
+
+        if (options.maxSize !== undefined) {
+            this.maxSize = options.maxSize;
         }
 
         this._reset();
