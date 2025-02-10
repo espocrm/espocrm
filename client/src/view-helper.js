@@ -61,6 +61,7 @@ class ViewHelper {
         marked.setOptions({
             breaks: true,
             tables: false,
+            headerIds: false,
         });
 
         DOMPurify.addHook('beforeSanitizeAttributes', function (node) {
