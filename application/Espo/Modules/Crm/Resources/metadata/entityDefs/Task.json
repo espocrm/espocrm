@@ -94,7 +94,8 @@
         "description": {
             "type": "text",
             "preview": true,
-            "attachmentField": "attachments"
+            "attachmentField": "attachments",
+            "cutHeight": 500
         },
         "parent": {
             "type": "linkParent",
