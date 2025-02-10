@@ -1163,6 +1163,22 @@ class NavbarSiteView extends View {
             return true;
         });
 
+        if (moreIsMet) {
+            let end = this.tabList.length;
+
+            for (let i = this.tabList.length - 1; i >= 0; i --) {
+                const item = this.tabList[i];
+
+                if (!this.tabsHelper.isTabDivider(item)) {
+                    break;
+                }
+
+                end = this.tabList.length - 1;
+            }
+
+            this.tabList = this.tabList.slice(0, end);
+        }
+
         const tabDefsList = [];
 
         const colorsDisabled =
