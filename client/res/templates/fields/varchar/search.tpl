@@ -14,3 +14,6 @@
     spellcheck="false"
     {{/if}}
 >
+<div data-role="multi-select-container" class="hidden">
+    <input data-role="multi-select-input">
+</div>

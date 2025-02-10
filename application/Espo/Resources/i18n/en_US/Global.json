@@ -774,7 +774,9 @@
             "notContains": "Not Contains",
             "isEmpty": "Is Empty",
             "isNotEmpty": "Is Not Empty",
-            "notEquals": "Not Equals"
+            "notEquals": "Not Equals",
+            "anyOf": "Any Of",
+            "noneOf": "None Of"
         },
         "intSearchRanges": {
             "equals": "Equals",

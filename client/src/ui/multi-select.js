@@ -42,18 +42,29 @@ import Selectize from 'lib!selectize';
  * @property {boolean} [matchAnyWord=false]
  * @property {boolean} [allowCustomOptions=false]
  * @property {function (string): {value: string, text: string}|null} [create]
+ * @property {string[]} [values] Values. As of v9.1.0.
  */
 
 /**
  * @module ui/multi-select
  */
 const MultiSelect = {
+
+    /**
+     * @const
+     */
+    defaultDelimiter: ':,:',
+
     /**
      * @param {Element|JQuery} element An element.
      * @param {module:ui/multi-select~Options} options Options.
      */
     init: function (element, options) {
         const $el = $(element);
+
+        if (options.values) {
+            $el.val(options.values.join(this.itemDelimiter));
+        }
 
         options = MultiSelect.applyDefaultOptions(options);
 
@@ -182,7 +193,7 @@ const MultiSelect = {
             removeButton: true,
             draggable: false,
             selectOnTab: false,
-            delimiter: ':,:',
+            delimiter: MultiSelect.defaultDelimiter,
             matchAnyWord: false,
             allowCustomOptions: false,
         };

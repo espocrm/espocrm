@@ -31,6 +31,7 @@
 import BaseFieldView from 'views/fields/base';
 import RegExpPattern from 'helpers/reg-exp-pattern';
 import Autocomplete from 'ui/autocomplete';
+import MultiSelect from 'ui/multi-select';
 
 /**
  * A varchar field.
@@ -84,6 +85,8 @@ class VarcharFieldView extends BaseFieldView {
         'notContains',
         'notEquals',
         'notLike',
+        'anyOf',
+        'noneOf',
         'isEmpty',
         'isNotEmpty',
     ]
@@ -112,6 +115,12 @@ class VarcharFieldView extends BaseFieldView {
      * @type {boolean}
      */
     noSpellCheck = false
+
+    /**
+     * @private
+     * @type {HTMLInputElement}
+     */
+    searchMultiSelectInputElement
 
     setup() {
         this.setupOptions();
@@ -216,11 +225,9 @@ class VarcharFieldView extends BaseFieldView {
     }
 
     setupSearch() {
-        this.events['change select.search-type'] = e => {
-            const type = $(e.currentTarget).val();
-
-            this.handleSearchType(type);
-        };
+        this.addHandler('change', 'select.search-type', (e, /** HTMLSelectElement */target) => {
+            this.handleSearchType(target.value);
+        });
     }
 
     data() {
@@ -257,14 +264,30 @@ class VarcharFieldView extends BaseFieldView {
         return data;
     }
 
+    /**
+     * @protected
+     * @param {string} type
+     */
     handleSearchType(type) {
-        if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
-            this.$el.find('input.main-element').addClass('hidden');
-
+        if (!this.element) {
+            // @todo Remove when handled by bullbone.
             return;
         }
 
-        this.$el.find('input.main-element').removeClass('hidden');
+        const mainElement = this.element.querySelector('input.main-element');
+        const multiSelectContainer = this.element.querySelector('div[data-role="multi-select-container"]');
+
+        if (['isEmpty', 'isNotEmpty', 'anyOf', 'noneOf'].includes(type)) {
+            mainElement.classList.add('hidden');
+        } else {
+            mainElement.classList.remove('hidden');
+        }
+
+        if (['anyOf', 'noneOf'].includes(type)) {
+            multiSelectContainer.classList.remove('hidden');
+        } else {
+            multiSelectContainer.classList.add('hidden');
+        }
     }
 
     afterRender() {
@@ -274,6 +297,7 @@ class VarcharFieldView extends BaseFieldView {
             const type = this.$el.find('select.search-type').val();
 
             this.handleSearchType(type);
+            this.initSearchMultiSelect();
         }
 
         if (
@@ -415,6 +439,66 @@ class VarcharFieldView extends BaseFieldView {
             };
         }
 
+        if (type === 'anyOf' || type === 'noneOf') {
+            let list = this.searchMultiSelectInputElement ?
+                this.searchMultiSelectInputElement.value.split(MultiSelect.defaultDelimiter) : [];
+
+            if (list.length === 1 && list[0] === '') {
+                list = [];
+            }
+
+            if (type === 'anyOf') {
+                if (list.length === 0) {
+                    return {
+                        type: 'any',
+                        data: {
+                            type: 'anyOf',
+                            valueList: list,
+                        },
+                    };
+                }
+
+                return {
+                    type: 'in',
+                    value: list,
+                    data: {
+                        type: 'anyOf',
+                        valueList: list,
+                    },
+                };
+            }
+
+            if (list.length === 0) {
+                return {
+                    type: 'any',
+                    data: {
+                        type: 'noneOf',
+                        valueList: list,
+                    },
+                };
+            }
+
+            return {
+                type: 'or',
+                value: [
+                    // Don't change order.
+                    {
+                        type: 'notIn',
+                        value: list,
+                        attribute: this.name,
+                    },
+                    {
+                        type: 'isNull',
+                        attribute: this.name,
+                    },
+                ],
+                data: {
+                    type: 'noneOf',
+                    valueList: list,
+                },
+            };
+        }
+
         const value = this.$element.val().toString().trim();
 
         if (!value) {
@@ -443,6 +527,34 @@ class VarcharFieldView extends BaseFieldView {
      */
     getAutocompleteLookupFunction() {
         return undefined;
+    }
+
+    /**
+     * @private
+     */
+    initSearchMultiSelect() {
+        if (!this.element) {
+            this.searchMultiSelectInputElement = undefined;
+
+            return;
+        }
+
+        this.searchMultiSelectInputElement = this.element.querySelector('input[data-role="multi-select-input"]');
+
+        MultiSelect.init(this.searchMultiSelectInputElement, {
+            items: (this.params.options || []).map(it => ({value: it, text: it})),
+            allowCustomOptions: true,
+            create: input => {
+                return {
+                    value: input,
+                    text: input,
+                };
+            },
+            values: this.getSearchParamsData().valueList || [],
+        });
+
+        this.element.querySelector('.selectize-dropdown-content')
+            .classList.add('small');
     }
 }
 
