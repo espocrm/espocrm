@@ -633,6 +633,12 @@ class TextFieldView extends BaseFieldView {
         const match = before.match(/(^|\n)( *[-*]|\d+\.)([^\n]*)$/);
 
         if (!match) {
+            // Prevent unwanted scroll applied by the browser on enter.
+            event.preventDefault();
+
+            target.value = before + "\n" + after;
+            target.selectionStart = target.selectionEnd = before.length + 1;
+
             return;
         }
 
