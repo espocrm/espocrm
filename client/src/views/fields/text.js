@@ -178,6 +178,14 @@ class TextFieldView extends BaseFieldView {
             this.addActionHandler('previewText', () => this.preview());
         }
 
+        this.listenTo(this.model, `change:${this.name}`, (m, v, /** Record*/o) => {
+            if (o.ui === true && this.mode === this.MODE_EDIT) {
+                // After changing the field content it's reasonable to show all text
+                // when returning to the detail mode.
+                this.seeMoreText = true;
+            }
+        })
+
         /** @private */
         this.controlSeeMoreBind = this.controlSeeMore.bind(this);
         /** @private */
