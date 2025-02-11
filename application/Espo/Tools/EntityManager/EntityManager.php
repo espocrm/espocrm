@@ -743,6 +743,13 @@ class EntityManager
         $this->processUpdateHook($entityTypeParams, $previousEntityTypeParams);
 
         $this->dataManager->clearCache();
+
+        if (
+            !$previousEntityTypeParams->get('optimisticConcurrencyControl') &&
+            $entityTypeParams->get('optimisticConcurrencyControl')
+        ) {
+            $this->dataManager->rebuild();
+        }
     }
 
     /**
