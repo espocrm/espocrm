@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,39 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils;
+import EnumFieldView from 'views/fields/enum';
 
-use Espo\Core\Utils\Theme\MetadataProvider;
+export default class FormThemeFieldView extends EnumFieldView {
 
-class ThemeManager
-{
-    private string $defaultName = 'Espo';
+    setupOptions() {
+        const list = Object.keys(this.getMetadata().get('themes') || {})
+            .sort((v1, v2) => {
+                if (v2 === 'EspoRtl') {
+                    return -1;
+                }
 
-    private string $defaultLogoSrc = 'client/img/logo.svg';
+                return this.translate(v1, 'theme')
+                    .localeCompare(this.translate(v2, 'theme'));
+            });
 
-    public function __construct(
-        private Config $config,
-        private Metadata $metadata,
-        private MetadataProvider $metadataProvider,
-    ) {}
-
-    public function getName(): string
-    {
-        return $this->config->get('theme') ?? $this->defaultName;
-    }
-
-    public function getStylesheet(): string
-    {
-        return $this->metadataProvider->getStylesheet($this->getName());
-    }
-
-    public function getLogoSrc(): string
-    {
-        return $this->metadata->get(['themes', $this->getName(), 'logo']) ?? $this->defaultLogoSrc;
-    }
-
-    public function isDark(): bool
-    {
-        return $this->metadataProvider->isDark($this->getName());
+        this.params.options = ['', ...list];
     }
 }

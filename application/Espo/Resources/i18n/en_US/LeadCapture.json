@@ -29,6 +29,7 @@
         "formEnabled": "Web Form",
         "formUrl": "Form URL",
         "formTitle": "Form Title",
+        "formTheme": "Form Theme",
         "formSuccessText": "Text to display after form submission",
         "formText": "Text to display on form",
         "formSuccessRedirectUrl": "URL to redirect to after form submission",

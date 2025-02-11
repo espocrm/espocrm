@@ -164,6 +164,16 @@
                     ]
                 }
             },
+            "formTheme": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "formEnabled"
+                        }
+                    ]
+                }
+            },
             "formText": {
                 "visible": {
                     "conditionGroup": [

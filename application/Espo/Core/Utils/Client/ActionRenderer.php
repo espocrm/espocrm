@@ -55,6 +55,7 @@ class ActionRenderer
             initAuth: $params->initAuth(),
             scripts: $params->getScripts(),
             pageTitle: $params->getPageTitle(),
+            theme: $params->getTheme(),
         );
 
         $securityParams = new SecurityParams(
@@ -76,6 +77,7 @@ class ActionRenderer
         bool $initAuth,
         array $scripts,
         ?string $pageTitle,
+        ?string $theme,
     ): string {
 
         $encodedData = Json::encode($data);
@@ -96,6 +98,7 @@ class ActionRenderer
             runScript: $script,
             scripts: $scripts,
             pageTitle: $pageTitle,
+            theme: $theme,
         );
 
         return $this->clientManager->render($params);

@@ -36,6 +36,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Theme\MetadataProvider as ThemeMetadataProvider;
 use Espo\Core\Utils\ThemeManager;
 use Espo\Entities\Integration;
 use Espo\Entities\LeadCapture;
@@ -60,6 +61,7 @@ class FormService
         private DataCache $dataCache,
         private ThemeManager $themeManager,
         private Config\SystemConfig $systemConfig,
+        private ThemeMetadataProvider $themeMetadataProvider,
     ) {}
 
     /**
@@ -75,7 +77,6 @@ class FormService
         $data = $this->getDataInternal($leadCapture);
 
         $data['captchaKey'] = $captchaKey;
-        $data['isDark'] = $this->themeManager->isDark();
 
         return [$leadCapture, $data, $captchaScript];
     }
@@ -413,6 +414,7 @@ class FormService
                     'regExpPatterns' => $this->metadata->get("app.regExpPatterns"),
                 ],
             ],
+            'isDark' => $this->isDark($leadCapture),
             'detailLayout' => $detailLayout,
             'language' => $languageData,
             'successText' => $successText,
@@ -464,5 +466,14 @@ class FormService
         }
 
         return 'https://www.google.com/recaptcha/api.js?render=' . $siteKey;
+    }
+
+    private function isDark(LeadCapture $leadCapture): bool
+    {
+        if (!$leadCapture->getFormTheme()) {
+            return $this->themeManager->isDark();
+        }
+
+        return $this->themeMetadataProvider->isDark($leadCapture->getFormTheme());
     }
 }

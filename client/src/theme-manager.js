@@ -37,7 +37,7 @@ class ThemeManager {
      * @param {module:models/settings} config A config.
      * @param {module:models/preferences} preferences Preferences.
      * @param {module:metadata} metadata Metadata.
-     * @param {?string} [name] A name. If not set, then will be obtained from config and preferences.
+     * @param {string|null} [name] A name. If not set, then will be obtained from config and preferences.
      */
     constructor(config, preferences, metadata, name) {
         /**
@@ -60,7 +60,13 @@ class ThemeManager {
 
         /**
          * @private
-         * @type {?string}
+         * @type {boolean}
+         */
+        this.useConfig = !name;
+
+        /**
+         * @private
+         * @type {string|null}
          */
         this.name = name || null;
     }
@@ -220,11 +226,15 @@ class ThemeManager {
 
         let values = null;
 
-        if (!this.config.get('userThemesDisabled') && this.preferences.get('theme')) {
+        if (
+            this.useConfig &&
+            !this.config.get('userThemesDisabled') &&
+            this.preferences.get('theme')
+        ) {
             values = this.preferences.get('themeParams');
         }
 
-        if (!values) {
+        if (!values && this.useConfig) {
             values = this.config.get('themeParams');
         }
 

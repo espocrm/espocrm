@@ -40,6 +40,7 @@ use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Core\Utils\File\Manager as FileManager;
 
+use Espo\Core\Utils\Theme\MetadataProvider as ThemeMetadataProvider;
 use Slim\Psr7\Response as Psr7Response;
 use Slim\ResponseEmitter;
 
@@ -70,6 +71,7 @@ class ClientManager
         private LoaderParamsProvider $loaderParamsProvider,
         private SystemConfig $systemConfig,
         private ApplicationConfig $applicationConfig,
+        private ThemeMetadataProvider $themeMetadataProvider,
     ) {
         $this->nonce = Util::generateKey();
     }
@@ -168,6 +170,7 @@ class ClientManager
             runScript: $params->runScript,
             additionalScripts: $params->scripts,
             pageTitle: $params->pageTitle,
+            theme: $params->theme,
         );
     }
 
@@ -181,6 +184,7 @@ class ClientManager
         array $vars = [],
         array $additionalScripts = [],
         ?string $pageTitle = null,
+        ?string $theme = null,
     ): string {
 
         $runScript ??= $this->runScript;
@@ -232,6 +236,10 @@ class ClientManager
             $this->module->getInternalList()
         );
 
+        $stylesheet = $theme ?
+            $this->themeMetadataProvider->getStylesheet($theme) :
+            $this->themeManager->getStylesheet();
+
         $data = [
             'applicationId' => $this->applicationId,
             'apiUrl' => $this->apiUrl,
@@ -239,7 +247,8 @@ class ClientManager
             'cacheTimestamp' => $cacheTimestamp,
             'appTimestamp' => $appTimestamp,
             'loaderCacheTimestamp' => Json::encode($loaderCacheTimestamp),
-            'stylesheet' => $this->themeManager->getStylesheet(),
+            'stylesheet' => $stylesheet,
+            'theme' => Json::encode($theme),
             'runScript' => $runScript,
             'basePath' => $this->basePath,
             'useCache' => $useCache ? 'true' : 'false',

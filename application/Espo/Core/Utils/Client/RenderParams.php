@@ -35,10 +35,12 @@ readonly class RenderParams
      * @param ?string $runScript A JS run-script.
      * @param Script[] $scripts Scripts to include on the page.
      * @param ?string $pageTitle A page title. Since 9.1.0.
+     * @param ?string $theme A page theme name.
      */
     public function __construct(
         public ?string $runScript = null,
         public array $scripts = [],
         public ?string $pageTitle = null,
+        public ?string $theme = null,
     ) {}
 }

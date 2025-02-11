@@ -31,6 +31,7 @@ namespace Espo\Core\Portal\Utils;
 
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Theme\MetadataProvider;
 use Espo\Entities\Portal;
 use Espo\Core\Utils\ThemeManager as BaseThemeManager;
 
@@ -38,9 +39,13 @@ class ThemeManager extends BaseThemeManager
 {
     private Portal $portal;
 
-    public function __construct(Config $config, Metadata $metadata, Portal $portal)
-    {
-        parent::__construct($config, $metadata);
+    public function __construct(
+        Config $config,
+        Metadata $metadata,
+        MetadataProvider $metadataProvider,
+        Portal $portal,
+    ) {
+        parent::__construct($config, $metadata, $metadataProvider);
 
         $this->portal = $portal;
     }

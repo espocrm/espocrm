@@ -73,7 +73,8 @@ class LeadCaptureForm implements EntryPoint
 
         $params = $params
             ->withFrameAncestors($leadCapture->getFormFrameAncestors())
-            ->withPageTitle($leadCapture->getFormTitle());
+            ->withPageTitle($leadCapture->getFormTitle())
+            ->withTheme($leadCapture->getFormTheme());
 
         if ($captchaScript) {
             $params = $params->withScripts([new Script(source: $captchaScript)]);

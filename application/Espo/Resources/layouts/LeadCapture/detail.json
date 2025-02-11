@@ -18,7 +18,8 @@
             [{"name": "formEnabled"}, {"name": "formTitle"}],
             [{"name": "formText"}, {"name": "formSuccessText"}],
             [{"name": "formSuccessRedirectUrl"}, {"name": "formLanguage"}],
-            [{"name": "formFrameAncestors"}, {"name": "formCaptcha"}]
+            [{"name": "formFrameAncestors"}, {"name": "formCaptcha"}],
+            [{"name": "formTheme"}, false]
         ]
     },
     {

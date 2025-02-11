@@ -27,39 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils;
+namespace Espo\Core\Utils\Theme;
 
-use Espo\Core\Utils\Theme\MetadataProvider;
+use Espo\Core\Utils\Metadata;
 
-class ThemeManager
+/**
+ * @internal
+ * @since 9.1.0
+ */
+class MetadataProvider
 {
-    private string $defaultName = 'Espo';
-
-    private string $defaultLogoSrc = 'client/img/logo.svg';
+    private string $defaultStylesheet = 'client/css/espo/espo.css';
 
     public function __construct(
-        private Config $config,
         private Metadata $metadata,
-        private MetadataProvider $metadataProvider,
     ) {}
 
-    public function getName(): string
+    public function getStylesheet(string $theme): string
     {
-        return $this->config->get('theme') ?? $this->defaultName;
+        return $this->metadata->get("themes.$theme.stylesheet") ?? $this->defaultStylesheet;
     }
 
-    public function getStylesheet(): string
+    public function isDark(string $theme): bool
     {
-        return $this->metadataProvider->getStylesheet($this->getName());
-    }
-
-    public function getLogoSrc(): string
-    {
-        return $this->metadata->get(['themes', $this->getName(), 'logo']) ?? $this->defaultLogoSrc;
-    }
-
-    public function isDark(): bool
-    {
-        return $this->metadataProvider->isDark($this->getName());
+        return (bool) $this->metadata->get("themes.$theme.isDark");
     }
 }

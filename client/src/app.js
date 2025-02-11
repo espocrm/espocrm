@@ -117,6 +117,11 @@ class App {
         this.internalModuleList = options.internalModuleList || [];
 
         /**
+         * @private
+         */
+        this.themeName = options.theme || null;
+
+        /**
          * A list of bundled modules.
          *
          * @private
@@ -433,7 +438,7 @@ class App {
 
                 this.fieldManager.acl = this.acl;
 
-                this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata);
+                this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata, this.themeName);
                 this.modelFactory = new ModelFactory(this.metadata);
                 this.collectionFactory = new CollectionFactory(this.modelFactory, this.settings, this.metadata);
 
@@ -1561,6 +1566,7 @@ class App {
  * @property {string} [bundledModuleList] A list of bundled modules.
  * @property {Number|null} [cacheTimestamp] A cache timestamp.
  * @property {Number|null} [appTimestamp] An application timestamp.
+ * @property {string|null} [theme] A theme name.
  */
 
 Object.assign(App.prototype, Events);

@@ -136,6 +136,12 @@
             "type": "varchar",
             "maxLength": 80
         },
+        "formTheme": {
+            "type": "enum",
+            "maxLength": 64,
+            "view": "views/lead-capture/fields/form-theme",
+            "translation": "Global.themes"
+        },
         "formText": {
             "type": "text",
             "tooltip": "optInConfirmationSuccessMessage"

@@ -221,8 +221,19 @@ class LeadCapture extends Entity
         return (bool) $this->get('formEnabled');
     }
 
+    /**
+     * @since 9.1.0
+     */
     public function getFormTitle(): ?string
     {
         return $this->get('formTitle');
+    }
+
+    /**
+     * @since 9.1.0
+     */
+    public function getFormTheme(): ?string
+    {
+        return $this->get('formTheme');
     }
 }
