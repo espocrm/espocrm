@@ -63,6 +63,12 @@ class RemindersHandler  {
     }
 
     control() {
+        if (!this.model.attributes.dateEnd && !this.model.attributes.dateEndDate) {
+            this.view.hideField('reminders');
+
+            return;
+        }
+
         /** @type {string[]} */
         const assignedUsersIds = this.model.attributes.assignedUsersIds || [];
 
