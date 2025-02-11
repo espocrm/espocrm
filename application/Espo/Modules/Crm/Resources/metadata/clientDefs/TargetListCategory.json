@@ -1,0 +1,42 @@
+{
+    "controller": "controllers/record-tree",
+    "collection": "collections/tree",
+    "menu": {
+        "listTree": {
+            "buttons": [
+                {
+                    "label": "List View",
+                    "link": "#TargetListCategory\/list",
+                    "acl": "read"
+                },
+                {
+                    "labelTranslation": "Global.scopeNamesPlural.TargetList",
+                    "link": "#TargetList",
+                    "acl": "read",
+                    "aclScope": "TargetList"
+                }
+            ]
+        },
+        "list": {
+            "buttons": [
+                {
+                    "label": "Tree View",
+                    "link": "#TargetListCategory",
+                    "acl": "read"
+                },
+                {
+                    "labelTranslation": "Global.scopeNamesPlural.TargetList",
+                    "link": "#TargetList",
+                    "acl": "read",
+                    "aclScope": "TargetList"
+                }
+            ]
+        }
+    },
+    "relationshipPanels": {
+        "children": {
+            "selectDisabled": true,
+            "unlinkDisabled": true
+        }
+    }
+}

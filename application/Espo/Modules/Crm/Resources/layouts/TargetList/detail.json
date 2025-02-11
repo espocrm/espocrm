@@ -1,10 +1,9 @@
 [
     {
-        "label": "",
-        "rows":[
-            [{"name":"name"}, {"name":"entryCount"}],
-            [false, {"name":"optedOutCount"}],
-            [{"name":"description", "fullWidth": true}]
+        "rows": [
+            [{"name": "name"}, {"name": "entryCount"}],
+            [{"name": "category"}, {"name": "optedOutCount"}],
+            [{"name": "description", "fullWidth": true}]
         ]
     }
 ]

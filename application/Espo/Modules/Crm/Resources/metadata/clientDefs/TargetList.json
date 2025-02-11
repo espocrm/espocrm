@@ -12,8 +12,14 @@
             }
         ]
     },
+    "views": {
+        "list": "views/list-with-categories"
+    },
     "recordViews":{
-        "detail":"crm:views/target-list/record/detail"
+        "detail": "crm:views/target-list/record/detail"
+    },
+    "modalViews": {
+        "select": "views/modals/select-records-with-categories"
     },
     "relationshipPanels":{
         "contacts":{

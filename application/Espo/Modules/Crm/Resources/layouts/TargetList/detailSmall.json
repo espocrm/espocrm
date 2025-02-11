@@ -1,11 +1,10 @@
 [
     {
-        "label": "",
         "rows": [
-            [{"name":"name", "fullWidth": true}],
-            [{"name":"entryCount", "fullWidth": true}],
-            [{"name":"optedOutCount", "fullWidth": true}],
-            [{"name":"description", "fullWidth": true}]
+            [{"name": "name"}],
+            [{"name": "category"}],
+            [{"name": "entryCount"}, {"name": "optedOutCount"}],
+            [{"name": "description"}]
         ]
     }
 ]

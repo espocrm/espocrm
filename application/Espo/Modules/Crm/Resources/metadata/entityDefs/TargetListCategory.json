@@ -1,0 +1,100 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true
+        },
+        "order": {
+            "type": "int",
+            "minValue": 1,
+            "required": true,
+            "textFilterDisabled": true
+        },
+        "description": {
+            "type": "text"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "teams": {
+            "type": "linkMultiple"
+        },
+        "parent": {
+            "type": "link"
+        },
+        "childList": {
+            "type": "jsonArray",
+            "notStorable": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "relationName": "entityTeam",
+            "layoutRelationshipsDisabled": true
+        },
+        "parent": {
+            "type": "belongsTo",
+            "foreign": "children",
+            "entity": "TargetListCategory"
+        },
+        "children": {
+            "type": "hasMany",
+            "foreign": "parent",
+            "entity": "TargetListCategory",
+            "readOnly": true
+        },
+        "targetLists": {
+            "type": "hasMany",
+            "foreign": "category",
+            "entity": "TargetList"
+        }
+    },
+    "collection": {
+        "orderBy": "parent",
+        "order": "asc"
+    },
+    "additionalTables": {
+        "TargetListCategoryPath": {
+            "attributes": {
+                "id": {
+                    "type": "id",
+                    "dbType": "integer",
+                    "len": 11,
+                    "autoincrement": true
+                },
+                "ascendorId": {
+                    "type": "foreignId",
+                    "index": true
+                },
+                "descendorId" : {
+                    "type": "foreignId",
+                    "index": true
+                }
+            }
+        }
+    },
+    "repositoryClassName": "Espo\\Core\\Repositories\\CategoryTree"
+}

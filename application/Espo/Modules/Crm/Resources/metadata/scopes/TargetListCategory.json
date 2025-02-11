@@ -1,0 +1,22 @@
+{
+    "entity": true,
+    "acl": true,
+    "aclLevelList": [
+        "all",
+        "team",
+        "no"
+    ],
+    "module": "Crm",
+    "customizable": false,
+    "entityManager": {
+        "fields": false,
+        "formula": false,
+        "relationships": false,
+        "addField": false,
+        "edit": false,
+        "layouts": false
+    },
+    "type": "CategoryTree",
+    "categoryParentEntityType": "TargetList",
+    "categoryField": "category"
+}

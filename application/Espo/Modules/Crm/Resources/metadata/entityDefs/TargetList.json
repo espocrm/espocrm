@@ -5,6 +5,10 @@
             "required": true,
             "pattern": "$noBadCharacters"
         },
+        "category": {
+            "type": "link",
+            "view": "views/fields/link-category-tree"
+        },
         "entryCount": {
             "type": "int",
             "readOnly": true,
@@ -132,6 +136,11 @@
             "entity": "Team",
             "relationName": "entityTeam",
             "layoutRelationshipsDisabled": true
+        },
+        "category": {
+            "type": "belongsTo",
+            "foreign": "category",
+            "entity": "TargetListCategory"
         },
         "campaigns": {
             "type": "hasMany",

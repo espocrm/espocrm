@@ -20,7 +20,8 @@
         "Activities": "Activities",
         "KnowledgeBaseArticle": "Knowledge Base Article",
         "KnowledgeBaseCategory": "Knowledge Base Category",
-        "CampaignLogRecord": "Campaign Log Record"
+        "CampaignLogRecord": "Campaign Log Record",
+        "TargetListCategory": "Target List Category"
     },
     "scopeNamesPlural": {
         "Account": "Accounts",
@@ -43,7 +44,8 @@
         "Activities": "Activities",
         "KnowledgeBaseArticle": "Knowledge Base",
         "KnowledgeBaseCategory": "Knowledge Base Categories",
-        "CampaignLogRecord": "Campaign Log Records"
+        "CampaignLogRecord": "Campaign Log Records",
+        "TargetListCategory": "Target List Categories"
     },
     "dashlets": {
         "Leads": "My Leads",
