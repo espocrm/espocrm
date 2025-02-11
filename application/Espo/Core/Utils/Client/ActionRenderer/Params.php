@@ -43,6 +43,7 @@ class Params
     private array $frameAncestors = [];
     /** @var Script[] */
     private array $scripts = [];
+    private ?string $pageTitle = null;
 
     /**
      * @param ?array<string, mixed> $data
@@ -106,6 +107,17 @@ class Params
         return $obj;
     }
 
+    /**
+     * @since 9.1.0
+     */
+    public function withPageTitle(?string $pageTitle): self
+    {
+        $obj = clone $this;
+        $obj->pageTitle = $pageTitle;
+
+        return $obj;
+    }
+
     public function getController(): string
     {
         return $this->controller;
@@ -145,5 +157,13 @@ class Params
     public function getScripts(): array
     {
         return $this->scripts;
+    }
+
+    /**
+     * @since 9.1.0
+     */
+    public function getPageTitle(): ?string
+    {
+        return $this->pageTitle;
     }
 }

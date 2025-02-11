@@ -165,10 +165,9 @@ class ClientManager
     public function render(RenderParams $params): string
     {
         return $this->renderInternal(
-            $params->runScript,
-            null,
-            [],
-            $params->scripts
+            runScript: $params->runScript,
+            additionalScripts: $params->scripts,
+            pageTitle: $params->pageTitle,
         );
     }
 
@@ -180,7 +179,8 @@ class ClientManager
         ?string $runScript = null,
         ?string $htmlFilePath = null,
         array $vars = [],
-        array $additionalScripts = []
+        array $additionalScripts = [],
+        ?string $pageTitle = null,
     ): string {
 
         $runScript ??= $this->runScript;
@@ -235,7 +235,7 @@ class ClientManager
         $data = [
             'applicationId' => $this->applicationId,
             'apiUrl' => $this->apiUrl,
-            'applicationName' => $this->config->get('applicationName', 'EspoCRM'),
+            'applicationName' => $pageTitle ?? $this->config->get('applicationName', 'EspoCRM'),
             'cacheTimestamp' => $cacheTimestamp,
             'appTimestamp' => $appTimestamp,
             'loaderCacheTimestamp' => Json::encode($loaderCacheTimestamp),

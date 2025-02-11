@@ -29,13 +29,16 @@
 
 namespace Espo\Core\Utils\Client;
 
-class RenderParams
+readonly class RenderParams
 {
     /**
-     * @param Script[] $scripts
+     * @param ?string $runScript A JS run-script.
+     * @param Script[] $scripts Scripts to include on the page.
+     * @param ?string $pageTitle A page title. Since 9.1.0.
      */
     public function __construct(
-        readonly public ?string $runScript = null,
-        readonly public array $scripts = [],
+        public ?string $runScript = null,
+        public array $scripts = [],
+        public ?string $pageTitle = null,
     ) {}
 }

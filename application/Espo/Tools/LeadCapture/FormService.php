@@ -417,6 +417,7 @@ class FormService
             'language' => $languageData,
             'successText' => $successText,
             'text' => $text,
+            'title' => $leadCapture->getFormTitle(),
             'config' => (object) $config,
             'appParams' => (object) $appParams,
         ];

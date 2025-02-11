@@ -70,6 +70,7 @@ export default class LeadCaptureFormView extends View {
      *         appParams: Record,
      *         captchaKey: boolean,
      *         isDark: boolean,
+     *         title: string|null,
      *     },
      * }} options
      */

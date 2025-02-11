@@ -132,6 +132,10 @@
             "type": "bool",
             "audited": true
         },
+        "formTitle": {
+            "type": "varchar",
+            "maxLength": 80
+        },
         "formText": {
             "type": "text",
             "tooltip": "optInConfirmationSuccessMessage"

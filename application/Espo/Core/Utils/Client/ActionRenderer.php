@@ -49,11 +49,12 @@ class ActionRenderer
     public function write(Response $response, Params $params): void
     {
         $body = $this->render(
-            $params->getController(),
-            $params->getAction(),
-            $params->getData(),
-            $params->initAuth(),
-            $params->getScripts(),
+            controller: $params->getController(),
+            action: $params->getAction(),
+            data: $params->getData(),
+            initAuth: $params->initAuth(),
+            scripts: $params->getScripts(),
+            pageTitle: $params->getPageTitle(),
         );
 
         $securityParams = new SecurityParams(
@@ -74,6 +75,7 @@ class ActionRenderer
         ?array $data,
         bool $initAuth,
         array $scripts,
+        ?string $pageTitle,
     ): string {
 
         $encodedData = Json::encode($data);
@@ -93,6 +95,7 @@ class ActionRenderer
         $params = new RenderParams(
             runScript: $script,
             scripts: $scripts,
+            pageTitle: $pageTitle,
         );
 
         return $this->clientManager->render($params);

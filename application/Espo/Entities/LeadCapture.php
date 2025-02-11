@@ -220,4 +220,9 @@ class LeadCapture extends Entity
     {
         return (bool) $this->get('formEnabled');
     }
+
+    public function getFormTitle(): ?string
+    {
+        return $this->get('formTitle');
+    }
 }
