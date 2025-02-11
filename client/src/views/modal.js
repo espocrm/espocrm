@@ -234,6 +234,15 @@ class ModalView extends View {
     isCollapsable = false
 
     /**
+     * Is maximizable.
+     *
+     * @protected
+     * @type {boolean}
+     * @since 9.1.0
+     */
+    isMaximizable = false
+
+    /**
      * Is collapsed. Do not change value. Only for reading.
      *
      * @protected
@@ -254,10 +263,6 @@ class ModalView extends View {
         /** @this module:views/modal */
         'click .action': function (e) {
             Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
-        },
-        /** @this module:views/modal */
-        'click [data-action="collapseModal"]': function () {
-            this.collapse();
         },
     }
 
@@ -369,6 +374,7 @@ class ModalView extends View {
                 fixedHeaderHeight: this.fixedHeaderHeight,
                 closeButton: !this.noCloseButton,
                 collapseButton: this.isCollapsable,
+                maximizeButton: this.isMaximizable && !this.getHelper().isXsScreen(),
                 onRemove: () => this.onDialogClose(),
                 onBackdropClick: () => this.onBackdropClick(),
             });
@@ -413,6 +419,10 @@ class ModalView extends View {
 
             $(this.containerSelector).remove();
         });
+
+        if (this.isCollapsable) {
+            this.addActionHandler('collapseModal', () => this.collapse());
+        }
     }
 
     setupFinal() {

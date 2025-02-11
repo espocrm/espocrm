@@ -57,6 +57,9 @@ import $ from 'jquery';
  * @property {boolean} [fullHeight] Deprecated.
  * @property {Number} [bodyDiffHeight]
  * @property {Number} [screenWidthXs]
+ * @property {boolean} [maximizeButton] Is maximizable.
+ * @property {function()} [onMaximize] On maximize handler.
+ * @property {function()} [onMinimize] On minimize handler.
  */
 
 /**
@@ -89,6 +92,37 @@ class Dialog {
     onBackdropClick
     buttons
     screenWidthXs
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    maximizeButton = false
+
+    /**
+     * @private
+     * @type {HTMLAnchorElement}
+     */
+    maximizeButtonElement
+
+    /**
+     * @private
+     * @type {HTMLAnchorElement}
+     */
+    minimizeButtonElement
+
+    /**
+     * @private
+     * @type {function()}
+     */
+    onMaximize
+
+    /**
+     * @private
+     * @type {function()}
+     */
+    onMinimize
+
 
     /**
      * @param {module:ui.Dialog~Params} options Options.
@@ -153,6 +187,7 @@ class Dialog {
             'onRemove',
             'onClose',
             'onBackdropClick',
+            'maximizeButton',
         ];
 
         params.forEach(param => {
@@ -354,6 +389,32 @@ class Dialog {
     }
 
     /**
+     * Hide maximize button.
+     *
+     * @since 9.1.0
+     */
+    hideMaximizeButton() {
+        if (!this.maximizeButtonElement) {
+            return;
+        }
+
+        this.maximizeButtonElement.classList.add('hidden');
+    }
+
+    /**
+     * Show maximize button.
+     *
+     * @since 9.1.0
+     */
+    showMaximizeButton() {
+        if (!this.maximizeButtonElement) {
+            return;
+        }
+
+        this.maximizeButtonElement.classList.remove('hidden');
+    }
+
+    /**
      * Set action items.
      *
      * @param {module:ui.Dialog~Button[]} buttonList
@@ -424,6 +485,62 @@ class Dialog {
                             .addClass('fas fa-minus')
                     )
             );
+        }
+
+        if (this.maximizeButton) {
+            {
+                const a = document.createElement('a');
+                a.classList.add('maximize-button');
+                a.role = 'button';
+                a.tabIndex = -1;
+                a.setAttribute('data-action', 'maximizeModal');
+
+                const icon = document.createElement('span');
+                icon.classList.add('far', 'fa-window-maximize')
+
+                a.append(icon);
+                $header.prepend(a);
+
+                this.maximizeButtonElement = a;
+
+                a.addEventListener('click', () => {
+                    if (this.onMaximize) {
+                        this.onMaximize();
+                    }
+
+                    this.maximizeButtonElement.classList.add('hidden');
+                    this.minimizeButtonElement.classList.remove('hidden');
+
+                    this.el.querySelector('.modal-dialog').classList.add('maximized');
+                });
+            }
+
+            {
+                const a = document.createElement('a');
+                a.classList.add('minimize-button', 'hidden');
+                a.role = 'button';
+                a.tabIndex = -1;
+                a.setAttribute('data-action', 'minimizeModal');
+
+                const icon = document.createElement('span');
+                icon.classList.add('far', 'fa-window-minimize')
+
+                a.append(icon);
+                $header.prepend(a);
+
+                this.minimizeButtonElement = a;
+
+                a.addEventListener('click', () => {
+                    if (this.onMinimize) {
+                        this.onMinimize();
+                    }
+
+                    this.minimizeButtonElement.classList.add('hidden');
+                    this.maximizeButtonElement.classList.remove('hidden');
+
+                    this.el.querySelector('.modal-dialog').classList.remove('maximized');
+                });
+            }
         }
 
         if (this.closeButton) {

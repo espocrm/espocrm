@@ -37,6 +37,7 @@ class ImagePreviewModalView extends ModalView {
     cssName = 'image-preview'
     size = ''
     backdrop = true
+    isMaximizable = true
 
     transformClassList = [
         'transform-flip',

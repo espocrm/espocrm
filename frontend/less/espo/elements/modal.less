@@ -77,12 +77,14 @@
         }
     }
 
-    .collapse-button {
-        float: right;
+    .collapse-button,
+    .maximize-button,
+    .minimize-button {
+        position: relative;
+
         padding-right: var(--17px);
         padding-left: var(--17px);
-        top: var(--3px);
-        position: relative;
+        float: right;
 
         &,
         > .fas,
@@ -97,6 +99,17 @@
                 color: var(--btn-text-color);
             }
         }
+    }
+
+    .maximize-button,
+    .minimize-button {
+        top: var(--2px);
+        left: var(--minus-3px);
+    }
+
+    .collapse-button {
+        top: var(--3px);
+        left: var(--minus-3px);
     }
 }
 
@@ -227,6 +240,12 @@
     .dialog-confirm > .modal-dialog,
     .dialog-centered > .modal-dialog {
         width: ~"min(var(--550px), 90vw)";
+    }
+}
+
+@media screen and (min-width: @screen-sm-min) {
+    .modal-dialog.maximized {
+        width: 100vw;
     }
 }
 
