@@ -117,6 +117,8 @@ class Service implements Crud,
     use Di\SelectBuilderFactorySetter;
     use Di\AssignmentCheckerManagerSetter;
 
+    private const ATTRIBUTE_VERSION_NUMBER = 'versionNumber';
+
     protected string $entityType;
     protected bool $getEntityBeforeUpdate = false;
 
@@ -531,11 +533,11 @@ class Service implements Crud,
      */
     protected function processConcurrencyControl(Entity $entity, stdClass $data, int $versionNumber): void
     {
-        if ($entity->get('versionNumber') === null) {
+        if ($entity->get(self::ATTRIBUTE_VERSION_NUMBER) === null) {
             return;
         }
 
-        if ($versionNumber === $entity->get('versionNumber')) {
+        if ($versionNumber === $entity->get(self::ATTRIBUTE_VERSION_NUMBER)) {
             return;
         }
 
@@ -561,7 +563,7 @@ class Service implements Crud,
 
         $responseData = (object) [
             'values' => $values,
-            'versionNumber' => $entity->get('versionNumber'),
+            'versionNumber' => $entity->get(self::ATTRIBUTE_VERSION_NUMBER),
         ];
 
         throw ConflictSilent::createWithBody('modified', Json::encode($responseData));
