@@ -29,11 +29,13 @@
 
 namespace Espo\Core\FieldProcessing\VersionNumber;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
 class BeforeSaveProcessor
 {
+    private const ATTRIBUTE_VERSION_NUMBER = Field::VERSION_NUMBER;
 
     public function __construct(private Metadata $metadata)
     {}
@@ -48,18 +50,18 @@ class BeforeSaveProcessor
         }
 
         if ($entity->isNew()) {
-            $entity->set('versionNumber', 1);
+            $entity->set(self::ATTRIBUTE_VERSION_NUMBER, 1);
 
             return;
         }
 
-        $entity->clear('versionNumber');
+        $entity->clear(self::ATTRIBUTE_VERSION_NUMBER);
 
-        if (!$entity->hasFetched('versionNumber')) {
+        if (!$entity->hasFetched(self::ATTRIBUTE_VERSION_NUMBER)) {
             return;
         }
 
-        $versionNumber = $entity->getFetched('versionNumber');
+        $versionNumber = $entity->getFetched(self::ATTRIBUTE_VERSION_NUMBER);
 
         if ($versionNumber === null) {
             $versionNumber = 0;
@@ -67,6 +69,6 @@ class BeforeSaveProcessor
 
         $versionNumber++;
 
-        $entity->set('versionNumber', $versionNumber);
+        $entity->set(self::ATTRIBUTE_VERSION_NUMBER, $versionNumber);
     }
 }

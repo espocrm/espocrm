@@ -544,7 +544,7 @@ class Converter
 
         // @todo Refactor.
         if ($this->metadata->get(['entityDefs', $entityType, 'optimisticConcurrencyControl'])) {
-            $ormMetadata[$entityType][EntityParam::ATTRIBUTES]['versionNumber'] = [
+            $ormMetadata[$entityType][EntityParam::ATTRIBUTES][Field::VERSION_NUMBER] = [
                 AttributeParam::TYPE => Entity::INT,
                 AttributeParam::DB_TYPE => Types::BIGINT,
                 CoreAttributeParam::NOT_EXPORTABLE => true,

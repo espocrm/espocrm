@@ -48,4 +48,5 @@ class Field
     public const IS_STARRED = 'isStarred';
     public const EMAIL_ADDRESS = 'emailAddress';
     public const PHONE_NUMBER = 'phoneNumber';
+    public const VERSION_NUMBER = 'versionNumber';
 }

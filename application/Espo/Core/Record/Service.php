@@ -39,6 +39,7 @@ use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\FieldSanitize\SanitizeManager;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Repository\Option\SaveOption;
@@ -117,7 +118,7 @@ class Service implements Crud,
     use Di\SelectBuilderFactorySetter;
     use Di\AssignmentCheckerManagerSetter;
 
-    private const ATTRIBUTE_VERSION_NUMBER = 'versionNumber';
+    private const ATTRIBUTE_VERSION_NUMBER = Field::VERSION_NUMBER;
 
     protected string $entityType;
     protected bool $getEntityBeforeUpdate = false;
