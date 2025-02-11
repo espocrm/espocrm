@@ -27,10 +27,49 @@
  ************************************************************************/
 
 import ModalView from 'views/modal';
+import Select from 'ui/select';
 
 class ResolveSaveConflictModalView extends ModalView {
 
-    template = 'modals/resolve-save-conflict'
+    // language=Handlebars
+    templateContent = `
+        <div class="margin-bottom-3x">
+            <p>{{translate 'resolveSaveConflict' category='messages'}}</p>
+        </div>
+
+        <div class="panel panel-default no-side-margin">
+            <table class="table" style="table-layout: fixed;">
+                <thead>
+                <tr>
+                    <th style="width: 25%">{{translate 'Field'}}</th>
+                    <th style="width: 25%">{{translate 'Resolution'}}</th>
+                    <th>{{translate 'Value'}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each dataList}}
+                    <tr>
+                        <td class="cell cell-nowrap">
+                    <span>
+                        {{translate field category='fields' scope=../entityType}}
+                    </span>
+                        </td>
+                        <td class="cell">
+                            <select class="form-control" data-name="resolution" data-field="{{field}}">
+                                {{options ../resolutionList resolution field='saveConflictResolution'}}
+                            </select>
+                        </td>
+                        <td class="cell">
+                            <div data-name="field" data-field="{{field}}">
+                                {{{var viewKey ../this}}}
+                            </div>
+                        </td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    `
 
     backdrop = true
 
@@ -41,6 +80,12 @@ class ResolveSaveConflictModalView extends ModalView {
     ]
 
     defaultResolution = 'current'
+
+    /**
+     * @private
+     * @type {string[]}
+     */
+    fieldList
 
     data() {
         const dataList = [];
@@ -153,7 +198,7 @@ class ResolveSaveConflictModalView extends ModalView {
             readOnly: true,
             model: this.model,
             name: field,
-            selector: '[data-name="field"][data-field="' + field + '"]',
+            selector: `[data-name="field"][data-field="${field}"]`,
             mode: 'list',
         });
     }
@@ -166,6 +211,12 @@ class ResolveSaveConflictModalView extends ModalView {
             const resolution = $el.val();
 
             this.setResolution(field, resolution);
+        });
+
+        this.fieldList.forEach(field => {
+            const selectElement = this.element.querySelector(`select[data-field="${field}"]`);
+
+            Select.init(selectElement);
         });
     }
 
