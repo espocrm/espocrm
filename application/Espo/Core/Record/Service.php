@@ -46,6 +46,7 @@ use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\Access\LinkCheck;
 use Espo\Core\Record\ActionHistory\Action;
 use Espo\Core\Record\ActionHistory\ActionLogger;
+use Espo\Core\Record\ConcurrencyControl\OptimisticProcessor;
 use Espo\Core\Record\Defaults\Populator as DefaultsPopulator;
 use Espo\Core\Record\Defaults\PopulatorFactory as DefaultsPopulatorFactory;
 use Espo\Core\Record\Formula\Processor as FormulaProcessor;
@@ -532,39 +533,20 @@ class Service implements Crud,
      * @throws Conflict
      * @noinspection PhpDocSignatureInspection
      */
-    protected function processConcurrencyControl(Entity $entity, stdClass $data, int $versionNumber): void
+    private function processConcurrencyControl(Entity $entity, int $versionNumber): void
     {
-        if ($entity->get(self::ATTRIBUTE_VERSION_NUMBER) === null) {
+        // @todo Use a bound interface.
+        $processor = $this->injectableFactory->create(OptimisticProcessor::class);
+
+        $result = $processor->process($entity, $versionNumber);
+
+        if (!$result) {
             return;
-        }
-
-        if ($versionNumber === $entity->get(self::ATTRIBUTE_VERSION_NUMBER)) {
-            return;
-        }
-
-        $attributeList = array_keys(get_object_vars($data));
-
-        $notMatchingAttributeList = [];
-
-        foreach ($attributeList as $attribute) {
-            if ($entity->get($attribute) !== $data->$attribute) {
-                $notMatchingAttributeList[] = $attribute;
-            }
-        }
-
-        if (empty($notMatchingAttributeList)) {
-            return;
-        }
-
-        $values = (object) [];
-
-        foreach ($notMatchingAttributeList as $attribute) {
-            $values->$attribute = $entity->get($attribute);
         }
 
         $responseData = (object) [
-            'values' => $values,
-            'versionNumber' => $entity->get(self::ATTRIBUTE_VERSION_NUMBER),
+            'values' => $result->values,
+            'versionNumber' => $result->versionNumber,
         ];
 
         throw ConflictSilent::createWithBody('modified', Json::encode($responseData));
@@ -718,11 +700,11 @@ class Service implements Crud,
             throw new ForbiddenSilent("No edit access.");
         }
 
-        if ($params->getVersionNumber() !== null) {
-            $this->processConcurrencyControl($entity, $data, $params->getVersionNumber());
-        }
-
         $entity->set($data);
+
+        if ($params->getVersionNumber() !== null) {
+            $this->processConcurrencyControl($entity, $params->getVersionNumber());
+        }
 
         $this->getRecordHookManager()->processEarlyBeforeUpdate($entity, $params);
 
