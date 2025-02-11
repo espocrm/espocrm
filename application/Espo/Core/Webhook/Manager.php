@@ -56,6 +56,7 @@ class Manager
         Field::MODIFIED_AT,
         Field::MODIFIED_BY,
         Field::STREAM_UPDATED_AT,
+        Field::VERSION_NUMBER,
     ];
 
     /** @var ?array<string, bool> */
