@@ -219,5 +219,6 @@
         "assignedUserStatus": {
             "columns": ["assignedUserId", "status"]
         }
-    }
+    },
+    "optimisticConcurrencyControl": true
 }

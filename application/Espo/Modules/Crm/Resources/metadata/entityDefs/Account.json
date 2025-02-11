@@ -370,5 +370,6 @@
         "assignedUser": {
             "columns": ["assignedUserId", "deleted"]
         }
-    }
+    },
+    "optimisticConcurrencyControl": true
 }

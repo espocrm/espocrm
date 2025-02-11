@@ -393,5 +393,6 @@
         "assignedUserStage": {
             "columns": ["assignedUserId", "stage"]
         }
-    }
+    },
+    "optimisticConcurrencyControl": true
 }

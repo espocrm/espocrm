@@ -222,5 +222,6 @@
             "columns": ["assignedUserId", "status"]
         }
     },
-    "repositoryClassName": "Espo\\Core\\Repositories\\Event"
+    "repositoryClassName": "Espo\\Core\\Repositories\\Event",
+    "optimisticConcurrencyControl": true
 }
