@@ -119,8 +119,6 @@ class Service implements Crud,
     use Di\SelectBuilderFactorySetter;
     use Di\AssignmentCheckerManagerSetter;
 
-    private const ATTRIBUTE_VERSION_NUMBER = Field::VERSION_NUMBER;
-
     protected string $entityType;
     protected bool $getEntityBeforeUpdate = false;
 
