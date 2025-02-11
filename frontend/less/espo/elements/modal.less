@@ -216,9 +216,22 @@
     .modal-dialog {
         margin: 0 0;
     }
-    .modal-dialog .image-container {
-        margin-left: calc(0rem - var(--panel-padding));
-        margin-right: calc(0rem - var(--panel-padding));
+
+    .modal-dialog {
+        .image-container {
+            margin-left: calc(0rem - var(--modal-padding));
+            margin-right: calc(0rem - var(--panel-padding));
+        }
+    }
+}
+
+.modal-dialog {
+    &.maximized {
+        .image-container {
+            > img {
+                max-height: calc(100vh - (var(--43px) + var(--modal-inner-padding) * 2));
+            }
+        }
     }
 }
 

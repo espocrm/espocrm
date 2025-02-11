@@ -49,6 +49,18 @@ class ImagePreviewModalView extends ModalView {
         'transform-rotate-270',
     ]
 
+    /**
+     * @protected
+     * @type {HTMLElement}
+     */
+    imageContainerElement
+
+    /**
+     * @protected
+     * @type {HTMLImageElement}
+     */
+    imageElement
+
     events = {
         /** @this ImagePreviewModalView */
         'keydown': function (e) {
@@ -120,7 +132,12 @@ class ImagePreviewModalView extends ModalView {
 
     afterRender() {
         const $container = this.$el.find('.image-container');
+
+        this.imageContainerElement = $container.get(0);
+
         const $img = this.$img = this.$el.find('.image-container img');
+
+        this.imageElement = $img.get(0);
 
         $img.on('load', () => {
             const imgEl = $img.get(0);
@@ -256,6 +273,23 @@ class ImagePreviewModalView extends ModalView {
         this.options.name = this.imageList[index].name;
 
         this.reRender();
+    }
+
+
+    onMaximize() {
+        /** @type {HTMLDivElement} */
+        const body = this.element.querySelector('.modal-body');
+
+        const width = this.imageContainerElement.clientWidth
+        const height = body.clientHeight;
+
+        this.imageElement.style.maxWidth = width  + 'px';
+        //this.imageElement.style.maxHeight = height + 'px';
+    }
+
+    onMinimize() {
+        this.imageElement.style.maxWidth = this.imageContainerElement.clientWidth + 'px';
+        //this.imageElement.style.maxHeight = '';
     }
 }
 

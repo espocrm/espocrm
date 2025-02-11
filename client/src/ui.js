@@ -123,7 +123,6 @@ class Dialog {
      */
     onMinimize
 
-
     /**
      * @param {module:ui.Dialog~Params} options Options.
      */
@@ -195,6 +194,14 @@ class Dialog {
                 this[param] = options[param];
             }
         });
+
+        if (options.onMaximize) {
+            this.onMaximize = options.onMaximize;
+        }
+
+        if (options.onMinimize) {
+            this.onMinimize = options.onMinimize;
+        }
 
         /** @private */
         this.onCloseIsCalled = false;
@@ -504,14 +511,14 @@ class Dialog {
                 this.maximizeButtonElement = a;
 
                 a.addEventListener('click', () => {
-                    if (this.onMaximize) {
-                        this.onMaximize();
-                    }
-
                     this.maximizeButtonElement.classList.add('hidden');
                     this.minimizeButtonElement.classList.remove('hidden');
 
                     this.el.querySelector('.modal-dialog').classList.add('maximized');
+
+                    if (this.onMaximize) {
+                        this.onMaximize();
+                    }
                 });
             }
 
@@ -531,14 +538,14 @@ class Dialog {
                 this.minimizeButtonElement = a;
 
                 a.addEventListener('click', () => {
-                    if (this.onMinimize) {
-                        this.onMinimize();
-                    }
-
                     this.minimizeButtonElement.classList.add('hidden');
                     this.maximizeButtonElement.classList.remove('hidden');
 
                     this.el.querySelector('.modal-dialog').classList.remove('maximized');
+
+                    if (this.onMinimize) {
+                        this.onMinimize();
+                    }
                 });
             }
         }

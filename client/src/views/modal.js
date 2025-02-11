@@ -377,6 +377,8 @@ class ModalView extends View {
                 maximizeButton: this.isMaximizable && !this.getHelper().isXsScreen(),
                 onRemove: () => this.onDialogClose(),
                 onBackdropClick: () => this.onBackdropClick(),
+                onMaximize: () => this.onMaximize(),
+                onMinimize: () => this.onMinimize(),
             });
 
             this.containerElement = document.querySelector(this.containerSelector);
@@ -1227,6 +1229,18 @@ class ModalView extends View {
             $footer.removeClass('shadowed');
         });
     }
+
+    /**
+     * @protected
+     * @since 9.1.0
+     */
+    onMaximize() {}
+
+    /**
+     * @protected
+     * @since 9.1.0
+     */
+    onMinimize() {}
 }
 
 export default ModalView;
