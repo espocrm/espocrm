@@ -58,40 +58,6 @@
                         }
                     ]
                 }
-            },
-            "reminders": {
-                "visible": {
-                    "conditionGroup": [
-                        {
-                            "type": "and",
-                            "value": [
-                                {
-                                    "type": "or",
-                                    "value": [
-                                        {
-                                            "type": "isNotEmpty",
-                                            "attribute": "dateEnd"
-                                        },
-                                         {
-                                            "type": "isNotEmpty",
-                                            "attribute": "dateEndDate"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "type": "notEquals",
-                                    "attribute": "status",
-                                    "value": "Completed"
-                                },
-                                {
-                                    "type": "notEquals",
-                                    "attribute": "status",
-                                    "value": "Canceled"
-                                }
-                            ]
-                        }
-                    ]
-                }
             }
         }
     },
