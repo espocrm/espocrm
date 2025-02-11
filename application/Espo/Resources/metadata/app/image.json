@@ -4,7 +4,8 @@
         "image/png",
         "image/gif",
         "image/webp",
-        "image/svg+xml"
+        "image/svg+xml",
+        "image/avif"
     ],
     "resizableFileTypeList": [
         "image/jpeg",
@@ -20,7 +21,8 @@
         "image/png",
         "image/gif",
         "image/webp",
-        "image/svg+xml"
+        "image/svg+xml",
+        "image/avif"
     ],
     "sizes": {
         "xxx-small": [18, 18],
