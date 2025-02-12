@@ -29,29 +29,25 @@
 
 namespace tests\unit\Espo\Core\Mail;
 
+use Laminas\Mail\Transport\Smtp as SmtpTransport;
+
 use Espo\Core\InjectableFactory;
+use Espo\Entities\Email;
+use Espo\Core\FileStorage\Manager;
+use Espo\Core\Mail\Account\Account;
+use Espo\Core\Mail\Account\SendingAccountProvider;
+use Espo\Core\Mail\ConfigDataProvider;
+use Espo\Core\Mail\EmailSender;
+use Espo\Core\Mail\Sender;
+use Espo\Core\Mail\Smtp\TransportFactory;
+use Espo\Core\Mail\SmtpParams;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Log;
 
-use Laminas\{
-    Mail\Transport\Smtp as SmtpTransport,
-};
+use PHPUnit\Framework\TestCase;
 
-use Espo\Entities\{
-    Email,
-};
-
-use Espo\Core\{
-    FileStorage\Manager,
-    Mail\Account\Account,
-    Mail\Account\SendingAccountProvider,
-    Mail\EmailSender,
-    Mail\Sender,
-    Mail\Smtp\TransportFactory,
-    Mail\SmtpParams,
-    ORM\EntityManager,
-    Utils\Config,
-    Utils\Log};
-
-class EmailSenderTest extends \PHPUnit\Framework\TestCase
+class EmailSenderTest extends TestCase
 {
     public function setUp(): void
     {
@@ -70,13 +66,16 @@ class EmailSenderTest extends \PHPUnit\Framework\TestCase
             $injectableFactory
         );
 
+        $configDataProvider = $this->createMock(ConfigDataProvider::class);
+
         $sender = new Sender(
             $this->config,
             $entityManager,
             $log,
             $transportFactory,
             $accountProvider,
-            $this->createMock(Manager::class)
+            $this->createMock(Manager::class),
+            $configDataProvider
         );
 
         $this->emailSender = $emailSender;
@@ -106,14 +105,10 @@ class EmailSenderTest extends \PHPUnit\Framework\TestCase
             ->method('getSystem')
             ->willReturn($account);
 
-        $this->config
+        $configDataProvider
             ->expects($this->any())
-            ->method('get')
-            ->will(
-                $this->returnValueMap([
-                    ['outboundEmailFromAddress', null, null],
-                ])
-            );
+            ->method('getOutboundEmailFromAddress')
+            ->willReturn(null);
     }
 
     protected function createEmail(array $data) : Email
