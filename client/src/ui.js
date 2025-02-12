@@ -375,6 +375,16 @@ class Dialog {
     }
 
     /**
+     * Get a general container element.
+     *
+     * @return {HTMLDivElement}
+     * @since 9.1.0
+     */
+    getElement() {
+        return this.el;
+    }
+
+    /**
      * Update the header text.
      *
      * @param {string} text

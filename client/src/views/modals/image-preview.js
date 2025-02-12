@@ -228,6 +228,14 @@ class ImagePreviewModalView extends ModalView {
         }
 
         if (this.isMultiple()) {
+            /** @type {HTMLDivElement|null} */
+            const titleElement = this.dialog.getElement().querySelector('.modal-header .modal-title');
+
+            if (titleElement) {
+                titleElement.classList.add('text-muted');
+                titleElement.style.userSelect = 'none';
+            }
+
             this.dialog.setHeaderText((this.getImageIndex() + 1).toString());
         }
 
