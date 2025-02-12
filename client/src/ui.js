@@ -374,6 +374,22 @@ class Dialog {
         });
     }
 
+    /**
+     * Update the header text.
+     *
+     * @param {string} text
+     * @since 9.1.0
+     */
+    setHeaderText(text) {
+        const element = this.el.querySelector('.modal-header .modal-title');
+
+        if (!element) {
+            return;
+        }
+
+        element.textContent = text;
+    }
+
     /** @private */
     callOnClose() {
         if (this.onClose) {

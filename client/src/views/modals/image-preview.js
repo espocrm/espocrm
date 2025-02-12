@@ -61,6 +61,23 @@ class ImagePreviewModalView extends ModalView {
      */
     imageElement
 
+    /**
+     * @private
+     * @type {string}
+     */
+    imageId
+
+    /**
+     * @private
+     * @type {string|null}
+     */
+    imageName
+
+    /**
+     * @type {{id: string, name?: string|null}[]}
+     */
+    imageList
+
     events = {
         /** @this ImagePreviewModalView */
         'keydown': function (e) {
@@ -78,7 +95,7 @@ class ImagePreviewModalView extends ModalView {
 
     data() {
         return {
-            name: this.options.name,
+            name: this.imageName,
             url: this.getImageUrl(),
             originalUrl: this.getOriginalImageUrl(),
             showOriginalLink: this.size,
@@ -89,10 +106,11 @@ class ImagePreviewModalView extends ModalView {
         this.buttonList = [];
         this.headerHtml = '&nbsp;';
 
-        this.navigationEnabled = (this.options.imageList && this.options.imageList.length > 1);
-
-        /** @type {Record[]} */
+        this.imageId = this.options.id;
+        this.imageName = this.options.name;
         this.imageList = this.options.imageList || [];
+
+        this.navigationEnabled = this.imageList.length > 1;
 
         this.wait(
             Espo.loader.requirePromise('lib!exif-js')
@@ -117,25 +135,29 @@ class ImagePreviewModalView extends ModalView {
 
     }
 
+    /**
+     * @private
+     * @return {string}
+     */
     getImageUrl() {
-        let url = this.getBasePath() + '?entryPoint=image&id=' + this.options.id;
+        let url = `${this.getBasePath()}?entryPoint=image&id=${this.imageId}`;
 
         if (this.size) {
-            url += '&size=' + this.size;
+            url += `&size=${this.size}`;
         }
 
         if (this.getUser().get('portalId')) {
-            url += '&portalId=' + this.getUser().get('portalId');
+            url += `&portalId=${this.getUser().get('portalId')}`;
         }
 
         return url;
     }
 
     getOriginalImageUrl() {
-        let url = this.getBasePath() + '?entryPoint=image&id=' + this.options.id;
+        let url = `${this.getBasePath()}?entryPoint=image&id=${this.imageId}`;
 
         if (this.getUser().get('portalId')) {
-            url += '&portalId=' + this.getUser().get('portalId');
+            url += `&portalId=${this.getUser().get('portalId')}`;
         }
 
         return url;
@@ -205,6 +227,10 @@ class ImagePreviewModalView extends ModalView {
             return;
         }
 
+        if (this.isMultiple()) {
+            this.dialog.setHeaderText((this.getImageIndex() + 1).toString());
+        }
+
         this.imageContainerElement = this.element.querySelector('.image-container');
         this.imageElement = this.imageContainerElement.querySelector('img')
 
@@ -242,6 +268,10 @@ class ImagePreviewModalView extends ModalView {
         this.switchToNext();
     }
 
+    /**
+     * @private
+     * @return {boolean}
+     */
     isMultiple() {
         return this.imageList.length > 1;
     }
@@ -255,13 +285,7 @@ class ImagePreviewModalView extends ModalView {
             return;
         }
 
-        let index = -1;
-
-        this.imageList.forEach((item, i) => {
-            if (item.id === this.options.id) {
-                index = i;
-            }
-        });
+        let index = this.getImageIndex();
 
         if (noLoop && index === 0) {
             return;
@@ -279,8 +303,8 @@ class ImagePreviewModalView extends ModalView {
             index = this.imageList.length - 1;
         }
 
-        this.options.id = this.imageList[index].id;
-        this.options.name = this.imageList[index].name;
+        this.imageId = this.imageList[index].id;
+        this.imageName = this.imageList[index].name;
 
         this.reRender();
     }
@@ -294,13 +318,7 @@ class ImagePreviewModalView extends ModalView {
             return;
         }
 
-        let index = -1;
-
-        this.imageList.forEach((item, i) => {
-            if (item.id === this.options.id) {
-                index = i;
-            }
-        });
+        let index = this.getImageIndex();
 
         if (noLoop && index === this.imageList.length - 1) {
             return;
@@ -318,10 +336,26 @@ class ImagePreviewModalView extends ModalView {
             index = 0;
         }
 
-        this.options.id = this.imageList[index].id;
-        this.options.name = this.imageList[index].name;
+        this.imageId = this.imageList[index].id;
+        this.imageName = this.imageList[index].name;
 
         this.reRender();
+    }
+
+    /**
+     * @private
+     * @return {number}
+     */
+    getImageIndex() {
+        let index = -1;
+
+        this.imageList.forEach((item, i) => {
+            if (item.id === this.imageId) {
+                index = i;
+            }
+        });
+
+        return index;
     }
 
     onMaximize() {
