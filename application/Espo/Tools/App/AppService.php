@@ -30,6 +30,7 @@
 namespace Espo\Tools\App;
 
 use Espo\Core\Authentication\Util\MethodProvider as AuthenticationMethodProvider;
+use Espo\Core\Mail\ConfigDataProvider as EmailConfigDataProvider;
 use Espo\Core\Name\Field;
 use Espo\Core\Utils\SystemUser;
 use Espo\Entities\DashboardTemplate;
@@ -73,7 +74,8 @@ class AppService
         private FieldUtil $fieldUtil,
         private Log $log,
         private AuthenticationMethodProvider $authenticationMethodProvider,
-        private SystemUser $systemUser
+        private SystemUser $systemUser,
+        private EmailConfigDataProvider $emailConfigDataProvider,
     ) {}
 
     /**
@@ -256,7 +258,7 @@ class AppService
         $user = $this->user;
 
         $outboundEmailIsShared = $this->config->get('outboundEmailIsShared');
-        $outboundEmailFromAddress = $this->config->get('outboundEmailFromAddress');
+        $outboundEmailFromAddress = $this->emailConfigDataProvider->getOutboundEmailFromAddress();
 
         $emailAddressList = [];
         $userEmailAddressList = [];

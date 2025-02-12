@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Tools\MassEmail;
 
+use Espo\Core\Mail\ConfigDataProvider;
 use Espo\ORM\EntityCollection;
 use Laminas\Mail\Message;
 
@@ -80,7 +81,8 @@ class SendingProcessor
         private AccountFactory $accountFactory,
         private CampaignService $campaignService,
         private MessageHeadersPreparator $headersPreparator,
-        private TemplateProcessor $templateProcessor
+        private TemplateProcessor $templateProcessor,
+        private ConfigDataProvider $configDataProvider,
     ) {}
 
     /**
@@ -528,7 +530,7 @@ class SendingProcessor
 
         $senderParams = $senderParams->withFromAddress(
             $massEmail->getFromAddress() ??
-            $this->config->get('outboundEmailFromAddress')
+            $this->configDataProvider->getOutboundEmailFromAddress()
         );
 
         if ($massEmail->getFromName()) {

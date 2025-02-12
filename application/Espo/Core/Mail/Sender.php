@@ -83,7 +83,8 @@ class Sender
         private Log $log,
         private TransportFactory $transportFactory,
         private SendingAccountProvider $accountProvider,
-        private FileStorageManager $fileStorageManager
+        private FileStorageManager $fileStorageManager,
+        private ConfigDataProvider $configDataProvider,
     ) {
 
         /** @noinspection PhpDeprecationInspection */
@@ -371,11 +372,11 @@ class Sender
         if ($fromAddress) {
             $fromAddress = trim($fromAddress);
         } else {
-            if (empty($params['fromAddress']) && !$config->get('outboundEmailFromAddress')) {
+            if (empty($params['fromAddress']) && !$this->configDataProvider->getOutboundEmailFromAddress()) {
                 throw new NoSmtp('outboundEmailFromAddress is not specified in config.');
             }
 
-            $fromAddress = $params['fromAddress'] ?? $config->get('outboundEmailFromAddress');
+            $fromAddress = $params['fromAddress'] ?? $this->configDataProvider->getOutboundEmailFromAddress();
 
             $email->setFromAddress($fromAddress);
         }
@@ -415,7 +416,6 @@ class Sender
         if (!$email->isNew()) {
             /** @var Collection<Attachment> $relatedAttachmentCollection */
             $relatedAttachmentCollection = $this->entityManager
-                ->getRDBRepository(Email::ENTITY_TYPE)
                 ->getRelation($email, 'attachments')
                 ->find();
 

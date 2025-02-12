@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\App;
 
+use Espo\Core\Mail\ConfigDataProvider as EmailConfigDataProvider;
 use Espo\Core\Utils\ThemeManager;
 use Espo\Entities\Settings;
 use Espo\ORM\Entity;
@@ -70,6 +71,7 @@ class SettingsService
         private AuthenticationMethodProvider $authenticationMethodProvider,
         private ThemeManager $themeManager,
         private Config\SystemConfig $systemConfig,
+        private EmailConfigDataProvider $emailConfigDataProvider,
     ) {}
 
     /**
@@ -251,7 +253,10 @@ class SettingsService
         }
 
         if (
-            ($this->config->get('outboundEmailFromAddress') || $this->config->get('internalSmtpServer')) &&
+            (
+                $this->emailConfigDataProvider->getOutboundEmailFromAddress() ||
+                $this->config->get('internalSmtpServer')
+            ) &&
             !$this->config->get('passwordRecoveryDisabled')
         ) {
             $data->passwordRecoveryEnabled = true;
@@ -280,9 +285,9 @@ class SettingsService
             }
         }
 
-        if ($this->isRestrictedMode() && !$user->isSuperAdmin()) {
+        /*if ($this->isRestrictedMode() && !$user->isSuperAdmin()) {
             // @todo Maybe add restriction level for non-super admins.
-        }
+        }*/
 
         foreach ($ignoreItemList as $item) {
             unset($data->$item);

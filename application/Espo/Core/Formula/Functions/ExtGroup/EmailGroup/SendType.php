@@ -30,6 +30,7 @@
 namespace Espo\Core\Formula\Functions\ExtGroup\EmailGroup;
 
 use Espo\Core\ApplicationUser;
+use Espo\Core\Mail\ConfigDataProvider;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Functions\BaseFunction;
@@ -99,7 +100,9 @@ class SendType extends BaseFunction implements
         }
 
         if (!$email->get('from')) {
-            $from = $this->config->get('outboundEmailFromAddress');
+            $from = $this->injectableFactory
+                ->create(ConfigDataProvider::class)
+                ->getOutboundEmailFromAddress();
 
             if ($from) {
                 $email->set('from', $from);

@@ -34,6 +34,7 @@ use Espo\Core\AclManager;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Mail\Account\GroupAccount\AccountFactory as GroupAccountFactory;
 use Espo\Core\Mail\Account\PersonalAccount\AccountFactory as PersonalAccountFactory;
+use Espo\Core\Mail\ConfigDataProvider;
 use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Entities\EmailAccount as EmailAccountEntity;
@@ -56,7 +57,8 @@ class SendingAccountProvider
         private GroupAccountFactory $groupAccountFactory,
         private PersonalAccountFactory $personalAccountFactory,
         private AclManager $aclManager,
-        private SystemSettingsAccount $systemSettingsAccount
+        private SystemSettingsAccount $systemSettingsAccount,
+        private ConfigDataProvider $configDataProvider,
     ) {}
 
     public function getShared(User $user, string $emailAddress): ?Account
@@ -214,7 +216,7 @@ class SendingAccountProvider
 
     private function loadSystem(): void
     {
-        $address = $this->config->get('outboundEmailFromAddress');
+        $address = $this->configDataProvider->getOutboundEmailFromAddress();
 
         if (!$address) {
             return;

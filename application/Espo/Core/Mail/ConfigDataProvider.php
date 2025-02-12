@@ -27,27 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\FieldProcessing\InboundEmail;
+namespace Espo\Core\Mail;
 
-use Espo\Core\FieldProcessing\Loader;
-use Espo\Core\FieldProcessing\Loader\Params;
-use Espo\Core\Mail\ConfigDataProvider;
-use Espo\Entities\InboundEmail;
-use Espo\ORM\Entity;
+use Espo\Core\Utils\Config;
 
-/**
- * @implements Loader<InboundEmail>
- */
-class IsSystemLoader implements Loader
+class ConfigDataProvider
 {
     public function __construct(
-        private ConfigDataProvider $configDataProvider,
+        private Config $config,
     ) {}
 
-    public function process(Entity $entity, Params $params): void
+    public function getOutboundEmailFromAddress(): ?string
     {
-        $isSystem = $entity->getEmailAddress() === $this->configDataProvider->getOutboundEmailFromAddress();
-
-        $entity->set('isSystem', $isSystem);
+        return $this->config->get('outboundEmailFromAddress');
     }
 }

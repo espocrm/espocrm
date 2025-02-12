@@ -44,6 +44,7 @@ use Espo\Core\Mail\Account\PersonalAccount\Account as PersonalAccount;
 use Espo\Core\Mail\Account\PersonalAccount\AccountFactory as PersonalAccountFactory;
 use Espo\Core\Mail\Account\PersonalAccount\Service as PersonalAccountService;
 use Espo\Core\Mail\Account\SendingAccountProvider;
+use Espo\Core\Mail\ConfigDataProvider;
 use Espo\Core\Mail\EmailSender;
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Exceptions\SendingError;
@@ -96,7 +97,8 @@ class SendService
         private GroupAccountService $groupAccountService,
         private HandlerProcessor $handlerProcessor,
         private PersonalAccountFactory $personalAccountFactory,
-        private GroupAccountFactory $groupAccountFactory
+        private GroupAccountFactory $groupAccountFactory,
+        private ConfigDataProvider $configDataProvider,
     ) {}
 
     /**
@@ -126,7 +128,7 @@ class SendService
 
         $systemIsShared = $this->config->get('outboundEmailIsShared');
         $systemFromName = $this->config->get('outboundEmailFromName');
-        $systemFromAddress = $this->config->get('outboundEmailFromAddress');
+        $systemFromAddress = $this->configDataProvider->getOutboundEmailFromAddress();
 
         $emailSender = $this->emailSender->create();
 
@@ -136,7 +138,6 @@ class SendService
             // @todo Use getEmailAddressGroup.
             /** @var Collection<EmailAddress> $emailAddressCollection */
             $emailAddressCollection = $this->entityManager
-                ->getRDBRepositoryByClass(User::class)
                 ->getRelation($user, 'emailAddresses')
                 ->find();
 
@@ -154,7 +155,7 @@ class SendService
         $fromAddress = strtolower($originalFromAddress);
 
         $isUserAddress = in_array($fromAddress, $userAddressList);
-        $isSystemAddress = $fromAddress === strtolower($systemFromAddress);
+        $isSystemAddress = $fromAddress === strtolower($systemFromAddress ?? '');
 
         $smtpParams = null;
         $personalAccount = null;
