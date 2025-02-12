@@ -258,7 +258,7 @@ class AppService
         $user = $this->user;
 
         $outboundEmailIsShared = $this->config->get('outboundEmailIsShared');
-        $outboundEmailFromAddress = $this->emailConfigDataProvider->getOutboundEmailFromAddress();
+        $outboundEmailFromAddress = $this->emailConfigDataProvider->getSystemOutboundAddress();
 
         $emailAddressList = [];
         $userEmailAddressList = [];

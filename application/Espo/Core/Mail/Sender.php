@@ -372,11 +372,11 @@ class Sender
         if ($fromAddress) {
             $fromAddress = trim($fromAddress);
         } else {
-            if (empty($params['fromAddress']) && !$this->configDataProvider->getOutboundEmailFromAddress()) {
+            if (empty($params['fromAddress']) && !$this->configDataProvider->getSystemOutboundAddress()) {
                 throw new NoSmtp('outboundEmailFromAddress is not specified in config.');
             }
 
-            $fromAddress = $params['fromAddress'] ?? $this->configDataProvider->getOutboundEmailFromAddress();
+            $fromAddress = $params['fromAddress'] ?? $this->configDataProvider->getSystemOutboundAddress();
 
             $email->setFromAddress($fromAddress);
         }

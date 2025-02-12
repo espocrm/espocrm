@@ -71,7 +71,7 @@ class SystemSettingsAccount implements Account
 
     public function getEmailAddress(): ?string
     {
-        return $this->configDataProvider->getOutboundEmailFromAddress();
+        return $this->configDataProvider->getSystemOutboundAddress();
     }
 
     public function getAssignedUser(): ?Link

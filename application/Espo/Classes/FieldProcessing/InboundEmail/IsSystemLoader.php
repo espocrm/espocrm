@@ -46,7 +46,7 @@ class IsSystemLoader implements Loader
 
     public function process(Entity $entity, Params $params): void
     {
-        $isSystem = $entity->getEmailAddress() === $this->configDataProvider->getOutboundEmailFromAddress();
+        $isSystem = $entity->getEmailAddress() === $this->configDataProvider->getSystemOutboundAddress();
 
         $entity->set('isSystem', $isSystem);
     }

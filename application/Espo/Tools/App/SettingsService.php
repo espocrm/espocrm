@@ -254,7 +254,7 @@ class SettingsService
 
         if (
             (
-                $this->emailConfigDataProvider->getOutboundEmailFromAddress() ||
+                $this->emailConfigDataProvider->getSystemOutboundAddress() ||
                 $this->config->get('internalSmtpServer')
             ) &&
             !$this->config->get('passwordRecoveryDisabled')

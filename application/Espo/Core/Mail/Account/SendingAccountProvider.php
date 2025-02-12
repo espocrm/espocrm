@@ -216,7 +216,7 @@ class SendingAccountProvider
 
     private function loadSystem(): void
     {
-        $address = $this->configDataProvider->getOutboundEmailFromAddress();
+        $address = $this->configDataProvider->getSystemOutboundAddress();
 
         if (!$address) {
             return;

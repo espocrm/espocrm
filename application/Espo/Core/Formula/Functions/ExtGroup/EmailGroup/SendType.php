@@ -102,7 +102,7 @@ class SendType extends BaseFunction implements
         if (!$email->get('from')) {
             $from = $this->injectableFactory
                 ->create(ConfigDataProvider::class)
-                ->getOutboundEmailFromAddress();
+                ->getSystemOutboundAddress();
 
             if ($from) {
                 $email->set('from', $from);

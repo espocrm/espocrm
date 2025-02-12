@@ -37,7 +37,7 @@ class ConfigDataProvider
         private Config $config,
     ) {}
 
-    public function getOutboundEmailFromAddress(): ?string
+    public function getSystemOutboundAddress(): ?string
     {
         return $this->config->get('outboundEmailFromAddress');
     }

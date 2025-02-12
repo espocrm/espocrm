@@ -530,7 +530,7 @@ class SendingProcessor
 
         $senderParams = $senderParams->withFromAddress(
             $massEmail->getFromAddress() ??
-            $this->configDataProvider->getOutboundEmailFromAddress()
+            $this->configDataProvider->getSystemOutboundAddress()
         );
 
         if ($massEmail->getFromName()) {

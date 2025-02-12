@@ -107,7 +107,7 @@ class EmailSenderTest extends TestCase
 
         $configDataProvider
             ->expects($this->any())
-            ->method('getOutboundEmailFromAddress')
+            ->method('getSystemOutboundAddress')
             ->willReturn(null);
     }
 

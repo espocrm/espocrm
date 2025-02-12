@@ -128,7 +128,7 @@ class SendService
 
         $systemIsShared = $this->config->get('outboundEmailIsShared');
         $systemFromName = $this->config->get('outboundEmailFromName');
-        $systemFromAddress = $this->configDataProvider->getOutboundEmailFromAddress();
+        $systemFromAddress = $this->configDataProvider->getSystemOutboundAddress();
 
         $emailSender = $this->emailSender->create();
 
