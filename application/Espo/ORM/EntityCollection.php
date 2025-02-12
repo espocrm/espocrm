@@ -37,6 +37,7 @@ use SeekableIterator;
 use RuntimeException;
 use OutOfBoundsException;
 use InvalidArgumentException;
+use Closure;
 
 /**
  * A standard collection of entities. It allocates a memory for all entities.
@@ -398,5 +399,73 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         $obj->setAsFetched();
 
         return $obj;
+    }
+
+    /**
+     * Filter.
+     *
+     * @param Closure(TEntity): bool $callback A filter callback.
+     * @return self<TEntity> A filtered collection. A new instance.
+     * @since 9.1.0
+     */
+    public function filter(Closure $callback): self
+    {
+        $newList = [];
+
+        foreach ($this as $entity) {
+            if ($callback($entity)) {
+                $newList[] = $entity;
+            }
+        }
+
+        return new EntityCollection($newList, $this->entityType, $this->entityFactory);
+    }
+
+    /**
+     * Sort.
+     *
+     * @param Closure(TEntity, TEntity): int $callback The comparison function.
+     * @return self<TEntity> A sorted collection. A new instance.
+     * @since 9.1.0
+     */
+    public function sort(Closure $callback): self
+    {
+        $newList = [...$this];
+
+        usort($newList, $callback);
+
+        return new EntityCollection($newList, $this->entityType, $this->entityFactory);
+    }
+
+    /**
+     * Reverse.
+     *
+     * @return self<TEntity> A reversed collection.
+     * @since 9.1.0
+     */
+    public function reverse(): self
+    {
+        $newList = array_reverse([...$this]);
+
+        return new EntityCollection($newList, $this->entityType, $this->entityFactory);
+    }
+
+    /**
+     * Find.
+     *
+     * @param Closure(TEntity): bool $callback A filter callback.
+     * @return ?TEntity
+     * @since 9.1.0
+     * @noinspection PhpDocSignatureInspection
+     */
+    public function find(Closure $callback): ?Entity
+    {
+        foreach ($this as $entity) {
+            if ($callback($entity)) {
+                return $entity;
+            }
+        }
+
+        return null;
     }
 }

@@ -30,7 +30,6 @@
 namespace Espo\ORM;
 
 use Espo\ORM\Query\Select as SelectQuery;
-
 use IteratorAggregate;
 use Countable;
 use Traversable;
@@ -38,6 +37,7 @@ use PDO;
 use PDOStatement;
 use RuntimeException;
 use LogicException;
+use Closure;
 
 /**
  * Reasonable to use when selecting a large number of records.
@@ -144,7 +144,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         $list = [];
 
         foreach ($this as $entity) {
-            $list[] = $entity->getValueMap();;
+            $list[] = $entity->getValueMap();
         }
 
         return $list;
@@ -170,6 +170,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
      * Create from a query.
      *
      * @return self<Entity>
+     * @internal
      */
     public static function fromQuery(SelectQuery $query, EntityManager $entityManager): self
     {
@@ -192,6 +193,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
      * Create from an SQL.
      *
      * @return self<Entity>
+     * @internal
      */
     public static function fromSql(string $entityType, string $sql, EntityManager $entityManager): self
     {
@@ -202,5 +204,62 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         $obj->sql = $sql;
 
         return $obj;
+    }
+
+    /**
+     * Filter.
+     *
+     * @param Closure(TEntity): bool $callback A filter callback.
+     * @return EntityCollection<TEntity> A filtered collection.
+     * @since 9.1.0
+     */
+    public function filter(Closure $callback): EntityCollection
+    {
+        return $this->toEntityCollection()->filter($callback);
+    }
+
+    /**
+     * Sort.
+     *
+     * @param Closure(TEntity, TEntity): int $callback The comparison function.
+     * @return EntityCollection<TEntity> A sorted collection. A new instance.
+     * @since 9.1.0
+     */
+    public function sort(Closure $callback): EntityCollection
+    {
+        return $this->toEntityCollection()->sort($callback);
+    }
+
+    /**
+     * Reverse.
+     *
+     * @return EntityCollection<TEntity> A reversed collection.
+     * @since 9.1.0
+     */
+    public function reverse(): EntityCollection
+    {
+        return $this->toEntityCollection()->reverse();
+    }
+
+    /**
+     * Find.
+     *
+     * @param Closure(TEntity): bool $callback A filter callback.
+     * @return ?TEntity
+     * @since 9.1.0
+     * @noinspection PhpDocSignatureInspection
+     */
+    public function find(Closure $callback): ?Entity
+    {
+        return $this->toEntityCollection()->find($callback);
+    }
+
+    /**
+     * @return EntityCollection<TEntity>
+     */
+    private function toEntityCollection(): EntityCollection
+    {
+        /** @var EntityCollection<TEntity> */
+        return (new EntityCollection([...$this], $this->entityType));
     }
 }

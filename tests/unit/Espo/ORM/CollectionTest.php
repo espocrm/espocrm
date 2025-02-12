@@ -32,12 +32,17 @@ namespace tests\unit\Espo\ORM;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Defs;
 use Espo\ORM\Defs\DefsData;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Espo\ORM\Executor\QueryExecutor;
 use Espo\ORM\Metadata;
 use Espo\ORM\MetadataDataProvider;
 use Espo\Core\ORM\EntityManager;
 
+use Espo\ORM\SthCollection;
+use PDOStatement;
 use PHPUnit\Framework\TestCase;
+use SplObjectStorage;
 
 require_once 'tests/unit/testData/DB/Entities.php';
 
@@ -116,5 +121,79 @@ class CollectionTest extends TestCase
         unset($collection[1]);
 
         $this->assertEquals(1, $collection->count());
+    }
+
+    public function testFilter(): void
+    {
+        $e1 = $this->createMock(Entity::class);
+        $e2 = $this->createMock(Entity::class);
+        $e3 = $this->createMock(Entity::class);
+        $e4 = $this->createMock(Entity::class);
+
+        $collection = new EntityCollection([$e1, $e2, $e3, $e4], 'Account');
+
+        $filtered = $collection->filter(function ($e) use ($e2, $e3) {
+            return $e !== $e2 && $e !== $e3;
+        });
+
+        $this->assertEquals([$e1, $e2], [...$filtered]);
+        $this->assertEquals($collection->getEntityType(), $filtered->getEntityType());
+    }
+
+    public function testSort(): void
+    {
+        $e1 = $this->createMock(Entity::class);
+        $e2 = $this->createMock(Entity::class);
+        $e3 = $this->createMock(Entity::class);
+
+        $map = new SplObjectStorage();
+
+        $map[$e1] = 3;
+        $map[$e2] = 2;
+        $map[$e3] = 1;
+
+        $collection = new EntityCollection([$e1, $e2, $e3], 'Account');
+
+        $sorted = $collection->sort(function ($e1, $e2) use ($map) {
+            return $map[$e1] - $map[$e2];
+        });
+
+        $this->assertEquals([$e3, $e2, $e1], [...$sorted]);
+        $this->assertEquals($collection->getEntityType(), $sorted->getEntityType());
+    }
+
+    public function testFind(): void
+    {
+        $e1 = $this->createMock(Entity::class);
+        $e2 = $this->createMock(Entity::class);
+        $e3 = $this->createMock(Entity::class);
+
+        $collection = new EntityCollection([$e1, $e2, $e3]);
+
+        $e = $collection->find(function ($e) use ($e2) {
+            return $e === $e2;
+        });
+
+        $this->assertSame($e2, $e);
+
+        $e = $collection->find(function ($e) use ($e2) {
+            return $e === 0;
+        });
+
+        $this->assertNull($e);
+    }
+
+    public function testReverse(): void
+    {
+        $e1 = $this->createMock(Entity::class);
+        $e2 = $this->createMock(Entity::class);
+        $e3 = $this->createMock(Entity::class);
+
+        $collection = new EntityCollection([$e1, $e2, $e3], 'Account');
+
+        $reversed = $collection->reverse();
+
+        $this->assertEquals([$e3, $e2, $e1], [...$reversed]);
+        $this->assertEquals($collection->getEntityType(), $reversed->getEntityType());
     }
 }
