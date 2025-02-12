@@ -277,19 +277,15 @@ class ImagePreviewModalView extends ModalView {
 
 
     onMaximize() {
-        /** @type {HTMLDivElement} */
-        const body = this.element.querySelector('.modal-body');
-
         const width = this.imageContainerElement.clientWidth
-        const height = body.clientHeight;
 
         this.imageElement.style.maxWidth = width  + 'px';
-        //this.imageElement.style.maxHeight = height + 'px';
     }
 
     onMinimize() {
-        this.imageElement.style.maxWidth = this.imageContainerElement.clientWidth + 'px';
-        //this.imageElement.style.maxHeight = '';
+        const width = this.imageContainerElement.clientWidth
+
+        this.imageElement.style.maxWidth = width + 'px';
     }
 }
 
