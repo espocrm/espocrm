@@ -91,16 +91,30 @@ class ImagePreviewModalView extends ModalView {
 
         this.navigationEnabled = (this.options.imageList && this.options.imageList.length > 1);
 
+        /** @type {Record[]} */
         this.imageList = this.options.imageList || [];
-
-        this.once('remove', () => {
-            $(window).off('resize.image-review');
-        });
 
         this.wait(
             Espo.loader.requirePromise('lib!exif-js')
                 .then(Lib => Exif = Lib)
         );
+
+        /** @private */
+        this.onImageLoadBind = this.onImageLoad.bind(this);
+        /** @private */
+        this.onImageClickBind = this.onImageClick.bind(this);
+        /** @private */
+        this.onWindowResizeBind = this.onWindowResize.bind(this);
+    }
+
+    onRemove() {
+        window.removeEventListener('resize', this.onWindowResizeBind);
+
+        if (this.imageElement) {
+            this.imageElement.removeEventListener('load', this.onImageLoadBind);
+            this.imageElement.removeEventListener('click', this.onImageClickBind);
+        }
+
     }
 
     getImageUrl() {
@@ -127,88 +141,115 @@ class ImagePreviewModalView extends ModalView {
         return url;
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    onImageLoad() {}
+    /**
+     * @private
+     */
+    onImageLoad() {
+        const image = this.imageElement;
 
-    afterRender() {
-        const $container = this.$el.find('.image-container');
+        Exif.getData(image, () => {
+            // noinspection JSDeprecatedSymbols
+            if (window.getComputedStyle(image).imageOrientation === 'from-image') {
+                return;
+            }
 
-        this.imageContainerElement = $container.get(0);
+            const orientation = Exif.getTag(image, 'Orientation');
 
-        const $img = this.$img = this.$el.find('.image-container img');
+            switch (orientation) {
+                case 2:
+                    image.classList.add('transform-flip');
 
-        this.imageElement = $img.get(0);
+                    break;
 
-        $img.on('load', () => {
-            const imgEl = $img.get(0);
+                case 3:
+                    image.classList.add('transform-rotate-180');
 
-            Exif.getData(imgEl, () => {
-                if ($img.css('image-orientation') === 'from-image') {
-                    return;
-                }
+                    break;
 
-                const orientation = Exif.getTag(this, 'Orientation');
+                case 4:
+                    image.classList.add('transform-rotate-180');
+                    image.classList.add('transform-flip');
 
-                switch (orientation) {
-                    case 2:
-                        $img.addClass('transform-flip');
-                        break;
-                    case 3:
-                        $img.addClass('transform-rotate-180');
-                        break;
-                    case 4:
-                        $img.addClass('transform-rotate-180');
-                        $img.addClass('transform-flip');
-                        break;
-                    case 5:
-                        $img.addClass('transform-rotate-270');
-                        $img.addClass('transform-flip');
-                        break;
-                    case 6:
-                        $img.addClass('transform-rotate-90');
-                        break;
-                    case 7:
-                        $img.addClass('transform-rotate-90');
-                        $img.addClass('transform-flip');
-                        break;
-                    case 8:
-                        $img.addClass('transform-rotate-270');
-                        break;
-                }
-            });
+                    break;
 
-            if (imgEl.naturalWidth > imgEl.clientWidth) {
-                this.$el.find('.original-link-container').removeClass('hidden');
+                case 5:
+                    image.classList.add('transform-rotate-270');
+                    image.classList.add('transform-flip');
+
+                    break;
+
+                case 6:
+                    image.classList.add('transform-rotate-90');
+
+                    break;
+
+                case 7:
+                    image.classList.add('transform-rotate-90');
+                    image.classList.add('transform-flip');
+
+                    break;
+
+                case 8:
+                    image.classList.add('transform-rotate-270');
+
+                    break;
             }
         });
 
-        if (this.navigationEnabled) {
-            $img.css('cursor', 'pointer');
+        /*if (image.naturalWidth > image.clientWidth) {}*/
+    }
 
-            $img.click(() => {
-                this.switchToNext();
-            });
+    afterRender() {
+        if (!this.element) {
+            // @todo Remove when views are not rendered, after change in bull.
+            return;
         }
 
-        const manageSize = () => {
-            const width = $container.width();
+        this.imageContainerElement = this.element.querySelector('.image-container');
+        this.imageElement = this.imageContainerElement.querySelector('img')
 
-            $img.css('maxWidth', width);
-        };
+        this.imageElement.addEventListener('load', this.onImageLoadBind);
 
-        $(window).off('resize.image-review');
+        if (this.navigationEnabled) {
+            this.imageElement.style.cursor = 'pointer';
+        }
 
-        $(window).on('resize.image-review', () => {
-            manageSize();
-        });
+        this.imageElement.addEventListener('click', this.onImageClickBind);
 
-        setTimeout(() => manageSize(), 100);
+        window.removeEventListener('resize', this.onWindowResizeBind);
+        window.addEventListener('resize', this.onWindowResizeBind);
+
+        setTimeout(() => this.onWindowResize(), 100);
+    }
+
+    /**
+     * @private
+     */
+    onWindowResize() {
+        if (!this.imageContainerElement) {
+            return;
+        }
+
+        const width = this.imageContainerElement.clientWidth;
+
+        this.imageElement.style.maxWidth = width + 'px';
+    }
+
+    /**
+     * @private
+     */
+    onImageClick() {
+        this.switchToNext();
     }
 
     isMultiple() {
         return this.imageList.length > 1;
     }
 
+    /**
+     * @private
+     * @param {boolean} [noLoop]
+     */
     switchToPrevious(noLoop) {
         if (!this.isMultiple()) {
             return;
@@ -216,8 +257,8 @@ class ImagePreviewModalView extends ModalView {
 
         let index = -1;
 
-        this.imageList.forEach((d, i) => {
-            if (d.id === this.options.id) {
+        this.imageList.forEach((item, i) => {
+            if (item.id === this.options.id) {
                 index = i;
             }
         });
@@ -226,9 +267,11 @@ class ImagePreviewModalView extends ModalView {
             return;
         }
 
-        this.transformClassList.forEach(item => {
-            this.$img.removeClass(item);
-        });
+        if (this.imageElement) {
+            this.transformClassList.forEach(item => {
+                this.imageElement.classList.remove(item);
+            });
+        }
 
         index--;
 
@@ -242,6 +285,10 @@ class ImagePreviewModalView extends ModalView {
         this.reRender();
     }
 
+    /**
+     * @private
+     * @param {boolean} [noLoop]
+     */
     switchToNext(noLoop) {
         if (!this.isMultiple()) {
             return;
@@ -249,8 +296,8 @@ class ImagePreviewModalView extends ModalView {
 
         let index = -1;
 
-        this.imageList.forEach((d, i) => {
-            if (d.id === this.options.id) {
+        this.imageList.forEach((item, i) => {
+            if (item.id === this.options.id) {
                 index = i;
             }
         });
@@ -259,9 +306,11 @@ class ImagePreviewModalView extends ModalView {
             return;
         }
 
-        this.transformClassList.forEach(item => {
-            this.$img.removeClass(item);
-        });
+        if (this.imageElement) {
+            this.transformClassList.forEach(item => {
+                this.imageElement.classList.remove(item);
+            });
+        }
 
         index++;
 
@@ -274,7 +323,6 @@ class ImagePreviewModalView extends ModalView {
 
         this.reRender();
     }
-
 
     onMaximize() {
         const width = this.imageContainerElement.clientWidth
