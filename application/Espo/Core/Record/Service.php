@@ -952,11 +952,17 @@ class Service implements Crud,
             throw new ForbiddenSilent("No read access.");
         }
 
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($this->entityType);
+
+        if (!$entityDefs->hasRelation($link)) {
+            throw new NotFound("Link does not exist.");
+        }
+
         $this->processForbiddenLinkReadCheck($link);
 
-        $foreignEntityType = $this->entityManager
-            ->getDefs()
-            ->getEntity($this->entityType)
+        $foreignEntityType = $entityDefs
             ->getRelation($link)
             ->getForeignEntityType();
 
@@ -1062,7 +1068,7 @@ class Service implements Crud,
         $foreignEntityType = $entity->getRelationParam($link, RelationParam::ENTITY);
 
         if (!$foreignEntityType) {
-            throw new LogicException("Entity '$this->entityType' has not relation '$link'.");
+            throw new NotFound("Entity $this->entityType does not have link $link.");
         }
 
         $foreignEntity = $this->entityManager->getEntityById($foreignEntityType, $foreignId);
@@ -1116,7 +1122,7 @@ class Service implements Crud,
         $foreignEntityType = $entity->getRelationParam($link, RelationParam::ENTITY);
 
         if (!$foreignEntityType) {
-            throw new LogicException("Entity '$this->entityType' has not relation '$link'.");
+            throw new NotFound("Entity $this->entityType does not have link $link.");
         }
 
         $foreignEntity = $this->entityManager->getEntityById($foreignEntityType, $foreignId);
