@@ -412,32 +412,6 @@ class Dialog {
     }
 
     /**
-     * Hide maximize button.
-     *
-     * @since 9.1.0
-     */
-    hideMaximizeButton() {
-        if (!this.maximizeButtonElement) {
-            return;
-        }
-
-        this.maximizeButtonElement.classList.add('hidden');
-    }
-
-    /**
-     * Show maximize button.
-     *
-     * @since 9.1.0
-     */
-    showMaximizeButton() {
-        if (!this.maximizeButtonElement) {
-            return;
-        }
-
-        this.maximizeButtonElement.classList.remove('hidden');
-    }
-
-    /**
      * Set action items.
      *
      * @param {module:ui.Dialog~Button[]} buttonList
