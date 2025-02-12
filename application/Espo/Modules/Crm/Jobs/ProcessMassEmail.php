@@ -33,35 +33,32 @@ use Espo\Core\Job\JobDataLess;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\DateTime;
 use Espo\Core\Utils\Log;
-
 use Espo\Modules\Crm\Entities\MassEmail;
 use Espo\Modules\Crm\Tools\MassEmail\QueueCreator;
 use Espo\Modules\Crm\Tools\MassEmail\SendingProcessor;
-
 use Throwable;
 
+/**
+ * @noinspection PhpUnused
+ */
 class ProcessMassEmail implements JobDataLess
 {
-    private SendingProcessor $processor;
-    private QueueCreator $queue;
-    private EntityManager $entityManager;
-    private Log $log;
-
     public function __construct(
-        SendingProcessor $processor,
-        QueueCreator $queue,
-        EntityManager $entityManager,
-        Log $log
-    ) {
-        $this->processor = $processor;
-        $this->queue = $queue;
-        $this->entityManager = $entityManager;
-        $this->log = $log;
-    }
+        private SendingProcessor $processor,
+        private QueueCreator $queue,
+        private EntityManager $entityManager,
+        private Log $log
+    ) {}
 
     public function run(): void
     {
-        $pendingMassEmailList = $this->entityManager
+        $this->processCreateQueue();
+        $this->processSend();
+    }
+
+    private function processCreateQueue(): void
+    {
+        $pendingMassEmails = $this->entityManager
             ->getRDBRepositoryByClass(MassEmail::class)
             ->where([
                 'status' => MassEmail::STATUS_PENDING,
@@ -69,32 +66,37 @@ class ProcessMassEmail implements JobDataLess
             ])
             ->find();
 
-        foreach ($pendingMassEmailList as $massEmail) {
+        foreach ($pendingMassEmails as $massEmail) {
             try {
                 $this->queue->create($massEmail);
             } catch (Throwable $e) {
-                $this->log->error(
-                    'Job ProcessMassEmail#createQueue ' . $massEmail->getId() . ': [' . $e->getCode() . '] ' .
-                    $e->getMessage()
-                );
+                $this->log->error("Create queue error. {id}. {message}", [
+                    'id' => $massEmail->getId(),
+                    'message' => $e->getMessage(),
+                    'exception' => $e,
+                ]);
             }
         }
+    }
 
-        $massEmailList = $this->entityManager
+    private function processSend(): void
+    {
+        $inProcessMassEmails = $this->entityManager
             ->getRDBRepositoryByClass(MassEmail::class)
             ->where([
                 'status' => MassEmail::STATUS_IN_PROCESS,
             ])
             ->find();
 
-        foreach ($massEmailList as $massEmail) {
+        foreach ($inProcessMassEmails as $massEmail) {
             try {
                 $this->processor->process($massEmail);
             } catch (Throwable $e) {
-                $this->log->error(
-                    'Job ProcessMassEmail#processSending '. $massEmail->getId() . ': [' . $e->getCode() . '] ' .
-                    $e->getMessage()
-                );
+                $this->log->error("Sending mass email error. {id}. {message}", [
+                    'id' => $massEmail->getId(),
+                    'message' => $e->getMessage(),
+                    'exception' => $e,
+                ]);
             }
         }
     }

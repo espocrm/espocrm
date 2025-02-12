@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Tools\MassEmail;
 
+use Espo\ORM\EntityCollection;
 use Laminas\Mail\Message;
 
 use Espo\Core\Name\Field;
@@ -109,14 +110,14 @@ class SendingProcessor
 
         foreach ($queueItemList as $queueItem) {
             $this->sendQueueItem(
-                $queueItem,
-                $massEmail,
-                $emailTemplate,
-                $attachmentList,
-                $campaign,
-                $isTest,
-                $smtpParams,
-                $senderParams
+                queueItem: $queueItem,
+                massEmail: $massEmail,
+                emailTemplate: $emailTemplate,
+                attachmentList: $attachmentList,
+                campaign: $campaign,
+                isTest: $isTest,
+                smtpParams: $smtpParams,
+                senderParams: $senderParams,
             );
         }
 
@@ -142,7 +143,7 @@ class SendingProcessor
         iterable $trackingUrlList = []
     ): ?Email {
 
-        $emailAddress = $target->get('emailAddress');
+        $emailAddress = $target->get(Field::EMAIL_ADDRESS);
 
         if (!$emailAddress) {
             return null;
@@ -159,7 +160,6 @@ class SendingProcessor
 
         $body = $this->prepareBody($emailData, $queueItem, $trackingUrlList, $massEmail);
 
-        /** @var Email $email */
         $email = $this->entityManager
             ->getRDBRepositoryByClass(Email::class)
             ->getNew();
@@ -229,13 +229,13 @@ class SendingProcessor
     }
 
     /**
-     * @param iterable<Attachment> $attachmentList
+     * @param EntityCollection<Attachment> $attachmentList
      */
     private function sendQueueItem(
         EmailQueueItem $queueItem,
         MassEmail $massEmail,
         EmailTemplate $emailTemplate,
-        $attachmentList,
+        EntityCollection $attachmentList,
         ?Campaign $campaign,
         bool $isTest,
         ?SmtpParams $smtpParams,
@@ -250,7 +250,7 @@ class SendingProcessor
 
         $target = $this->entityManager->getEntityById($queueItem->getTargetType(), $queueItem->getTargetId());
 
-        $emailAddress = $target?->get('emailAddress');
+        $emailAddress = $target?->get(Field::EMAIL_ADDRESS);
 
         if (
             !$target ||
