@@ -519,6 +519,8 @@ class Dialog {
                     if (this.onMaximize) {
                         this.onMaximize();
                     }
+
+                    this.getElement().focus();
                 });
             }
 
@@ -546,6 +548,8 @@ class Dialog {
                     if (this.onMinimize) {
                         this.onMinimize();
                     }
+
+                    this.getElement().focus();
                 });
             }
         }
