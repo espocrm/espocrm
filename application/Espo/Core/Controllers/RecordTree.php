@@ -63,14 +63,11 @@ class RecordTree extends Record
             return (object) $this->actionListTree($request->getRouteParams(), $request->getParsedBody(), $request);
         }
 
-        $where = $request->getQueryParams()['where'] ?? null;
+        $selectParams = $this->fetchSearchParamsFromRequest($request);
+
         $parentId = $request->getQueryParam('parentId');
         $maxDepth = $request->getQueryParam('maxDepth');
         $onlyNotEmpty = (bool) $request->getQueryParam('onlyNotEmpty');
-
-        if ($where !== null && !is_array($where)) {
-            throw new BadRequest();
-        }
 
         if ($maxDepth !== null) {
             $maxDepth = (int) $maxDepth;
@@ -79,7 +76,7 @@ class RecordTree extends Record
         $collection = $this->getRecordTreeService()->getTree(
             $parentId,
             [
-                'where' => $where,
+                'where' => $selectParams->getWhere(),
                 'onlyNotEmpty' => $onlyNotEmpty,
             ],
             $maxDepth
