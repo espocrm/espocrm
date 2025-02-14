@@ -171,6 +171,23 @@ class GlobalSearchView extends SiteNavbarItemView {
 
                             return false;
                         })
+                        .sort((a, b) => {
+                            if (
+                                a.lowerLabel.startsWith(lower) &&
+                                !b.lowerLabel.startsWith(lower)
+                            ) {
+                                return -1;
+                            }
+
+                            if (
+                                !a.lowerLabel.startsWith(lower) &&
+                                b.lowerLabel.startsWith(lower)
+                            ) {
+                                return 1;
+                            }
+
+                            return a.lowerLabel.localeCompare(b.lowerLabel);
+                        })
                         .map(it => ({
                             value: it.label,
                             url: it.url,
@@ -331,10 +348,9 @@ class GlobalSearchView extends SiteNavbarItemView {
      */
     getTabDataList() {
         /** @type {module:views/global-search/global-search~tabData[]}*/
-        const list = [];
+        let list = [];
 
         /**
-         *
          * @param {string|TabsHelper~item} item
          * @return {module:views/global-search/global-search~tabData}
          */
@@ -351,9 +367,13 @@ class GlobalSearchView extends SiteNavbarItemView {
             };
         };
 
+        /**
+         * @param {string|TabsHelper~item} item
+         * @return {boolean}
+         */
         const checkTab = (item) => {
             return (this.tabsHelper.isTabScope(item) || this.tabsHelper.isTabUrl(item)) &&
-                this.tabsHelper.checkTabAccess(item)
+                this.tabsHelper.checkTabAccess(item);
         }
 
         for (const item of this.tabsHelper.getTabList()) {
@@ -392,6 +412,7 @@ class GlobalSearchView extends SiteNavbarItemView {
                 .forEach(it => {
                     it.itemList
                         .filter(it => it.tabQuickSearch && it.label)
+                        .filter(it => !list.find(subIt => subIt.url === it.url))
                         .forEach(it => {
                             const label = this.translate(it.label, 'labels', 'Admin');
 
@@ -404,6 +425,12 @@ class GlobalSearchView extends SiteNavbarItemView {
                         });
                 });
         }
+
+        list = list
+            .filter((it, i) => {
+                return list.findIndex(subIt => subIt.url === it.url) === i &&
+                    list.findIndex(subIt => subIt.lowerLabel === it.lowerLabel) === i
+            });
 
         /** @type {Record<string, {tab: boolean}>} */
         const scopes = this.getMetadata().get('scopes') || {};
