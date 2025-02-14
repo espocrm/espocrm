@@ -100,6 +100,7 @@ class SelectRecordsModalView extends ModalView {
      * @property {function(): Promise<Record>} [createAttributesProvider] Create-attributes provider.
      * @property {Record} [createAttributes] Create-attributes.
      * @property {function(import('model').default[])} [onSelect] On record select. As of 9.0.0.
+     * @property {function(import('model').default[])} [onCreate] On create click. As of 9.0.5.
      */
 
     /**
@@ -112,6 +113,11 @@ class SelectRecordsModalView extends ModalView {
         if (options.onSelect) {
             /** @private */
             this.onSelect = options.onSelect;
+        }
+
+        if (options.onCreate) {
+            /** @private */
+            this.onCreate = options.onCreate;
         }
     }
 
@@ -388,6 +394,13 @@ class SelectRecordsModalView extends ModalView {
     }
 
     create() {
+        if (this.onCreate) {
+            this.onCreate();
+
+            return;
+        }
+
+        // @todo Remove in v9.1.0. Kept bc.
         if (this.options.triggerCreateEvent) {
             this.trigger('create');
 

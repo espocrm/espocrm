@@ -885,7 +885,10 @@ class RelationshipPanelView extends BottomPanelView {
     actionSelectRelated() {
         const helper = new SelectRelatedHelper(this);
 
-        helper.process(this.model, this.link);
+        helper.process(this.model, this.link, {
+            hasCreate: this.defs.create,
+            onCreate: () => this.actionCreateRelated(),
+        });
     }
 
     /**

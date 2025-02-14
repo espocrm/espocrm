@@ -58,6 +58,8 @@ class SelectRelatedHelper {
      *     primaryFilterName?: string,
      *     boolFilterList?: string[]|string,
      *     viewKey?: string,
+     *     hasCreate?: boolean,
+     *     onCreate?: function(): void,
      * }} options
      */
     process(model, link, options = {}) {
@@ -159,10 +161,14 @@ class SelectRelatedHelper {
             const orderBy = filters.orderBy || panelDefs.selectOrderBy;
             const orderDirection = filters.orderBy ? filters.order : panelDefs.selectOrderDirection;
 
+            const createButton = options.hasCreate === true && options.onCreate !== undefined;
+
+            /** @type {import('views/modals/select-records').default} */
+            let modalView;
+
             this.view.createView('dialogSelectRelated', viewName, {
                 scope: scope,
                 multiple: true,
-                triggerCreateEvent: true,
                 filters: advanced,
                 massRelateEnabled: massRelateEnabled,
                 primaryFilterName: primaryFilterName,
@@ -171,7 +177,17 @@ class SelectRelatedHelper {
                 layoutName: panelDefs.selectLayout,
                 orderBy: orderBy,
                 orderDirection: orderDirection,
+                createButton: createButton,
+                onCreate: () => {
+                    modalView.close();
+
+                    if (options.onCreate) {
+                        options.onCreate();
+                    }
+                },
             }, view => {
+                modalView = view;
+
                 view.render();
 
                 Espo.Ui.notify(false);
