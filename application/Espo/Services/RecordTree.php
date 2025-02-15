@@ -64,7 +64,7 @@ class RecordTree extends Record
     protected $categoryField = null;
 
     /**
-     * @param array<string, mixed> $params
+     * @param array{where?: ?WhereItem, onlyNotEmpty?: bool} $params
      * @return ?Collection<Entity>
      * @throws Forbidden
      * @throws BadRequest
@@ -84,7 +84,7 @@ class RecordTree extends Record
     }
 
     /**
-     * @param array<string, mixed> $params
+     * @param array{where?: ?WhereItem, onlyNotEmpty?: bool} $params
      * @return ?Collection<Entity>
      * @throws BadRequest
      * @throws Forbidden
@@ -104,7 +104,11 @@ class RecordTree extends Record
             return null;
         }
 
-        $searchParams = SearchParams::fromRaw($params);
+        $searchParams = SearchParams::create();
+
+        if (isset($params['where'])) {
+            $searchParams = $searchParams->withWhere($params['where']);
+        }
 
         $selectBuilder = $this->selectBuilderFactory
             ->create()

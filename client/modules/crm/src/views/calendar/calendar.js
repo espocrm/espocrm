@@ -453,7 +453,7 @@ class CalendarView extends View {
                 start + this.rangeSeparator + end :
                 start;
         } else {
-            title = moment(view.currentStart).format(format);
+            title = this.dateToMoment(view.currentStart).format(format);
         }
 
         if (this.options.userId && this.options.userName) {

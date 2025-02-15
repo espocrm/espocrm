@@ -4218,6 +4218,22 @@ body > .autocomplete-suggestions.text-search-suggestions {
     }
 }
 
+.formula-edit-container {
+    &:has(> :last-child:nth-child(2)) {
+        clear: both;
+
+        > div:first-child {
+            float: left;
+            width: calc(100% - var(--70px));
+        }
+
+        > div:last-child {
+            float: right;
+            width: var(--70px);
+        }
+    }
+}
+
 @import "misc/kanban.less";
 @import "misc/wysiwyg.less";
 
