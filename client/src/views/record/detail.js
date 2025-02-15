@@ -3990,6 +3990,11 @@ class DetailRecordView extends BaseRecordView {
         e.preventDefault();
         e.stopPropagation();
 
+        if (document.activeElement instanceof HTMLInputElement) {
+            // Fields may need to fetch data first.
+            document.activeElement.dispatchEvent(new Event('change', {bubbles: true}));
+        }
+
         const methodName = 'action' + Espo.Utils.upperCaseFirst(action);
 
         this[methodName]();
