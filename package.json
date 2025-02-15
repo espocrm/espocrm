@@ -73,7 +73,7 @@
     "qrcodejs": "^1.0.0",
     "selectize": "github:selectize/selectize.js#v0.13.6",
     "set-value": ">=4.0.1",
-    "summernote": "^0.8.20",
+    "summernote": "^0.9.1",
     "timepicker": "^1.11.15",
     "turndown": "^7.2.0",
     "underscore": "^1.13.1",
