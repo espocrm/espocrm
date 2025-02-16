@@ -1407,6 +1407,11 @@ class BaseFieldView extends View {
                     if (key === 'Control+Enter') {
                         e.stopPropagation();
 
+                        if (document.activeElement instanceof HTMLInputElement) {
+                            // Fields may need to fetch data first.
+                            document.activeElement.dispatchEvent(new Event('change', {bubbles: true}));
+                        }
+
                         this.fetchToModel();
                         this.inlineEditSave();
 

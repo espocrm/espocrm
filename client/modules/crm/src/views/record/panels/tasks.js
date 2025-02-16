@@ -194,10 +194,6 @@ export default class TasksRelationshipPanelView extends RelationshipPanelView {
         });
     }
 
-    actionRefresh() {
-        this.collection.fetch();
-    }
-
     // noinspection JSUnusedGlobalSymbols
     actionComplete(data) {
         const id = data.id;

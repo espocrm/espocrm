@@ -49,6 +49,10 @@ class LinkManagerEditModalView extends ModalView {
         },
         /** @this LinkManagerEditModalView */
         'Control+Enter': function (e) {
+            if (document.activeElement instanceof HTMLInputElement) {
+                document.activeElement.dispatchEvent(new Event('change', {bubbles: true}));
+            }
+
             this.save();
 
             e.preventDefault();

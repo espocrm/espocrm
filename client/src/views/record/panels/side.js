@@ -385,8 +385,12 @@ class SidePanelView extends View {
     /**
      * A `refresh` action.
      */
-    actionRefresh() {
-        this.model.fetch();
+    async actionRefresh() {
+        Espo.Ui.notify(' ... ');
+
+        await this.model.fetch();
+
+        Espo.Ui.notify();
     }
 
     // noinspection JSUnusedGlobalSymbols

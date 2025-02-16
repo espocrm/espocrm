@@ -621,8 +621,12 @@ class RelationshipPanelView extends BottomPanelView {
      *
      * @protected
      */
-    actionRefresh() {
-        this.collection.fetch();
+    async actionRefresh() {
+        Espo.Ui.notify(' ... ');
+
+        await this.collection.fetch()
+
+        Espo.Ui.notify();
     }
 
     /**

@@ -66,6 +66,11 @@ class EditModalView extends ModalView {
             e.preventDefault();
             e.stopPropagation();
 
+            if (document.activeElement instanceof HTMLInputElement) {
+                // Fields may need to fetch data first.
+                document.activeElement.dispatchEvent(new Event('change', {bubbles: true}));
+            }
+
             this.actionSave();
         },
         /** @this EditModalView */

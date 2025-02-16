@@ -631,10 +631,6 @@ class ActivitiesPanelView extends RelationshipPanelView {
         });
     }
 
-    actionRefresh() {
-        this.collection.fetch();
-    }
-
     actionSetHeld(data) {
         const id = data.id;
 

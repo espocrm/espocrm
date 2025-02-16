@@ -56,7 +56,9 @@ class BaseDashletOptionsModalView extends ModalView {
 
     shortcutKeys = {
         /** @this BaseDashletOptionsModalView */
-        'Control+Enter': 'save',
+        'Control+Enter': function (e) {
+            this.handleShortcutKeyCtrlEnter(e);
+        },
         /** @this BaseDashletOptionsModalView */
         'Escape': function (e) {
             if (this.saveDisabled) {
@@ -234,6 +236,21 @@ class BaseDashletOptionsModalView extends ModalView {
         }
 
         this.getRecordView().showField(name);
+    }
+
+    /**
+     * @protected
+     * @param {KeyboardEvent} e
+     */
+    handleShortcutKeyCtrlEnter(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (document.activeElement instanceof HTMLInputElement) {
+            document.activeElement.dispatchEvent(new Event('change', {bubbles: true}));
+        }
+
+        this.actionSave();
     }
 }
 

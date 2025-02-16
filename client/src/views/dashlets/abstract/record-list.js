@@ -176,17 +176,22 @@ class RecordListDashletView extends BaseDashletView {
         }
     }
 
-    actionRefresh() {
+    async actionRefresh() {
         if (!this.collection) {
             return;
         }
 
         this.collection.where = this.searchManager.getWhere();
-        this.collection.fetch({
+
+        Espo.Ui.notify(' ... ');
+
+        await this.collection.fetch({
             previousDataList: this.collection.models.map(model => {
                 return Espo.Utils.cloneDeep(model.attributes);
             }),
         });
+
+        Espo.Ui.notify();
     }
 
     // noinspection JSUnusedGlobalSymbols
