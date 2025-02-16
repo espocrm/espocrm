@@ -3214,7 +3214,7 @@ class ListRecordView extends View {
      * @protected
      * @param {{id?: string, scope?: string}} [data]
      */
-    actionQuickView(data) {
+    async actionQuickView(data) {
         data = data || {};
 
         const id = data.id;
@@ -3253,27 +3253,20 @@ class ListRecordView extends View {
             return;
         }
 
-        const helper = new RecordModal();
+        const view = await (new RecordModal()).showDetail(this, {
+            id: id,
+            scope: scope,
+            model: model,
+            rootUrl: this.options.keepCurrentRootUrl ? this.getRouter().getCurrentUrl() : null,
+            editDisabled: this.quickEditDisabled,
+        })
 
-        helper
-            .showDetail(this, {
-                id: id,
-                scope: scope,
-                model: model,
-                rootUrl: this.options.keepCurrentRootUrl ? this.getRouter().getCurrentUrl() : null,
-                editDisabled: this.quickEditDisabled,
-            })
-            .then(view => {
-                if (!model) {
-                    return;
-                }
+        if (!model) {
+            return;
+        }
 
-                this.listenTo(view, 'after:save', model => {
-                    this.trigger('after:save', model);
-                });
-
-                this.listenTo(view, 'after:destroy', model => this.removeRecordFromList(model.id));
-            });
+        this.listenTo(view, 'after:save', model => this.trigger('after:save', model));
+        this.listenTo(view, 'after:destroy', model => this.removeRecordFromList(model.id));
     }
 
     // noinspection JSUnusedGlobalSymbols
