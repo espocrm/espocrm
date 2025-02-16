@@ -73,10 +73,19 @@ class EditView extends MainView {
      */
     rootLinkDisabled = false
 
+    /**
+     * A root URL.
+     *
+     * @type {string}
+     */
+    rootUrl
+
     /** @inheritDoc */
     setup() {
         this.headerView = this.options.headerView || this.headerView;
         this.recordView = this.options.recordView || this.recordView;
+
+        this.rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope
 
         this.setupHeader();
         this.setupRecord();
@@ -152,49 +161,56 @@ class EditView extends MainView {
 
     /** @inheritDoc */
     getHeader() {
-        const headerIconHtml = this.getHeaderIconHtml();
-        const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
         const scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
 
-        let $root = $('<span>').text(scopeLabel);
+        let root = document.createElement('span');
+        root.text = scopeLabel;
+        root.style.userSelect = 'none';
 
         if (!this.options.noHeaderLinks && !this.rootLinkDisabled) {
-            $root =
-                $('<span>')
-                    .append(
-                        $('<a>')
-                            .attr('href', rootUrl)
-                            .addClass('action')
-                            .attr('data-action', 'navigateToRoot')
-                            .text(scopeLabel)
-                    );
+            const a = document.createElement('a');
+            a.href = this.rootUrl;
+            a.classList.add('action');
+            a.dataset.action = 'navigateToRoot';
+            a.text = scopeLabel;
+
+            root = document.createElement('span');
+            root.style.userSelect = 'none';
+            root.append(a);
         }
 
-        if (headerIconHtml) {
-            $root.prepend(headerIconHtml);
+        const iconHtml = this.getHeaderIconHtml();
+
+        if (iconHtml) {
+            root.insertAdjacentHTML('afterbegin', iconHtml);
         }
 
         if (this.model.isNew()) {
-            const $create = $('<span>').text(this.getLanguage().translate('create'));
+            const create = document.createElement('span');
+            create.textContent = this.getLanguage().translate('create');
+            create.style.userSelect = 'none';
 
-            return this.buildHeaderHtml([$root, $create]);
+            return this.buildHeaderHtml([root, create]);
         }
 
-        const name = this.model.get('name') || this.model.id;
+        const name = this.model.attributes.name || this.model.id;
 
-        let $name = $('<span>').text(name);
+        let title = document.createElement('span');
+        title.textContent = name;
 
         if (!this.options.noHeaderLinks) {
-            const url = '#' + this.scope + '/view/' + this.model.id;
+            const url = `#${this.scope}/view/${this.model.id}`;
 
-            $name =
-                $('<a>')
-                    .attr('href', url)
-                    .addClass('action')
-                    .append($name);
+            const a = document.createElement('a');
+            a.href = url;
+            a.classList.add('action');
+
+            a.append(title);
+
+            title = a;
         }
 
-        return this.buildHeaderHtml([$root, $name]);
+        return this.buildHeaderHtml([root, title]);
     }
 
     /** @inheritDoc */
