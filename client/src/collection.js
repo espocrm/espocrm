@@ -58,6 +58,15 @@ import _ from 'underscore';
  */
 
 /**
+ * On model sync.
+ *
+ * @event Collection#model-sync
+ * @param {Model} model A model.
+ * @param {Record & {action?: 'fetch'|'save'|'destroy'}} o Options.
+ * @since 9.1.0
+ */
+
+/**
  * A collection.
  *
  * @mixes Bull.Events
@@ -934,10 +943,17 @@ class Collection {
     /**
      * Clone.
      *
-     * @return {import('collection').default}
+     * @param {{withModels?: boolean}} [options]
+     * @return {Collection}
      */
-    clone() {
-        const collection = new this.constructor(this.models, {
+    clone(options = {}) {
+        let models = this.models;
+
+        if (options.withModels) {
+            models = this.models.map(m => m.clone());
+        }
+
+        const collection = new this.constructor(models, {
             model: this.model,
             entityType: this.entityType,
             defs: this.defs,
@@ -1057,6 +1073,7 @@ class Collection {
 
     /** @private */
     _onModelEvent(event, model, collection, options) {
+        // @todo Revise. Never triggerred? Remove?
         if (event === 'sync' && collection !== this) {
             return;
         }

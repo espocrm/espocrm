@@ -73,8 +73,8 @@ class MultiCollection extends Collection {
     }
 
     /** @inheritDoc */
-    clone() {
-        const collection = super.clone();
+    clone(options) {
+        const collection = super.clone(options);
         collection.seeds = this.seeds;
 
         return collection;

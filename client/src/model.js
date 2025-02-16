@@ -45,7 +45,7 @@ import _ from 'underscore';
  * @event Model#sync
  * @param {Model} model A model.
  * @param {Object} response Response from backend.
- * @param {Object.<string, *>} o Options.
+ * @param {Record.<string, *> & {action?: 'fetch'|'save'|'destroy'}} o Options.
  */
 
 /**
@@ -486,7 +486,13 @@ class Model {
                 success.call(options.context, this, response, options);
             }
 
+            options.action = 'fetch';
+
             this.trigger('sync', this, response, options);
+
+            if (this.collection) {
+                this.collection.trigger('model-sync', this, options);
+            }
         };
 
         this.lastSyncPromise = this.sync('read', this, options);
@@ -534,7 +540,13 @@ class Model {
                 success.call(options.context, this, response, options);
             }
 
+            options.action = 'save';
+
             this.trigger('sync', this, response, options);
+
+            if (this.collection) {
+                this.collection.trigger('model-sync', this, options);
+            }
         };
 
         const error = options.error;
@@ -570,13 +582,13 @@ class Model {
     /**
      * Delete the record in the backend.
      *
-     * @param {{wait: boolean} & Object.<string, *>} [options] Options.
+     * @param {{wait?: boolean} & Object.<string, *>} [options] Options.
      * @returns {Promise}
      * @fires Model#sync
      * @copyright Credits to Backbone.js.
      */
-    destroy(options) {
-        options = _.clone(options || {});
+    destroy(options = {}) {
+        options = {...options}
 
         const success = options.success;
 
@@ -595,7 +607,15 @@ class Model {
             }
 
             if (!this.isNew()) {
-                this.trigger('sync', this, response, options);
+                const syncOptions = {...options};
+
+                syncOptions.action = 'destroy';
+
+                this.trigger('sync', this, response, syncOptions);
+
+                if (this.collection) {
+                    this.collection.trigger('model-sync', this, syncOptions);
+                }
             }
         };
 

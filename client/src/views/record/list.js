@@ -2149,18 +2149,39 @@ class ListRecordView extends View {
      * @param {string} id
      */
     processLinkClick(id) {
-        const model = this.collection.get(id);
         const scope = this.getModelScope(id);
 
-        const clonedModel = model.clone();
+        const collection = this.collection.clone({withModels: true});
 
         const options = {
             id: id,
-            model: clonedModel,
+            model: collection.get(id),
         };
 
-        this.listenTo(clonedModel, 'sync', () => {
-            model.setMultiple(clonedModel.getClonedAttributes(), {sync: true});
+        this.listenTo(collection, 'model-sync', (/** Model */m, /** Record */o) => {
+            const model = this.collection.get(m.id);
+
+            if (!model) {
+                return;
+            }
+
+            if (o.action === 'fetch' || o.action === 'save') {
+                model.setMultiple(m.getClonedAttributes(), o);
+            }
+        });
+
+        this.listenTo(collection, 'sync', (c, r, /** Record */o) => {
+            if (!o.more) {
+                return;
+            }
+
+            const moreModels = collection.models.slice(this.collection.length);
+
+            this.collection.add(moreModels);
+            this.collection.total = collection.total;
+            this.collection.lengthCorrection = collection.lengthCorrection;
+
+            this.collection.trigger('sync', o);
         });
 
         if (this.options.keepCurrentRootUrl) {
