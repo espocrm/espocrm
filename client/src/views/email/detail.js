@@ -560,22 +560,28 @@ class EmailDetailView extends DetailView {
             this.model.attributes.groupStatusFolder === 'Archive' :
             this.model.attributes.inArchive;
 
-        const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+        const scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
 
-        const headerIconHtml = this.getHeaderIconHtml();
+        let root = document.createElement('span');
+        root.text = scopeLabel;
+        root.style.userSelect = 'none';
 
-        let $root = $('<a>')
-            .attr('href', rootUrl)
-            .attr('data-action', 'navigateToRoot')
-            .addClass('action')
-            .text(
-                this.getLanguage().translate(this.model.name, 'scopeNamesPlural')
-            );
+        if (!this.rootLinkDisabled) {
+            const a = document.createElement('a');
+            a.href = this.rootUrl;
+            a.classList.add('action');
+            a.dataset.action = 'navigateToRoot';
+            a.text = scopeLabel;
 
-        if (headerIconHtml) {
-            $root = $('<span>')
-                .append(headerIconHtml, $root)
-                .get(0).innerHTML;
+            root = document.createElement('span');
+            root.style.userSelect = 'none';
+            root.append(a);
+        }
+
+        const iconHtml = this.getHeaderIconHtml();
+
+        if (iconHtml) {
+            root.insertAdjacentHTML('afterbegin', iconHtml);
         }
 
         let styleClass = '';
@@ -589,7 +595,7 @@ class EmailDetailView extends DetailView {
         }
 
         return this.buildHeaderHtml([
-            $root,
+            root,
             $('<span>')
                 .addClass('font-size-flexible title')
                 .addClass(styleClass)
