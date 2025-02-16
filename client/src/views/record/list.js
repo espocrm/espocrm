@@ -3752,6 +3752,7 @@ class ListRecordView extends View {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Checkboxes are disabled.
      *
