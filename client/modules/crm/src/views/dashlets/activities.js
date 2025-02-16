@@ -175,13 +175,17 @@ class ActivitiesDashletView extends BaseDashletView {
         this.collection.fetch();
     }
 
-    actionRefresh() {
-        this.collection.fetch({
+    async actionRefresh() {
+        Espo.Ui.notify(' ... ');
+
+        await this.collection.fetch({
             previousTotal: this.collection.total,
             previousDataList: this.collection.models.map(model => {
                 return Espo.Utils.cloneDeep(model.attributes);
             }),
         });
+
+        Espo.Ui.notify();
     }
 
     // noinspection JSUnusedGlobalSymbols

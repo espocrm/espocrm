@@ -34,12 +34,16 @@ class StreamDashletView extends BaseDashletView {
 
     templateContent = '<div class="list-container">{{{list}}}</div>'
 
-    actionRefresh() {
+    async actionRefresh() {
         if (!this.getRecordView()) {
             return;
         }
 
-        this.getRecordView().showNewRecords();
+        Espo.Ui.notify(' ... ');
+
+        await this.getRecordView().showNewRecords();
+
+        Espo.Ui.notify();
     }
 
     afterRender() {

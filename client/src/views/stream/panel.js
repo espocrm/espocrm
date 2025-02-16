@@ -852,10 +852,16 @@ class PanelStreamView extends RelationshipPanelView {
         return this.getView('list')
     }
 
-    actionRefresh() {
-        if (this.getListView()) {
-            this.getListView().showNewRecords();
+    async actionRefresh() {
+        if (!this.getListView()) {
+            return;
         }
+
+        Espo.Ui.notify(' ... ');
+
+        await this.getListView().showNewRecords();
+
+        Espo.Ui.notify();
     }
 
     preview() {
