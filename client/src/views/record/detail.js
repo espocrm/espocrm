@@ -2296,6 +2296,10 @@ class DetailRecordView extends BaseRecordView {
         this.setConfirmLeaveOut(false);
     }
 
+    /**
+     * @protected
+     * @param {number} indexOfRecord
+     */
     switchToModelByIndex(indexOfRecord) {
         const collection = this.model.collection || this.collection;
 
@@ -2314,7 +2318,7 @@ class DetailRecordView extends BaseRecordView {
         const id = model.id;
         const scope = this.entityType || this.scope;
 
-        this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
+        this.getRouter().navigate(`#${scope}/view/${id}`, {trigger: false});
 
         this.getRouter().dispatch(scope, 'view', {
             id: id,
