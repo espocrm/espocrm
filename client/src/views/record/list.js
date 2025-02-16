@@ -3210,6 +3210,10 @@ class ListRecordView extends View {
             .get(0).outerHTML;
     }
 
+    /**
+     * @protected
+     * @param {{id?: string, scope?: string}} [data]
+     */
     actionQuickView(data) {
         data = data || {};
 
@@ -3244,7 +3248,7 @@ class ListRecordView extends View {
         }
 
         if (this.quickDetailDisabled) {
-            this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: true});
+            this.getRouter().navigate(`#${scope}/view/${id}`, {trigger: true});
 
             return;
         }
