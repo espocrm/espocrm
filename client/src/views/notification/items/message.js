@@ -27,7 +27,6 @@
  ************************************************************************/
 
 import BaseNotificationItemView from 'views/notification/items/base';
-import {marked} from 'marked';
 import DOMPurify from 'dompurify';
 
 class MessageNotificationItemView extends BaseNotificationItemView {
@@ -45,7 +44,8 @@ class MessageNotificationItemView extends BaseNotificationItemView {
         const data = /** @type {Object.<string, *>} */this.model.get('data') || {};
 
         const messageRaw = this.model.get('message') || data.message || '';
-        const message = marked.parse(messageRaw);
+
+        const message = this.getHelper().transformMarkdownText(messageRaw);
 
         this.messageTemplate = DOMPurify.sanitize(message, {}).toString();
 
