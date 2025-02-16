@@ -758,20 +758,23 @@ class ListWithCategories extends ListView {
             return super.getHeader();
         }
 
-        let rootUrl = '#' + this.scope;
+        let rootUrl = `#${this.scope}`;
 
         if (this._primaryFilter) {
-            rootUrl += '/list/primaryFilter=' + this.getHelper().escapeString(this._primaryFilter);
+            const filterPart = this.getHelper().escapeString(this._primaryFilter);
+
+            rootUrl += `/list/primaryFilter=${filterPart}`;
         }
 
-        const $root = $('<a>')
-            .attr('href', rootUrl)
-            .addClass('action')
-            .text(this.translate(this.scope, 'scopeNamesPlural'))
-            .addClass('action')
-            .attr('data-action', 'openCategory');
+        const root = document.createElement('a');
+        root.href = rootUrl;
+        root.textContent = this.translate(this.scope, 'scopeNamesPlural');
+        root.dataset.action = 'openCategory';
+        root.classList.add('action');
+        root.style.userSelect = 'none';
 
-        const list = [$root];
+        /** @type {*[]} */
+        const list = [root];
 
         const currentName = this.nestedCategoriesCollection.categoryData.name;
         const upperId = this.nestedCategoriesCollection.categoryData.upperId;
@@ -782,26 +785,35 @@ class ListWithCategories extends ListView {
         }
 
         if (upperId) {
-            let url = rootUrl + '/' + 'list/categoryId=' + this.getHelper().escapeString(upperId);
+            const upperIdPart = this.getHelper().escapeString(upperId);
+
+            let url = `${rootUrl}/list/categoryId=${upperIdPart}`;
 
             if (this._primaryFilter) {
-                url += '&primaryFilter=' + this.getHelper().escapeString(this._primaryFilter);
+                const filterPart = this.getHelper().escapeString(this._primaryFilter);
+
+                url += `&primaryFilter=${filterPart}`;
             }
 
-            const $folder = $('<a>')
-                .attr('href', url)
-                .text(upperName)
-                .addClass('action')
-                .attr('data-action', 'openCategory')
-                .attr('data-id', upperId)
-                .attr('data-name', upperName);
+            const folder = document.createElement('a');
+            folder.href = url;
+            folder.textContent = upperName;
+            folder.classList.add('action');
+            folder.dataset.action = 'openCategory';
+            folder.dataset.id = upperId;
+            folder.dataset.name = upperName;
+            folder.style.userSelect = 'none';
 
-            list.push($folder);
+            list.push(folder);
         }
 
-        const $last = $('<span>').text(currentName);
+        const last = document.createElement('span');
+        last.textContent = currentName;
+        last.dataset.action = 'fullRefresh';
+        last.style.cursor = 'pointer';
+        last.style.userSelect = 'none';
 
-        list.push($last);
+        list.push(last);
 
         return this.buildHeaderHtml(list);
     }

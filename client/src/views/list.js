@@ -254,6 +254,8 @@ class ListView extends MainView {
         if (this._fromAdmin || this._primaryFilter) {
             this.keepCurrentRootUrl = true;
         }
+
+        this.addActionHandler('fullRefresh', () => this.actionFullRefresh());
     }
 
     setupFinal() {
@@ -720,32 +722,42 @@ class ListView extends MainView {
      * @inheritDoc
      */
     getHeader() {
-        const $root = $('<span>')
-            .text(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
-
         if (this._fromAdmin) {
-            const $root = $('<a>')
-                .attr('href', '#Admin')
-                .text(this.translate('Administration', 'labels', 'Admin'));
+            const root = document.createElement('a');
+            root.href = '#Admin';
+            root.textContent = this.translate('Administration', 'labels', 'Admin');
+            root.style.userSelect = 'none';
 
-            const $scope = $('<span>')
-                .text(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
+            const scope = document.createElement('span');
+            scope.textContent = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
+            scope.dataset.action = 'fullRefresh';
+            scope.style.cursor = 'pointer';
+            scope.style.userSelect = 'none';
 
-            return this.buildHeaderHtml([$root, $scope]);
+            return this.buildHeaderHtml([root, scope]);
         }
 
-        const headerIconHtml = this.getHeaderIconHtml();
+        const root = document.createElement('span');
+        root.textContent = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
 
-        if (headerIconHtml) {
-            $root.prepend(headerIconHtml);
+        root.title = this.translate('clickToRefresh', 'messages');
+        root.dataset.action = 'fullRefresh';
+        root.style.cursor = 'pointer';
+        root.style.userSelect = 'none';
+
+        const iconHtml = this.getHeaderIconHtml();
+
+        if (iconHtml) {
+            root.insertAdjacentHTML('afterbegin', iconHtml);
         }
 
         if (this._primaryFilter) {
             const label = this.translate(this._primaryFilter, 'presetFilters', this.entityType);
-            $root.append(' · ' + label);
+
+            root.insertAdjacentHTML('afterend', ' · ' + label);
         }
 
-        return this.buildHeaderHtml([$root]);
+        return this.buildHeaderHtml([root]);
     }
 
     /**
@@ -972,6 +984,17 @@ class ListView extends MainView {
      */
     handleShortcutKeyControlArrowRight(e) {
         this.getRecordView().trigger('request-page', 'next');
+    }
+
+    /**
+     * @protected
+     */
+    async actionFullRefresh() {
+        Espo.Ui.notify(' ... ');
+
+        await this.collection.fetch();
+
+        Espo.Ui.notify();
     }
 }
 

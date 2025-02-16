@@ -152,6 +152,8 @@ class DetailView extends MainView {
         this.initFollowButtons();
         this.initStarButtons();
         this.initRedirect();
+
+        this.addActionHandler('fullRefresh', () => this.actionFullRefresh());
     }
 
     /** @inheritDoc */
@@ -572,10 +574,17 @@ class DetailView extends MainView {
             title.style.textDecoration = 'line-through';
         }
 
+        if (this.getRecordView().getMode() === 'detail') {
+            title.title = this.translate('clickToRefresh', 'messages');
+            title.dataset.action = 'fullRefresh';
+            title.style.cursor = 'pointer';
+        }
+
         const scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
 
         let root = document.createElement('span');
         root.text = scopeLabel;
+        root.style.userSelect = 'none';
 
         if (!this.rootLinkDisabled) {
             const a = document.createElement('a');
@@ -585,6 +594,7 @@ class DetailView extends MainView {
             a.text = scopeLabel;
 
             root = document.createElement('span');
+            root.style.userSelect = 'none';
             root.append(a);
         }
 
@@ -707,6 +717,35 @@ class DetailView extends MainView {
         }
 
         this.modesView.showMode(mode);
+    }
+
+    /**
+     * @protected
+     */
+    async actionFullRefresh() {
+        if (this.getRecordMode() === 'edit') {
+            return;
+        }
+
+        Espo.Ui.notify(' ... ');
+
+        await this.model.fetch();
+
+        this.model.trigger('update-all');
+
+        Espo.Ui.notify();
+    }
+
+    /**
+     * @private
+     * @return {'detail'|'edit'}
+     */
+    getRecordMode() {
+        if (this.getRecordView().getMode) {
+            return this.getRecordView().getMode();
+        }
+
+        return 'detail';
     }
 }
 
