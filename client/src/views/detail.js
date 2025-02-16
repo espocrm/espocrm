@@ -562,40 +562,41 @@ class DetailView extends MainView {
      * @inheritDoc
      */
     getHeader() {
-        const name = this.model.get('name') || this.model.id;
+        const name = this.model.attributes.name || this.model.id;
 
-        const $name =
-            $('<span>')
-                .addClass('font-size-flexible title')
-                .text(name);
+        const title = document.createElement('span');
+        title.classList.add('font-size-flexible', 'title')
+        title.textContent = name;
 
-        if (this.model.get('deleted')) {
-            $name.css('text-decoration', 'line-through');
+        if (this.model.attributes.deleted) {
+            title.style.textDecoration = 'line-through';
         }
 
-        const headerIconHtml = this.getHeaderIconHtml();
         const scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
 
-        let $root = $('<span>').text(scopeLabel);
+        let root = document.createElement('span');
+        root.text = scopeLabel;
 
         if (!this.rootLinkDisabled) {
-            $root = $('<span>')
-                .append(
-                    $('<a>')
-                        .attr('href', this.rootUrl)
-                        .addClass('action')
-                        .attr('data-action', 'navigateToRoot')
-                        .text(scopeLabel)
-                );
+            const a = document.createElement('a');
+            a.href = this.rootUrl;
+            a.classList.add('action');
+            a.dataset.action = 'navigateToRoot';
+            a.text = scopeLabel;
+
+            root = document.createElement('span');
+            root.append(a);
         }
 
-        if (headerIconHtml) {
-            $root.prepend(headerIconHtml);
+        const iconHtml = this.getHeaderIconHtml();
+
+        if (iconHtml) {
+            root.insertAdjacentHTML('afterbegin', iconHtml);
         }
 
         return this.buildHeaderHtml([
-            $root,
-            $name,
+            root,
+            title,
         ]);
     }
 
