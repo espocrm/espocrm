@@ -2152,10 +2152,16 @@ class ListRecordView extends View {
         const model = this.collection.get(id);
         const scope = this.getModelScope(id);
 
+        const clonedModel = model.clone();
+
         const options = {
             id: id,
-            model: model,
+            model: clonedModel,
         };
+
+        this.listenTo(clonedModel, 'sync', () => {
+            model.setMultiple(clonedModel.getClonedAttributes(), {sync: true});
+        });
 
         if (this.options.keepCurrentRootUrl) {
             options.rootUrl = this.getRouter().getCurrentUrl();
