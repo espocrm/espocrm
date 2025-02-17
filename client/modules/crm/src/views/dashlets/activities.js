@@ -175,8 +175,23 @@ class ActivitiesDashletView extends BaseDashletView {
         this.collection.fetch();
     }
 
-    async actionRefresh() {
-        Espo.Ui.notify(' ... ');
+    actionRefresh() {
+        this.refreshInternal();
+    }
+
+    autoRefresh() {
+        this.refreshInternal({skipNotify: true});
+    }
+
+    /**
+     * @private
+     * @param {{skipNotify?: boolean}} [options]
+     * @return {Promise<void>}
+     */
+    async refreshInternal(options = {}) {
+        if (!options.skipNotify) {
+            Espo.Ui.notify(' ... ');
+        }
 
         await this.collection.fetch({
             previousTotal: this.collection.total,
@@ -185,7 +200,9 @@ class ActivitiesDashletView extends BaseDashletView {
             }),
         });
 
-        Espo.Ui.notify();
+        if (!options.skipNotify) {
+            Espo.Ui.notify();
+        }
     }
 
     // noinspection JSUnusedGlobalSymbols

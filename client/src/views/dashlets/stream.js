@@ -34,16 +34,32 @@ class StreamDashletView extends BaseDashletView {
 
     templateContent = '<div class="list-container">{{{list}}}</div>'
 
-    async actionRefresh() {
+    actionRefresh() {
+        this.refreshInternal();
+    }
+
+    autoRefresh() {
+        this.refreshInternal({skipNotify: true});
+    }
+    /**
+     * @private
+     * @param {{skipNotify?: boolean}} [options]
+     * @return {Promise<void>}
+     */
+    async refreshInternal(options = {}) {
         if (!this.getRecordView()) {
             return;
         }
 
-        Espo.Ui.notify(' ... ');
+        if (!options.skipNotify) {
+            Espo.Ui.notify(' ... ');
+        }
 
         await this.getRecordView().showNewRecords();
 
-        Espo.Ui.notify();
+        if (!options.skipNotify) {
+            Espo.Ui.notify();
+        }
     }
 
     afterRender() {

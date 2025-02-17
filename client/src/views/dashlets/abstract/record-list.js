@@ -176,14 +176,29 @@ class RecordListDashletView extends BaseDashletView {
         }
     }
 
-    async actionRefresh() {
+    actionRefresh() {
+        this.refreshInternal();
+    }
+
+    autoRefresh() {
+        this.refreshInternal({skipNotify: true});
+    }
+
+    /**
+     * @private
+     * @param {{skipNotify?: boolean}} [options]
+     * @return {Promise<void>}
+     */
+    async refreshInternal(options = {}) {
         if (!this.collection) {
             return;
         }
 
-        this.collection.where = this.searchManager.getWhere();
+        if (!options.skipNotify) {
+            Espo.Ui.notify(' ... ');
+        }
 
-        Espo.Ui.notify(' ... ');
+        this.collection.where = this.searchManager.getWhere();
 
         await this.collection.fetch({
             previousDataList: this.collection.models.map(model => {
@@ -191,7 +206,9 @@ class RecordListDashletView extends BaseDashletView {
             }),
         });
 
-        Espo.Ui.notify();
+        if (!options.skipNotify) {
+            Espo.Ui.notify();
+        }
     }
 
     // noinspection JSUnusedGlobalSymbols
