@@ -70,9 +70,43 @@
     }
 }
 
-.selectize-control.multi .selectize-input > div {
-    border-radius: var(--border-radius);
-    padding: var(--1px) var(--4px);
+.selectize-control.multi .selectize-input {
+    > div {
+        border-radius: var(--border-radius);
+        padding: var(--1px) var(--4px);
+
+        &:not(.active) {
+            &.primary {
+                > span {
+                    color: var(--state-primary-text);
+                }
+            }
+
+            &.warning {
+                > span {
+                    color: var(--state-warning-text);
+                }
+            }
+
+            &.danger {
+                > span {
+                    color: var(--state-danger-text);
+                }
+            }
+
+            &.info {
+                > span {
+                    color: var(--state-info-text);
+                }
+            }
+
+            &.success {
+                > span {
+                    color: var(--state-success-text);
+                }
+            }
+        }
+    }
 }
 
 .selectize-control.single {

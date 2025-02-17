@@ -33,7 +33,7 @@ import Selectize from 'lib!selectize';
 /**
  * @typedef module:ui/multi-select~Options
  * @type {Object}
- * @property {{value: string, text: string}[]} items
+ * @property {{value: string, text: string, style?: string}[]} items
  * @property {string} [delimiter=':,:']
  * @property {boolean} [restoreOnBackspace=false]
  * @property {boolean} [removeButton=true]
@@ -68,23 +68,25 @@ const MultiSelect = {
 
         options = MultiSelect.applyDefaultOptions(options);
 
-        const plugins = [];
+        const plugins = {};
 
         if (options.removeButton) {
-            plugins.push('remove_button');
+            plugins.remove_button = {title: ''};
         }
 
         if (options.draggable) {
-            plugins.push('drag_drop');
+            plugins.drag_drop = {};
         }
 
         if (options.restoreOnBackspace) {
             MultiSelect.loadRestoreOnBackspacePlugin();
-            plugins.push('restore_on_backspace_espo')
+
+            plugins.restore_on_backspace_espo = {};
         }
 
         MultiSelect.loadBypassCtrlEnterPlugin();
-        plugins.push('bypass_ctrl_enter');
+
+        plugins.bypass_ctrl_enter = {};
 
         const selectizeOptions = {
             options: options.items,
@@ -139,24 +141,36 @@ const MultiSelect = {
             };
         }
 
+        selectizeOptions.render = {};
+
         if (options.allowCustomOptions) {
             selectizeOptions.persist = false;
             selectizeOptions.create = options.create;
-            // noinspection JSUnusedGlobalSymbols
-            selectizeOptions.render = {
-                option_create: data => {
-                    return $('<div>')
-                        .addClass('create')
-                        .append(
-                            $('<span>')
-                                .text(data.input)
-                                .addClass('text-bold')
-                        )
-                        .append('&hellip;')
-                        .get(0).outerHTML;
-                },
-            };
+
+            selectizeOptions.render.option_create = data => {
+                return $('<div>')
+                    .addClass('create')
+                    .append(
+                        $('<span>')
+                            .text(data.input)
+                            .addClass('text-bold')
+                    )
+                    .append('&hellip;')
+                    .get(0).outerHTML;
+            }
         }
+
+        const styleMap = (options.items || []).reduce((o, it) => ({
+            [it.value]: it.style,
+            ...o,
+        }), {});
+
+        selectizeOptions.render.item = (/** {text: string, value: string} */data, escape) => {
+            const text = escape(data.text);
+            const style = styleMap[data.value] || '';
+
+            return `<div class="${style}"><span>${text}</span> <a href="javascript:" class="remove">&times;</a></div>`;
+        };
 
         $el.selectize(selectizeOptions);
     },

@@ -485,6 +485,7 @@ class ArrayFieldView extends BaseFieldView {
             items.push({
                 value: value,
                 text: label,
+                style: this.styleMap[value] || undefined,
             });
         });
 

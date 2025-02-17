@@ -181,6 +181,7 @@ class MultiEnumFieldView extends ArrayFieldView {
                 items.push({
                     value: value,
                     text: this.translateValueToEditLabel(originalValue),
+                    style: this.styleMap[value] || undefined,
                 });
             });
 
