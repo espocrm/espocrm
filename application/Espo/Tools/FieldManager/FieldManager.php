@@ -39,9 +39,7 @@ use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
 use Espo\Core\Utils\Util;
-
 use Espo\ORM\Defs\Params\FieldParam;
-use Espo\ORM\Type\AttributeType;
 use Espo\Tools\EntityManager\NameUtil;
 use RuntimeException;
 use stdClass;
