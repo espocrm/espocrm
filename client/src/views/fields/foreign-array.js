@@ -35,14 +35,14 @@ class ForeignArrayFieldView extends ArrayFieldView {
     setupOptions() {
         this.params.options = [];
 
-        let field = this.params.field;
-        let link = this.params.link;
+        const field = this.params.field;
+        const link = this.params.link;
 
         if (!field || !link) {
             return;
         }
 
-        let scope = this.getMetadata().get(['entityDefs', this.model.entityType, 'links', link, 'entity']);
+        const scope = this.getMetadata().get(['entityDefs', this.model.entityType, 'links', link, 'entity']);
 
         if (!scope) {
             return;

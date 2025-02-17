@@ -34,15 +34,14 @@ class ForeignBoolFieldView extends BoolFieldView {
     type = 'foreign'
 
     setup() {
-        super.setup();
+        const helper = new Helper(this);
+        const foreignParams = helper.getForeignParams();
 
-        let helper = new Helper(this);
-
-        let foreignParams = helper.getForeignParams();
-
-        for (let param in foreignParams) {
+        for (const param in foreignParams) {
             this.params[param] = foreignParams[param];
         }
+
+        super.setup();
     }
 }
 
