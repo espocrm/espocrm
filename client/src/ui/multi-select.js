@@ -167,10 +167,31 @@ const MultiSelect = {
 
         selectizeOptions.render.item = (/** {text: string, value: string} */data, escape) => {
             const text = escape(data.text);
-            const style = styleMap[data.value] || '';
+            const style = escape(styleMap[data.value] || '');
 
-            return `<div class="${style}"><span>${text}</span> <a href="javascript:" class="remove">&times;</a></div>`;
+            return `<div class="item ${style}"><span>${text}</span> ` +
+                `<a href="javascript:" class="remove">&times;</a></div>`;
         };
+
+        selectizeOptions.render.option = (/** {text: string, value: string} */data, escape) => {
+            const value = data.value;
+
+            let classes = '';
+
+            if (value === '') {
+                classes += ' selectize-dropdown-emptyoptionlabel';
+            }
+
+            const style = styleMap[data.value];
+
+            if (style) {
+                classes += ' ' + escape('text-' + style);
+            }
+
+            const text = escape(data.text);
+
+            return `<div class="option ${classes}">${text}</div>`;
+        }
 
         $el.selectize(selectizeOptions);
     },
