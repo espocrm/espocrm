@@ -37,12 +37,15 @@ export default class extends DynamicLogicConditionsStringItemBaseView {
 
         const viewName = 'views/fields/link';
 
+        const foreignScope = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'entity']) ||
+            this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'entity'])
+
         this.createView('value', viewName, {
             model: this.model,
             name: 'link',
             selector: `[data-view-key="${key}"]`,
-            foreignScope: this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'entity']) ||
-                this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'entity'])
+            readOnly: true,
+            foreignScope: foreignScope,
         });
     }
 }

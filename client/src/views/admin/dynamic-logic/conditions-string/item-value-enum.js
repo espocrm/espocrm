@@ -44,6 +44,7 @@ export default class extends DynamicLogicConditionsStringItemBaseView {
             params: {
                 options: this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'options']) || []
             },
+            readOnly: true,
         });
     }
 }
