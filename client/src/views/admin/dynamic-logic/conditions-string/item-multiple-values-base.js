@@ -72,6 +72,7 @@ export default class extends DynamicLogicConditionsStringItemBaseView {
                 model: model,
                 name: this.field,
                 selector: `[data-view-key="${key}"]`,
+                readOnly: true,
             });
         });
     }
