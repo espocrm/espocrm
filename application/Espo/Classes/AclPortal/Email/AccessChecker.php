@@ -68,7 +68,7 @@ class AccessChecker implements AccessEntityCREDSChecker
 
         assert($entity instanceof CoreEntity);
 
-        $userIdList = $entity->getLinkMultipleIdLIst('users');
+        $userIdList = $entity->getLinkMultipleIdList('users');
 
         if (is_array($userIdList) && in_array($user->getId(), $userIdList)) {
             return true;
