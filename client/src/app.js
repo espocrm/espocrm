@@ -1009,9 +1009,15 @@ class App {
             return;
         }
 
-        const stylesheetPath = this.basePath + this.themeManager.getStylesheet();
+        const path = this.basePath + this.themeManager.getStylesheet();
 
-        $('#main-stylesheet').attr('href', stylesheetPath);
+        const element = document.querySelector('#main-stylesheet');
+
+        if (!element) {
+            return;
+        }
+
+        element.setAttribute('href', path);
     }
 
     /**
