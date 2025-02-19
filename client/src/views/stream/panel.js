@@ -30,6 +30,7 @@ import RelationshipPanelView from 'views/record/panels/relationship';
 import _ from 'underscore';
 import NotePostFieldView from 'views/note/fields/post';
 import ViewRecordHelper from 'view-record-helper';
+import TextFieldView from 'views/fields/text';
 
 class PanelStreamView extends RelationshipPanelView {
 
@@ -720,7 +721,7 @@ class PanelStreamView extends RelationshipPanelView {
         Espo.Ui.success(this.translate('Posted'));
 
         this.collection.fetchNew()
-            .then(() => {});
+            .then(() => this.afterPostAndFetch(model));
 
         textAreaElement.disabled = false;
 
@@ -734,6 +735,28 @@ class PanelStreamView extends RelationshipPanelView {
         this.getSessionStorage().clear(this.storageTextKey);
         this.getSessionStorage().clear(this.storageAttachmentsKey);
         this.getSessionStorage().clear(this.storageIsInernalKey);
+    }
+
+    /**
+     * @private
+     * @param {import('model').default} model
+     */
+    afterPostAndFetch(model) {
+        const rowView = this.getListView().getView(model.id);
+
+        if (!rowView) {
+            return;
+        }
+
+        const postView = rowView.getView('post');
+
+        if (!(postView instanceof TextFieldView)) {
+            console.error('Post field not obtained.')
+
+            return;
+        }
+
+        postView.seeMore();
     }
 
     /**
