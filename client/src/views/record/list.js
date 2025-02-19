@@ -2165,7 +2165,7 @@ class ListRecordView extends View {
                 return;
             }
 
-            if (o.action === 'fetch' || o.action === 'save') {
+            if (o.action === 'set' || o.action === 'fetch' || o.action === 'save') {
                 model.setMultiple(m.getClonedAttributes(), o);
             }
         });

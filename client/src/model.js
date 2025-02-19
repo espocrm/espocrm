@@ -276,7 +276,9 @@ class Model {
      * @param {{
      *     silent?: boolean,
      *     unset?: boolean,
+     *     sync?: boolean,
      * } & Object.<string, *>} [options] Options. `silent` won't trigger a `change` event.
+     *     `sync` can be used to emulate syncing.
      * @return {this}
      * @fires Model#change Unless `{silent: true}`.
      * @copyright Credits to Backbone.js.
@@ -327,6 +329,14 @@ class Model {
 
             for (let i = 0; i < changes.length; i++) {
                 this.trigger('change:' + changes[i], this, current[changes[i]], options);
+            }
+        }
+
+        if (options.sync) {
+            if (this.collection) {
+                const modelSyncOptions = {...options, action: 'set'};
+
+                this.collection.trigger('model-sync', this, modelSyncOptions);
             }
         }
 
