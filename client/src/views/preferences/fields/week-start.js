@@ -42,6 +42,6 @@ export default class extends EnumIntFieldView {
 
         const defaultWeekStart = this.getConfig().get('weekStart');
 
-        this.translatedOptions[-1] = `${this.translate('Default')} (${dayList[defaultWeekStart]})`;
+        this.translatedOptions[-1] = `${this.translate('Default')} · ${dayList[defaultWeekStart]}`;
     }
 }

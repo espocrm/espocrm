@@ -35,6 +35,6 @@ export default class extends EnumFieldView {
         this.params.options.unshift('');
 
         this.translatedOptions = this.translatedOptions || {};
-        this.translatedOptions[''] = `${this.translate('Default')} (${this.getConfig().get('timeFormat')})`;
+        this.translatedOptions[''] = `${this.translate('Default')} · ${this.getConfig().get('timeFormat')}`;
     }
 }

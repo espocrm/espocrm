@@ -51,7 +51,7 @@ export default class extends ThemeSettingsFieldView {
         const defaultTheme = this.getConfig().get('theme');
         const defaultTranslated = this.translatedOptions[defaultTheme] || defaultTheme;
 
-        this.translatedOptions[''] = `${this.translate('Default')} (${defaultTranslated})`;
+        this.translatedOptions[''] = `${this.translate('Default')} · ${defaultTranslated}`;
     }
 
     afterRenderDetail() {

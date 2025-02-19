@@ -45,6 +45,6 @@ export default class extends EnumFieldView {
         const defaultTranslated = this.translatedOptions[this.getConfig().get('language')] ||
             this.getConfig().get('language');
 
-        this.translatedOptions[''] = `${this.translate('Default')} (${defaultTranslated})`;
+        this.translatedOptions[''] = `${this.translate('Default')} · ${defaultTranslated}`;
     }
 }
