@@ -148,6 +148,13 @@
         "themeParams": {
             "type": "jsonObject"
         },
+        "pageContentWidth": {
+            "type": "enum",
+            "options": [
+                "",
+                "Wide"
+            ]
+        },
         "useCustomTabList": {
             "type": "bool",
             "default": false

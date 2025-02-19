@@ -100,7 +100,7 @@
         "rows": [
             [
                 {"name": "theme"},
-                false
+                {"name": "pageContentWidth"}
             ]
         ]
     },

@@ -497,6 +497,8 @@ class App {
                 this.loadStylesheet();
             }
 
+            this.applyUserStyle();
+
             if (this.anotherUser) {
                 this.viewHelper.webSocketManager = null;
                 this.webSocketManager = null;
@@ -1018,6 +1020,17 @@ class App {
         }
 
         element.setAttribute('href', path);
+    }
+
+    /**
+     * @private
+     */
+    applyUserStyle() {
+        const pageContentWidth = this.preferences.get('pageContentWidth');
+
+        if (pageContentWidth) {
+            document.body.dataset.contentWidth = pageContentWidth;
+        }
     }
 
     /**

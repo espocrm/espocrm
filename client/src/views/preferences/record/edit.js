@@ -174,11 +174,12 @@ class PreferencesEditRecordView extends EditRecordView {
             this.hideField('theme');
         }
 
-        this.on('save', initialAttributes => {
+        this.on('save', /** Record */initialAttributes => {
             if (
                 this.model.get('language') !== initialAttributes.language ||
                 this.model.get('theme') !== initialAttributes.theme ||
-                (this.model.get('themeParams') || {}).navbar !== (initialAttributes.themeParams || {}).navbar
+                (this.model.get('themeParams') || {}).navbar !== (initialAttributes.themeParams || {}).navbar ||
+                this.model.get('pageContentWidth') !== initialAttributes.pageContentWidth
             ) {
                 this.setConfirmLeaveOut(false);
 

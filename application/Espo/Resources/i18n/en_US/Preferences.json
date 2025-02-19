@@ -22,6 +22,7 @@
         "defaultReminders": "Default Reminders",
         "defaultRemindersTask": "Default Reminders for Tasks",
         "theme": "Theme",
+        "pageContentWidth": "Content Width",
         "useCustomTabList": "Custom Tab List",
         "addCustomTabs": "Add Custom Tabs",
         "tabList": "Tab List",
@@ -44,6 +45,10 @@
         "weekStart": {
             "0": "Sunday",
             "1": "Monday"
+        },
+        "pageContentWidth": {
+            "": "Normal",
+            "Wide": "Wide"
         }
     },
     "labels": {
