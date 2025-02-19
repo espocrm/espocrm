@@ -662,73 +662,78 @@ class PanelStreamView extends RelationshipPanelView {
     /**
      * @private
      */
-    post() {
+    async post() {
         this.postFieldView.fetchToModel();
 
         /** @type {string} */
         const message = this.seed.attributes.post || '';
 
-        this.disablePostButton();
-
         const textAreaElement = this.postFieldView.getTextAreaElement();
 
+        this.disablePostButton();
         textAreaElement.disabled = true;
 
-        this.getModelFactory().create('Note', model => {
-            if (this.getAttachmentsFieldView().validateReady()) {
-                textAreaElement.disabled = false;
-                this.enablePostButton();
+        const model = await this.getModelFactory().create('Note');
 
-                return;
-            }
+        if (this.getAttachmentsFieldView().validateReady()) {
+            textAreaElement.disabled = false;
+            this.enablePostButton();
 
-            if (message.trim() === '' && (this.seed.get('attachmentsIds') || []).length === 0) {
-                Espo.Ui.error(this.translate('Post cannot be empty'))
+            return;
+        }
 
-                textAreaElement.disabled = false;
-                this.controlPostButtonAvailability();
+        /** @type {string[]} */
+        const attachmentIds = this.seed.get('attachmentsIds') || [];
 
-                textAreaElement.focus();
+        if (message.trim() === '' && attachmentIds.length === 0) {
+            Espo.Ui.error(this.translate('Post cannot be empty'))
 
-                return;
-            }
+            textAreaElement.disabled = false;
+            this.controlPostButtonAvailability();
 
-            model.set('post', message);
-            model.set('attachmentsIds', Espo.Utils.clone(this.seed.get('attachmentsIds') || []));
-            model.set('type', 'Post');
-            model.set('isInternal', this.isInternalNoteMode);
+            textAreaElement.focus();
 
-            this.prepareNoteForPost(model);
+            return;
+        }
 
-            this._justPosted = true;
-            setTimeout(() => this._justPosted = false, 1000);
+        model.set('post', message || null);
+        model.set('attachmentsIds', [...attachmentIds]);
+        model.set('type', 'Post');
+        model.set('isInternal', this.isInternalNoteMode);
 
-            Espo.Ui.notify(' ... ');
+        this.prepareNoteForPost(model);
 
-            model.save(null)
-                .then(() => {
-                    Espo.Ui.success(this.translate('Posted'));
+        this._justPosted = true;
+        setTimeout(() => this._justPosted = false, 1000);
 
-                    this.collection.fetchNew();
+        Espo.Ui.notify(' ... ');
 
-                    textAreaElement.disabled = false;
+        try {
+            await model.save(null);
+        } catch (e) {
+            this.postFieldView.getTextAreaElement().disabled = false;
+            this.controlPostButtonAvailability();
 
-                    this.disablePostingMode();
-                    this.afterPost();
+            return;
+        }
 
-                    if (this.getPreferences().get('followEntityOnStreamPost')) {
-                        this.model.set('isFollowed', true);
-                    }
+        Espo.Ui.success(this.translate('Posted'));
 
-                    this.getSessionStorage().clear(this.storageTextKey);
-                    this.getSessionStorage().clear(this.storageAttachmentsKey);
-                    this.getSessionStorage().clear(this.storageIsInernalKey);
-                })
-                .catch(() => {
-                    this.postFieldView.getTextAreaElement().disabled = false;
-                    this.controlPostButtonAvailability();
-                });
-        });
+        this.collection.fetchNew()
+            .then(() => {});
+
+        textAreaElement.disabled = false;
+
+        this.disablePostingMode();
+        this.afterPost();
+
+        if (this.getPreferences().get('followEntityOnStreamPost')) {
+            this.model.set('isFollowed', true);
+        }
+
+        this.getSessionStorage().clear(this.storageTextKey);
+        this.getSessionStorage().clear(this.storageAttachmentsKey);
+        this.getSessionStorage().clear(this.storageIsInernalKey);
     }
 
     /**
