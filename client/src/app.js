@@ -1061,79 +1061,66 @@ class App {
      * @param {module:app~UserData|null} data
      * @param {function} callback
      */
-    initUserData(data, callback) {
+    async initUserData(data, callback) {
         data = data || {};
 
         if (this.auth === null) {
             return;
         }
 
-        new Promise(resolve => {
-            if (data.user) {
-                resolve(data);
+        if (!data.user) {
+            data = await this.requestUserData();
+        }
 
-                return;
+        this.language.name = data.language;
+
+        await this.language.load();
+
+        this.dateTime.setLanguage(this.language);
+
+        const userData = data.user || null;
+        const preferencesData = data.preferences || null;
+        const aclData = data.acl || null;
+        const settingData = data.settings || {};
+
+        this.user.setMultiple(userData);
+        this.preferences.setMultiple(preferencesData);
+        this.settings.setMultiple(settingData);
+        this.acl.set(aclData);
+        this.appParams.setAll(data.appParams);
+
+        if (!this.auth) {
+            return;
+        }
+
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('GET', `${this.basePath}${this.apiUrl}/`);
+        xhr.setRequestHeader('Authorization', `Basic ${this.auth}`);
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                const arr = Base64.decode(this.auth).split(':');
+
+                this.setCookieAuth(arr[0], arr[1]);
+
+                callback();
             }
 
-            this.requestUserData(userData => {
-                data = userData;
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 401) {
+                Ui.error('Auth error');
+            }
+        };
 
-                resolve(data);
-            });
-        })
-            .then(data => {
-                this.language.name = data.language;
-
-                return this.language.load();
-            })
-            .then(() => {
-                this.dateTime.setLanguage(this.language);
-
-                const userData = data.user || null;
-                const preferencesData = data.preferences || null;
-                const aclData = data.acl || null;
-                const settingData = data.settings || {};
-
-                this.user.set(userData);
-                this.preferences.set(preferencesData);
-                this.settings.set(settingData);
-                this.acl.set(aclData);
-                this.appParams.setAll(data.appParams);
-
-                if (!this.auth) {
-                    return;
-                }
-
-                const xhr = new XMLHttpRequest();
-
-                xhr.open('GET', this.basePath + this.apiUrl + '/');
-                xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
-
-                xhr.onreadystatechange = () => {
-                    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                        const arr = Base64.decode(this.auth).split(':');
-
-                        this.setCookieAuth(arr[0], arr[1]);
-
-                        callback();
-                    }
-
-                    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 401) {
-                        Ui.error('Auth error');
-                    }
-                };
-
-                xhr.send('');
-            });
+        xhr.send('');
     }
 
     /**
      * @private
-     * @param {function} callback
+     * @return {Promise<module:app~UserData>}
      */
-    requestUserData(callback) {
-        Ajax.getRequest('App/user', {}, {appStart: true})
-            .then(callback);
+    async requestUserData() {
+        return Ajax.getRequest('App/user', {}, {appStart: true});
     }
 
     /**
@@ -1471,17 +1458,16 @@ class App {
 
     /**
      * @private
-     * @return {Promise}
      */
-    initTemplateBundles() {
+    async initTemplateBundles() {
         if (!this.responseCache) {
-            return Promise.resolve();
+            return;
         }
 
         const key = 'templateBundlesCached';
 
         if (this.cache.get('app', key)) {
-            return Promise.resolve();
+            return;
         }
 
         const files = ['client/lib/templates.tpl'];
@@ -1502,58 +1488,56 @@ class App {
             url.searchParams.append('t', this.appTimestamp);
 
             return new Promise(resolve => {
-                fetch(url)
-                    .then(response => {
-                        if (!response.ok) {
-                            console.error(`Could not fetch ${url}.`);
+                fetch(url).then(response => {
+                    if (!response.ok) {
+                        console.error(`Could not fetch ${url}.`);
+                        resolve();
+
+                        return;
+                    }
+
+                    const promiseList = [];
+
+                    response.text().then(text => {
+                        const index = text.indexOf('\n');
+
+                        if (index <= 0) {
                             resolve();
 
                             return;
                         }
 
-                        const promiseList = [];
+                        const delimiter = text.slice(0, index + 1);
+                        text = text.slice(index + 1);
 
-                        response.text().then(text => {
-                            const index = text.indexOf('\n');
+                        text.split(delimiter).forEach(item => {
+                            const index = item.indexOf('\n');
 
-                            if (index <= 0) {
-                                resolve();
+                            const file = item.slice(0, index).trim();
+                            let content = item.slice(index + 1);
 
-                                return;
-                            }
+                            // noinspection RegExpDuplicateCharacterInClass
+                            content = content.replace(/[\r|\n|\r\n]$/, '');
 
-                            const delimiter = text.slice(0, index + 1);
-                            text = text.slice(index + 1);
+                            const url = baseUrl + this.basePath + 'client/' + file;
 
-                            text.split(delimiter).forEach(item => {
-                                const index = item.indexOf('\n');
+                            const urlObj = new URL(url);
+                            urlObj.searchParams.append('r', timestamp);
 
-                                const file = item.slice(0, index).trim();
-                                let content = item.slice(index + 1);
-
-                                // noinspection RegExpDuplicateCharacterInClass
-                                content = content.replace(/[\r|\n|\r\n]$/, '');
-
-                                const url = baseUrl + this.basePath + 'client/' + file;
-
-                                const urlObj = new URL(url);
-                                urlObj.searchParams.append('r', timestamp);
-
-                                promiseList.push(
-                                    this.responseCache.put(urlObj, new Response(content))
-                                );
-                            });
+                            promiseList.push(
+                                this.responseCache.put(urlObj, new Response(content))
+                            );
                         });
-
-                        Promise.all(promiseList).then(() => resolve());
                     });
+
+                    Promise.all(promiseList).then(() => resolve());
+                });
             });
         });
 
-        return Promise.all(promiseList)
-            .then(() => {
-                this.cache.set('app', key, true);
-            });
+        await Promise.all(promiseList);
+
+        this.cache.set('app', key, true);
     }
 }
 
