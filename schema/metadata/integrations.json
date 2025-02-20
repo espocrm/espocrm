@@ -6,7 +6,10 @@
     "type": "object",
     "properties": {
         "fields": {
-            "$ref": "./entityDefs.json#/properties/fields",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "./entityDefs.json#/definitions/fieldDefs"
+            },
             "description": "Field definitions for the integration (to be available at Administration > Integrations)."
         },
         "allowUserAccounts": {
