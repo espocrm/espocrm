@@ -28,7 +28,6 @@
 
 /** @module app */
 
-import $ from 'jquery';
 import Backbone from 'backbone';
 import {Events, View as BullView, Factory as BullFactory} from 'bullbone';
 import Base64 from 'js-base64';
