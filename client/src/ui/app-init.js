@@ -49,79 +49,113 @@ function uiAppInit() {
         e.preventDefault();
     });
 
-    $document.on('show.bs.dropdown', e => {
-        if (!e.target.parentElement.classList.contains('fix-overflow')) {
-            return;
-        }
-
-        const isRight = e.target.classList.contains('pull-right');
-
-        const $ul = $(e.target.parentElement).find('.dropdown-menu');
-
-        const rect = e.target.getBoundingClientRect();
-
-        const parent = $ul.offsetParent().get(0);
-
-        if (!parent) {
-            return;
-        }
-
-        const scrollTop = parent === window.document.documentElement ?
-            (document.documentElement.scrollTop || document.body.scrollTop) :
-            parent.scrollTop;
-
-        const top = rect.top + scrollTop + e.target.getBoundingClientRect().height;
-
-        const left = isRight ?
-            rect.left - $ul.outerWidth() + rect.width:
-            rect.left
-
-        $ul.css({
-            top: top,
-            left: left,
-            right: 'auto',
-        });
+    $document.on('hidden.bs.dropdown', e => {
+        $(e.target).removeClass('dropup');
     });
 
     $document.on('show.bs.dropdown', e => {
-        const $body = $(e.target).closest('.dashlet-body');
+        let isUp;
 
-        if (!$body.length) {
+        const target = e.target;
+        const $dropdown = $(e.target).find('.dropdown-menu');
+
+        const height = $dropdown.outerHeight();
+
+        {
+            const windowHeight = $(window).height();
+            const top = e.target.getBoundingClientRect().bottom;
+
+            const spaceBelow = windowHeight - (top + height);
+
+            isUp = spaceBelow < 0 && top > height;
+
+            if (isUp) {
+                $(target).addClass('dropup');
+            } else {
+                $(target).removeClass('dropup');
+            }
+        }
+
+        const $dashletBody = $(target).closest('.dashlet-body');
+
+        if ($dashletBody.length) {
+            const $body = $dashletBody;
+
+            $(target).removeClass('dropup');
+
+            const $group = $(target);
+
+            const rect = target.getBoundingClientRect();
+            const $ul = $group.find('.dropdown-menu');
+            const isRight = target.classList.contains('pull-right');
+
+            const $toggle = $group.find('.dropdown-toggle');
+
+            $body.on('scroll.dd', () => {
+                if ($group.hasClass('open')) {
+                    // noinspection JSUnresolvedReference
+                    $toggle.dropdown('toggle');
+                    $body.off('scroll.dd');
+                }
+            })
+
+            $group.one('hidden.bs.dropdown', () => {
+                $body.off('scroll.dd');
+            });
+
+            const left = isRight ?
+                rect.left - $ul.outerWidth() + rect.width:
+                rect.left
+
+            const top = isUp ?
+                rect.top - height :
+                rect.top + target.getBoundingClientRect().height;
+
+            $ul.css({
+                position: 'fixed',
+                top: top,
+                left: left,
+                right: 'auto',
+            });
+
             return;
         }
 
-        const $group = $(e.target);
+        if (e.target.parentElement.classList.contains('fix-overflow')) {
+            console.log(1);
 
-        const rect = e.target.getBoundingClientRect();
-        const $ul = $group.find('.dropdown-menu');
-        const isRight = e.target.classList.contains('pull-right');
+            $(target).removeClass('dropup');
 
-        const $toggle = $group.find('.dropdown-toggle');
+            const isRight = e.target.classList.contains('pull-right');
 
-        $body.on('scroll.dd', () => {
-            if ($group.hasClass('open')) {
-                // noinspection JSUnresolvedReference
-                $toggle.dropdown('toggle');
-                $body.off('scroll.dd');
+            const $ul = $(e.target.parentElement).find('.dropdown-menu');
+
+            const rect = e.target.getBoundingClientRect();
+
+            const parent = $ul.offsetParent().get(0);
+
+            if (!parent) {
+                return;
             }
-        })
 
-        $group.one('hide.bs.dropdown', () => {
-            $body.off('scroll.dd');
-        });
+            const scrollTop = parent === window.document.documentElement ?
+                (document.documentElement.scrollTop || document.body.scrollTop) :
+                parent.scrollTop;
 
-        const left = isRight ?
-            rect.left - $ul.outerWidth() + rect.width:
-            rect.left
+            const top = isUp ?
+                rect.top + scrollTop - height :
+                rect.top + scrollTop + e.target.getBoundingClientRect().height;
 
-        const top = rect.top + e.target.getBoundingClientRect().height;
+            const left = isRight ?
+                rect.left - $ul.outerWidth() + rect.width:
+                rect.left
 
-        $ul.css({
-            position: 'fixed',
-            top: top,
-            left: left,
-            right: 'auto',
-        });
+            $ul.css({
+                top: top,
+                left: left,
+                right: 'auto',
+            });
+        }
     });
 }
 
