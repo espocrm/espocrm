@@ -2173,7 +2173,7 @@ class DetailRecordView extends BaseRecordView {
         const dynamicHandlerClassName = this.dynamicHandlerClassName ||
             this.getMetadata().get(['clientDefs', this.scope, 'dynamicHandler']);
 
-        const init = dynamicHandler => {
+        const init = /** import('dynamic-handler').default */dynamicHandler => {
             this.listenTo(this.model, 'change', (model, o) => {
                 if ('onChange' in dynamicHandler) {
                     dynamicHandler.onChange.call(dynamicHandler, model, o);
