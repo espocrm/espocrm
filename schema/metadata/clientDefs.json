@@ -305,6 +305,10 @@
                 }
             }
         },
+        "nameAttribute": {
+            "type": "string",
+            "description": "An entity attribute to be used to display the record name on views. As of v9.1."
+        },
         "menu": {
             "description": "Top-right menu for views (list, detail, edit). Action types: buttons, dropdowns. https://docs.espocrm.com/development/custom-buttons/",
             "type": "object",

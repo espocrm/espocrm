@@ -80,12 +80,20 @@ class EditView extends MainView {
      */
     rootUrl
 
+    /**
+     * @private
+     * @type {string}
+     */
+    nameAttribute
+
     /** @inheritDoc */
     setup() {
         this.headerView = this.options.headerView || this.headerView;
         this.recordView = this.options.recordView || this.recordView;
 
-        this.rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope
+        this.rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+
+        this.nameAttribute = this.getMetadata().get(`clientDefs.${this.entityType}.nameAttribute`) || 'name';
 
         this.setupHeader();
         this.setupRecord();
@@ -193,7 +201,7 @@ class EditView extends MainView {
             return this.buildHeaderHtml([root, create]);
         }
 
-        const name = this.model.attributes.name || this.model.id;
+        const name = this.model.attributes[this.nameAttribute] || this.model.id;
 
         let title = document.createElement('span');
         title.textContent = name;
@@ -224,7 +232,7 @@ class EditView extends MainView {
             return;
         }
 
-        const name = this.model.get('name');
+        const name = this.model.attributes[this.nameAttribute];
 
         const title = name ? name : this.getLanguage().translate(this.scope, 'scopeNames');
 

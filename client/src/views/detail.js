@@ -133,6 +133,12 @@ class DetailView extends MainView {
      */
     MODE_DETAIL = 'detail'
 
+    /**
+     * @private
+     * @type {string}
+     */
+    nameAttribute
+
     /** @inheritDoc */
     setup() {
         super.setup();
@@ -144,6 +150,8 @@ class DetailView extends MainView {
 
         this.rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
         this.isReturn = this.options.isReturn || this.options.params.isReturn || false;
+
+        this.nameAttribute = this.getMetadata().get(`clientDefs.${this.entityType}.nameAttribute`) || 'name';
 
         this.setupModes();
         this.setupHeader();
@@ -199,8 +207,8 @@ class DetailView extends MainView {
             this.updatePageTitle();
         });
 
-        this.listenTo(this.model, 'sync', (model) => {
-            if (model && model.hasChanged('name')) {
+        this.listenTo(this.model, 'sync', model => {
+            if (model && model.hasChanged(this.nameAttribute)) {
                 this.updatePageTitle();
             }
         });
@@ -217,8 +225,8 @@ class DetailView extends MainView {
             fontSizeFlexible: true,
         });
 
-        this.listenTo(this.model, 'sync', (model) => {
-            if (model && model.hasChanged('name')) {
+        this.listenTo(this.model, 'sync', model => {
+            if (model && model.hasChanged(this.nameAttribute)) {
                 if (this.getView('header')) {
                     this.getView('header').reRender();
                 }
@@ -564,7 +572,7 @@ class DetailView extends MainView {
      * @inheritDoc
      */
     getHeader() {
-        const name = this.model.attributes.name || this.model.id;
+        const name = this.model.attributes[this.nameAttribute] || this.model.id;
 
         const title = document.createElement('span');
         title.classList.add('font-size-flexible', 'title')
@@ -614,8 +622,8 @@ class DetailView extends MainView {
      * @inheritDoc
      */
     updatePageTitle() {
-        if (this.model.has('name')) {
-            this.setPageTitle(this.model.get('name') || this.model.id);
+        if (this.model.has(this.nameAttribute)) {
+            this.setPageTitle(this.model.attributes[this.nameAttribute] || this.model.id);
 
             return;
         }

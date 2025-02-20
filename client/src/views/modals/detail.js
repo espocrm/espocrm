@@ -53,6 +53,12 @@ class DetailModalView extends ModalView {
     flexibleHeaderFontSize = true
     duplicateAction = false
 
+    /**
+     * @private
+     * @type {string}
+     */
+    nameAttribute
+
     shortcutKeys = {
         /** @this DetailModalView */
         'Control+Space': function (e) {
@@ -134,6 +140,8 @@ class DetailModalView extends ModalView {
             this.editDisabled;
         this.removeDisabled = this.getMetadata().get(['clientDefs', this.entityType, 'removeDisabled']) ||
             this.removeDisabled;
+
+        this.nameAttribute = this.getMetadata().get(`clientDefs.${this.entityType}.nameAttribute`) || 'name';
 
         this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
         this.layoutName = this.options.layoutName || this.layoutName;
@@ -340,7 +348,7 @@ class DetailModalView extends ModalView {
             .text(this.getLanguage().translate(scope, 'scopeNames'))
             .get(0).outerHTML;
 
-        if (model.get('name')) {
+        if (model.attributes[this.nameAttribute]) {
             this.headerHtml += ' ' +
                 $('<span>')
                     .addClass('chevron-right')
@@ -348,7 +356,7 @@ class DetailModalView extends ModalView {
 
             this.headerHtml += ' ' +
                 $('<span>')
-                    .text(model.get('name'))
+                    .text(model.attributes[this.nameAttribute])
                     .get(0).outerHTML;
         }
 

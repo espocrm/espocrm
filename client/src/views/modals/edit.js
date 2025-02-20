@@ -52,6 +52,12 @@ class EditModalView extends ModalView {
     /** @protected */
     bottomDisabled = false
 
+    /**
+     * @private
+     * @type {string}
+     */
+    nameAttribute
+
     shortcutKeys = {
         /** @this EditModalView */
         'Control+Enter': function (e) {
@@ -183,6 +189,8 @@ class EditModalView extends ModalView {
         this.entityType = this.options.entityType || this.scope;
         this.id = this.options.id;
 
+        this.nameAttribute = this.getMetadata().get(`clientDefs.${this.entityType}.nameAttribute`) || 'name';
+
         if (this.options.headerText !== undefined) {
             this.headerHtml = undefined;
             this.headerText = this.options.headerText;
@@ -312,7 +320,7 @@ class EditModalView extends ModalView {
             const separator = document.createElement('span');
             separator.classList.add('chevron-right');
 
-            const name = this.model.attributes.name;
+            const name = this.model.attributes[this.nameAttribute];
 
             wrapper.append(
                 document.createTextNode(this.getLanguage().translate('Edit') + ' · '),
@@ -379,8 +387,8 @@ class EditModalView extends ModalView {
                     this.dialog.close();
 
                     if (wasNew) {
-                        const url = '#' + this.scope + '/view/' + model.id;
-                        const name = model.get('name') || this.model.id;
+                        const url = `#${this.scope}/view/${model.id}`;
+                        const name = model.attributes[this.nameAttribute] || this.model.id;
 
                         const msg = this.translate('Created') + '\n' +
                             `[${name}](${url})`;
