@@ -103,13 +103,15 @@ class Integration extends Entity
 
         if ($this->hasAttribute($name)) {
             $this->setInContainer($name, $value);
-        } else {
-            $data = $this->getData();
 
-            $data->$name = $value;
-
-            $this->set(self::ATTR_DATA, $data);
+            return $this;
         }
+
+        $data = $this->getData();
+
+        $data->$name = $value;
+
+        $this->set(self::ATTR_DATA, $data);
 
         return $this;
     }
