@@ -34,10 +34,11 @@ class PreferencesController extends RecordController {
     defaultAction = 'own'
 
     getModel(callback, context) {
-        const model = new Preferences();
+        const model = new Preferences({}, {
+            defs: this.getMetadata().get('entityDefs.Preferences') || {},
+        });
 
-        model.settings = this.getConfig();
-        model.defs = this.getMetadata().get('entityDefs.Preferences');
+        model.setSettings(this.getConfig());
 
         if (callback) {
             callback.call(this, model);
@@ -57,7 +58,7 @@ class PreferencesController extends RecordController {
         this.actionEdit({id: this.getUser().id});
     }
 
-    actionList() {}
+    actionList(options) {}
 }
 
 export default PreferencesController;

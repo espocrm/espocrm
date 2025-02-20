@@ -69,7 +69,7 @@ class App {
 
     /**
      * @param {module:app~Options} options Options.
-     * @param {module:app~callback} callback A callback.
+     * @param {function(App): void} callback A callback.
      */
     constructor(options, callback) {
         options = options || {};
@@ -131,7 +131,11 @@ class App {
         this.appTimestamp = options.appTimestamp;
 
         this.initCache(options)
-            .then(() => this.init(options, callback));
+            .then(async () => {
+                await this.init(options);
+
+                callback(this);
+            });
 
         uiAppInit();
     }
@@ -144,13 +148,13 @@ class App {
 
     /**
      * @protected
-     * @type {module:models/user}
+     * @type {User}
      */
     user = null
 
     /**
      * @private
-     * @type {module:models/preferences}
+     * @type {Preferences}
      */
     preferences = null
 
@@ -162,7 +166,7 @@ class App {
 
     /**
      * @private
-     * @type {module:metadata}
+     * @type {Metadata}
      */
     metadata = null
 
@@ -316,6 +320,12 @@ class App {
     webSocketManager = null
 
     /**
+     * @private
+     * @type {AclManager}
+     */
+    acl
+
+    /**
      * An application timestamp. Used for asset cache busting and update detection.
      *
      * @private
@@ -368,9 +378,8 @@ class App {
     /**
      * @private
      * @param {module:app~Options} options
-     * @param {function} [callback]
      */
-    init(options, callback) {
+    async init(options) {
         this.appParams = new AppParams();
 
         this.controllers = {};
@@ -407,47 +416,42 @@ class App {
 
         this.initBroadcastChannel();
 
-        Promise
-            .all([
-                this.settings.load(),
-                this.language.loadDefault(),
-                this.initTemplateBundles(),
-            ])
-            .then(() => {
-                this.loader.setIsDeveloperMode(this.settings.get('isDeveloperMode'));
+        await Promise.all([
+            this.settings.load(),
+            this.language.loadDefault(),
+            this.initTemplateBundles(),
+        ]);
 
-                this.user = new User();
-                this.preferences = new Preferences();
+        this.loader.setIsDeveloperMode(this.settings.get('isDeveloperMode'));
 
-                this.preferences.settings = this.settings;
+        this.user = new User();
+        this.preferences = new Preferences();
 
-                /** @type {module:acl-manager} */
-                this.acl = this.createAclManager();
+        this.preferences.setSettings(this.settings);
 
-                this.fieldManager.acl = this.acl;
+        this.acl = this.createAclManager();
 
-                this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata, this.themeName);
-                this.modelFactory = new ModelFactory(this.metadata);
-                this.collectionFactory = new CollectionFactory(this.modelFactory, this.settings, this.metadata);
+        this.fieldManager.acl = this.acl;
 
-                if (this.settings.get('useWebSocket')) {
-                    this.webSocketManager = new WebSocketManager(this.settings);
-                }
+        this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata, this.themeName);
+        this.modelFactory = new ModelFactory(this.metadata);
+        this.collectionFactory = new CollectionFactory(this.modelFactory, this.settings, this.metadata);
 
-                container.set(AclManager, this.acl);
-                container.set(User, this.user);
-                container.set(Preferences, this.preferences);
-                container.set(ThemeManager, this.themeManager);
-                container.set(ModelFactory, this.modelFactory);
-                container.set(CollectionFactory, this.collectionFactory);
-                container.set(WebSocketManager, this.webSocketManager);
+        if (this.settings.get('useWebSocket')) {
+            this.webSocketManager = new WebSocketManager(this.settings);
+        }
 
-                this.initUtils();
-                this.initView();
-                this.initBaseController();
+        container.set(AclManager, this.acl);
+        container.set(User, this.user);
+        container.set(Preferences, this.preferences);
+        container.set(ThemeManager, this.themeManager);
+        container.set(ModelFactory, this.modelFactory);
+        container.set(CollectionFactory, this.collectionFactory);
+        container.set(WebSocketManager, this.webSocketManager);
 
-                callback.call(this, this);
-            });
+        this.initUtils();
+        this.initView();
+        this.initBaseController();
     }
 
     /**

@@ -40,6 +40,12 @@ class Preferences extends Model {
     urlRoot = 'Preferences'
 
     /**
+     * @private
+     * @type {import('models/settings').default}
+     */
+    settings
+
+    /**
      * Get dashlet options.
      *
      * @param {string} id A dashlet ID.
@@ -58,6 +64,14 @@ class Preferences extends Model {
      */
     isPortal() {
         return this.get('isPortalUser');
+    }
+
+    /**
+     * @internal
+     * @param {import('models/settings').default} settings
+     */
+    setSettings(settings) {
+        this.settings = settings;
     }
 }
 
