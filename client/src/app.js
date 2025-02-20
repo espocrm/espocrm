@@ -332,48 +332,37 @@ class App {
     /**
      * @private
      * @param {module:app~Options} options
-     * @return Promise
      */
-    initCache(options) {
+    async initCache(options) {
         if (!this.useCache) {
-            return Promise.resolve();
+            return;
         }
 
-        const cacheTimestamp = options.cacheTimestamp || null;
+        const timestamp = options.cacheTimestamp || null;
 
-        this.cache = new Cache(cacheTimestamp);
+        this.cache = new Cache(timestamp);
 
-        const storedCacheTimestamp = this.cache.getCacheTimestamp();
+        const storedTimestamp = this.cache.getCacheTimestamp();
 
-        cacheTimestamp ?
-            this.cache.handleActuality(cacheTimestamp) :
+        timestamp ?
+            this.cache.handleActuality(timestamp) :
             this.cache.storeTimestamp();
 
         if (!window.caches) {
-            return Promise.resolve();
+            return;
         }
 
-        return new Promise(resolve => {
-            const deleteCache = !cacheTimestamp ||
-                !storedCacheTimestamp ||
-                cacheTimestamp !== storedCacheTimestamp;
+        const deleteCache = !timestamp || !storedTimestamp || timestamp !== storedTimestamp;
 
-            (
-                deleteCache ?
-                    caches.delete('espo') :
-                    Promise.resolve()
-            )
-                .then(() => caches.open('espo'))
-                .then(cache => {
-                    this.responseCache = cache;
+        try {
+            if (deleteCache) {
+                await caches.delete('espo');
+            }
 
-                    resolve();
-                })
-                .catch(() => {
-                    console.error(`Could not open 'espo' cache.`);
-                    resolve();
-                });
-        });
+            this.responseCache = await caches.open('espo');
+        } catch (e) {
+            console.error(`Could not open 'espo' cache.`);
+        }
     }
 
     /**
