@@ -30,16 +30,32 @@
 namespace Espo\Entities;
 
 use Espo\Core\ORM\Entity;
-
+use Espo\ORM\Name\Attribute;
 use stdClass;
 
 class Integration extends Entity
 {
     public const ENTITY_TYPE = 'Integration';
 
+    private const ATTR_DATA = 'data';
+    private const ATTR_ENABLED = 'enabled';
+
+    public function has(string $attribute): bool
+    {
+        if ($attribute === Attribute::ID) {
+            return (bool) $this->id;
+        }
+
+        if ($this->hasAttribute($attribute)) {
+            return $this->hasInContainer($attribute);
+        }
+
+        return property_exists($this->getData(), $attribute);
+    }
+
     public function get(string $attribute): mixed
     {
-        if ($attribute == 'id') {
+        if ($attribute === Attribute::ID) {
             return $this->id;
         }
 
@@ -47,56 +63,39 @@ class Integration extends Entity
             if ($this->hasInContainer($attribute)) {
                 return $this->getFromContainer($attribute);
             }
-        } else {
-            if ($this->get('data')) {
-                $data = $this->get('data');
-            } else {
-                $data = new stdClass();
-            }
 
-            if (isset($data->$attribute)) {
-                return $data->$attribute;
-            }
+            return null;
         }
 
-        return null;
+        return $this->getData()->$attribute ?? null;
     }
 
-    public function clear(string $name): void
+    public function clear(string $attribute): void
     {
-        parent::clear($name);
+        parent::clear($attribute);
 
-        $data = $this->get('data');
+        $data = $this->getData();
 
-        if (empty($data)) {
-            $data = new stdClass();
-        }
+        unset($data->$attribute);
 
-        unset($data->$name);
-
-        $this->set('data', $data);
+        $this->set(self::ATTR_DATA, $data);
     }
 
-    public function set($p1, $p2 = null): static
+    public function set($attribute, $value = null): static
     {
-        if (is_object($p1)) {
-            $p1 = get_object_vars($p1);
+        if (is_object($attribute)) {
+            $attribute = get_object_vars($attribute);
         }
 
-        if (is_array($p1)) {
-            if ($p2 === null) {
-                $p2 = false;
-            }
-
-            $this->populateFromArray($p1, $p2);
+        if (is_array($attribute)) {
+            $this->populateFromArray($attribute, false);
 
             return $this;
         }
 
-        $name = $p1;
-        $value = $p2;
+        $name = $attribute;
 
-        if ($name == 'id') {
+        if ($name === Attribute::ID) {
             $this->id = $value;
 
             return $this;
@@ -105,11 +104,11 @@ class Integration extends Entity
         if ($this->hasAttribute($name)) {
             $this->setInContainer($name, $value);
         } else {
-            $data = $this->get('data') ?? (object) [];
+            $data = $this->getData();
 
             $data->$name = $value;
 
-            $this->set('data', $data);
+            $this->set(self::ATTR_DATA, $data);
         }
 
         return $this;
@@ -117,7 +116,7 @@ class Integration extends Entity
 
     public function isAttributeChanged(string $name): bool
     {
-        if ($name === 'data') {
+        if ($name === self::ATTR_DATA) {
             return true;
         }
 
@@ -145,38 +144,41 @@ class Integration extends Entity
 
     public function getValueMap(): stdClass
     {
-        $array = [];
+        $map = [];
 
         if (isset($this->id)) {
-            $array['id'] = $this->id;
+            $map[Attribute::ID] = $this->id;
         }
 
         foreach ($this->getAttributeList() as $attribute) {
-            if ($attribute === 'id') {
+            if ($attribute === Attribute::ID) {
                 continue;
             }
 
-            if ($attribute === 'data') {
+            if ($attribute === self::ATTR_DATA) {
                 continue;
             }
 
             if ($this->has($attribute)) {
-                $array[$attribute] = $this->get($attribute);
+                $map[$attribute] = $this->get($attribute);
             }
         }
 
-        $data = $this->get('data') ?? (object) [];
+        $data = $this->getData();
 
-        $array = array_merge(
-            $array,
-            get_object_vars($data)
-        );
+        $map = array_merge($map, get_object_vars($data));
 
-        return (object) $array;
+        return (object) $map;
     }
 
     public function isEnabled(): bool
     {
-        return (bool) $this->get('enabled');
+        return (bool) $this->get(self::ATTR_ENABLED);
+    }
+
+    public function getData(): stdClass
+    {
+        /** @var stdClass */
+        return $this->get(self::ATTR_DATA) ?? (object) [];
     }
 }
