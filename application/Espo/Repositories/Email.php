@@ -29,19 +29,18 @@
 
 namespace Espo\Repositories;
 
-use Espo\Core\Field\Link;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Entities\EmailFilter;
 use Espo\Entities\InboundEmail;
 use Espo\Entities\User as UserEntity;
 use Espo\Modules\Crm\Entities\Account;
-use Espo\ORM\Collection;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Repositories\Database;
 use Espo\Entities\Email as EmailEntity;
+use Espo\ORM\EntityCollection;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Entities\EmailAddress;
 use Espo\Core\Di;
@@ -56,24 +55,41 @@ class Email extends Database implements
 {
     use Di\EmailFilterManagerSetter;
 
+    private const ADDRESS_FROM = 'from';
+    private const ADDRESS_TO = 'to';
+    private const ADDRESS_CC = 'cc';
+    private const ADDRESS_BCC = 'bcc';
+    private const ADDRESS_REPLY_TO = 'replyTo';
+
+    private const ATTR_FROM_EMAIL_ADDRESS_ID = 'fromEmailAddressId';
+    private const ATTR_FROM_EMAIL_ADDRESS_NAME = 'fromEmailAddressName';
+
+    /**
+     * @private string[]
+     */
+    private const ADDRESS_TYPE_LIST = [
+        self::ADDRESS_FROM,
+        self::ADDRESS_TO,
+        self::ADDRESS_CC,
+        self::ADDRESS_BCC,
+        self::ADDRESS_REPLY_TO,
+    ];
+
     protected function prepareAddresses(EmailEntity $entity, string $type, bool $addAssignedUser = false): void
     {
         if (!$entity->has($type)) {
             return;
         }
 
-        $eaRepository = $this->getEmailAddressRepository();
-
         $addressValue = $entity->get($type);
         $idList = [];
 
-        if (!empty($addressValue)) {
-            $addressList = array_map(fn($item) => trim($item), explode(';', $addressValue));
-            $addressList = array_filter($addressList, fn($item) => filter_var($item, FILTER_VALIDATE_EMAIL) !== false);
+        if ($addressValue) {
+            $addressList = $this->explodeAndPrepareAddressList($addressValue);
 
-            $idList = $eaRepository->getIdListFormAddressList($addressList);
+            $idList = $this->getEmailAddressRepository()->getIdListFormAddressList($addressList);
 
-            if ($type !== 'replyTo') {
+            if ($type !== self::ADDRESS_REPLY_TO) {
                 foreach ($idList as $id) {
                     $this->addUserByEmailAddressId($entity, $id, $addAssignedUser);
                 }
@@ -104,158 +120,101 @@ class Email extends Database implements
 
     public function loadFromField(EmailEntity $entity): void
     {
-        $fromEmailAddressName = $entity->get('fromEmailAddressName');
+        $fromEmailAddressName = $entity->get(self::ATTR_FROM_EMAIL_ADDRESS_NAME);
 
-        if ($fromEmailAddressName && !$entity->isAttributeChanged('fromEmailAddressName')) {
-            $entity->set('from', $fromEmailAddressName);
-            $entity->setFetched('from', $fromEmailAddressName);
+        if ($fromEmailAddressName && !$entity->isAttributeChanged(self::ATTR_FROM_EMAIL_ADDRESS_NAME)) {
+            $entity->set(self::ADDRESS_FROM, $fromEmailAddressName);
+            $entity->setFetched(self::ADDRESS_FROM, $fromEmailAddressName);
 
             return;
         }
 
-        $fromEmailAddressId = $entity->get('fromEmailAddressId');
+        $fromEmailAddressId = $entity->get(self::ATTR_FROM_EMAIL_ADDRESS_ID);
 
         if ($fromEmailAddressId) {
             $emailAddress = $this->getEmailAddressRepository()->getById($fromEmailAddressId);
 
             if ($emailAddress) {
                 $entity->setFromAddress($emailAddress->getAddress());
-                $entity->setFetched('from', $emailAddress->getAddress());
+                $entity->setFetched(self::ADDRESS_FROM, $emailAddress->getAddress());
 
                 return;
             }
         }
 
-        if (!$entity->has('fromEmailAddressId')) {
+        if (!$entity->has(self::ATTR_FROM_EMAIL_ADDRESS_ID)) {
             return;
         }
 
         $entity->setFromAddress(null);
-        $entity->setFetched('from', null);
+        $entity->setFetched(self::ADDRESS_FROM, null);
+    }
+
+    private function loadAddressMultiField(EmailEntity $entity, string $type): void
+    {
+        $entity->loadLinkMultipleField($type . 'EmailAddresses');
+
+        /** @var ?stdClass $names */
+        $names = $entity->get($type . 'EmailAddressesNames');
+
+        if ($names === null) {
+            return;
+        }
+
+        $addresses = [];
+
+        foreach (get_object_vars($names) as $address) {
+            $addresses[] = $address;
+        }
+
+        $entity->set($type, implode(';', $addresses));
     }
 
     public function loadToField(EmailEntity $entity): void
     {
-        $entity->loadLinkMultipleField('toEmailAddresses');
-        /** @var ?stdClass $names */
-        $names = $entity->get('toEmailAddressesNames');
-
-        if ($names === null) {
-            return;
-        }
-
-        $arr = [];
-
-        foreach (get_object_vars($names) as $address) {
-            $arr[] = $address;
-        }
-
-        $entity->set('to', implode(';', $arr));
+        $this->loadAddressMultiField($entity, self::ADDRESS_TO);
     }
 
     public function loadCcField(EmailEntity $entity): void
     {
-        $entity->loadLinkMultipleField('ccEmailAddresses');
-        /** @var ?stdClass $names */
-        $names = $entity->get('ccEmailAddressesNames');
-
-        if ($names === null) {
-            return;
-        }
-
-        $arr = [];
-
-        foreach (get_object_vars($names) as $address) {
-            $arr[] = $address;
-        }
-
-        $entity->set('cc', implode(';', $arr));
+        $this->loadAddressMultiField($entity, self::ADDRESS_CC);
     }
 
     public function loadBccField(EmailEntity $entity): void
     {
-        $entity->loadLinkMultipleField('bccEmailAddresses');
-        /** @var ?stdClass $names */
-        $names = $entity->get('bccEmailAddressesNames');
-
-        if ($names === null) {
-            return;
-        }
-
-        $arr = [];
-
-        foreach (get_object_vars($names) as $address) {
-            $arr[] = $address;
-        }
-
-        $entity->set('bcc', implode(';', $arr));
+        $this->loadAddressMultiField($entity, self::ADDRESS_BCC);
     }
 
     public function loadReplyToField(EmailEntity $entity): void
     {
-        $entity->loadLinkMultipleField('replyToEmailAddresses');
-
-        $names = $entity->get('replyToEmailAddressesNames');
-
-        if (!empty($names)) {
-            $arr = [];
-
-            foreach ($names as $address) {
-                $arr[] = $address;
-            }
-
-            $entity->set('replyTo', implode(';', $arr));
-        }
+        $this->loadAddressMultiField($entity, self::ADDRESS_REPLY_TO);
     }
 
     /**
      * @param string[] $fieldList
      */
-    public function loadNameHash(EmailEntity $entity, array $fieldList = ['from', 'to', 'cc', 'bcc', 'replyTo']): void
+    public function loadNameHash(EmailEntity $entity, array $fieldList = self::ADDRESS_TYPE_LIST): void
     {
         $addressList = [];
 
-        if (in_array('from', $fieldList) && $entity->get('from')) {
-            $addressList[] = $entity->get('from');
+        if (in_array(self::ADDRESS_FROM, $fieldList) && $entity->get(self::ADDRESS_FROM)) {
+            $addressList[] = $entity->get(self::ADDRESS_FROM);
         }
 
-        if (in_array('to', $fieldList)) {
-            $arr = explode(';', $entity->get('to'));
-
-            foreach ($arr as $address) {
-                if (!in_array($address, $addressList)) {
-                    $addressList[] = $address;
-                }
-            }
+        if (in_array(self::ADDRESS_TO, $fieldList)) {
+            $this->addAddresses($entity, self::ADDRESS_TO, $addressList);
         }
 
-        if (in_array('cc', $fieldList)) {
-            $arr = explode(';', $entity->get('cc'));
-
-            foreach ($arr as $address) {
-                if (!in_array($address, $addressList)) {
-                    $addressList[] = $address;
-                }
-            }
-        }
-        if (in_array('bcc', $fieldList)) {
-            $arr = explode(';', $entity->get('bcc'));
-
-            foreach ($arr as $address) {
-                if (!in_array($address, $addressList)) {
-                    $addressList[] = $address;
-                }
-            }
+        if (in_array(self::ADDRESS_CC, $fieldList)) {
+            $this->addAddresses($entity, self::ADDRESS_CC, $addressList);
         }
 
-        if (in_array('replyTo', $fieldList)) {
-            $arr = explode(';', $entity->get('replyTo'));
+        if (in_array(self::ADDRESS_BCC, $fieldList)) {
+            $this->addAddresses($entity, self::ADDRESS_BCC, $addressList);
+        }
 
-            foreach ($arr as $address) {
-                if (!in_array($address, $addressList)) {
-                    $addressList[] = $address;
-                }
-            }
+        if (in_array(self::ADDRESS_REPLY_TO, $fieldList)) {
+            $this->addAddresses($entity, self::ADDRESS_REPLY_TO, $addressList);
         }
 
         $nameHash = (object) [];
@@ -263,20 +222,19 @@ class Email extends Database implements
         $idHash = (object) [];
 
         foreach ($addressList as $address) {
-            $p = $this->getEmailAddressRepository()->getEntityByAddress($address);
+            $related = $this->getEmailAddressRepository()->getEntityByAddress($address);
 
-            if (!$p) {
-                $p = $this->entityManager
-                    ->getRDBRepository(InboundEmail::ENTITY_TYPE)
+            if (!$related) {
+                $related = $this->entityManager
+                    ->getRDBRepositoryByClass(InboundEmail::class)
                     ->where(['emailAddress' => $address])
                     ->findOne();
             }
 
-            if ($p) {
-                $nameHash->$address = $p->get(Field::NAME);
-                $typeHash->$address = $p->getEntityType();
-
-                $idHash->$address = $p->getId();
+            if ($related) {
+                $nameHash->$address = $related->get(Field::NAME);
+                $typeHash->$address = $related->getEntityType();
+                $idHash->$address = $related->getId();
             }
         }
 
@@ -305,71 +263,15 @@ class Email extends Database implements
         }
 
         if ($entity->has('attachmentsIds')) {
-            $attachmentsIds = $entity->get('attachmentsIds');
-            if (!empty($attachmentsIds)) {
+            /** @var string[] $attachmentsIds */
+            $attachmentsIds = $entity->get('attachmentsIds') ?? [];
+
+            if ($attachmentsIds !== []) {
                 $entity->set('hasAttachment', true);
             }
         }
 
-        if (
-            $entity->has('from') ||
-            $entity->has('to') ||
-            $entity->has('cc') ||
-            $entity->has('bcc') ||
-            $entity->has('replyTo')
-        ) {
-            if (!$entity->has('usersIds')) {
-                $entity->loadLinkMultipleField('users');
-            }
-
-            if ($entity->has('from')) {
-                $from = trim($entity->getFromAddress() ?? '');
-
-                if (!empty($from)) {
-                    $ids = $this->getEmailAddressRepository()->getIdListFormAddressList([$from]);
-
-                    if ($ids !== []) {
-                        $entity->set('fromEmailAddressId', $ids[0]);
-                        $entity->set('fromEmailAddressName', $from);
-
-                        $this->addUserByEmailAddressId($entity, $ids[0], true);
-
-                        if (!$entity->getSentBy()) {
-                            /** @var UserEntity $user */
-                            $user = $this->getEmailAddressRepository()
-                                ->getEntityByAddressId(
-                                    $entity->get('fromEmailAddressId'),
-                                    UserEntity::ENTITY_TYPE,
-                                    true
-                                );
-
-                            if ($user && $entity->getStatus() !== EmailEntity::STATUS_DRAFT) {
-                                $entity->setSentBy($user);
-                            }
-                        }
-                    }
-                } else {
-                    /** @noinspection PhpRedundantOptionalArgumentInspection */
-                    $entity->set('fromEmailAddressId', null);
-                }
-            }
-
-            if ($entity->has('to')) {
-                $this->prepareAddresses($entity, 'to', true);
-            }
-
-            if ($entity->has('cc')) {
-                $this->prepareAddresses($entity, 'cc');
-            }
-
-            if ($entity->has('bcc')) {
-                $this->prepareAddresses($entity, 'bcc');
-            }
-
-            if ($entity->has('replyTo')) {
-                $this->prepareAddresses($entity, 'replyTo');
-            }
-        }
+        $this->processBeforeSaveAddresses($entity);
 
         if ($entity->getAssignedUser()) {
             $entity->addUserId($entity->getAssignedUser()->getId());
@@ -390,11 +292,11 @@ class Email extends Database implements
             !empty($options[EmailEntity::SAVE_OPTION_IS_BEING_IMPORTED]) ||
             !empty($options[EmailEntity::SAVE_OPTION_IS_JUST_SENT])
         ) {
-            if (!$entity->has('from')) {
+            if (!$entity->has(self::ADDRESS_FROM)) {
                 $this->loadFromField($entity);
             }
 
-            if (!$entity->has('to')) {
+            if (!$entity->has(self::ADDRESS_TO)) {
                 $this->loadToField($entity);
             }
 
@@ -479,31 +381,31 @@ class Email extends Database implements
     {
         parent::afterSave($entity, $options);
 
-        if (!$entity->isNew()) {
-            if (
-                $entity->getParentType() &&
-                $entity->getParentId() &&
-                $entity->isAttributeChanged('parentId')
-            ) {
-                /** @var Collection<EmailEntity> $replyList */
-                $replyList = $this
-                    ->getRelation($entity, 'replies')
-                    ->find();
+        if (
+            !$entity->isNew() &&
+            $entity->getParentType() &&
+            $entity->getParentId() &&
+            $entity->isAttributeChanged('parentId')
+        ) {
+            /** @var EntityCollection<EmailEntity> $replyList */
+            $replyList = $this->getRelation($entity, 'replies')
+                ->find();
 
-                foreach ($replyList as $reply) {
-                    if ($reply->getId() === $entity->getId()) {
-                        continue;
-                    }
-
-                    if (!$reply->getParentId()) {
-                        $reply->set([
-                            'parentId' => $entity->getParentId(),
-                            'parentType' => $entity->getParentType(),
-                        ]);
-
-                        $this->entityManager->saveEntity($reply);
-                    }
+            foreach ($replyList as $reply) {
+                if ($reply->getId() === $entity->getId()) {
+                    continue;
                 }
+
+                if ($reply->getParentId()) {
+                    continue;
+                }
+
+                $reply->setMultiple([
+                    'parentId' => $entity->getParentId(),
+                    'parentType' => $entity->getParentType(),
+                ]);
+
+                $this->entityManager->saveEntity($reply);
             }
         }
 
@@ -539,5 +441,103 @@ class Email extends Database implements
     {
         /** @var EmailAddressRepository */
         return $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
+    }
+
+    /**
+     * @param string[] $addressList
+     */
+    private function addAddresses(EmailEntity $entity, string $type, array &$addressList): void
+    {
+        $splitList = explode(';', $entity->get($type));
+
+        foreach ($splitList as $address) {
+            if (!in_array($address, $addressList)) {
+                $addressList[] = $address;
+            }
+        }
+    }
+
+    private function processBeforeSaveAddresses(EmailEntity $entity): void
+    {
+        $hasOne =
+            $entity->has(self::ADDRESS_FROM) ||
+            $entity->has(self::ADDRESS_TO) ||
+            $entity->has(self::ADDRESS_CC) ||
+            $entity->has(self::ADDRESS_BCC) ||
+            $entity->has(self::ADDRESS_REPLY_TO);
+
+        if (!$hasOne) {
+            return;
+        }
+
+        if (!$entity->has('usersIds')) {
+            $entity->loadLinkMultipleField('users');
+        }
+
+        if ($entity->has(self::ADDRESS_FROM)) {
+            $this->processBeforeSaveFrom($entity);
+        }
+
+        if ($entity->has(self::ADDRESS_TO)) {
+            $this->prepareAddresses($entity, self::ADDRESS_TO, true);
+        }
+
+        if ($entity->has(self::ADDRESS_CC)) {
+            $this->prepareAddresses($entity, self::ADDRESS_CC);
+        }
+
+        if ($entity->has(self::ADDRESS_BCC)) {
+            $this->prepareAddresses($entity, self::ADDRESS_BCC);
+        }
+
+        if ($entity->has(self::ADDRESS_REPLY_TO)) {
+            $this->prepareAddresses($entity, self::ADDRESS_REPLY_TO);
+        }
+    }
+
+    private function processBeforeSaveFrom(EmailEntity $entity): void
+    {
+        $from = trim($entity->getFromAddress() ?? '');
+
+        if (!$from) {
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
+            $entity->set(self::ATTR_FROM_EMAIL_ADDRESS_ID, null);
+
+            return;
+        }
+
+        $ids = $this->getEmailAddressRepository()->getIdListFormAddressList([$from]);
+
+        if ($ids === []) {
+            return;
+        }
+
+        $entity->set(self::ATTR_FROM_EMAIL_ADDRESS_ID, $ids[0]);
+        $entity->set(self::ATTR_FROM_EMAIL_ADDRESS_NAME, $from);
+
+        $this->addUserByEmailAddressId($entity, $ids[0], true);
+
+        if ($entity->getSentBy()) {
+            return;
+        }
+
+        $user = $this->getEmailAddressRepository()->getEntityByAddressId($ids[0], UserEntity::ENTITY_TYPE, true);
+
+        if (
+            $user instanceof UserEntity &&
+            $entity->getStatus() !== EmailEntity::STATUS_DRAFT
+        ) {
+            $entity->setSentBy($user);
+        }
+    }
+
+    /**
+     * @return string[]
+     */
+    private function explodeAndPrepareAddressList(string $addressValue): array
+    {
+        $addressList = array_map(fn ($item) => trim($item), explode(';', $addressValue));
+
+        return array_filter($addressList, fn ($item) => filter_var($item, FILTER_VALIDATE_EMAIL) !== false);
     }
 }
