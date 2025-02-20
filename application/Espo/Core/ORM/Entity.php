@@ -207,6 +207,7 @@ class Entity extends BaseEntity
      *
      * @param ?array<string, string> $columns Deprecated as of v9.0.
      * @todo Add a method to load and set only fetched values?
+     * @internal
      */
     public function loadLinkMultipleField(string $field, ?array $columns = null): void
     {
@@ -302,8 +303,8 @@ class Entity extends BaseEntity
 
         $toSetFetched = !$this->isNew() && !$this->hasFetched($idsAttribute);
 
-        $this->set($idsAttribute, $ids);
-        $this->set($namesAttribute, $names);
+        $this->setInContainerNotWritten($idsAttribute, $ids);
+        $this->setInContainerNotWritten($namesAttribute, $names);
 
         if ($toSetFetched) {
             $this->setFetched($idsAttribute, $ids);
@@ -319,7 +320,7 @@ class Entity extends BaseEntity
         }
 
         if ($columns) {
-            $this->set($columnsAttribute, $columnsData);
+            $this->setInContainerNotWritten($columnsAttribute, $columnsData);
 
             if ($toSetFetched) {
                 $this->setFetched($columnsAttribute, $columnsData);
@@ -350,7 +351,6 @@ class Entity extends BaseEntity
         $select = [Attribute::ID, Field::NAME];
 
         $entity = $this->entityManager
-            ->getRDBRepository($this->getEntityType())
             ->getRelation($this, $field)
             ->select($select)
             ->findOne();
@@ -375,8 +375,8 @@ class Entity extends BaseEntity
             return;
         }
 
-        $this->set($idAttribute, $entityId);
-        $this->set($nameAttribute, $entityName);
+        $this->setInContainerNotWritten($idAttribute, $entityId);
+        $this->setInContainerNotWritten($nameAttribute, $entityName);
     }
 
     /**

@@ -274,14 +274,26 @@ class BaseEntity implements Entity
     }
 
     /**
-     * Set a value in the container.
-     *
-     * @param mixed $value
+     * Set a value in the container. To be used wisely. Use `set` instead.
      */
-    protected function setInContainer(string $attribute, $value): void
+    protected function setInContainer(string $attribute, mixed $value): void
     {
         $this->valuesContainer[$attribute] = $value;
+
         $this->writtenMap[$attribute] = true;
+    }
+
+    /**
+     * Not to be used. To be used internally for lazy-loading purpose.
+     *
+     * @internal
+     * @since 9.1.0
+     */
+    protected function setInContainerNotWritten(string $attribute, mixed $value): void
+    {
+        $this->valuesContainer[$attribute] = $value;
+
+        unset($this->writtenMap[$attribute]);
     }
 
     /**
