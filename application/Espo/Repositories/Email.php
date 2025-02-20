@@ -96,13 +96,22 @@ class Email extends Database implements
             return;
         }
 
+        $previousIds = [];
+
+        if (!$entity->isNew()) {
+            $previousIds = $entity->getFetchedLinkMultipleIdList($link);
+        }
+
         $addressList = $this->explodeAndPrepareAddressList($addressValue);
 
         $ids = $this->getEmailAddressRepository()->getIdListFormAddressList($addressList);
 
         $entity->setLinkMultipleIdList($link, $ids);
 
-        if ($skipUsers) {
+        if (
+            $skipUsers ||
+            array_diff($previousIds, $ids) === array_diff($ids, $previousIds)
+        ) {
             return;
         }
 
