@@ -582,6 +582,58 @@ class Entity extends BaseEntity
     }
 
     /**
+     * Get previous link-multiple field IDs.
+     *
+     * @return string[]
+     * @since 9.1.0
+     */
+    public function getFetchedLinkMultipleIdList(string $field): array
+    {
+        $idsAttribute = $field . 'Ids';
+
+        if (!$this->hasAttribute($idsAttribute)) {
+            throw new LogicException("Called `getFetchedLinkMultipleIdList` for non-link-multiple field `$field.");
+        }
+
+        if (!$this->isNew()) {
+            if (!$this->has($idsAttribute)) {
+                $this->loadLinkMultipleField($field);
+            } else if (!$this->hasFetched($field)) {
+                // Set but not loaded.
+
+                $attributes = [
+                    $field . 'Ids',
+                    $field . 'Names',
+                    $field . 'Types',
+                    $field . 'Columns',
+                ];
+
+                $map = array_reduce($attributes, function ($p, $item) {
+                    if (!$this->has($item)) {
+                        return $p;
+                    }
+
+                    $p[$item] = $this->get($item);
+
+                    return $p;
+                }, []);
+
+                $this->loadLinkMultipleField($field);
+
+                // Restore set values.
+                $this->setMultiple($map);
+            }
+        }
+
+        if (!$this->has($idsAttribute) && !$this->isNew()) {
+            $this->loadLinkMultipleField($field);
+        }
+
+        /** @var string[] */
+        return $this->getFetched($idsAttribute) ?? [];
+    }
+
+    /**
      * Has an ID in a link-multiple field.
      */
     public function hasLinkMultipleId(string $field, string $id): bool
