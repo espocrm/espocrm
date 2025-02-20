@@ -30,7 +30,6 @@
 namespace Espo\Modules\Crm\Classes\Select\Task\PrimaryFilters;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
 use Espo\Entities\User;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Core\Select\Primary\Filter;
@@ -40,6 +39,9 @@ use Espo\Core\Select\Where\ConverterFactory;
 use Espo\Modules\Crm\Entities\Task;
 use LogicException;
 
+/**
+ * @noinspection PhpUnused
+ */
 class Todays implements Filter
 {
     public function __construct(

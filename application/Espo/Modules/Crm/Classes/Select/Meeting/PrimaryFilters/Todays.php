@@ -30,7 +30,6 @@
 namespace Espo\Modules\Crm\Classes\Select\Meeting\PrimaryFilters;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
 use Espo\Entities\User;
 use Espo\Core\Select\Primary\Filter;
 use Espo\ORM\Query\SelectBuilder;
@@ -40,6 +39,9 @@ use Espo\Core\Select\Where\Item;
 use Espo\Modules\Crm\Entities\Meeting;
 use LogicException;
 
+/**
+ * @noinspection PhpUnused
+ */
 class Todays implements Filter
 {
     public function __construct(
