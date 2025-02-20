@@ -468,94 +468,95 @@ class App {
             return;
         }
 
-        this.initUserData(null, () => this.onAuth.call(this));
+        this.initUserData(null, () => this.onAuth());
     }
 
     /**
      * @private
      * @param {boolean} [afterLogin]
      */
-    onAuth(afterLogin) {
-        this.metadata.load().then(() => {
-            this.fieldManager.defs = this.metadata.get('fields');
-            this.fieldManager.metadata = this.metadata;
+    async onAuth(afterLogin = false) {
+        await this.metadata.load();
 
-            this.settings.defs = this.metadata.get('entityDefs.Settings') || {};
-            this.user.defs = this.metadata.get('entityDefs.User');
-            this.preferences.defs = this.metadata.get('entityDefs.Preferences');
-            this.viewHelper.layoutManager.setUserId(this.user.id);
+        this.fieldManager.defs = this.metadata.get('fields') || {};
+        this.fieldManager.metadata = this.metadata;
 
-            if (this.themeManager.isUserTheme()) {
-                this.loadStylesheet();
+        this.settings.setDefs(this.metadata.get('entityDefs.Settings') || {});
+        this.preferences.setDefs(this.metadata.get('entityDefs.Preferences') || {});
+
+        this.viewHelper.layoutManager.setUserId(this.user.id);
+
+        if (this.themeManager.isUserTheme()) {
+            this.loadStylesheet();
+        }
+
+        this.applyUserStyle();
+
+        if (this.anotherUser) {
+            this.viewHelper.webSocketManager = null;
+            this.webSocketManager = null;
+        }
+
+        if (this.webSocketManager) {
+            this.webSocketManager.connect(this.auth, this.user.id);
+        }
+
+        const promiseList = [];
+        const aclImplementationClassMap = {};
+
+        const clientDefs = this.metadata.get('clientDefs') || {};
+
+        Object.keys(clientDefs).forEach(scope => {
+            const o = clientDefs[scope];
+
+            const implClassName = (o || {})[this.aclName];
+
+            if (!implClassName) {
+                return;
             }
 
-            this.applyUserStyle();
+            const promise = new Promise(resolve => {
+                this.loader.require(implClassName, Class => {
+                    aclImplementationClassMap[scope] = Class;
 
-            if (this.anotherUser) {
-                this.viewHelper.webSocketManager = null;
-                this.webSocketManager = null;
-            }
-
-            if (this.webSocketManager) {
-                this.webSocketManager.connect(this.auth, this.user.id);
-            }
-
-            const promiseList = [];
-            const aclImplementationClassMap = {};
-
-            const clientDefs = this.metadata.get('clientDefs') || {};
-
-            Object.keys(clientDefs).forEach(scope => {
-                const o = clientDefs[scope];
-
-                const implClassName = (o || {})[this.aclName];
-
-                if (!implClassName) {
-                    return;
-                }
-
-                promiseList.push(
-                    new Promise(resolve => {
-                        this.loader.require(implClassName, implClass => {
-                            aclImplementationClassMap[scope] = implClass;
-
-                            resolve();
-                        });
-                    })
-                );
+                    resolve();
+                });
             });
 
-            if (!this.themeManager.isApplied() && this.themeManager.isUserTheme()) {
-                promiseList.push(
-                    new Promise(resolve => {
-                        const check = i => {
-                            if (this.themeManager.isApplied() || i === 50) {
-                                resolve();
-
-                                return;
-                            }
-
-                            i = i || 0;
-
-                            setTimeout(() => check(i + 1), 10);
-                        }
-
-                        check();
-                    })
-                );
-            }
-
-            Promise.all(promiseList)
-                .then(() => {
-                    this.acl.implementationClassMap = aclImplementationClassMap;
-
-                    this.initRouter();
-                });
-
-            if (afterLogin) {
-                this.broadcastChannel.postMessage('logged-in');
-            }
+            promiseList.push(promise);
         });
+
+        if (!this.themeManager.isApplied() && this.themeManager.isUserTheme()) {
+            const promise = new Promise(resolve => {
+                const check = i => {
+                    if (this.themeManager.isApplied() || i === 50) {
+                        resolve();
+
+                        return;
+                    }
+
+                    i = i || 0;
+
+                    setTimeout(() => check(i + 1), 10);
+                }
+
+                check();
+            });
+
+            promiseList.push(promise);
+        }
+
+        const promise = Promise.all(promiseList);
+
+        if (afterLogin) {
+            this.broadcastChannel.postMessage('logged-in');
+        }
+
+        await promise;
+
+        this.acl.implementationClassMap = aclImplementationClassMap;
+
+        this.initRouter();
     }
 
     /**
