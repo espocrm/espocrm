@@ -75,31 +75,43 @@ class Email extends Database implements
         self::ADDRESS_REPLY_TO,
     ];
 
-    protected function prepareAddresses(EmailEntity $entity, string $type, bool $addAssignedUser = false): void
-    {
+    private function prepareAddresses(
+        EmailEntity $entity,
+        string $type,
+        bool $addAssignedUser = false,
+        bool $skipUsers = false,
+    ): void {
+
         if (!$entity->has($type)) {
             return;
         }
 
+        $link = $type . 'EmailAddresses';
+
         $addressValue = $entity->get($type);
-        $idList = [];
 
-        if ($addressValue) {
-            $addressList = $this->explodeAndPrepareAddressList($addressValue);
+        if (!$addressValue) {
+            $entity->setLinkMultipleIdList($link, []);
 
-            $idList = $this->getEmailAddressRepository()->getIdListFormAddressList($addressList);
-
-            if ($type !== self::ADDRESS_REPLY_TO) {
-                foreach ($idList as $id) {
-                    $this->addUserByEmailAddressId($entity, $id, $addAssignedUser);
-                }
-            }
+            return;
         }
 
-        $entity->setLinkMultipleIdList($type . 'EmailAddresses', $idList);
+        $addressList = $this->explodeAndPrepareAddressList($addressValue);
+
+        $ids = $this->getEmailAddressRepository()->getIdListFormAddressList($addressList);
+
+        $entity->setLinkMultipleIdList($link, $ids);
+
+        if ($skipUsers) {
+            return;
+        }
+
+        foreach ($ids as $id) {
+            $this->addUserByEmailAddressId($entity, $id, $addAssignedUser);
+        }
     }
 
-    protected function addUserByEmailAddressId(
+    private function addUserByEmailAddressId(
         EmailEntity $entity,
         string $emailAddressId,
         bool $addAssignedUser = false
@@ -491,7 +503,7 @@ class Email extends Database implements
         }
 
         if ($entity->has(self::ADDRESS_REPLY_TO)) {
-            $this->prepareAddresses($entity, self::ADDRESS_REPLY_TO);
+            $this->prepareAddresses($entity, self::ADDRESS_REPLY_TO, false, true);
         }
     }
 
