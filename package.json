@@ -7,12 +7,14 @@
     "url": "https://github.com/espocrm/espocrm.git"
   },
   "scripts": {
-    "build": "grunt",
-    "test": "grunt run-tests",
-    "test-unit": "grunt run-unit-tests",
-    "test-integration": "grunt run-integration-tests",
     "postinstall": "node js/scripts/postinstall-cleanup && node js/scripts/prepare-lib-original.js",
-    "build-frontend": "grunt internal"
+    "build": "grunt",
+    "build-dev": "grunt dev",
+    "build-test": "grunt test",
+    "build-frontend": "grunt internal",
+    "sa": "php vendor/bin/phpstan",
+    "unit-tests": "php vendor/bin/phpunit ./tests/unit",
+    "integration-tests": "php vendor/bin/phpunit ./tests/integration"
   },
   "author": "Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko",
   "license": "AGPL-3.0-or-later",
