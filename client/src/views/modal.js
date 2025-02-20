@@ -425,6 +425,8 @@ class ModalView extends View {
         if (this.isCollapsable) {
             this.addActionHandler('collapseModal', () => this.collapse());
         }
+
+        this.on('after:expand', () => this.afterExpand());
     }
 
     setupFinal() {
@@ -1164,6 +1166,14 @@ class ModalView extends View {
     beforeCollapse() {
         return new Promise(resolve => resolve());
     }
+
+    /**
+     * Called after expanding.
+     *
+     * @protected
+     * @since 9.1.0
+     */
+    afterExpand() {}
 
     /** @private */
     adjustButtons() {

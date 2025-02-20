@@ -30,14 +30,18 @@ import View from 'view';
 
 class CollapsedModalBar extends View {
 
-    maxNumberToDisplay = 3
-
     // language=Handlebars
     templateContent = `
         {{#each dataList}}
-        <div class="collapsed-modal" data-number="{{number}}">{{var key ../this}}</div>
+            <div class="collapsed-modal" data-number="{{number}}">{{var key ../this}}</div>
         {{/each}}
     `
+
+    /**
+     * @private
+     * @type {number}
+     */
+    maxNumberToDisplay = 3
 
     data() {
         return {
@@ -60,10 +64,14 @@ class CollapsedModalBar extends View {
         this.numberList = [];
     }
 
+    /**
+     * @private
+     * @return {Record[]}
+     */
     getDataList() {
         const list = [];
 
-        let numberList = Espo.Utils.clone(this.numberList);
+        let numberList = [...this.numberList];
 
         if (this.numberList.length > this.maxNumberToDisplay) {
             numberList = numberList.slice(this.numberList.length - this.maxNumberToDisplay);
@@ -82,6 +90,11 @@ class CollapsedModalBar extends View {
         return list;
     }
 
+    /**
+     * @private
+     * @param {string} title
+     * @return {number|null}
+     */
     calculateDuplicateNumber(title) {
         let duplicateNumber = 0;
 
@@ -104,41 +117,50 @@ class CollapsedModalBar extends View {
         return duplicateNumber;
     }
 
+    /**
+     * @param {number} number
+     * @return {import('views/modal').default|null}
+     */
     getModalViewByNumber(number) {
         const key = 'key-' + number;
 
         return this.getView(key);
     }
 
+    /**
+     * @param {import('views/modal').default} modalView
+     * @param {{title: string}} options
+     */
     addModalView(modalView, options) {
         const number = this.lastNumber;
 
         this.numberList.push(this.lastNumber);
 
-        const key = 'key-' + number;
+        const key = `key-${number}`;
 
         this.createView(key, 'views/collapsed-modal', {
             title: options.title,
             duplicateNumber: this.calculateDuplicateNumber(options.title),
-            selector: '[data-number="' + number + '"]',
+            selector: `[data-number="${number}"]`,
         })
         .then(view => {
-            this.listenToOnce(view, 'close', () => {
-                this.removeModalView(number);
-            });
+            this.listenToOnce(view, 'close', () => this.removeModalView(number));
 
             this.listenToOnce(view, 'expand', () => {
                 this.removeModalView(number, true);
 
                 // Use timeout to prevent DOM being updated after modal is re-rendered.
                 setTimeout(() => {
-                    const key = 'dialog-' + number;
+                    const key = `dialog-${number}`;
 
                     this.setView(key, modalView);
 
                     modalView.setSelector(modalView.containerSelector);
 
-                    this.getView(key).render();
+                    this.getView(key).render()
+                        .then(() => {
+                            modalView.trigger('after:expand');
+                        });
                 }, 5);
             });
 
@@ -148,7 +170,12 @@ class CollapsedModalBar extends View {
         this.lastNumber++;
     }
 
-    removeModalView(number, noReRender) {
+    /**
+     *
+     * @param {number} number
+     * @param {boolean} [noReRender]
+     */
+    removeModalView(number, noReRender = false) {
         const key = 'key-' + number;
 
         const index = this.numberList.indexOf(number);
