@@ -563,7 +563,7 @@ class App {
      * @private
      */
     initRouter() {
-        const routes = this.metadata.get(['app', 'clientRoutes']) || {};
+        const routes = this.metadata.get('app.clientRoutes') || {};
 
         this.router = new Router({routes: routes});
 
@@ -581,8 +581,7 @@ class App {
 
         try {
             Backbone.history.start({root: window.location.pathname});
-        }
-        catch (e) {
+        } catch (e) {
             Backbone.history.loadUrl();
         }
     }
@@ -687,17 +686,16 @@ class App {
         }
 
         try {
-            let className = this.metadata.get(['clientDefs', name, 'controller']);
+            let className = this.metadata.get(`clientDefs.${name}.controller`);
 
             if (!className) {
-                const module = this.metadata.get(['scopes', name, 'module']);
+                const module = this.metadata.get(`scopes.${name}.module`);
 
                 className = Utils.composeClassName(module, name, 'controllers');
             }
 
             this.createController(className, name, callback);
-        }
-        catch (e) {
+        } catch (e) {
             this.baseController.error404();
         }
     }
