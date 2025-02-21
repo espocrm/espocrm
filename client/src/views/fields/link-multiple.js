@@ -1089,9 +1089,6 @@ class LinkMultipleFieldView extends BaseFieldView {
         const orderBy = filters.orderBy || this.panelDefs.selectOrderBy;
         const orderDirection = filters.orderBy ? filters.order : this.panelDefs.selectOrderDirection;
 
-        /** @type {import('views/modal').default} */
-        let view;
-
         /** @type {module:views/modals/select-records~Options} */
         const options = {
             entityType: this.foreignScope,
@@ -1112,8 +1109,7 @@ class LinkMultipleFieldView extends BaseFieldView {
             },
         };
 
-        view = /** @type {import('views/modal').default} */
-            await this.createView('modal', viewName, options);
+        const view = await this.createView('modal', viewName, options);
 
         await view.render();
 

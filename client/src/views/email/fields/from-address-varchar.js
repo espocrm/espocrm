@@ -439,7 +439,7 @@ class EmailFromAddressVarchar extends BaseFieldView {
      * @param {string} scope
      * @param {string} address
      */
-    addToPerson(scope, address) {
+    async addToPerson(scope, address) {
         const fromString = this.model.get('fromString') || this.model.get('fromName');
         let name = this.nameHash[address] || null;
 
@@ -467,11 +467,6 @@ class EmailFromAddressVarchar extends BaseFieldView {
             attributes.accountName = this.model.get('accountName');
         }
 
-        const viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.select`) ||
-            'views/modals/select-records';
-
-        Espo.Ui.notifyWait();
-
         const filters = {};
 
         if (name) {
@@ -482,67 +477,75 @@ class EmailFromAddressVarchar extends BaseFieldView {
             };
         }
 
-        this.createView('dialog', viewName, {
-            scope: scope,
+        const afterSave = /** import('model').default */model => {
+            const nameHash = Espo.Utils.clone(this.model.get('nameHash') || {});
+            const typeHash = Espo.Utils.clone(this.model.get('typeHash') || {});
+            const idHash = Espo.Utils.clone(this.model.get('idHash') || {});
+
+            idHash[address] = model.id;
+            nameHash[address] = model.attributes.name;
+            typeHash[address] = scope;
+
+            this.idHash = idHash;
+            this.nameHash = nameHash;
+            this.typeHash = typeHash;
+
+            const attributes = {
+                nameHash: nameHash,
+                idHash: idHash,
+                typeHash: typeHash,
+            };
+
+            setTimeout(() => {
+                this.model.set(attributes);
+
+                if (this.model.attributes.icsContents) {
+                    this.model.fetch();
+                }
+            }, 50);
+        };
+
+        const viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.select`) ||
+            'views/modals/select-records';
+
+        /** @type {module:views/modals/select-records~Options} */
+        const options = {
+            entityType: scope,
             createButton: false,
             filters: filters,
-        }, (view) => {
-            view.render();
+            onSelect: async models => {
+                const model = models[0];
 
-            Espo.Ui.notify(false);
+                if (!model.attributes.emailAddress) {
+                    await model.save({emailAddress: address}, {patch: true});
 
-            this.listenToOnce(view, 'select', (model) => {
-                const afterSave = () => {
-                    const nameHash = Espo.Utils.clone(this.model.get('nameHash') || {});
-                    const typeHash = Espo.Utils.clone(this.model.get('typeHash') || {});
-                    const idHash = Espo.Utils.clone(this.model.get('idHash') || {});
+                    afterSave(model);
 
-                    idHash[address] = model.id;
-                    nameHash[address] = model.get('name');
-                    typeHash[address] = scope;
-
-                    this.idHash = idHash;
-                    this.nameHash = nameHash;
-                    this.typeHash = typeHash;
-
-                    const attributes = {
-                        nameHash: nameHash,
-                        idHash: idHash,
-                        typeHash: typeHash
-                    };
-
-                    setTimeout(() => {
-                        this.model.set(attributes);
-
-                        if (this.model.get('icsContents')) {
-                            this.model.fetch();
-                        }
-                    }, 50);
-                };
-
-                if (!model.get('emailAddress')) {
-                    model.save({
-                        'emailAddress': address
-                    }, {patch: true}).then(afterSave);
+                    return;
                 }
-                else {
-                    model.fetch().then(() => {
-                        const emailAddressData = model.get('emailAddressData') || [];
 
-                        const item = {
-                            emailAddress: address,
-                            primary: emailAddressData.length === 0
-                        };
+                await model.fetch();
 
-                        emailAddressData.push(item);
+                const emailAddressData = [...(model.attributes.emailAddressData || [])];
 
-                        model.save({
-                            'emailAddressData': emailAddressData
-                        }, {patch: true}).then(afterSave);
-                    });
-                }
-            });
-        });
+                emailAddressData.push({
+                    emailAddress: address,
+                    primary: emailAddressData.length === 0
+                });
+
+                await model.save({emailAddressData: emailAddressData}, {patch: true});
+
+                afterSave(model);
+            }
+        };
+
+        Espo.Ui.notifyWait();
+
+        const view = await this.createView('modal', viewName, options);
+
+        await view.render();
+
+        Espo.Ui.notify();
     }
 
     fetchSearch() {
