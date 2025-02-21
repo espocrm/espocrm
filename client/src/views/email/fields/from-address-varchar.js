@@ -399,22 +399,18 @@ class EmailFromAddressVarchar extends BaseFieldView {
             attributes.lastName = lastName;
         }
 
-        const viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.edit`) ||
-            'views/modals/edit';
+        const helper = new RecordModal();
 
-        this.createView('create', viewName, {
-            scope: scope,
-            attributes: attributes
-        }, view => {
-            view.render();
-
-            this.listenTo(view, 'after:save', (model) => {
+        helper.showCreate(this, {
+            entityType: scope,
+            attributes: attributes,
+            afterSave: model => {
                 const nameHash = Espo.Utils.clone(this.model.get('nameHash') || {});
                 const typeHash = Espo.Utils.clone(this.model.get('typeHash') || {});
                 const idHash = Espo.Utils.clone(this.model.get('idHash') || {});
 
                 idHash[address] = model.id;
-                nameHash[address] = model.get('name');
+                nameHash[address] = model.attributes.name;
                 typeHash[address] = scope;
 
                 this.idHash = idHash;
@@ -424,17 +420,17 @@ class EmailFromAddressVarchar extends BaseFieldView {
                 const attributes = {
                     nameHash: nameHash,
                     idHash: idHash,
-                    typeHash: typeHash
+                    typeHash: typeHash,
                 };
 
                 setTimeout(() => {
                     this.model.set(attributes);
 
-                    if (this.model.get('icsContents')) {
+                    if (this.model.attributes.icsContents) {
                         this.model.fetch();
                     }
                 }, 50);
-            });
+            },
         });
     }
 

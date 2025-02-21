@@ -2063,6 +2063,7 @@ class ListRecordView extends View {
             this._renderEmpty = false;
 
             if (this.hasView('modal') && this.getView('modal').isRendered()) {
+                // @todo Find a way to not to re-render modals.
                 return;
             }
 

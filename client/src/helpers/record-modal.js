@@ -70,6 +70,8 @@ class RecordModalHelper {
      *   rootUrl?: string,
      *   afterSave?: function(import('model').default, {bypassClose: boolean}),
      *   afterDestroy?: function(import('model').default),
+     *   beforeRender?: function(import('views/modals/detail').default),
+     *   onClose?: function(),
      * }} params
      * @return {Promise<import('views/modals/detail').default>}
      */
@@ -122,6 +124,14 @@ class RecordModalHelper {
             modalView.listenToOnce(modalView, 'after:destroy', model => params.afterDestroy(model));
         }
 
+        if (params.beforeRender) {
+            params.beforeRender(modalView);
+        }
+
+        if (params.onClose) {
+            view.listenToOnce(modalView, 'close', () => params.onClose());
+        }
+
         await modalView.render();
 
         Espo.Ui.notify();
@@ -141,6 +151,8 @@ class RecordModalHelper {
      *   noFullForm?: boolean,
      *   returnUrl?: string,
      *   afterSave?: function(import('model').default, {bypassClose: boolean}),
+     *   beforeRender?: function(import('views/modals/edit').default),
+     *   onClose?: function(),
      *   returnDispatchParams?: {
      *       controller: string,
      *       action: string|null,
@@ -186,6 +198,14 @@ class RecordModalHelper {
             });
         }
 
+        if (params.beforeRender) {
+            params.beforeRender(modalView);
+        }
+
+        if (params.onClose) {
+            view.listenToOnce(modalView, 'close', () => params.onClose());
+        }
+
         await modalView.render();
 
         Espo.Ui.notify();
@@ -205,6 +225,8 @@ class RecordModalHelper {
      *   relate?: model:model~setRelateItem | model:model~setRelateItem[],
      *   attributes?: Record.<string, *>,
      *   afterSave?: function(import('model').default, {bypassClose: boolean}),
+     *   beforeRender?: function(import('views/modals/edit').default),
+     *   onClose?: function(),
      *   focusForCreate?: boolean,
      *   returnDispatchParams?: {
      *       controller: string,
@@ -239,8 +261,7 @@ class RecordModalHelper {
         Espo.Ui.notifyWait();
 
         const modalView = /** @type {import('views/modals/edit').default} */
-            await view.createView('modal', viewName, options)
-
+            await view.createView('modal', viewName, options);
 
         // @todo Revise.
         modalView.listenToOnce(modalView, 'remove', () => view.clearView('modal'));
@@ -249,6 +270,14 @@ class RecordModalHelper {
             modalView.listenTo(modalView, 'after:save', (model, /** Record */o) => {
                 params.afterSave(model, {bypassClose: !!o.bypassClose});
             });
+        }
+
+        if (params.beforeRender) {
+            params.beforeRender(modalView);
+        }
+
+        if (params.onClose) {
+            view.listenToOnce(modalView, 'close', () => params.onClose());
         }
 
         await modalView.render();

@@ -29,6 +29,7 @@
 /** @module views/record/kanban */
 
 import ListRecordView from 'views/record/list';
+import RecordModal from 'helpers/record-modal';
 
 /**
  * A kanban record view.
@@ -385,6 +386,7 @@ class KanbanRecordView extends ListRecordView {
             this._renderEmpty = false;
 
             if (this.hasView('modal') && this.getView('modal').isRendered()) {
+                // @todo Find a way to not to re-render modals.
                 return;
             }
 
@@ -1271,9 +1273,6 @@ class KanbanRecordView extends ListRecordView {
             return;
         }
 
-        const viewName = this.getMetadata().get(`clientDefs.${this.scope}.modalViews.edit`) ||
-            'views/modals/edit';
-
         const getCreateAttributes = () => {
             if (this.getCreateAttributes) {
                 return this.getCreateAttributes(group);
@@ -1284,28 +1283,25 @@ class KanbanRecordView extends ListRecordView {
 
         const attributes = await getCreateAttributes();
 
-        const options = {
-            attributes: attributes,
-            scope: this.scope,
-        };
+        const helper = new RecordModal();
 
-        const view = /** @type {module:views/modals/edit} */
-            await this.createView('quickCreate', viewName, options);
+        await helper.showCreate(this, {
+            attributes: attributes ,
+            entityType: this.scope,
+            afterSave: async model => {
+                if (this.orderDisabled) {
+                    await this.collection.fetch({maxSize: this.collection.maxSize});
 
-        view.getRecordView().setFieldReadOnly(this.statusField, true);
+                    return;
+                }
 
-        this.listenToOnce(view, 'after:save', () => {
-            if (this.orderDisabled) {
-                this.collection.fetch({maxSize: this.collection.maxSize});
-
-                return;
-            }
-
-            this.storeGroupOrder(group, view.model.id)
-                .then(() => this.collection.fetch({maxSize: this.collection.maxSize}));
+                await this.storeGroupOrder(group, model.id)
+                await this.collection.fetch({maxSize: this.collection.maxSize});
+            },
+            beforeRender: view => {
+                view.getRecordView().setFieldReadOnly(this.statusField, true);
+            },
         });
-
-        await view.render();
     }
 
     /**
