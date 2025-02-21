@@ -68,6 +68,7 @@ class RecordModalHelper {
      *   editDisabled?: boolean,
      *   removeDisabled?: boolean,
      *   rootUrl?: string,
+     *   layoutName?: string,
      *   afterSave?: function(import('model').default, {bypassClose: boolean}),
      *   afterDestroy?: function(import('model').default),
      *   beforeRender?: function(import('views/modals/detail').default),
@@ -104,6 +105,7 @@ class RecordModalHelper {
             quickEditDisabled: params.editDisabled,
             rootUrl: params.rootUrl,
             removeDisabled: params.removeDisabled,
+            layoutName: params.layoutName,
         };
 
         Espo.Ui.notifyWait();
@@ -148,8 +150,9 @@ class RecordModalHelper {
      *   id?: string,
      *   model?: import('model').default,
      *   rootUrl?: string,
-     *   noFullForm?: boolean,
+     *   fullFormDisabled?: boolean,
      *   returnUrl?: string,
+     *   layoutName?: string,
      *   afterSave?: function(import('model').default, {bypassClose: boolean}),
      *   beforeRender?: function(import('views/modals/edit').default),
      *   onClose?: function(),
@@ -175,9 +178,10 @@ class RecordModalHelper {
             entityType: entityType,
             id: id,
             model: model,
-            fullFormDisabled: params.noFullForm,
+            fullFormDisabled: params.fullFormDisabled,
             returnUrl: params.returnUrl || this.router.getCurrentUrl(),
             returnDispatchParams: params.returnDispatchParams,
+            layoutName: params.layoutName,
         };
 
         if (params.rootUrl) {
@@ -220,7 +224,7 @@ class RecordModalHelper {
      * @param {{
      *   entityType: string,
      *   rootUrl?: string,
-     *   noFullForm?: boolean,
+     *   fullFormDisabled?: boolean,
      *   returnUrl?: string,
      *   relate?: model:model~setRelateItem | model:model~setRelateItem[],
      *   attributes?: Record.<string, *>,
@@ -228,6 +232,7 @@ class RecordModalHelper {
      *   beforeRender?: function(import('views/modals/edit').default),
      *   onClose?: function(),
      *   focusForCreate?: boolean,
+     *   layoutName?: string,
      *   returnDispatchParams?: {
      *       controller: string,
      *       action: string|null,
@@ -246,12 +251,13 @@ class RecordModalHelper {
         /** @type {module:views/modals/edit~options} */
         const options = {
             entityType: entityType,
-            fullFormDisabled: params.noFullForm,
+            fullFormDisabled: params.fullFormDisabled,
             returnUrl: params.returnUrl || this.router.getCurrentUrl(),
             returnDispatchParams: params.returnDispatchParams,
             relate: params.relate,
             attributes: params.attributes,
             focusForCreate: params.focusForCreate,
+            layoutName: params.layoutName,
         };
 
         if (params.rootUrl) {

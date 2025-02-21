@@ -26,83 +26,72 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/campaign/record/panels/campaign-log-records', ['views/record/panels/relationship'], function (Dep) {
+import RelationshipPanelView from 'views/record/panels/relationship';
+import RecordModal from 'helpers/record-modal';
 
-    return Dep.extend({
+// noinspection JSUnusedGlobalSymbols
+export default class CampaignLogRecordsPanelView extends RelationshipPanelView {
 
-        filterList: [
-            "all",
-            "sent",
-            "opened",
-            "optedOut",
-            "bounced",
-            "clicked",
-            "optedIn",
-            "leadCreated",
-        ],
+    filterList = [
+        "all",
+        "sent",
+        "opened",
+        "optedOut",
+        "bounced",
+        "clicked",
+        "optedIn",
+        "leadCreated",
+    ]
 
-    	data: function () {
-    		return _.extend({
-    			filterList: this.filterList,
-                filterValue: this.filterValue,
-    		}, Dep.prototype.data.call(this));
-    	},
-
-    	setup: function () {
-            if (this.getAcl().checkScope('TargetList', 'create')) {
-                this.actionList.push({
-                    action: 'createTargetList',
-                    label: 'Create Target List',
-                });
-            }
-
-            this.filterList = Espo.Utils.clone(this.filterList);
-
-            if (!this.getConfig().get('massEmailOpenTracking')) {
-                var i = this.filterList.indexOf('opened')
-
-                if (~i) {
-                    this.filterList.splice(i, 1);
-                }
-            }
-
-    		Dep.prototype.setup.call(this);
-    	},
-
-        actionCreateTargetList: function () {
-            var attributes = {
-                sourceCampaignId: this.model.id,
-                sourceCampaignName: this.model.get('name'),
-            };
-
-            if (!this.collection.data.primaryFilter) {
-                attributes.includingActionList = [];
-            } else {
-                var status = Espo.Utils.upperCaseFirst(this.collection.data.primaryFilter).replace(/([A-Z])/g, ' $1');
-
-                attributes.includingActionList = [status];
-            }
-
-            var viewName = this.getMetadata().get('clientDefs.TargetList.modalViews.edit') || 'views/modals/edit';
-
-            this.createView('quickCreate', viewName, {
-                scope: 'TargetList',
-                attributes: attributes,
-                fullFormDisabled: true,
-                layoutName: 'createFromCampaignLog',
-            }, (view) => {
-                view.render();
-
-                var recordView = view.getView('edit');
-
-                if (recordView) {
-                    recordView.setFieldRequired('includingActionList');
-                }
-
-                this.listenToOnce(view, 'after:save', () => {
-                    Espo.Ui.success(this.translate('Done'));
-                });
+    setup() {
+        if (this.getAcl().checkScope('TargetList', 'create')) {
+            this.actionList.push({
+                action: 'createTargetList',
+                label: 'Create Target List',
             });
-        },
-    });
-});
+        }
+
+        this.filterList = Espo.Utils.clone(this.filterList);
+
+        if (!this.getConfig().get('massEmailOpenTracking')) {
+            const i = this.filterList.indexOf('opened');
+
+            if (i >= 0) {
+                this.filterList.splice(i, 1);
+            }
+        }
+
+        super.setup();
+    }
+
+    actionCreateTargetList() {
+        const attributes = {
+            sourceCampaignId: this.model.id,
+            sourceCampaignName: this.model.attributes.name,
+        };
+
+        if (!this.collection.data.primaryFilter) {
+            attributes.includingActionList = [];
+        } else {
+            const status = Espo.Utils.upperCaseFirst(this.collection.data.primaryFilter)
+                .replace(/([A-Z])/g, ' $1');
+
+            attributes.includingActionList = [status];
+        }
+
+        const helper = new RecordModal();
+
+        helper.showCreate(this, {
+            entityType: 'TargetList',
+            attributes: attributes,
+            fullFormDisabled: true,
+            layoutName: 'createFromCampaignLog',
+            afterSave: () => {
+                Espo.Ui.success(this.translate('Done'));
+            },
+            beforeRender: view => {
+                view.getRecordView().setFieldRequired('includingActionList')
+            },
+        });
+    }
+}

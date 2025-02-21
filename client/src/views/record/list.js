@@ -3364,7 +3364,7 @@ class ListRecordView extends View {
                 entityType: scope,
                 id: id,
                 model: model,
-                noFullForm: data.noFullForm,
+                fullFormDisabled: data.noFullForm,
                 rootUrl: rootUrl,
                 afterSave: m => {
                     const model = this.collection.get(m.id);
