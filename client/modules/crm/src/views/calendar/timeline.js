@@ -1031,6 +1031,14 @@ class TimelineView extends View {
 
     actionRefresh() {
         this.runFetch();
+
+        const iconEl = this.element.querySelector('button[data-action="refresh"] > span');
+
+        if (iconEl) {
+            iconEl.classList.add('animation-spin-fast');
+
+            setTimeout(() => iconEl.classList.remove('animation-spin-fast'), 500);
+        }
     }
 
     getColorFromScopeName(scope) {
