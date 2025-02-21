@@ -166,12 +166,7 @@ class HistoryPanelView extends ActivitiesPanelView {
             return;
         }
 
-        const emailHelper = new EmailHelper(
-            this.getLanguage(),
-            this.getUser(),
-            this.getDateTime(),
-            this.getAcl()
-        );
+        const emailHelper = new EmailHelper();
 
         Espo.Ui.notifyWait();
 

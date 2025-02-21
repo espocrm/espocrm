@@ -28,50 +28,48 @@
 
 /** @module email-helper */
 
+import {inject} from 'di';
+import Language from 'language';
+import User from 'models/user';
+import DateTime from 'date-time';
+import AclManager from 'acl-manager';
+
 /**
  * An email helper.
  */
 class EmailHelper {
 
     /**
-     * @param {module:language} language A language.
-     * @param {module:models/user} user A user.
-     * @param {module:date-time} dateTime A date-time util.
-     * @param {module:acl-manager} acl An ACL manager.
+     * @private
+     * @type {Language}
      */
-    constructor(language, user, dateTime, acl) {
-        /** @private */
-        this.language = language;
-        /** @private */
-        this.user = user;
-        /** @private */
-        this.dateTime = dateTime;
-        /** @private */
-        this.acl = acl;
+    @inject(Language)
+    language
 
+    /**
+     * @private
+     * @type {User}
+     */
+    @inject(User)
+    user
+
+    /**
+     * @private
+     * @type {DateTime}
+     */
+    @inject(DateTime)
+    dateTime
+
+    /**
+     * @private
+     * @type {AclManager}
+     */
+    @inject(AclManager)
+    acl
+
+    constructor() {
         /** @private */
         this.erasedPlaceholder = 'ERASED:';
-    }
-
-    /**
-     * @returns {module:language}
-     */
-    getLanguage() {
-        return this.language;
-    }
-
-    /**
-     * @returns {module:models/user}
-     */
-    getUser() {
-        return this.user;
-    }
-
-    /**
-     * @returns {module:date-time}
-     */
-    getDateTime() {
-        return this.dateTime;
     }
 
     /**
@@ -85,10 +83,10 @@ class EmailHelper {
     getReplyAttributes(model, data, cc) {
         const attributes = {
             status: 'Draft',
-            isHtml: model.get('isHtml'),
+            isHtml: model.attributes.isHtml,
         };
 
-        const subject = model.get('name') || '';
+        const subject = model.attributes.name || '';
 
         attributes['name'] = subject.toUpperCase().indexOf('RE:') !== 0 ?
             'Re: ' + subject :
@@ -96,10 +94,10 @@ class EmailHelper {
 
         let to = '';
         let isReplyOnSent = false;
-        const nameHash = model.get('nameHash') || {};
-        const replyToAddressString = model.get('replyTo') || null;
-        const replyToString = model.get('replyToString') || null;
-        const userEmailAddressList = this.getUser().get('emailAddressList') || [];
+        const nameHash = model.attributes.nameHash || {};
+        const replyToAddressString = model.attributes.replyTo || null;
+        const replyToString = model.attributes.replyToString || null;
+        const userEmailAddressList = this.user.attributes.emailAddressList || [];
         const idHash = model.attributes.idHash || {};
         const typeHash = model.attributes.typeHash || {};
 
@@ -131,13 +129,13 @@ class EmailHelper {
 
         if (
             (!to || !to.includes('@')) &&
-            model.get('from')
+            model.attributes.from
         ) {
-            if (!userEmailAddressList.includes(model.get('from'))) {
-                to = model.get('from');
+            if (!userEmailAddressList.includes(model.attributes.from)) {
+                to = model.attributes.from;
 
                 if (!nameHash[to]) {
-                    const fromString = model.get('fromString') || model.get('fromName');
+                    const fromString = model.attributes.fromString || model.attributes.fromName;
 
                     if (fromString) {
                         const name = this.parseNameFromStringAddress(fromString);
@@ -156,15 +154,15 @@ class EmailHelper {
         attributes.to = to;
 
         if (cc) {
-            attributes.cc = model.get('cc') || '';
+            attributes.cc = model.attributes.cc || '';
 
             /** @type {string[]} */
-            const excludeFromReplyEmailAddressList = this.getUser().get('excludeFromReplyEmailAddressList') || [];
+            const excludeFromReplyEmailAddressList = this.user.get('excludeFromReplyEmailAddressList') || [];
 
             (model.get('to') || '').split(';').forEach(item => {
                 item = item.trim();
 
-                if (item === this.getUser().get('emailAddress')) {
+                if (item === this.user.get('emailAddress')) {
                     return;
                 }
 
@@ -207,7 +205,7 @@ class EmailHelper {
         }
 
         /** @type {string[]} */
-        const personalAddresses = this.getUser().get('userEmailAddressList') || [];
+        const personalAddresses = this.user.get('userEmailAddressList') || [];
         const lcPersonalAddresses = personalAddresses.map(it => it.toLowerCase());
 
         if (attributes.cc) {
@@ -313,18 +311,18 @@ class EmailHelper {
 
         if (model.get('isHtml')) {
             prepending = '<br>' + '------' +
-                this.getLanguage().translate('Forwarded message', 'labels', 'Email') + '------';
+                this.language.translate('Forwarded message', 'labels', 'Email') + '------';
         }
         else {
             prepending = '\n\n' + '------' +
-                this.getLanguage().translate('Forwarded message', 'labels', 'Email') + '------';
+                this.language.translate('Forwarded message', 'labels', 'Email') + '------';
         }
 
         const list = [];
 
         if (model.get('from')) {
             const from = model.get('from');
-            let line = this.getLanguage().translate('from', 'fields', 'Email') + ': ';
+            let line = this.language.translate('from', 'fields', 'Email') + ': ';
 
             const nameHash = model.get('nameHash') || {};
 
@@ -343,14 +341,14 @@ class EmailHelper {
         }
 
         if (model.get('dateSent')) {
-            let line = this.getLanguage().translate('dateSent', 'fields', 'Email') + ': ';
-            line += this.getDateTime().toDisplay(model.get('dateSent'));
+            let line = this.language.translate('dateSent', 'fields', 'Email') + ': ';
+            line += this.dateTime.toDisplay(model.get('dateSent'));
 
             list.push(line);
         }
 
         if (model.get('name')) {
-            let line = this.getLanguage().translate('subject', 'fields', 'Email') + ': ';
+            let line = this.language.translate('subject', 'fields', 'Email') + ': ';
 
             line += model.get('name');
 
@@ -358,7 +356,7 @@ class EmailHelper {
         }
 
         if (model.get('to')) {
-            let line = this.getLanguage().translate('to', 'fields', 'Email') + ': ';
+            let line = this.language.translate('to', 'fields', 'Email') + ': ';
 
             const partList = [];
 
@@ -453,24 +451,24 @@ class EmailHelper {
      * @param {Object.<string, *>} attributes
      */
     addReplyBodyAttributes(model, attributes) {
-        const format = this.getDateTime().getReadableShortDateTimeFormat();
+        const format = this.dateTime.getReadableShortDateTimeFormat();
 
         const dateSent = model.get('dateSent');
 
         let dateSentString = null;
 
         if (dateSent) {
-            const dateSentMoment = this.getDateTime().toMoment(dateSent);
+            const dateSentMoment = this.dateTime.toMoment(dateSent);
 
             dateSentString = dateSentMoment.format(format);
 
-            if (dateSentMoment.year() !== this.getDateTime().getNowMoment().year()) {
+            if (dateSentMoment.year() !== this.dateTime.getNowMoment().year()) {
                 dateSentString += ', ' + dateSentMoment.year();
             }
         }
 
         let replyHeadString =
-            (dateSentString || this.getLanguage().translate('Original message', 'labels', 'Email'));
+            (dateSentString || this.language.translate('Original message', 'labels', 'Email'));
 
         let fromName = model.get('fromName');
 

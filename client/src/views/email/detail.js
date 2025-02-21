@@ -201,12 +201,7 @@ class EmailDetailView extends DetailView {
     actionCreateLead() {
         const attributes = {};
 
-        const emailHelper = new EmailHelper(
-            this.getLanguage(),
-            this.getUser(),
-            this.getDateTime(),
-            this.getAcl()
-        );
+        const emailHelper = new EmailHelper();
 
         const fromString = this.model.get('fromString') || this.model.get('fromName');
 
@@ -375,12 +370,7 @@ class EmailDetailView extends DetailView {
     actionCreateContact() {
         const attributes = {};
 
-        const emailHelper = new EmailHelper(
-            this.getLanguage(),
-            this.getUser(),
-            this.getDateTime(),
-            this.getAcl()
-        );
+        const emailHelper = new EmailHelper();
 
         const fromString = this.model.get('fromString') || this.model.get('fromName');
 
@@ -438,12 +428,7 @@ class EmailDetailView extends DetailView {
     }
 
     actionReply(data, e, cc) {
-        const emailHelper = new EmailHelper(
-            this.getLanguage(),
-            this.getUser(),
-            this.getDateTime(),
-            this.getAcl(),
-        );
+        const emailHelper = new EmailHelper();
 
         const attributes = emailHelper.getReplyAttributes(this.model, data, cc);
 
@@ -473,12 +458,7 @@ class EmailDetailView extends DetailView {
 
     // noinspection JSUnusedGlobalSymbols
     actionForward() {
-        const emailHelper = new EmailHelper(
-            this.getLanguage(),
-            this.getUser(),
-            this.getDateTime(),
-            this.getAcl()
-        );
+        const emailHelper = new EmailHelper();
 
         Espo.Ui.notifyWait();
 

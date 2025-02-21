@@ -348,12 +348,7 @@ class EmailFromAddressVarchar extends BaseFieldView {
     parseNameFromStringAddress(value) {
         value = value || '';
 
-        const emailHelper = new EmailHelper(
-            this.getLanguage(),
-            this.getUser(),
-            this.getDateTime(),
-            this.getAcl()
-        );
+        const emailHelper = new EmailHelper();
 
         return emailHelper.parseNameFromStringAddress(value);
     }
@@ -368,12 +363,7 @@ class EmailFromAddressVarchar extends BaseFieldView {
         let name = this.nameHash[address] || null;
 
         if (!name && this.name === 'from' && fromString) {
-            const emailHelper = new EmailHelper(
-                this.getLanguage(),
-                this.getUser(),
-                this.getDateTime(),
-                this.getAcl()
-            );
+            const emailHelper = new EmailHelper();
 
             name = emailHelper.parseNameFromStringAddress(fromString);
         }
@@ -444,12 +434,7 @@ class EmailFromAddressVarchar extends BaseFieldView {
         let name = this.nameHash[address] || null;
 
         if (!name && this.name === 'from' && fromString) {
-            const emailHelper = new EmailHelper(
-                this.getLanguage(),
-                this.getUser(),
-                this.getDateTime(),
-                this.getAcl()
-            );
+            const emailHelper = new EmailHelper();
 
             name = emailHelper.parseNameFromStringAddress(fromString);
         }
