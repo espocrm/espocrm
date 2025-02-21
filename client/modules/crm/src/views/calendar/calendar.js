@@ -31,6 +31,7 @@
 import View from 'view';
 import moment from 'moment';
 import * as FullCalendar from 'fullcalendar';
+import RecordModal from 'helpers/record-modal';
 
 /**
  * @typedef {import('@fullcalendar/core/internal-common.js').EventImpl} EventImpl
@@ -901,38 +902,31 @@ class CalendarView extends View {
 
                 this.calendar.unselect();
             },
-            eventClick: info => {
+            eventClick: async info => {
                 const event = info.event;
 
                 const scope = event.extendedProps.scope;
                 const recordId = event.extendedProps.recordId;
 
-                const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'detail']) ||
-                    'views/modals/detail';
+                const helper = new RecordModal();
 
-                Espo.Ui.notifyWait();
+                /** @type {import('views/modals/detail').default} */
+                let modalView;
 
-                this.createView('quickView', viewName, {
-                    scope: scope,
+                modalView = await helper.showDetail(this, {
+                    entityType: scope,
                     id: recordId,
                     removeDisabled: false,
-                }, view => {
-                    view.render();
-                    view.notify(false);
-
-                    this.listenToOnce(view, 'after:destroy', model => {
-                        this.removeModel(model);
-                    });
-
-                    this.listenTo(view, 'after:save', (model, o) => {
-                        o = o || {};
-
+                    afterSave: (model, o) => {
                         if (!o.bypassClose) {
-                            view.close();
+                            modalView.close();
                         }
 
                         this.updateModel(model);
-                    });
+                    },
+                    afterDestroy: model => {
+                        this.removeModel(model);
+                    },
                 });
             },
             datesSet: () => {

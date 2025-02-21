@@ -132,7 +132,7 @@ class DetailModalView extends ModalView {
             this.editDisabled = this.options.editDisabled;
         }
 
-        if ('removeDisabled' in this.options) {
+        if (this.options.removeDisabled !== undefined) {
             this.removeDisabled = this.options.removeDisabled;
         }
 

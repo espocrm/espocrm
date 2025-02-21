@@ -66,8 +66,9 @@ class RecordModalHelper {
      *   entityType: string,
      *   model?: import('model').default,
      *   editDisabled?: boolean,
+     *   removeDisabled?: boolean,
      *   rootUrl?: string,
-     *   afterSave?: function(import('model').default),
+     *   afterSave?: function(import('model').default, {bypassClose: boolean}),
      *   afterDestroy?: function(import('model').default),
      * }} params
      * @return {Promise<import('views/modals/detail').default>}
@@ -91,14 +92,16 @@ class RecordModalHelper {
         const viewName = this.metadata.get(`clientDefs.${entityType}.modalViews.detail`) ||
             'views/modals/detail';
 
-        Espo.Ui.notifyWait()
+        Espo.Ui.notifyWait();
 
+        /** @type {module:views/modals/detail~options} */
         const options = {
             entityType: entityType,
             model: model,
             id: id,
             quickEditDisabled: params.editDisabled,
             rootUrl: params.rootUrl,
+            removeDisabled: params.removeDisabled,
         };
 
         Espo.Ui.notifyWait();
@@ -110,7 +113,9 @@ class RecordModalHelper {
         view.listenToOnce(modalView, 'remove', () => view.clearView('modal'));
 
         if (params.afterSave) {
-            modalView.listenTo(modalView, 'after:save', model => params.afterSave(model));
+            modalView.listenTo(modalView, 'after:save', (model, /** Record */o) => {
+                params.afterSave(model, {bypassClose: !!o.bypassClose});
+            });
         }
 
         if (params.afterDestroy) {
@@ -135,7 +140,7 @@ class RecordModalHelper {
      *   rootUrl?: string,
      *   noFullForm?: boolean,
      *   returnUrl?: string,
-     *   afterSave?: function(import('model').default),
+     *   afterSave?: function(import('model').default, {bypassClose: boolean}),
      *   returnDispatchParams?: {
      *       controller: string,
      *       action: string|null,
@@ -153,7 +158,7 @@ class RecordModalHelper {
         const viewName = this.metadata.get(`clientDefs.${entityType}.modalViews.edit`) ||
             'views/modals/edit';
 
-        /** @type {module:views/modals/detail~options} */
+        /** @type {module:views/modals/edit~options} */
         const options = {
             entityType: entityType,
             id: id,
@@ -176,7 +181,9 @@ class RecordModalHelper {
         modalView.listenToOnce(modalView, 'remove', () => view.clearView('modal'));
 
         if (params.afterSave) {
-            modalView.listenTo(modalView, 'after:save', model => params.afterSave(model));
+            modalView.listenTo(modalView, 'after:save', (model, /** Record */o) => {
+                params.afterSave(model, {bypassClose: !!o.bypassClose});
+            });
         }
 
         await modalView.render();
@@ -197,7 +204,7 @@ class RecordModalHelper {
      *   returnUrl?: string,
      *   relate?: model:model~setRelateItem | model:model~setRelateItem[],
      *   attributes?: Record.<string, *>,
-     *   afterSave?: function(import('model').default),
+     *   afterSave?: function(import('model').default, {bypassClose: boolean}),
      *   returnDispatchParams?: {
      *       controller: string,
      *       action: string|null,
@@ -237,7 +244,9 @@ class RecordModalHelper {
         modalView.listenToOnce(modalView, 'remove', () => view.clearView('modal'));
 
         if (params.afterSave) {
-            modalView.listenTo(modalView, 'after:save', model => params.afterSave(model));
+            modalView.listenTo(modalView, 'after:save', (model, /** Record */o) => {
+                params.afterSave(model, {bypassClose: !!o.bypassClose});
+            });
         }
 
         await modalView.render();

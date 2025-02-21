@@ -763,26 +763,16 @@ class RelationshipPanelView extends BottomPanelView {
      */
     actionEditRelated(data) {
         const id = data.id;
-        const scope = this.collection.get(id).name;
+        const entityType = this.collection.get(id).entityType;
 
-        const viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
-            'views/modals/edit';
+        const helper = new RecordModal();
 
-        Espo.Ui.notifyWait();
-
-        this.createView('quickEdit', viewName, {
-            scope: scope,
+        helper.showEdit(this, {
+            entityType: entityType,
             id: id,
-        }, (view) => {
-            view.once('after:render', () => {
-                Espo.Ui.notify(false);
-            });
-
-            view.render();
-
-            view.once('after:save', () => {
+            afterSave: () => {
                 this.collection.fetch();
-            });
+            },
         });
     }
 
