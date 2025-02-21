@@ -345,7 +345,7 @@ class LinkParentFieldView extends BaseFieldView {
 
         if (!this.isListMode()) {
             this.addActionHandler('selectLink', () => {
-                Espo.Ui.notify(' ... ');
+                Espo.Ui.notifyWait();
 
                 const viewName = this.getMetadata().get(`clientDefs.${this.foreignScope}.modalViews.select`) ||
                     this.selectRecordsView;

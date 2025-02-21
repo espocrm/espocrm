@@ -119,7 +119,7 @@ class IndexFieldManagerView extends View {
 
         this.getRouter().navigate('#Admin/fieldManager/scope=' + scope, {trigger: false});
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('content', 'views/admin/field-manager/list', {
             fullSelector: '#fields-content',
@@ -150,7 +150,7 @@ class IndexFieldManagerView extends View {
         this.getRouter()
             .navigate('#Admin/fieldManager/scope=' + scope + '&field=' + field, {trigger: false});
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('content', 'views/admin/field-manager/edit', {
             fullSelector: '#fields-content',
@@ -181,7 +181,7 @@ class IndexFieldManagerView extends View {
         this.getRouter()
             .navigate('#Admin/fieldManager/scope=' + scope + '&type=' + type + '&create=true', {trigger: false});
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('content', 'views/admin/field-manager/edit', {
             fullSelector: '#fields-content',

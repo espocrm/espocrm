@@ -622,7 +622,7 @@ class RelationshipPanelView extends BottomPanelView {
      * @protected
      */
     async actionRefresh() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         await this.collection.fetch()
 
@@ -684,7 +684,7 @@ class RelationshipPanelView extends BottomPanelView {
             }
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('modalRelatedList', viewName, options, view => {
             Espo.Ui.notify(false);
@@ -768,7 +768,7 @@ class RelationshipPanelView extends BottomPanelView {
         const viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
             'views/modals/edit';
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('quickEdit', viewName, {
             scope: scope,
@@ -799,7 +799,7 @@ class RelationshipPanelView extends BottomPanelView {
             message: this.translate('unlinkRecordConfirmation', 'messages'),
             confirmText: this.translate('Unlink'),
         }, () => {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             Espo.Ajax
                 .deleteRequest(this.collection.url, {id: id})
@@ -829,7 +829,7 @@ class RelationshipPanelView extends BottomPanelView {
         }, () => {
             const model = this.collection.get(id);
 
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             model
                 .destroy()
@@ -852,7 +852,7 @@ class RelationshipPanelView extends BottomPanelView {
      */
     actionUnlinkAllRelated(data) {
         this.confirm(this.translate('unlinkAllConfirmation', 'messages'), () => {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             Espo.Ajax
                 .postRequest(this.model.entityType + '/action/unlinkAll', {

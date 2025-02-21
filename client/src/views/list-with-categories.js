@@ -402,7 +402,7 @@ class ListWithCategories extends ListView {
             this.hideListContainer();
             this.$nestedCategoriesContainer.addClass('hidden');
 
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             const promises = [
                 this.nestedCategoriesCollection.fetch().then(() => this.updateHeader()),
@@ -879,7 +879,7 @@ class ListWithCategories extends ListView {
             a.classList.add('disabled');
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         if (this.isExpanded) {
             await this.actionExpand();

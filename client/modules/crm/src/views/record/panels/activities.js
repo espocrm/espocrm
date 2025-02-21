@@ -469,7 +469,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
             };
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
             'views/modals/edit';
@@ -571,7 +571,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
         }
 
         if (!attributes.to && this.isBasePlus()) {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             Espo.Ajax.getRequest(`Activities/${this.model.entityType}/${this.model.id}/composeEmailAddressList`)
                 .then(/** Record[] */list => {
@@ -613,7 +613,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
             };
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.getComposeEmailAttributes(scope, data, attributes => {
             this.createView('quickCreate', 'views/modals/compose-email', {

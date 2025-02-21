@@ -82,7 +82,7 @@ class ExternalAccountIndex extends View {
             this.getMetadata().get(['integrations', integration, 'userView']) ||
             'views/external-account/' + Espo.Utils.camelCaseToHyphen(authMethod);
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('content', viewName, {
             fullSelector: '#external-account-content',

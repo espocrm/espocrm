@@ -787,7 +787,7 @@ class ListRecordView extends View {
      * @param {'first'|'last'|'next'|'previous'|'current'} page
      */
     goToPage(page) {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const onSync = () => {
             Espo.Ui.notify(false);
@@ -864,7 +864,7 @@ class ListRecordView extends View {
 
         const order = asc ? 'asc' : 'desc';
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const maxSizeLimit = this.getConfig().get('recordListMaxSizeLimit') || 200;
 
@@ -1443,7 +1443,7 @@ class ListRecordView extends View {
             message: this.translate('removeSelectedRecordsConfirmation', 'messages', this.scope),
             confirmText: this.translate('Remove'),
         }, () => {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             const helper = new MassActionHelper(this);
             const params = this.getMassActionSelectionPostData();
@@ -1565,7 +1565,7 @@ class ListRecordView extends View {
             this.listenToOnce(view, 'select', (templateModel) => {
                 this.clearView('pdfTemplate');
 
-                Espo.Ui.notify(' ... ');
+                Espo.Ui.notifyWait();
 
                 Espo.Ajax.postRequest(
                     'Pdf/action/massPrint',
@@ -1727,7 +1727,7 @@ class ListRecordView extends View {
             return false;
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         let ids = false;
 
@@ -1813,7 +1813,7 @@ class ListRecordView extends View {
             message: this.translate('unlinkSelectedRecordsConfirmation', 'messages'),
             confirmText: this.translate('Unlink'),
         }, () => {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             Espo.Ajax.deleteRequest(this.collection.url, {ids: this.checkedList})
                 .then(() => {
@@ -3111,7 +3111,7 @@ class ListRecordView extends View {
         $showMore.children('a').addClass('disabled');
 
         if (!options.skipNotify) {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
         }
 
         const lengthBefore = collection.length;
@@ -3426,7 +3426,7 @@ class ListRecordView extends View {
             this.collection.trigger('model-removing', id);
             this.collection.remove(model);
 
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             model.destroy({wait: true, fromList: true})
                 .then(() => {
@@ -3624,7 +3624,7 @@ class ListRecordView extends View {
 
         this._internalLayout = null;
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         await this.collection.fetch();
 

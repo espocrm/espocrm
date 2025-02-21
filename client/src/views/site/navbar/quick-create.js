@@ -91,7 +91,7 @@ class QuickCreateNavbarView extends View {
     }
 
     processCreate(scope) {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const type = this.getMetadata().get(['clientDefs', scope, 'quickCreateModalType']) || 'edit';
         const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', type]) || 'views/modals/edit';

@@ -152,7 +152,7 @@ class LabelManagerView extends  View {
     }
 
     createRecordView() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('record', 'views/admin/label-manager/edit', {
             selector: '.language-record',

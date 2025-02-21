@@ -266,7 +266,7 @@ class LayoutIndexView extends View {
 
         this.navigate(scope, type);
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const typeReal = this.getMetadata()
             .get('clientDefs.' + scope + '.additionalLayouts.' + type + '.type') || type;

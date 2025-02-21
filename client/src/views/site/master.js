@@ -61,7 +61,7 @@ class MasterSiteView extends View {
     currentName
 
     showLoadingNotification() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
     }
 
     hideLoadingNotification() {

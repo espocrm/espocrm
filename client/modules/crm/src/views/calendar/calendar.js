@@ -910,7 +910,7 @@ class CalendarView extends View {
                 const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'detail']) ||
                     'views/modals/detail';
 
-                Espo.Ui.notify(' ... ');
+                Espo.Ui.notifyWait();
 
                 this.createView('quickView', viewName, {
                     scope: scope,
@@ -1210,7 +1210,7 @@ class CalendarView extends View {
             attributes.assignedUserName = this.options.userName || this.options.userId;
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
             attributes: attributes,
@@ -1265,7 +1265,7 @@ class CalendarView extends View {
         url += '&agenda=' + encodeURIComponent(agenda);
 
         if (!this.suppressLoadingAlert) {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
         }
 
         Espo.Ajax.getRequest(url).then(data => {

@@ -73,7 +73,7 @@ class StreamView extends View {
     }
 
     afterRender() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.getCollectionFactory().create('Note', collection => {
             this.collection = collection;
@@ -138,7 +138,7 @@ class StreamView extends View {
 
         this.getRouter().navigate(url);
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.getRecordView().element.innerHTML = '';
 
@@ -191,7 +191,7 @@ class StreamView extends View {
             setTimeout(() => iconEl.classList.remove('animation-spin-fast'), 500);
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.getRecordView().showNewRecords()
             .then(() => Espo.Ui.notify(false));

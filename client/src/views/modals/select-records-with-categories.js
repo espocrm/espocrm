@@ -142,7 +142,7 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
 
                 this.applyCategoryToCollection();
 
-                Espo.Ui.notify(' ... ');
+                Espo.Ui.notifyWait();
 
                 this.collection.fetch()
                     .then(() => Espo.Ui.notify(false));
@@ -166,7 +166,7 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
         this.applyCategoryToCollection();
         this.getCategoriesView().isExpanded = this.isExpanded;
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         await this.collection.fetch();
 

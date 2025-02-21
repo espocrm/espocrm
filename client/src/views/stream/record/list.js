@@ -221,7 +221,7 @@ class ListStreamRecordView extends ListExpandedRecordView {
     actionPin(data) {
         const collection = /** @type {import('collections/note').default} */this.collection;
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax.postRequest(`Note/${data.id}/pin`).then(() => {
             Espo.Ui.notify(false);
@@ -248,7 +248,7 @@ class ListStreamRecordView extends ListExpandedRecordView {
     actionUnpin(data) {
         const collection = /** @type {import('collections/note').default} */this.collection;
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax.deleteRequest(`Note/${data.id}/pin`).then(() => {
             Espo.Ui.notify(false);

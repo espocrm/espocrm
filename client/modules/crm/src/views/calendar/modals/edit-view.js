@@ -192,7 +192,7 @@ define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], function
                     }
                 });
 
-                Espo.Ui.notify(' ... ');
+                Espo.Ui.notifyWait();
 
                 this.getPreferences()
                     .save({

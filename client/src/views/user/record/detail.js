@@ -275,7 +275,7 @@ class UserDetailRecordView extends DetailRecordView {
 
     // noinspection JSUnusedGlobalSymbols
     actionChangePassword() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('changePassword', 'views/modals/change-password', {userId: this.model.id}, view => {
             view.render();
@@ -306,7 +306,7 @@ class UserDetailRecordView extends DetailRecordView {
 
     // noinspection JSUnusedGlobalSymbols
     actionAccess() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax.getRequest(`User/${this.model.id}/acl`).then(aclData => {
             this.createView('access', 'views/user/modals/access', {
@@ -436,7 +436,7 @@ class UserDetailRecordView extends DetailRecordView {
         this.confirm(
             this.translate('generateAndSendNewPassword', 'messages', 'User')
         ).then(() => {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             Espo.Ajax
                 .postRequest('UserSecurity/password/generate', {id: this.model.id})

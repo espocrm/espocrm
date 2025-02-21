@@ -39,7 +39,7 @@ class SendInEmailHandler extends RowActionHandler {
         const modelFactory = this.view.getModelFactory();
         const collectionFactory = this.view.getCollectionFactory();
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         model.fetch()
             .then(() => {

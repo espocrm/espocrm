@@ -119,7 +119,7 @@ export default class TemplateManagerIndexView extends View {
     }
 
     createRecordView() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('record', 'views/admin/template-manager/edit', {
             selector: '.template-record',

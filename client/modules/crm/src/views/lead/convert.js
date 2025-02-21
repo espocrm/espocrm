@@ -69,7 +69,7 @@ class ConvertLeadView extends MainView {
         this.wait(true);
         this.id = this.options.id;
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.getModelFactory().create('Lead', model => {
             this.model = model;
@@ -188,7 +188,7 @@ class ConvertLeadView extends MainView {
         const process = (data) => {
             this.$el.find('[data-action="convert"]').addClass('disabled');
 
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             Espo.Ajax
             .postRequest('Lead/action/convert', data)

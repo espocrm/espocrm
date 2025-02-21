@@ -116,7 +116,7 @@ class EmailSubjectFieldView extends VarcharFieldView {
     }
 
     showAttachments() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('dialog', 'views/email/modals/attachments', {model: this.model})
             .then(view => {

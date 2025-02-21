@@ -67,7 +67,7 @@ class MoveActionHandler extends RowActionHandler {
             return;
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax.postRequest('KnowledgeBaseArticle/action/moveToTop', {
             id: model.id,
@@ -85,7 +85,7 @@ class MoveActionHandler extends RowActionHandler {
             return;
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax.postRequest('KnowledgeBaseArticle/action/moveUp', {
             id: model.id,
@@ -103,7 +103,7 @@ class MoveActionHandler extends RowActionHandler {
             return;
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax.postRequest('KnowledgeBaseArticle/action/moveDown', {
             id: model.id,
@@ -121,7 +121,7 @@ class MoveActionHandler extends RowActionHandler {
             return;
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax.postRequest('KnowledgeBaseArticle/action/moveToBottom', {
             id: model.id,

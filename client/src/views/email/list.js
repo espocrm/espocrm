@@ -419,7 +419,7 @@ class EmailListView extends ListView {
     actionComposeEmail(data) {
         data = data || {};
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
             'views/modals/compose-email';
@@ -538,7 +538,7 @@ class EmailListView extends ListView {
                         xhr.abort();
                     }
 
-                    Espo.Ui.notify(' ... ');
+                    Espo.Ui.notifyWait();
 
                     this.collection.offset = 0;
 

@@ -46,7 +46,7 @@ export default class extends ListRecordView {
             return;
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         await Espo.Ajax.postRequest('GroupEmailFolder/action/moveUp', {id: model.id});
         await this.collection.fetch();
@@ -68,7 +68,7 @@ export default class extends ListRecordView {
             return;
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         await Espo.Ajax.postRequest('GroupEmailFolder/action/moveDown', {id: model.id});
         await this.collection.fetch();

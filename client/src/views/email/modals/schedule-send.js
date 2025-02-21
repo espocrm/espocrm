@@ -130,7 +130,7 @@ export default class EmailScheduleSendModalView extends ModalView {
         }
 
         this.disableButton('schedule');
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.model.set({
             status: 'Draft',

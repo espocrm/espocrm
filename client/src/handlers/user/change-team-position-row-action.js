@@ -81,7 +81,7 @@ export default class ChangeUserTeamPositionRowActionHandler extends RowActionHan
      * @param {string|null} position
      */
     async savePosition(teamId, model, position) {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         await Espo.Ajax.putRequest(`Team/${teamId}/userPosition`, {
             id: model.id,

@@ -138,7 +138,7 @@ class RecordListPagination extends View {
             return null;
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
        return this.collection.setOffset(offset)
             .then(() => {

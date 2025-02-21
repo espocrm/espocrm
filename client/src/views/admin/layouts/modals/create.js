@@ -145,7 +145,7 @@ class LayoutCreateModalView extends ModalView {
 
         this.disableButton('create');
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax
             .postRequest('Layout/action/create', {

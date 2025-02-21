@@ -127,7 +127,7 @@ class SelectRelatedHelper {
             this.metadata.get(['clientDefs', scope, 'modalViews', viewKey]) ||
             'views/modals/select-records';
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const handler = panelDefs.selectHandler || null;
 

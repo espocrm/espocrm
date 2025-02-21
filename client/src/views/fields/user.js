@@ -51,7 +51,7 @@ class UserFieldView extends LinkFieldView {
         };
 
         this.addActionHandler('selectLinkTeams', () => {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             const viewName = this.getMetadata().get('clientDefs.Team.modalViews.select') ||
                 'views/modals/select-records';

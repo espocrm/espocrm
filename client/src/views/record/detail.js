@@ -1609,7 +1609,7 @@ class DetailRecordView extends BaseRecordView {
             this.trigger('before:delete');
             this.trigger('delete');
 
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             const collection = this.model.collection;
 
@@ -2447,7 +2447,7 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('modalRelatedList', viewName, options, view => {
             Espo.Ui.notify(false);

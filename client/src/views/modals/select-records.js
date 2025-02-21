@@ -348,14 +348,14 @@ class SelectRecordsModalView extends ModalView {
 
             const fetch = () => {
                 this.whenRendered().then(() => {
-                    Espo.Ui.notify(' ... ');
+                    Espo.Ui.notifyWait();
 
                     this.collection.fetch()
                         .then(() => Espo.Ui.notify(false));
                 });
                 // Timeout to make notify work.
                 /*setTimeout(() => {
-                    Espo.Ui.notify(' ... ');
+                    Espo.Ui.notifyWait();
 
                     this.collection.fetch()
                         .then(() => Espo.Ui.notify(false));
@@ -407,7 +407,7 @@ class SelectRecordsModalView extends ModalView {
             return;
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const viewName = this.getMetadata()
                 .get(['clientDefs', this.scope, 'modalViews', 'edit']) ||

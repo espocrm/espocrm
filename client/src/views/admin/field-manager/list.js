@@ -106,7 +106,7 @@ class FieldManagerListView extends View {
             .replace('{field}', field);
 
         this.confirm(msg, () => {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             Espo.Ajax.deleteRequest('Admin/fieldManager/' + this.scope + '/' + field).then(() => {
                 Espo.Ui.success(this.translate('Removed'));

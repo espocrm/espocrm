@@ -241,7 +241,7 @@ class MeetingDetailView extends DetailView {
     }
 
     actionSendInvitations() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('dialog', 'crm:views/meeting/modals/send-invitations', {
             model: this.model,
@@ -254,7 +254,7 @@ class MeetingDetailView extends DetailView {
     }
 
     actionSendCancellation() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('dialog', 'crm:views/meeting/modals/send-cancellation', {
             model: this.model,
@@ -277,7 +277,7 @@ class MeetingDetailView extends DetailView {
 
             this.listenTo(view, 'set-status', (status) => {
                 this.disableMenuItem('setAcceptanceStatus');
-                Espo.Ui.notify(' ... ');
+                Espo.Ui.notifyWait();
 
                 Espo.Ajax
                     .postRequest(this.model.entityType + '/action/setAcceptanceStatus', {

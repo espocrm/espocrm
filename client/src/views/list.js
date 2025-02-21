@@ -609,7 +609,7 @@ class ListView extends MainView {
             return;
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createListRecordView(true);
     }
@@ -710,7 +710,7 @@ class ListView extends MainView {
                     this.collection.data.select = selectAttributeList.join(',');
                 }
 
-                Espo.Ui.notify(' ... ');
+                Espo.Ui.notifyWait();
 
                 this.collection.fetch({main: true})
                     .then(() => Espo.Ui.notify(false));
@@ -799,7 +799,7 @@ class ListView extends MainView {
 
         const attributes = this.getCreateAttributes() || {};
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
             'views/modals/edit';
@@ -990,7 +990,7 @@ class ListView extends MainView {
      * @protected
      */
     async actionFullRefresh() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         await this.collection.fetch();
 

@@ -544,7 +544,7 @@ class TextFieldView extends BaseFieldView {
         const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') ||
             'views/modals/compose-email';
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('quickCreate', viewName, {
             attributes: attributes,

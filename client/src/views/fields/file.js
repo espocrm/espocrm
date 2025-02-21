@@ -757,7 +757,7 @@ class FileFieldView extends LinkFieldView {
             'views/modals/select-records';
 
         if (viewName) {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             let filters = null;
 

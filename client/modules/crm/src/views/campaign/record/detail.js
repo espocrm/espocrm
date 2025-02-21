@@ -85,7 +85,7 @@ define('crm:views/campaign/record/detail', ['views/record/detail'], function (De
                 this.listenToOnce(view, 'proceed', (link) => {
                     this.clearView('dialog');
 
-                    Espo.Ui.notify(' ... ');
+                    Espo.Ui.notifyWait();
 
                     Espo.Ajax.postRequest(`Campaign/${this.model.id}/generateMailMerge`, {link: link})
                         .then(response => {

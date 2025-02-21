@@ -279,7 +279,7 @@ class MeetingModalDetailView extends DetailModalView {
             this.listenTo(view, 'set-status', (status) => {
                 this.hideAcceptanceButton();
 
-                Espo.Ui.notify(' ... ');
+                Espo.Ui.notifyWait();
 
                 Espo.Ajax
                     .postRequest(this.model.entityType + '/action/setAcceptanceStatus', {
@@ -342,7 +342,7 @@ class MeetingModalDetailView extends DetailModalView {
     }
 
     actionSendInvitations() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('dialog', 'crm:views/meeting/modals/send-invitations', {
             model: this.model,

@@ -39,7 +39,7 @@ class OidcLoginHandler extends LoginHandler {
             'location=0,status=0,width=800,height=800'
         );
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         return new Promise((resolve, reject) => {
             Espo.Ajax.getRequest('Oidc/authorizationData')

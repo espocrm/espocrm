@@ -87,7 +87,7 @@ class ImportEmlModal extends ModalView {
         }
 
         this.disableButton('import');
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax
             .postRequest('Email/importEml', {fileId: this.model.attributes.fileId})

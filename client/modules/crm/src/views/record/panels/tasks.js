@@ -172,7 +172,7 @@ export default class TasksRelationshipPanelView extends RelationshipPanelView {
         const scope = 'Task';
         const foreignLink = this.model.defs['links'][link].foreign;
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.edit`) ||
             'views/modals/edit';

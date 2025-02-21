@@ -713,7 +713,7 @@ class FieldManagerEditView extends View {
             this.broadcastUpdate();
         };
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         if (this.isNew) {
             this.model

@@ -671,7 +671,7 @@ class TimelineView extends View {
             attributes.assignedUserName = userName || userId;
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
             attributes: attributes,
@@ -688,7 +688,7 @@ class TimelineView extends View {
     }
 
     viewEvent(scope, id) {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'detail']) ||
             'views/modals/detail';
@@ -931,7 +931,7 @@ class TimelineView extends View {
 
     fetchEvents(from, to, callback) {
         if (!this.options.noFetchLoadingMessage) {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
         }
 
         from = from.clone().add((-1) * this.leftMargin, 'seconds');
@@ -1004,7 +1004,7 @@ class TimelineView extends View {
         const viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
             'views/modals/select-records';
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('dialog', viewName, {
             scope: 'User',

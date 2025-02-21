@@ -143,7 +143,7 @@ class EntityManagerExportModalView extends ModalView {
 
         this.disableButton('export');
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax
             .postRequest('EntityManager/action/exportCustom', data)

@@ -33,7 +33,7 @@ define('crm:views/opportunity/record/panels/activities', ['crm:views/record/pane
         getComposeEmailAttributes: function (scope, data, callback) {
             data = data || {};
 
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             Dep.prototype.getComposeEmailAttributes.call(this, scope, data, (attributes) => {
                 Espo.Ajax.getRequest('Opportunity/action/emailAddressList?id=' + this.model.id).then(list => {

@@ -35,7 +35,7 @@ class PopulateDefaultsHandler extends ActionHandler {
 
         await this.view.confirm(confirmMessage);
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         await Espo.Ajax.postRequest('AddressCountry/action/populateDefaults');
         await this.view.collection.fetch();

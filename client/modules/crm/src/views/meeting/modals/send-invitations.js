@@ -167,7 +167,7 @@ define('crm:views/meeting/modals/send-invitations', ['views/modal', 'collection'
         actionSend: function () {
             this.disableButton('send');
 
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             let targets = this.getListView().checkedList.map(id => {
                 return {

@@ -155,7 +155,7 @@ export default class LeadCaptureFormView extends View {
 
         this.recordView.disableActionItems();
 
-        Espo.Ui.notify(' ... ')
+        Espo.Ui.notifyWait()
 
         const token = await this.processCaptcha();
 

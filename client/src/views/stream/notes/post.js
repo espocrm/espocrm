@@ -225,7 +225,7 @@ class PostNoteStreamView extends NoteStreamView {
      * @param {string} type
      */
     async react(type) {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const previousMyReactions = this.model.attributes.myReactions;
         const previousReactionCounts = this.model.attributes.reactionCounts;
@@ -264,7 +264,7 @@ class PostNoteStreamView extends NoteStreamView {
      * @param {string} type
      */
     async unReact(type) {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const previousMyReactions = this.model.attributes.myReactions;
         const previousReactionCounts = this.model.attributes.reactionCounts;

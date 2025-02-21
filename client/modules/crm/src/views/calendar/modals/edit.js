@@ -49,7 +49,7 @@ class CalenderEditModalView extends EditModalView {
     additionalEvents = {
         /** @this CalenderEditModalView */
         'change .scope-switcher input[name="scope"]': function () {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             const prevScope = this.scope;
 

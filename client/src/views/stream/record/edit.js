@@ -275,7 +275,7 @@ class EditStreamView extends BaseRecordView {
     }
 
     beforeSave() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
     }
 
     afterSave() {

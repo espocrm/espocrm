@@ -420,7 +420,7 @@ class LoginView extends View {
 
     /** @private */
     notifyLoading() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
     }
 
     /** @private */

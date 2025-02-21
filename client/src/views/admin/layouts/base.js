@@ -277,7 +277,7 @@ class LayoutBaseView extends View {
             .then(() => {
                 this.disableButtons();
 
-                Espo.Ui.notify(' ... ');
+                Espo.Ui.notifyWait();
 
                 Espo.Ajax
                     .postRequest('Layout/action/delete', {

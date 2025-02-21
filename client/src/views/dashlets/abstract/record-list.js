@@ -195,7 +195,7 @@ class RecordListDashletView extends BaseDashletView {
         }
 
         if (!options.skipNotify) {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
         }
 
         this.collection.where = this.searchManager.getWhere();
@@ -226,7 +226,7 @@ class RecordListDashletView extends BaseDashletView {
             }
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
             'views/modals/edit';

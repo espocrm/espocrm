@@ -164,7 +164,7 @@ export default class LinkManagerEditParamsModalView extends ModalView {
         }
 
         this.disableAllActionItems();
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const params = {};
 
@@ -197,7 +197,7 @@ export default class LinkManagerEditParamsModalView extends ModalView {
      */
     async resetToDefault() {
         this.disableAllActionItems();
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         try {
             await Espo.Ajax.postRequest('EntityManager/action/resetLinkParamsToDefault', {

@@ -86,7 +86,7 @@ class MergeRecordView extends View {
                 });
             });
 
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             const sourceIdList = this.models
                 .filter(m => m.id !== model.id)

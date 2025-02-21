@@ -48,7 +48,7 @@ class DeletedDetailRecordView extends DetailRecordView {
 
     // noinspection JSUnusedGlobalSymbols
     actionRestoreDeleted() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax
             .postRequest(this.model.entityType + '/action/restoreDeleted', {id: this.model.id})

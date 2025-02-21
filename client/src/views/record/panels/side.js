@@ -386,7 +386,7 @@ class SidePanelView extends View {
      * A `refresh` action.
      */
     async actionRefresh() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         await this.model.fetch();
 

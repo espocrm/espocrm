@@ -531,7 +531,7 @@ class ListRelatedView extends MainView {
             return;
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createListRecordView(true);
     }
@@ -633,7 +633,7 @@ class ListRelatedView extends MainView {
                     this.collection.data.select = selectAttributeList.join(',');
                 }
 
-                Espo.Ui.notify(' ... ');
+                Espo.Ui.notifyWait();
 
                 this.collection.fetch({main: true})
                     .then(() => Espo.Ui.notify(false));
@@ -671,7 +671,7 @@ class ListRelatedView extends MainView {
             message: this.translate('unlinkRecordConfirmation', 'messages'),
             confirmText: this.translate('Unlink'),
         }, () => {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             Espo.Ajax
                 .deleteRequest(this.collection.url, {id: id})

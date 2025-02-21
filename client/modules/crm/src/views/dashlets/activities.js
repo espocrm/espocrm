@@ -190,7 +190,7 @@ class ActivitiesDashletView extends BaseDashletView {
      */
     async refreshInternal(options = {}) {
         if (!options.skipNotify) {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
         }
 
         await this.collection.fetch({
@@ -212,7 +212,7 @@ class ActivitiesDashletView extends BaseDashletView {
 
         this.populateAttributesAssignedUser(scope, attributes);
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
 
@@ -235,7 +235,7 @@ class ActivitiesDashletView extends BaseDashletView {
 
         this.populateAttributesAssignedUser('Meeting', attributes);
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const viewName = this.getMetadata().get('clientDefs.Meeting.modalViews.edit') || 'views/modals/edit';
 
@@ -258,7 +258,7 @@ class ActivitiesDashletView extends BaseDashletView {
 
         this.populateAttributesAssignedUser('Call', attributes);
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const viewName = this.getMetadata().get('clientDefs.Call.modalViews.edit') || 'views/modals/edit';
 

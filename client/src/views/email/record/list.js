@@ -407,7 +407,7 @@ class EmailListRecordView extends ListRecordView {
     actionMoveToArchive(data) {
         const id = data.id;
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax
             .postRequest('Email/inbox/folders/archive', {id: id})
@@ -421,7 +421,7 @@ class EmailListRecordView extends ListRecordView {
     actionMoveToTrash(data) {
         const id = data.id;
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax
             .postRequest('Email/inbox/inTrash', {id: id})
@@ -436,7 +436,7 @@ class EmailListRecordView extends ListRecordView {
     actionRetrieveFromTrash(data) {
         const id = data.id;
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.retrieveFromTrash(id)
             .then(() => {
@@ -484,7 +484,7 @@ class EmailListRecordView extends ListRecordView {
         const id = data.id;
         const folderId = data.folderId;
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.retrieveFromTrash(id)
             .then(() => {
@@ -511,7 +511,7 @@ class EmailListRecordView extends ListRecordView {
         const folderId = data.folderId;
 
         if (folderId) {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             this.moveToFolder(id, folderId)
                 .then(() => {
@@ -549,7 +549,7 @@ class EmailListRecordView extends ListRecordView {
             this.listenToOnce(view, 'select', folderId => {
                 this.clearView('dialog');
 
-                Espo.Ui.notify(' ... ');
+                Espo.Ui.notifyWait();
 
                 this.moveToFolder(id, folderId)
                     .then(() => {

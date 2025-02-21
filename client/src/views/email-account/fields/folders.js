@@ -70,7 +70,7 @@ export default class extends ArrayFieldView {
     }
 
     actionAddItem() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.fetchFolders()
             .then(options => {

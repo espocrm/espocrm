@@ -245,7 +245,7 @@ class EmailDetailView extends DetailView {
 
         const viewName = this.getMetadata().get('clientDefs.Lead.modalViews.edit') || 'views/modals/edit';
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('quickCreate', viewName, {
             scope: 'Lead',
@@ -309,7 +309,7 @@ class EmailDetailView extends DetailView {
 
         const viewName = this.getMetadata().get('clientDefs.Case.modalViews.edit') || 'views/modals/edit';
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         (new Promise(resolve => {
             if (!(this.model.get('attachmentsIds') || []).length) {
@@ -366,7 +366,7 @@ class EmailDetailView extends DetailView {
 
         const viewName = this.getMetadata().get('clientDefs.Task.modalViews.edit') || 'views/modals/edit';
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('quickCreate', viewName, {
             scope: 'Task',
@@ -449,7 +449,7 @@ class EmailDetailView extends DetailView {
 
         const viewName = this.getMetadata().get('clientDefs.Contact.modalViews.edit') || 'views/modals/edit';
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('quickCreate', viewName, {
             scope: 'Contact',
@@ -483,7 +483,7 @@ class EmailDetailView extends DetailView {
 
         const attributes = emailHelper.getReplyAttributes(this.model, data, cc);
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
             'views/modals/compose-email';
@@ -516,7 +516,7 @@ class EmailDetailView extends DetailView {
             this.getAcl()
         );
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax
             .postRequest('Email/action/getDuplicateAttributes', {
@@ -532,7 +532,7 @@ class EmailDetailView extends DetailView {
                 attributes.attachmentsIds = duplicateAttributes.attachmentsIds;
                 attributes.attachmentsNames = duplicateAttributes.attachmentsNames;
 
-                Espo.Ui.notify(' ... ');
+                Espo.Ui.notifyWait();
 
                 const viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
                     'views/modals/compose-email';
@@ -639,7 +639,7 @@ class EmailDetailView extends DetailView {
                 attributes.accountsNames[this.model.get('accountId')] = this.model.get('accountName');
             }
 
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             Espo.Ajax.postRequest('Attachment/copy/' + id, {
                 relatedType: 'Document',

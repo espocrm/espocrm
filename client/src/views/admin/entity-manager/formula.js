@@ -142,7 +142,7 @@ class EntityManagerFormulaView extends View {
 
         this.disableButtons();
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax
             .postRequest('EntityManager/action/formula', {
@@ -169,7 +169,7 @@ class EntityManagerFormulaView extends View {
         await this.confirm(this.translate('confirmation', 'messages'));
 
         this.disableButtons();
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         try {
             await Espo.Ajax.postRequest('EntityManager/action/resetFormulaToDefault', {

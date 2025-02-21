@@ -65,7 +65,7 @@ define('crm:views/call/record/list', ['views/record/list'], function (Dep) {
                 this.collection.fetch();
             });
 
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             model.save();
         },

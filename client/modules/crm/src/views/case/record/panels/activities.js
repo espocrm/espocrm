@@ -33,7 +33,7 @@ define('crm:views/case/record/panels/activities', ['crm:views/record/panels/acti
         getComposeEmailAttributes: function (scope, data, callback) {
             data = data || {};
 
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             Dep.prototype.getComposeEmailAttributes.call(this, scope, data, attributes => {
                 attributes.name = '[#' + this.model.get('number') + '] ' + this.model.get('name');

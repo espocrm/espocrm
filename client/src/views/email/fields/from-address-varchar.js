@@ -474,7 +474,7 @@ class EmailFromAddressVarchar extends BaseFieldView {
         const viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.select`) ||
             'views/modals/select-records';
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const filters = {};
 

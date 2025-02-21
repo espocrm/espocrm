@@ -101,7 +101,7 @@ class GlobalStreamView extends View {
     }
 
     fetchAndRender() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.collection.fetch()
             .then(() => {

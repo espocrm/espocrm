@@ -52,7 +52,7 @@ class CampaignUnsubscribeView extends View {
             `Campaign/unsubscribe/${this.actionData.queueItemId}`;
 
         this.addActionHandler('subscribe', () => {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             this.inProcess = true;
             this.reRender();
@@ -75,7 +75,7 @@ class CampaignUnsubscribeView extends View {
         });
 
         this.addActionHandler('unsubscribe', () => {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             this.inProcess = true;
             this.reRender();

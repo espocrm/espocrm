@@ -76,7 +76,7 @@ class StreamViewAuditLogModalView extends ModalView {
                     type: 'listAuditLog',
                 });
 
-                Espo.Ui.notify(' ... ');
+                Espo.Ui.notifyWait();
 
                 return this.assignView('record', listView, '.record')
                     .then(() => {

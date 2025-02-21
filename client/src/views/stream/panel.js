@@ -707,7 +707,7 @@ class PanelStreamView extends RelationshipPanelView {
         this._justPosted = true;
         setTimeout(() => this._justPosted = false, 1000);
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         try {
             await model.save(null);
@@ -885,7 +885,7 @@ class PanelStreamView extends RelationshipPanelView {
             return;
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         await this.getListView().showNewRecords();
 

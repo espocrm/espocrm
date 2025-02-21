@@ -639,7 +639,7 @@ class DetailModalView extends ModalView {
         const viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
             'views/modals/edit';
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         return new Promise(resolve => {
             this.createView('quickEdit', viewName, {
@@ -737,7 +737,7 @@ class DetailModalView extends ModalView {
 
     // noinspection JSUnusedGlobalSymbols
     actionDuplicate() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax
             .postRequest(this.scope + '/action/getDuplicateAttributes', {id: this.model.id})

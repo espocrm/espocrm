@@ -585,7 +585,7 @@ InstallScript.prototype.hideMsg = function() {
 }
 
 InstallScript.prototype.showLoading = function() {
-    Espo.Ui.notify(' ... ');
+    Espo.Ui.notifyWait();
 }
 
 InstallScript.prototype.hideLoading = function() {

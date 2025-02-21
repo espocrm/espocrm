@@ -474,14 +474,14 @@ class RelatedListModalView extends ModalView {
 
             const fetch = () => {
                 this.whenRendered().then(() => {
-                    Espo.Ui.notify(' ... ');
+                    Espo.Ui.notifyWait();
 
                     this.collection.fetch()
                         .then(() => Espo.Ui.notify(false));
                 });
                 // Timeout to make notify work.
                 /*setTimeout(() => {
-                    Espo.Ui.notify(' ... ');
+                    Espo.Ui.notifyWait();
 
                     this.collection.fetch()
                         .then(() => Espo.Ui.notify(false));
@@ -527,7 +527,7 @@ class RelatedListModalView extends ModalView {
             message: this.translate('unlinkRecordConfirmation', 'messages'),
             confirmText: this.translate('Unlink'),
         }, () => {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             Espo.Ajax.deleteRequest(this.collection.url, {id: id}).then(() => {
                 Espo.Ui.success(this.translate('Unlinked'));
@@ -622,7 +622,7 @@ class RelatedListModalView extends ModalView {
         }, () => {
             const model = this.collection.get(id);
 
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             model
                 .destroy()

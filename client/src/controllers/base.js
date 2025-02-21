@@ -190,7 +190,7 @@ class BaseController extends Controller {
     actionLogoutWait() {
         this.entire('views/base', {template: 'logout-wait'}, view => {
             view.render()
-                .then(() => Espo.Ui.notify(' ... '))
+                .then(() => Espo.Ui.notifyWait())
         });
     }
 

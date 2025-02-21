@@ -52,7 +52,7 @@ class StreamDashletView extends BaseDashletView {
         }
 
         if (!options.skipNotify) {
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
         }
 
         await this.getRecordView().showNewRecords();

@@ -83,7 +83,7 @@ export default class extends ModalView {
             });
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.wait(
             Espo.Ajax.getRequest('EmailFolder/action/listAll')

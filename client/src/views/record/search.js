@@ -566,7 +566,7 @@ class SearchView extends View {
     }
 
     refresh() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.collection.abortLastFetch();
         this.collection.reset();
@@ -984,7 +984,7 @@ class SearchView extends View {
         this.collection.where = this.searchManager.getWhere();
         this.collection.offset = 0;
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.collection.fetch().then(() => {
             Espo.Ui.notify(false);

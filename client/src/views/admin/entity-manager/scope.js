@@ -201,7 +201,7 @@ class EntityManagerScopeView extends View {
     }
 
     editFormula() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.loader.requirePromise('views/admin/entity-manager/modals/select-formula')
             .then(View => {

@@ -107,7 +107,7 @@ export default class IntegrationsIndexView extends View {
 
         this.getRouter().navigate(`#Admin/integrations/name=${integration}`, {trigger: false});
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         await this.createIntegrationView(integration);
 

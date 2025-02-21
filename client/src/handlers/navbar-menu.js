@@ -36,7 +36,7 @@ class NavbarMenuHandler extends ActionHandler {
 
     // noinspection JSUnusedGlobalSymbols
     lastViewed() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.view.createView('dialog', 'views/modals/last-viewed', {}, view => {
             view.render();

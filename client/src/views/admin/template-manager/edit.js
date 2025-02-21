@@ -211,7 +211,7 @@ export default class TemplateManagerEditView extends View {
                 data.scope = this.scope;
             }
 
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             Espo.Ajax.postRequest('TemplateManager/action/resetTemplate', data)
                 .then(returnData => {

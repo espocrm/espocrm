@@ -557,7 +557,7 @@ class Step2ImportView extends View {
 
         $(this.containerSelector + ' button[data-name="update"]').removeClass('disabled');
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         let label = this.translate(name, 'fields', this.scope);
         label = this.getHelper().escapeString(label);
@@ -690,7 +690,7 @@ class Step2ImportView extends View {
 
         this.disableButtons();
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax.postRequest('Import/file', null, {
             timeout: 0,

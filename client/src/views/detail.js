@@ -360,7 +360,7 @@ class DetailView extends MainView {
         this.clearView('record');
         this.setViewMode(mode, true);
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         if (this.modesView) {
             this.modesView.changeMode(mode);
@@ -654,7 +654,7 @@ class DetailView extends MainView {
      * Action 'duplicate'.
      */
     actionDuplicate() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax
             .postRequest(this.scope + '/action/getDuplicateAttributes', {id: this.model.id})
@@ -735,7 +735,7 @@ class DetailView extends MainView {
             return;
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         await this.model.fetch();
 

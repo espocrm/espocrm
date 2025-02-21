@@ -48,7 +48,7 @@ class NotificationListView extends View {
     }
 
     actionRefresh() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const $btn = this.$el.find('[data-action="refresh"]');
         $btn.addClass('disabled').attr('disabled', 'disabled');
@@ -110,7 +110,7 @@ class NotificationListView extends View {
     }
 
     actionMarkAllRead() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const $link = this.$el.find('[data-action="markAllNotificationsRead"]');
         $link.attr('disabled', 'disabled').addClass('disabled');

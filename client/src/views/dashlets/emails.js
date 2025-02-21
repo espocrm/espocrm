@@ -50,7 +50,7 @@ class EmailsDashletView extends RecordListDashletView {
     actionCompose() {
         const attributes = this.getCreateAttributes() || {};
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') ||
             'views/modals/compose-email';

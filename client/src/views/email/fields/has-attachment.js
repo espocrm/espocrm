@@ -55,7 +55,7 @@ export default class extends BaseFieldView {
      * @private
      */
     show() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('dialog', 'views/email/modals/attachments', {model: this.model})
             .then(view => {

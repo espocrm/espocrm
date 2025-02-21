@@ -202,7 +202,7 @@ class UserSecurityModalView extends ModalView {
             const view = this.getMetadata().get(['app', 'authentication2FAMethods', auth2FAMethod, 'userApplyView']);
 
             if (view) {
-                Espo.Ui.notify(' ... ');
+                Espo.Ui.notifyWait();
 
                 this.createView('dialog', view, {
                     model: this.model,

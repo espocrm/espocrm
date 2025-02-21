@@ -64,7 +64,7 @@ class KnowledgeBaseRecordDetailView extends DetailRecordView {
 
     // noinspection JSUnusedGlobalSymbols
     actionSendInEmail() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const helper = new KnowledgeBaseHelper(this.getLanguage());
 

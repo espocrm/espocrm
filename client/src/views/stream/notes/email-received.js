@@ -233,7 +233,7 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
 
         this.formModel.id = this.emailId;
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         try {
             await this.formModel.fetch();

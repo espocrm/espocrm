@@ -1134,7 +1134,7 @@ class LinkFieldView extends BaseFieldView {
      * @protected
      */
     actionSelect() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const panelDefs = this.panelDefs;
 
@@ -1293,7 +1293,7 @@ class LinkFieldView extends BaseFieldView {
     }
 
     actionSelectOneOf() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const viewName = this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'select']) ||
             this.selectRecordsView;
@@ -1337,7 +1337,7 @@ class LinkFieldView extends BaseFieldView {
         const viewName = this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'edit']) ||
             'views/modals/edit';
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.getCreateAttributesProvider()().then(attributes => {
             this.createView('dialog', viewName, {

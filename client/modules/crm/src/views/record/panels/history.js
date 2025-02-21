@@ -141,7 +141,7 @@ class HistoryPanelView extends ActivitiesPanelView {
             };
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.edit`) ||
             'views/modals/edit';
@@ -178,7 +178,7 @@ class HistoryPanelView extends ActivitiesPanelView {
             this.getAcl()
         );
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.getModelFactory().create('Email')
             .then(model => {

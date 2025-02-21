@@ -234,7 +234,7 @@ class ListTreeRecordItemView extends View {
             collection.url = this.collection.url;
             collection.parentId = this.model.id;
 
-            Espo.Ui.notify(' ... ');
+            Espo.Ui.notifyWait();
 
             this.listenToOnce(collection, 'sync', () => {
                 Espo.Ui.notify(false);

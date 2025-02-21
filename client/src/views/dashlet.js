@@ -165,7 +165,7 @@ class DashletView extends View {
             this.optionsView ||
             'views/dashlets/options/base';
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('options', optionsView, {
             name: this.name,

@@ -401,7 +401,7 @@ class EmailDetailRecordView extends DetailRecordView {
     }
 
     actionMoveToArchive() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         Espo.Ajax.postRequest(`Email/inbox/folders/archive`, {id: this.model.id})
             .then(() => {
@@ -555,7 +555,7 @@ class EmailDetailRecordView extends DetailRecordView {
             }
         }
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('modalRelatedList', viewName, options, (view) => {
             Espo.Ui.notify(false);

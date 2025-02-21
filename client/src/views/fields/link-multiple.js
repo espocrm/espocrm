@@ -1068,7 +1068,7 @@ class LinkMultipleFieldView extends BaseFieldView {
      * @protected
      */
     actionSelect() {
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const panelDefs = this.panelDefs;
 
@@ -1225,7 +1225,7 @@ class LinkMultipleFieldView extends BaseFieldView {
         const viewName = this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'edit']) ||
             'views/modals/edit';
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.getCreateAttributesProvider()().then(attributes => {
             this.createView('dialog', viewName, {

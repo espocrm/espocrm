@@ -46,7 +46,7 @@ export default class extends View {
     setup() {
         this.requirements = {};
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         const promise = Espo.Ajax.getRequest('Admin/action/systemRequirementList').then(requirements => {
             this.requirements = requirements;

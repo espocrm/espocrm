@@ -125,7 +125,7 @@ class EmailBodyFieldView extends WysiwygFieldView {
         const parentId = this.model.get('parentId');
         const parentType = this.model.get('parentType');
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         this.createView('insertFieldDialog', 'views/email/modals/insert-field', {
             parentId: parentId,
