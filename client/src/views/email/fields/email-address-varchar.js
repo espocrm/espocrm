@@ -214,7 +214,7 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
     /**
      * @param {string} entityType
      */
-    processSelectEntityType(entityType) {
+    async processSelectEntityType(entityType) {
         const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) ||
             'views/modals/select-records';
 
@@ -256,32 +256,15 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
             };
         }
 
-        this.createView('dialog', viewName, {
-            scope: entityType,
+        /** @type {module:views/modals/select-records~Options} */
+        const options = {
+            entityType: entityType,
             multiple: true,
             createButton: false,
             mandatorySelectAttributeList: ['emailAddress'],
             headerText: headerText,
             filters: filters,
-        }).then(/** import('views/modals/select-records').default */view => {
-            this.selectAddressEntityTypeList.forEach(itemEntityType => {
-                view.addButton({
-                    name: 'selectEntityType' + itemEntityType,
-                    style: 'text',
-                    position: 'right',
-                    label: this.translate(itemEntityType, 'scopeNamesPlural'),
-                    className: itemEntityType === entityType ? 'active btn-xs-wide' : 'btn-xs-wide',
-                    disabled: itemEntityType === entityType,
-                    onClick: () => {
-                        this.clearView('dialog');
-                        this.processSelectEntityType(itemEntityType);
-                    },
-                }, false, true);
-            });
-
-            view.render();
-
-            this.listenToOnce(view, 'select', /** module:model[] */models => {
+            onSelect: models => {
                 models
                     .filter(model => model.attributes.emailAddress)
                     .forEach(model => {
@@ -300,8 +283,29 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
                     });
 
                 this.trigger('change');
-            });
+            },
+        };
+
+        const view = /** @type {import('views/modals/select-records').default} */
+            await this.createView('modal', viewName, options);
+
+        this.selectAddressEntityTypeList.forEach(itemEntityType => {
+            view.addButton({
+                name: 'selectEntityType' + itemEntityType,
+                style: 'text',
+                position: 'right',
+                label: this.translate(itemEntityType, 'scopeNamesPlural'),
+                className: itemEntityType === entityType ? 'active btn-xs-wide' : 'btn-xs-wide',
+                disabled: itemEntityType === entityType,
+                onClick: () => {
+                    this.clearView('modal');
+
+                    this.processSelectEntityType(itemEntityType);
+                },
+            }, false, true);
         });
+
+        await view.render();
     }
 
     initAddressList() {
