@@ -74,6 +74,10 @@
                 "type": "string"
             }
         },
+        "quickCreateModalType": {
+            "type": "string",
+            "description": "A modal view type to be used for quick create."
+        },
         "listViewModeList": {
             "type": "array",
             "items": {

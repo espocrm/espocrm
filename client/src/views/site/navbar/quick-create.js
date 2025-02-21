@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import View from 'view';
+import RecordModal from 'helpers/record-modal';
 
 class QuickCreateNavbarView extends View {
 
@@ -90,15 +91,34 @@ class QuickCreateNavbarView extends View {
         return this.list.length > 0;
     }
 
-    processCreate(scope) {
+    /**
+     * @private
+     * @param {string} scope
+     */
+    async processCreate(scope) {
         Espo.Ui.notifyWait();
 
-        const type = this.getMetadata().get(['clientDefs', scope, 'quickCreateModalType']) || 'edit';
-        const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', type]) || 'views/modals/edit';
+        const type = this.getMetadata().get(`clientDefs.${scope}.quickCreateModalType`);
 
-        this.createView('dialog', viewName , {scope: scope})
-            .then(view => view.render())
-            .then(() => Espo.Ui.notify(false));
+        if (type) {
+            const viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.${type}`);
+
+            if (viewName) {
+                const view = await this.createView('modal', viewName , {scope: scope});
+
+                await view.render();
+
+                Espo.Ui.notify();
+
+                return;
+            }
+        }
+
+        const helper = new RecordModal();
+
+        await helper.showCreate(this, {
+            entityType: scope,
+        });
     }
 }
 
