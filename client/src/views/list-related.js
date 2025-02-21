@@ -272,6 +272,7 @@ class ListRelatedView extends MainView {
         );
 
         this.addActionHandler('fullRefresh', () => this.actionFullRefresh());
+        this.addActionHandler('removeRelated', () => this.actionRemoveRelated());
     }
 
     /**
@@ -832,6 +833,37 @@ class ListRelatedView extends MainView {
         await this.collection.fetch();
 
         Espo.Ui.notify();
+    }
+
+    /**
+     * @protected
+     * @param {{id: string}} data
+     * @return {Promise<void>}
+     */
+    async actionRemoveRelated(data) {
+        const id = data.id;
+
+        await this.confirm({
+            message: this.translate('removeRecordConfirmation', 'messages'),
+            confirmText: this.translate('Remove'),
+        });
+
+        const model = this.collection.get(id);
+
+        if (!model) {
+            return;
+        }
+
+        Espo.Ui.notifyWait();
+
+        await model.destroy();
+
+        Espo.Ui.success(this.translate('Removed'));
+
+        this.collection.fetch().then(() => {});
+
+        this.model.trigger('after:unrelate');
+        this.model.trigger(`after:unrelate:${this.link}`);
     }
 }
 
