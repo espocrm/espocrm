@@ -1133,13 +1133,9 @@ class LinkFieldView extends BaseFieldView {
     /**
      * @protected
      */
-    actionSelect() {
-        Espo.Ui.notifyWait();
-
-        const panelDefs = this.panelDefs;
-
-        const viewName = panelDefs.selectModalView ||
-            this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'select']) ||
+    async actionSelect() {
+        const viewName = this.panelDefs.selectModalView ||
+            this.getMetadata().get(`clientDefs.${this.foreignScope}.modalViews.select`) ||
             this.selectRecordsView;
 
         const mandatorySelectAttributeList = this.getMandatorySelectAttributeList();
@@ -1147,38 +1143,45 @@ class LinkFieldView extends BaseFieldView {
         const createButton = this.isEditMode() && (!this.createDisabled || this.forceCreateButton);
 
         const createAttributesProvider = createButton ?
-            this.getCreateAttributesProvider() :
-            null;
+            this.getCreateAttributesProvider() : null;
 
-        this._getSelectFilters().then(filters => {
-            const orderBy = filters.orderBy || this.panelDefs.selectOrderBy;
-            const orderDirection = filters.orderBy ? filters.order : this.panelDefs.selectOrderDirection;
+        Espo.Ui.notifyWait();
 
-            this.createView('dialog', viewName, {
-                scope: this.foreignScope,
-                createButton: createButton,
-                filters: filters.advanced,
-                boolFilterList: filters.bool,
-                primaryFilterName: filters.primary,
-                mandatorySelectAttributeList: mandatorySelectAttributeList,
-                forceSelectAllAttributes: this.forceSelectAllAttributes,
-                filterList: this.getSelectFilterList(),
-                createAttributesProvider: createAttributesProvider,
-                layoutName: this.panelDefs.selectLayout,
-                orderBy: orderBy,
-                orderDirection: orderDirection,
-            }, view => {
-                view.render();
+        const filters = await this._getSelectFilters();
 
-                Espo.Ui.notify(false);
+        const orderBy = filters.orderBy || this.panelDefs.selectOrderBy;
+        const orderDirection = filters.orderBy ? filters.order : this.panelDefs.selectOrderDirection;
 
-                this.listenToOnce(view, 'select', model => {
-                    this.clearView('dialog');
+        /** @type {import('views/modal').default} */
+        let view;
 
-                    this.select(model);
-                });
-            });
-        });
+        /** @type {module:views/modals/select-records~Options} */
+        const options = {
+            entityType: this.foreignScope,
+            createButton: createButton,
+            filters: filters.advanced,
+            boolFilterList: filters.bool,
+            primaryFilterName: filters.primary,
+            mandatorySelectAttributeList: mandatorySelectAttributeList,
+            forceSelectAllAttributes: this.forceSelectAllAttributes,
+            filterList: this.getSelectFilterList(),
+            createAttributesProvider: createAttributesProvider,
+            layoutName: this.panelDefs.selectLayout,
+            orderBy: orderBy,
+            orderDirection: orderDirection,
+            onSelect: (models) => {
+                view.close();
+
+                this.select(models[0]);
+            },
+        };
+
+        view = /** @type {import('views/modal').default}  */
+            await this.createView('modal', viewName, options);
+
+        await view.render();
+
+        Espo.Ui.notify();
     }
 
     /**

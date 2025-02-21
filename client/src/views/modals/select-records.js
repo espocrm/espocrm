@@ -89,7 +89,7 @@ class SelectRecordsModalView extends ModalView {
      * @property {Object.<string, module:search-manager~advancedFilter>} [filters] Filters.
      * @property {string[]} [boolFilterList] Bool filters.
      * @property {string} [primaryFilterName] A primary filter.
-     * @property {string} [filterList] A filter list.
+     * @property {string[]} [filterList] A filter list.
      * @property {string} [layoutName] A layout name.
      * @property {boolean} [multiple] Allow select multiple.
      * @property {boolean} [createButton] A create button.
