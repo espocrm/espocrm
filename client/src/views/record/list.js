@@ -2198,7 +2198,7 @@ class ListRecordView extends View {
             this.collection.total = collection.total;
             this.collection.lengthCorrection = collection.lengthCorrection;
 
-            this.collection.trigger('sync', o);
+            this.collection.trigger('sync', c, r, o);
         });
 
         if (this.options.keepCurrentRootUrl) {
