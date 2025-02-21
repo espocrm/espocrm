@@ -1107,9 +1107,7 @@ class LinkMultipleFieldView extends BaseFieldView {
             layoutName: this.panelDefs.selectLayout,
             orderBy: orderBy,
             orderDirection: orderDirection,
-            onSelect: (models) => {
-                view.close();
-
+            onSelect: models => {
                 this.select(models);
             },
         };

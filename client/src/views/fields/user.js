@@ -50,32 +50,7 @@ class UserFieldView extends LinkFieldView {
             this.deleteLinkTeams(id);
         };
 
-        this.addActionHandler('selectLinkTeams', () => {
-            Espo.Ui.notifyWait();
-
-            const viewName = this.getMetadata().get('clientDefs.Team.modalViews.select') ||
-                'views/modals/select-records';
-
-            this.createView('dialog', viewName, {
-                scope: 'Team',
-                createButton: false,
-                multiple: true,
-            }, view => {
-                view.render();
-
-                Espo.Ui.notify(false);
-
-                this.listenToOnce(view, 'select', models => {
-                    if (Object.prototype.toString.call(models) !== '[object Array]') {
-                        models = [models];
-                    }
-
-                    models.forEach(model => {
-                        this.addLinkTeams(model.id, model.get('name'));
-                    });
-                });
-            });
-        });
+        this.addActionHandler('selectLinkTeams', () => this.actionSelectLinkTeams());
 
         this.events['click a[data-action="clearLinkTeams"]'] = e => {
             const id = $(e.currentTarget).data('id').toString();
@@ -84,13 +59,36 @@ class UserFieldView extends LinkFieldView {
         };
     }
 
+    /**
+     * @protected
+     */
+    async actionSelectLinkTeams() {
+        const viewName = this.getMetadata().get('clientDefs.Team.modalViews.select') ||
+            'views/modals/select-records';
+
+        /** @type {module:views/modals/select-records~Options} */
+        const options = {
+            entityType: 'Team',
+            createButton: false,
+            multiple: true,
+            onSelect: models => {
+                models.forEach(model => this.addLinkTeams(model.id, model.attributes.name));
+            },
+        };
+
+        Espo.Ui.notifyWait();
+
+        const view = await this.createView('modal', viewName, options);
+
+        await view.render();
+    }
+
     handleSearchType(type) {
         super.handleSearchType(type);
 
         if (type === 'isFromTeams') {
             this.$el.find('div.teams-container').removeClass('hidden');
-        }
-        else {
+        } else {
             this.$el.find('div.teams-container').addClass('hidden');
         }
     }

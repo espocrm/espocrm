@@ -381,9 +381,6 @@ class LinkParentFieldView extends BaseFieldView {
 
         const createButton = !this.createDisabled && this.isEditMode();
 
-        /** @type {import('views/modal').default} */
-        let view;
-
         /** @type {module:views/modals/select-records~Options} */
         const options = {
             scope: this.foreignScope,
@@ -395,16 +392,13 @@ class LinkParentFieldView extends BaseFieldView {
             mandatorySelectAttributeList: this.getMandatorySelectAttributeList(),
             forceSelectAllAttributes: this.isForceSelectAllAttributes(),
             onSelect: models => {
-                view.close();
-
                 this.select(models[0]);
             },
         };
 
         Espo.Ui.notifyWait();
 
-        view = view = /** @type {import('views/modal').default} */
-            await this.createView('modal', viewName, options);
+        const view = await this.createView('modal', viewName, options);
 
         await view.render();
 
