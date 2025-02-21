@@ -28,6 +28,8 @@
 
 import DetailView from 'views/detail';
 import EmailHelper from 'email-helper';
+import RecordModal from 'helpers/record-modal';
+import SelectOneAttachmentModalView from 'views/attachment/modals/select-one';
 
 class EmailDetailView extends DetailView {
 
@@ -630,7 +632,7 @@ class EmailDetailView extends DetailView {
         const names = this.model.get('attachmentsNames') || {};
         const types = this.model.get('attachmentsTypes') || {};
 
-        const proceed = (id) => {
+        const proceed = async id => {
             const attributes = {};
 
             if (this.model.get('accountId')) {
@@ -641,29 +643,20 @@ class EmailDetailView extends DetailView {
 
             Espo.Ui.notifyWait();
 
-            Espo.Ajax.postRequest('Attachment/copy/' + id, {
+            const attachment = await Espo.Ajax.postRequest(`Attachment/copy/${id}`, {
                 relatedType: 'Document',
                 field: 'file',
-            }).then((attachment) => {
-                attributes.fileId = attachment.id;
-                attributes.fileName = attachment.name;
-                attributes.name = attachment.name;
+            })
 
-                const viewName = this.getMetadata().get('clientDefs.Document.modalViews.edit') ||
-                    'views/modals/edit';
+            attributes.fileId = attachment.id;
+            attributes.fileName = attachment.name;
+            attributes.name = attachment.name;
 
-                this.createView('quickCreate', viewName, {
-                    scope: 'Document',
-                    attributes: attributes,
-                }, (view) => {
-                    view.render();
+            const helper = new RecordModal();
 
-                    Espo.Ui.notify(false);
-
-                    this.listenToOnce(view, 'after:save', () => {
-                        view.close();
-                    });
-                });
+            await helper.showCreate(this, {
+                entityType: 'Document',
+                attributes: attributes,
             });
         };
 
@@ -683,14 +676,15 @@ class EmailDetailView extends DetailView {
             });
         });
 
-        this.createView('dialog', 'views/attachment/modals/select-one', {
+        const modalView = new SelectOneAttachmentModalView({
             dataList: dataList,
             fieldLabel: this.translate('attachments', 'fields', 'Email'),
-        }, view => {
-            view.render();
-
-            this.listenToOnce(view, 'select', proceed.bind(this));
+            onSelect: id => proceed(id),
         });
+
+        this.assignView('selectModal', modalView);
+
+        modalView.render();
     }
 }
 

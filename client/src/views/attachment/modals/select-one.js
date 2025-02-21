@@ -28,7 +28,7 @@
 
 import ModalView from 'views/modal';
 
-export default class extends ModalView {
+export default class SelectOneAttachmentModalView extends ModalView {
 
     backdrop = true
 
@@ -36,7 +36,8 @@ export default class extends ModalView {
     templateContent =
         `<ul class="list-group no-side-margin">
             {{#each viewObject.options.dataList}}
-                <li class="list-group-item"
+                <li
+                    class="list-group-item"
                 ><a
                     role="button"
                     class="action"
@@ -44,21 +45,34 @@ export default class extends ModalView {
                     data-id="{{id}}"
                 >{{name}}</a></li>
             {{/each}}
-            </ul>
+        </ul>
         `
+
+    /**
+     *
+     * @param {{
+     *     fieldLabel?: string,
+     *     dataList: {id: string, name: string}[],
+     *     onSelect: function(string),
+     * }} options
+     */
+    constructor(options) {
+        super(options);
+
+        this.options = options;
+    }
 
     setup() {
         this.headerText = this.translate('Select');
 
         if (this.options.fieldLabel) {
-            this.headerText += ': ' + this.options.fieldLabel;
+            this.headerText += ' · ' + this.options.fieldLabel;
         }
-    }
 
-    // noinspection JSUnusedGlobalSymbols
-    actionSelect(data) {
-        this.trigger('select', data.id);
+        this.addActionHandler('select', (e, target) => {
+            this.options.onSelect(target.dataset.id);
 
-        this.remove();
+            this.close();
+        });
     }
 }
