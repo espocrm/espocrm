@@ -33,6 +33,7 @@ import {DataSet} from 'vis-data';
 import {Timeline} from 'vis-timeline';
 import moment from 'moment';
 import $ from 'jquery';
+import RecordModal from 'helpers/record-modal';
 
 class TimelineView extends View {
 
@@ -687,33 +688,31 @@ class TimelineView extends View {
         });
     }
 
-    viewEvent(scope, id) {
-        Espo.Ui.notifyWait();
+    /**
+     *
+     * @param {string} scope
+     * @param {string} id
+     */
+    async viewEvent(scope, id) {
+        const helper = new RecordModal();
 
-        const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'detail']) ||
-            'views/modals/detail';
+        /** @type {import('views/modals/detail').default} */
+        let modalView;
 
-        this.createView('quickView', viewName, {
-            scope: scope,
+        modalView = await helper.showDetail(this, {
+            entityType: scope,
             id: id,
-            removeDisabled: false
-        }, (view) => {
-            view.render();
-            view.notify(false);
-
-            this.listenToOnce(view, 'after:destroy', () => {
-                this.runFetch();
-            });
-
-            this.listenTo(view, 'after:save', (m, o) => {
-                o = o || {};
-
+            removeDisabled: false,
+            afterSave: (model, o) => {
                 if (!o.bypassClose) {
-                    view.close();
+                    modalView.close();
                 }
 
                 this.runFetch();
-            });
+            },
+            afterDestroy: () => {
+                this.runFetch();
+            },
         });
     }
 
