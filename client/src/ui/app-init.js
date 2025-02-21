@@ -122,8 +122,6 @@ function uiAppInit() {
         }
 
         if (e.target.parentElement.classList.contains('fix-overflow')) {
-            console.log(1);
-
             $(target).removeClass('dropup');
 
             const isRight = e.target.classList.contains('pull-right');
