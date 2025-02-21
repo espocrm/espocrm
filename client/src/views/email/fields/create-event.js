@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import BaseFieldView from 'views/fields/base';
+import RecordModal from 'helpers/record-modal';
 
 export default class extends BaseFieldView {
 
@@ -48,9 +49,6 @@ export default class extends BaseFieldView {
     }
 
     createEvent() {
-        const viewName = this.getMetadata().get(['clientDefs', this.eventEntityType, 'modalViews', 'edit']) ||
-            'views/modals/edit';
-
         const eventData = this.model.get('icsEventData') || {};
 
         const attributes = Espo.Utils.cloneDeep(eventData.valueMap || {});
@@ -61,21 +59,17 @@ export default class extends BaseFieldView {
 
         this.addFromAddressToAttributes(attributes);
 
-        this.createView('dialog', viewName, {
-            attributes: attributes,
-            scope: this.eventEntityType,
-        })
-            .then(view => {
-                view.render();
+        const helper = new RecordModal();
 
-                this.listenToOnce(view, 'after:save', () => {
-                    this.model
-                        .fetch()
-                        .then(() =>
-                            Espo.Ui.success(this.translate('Done'))
-                        );
-                });
-            });
+        helper.showCreate(this, {
+            entityType: this.eventEntityType,
+            attributes: attributes,
+            afterSave: async () => {
+                await this.model.fetch();
+
+                Espo.Ui.success(this.translate('Done'))
+            },
+        });
     }
 
     /**
