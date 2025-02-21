@@ -30,6 +30,7 @@
 
 import ModalView from 'views/modal';
 import SearchManager from 'search-manager';
+import RecordModal from 'helpers/record-modal';
 
 /**
  * A select-records modal.
@@ -119,6 +120,9 @@ class SelectRecordsModalView extends ModalView {
             /** @private */
             this.onCreate = options.onCreate;
         }
+
+        /** @private */
+        this.createAttributesProvider = options.createAttributesProvider;
     }
 
     data() {
@@ -393,7 +397,7 @@ class SelectRecordsModalView extends ModalView {
         this.wait(promise);
     }
 
-    create() {
+    async create() {
         if (this.onCreate) {
             this.onCreate();
 
@@ -407,46 +411,36 @@ class SelectRecordsModalView extends ModalView {
             return;
         }
 
-        Espo.Ui.notifyWait();
+        let attributes;
 
-        const viewName = this.getMetadata()
-                .get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
-            'views/modals/edit';
+        if (this.options.createAttributesProvider) {
+            attributes = await this.createAttributesProvider();
+        } else {
+            attributes = this.options.createAttributes || {};
+        }
 
-        new Promise(resolve => {
-            if (this.options.createAttributesProvider) {
-                this.options.createAttributesProvider().then(attributes => {
-                    resolve(attributes)
+        const helper = new RecordModal();
+
+        await helper.showCreate(this, {
+            entityType: this.entityType,
+            fullFormDisabled: true,
+            attributes: attributes,
+            afterSave: model => {
+                this.trigger('select', model);
+
+                if (this.onSelect) {
+                    this.onSelect([model]);
+                }
+
+                setTimeout(() => this.close(), 10);
+            },
+            beforeRender: view => {
+                this.listenToOnce(view, 'leave', () => {
+                    view.close();
+                    this.close();
                 });
-
-                return;
-            }
-
-            resolve(this.options.createAttributes || {});
-        })
-            .then(attributes => {
-                this.createView('quickCreate', viewName, {
-                    scope: this.scope,
-                    fullFormDisabled: true,
-                    attributes: attributes,
-                }, view => {
-                    view.render()
-                        .then(() => Espo.Ui.notify(false));
-
-                    this.listenToOnce(view, 'leave', () => {
-                        view.close();
-                        this.close();
-                    });
-
-                    this.listenToOnce(view, 'after:save', (model) => {
-                        view.close();
-
-                        this.trigger('select', model);
-
-                        setTimeout(() => this.close(), 10);
-                    });
-                });
-            });
+            },
+        });
     }
 
     actionSelect() {
