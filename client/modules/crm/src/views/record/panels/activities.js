@@ -28,6 +28,7 @@
 
 import RelationshipPanelView from 'views/record/panels/relationship';
 import MultiCollection from 'multi-collection';
+import RecordModal from 'helpers/record-modal';
 
 class ActivitiesPanelView extends RelationshipPanelView {
 
@@ -446,6 +447,10 @@ class ActivitiesPanelView extends RelationshipPanelView {
         this.actionCreateActivity(data);
     }
 
+    /**
+     * @protected
+     * @param {Record} data
+     */
     actionCreateActivity(data) {
         const link = data.link;
         let foreignLink;
@@ -458,33 +463,22 @@ class ActivitiesPanelView extends RelationshipPanelView {
             scope = data.scope;
         }
 
-        const o = {
-            scope: scope
-        };
-
-        if (link) {
-            o.relate = {
-                model: this.model,
-                link: foreignLink
-            };
-        }
-
         Espo.Ui.notifyWait();
 
-        const viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
-            'views/modals/edit';
-
         this.getCreateActivityAttributes(scope, data, attributes => {
-            o.attributes = attributes;
+            const helper = new RecordModal();
 
-            this.createView('quickCreate', viewName, o, (view) => {
-                view.render();
-                view.notify(false);
-
-                this.listenToOnce(view, 'after:save', () => {
+            helper.showCreate(this, {
+                entityType: scope,
+                relate: link ? {
+                    model: this.model,
+                    link: foreignLink
+                } : undefined,
+                attributes:  attributes,
+                afterSave: () => {
                     this.model.trigger(`update-related:${link}`);
                     this.model.trigger('after:relate');
-                });
+                },
             });
         });
     }

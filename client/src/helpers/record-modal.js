@@ -205,6 +205,7 @@ class RecordModalHelper {
      *   relate?: model:model~setRelateItem | model:model~setRelateItem[],
      *   attributes?: Record.<string, *>,
      *   afterSave?: function(import('model').default, {bypassClose: boolean}),
+     *   focusForCreate?: boolean,
      *   returnDispatchParams?: {
      *       controller: string,
      *       action: string|null,
@@ -228,6 +229,7 @@ class RecordModalHelper {
             returnDispatchParams: params.returnDispatchParams,
             relate: params.relate,
             attributes: params.attributes,
+            focusForCreate: params.focusForCreate,
         };
 
         if (params.rootUrl) {

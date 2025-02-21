@@ -30,6 +30,7 @@
 
 import MainView from 'views/main';
 import SearchManager from 'search-manager';
+import RecordModal from 'helpers/record-modal';
 
 /**
  * A list view.
@@ -799,24 +800,6 @@ class ListView extends MainView {
 
         const attributes = this.getCreateAttributes() || {};
 
-        Espo.Ui.notifyWait();
-
-        const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
-            'views/modals/edit';
-
-        let options = {
-            scope: this.scope,
-            attributes: attributes,
-        };
-
-        if (this.keepCurrentRootUrl) {
-            options.rootUrl = this.getRouter().getCurrentUrl();
-        }
-
-        if (data.focusForCreate) {
-            options.focusForCreate = true;
-        }
-
         const returnDispatchParams = {
             controller: this.scope,
             action: null,
@@ -825,20 +808,18 @@ class ListView extends MainView {
 
         this.prepareCreateReturnDispatchParams(returnDispatchParams);
 
-        options = {
-            ...options,
+        const helper = new RecordModal();
+
+        helper.showCreate(this, {
+            entityType: this.scope,
+            attributes: attributes,
+            rootUrl: this.keepCurrentRootUrl ? this.getRouter().getCurrentUrl() : undefined,
+            focusForCreate: data.focusForCreate,
             returnUrl: this.getRouter().getCurrentUrl(),
             returnDispatchParams: returnDispatchParams,
-        };
-
-        // noinspection JSValidateTypes
-        return this.createView('quickCreate', viewName, options, (view) => {
-            view.render();
-            view.notify(false);
-
-            this.listenToOnce(view, 'after:save', () => {
-                this.collection.fetch();
-            });
+            afterSave: () => {
+                this.collection.fetch()
+            },
         });
     }
 
