@@ -28,6 +28,7 @@
 
 import BaseDashletView from 'views/dashlets/abstract/base';
 import SearchManager from 'search-manager';
+import RecordModal from 'helpers/record-modal';
 
 class RecordListDashletView extends BaseDashletView {
 
@@ -226,21 +227,12 @@ class RecordListDashletView extends BaseDashletView {
             }
         }
 
-        Espo.Ui.notifyWait();
+        const helper = new RecordModal();
 
-        const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
-            'views/modals/edit';
-
-        this.createView('modal', viewName, {
-            scope: this.scope,
+        helper.showCreate(this, {
+            entityType: this.scope,
             attributes: attributes,
-        }, view => {
-            view.render();
-            view.notify(false);
-
-            this.listenToOnce(view, 'after:save', () => {
-                this.actionRefresh();
-            });
+            afterSave: () => this.actionRefresh(),
         });
     }
 
