@@ -385,14 +385,7 @@ class KanbanRecordView extends ListRecordView {
         this.listenTo(this.collection, 'sync', () => {
             this._renderEmpty = false;
 
-            if (this.hasView('modal') && this.getView('modal').isRendered()) {
-                // @todo Find a way to not to re-render modals.
-                return;
-            }
-
-            this.buildRows(() => {
-                this.render();
-            });
+            this.buildRowsAndRender();
         });
 
         this.collection.listenTo(

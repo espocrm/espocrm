@@ -2062,11 +2062,6 @@ class ListRecordView extends View {
         this.listenTo(this.collection, 'sync', (c, r, options) => {
             this._renderEmpty = false;
 
-            if (this.hasView('modal') && this.getView('modal').isRendered()) {
-                // @todo Find a way to not to re-render modals.
-                return;
-            }
-
             options = options || {};
 
             if (options.previousDataList) {
@@ -2097,9 +2092,7 @@ class ListRecordView extends View {
             this.checkedList = [];
             this.allResultIsChecked = false;
 
-            this.buildRows(() => {
-                this.render();
-            });
+            this.buildRowsAndRender();
         });
 
         this.checkedList = [];
@@ -2143,6 +2136,29 @@ class ListRecordView extends View {
         if (this.columnResize && this._listSettingsHelper) {
             this._columnResizeHelper = new ListColumnResizeHelper(this, this._listSettingsHelper);
         }
+    }
+
+    /**
+     * @protected
+     * @since 9.1.0
+     */
+    buildRowsAndRender() {
+        let modalView;
+        const modalKey = 'modal';
+
+        if (this.hasView(modalKey) && this.getView(modalKey).isRendered()) {
+            modalView = this.getView(modalKey);
+
+            this.unchainView(modalKey);
+        }
+
+        this.buildRows(async () => {
+            await this.reRender({force: true});
+
+            if (modalView) {
+                this.setView(modalKey, modalView);
+            }
+        });
     }
 
     /**
