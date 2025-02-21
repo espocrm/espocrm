@@ -30,7 +30,6 @@
 
 import MainView from 'views/main';
 import SearchManager from 'search-manager';
-import RecordModal from 'helpers/record-modal';
 import CreateRelatedHelper from 'helpers/record/create-related';
 
 /**
@@ -136,6 +135,12 @@ class ListRelatedView extends MainView {
     filtersDisabled = false
 
     /**
+     * @private
+     * @type {string}
+     */
+    nameAttribute
+
+    /**
      * @inheritDoc
      */
     shortcutKeys = {
@@ -177,6 +182,10 @@ class ListRelatedView extends MainView {
             console.error(`Collection not passed.`);
             throw new Error();
         }
+
+        this.rootUrl = this.options.rootUrl || this.options.params.rootUrl || `#${this.scope}`;
+
+        this.nameAttribute = this.getMetadata().get(`clientDefs.${this.scope}.nameAttribute`) || 'name';
 
         /** @type {Record} */
         this.panelDefs = this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', this.link]) || {};
@@ -261,6 +270,8 @@ class ListRelatedView extends MainView {
         this.wait(
             this.getHelper().processSetupHandlers(this, 'list')
         );
+
+        this.addActionHandler('fullRefresh', () => this.actionFullRefresh());
     }
 
     /**
@@ -678,46 +689,56 @@ class ListRelatedView extends MainView {
      * @inheritDoc
      */
     getHeader() {
-        const name = this.model.get('name') || this.model.id;
+        const name = this.model.attributes[this.nameAttribute] || this.model.id;
 
-        const recordUrl = '#' + this.scope + '/view/' + this.model.id;
+        const recordUrl = `#${this.scope}/view/${this.model.id}`;
 
-        const $name =
-            $('<a>')
-                .attr('href', recordUrl)
-                .addClass('font-size-flexible title')
-                .text(name);
+        const title = document.createElement('a');
+        title.href = recordUrl;
+        title.classList.add('font-size-flexible', 'title');
+        title.textContent = name;
+        title.style.userSelect = 'none';
 
-        if (this.model.get('deleted')) {
-            $name.css('text-decoration', 'line-through');
+        if (this.model.attributes.deleted) {
+            title.style.textDecoration = 'line-through';
         }
 
-        const headerIconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
         const scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
 
-        let $root = $('<span>').text(scopeLabel);
+        let root = document.createElement('span');
+        root.text = scopeLabel;
+        root.style.userSelect = 'none';
 
         if (!this.rootLinkDisabled) {
-            $root = $('<span>')
-                .append(
-                    $('<a>')
-                        .attr('href', '#' + this.scope)
-                        .addClass('action')
-                        .attr('data-action', 'navigateToRoot')
-                        .text(scopeLabel)
-                );
+            const a = document.createElement('a');
+            a.href = this.rootUrl;
+            a.classList.add('action');
+            a.dataset.action = 'navigateToRoot';
+            a.text = scopeLabel;
+
+            root = document.createElement('span');
+            root.style.userSelect = 'none';
+            root.append(a);
         }
 
-        if (headerIconHtml) {
-            $root.prepend(headerIconHtml);
+        const iconHtml = this.getHeaderIconHtml();
+
+        if (iconHtml) {
+            root.insertAdjacentHTML('afterbegin', iconHtml);
         }
 
-        const $link = $('<span>').text(this.translate(this.link, 'links', this.scope));
+        const link = document.createElement('span');
+        link.textContent = this.translate(this.link, 'links', this.scope);
+
+        link.title = this.translate('clickToRefresh', 'messages');
+        link.dataset.action = 'fullRefresh';
+        link.style.cursor = 'pointer';
+        link.style.userSelect = 'none';
 
         return this.buildHeaderHtml([
-            $root,
-            $name,
-            $link
+            root,
+            title,
+            link,
         ]);
     }
 
@@ -800,6 +821,17 @@ class ListRelatedView extends MainView {
         }
 
         this.getSearchView().selectNextPreset();
+    }
+
+    /**
+     * @protected
+     */
+    async actionFullRefresh() {
+        Espo.Ui.notifyWait();
+
+        await this.collection.fetch();
+
+        Espo.Ui.notify();
     }
 }
 
