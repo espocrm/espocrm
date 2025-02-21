@@ -28,6 +28,7 @@
 
 import BaseDashletView from 'views/dashlets/abstract/base';
 import MultiCollection from 'multi-collection';
+import RecordModalHelper from 'helpers/record-modal';
 
 class ActivitiesDashletView extends BaseDashletView {
 
@@ -212,20 +213,14 @@ class ActivitiesDashletView extends BaseDashletView {
 
         this.populateAttributesAssignedUser(scope, attributes);
 
-        Espo.Ui.notifyWait();
+        const helper = new RecordModalHelper();
 
-        const viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
-
-        this.createView('quickCreate', viewName, {
-            scope: scope,
+        helper.showCreate(this, {
+            entityType: scope,
             attributes: attributes,
-        }, view => {
-            view.render();
-            view.notify(false);
-
-            this.listenToOnce(view, 'after:save', () => {
+            afterSave: () => {
                 this.actionRefresh();
-            });
+            },
         });
     }
 
@@ -235,20 +230,14 @@ class ActivitiesDashletView extends BaseDashletView {
 
         this.populateAttributesAssignedUser('Meeting', attributes);
 
-        Espo.Ui.notifyWait();
+        const helper = new RecordModalHelper();
 
-        const viewName = this.getMetadata().get('clientDefs.Meeting.modalViews.edit') || 'views/modals/edit';
-
-        this.createView('quickCreate', viewName, {
-            scope: 'Meeting',
+        helper.showCreate(this, {
+            entityType: 'Meeting',
             attributes: attributes,
-        }, view => {
-            view.render();
-            view.notify(false);
-
-            this.listenToOnce(view, 'after:save', () => {
+            afterSave: () => {
                 this.actionRefresh();
-            });
+            },
         });
     }
 
@@ -258,20 +247,14 @@ class ActivitiesDashletView extends BaseDashletView {
 
         this.populateAttributesAssignedUser('Call', attributes);
 
-        Espo.Ui.notifyWait();
+        const helper = new RecordModalHelper();
 
-        const viewName = this.getMetadata().get('clientDefs.Call.modalViews.edit') || 'views/modals/edit';
-
-        this.createView('quickCreate', viewName, {
-            scope: 'Call',
+        helper.showCreate(this, {
+            entityType: 'Call',
             attributes: attributes,
-        }, view => {
-            view.render();
-            view.notify(false);
-
-            this.listenToOnce(view, 'after:save', () => {
+            afterSave: () => {
                 this.actionRefresh();
-            });
+            },
         });
     }
 

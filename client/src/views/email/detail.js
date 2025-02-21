@@ -245,33 +245,26 @@ class EmailDetailView extends DetailView {
 
         attributes.originalEmailId = this.model.id;
 
-        const viewName = this.getMetadata().get('clientDefs.Lead.modalViews.edit') || 'views/modals/edit';
+        const helper = new RecordModal();
 
-        Espo.Ui.notifyWait();
-
-        this.createView('quickCreate', viewName, {
-            scope: 'Lead',
+        const modalView = helper.showCreate(this, {
+            entityType: 'Lead',
             attributes: attributes,
-        }, view => {
-            view.render();
-            view.notify(false);
-
-            this.listenTo(view, 'before:save', () => {
-                this.getRecordView().blockUpdateWebSocket(true);
-            });
-
-            this.listenToOnce(view, 'after:save', () => {
+            afterSave: () => {
                 this.model.fetch();
+
                 this.removeMenuItem('createContact');
                 this.removeMenuItem('createLead');
+            },
+        })
 
-                view.close();
-            });
+        this.listenTo(modalView, 'before:save', () => {
+            this.getRecordView().blockUpdateWebSocket(true);
         });
     }
 
     // noinspection JSUnusedGlobalSymbols
-    actionCreateCase() {
+    async actionCreateCase() {
         const attributes = {};
 
         const parentId = this.model.get('parentId');
@@ -285,8 +278,7 @@ class EmailDetailView extends DetailView {
             if (parentType === 'Account') {
                 attributes.accountId = parentId;
                 attributes.accountName = parentName;
-            }
-            else if (parentType === 'Contact') {
+            } else if (parentType === 'Contact') {
                 attributes.contactId = parentId;
                 attributes.contactName = parentName;
 
@@ -298,8 +290,7 @@ class EmailDetailView extends DetailView {
                     attributes.accountId = accountId;
                     attributes.accountName = accountName || accountId;
                 }
-            }
-            else if (parentType === 'Lead') {
+            } else if (parentType === 'Lead') {
                 attributes.leadId = parentId;
                 attributes.leadName = parentName;
             }
@@ -309,47 +300,34 @@ class EmailDetailView extends DetailView {
         attributes.name = this.model.get('name');
         attributes.description = this.model.get('bodyPlain') || '';
 
-        const viewName = this.getMetadata().get('clientDefs.Case.modalViews.edit') || 'views/modals/edit';
+        const attachmentIds = this.model.get('attachmentsIds') || [];
 
         Espo.Ui.notifyWait();
 
-        (new Promise(resolve => {
-            if (!(this.model.get('attachmentsIds') || []).length) {
-                resolve();
-
-                return;
-            }
-
-            Espo.Ajax.postRequest(`Email/${this.model.id}/attachments/copy`, {
+        if (attachmentIds.length) {
+            /** @type {Record} data */
+            const data = await Espo.Ajax.postRequest(`Email/${this.model.id}/attachments/copy`, {
                 parentType: 'Case',
                 field: 'attachments',
-            }).then(data => {
-                attributes.attachmentsIds = data.ids;
-                attributes.attachmentsNames = data.names;
-
-                resolve();
             });
-        })).then(() => {
-            this.createView('quickCreate', viewName, {
-                scope: 'Case',
-                attributes: attributes,
-            }, view => {
-                view.render();
 
-                Espo.Ui.notify(false);
+            attributes.attachmentsIds = data.ids;
+            attributes.attachmentsNames = data.names;
+        }
 
-                this.listenToOnce(view, 'after:save', () => {
-                    this.model.fetch();
-                    this.removeMenuItem('createCase');
+        const helper = new RecordModal();
 
-                    view.close();
-                });
+        const modalView = await helper.showCreate(this, {
+            entityType: 'Case',
+            attributes: attributes,
+            afterSave: () => {
+                this.model.fetch();
 
-                this.listenTo(view, 'before:save', () => {
-                    this.getRecordView().blockUpdateWebSocket(true);
-                });
-            });
+                this.removeMenuItem('createCase');
+            },
         });
+
+        this.listenTo(modalView, 'before:save', () => this.getRecordView().blockUpdateWebSocket(true));
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -361,43 +339,35 @@ class EmailDetailView extends DetailView {
         attributes.parentType = this.model.get('parentType');
         attributes.originalEmailId = this.model.id;
 
-        const subject = this.model.get('name');
+        const subject = this.model.attributes.name;
 
         attributes.description =
             `[${this.translate('Email', 'scopeNames')}: ${subject}](#Email/view/${this.model.id})\n`;
 
-        const viewName = this.getMetadata().get('clientDefs.Task.modalViews.edit') || 'views/modals/edit';
+        const fullFormUrl = `#Task/create?emailId=${attributes.originalEmailId}`;
 
-        Espo.Ui.notifyWait();
+        const helper = new RecordModal();
 
-        this.createView('quickCreate', viewName, {
-            scope: 'Task',
+        helper.showCreate(this, {
+            entityType: 'Task',
             attributes: attributes,
-            fullFormUrl: `#Task/create?emailId=${attributes.emailId}`,
-        }, view => {
-            const recordView = view.getRecordView();
-
-            const nameFieldView = recordView.getFieldView('name');
-
-            let nameOptionList = [];
-
-            if (nameFieldView && nameFieldView.params.options) {
-                nameOptionList = nameOptionList.concat(nameFieldView.params.options);
-            }
-
-            nameOptionList.push(this.translate('replyToEmail', 'nameOptions', 'Task'));
-
-            recordView.setFieldOptionList('name', nameOptionList);
-
-            view.render();
-
-            view.notify(false);
-
-            this.listenToOnce(view, 'after:save', () => {
-                view.close();
-
+            fullFormUrl: fullFormUrl,
+            afterSave: () => {
                 this.model.fetch();
-            });
+            },
+            beforeRender: view => {
+                const nameFieldView = view.getRecordView().getFieldView('name');
+
+                const nameOptionList = [];
+
+                if (nameFieldView && nameFieldView.params.options) {
+                    nameOptionList.push(...nameFieldView.params.options);
+                }
+
+                nameOptionList.push(this.translate('replyToEmail', 'nameOptions', 'Task'));
+
+                view.getRecordView().setFieldOptionList('name', nameOptionList);
+            },
         });
     }
 
@@ -449,29 +419,21 @@ class EmailDetailView extends DetailView {
 
         attributes.originalEmailId = this.model.id;
 
-        const viewName = this.getMetadata().get('clientDefs.Contact.modalViews.edit') || 'views/modals/edit';
+        const helper = new RecordModal();
 
-        Espo.Ui.notifyWait();
-
-        this.createView('quickCreate', viewName, {
-            scope: 'Contact',
+        const modalView = helper.showCreate(this, {
+            entityType: 'Contact',
             attributes: attributes,
-        }, (view) => {
-            view.render();
-
-            view.notify(false);
-
-            this.listenToOnce(view, 'after:save', () => {
+            afterSave: () => {
                 this.model.fetch();
+
                 this.removeMenuItem('createContact');
                 this.removeMenuItem('createLead');
+            },
+        })
 
-                view.close();
-            });
-
-            this.listenTo(view, 'before:save', () => {
-                this.getRecordView().blockUpdateWebSocket(true);
-            });
+        this.listenTo(modalView, 'before:save', () => {
+            this.getRecordView().blockUpdateWebSocket(true);
         });
     }
 

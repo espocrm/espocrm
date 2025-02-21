@@ -28,6 +28,7 @@
 
 import ActivitiesPanelView from 'crm:views/record/panels/activities';
 import EmailHelper from 'email-helper';
+import RecordModalHelper from 'helpers/record-modal';
 
 class HistoryPanelView extends ActivitiesPanelView {
 
@@ -134,31 +135,25 @@ class HistoryPanelView extends ActivitiesPanelView {
 
         let relate = null;
 
-        if ('emails' in this.model.defs['links']) {
+        if (this.model.hasLink('emails')) {
             relate = {
                 model: this.model,
-                link: this.model.defs['links']['emails'].foreign,
+                link: this.model.getLinkParam('emails', 'foreign'),
             };
         }
 
-        Espo.Ui.notifyWait();
-
-        const viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.edit`) ||
-            'views/modals/edit';
-
         this.getArchiveEmailAttributes(scope, data, attributes => {
-            this.createView('quickCreate', viewName, {
-                scope: scope,
-                relate: relate,
-                attributes: attributes,
-            }, (view) => {
-                view.render();
-                view.notify(false);
+            const helper = new RecordModalHelper();
 
-                this.listenToOnce(view, 'after:save', () => {
+            helper.showCreate(this, {
+                entityType: 'Email',
+                attributes: attributes,
+                relate: relate,
+                afterSave: () => {
                     this.collection.fetch();
+
                     this.model.trigger('after:relate');
-                });
+                },
             });
         });
     }

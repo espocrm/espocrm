@@ -67,7 +67,9 @@ class RecordModalHelper {
      *   model?: import('model').default,
      *   editDisabled?: boolean,
      *   removeDisabled?: boolean,
+     *   fullFormDisabled?: string,
      *   rootUrl?: string,
+     *   fullFormUrl?: string,
      *   layoutName?: string,
      *   afterSave?: function(import('model').default, {bypassClose: boolean}),
      *   afterDestroy?: function(import('model').default),
@@ -106,6 +108,8 @@ class RecordModalHelper {
             rootUrl: params.rootUrl,
             removeDisabled: params.removeDisabled,
             layoutName: params.layoutName,
+            fullFormDisabled: params.fullFormDisabled,
+            fullFormUrl: params.fullFormUrl,
         };
 
         Espo.Ui.notifyWait();
@@ -151,6 +155,7 @@ class RecordModalHelper {
      *   model?: import('model').default,
      *   rootUrl?: string,
      *   fullFormDisabled?: boolean,
+     *   fullFormUrl?: string,
      *   returnUrl?: string,
      *   layoutName?: string,
      *   afterSave?: function(import('model').default, {bypassClose: boolean}),
@@ -182,6 +187,7 @@ class RecordModalHelper {
             returnUrl: params.returnUrl || this.router.getCurrentUrl(),
             returnDispatchParams: params.returnDispatchParams,
             layoutName: params.layoutName,
+            fullFormUrl: params.fullFormUrl,
         };
 
         if (params.rootUrl) {
@@ -225,6 +231,7 @@ class RecordModalHelper {
      *   entityType: string,
      *   rootUrl?: string,
      *   fullFormDisabled?: boolean,
+     *   fullFormUrl?: string,
      *   returnUrl?: string,
      *   relate?: model:model~setRelateItem | model:model~setRelateItem[],
      *   attributes?: Record.<string, *>,
@@ -258,6 +265,7 @@ class RecordModalHelper {
             attributes: params.attributes,
             focusForCreate: params.focusForCreate,
             layoutName: params.layoutName,
+            fullFormUrl: params.fullFormUrl,
         };
 
         if (params.rootUrl) {

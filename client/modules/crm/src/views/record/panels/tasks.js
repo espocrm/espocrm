@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import RelationshipPanelView from 'views/record/panels/relationship';
+import CreateRelatedHelper from 'helpers/record/create-related';
 
 export default class TasksRelationshipPanelView extends RelationshipPanelView {
 
@@ -169,29 +170,9 @@ export default class TasksRelationshipPanelView extends RelationshipPanelView {
             link = 'tasks';
         }
 
-        const scope = 'Task';
-        const foreignLink = this.model.defs['links'][link].foreign;
+        const helper = new CreateRelatedHelper(this);
 
-        Espo.Ui.notifyWait();
-
-        const viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.edit`) ||
-            'views/modals/edit';
-
-        this.createView('quickCreate', viewName, {
-            scope: scope,
-            relate: {
-                model: this.model,
-                link: foreignLink,
-            }
-        }, (view) => {
-            view.render();
-            view.notify(false);
-
-            this.listenToOnce(view, 'after:save', () => {
-                this.model.trigger(`update-related:${this.link}`);
-                this.model.trigger('after:relate');
-            });
-        });
+        helper.process(this.model, link)
     }
 
     // noinspection JSUnusedGlobalSymbols
