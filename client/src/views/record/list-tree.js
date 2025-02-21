@@ -29,6 +29,7 @@
 /** @module views/record/list-tree */
 
 import ListRecordView from 'views/record/list';
+import RecordModal from 'helpers/record-modal';
 
 class ListTreeRecordView extends ListRecordView {
 
@@ -247,28 +248,23 @@ class ListTreeRecordView extends ListRecordView {
 
         if (this.model) {
             attributes.parentId = this.model.id;
-            attributes.parentName = this.model.get('name');
+            attributes.parentName = this.model.attributes.name;
         }
 
         const scope = this.collection.entityType;
 
-        const viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
-            'views/modals/edit';
+        const helper = new RecordModal();
 
-        this.createView('quickCreate', viewName, {
-            scope: scope,
+        helper.showCreate(this, {
+            entityType: scope,
             attributes: attributes,
-        }, view => {
-            view.render();
-
-            this.listenToOnce(view, 'after:save', /** import('model').default */model => {
-                view.close();
-
-                const collection = /** @type import('collections/tree').default */ this.collection;
+            afterSave: model => {
+                const collection = /** @type {import('collections/tree').default} collection */
+                    this.collection;
 
                 model.set('childCollection', collection.createSeed());
 
-                if (model.get('parentId') !== attributes.parentId) {
+                if (model.attributes.parentId !== attributes.parentId) {
                     let v = this;
 
                     while (1) {
@@ -285,7 +281,7 @@ class ListTreeRecordView extends ListRecordView {
                 }
 
                 this.collection.fetch();
-            });
+            },
         });
     }
 
