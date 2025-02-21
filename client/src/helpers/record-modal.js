@@ -67,7 +67,7 @@ class RecordModalHelper {
      *   model?: import('model').default,
      *   editDisabled?: boolean,
      *   removeDisabled?: boolean,
-     *   fullFormDisabled?: string,
+     *   fullFormDisabled?: boolean,
      *   rootUrl?: string,
      *   fullFormUrl?: string,
      *   layoutName?: string,
