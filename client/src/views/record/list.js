@@ -96,6 +96,8 @@ class ListRecordView extends View {
      * @property {boolean} [displayTotalCount] Display total count.
      * @property {Record} [rootData] Root data.
      * @property {boolean} [columnResize] Column resize. Actual only if the settings is enabled.
+     * @property {function(import('model').default[])} [onSelect] An on-select callback. Actual if selectable.
+     *     As of v9.1.0.
      */
 
     /**
@@ -2225,6 +2227,10 @@ class ListRecordView extends View {
         }
 
         this.trigger('select', model);
+
+        if (this.options.onSelect) {
+            this.options.onSelect([model]);
+        }
     }
 
     onRemove() {

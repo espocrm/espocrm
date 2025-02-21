@@ -1169,14 +1169,14 @@ class LinkFieldView extends BaseFieldView {
             layoutName: this.panelDefs.selectLayout,
             orderBy: orderBy,
             orderDirection: orderDirection,
-            onSelect: (models) => {
+            onSelect: models => {
                 view.close();
 
                 this.select(models[0]);
             },
         };
 
-        view = /** @type {import('views/modal').default}  */
+        view = /** @type {import('views/modal').default} */
             await this.createView('modal', viewName, options);
 
         await view.render();

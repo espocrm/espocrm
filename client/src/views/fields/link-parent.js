@@ -333,7 +333,7 @@ class LinkParentFieldView extends BaseFieldView {
             this.foreignScopeList.unshift(this.foreignScope);
         }
 
-        this.listenTo(this.model, 'change:' + this.typeName, () => {
+        this.listenTo(this.model, `change:${this.typeName}`, () => {
             this.foreignScope = this.model.get(this.typeName) || this.foreignScopeList[0];
         });
 
@@ -344,53 +344,71 @@ class LinkParentFieldView extends BaseFieldView {
         }
 
         if (!this.isListMode()) {
-            this.addActionHandler('selectLink', () => {
-                Espo.Ui.notifyWait();
+            this.addActionHandler('selectLink', () => this.actionSelect());
+            this.addActionHandler('clearLink', () => this.actionClearLink());
 
-                const viewName = this.getMetadata().get(`clientDefs.${this.foreignScope}.modalViews.select`) ||
-                    this.selectRecordsView;
-
-                const createButton = !this.createDisabled && this.isEditMode();
-
-                this.createView('dialog', viewName, {
-                    scope: this.foreignScope,
-                    createButton: createButton,
-                    filters: this.getSelectFilters(),
-                    boolFilterList: this.getSelectBoolFilterList(),
-                    primaryFilterName: this.getSelectPrimaryFilterName(),
-                    createAttributes: createButton ? this.getCreateAttributes() : null,
-                    mandatorySelectAttributeList: this.getMandatorySelectAttributeList(),
-                    forceSelectAllAttributes: this.isForceSelectAllAttributes(),
-                }, dialog => {
-                    dialog.render();
-
-                    Espo.Ui.notify(false);
-
-                    this.listenToOnce(dialog, 'select', (model) => {
-                        this.clearView('dialog');
-                        this.select(model);
-                    });
-                });
-            });
-
-            this.addActionHandler('clearLink', () => {
-                if (this.foreignScopeList.length) {
-                    this.foreignScope = this.foreignScopeList[0];
-                    Select.setValue(this.$elementType, this.foreignScope);
-                }
-
-                this.$elementName.val('');
-                this.$elementId.val('');
-
-                this.trigger('change');
-            });
-
-            this.events['change select[data-name="'+this.typeName+'"]'] = (e) => {
+            this.events[`change select[data-name="${this.typeName}"]`] = e => {
                 this.foreignScope = e.currentTarget.value;
+
                 this.$elementName.val('');
                 this.$elementId.val('');
             };
         }
+    }
+
+    /**
+     * @protected
+     */
+    actionClearLink() {
+        if (this.foreignScopeList.length) {
+            this.foreignScope = this.foreignScopeList[0];
+
+            Select.setValue(this.$elementType, this.foreignScope);
+        }
+
+        this.$elementName.val('');
+        this.$elementId.val('');
+
+        this.trigger('change');
+    }
+
+    /**
+     * @protected
+     */
+    async actionSelect() {
+        const viewName = this.getMetadata().get(`clientDefs.${this.foreignScope}.modalViews.select`) ||
+            this.selectRecordsView;
+
+        const createButton = !this.createDisabled && this.isEditMode();
+
+        /** @type {import('views/modal').default} */
+        let view;
+
+        /** @type {module:views/modals/select-records~Options} */
+        const options = {
+            scope: this.foreignScope,
+            createButton: createButton,
+            filters: this.getSelectFilters(),
+            boolFilterList: this.getSelectBoolFilterList(),
+            primaryFilterName: this.getSelectPrimaryFilterName(),
+            createAttributes: createButton ? this.getCreateAttributes() : null,
+            mandatorySelectAttributeList: this.getMandatorySelectAttributeList(),
+            forceSelectAllAttributes: this.isForceSelectAllAttributes(),
+            onSelect: models => {
+                view.close();
+
+                this.select(models[0]);
+            },
+        };
+
+        Espo.Ui.notifyWait();
+
+        view = view = /** @type {import('views/modal').default} */
+            await this.createView('modal', viewName, options);
+
+        await view.render();
+
+        Espo.Ui.notify();
     }
 
     /** @inheritDoc */

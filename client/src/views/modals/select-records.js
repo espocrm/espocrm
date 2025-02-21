@@ -325,11 +325,15 @@ class SelectRecordsModalView extends ModalView {
             pagination: this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) || null,
         }, view => {
 
-            this.listenToOnce(view, 'select', model => {
-                this.trigger('select', model);
+            this.listenToOnce(view, 'select', models => {
+                this.trigger('select', models);
 
                 if (this.onSelect) {
-                    this.onSelect([model]);
+                    if (!Array.isArray(models)) {
+                        models = [models];
+                    }
+
+                    this.onSelect(models);
                 }
 
                 this.close();
