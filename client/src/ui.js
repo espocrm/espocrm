@@ -1191,6 +1191,15 @@ Espo.Ui = {
      */
 
     /**
+     * Show the spinner.
+     *
+     * @since 9.1.0
+     */
+    notifyWait: function () {
+        Espo.Ui.notify(' ... ');
+    },
+
+    /**
      * Show a notify-message.
      *
      * @param {string|false} [message=false] A message. False removes an already displayed message.

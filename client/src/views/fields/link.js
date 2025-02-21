@@ -1098,7 +1098,7 @@ class LinkFieldView extends BaseFieldView {
 
         helper.showDetail(this, {
             id: id,
-            scope: entityType,
+            entityType: entityType,
         });
     }
 

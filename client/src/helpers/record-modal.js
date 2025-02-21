@@ -29,9 +29,10 @@
 import {inject} from 'di';
 import Metadata from 'metadata';
 import AclManager from 'acl-manager';
+import Router from 'router';
 
 /**
- * A record-modal helper.
+ * A record-modal helper. Use to render the quick view and quick edit modals.
  */
 class RecordModalHelper {
 
@@ -50,22 +51,34 @@ class RecordModalHelper {
     acl
 
     /**
-     * @param {module:view} view
+     * @private
+     * @type {Router}
+     */
+    @inject(Router)
+    router
+
+    /**
+     * Show the 'detail' modal.
+     *
+     * @param {import('view').default} view
      * @param {{
      *   id: string,
-     *   scope: string,
-     *   model?: module:model,
+     *   entityType: string,
+     *   model?: import('model').default,
      *   editDisabled?: boolean,
      *   rootUrl?: string,
+     *   afterSave?: function(import('model').default),
+     *   afterDestroy?: function(import('model').default),
      * }} params
-     * @return {Promise}
+     * @return {Promise<import('views/modals/detail').default>}
      */
-    showDetail(view, params) {
+    async showDetail(view, params) {
         const id = params.id;
-        const scope = params.scope;
+        // noinspection JSUnresolvedReference
+        const entityType = params.entityType || params.scope;
         const model = params.model;
 
-        if (!id || !scope) {
+        if (!id || !entityType) {
             console.error("Bad data.");
 
             return Promise.reject();
@@ -75,27 +88,163 @@ class RecordModalHelper {
             return Promise.reject();
         }
 
-        const viewName = this.metadata.get(['clientDefs', scope, 'modalViews', 'detail']) ||
+        const viewName = this.metadata.get(`clientDefs.${entityType}.modalViews.detail`) ||
             'views/modals/detail';
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait()
 
         const options = {
-            scope: scope,
+            entityType: entityType,
             model: model,
             id: id,
             quickEditDisabled: params.editDisabled,
             rootUrl: params.rootUrl,
         };
 
-        return view.createView('modal', viewName, options, modalView => {
-            modalView.render()
-                .then(() => Espo.Ui.notify(false));
+        Espo.Ui.notifyWait();
 
-            view.listenToOnce(modalView, 'remove', () => {
-                view.clearView('modal');
-            });
-        });
+        const modalView = /** @type {import('views/modals/detail').default} */
+            await view.createView('modal', viewName, options);
+
+        // @todo Revise.
+        view.listenToOnce(modalView, 'remove', () => view.clearView('modal'));
+
+        if (params.afterSave) {
+            modalView.listenTo(modalView, 'after:save', model => params.afterSave(model));
+        }
+
+        if (params.afterDestroy) {
+            modalView.listenToOnce(modalView, 'after:destroy', model => params.afterDestroy(model));
+        }
+
+        await modalView.render();
+
+        Espo.Ui.notify();
+
+        return modalView;
+    }
+
+    /**
+     * Show the 'edit' modal.
+     *
+     * @param {import('view').default} view
+     * @param {{
+     *   entityType: string,
+     *   id?: string,
+     *   model?: import('model').default,
+     *   rootUrl?: string,
+     *   noFullForm?: boolean,
+     *   returnUrl?: string,
+     *   afterSave?: function(import('model').default),
+     *   returnDispatchParams?: {
+     *       controller: string,
+     *       action: string|null,
+     *       options: {isReturn?: boolean} & Record,
+     *   },
+     * }} params
+     * @return {Promise<import('views/modals/edit').default>}
+     * @since 9.1.0
+     */
+    async showEdit(view, params) {
+        const id = params.id;
+        const entityType = params.entityType;
+        const model = params.model;
+
+        const viewName = this.metadata.get(`clientDefs.${entityType}.modalViews.edit`) ||
+            'views/modals/edit';
+
+        /** @type {module:views/modals/detail~options} */
+        const options = {
+            entityType: entityType,
+            id: id,
+            model: model,
+            fullFormDisabled: params.noFullForm,
+            returnUrl: params.returnUrl || this.router.getCurrentUrl(),
+            returnDispatchParams: params.returnDispatchParams,
+        };
+
+        if (params.rootUrl) {
+            options.rootUrl = params.rootUrl;
+        }
+
+        Espo.Ui.notifyWait();
+
+        const modalView = /** @type {import('views/modals/edit').default} */
+            await view.createView('modal', viewName, options)
+
+        // @todo Revise.
+        modalView.listenToOnce(modalView, 'remove', () => view.clearView('modal'));
+
+        if (params.afterSave) {
+            modalView.listenTo(modalView, 'after:save', model => params.afterSave(model));
+        }
+
+        await modalView.render();
+
+        Espo.Ui.notify();
+
+        return modalView;
+    }
+
+    /**
+     * Show the 'create' modal.
+     *
+     * @param {import('view').default} view
+     * @param {{
+     *   entityType: string,
+     *   rootUrl?: string,
+     *   noFullForm?: boolean,
+     *   returnUrl?: string,
+     *   relate?: model:model~setRelateItem | model:model~setRelateItem[],
+     *   attributes?: Record.<string, *>,
+     *   afterSave?: function(import('model').default),
+     *   returnDispatchParams?: {
+     *       controller: string,
+     *       action: string|null,
+     *       options: {isReturn?: boolean} & Record,
+     *   },
+     * }} params
+     * @return {Promise<import('views/modals/edit').default>}
+     * @since 9.1.0
+     */
+    async showCreate(view, params) {
+        const entityType = params.entityType;
+
+        const viewName = this.metadata.get(`clientDefs.${entityType}.modalViews.edit`) ||
+            'views/modals/edit';
+
+        /** @type {module:views/modals/edit~options} */
+        const options = {
+            entityType: entityType,
+            fullFormDisabled: params.noFullForm,
+            returnUrl: params.returnUrl || this.router.getCurrentUrl(),
+            returnDispatchParams: params.returnDispatchParams,
+            relate: params.relate,
+            attributes: params.attributes,
+        };
+
+        if (params.rootUrl) {
+            options.rootUrl = params.rootUrl;
+        }
+
+        Espo.Ui.notifyWait();
+
+        const modalView = /** @type {import('views/modals/edit').default} */
+            await view.createView('modal', viewName, options)
+
+
+        // @todo Revise.
+        modalView.listenToOnce(modalView, 'remove', () => view.clearView('modal'));
+
+        if (params.afterSave) {
+            modalView.listenTo(modalView, 'after:save', model => params.afterSave(model));
+        }
+
+        await modalView.render();
+
+        Espo.Ui.notify();
+
+        return modalView;
     }
 }
 

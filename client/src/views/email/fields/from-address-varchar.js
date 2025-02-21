@@ -587,7 +587,7 @@ class EmailFromAddressVarchar extends BaseFieldView {
 
         helper.showDetail(this, {
             id: data.id,
-            scope: data.scope,
+            entityType: data.scope,
         });
     }
 }

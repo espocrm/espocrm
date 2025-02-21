@@ -68,7 +68,7 @@ class GlobalSearchNameFieldView extends BaseFieldView {
 
         helper.showDetail(this, {
             id: this.model.id,
-            scope: this.model.attributes._scope,
+            entityType: this.model.attributes._scope,
         });
     }
 }

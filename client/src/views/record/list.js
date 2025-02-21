@@ -3274,27 +3274,38 @@ class ListRecordView extends View {
             return;
         }
 
-        const view = await (new RecordModal()).showDetail(this, {
+        const rootUrl = this.options.keepCurrentRootUrl ? this.getRouter().getCurrentUrl() : undefined;
+
+        const helper = new RecordModal();
+
+        await helper.showDetail(this, {
             id: id,
-            scope: scope,
+            entityType: scope,
             model: model,
-            rootUrl: this.options.keepCurrentRootUrl ? this.getRouter().getCurrentUrl() : null,
+            rootUrl: rootUrl,
             editDisabled: this.quickEditDisabled,
-        })
+            afterSave: m => {
+                if (!model) {
+                    return;
+                }
 
-        if (!model) {
-            return;
-        }
+                this.trigger('after:save', m);
+            },
+            afterDestroy: m => {
+                if (!model) {
+                    return;
+                }
 
-        this.listenTo(view, 'after:save', model => this.trigger('after:save', model));
-        this.listenTo(view, 'after:destroy', model => this.removeRecordFromList(model.id));
+                this.removeRecordFromList(m.id);
+            },
+        });
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * @param {Object.<string, *>} data
      */
-    actionQuickEdit(data) {
+    async actionQuickEdit(data) {
         data = data || {};
 
         const id = data.id;
@@ -3327,43 +3338,18 @@ class ListRecordView extends View {
             return;
         }
 
-        const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'edit']) ||
-            'views/modals/edit';
-
         if (!this.quickEditDisabled) {
-            Espo.Ui.notify(' ... ');
+            const helper = new RecordModal();
 
-            const options = {
-                scope: scope,
+            const rootUrl = this.options.keepCurrentRootUrl ? this.getRouter().getCurrentUrl() : undefined;
+
+            await helper.showEdit(this, {
+                entityType: scope,
                 id: id,
                 model: model,
-                fullFormDisabled: data.noFullForm,
-                returnUrl: this.getRouter().getCurrentUrl(),
-                returnDispatchParams: {
-                    controller: scope,
-                    action: null,
-                    options: {
-                        isReturn: true,
-                    },
-                },
-            };
-
-            if (this.options.keepCurrentRootUrl) {
-                options.rootUrl = this.getRouter().getCurrentUrl();
-            }
-
-            this.createView('modal', viewName, options, (view) => {
-                view.once('after:render', () => {
-                    Espo.Ui.notify(false);
-                });
-
-                view.render();
-
-                this.listenToOnce(view, 'remove', () => {
-                    this.clearView('modal');
-                });
-
-                this.listenToOnce(view, 'after:save', (m) => {
+                noFullForm: data.noFullForm,
+                rootUrl: rootUrl,
+                afterSave: m => {
                     const model = this.collection.get(m.id);
 
                     if (model) {
@@ -3371,7 +3357,14 @@ class ListRecordView extends View {
                     }
 
                     this.trigger('after:save', m);
-                });
+                },
+                returnDispatchParams: {
+                    controller: scope,
+                    action: null,
+                    options: {
+                        isReturn: true,
+                    },
+                },
             });
 
             return;
@@ -3394,7 +3387,7 @@ class ListRecordView extends View {
             options.rootUrl = this.getRouter().getCurrentUrl();
         }
 
-        this.getRouter().navigate('#' + scope + '/edit/' + id, {trigger: false});
+        this.getRouter().navigate(`#${scope}/edit/${id}`, {trigger: false});
         this.getRouter().dispatch(scope, 'edit', options);
     }
 

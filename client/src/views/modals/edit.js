@@ -139,7 +139,11 @@ class EditModalView extends ModalView {
      * @property {boolean} [focusForCreate] Focus for create.
      * @property {string} [rootUrl] A root URL.
      * @property {string} [returnUrl] A return URL.
-     * @property {Record} [returnDispatchParams] Return dispatch params.
+     * @property {{
+     *     controller: string,
+     *     action: string|null,
+     *     options: {isReturn?: boolean} & Record,
+     * }} [returnDispatchParams] Return dispatch params.
      * @property {string} [fullFormUrl] A full-form URL. As of v9.0.
      */
 

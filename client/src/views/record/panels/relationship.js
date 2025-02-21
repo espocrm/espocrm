@@ -744,7 +744,7 @@ class RelationshipPanelView extends BottomPanelView {
 
         helper
             .showDetail(this, {
-                scope: scope,
+                entityType: scope,
                 id: id,
                 model: model,
             })

@@ -30,6 +30,8 @@
 
 import MainView from 'views/main';
 import SearchManager from 'search-manager';
+import RecordModal from 'helpers/record-modal';
+import CreateRelatedHelper from 'helpers/record/create-related';
 
 /**
  * A list-related view.
@@ -632,65 +634,16 @@ class ListRelatedView extends MainView {
      *
      * @protected
      */
-    actionQuickCreate() {
+    async actionQuickCreate() {
         const link = this.link;
-        const foreignScope = this.foreignScope;
-        const foreignLink = this.model.getLinkParam(link, 'foreign');
 
-        let attributes = {};
+        const helper = new CreateRelatedHelper(this);
 
-        const attributeMap = this.getMetadata()
-            .get(['clientDefs', this.scope, 'relationshipPanels', link, 'createAttributeMap']) || {};
-
-        Object.keys(attributeMap)
-            .forEach(attr => {
-                attributes[attributeMap[attr]] = this.model.get(attr);
-            });
-
-        Espo.Ui.notify(' ... ');
-
-        const handler = this.getMetadata()
-            .get(['clientDefs', this.scope, 'relationshipPanels', link, 'createHandler']);
-
-        (new Promise(resolve => {
-            if (!handler) {
-                resolve({});
-
-                return;
-            }
-
-            Espo.loader.requirePromise(handler)
-                .then(Handler => new Handler(this.getHelper()))
-                .then(handler => {
-                    handler.getAttributes(this.model)
-                        .then(attributes => resolve(attributes));
-                });
-        }))
-            .then(additionalAttributes => {
-                attributes = {...attributes, ...additionalAttributes};
-
-                const viewName = this.getMetadata()
-                    .get(['clientDefs', foreignScope, 'modalViews', 'edit']) || 'views/modals/edit';
-
-                this.createView('quickCreate', viewName, {
-                    scope: foreignScope,
-                    relate: {
-                        model: this.model,
-                        link: foreignLink,
-                    },
-                    attributes: attributes,
-                }, view => {
-                    view.render();
-                    view.notify(false);
-
-                    this.listenToOnce(view, 'after:save', () => {
-                        this.collection.fetch();
-
-                        this.model.trigger('after:relate');
-                        this.model.trigger('after:relate:' + link);
-                    });
-                });
-            });
+        return helper.process(this.model, link, {
+            afterSave: () => {
+                this.collection.fetch()
+            },
+        });
     }
 
     // noinspection JSUnusedGlobalSymbols

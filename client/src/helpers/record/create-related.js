@@ -28,6 +28,7 @@
 
 import {inject} from 'di';
 import Metadata from 'metadata';
+import RecordModal from 'helpers/record-modal';
 
 /**
  * @internal
@@ -52,65 +53,52 @@ class CreateRelatedHelper {
     /**
      * @param {import('model').default} model
      * @param {string} link
-     * @param {Record} options
+     * @param {{
+     *     afterSave: function(import('model').default),
+     * }} [options]
      */
-    process(model, link, options = {}) {
+    async process(model, link, options = {}) {
         const scope = model.defs['links'][link].entity;
         const foreignLink = model.defs['links'][link].foreign;
 
+        /** @type {Record} */
+        const panelDefs = this.metadata.get(`clientDefs.${model.entityType}.relationshipPanels.${link}`) || {};
+
+        const attributeMap = panelDefs.createAttributeMap || {};
+        const handler = panelDefs.createHandler;
+
         let attributes = {};
 
-        const attributeMap = this.metadata
-            .get(['clientDefs', model.entityType, 'relationshipPanels', link, 'createAttributeMap']) || {};
+        Object.keys(attributeMap).forEach(attr => attributes[attributeMap[attr]] = model.get(attr));
 
-        Object.keys(attributeMap)
-            .forEach(attr => attributes[attributeMap[attr]] = model.get(attr));
+        if (handler) {
+            const Handler = await Espo.loader.requirePromise(handler);
+            /** @type {{getAttributes: function(import('model').default): Promise<Record>}} */
+            const handlerObj = new Handler(this.view.getHelper());
 
-        Espo.Ui.notify(' ... ');
+            const additionalAttributes = await handlerObj.getAttributes(model);
 
-        const handler = this.metadata
-            .get(['clientDefs', model.entityType, 'relationshipPanels', link, 'createHandler']);
-
-        new Promise(resolve => {
-            if (!handler) {
-                resolve({});
-
-                return;
-            }
-
-            Espo.loader.requirePromise(handler)
-                .then(Handler => new Handler(this.view.getHelper()))
-                .then(handler => {
-                    handler.getAttributes(model)
-                        .then(attributes => resolve(attributes));
-                });
-        }).then(additionalAttributes => {
             attributes = {...attributes, ...additionalAttributes};
+        }
 
-            const viewName = this.metadata.get(['clientDefs', scope, 'modalViews', 'edit']) || 'views/modals/edit';
+        const helper = new RecordModal();
 
-            this.view.createView('quickCreate', viewName, {
-                scope: scope,
-                relate: {
-                    model: model,
-                    link: foreignLink,
-                },
-                attributes: attributes,
-            }, view => {
-                view.render();
-                view.notify(false);
+        await helper.showCreate(this.view, {
+            entityType: scope,
+            relate: {
+                model: model,
+                link: foreignLink,
+            },
+            attributes: attributes,
+            afterSave: m => {
+                if (options.afterSave) {
+                    options.afterSave(m);
+                }
 
-                this.view.listenToOnce(view, 'after:save', () => {
-                    if (options.fromSelectRelated) {
-                        setTimeout(() => this.view.clearView('dialogSelectRelated'), 25);
-                    }
-
-                    model.trigger(`update-related:${link}`);
-
-                    model.trigger('after:relate');
-                    model.trigger(`after:relate:${link}`);
-                });
-            });
+                model.trigger(`update-related:${link}`);
+                model.trigger('after:relate');
+                model.trigger(`after:relate:${link}`);
+            },
         });
     }
 }
