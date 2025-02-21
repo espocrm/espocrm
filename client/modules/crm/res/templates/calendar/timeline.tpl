@@ -35,7 +35,7 @@
         <button
             class="btn btn-text{{#ifNotEqual calendarType 'shared'}} hidden{{/ifNotEqual}} btn-icon"
             data-action="showSharedCalendarOptions"
-            title="{{translate 'Manage Users' scope='Calendar'}}"
+            title="{{translate 'Shared Mode Options' scope='Calendar'}}"
         ><span class="fas fa-pencil-alt fa-sm"></span></button>
         </div>
         {{/if}}

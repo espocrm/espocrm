@@ -26,69 +26,109 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/calendar/modals/shared-options', ['views/modal', 'model'], function (Dep, Model) {
+import ModalView from 'views/modal';
+import Model from 'model';
 
-    return Dep.extend({
+export default class TimelineSharedOptionsModalView extends ModalView {
 
-        className: 'dialog dialog-record',
+    className = 'dialog dialog-record'
 
-        template: 'crm:calendar/modals/shared-options',
+    templateContent = `
+        <div class="panel panel-default no-side-margin">
+            <div class="panel-body">
+                <div class="record-container">{{{record}}}</div>
+            </div>
+        </div>
+    `
 
-        buttonList: [
+    /**
+     *
+     * @param {{
+     *     users: {id: string, name: string}[],
+     *     onApply: function({
+     *         users: {id: string, name: string}[],
+     *     }),
+     * }} options
+     */
+    constructor(options) {
+        super(options);
+
+        this.options = options;
+    }
+
+    setup() {
+        this.buttonList = [
             {
                 name: 'save',
                 label: 'Save',
                 style: 'primary',
+                onClick: () => this.actionSave(),
             },
             {
                 name: 'cancel',
                 label: 'Cancel',
+                onClick: () => this.actionClose(),
             },
-        ],
+        ];
 
-        setup: function () {
-            var userList = this.options.userList || [];
+        this.headerText = this.translate('timeline', 'modes', 'Calendar') + ' · ' +
+            this.translate('Shared Mode Options', 'labels', 'Calendar')
 
-            var userIdList = [];
-            var userNames = {};
+        const users = this.options.users;
 
-            userList.forEach(item => {
-                userIdList.push(item.id);
-                userNames[item.id] = item.name;
+        const userIdList = [];
+        const userNames = {};
+
+        users.forEach(item => {
+            userIdList.push(item.id);
+
+            userNames[item.id] = item.name;
+        });
+
+        this.model = new Model({
+            usersIds: userIdList,
+            usersNames: userNames,
+        });
+
+        this.createView('record', 'crm:views/calendar/record/shared-options', {
+            model: this.model,
+            selector: '.record-container',
+        });
+
+    }
+
+    /**
+     * @private
+     * @return {import('views/record/edit').default}
+     */
+    getRecordView() {
+        return this.getView('record');
+    }
+
+    /**
+     * @private
+     */
+    actionSave() {
+        const data = this.getRecordView().processFetch();
+
+        if (this.getRecordView().validate()) {
+            return;
+        }
+
+        /** @type {{id: string, name: string}[]} */
+        const users = [];
+
+        const userIds = this.model.attributes.usersIds || [];
+
+        userIds.forEach(id => {
+            users.push({
+                id: id,
+                name: (data.usersNames || {})[id] || id
             });
+        });
 
-            var model = new Model();
+        this.options.onApply({users: users})
 
-            model.name = 'SharedCalendarOptions';
-
-            model.set({
-                usersIds: userIdList,
-                usersNames: userNames
-            });
-
-            this.createView('record', 'crm:views/calendar/record/shared-options', {
-                selector: '.record-container',
-                model: model,
-            });
-        },
-
-        actionSave: function () {
-            var data = this.getView('record').fetch();
-
-            var userList = [];
-
-            (data.usersIds || []).forEach(id => {
-                userList.push({
-                    id: id,
-                    name: (data.usersNames || {})[id] || id
-                });
-            });
-
-            this.trigger('save', {
-                userList: userList
-            });
-
-            this.remove();
-        },
-    });
-});
+        this.close();
+    }
+}

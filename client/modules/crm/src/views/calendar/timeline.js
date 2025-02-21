@@ -34,6 +34,7 @@ import {Timeline} from 'vis-timeline';
 import moment from 'moment';
 import $ from 'jquery';
 import RecordModal from 'helpers/record-modal';
+import TimelineSharedOptionsModalView from 'crm:views/calendar/modals/shared-options';
 
 class TimelineView extends View {
 
@@ -115,10 +116,6 @@ class TimelineView extends View {
             }
 
             this.selectCalendarType(calendarType);
-        },
-        /** @this TimelineView */
-        'click button[data-action="addUser"]': function () {
-            this.actionAddUser();
         },
         /** @this TimelineView */
         'click button[data-action="showSharedCalendarOptions"]': function () {
@@ -811,29 +808,6 @@ class TimelineView extends View {
         }, {patch: true});
     }
 
-    addSharedCalenderUser(id, name, skipStore) {
-        let isMet = false;
-
-        this.userList.forEach(item => {
-            if (item.id === id) {
-                isMet = true;
-            }
-        });
-
-        if (isMet) {
-            return;
-        }
-
-        this.userList.push({
-            id: id,
-            name: name,
-        });
-
-        if (!skipStore) {
-            this.storeUserList();
-        }
-    }
-
     getSharedCalenderUserList() {
         const list = Espo.Utils.clone(this.getPreferences().get('sharedCalendarUserList'));
 
@@ -977,47 +951,11 @@ class TimelineView extends View {
         });
     }
 
-    actionShowSharedCalendarOptions() {
-        this.createView('dialog', 'crm:views/calendar/modals/shared-options', {
-            userList: this.userList,
-        }, view => {
-            view.render();
-
-            this.listenToOnce(view, 'save', data => {
-                this.userList = data.userList;
-                this.storeUserList();
-                this.initGroupsDataSet();
-                this.timeline.setGroups(this.groupsDataSet);
-                this.runFetch();
-            });
-        });
-    }
-
-    actionAddUser() {
-        const boolFilterList = [];
-
-        if (this.getAcl().getPermissionLevel('userCalendar') === 'team') {
-            boolFilterList.push('onlyMyTeam');
-        }
-
-        const viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
-            'views/modals/select-records';
-
-        Espo.Ui.notifyWait();
-
-        this.createView('dialog', viewName, {
-            scope: 'User',
-            createButton: false,
-            boolFilterList: boolFilterList,
-            multiple: true,
-        }, view => {
-            view.render();
-            Espo.Ui.notify(false);
-
-            this.listenToOnce(view, 'select', modelList => {
-                modelList.forEach(model => {
-                    this.addSharedCalenderUser(model.id, model.get('name'));
-                });
+    async actionShowSharedCalendarOptions() {
+        const view = new TimelineSharedOptionsModalView({
+            users: this.userList,
+            onApply: data => {
+                this.userList = data.users;
 
                 this.storeUserList();
                 this.initGroupsDataSet();
@@ -1025,8 +963,12 @@ class TimelineView extends View {
                 this.timeline.setGroups(this.groupsDataSet);
 
                 this.runFetch();
-            });
+            },
         });
+
+        await this.assignView('modal', view);
+
+        await view.render();
     }
 
     actionRefresh() {
