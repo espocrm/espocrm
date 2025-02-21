@@ -1333,28 +1333,19 @@ class LinkFieldView extends BaseFieldView {
         return undefined;
     }
 
-    actionCreateLink() {
-        const viewName = this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'edit']) ||
-            'views/modals/edit';
+    /**
+     * @protected
+     */
+    async actionCreateLink() {
+        const helper = new RecordModal();
 
-        Espo.Ui.notifyWait();
+        const attributes = await this.getCreateAttributesProvider()();
 
-        this.getCreateAttributesProvider()().then(attributes => {
-            this.createView('dialog', viewName, {
-                scope: this.foreignScope,
-                fullFormDisabled: true,
-                attributes: attributes,
-            }, view => {
-                view.render()
-                    .then(() => Espo.Ui.notify(false));
-
-                this.listenToOnce(view, 'after:save', model => {
-                    view.close();
-                    this.clearView('dialog');
-
-                    this.select(model);
-                });
-            });
+        await helper.showCreate(this, {
+            entityType: this.foreignScope,
+            fullFormDisabled: true,
+            attributes: attributes,
+            afterSave: model => this.select(model),
         });
     }
 
