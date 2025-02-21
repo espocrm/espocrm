@@ -28,18 +28,22 @@
 
 import ModalView from 'views/modal';
 import Model from 'model';
+import EditForModalRecordView from 'views/record/edit-for-modal';
+import CalendarUsersFieldView from 'crm:views/calendar/fields/users';
 
 export default class TimelineSharedOptionsModalView extends ModalView {
 
     className = 'dialog dialog-record'
 
     templateContent = `
-        <div class="panel panel-default no-side-margin">
-            <div class="panel-body">
-                <div class="record-container">{{{record}}}</div>
-            </div>
-        </div>
+        <div class="record-container no-side-margin">{{{record}}}</div>
     `
+
+    /**
+     * @private
+     * @type {EditForModalRecordView}
+     */
+    recordView
 
     /**
      *
@@ -90,28 +94,34 @@ export default class TimelineSharedOptionsModalView extends ModalView {
             usersNames: userNames,
         });
 
-        this.createView('record', 'crm:views/calendar/record/shared-options', {
+        this.recordView = new EditForModalRecordView({
             model: this.model,
-            selector: '.record-container',
+            detailLayout: [
+                {
+                    rows: [
+                        [
+                            {
+                                view: new CalendarUsersFieldView({
+                                    name: 'users',
+                                }),
+                            },
+                            false
+                        ]
+                    ]
+                }
+            ]
         });
 
-    }
-
-    /**
-     * @private
-     * @return {import('views/record/edit').default}
-     */
-    getRecordView() {
-        return this.getView('record');
+        this.assignView('record', this.recordView);
     }
 
     /**
      * @private
      */
     actionSave() {
-        const data = this.getRecordView().processFetch();
+        const data = this.recordView.processFetch();
 
-        if (this.getRecordView().validate()) {
+        if (this.recordView.validate()) {
             return;
         }
 
