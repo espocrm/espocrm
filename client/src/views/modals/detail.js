@@ -31,6 +31,7 @@
 import ModalView from 'views/modal';
 import ActionItemSetup from 'helpers/action-item-setup';
 import Backbone from 'backbone';
+import RecordModal from 'helpers/record-modal';
 
 /**
  * A quick view modal.
@@ -616,9 +617,9 @@ class DetailModalView extends ModalView {
     }
 
     /**
-     * @return {Promise}
+     * @return {Promise<import('views/modals/edit').default>}
      */
-    actionEdit() {
+    async actionEdit() {
         if (this.options.quickEditDisabled) {
             const options = {
                 id: this.id,
@@ -630,53 +631,39 @@ class DetailModalView extends ModalView {
                 options.rootUrl = this.options.rootUrl;
             }
 
-            this.getRouter().navigate('#' + this.scope + '/edit/' + this.id, {trigger: false});
+            this.getRouter().navigate(`#${this.scope}/edit/${this.id}`, {trigger: false});
             this.getRouter().dispatch(this.scope, 'edit', options);
 
             return Promise.reject();
         }
 
-        const viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
-            'views/modals/edit';
+        const helper = new RecordModal();
 
-        Espo.Ui.notifyWait();
+        const modalView = await helper.showEdit(this, {
+            entityType: this.entityType,
+            id: this.id,
+            fullFormDisabled: this.fullFormDisabled,
+            afterSave: (model, o) => {
+                this.model.set(model.getClonedAttributes());
 
-        return new Promise(resolve => {
-            this.createView('quickEdit', viewName, {
-                scope: this.scope,
-                entityType: this.model.entityType,
-                id: this.id,
-                fullFormDisabled: this.fullFormDisabled
-            }, view => {
-                this.listenToOnce(view, 'remove', () => {
-                    this.dialog.show();
-                });
+                this.trigger('after:save', model, o);
 
-                this.listenToOnce(view, 'leave', () => {
-                    this.remove();
-                });
+                this.controlRecordButtonsVisibility();
 
-                this.listenTo(view, 'after:save', (model, o) => {
-                    this.model.set(model.getClonedAttributes());
+                this.trigger('model-sync');
 
-                    this.trigger('after:save', model, o);
-                    this.controlRecordButtonsVisibility();
-
-                    this.trigger('model-sync');
-
-                    // Triggers stream panel update.
-                    this.model.trigger('sync');
-                });
-
-                view.render()
-                    .then(() => {
-                        Espo.Ui.notify(false);
-                        this.dialog.hide();
-
-                        resolve(view);
-                    });
-            });
+                // Triggers stream panel update.
+                this.model.trigger('sync');
+            },
+            beforeRender: view => {
+                this.listenToOnce(view, 'remove', () => this.dialog.show());
+                this.listenToOnce(view, 'leave', () => this.remove());
+            },
         });
+
+        this.dialog.hide();
+
+        return modalView;
     }
 
     // noinspection JSUnusedGlobalSymbols

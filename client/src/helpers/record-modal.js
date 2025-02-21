@@ -71,7 +71,7 @@ class RecordModalHelper {
      *   rootUrl?: string,
      *   fullFormUrl?: string,
      *   layoutName?: string,
-     *   afterSave?: function(import('model').default, {bypassClose: boolean}),
+     *   afterSave?: function(import('model').default, {bypassClose: boolean} & Record),
      *   afterDestroy?: function(import('model').default),
      *   beforeRender?: function(import('views/modals/detail').default),
      *   onClose?: function(),
@@ -122,7 +122,7 @@ class RecordModalHelper {
 
         if (params.afterSave) {
             modalView.listenTo(modalView, 'after:save', (model, /** Record */o) => {
-                params.afterSave(model, {bypassClose: !!o.bypassClose});
+                params.afterSave(model, {...o});
             });
         }
 
@@ -158,7 +158,7 @@ class RecordModalHelper {
      *   fullFormUrl?: string,
      *   returnUrl?: string,
      *   layoutName?: string,
-     *   afterSave?: function(import('model').default, {bypassClose: boolean}),
+     *   afterSave?: function(import('model').default, {bypassClose: boolean} & Record),
      *   beforeRender?: function(import('views/modals/edit').default),
      *   onClose?: function(),
      *   returnDispatchParams?: {
@@ -204,7 +204,7 @@ class RecordModalHelper {
 
         if (params.afterSave) {
             modalView.listenTo(modalView, 'after:save', (model, /** Record */o) => {
-                params.afterSave(model, {bypassClose: !!o.bypassClose});
+                params.afterSave(model, {...o});
             });
         }
 
@@ -235,7 +235,7 @@ class RecordModalHelper {
      *   returnUrl?: string,
      *   relate?: model:model~setRelateItem | model:model~setRelateItem[],
      *   attributes?: Record.<string, *>,
-     *   afterSave?: function(import('model').default, {bypassClose: boolean}),
+     *   afterSave?: function(import('model').default, {bypassClose: boolean} & Record),
      *   beforeRender?: function(import('views/modals/edit').default),
      *   onClose?: function(),
      *   focusForCreate?: boolean,
@@ -282,7 +282,7 @@ class RecordModalHelper {
 
         if (params.afterSave) {
             modalView.listenTo(modalView, 'after:save', (model, /** Record */o) => {
-                params.afterSave(model, {bypassClose: !!o.bypassClose});
+                params.afterSave(model, {...o});
             });
         }
 
