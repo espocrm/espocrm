@@ -270,36 +270,33 @@ class SelectRecordsModalView extends ModalView {
     }
 
     setupSearch() {
-        const searchManager = this.searchManager =
-            new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
-
-        searchManager.emptyOnReset = true;
+        this.searchManager = new SearchManager(this.collection, {emptyOnReset: true});
 
         if (this.filters) {
-            searchManager.setAdvanced(this.filters);
+            this.searchManager.setAdvanced(this.filters);
         }
 
         const boolFilterList = this.boolFilterList ||
             this.getMetadata().get(`clientDefs.${this.scope}.selectDefaultFilters.boolFilterList`);
 
         if (boolFilterList) {
-            searchManager.setBool(boolFilterList);
+            this.searchManager.setBool(boolFilterList);
         }
 
         const primaryFilterName = this.primaryFilterName ||
             this.getMetadata().get(`clientDefs.${this.scope}.selectDefaultFilters.filter`);
 
         if (primaryFilterName) {
-            searchManager.setPrimary(primaryFilterName);
+            this.searchManager.setPrimary(primaryFilterName);
         }
 
-        this.collection.where = searchManager.getWhere();
+        this.collection.where = this.searchManager.getWhere();
 
         if (this.searchPanel) {
             this.createView('search', 'views/record/search', {
                 collection: this.collection,
                 fullSelector: this.containerSelector + ' .search-container',
-                searchManager: searchManager,
+                searchManager: this.searchManager,
                 disableSavePreset: true,
                 filterList: this.filterList,
             }, view => {
@@ -309,8 +306,8 @@ class SelectRecordsModalView extends ModalView {
     }
 
     setupList() {
-        const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
-            this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
+        const viewName = this.getMetadata().get(`clientDefs.${this.scope}.recordViews.listSelect`) ||
+            this.getMetadata().get(`clientDefs.${this.scope}.recordViews.list`) ||
             'views/record/list';
 
         const promise = this.createView('list', viewName, {
@@ -346,8 +343,7 @@ class SelectRecordsModalView extends ModalView {
                 this.listenTo(view, 'check', () => {
                     if (view.checkedList.length) {
                         this.enableButton('select');
-                    }
-                    else {
+                    } else {
                         this.disableButton('select');
                     }
                 });

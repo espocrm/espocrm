@@ -291,9 +291,10 @@ class RelationshipPanelView extends BottomPanelView {
             collection.maxSize = this.recordsPerPage || this.getConfig().get('recordsPerPageSmall') || 5;
 
             if (this.defs.filters) {
-                const searchManager = new SearchManager(collection, 'listRelationship', null, this.getDateTime());
+                const searchManager = new SearchManager(collection);
 
                 searchManager.setAdvanced(this.defs.filters);
+
                 collection.where = searchManager.getWhere();
             }
 

@@ -93,7 +93,7 @@ class RecordListDashletView extends BaseDashletView {
         this.getCollectionFactory().create(this.scope, collection => {
             const searchData = this.getSearchData();
 
-            this.searchManager = new SearchManager(collection, 'list', null, this.getDateTime(), searchData);
+            this.searchManager = new SearchManager(collection, {defaultData: searchData});
 
             if (!this.scope) {
                 this.$el.find('.list-container')

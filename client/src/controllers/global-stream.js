@@ -43,7 +43,7 @@ class GlobalStreamController extends Controller {
         const view = new GlobalStreamView();
 
         this.main(view, undefined, undefined, {
-            key: key,
+            storageKey: key,
             useStored: isReturn,
         });
     }

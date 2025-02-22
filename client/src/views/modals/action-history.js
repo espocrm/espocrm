@@ -75,16 +75,15 @@ class ActionHistoryModalView extends ModalView {
     }
 
     setupSearch() {
-        const searchManager = this.searchManager =
-            new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
+        this.searchManager = new SearchManager(this.collection);
 
         this.collection.data.boolFilterList = ['onlyMy'];
-        this.collection.where = searchManager.getWhere();
+        this.collection.where = this.searchManager.getWhere();
 
         this.createView('search', 'views/record/search', {
             collection: this.collection,
             fullSelector: this.containerSelector + ' .search-container',
-            searchManager: searchManager,
+            searchManager: this.searchManager,
             disableSavePreset: true,
             textFilterDisabled: true,
         });

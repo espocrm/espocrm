@@ -464,7 +464,7 @@ class ListView extends MainView {
      * @returns {Object}
      */
     getSearchDefaultData() {
-        return this.getMetadata().get('clientDefs.' + this.scope + '.defaultFilterData');
+        return this.getMetadata().get(`clientDefs.${this.scope}.defaultFilterData`);
     }
 
     /**
@@ -479,13 +479,10 @@ class ListView extends MainView {
             key += 'Filter' + Espo.Utils.upperCaseFirst(this._primaryFilter);
         }
 
-        const searchManager = new SearchManager(
-            collection,
-            key,
-            this.getStorage(),
-            this.getDateTime(),
-            this.getSearchDefaultData()
-        );
+        const searchManager = new SearchManager(collection, {
+            storageKey: key,
+            defaultData: this.getSearchDefaultData(),
+        });
 
         searchManager.scope = this.scope;
         searchManager.loadStored();

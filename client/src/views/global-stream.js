@@ -70,12 +70,7 @@ class GlobalStreamView extends View {
     }
 
     setupSearchManager() {
-        const searchManager = new SearchManager(
-            this.collection,
-            undefined,
-            this.getStorage(),
-            this.getDateTime()
-        );
+        const searchManager = new SearchManager(this.collection);
 
         searchManager.loadStored();
 

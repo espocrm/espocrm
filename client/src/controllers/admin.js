@@ -125,7 +125,7 @@ class AdminController extends Controller {
             this.listenTo(view, 'rebuild', this.rebuild);
         }, {
             useStored: isReturn,
-            key: key,
+            storageKey: key,
         });
     }
 
@@ -352,12 +352,7 @@ class AdminController extends Controller {
     // noinspection JSUnusedGlobalSymbols
     actionAuthTokens() {
         this.collectionFactory.create('AuthToken', collection => {
-            const searchManager = new SearchManager(
-                collection,
-                'list',
-                this.getStorage(),
-                this.getDateTime()
-            );
+            const searchManager = new SearchManager(collection, {storageKey: 'list'});
 
             searchManager.loadStored();
             collection.where = searchManager.getWhere();
@@ -374,12 +369,7 @@ class AdminController extends Controller {
     // noinspection JSUnusedGlobalSymbols
     actionAuthLog() {
         this.collectionFactory.create('AuthLogRecord', collection => {
-            const searchManager = new SearchManager(
-                collection,
-                'list',
-                this.getStorage(),
-                this.getDateTime()
-            );
+            const searchManager = new SearchManager(collection, {storageKey: 'list'});
 
             searchManager.loadStored();
 
@@ -402,12 +392,7 @@ class AdminController extends Controller {
     // noinspection JSUnusedGlobalSymbols
     actionJobs() {
         this.collectionFactory.create('Job', collection => {
-            const searchManager = new SearchManager(
-                collection,
-                'list',
-                this.getStorage(),
-                this.getDateTime()
-            );
+            const searchManager = new SearchManager(collection, {storageKey: 'list'});
 
             searchManager.loadStored();
 
@@ -425,12 +410,7 @@ class AdminController extends Controller {
     // noinspection JSUnusedGlobalSymbols
     actionAppLog() {
         this.collectionFactory.create('AppLogRecord', collection => {
-            const searchManager = new SearchManager(
-                collection,
-                'list',
-                this.getStorage(),
-                this.getDateTime()
-            );
+            const searchManager = new SearchManager(collection, {storageKey: 'list'});
 
             searchManager.loadStored();
 

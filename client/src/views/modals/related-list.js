@@ -354,18 +354,15 @@ class RelatedListModalView extends ModalView {
     }
 
     setupSearch() {
-        const searchManager = this.searchManager =
-            new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
-
-        searchManager.emptyOnReset = true;
+        this.searchManager = new SearchManager(this.collection, {emptyOnReset: true});
 
         const primaryFilterName = this.primaryFilterName;
 
         if (primaryFilterName) {
-            searchManager.setPrimary(primaryFilterName);
+            this.searchManager.setPrimary(primaryFilterName);
         }
 
-        this.collection.where = searchManager.getWhere();
+        this.collection.where = this.searchManager.getWhere();
 
         let filterList = Espo.Utils.clone(this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || []);
 
@@ -405,7 +402,7 @@ class RelatedListModalView extends ModalView {
             this.createView('search', 'views/record/search', {
                 collection: this.collection,
                 fullSelector: this.containerSelector + ' .search-container',
-                searchManager: searchManager,
+                searchManager: this.searchManager,
                 disableSavePreset: true,
                 filterList: filterList,
                 filtersLayoutName: this.options.filtersLayoutName,

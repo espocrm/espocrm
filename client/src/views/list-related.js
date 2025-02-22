@@ -449,13 +449,7 @@ class ListRelatedView extends MainView {
     setupSearchManager() {
         const collection = this.collection;
 
-        const searchManager = new SearchManager(
-            collection,
-            'list',
-            null,
-            this.getDateTime(),
-            null
-        );
+        const searchManager = new SearchManager(collection);
 
         if (this.panelDefs.primaryFilter) {
             searchManager.setPrimary(this.panelDefs.primaryFilter);

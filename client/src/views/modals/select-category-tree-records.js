@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import SelectRecordsModalView from 'views/modals/select-records';
+import SearchManager from 'search-manager';
 
 class SelectCategoryTreeRecordsModalView extends SelectRecordsModalView {
 
@@ -104,61 +105,59 @@ class SelectCategoryTreeRecordsModalView extends SelectRecordsModalView {
 
         this.waitForView('list');
 
-        Espo.loader.require('search-manager', SearchManager => {
-            this.getCollectionFactory().create(this.entityType, collection => {
-                collection.maxSize = this.getConfig().get('recordsPerPageSelect') || 5;
+        this.getCollectionFactory().create(this.entityType, collection => {
+            collection.maxSize = this.getConfig().get('recordsPerPageSelect') || 5;
 
-                this.collection = collection;
+            this.collection = collection;
 
-                const searchManager = new SearchManager(collection, 'listSelect', null, this.getDateTime());
+            const searchManager = new SearchManager(collection);
 
-                searchManager.emptyOnReset = true;
+            searchManager.emptyOnReset = true;
 
-                if (this.filters) {
-                    searchManager.setAdvanced(this.filters);
-                }
+            if (this.filters) {
+                searchManager.setAdvanced(this.filters);
+            }
 
-                if (this.boolFilterList) {
-                    searchManager.setBool(this.boolFilterList);
-                }
+            if (this.boolFilterList) {
+                searchManager.setBool(this.boolFilterList);
+            }
 
-                if (this.primaryFilterName) {
-                    searchManager.setPrimary(this.primaryFilterName);
-                }
+            if (this.primaryFilterName) {
+                searchManager.setPrimary(this.primaryFilterName);
+            }
 
-                collection.where = searchManager.getWhere();
-                collection.url = collection.entityType + '/action/listTree';
+            collection.where = searchManager.getWhere();
+            collection.url = collection.entityType + '/action/listTree';
 
-                const viewName =
-                    this.getMetadata().get(`clientDefs.${this.entityType}.recordViews.listSelectCategoryTree`) ||
-                    'views/record/list-tree';
+            const viewName =
+                this.getMetadata().get(`clientDefs.${this.entityType}.recordViews.listSelectCategoryTree`) ||
+                'views/record/list-tree';
 
-                this.listenToOnce(collection, 'sync', () => {
-                    this.createView('list', viewName, {
-                        collection: collection,
-                        fullSelector: this.containerSelector + ' .list-container',
-                        readOnly: true,
-                        selectable: true,
-                        checkboxes: this.multiple,
-                        massActionsDisabled: true,
-                        searchManager: searchManager,
-                        checkAllResultDisabled: true,
-                        buttonsDisabled: true,
-                    }, listView => {
-                        listView.once('select', model => {
-                            this.trigger('select', model);
+            this.listenToOnce(collection, 'sync', () => {
+                this.createView('list', viewName, {
+                    collection: collection,
+                    fullSelector: this.containerSelector + ' .list-container',
+                    readOnly: true,
+                    selectable: true,
+                    checkboxes: this.multiple,
+                    massActionsDisabled: true,
+                    searchManager: searchManager,
+                    checkAllResultDisabled: true,
+                    buttonsDisabled: true,
+                }, listView => {
+                    listView.once('select', model => {
+                        this.trigger('select', model);
 
-                            if (this.options.onSelect) {
-                                this.options.onSelect([model]);
-                            }
+                        if (this.options.onSelect) {
+                            this.options.onSelect([model]);
+                        }
 
-                            this.close();
-                        });
+                        this.close();
                     });
                 });
-
-                collection.fetch();
             });
+
+            collection.fetch();
         });
     }
 }

@@ -42,7 +42,7 @@ class StreamController extends Controller {
         }
 
         this.main('views/stream', {displayTitle: true}, undefined, {
-            key: key,
+            storageKey: key,
             useStored: isReturn,
         });
     }
@@ -57,7 +57,7 @@ class StreamController extends Controller {
         }
 
         this.main('views/stream', {displayTitle: true, filter: 'posts'}, undefined, {
-            key: key,
+            storageKey: key,
             useStored: isReturn,
         });
     }
@@ -72,7 +72,7 @@ class StreamController extends Controller {
         }
 
         this.main('views/stream', {displayTitle: true, filter: 'updates'}, undefined, {
-            key: key,
+            storageKey: key,
             useStored: isReturn,
         });
     }

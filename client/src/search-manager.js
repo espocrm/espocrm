@@ -64,6 +64,10 @@
  * @property {Object.<string, *>} [data] Additional data for UI.
  */
 
+import {inject} from 'di';
+import DateTime from 'date-time';
+import Storage from 'storage';
+
 /**
  * A search manager.
  */
@@ -73,24 +77,40 @@ class SearchManager {
      * @type {string|null}
      * @private
      */
-    timeZone
+    timeZone = null
+
+    /**
+     * @private
+     * @type {module:search-manager~data}
+     */
+    defaultData
+
+    /**
+     * @private
+     * @type {DateTime}
+     */
+    @inject(DateTime)
+    dateTime
+
+    /**
+     * @private
+     * @type {Storage}
+     */
+    @inject(Storage)
+    storage
+
+    /**
+     * @typedef {Object} module:search-manager~Options
+     * @property {string} [storageKey] A storage key. If not specified, the storage won't be used.
+     * @property {module:search-manager~data} [defaultData] Default data.
+     * @property {boolean} [emptyOnReset] To empty on reset.
+     */
 
     /**
      * @param {module:collection} collection A collection.
-     * @param {string|null} type A type. Used for a storage key.
-     * @param {module:storage|null} storage A storage.
-     * @param {module:date-time|null} dateTime A date-time util.
-     * @param {module:search-manager~data|null} [defaultData=null] Default search data.
-     * @param {boolean} [emptyOnReset=false] To empty on reset.
+     * @param {module:search-manager~Options} [options]
      */
-    constructor(
-        collection,
-        type,
-        storage,
-        dateTime,
-        defaultData,
-        emptyOnReset
-    ) {
+    constructor(collection, options = {}) {
         /**
          * @private
          * @type {module:collection}
@@ -100,34 +120,28 @@ class SearchManager {
         /**
          * An entity type.
          *
-         * @public
+         * @private
          * @type {string}
          */
         this.scope = collection.entityType;
 
         /**
          * @private
-         * @type {module:storage|null}
-         */
-        this.storage = storage;
-
-        /**
-         * @private
          * @type {string}
          */
-        this.type = type || 'list';
-
-        /**
-         * @private
-         * @type {module:date-time|null}
-         */
-        this.dateTime = dateTime;
+        this.storageKey = options.storageKey;
 
         /**
          * @private
          * @type {boolean}
          */
-        this.emptyOnReset = emptyOnReset;
+        this.useStorage = !!this.storageKey;
+
+        /**
+         * @private
+         * @type {boolean}
+         */
+        this.emptyOnReset = options.emptyOnReset || false;
 
         /**
          * @private
@@ -140,12 +154,19 @@ class SearchManager {
             primary: null,
         };
 
+        let defaultData = options.defaultData;
+
+        if (!defaultData && arguments[4]) {
+            // For bc.
+            defaultData = arguments[4];
+        }
+
         if (defaultData) {
             this.defaultData = defaultData;
 
-            for (const p in this.emptyData) {
-                if (!(p in defaultData)) {
-                    defaultData[p] = Espo.Utils.clone(this.emptyData[p]);
+            for (const key in this.emptyData) {
+                if (!(key in defaultData)) {
+                    defaultData[key] = Espo.Utils.clone(this.emptyData[key]);
                 }
             }
         }
@@ -319,14 +340,25 @@ class SearchManager {
      * @returns {module:search-manager}
      */
     loadStored() {
-        this.data =
-            this.storage.get(this.type + 'Search', this.scope) ||
+        this.data = this.getFromStorageIfEnabled() ||
             Espo.Utils.clone(this.defaultData) ||
             Espo.Utils.clone(this.emptyData);
 
         this.sanitizeData();
 
         return this;
+    }
+
+    /**
+     * @private
+     * @return {module:search-manager~data|null}
+     */
+    getFromStorageIfEnabled() {
+        if (!this.useStorage) {
+            return null;
+        }
+
+        return this.storage.get(`${this.storageKey}Search`, this.scope);
     }
 
     /**
@@ -387,11 +419,11 @@ class SearchManager {
     set(data) {
         this.data = data;
 
-        if (this.storage) {
+        if (this.useStorage) {
             data = Espo.Utils.clone(data);
             delete data['textFilter'];
 
-            this.storage.set(this.type + 'Search', this.scope, data);
+            this.storage.set(this.storageKey + 'Search', this.scope, data);
         }
     }
 
@@ -405,8 +437,8 @@ class SearchManager {
     empty() {
         this.data = Espo.Utils.clone(this.emptyData);
 
-        if (this.storage) {
-            this.storage.clear(this.type + 'Search', this.scope);
+        if (this.useStorage) {
+            this.storage.clear(this.storageKey + 'Search', this.scope);
         }
     }
 
@@ -422,8 +454,8 @@ class SearchManager {
 
         this.data = Espo.Utils.clone(this.defaultData) || Espo.Utils.clone(this.emptyData);
 
-        if (this.storage) {
-            this.storage.clear(this.type + 'Search', this.scope);
+        if (this.useStorage) {
+            this.storage.clear(this.storageKey + 'Search', this.scope);
         }
     }
 
