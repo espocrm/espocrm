@@ -296,14 +296,15 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
         showNoData: function () {
             this.$container.empty();
 
-            var $text = $('<span>').html(this.translate('No Data')).addClass('text-muted');
+            const $text = $('<span>').html(this.translate('No Data')).addClass('text-muted');
 
             const $div = $('<div>')
                 .css('text-align', 'center')
                 .css('font-size', 'calc(var(--font-size-base) * 1.2)')
                 .css('display', 'table')
                 .css('width', '100%')
-                .css('height', '100%');
+                .css('height', '100%')
+                .css('user-select', 'none');
 
             $text
                 .css('display', 'table-cell')
