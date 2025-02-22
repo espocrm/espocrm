@@ -26,78 +26,88 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
- define('crm:views/activities/list', ['views/list-related'], function (Dep) {
+import ListRelatedView from 'views/list-related';
 
-    return Dep.extend({
+export default class ActivitiesListView extends ListRelatedView {
 
-        createButton: false,
 
-        unlinkDisabled: true,
+    createButton = false
+    unlinkDisabled = true
+    filtersDisabled = true
 
-        filtersDisabled: true,
+    setup() {
+        this.rowActionsView = 'views/record/row-actions/default';
 
-        setup: function () {
-            this.rowActionsView = 'views/record/row-actions/default';
+        super.setup();
 
-            Dep.prototype.setup.call(this);
+        this.type = this.options.type;
+    }
 
-            this.type = this.options.type;
-        },
+    getHeader() {
+        const name = this.model.get('name') || this.model.id;
 
-        getHeader: function () {
-            let name = this.model.get('name') || this.model.id;
+        const recordUrl = `#${this.scope}/view/${this.model.id}`;
 
-            let recordUrl = '#' + this.scope  + '/view/' + this.model.id;
+        const $name =
+            $('<a>')
+                .attr('href', recordUrl)
+                .addClass('font-size-flexible title')
+                .text(name)
+                .css('user-select', 'none');
 
-            let $name =
-                $('<a>')
-                    .attr('href', recordUrl)
-                    .addClass('font-size-flexible title')
-                    .text(name);
+        if (this.model.get('deleted')) {
+            $name.css('text-decoration', 'line-through');
+        }
 
-            if (this.model.get('deleted')) {
-                $name.css('text-decoration', 'line-through');
-            }
+        const headerIconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
+        const scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
 
-            let headerIconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
-            let scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
+        let $root = $('<span>').text(scopeLabel);
 
-            let $root = $('<span>').text(scopeLabel);
+        if (!this.rootLinkDisabled) {
+            $root = $('<span>')
+                .append(
+                    $('<a>')
+                        .attr('href', '#' + this.scope)
+                        .addClass('action')
+                        .attr('data-action', 'navigateToRoot')
+                        .text(scopeLabel)
+                );
+        }
 
-            if (!this.rootLinkDisabled) {
-                $root = $('<span>')
-                    .append(
-                        $('<a>')
-                            .attr('href', '#' + this.scope)
-                            .addClass('action')
-                            .attr('data-action', 'navigateToRoot')
-                            .text(scopeLabel)
-                    );
-            }
+        $root.css('user-select', 'none');
 
-            if (headerIconHtml) {
-                $root.prepend(headerIconHtml);
-            }
+        if (headerIconHtml) {
+            $root.prepend(headerIconHtml);
+        }
 
-            let linkLabel = this.type === 'history' ? this.translate('History') : this.translate('Activities');
+        const linkLabel = this.type === 'history' ? this.translate('History') : this.translate('Activities');
 
-            let $link = $('<span>').text(linkLabel);
+        const $link = $('<span>').text(linkLabel);
 
-            let $target = $('<span>').text(this.translate(this.foreignScope, 'scopeNamesPlural'));
+        $link
+            .css('user-select', 'none');
 
-            return this.buildHeaderHtml([
-                $root,
-                $name,
-                $link,
-                $target,
-            ]);
-        },
+        const $target = $('<span>').text(this.translate(this.foreignScope, 'scopeNamesPlural'));
 
-        /**
-         * @inheritDoc
-         */
-        updatePageTitle: function () {
-            this.setPageTitle(this.translate(this.foreignScope, 'scopeNamesPlural'));
-        },
-    });
-});
+        $target
+            .css('user-select', 'none')
+            .css('cursor', 'pointer')
+            .attr('data-action', 'fullRefresh')
+            .attr('title', this.translate('clickToRefresh', 'messages'))
+
+        return this.buildHeaderHtml([
+            $root,
+            $name,
+            $link,
+            $target,
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    updatePageTitle() {
+        this.setPageTitle(this.translate(this.foreignScope, 'scopeNamesPlural'));
+    }
+}
