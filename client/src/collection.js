@@ -67,6 +67,15 @@ import _ from 'underscore';
  */
 
 /**
+ * @typedef {Object} module:collection~Data
+ * @property {string|null} [primaryFilter]
+ * @property {string[]} [boolFilterList]
+ * @property {string} [textFilter]
+ * @property {string} [select]
+ * @property {string} [q]
+ */
+
+/**
  * A collection.
  *
  * @mixes Bull.Events
@@ -220,13 +229,7 @@ class Collection {
         this.defs = options.defs || {};
 
         /**
-         * @type {{
-         *     primaryFilter?: string,
-         *     boolFilterList?: string[],
-         *     textFilter?: string,
-         *     select?: string,
-         *     q?: string,
-         * } | Record<string, *>}
+         * @type {module:collection~Data | Record<string, *>}
          */
         this.data = {};
 

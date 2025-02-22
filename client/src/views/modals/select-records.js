@@ -101,6 +101,8 @@ class SelectRecordsModalView extends ModalView {
      * @property {function(): Promise<Record>} [createAttributesProvider] Create-attributes provider.
      * @property {Record} [createAttributes] Create-attributes.
      * @property {function(import('model').default[])} [onSelect] On record select. As of 9.0.0.
+     * @property {function({where: Record[], searchParams: module:collection~Data})} [onMassSelect]
+     *     On record select. As of 9.1.0.
      * @property {function()} [onCreate] On create click. As of 9.0.5.
      */
 
@@ -114,6 +116,11 @@ class SelectRecordsModalView extends ModalView {
         if (options.onSelect) {
             /** @private */
             this.onSelect = options.onSelect;
+        }
+
+        if (options.onMassSelect) {
+            /** @private */
+            this.onMassSelect = options.onMassSelect;
         }
 
         if (options.onCreate) {
@@ -455,11 +462,17 @@ class SelectRecordsModalView extends ModalView {
         const listView = this.getRecordView();
 
         if (listView.allResultIsChecked) {
-            this.trigger('select', {
+            const data = {
                 massRelate: true,
                 where: this.collection.getWhere(),
                 searchParams: this.collection.data,
-            });
+            };
+
+            this.trigger('select', data);
+
+            if (this.onMassSelect) {
+                this.onMassSelect(data)
+            }
 
             this.close();
 
