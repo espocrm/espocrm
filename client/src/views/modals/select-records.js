@@ -130,6 +130,8 @@ class SelectRecordsModalView extends ModalView {
 
         /** @private */
         this.createAttributesProvider = options.createAttributesProvider;
+
+        this.options = options;
     }
 
     data() {
@@ -140,7 +142,6 @@ class SelectRecordsModalView extends ModalView {
     }
 
     setup() {
-        /** @type {Object.<string, module:search-manager~advancedFilter>} */
         this.filters = this.options.filters || {};
         this.boolFilterList = this.options.boolFilterList;
         this.primaryFilterName = this.options.primaryFilterName || null;
@@ -174,6 +175,7 @@ class SelectRecordsModalView extends ModalView {
             });
         }
 
+        // noinspection JSUnresolvedReference
         this.scope = this.entityType = this.options.scope || this.scope || this.options.entityType;
 
         const orderBy = this.options.orderBy ||
@@ -278,20 +280,14 @@ class SelectRecordsModalView extends ModalView {
         }
 
         const boolFilterList = this.boolFilterList ||
-            this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.boolFilterList');
+            this.getMetadata().get(`clientDefs.${this.scope}.selectDefaultFilters.boolFilterList`);
 
         if (boolFilterList) {
-            const d = {};
-
-            boolFilterList.forEach(item => {
-                d[item] = true;
-            });
-
-            searchManager.setBool(d);
+            searchManager.setBool(boolFilterList);
         }
 
         const primaryFilterName = this.primaryFilterName ||
-            this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.filter');
+            this.getMetadata().get(`clientDefs.${this.scope}.selectDefaultFilters.filter`);
 
         if (primaryFilterName) {
             searchManager.setPrimary(primaryFilterName);
@@ -416,6 +412,7 @@ class SelectRecordsModalView extends ModalView {
         }
 
         // @todo Remove in v9.1.0. Kept bc.
+        // noinspection JSUnresolvedReference
         if (this.options.triggerCreateEvent) {
             this.trigger('create');
 

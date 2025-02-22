@@ -31,9 +31,7 @@ import SelectRecordsModalView from 'views/modals/select-records';
 class SelectCategoryTreeRecordsModalView extends SelectRecordsModalView {
 
     setup() {
-        /** @type {Object.<string, module:search-manager~advancedFilter>} */
         this.filters = this.options.filters || {};
-        /** @type {Object.<string, boolean>} */
         this.boolFilterList = this.options.boolFilterList || {};
         this.primaryFilterName = this.options.primaryFilterName || null;
 
@@ -47,7 +45,7 @@ class SelectCategoryTreeRecordsModalView extends SelectRecordsModalView {
         this.buttonList = [
             {
                 name: 'cancel',
-                label: 'Cancel'
+                label: 'Cancel',
             }
         ];
 
@@ -60,17 +58,26 @@ class SelectCategoryTreeRecordsModalView extends SelectRecordsModalView {
                     const listView = this.getRecordView();
 
                     if (listView.allResultIsChecked) {
-                        this.trigger('select', {
+                        const data = {
                             massRelate: true,
                             where: this.collection.getWhere(),
                             searchParams: this.collection.data,
-                        });
-                    }
-                    else {
+                        };
+
+                        this.trigger('select', data);
+
+                        if (this.options.onMassSelect) {
+                            this.options.onMassSelect(data);
+                        }
+                    } else {
                         const list = listView.getSelected();
 
                         if (list.length) {
                             this.trigger('select', list);
+
+                            if (this.options.onSelect) {
+                                this.options.onSelect(list);
+                            }
                         }
                     }
 
@@ -79,25 +86,26 @@ class SelectCategoryTreeRecordsModalView extends SelectRecordsModalView {
             });
         }
 
-        this.scope = this.options.scope;
+        // noinspection JSUnresolvedReference
+        this.scope = this.entityType = this.options.entityType || this.options.scope;
 
         this.$header = $('<span>');
 
         this.$header.append(
             $('<span>').text(
-                this.translate('Select') + ': ' +
-                this.getLanguage().translate(this.scope, 'scopeNamesPlural')
+                this.translate('Select') + ' · ' +
+                this.getLanguage().translate(this.entityType, 'scopeNamesPlural')
             )
         );
 
         this.$header.prepend(
-            this.getHelper().getScopeColorIconHtml(this.scope)
+            this.getHelper().getScopeColorIconHtml(this.entityType)
         );
 
         this.waitForView('list');
 
         Espo.loader.require('search-manager', SearchManager => {
-            this.getCollectionFactory().create(this.scope, collection => {
+            this.getCollectionFactory().create(this.entityType, collection => {
                 collection.maxSize = this.getConfig().get('recordsPerPageSelect') || 5;
 
                 this.collection = collection;
@@ -122,7 +130,7 @@ class SelectCategoryTreeRecordsModalView extends SelectRecordsModalView {
                 collection.url = collection.entityType + '/action/listTree';
 
                 const viewName =
-                    this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelectCategoryTree') ||
+                    this.getMetadata().get(`clientDefs.${this.entityType}.recordViews.listSelectCategoryTree`) ||
                     'views/record/list-tree';
 
                 this.listenToOnce(collection, 'sync', () => {
@@ -139,6 +147,11 @@ class SelectCategoryTreeRecordsModalView extends SelectRecordsModalView {
                     }, listView => {
                         listView.once('select', model => {
                             this.trigger('select', model);
+
+                            if (this.options.onSelect) {
+                                this.options.onSelect([model]);
+                            }
+
                             this.close();
                         });
                     });

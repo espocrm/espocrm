@@ -38,7 +38,7 @@
  * @property {string} [primary] A primary filter.
  * @property {Object.<string, boolean>} [bool] Bool filters.
  * @property {Record<module:search-manager~advancedFilter>} [advanced] Advanced filters (field filters).
- * Contains data needed for both the backend and frontend. Keys are field names.
+ *     Contains data needed for both the backend and frontend. Keys are field names.
  */
 
 /**
@@ -353,9 +353,16 @@ class SearchManager {
     /**
      * Set bool filters.
      *
-     * @param {Object.<string, boolean>} bool Bool filters.
+     * @param {Record.<string, boolean>|string[]} bool Bool filters.
      */
     setBool(bool) {
+        if (Array.isArray(bool)) {
+            const data = {};
+            bool.forEach(it => data[it] = true);
+
+            bool = data;
+        }
+
         this.data = Espo.Utils.clone(this.data);
 
         this.data.bool = bool;
