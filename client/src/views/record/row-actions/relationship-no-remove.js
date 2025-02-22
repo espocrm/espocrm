@@ -26,46 +26,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/row-actions/relationship-no-remove', ['views/record/row-actions/relationship'], function (Dep) {
+import RelationshipRowActionsView from 'views/record/row-actions/relationship';
 
-    return Dep.extend({
+// noinspection JSUnusedGlobalSymbols
+export default class UserRelationshipNoRemoveRowActionsView extends RelationshipRowActionsView {
 
-        getActionList: function () {
-            var list = [{
-                action: 'quickView',
-                label: 'View',
+    getActionList() {
+        const list = [];
+
+        list.push({
+            action: 'quickView',
+            label: 'View',
+            data: {
+                id: this.model.id
+            },
+            link: `#${this.model.entityType}/view/${this.model.id}`,
+            groupIndex: 0,
+        });
+
+        if (this.options.acl.edit) {
+            list.push({
+                action: 'quickEdit',
+                label: 'Edit',
                 data: {
-                    id: this.model.id
+                    id: this.model.id,
                 },
-                link: '#' + this.model.entityType + '/view/' + this.model.id,
+                link: `#${this.model.entityType}/edit/${this.model.id}`,
                 groupIndex: 0,
-            }];
+            });
 
-            if (this.options.acl.edit) {
+            if (!this.options.unlinkDisabled) {
                 list.push({
-                    action: 'quickEdit',
-                    label: 'Edit',
+                    action: 'unlinkRelated',
+                    label: 'Unlink',
                     data: {
-                        id: this.model.id
+                        id: this.model.id,
                     },
-                    link: '#' + this.model.entityType + '/edit/' + this.model.id,
                     groupIndex: 0,
                 });
-
-                if (!this.options.unlinkDisabled) {
-                    list.push({
-                        action: 'unlinkRelated',
-                        label: 'Unlink',
-                        data: {
-                            id: this.model.id
-                        },
-                        groupIndex: 0,
-                    });
-                }
             }
+        }
 
-            return list;
-        },
-
-    });
-});
+        return list;
+    }
+}

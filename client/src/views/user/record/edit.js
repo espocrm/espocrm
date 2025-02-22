@@ -31,8 +31,6 @@ import UserDetailRecordView from 'views/user/record/detail';
 
 class UserEditRecordView extends EditRecordView {
 
-    sideView = 'views/user/record/edit-side'
-
     /**
      * @name model
      * @type module:models/user

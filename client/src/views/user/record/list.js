@@ -26,46 +26,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/record/list', ['views/record/list'], function (Dep) {
+import ListRecordView from 'views/record/list';
 
-    return Dep.extend({
+export default class UserListRecordView extends ListRecordView {
 
-        quickEditDisabled: true,
+    rowActionsView = 'views/user/record/row-actions/default'
 
-        rowActionsView: 'views/user/record/row-actions/default',
+    quickEditDisabled = true
+    massActionList = ['remove', 'massUpdate', 'export']
+    checkAllResultMassActionList = ['massUpdate', 'export']
 
-        massActionList: ['remove', 'massUpdate', 'export'],
+    setupMassActionItems() {
+        super.setupMassActionItems();
 
-        checkAllResultMassActionList: ['massUpdate', 'export'],
+        if (this.scope === 'ApiUser') {
+            this.removeMassAction('massUpdate');
+            this.removeMassAction('export');
 
-        setupMassActionItems: function () {
-            Dep.prototype.setupMassActionItems.call(this);
+            this.layoutName = 'listApi';
+        }
 
-            if (this.scope === 'ApiUser') {
-                this.removeMassAction('massUpdate');
-                this.removeMassAction('export');
+        if (this.scope === 'PortalUser') {
+            this.layoutName = 'listPortal';
+        }
 
-                this.layoutName = 'listApi';
-            }
+        if (!this.getUser().isAdmin()) {
+            this.removeMassAction('massUpdate');
+            this.removeMassAction('export');
+        }
+    }
 
-            if (this.scope === 'PortalUser') {
-                this.layoutName = 'listPortal';
-            }
+    getModelScope(id) {
+        const model = /** @type {import('models/user').default} */
+            this.collection.get(id);
 
-            if (!this.getUser().isAdmin()) {
-                this.removeMassAction('massUpdate');
-                this.removeMassAction('export');
-            }
-        },
+        if (model.isPortal()) {
+            return 'PortalUser';
+        }
 
-        getModelScope: function (id) {
-            var model = this.collection.get(id);
-
-            if (model.isPortal()) {
-                return 'PortalUser';
-            }
-
-            return this.scope;
-        },
-    });
-});
+        return this.scope;
+    }
+}

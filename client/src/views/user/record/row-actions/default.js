@@ -26,42 +26,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/record/row-actions/default', ['views/record/row-actions/default'], function (Dep) {
+import DefaultRowActionsView from 'views/record/row-actions/default';
 
-    return Dep.extend({
+export default class UserDefaultRowActionsView extends DefaultRowActionsView {
 
-        getActionList: function () {
-            var scope = 'User';
 
-            if (this.model.isPortal()) {
-                scope = 'PortalUser';
-            } else if (this.model.isApi()) {
-                scope = 'ApiUser';
-            }
+    getActionList() {
+        let scope = 'User';
 
-            var list = [{
-                action: 'quickView',
-                label: 'View',
+        const model = /** @type {import('models/user').default} */this.model;
+
+        if (model.isPortal()) {
+            scope = 'PortalUser';
+        } else if (model.isApi()) {
+            scope = 'ApiUser';
+        }
+
+        const list = [{
+            action: 'quickView',
+            label: 'View',
+            data: {
+                id: this.model.id,
+                scope: scope,
+            },
+            link: `#${scope}/view/${this.model.id}`,
+        }];
+
+        if (this.options.acl.edit) {
+            list.push({
+                action: 'quickEdit',
+                label: 'Edit',
                 data: {
                     id: this.model.id,
-                    scope: scope
+                    scope: scope,
                 },
-                link: '#' + scope + '/view/' + this.model.id
-            }];
+                link: `#${scope}/edit/${this.model.id}`,
+            });
+        }
 
-            if (this.options.acl.edit) {
-                list.push({
-                    action: 'quickEdit',
-                    label: 'Edit',
-                    data: {
-                        id: this.model.id,
-                        scope: scope
-                    },
-                    link: '#' + scope + '/edit/' + this.model.id
-                });
-            }
-
-            return list;
-        },
-    });
-});
+        return list;
+    }
+}

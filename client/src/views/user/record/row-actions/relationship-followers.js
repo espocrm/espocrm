@@ -26,36 +26,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/record/row-actions/relationship-followers', ['views/record/row-actions/relationship'], function (Dep) {
+import RelationshipRowActionsView from 'views/record/row-actions/relationship';
 
-    return Dep.extend({
+// noinspection JSUnusedGlobalSymbols
+export default class UserRelationshipFollowersRowActionsView extends RelationshipRowActionsView {
 
-        getActionList: function () {
-            var list = [{
-                action: 'quickView',
-                label: 'View',
+    getActionList() {
+        const list = [];
+
+        const model = /** @type {import('models/user').default} */this.model;
+
+        list.push({
+            action: 'quickView',
+            label: 'View',
+            data: {
+                id: this.model.id,
+            },
+            link: `#${this.model.entityType}/view/${this.model.id}`
+        })
+
+        if (
+            this.getUser().isAdmin() ||
+            this.getAcl().getPermissionLevel('followerManagementPermission') !== 'no' ||
+            model.isPortal() && this.getAcl().getPermissionLevel('portalPermission') === 'yes' ||
+            this.model.id === this.getUser().id
+        ) {
+            list.push({
+                action: 'unlinkRelated',
+                label: 'Unlink',
                 data: {
-                    id: this.model.id
+                    id: this.model.id,
                 },
-                link: '#' + this.model.entityType + '/view/' + this.model.id
-            }];
-
-            if (
-                this.getUser().isAdmin() ||
-                this.getAcl().get('followerManagementPermission') !== 'no' ||
-                this.model.isPortal() && this.getAcl().get('portalPermission') === 'yes' ||
-                this.model.id === this.getUser().id
-            ) {
-                list.push({
-                    action: 'unlinkRelated',
-                    label: 'Unlink',
-                    data: {
-                        id: this.model.id
-                    }
-                });
-            }
-
-            return list;
+            });
         }
-    });
-});
+
+        return list;
+    }
+}

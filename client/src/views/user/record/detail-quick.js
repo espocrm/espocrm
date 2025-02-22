@@ -26,25 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/record/detail-quick',
-['views/record/detail-small', 'views/user/record/detail'], function (Dep, Detail) {
+import DetailRecordView from 'views/record/detail';
+import UserDetailRecordView from 'views/user/record/detail';
 
-    return Dep.extend({
+export default class extends DetailRecordView {
 
-        sideView: 'views/user/record/detail-quick-side',
+    sideView = 'views/user/record/detail-quick-side'
 
-        bottomView: null,
+    bottomView = null
 
-        editModeEnabled: false,
+    setup() {
+        super.setup();
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-            Detail.prototype.setupNonAdminFieldsAccess.call(this);
-            Detail.prototype.setupFieldAppearance.call(this);
-        },
+        UserDetailRecordView.prototype.setupNonAdminFieldsAccess.call(this);
+        UserDetailRecordView.prototype.setupFieldAppearance.call(this);
+    }
 
-        controlFieldAppearance: function () {
-            Detail.prototype.controlFieldAppearance.call(this);
-        },
-    });
-});
+    // noinspection JSUnusedGlobalSymbols
+    controlFieldAppearance() {
+        UserDetailRecordView.prototype.controlFieldAppearance.call(this);
+    }
+}

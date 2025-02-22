@@ -28,7 +28,7 @@
 
 import DefaultRowActionsView from 'views/record/row-actions/default';
 
-class RelationshipActionsView extends DefaultRowActionsView {
+class RelationshipRowActionsView extends DefaultRowActionsView {
 
     getActionList() {
         const list = [{
@@ -81,4 +81,4 @@ class RelationshipActionsView extends DefaultRowActionsView {
     }
 }
 
-export default RelationshipActionsView;
+export default RelationshipRowActionsView;

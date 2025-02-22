@@ -64,11 +64,35 @@ class DefaultRowActionsView extends View {
      */
     lastActionList
 
+    /**
+     * @private
+     * @type {Object.<string, {isAvailable: function(module:model, string)}>}
+     */
+    handlers
+
+    /**
+     * @param {{
+     *    acl?: {
+     *        edit?: boolean,
+     *        detete?: boolean,
+     *    },
+     *    model: import('model').default,
+     *    rowActionHandlers?: Object.<string, {isAvailable: function(module:model, string)}>,
+     *    additionalActionList?: string[],
+     *    scope?: string,
+     * } & Record} options
+     */
+    constructor(options) {
+        super(options);
+
+        this.options = options;
+    }
+
     setup() {
         this.options.acl = this.options.acl || {};
         this.scope = this.options.scope || this.model.entityType;
 
-        /** @type {Object.<string, {isAvailable: function(module:model, string)}>} */
+        // noinspection JSValidateTypes
         this.handlers = this.options.rowActionHandlers || {};
 
         /** @type {module:views/record/row-actions/actions~item[]} */
@@ -255,7 +279,6 @@ class DefaultRowActionsView extends View {
     }
 
     setupAdditionalActions() {
-        /** @type {string[]} */
         const list = this.options.additionalActionList;
 
         if (!list) {
