@@ -26,22 +26,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/contact/modals/select-for-portal-user', ['views/modals/select-records'], function (Dep) {
+import SelectRecordsModalView from 'views/modals/select-records';
 
-    return Dep.extend({
+export default class SelectForPortalUserModalView extends SelectRecordsModalView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    /**
+     * @param {
+     *     module:views/modals/select-records~Options &
+     *     {onSkip: function()}
+     * } options
+     */
+    constructor(options) {
+        super(options);
 
-            this.buttonList.unshift({
-                name: 'skip',
-                text: this.translate('Proceed w/o Contact', 'labels', 'User')
-            });
-        },
+        this.options = options;
+    }
 
-        actionSkip: function () {
-            this.trigger('skip');
-            this.remove();
-        },
-    });
-});
+    setup() {
+        super.setup();
+
+        this.buttonList.unshift({
+            name: 'skip',
+            text: this.translate('Proceed w/o Contact', 'labels', 'User'),
+            onClick: () => this.actionSkip(),
+        });
+    }
+
+    actionSkip() {
+        this.options.onSkip();
+
+        this.close();
+    }
+}

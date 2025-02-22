@@ -27,17 +27,22 @@
  ************************************************************************/
 
 import ListView from 'views/list';
+import SelectForPortalUserModalView from 'modules/crm/views/contact/modals/select-for-portal-user';
 
 class PortalUserListView extends ListView {
 
     defaultOrderBy = 'createdAt'
     defaultOrder = 'desc'
 
-    actionCreate() {
-        const viewName = 'crm:views/contact/modals/select-for-portal-user';
-
-        this.createView('modal', viewName, {
-            scope: 'Contact',
+    async actionCreate(data) {
+        /**
+         * @type {
+         *     module:views/modals/select-records~Options &
+         *     {onSkip: function()}
+         * }
+         */
+        const options = {
+            entityType: 'Contact',
             primaryFilterName: 'notPortalUsers',
             createButton: false,
             mandatorySelectAttributeList: [
@@ -50,21 +55,20 @@ class PortalUserListView extends ListView {
                 'emailAddressData',
                 'phoneNumber',
                 'phoneNumberData',
-            ]
-        }, view => {
-            view.render();
+            ],
+            onSelect: models => {
+                const model = models[0];
 
-            this.listenToOnce(view, 'select', model => {
                 const attributes = {};
 
                 attributes.contactId = model.id;
-                attributes.contactName = model.get('name');
+                attributes.contactName = model.attributes.name;
 
-                if (model.get('accountId')) {
+                if (model.attributes.accountId) {
                     const names = {};
-                    names[model.get('accountId')] = model.get('accountName');
+                    names[model.attributes.accountId] = model.attributes.accountName;
 
-                    attributes.accountsIds = [model.get('accountId')];
+                    attributes.accountsIds = [model.attributes.accountId];
                     attributes.accountsNames = names;
                 }
 
@@ -86,32 +90,28 @@ class PortalUserListView extends ListView {
 
                 attributes.type = 'portal';
 
-                const router = this.getRouter();
-
                 const url = `#${this.scope}/create`;
 
-                router.dispatch(this.scope, 'create', {
-                    attributes: attributes
-                });
-
-                router.navigate(url, {trigger: false});
-            });
-
-            this.listenToOnce(view, 'skip', () => {
+                this.getRouter().dispatch(this.scope, 'create', {attributes: attributes});
+                this.getRouter().navigate(url, {trigger: false});
+            },
+            onSkip: () => {
                 const attributes = {
                     type: 'portal',
                 };
 
-                const router = this.getRouter();
                 const url = `#${this.scope}/create`;
 
-                router.dispatch(this.scope, 'create', {
-                    attributes: attributes
-                });
+                this.getRouter().dispatch(this.scope, 'create', {attributes: attributes});
+                this.getRouter().navigate(url, {trigger: false});
+            },
+        };
 
-                router.navigate(url, {trigger: false});
-            });
-        });
+        const view = new SelectForPortalUserModalView(options);
+
+        await this.assignView('modal', view);
+
+        await view.render();
     }
 }
 
