@@ -108,7 +108,7 @@ class SearchManager {
 
     /**
      * @param {module:collection} collection A collection.
-     * @param {module:search-manager~Options} [options]
+     * @param {module:search-manager~Options} [options] Options. As of 9.1.
      */
     constructor(collection, options = {}) {
         /**
