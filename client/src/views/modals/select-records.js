@@ -310,21 +310,22 @@ class SelectRecordsModalView extends ModalView {
             this.getMetadata().get(`clientDefs.${this.scope}.recordViews.list`) ||
             'views/record/list';
 
-        const promise = this.createView('list', viewName, {
+        /** @type {module:views/record/list~options} */
+        const options = {
             collection: this.collection,
             fullSelector: this.containerSelector + ' .list-container',
             selectable: true,
             checkboxes: this.multiple,
             massActionsDisabled: true,
-            rowActionsView: false,
+            rowActionsView: null,
             layoutName: this.layoutName,
-            searchManager: this.searchManager,
             checkAllResultDisabled: !this.massRelateEnabled,
             buttonsDisabled: true,
             skipBuildRows: true,
             pagination: this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) || null,
-        }, view => {
+        }
 
+        const promise = this.createView('list', viewName, options, view => {
             this.listenToOnce(view, 'select', models => {
                 this.trigger('select', models);
 

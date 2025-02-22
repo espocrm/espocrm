@@ -74,7 +74,7 @@ class ListRecordView extends View {
      * @property {boolean} [pagination] To enable the pagination.
      * @property {boolean} [headerDisabled] Disable the header.
      * @property {boolean} [noDataDisabled] Disable the no-data label (when no results).
-     * @property {string} [rowActionsView] A row actions view.
+     * @property {string|null} [rowActionsView] A row actions view.
      * @property {boolean} [rowActionsDisabled] Disable row actions.
      * @property {boolean} [showMore] The show-more button.
      * @property {boolean} [keepCurrentRootUrl] Keep a current root URL.
