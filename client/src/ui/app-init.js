@@ -28,8 +28,13 @@
 
 import $ from 'jquery';
 
-function uiAppInit() {
+/**
+ * @param {{themeManager: import('theme-manager').default}} options
+ */
+function uiAppInit(options) {
     const $document = $(document);
+
+    const topSpaceHeight = 100;
 
     $document.on('keydown.espo.button', e => {
         if (
@@ -67,7 +72,7 @@ function uiAppInit() {
 
             const spaceBelow = windowHeight - (top + height);
 
-            isUp = spaceBelow < 0 && top > height;
+            isUp = spaceBelow < 0 && top - topSpaceHeight > height;
 
             if (isUp) {
                 $(target).addClass('dropup');
