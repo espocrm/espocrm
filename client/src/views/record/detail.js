@@ -32,6 +32,7 @@ import BaseRecordView from 'views/record/base';
 import ViewRecordHelper from 'view-record-helper';
 import ActionItemSetup from 'helpers/action-item-setup';
 import StickyBarHelper from 'helpers/record/misc/sticky-bar';
+import SelectTemplateModalView from 'views/modals/select-template';
 
 /**
  * A detail record view.
@@ -2474,22 +2475,22 @@ class DetailRecordView extends BaseRecordView {
     }
 
     // noinspection JSUnusedGlobalSymbols
-    actionPrintPdf() {
-        this.createView('pdfTemplate', 'views/modals/select-template', {
+    async actionPrintPdf() {
+        const view = new SelectTemplateModalView({
             entityType: this.entityType,
-        }, (view) => {
-            view.render();
+            onSelect: models => {
+                const model = models[0];
 
-            this.listenToOnce(view, 'select', (model) => {
-                this.clearView('pdfTemplate');
+                const url = `?entryPoint=pdf&entityType=${this.entityType}&entityId=${this.model.id}` +
+                    `&templateId=${model.id}`;
 
-                window.open(
-                    '?entryPoint=pdf&entityType=' +
-                    this.entityType + '&entityId=' +
-                    this.model.id + '&templateId=' + model.id, '_blank'
-                );
-            });
+                window.open(url, '_blank');
+            },
         });
+
+        await this.assignView('modal', view);
+
+        await view.render();
     }
 
     afterSave() {
