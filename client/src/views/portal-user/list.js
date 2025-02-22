@@ -27,7 +27,6 @@
  ************************************************************************/
 
 import ListView from 'views/list';
-import SelectForPortalUserModalView from 'modules/crm/views/contact/modals/select-for-portal-user';
 
 class PortalUserListView extends ListView {
 
@@ -106,6 +105,11 @@ class PortalUserListView extends ListView {
                 this.getRouter().navigate(url, {trigger: false});
             },
         };
+
+        // As the file is supposed to bundled separately, resort to async module loading.
+        /** @type {typeof import('modules/crm/views/contact/modals/select-for-portal-user').default} */
+        const SelectForPortalUserModalView =
+            await Espo.loader.requirePromise('modules/crm/views/contact/modals/select-for-portal-user');
 
         const view = new SelectForPortalUserModalView(options);
 
