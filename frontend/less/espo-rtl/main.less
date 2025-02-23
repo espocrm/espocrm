@@ -1,4 +1,5 @@
 @import "../espo/init.less";
+@import "fonts-rtl.less";
 @import "bootstrap-rtl/bootstrap-rtl.less";
 @import "../espo/value-variables.less";
 @import "../espo/variables.less";
@@ -16,4 +17,8 @@
 
 body {
     --theme-name: EspoRtl;
+}
+
+html[dir="rtl"][data-language="fa"] {
+    font-family: "Vazirmatn", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 }
