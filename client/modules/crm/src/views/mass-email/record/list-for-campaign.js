@@ -26,24 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/mass-email/record/list-for-campaign', ['views/record/list'], function (Dep) {
+import ListRecordView from 'views/record/list';
+import MassEmailSendTestModalView from 'crm:views/mass-email/modals/send-test';
 
-    return Dep.extend({
+export default class extends ListRecordView {
 
-        actionSendTest: function (data) {
-            var id = data.id;
+    // noinspection JSUnusedGlobalSymbols
+    async actionSendTest(data) {
+        const id = data.id;
 
-            var model = this.collection.get(id);
+        const model = this.collection.get(id);
 
-            if (!model) {
-                return;
-            }
+        if (!model) {
+            return;
+        }
 
-            this.createView('sendTest', 'crm:views/mass-email/modals/send-test', {
-                model: model,
-            }, (view) => {
-                view.render();
-            });
-        },
-    });
-});
+        const view = new MassEmailSendTestModalView({model: this.model});
+
+        await this.assignView('modal', view);
+        await view.render();
+    }
+}

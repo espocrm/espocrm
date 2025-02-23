@@ -26,140 +26,193 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], function (Dep, Model) {
+import ModalView from 'views/modal';
+import Model from 'model';
+import EditForModalRecordView from 'views/record/edit-for-modal';
+import LinkMultipleFieldView from 'views/fields/link-multiple';
 
-    return Dep.extend({
+export default class MassEmailSendTestModalView extends ModalView {
 
-        scope: 'MassEmail',
+    // language=Handlebars
+    templateContent = `
+        <div class="record-container no-side-margin">{{{record}}}</div>
+    `
 
-        template: 'crm:mass-email/modals/send-test',
+    /**
+     * @private
+     * @type {EditForModalRecordView}
+     */
+    recordView
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    /**
+     * @private
+     * @type {Model}
+     */
+    formModel
 
-            this.headerText = this.translate('Send Test', 'labels', 'MassEmail');
+    /**
+     * @param {{model: import('model').default}} options
+     */
+    constructor(options) {
+        super(options);
 
-            var model = new Model();
+        this.model = options.model;
+    }
 
-            model.set('usersIds', [this.getUser().id]);
+    setup() {
+        super.setup();
 
-            var usersNames = {};
+        this.headerText = this.translate('Send Test', 'labels', 'MassEmail');
 
-            usersNames[this.getUser().id] = this.getUser().get('name');
-            model.set('usersNames', usersNames);
+        const formModel = this.formModel = new Model();
 
-            this.createView('users', 'views/fields/link-multiple', {
-                model: model,
-                selector: '.field[data-name="users"]',
-                foreignScope: 'User',
-                defs: {
-                    name: 'users',
-                    params: {
-                    }
-                },
-                mode: 'edit',
-            });
+        formModel.set('usersIds', [this.getUser().id]);
 
-            this.createView('contacts', 'views/fields/link-multiple', {
-                model: model,
-                selector: '.field[data-name="contacts"]',
-                foreignScope: 'Contact',
-                defs: {
-                    name: 'contacts',
-                    params: {
-                    }
-                },
-                mode: 'edit',
-            });
+        const usersNames = {};
 
-            this.createView('leads', 'views/fields/link-multiple', {
-                model: model,
-                selector: '.field[data-name="leads"]',
-                foreignScope: 'Lead',
-                defs: {
-                    name: 'leads',
-                    params: {
-                    }
-                },
-                mode: 'edit',
-            });
+        usersNames[this.getUser().id] = this.getUser().get('name');
+        formModel.set('usersNames', usersNames);
 
-            this.createView('accounts', 'views/fields/link-multiple', {
-                model: model,
-                selector: '.field[data-name="accounts"]',
-                foreignScope: 'Account',
-                defs: {
-                    name: 'accounts',
-                    params: {
-                    }
-                },
-                mode: 'edit',
-            });
+        this.recordView = new EditForModalRecordView({
+            model: formModel,
+            detailLayout: [
+                {
+                    rows: [
+                        [
+                            {
+                                view: new LinkMultipleFieldView({
+                                    name: 'users',
+                                    labelText: this.translate('users', 'links', 'TargetList'),
+                                    mode: 'edit',
+                                    params: {
+                                        entity: 'User',
+                                    },
+                                })
+                            },
+                            false
+                        ],
+                        [
+                            {
+                                view: new LinkMultipleFieldView({
+                                    name: 'contacts',
+                                    labelText: this.translate('contacts', 'links', 'TargetList'),
+                                    mode: 'edit',
+                                    params: {
+                                        entity: 'Contact',
+                                    },
+                                })
+                            },
+                            false
+                        ],
+                        [
+                            {
+                                view: new LinkMultipleFieldView({
+                                    name: 'leads',
+                                    labelText: this.translate('leads', 'links', 'TargetList'),
+                                    mode: 'edit',
+                                    params: {
+                                        entity: 'Lead',
+                                    },
+                                })
+                            },
+                            false
+                        ],
+                        [
+                            {
+                                view: new LinkMultipleFieldView({
+                                    name: 'accounts',
+                                    labelText: this.translate('accounts', 'links', 'TargetList'),
+                                    mode: 'edit',
+                                    params: {
+                                        entity: 'Account',
+                                    },
+                                })
+                            },
+                            false
+                        ],
+                    ]
+                }
+            ]
+        });
 
-            this.buttonList.push({
-                name: 'sendTest',
-                label: 'Send Test',
-                style: 'danger',
-            });
+        this.assignView('record', this.recordView);
 
-            this.buttonList.push({
-                name: 'cancel',
-                label: 'Cancel',
-            });
-        },
+        this.buttonList.push({
+            name: 'sendTest',
+            label: 'Send Test',
+            style: 'danger',
+            onClick: () => this.actionSendTest(),
+        });
 
-        actionSendTest: function () {
+        this.buttonList.push({
+            name: 'cancel',
+            label: 'Cancel',
+            onClick: () => this.actionClose(),
+        });
+    }
 
-            var list = [];
+    actionSendTest() {
+        const list = [];
 
-            this.getView('users').fetch().usersIds.forEach(function (id) {
+        if (Array.isArray(this.formModel.attributes.usersIds)) {
+            this.formModel.attributes.usersIds.forEach(id => {
                 list.push({
                     id: id,
-                    type: 'User'
+                    type: 'User',
                 });
             });
+        }
 
-            this.getView('contacts').fetch().contactsIds.forEach(function (id) {
+        if (Array.isArray(this.formModel.attributes.contactsIds)) {
+            this.formModel.attributes.contactsIds.forEach(id => {
                 list.push({
                     id: id,
-                    type: 'Contact'
+                    type: 'Contact',
                 });
             });
+        }
 
-            this.getView('leads').fetch().leadsIds.forEach(function (id) {
+        if (Array.isArray(this.formModel.attributes.leadsIds)) {
+            this.formModel.attributes.leadsIds.forEach(id => {
                 list.push({
                     id: id,
-                    type: 'Lead'
+                    type: 'Lead',
                 });
             });
+        }
 
-            this.getView('accounts').fetch().accountsIds.forEach(function (id) {
+        if (Array.isArray(this.formModel.attributes.accountsIds)) {
+            this.formModel.attributes.accountsIds.forEach(id => {
                 list.push({
                     id: id,
-                    type: 'Account'
+                    type: 'Account',
                 });
             });
+        }
 
-            if (list.length === 0) {
-                alert(this.translate('selectAtLeastOneTarget', 'messages', 'MassEmail'));
+        if (list.length === 0) {
+            Espo.Ui.error(this.translate('selectAtLeastOneTarget', 'messages', 'MassEmail'));
 
-                return;
-            }
+            return;
+        }
 
-            this.disableButton('sendTest');
+        console.log(list);
 
-            Espo.Ajax
-                .postRequest('MassEmail/action/sendTest', {
-                    id: this.model.id,
-                    targetList: list,
-                })
-                .then(() => {
-                    Espo.Ui.success(this.translate('testSent', 'messages', 'MassEmail'));
-                    this.close();
-                })
-                .catch(() => {
-                    this.enableButton('sendTest');
-                });
-        },
-    });
-});
+        return;
+
+        this.disableButton('sendTest');
+
+        Espo.Ajax.postRequest('MassEmail/action/sendTest', {
+            id: this.model.id,
+            targetList: list,
+        })
+        .then(() => {
+            Espo.Ui.success(this.translate('testSent', 'messages', 'MassEmail'));
+
+            this.close();
+        })
+        .catch(() => {
+            this.enableButton('sendTest');
+        });
+    }
+}

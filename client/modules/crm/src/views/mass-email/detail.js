@@ -26,29 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/mass-email/detail', ['views/detail'], function (Dep) {
+import DetailView from 'views/detail';
+import MassEmailSendTestModalView from 'crm:views/mass-email/modals/send-test';
 
-    return Dep.extend({
+export default class extends DetailView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-            if (~['Draft', 'Pending'].indexOf(this.model.get('status'))) {
-                if (this.getAcl().checkModel(this.model, 'edit')) {
-                    this.menu.buttons.push({
-                        'label': 'Send Test',
-                        'action': 'sendTest',
-                        'acl': 'edit'
-                    });
-                }
-            }
-        },
+    setup() {
+        super.setup();
 
-        actionSendTest: function () {
-            this.createView('sendTest', 'crm:views/mass-email/modals/send-test', {
-                model: this.model
-            }, function (view) {
-                view.render();
-            }, this);
-        },
-    });
-});
+        if (
+            ['Draft', 'Pending'].includes(this.model.attributes.status) &&
+            this.getAcl().checkModel(this.model, 'edit')
+        ) {
+            this.addMenuItem('buttons', {
+                label: 'Send Test',
+                action: 'sendTest',
+                acl: 'edit',
+                onClick: () => this.actionSendTest(),
+            });
+        }
+    }
+
+    async actionSendTest() {
+        const view = new MassEmailSendTestModalView({model: this.model});
+
+        await this.assignView('modal', view);
+        await view.render();
+    }
+}
