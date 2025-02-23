@@ -63,14 +63,14 @@
             "type": "link"
         },
         "contact": {
-            "type": "link",
-            "view": "crm:views/case/fields/contact"
+            "type": "link"
         },
         "contacts": {
             "type": "linkMultiple",
-            "view": "crm:views/case/fields/contacts",
+            "view": "views/fields/link-multiple-with-primary",
             "orderBy": "name",
-            "detailLayoutIncompatibleFieldList": ["contact"]
+            "detailLayoutIncompatibleFieldList": ["contact"],
+            "primaryLink": "contact"
         },
         "inboundEmail": {
             "type": "link",
