@@ -28,22 +28,27 @@
 
 import ModalView from 'views/modal';
 import Model from 'model';
+import EditForModalRecordView from 'views/record/edit-for-modal';
+import EnumFieldView from 'views/fields/enum';
+import VarcharFieldView from 'views/fields/varchar';
+import CalendarSharedViewTeamsFieldView from 'crm:views/calendar/fields/teams';
 
 export default class CalendarEditViewModal extends ModalView {
 
     // language=Handlebars
     templateContent = `
-        <div class="panel panel-default no-side-margin">
-            <div class="panel-body">
-                <div class="record-container">{{{record}}}</div>
-            </div>
-        </div>
+        <div class="record-container no-side-margin">{{{record}}}</div>
     `
 
-    className ='dialog dialog-record'
+    className = 'dialog dialog-record'
 
     /**
-     *
+     * @private
+     * @type {EditForModalRecordView}
+     */
+    recordView
+
+    /**
      * @param {{
      *     afterSave?: function({id: string}): void,
      *     afterRemove?: function(): void,
@@ -132,10 +137,50 @@ export default class CalendarEditViewModal extends ModalView {
 
         model.set(modelData);
 
-        this.createView('record', 'crm:views/calendar/record/edit-view', {
-            selector: '.record-container',
-            model: model
+        this.recordView = new EditForModalRecordView({
+            model: model,
+            detailLayout: [
+                {
+                    rows: [
+                        [
+                            {
+                                view: new VarcharFieldView({
+                                    name: 'name',
+                                    labelText: this.translate('name', 'fields'),
+                                    params: {
+                                        required: true,
+                                    },
+                                })
+                            },
+                            {
+                                view: new EnumFieldView({
+                                    name: 'mode',
+                                    labelText: this.translate('mode', 'fields', 'DashletOptions'),
+                                    params: {
+                                        translation: 'DashletOptions.options.mode',
+                                        options: this.getMetadata().get('clientDefs.Calendar.sharedViewModeList') || [],
+                                    },
+                                })
+                            }
+                        ],
+                        [
+                            {
+                                view: new CalendarSharedViewTeamsFieldView({
+                                    name: 'teams',
+                                    labelText: this.translate('teams', 'fields'),
+                                    params: {
+                                        required: true
+                                    },
+                                })
+                            },
+                            false
+                        ]
+                    ]
+                }
+            ]
         });
+
+        this.assignView('record', this.recordView);
 
         if (this.isNew) {
             this.headerText = this.translate('Create Shared View', 'labels', 'Calendar');
@@ -146,16 +191,11 @@ export default class CalendarEditViewModal extends ModalView {
     }
 
     async actionSave() {
-        const modelData = this.getView('record').fetch();
-
-        this.getView('record').model.set(modelData);
-
-        if (this.getView('record').validate()) {
+        if (this.recordView.validate()) {
             return;
         }
 
-        this.disableButton('save');
-        this.disableButton('remove');
+        const modelData = this.recordView.fetch();
 
         const calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
 
@@ -168,7 +208,7 @@ export default class CalendarEditViewModal extends ModalView {
         };
 
         if (this.isNew) {
-            data.id = Math.random().toString(36).substr(2, 10);
+            data.id = Math.random().toString(36).substring(2, 12);
 
             calendarViewDataList.push(data);
         } else {
@@ -182,6 +222,9 @@ export default class CalendarEditViewModal extends ModalView {
         }
 
         Espo.Ui.notify(this.translate('saving', 'messages'));
+
+        this.disableButton('save');
+        this.disableButton('remove');
 
         try {
             await this.getPreferences().save(
