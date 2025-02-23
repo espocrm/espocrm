@@ -26,119 +26,111 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/call/record/list', ['views/record/list'], function (Dep) {
+import ListRecordView from 'views/record/list';
 
-    return Dep.extend({
+export default class extends ListRecordView {
 
-        rowActionsView: 'crm:views/call/record/row-actions/default',
+    rowActionsView = 'modules/crm/views/call/record/row-actions/default'
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            if (
-                this.getAcl().checkScope(this.entityType, 'edit') &&
-                this.getAcl().checkField(this.entityType, 'status', 'edit')
-            ) {
-                this.massActionList.push('setHeld');
-                this.massActionList.push('setNotHeld');
+        if (
+            this.getAcl().checkScope(this.entityType, 'edit') &&
+            this.getAcl().checkField(this.entityType, 'status', 'edit')
+        ) {
+            this.massActionList.push('setHeld');
+            this.massActionList.push('setNotHeld');
+        }
+    }
+
+    /**
+     * @protected
+     * @param {Record} data
+     */
+    async actionSetHeld(data) {
+        const id = data.id;
+
+        if (!id) {
+            return;
+        }
+
+        const model = this.collection.get(id);
+
+        if (!model) {
+            return;
+        }
+
+        Espo.Ui.notify(this.translate('saving', 'messages'));
+
+        await model.save({status: 'Held'}, {patch: true});
+
+        Espo.Ui.success(this.translate('Saved'));
+    }
+
+    /**
+     * @protected
+     * @param {Record} data
+     */
+    async actionSetNotHeld(data) {
+        const id = data.id;
+
+        if (!id) {
+            return;
+        }
+
+        const model = this.collection.get(id);
+
+        if (!model) {
+            return;
+        }
+
+        Espo.Ui.notify(this.translate('saving', 'messages'));
+
+        await model.save({status: 'Not Held'}, {patch: true});
+
+        Espo.Ui.success(this.translate('Saved'));
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    async massActionSetHeld() {
+        const data = {};
+
+        data.ids = this.checkedList;
+
+        Espo.Ui.notify(this.translate('saving', 'messages'));
+
+        await Espo.Ajax.postRequest(`${this.collection.entityType}/action/massSetHeld`, data);
+
+        Espo.Ui.success(this.translate('Saved'));
+
+        await this.collection.fetch();
+
+        data.ids.forEach(id => {
+            if (this.collection.get(id)) {
+                this.checkRecord(id);
             }
-        },
+        });
+    }
 
-        actionSetHeld: function (data) {
-            let id = data.id;
+    // noinspection JSUnusedGlobalSymbols
+    async massActionSetNotHeld() {
+        const data = {};
 
-            if (!id) {
-                return;
+        data.ids = this.checkedList;
+
+        Espo.Ui.notify(this.translate('saving', 'messages'));
+
+        await Espo.Ajax.postRequest(`${this.collection.entityType}/action/massSetNotHeld`, data);
+
+        Espo.Ui.success(this.translate('Saved'));
+
+        await this.collection.fetch();
+
+        data.ids.forEach(id => {
+            if (this.collection.get(id)) {
+                this.checkRecord(id);
             }
-
-            var model = this.collection.get(id);
-
-            if (!model) {
-                return;
-            }
-
-            model.set('status', 'Held');
-
-            this.listenToOnce(model, 'sync', () => {
-                Espo.Ui.notify(false);
-
-                this.collection.fetch();
-            });
-
-            Espo.Ui.notifyWait();
-
-            model.save();
-        },
-
-        actionSetNotHeld: function (data) {
-            let id = data.id;
-
-            if (!id) {
-                return;
-            }
-
-            let model = this.collection.get(id);
-
-            if (!model) {
-                return;
-            }
-
-            model.set('status', 'Not Held');
-
-            this.listenToOnce(model, 'sync', () => {
-                Espo.Ui.notify(false);
-                this.collection.fetch();
-            });
-
-            Espo.Ui.notify(this.translate('saving', 'messages'));
-
-            model.save();
-        },
-
-        massActionSetHeld: function () {
-            Espo.Ui.notify(this.translate('saving', 'messages'));
-
-            let data = {};
-
-            data.ids = this.checkedList;
-
-            Espo.Ajax.postRequest(this.collection.entityType + '/action/massSetHeld', data)
-                .then(() => {
-                    Espo.Ui.notify(false);
-
-                    this.listenToOnce(this.collection, 'sync', () => {
-                        data.ids.forEach(id => {
-                            if (this.collection.get(id)) {
-                                this.checkRecord(id);
-                            }
-                        });
-                    });
-
-                    this.collection.fetch();
-                });
-        },
-
-        massActionSetNotHeld: function () {
-            Espo.Ui.notify(this.translate('saving', 'messages'));
-
-            let data = {};
-
-            data.ids = this.checkedList;
-
-            Espo.Ajax.postRequest(this.collection.entityType + '/action/massSetNotHeld', data)
-                .then(() => {
-                    Espo.Ui.notify(false);
-
-                    this.listenToOnce(this.collection, 'sync', () => {
-                        data.ids.forEach(id => {
-                            if (this.collection.get(id)) {
-                                this.checkRecord(id);
-                            }
-                        });
-                    });
-
-                    this.collection.fetch();
-                });
-        },
-    });
-});
+        });
+    }
+}

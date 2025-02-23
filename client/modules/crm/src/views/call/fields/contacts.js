@@ -26,48 +26,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/call/fields/contacts', ['crm:views/meeting/fields/contacts'], function (Dep) {
+import AttendeesFieldView from 'modules/crm/views/meeting/fields/attendees';
 
-    return Dep.extend({
+export default class extends AttendeesFieldView {
 
-        getAttributeList: function () {
-            let list = Dep.prototype.getAttributeList.call(this);
+    getAttributeList() {
+        return [
+            ...super.getAttributeList(),
+            'phoneNumbersMap',
+        ]
+    }
 
-            list.push('phoneNumbersMap');
+    getDetailLinkHtml(id, name) {
+        const html = super.getDetailLinkHtml(id, name);
 
-            return list;
-        },
+        const key = this.foreignScope + '_' + id;
+        const phoneNumbersMap = this.model.get('phoneNumbersMap') || {};
 
-        getDetailLinkHtml: function (id, name) {
-            let html = Dep.prototype.getDetailLinkHtml.call(this, id, name);
+        if (!(key in phoneNumbersMap)) {
+            return html;
+        }
 
-            let key = this.foreignScope + '_' + id;
-            let phoneNumbersMap = this.model.get('phoneNumbersMap') || {};
+        const number = phoneNumbersMap[key];
 
-            if (!(key in phoneNumbersMap)) {
-                return html;
-            }
+        const $item = $(html);
 
-            let number = phoneNumbersMap[key];
+        // @todo Format phone number.
 
-            let $item = $(html);
+        $item
+            .append(
+                ' ',
+                $('<span>').addClass('text-muted middle-dot'),
+                ' ',
+                $('<a>')
+                    .attr('href', 'tel:' + number)
+                    .attr('data-phone-number', number)
+                    .attr('data-action', 'dial')
+                    .addClass('small')
+                    .text(number)
+            )
 
-            $item
-                .append(
-                    ' ',
-                    $('<span>').addClass('text-muted middle-dot'),
-                    ' ',
-                    $('<a>')
-                        .attr('href', 'tel:' + number)
-                        .attr('data-phone-number', number)
-                        .attr('data-action', 'dial')
-                        .addClass('small')
-                        .text(number)
-                )
-
-            return $('<div>')
-                .append($item)
-                .get(0).outerHTML;
-        },
-    });
-});
+        return $('<div>')
+            .append($item)
+            .get(0).outerHTML;
+    }
+}

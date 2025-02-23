@@ -26,8 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/fields/contacts', ['crm:views/meeting/fields/attendees'], function (Dep) {
+import AttendeesFieldView from 'modules/crm/views/meeting/fields/attendees';
 
-    /** Left for bc. */
-    return Dep.extend({});
-});
+export default class extends AttendeesFieldView {}
