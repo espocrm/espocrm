@@ -53,6 +53,7 @@ class LinkFieldView extends BaseFieldView {
      * @property {boolean} [required] Required.
      * @property {boolean} [autocompleteOnEmpty] Autocomplete on empty input.
      * @property {boolean} [createButton] Show 'Create' button.
+     * @property {string} [entity] An entity type. As of 9.1.0.
      */
 
     /**
@@ -347,8 +348,11 @@ class LinkFieldView extends BaseFieldView {
 
         this.foreignScope = this.options.foreignScope || this.foreignScope;
 
-        this.foreignScope = this.foreignScope ||
-            this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
+        this.foreignScope =
+            this.foreignScope ||
+            this.params.entity ||
+            this.model.getFieldParam(this.name, 'entity') ||
+            this.model.getLinkParam(this.name, 'entity');
 
         if ('createDisabled' in this.options) {
             this.createDisabled = this.options.createDisabled;

@@ -55,6 +55,7 @@ class LinkMultipleFieldView extends BaseFieldView {
      * @property {boolean} [sortable] Sortable.
      * @property {boolean} [createButton] Show 'Create' button.
      * @property {number} [maxCount] A max number of items.
+     * @property {string} [entity] An entity type. As of 9.1.0.
      */
 
     /**
@@ -355,8 +356,10 @@ class LinkMultipleFieldView extends BaseFieldView {
         this.nameHashName = this.name + 'Names';
         this.idsName = this.name + 'Ids';
 
-        this.foreignScope = this.options.foreignScope ||
+        this.foreignScope =
+            this.options.foreignScope ||
             this.foreignScope ||
+            this.params.entity ||
             this.model.getFieldParam(this.name, 'entity') ||
             this.model.getLinkParam(this.name, 'entity');
 
