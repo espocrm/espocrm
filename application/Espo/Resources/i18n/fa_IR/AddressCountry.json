@@ -1,0 +1,20 @@
+{
+    "labels": {
+        "Create AddressCountry": "ایجاد کشور",
+        "Populate": "پر کردن"
+    },
+    "fields": {
+        "code": "کد",
+        "isPreferred": "ترجیح داده شده"
+    },
+    "tooltips": {
+        "code": "کد ISO 3166-1 alpha-2.",
+        "isPreferred": "کشورهای ترجیح داده شده در ابتدای لیست انتخاب ظاهر می‌شوند."
+    },
+    "messages": {
+        "confirmPopulateDefaults": "تمام کشورهای موجود حذف خواهند شد و لیست پیش‌فرض کشورها ایجاد خواهد شد. امکان بازگشت این عملیات وجود ندارد.\n\nآیا مطمئن هستید؟"
+    },
+    "strings": {
+        "populateDefaults": "پر کردن با لیست پیش‌فرض کشورها"
+    }
+}

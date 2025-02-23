@@ -1,0 +1,23 @@
+{
+    "labels": {
+        "Check Syntax": "بررسی نحو",
+        "Run": "اجرا"
+    },
+    "fields": {
+        "target": "هدف",
+        "targetType": "نوع هدف",
+        "script": "اسکریپت",
+        "output": "خروجی",
+        "error": "خطا"
+    },
+    "messages": {
+        "runSuccess": "با موفقیت اجرا شد.",
+        "runError": "خطا.",
+        "checkSyntaxSuccess": "نحو صحیح است.",
+        "checkSyntaxError": "خطای نحوی.",
+        "emptyScript": "اسکریپت خالی است."
+    },
+    "tooltips": {
+        "output": "مقادیر را با تابع `output\\printLine` چاپ کنید."
+    }
+}

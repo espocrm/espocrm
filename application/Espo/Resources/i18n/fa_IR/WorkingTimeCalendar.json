@@ -1,0 +1,26 @@
+{
+    "labels": {
+        "Create WorkingTimeCalendar": "ایجاد تقویم"
+    },
+    "fields": {
+        "timeZone": "منطقه زمانی",
+        "timeRanges": "برنامه روز کاری",
+        "weekday0": "یکشنبه",
+        "weekday1": "دوشنبه",
+        "weekday2": "سه‌شنبه",
+        "weekday3": "چهارشنبه",
+        "weekday4": "پنج‌شنبه",
+        "weekday5": "جمعه",
+        "weekday6": "شنبه",
+        "weekday0TimeRanges": "برنامه یکشنبه",
+        "weekday1TimeRanges": "برنامه دوشنبه",
+        "weekday2TimeRanges": "برنامه سه‌شنبه",
+        "weekday3TimeRanges": "برنامه چهارشنبه",
+        "weekday4TimeRanges": "برنامه پنج‌شنبه",
+        "weekday5TimeRanges": "برنامه جمعه",
+        "weekday6TimeRanges": "برنامه شنبه"
+    },
+    "links": {
+        "ranges": "استثناها"
+    }
+}

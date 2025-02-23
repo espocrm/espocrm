@@ -1,0 +1,11 @@
+{
+    "fields": {
+        "type": "نوع",
+        "optOut": "انصراف داده",
+        "invalid": "نامعتبر",
+        "numeric": "مقدار عددی"
+    },
+    "presetFilters": {
+        "orphan": "بدون مرجع"
+    }
+}
