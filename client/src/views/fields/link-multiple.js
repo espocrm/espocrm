@@ -42,10 +42,11 @@ class LinkMultipleFieldView extends BaseFieldView {
     /**
      * @typedef {Object} module:views/fields/link-multiple~options
      * @property {
-     *     module:views/fields/link~params &
+     *     module:views/fields/link-multiple~params &
      *     module:views/fields/base~params &
      *     Record
      * } [params] Parameters.
+     * @property {boolean} [createDisabled] Disable create button in the select modal.
      */
 
     /**

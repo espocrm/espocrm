@@ -46,6 +46,7 @@ class LinkFieldView extends BaseFieldView {
      *     module:views/fields/base~params &
      *     Record
      * } [params] Parameters.
+     * @property {boolean} [createDisabled] Disable create button in the select modal.
      */
 
     /**
