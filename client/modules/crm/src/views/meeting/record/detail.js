@@ -69,7 +69,7 @@ class MeetingDetailRecordView extends DetailRecordView {
     }
 
     manageAccessEdit(second) {
-        super.manageAccessEdit();
+        super.manageAccessEdit(second);
 
         if (second && !this.getAcl().checkModel(this.model, 'edit', true)) {
             this.hideActionItem('setHeld');

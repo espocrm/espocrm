@@ -26,32 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/task/record/list', ['views/record/list'], function (Dep) {
+import ListRecordView from 'views/record/list';
 
-    return Dep.extend({
+export default class extends ListRecordView {
 
-        rowActionsView: 'crm:views/task/record/row-actions/default',
+    rowActionsView = 'crm:views/task/record/row-actions/default'
 
-        actionSetCompleted: function (data) {
-            const id = data.id;
+    actionSetCompleted(data) {
+        const id = data.id;
 
-            if (!id) {
-                return;
-            }
+        if (!id) {
+            return;
+        }
 
-            const model = this.collection.get(id);
+        const model = this.collection.get(id);
 
-            if (!model) {
-                return;
-            }
+        if (!model) {
+            return;
+        }
 
-            Espo.Ui.notify(this.translate('saving', 'messages'));
+        Espo.Ui.notify(this.translate('saving', 'messages'));
 
-            model.save({status: 'Completed'}, {patch: true}).then(() => {
-                Espo.Ui.success(this.translate('Saved'));
+        model.save({status: 'Completed'}, {patch: true}).then(() => {
+            Espo.Ui.success(this.translate('Saved'));
 
-                this.collection.fetch();
-            });
-        },
-    });
-});
+            this.collection.fetch();
+        });
+    }
+}

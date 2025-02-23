@@ -26,63 +26,63 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/call/record/detail', ['views/record/detail'], function (Dep) {
+import DetailRecordView from 'views/record/detail';
 
-    return Dep.extend({
+export default class extends DetailRecordView {
 
-        duplicateAction: true,
+    duplicateAction = true
 
-        setupActionItems: function () {
-            Dep.prototype.setupActionItems.call(this);
+    setupActionItems() {
+        super.setupActionItems();
 
-            if (
-                this.getAcl().checkModel(this.model, 'edit') &&
-                this.getAcl().checkField(this.entityType, 'status', 'edit')
-            ) {
-                if (['Held', 'Not Held'].indexOf(this.model.get('status')) === -1) {
-                    this.dropdownItemList.push({
-                        'label': 'Set Held',
-                        'name': 'setHeld',
-                    });
-
-                    this.dropdownItemList.push({
-                        'label': 'Set Not Held',
-                        'name': 'setNotHeld',
-                    });
-                }
-            }
-        },
-
-        manageAccessEdit: function (second) {
-            Dep.prototype.manageAccessEdit.call(this, second);
-
-            if (second) {
-                if (!this.getAcl().checkModel(this.model, 'edit', true)) {
-                    this.hideActionItem('setHeld');
-                    this.hideActionItem('setNotHeld');
-                }
-            }
-        },
-
-        actionSetHeld: function () {
-            this.model.save({status: 'Held'}, {patch: true})
-                .then(() => {
-                    Espo.Ui.success(this.translate('Saved'));
-
-                    this.removeButton('setHeld');
-                    this.removeButton('setNotHeld');
+        if (
+            this.getAcl().checkModel(this.model, 'edit') &&
+            this.getAcl().checkField(this.entityType, 'status', 'edit')
+        ) {
+            if (!['Held', 'Not Held'].includes(this.model.attributes.status)) {
+                this.dropdownItemList.push({
+                    label: 'Set Held',
+                    name: 'setHeld',
+                    onClick: () => this.actionSetHeld(),
                 });
-        },
 
-        actionSetNotHeld: function () {
-            this.model.save({status: 'Not Held'}, {patch: true})
-                .then(() => {
-                    Espo.Ui.success(this.translate('Saved'));
-
-                    this.removeButton('setHeld');
-                    this.removeButton('setNotHeld');
+                this.dropdownItemList.push({
+                    label: 'Set Not Held',
+                    name: 'setNotHeld',
+                    onClick: () => this.actionSetNotHeld(),
                 });
-        },
-    });
-});
+            }
+        }
+    }
 
+    manageAccessEdit(second) {
+        super.manageAccessEdit(second);
+
+        if (second) {
+            if (!this.getAcl().checkModel(this.model, 'edit', true)) {
+                this.hideActionItem('setHeld');
+                this.hideActionItem('setNotHeld');
+            }
+        }
+    }
+
+    actionSetHeld() {
+        this.model.save({status: 'Held'}, {patch: true})
+            .then(() => {
+                Espo.Ui.success(this.translate('Saved'));
+
+                this.removeActionItem('setHeld');
+                this.removeActionItem('setNotHeld');
+            });
+    }
+
+    actionSetNotHeld() {
+        this.model.save({status: 'Not Held'}, {patch: true})
+            .then(() => {
+                Espo.Ui.success(this.translate('Saved'));
+
+                this.removeActionItem('setHeld');
+                this.removeActionItem('setNotHeld');
+            });
+    }
+}

@@ -26,8 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/contact/detail', ['views/detail'], function (Dep) {
+import DetailView from 'views/detail';
 
-    /** Left for bc. */
-    return Dep.extend({});
-});
+/** Left for bc. */
+export default class extends DetailView {}

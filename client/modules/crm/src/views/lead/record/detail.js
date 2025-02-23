@@ -26,28 +26,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/lead/record/detail', ['views/record/detail'], function (Dep) {
+import DetailRecordView from 'views/record/detail';
 
-    return Dep.extend({
+export default class extends DetailRecordView {
 
-        selfAssignAction: true,
-        sideView: 'crm:views/lead/record/detail-side',
+    selfAssignAction = true
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+    sideView = 'crm:views/lead/record/detail-side'
 
-        getSelfAssignAttributes: function () {
-            if (this.model.get('status') === 'New') {
-                if (
-                    ~(this.getMetadata().get(['entityDefs', 'Lead', 'fields', 'status', 'options']) || [])
-                        .indexOf('Assigned')
-                ) {
-                    return {
-                        'status': 'Assigned',
-                    };
-                }
+    getSelfAssignAttributes() {
+        if (this.model.attributes.status === 'New') {
+            const options = this.getMetadata().get(['entityDefs', 'Lead', 'fields', 'status', 'options']) || [];
+
+            if (options.includes('Assigned')) {
+                return {
+                    'status': 'Assigned',
+                };
             }
-        },
-    });
-});
+        }
+
+        return {};
+    }
+}

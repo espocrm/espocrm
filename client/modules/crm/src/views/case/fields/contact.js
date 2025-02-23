@@ -26,8 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/case/fields/contact', ['views/fields/link'], function (Dep) {
+/** Left for bc. */
+import LinkFieldView from 'views/fields/link';
 
-    /** Left for bc. */
-    return Dep.extend({});
-});
+export default class extends LinkFieldView {}
