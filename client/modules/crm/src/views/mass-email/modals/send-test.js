@@ -196,9 +196,6 @@ export default class MassEmailSendTestModalView extends ModalView {
             return;
         }
 
-        console.log(list);
-
-        return;
 
         this.disableButton('sendTest');
 
