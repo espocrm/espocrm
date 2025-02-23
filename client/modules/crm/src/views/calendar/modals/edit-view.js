@@ -26,188 +26,231 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], function (Dep, Model) {
+import ModalView from 'views/modal';
+import Model from 'model';
 
-    return Dep.extend({
+export default class CalendarEditViewModal extends ModalView {
 
-        // language=Handlebars
-        templateContent: '' +
-            '<div class="panel panel-default no-side-margin"><div class="panel-body">' +
-            '<div class="record-container">{{{record}}}</div>' +
-            '</div></div>',
+    // language=Handlebars
+    templateContent = `
+        <div class="panel panel-default no-side-margin">
+            <div class="panel-body">
+                <div class="record-container">{{{record}}}</div>
+            </div>
+        </div>
+    `
 
-        className: 'dialog dialog-record',
+    className ='dialog dialog-record'
 
-        buttonList: [
+    /**
+     *
+     * @param {{
+     *     afterSave?: function({id: string}): void,
+     *     afterRemove?: function(): void,
+     *     id?: string,
+     * }} options
+     */
+    constructor(options) {
+        super();
+
+        this.options = options;
+    }
+
+    setup() {
+        const id = this.options.id;
+
+        this.buttonList = [
             {
                 name: 'cancel',
                 label: 'Cancel',
-            }
-        ],
+                onClick: () => this.actionCancel(),
+            },
+        ];
 
-        setup: function () {
-            var id = this.options.id;
+        this.isNew = !id;
 
-            this.isNew = !id;
+        const calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
 
-            var calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
-
-            if (this.isNew) {
-                this.buttonList.unshift({
-                    name: 'save',
-                    label: 'Create',
-                    style: 'danger'
-                });
-            }
-            else {
-                this.buttonList.unshift({
-                    name: 'remove',
-                    label: 'Remove'
-                });
-
-                this.buttonList.unshift({
-                    name: 'save',
-                    label: 'Save',
-                    style: 'primary'
-                });
-            }
-
-            var model = new Model();
-
-            model.name = 'CalendarView';
-
-            var modelData = {};
-
-            if (!this.isNew) {
-                calendarViewDataList.forEach(item => {
-                    if (id === item.id) {
-                        modelData.teamsIds = item.teamIdList || [];
-                        modelData.teamsNames = item.teamNames || {};
-                        modelData.id = item.id;
-                        modelData.name = item.name;
-                        modelData.mode = item.mode;
-                    }
-                });
-            }
-            else {
-                modelData.name = this.translate('Shared', 'labels', 'Calendar');
-
-                var foundCount = 0;
-
-                calendarViewDataList.forEach(item => {
-                    if (item.name.indexOf(modelData.name) === 0) {
-                        foundCount++;
-                    }
-                });
-
-                if (foundCount) {
-                    modelData.name += ' ' + foundCount;
-                }
-
-                modelData.id = id;
-
-                modelData.teamsIds = this.getUser().get('teamsIds') || [];
-                modelData.teamsNames = this.getUser().get('teamsNames') || {};
-            }
-
-            model.set(modelData);
-
-            this.createView('record', 'crm:views/calendar/record/edit-view', {
-                selector: '.record-container',
-                model: model
+        if (this.isNew) {
+            this.buttonList.unshift({
+                name: 'save',
+                label: 'Create',
+                style: 'danger',
+                onClick: () => this.actionSave(),
             });
-        },
+        } else {
+            this.dropdownItemList.push({
+                name: 'remove',
+                label: 'Remove',
+                onClick: () => this.actionRemove(),
+            });
 
-        actionSave: function () {
-            var modelData = this.getView('record').fetch();
-            this.getView('record').model.set(modelData);
-
-            if (this.getView('record').validate()) {
-                return;
-            }
-
-            this.disableButton('save');
-            this.disableButton('remove');
-
-            var calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
-
-            var data = {
-                name: modelData.name,
-                teamIdList: modelData.teamsIds,
-                teamNames: modelData.teamsNames,
-                mode: modelData.mode
-            };
-
-            if (this.isNew) {
-                data.id = Math.random().toString(36).substr(2, 10);
-                calendarViewDataList.push(data);
-            } else {
-                data.id = this.getView('record').model.id;
-
-                calendarViewDataList.forEach((item, i) => {
-                    if (item.id === data.id) {
-                        calendarViewDataList[i] = data;
-                    }
-                });
-            }
-
-            Espo.Ui.notify(this.translate('saving', 'messages'));
-
-            this.getPreferences()
-                .save(
-                    {
-                        'calendarViewDataList': calendarViewDataList,
-                    },
-                    {patch: true}
-                )
-                .then(() => {
-                    Espo.Ui.notify(false);
-                        this.trigger('after:save', data);
-                        this.remove();
-                })
-                .catch(() => {
-                    this.enableButton('remove');
-                    this.enableButton('save');
-                });
-        },
-
-        actionRemove: function () {
-            this.confirm(this.translate('confirmation', 'messages'), () => {
-                this.disableButton('save');
-                this.disableButton('remove');
-
-                var id = this.options.id;
-
-                if (!id) {
-                    return;
-                }
-
-                var newCalendarViewDataList = [];
-
-                var calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
-
-                calendarViewDataList.forEach((item) => {
-                    if (item.id !== id) {
-                        newCalendarViewDataList.push(item);
-                    }
-                });
-
-                Espo.Ui.notifyWait();
-
-                this.getPreferences()
-                    .save({
-                        'calendarViewDataList': newCalendarViewDataList
-                    }, {patch: true})
-                    .then(() => {
-                        Espo.Ui.notify(false);
-                        this.trigger('after:remove');
-                        this.remove();
-                    })
-                    .catch(() => {
-                        this.enableButton('remove');
-                        this.enableButton('save');
-                    });
+            this.buttonList.unshift({
+                name: 'save',
+                label: 'Save',
+                style: 'primary',
+                onClick: () => this.actionSave(),
             });
         }
-    });
-});
+
+        const model = new Model();
+
+        model.name = 'CalendarView';
+
+        const modelData = {};
+
+        if (!this.isNew) {
+            calendarViewDataList.forEach(item => {
+                if (id === item.id) {
+                    modelData.teamsIds = item.teamIdList || [];
+                    modelData.teamsNames = item.teamNames || {};
+                    modelData.id = item.id;
+                    modelData.name = item.name;
+                    modelData.mode = item.mode;
+                }
+            });
+        } else {
+            modelData.name = this.translate('Shared', 'labels', 'Calendar');
+
+            let foundCount = 0;
+
+            calendarViewDataList.forEach(item => {
+                if (item.name.indexOf(modelData.name) === 0) {
+                    foundCount++;
+                }
+            });
+
+            if (foundCount) {
+                modelData.name += ' ' + foundCount;
+            }
+
+            modelData.id = id;
+
+            modelData.teamsIds = this.getUser().get('teamsIds') || [];
+            modelData.teamsNames = this.getUser().get('teamsNames') || {};
+        }
+
+        model.set(modelData);
+
+        this.createView('record', 'crm:views/calendar/record/edit-view', {
+            selector: '.record-container',
+            model: model
+        });
+
+        if (this.isNew) {
+            this.headerText = this.translate('Create Shared View', 'labels', 'Calendar');
+        } else {
+            this.headerText = this.translate('Edit Shared View', 'labels', 'Calendar') + ' · ' +
+                modelData.name;
+        }
+    }
+
+    async actionSave() {
+        const modelData = this.getView('record').fetch();
+
+        this.getView('record').model.set(modelData);
+
+        if (this.getView('record').validate()) {
+            return;
+        }
+
+        this.disableButton('save');
+        this.disableButton('remove');
+
+        const calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
+
+        const data = {
+            name: modelData.name,
+            teamIdList: modelData.teamsIds,
+            teamNames: modelData.teamsNames,
+            mode: modelData.mode,
+            id: undefined,
+        };
+
+        if (this.isNew) {
+            data.id = Math.random().toString(36).substr(2, 10);
+
+            calendarViewDataList.push(data);
+        } else {
+            data.id = this.getView('record').model.id;
+
+            calendarViewDataList.forEach((item, i) => {
+                if (item.id === data.id) {
+                    calendarViewDataList[i] = data;
+                }
+            });
+        }
+
+        Espo.Ui.notify(this.translate('saving', 'messages'));
+
+        try {
+            await this.getPreferences().save(
+                {
+                    calendarViewDataList: calendarViewDataList,
+                },
+                {patch: true}
+            )
+        } catch (e) {
+            this.enableButton('remove');
+            this.enableButton('save');
+
+            return;
+        }
+
+        Espo.Ui.notify();
+
+        this.trigger('after:save', data);
+
+        if (this.options.afterSave) {
+            this.options.afterSave(data);
+        }
+
+        this.close();
+    }
+
+    async actionRemove() {
+        await this.confirm(this.translate('confirmation', 'messages'));
+
+        this.disableButton('save');
+        this.disableButton('remove');
+
+        const id = this.options.id;
+
+        if (!id) {
+            return;
+        }
+
+        const newCalendarViewDataList = [];
+
+        const calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
+
+        calendarViewDataList.forEach(item => {
+            if (item.id !== id) {
+                newCalendarViewDataList.push(item);
+            }
+        });
+
+        Espo.Ui.notifyWait();
+
+        try {
+            await this.getPreferences().save({
+                calendarViewDataList: newCalendarViewDataList,
+            }, {patch: true})
+        } catch (e) {
+            this.enableButton('remove');
+            this.enableButton('save');
+
+            return;
+        }
+
+        Espo.Ui.notify();
+
+        this.trigger('after:remove');
+
+        if (this.options.afterRemove) {
+            this.options.afterRemove();
+        }
+
+        this.close();
+    }
+}

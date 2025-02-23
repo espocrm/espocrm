@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import View from 'view';
+import CalendarEditViewModal from 'crm:views/calendar/modals/edit-view';
 
 class CalendarPage extends View {
 
@@ -290,48 +291,44 @@ class CalendarPage extends View {
         this.setPageTitle(this.translate('Calendar', 'scopeNames'));
     }
 
-    createCustomView() {
-        this.createView('createCustomView', 'crm:views/calendar/modals/edit-view', {}, view => {
-            view.render();
-
-            this.listenToOnce(view, 'after:save', data => {
-                view.close();
-                this.mode = 'view-' + data.id;
+    async createCustomView() {
+        const view = new CalendarEditViewModal({
+            afterSave: data => {
+                this.mode = `view-${data.id}`;
                 this.date = null;
 
                 this.updateUrl(true);
-            });
+            },
         });
+
+        await this.assignView('modal', view);
+
+        await view.render();
     }
 
-    editCustomView() {
+    async editCustomView() {
         const viewId = this.getCalendarView().viewId;
 
         if (!viewId) {
             return;
         }
-
-        this.createView('createCustomView', 'crm:views/calendar/modals/edit-view', {id: viewId}, view => {
-            view.render();
-
-            this.listenToOnce(view, 'after:save', () => {
-                view.close();
-
-                const calendarView = this.getCalendarView();
-
-                calendarView.setupMode();
-                calendarView.reRender();
-            });
-
-            this.listenToOnce(view, 'after:remove', () => {
-                view.close();
-
+        const view = new CalendarEditViewModal({
+            id: viewId,
+            afterSave: () => {
+                this.getCalendarView().setupMode();
+                this.getCalendarView().reRender();
+            },
+            afterRemove: () => {
                 this.mode = null;
                 this.date = null;
 
                 this.updateUrl(true);
-            });
+            },
         });
+
+        await this.assignView('modal', view);
+
+        await view.render();
     }
 
     /**
