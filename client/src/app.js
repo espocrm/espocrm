@@ -727,13 +727,26 @@ class App {
      * @private
      */
     initUtils() {
-        this.dateTime = new DateTime();
-        this.modelFactory.dateTime = this.dateTime;
-        this.dateTime.setSettingsAndPreferences(this.settings, this.preferences);
-        this.numberUtil = new NumberUtil(this.settings, this.preferences);
+        // Import DateTimeFa only when needed
+        if (this.language && this.language.name === 'fa') {
+            this.loader.require('date-time-fa', DateTimeFa => {
+                this.dateTime = new DateTimeFa();
+                this.modelFactory.dateTime = this.dateTime;
+                this.dateTime.setSettingsAndPreferences(this.settings, this.preferences);
+                this.numberUtil = new NumberUtil(this.settings, this.preferences);
 
-        container.set(DateTime, this.dateTime);
-        container.set(NumberUtil, this.numberUtil);
+                container.set(DateTime, this.dateTime);
+                container.set(NumberUtil, this.numberUtil);
+            });
+        } else {
+            this.dateTime = new DateTime();
+            this.modelFactory.dateTime = this.dateTime;
+            this.dateTime.setSettingsAndPreferences(this.settings, this.preferences);
+            this.numberUtil = new NumberUtil(this.settings, this.preferences);
+
+            container.set(DateTime, this.dateTime);
+            container.set(NumberUtil, this.numberUtil);
+        }
     }
 
     /**
