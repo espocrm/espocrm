@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Tools\MassEmail;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Log;
 use Espo\Modules\Crm\Entities\Campaign;
 use Espo\ORM\Collection;
@@ -42,6 +43,7 @@ use Espo\Modules\Crm\Entities\EmailQueueItem;
 use Espo\Core\Exceptions\Error;
 use Espo\ORM\EntityManager;
 use Espo\Core\Utils\Metadata;
+use stdClass;
 
 class QueueCreator
 {
@@ -94,88 +96,16 @@ class QueueCreator
             return;
         }
 
+        $withOptedOut = $massEmail->getCampaign()?->getType() === Campaign::TYPE_INFORMATIONAL_EMAIL;
+
         if (!$isTest) {
             $this->cleanupQueueItems($massEmail);
         }
 
-        $metTargetHash = [];
-        $metEmailAddressHash = [];
         $itemList = [];
 
         if (!$isTest) {
-            /** @var Collection<TargetList> $excludingTargetListList */
-            $excludingTargetListList = $this->entityManager
-                ->getRDBRepositoryByClass(MassEmail::class)
-                ->getRelation($massEmail, 'excludingTargetLists')
-                ->find();
-
-            foreach ($excludingTargetListList as $excludingTargetList) {
-                foreach ($this->targetLinkList as $link) {
-                    $excludingList = $this->entityManager
-                        ->getRDBRepositoryByClass(TargetList::class)
-                        ->getRelation($excludingTargetList, $link)
-                        ->sth()
-                        ->select([Attribute::ID, 'emailAddress'])
-                        ->find();
-
-                    foreach ($excludingList as $excludingTarget) {
-                        $hashId = $excludingTarget->getEntityType() . '-'. $excludingTarget->getId();
-
-                        $metTargetHash[$hashId] = true;
-
-                        $emailAddress = $excludingTarget->get('emailAddress');
-
-                        if ($emailAddress) {
-                            $metEmailAddressHash[$emailAddress] = true;
-                        }
-                    }
-                }
-            }
-
-            /** @var Collection<TargetList> $targetListCollection */
-            $targetListCollection = $this->entityManager
-                ->getRDBRepositoryByClass(MassEmail::class)
-                ->getRelation($massEmail, 'targetLists')
-                ->find();
-
-            foreach ($targetListCollection as $targetList) {
-                foreach ($this->targetLinkList as $link) {
-                    $recordList = $this->entityManager
-                        ->getRDBRepositoryByClass(TargetList::class)
-                        ->getRelation($targetList, $link)
-                        ->select([Attribute::ID, 'emailAddress'])
-                        ->sth()
-                        ->where(['@relation.optedOut' => false])
-                        ->find();
-
-                    foreach ($recordList as $record) {
-                        $hashId = $record->getEntityType() . '-'. $record->getId();
-
-                        $emailAddress = $record->get('emailAddress');
-
-                        if (!$emailAddress) {
-                            continue;
-                        }
-
-                        if (!empty($metEmailAddressHash[$emailAddress])) {
-                            continue;
-                        }
-
-                        if (!empty($metTargetHash[$hashId])) {
-                            continue;
-                        }
-
-                        $item = $record->getValueMap();
-
-                        $item->entityType = $record->getEntityType();
-
-                        $itemList[] = $item;
-
-                        $metTargetHash[$hashId] = true;
-                        $metEmailAddressHash[$emailAddress] = true;
-                    }
-                }
-            }
+            $itemList = $this->getItemList($massEmail, $withOptedOut);
         }
 
         foreach ($additionalTargetList as $record) {
@@ -199,7 +129,7 @@ class QueueCreator
 
             $emailAddressRecord = $this->getEmailAddressRepository()->getByAddress($emailAddress);
 
-            if ($emailAddressRecord) {
+            if ($emailAddressRecord && !$withOptedOut) {
                 if (
                     $emailAddressRecord->isInvalid() ||
                     $emailAddressRecord->isOptedOut()
@@ -221,15 +151,17 @@ class QueueCreator
             $this->entityManager->saveEntity($queueItem);
         }
 
-        if (!$isTest) {
-            $massEmail->set('status', MassEmail::STATUS_IN_PROCESS);
-
-            if (empty($itemList)) {
-                $massEmail->set('status', MassEmail::STATUS_COMPLETE);
-            }
-
-            $this->entityManager->saveEntity($massEmail);
+        if ($isTest) {
+            return;
         }
+
+        $massEmail->setStatus(MassEmail::STATUS_IN_PROCESS);
+
+        if ($itemList === []) {
+            $massEmail->setStatus(MassEmail::STATUS_COMPLETE);
+        }
+
+        $this->entityManager->saveEntity($massEmail);
     }
 
     private function getEmailAddressRepository(): EmailAddressRepository
@@ -243,5 +175,84 @@ class QueueCreator
         return !$isTest &&
             $massEmail->getCampaign() &&
             $massEmail->getCampaign()->getStatus() === Campaign::STATUS_INACTIVE;
+    }
+
+    /**
+     * @return stdClass[]
+     */
+    private function getItemList(MassEmail $massEmail, bool $withOptedOut): array
+    {
+        $metTargetHash = [];
+        $metEmailAddressHash = [];
+
+        $itemList = [];
+
+        foreach ($massEmail->getExcludingTargetLists() as $excludingTargetList) {
+            foreach ($this->targetLinkList as $link) {
+                $targets = $this->entityManager
+                    ->getRelation($excludingTargetList, $link)
+                    ->sth()
+                    ->select([Attribute::ID, Field::EMAIL_ADDRESS])
+                    ->find();
+
+                foreach ($targets as $target) {
+                    $hashId = $target->getEntityType() . '-' . $target->getId();
+
+                    $metTargetHash[$hashId] = true;
+
+                    $emailAddress = $target->get(Field::EMAIL_ADDRESS);
+
+                    if ($emailAddress) {
+                        $metEmailAddressHash[$emailAddress] = true;
+                    }
+                }
+            }
+        }
+
+        foreach ($massEmail->getTargetLists() as $targetList) {
+            foreach ($this->targetLinkList as $link) {
+                $where = [];
+
+                if (!$withOptedOut) {
+                    $where = ['@relation.optedOut' => false];
+                }
+
+                $records = $this->entityManager
+                    ->getRelation($targetList, $link)
+                    ->select([Attribute::ID, Field::EMAIL_ADDRESS])
+                    ->sth()
+                    ->where($where)
+                    ->find();
+
+                foreach ($records as $record) {
+                    $hashId = $record->getEntityType() . '-' . $record->getId();
+
+                    $emailAddress = $record->get(Field::EMAIL_ADDRESS);
+
+                    if (!$emailAddress) {
+                        continue;
+                    }
+
+                    if (!empty($metEmailAddressHash[$emailAddress])) {
+                        continue;
+                    }
+
+                    if (!empty($metTargetHash[$hashId])) {
+                        continue;
+                    }
+
+                    $item = $record->getValueMap();
+
+                    $item->entityType = $record->getEntityType();
+
+                    $itemList[] = $item;
+
+                    $metTargetHash[$hashId] = true;
+                    $metEmailAddressHash[$emailAddress] = true;
+                }
+            }
+        }
+
+        return $itemList;
     }
 }

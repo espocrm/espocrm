@@ -30,12 +30,14 @@
 namespace Espo\Modules\Crm\Tools\MassEmail\MessagePreparator;
 
 use Espo\Core\Mail\SenderParams;
+use Espo\Modules\Crm\Entities\EmailQueueItem;
 
 class Data
 {
     public function __construct(
         private string $id,
-        private SenderParams $senderParams
+        private SenderParams $senderParams,
+        private EmailQueueItem $queueItem,
     ) {}
 
     public function getId(): string
@@ -47,5 +49,13 @@ class Data
     public function getSenderParams(): SenderParams
     {
         return $this->senderParams;
+    }
+
+    /**
+     * @since 9.1.0
+     */
+    public function getQueueItem(): EmailQueueItem
+    {
+        return $this->queueItem;
     }
 }

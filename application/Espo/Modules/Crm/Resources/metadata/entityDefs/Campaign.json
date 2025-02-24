@@ -29,12 +29,14 @@
             "options": [
                 "Email",
                 "Newsletter",
+                "Informational Email",
                 "Web",
                 "Television",
                 "Radio",
                 "Mail"
             ],
             "default": "Email",
+            "maxLength": 64,
             "customizationOptionsDisabled": true,
             "customizationOptionsReferenceDisabled": true
         },

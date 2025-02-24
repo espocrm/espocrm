@@ -46,6 +46,7 @@
     "options": {
         "type": {
             "Email": "Email",
+            "Informational Email": "Informational Email",
             "Web": "Web",
             "Television": "Television",
             "Radio": "Radio",
@@ -78,6 +79,7 @@
         "active": "Active"
     },
     "messages": {
+        "cannotChangeType": "Cannot change type.",
         "unsubscribed": "You have been unsubscribed from our mailing list.",
         "subscribedAgain": "You are subscribed again."
     },

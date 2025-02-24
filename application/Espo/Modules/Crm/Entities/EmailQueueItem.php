@@ -31,6 +31,7 @@ namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\ORM\Entity;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
+use UnexpectedValueException;
 
 class EmailQueueItem extends Entity
 {
@@ -61,7 +62,7 @@ class EmailQueueItem extends Entity
         $value = $this->get('targetType');
 
         if (!is_string($value)) {
-            throw new \UnexpectedValueException();
+            throw new UnexpectedValueException();
         }
 
         return $value;
@@ -72,7 +73,7 @@ class EmailQueueItem extends Entity
         $value = $this->get('targetId');
 
         if (!is_string($value)) {
-            throw new \UnexpectedValueException();
+            throw new UnexpectedValueException();
         }
 
         return $value;

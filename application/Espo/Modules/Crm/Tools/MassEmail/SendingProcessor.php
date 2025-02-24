@@ -29,10 +29,11 @@
 
 namespace Espo\Modules\Crm\Tools\MassEmail;
 
-use Espo\Core\Mail\ConfigDataProvider;
-use Espo\ORM\EntityCollection;
 use Laminas\Mail\Message;
 
+use Espo\Core\Field\DateTime;
+use Espo\Core\Mail\ConfigDataProvider;
+use Espo\ORM\EntityCollection;
 use Espo\Core\Name\Field;
 use Espo\Tools\EmailTemplate\Result;
 use Espo\Core\Mail\Account\GroupAccount\AccountFactory;
@@ -50,7 +51,6 @@ use Espo\Core\Mail\EmailSender;
 use Espo\Core\Mail\Sender;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Log;
 use Espo\Entities\Email;
@@ -65,7 +65,6 @@ use Espo\Tools\EmailTemplate\Params as TemplateParams;
 use Espo\Tools\EmailTemplate\Processor as TemplateProcessor;
 
 use Exception;
-use DateTime;
 
 class SendingProcessor
 {
@@ -83,6 +82,7 @@ class SendingProcessor
         private MessageHeadersPreparator $headersPreparator,
         private TemplateProcessor $templateProcessor,
         private ConfigDataProvider $configDataProvider,
+        private Config\ApplicationConfig $applicationConfig,
     ) {}
 
     /**
@@ -113,7 +113,6 @@ class SendingProcessor
             return;
         }
 
-        $campaign = $massEmail->getCampaign();
         $attachmentList = $emailTemplate->getAttachments();
         [$smtpParams, $senderParams] = $this->getSenderParams($massEmail);
         $queueItemList = $this->getQueueItems($massEmail, $isTest, $maxSize);
@@ -124,7 +123,6 @@ class SendingProcessor
                 massEmail: $massEmail,
                 emailTemplate: $emailTemplate,
                 attachmentList: $attachmentList,
-                campaign: $campaign,
                 isTest: $isTest,
                 smtpParams: $smtpParams,
                 senderParams: $senderParams,
@@ -168,11 +166,9 @@ class SendingProcessor
                 ->withParent($target)
         );
 
-        $body = $this->prepareBody($emailData, $queueItem, $trackingUrlList, $massEmail);
+        $body = $this->prepareBody($massEmail, $queueItem, $emailData, $trackingUrlList);
 
-        $email = $this->entityManager
-            ->getRDBRepositoryByClass(Email::class)
-            ->getNew();
+        $email = $this->entityManager->getRDBRepositoryByClass(Email::class)->getNew();
 
         $email
             ->addToAddress($emailAddress)
@@ -203,7 +199,7 @@ class SendingProcessor
 
         $id = $queueItem->getId();
 
-        $this->headersPreparator->prepare($message->getHeaders(), new Data($id, $senderParams));
+        $this->headersPreparator->prepare($message->getHeaders(), new Data($id, $senderParams, $queueItem));
 
         $fromAddress = $senderParams->getFromAddress();
 
@@ -246,10 +242,9 @@ class SendingProcessor
         MassEmail $massEmail,
         EmailTemplate $emailTemplate,
         EntityCollection $attachmentList,
-        ?Campaign $campaign,
         bool $isTest,
         ?SmtpParams $smtpParams,
-        SenderParams $senderParams
+        SenderParams $senderParams,
     ): void {
 
         if ($this->isNotPending($queueItem)) {
@@ -284,18 +279,18 @@ class SendingProcessor
         }
 
         $email = $this->getPreparedEmail(
-            $queueItem,
-            $massEmail,
-            $emailTemplate,
-            $target,
-            $this->getTrackingUrls($campaign)
+            queueItem: $queueItem,
+            massEmail: $massEmail,
+            emailTemplate: $emailTemplate,
+            target: $target,
+            trackingUrlList: $this->getTrackingUrls($massEmail->getCampaign()),
         );
 
         if (!$email) {
             return;
         }
 
-        $senderParams = $this->prepareItemSenderParams($email, $senderParams, $campaign, $massEmail);
+        $senderParams = $this->prepareItemSenderParams($email, $senderParams, $massEmail);
 
         $queueItem->incrementAttemptCount();
 
@@ -331,16 +326,15 @@ class SendingProcessor
 
         $this->setItemSent($queueItem, $emailAddress);
 
-        if ($campaign) {
-            $this->campaignService->logSent($campaign->getId(), $queueItem, $emailObject);
+        if ($massEmail->getCampaign()) {
+            $this->campaignService->logSent($massEmail->getCampaign()->getId(), $queueItem, $emailObject);
         }
     }
 
     private function getSiteUrl(): string
     {
-        return
-            $this->config->get('massEmailSiteUrl') ??
-            $this->config->get('siteUrl');
+        return $this->config->get('massEmailSiteUrl') ??
+            $this->applicationConfig->getSiteUrl();
     }
 
     /**
@@ -448,14 +442,13 @@ class SendingProcessor
         $batchMaxSize = $this->config->get('massEmailMaxPerBatchCount');
 
         if (!$isTest) {
-            $threshold = new DateTime();
-            $threshold->modify('-1 hour');
+            $threshold = DateTime::createNow()->addHours(-1);
 
             $sentLastHourCount = $this->entityManager
                 ->getRDBRepositoryByClass(EmailQueueItem::class)
                 ->where([
                     'status' => EmailQueueItem::STATUS_SENT,
-                    'sentAt>' => $threshold->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
+                    'sentAt>' => $threshold->toString(),
                 ])
                 ->count();
 
@@ -510,13 +503,12 @@ class SendingProcessor
      */
     private function getTrackingUrls(?Campaign $campaign): iterable
     {
-        if (!$campaign) {
+        if (!$campaign || $campaign->getType() === Campaign::TYPE_INFORMATIONAL_EMAIL) {
             return [];
         }
 
-        /** @var Collection<CampaignTrackingUrl>  */
+        /** @var Collection<CampaignTrackingUrl> */
         return $this->entityManager
-            ->getRDBRepositoryByClass(Campaign::class)
             ->getRelation($campaign, 'trackingUrls')
             ->find();
     }
@@ -524,9 +516,10 @@ class SendingProcessor
     private function prepareItemSenderParams(
         Email $email,
         SenderParams $senderParams,
-        ?Campaign $campaign,
         MassEmail $massEmail
     ): SenderParams {
+
+        $campaign = $massEmail->getCampaign();
 
         if ($email->get('replyToAddress')) { // @todo Revise.
             $senderParams = $senderParams->withReplyToAddress(null);
@@ -567,6 +560,7 @@ class SendingProcessor
     private function getTrackUrl(mixed $trackingUrl, EmailQueueItem $queueItem): string
     {
         $siteUrl = $this->getSiteUrl();
+
         $id1 = $trackingUrl->getId();
         $id2 = $queueItem->getId();
 
@@ -577,19 +571,54 @@ class SendingProcessor
      * @param iterable<CampaignTrackingUrl> $trackingUrlList
      */
     private function prepareBody(
-        Result $emailData,
+        MassEmail $massEmail,
         EmailQueueItem $queueItem,
-        $trackingUrlList,
-        MassEmail $massEmail
+        Result $emailData,
+        iterable $trackingUrlList,
     ): string {
 
-        $body = $emailData->getBody();
+        $body = $this->addBodyLinks(
+            massEmail: $massEmail,
+            queueItem: $queueItem,
+            emailData: $emailData,
+            body: $emailData->getBody(),
+            trackingUrlList: $trackingUrlList,
+        );
+
+        return $this->addBodyTracking(
+            massEmail: $massEmail,
+            queueItem: $queueItem,
+            emailData: $emailData,
+            body: $body,
+        );
+    }
+
+    private function toSkipAsInactive(MassEmail $massEmail, bool $isTest): bool
+    {
+        return !$isTest &&
+            $massEmail->getCampaign() &&
+            $massEmail->getCampaign()->getStatus() === Campaign::STATUS_INACTIVE;
+    }
+
+    /**
+     * @param iterable<CampaignTrackingUrl> $trackingUrlList
+     */
+    private function addBodyLinks(
+        MassEmail $massEmail,
+        EmailQueueItem $queueItem,
+        Result $emailData,
+        string $body,
+        iterable $trackingUrlList,
+    ): string {
 
         $optOutUrl = $this->getOptOutUrl($queueItem);
         $optOutLink = $this->getOptOutLink($optOutUrl);
 
-        $body = str_replace('{optOutUrl}', $optOutUrl, $body);
-        $body = str_replace('{optOutLink}', $optOutLink, $body);
+        if (!$this->isInformational($massEmail)) {
+            $body = str_replace('{optOutUrl}', $optOutUrl, $body);
+            $body = str_replace('{optOutLink}', $optOutLink, $body);
+        }
+
         $body = str_replace('{queueItemId}', $queueItem->getId(), $body);
 
         foreach ($trackingUrlList as $trackingUrl) {
@@ -598,40 +627,77 @@ class SendingProcessor
             $body = str_replace($trackingUrl->getUrlToUse(), $url, $body);
         }
 
-        if (
-            !$this->config->get('massEmailDisableMandatoryOptOutLink') &&
-            stripos($body, '?entryPoint=unsubscribe&id') === false
-        ) {
-            if ($emailData->isHtml()) {
-                $body .= "<br><br>" . $optOutLink;
-            } else {
-                $body .= "\n\n" . $optOutUrl;
-            }
+        return $this->addMandatoryBodyOptOutLink($massEmail, $queueItem, $emailData, $body);
+    }
+
+    private function addMandatoryBodyOptOutLink(
+        MassEmail $massEmail,
+        EmailQueueItem $queueItem,
+        Result $emailData,
+        string $body,
+    ): string {
+
+        if ($this->config->get('massEmailDisableMandatoryOptOutLink')) {
+            return $body;
         }
 
-        $trackImageAlt = $this->defaultLanguage->translateLabel('Campaign', 'scopeNames');
+        if ($this->isInformational($massEmail)) {
+            return $body;
+        }
 
-        $trackOpenedUrl = $this->getSiteUrl() . '?entryPoint=campaignTrackOpened&id=' . $queueItem->getId();
+        if (stripos($body, '?entryPoint=unsubscribe&id') !== false) {
+            return $body;
+        }
 
-        /** @noinspection HtmlDeprecatedAttribute */
-        $trackOpenedHtml = "<img alt=\"$trackImageAlt\" width=\"1\" height=\"1\" border=\"0\" src=\"$trackOpenedUrl\">";
+        $optOutUrl = $this->getOptOutUrl($queueItem);
+        $optOutLink = $this->getOptOutLink($optOutUrl);
 
-        if (
-            $massEmail->getCampaignId() &&
-            $this->config->get('massEmailOpenTracking')
-        ) {
-            if ($emailData->isHtml()) {
-                $body .= '<br>' . $trackOpenedHtml;
-            }
+        if ($emailData->isHtml()) {
+            $body .= "<br><br>" . $optOutLink;
+        } else {
+            $body .= "\n\n" . $optOutUrl;
         }
 
         return $body;
     }
 
-    private function toSkipAsInactive(MassEmail $massEmail, bool $isTest): bool
+    private function addBodyTracking(
+        MassEmail $massEmail,
+        EmailQueueItem $queueItem,
+        Result $emailData,
+        string $body
+    ): string {
+
+        if (!$massEmail->getCampaign()) {
+            return $body;
+        }
+
+        if ($massEmail->getCampaign()->getType() === Campaign::TYPE_INFORMATIONAL_EMAIL) {
+            return $body;
+        }
+
+        if (!$this->config->get('massEmailOpenTracking')) {
+            return $body;
+        }
+
+        if (!$emailData->isHtml()) {
+            return $body;
+        }
+
+        $alt = $this->defaultLanguage->translateLabel('Campaign', 'scopeNames');
+
+        $url = "{$this->getSiteUrl()}?entryPoint=campaignTrackOpened&id={$queueItem->getId()}";
+
+        /** @noinspection HtmlDeprecatedAttribute */
+        $trackOpenedHtml = "<img alt=\"$alt\" width=\"1\" height=\"1\" border=\"0\" src=\"$url\">";
+
+        $body .= '<br>' . $trackOpenedHtml;
+
+        return $body;
+    }
+
+    private function isInformational(MassEmail $massEmail): bool
     {
-        return !$isTest &&
-            $massEmail->getCampaign() &&
-            $massEmail->getCampaign()->getStatus() === Campaign::STATUS_INACTIVE;
+        return $massEmail->getCampaign()?->getType() === Campaign::TYPE_INFORMATIONAL_EMAIL;
     }
 }

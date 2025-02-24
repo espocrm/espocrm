@@ -41,15 +41,16 @@
       "detail": "crm:views/campaign/detail"
     },
     "sidePanels":{
-      "detail":[
-         {
-            "name":"statistics",
-            "label":"Statistics",
-            "view":"crm:views/campaign/record/panels/campaign-stats",
-            "hidden": false,
-            "isForm": true
-         }
-      ]
+        "detail":[
+            {
+                "name": "statistics",
+                "label": "Statistics",
+                "view": "crm:views/campaign/record/panels/campaign-stats",
+                "hidden": false,
+                "isForm": true,
+                "notRefreshable": true
+            }
+        ]
     },
     "relationshipPanels": {
         "campaignLogRecords": {
@@ -57,7 +58,7 @@
             "layout": "listForCampaign",
             "rowActionsView": "views/record/row-actions/remove-only",
             "selectDisabled": false,
-            "createDisabled": false
+            "createDisabled": true
         },
         "massEmails": {
             "createAttributeMap": {
@@ -100,6 +101,11 @@
                                 {
                                     "type": "equals",
                                     "attribute": "type",
+                                    "value": "Informational Email"
+                                },
+                                {
+                                    "type": "equals",
+                                    "attribute": "type",
                                     "value": "Mail"
                                 }
                             ]
@@ -122,6 +128,11 @@
                                     "type": "equals",
                                     "attribute": "type",
                                     "value": "Newsletter"
+                                },
+                                {
+                                    "type": "equals",
+                                    "attribute": "type",
+                                    "value": "Informational Email"
                                 },
                                 {
                                     "type": "equals",
@@ -196,7 +207,11 @@
                         {
                             "type": "in",
                             "attribute": "type",
-                            "value": ["Email", "Newsletter"]
+                            "value": [
+                                "Email",
+                                "Newsletter",
+                                "Informational Email"
+                            ]
                         }
                     ]
                 }

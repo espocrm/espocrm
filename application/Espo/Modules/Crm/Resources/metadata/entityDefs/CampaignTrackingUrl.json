@@ -15,12 +15,17 @@
             "readOnly": true
         },
         "campaign": {
-            "type": "link"
+            "type": "link",
+            "readOnlyAfterCreate": true
         },
         "action": {
             "type": "enum",
-            "options": ["Redirect", "Show Message"],
-            "default": "Redirect"
+            "options": [
+                "Redirect",
+                "Show Message"
+            ],
+            "default": "Redirect",
+            "maxLength": 12
         },
         "message": {
             "type": "text",

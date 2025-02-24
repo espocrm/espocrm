@@ -26,90 +26,105 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/campaign/record/panels/campaign-stats', ['views/record/panels/side'], function (Dep) {
+import SidePanelView from 'views/record/panels/side';
 
-    return Dep.extend({
+// noinspection JSUnusedGlobalSymbols
+export default class extends SidePanelView {
 
-    	controlStatsFields: function () {
-    		var type = this.model.get('type');
-            var fieldList;
+    controlStatsFields() {
+        const type = this.model.attributes.type;
 
-    		switch (type) {
-    			case 'Email':
-    			case 'Newsletter':
-                    fieldList = [
-                        'sentCount',
-                        'openedCount',
-                        'clickedCount',
-                        'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'optedInCount', 'revenue'];
-    				break;
+        let fieldList;
 
-    			case 'Web':
-                    fieldList = ['leadCreatedCount', 'optedInCount', 'revenue'];
+        switch (type) {
+            case 'Email':
+            case 'Newsletter':
+                fieldList = [
+                    'sentCount',
+                    'openedCount',
+                    'clickedCount',
+                    'optedOutCount',
+                    'bouncedCount',
+                    'leadCreatedCount',
+                    'optedInCount',
+                    'revenue',
+                ];
 
-                    break;
+                break;
 
-    			case 'Television':
-    			case 'Radio':
-    				fieldList = ['leadCreatedCount', 'revenue'];
+            case 'Informational Email':
+                fieldList = [
+                    'sentCount',
+                    'bouncedCount',
+                ];
 
-    				break;
+                break;
 
-    			case 'Mail':
-    				fieldList = ['sentCount', 'leadCreatedCount', 'optedInCount', 'revenue'];
+            case 'Web':
+                fieldList = ['leadCreatedCount', 'optedInCount', 'revenue'];
 
-    				break;
+                break;
 
-    			default:
-    				fieldList = ['leadCreatedCount', 'revenue'];
-    		}
+            case 'Television':
+            case 'Radio':
+                fieldList = ['leadCreatedCount', 'revenue'];
 
-            if (!this.getConfig().get('massEmailOpenTracking')) {
-                var i = fieldList.indexOf('openedCount')
+                break;
 
-                if (~i) {
-                    fieldList.splice(i, 1);
-                }
+            case 'Mail':
+                fieldList = ['sentCount', 'leadCreatedCount', 'optedInCount', 'revenue'];
+
+                break;
+
+            default:
+                fieldList = ['leadCreatedCount', 'revenue'];
+        }
+
+        if (!this.getConfig().get('massEmailOpenTracking')) {
+            const i = fieldList.indexOf('openedCount');
+
+            if (i > -1) {
+                fieldList.splice(i, 1);
             }
+        }
 
-            this.statsFieldList.forEach(item => {
-                this.options.recordViewObject.hideField(item);
-            });
+        this.statsFieldList.forEach(item => {
+            this.options.recordViewObject.hideField(item);
+        });
 
-            fieldList.forEach(item => {
-                this.options.recordViewObject.showField(item);
-            });
+        fieldList.forEach(item => {
+            this.options.recordViewObject.showField(item);
+        });
 
-            if (!this.getAcl().checkScope('Lead')) {
-                this.options.recordViewObject.hideField('leadCreatedCount');
-            }
+        if (!this.getAcl().checkScope('Lead')) {
+            this.options.recordViewObject.hideField('leadCreatedCount', true);
+        }
 
-            if (!this.getAcl().checkScope('Opportunity')) {
-                this.options.recordViewObject.hideField('revenue');
-            }
-    	},
+        if (!this.getAcl().checkScope('Opportunity')) {
+            this.options.recordViewObject.hideField('revenue', true);
+        }
+    }
 
-    	setupFields: function () {
-            this.fieldList = [
-                'sentCount',
-                'openedCount',
-                'clickedCount', 'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'optedInCount', 'revenue'];
+    setupFields() {
+        this.fieldList = [
+            'sentCount',
+            'openedCount',
+            'clickedCount',
+            'optedOutCount',
+            'bouncedCount',
+            'leadCreatedCount',
+            'optedInCount',
+            'revenue',
+        ];
 
-            this.statsFieldList = this.fieldList;
-    	},
+        this.statsFieldList = this.fieldList;
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.controlStatsFields();
+        this.controlStatsFields();
 
-            this.listenTo(this.model, 'change:type', () => {
-                this.controlStatsFields();
-            });
-        },
-
-        actionRefresh: function () {
-            this.model.fetch();
-        },
-    });
-});
+        this.listenTo(this.model, 'change:type', () => this.controlStatsFields());
+    }
+}

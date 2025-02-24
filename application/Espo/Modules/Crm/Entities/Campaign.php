@@ -41,6 +41,8 @@ class Campaign extends Entity
     public const ENTITY_TYPE = 'Campaign';
 
     public const TYPE_EMAIL = 'Email';
+    public const TYPE_NEWSLETTER = 'Newsletter';
+    public const TYPE_INFORMATIONAL_EMAIL = 'Informational Email';
     public const TYPE_MAIL = 'Mail';
 
     public const STATUS_ACTIVE = 'Active';

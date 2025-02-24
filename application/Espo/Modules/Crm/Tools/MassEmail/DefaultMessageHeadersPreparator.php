@@ -31,6 +31,7 @@ namespace Espo\Modules\Crm\Tools\MassEmail;
 
 use Espo\Core\Mail\Mail\Header\XQueueItemId;
 use Espo\Core\Utils\Config;
+use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Modules\Crm\Tools\MassEmail\MessagePreparator\Data;
 use Laminas\Mail\Headers;
 
@@ -49,12 +50,7 @@ class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
         $headers->addHeader($header);
         $headers->addHeaderLine('Precedence', 'bulk');
 
-        if (!$this->config->get('massEmailDisableMandatoryOptOutLink')) {
-            $url = "{$this->getSiteUrl()}/api/v1/Campaign/unsubscribe/$id";
-
-            $headers->addHeaderLine('List-Unsubscribe-Post', 'List-Unsubscribe=One-Click');
-            $headers->addHeaderLine('List-Unsubscribe', "<$url>");
-        }
+        $this->addMandatoryOptOut($headers, $data);
     }
 
     private function getSiteUrl(): string
@@ -62,5 +58,25 @@ class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
         $url = $this->config->get('massEmailSiteUrl') ?? $this->config->get('siteUrl');
 
         return rtrim($url, '/');
+    }
+
+    private function addMandatoryOptOut(Headers $headers, Data $data): void
+    {
+        $campaignType = $data->getQueueItem()->getMassEmail()?->getCampaign()?->getType();
+
+        if ($campaignType === Campaign::TYPE_INFORMATIONAL_EMAIL) {
+            return;
+        }
+
+        if ($this->config->get('massEmailDisableMandatoryOptOutLink')) {
+            return;
+        }
+
+        $id = $data->getId();
+
+        $url = "{$this->getSiteUrl()}/api/v1/Campaign/unsubscribe/$id";
+
+        $headers->addHeaderLine('List-Unsubscribe-Post', 'List-Unsubscribe=One-Click');
+        $headers->addHeaderLine('List-Unsubscribe', "<$url>");
     }
 }

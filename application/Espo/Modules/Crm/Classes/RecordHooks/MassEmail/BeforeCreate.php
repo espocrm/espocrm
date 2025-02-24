@@ -33,6 +33,7 @@ use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\Hook\SaveHook;
+use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Modules\Crm\Entities\MassEmail;
 use Espo\ORM\Entity;
 
@@ -51,6 +52,24 @@ class BeforeCreate implements SaveHook
             throw new Forbidden("No 'edit' access.");
         }
 
+        $this->checkCampaign($entity);
+    }
 
+    /**
+     * @throws Forbidden
+     */
+    private function checkCampaign(MassEmail $entity): void
+    {
+        if (
+            !$entity->getCampaign() || in_array($entity->getCampaign()->getType(), [
+                Campaign::TYPE_EMAIL,
+                Campaign::TYPE_NEWSLETTER,
+                Campaign::TYPE_INFORMATIONAL_EMAIL,
+            ])
+        ) {
+            return;
+        }
+
+        throw new Forbidden("Cannot create mass email for non-email campaign.");
     }
 }

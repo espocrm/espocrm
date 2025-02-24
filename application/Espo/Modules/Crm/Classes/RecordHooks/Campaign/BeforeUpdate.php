@@ -27,47 +27,51 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Classes\RecordHooks\CampaignTrackingUrl;
+namespace Espo\Modules\Crm\Classes\RecordHooks\Campaign;
 
-use Espo\Core\Acl;
+use Espo\Core\Exceptions\Error\Body;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\Hook\SaveHook;
 use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Modules\Crm\Entities\CampaignTrackingUrl;
+use Espo\Modules\Crm\Entities\MassEmail;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
 /**
- * @implements SaveHook<CampaignTrackingUrl>
+ * @implements SaveHook<Campaign>
  */
-class BeforeCreate implements SaveHook
+class BeforeUpdate implements SaveHook
 {
     public function __construct(
-        private Acl $acl
+        private EntityManager $entityManager,
     ) {}
 
     public function process(Entity $entity): void
     {
-        if (!$this->acl->check($entity, Acl\Table::ACTION_EDIT)) {
-            throw new Forbidden("No 'edit' access.");
-        }
-
-        $this->checkCampaign($entity);
+        $this->checkType($entity);
     }
 
     /**
      * @throws Forbidden
      */
-    private function checkCampaign(CampaignTrackingUrl $entity): void
+    private function checkType(Campaign $entity): void
     {
-        if (
-            !$entity->getCampaign() || in_array($entity->getCampaign()->getType(), [
-                Campaign::TYPE_EMAIL,
-                Campaign::TYPE_NEWSLETTER,
-            ])
-        ) {
+        if (!$entity->isAttributeChanged('type')) {
             return;
         }
 
-        throw new Forbidden("Cannot create tacking URL for non-email campaign.");
+        $massEmail = $this->entityManager
+            ->getRDBRepositoryByClass(MassEmail::class)
+            ->where(['campaignId' => $entity->getId()])
+            ->findOne();
+
+
+        if ($massEmail) {
+            throw Forbidden::createWithBody(
+                'Cannot change type.',
+                Body::create()->withMessageTranslation('cannotChangeType', Campaign::ENTITY_TYPE)
+            );
+        }
     }
 }

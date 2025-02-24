@@ -1,6 +1,5 @@
 [
     {
-        "label": "",
         "rows": [
             [
                 {"name": "name"},
@@ -9,18 +8,27 @@
             [
                 {"name": "campaign"},
                 {"name": "startAt"}
-            ],
+            ]
+        ]
+    },
+    {
+        "rows": [
             [
                 {"name": "targetLists"},
                 {"name": "excludingTargetLists"}
             ],
             [
-                false,
-                {"name": "optOutEntirely"}
+                {"name": "emailTemplate"},
+                false
             ],
             [
-                {"name": "emailTemplate"}, {"name": "storeSentEmails"}
-            ],
+                {"name": "storeSentEmails"},
+                {"name": "optOutEntirely"}
+            ]
+        ]
+    },
+    {
+        "rows": [
             [
                 {"name": "smtpAccount"},
                 false

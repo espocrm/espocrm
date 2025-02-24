@@ -235,7 +235,7 @@ class UnsubscribeService
         [,, $massEmail, $target] = $this->getRecords($queueItemId);
 
         if ($massEmail->optOutEntirely()) {
-            $emailAddress = $target->get('emailAddress');
+            $emailAddress = $target->get(Field::EMAIL_ADDRESS);
 
             if ($emailAddress) {
                 $address = $this->getEmailAddressRepository()->getByAddress($emailAddress);
@@ -248,16 +248,8 @@ class UnsubscribeService
 
         $link = $this->util->getLinkByEntityType($target->getEntityType());
 
-        /** @var Collection<TargetList> $targetListList */
-        $targetListList = $this->entityManager
-            ->getRDBRepository(MassEmail::ENTITY_TYPE)
-            ->getRelation($massEmail, 'targetLists')
-            ->find();
-
-        foreach ($targetListList as $targetList) {
-            $relation = $this->entityManager
-                ->getRDBRepository(TargetList::ENTITY_TYPE)
-                ->getRelation($targetList, $link);
+        foreach ($massEmail->getTargetLists() as $targetList) {
+            $relation = $this->entityManager->getRelation($targetList, $link);
 
             if (!$relation->getColumn($target, 'optedOut')) {
                 return true;
@@ -289,8 +281,7 @@ class UnsubscribeService
      */
     private function getRecords(string $queueItemId): array
     {
-        /** @var ?EmailQueueItem $queueItem */
-        $queueItem = $this->entityManager->getEntityById(EmailQueueItem::ENTITY_TYPE, $queueItemId);
+        $queueItem = $this->entityManager->getRDBRepositoryByClass(EmailQueueItem::class)->getById($queueItemId);
 
         if (!$queueItem) {
             throw new NotFound("No item.");
@@ -303,9 +294,12 @@ class UnsubscribeService
         }
 
         $campaign = $massEmail->getCampaign();
-
         $targetType = $queueItem->getTargetType();
         $targetId = $queueItem->getTargetId();
+
+        if ($campaign && $campaign->getType() === Campaign::TYPE_INFORMATIONAL_EMAIL) {
+            throw new NotFound("Campaign is informational.");
+        }
 
         $target = $this->entityManager->getEntityById($targetType, $targetId);
 

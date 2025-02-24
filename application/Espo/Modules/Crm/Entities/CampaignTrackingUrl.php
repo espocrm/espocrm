@@ -94,4 +94,10 @@ class CampaignTrackingUrl extends Entity
     {
         return !$this->isNew();
     }
+
+    public function getCampaign(): ?Campaign
+    {
+        /** @var ?Campaign */
+        return $this->relations->getOne('campaign');
+    }
 }
