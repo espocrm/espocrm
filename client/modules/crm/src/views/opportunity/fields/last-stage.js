@@ -26,31 +26,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/opportunity/fields/last-stage', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+// noinspection JSUnusedGlobalSymbols
+export default class extends EnumFieldView {
 
-        setup: function () {
-            var optionList = this.getMetadata().get('entityDefs.Opportunity.fields.stage.options', []);
-            var probabilityMap = this.getMetadata().get('entityDefs.Opportunity.fields.stage.probabilityMap', {});
+    setup() {
+        /** @type {string[]} */
+        const optionList = this.getMetadata().get('entityDefs.Opportunity.fields.stage.options', []);
 
-            this.params.options = [];
+        /** @type {Record.<string, number|null>} */
+        const probabilityMap = this.getMetadata().get('entityDefs.Opportunity.fields.stage.probabilityMap', {});
 
-            optionList.forEach(item => {
-                if (!probabilityMap[item]) {
-                    return;
-                }
+        this.params.options = [];
 
-                if (probabilityMap[item] === 100) {
-                    return;
-                }
+        optionList.forEach(item => {
+            if (!probabilityMap[item]) {
+                return;
+            }
 
-                this.params.options.push(item);
-            });
+            if (probabilityMap[item] === 100) {
+                return;
+            }
 
-            this.params.translation = 'Opportunity.options.stage';
+            this.params.options.push(item);
+        });
 
-            Dep.prototype.setup.call(this);
-        },
-    });
-});
+        this.params.translation = 'Opportunity.options.stage';
+
+        super.setup();
+    }
+}
