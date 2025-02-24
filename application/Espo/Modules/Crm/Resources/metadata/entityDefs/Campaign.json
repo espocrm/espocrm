@@ -26,8 +26,16 @@
         },
         "type": {
             "type": "enum",
-            "options": ["Email", "Newsletter", "Web", "Television", "Radio", "Mail"],
+            "options": [
+                "Email",
+                "Newsletter",
+                "Web",
+                "Television",
+                "Radio",
+                "Mail"
+            ],
             "default": "Email",
+            "customizationOptionsDisabled": true,
             "customizationOptionsReferenceDisabled": true
         },
         "startDate": {
@@ -294,8 +302,7 @@
         "massEmails": {
             "type": "hasMany",
             "entity": "MassEmail",
-            "foreign": "campaign",
-            "layoutRelationshipsDisabled": true
+            "foreign": "campaign"
         },
         "contactsTemplate": {
             "type": "belongsTo",

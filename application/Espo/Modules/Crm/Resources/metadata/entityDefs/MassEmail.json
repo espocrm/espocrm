@@ -55,7 +55,8 @@
             "view": "crm:views/mass-email/fields/email-template"
         },
         "campaign": {
-            "type": "link"
+            "type": "link",
+            "readOnlyAfterCreate": true
         },
         "targetLists": {
             "type": "linkMultiple",

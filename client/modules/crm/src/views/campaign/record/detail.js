@@ -32,8 +32,6 @@ define('crm:views/campaign/record/detail', ['views/record/detail'], function (De
 
         duplicateAction: true,
 
-        bottomView: 'crm:views/campaign/record/detail-bottom',
-
         setupActionItems: function () {
             Dep.prototype.setupActionItems.call(this);
             this.dropdownItemList.push({

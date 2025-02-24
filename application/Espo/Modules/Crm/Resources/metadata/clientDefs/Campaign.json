@@ -56,8 +56,8 @@
             "view": "crm:views/campaign/record/panels/campaign-log-records",
             "layout": "listForCampaign",
             "rowActionsView": "views/record/row-actions/remove-only",
-            "select": false,
-            "create": false
+            "selectDisabled": false,
+            "createDisabled": false
         },
         "massEmails": {
             "createAttributeMap": {
@@ -66,7 +66,14 @@
                 "excludingTargetListsIds": "excludingTargetListsIds",
                 "excludingTargetListsNames": "excludingTargetListsNames"
             },
-            "createHandler": "crm:handlers/campaign/mass-emails-create"
+            "createHandler": "crm:handlers/campaign/mass-emails-create",
+            "selectDisabled": true,
+            "recordListView": "crm:views/mass-email/record/list-for-campaign",
+            "rowActionsView": "crm:views/mass-email/record/row-actions/for-campaign"
+        },
+        "trackingUrls": {
+            "selectDisabled": true,
+            "rowActionsView": "views/record/row-actions/relationship-no-unlink"
         }
     },
     "filterList": [
@@ -183,13 +190,35 @@
             }
         },
         "panels": {
+            "massEmails": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "in",
+                            "attribute": "type",
+                            "value": ["Email", "Newsletter"]
+                        }
+                    ]
+                }
+            },
+            "trackingUrls": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "in",
+                            "attribute": "type",
+                            "value": ["Email", "Newsletter"]
+                        }
+                    ]
+                }
+            },
             "mailMerge": {
                 "visible": {
                     "conditionGroup": [
                         {
-                            "type": "equals",
+                            "type": "in",
                             "attribute": "type",
-                            "value": "Mail"
+                            "value": ["Mail"]
                         }
                     ]
                 }
