@@ -107,6 +107,11 @@ class Opportunity extends Entity
         return $this->get('lastStage');
     }
 
+    public function setLastStage(?string $lastStage): void
+    {
+        $this->set('lastStage', $lastStage);
+    }
+
     public function getProbability(): ?int
     {
         return $this->get('probability');

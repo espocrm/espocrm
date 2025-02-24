@@ -31,34 +31,29 @@ namespace Espo\Modules\Crm\Classes\Select\Opportunity\Utils;
 
 use Espo\Core\Utils\Metadata;
 
-class StageListPoriver
+class StageListProvider
 {
-    private $metadata;
-
-    public function __construct(Metadata $metadata)
-    {
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Metadata $metadata)
+    {}
 
     /**
      * @return string[]
      */
     public function getLost(): array
     {
-        $lostStageList = [];
+        $output = [];
 
-        $probabilityMap =  $this->metadata
-            ->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap']) ?? [];
+        $probabilityMap = $this->getProbabilityMap();
 
-        $stageList = $this->metadata->get('entityDefs.Opportunity.fields.stage.options') ?? [];
+        foreach ($this->getStageList() as $stage) {
+            $value = $probabilityMap[$stage] ?? null;
 
-        foreach ($stageList as $stage) {
-            if (empty($probabilityMap[$stage])) {
-                $lostStageList[] = $stage;
+            if ($value === 0 || $value === 0.0) {
+                $output[] = $stage;
             }
         }
 
-        return $lostStageList;
+        return $output;
     }
 
     /**
@@ -66,19 +61,37 @@ class StageListPoriver
      */
     public function getWon(): array
     {
-        $wonStageList = [];
+        $output = [];
 
-        $probabilityMap =  $this->metadata
-            ->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap']) ?? [];
+        $probabilityMap = $this->getProbabilityMap();
 
-        $stageList = $this->metadata->get('entityDefs.Opportunity.fields.stage.options') ?? [];
+        foreach ($this->getStageList() as $stage) {
+            $value = $probabilityMap[$stage] ?? null;
 
-        foreach ($stageList as $stage) {
-            if (!empty($probabilityMap[$stage]) && $probabilityMap[$stage] == 100) {
-                $wonStageList[] = $stage;
+            if ($value == 100) {
+                $output[] = $stage;
             }
         }
 
-        return $wonStageList;
+        return $output;
+    }
+
+    /**
+     * @return array<string, ?int>
+     */
+    private function getProbabilityMap(): array
+    {
+        /** @var array<string, ?int> $probabilityMap */
+        $probabilityMap = $this->metadata->get('entityDefs.Opportunity.fields.stage.probabilityMap') ?? [];
+
+        return $probabilityMap;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getStageList(): array
+    {
+        return $this->metadata->get('entityDefs.Opportunity.fields.stage.options') ?? [];
     }
 }

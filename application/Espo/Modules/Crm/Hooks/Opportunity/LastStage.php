@@ -56,19 +56,20 @@ class LastStage implements BeforeSave
             return;
         }
 
-        $probability = $this->metadata
-            ->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $entity->getStage() ?? '']) ?? 0;
+        $stage = $entity->getStage();
 
-        if ($probability) {
-            $entity->set('lastStage', $entity->getStage());
+        $probability = $this->metadata->get("entityDefs.Opportunity.fields.stage.probabilityMap.$stage");
+
+        if ($probability !== 0) {
+            $entity->setLastStage($entity->getStage());
 
             return;
         }
 
-        $probabilityMap =  $this->metadata
-            ->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap']) ?? [];
+        // Lost.
 
-        $stageList = $this->metadata->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'options']) ?? [];
+        $probabilityMap = $this->getProbabilityMap();
+        $stageList = $this->getStageList();
 
         if (!count($stageList)) {
             return;
@@ -85,7 +86,7 @@ class LastStage implements BeforeSave
 
                 if (
                     $itemProbability === null ||
-                    $itemProbability === 100 ||
+                    $itemProbability == 100 ||
                     $itemProbability === 0 ||
                     $itemProbability >= $min
                 ) {
@@ -100,7 +101,7 @@ class LastStage implements BeforeSave
                 return;
             }
 
-            $entity->set('lastStage', $minStage);
+            $entity->setLastStage($minStage);
 
             return;
         }
@@ -111,8 +112,7 @@ class LastStage implements BeforeSave
             return;
         }
 
-        $lastStageProbability = $this->metadata
-            ->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $entity->getLastStage()]) ?? 0;
+        $lastStageProbability = $probabilityMap[$entity->getLastStage()] ?? null;
 
         if ($lastStageProbability !== 100) {
             return;
@@ -141,6 +141,25 @@ class LastStage implements BeforeSave
             return;
         }
 
-        $entity->set('lastStage', $maxStage);
+        $entity->setLastStage($maxStage);
+    }
+
+    /**
+     * @return array<string, ?int>
+     */
+    private function getProbabilityMap(): array
+    {
+        /** @var array<string, ?int> $probabilityMap */
+        $probabilityMap = $this->metadata->get('entityDefs.Opportunity.fields.stage.probabilityMap') ?? [];
+
+        return $probabilityMap;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getStageList(): array
+    {
+        return $this->metadata->get('entityDefs.Opportunity.fields.stage.options') ?? [];
     }
 }

@@ -33,13 +33,13 @@ use Espo\Core\Select\Primary\Filter;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\Part\Condition as Cond;
 
-use Espo\Modules\Crm\Classes\Select\Opportunity\Utils\StageListPoriver;
+use Espo\Modules\Crm\Classes\Select\Opportunity\Utils\StageListProvider;
 
 class Lost implements Filter
 {
     private $stageListPoriver;
 
-    public function __construct(StageListPoriver $stageListPoriver)
+    public function __construct(StageListProvider $stageListPoriver)
     {
         $this->stageListPoriver = $stageListPoriver;
     }

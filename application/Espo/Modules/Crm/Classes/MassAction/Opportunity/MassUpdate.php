@@ -34,22 +34,16 @@ use Espo\Core\MassAction\Params;
 use Espo\Core\MassAction\Result;
 use Espo\Core\MassAction\Data;
 use Espo\Core\MassAction\MassAction;
-
 use Espo\Tools\MassUpdate\Data as MassUpdateData;
-
 use Espo\Core\Utils\Metadata;
 
 class MassUpdate implements MassAction
 {
-    private MassUpdateOriginal $massUpdateOriginal;
 
-    private Metadata $metadata;
-
-    public function __construct(MassUpdateOriginal $massUpdateOriginal, Metadata $metadata)
-    {
-        $this->massUpdateOriginal = $massUpdateOriginal;
-        $this->metadata = $metadata;
-    }
+    public function __construct(
+        private MassUpdateOriginal $massUpdateOriginal,
+        private Metadata $metadata
+    ) {}
 
     public function process(Params $params, Data $data): Result
     {
@@ -60,8 +54,7 @@ class MassUpdate implements MassAction
         $stage = $massUpdateData->getValue('stage');
 
         if ($stage && !$massUpdateData->has('probability')) {
-            $probability = $this->metadata
-                ->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $stage]);
+            $probability = $this->metadata->get("entityDefs.Opportunity.fields.stage.probabilityMap.$stage");
         }
 
         if ($probability !== null) {

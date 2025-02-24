@@ -56,7 +56,11 @@ class BeforeUpdate implements SaveHook
 
         $stage = $entity->getStage();
 
-        $probability = $this->metadata->get("entityDefs.Opportunity.fields.stage.probabilityMap.$stage") ?? 0;
+        $probability = $this->metadata->get("entityDefs.Opportunity.fields.stage.probabilityMap.$stage");
+
+        if ($probability === null) {
+            return;
+        }
 
         $entity->setProbability($probability);
     }

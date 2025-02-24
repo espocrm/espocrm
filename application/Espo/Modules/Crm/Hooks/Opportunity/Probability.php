@@ -53,7 +53,7 @@ class Probability implements BeforeSave
             return;
         }
 
-        if ($entity->get('probability') !== null) {
+        if ($entity->getProbability() !== null) {
             return;
         }
 
