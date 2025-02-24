@@ -26,59 +26,75 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/opportunity/admin/field-manager/fields/probability-map', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
+import $ from 'jquery';
 
-    return Dep.extend({
+// noinspection JSUnusedGlobalSymbols
+export default class extends BaseFieldView {
 
-        editTemplate: 'crm:opportunity/admin/field-manager/fields/probability-map/edit',
+    editTemplateContent = `
+        <div class="list-group link-container no-input">
+            {{#each stageList}}
+                <div class="list-group-item form-inline">
+                    <div style="display: inline-block; width: 100%;">
+                        <input
+                            class="role form-control input-sm pull-right"
+                            data-name="{{./this}}" value="{{prop ../values this}}"
+                        >
+                        <div>{{./this}}</div>
+                    </div>
+                    <br class="clear: both;">
+                </div>
+            {{/each}}
+        </div>
+    `
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.listenTo(this.model, 'change:options', function (m, v, o) {
-                let probabilityMap = this.model.get('probabilityMap') || {}
+        this.listenTo(this.model, 'change:options', function (m, v, o) {
+            const probabilityMap = this.model.get('probabilityMap') || {};
 
-                if (o.ui) {
-                    (this.model.get('options') || []).forEach(item => {
-                        if (!(item in probabilityMap)) {
-                            probabilityMap[item] = 50;
-                        }
-                    });
+            if (o.ui) {
+                (this.model.get('options') || []).forEach(item => {
+                    if (!(item in probabilityMap)) {
+                        probabilityMap[item] = 50;
+                    }
+                });
 
-                    this.model.set('probabilityMap', probabilityMap);
-                }
+                this.model.set('probabilityMap', probabilityMap);
+            }
 
-                this.reRender();
-            });
-        },
+            this.reRender();
+        });
+    }
 
-        data: function () {
-            let data = {};
+    data() {
+        const data = {};
 
-            let values = this.model.get('probabilityMap') || {};
+        const values = this.model.get('probabilityMap') || {};
 
-            data.stageList = this.model.get('options') || [];
-            data.values = values;
+        data.stageList = this.model.get('options') || [];
+        data.values = values;
 
-            return data;
-        },
+        return data;
+    }
 
-        fetch: function () {
-            let data = {
-                probabilityMap: {},
-            };
+    fetch() {
+        const data = {
+            probabilityMap: {},
+        };
 
-            (this.model.get('options') || []).forEach(item => {
-                data.probabilityMap[item] = parseInt(this.$el.find('input[data-name="'+item+'"]').val());
-            });
+        (this.model.get('options') || []).forEach(item => {
+            data.probabilityMap[item] = parseInt($(this.element).find(`input[data-name="${item}"]`).val());
+        });
 
-            return data;
-        },
+        return data;
+    }
 
-        afterRender: function () {
-            this.$el.find('input').on('change', () => {
-                this.trigger('change')
-            });
-        },
-    });
-});
+    afterRender() {
+        $(this.element).find('input').on('change', () => {
+            this.trigger('change')
+        });
+    }
+}
