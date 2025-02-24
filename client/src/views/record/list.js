@@ -2618,10 +2618,10 @@ class ListRecordView extends View {
         return this._listSettingsHelper ? this._listSettingsHelper.getColumnResize() : false;
     }
 
-    /** @protected */
+    /**
+     * @private
+     */
     _getHeaderDefs() {
-        const defs = [];
-
         const resize = this._hasColumnResize();
 
         const widthMap = this._listSettingsHelper ? this._listSettingsHelper.getColumnWidthMap() : {};
@@ -2633,24 +2633,37 @@ class ListRecordView extends View {
 
         let emptyWidthMet = false;
 
-        const visibleColumns = this.listLayout.filter(it => {
-            if (!this._listSettingsHelper && it.hidden) {
-                return false;
-            }
+        const visibleColumns = this.listLayout
+            .filter(it => {
+                if (!this._listSettingsHelper && it.hidden) {
+                    return false;
+                }
 
-            if (!this._listSettingsHelper) {
+                if (!this._listSettingsHelper) {
+                    return true;
+                }
+
+                if (it.name && this._listSettingsHelper.isColumnHidden(it.name, it.hidden)) {
+                    return false;
+                }
+
                 return true;
-            }
+            })
+            .map(it => ({...it}));
 
-            if (it.name && this._listSettingsHelper.isColumnHidden(it.name, it.hidden)) {
-                return false;
-            }
-
-            return true;
-        })
+        /**
+         * @type {({
+         *     widthPercent?: number|null,
+         *     width?: string|false,
+         *     isResized: boolean,
+         * } & Record)[]}
+         */
+        const defs = [];
 
         for (const col of visibleColumns) {
             let width = false;
+            let widthPercent = null;
+            let isResized = false;
 
             const itemName = col.name;
 
@@ -2658,8 +2671,16 @@ class ListRecordView extends View {
                 const widthItem = widthMap[itemName];
 
                 width = widthItem.value + widthItem.unit;
+
+                if (widthItem.unit === '%') {
+                    widthPercent = widthItem.value;
+                }
+
+                isResized = true;
             } else if ('width' in col && col.width !== null) {
                 width = col.width + '%';
+
+                widthPercent = col.width;
             } else if ('widthPx' in col) {
                 width = (col.widthPx * this._fontSizeFactor).toString() + 'px';
             } else {
@@ -2675,14 +2696,15 @@ class ListRecordView extends View {
                 align: ('align' in col) ? col.align : false,
                 resizable: resize && width && visibleColumns.length > 1,
                 resizeOnRight: resize && width && !emptyWidthMet,
+                widthPercent: widthPercent,
+                isResized: isResized,
             };
 
             if ('customLabel' in col) {
                 item.customLabel = col.customLabel;
                 item.hasCustomLabel = true;
                 item.label = item.customLabel;
-            }
-            else {
+            } else {
                 item.label = this.translate(label, 'fields', this.collection.entityType);
             }
 
@@ -2699,6 +2721,43 @@ class ListRecordView extends View {
             }
 
             defs.push(item);
+        }
+
+        {
+            const emptyWidth = 3.0;
+            let sum = 0.0;
+            let sumResized = 0.0;
+            let countEmpty = 0;
+
+            for (const item of defs) {
+                if (item.widthPercent === null) {
+                    sum += emptyWidth;
+                    countEmpty ++;
+
+                    continue;
+                }
+
+                sum += item.widthPercent;
+
+                if (item.isResized) {
+                    sumResized += item.widthPercent;
+                }
+            }
+
+            if (emptyWidthMet && sum > 100) {
+                const space = 5;
+                const factor = (100 - countEmpty * emptyWidth - space - sumResized) / (sum);
+
+                for (const item of defs) {
+                    if (item.widthPercent === null || item.isResized) {
+                        continue;
+                    }
+
+                    item.widthPercent = item.widthPercent * factor;
+
+                    item.width = item.widthPercent.toString() + '%';
+                }
+            }
         }
 
         const isCustomSorted =
@@ -3015,7 +3074,7 @@ class ListRecordView extends View {
     /**
      * Compose a cell selector for a layout item.
      *
-     * @param {module:model} model A model.
+     * @param {import('model').default} model A model.
      * @param {Record} item An item.
      * @return {string}
      */
@@ -3023,9 +3082,19 @@ class ListRecordView extends View {
         return `${this.getSelector()} ${this.getRowSelector(model.id)} .cell[data-name="${item.columnName}"]`;
     }
 
+    /**
+     * @protected
+     * @param {Record.<string, *>[]} internalLayout
+     * @param {import('model').default} model
+     */
     prepareInternalLayout(internalLayout, model) {
         internalLayout.forEach(item => {
-            item.el = this.getCellSelector(model, item);
+            item.fullSelector = this.getCellSelector(model, item);
+
+            if (this.header && item.options && item.options.defs) {
+                item.options.defs.width = undefined;
+                item.options.defs.widthPx = undefined;
+            }
         });
     }
 

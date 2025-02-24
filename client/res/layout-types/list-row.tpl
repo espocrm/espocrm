@@ -1,13 +1,17 @@
 <% _.each(layout, function (defs, key) { %>
     <%
-        var width = null;
-        if (defs.options && defs.options.defs && 'width' in defs.options.defs) {
+        let width = null;
+
+        if (defs.options && defs.options.defs && defs.options.defs.width !== undefined) {
             width = (defs.options.defs.width + '%') || null;
         }
-        if (defs.options && defs.options.defs && 'widthPx' in defs.options.defs) {
+
+        if (defs.options && defs.options.defs && defs.options.defs.widthPx !== undefined) {
             width = defs.options.defs.widthPx || null;
         }
-        var align = false;
+
+        let align = false;
+
         if (defs.options && defs.options.defs) {
             align = defs.options.defs.align || false;
         }
