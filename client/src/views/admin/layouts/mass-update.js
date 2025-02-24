@@ -52,7 +52,7 @@ class LayoutMassUpdateView extends LayoutRowsView {
     }
 
     loadLayout(callback) {
-        this.getModelFactory().create(this.scope, (model) => {
+        this.getModelFactory().create(this.scope).then(model => {
             this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, (layout) => {
                 const allFields = [];
 
@@ -60,7 +60,9 @@ class LayoutMassUpdateView extends LayoutRowsView {
                     if (
                         !model.getFieldParam(field, 'massUpdateDisabled') &&
                         !model.getFieldParam(field, 'readOnly') &&
-                        this.isFieldEnabled(model, field)
+                        !model.getFieldParam(field, 'readOnlyAfterCreate') &&
+                        this.isFieldEnabled(model, field) &&
+                        model.getFieldType('field') !== 'foreign'
                     ) {
                         allFields.push(field);
                     }
