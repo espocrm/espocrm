@@ -37,6 +37,6 @@ class Active implements Filter
 {
     public function apply(SelectBuilder $queryBuilder): void
     {
-        $queryBuilder->where(['status' => Campaign::TYPE_ACTIVE]);
+        $queryBuilder->where(['status' => Campaign::STATUS_ACTIVE]);
     }
 }

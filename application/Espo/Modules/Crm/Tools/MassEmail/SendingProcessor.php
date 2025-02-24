@@ -91,6 +91,14 @@ class SendingProcessor
      */
     public function process(MassEmail $massEmail, bool $isTest = false): void
     {
+        if ($this->toSkipAsInactive($massEmail, $isTest)) {
+            $this->log->notice("Skipping mass email {id} queue for inactive campaign.", [
+                'id' => $massEmail->getId(),
+            ]);
+
+            return;
+        }
+
         $maxSize = 0;
 
         if ($this->handleMaxSize($isTest, $maxSize)) {
@@ -618,5 +626,12 @@ class SendingProcessor
         }
 
         return $body;
+    }
+
+    private function toSkipAsInactive(MassEmail $massEmail, bool $isTest): bool
+    {
+        return !$isTest &&
+            $massEmail->getCampaign() &&
+            $massEmail->getCampaign()->getStatus() === Campaign::STATUS_INACTIVE;
     }
 }

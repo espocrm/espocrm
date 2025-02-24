@@ -43,7 +43,8 @@ class Campaign extends Entity
     public const TYPE_EMAIL = 'Email';
     public const TYPE_MAIL = 'Mail';
 
-    public const TYPE_ACTIVE = 'Active';
+    public const STATUS_ACTIVE = 'Active';
+    public const STATUS_INACTIVE = 'Inactive';
 
     public function getName(): ?string
     {
@@ -70,6 +71,11 @@ class Campaign extends Entity
     public function getType(): ?string
     {
         return $this->get('type');
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->get('status');
     }
 
     public function getStartDate(): ?Date

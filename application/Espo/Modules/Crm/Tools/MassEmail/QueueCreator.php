@@ -29,6 +29,8 @@
 
 namespace Espo\Modules\Crm\Tools\MassEmail;
 
+use Espo\Core\Utils\Log;
+use Espo\Modules\Crm\Entities\Campaign;
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 use Espo\ORM\Name\Attribute;
@@ -50,7 +52,8 @@ class QueueCreator
 
     public function __construct(
         protected EntityManager $entityManager,
-        private Metadata $metadata
+        private Metadata $metadata,
+        private Log $log,
     ) {
         $this->targetLinkList = $this->metadata->get(['scopes', 'TargetList', 'targetLinkList']) ?? [];
     }
@@ -81,6 +84,14 @@ class QueueCreator
     {
         if (!$isTest && $massEmail->getStatus() !== MassEmail::STATUS_PENDING) {
             throw new Error("Mass Email {$massEmail->getId()} should has status 'Pending'.");
+        }
+
+        if ($this->toSkipAsInactive($massEmail, $isTest)) {
+            $this->log->notice("Skipping mass email {id} queue creation for inactive campaign.", [
+                'id' => $massEmail->getId(),
+            ]);
+
+            return;
         }
 
         if (!$isTest) {
@@ -225,5 +236,12 @@ class QueueCreator
     {
         /** @var EmailAddressRepository */
         return $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
+    }
+
+    private function toSkipAsInactive(MassEmail $massEmail, bool $isTest): bool
+    {
+        return !$isTest &&
+            $massEmail->getCampaign() &&
+            $massEmail->getCampaign()->getStatus() === Campaign::STATUS_INACTIVE;
     }
 }
