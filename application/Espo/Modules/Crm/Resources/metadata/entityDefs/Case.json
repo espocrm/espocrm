@@ -207,7 +207,8 @@
     "collection": {
         "orderBy": "number",
         "order": "desc",
-        "textFilterFields": ["name", "number"]
+        "textFilterFields": ["name", "number", "description"],
+        "fullTextSearch": true
     },
     "indexes": {
         "status": {

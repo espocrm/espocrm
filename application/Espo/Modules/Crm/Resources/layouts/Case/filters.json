@@ -7,10 +7,11 @@
     "account",
     "contact",
     "number",
+    "name",
+    "description",
     "isInternal",
     "createdAt",
     "createdBy",
     "modifiedAt",
-    "streamUpdatedAt",
-    "description"
+    "streamUpdatedAt"
 ]
