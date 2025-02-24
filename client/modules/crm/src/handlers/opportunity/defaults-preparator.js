@@ -27,12 +27,21 @@
  ************************************************************************/
 
 import DefaultsPreparator from 'handlers/model/defaults-preparator';
+import Metadata from 'metadata';
+import {inject} from 'di';
 
 // noinspection JSUnusedGlobalSymbols
 export default class extends DefaultsPreparator {
 
+    /**
+     * @private
+     * @type {Metadata}
+     */
+    @inject(Metadata)
+    metadata
+
     prepare(model) {
-        const probabilityMap = this.viewHelper.metadata.get('entityDefs.Opportunity.fields.stage.probabilityMap') || {};
+        const probabilityMap = this.metadata.get('entityDefs.Opportunity.fields.stage.probabilityMap') || {};
         const stage = model.attributes.stage;
 
         const attributes = {};
