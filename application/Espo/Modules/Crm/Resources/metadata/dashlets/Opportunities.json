@@ -1,8 +1,9 @@
 {
-    "view":"views/dashlets/abstract/record-list",
+    "view": "views/dashlets/abstract/record-list",
     "aclScope": "Opportunity",
     "entityType": "Opportunity",
     "options": {
+        "view": "views/dashlets/options/record-list",
         "fields": {
             "title": {
                 "type": "varchar",
@@ -20,6 +21,9 @@
             "expandedLayout": {
                 "type": "base",
                 "view": "views/dashlets/fields/records/expanded-layout"
+            },
+            "includeShared": {
+                "type": "bool"
             }
         },
         "defaults": {
@@ -27,6 +31,7 @@
             "order": "asc",
             "displayRecords": 5,
             "populateAssignedUser": true,
+            "includeShared": false,
             "expandedLayout": {
                 "rows": [
                     [
@@ -56,11 +61,12 @@
             {
                 "rows": [
                     [
-                        {"name": "title"}
+                        {"name": "title"},
+                        {"name": "autorefreshInterval"}
                     ],
                     [
                         {"name": "displayRecords"},
-                        {"name": "autorefreshInterval"}
+                        {"name": "includeShared"}
                     ],
                     [
                         {"name": "expandedLayout"},

@@ -68,12 +68,20 @@ class RecordListDashletView extends BaseDashletView {
 
     rowActionsView = 'views/record/row-actions/view-and-edit'
 
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    hasCollaborators
+
     init() {
         this.name = this.options.name || this.name;
-        this.scope = this.getMetadata().get(['dashlets', this.name, 'entityType']) || this.scope;
+        this.scope = this.getMetadata().get(`dashlets.${this.name}.entityType`) || this.scope;
 
         this.additionalRowActionList = this.getMetadata().get(`dashlets.${this.name}.rowActionList`) ||
             this.additionalRowActionList;
+
+        this.hasCollaborators = !!this.getMetadata().get(`scopes.${this.scope}.collaborators`);
 
         super.init();
     }
@@ -86,7 +94,22 @@ class RecordListDashletView extends BaseDashletView {
      * @return {module:search-manager~data}
      */
     getSearchData() {
-        return this.getOption('searchData');
+        /** @type {module:search-manager~data} */
+        const data = Espo.Utils.cloneDeep(this.getOption('searchData'));
+
+        if (!this.hasCollaborators) {
+            return data;
+        }
+
+        if (this.getOption('includeShared')) {
+            if (!data.bool) {
+                data.bool = {};
+            }
+
+            data.bool.shared = true;
+        }
+
+        return data;
     }
 
     afterRender() {
@@ -172,7 +195,7 @@ class RecordListDashletView extends BaseDashletView {
                 name: 'create',
                 text: this.translate('Create ' + this.scope, 'labels', this.scope),
                 iconHtml: '<span class="fas fa-plus"></span>',
-                url: '#'+this.scope+'/create',
+                url: `#${this.scope}/create`,
             });
         }
     }

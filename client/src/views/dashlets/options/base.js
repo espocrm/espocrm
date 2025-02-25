@@ -36,8 +36,23 @@ class BaseDashletOptionsModalView extends ModalView {
 
     cssName = 'options-modal'
     className = 'dialog dialog-record'
-    name = ''
+
+    /**
+     * @protected
+     * @type {string}
+     */
+    name
+
+    /**
+     * @protected
+     * @type {boolean}
+     */
     escapeDisabled = true
+
+    /**
+     * @protected
+     * @type {boolean}
+     */
     saveDisabled = false;
 
     buttonList = [

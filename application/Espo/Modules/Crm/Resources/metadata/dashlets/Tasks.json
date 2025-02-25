@@ -1,8 +1,9 @@
 {
-    "view":"crm:views/dashlets/tasks",
+    "view": "crm:views/dashlets/tasks",
     "aclScope": "Task",
     "entityType": "Task",
     "options": {
+        "view": "views/dashlets/options/record-list",
         "fields": {
             "title": {
                 "type": "varchar",
@@ -20,12 +21,16 @@
             "expandedLayout": {
                 "type": "base",
                 "view": "views/dashlets/fields/records/expanded-layout"
+            },
+            "includeShared": {
+                "type": "bool"
             }
         },
         "defaults": {
             "orderBy": "dateUpcoming",
             "order": "asc",
             "displayRecords": 5,
+            "includeShared": false,
             "expandedLayout": {
                 "rows": [
                     [
@@ -58,14 +63,16 @@
             {
                 "rows": [
                     [
-                        {"name": "title"}
-                    ],
-                    [
-                        {"name": "displayRecords"},
+                        {"name": "title"},
                         {"name": "autorefreshInterval"}
                     ],
                     [
-                        {"name": "expandedLayout", "fullWidth": true}
+                        {"name": "displayRecords"},
+                        {"name": "includeShared"}
+                    ],
+                    [
+                        {"name": "expandedLayout"},
+                        false
                     ]
                 ]
             }
