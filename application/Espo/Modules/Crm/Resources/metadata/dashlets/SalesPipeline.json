@@ -35,7 +35,8 @@
             {
                 "rows": [
                     [
-                        {"name": "title", "span": 2}
+                        {"name": "title"},
+                        false
                     ],
                     [
                         {"name": "dateFilter"},

@@ -14,7 +14,8 @@
             {
                 "rows": [
                     [
-                        {"name": "title"}
+                        {"name": "title"},
+                        false
                     ],
                     [
                         {"name": "text"}

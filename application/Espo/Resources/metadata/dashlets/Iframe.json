@@ -20,7 +20,8 @@
             {
                 "rows": [
                     [
-                        {"name": "title"}
+                        {"name": "title"},
+                        false
                     ],
                     [
                         {"name": "url"},

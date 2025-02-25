@@ -79,11 +79,12 @@
             {
                 "rows": [
                     [
-                        {"name": "title"}
+                        {"name": "title"},
+                        {"name": "autorefreshInterval"}
                     ],
                     [
                         {"name": "displayRecords"},
-                        {"name": "autorefreshInterval"}
+                        false
                     ],
                     [
                         {"name": "expandedLayout"},

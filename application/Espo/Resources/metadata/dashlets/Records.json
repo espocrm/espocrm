@@ -53,11 +53,12 @@
             {
                 "rows": [
                     [
-                        {"name": "title"}
+                        {"name": "title"},
+                        {"name": "autorefreshInterval"}
                     ],
-                      [
+                    [
                         {"name": "entityType"},
-                        false
+                        {"name": "displayRecords"}
                     ],
                     [
                         {"name": "primaryFilter"},
@@ -66,10 +67,6 @@
                     [
                         {"name": "boolFilterList"},
                         {"name": "sortDirection"}
-                    ],
-                    [
-                        {"name": "displayRecords"},
-                        {"name": "autorefreshInterval"}
                     ],
                     [
                         {"name": "expandedLayout"},
