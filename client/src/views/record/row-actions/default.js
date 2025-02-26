@@ -178,7 +178,7 @@ class DefaultRowActionsView extends View {
             data: {
                 id: this.model.id
             },
-            link: '#' + this.model.entityType + '/view/' + this.model.id,
+            link: `#${this.model.entityType}/view/${this.model.id}`,
             groupIndex: 0,
         }];
 
@@ -189,7 +189,7 @@ class DefaultRowActionsView extends View {
                 data: {
                     id: this.model.id
                 },
-                link: '#' + this.model.entityType + '/edit/' + this.model.id,
+                link: `#${this.model.entityType}/edit/${this.model.id}`,
                 groupIndex: 0,
             });
         }
@@ -210,6 +210,12 @@ class DefaultRowActionsView extends View {
         return list;
     }
 
+    /**
+     * Not to be overridden.
+     *
+     * @protected
+     * @return {module:views/record/list~rowAction[]}
+     */
     getAdditionalActionList() {
         const list = [];
 

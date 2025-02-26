@@ -64,6 +64,8 @@ export default class UserDefaultRowActionsView extends DefaultRowActionsView {
             });
         }
 
+        this.getAdditionalActionList().forEach(item => list.push(item));
+
         return list;
     }
 }
