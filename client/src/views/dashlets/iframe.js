@@ -32,7 +32,7 @@ class IframeDashletView extends BaseDashletView {
 
     name = 'Iframe'
 
-    templateContent = '<iframe style="margin: 0; border: 0;"></iframe>'
+    templateContent = '<iframe style="margin: 0; border: 0;" sandbox="allow-scripts"></iframe>'
 
     afterRender() {
         const $iframe = this.$el.find('iframe');
