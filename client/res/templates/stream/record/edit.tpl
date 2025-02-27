@@ -21,18 +21,19 @@
     </div>
     <div class="col-sm-5">
         <div class="form-group">
-        <div class="cell" data-name="targetType">
-            <div class="field" data-name="targetType">{{{targetTypeField}}}</div>
-        </div>
-        <div class="cell" data-name="users">
-            <div class="field" data-name="users">{{{usersField}}}</div>
-        </div>
-        <div class="cell" data-name="teams">
-            <div class="field" data-name="teams">{{{teamsField}}}</div>
-        </div>
-        <div class="cell" data-name="portals">
-            <div class="field" data-name="portals">{{{portalsField}}}</div>
-        </div>
+            <div class="cell" data-name="targetType">
+                <label class="control-label">{{translate 'to' category='otherFields' scope='Note'}}</label>
+                <div class="field" data-name="targetType">{{{targetTypeField}}}</div>
+            </div>
+            <div class="cell" data-name="users">
+                <div class="field" data-name="users">{{{usersField}}}</div>
+            </div>
+            <div class="cell" data-name="teams">
+                <div class="field" data-name="teams">{{{teamsField}}}</div>
+            </div>
+            <div class="cell" data-name="portals">
+                <div class="field" data-name="portals">{{{portalsField}}}</div>
+            </div>
         </div>
     </div>
 </div>
