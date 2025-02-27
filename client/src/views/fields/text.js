@@ -655,6 +655,8 @@ class TextFieldView extends BaseFieldView {
         event.preventDefault();
 
         if (match[3].trim() === '') {
+            // @todo Skip handling if no enumeration line before.
+
             target.value = before.substring(0, match.index) + '\n' + after;
             target.selectionStart = target.selectionEnd = target.value.length - after.length;
 
