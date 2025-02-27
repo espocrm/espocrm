@@ -520,6 +520,12 @@ class LinkParentFieldView extends BaseFieldView {
             url += '&' + $.param({'primaryFilter': primary});
         }
 
+        const advanced = this.getSelectFilters();
+
+        if (advanced && Object.keys(advanced).length) {
+            url += '&' + $.param({'where': advanced});
+        }
+
         return url;
     }
 
