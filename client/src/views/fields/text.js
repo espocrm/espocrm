@@ -647,6 +647,8 @@ class TextFieldView extends BaseFieldView {
             target.value = before + "\n" + after;
             target.selectionStart = target.selectionEnd = before.length + 1;
 
+            this.controlTextareaHeight();
+
             return;
         }
 
