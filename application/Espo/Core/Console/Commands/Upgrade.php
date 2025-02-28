@@ -151,6 +151,8 @@ class Upgrade implements Command
             if (!$packageFile) {
                 fwrite(STDOUT, "Error: Unable to download upgrade package.\n");
 
+                $io->setExitStatus(1);
+
                 return;
             }
         }
