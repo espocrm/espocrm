@@ -177,6 +177,8 @@ class Upgrade implements Command
 
             fwrite(STDOUT, $errorMessage . "\n");
 
+            $io->setExitStatus(1);
+
             return;
         }
 
