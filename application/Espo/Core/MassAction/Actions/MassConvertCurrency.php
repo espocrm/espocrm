@@ -43,11 +43,15 @@ use Espo\Core\MassAction\Result;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ORM\Repository\Option\SaveOption;
+use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\Tools\Currency\Conversion\EntityConverterFactory;
 use RuntimeException;
 
+/**
+ * @noinspection PhpUnused
+ */
 class MassConvertCurrency implements MassAction
 {
     public function __construct(
@@ -57,7 +61,8 @@ class MassConvertCurrency implements MassAction
         private Metadata $metadata,
         private CurrencyConfigDataProvider $configDataProvider,
         private EntityConverterFactory $converterFactory,
-        private User $user
+        private User $user,
+        private Log $log,
     ) {}
 
     public function process(Params $params, Data $data): Result
@@ -116,7 +121,14 @@ class MassConvertCurrency implements MassAction
                 throw new RuntimeException("Only Core-Entity allowed.");
             }
 
-            $converter->convert($entity, $targetCurrency, $rates);
+            try {
+                $converter->convert($entity, $targetCurrency, $rates);
+            } catch (Forbidden $e) {
+                $this->log->info("Could not convert currency for {id}.", [
+                    'id' => $entity->getId(),
+                    'exception' => $e,
+                ]);
+            }
 
             $this->entityManager->saveEntity($entity, [SaveOption::MODIFIED_BY_ID => $this->user->getId()]);
 

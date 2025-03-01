@@ -47,6 +47,9 @@ use Espo\Entities\User;
 use Espo\Tools\Currency\Conversion\EntityConverterFactory;
 use RuntimeException;
 
+/**
+ * @noinspection PhpUnused
+ */
 class ConvertCurrency implements Action
 {
     public function __construct(
