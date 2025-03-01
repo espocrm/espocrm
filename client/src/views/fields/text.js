@@ -618,13 +618,25 @@ class TextFieldView extends BaseFieldView {
     }
 
     /**
+     * @type {boolean}
+     * @private
+     */
+    _lastEnteredKeyIsEnter = false
+
+    /**
      * @private
      * @param {KeyboardEvent} event
      */
     onKeyDownMarkdown(event) {
         if (Espo.Utils.getKeyFromKeyEvent(event) !== 'Enter') {
+            this._lastEnteredKeyIsEnter = false;
+
             return;
         }
+
+        const lastEnteredKeyIsEnter = this._lastEnteredKeyIsEnter;
+
+        this._lastEnteredKeyIsEnter = true;
 
         const target = event.target;
 
@@ -654,9 +666,7 @@ class TextFieldView extends BaseFieldView {
 
         event.preventDefault();
 
-        if (match[3].trim() === '') {
-            // @todo Skip handling if no enumeration line before.
-
+        if (match[3].trim() === '' && lastEnteredKeyIsEnter) {
             target.value = before.substring(0, match.index) + '\n' + after;
             target.selectionStart = target.selectionEnd = target.value.length - after.length;
 
