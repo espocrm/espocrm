@@ -1443,28 +1443,38 @@ section {
 .list > {
     table > tbody,
     ul.list-group {
-        > tr.list-row.starred,
         > li.list-row.starred {
-            .cell[data-name="name"] {
-                &:has(> a.link) {
-                    &::before {
-                        //noinspection CssNoGenericFontName
-                        font-family: 'Font Awesome 6 Free';
-                        font-weight: 900;
-                        content: "\f005";
-                        font-size: var(--10px);
-                        padding-right: var(--4px);
-                        top: var(--3px);
-                        position: relative;
-                        color: var(--state-warning-text);
-                        float: left;
-                    }
-                }
+            position: relative;
 
-                > a.link {
-                    position: relative;
-                    left: var(--minus-14px);
-                    padding-left: var(--14px);
+            &::before {
+                content: " ";
+                inset: 0;
+                position: absolute;
+                left: 0;
+                top: calc(50% - var(--8px));
+                height: var(--16px);
+                width: var(--3px);
+                background-color: var(--brand-warning);
+                border-top-right-radius: var(--2px);
+                border-bottom-right-radius: var(--2px);
+            }
+        }
+
+        > tr.list-row.starred {
+            .cell:first-child {
+                position: relative;
+
+                &::before {
+                    content: " ";
+                    inset: 0;
+                    position: absolute;
+                    left: 0;
+                    top: var(--11px);
+                    height: var(--16px);
+                    width: var(--3px);
+                    background-color: var(--brand-warning);
+                    border-top-right-radius: var(--2px);
+                    border-bottom-right-radius: var(--2px);
                 }
             }
         }
