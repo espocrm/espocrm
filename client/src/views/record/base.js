@@ -722,7 +722,7 @@ class BaseRecordView extends View {
             }
         }
 
-        this.model.set(this.attributes, {skipReRender: true});
+        this.model.set(this.attributes, {skipReRenderInEditMode: true});
     }
 
     /**

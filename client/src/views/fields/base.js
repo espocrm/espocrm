@@ -1373,7 +1373,10 @@ class BaseFieldView extends View {
         }
 
         if (!noReset) {
-            this.model.set(this.initialAttributes, {skipReRenderInEditMode: true});
+            this.model.set(this.initialAttributes, {
+                skipReRenderInEditMode: true,
+                editCancel: true,
+            });
         }
 
         const promise = this.setDetailMode()

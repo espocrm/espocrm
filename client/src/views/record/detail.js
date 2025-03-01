@@ -1599,7 +1599,10 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        this.model.set(this.attributes, {skipReRender: skipReRender});
+        this.model.set(this.attributes, {
+            skipReRenderInEditMode: skipReRender,
+            editCancel: true,
+        });
     }
 
     delete() {
