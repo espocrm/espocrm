@@ -391,6 +391,7 @@ class LinkParentFieldView extends BaseFieldView {
             createAttributes: createButton ? this.getCreateAttributes() : null,
             mandatorySelectAttributeList: this.getMandatorySelectAttributeList(),
             forceSelectAllAttributes: this.isForceSelectAllAttributes(),
+            layoutName: this.getSelectLayout(),
             onSelect: models => {
                 this.select(models[0]);
             },
@@ -752,6 +753,15 @@ class LinkParentFieldView extends BaseFieldView {
             id: id,
             entityType: entityType,
         });
+    }
+
+    /**
+     * @protected
+     * @return {string|undefined}
+     * @since 9.1.0
+     */
+    getSelectLayout() {
+        return undefined;
     }
 }
 
