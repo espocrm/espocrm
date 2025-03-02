@@ -28,10 +28,7 @@
 
 import $ from 'jquery';
 
-/**
- * @param {{themeManager: import('theme-manager').default}} options
- */
-function uiAppInit(options) {
+function uiAppInit() {
     const $document = $(document);
 
     const topSpaceHeight = 100;
@@ -67,6 +64,8 @@ function uiAppInit(options) {
         const height = $dropdown.outerHeight();
 
         {
+            const $target = $(target);
+
             const windowHeight = $(window).height();
             const top = e.target.getBoundingClientRect().bottom;
 
@@ -74,10 +73,14 @@ function uiAppInit(options) {
 
             isUp = spaceBelow < 0 && top - topSpaceHeight > height;
 
+            if ($target.hasClass('more') || $target.hasClass('tab')) {
+                return;
+            }
+
             if (isUp) {
-                $(target).addClass('dropup');
+                $target.addClass('dropup');
             } else {
-                $(target).removeClass('dropup');
+                $target.removeClass('dropup');
             }
         }
 
