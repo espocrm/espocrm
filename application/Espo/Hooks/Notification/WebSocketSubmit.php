@@ -29,29 +29,30 @@
 
 namespace Espo\Hooks\Notification;
 
+use Espo\Core\Hook\Hook\AfterSave;
+use Espo\Entities\Notification;
 use Espo\ORM\Entity;
-
-use Espo\Core\Utils\Config;
 use Espo\Core\WebSocket\Submission as WebSocketSubmission;
+use Espo\ORM\Repository\Option\SaveOptions;
 
-class WebSocketSubmit
+/**
+ * @implements AfterSave<Notification>
+ */
+class WebSocketSubmit implements AfterSave
 {
     public static int $order = 20;
 
-    public function __construct(private WebSocketSubmission $webSocketSubmission, private Config $config)
-    {}
+    public function __construct(
+        private WebSocketSubmission $webSocketSubmission,
+    ) {}
 
-    public function afterSave(Entity $entity): void
+    public function afterSave(Entity $entity, SaveOptions $options): void
     {
-        if (!$this->config->get('useWebSocket')) {
-            return;
-        }
-
         if (!$entity->isNew()) {
             return;
         }
 
-        $userId = $entity->get('userId');
+        $userId = $entity->getUserId();
 
         if (!$userId) {
             return;

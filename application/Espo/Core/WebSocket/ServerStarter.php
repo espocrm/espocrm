@@ -29,7 +29,6 @@
 
 namespace Espo\Core\WebSocket;
 
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 
 use React\EventLoop\Factory as EventLoopFactory;
@@ -55,15 +54,15 @@ class ServerStarter
 
     public function __construct(
         private Subscriber $subscriber,
-        private Config $config,
+        private ConfigDataProvider $configDataProvider,
         Metadata $metadata
     ) {
         $this->categoriesData = $metadata->get(['app', 'webSocket', 'categories'], []);
-        $this->phpExecutablePath = $config->get('phpExecutablePath');
-        $this->isDebugMode = (bool) $config->get('webSocketDebugMode');
-        $this->useSecureServer = (bool) $config->get('webSocketUseSecureServer');
 
-        $port = $this->config->get('webSocketPort');
+        $this->phpExecutablePath = $this->configDataProvider->getPhpExecutablePath();
+        $this->isDebugMode = $this->configDataProvider->isDebugMode();
+        $this->useSecureServer = $this->configDataProvider->useSecureServer();
+        $port = $this->configDataProvider->getPort();
 
         if (!$port) {
             $port = $this->useSecureServer ? '8443' : '8080';
@@ -105,20 +104,20 @@ class ServerStarter
     /**
      * @return array<string, mixed>
      */
-    protected function getSslParams(): array
+    private function getSslParams(): array
     {
         $sslParams = [
-            'local_cert' => $this->config->get('webSocketSslCertificateFile'),
-            'allow_self_signed' => $this->config->get('webSocketSslAllowSelfSigned', false),
+            'local_cert' => $this->configDataProvider->getSslCertificateFile(),
+            'allow_self_signed' => $this->configDataProvider->allowSelfSignedSsl(),
             'verify_peer' => false,
         ];
 
-        if ($this->config->get('webSocketSslCertificatePassphrase')) {
-            $sslParams['passphrase'] = $this->config->get('webSocketSslCertificatePassphrase');
+        if ($this->configDataProvider->getSslCertificatePassphrase()) {
+            $sslParams['passphrase'] = $this->configDataProvider->getSslCertificatePassphrase();
         }
 
-        if ($this->config->get('webSocketSslCertificateLocalPrivateKey')) {
-            $sslParams['local_pk'] = $this->config->get('webSocketSslCertificateLocalPrivateKey');
+        if ($this->configDataProvider->getSslCertificateLocalPrivateKey()) {
+            $sslParams['local_pk'] = $this->configDataProvider->getSslCertificateLocalPrivateKey();
         }
 
         return $sslParams;

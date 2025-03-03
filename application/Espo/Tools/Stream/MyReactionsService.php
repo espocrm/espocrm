@@ -144,12 +144,8 @@ class MyReactionsService
 
     private function webSocketSubmit(Note $note): void
     {
-        if (!$this->config->get('useWebSocket')) {
-            return;
-        }
-
         $topic = "streamUpdate.{$note->getParentType()}.{$note->getParentId()}";
 
-        $this->webSocketSubmission->submit($topic, null, (object) ['noteId' => $note->getId()]);
+        $this->webSocketSubmission->submit($topic, null, ['noteId' => $note->getId()]);
     }
 }

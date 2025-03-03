@@ -35,23 +35,33 @@ use Espo\Core\Utils\Json;
 use stdClass;
 use Throwable;
 
-/**
- * @todo Introduce a wrapper class that will skip sending if WebSocket is not enabled.
- */
 class Submission
 {
     public function __construct(
         private Sender $sender,
-        private Log $log
+        private Log $log,
+        private ConfigDataProvider $configDataProvider,
     ) {}
 
     /**
      * Submit to a web-socket server.
+     *
+     * Since 9.1.0 performs check whether enabled in the config.
+     *
+     * @param stdClass|array<string, mixed>|null $data Data to submit. Assoc array is supported since 9.1.0.
      */
-    public function submit(string $topic, ?string $userId = null, ?stdClass $data = null): void
+    public function submit(string $topic, ?string $userId = null, stdClass|array|null $data = null): void
     {
+        if (!$this->configDataProvider->isEnabled()) {
+            return;
+        }
+
         if (!$data) {
             $data = (object) [];
+        }
+
+        if (is_array($data)) {
+            $data = (object) $data;
         }
 
         if ($userId) {

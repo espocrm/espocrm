@@ -35,12 +35,9 @@ use Espo\Entities\Note;
 use Espo\Entities\Notification;
 use Espo\Entities\User;
 use Espo\Entities\Email;
-
-use Espo\Core\Utils\Config;
 use Espo\Core\AclManager;
 use Espo\Core\WebSocket\Submission;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
-
 use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
@@ -49,10 +46,9 @@ class Service
 {
     public function __construct(
         private EntityManager $entityManager,
-        private Config $config,
         private AclManager $aclManager,
         private Submission $webSocketSubmission,
-        private RecordIdGenerator $idGenerator
+        private RecordIdGenerator $idGenerator,
     ) {}
 
     public function notifyAboutMentionInPost(string $userId, Note $note): void
@@ -146,10 +142,8 @@ class Service
 
         $this->entityManager->getMapper()->massInsert($collection);
 
-        if ($this->config->get('useWebSocket')) {
-            foreach ($userIdList as $userId) {
-                $this->webSocketSubmission->submit('newNotification', $userId);
-            }
+        foreach ($userIdList as $userId) {
+            $this->webSocketSubmission->submit('newNotification', $userId);
         }
     }
 

@@ -37,7 +37,6 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Name\Field;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Select\Where\Item as WhereItem;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 use Espo\Core\WebSocket\Submission as WebSocketSubmission;
 use Espo\Entities\Email;
@@ -63,7 +62,6 @@ class InboxService
         private Log $log,
         private SelectBuilderFactory $selectBuilderFactory,
         private WebSocketSubmission $webSocketSubmission,
-        private Config $config,
     ) {}
 
     /**
@@ -487,10 +485,6 @@ class InboxService
 
     private function submitNotificationWebSocket(string $userId): void
     {
-        if (!$this->config->get('useWebSocket')) {
-            return;
-        }
-
         $this->webSocketSubmission->submit('newNotification', $userId);
     }
 

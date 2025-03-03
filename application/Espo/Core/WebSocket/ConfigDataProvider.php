@@ -27,45 +27,72 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Hooks\Note;
+namespace Espo\Core\WebSocket;
 
-use Espo\Core\Hook\Hook\AfterSave;
-use Espo\Entities\Note;
-use Espo\ORM\Entity;
-use Espo\Core\WebSocket\Submission as WebSocketSubmission;
-use Espo\ORM\Repository\Option\SaveOptions;
+use Espo\Core\Utils\Config;
 
 /**
- * @implements AfterSave<Note>
+ * @since 9.1.0
  */
-class WebSocketSubmit implements AfterSave
+class ConfigDataProvider
 {
-    public static int $order = 20;
-
     public function __construct(
-        private WebSocketSubmission $webSocketSubmission,
+        private Config $config,
     ) {}
 
-    public function afterSave(Entity $entity, SaveOptions $options): void
+    public function isEnabled(): bool
     {
-        $parentId = $entity->getParentId();
-        $parentType = $entity->getParentType();
+        return (bool) $this->config->get('useWebSocket');
+    }
 
-        if (!$parentId || !$parentType) {
-            return;
+    public function isDebugMode(): bool
+    {
+        return (bool) $this->config->get('webSocketDebugMode');
+    }
+
+    public function useSecureServer(): bool
+    {
+        return (bool) $this->config->get('webSocketUseSecureServer');
+    }
+
+    public function getPort(): ?string
+    {
+        $port = $this->config->get('webSocketPort');
+
+        if (!$port) {
+            return null;
         }
 
-        $data = (object) [
-            'createdById' => $entity->getCreatedById(),
-        ];
+        return (string) $port;
+    }
 
-        if (!$entity->isNew()) {
-            $data->noteId = $entity->getId();
-            $data->pin = $entity->isAttributeChanged('isPinned');
-        }
+    public function getPhpExecutablePath(): ?string
+    {
+        return $this->config->get('phpExecutablePath');
+    }
 
-        $topic = "streamUpdate.$parentType.$parentId";
+    public function getSslCertificateFile(): ?string
+    {
+        return $this->config->get('webSocketSslCertificateFile');
+    }
 
-        $this->webSocketSubmission->submit($topic, null, $data);
+    public function allowSelfSignedSsl(): bool
+    {
+        return (bool) $this->config->get('webSocketSslAllowSelfSigned');
+    }
+
+    public function getSslCertificatePassphrase(): ?string
+    {
+        return $this->config->get('webSocketSslCertificatePassphrase');
+    }
+
+    public function getSslCertificateLocalPrivateKey(): ?string
+    {
+        return $this->config->get('webSocketSslCertificateLocalPrivateKey');
+    }
+
+    public function getMessager(): ?string
+    {
+        return $this->config->get('webSocketMessager');
     }
 }

@@ -31,6 +31,7 @@ namespace Espo\Modules\Crm\Jobs;
 
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\WebSocket\ConfigDataProvider;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Reminder;
 use Espo\Core\Job\JobDataLess;
@@ -43,6 +44,9 @@ use Espo\Core\WebSocket\Submission as WebSocketSubmission;
 use Throwable;
 use DateTime;
 
+/**
+ * @noinspection PhpUnused
+ */
 class SubmitPopupReminders implements JobDataLess
 {
     private const REMINDER_PAST_HOURS = 24;
@@ -51,12 +55,13 @@ class SubmitPopupReminders implements JobDataLess
         private EntityManager $entityManager,
         private Config $config,
         private WebSocketSubmission $webSocketSubmission,
-        private Log $log
+        private Log $log,
+        private ConfigDataProvider $webSocketConfig,
     ) {}
 
     public function run(): void
     {
-        if (!$this->config->get('useWebSocket')) {
+        if (!$this->webSocketConfig->isEnabled()) {
             return;
         }
 
@@ -70,7 +75,7 @@ class SubmitPopupReminders implements JobDataLess
             ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
         $reminderList = $this->entityManager
-            ->getRDBRepository(Reminder::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(Reminder::class)
             ->where([
                 'type' => Reminder::TYPE_POPUP,
                 'remindAt<=' => $now,
@@ -146,13 +151,13 @@ class SubmitPopupReminders implements JobDataLess
             ];;
 
             $reminder->set('isSubmitted', true);
+
             $this->entityManager->saveEntity($reminder);
         }
 
         foreach ($submitData as $userId => $list) {
             try {
-                $this->webSocketSubmission
-                    ->submit('popupNotifications.event', $userId, (object) ['list' => $list]);
+                $this->webSocketSubmission->submit('popupNotifications.event', $userId, ['list' => $list]);
             } catch (Throwable $e) {
                 $this->log->error('Job SubmitPopupReminders: [' . $e->getCode() . '] ' .$e->getMessage());
             }

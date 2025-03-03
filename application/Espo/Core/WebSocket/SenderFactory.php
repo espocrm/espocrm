@@ -30,7 +30,6 @@
 namespace Espo\Core\WebSocket;
 
 use Espo\Core\InjectableFactory;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Binding\Factory;
 
@@ -45,19 +44,19 @@ class SenderFactory implements Factory
 
     public function __construct(
         private InjectableFactory $injectableFactory,
-        private Config $config,
-        private Metadata $metadata
+        private ConfigDataProvider $config,
+        private Metadata $metadata,
     ) {}
 
     public function create(): Sender
     {
-        $messager = $this->config->get('webSocketMessager') ?? self::DEFAULT_MESSAGER;
+        $messager = $this->config->getMessager() ?? self::DEFAULT_MESSAGER;
 
         /** @var ?class-string<Sender> $className */
         $className = $this->metadata->get(['app', 'webSocket', 'messagers', $messager, 'senderClassName']);
 
         if (!$className) {
-            throw new RuntimeException("No sender for messager '{$messager}'.");
+            throw new RuntimeException("No sender for messager '$messager'.");
         }
 
         return $this->injectableFactory->create($className);

@@ -29,29 +29,29 @@
 
 namespace Espo\Hooks\Common;
 
+use Espo\Core\Hook\Hook\AfterSave;
+use Espo\Core\WebSocket\ConfigDataProvider;
 use Espo\ORM\Entity;
-
 use Espo\Core\ORM\Repository\Option\SaveOption;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\WebSocket\Submission as WebSocketSubmission;
+use Espo\ORM\Repository\Option\SaveOptions;
 
-class WebSocketSubmit
+/**
+ * @implements AfterSave<Entity>
+ */
+class WebSocketSubmit implements AfterSave
 {
     public static int $order = 20;
 
     public function __construct(
         private Metadata $metadata,
         private WebSocketSubmission $webSocketSubmission,
-        private Config $config
     ) {}
 
-    /**
-     * @param array<string, mixed> $options
-     */
-    public function afterSave(Entity $entity, array $options): void
+    public function afterSave(Entity $entity, SaveOptions $options): void
     {
-        if ($options[SaveOption::SILENT] ?? false) {
+        if ($options->get(SaveOption::SILENT)) {
             return;
         }
 
@@ -59,19 +59,15 @@ class WebSocketSubmit
             return;
         }
 
-        if (!$this->config->get('useWebSocket')) {
-            return;
-        }
-
         $scope = $entity->getEntityType();
         $id = $entity->getId();
 
-        if (!$this->metadata->get(['scopes', $scope, 'object'])) {
+        if (!$this->metadata->get("scopes.$scope.object")) {
             return;
         }
 
-        $topic = "recordUpdate.{$scope}.{$id}";
+        $topic = "recordUpdate.$scope.$id";
 
-        $this->webSocketSubmission->submit($topic, null);
+        $this->webSocketSubmission->submit($topic);
     }
 }
