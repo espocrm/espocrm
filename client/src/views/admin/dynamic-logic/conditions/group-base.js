@@ -161,7 +161,8 @@ export default class DynamicLogicConditionGroupBaseView extends View {
         }
 
         if (!viewName) {
-            return;
+            // Ensuring the item is rendered even if the field is deleted.
+            viewName = 'views/admin/dynamic-logic/conditions/field-types/base';
         }
 
         this.createView(key, viewName, {
