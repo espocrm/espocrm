@@ -41,7 +41,10 @@ export default class {
         const level = this.view.getAcl().getPermissionLevel('user');
 
         this.toShow = (level === 'all' || level === 'team') &&
-            this.metadata.get(`scopes.${this.entityType}.object`) &&
+            (
+                this.metadata.get(`scopes.${this.entityType}.object`) ||
+                this.metadata.get(`scopes.${this.entityType}.acl`)
+            )
             this.view.getAcl().checkScope('User');
     }
 

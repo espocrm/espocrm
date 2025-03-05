@@ -93,8 +93,11 @@ class UsersAccessService
             throw new Forbidden("No access for portal user.");
         }
 
-        if (!$this->metadata->get("scopes.{$entity->getEntityType()}.object")) {
-            throw new Forbidden("Non-object entity.");
+        if (
+            !$this->metadata->get("scopes.{$entity->getEntityType()}.object") &&
+            !$this->metadata->get("scopes.{$entity->getEntityType()}.acl")
+        ) {
+            throw new Forbidden("Non-object entity and non-acl entity.");
         }
 
         if (!$this->acl->checkEntityRead($entity)) {
