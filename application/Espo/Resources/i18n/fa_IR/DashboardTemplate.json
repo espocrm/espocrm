@@ -1,1 +1,13 @@
-{}
+{
+    "fields": {
+        "layout": "چیدمان",
+        "append": "اضافه کردن (برگه‌های کاربر حذف نشود)"
+    },
+    "links": {
+    },
+    "labels": {
+        "Create DashboardTemplate": "ایجاد قالب",
+        "Deploy to Users": "اعمال برای کاربران",
+        "Deploy to Team": "اعمال برای تیم"
+    }
+}
