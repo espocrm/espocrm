@@ -223,72 +223,79 @@ class DefaultsPopulator {
      * @private
      */
     prepareForPortal(model, defaultHash) {
+        const accountLink = this.metadata.get(`aclDefs.${model.entityType}.accountLink`);
+        const contactLink = this.metadata.get(`aclDefs.${model.entityType}.contactLink`);
+
         if (
-            model.hasField('account') &&
-            ['belongsTo', 'hasOne'].includes(model.getLinkType('account')) &&
-            model.getLinkParam('account', 'entity') === 'Account'
+            accountLink &&
+            model.hasField(accountLink) &&
+            ['belongsTo', 'hasOne'].includes(model.getLinkType(accountLink)) &&
+            model.getLinkParam(accountLink, 'entity') === 'Account'
         ) {
-            if (this.user.get('accountId')) {
-                defaultHash['accountId'] =  this.user.get('accountId');
-                defaultHash['accountName'] = this.user.get('accountName');
+            if (this.user.attributes.accountId) {
+                defaultHash[accountLink + 'Id'] = this.user.attributes.accountId;
+                defaultHash[accountLink + 'Name'] = this.user.attributes.accuntName;
             }
         }
 
         if (
-            model.hasField('contact') &&
-            ['belongsTo', 'hasOne'].includes(model.getLinkType('contact'))&&
-            model.getLinkParam('contact', 'entity') === 'Contact'
+            contactLink &&
+            model.hasField(contactLink) &&
+            ['belongsTo', 'hasOne'].includes(model.getLinkType(contactLink))&&
+            model.getLinkParam(contactLink, 'entity') === 'Contact'
         ) {
-            if (this.user.get('contactId')) {
-                defaultHash['contactId'] = this.user.get('contactId');
-                defaultHash['contactName'] = this.user.get('contactName');
+            if (this.user.attributes.contactId) {
+                defaultHash[contactLink + 'Id'] = this.user.attributes.contactId;
+                defaultHash[contactLink + 'Name'] = this.user.attributes.contactName;
             }
         }
 
-        if (model.hasField('parent') && model.getLinkType('parent') === 'belongsToParent') {
+        if (
+            accountLink &&
+            model.hasField(accountLink) &&
+            model.getLinkType(accountLink) === 'hasMany' &&
+            model.getLinkParam(accountLink, 'entity') === 'Account'
+        ) {
+            if (this.user.attributes.accountsIds) {
+                defaultHash['accountsIds'] = [...this.user.attributes.accountsIds];
+                defaultHash['accountsNames'] = {...this.user.attributes.accountsNames};
+            }
+        }
+
+        if (
+            contactLink &&
+            model.hasField(contactLink) &&
+            model.getLinkType(contactLink) === 'hasMany'&&
+            model.getLinkParam(contactLink, 'entity') === 'Contact'
+        ) {
+            if (this.user.attributes.contactId) {
+                defaultHash['contactsIds'] = [this.user.attributes.contactId];
+                defaultHash['contactsNames'] = {[this.user.attributes.contactId]: this.user.attributes.contactName};
+            }
+        }
+
+        if (
+            model.hasField('parent') &&
+            model.getLinkType('parent') === 'belongsToParent'
+        ) {
             if (!this.config.get('b2cMode')) {
-                if (this.user.get('accountId')) {
-                    if ((model.getFieldParam('parent', 'entityList') || []).includes('Account')) {
-                        defaultHash['parentId'] = this.user.get('accountId');
-                        defaultHash['parentName'] = this.user.get('accountName');
-                        defaultHash['parentType'] = 'Account';
-                    }
+                if (
+                    this.user.attributes.accountId &&
+                    (model.getFieldParam('parent', 'entityList') || []).includes('Account')
+                ) {
+                    defaultHash['parentId'] = this.user.attributes.accountId;
+                    defaultHash['parentName'] = this.user.attributes.accountName;
+                    defaultHash['parentType'] = 'Account';
                 }
-            }
-            else {
-                if (this.user.get('contactId')) {
-                    if ((model.getFieldParam('parent', 'entityList') || []).includes('Contact')) {
-                        defaultHash['contactId'] = this.user.get('contactId');
-                        defaultHash['parentName'] = this.user.get('contactName');
-                        defaultHash['parentType'] = 'Contact';
-                    }
+            } else {
+                if (
+                    this.user.attributes.contactId &&
+                    (model.getFieldParam('parent', 'entityList') || []).includes('Contact')
+                ) {
+                    defaultHash['parentId'] = this.user.attributes.contactId;
+                    defaultHash['parentName'] = this.user.attributes.contactName;
+                    defaultHash['parentType'] = 'Contact';
                 }
-            }
-        }
-
-        if (
-            model.hasField('accounts') &&
-            model.getLinkType('accounts') === 'hasMany' &&
-            model.getLinkParam('accounts', 'entity') === 'Account'
-        ) {
-            if (this.user.get('accountsIds')) {
-                defaultHash['accountsIds'] = this.user.get('accountsIds');
-                defaultHash['accountsNames'] = this.user.get('accountsNames');
-            }
-        }
-
-        if (
-            model.hasField('contacts') &&
-            model.getLinkType('contacts') === 'hasMany'&&
-            model.getLinkParam('contacts', 'entity') === 'Contact'
-        ) {
-            if (this.user.get('contactId')) {
-                defaultHash['contactsIds'] = [this.user.get('contactId')];
-
-                const names = {};
-
-                names[this.user.get('contactId')] = this.user.get('contactName');
-                defaultHash['contactsNames'] = names;
             }
         }
     }
