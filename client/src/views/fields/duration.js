@@ -38,6 +38,12 @@ class DurationFieldView extends EnumFieldView {
     detailTemplate = 'fields/varchar/detail'
     editTemplate = 'fields/duration/edit'
 
+    /**
+     * @private
+     * @type {boolean}
+     */
+    _justFocused = false
+
     data() {
         const valueIsSet = this.model.has(this.startField) && this.model.has(this.endField);
 
@@ -342,6 +348,10 @@ class DurationFieldView extends EnumFieldView {
 
                     callback(list);
                 },
+                onFocus: () => {
+                    this._justFocused = true;
+                    setTimeout(() => this._justFocused = false, 150);
+                },
             });
         }
     }
@@ -435,7 +445,7 @@ class DurationFieldView extends EnumFieldView {
     updateDuration() {
         const seconds = this.seconds;
 
-        if (this.isEditMode() && this.$duration && this.$duration.length) {
+        if (this.isEditMode() && this.$duration && this.$duration.length && !this._justFocused) {
             const options = this.getOptions().map(value => {
                 return {
                     value: value.toString(),

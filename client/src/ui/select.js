@@ -41,6 +41,7 @@ import Selectize from 'lib!selectize';
  *   searched items.
  * @property {'value'|'text'|'$order'|'$score'} [sortBy='$order'] Item sorting.
  * @property {'asc'|'desc'} [sortDirection='asc'] Sort direction.
+ * @property {function()} [onFocus] On-focus callback.
  */
 
 /**
@@ -152,6 +153,12 @@ const Select = {
                 this.refreshOptions(true);
             },
         };
+
+        if (options.onFocus) {
+            selectizeOptions.onFocus = function () {
+                options.onFocus();
+            };
+        }
 
         if (!options.matchAnyWord) {
             /** @this Selectize */
