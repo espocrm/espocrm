@@ -51,25 +51,13 @@ use Espo\Entities\Note;
  */
 class NoteHookProcessor
 {
-    private StreamService $streamService;
-    private Service $service;
-    private EntityManager $entityManager;
-    private User $user;
-    private InternalAclManager $internalAclManager;
-
     public function __construct(
-        StreamService $streamService,
-        Service $service,
-        EntityManager $entityManager,
-        User $user,
-        InternalAclManager $internalAclManager
-    ) {
-        $this->streamService = $streamService;
-        $this->service = $service;
-        $this->entityManager = $entityManager;
-        $this->user = $user;
-        $this->internalAclManager = $internalAclManager;
-    }
+        private StreamService $streamService,
+        private Service $service,
+        private EntityManager $entityManager,
+        private User $user,
+        private InternalAclManager $internalAclManager
+    ) {}
 
     public function afterSave(Note $note): void
     {
