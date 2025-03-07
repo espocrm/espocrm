@@ -55,9 +55,13 @@ class PanelsContainerRecordView extends View {
      * @property {string} [view] A view name.
      * @property {Object.<string, *>} [Options] A view options.
      * @property {boolean} [sticked] To stick to an upper panel.
-     * @property {Number} [tabNumber] A tab number.
+     * @property {number} [tabNumber] A tab number.
      * @property {string} [aclScope] A scope to check access to.
      * @property {Espo.Utils~AccessDefs[]} [accessDataList] Access control defs.
+     * @property {Record} [dynamicLogicVisible] Visibility rules.
+     * @property {Record} [dynamicLogicStyled] Style rules.
+     * @property {Record} [options] Options.
+     * @property {boolean} [disabled] Disabled.
      */
 
     /**
@@ -467,9 +471,9 @@ class PanelsContainerRecordView extends View {
         let fields = {};
 
         this.panelList.forEach(p => {
-            const panelView = this.getView(p.name);
+            const panelView = this.getPanelActionsView(p.name);
 
-            if ((!panelView.disabled || withHidden) && 'getFieldViews' in panelView) {
+            if ((!panelView.disabled || withHidden) && ('getFieldViews' in panelView)) {
                 fields = _.extend(fields, panelView.getFieldViews());
             }
         });
@@ -486,14 +490,23 @@ class PanelsContainerRecordView extends View {
         let data = {};
 
         this.panelList.forEach(p => {
-            const panelView = this.getView(p.name);
+            const panelView = this.getPanelView(p.name);
 
-            if (!panelView.disabled && 'fetch' in panelView) {
+            if (!panelView.disabled && ('fetch' in panelView)) {
                 data = _.extend(data, panelView.fetch());
             }
         });
 
         return data;
+    }
+
+    /**
+     * @private
+     * @param name
+     * @return {import('views/record/panels/side').default|import('views/record/panels/side').default|null}
+     */
+    getPanelView(name) {
+        return this.getView(name);
     }
 
     /**
@@ -545,8 +558,8 @@ class PanelsContainerRecordView extends View {
     }
 
     showPanelFinalize(name, callback, wasShown) {
-        const process = (wasRendered) => {
-            const view = this.getView(name);
+        const process = wasRendered => {
+            const view = this.getPanelView(name);
 
             if (view) {
                 view.$el.closest('.panel').removeClass('hidden');
@@ -837,7 +850,7 @@ class PanelsContainerRecordView extends View {
     }
 
     actionShowMorePanels() {
-        this.panelList.forEach(p => {
+        this.panelList.forEach(/** module:views/record/panels-container~panel & Record*/p => {
             if (!p.hiddenAfterDelimiter) {
                 return;
             }
@@ -850,6 +863,10 @@ class PanelsContainerRecordView extends View {
         this.$el.find('.panels-show-more-delimiter').remove();
     }
 
+    /**
+     * @private
+     * @param {function} callback
+     */
     onPanelsReady(callback) {
         Promise.race([
             new Promise(resolve => {
@@ -865,6 +882,14 @@ class PanelsContainerRecordView extends View {
         });
     }
 
+    /**
+     * @private
+     * @return {{
+     *     label: string,
+     *     isActive: boolean,
+     *     hidden: boolean,
+     * }[]}
+     */
     getTabDataList() {
         return this.tabDataList.map((item, i) => {
             let label = item.label;
@@ -888,6 +913,10 @@ class PanelsContainerRecordView extends View {
         });
     }
 
+    /**
+     * @protected
+     * @param {number} tab
+     */
     selectTab(tab) {
         this.currentTab = tab;
 
@@ -961,7 +990,10 @@ class PanelsContainerRecordView extends View {
         }
     }
 
-    /** @private */
+    /**
+     * @private
+     * @param {number} tab
+     */
     controlTabVisibilityShow(tab) {
         if (!this.hasTabs) {
             return;
@@ -976,7 +1008,10 @@ class PanelsContainerRecordView extends View {
         this.$el.find(`.tabs > [data-tab="${tab.toString()}"]`).removeClass('hidden');
     }
 
-    /** @private */
+    /**
+     * @private
+     * @param {number} tab
+     */
     controlTabVisibilityHide(tab) {
         if (!this.hasTabs) {
             return;

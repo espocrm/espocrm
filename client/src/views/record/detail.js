@@ -3701,7 +3701,7 @@ class DetailRecordView extends BaseRecordView {
      * Select a tab.
      *
      * @protected
-     * @param {Number} tab
+     * @param {number} tab
      */
     selectTab(tab) {
         this.currentTab = tab;

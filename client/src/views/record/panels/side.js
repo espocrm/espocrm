@@ -102,9 +102,9 @@ class SidePanelView extends View {
     inlineEditDisabled = false
 
     /**
-     * Disable.
+     * Disabled.
      *
-     * @protected
+     * @internal
      */
     disabled = false
 
