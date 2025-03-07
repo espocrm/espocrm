@@ -69,7 +69,7 @@ class NoteAccessControl
                 unset($data->attributes->became->$attribute);
             }
 
-            $note->set('data', $data);
+            $note->setData($data);
         }
 
         if ($note->getType() === Note::TYPE_STATUS && $note->getParentType()) {
@@ -86,7 +86,7 @@ class NoteAccessControl
                 $data->style = null;
             }
 
-            $note->set('data', $data);
+            $note->setData($data);
         }
 
         if ($note->getType() === Note::TYPE_CREATE && $note->getParentType()) {
@@ -103,7 +103,7 @@ class NoteAccessControl
                 $data->statusStyle = null;
             }
 
-            $note->set('data', $data);
+            $note->setData($data);
         }
     }
 }
