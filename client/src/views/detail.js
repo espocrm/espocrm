@@ -582,7 +582,7 @@ class DetailView extends MainView {
             title.style.textDecoration = 'line-through';
         }
 
-        if (this.getRecordView().getMode() === 'detail') {
+        if (this.getRecordMode() === 'detail') {
             title.title = this.translate('clickToRefresh', 'messages');
             title.dataset.action = 'fullRefresh';
             title.style.cursor = 'pointer';
