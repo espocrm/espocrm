@@ -100,6 +100,8 @@ class DetailSideRecordView extends PanelsContainerRecordView {
             this.type = this.options.type;
         }
 
+        this.setupInitial();
+
         this.setupPanels();
 
         if (!this.additionalPanelsDisabled) {

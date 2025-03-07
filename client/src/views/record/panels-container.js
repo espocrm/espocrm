@@ -372,7 +372,7 @@ class PanelsContainerRecordView extends View {
             let options = {
                 model: this.model,
                 panelName: name,
-                selector: '.panel[data-name="' + name + '"] > .panel-body',
+                selector: `.panel[data-name="${name}"] > .panel-body`,
                 defs: p,
                 mode: this.mode,
                 recordHelper: this.recordHelper,
@@ -436,7 +436,7 @@ class PanelsContainerRecordView extends View {
 
                 // @todo Use name_Actions.
                 this.createView(name + 'Actions', 'views/record/panel-actions', {
-                    selector: '.panel[data-name="' + p.name + '"] > .panel-heading > .panel-actions-container',
+                    selector: `.panel[data-name="${p.name}"] > .panel-heading > .panel-actions-container`,
                     model: this.model,
                     defs: p,
                     scope: this.scope,
@@ -517,7 +517,14 @@ class PanelsContainerRecordView extends View {
         return !!this.panelList.find(item => item.name === name);
     }
 
-    processShowPanel(name, callback, wasShown) {
+    /**
+     * @internal
+     *
+     * @param {string} name
+     * @param [callback] Not to be used.
+     * @param {boolean} [wasShown]
+     */
+    processShowPanel(name, callback, wasShown = false) {
         if (this.recordHelper.getPanelStateParam(name, 'hidden')) {
             return;
         }
@@ -537,6 +544,12 @@ class PanelsContainerRecordView extends View {
         this.showPanelFinalize(name, callback, wasShown);
     }
 
+    /**
+     * @internal
+     *
+     * @param {string} name
+     * @param [callback] Not to be used.
+     */
     processHidePanel(name, callback) {
         if (!this.recordHelper.getPanelStateParam(name, 'hidden')) {
             return;
@@ -557,14 +570,28 @@ class PanelsContainerRecordView extends View {
         this.hidePanelFinalize(name, callback);
     }
 
-    showPanelFinalize(name, callback, wasShown) {
+    /**
+     * @private
+     *
+     * @param {string} name
+     * @param [callback] Not to be used.
+     * @param {boolean} [wasShown]
+     */
+    async showPanelFinalize(name, callback, wasShown) {
         const process = wasRendered => {
             const view = this.getPanelView(name);
 
             if (view) {
-                view.$el.closest('.panel').removeClass('hidden');
+                if (view.element) {
+                    const panelElement = view.element.closest('.panel');
+
+                    if (panelElement) {
+                        panelElement.classList.remove('hidden');
+                    }
+                }
 
                 view.disabled = false;
+
                 view.trigger('show');
                 view.trigger('panel-show-propagated');
 
@@ -592,23 +619,37 @@ class PanelsContainerRecordView extends View {
             return;
         }
 
-        this.once('after:render', () => {
-            process();
-        });
+        await this.whenRendered();
+
+        process();
     }
 
-    hidePanelFinalize(name, callback) {
+    /**
+     * @private
+     *
+     * @param {string} name
+     * @param [callback] Not to be used.
+     */
+    async hidePanelFinalize(name, callback) {
         if (this.isRendered()) {
-            const view = this.getView(name);
+            const view = this.getPanelView(name);
 
             if (view) {
-                view.$el.closest('.panel').addClass('hidden');
+                if (view.element) {
+                    const panelElement = view.element.closest('.panel');
+
+                    if (panelElement) {
+                        panelElement.classList.add('hidden');
+                    }
+                }
+
                 view.disabled = true;
+
                 view.trigger('hide');
             }
 
             if (typeof callback === 'function') {
-                callback.call(this);
+                callback();
             }
 
             this.adjustPanels();
@@ -617,9 +658,9 @@ class PanelsContainerRecordView extends View {
         }
 
         if (typeof callback === 'function') {
-            this.once('after:render', () => {
-                callback.call(this);
-            });
+            await this.whenRendered();
+
+            callback();
         }
     }
 
@@ -629,7 +670,6 @@ class PanelsContainerRecordView extends View {
      * @param [callback] Not to be used.
      */
     showPanel(name, softLockedType, callback) {
-
         if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) {
             return;
         }
@@ -683,6 +723,11 @@ class PanelsContainerRecordView extends View {
         this.processHidePanel(name, callback);
     }
 
+    /**
+     * @internal
+     * @protected
+     * @param {Object} layoutData
+     */
     alterPanels(layoutData) {
         layoutData = layoutData || this.layoutData || {};
 
@@ -711,7 +756,7 @@ class PanelsContainerRecordView extends View {
 
         /**
          * @private
-         * @type {Object.<string,*>[]}
+         * @type {Object.<string, *>[]}
          */
         this.tabDataList = tabDataList.sort((v1, v2) => v1.index - v2.index);
 
@@ -760,8 +805,15 @@ class PanelsContainerRecordView extends View {
 
         const firstTabIndex = newList.findIndex(item => item.tabNumber !== -1);
 
+        /*let firstNonHiddenTabIndex = newList.findIndex(item => item.tabNumber !== -1 && !item.hidden);
+
+        if (firstNonHiddenTabIndex < 0) {
+            firstNonHiddenTabIndex = firstTabIndex;
+        }*/
+
         if (firstTabIndex !== -1) {
             newList[firstTabIndex].isTabsBeginning = true;
+
             this.hasTabs = true;
             this.currentTab = newList[firstTabIndex].tabNumber;
 
@@ -771,15 +823,14 @@ class PanelsContainerRecordView extends View {
                     item.tabHidden = true;
                 });
 
-            this.panelList
-                .forEach((item, i) => {
-                    if (
-                        item.tabNumber !== -1 &&
-                        (i === 0 || this.panelList[i - 1].tabNumber !== item.tabNumber)
-                    ) {
-                        item.sticked = false;
-                    }
-                });
+            this.panelList.forEach((item, i) => {
+                if (
+                    item.tabNumber !== -1 &&
+                    (i === 0 || this.panelList[i - 1].tabNumber !== item.tabNumber)
+                ) {
+                    item.sticked = false;
+                }
+            });
         }
 
         this.panelList = newList;
@@ -811,6 +862,9 @@ class PanelsContainerRecordView extends View {
         }
     }
 
+    /**
+     * @protected
+     */
     setupPanelsFinal() {
         let afterDelimiter = false;
         let rightAfterDelimiter = false;
@@ -864,7 +918,8 @@ class PanelsContainerRecordView extends View {
     }
 
     /**
-     * @private
+     * @internal
+     * @protected
      * @param {function} callback
      */
     onPanelsReady(callback) {
@@ -896,8 +951,7 @@ class PanelsContainerRecordView extends View {
 
             if (!label) {
                 label = (i + 1).toString();
-            }
-            else if (label[0] === '$') {
+            } else if (label[0] === '$') {
                 label = this.translate(label.substring(1), 'tabs', this.scope);
             }
 
@@ -914,10 +968,11 @@ class PanelsContainerRecordView extends View {
     }
 
     /**
-     * @protected
+     * @private
      * @param {number} tab
+     * @param {boolean} [doNotStore]
      */
-    selectTab(tab) {
+    selectTab(tab, doNotStore = false) {
         this.currentTab = tab;
 
         if (this.isRendered()) {
@@ -935,7 +990,7 @@ class PanelsContainerRecordView extends View {
         this.panelList
             .filter(item => item.tabNumber === tab && item.name)
             .forEach(item => {
-                const view = this.getView(item.name);
+                const view = this.getPanelView(item.name);
 
                 if (view) {
                     view.trigger('tab-show');
@@ -949,7 +1004,7 @@ class PanelsContainerRecordView extends View {
         this.panelList
             .filter(item => item.tabNumber !== tab && item.name)
             .forEach(item => {
-                const view = this.getView(item.name);
+                const view = this.getPanelView(item.name);
 
                 if (view) {
                     view.trigger('tab-hide');
@@ -960,28 +1015,32 @@ class PanelsContainerRecordView extends View {
                 }
             });
 
+        if (doNotStore) {
+            return;
+        }
+
         this.storeTab();
     }
 
     /** @private */
     storeTab() {
-        const key = 'tab_' + this.name;
-        const keyRecord = 'tab_' + this.name + '_record';
+        const key = `tab_${this.name}`;
+        const keyRecord = `tab_${this.name}_record`;
 
         this.getSessionStorage().set(key, this.currentTab);
-        this.getSessionStorage().set(keyRecord, this.entityType + '_' + this.model.id);
+        this.getSessionStorage().set(keyRecord, `${this.entityType}_${this.model.id}`);
     }
 
     /** @private */
     isStoredTabForThisRecord() {
-        const keyRecord = 'tab_' + this.name + '_record';
+        const keyRecord = `tab_${this.name}_record`;
 
-        return this.getSessionStorage().get(keyRecord) === this.entityType + '_' + this.model.id;
+        return this.getSessionStorage().get(keyRecord) === `${this.entityType}_${this.model.id}`;
     }
 
     /** @private */
     selectStoredTab() {
-        const key = 'tab_' + this.name;
+        const key = `tab_${this.name}`;
 
         const tab = this.getSessionStorage().get(key);
 
@@ -994,47 +1053,49 @@ class PanelsContainerRecordView extends View {
      * @private
      * @param {number} tab
      */
-    controlTabVisibilityShow(tab) {
+    async controlTabVisibilityShow(tab) {
         if (!this.hasTabs) {
             return;
         }
 
-        if (this.isBeingRendered()) {
-            this.once('after:render', () => this.controlTabVisibilityShow(tab));
+        await this.whenRendered();
 
-            return;
+        if (this.element) {
+            const tabElement = this.element.querySelector(`.tabs > [data-tab="${tab.toString()}"]`);
+
+            if (tabElement) {
+                tabElement.classList.remove('hidden');
+            }
         }
-
-        this.$el.find(`.tabs > [data-tab="${tab.toString()}"]`).removeClass('hidden');
     }
 
     /**
      * @private
      * @param {number} tab
      */
-    controlTabVisibilityHide(tab) {
+    async controlTabVisibilityHide(tab) {
         if (!this.hasTabs) {
             return;
         }
 
-        if (this.isBeingRendered()) {
-            this.once('after:render', () => this.controlTabVisibilityHide(tab));
-
-            return;
-        }
+        await this.whenRendered();
 
         const panelList = this.panelList.filter(panel => panel.tabNumber === tab);
 
-        const allIsHidden = panelList
+        const allHidden = panelList
             .findIndex(panel => !this.recordHelper.getPanelStateParam(panel.name, 'hidden')) === -1;
 
-        if (!allIsHidden) {
+        if (!allHidden) {
             return;
         }
 
-        const $tab = this.$el.find(`.tabs > [data-tab="${tab.toString()}"]`);
+        if (this.element) {
+            const tabElement = this.element.querySelector(`.tabs > [data-tab="${tab.toString()}"]`);
 
-        $tab.addClass('hidden');
+            if (tabElement) {
+                tabElement.classList.add('hidden');
+            }
+        }
 
         if (this.currentTab === tab) {
             const firstVisiblePanel = this.panelList
@@ -1043,8 +1104,38 @@ class PanelsContainerRecordView extends View {
             const firstVisibleTab = firstVisiblePanel ?
                 firstVisiblePanel.tabNumber : 0;
 
-            this.selectTab(firstVisibleTab);
+            this.selectTab(firstVisibleTab, true);
         }
+    }
+
+    /**
+     * @protected
+     */
+    setupInitial() {
+        // Handles the situation when the first tab is hidden.
+        this.listenToOnce(this.model, 'sync', async (m, r, /** Record */o) => {
+            if (o.action !== 'fetch') {
+                return;
+            }
+
+            setTimeout(async () =>  {
+                await this.whenRendered();
+
+                if (!this.hasTabs) {
+                    return;
+                }
+
+                const firstVisiblePanel = this.panelList.find(p => !p.hidden && p.tabNumber > -1);
+
+                if (!firstVisiblePanel) {
+                    return;
+                }
+
+                if (firstVisiblePanel.tabNumber > this.currentTab) {
+                    this.selectTab(firstVisiblePanel.tabNumber, true);
+                }
+            }, 1);
+        });
     }
 }
 

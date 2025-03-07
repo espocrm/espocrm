@@ -139,6 +139,8 @@ class DetailBottomRecordView extends PanelsContainerRecordView {
 
         this.panelList = [];
 
+        this.setupInitial();
+
         this.setupPanels();
 
         this.wait(true);
