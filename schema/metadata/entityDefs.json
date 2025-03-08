@@ -1035,7 +1035,7 @@
                 },
                 "optimisticConcurrencyControlIgnore": {
                     "type": "boolean",
-                    "description": "Ignore optimistic concurrency control."
+                    "description": "Ignore optimistic concurrency control. As of v9.1."
                 },
                 "additionalAttributeList": {
                     "type": "array",
