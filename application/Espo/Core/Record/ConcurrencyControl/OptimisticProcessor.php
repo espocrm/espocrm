@@ -33,6 +33,7 @@ use Espo\Core\Name\Field;
 use Espo\Core\Record\ConcurrencyControl\Optimistic\Result;
 use Espo\Core\Utils\FieldUtil;
 use Espo\ORM\BaseEntity;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -64,7 +65,16 @@ class OptimisticProcessor
             ->getDefs()
             ->getEntity($entity->getEntityType());
 
-        foreach ($entityDefs->getFieldNameList() as $field) {
+        foreach ($entityDefs->getFieldList() as $fieldDefs) {
+            $field = $fieldDefs->getName();
+
+            if (
+                $fieldDefs->getParam('optimisticConcurrencyControlIgnore') ||
+                $fieldDefs->getParam(FieldParam::READ_ONLY)
+            ) {
+                continue;
+            }
+
             foreach ($this->fieldUtil->getActualAttributeList($entityDefs->getName(), $field) as $attribute) {
                 if (
                     $entity instanceof BaseEntity &&

@@ -1033,6 +1033,10 @@
                     "type": "string",
                     "description": "Duplicates attributes of a field. Some fields can require some processing when an entity is being duplicated. Should implement Espo\\Core\\Record\\Duplicator\\FieldDuplicator."
                 },
+                "optimisticConcurrencyControlIgnore": {
+                    "type": "boolean",
+                    "description": "Ignore optimistic concurrency control."
+                },
                 "additionalAttributeList": {
                     "type": "array",
                     "items": {

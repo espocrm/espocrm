@@ -68,4 +68,9 @@ class FieldParam
      * A default value.
      */
     public const DEFAULT = 'default';
+
+    /**
+     * Read-only.
+     */
+    public const READ_ONLY = 'readOnly';
 }
