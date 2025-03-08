@@ -33,6 +33,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Entities\Settings;
+use Espo\ORM\Defs\Params\FieldParam;
 
 class Access
 {
@@ -67,7 +68,7 @@ class Access
         $fieldDefs = $this->metadata->get(['entityDefs', Settings::ENTITY_TYPE, 'fields']);
 
         foreach ($fieldDefs as $field => $fieldParams) {
-            if (empty($fieldParams['readOnly'])) {
+            if (empty($fieldParams[FieldParam::READ_ONLY])) {
                 continue;
             }
 
