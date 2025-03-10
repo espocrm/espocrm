@@ -1,0 +1,11 @@
+{
+    "fields": {
+        "layoutList": "چیدمان‌ها"
+    },
+    "labels": {
+        "Create LayoutSet": "ایجاد مجموعه چیدمان",
+        "Edit Layouts": "ویرایش چیدمان‌ها"
+    },
+    "tooltips": {
+    }
+}
