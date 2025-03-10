@@ -1601,7 +1601,7 @@ class DetailRecordView extends BaseRecordView {
 
         this.model.set(this.attributes, {
             skipReRenderInEditMode: skipReRender,
-            editCancel: true,
+            action: 'cancel-edit',
         });
     }
 

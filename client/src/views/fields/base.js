@@ -940,6 +940,7 @@ class BaseFieldView extends View {
                 this.model.set(attributes, {
                     ui: true,
                     fromView: this,
+                    action: 'ui',
                 });
             });
         }
@@ -1375,7 +1376,7 @@ class BaseFieldView extends View {
         if (!noReset) {
             this.model.set(this.initialAttributes, {
                 skipReRenderInEditMode: true,
-                editCancel: true,
+                action: 'cancel-edit',
             });
         }
 

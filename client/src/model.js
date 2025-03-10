@@ -36,7 +36,7 @@ import _ from 'underscore';
  *
  * @event Model#change
  * @param {Model} model A model.
- * @param {Object.<string, *>} o Options.
+ * @param {Record.<string, *> & {action?: string|'ui'|'save'|'fetch'|'cancel-edit'}} o Options.
  */
 
 /**
@@ -290,6 +290,14 @@ class Model {
 
         options = options || {};
 
+        if (options.ui && !options.action) {
+            options.action = 'ui';
+        }
+
+        if (!options.ui && options.action === 'ui') {
+            options.ui = true;
+        }
+
         const changes = [];
         const changing = this._changing;
 
@@ -485,6 +493,9 @@ class Model {
     fetch(options) {
         options = {...options};
 
+        options.action = 'fetch';
+
+        // For bc.
         const success = options.success;
 
         options.success = response => {
@@ -495,8 +506,6 @@ class Model {
             if (success) {
                 success.call(options.context, this, response, options);
             }
-
-            options.action = 'fetch';
 
             this.trigger('sync', this, response, options);
 
@@ -517,7 +526,8 @@ class Model {
      * @param {{
      *     patch?: boolean,
      *     wait?: boolean,
-     * } & Object.<string, *>} [options] Options.
+     * } & Object.<string, *>} [options] Options. Use `patch` to send a PATCH request. If `wait`, attributes will be
+     *     set only after the request is completed.
      * @returns {Promise<Object.<string, *>>}
      * @fires Model#sync
      * @copyright Credits to Backbone.js.
@@ -542,6 +552,8 @@ class Model {
                 responseAttributes = {...setAttributes, ...responseAttributes};
             }
 
+            options.action = 'save';
+
             if (responseAttributes) {
                 this.setMultiple(responseAttributes, options);
             }
@@ -549,8 +561,6 @@ class Model {
             if (success) {
                 success.call(options.context, this, response, options);
             }
-
-            options.action = 'save';
 
             this.trigger('sync', this, response, options);
 
