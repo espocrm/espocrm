@@ -29,17 +29,21 @@
 
 namespace Espo\Core\Formula\Functions;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Core\Formula\ArgumentList;
 
+/**
+ * @noinspection PhpUnused
+ */
 class BundleType extends BaseFunction
 {
     public function process(ArgumentList $args)
     {
+        $value = null;
+
         foreach ($args as $item) {
-            $this->evaluate($item);
+            $value = $this->evaluate($item);
         }
+
+        return $value;
     }
 }

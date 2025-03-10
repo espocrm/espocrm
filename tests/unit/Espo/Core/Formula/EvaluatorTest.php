@@ -1620,4 +1620,74 @@ class EvaluatorTest extends TestCase
 
         $this->assertEquals("<p><strong>test</strong></p>\n", $result);
     }
+
+    public function testLastExpressionEvaluation1(): void
+    {
+        $expression = "\$a = 1; \$b = \$a + 1; \$b;";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals(2, $result);
+    }
+
+    public function testLastExpressionEvaluation2(): void
+    {
+        $expression = "\$a = 1; \$b = \$a + 1; \$b";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals(2, $result);
+    }
+
+    public function testLastExpressionEvaluation3(): void
+    {
+        $expression = "\$a = 1; \$a + 1;";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals(2, $result);
+    }
+
+    public function testLastExpressionEvaluation4(): void
+    {
+        $expression = "\$a = 1; \$b = \$a + 1;";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals(2, $result);
+    }
+
+    public function testLastExpressionEvaluation5(): void
+    {
+        $expression = "\$c = (\$a = 1; \$b = \$a + 1;); \$c;";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals(2, $result);
+    }
+
+    public function testLastExpressionEvaluationNull1(): void
+    {
+        $expression = "null";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals(null, $result);
+    }
+
+    public function testLastExpressionEvaluationNull2(): void
+    {
+        $expression = "";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals(null, $result);
+    }
 }
