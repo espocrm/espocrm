@@ -30,6 +30,7 @@
 
 import BaseFieldView from 'views/fields/base';
 import FileUpload from 'helpers/file-upload';
+import AttachmentInsertSourceFromHelper from 'helpers/misc/attachment-insert-from-source';
 
 /**
  * An attachment-multiple field.
@@ -411,10 +412,9 @@ class AttachmentMultipleFieldView extends BaseFieldView {
     /**
      * @protected
      * @param {import('model').default} attachment
-     * @param {string|null} [link]
      * @param {boolean} [ui]
      */
-    pushAttachment(attachment, link, ui) {
+    pushAttachment(attachment, ui) {
         const arr = _.clone(this.model.get(this.idsName) || []);
 
         arr.push(attachment.id);
@@ -662,7 +662,7 @@ class AttachmentMultipleFieldView extends BaseFieldView {
                             return;
                         }
 
-                        this.pushAttachment(attachment, null, true);
+                        this.pushAttachment(attachment, true);
 
                         $attachmentBox.attr('data-id', attachment.id);
                         $attachmentBox.trigger('ready');
@@ -887,94 +887,19 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         }
     }
 
+    /**
+     * @private
+     * @param {string} source
+     */
     insertFromSource(source) {
-        const viewName =
-            this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs', source, 'insertModalView']) ||
-            this.getMetadata().get(['clientDefs', source, 'modalViews', 'select']) ||
-            'views/modals/select-records';
+        const helper = new AttachmentInsertSourceFromHelper(this);
 
-        if (viewName) {
-            Espo.Ui.notifyWait();
-
-            let filters = null;
-
-            if (('getSelectFilters' + source) in this) {
-                filters = this['getSelectFilters' + source]();
-
-                if (this.model.get('parentId') && this.model.get('parentType') === 'Account') {
-                    if (
-                        this.getMetadata()
-                            .get(['entityDefs', source, 'fields', 'account', 'type']) === 'link'
-                    ) {
-                        filters = {
-                            account: {
-                                type: 'equals',
-                                field: 'accountId',
-                                value: this.model.get('parentId'),
-                                valueName: this.model.get('parentName')
-                            }
-                        };
-                    }
-                }
-            }
-
-            let boolFilterList = this.getMetadata()
-                .get(['clientDefs', 'Attachment', 'sourceDefs', source, 'boolFilterList']);
-
-            if (('getSelectBoolFilterList' + source) in this) {
-                boolFilterList = this['getSelectBoolFilterList' + source]();
-            }
-
-            let primaryFilterName = this.getMetadata()
-                .get(['clientDefs', 'Attachment', 'sourceDefs', source, 'primaryFilter']);
-
-            if (('getSelectPrimaryFilterName' + source) in this) {
-                primaryFilterName = this['getSelectPrimaryFilterName' + source]();
-            }
-
-            this.createView('insertFromSource', viewName, {
-                scope: source,
-                createButton: false,
-                filters: filters,
-                boolFilterList: boolFilterList,
-                primaryFilterName: primaryFilterName,
-                multiple: true,
-            }, view => {
-                view.render();
-
-                Espo.Ui.notify(false);
-
-                this.listenToOnce(view, 'select', (modelList) =>{
-                    if (Object.prototype.toString.call(modelList) !== '[object Array]') {
-                        modelList = [modelList];
-                    }
-
-                    modelList.forEach(model => {
-                        if (model.entityType === 'Attachment') {
-                            this.pushAttachment(model);
-
-                            return;
-                        }
-
-                        Espo.Ajax
-                            .postRequest(source + '/action/getAttachmentList', {
-                                id: model.id,
-                                field: this.name,
-                                parentType: this.entityType,
-                            })
-                            .then(attachmentList => {
-                                attachmentList.forEach(item => {
-                                    this.getModelFactory().create('Attachment', attachment => {
-                                        attachment.set(item);
-
-                                        this.pushAttachment(attachment, true);
-                                    });
-                                });
-                            });
-                    });
-                });
-            });
-        }
+        helper.insert({
+            source: source,
+            onInsert: models => {
+                models.forEach(model => this.pushAttachment(model));
+            },
+        });
     }
 
     validateRequired() {

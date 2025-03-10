@@ -30,6 +30,7 @@
 
 import LinkFieldView from 'views/fields/link';
 import FileUpload from 'helpers/file-upload';
+import AttachmentInsertSourceFromHelper from 'helpers/misc/attachment-insert-from-source';
 
 /**
  * A file field.
@@ -750,96 +751,19 @@ class FileFieldView extends LinkFieldView {
         return $att;
     }
 
+    /**
+     * @private
+     * @param {string} source
+     */
     insertFromSource(source) {
-        const viewName =
-            this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs', source, 'insertModalView']) ||
-            this.getMetadata().get(['clientDefs', source, 'modalViews', 'select']) ||
-            'views/modals/select-records';
+        const helper = new AttachmentInsertSourceFromHelper(this);
 
-        if (viewName) {
-            Espo.Ui.notifyWait();
-
-            let filters = null;
-
-            if (('getSelectFilters' + source) in this) {
-                filters = this['getSelectFilters' + source]();
-
-                if (this.model.get('parentId') && this.model.get('parentType') === 'Account') {
-                    if (
-                        this.getMetadata()
-                            .get(['entityDefs', source, 'fields', 'account', 'type']) === 'link'
-                    ) {
-                        filters = {
-                            account: {
-                                type: 'equals',
-                                field: 'accountId',
-                                value: this.model.get('parentId'),
-                                valueName: this.model.get('parentName'),
-                            }
-                        };
-                    }
-                }
-            }
-
-            let boolFilterList = this.getMetadata().get(
-                ['clientDefs', 'Attachment', 'sourceDefs', source, 'boolFilterList']
-            );
-
-            if (('getSelectBoolFilterList' + source) in this) {
-                boolFilterList = this['getSelectBoolFilterList' + source]();
-            }
-
-            let primaryFilterName = this.getMetadata().get(
-                ['clientDefs', 'Attachment', 'sourceDefs', source, 'primaryFilter']
-            );
-
-            if (('getSelectPrimaryFilterName' + source) in this) {
-                primaryFilterName = this['getSelectPrimaryFilterName' + source]();
-            }
-
-            this.createView('insertFromSource', viewName, {
-                scope: source,
-                createButton: false,
-                filters: filters,
-                boolFilterList: boolFilterList,
-                primaryFilterName: primaryFilterName,
-                multiple: false,
-            }, (view) => {
-                view.render();
-
-                Espo.Ui.notify(false);
-
-                this.listenToOnce(view, 'select', (modelList) => {
-                    if (Object.prototype.toString.call(modelList) !== '[object Array]') {
-                        modelList = [modelList];
-                    }
-
-                    modelList.forEach(model => {
-                        if (model.entityType === 'Attachment') {
-                            this.setAttachment(model);
-
-                            return;
-                        }
-
-                        Espo.Ajax
-                            .postRequest(source + '/action/getAttachmentList', {
-                                id: model.id,
-                                field: this.name,
-                                relatedType: this.entityType,
-                            })
-                            .then(attachmentList => {
-                                attachmentList.forEach(item => {
-                                    this.getModelFactory().create('Attachment', (attachment) => {
-                                        attachment.set(item);
-
-                                        this.setAttachment(attachment);
-                                    });
-                                });
-                            });
-                    });
-                });
-            });
-        }
+        helper.insert({
+            source: source,
+            onInsert: models => {
+                models.forEach(model => this.setAttachment(model));
+            },
+        });
     }
 
     fetch() {
