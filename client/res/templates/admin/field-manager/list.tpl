@@ -43,7 +43,10 @@
                 {{translate name scope=../scope category='fields'}}
             {{/if}}
         </td>
-        <td>{{name}}</td>
+        <td>
+            <span class="{{#if isCustom}} text-info {{/if}}">{{name}}</span>
+
+        </td>
         <td>{{translate type category='fieldTypes' scope='Admin'}}</td>
         <td style="text-align: right">
             <div class="btn-group row-dropdown-group">
