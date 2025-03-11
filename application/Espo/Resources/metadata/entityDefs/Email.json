@@ -296,7 +296,7 @@
             "layoutAvailabilityList": []
         },
         "emailAddress": {
-            "type": "base",
+            "type": "varchar",
             "notStorable": true,
             "view": "views/email/fields/email-address",
             "customizationDisabled": true,
