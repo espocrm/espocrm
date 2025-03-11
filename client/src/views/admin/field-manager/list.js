@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import View from 'view';
+import ViewDetailsModalView from 'views/admin/field-manager/modals/view-details';
 
 class FieldManagerListView extends View {
 
@@ -55,6 +56,8 @@ class FieldManagerListView extends View {
     }
 
     setup() {
+        this.addActionHandler('viewDetails', (e, target) => this.viewDetails(target.dataset.name));
+
         this.scope = this.options.scope;
 
         this.isCustomizable =
@@ -199,6 +202,21 @@ class FieldManagerListView extends View {
 
                 $row.removeClass('hidden');
             });
+    }
+
+    /**
+     * @private
+     * @param {string} name
+     */
+    async viewDetails(name) {
+        const view = new ViewDetailsModalView({
+            field: name,
+            entityType: this.scope,
+        });
+
+        await this.assignView('modal', view);
+
+        await view.render();
     }
 }
 

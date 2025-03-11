@@ -46,13 +46,22 @@
         <td>{{name}}</td>
         <td>{{translate type category='fieldTypes' scope='Admin'}}</td>
         <td style="text-align: right">
-            {{#if isCustom}}
-                <div class="btn-group row-dropdown-group">
-                    <button
-                        class="btn btn-link btn-sm dropdown-toggle"
-                        data-toggle="dropdown"
-                    ><span class="caret"></span></button>
-                    <ul class="dropdown-menu pull-right">
+            <div class="btn-group row-dropdown-group">
+                <button
+                    class="btn btn-link btn-sm dropdown-toggle"
+                    data-toggle="dropdown"
+                ><span class="caret"></span></button>
+                <ul class="dropdown-menu pull-right">
+                    <li>
+                        <a
+                            role="button"
+                            tabindex="0"
+                            data-action="viewDetails"
+                            data-name="{{name}}"
+                        >{{translate 'View Details' scope='FieldManager'}}</a>
+                    </li>
+                    {{#if isCustom}}
+                        <li class="divider"></li>
                         <li>
                             <a
                                 role="button"
@@ -61,9 +70,9 @@
                                 data-name="{{name}}"
                             >{{translate 'Remove'}}</a>
                         </li>
-                    </ul>
-                </div>
-            {{/if}}
+                    {{/if}}
+                </ul>
+            </div>
         </td>
     </tr>
     {{/each}}
