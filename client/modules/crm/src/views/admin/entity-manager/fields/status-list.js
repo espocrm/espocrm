@@ -26,17 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/admin/entity-manager/fields/status-list', ['views/fields/multi-enum'], function (Dep) {
+import MultiEnumFieldView from 'views/fields/multi-enum';
 
-    return Dep.extend({
+export default class extends MultiEnumFieldView {
 
-        setupOptions: function () {
-            let entityType = this.model.get('name');
+    setupOptions() {
+        const entityType = this.model.get('name');
 
-            this.params.options = Espo.Utils.clone(
-                this.getMetadata().get(['entityDefs', entityType, 'fields', 'status', 'options'])) || [];
+        const options = this.getMetadata().get(['entityDefs', entityType, 'fields', 'status', 'options']) || [];
 
-            this.params.translation = `${entityType}.options.status`;
-        },
-    });
-});
+        this.params.options = [...options];
+        this.params.translation = `${entityType}.options.status`;
+    }
+}
