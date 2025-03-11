@@ -114,6 +114,7 @@
         "kanban": "Kanban"
     },
     "fieldTypes": {
+        "base": "Base",
         "address": "Address",
         "array": "Array",
         "foreign": "Foreign",
