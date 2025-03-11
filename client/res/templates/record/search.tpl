@@ -158,7 +158,7 @@
 
 <div class="advanced-filters-apply-container{{#unless toShowApplyFiltersButton}} hidden{{/unless}}">
     <a role="button" tabindex="0" class="btn btn-default btn-sm" data-action="applyFilters">
-        <span class="fas fa-search"></span>
+        <span class="fas fa-search fa-sm"></span>
         <span class="text-apply{{#if toShowResetFiltersText}} hidden{{/if}}">{{translate 'Apply'}}</span>
         <span class="text-reset{{#unless toShowResetFiltersText}} hidden{{/unless}}">{{translate 'Reset'}}</span>
     </a>
