@@ -26,93 +26,110 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/account/fields/shipping-address', ['views/fields/address'], function (Dep) {
+import AddressFieldView from 'views/fields/address';
 
-    return Dep.extend({
+export default class extends AddressFieldView {
 
-        copyFrom: 'billingAddress',
+    copyFrom = 'billingAddress'
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.attributePartList = this.getMetadata().get(['fields', 'address', 'actualFields']) || [];
+        this.addActionHandler('copyFromBilling', () => this.copy());
 
-            this.allAddressAttributeList = [];
+        this.attributePartList = this.getMetadata().get(['fields', 'address', 'actualFields']) || [];
 
-            this.attributePartList.forEach(part => {
-                this.allAddressAttributeList.push(this.copyFrom + Espo.Utils.upperCaseFirst(part));
-                this.allAddressAttributeList.push(this.name + Espo.Utils.upperCaseFirst(part));
-            });
+        this.allAddressAttributeList = [];
 
-            this.listenTo(this.model, 'change', () => {
-                var isChanged = false;
+        this.attributePartList.forEach(part => {
+            this.allAddressAttributeList.push(this.copyFrom + Espo.Utils.upperCaseFirst(part));
+            this.allAddressAttributeList.push(this.name + Espo.Utils.upperCaseFirst(part));
+        });
 
-                this.allAddressAttributeList.forEach(attribute => {
-                    if (this.model.hasChanged(attribute)) {
-                        isChanged = true;
-                    }
-                });
+        this.listenTo(this.model, 'change', () => {
+            let isChanged = false;
 
-                if (isChanged) {
-                    if (this.isEditMode() && this.isRendered() && this.$copyButton) {
-                        if (this.toShowCopyButton()) {
-                            this.$copyButton.removeClass('hidden');
-                        } else {
-                            this.$copyButton.addClass('hidden');
-                        }
-                    }
+            for (const attribute of this.allAddressAttributeList) {
+                if (this.model.hasChanged(attribute)) {
+                    isChanged = true;
+
+                    break;
                 }
-            });
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.mode === 'edit') {
-                var label = this.translate('Copy Billing', 'labels', 'Account');
-                this.$copyButton = $('<button class="btn btn-default btn-sm">' + label + '</button>');
-
-                this.$copyButton.on('click', () => {
-                    this.copy(this.copyFrom);
-                });
-
-                if (!this.toShowCopyButton()) {
-                    this.$copyButton.addClass('hidden');
-                }
-
-                this.$el.append(this.$copyButton);
             }
-        },
 
-        copy: function (fieldFrom) {
-            Object.keys(this.getMetadata().get('fields.address.fields'))
-                .forEach(attr => {
-                    let destField = this.name + Espo.Utils.upperCaseFirst(attr);
-                    let sourceField = fieldFrom + Espo.Utils.upperCaseFirst(attr);
+            if (!isChanged) {
+                return;
+            }
 
-                    this.model.set(destField, this.model.get(sourceField));
-                });
-        },
+            if (!this.isEditMode() || !this.isRendered() || !this.copyButtonElement) {
+                return;
+            }
 
-        toShowCopyButton: function () {
-            var billingIsNotEmpty = false;
-            var shippingIsNotEmpty = false;
+            if (this.toShowCopyButton()) {
+                this.copyButtonElement.classList.remove('hidden');
+            } else {
+                this.copyButtonElement.classList.add('hidden');
+            }
+        });
+    }
 
-            this.attributePartList.forEach(part => {
-                let attribute1 = this.copyFrom + Espo.Utils.upperCaseFirst(part);
+    afterRender() {
+        super.afterRender();
 
-                if (this.model.get(attribute1)) {
-                    billingIsNotEmpty = true;
-                }
+        if (this.mode === this.MODE_EDIT && this.element) {
+            const label = this.translate('Copy Billing', 'labels', 'Account');
 
-                let attribute2 = this.name + Espo.Utils.upperCaseFirst(part);
+            const button = this.copyButtonElement = document.createElement('button');
 
-                if (this.model.get(attribute2)) {
-                    shippingIsNotEmpty = true;
-                }
+            button.classList.add('btn', 'btn-default', 'btn-sm', 'action');
+            button.textContent = label;
+            button.setAttribute('data-action', 'copyFromBilling')
+
+            if (!this.toShowCopyButton()) {
+                button.classList.add('hidden');
+            }
+
+            this.element.append(button);
+        }
+    }
+
+    /**
+     * @private
+     */
+    copy() {
+        const fieldFrom = this.copyFrom;
+
+        Object.keys(this.getMetadata().get('fields.address.fields') || {})
+            .forEach(attr => {
+                const destField = this.name + Espo.Utils.upperCaseFirst(attr);
+                const sourceField = fieldFrom + Espo.Utils.upperCaseFirst(attr);
+
+                this.model.set(destField, this.model.get(sourceField));
             });
+    }
 
-            return billingIsNotEmpty && !shippingIsNotEmpty;
-        },
-    });
-});
+    /**
+     * @private
+     * @return {boolean}
+     */
+    toShowCopyButton() {
+        let billingIsNotEmpty = false;
+        let shippingIsNotEmpty = false;
+
+        this.attributePartList.forEach(part => {
+            const attribute1 = this.copyFrom + Espo.Utils.upperCaseFirst(part);
+
+            if (this.model.get(attribute1)) {
+                billingIsNotEmpty = true;
+            }
+
+            const attribute2 = this.name + Espo.Utils.upperCaseFirst(part);
+
+            if (this.model.get(attribute2)) {
+                shippingIsNotEmpty = true;
+            }
+        });
+
+        return billingIsNotEmpty && !shippingIsNotEmpty;
+    }
+}
