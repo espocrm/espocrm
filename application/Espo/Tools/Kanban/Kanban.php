@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\FieldProcessing\ListLoadProcessor;
 use Espo\Core\FieldProcessing\Loader\Params as FieldLoaderParams;
 use Espo\Core\Record\Collection;
+use Espo\Core\Record\Select\ApplierClassNameListProvider;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
@@ -59,7 +60,8 @@ class Kanban
         private SelectBuilderFactory $selectBuilderFactory,
         private EntityManager $entityManager,
         private ListLoadProcessor $listLoadProcessor,
-        private RecordServiceContainer $recordServiceContainer
+        private RecordServiceContainer $recordServiceContainer,
+        private ApplierClassNameListProvider $applierClassNameListProvider,
     ) {}
 
     public function setEntityType(string $entityType): self
@@ -142,6 +144,9 @@ class Kanban
             ->from($this->entityType)
             ->withStrictAccessControl()
             ->withSearchParams($searchParams)
+            ->withAdditionalApplierClassNameList(
+                $this->applierClassNameListProvider->get($this->entityType)
+            )
             ->build();
 
         $statusField = $this->getStatusField();
