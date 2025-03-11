@@ -444,6 +444,12 @@ class BaseFieldView extends View {
             this.readOnlyLocked = true;
         }
 
+        if (!this.isReady) {
+            this.mode = 'detail';
+
+            return Promise.resolve();
+        }
+
         if (this.isEditMode()) {
             if (this.isInlineEditMode()) {
                 return this.inlineEditClose();
