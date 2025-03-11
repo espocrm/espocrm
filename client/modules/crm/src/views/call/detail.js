@@ -26,6 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import MeetingDetailView from 'crm:views/meeting/detail';
+import MeetingDetailView from 'modules/crm/views/meeting/detail';
 
 export default class extends MeetingDetailView {}
