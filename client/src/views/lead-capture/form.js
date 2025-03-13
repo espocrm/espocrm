@@ -119,7 +119,7 @@ export default class LeadCaptureFormView extends View {
 
         this.model.url = this.formData.requestUrl;
 
-        this.recordView = new EditRecordView({
+        this.recordView = new CustomEditView({
             model: this.model,
             detailLayout: this.formData.detailLayout,
             buttonList: [
@@ -139,11 +139,16 @@ export default class LeadCaptureFormView extends View {
         this.assignView('record', this.recordView, '.record');
 
         this.whenReady().then(() => this.initAutocomplete());
+
+        this.listenTo(this.recordView, 'save', () => this.actionCreate());
     }
 
     afterRender() {
         const subContainer = this.element.querySelector('.detail-button-container .sub-container');
-        subContainer.classList.add('sub-container-center-5');
+
+        if (subContainer) {
+            subContainer.classList.add('sub-container-center-5');
+        }
     }
 
     async actionCreate() {
@@ -276,5 +281,12 @@ export default class LeadCaptureFormView extends View {
                 }
             });
         }
+    }
+}
+
+class CustomEditView extends EditRecordView {
+
+    async actionSave(data) {
+        this.trigger('save');
     }
 }
