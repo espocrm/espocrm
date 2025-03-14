@@ -708,7 +708,7 @@ class Service
     private function fetchWorkingRangeListForTeams(array $teamIdList, FetchParams $fetchParams): array
     {
         $teamList = iterator_to_array(
-                $this->entityManager
+            $this->entityManager
                 ->getRDBRepositoryByClass(Team::class)
                 ->where([Attribute::ID => $teamIdList])
                 ->find()
@@ -793,6 +793,13 @@ class Service
         $fetchParams = $fetchParams
             ->withFrom($params->from)
             ->withTo($params->to);
+
+        if ($fetchParams->getScopeList() === null) {
+            $fetchParams = $fetchParams->withScopeList(
+                $this->config->get('busyRangesEntityList') ??
+                [Meeting::ENTITY_TYPE, Call::ENTITY_TYPE]
+            );
+        }
 
         $eventList = $this->fetchInternal($user, $fetchParams->withSkipAcl(), !$params->accessCheck);
 

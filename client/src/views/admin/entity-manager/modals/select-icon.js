@@ -1421,7 +1421,6 @@ export default class extends ModalView {
             "fas fa-water",
             "fas fa-water-ladder",
             "fas fa-wave-square",
-            "fas fa-web-awesome",
             "fas fa-weight-hanging",
             "fas fa-weight-scale",
             "fas fa-wheat-awn",
