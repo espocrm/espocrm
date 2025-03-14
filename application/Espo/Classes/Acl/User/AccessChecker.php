@@ -46,14 +46,10 @@ class AccessChecker implements AccessEntityCREDSChecker
 {
     use DefaultAccessCheckerDependency;
 
-    private DefaultAccessChecker $defaultAccessChecker;
-    private AclManager $aclManager;
-
-    public function __construct(DefaultAccessChecker $defaultAccessChecker, AclManager $aclManager)
-    {
-        $this->defaultAccessChecker = $defaultAccessChecker;
-        $this->aclManager = $aclManager;
-    }
+    public function __construct(
+        private DefaultAccessChecker $defaultAccessChecker,
+        private AclManager $aclManager,
+    ) {}
 
     public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool
     {
@@ -70,6 +66,10 @@ class AccessChecker implements AccessEntityCREDSChecker
 
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
+        if (!$user->isAdmin() && !$entity->isActive()) {
+            return false;
+        }
+
         if ($entity->isPortal()) {
             if ($this->aclManager->getPermissionLevel($user, Permission::PORTAL) === Table::LEVEL_YES) {
                 return true;
