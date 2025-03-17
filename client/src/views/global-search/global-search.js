@@ -186,6 +186,12 @@ class GlobalSearchView extends SiteNavbarItemView {
                                 return 1;
                             }
 
+                            const lengthDiff = a.lowerLabel.length - b.lowerLabel.length;
+
+                            if (lengthDiff !== 0) {
+                                return lengthDiff;
+                            }
+
                             return a.lowerLabel.localeCompare(b.lowerLabel);
                         })
                         .map(it => ({
