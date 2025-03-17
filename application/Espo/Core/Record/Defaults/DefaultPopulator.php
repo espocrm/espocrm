@@ -33,11 +33,17 @@ use Espo\Core\Acl;
 use Espo\Core\Acl\Permission;
 use Espo\Core\Acl\Table as AclTable;
 use Espo\Core\Currency\ConfigDataProvider as CurrencyConfigDataProvider;
+use Espo\Core\Field\Link;
+use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Field\LinkMultipleItem;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\FieldUtil;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -54,6 +60,7 @@ class DefaultPopulator implements Populator
         private FieldUtil $fieldUtil,
         private EntityManager $entityManager,
         private CurrencyConfigDataProvider $currencyConfig,
+        private Metadata $metadata,
     ) {}
 
     public function populate(Entity $entity): void
@@ -61,6 +68,7 @@ class DefaultPopulator implements Populator
         $this->processAssignedUser($entity);
         $this->processDefaultTeam($entity);
         $this->processCurrency($entity);
+        $this->processPortal($entity);
     }
 
     /**
@@ -136,11 +144,11 @@ class DefaultPopulator implements Populator
         foreach ($this->fieldUtil->getEntityTypeFieldList($entityType) as $field) {
             $type = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, FieldParam::TYPE);
 
-            if (
-                $type === FieldType::CURRENCY &&
-                $entity->get($field) &&
-                !$entity->get($field . 'Currency')
-            ) {
+            if ($type !== FieldType::CURRENCY) {
+                continue;
+            }
+
+            if ($entity->get($field) && !$entity->get($field . 'Currency')) {
                 $entity->set($field . 'Currency', $this->currencyConfig->getDefaultCurrency());
             }
         }
@@ -179,5 +187,90 @@ class DefaultPopulator implements Populator
 
         $entity->set(Field::ASSIGNED_USER . 'Id', $this->user->getId());
         $entity->set(Field::ASSIGNED_USER . 'Name', $this->user->getName());
+    }
+
+    private function processPortal(Entity $entity): void
+    {
+        if (!$this->user->isPortal()) {
+            return;
+        }
+
+        $this->processPortalAccount($entity);
+        $this->processPortalContact($entity);
+    }
+
+    private function processPortalAccount(Entity $entity): void
+    {
+        /** @var ?string $link */
+        $link = $this->metadata->get("aclDefs.{$entity->getEntityType()}.accountLink");
+
+        if (!$link) {
+            return;
+        }
+
+        $account = $this->user->getContact()?->getAccount();
+
+        if (!$account) {
+            return;
+        }
+
+        $this->processPortalRecord($entity, $link, $account);
+    }
+
+    private function processPortalContact(Entity $entity): void
+    {
+        /** @var ?string $link */
+        $link = $this->metadata->get("aclDefs.{$entity->getEntityType()}.contactLink");
+
+        if (!$link) {
+            return;
+        }
+
+        $contact = $this->user->getContact();
+
+        if (!$contact) {
+            return;
+        }
+
+        $this->processPortalRecord($entity, $link, $contact);
+    }
+
+    private function processPortalRecord(Entity $entity, string $link, Account|Contact $record): void
+    {
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
+
+        $fieldDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType())
+            ->tryGetField($link);
+
+        if (!$fieldDefs) {
+            return;
+        }
+
+        if (
+            $fieldDefs->getType() === FieldType::LINK ||
+            $fieldDefs->getType() === FieldType::LINK_ONE
+        ) {
+            if ($entity->has($link . 'Id')) {
+                return;
+            }
+
+            $entity->setValueObject($link, Link::create($record->getId(), $record->getName()));
+
+            return;
+        }
+
+        if ($fieldDefs->getType() === FieldType::LINK_MULTIPLE) {
+            if ($entity->has($link . 'Ids')) {
+                return;
+            }
+
+            $linkMultiple = LinkMultiple::create([LinkMultipleItem::create($record->getId(), $record->getName())]);
+
+            $entity->setValueObject($link, $linkMultiple);
+        }
     }
 }
