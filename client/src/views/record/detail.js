@@ -33,6 +33,7 @@ import ViewRecordHelper from 'view-record-helper';
 import ActionItemSetup from 'helpers/action-item-setup';
 import StickyBarHelper from 'helpers/record/misc/sticky-bar';
 import SelectTemplateModalView from 'views/modals/select-template';
+import DebounceHelper from 'helpers/util/debounce';
 
 /**
  * A detail record view.
@@ -542,6 +543,18 @@ class DetailRecordView extends BaseRecordView {
      * @since 9.0.0
      */
     rootData
+
+    /**
+     * @private
+     * @type {DebounceHelper}
+     */
+    _webSocketDebounceHelper
+
+    /**
+     * @private
+     * @type {number}
+     */
+    _webSocketDebounceInterval = 500
 
     /**
      * A shortcut-key => action map.
@@ -1888,7 +1901,7 @@ class DetailRecordView extends BaseRecordView {
         this.numId = Math.floor((Math.random() * 10000) + 1);
 
         // For testing purpose.
-        $(window).on('fetch-record.' + this.cid, () => this.handleRecordUpdate());
+        $(window).on('fetch-record.' + this.cid, () => this._webSocketDebounceHelper.process());
 
         this.once('remove', () => {
             if (this.isChanged) {
@@ -1974,6 +1987,11 @@ class DetailRecordView extends BaseRecordView {
 
         this.on('after:render', () => {
             this.initElementReferences();
+        });
+
+        this._webSocketDebounceHelper = new DebounceHelper({
+            interval: this._webSocketDebounceInterval,
+            handler: () => this.handleRecordUpdate(),
         });
 
         if (
@@ -3550,9 +3568,7 @@ class DetailRecordView extends BaseRecordView {
         this.recordUpdateWebSocketTopic = topic;
         this.isSubscribedToWebSocket = true;
 
-        this.getHelper().webSocketManager.subscribe(topic, () => {
-            this.handleRecordUpdate();
-        });
+        this.getHelper().webSocketManager.subscribe(topic, () => this._webSocketDebounceHelper.process());
     }
 
     unsubscribeFromWebSocket() {
@@ -3563,7 +3579,10 @@ class DetailRecordView extends BaseRecordView {
         this.getHelper().webSocketManager.unsubscribe(this.recordUpdateWebSocketTopic);
     }
 
-    handleRecordUpdate() {
+    /**
+     * @private
+     */
+    async handleRecordUpdate() {
         if (this.updateWebSocketIsBlocked) {
             return;
         }
@@ -3571,16 +3590,16 @@ class DetailRecordView extends BaseRecordView {
         if (this.inlineEditModeIsOn || this.mode === this.MODE_EDIT) {
             const m = this.model.clone();
 
-            m.fetch().then(() => {
-                if (this.inlineEditModeIsOn || this.mode === this.MODE_EDIT) {
-                    this.updatedAttributes = Espo.Utils.cloneDeep(m.attributes);
-                }
-            });
+            await m.fetch();
+
+            if (this.inlineEditModeIsOn || this.mode === this.MODE_EDIT) {
+                this.updatedAttributes = Espo.Utils.cloneDeep(m.attributes);
+            }
 
             return;
         }
 
-        this.model.fetch({highlight: true});
+        await this.model.fetch({highlight: true});
     }
 
     blockUpdateWebSocket(toUnblock) {
