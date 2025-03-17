@@ -71,6 +71,7 @@
             "layoutDefaultSidePanelDisabled": true,
             "customizationRequiredDisabled": true,
             "customizationOptionsDisabled": true,
+            "customizationOptionsReferenceDisabled": true,
             "customizationIsSortedDisabled": true,
             "customizationDisplayAsLabelDisabled": true,
             "customizationAuditedDisabled": true,
