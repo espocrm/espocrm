@@ -498,9 +498,16 @@ class NavbarSiteView extends View {
 
         return this.itemList
             .filter(name => {
-                const defs = defsMap[name];
+                const item = defsMap[name];
 
-                if (!defs) {
+                if (!item) {
+                    return false;
+                }
+
+                if (
+                    item.accessDataList &&
+                    !Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())
+                ) {
                     return false;
                 }
 
@@ -524,7 +531,11 @@ class NavbarSiteView extends View {
     /**
      *
      * @param {string} name
-     * @return {{view: string, class: string}}
+     * @return {{
+     *     view: string,
+     *     class: string,
+     *     accessDataList?: module:utils~AccessDefs[],
+     * }}
      */
     getItemDefs(name) {
         return this.getMetadata().get(['app', 'clientNavbar', 'items', name]);

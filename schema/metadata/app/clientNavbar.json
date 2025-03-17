@@ -27,6 +27,9 @@
                     "disabled": {
                         "type": "boolean",
                         "description": "To disable."
+                    },
+                    "accessDataList": {
+                        "$ref": "../clientDefs.json#/definitions/accessDataList"
                     }
                 }
             }
