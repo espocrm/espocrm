@@ -59,6 +59,10 @@ class UserFieldView extends LinkFieldView {
         };
     }
 
+    getSelectPrimaryFilterName() {
+        return 'active';
+    }
+
     /**
      * @protected
      */
