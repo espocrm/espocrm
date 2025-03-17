@@ -32,10 +32,10 @@ namespace Espo\Core\Record\Defaults;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Permission;
 use Espo\Core\Acl\Table as AclTable;
+use Espo\Core\Currency\ConfigDataProvider as CurrencyConfigDataProvider;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Type\FieldType;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Entities\User;
 use Espo\ORM\Defs\Params\FieldParam;
@@ -52,50 +52,15 @@ class DefaultPopulator implements Populator
         private Acl $acl,
         private User $user,
         private FieldUtil $fieldUtil,
-        private Config $config,
-        private EntityManager $entityManager
+        private EntityManager $entityManager,
+        private CurrencyConfigDataProvider $currencyConfig,
     ) {}
 
     public function populate(Entity $entity): void
     {
-        $entityType = $entity->getEntityType();
-
-        if ($this->isAssignedUserShouldBeSetWithSelf($entityType)) {
-            $entity->set('assignedUserId', $this->user->getId());
-            $entity->set('assignedUserName', $this->user->getName());
-        }
-
-        if ($this->toAddDetailTeam($entity)) {
-            $defaultTeamId = $this->user->getDefaultTeam()?->getId();
-
-            if (!$defaultTeamId || !$entity instanceof CoreEntity) {
-                throw new RuntimeException();
-            }
-
-            $entity->addLinkMultipleId(Field::TEAMS, $defaultTeamId);
-
-            $teamsNames = $entity->get('teamsNames');
-
-            if (!$teamsNames || !is_object($teamsNames)) {
-                $teamsNames = (object) [];
-            }
-
-            $teamsNames->$defaultTeamId = $this->user->get('defaultTeamName');
-
-            $entity->set('teamsNames', $teamsNames);
-        }
-
-        foreach ($this->fieldUtil->getEntityTypeFieldList($entityType) as $field) {
-            $type = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, FieldParam::TYPE);
-
-            if (
-                $type === FieldType::CURRENCY &&
-                $entity->get($field) &&
-                !$entity->get($field . 'Currency')
-            ) {
-                $entity->set($field . 'Currency', $this->config->get('defaultCurrency'));
-            }
-        }
+        $this->processAssignedUser($entity);
+        $this->processDefaultTeam($entity);
+        $this->processCurrency($entity);
     }
 
     /**
@@ -127,10 +92,7 @@ class DefaultPopulator implements Populator
         return false;
     }
 
-    /**
-     * @phpstan-assert-if-true CoreEntity $entity
-     */
-    private function toAddDetailTeam(Entity $entity): bool
+    private function toAddDefaultTeam(Entity $entity): bool
     {
         if ($this->user->isPortal()) {
             return false;
@@ -165,5 +127,57 @@ class DefaultPopulator implements Populator
         }
 
         return false;
+    }
+
+    private function processCurrency(Entity $entity): void
+    {
+        $entityType = $entity->getEntityType();
+
+        foreach ($this->fieldUtil->getEntityTypeFieldList($entityType) as $field) {
+            $type = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, FieldParam::TYPE);
+
+            if (
+                $type === FieldType::CURRENCY &&
+                $entity->get($field) &&
+                !$entity->get($field . 'Currency')
+            ) {
+                $entity->set($field . 'Currency', $this->currencyConfig->getDefaultCurrency());
+            }
+        }
+    }
+
+    private function processDefaultTeam(Entity $entity): void
+    {
+        if (!$this->toAddDefaultTeam($entity)) {
+            return;
+        }
+
+        $defaultTeamId = $this->user->getDefaultTeam()?->getId();
+
+        if (!$defaultTeamId || !$entity instanceof CoreEntity) {
+            throw new RuntimeException();
+        }
+
+        $entity->addLinkMultipleId(Field::TEAMS, $defaultTeamId);
+
+        $teamsNames = $entity->get(Field::TEAMS . 'Names');
+
+        if (!$teamsNames || !is_object($teamsNames)) {
+            $teamsNames = (object)[];
+        }
+
+        $teamsNames->$defaultTeamId = $this->user->getDefaultTeam()?->getName();
+
+        $entity->set(Field::TEAMS . 'Names', $teamsNames);
+    }
+
+    private function processAssignedUser(Entity $entity): void
+    {
+        if (!$this->isAssignedUserShouldBeSetWithSelf($entity->getEntityType())) {
+            return;
+        }
+
+        $entity->set(Field::ASSIGNED_USER . 'Id', $this->user->getId());
+        $entity->set(Field::ASSIGNED_USER . 'Name', $this->user->getName());
     }
 }
