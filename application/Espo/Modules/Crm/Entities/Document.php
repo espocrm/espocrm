@@ -72,6 +72,16 @@ class Document extends Entity
         return $file;
     }
 
+    public function getStatus(): ?string
+    {
+        return $this->get('status');
+    }
+
+    public function setStatus(string $status): self
+    {
+        return $this->set('status', $status);
+    }
+
     public function getAssignedUser(): ?Link
     {
         /** @var ?Link */

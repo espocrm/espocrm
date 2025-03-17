@@ -80,6 +80,11 @@ class Campaign extends Entity
         return $this->get('status');
     }
 
+    public function setStatus(string $status): self
+    {
+        return $this->set('status', $status);
+    }
+
     public function getStartDate(): ?Date
     {
         /** @var ?Date */

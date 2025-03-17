@@ -43,4 +43,9 @@ class Event extends Entity
     {
         return $this->get('status');
     }
+
+    public function setStatus(string $status): self
+    {
+        return $this->set('status', $status);
+    }
 }

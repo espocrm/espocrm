@@ -71,6 +71,11 @@ class Call extends Entity
         return $this->get('status');
     }
 
+    public function setStatus(string $status): self
+    {
+        return $this->set('status', $status);
+    }
+
     public function getDateStart(): ?DateTime
     {
         /** @var ?DateTime */
