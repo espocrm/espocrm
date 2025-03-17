@@ -471,7 +471,7 @@ class PanelsContainerRecordView extends View {
         let fields = {};
 
         this.panelList.forEach(p => {
-            const panelView = this.getPanelActionsView(p.name);
+            const panelView = this.getPanelView(p.name);
 
             if ((!panelView.disabled || withHidden) && ('getFieldViews' in panelView)) {
                 fields = _.extend(fields, panelView.getFieldViews());
