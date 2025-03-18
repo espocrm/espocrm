@@ -125,7 +125,7 @@ class AdminController extends Controller {
             this.listenTo(view, 'rebuild', this.rebuild);
         }, {
             useStored: isReturn,
-            storageKey: key,
+            key: key,
         });
     }
 
