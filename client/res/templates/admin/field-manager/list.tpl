@@ -5,7 +5,7 @@
             type="button"
             class="btn btn-default btn-wide"
             data-action="addField"
-        ><span class="fas fa-plus"></span> {{translate 'Add Field' scope='Admin'}}</button>
+        ><span class="fas fa-plus fa-sm"></span><span>{{translate 'Add Field' scope='Admin'}}</span></button>
         {{/if}}
     </div>
 </div>

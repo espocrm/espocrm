@@ -5,8 +5,7 @@
 <div class="button-container">
     <div class="btn-group">
         <button class="btn btn-default" data-action="createEntity">
-            <span class="fas fa-plus"></span>
-            {{translate 'Create Entity' scope='Admin'}}
+            <span class="fas fa-plus fa-sm"></span><span>{{translate 'Create Entity' scope='Admin'}}</span>
         </button>
         <button
             class="btn btn-default dropdown-toggle"

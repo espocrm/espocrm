@@ -13,8 +13,7 @@
 <div class="button-container">
     {{#if isCreatable}}
         <button class="btn btn-default btn-wide" data-action="createLink">
-            <span class="fas fa-plus"></span>
-            {{translate 'Create Link' scope='Admin'}}
+            <span class="fas fa-plus fa-sm"></span><span>{{translate 'Create Link' scope='Admin'}}</span>
         </button>
     {{/if}}
 </div>
