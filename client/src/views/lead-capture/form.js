@@ -42,13 +42,6 @@ export default class LeadCaptureFormView extends View {
                     </div>
                 </div>
             {{else}}
-                {{#if text}}
-                <div class="panel paned-default">
-                    <div class="panel-body">
-                        <div class="complex-text">{{complexText text}}</div>
-                    </div>
-                </div>
-                {{/if}}
                 <div class="record">{{{record}}}</div>
             {{/if}}
         </div>
@@ -84,7 +77,6 @@ export default class LeadCaptureFormView extends View {
         return {
             isPosted: this.isPosted,
             successText: this.formData.successText,
-            text: this.formData.text,
         };
     }
 
@@ -119,9 +111,23 @@ export default class LeadCaptureFormView extends View {
 
         this.model.url = this.formData.requestUrl;
 
+        const detailLayout = [
+            ...(
+                this.formData.text ?
+                    [
+                        {
+                            noteText: this.formData.text,
+                            noteStyle: 'default',
+                            rows: [],
+                        }
+                    ] : []
+            ),
+            ...this.formData.detailLayout,
+        ];
+
         this.recordView = new CustomEditView({
             model: this.model,
-            detailLayout: this.formData.detailLayout,
+            detailLayout: detailLayout,
             buttonList: [
                 {
                     name: 'save',
