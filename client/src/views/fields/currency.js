@@ -259,8 +259,10 @@ class CurrencyFieldView extends FloatFieldView {
 
             const parts = value.split('.');
 
-            if (parts[1] && parts[1].length < scale) {
-                value = parts[0] + '.' + parts[1].padEnd(scale, '0');
+            const decimalPart = parts[1] || '';
+
+            if (decimalPart.length < scale) {
+                value = parts[0] + '.' + decimalPart.padEnd(scale, '0');
             }
         }
 
