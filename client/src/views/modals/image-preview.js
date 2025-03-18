@@ -222,11 +222,6 @@ class ImagePreviewModalView extends ModalView {
     }
 
     afterRender() {
-        if (!this.element) {
-            // @todo Remove when views are not rendered, after change in bull.
-            return;
-        }
-
         if (this.isMultiple()) {
             /** @type {HTMLDivElement|null} */
             const titleElement = this.dialog.getElement().querySelector('.modal-header .modal-title');

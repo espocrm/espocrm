@@ -385,13 +385,11 @@ class TextFieldView extends BaseFieldView {
                     this.controlSeeMore();
                 });
 
-                // Can be hidden.
                 // @todo Revise stream post with empty text.
-                if (this.element) {
-                    this.element.querySelectorAll('img').forEach(image => {
-                        image.addEventListener('load', this.controlSeeMoreBind);
-                    });
-                }
+
+                this.element.querySelectorAll('img').forEach(image => {
+                    image.addEventListener('load', this.controlSeeMoreBind);
+                });
             }
         }
 

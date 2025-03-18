@@ -141,6 +141,10 @@ class VarcharFieldView extends BaseFieldView {
                 this.events['click [data-action="copyToClipboard"]'] = () => this.copyToClipboard();
             }
         }
+
+        this.on('remove', () => {
+            this.searchMultiSelectInputElement = undefined;
+        });
     }
 
     /**
@@ -269,11 +273,6 @@ class VarcharFieldView extends BaseFieldView {
      * @param {string} type
      */
     handleSearchType(type) {
-        if (!this.element) {
-            // @todo Remove when handled by bullbone.
-            return;
-        }
-
         const mainElement = this.element.querySelector('input.main-element');
         const multiSelectContainer = this.element.querySelector('div[data-role="multi-select-container"]');
 
@@ -533,12 +532,6 @@ class VarcharFieldView extends BaseFieldView {
      * @private
      */
     initSearchMultiSelect() {
-        if (!this.element) {
-            this.searchMultiSelectInputElement = undefined;
-
-            return;
-        }
-
         this.searchMultiSelectInputElement = this.element.querySelector('input[data-role="multi-select-input"]');
 
         MultiSelect.init(this.searchMultiSelectInputElement, {
