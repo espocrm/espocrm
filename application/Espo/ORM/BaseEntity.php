@@ -29,6 +29,7 @@
 
 namespace Espo\ORM;
 
+use Doctrine\DBAL\Types\Types;
 use Espo\ORM\DataLoader\EmptyLoader;
 use Espo\ORM\DataLoader\Loader;
 use Espo\ORM\Defs\Params\AttributeParam;
@@ -481,6 +482,13 @@ class BaseEntity implements Entity
         }
 
         $attributeType = $this->getAttributeType($attribute);
+
+        if (
+            $attributeType === self::VARCHAR &&
+            $this->getAttributeParam($attribute, AttributeParam::DB_TYPE) === Types::DECIMAL
+        ) {
+            return $this->prepareAttributeValueDecimal($attribute, $value);
+        }
 
         if ($attributeType === self::FOREIGN) {
             $attributeType = $this->getForeignAttributeType($attribute) ?? $attributeType;
@@ -1164,5 +1172,27 @@ class BaseEntity implements Entity
         $this->isPartiallyLoaded = false;
 
         $this->loader->load($this);
+    }
+
+    private function prepareAttributeValueDecimal(string $attribute, mixed $value): ?string
+    {
+        if (!is_scalar($value) || !is_numeric($value)) {
+            return null;
+        }
+
+        $scale = $this->getAttributeParam($attribute, AttributeParam::SCALE);
+
+        $value = strval($value);
+
+        $parts = explode('.', $value, 2);
+
+        $left = $parts[0];
+        $right = $parts[1] ?? '';
+
+        if (strlen($right) < $scale) {
+            $value = $left . '.' . str_pad($right, $scale, '0');
+        }
+
+        return $value;
     }
 }

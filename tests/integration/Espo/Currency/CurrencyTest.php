@@ -29,6 +29,7 @@
 
 namespace tests\integration\Espo\Currency;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Formula\Manager as FormulaManager;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\Tools\Currency\RateService;
@@ -67,6 +68,9 @@ class CurrencyTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals(1.3, $newRates->getRate('EUR'));
     }
 
+    /**
+     * @throws Error
+     */
     public function testDecimal1(): void
     {
         $this->getMetadata()->set('entityDefs', 'Lead', [
@@ -82,12 +86,20 @@ class CurrencyTest extends \tests\integration\Core\BaseTestCase
         $this->getDataManager()->rebuild();
         $this->reCreateApplication();
 
+        $em = $this->getEntityManager();
+
         $value = Currency::create('10.1', 'USD')
             ->add(Currency::create('0.1', 'USD'));
 
-        /** @var Lead $lead */
-        $lead = $this->getEntityManager()->getNewEntity(Lead::ENTITY_TYPE);
+        $lead = $em->getRDBRepositoryByClass(Lead::class)->getNew();
+
         $lead->setValueObject('testCurrency', $value);
+
+        $value = $lead->getValueObject('testCurrency');
+        $this->assertInstanceOf(Currency::class, $value);
+
+        $this->assertEquals('10.2000', $value->getAmountAsString());
+
         $this->getEntityManager()->saveEntity($lead);
 
         /** @var Lead $lead */
@@ -98,6 +110,29 @@ class CurrencyTest extends \tests\integration\Core\BaseTestCase
         $this->assertInstanceOf(Currency::class, $value);
         $this->assertEquals('10.2000', $value->getAmountAsString());
         $this->assertEquals(0, $value->compare(Currency::create('10.2', 'USD')));
+
+        //
+
+        $lead = $em->getRDBRepositoryByClass(Lead::class)->getNew();
+
+        $value = Currency::create('10', 'USD');
+
+        $lead->setValueObject('testCurrency', $value);
+
+        $value = $lead->getValueObject('testCurrency');
+        $this->assertInstanceOf(Currency::class, $value);
+
+        $this->assertEquals('10.0000', $value->getAmountAsString());
+
+        //
+
+        $lead = $em->getRDBRepositoryByClass(Lead::class)->getNew();
+
+        $lead->setValueObject('testCurrency', null);
+
+        $value = $lead->getValueObject('testCurrency');
+
+        $this->assertEquals(null, $value);
     }
 
     public function testFormulaConvert(): void
