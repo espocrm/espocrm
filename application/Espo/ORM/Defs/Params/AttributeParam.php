@@ -88,4 +88,9 @@ class AttributeParam
      * Scale.
      */
     public const SCALE = 'scale';
+
+    /**
+     * Dependee attributes.
+     */
+    public const DEPENDEE_ATTRIBUTE_LIST = 'dependeeAttributeList';
 }

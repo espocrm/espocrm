@@ -1958,7 +1958,7 @@ abstract class BaseQueryComposer implements QueryComposer
         foreach ($itemListFiltered as $item) {
             $additionalList = array_merge(
                 $additionalList,
-                $this->getAttributeParam($entity, $item, 'dependeeAttributeList') ?? []
+                $this->getAttributeParam($entity, $item, AttributeParam::DEPENDEE_ATTRIBUTE_LIST) ?? []
             );
         }
 

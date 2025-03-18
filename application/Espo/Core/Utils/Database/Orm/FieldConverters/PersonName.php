@@ -34,6 +34,8 @@ use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\FieldConverter;
 use Espo\ORM\Defs\FieldDefs;
+use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Type\AttributeType;
 
 /**
@@ -151,10 +153,10 @@ class PersonName implements FieldConverter
                 ],
             ]);
 
-        $dependeeAttributeList = $fieldDefs->getParam('dependeeAttributeList');
+        $dependeeAttributeList = $fieldDefs->getParam(FieldParam::DEPENDEE_ATTRIBUTE_LIST);
 
         if ($dependeeAttributeList) {
-            $attributeDefs = $attributeDefs->withParam('dependeeAttributeList', $dependeeAttributeList);
+            $attributeDefs = $attributeDefs->withParam(AttributeParam::DEPENDEE_ATTRIBUTE_LIST, $dependeeAttributeList);
         }
 
         return EntityDefs::create()

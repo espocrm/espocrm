@@ -95,7 +95,7 @@ class Converter
         'where' => 'where',
         'storeArrayValues' => 'storeArrayValues',
         'binary' => 'binary',
-        'dependeeAttributeList' => 'dependeeAttributeList',
+        FieldParam::DEPENDEE_ATTRIBUTE_LIST => AttributeParam::DEPENDEE_ATTRIBUTE_LIST,
         FieldParam::PRECISION => AttributeParam::PRECISION,
         FieldParam::SCALE => AttributeParam::SCALE,
     ];
