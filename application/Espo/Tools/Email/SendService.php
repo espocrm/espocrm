@@ -270,7 +270,6 @@ class SendService
                 return $params;
             }
 
-            /** @var ?InboundEmail $inboundEmail */
             $inboundEmail = $this->entityManager
                 ->getRDBRepositoryByClass(InboundEmail::class)
                 ->getById($inboundEmailId);
