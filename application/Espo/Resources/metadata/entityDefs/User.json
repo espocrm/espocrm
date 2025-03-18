@@ -26,7 +26,14 @@
         },
         "type": {
             "type": "enum",
-            "options": ["regular", "admin", "portal", "system", "super-admin", "api"],
+            "options": [
+                "regular",
+                "admin",
+                "portal",
+                "system",
+                "super-admin",
+                "api"
+            ],
             "default": "regular",
             "maxLength": 24,
             "index": true,
