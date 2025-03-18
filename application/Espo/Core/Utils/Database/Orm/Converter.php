@@ -96,8 +96,8 @@ class Converter
         'storeArrayValues' => 'storeArrayValues',
         'binary' => 'binary',
         'dependeeAttributeList' => 'dependeeAttributeList',
-        'precision' => 'precision',
-        'scale' => 'scale',
+        FieldParam::PRECISION => AttributeParam::PRECISION,
+        FieldParam::SCALE => AttributeParam::SCALE,
     ];
 
     /** @var array<string, mixed> */

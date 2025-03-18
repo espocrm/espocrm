@@ -72,16 +72,16 @@ class Currency implements FieldConverter
 
         $convertedDefs = null;
 
-        if ($fieldDefs->getParam('decimal')) {
+        if ($fieldDefs->getParam(FieldParam::DECIMAL)) {
             $dbType = $fieldDefs->getParam(FieldParam::DB_TYPE) ?? Types::DECIMAL;
-            $precision = $fieldDefs->getParam('precision') ?? self::DEFAULT_PRECISION;
-            $scale = $fieldDefs->getParam('scale') ?? self::DEFAULT_SCALE;
+            $precision = $fieldDefs->getParam(FieldParam::PRECISION) ?? self::DEFAULT_PRECISION;
+            $scale = $fieldDefs->getParam(FieldParam::SCALE) ?? self::DEFAULT_SCALE;
 
             $amountDefs = $amountDefs
                 ->withType(AttributeType::VARCHAR)
                 ->withDbType($dbType)
-                ->withParam('precision', $precision)
-                ->withParam('scale', $scale);
+                ->withParam(AttributeParam::PRECISION, $precision)
+                ->withParam(AttributeParam::SCALE, $scale);
         }
 
         if ($fieldDefs->isNotStorable()) {

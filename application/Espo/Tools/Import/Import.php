@@ -37,6 +37,7 @@ use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Entities\Attachment;
 use Espo\Entities\ImportError;
 use Espo\ORM\Defs\Params\AttributeParam;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
 use Espo\Tools\Import\Jobs\RunIdle;
@@ -811,7 +812,7 @@ class Import
 
             if (
                 $fieldType === FieldType::CURRENCY &&
-                $fieldDefs->getParam('decimal')
+                $fieldDefs->getParam(FieldParam::DECIMAL)
             ) {
                 $value = $this->transformFloatString($decimalMark, $value);
 

@@ -32,6 +32,7 @@ namespace Espo\Classes\FieldValidators;
 use Espo\Core\Field\Currency;
 use Espo\Core\Utils\Config;
 use Espo\ORM\BaseEntity;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Entity;
 
 class CurrencyType extends FloatType
@@ -83,7 +84,7 @@ class CurrencyType extends FloatType
         }
 
         /** @var int $precision */
-        $precision = $entity->getAttributeParam($field, 'precision') ?? self::DEFAULT_PRECISION;
+        $precision = $entity->getAttributeParam($field, AttributeParam::PRECISION) ?? self::DEFAULT_PRECISION;
 
         $value = $entity->get($field);
 

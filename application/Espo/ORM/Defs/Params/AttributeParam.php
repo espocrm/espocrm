@@ -78,4 +78,14 @@ class AttributeParam
      * A foreign attribute name. For foreign attributes.
      */
     public const FOREIGN = 'foreign';
+
+    /**
+     * Precision.
+     */
+    public const PRECISION = 'precision';
+
+    /**
+     * Scale.
+     */
+    public const SCALE = 'scale';
 }

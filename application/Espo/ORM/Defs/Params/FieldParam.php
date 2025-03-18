@@ -73,4 +73,19 @@ class FieldParam
      * Read-only.
      */
     public const READ_ONLY = 'readOnly';
+
+    /**
+     * Decimal.
+     */
+    public const DECIMAL = 'decimal';
+
+    /**
+     * Precision.
+     */
+    public const PRECISION = 'precision';
+
+    /**
+     * Scale.
+     */
+    public const SCALE = 'scale';
 }
