@@ -1044,6 +1044,13 @@
                     },
                     "description": "Additional attributes for a field. Attribute name will be derived by concatenation with the field name."
                 },
+                "dependeeAttributeList": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Dependee attributes."
+                },
                 "select": {
                     "type": "object",
                     "description": "A custom complex expression to be used for the field when reading from DB. It's possible to define leftJoins and joins that are needed to be applied when the field is being selected.",
