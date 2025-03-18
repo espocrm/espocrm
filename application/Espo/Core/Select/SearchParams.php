@@ -43,7 +43,16 @@ use stdClass;
 class SearchParams
 {
     /** @var array<string, mixed> */
-    private array $rawParams = [];
+    private array $rawParams = [
+        'select' => null,
+        'boolFilterList' => [],
+        'orderBy' => null,
+        'order' => null,
+        'maxSize' => null,
+        'where' => null,
+        'primaryFilter' => null,
+        'textFilter' => null,
+    ];
 
     public const ORDER_ASC = 'ASC';
     public const ORDER_DESC = 'DESC';

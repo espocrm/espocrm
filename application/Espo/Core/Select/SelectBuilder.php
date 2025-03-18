@@ -499,11 +499,10 @@ class SelectBuilder
             return;
         }
 
-        $searchParams = SearchParams::fromRaw([
-            'boolFilterList' => $this->boolFilterList,
-            'primaryFilter' => $this->primaryFilter,
-            'textFilter' => $this->textFilter,
-        ]);
+        $searchParams = SearchParams::create()
+            ->withBoolFilterList($this->boolFilterList)
+            ->withPrimaryFilter($this->primaryFilter)
+            ->withTextFilter($this->textFilter);
 
         if ($this->searchParams) {
             $searchParams = SearchParams::merge($searchParams, $this->searchParams);
