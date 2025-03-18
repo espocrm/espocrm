@@ -80,6 +80,13 @@
                 "type": "string",
                 "description": "A field."
             }
+        },
+        "additionalApplierClassNameList": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Additional appliers. Should implement Espo\\Core\\Select\\Applier\\AdditionalApplier interface. Since v9.1.0."
         }
     }
 }

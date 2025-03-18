@@ -30,12 +30,12 @@
 namespace Espo\Core\Select\Applier\Appliers;
 
 use Espo\Core\Binding\ContextualBinder;
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Select\Applier\AdditionalApplier;
 use Espo\Core\Binding\BindingContainerBuilder;
-
 use Espo\Entities\User;
 
 class Additional
@@ -44,6 +44,7 @@ class Additional
         private User $user,
         private InjectableFactory $injectableFactory,
         private string $entityType,
+        private Metadata $metadata,
     ) {}
 
     /**
@@ -51,6 +52,8 @@ class Additional
      */
     public function apply(array $classNameList, QueryBuilder $queryBuilder, SearchParams $searchParams): void
     {
+        $classNameList = array_merge($this->getMandatoryClassNameList(), $classNameList);
+
         foreach ($classNameList as $className) {
             $applier = $this->createApplier($className);
 
@@ -72,5 +75,14 @@ class Additional
                 })
                 ->build()
         );
+    }
+
+    /**
+     * @return class-string<AdditionalApplier>[]
+     */
+    private function getMandatoryClassNameList(): array
+    {
+        /** @var class-string<AdditionalApplier>[] */
+        return $this->metadata->get("selectDefs.$this->entityType.additionalApplierClassNameList") ?? [];
     }
 }

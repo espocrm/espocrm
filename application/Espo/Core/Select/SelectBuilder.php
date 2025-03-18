@@ -495,10 +495,6 @@ class SelectBuilder
     {
         assert($this->queryBuilder !== null);
 
-        if (count($this->additionalApplierClassNameList) === 0) {
-            return;
-        }
-
         $searchParams = SearchParams::create()
             ->withBoolFilterList($this->boolFilterList)
             ->withPrimaryFilter($this->primaryFilter)
