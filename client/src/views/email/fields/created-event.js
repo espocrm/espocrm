@@ -33,6 +33,7 @@ export default class extends LinkParentFieldView {
     data() {
         const data = super.data();
 
+        /** @type {Record} */
         const icsEventData = this.model.get('icsEventData') || {};
 
         if (
