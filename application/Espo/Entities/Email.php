@@ -218,7 +218,7 @@ class Email extends Entity
             return null;
         }
 
-        return EmailUtil::stripBodyPlainQuotePart($body) ?: null;
+        return EmailUtil::stripPlainTextQuotePart($body) ?: null;
     }
 
     public function getBodyPlain(): ?string
@@ -230,41 +230,7 @@ class Email extends Entity
         /** @var string $body */
         $body = $this->get('body') ?? '';
 
-        $breaks = ["<br />", "<br>", "<br/>", "<br />", "&lt;br /&gt;", "&lt;br/&gt;", "&lt;br&gt;"];
-
-        $body = str_ireplace($breaks, "\r\n", $body);
-        $body = strip_tags($body);
-
-        $reList = [
-            '&(quot|#34);',
-            '&(amp|#38);',
-            '&(lt|#60);',
-            '&(gt|#62);',
-            '&(nbsp|#160);',
-            '&(iexcl|#161);',
-            '&(cent|#162);',
-            '&(pound|#163);',
-            '&(copy|#169);',
-            '&(reg|#174);',
-        ];
-
-        $replaceList = [
-            '',
-            '&',
-            '<',
-            '>',
-            ' ',
-            '¡',
-            '¢',
-            '£',
-            '©',
-            '®',
-        ];
-
-        foreach ($reList as $i => $re) {
-            /** @var string $body */
-            $body = mb_ereg_replace($re, $replaceList[$i], $body, 'i');
-        }
+        $body = EmailUtil::stripHtml($body);
 
         if (!$body) {
             return null;

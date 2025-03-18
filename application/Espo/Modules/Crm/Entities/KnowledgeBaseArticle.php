@@ -117,4 +117,14 @@ class KnowledgeBaseArticle extends Entity
 
         return $this;
     }
+
+    public function getBody(): ?string
+    {
+        return $this->get('body');
+    }
+
+    public function setBody(?string $body): self
+    {
+        return $this->set('body', $body);
+    }
 }

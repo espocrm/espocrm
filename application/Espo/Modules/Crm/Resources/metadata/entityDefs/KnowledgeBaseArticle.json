@@ -101,6 +101,12 @@
         },
         "body": {
             "type": "wysiwyg"
+        },
+        "bodyPlain": {
+            "type": "text",
+            "readOnly": true,
+            "directUpdateDisabled": true,
+            "fieldManagerParamList": []
         }
     },
     "links": {
@@ -140,7 +146,12 @@
     },
     "collection": {
         "orderBy": "order",
-        "order": "asc"
+        "order": "asc",
+        "textFilterFields": [
+            "name",
+            "bodyPlain"
+        ],
+        "fullTextSearch": true
     },
     "optimisticConcurrencyControl": true
 }

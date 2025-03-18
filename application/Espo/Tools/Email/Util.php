@@ -64,13 +64,72 @@ class Util
         return $string;
     }
 
-    static public function stripBodyPlainQuotePart(string $body): string
+    /**
+     * Strip HTML.
+     *
+     * @since 9.1.0
+     */
+    static public function stripHtml(string $string): string
     {
-        if (!$body) {
+        $breaks = [
+            "<br />",
+            "<br>",
+            "<br/>",
+            "<br />",
+            "&lt;br /&gt;",
+            "&lt;br/&gt;",
+            "&lt;br&gt;",
+        ];
+
+        $string = str_ireplace($breaks, "\r\n", $string);
+        $string = strip_tags($string);
+
+        $reList = [
+            '&(quot|#34);',
+            '&(amp|#38);',
+            '&(lt|#60);',
+            '&(gt|#62);',
+            '&(nbsp|#160);',
+            '&(iexcl|#161);',
+            '&(cent|#162);',
+            '&(pound|#163);',
+            '&(copy|#169);',
+            '&(reg|#174);',
+        ];
+
+        $replaceList = [
+            '',
+            '&',
+            '<',
+            '>',
+            ' ',
+            '¡',
+            '¢',
+            '£',
+            '©',
+            '®',
+        ];
+
+        foreach ($reList as $i => $re) {
+            /** @var string $string */
+            $string = mb_ereg_replace($re, $replaceList[$i], $string, 'i');
+        }
+
+        return $string;
+    }
+
+    /**
+     * Strip a quote part in a plain text.
+     *
+     * @since 9.0.0
+     */
+    static public function stripPlainTextQuotePart(string $string): string
+    {
+        if (!$string) {
             return '';
         }
 
-        $lines = preg_split("/\r\n|\n|\r/", $body);
+        $lines = preg_split("/\r\n|\n|\r/", $string);
 
         if (!is_array($lines)) {
             return '';
