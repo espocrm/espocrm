@@ -71,6 +71,10 @@ class Person extends Entity
     {
         $this->setInContainer('lastName', $value);
 
+        if (!$this->helper->hasAllPersonNameAttributes($this, 'name')) {
+            return;
+        }
+
         $name = $this->helper->formatPersonName($this, 'name');
 
         $this->setInContainer(Field::NAME, $name);
@@ -84,6 +88,10 @@ class Person extends Entity
     {
         $this->setInContainer('firstName', $value);
 
+        if (!$this->helper->hasAllPersonNameAttributes($this, 'name')) {
+            return;
+        }
+
         $name = $this->helper->formatPersonName($this, 'name');
 
         $this->setInContainer(Field::NAME, $name);
@@ -96,6 +104,10 @@ class Person extends Entity
     protected function _setMiddleName($value)
     {
         $this->setInContainer('middleName', $value);
+
+        if (!$this->helper->hasAllPersonNameAttributes($this, 'name')) {
+            return;
+        }
 
         $name = $this->helper->formatPersonName($this, 'name');
 

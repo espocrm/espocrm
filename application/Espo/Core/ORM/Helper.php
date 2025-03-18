@@ -41,6 +41,41 @@ class Helper
     public function __construct(private Config $config)
     {}
 
+    /**
+     * @internal
+     */
+    public function hasAllPersonNameAttributes(Entity $entity, string $field): bool
+    {
+        $format = $this->config->get('personNameFormat');
+
+        $firstName = 'first' . ucfirst($field);
+        $lastName = 'last' . ucfirst($field);
+        $middleName = 'middle' . ucfirst($field);
+
+        $attributes = [
+            $firstName,
+            $lastName,
+        ];
+
+        if (
+            $format === self::FORMAT_LAST_FIRST_MIDDLE ||
+            $format === self::FORMAT_FIRST_MIDDLE_LAST
+        ) {
+            $attributes[] = $middleName;
+        }
+
+        foreach ($attributes as $attribute) {
+            if (!$entity->has($attribute)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @internal
+     */
     public function formatPersonName(Entity $entity, string $field): ?string
     {
         $format = $this->config->get('personNameFormat');
