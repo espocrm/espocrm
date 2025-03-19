@@ -29,8 +29,11 @@
 
 namespace Espo\Core\Select\Order;
 
+use Espo\Core\Acl;
+use Espo\Core\AclManager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\Type\FieldType;
+use Espo\Entities\User;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\OrderList;
 use Espo\Core\Exceptions\Forbidden;
@@ -47,7 +50,9 @@ class Applier
         private string $entityType,
         private MetadataProvider $metadataProvider,
         private ItemConverterFactory $itemConverterFactory,
-        private OrdererFactory $ordererFactory
+        private OrdererFactory $ordererFactory,
+        private AclManager $aclManager,
+        private User $user,
     ) {}
 
     /**
@@ -79,6 +84,13 @@ class Applier
 
             if ($this->metadataProvider->getFieldType($this->entityType, $orderBy) === FieldType::PASSWORD) {
                 throw new Forbidden("Order by field '$orderBy' is not allowed.");
+            }
+
+            if (
+                $params->applyPermissionCheck() &&
+                !$this->aclManager->checkField($this->user, $this->entityType, $orderBy)
+            ) {
+                throw new Forbidden("Not access to order by field '$orderBy'.");
             }
         }
 

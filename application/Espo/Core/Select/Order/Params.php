@@ -40,12 +40,11 @@ use InvalidArgumentException;
  */
 class Params
 {
-    //private bool $forbidComplexExpressions = false;
     private bool $forceDefault = false;
-    /** @var mixed */
-    private $orderBy = null;
+    private mixed $orderBy = null;
     /** @var SearchParams::ORDER_ASC|SearchParams::ORDER_DESC|null */
     private $order = null;
+    private bool $applyPermissionCheck = false;
 
     private function __construct() {}
 
@@ -54,16 +53,17 @@ class Params
      *     forceDefault?: bool,
      *     orderBy?: ?string,
      *     order?: SearchParams::ORDER_ASC|SearchParams::ORDER_DESC|null,
+     *     applyPermissionCheck?: bool,
      * } $params
      */
     public static function fromAssoc(array $params): self
     {
         $object = new self();
 
-        //$object->forbidComplexExpressions = $params['forbidComplexExpressions'] ?? false;
         $object->forceDefault = $params['forceDefault'] ?? false;
         $object->orderBy = $params['orderBy'] ?? null;
         $object->order = $params['order'] ?? null;
+        $object->applyPermissionCheck = $params['applyPermissionCheck'] ?? false;
 
         foreach ($params as $key => $value) {
             if (!property_exists($object, $key)) {
@@ -88,11 +88,6 @@ class Params
 
         return $object;
     }
-
-    /*public function forbidComplexExpressions(): bool
-    {
-        return $this->forbidComplexExpressions;
-    }*/
 
     /**
      * Force default order.
@@ -119,5 +114,13 @@ class Params
     public function getOrder(): ?string
     {
         return $this->order;
+    }
+
+    /**
+     * Apply permission check.
+     */
+    public function applyPermissionCheck(): bool
+    {
+        return $this->applyPermissionCheck;
     }
 }

@@ -206,9 +206,9 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             );
 
         $orderParams = OrderParams::fromAssoc([
-            //'forbidComplexExpressions' => true,
             'orderBy' => $searchParams->getOrderBy(),
             'order' => $searchParams->getOrder(),
+            'applyPermissionCheck' => true,
         ]);
 
         $this->orderApplier

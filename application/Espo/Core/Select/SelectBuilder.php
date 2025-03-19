@@ -453,9 +453,9 @@ class SelectBuilder
             ($this->searchParams->getOrderBy() || $this->searchParams->getOrder())
         ) {
             $params = OrderParams::fromAssoc([
-                //'forbidComplexExpressions' => $this->applyComplexExpressionsForbidden,
                 'orderBy' => $this->searchParams->getOrderBy(),
                 'order' => $this->searchParams->getOrder(),
+                'applyPermissionCheck' => $this->applyWherePermissionCheck,
             ]);
 
             $this->createOrderApplier()

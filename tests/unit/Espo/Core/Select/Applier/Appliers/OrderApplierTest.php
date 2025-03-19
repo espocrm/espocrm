@@ -29,7 +29,9 @@
 
 namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
+use Espo\Core\AclManager;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Entities\User;
 use Espo\ORM\Query\Part\OrderList;
 use Espo\ORM\Query\Part\Order;
 use Espo\Core\Select\Order\Applier as OrderApplier;
@@ -56,13 +58,18 @@ class OrderApplierTest extends TestCase
         $this->queryBuilder = $this->createMock(QueryBuilder::class);
         $this->params = $this->createMock(OrderParams::class);
 
+        $aclManager = $this->createMock(AclManager::class);
+        $user = $this->createMock(User::class);
+
         $this->entityType = 'Test';
 
         $this->applier = new OrderApplier(
             $this->entityType,
             $this->metadataProvider,
             $this->itemConverterFactory,
-            $this->ordererFactory
+            $this->ordererFactory,
+            $aclManager,
+            $user,
         );
     }
 
