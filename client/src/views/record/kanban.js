@@ -200,7 +200,7 @@ class KanbanRecordView extends ListRecordView {
         },
         /** @this KanbanRecordView */
         'mouseenter th.group-header': function (e) {
-            if (!this.isCreatable) {
+            if (!this.isCreatable || this.getMetadata().get(['clientDefs', this.entityType, 'createDisabled'])) {
                 return;
             }
 
