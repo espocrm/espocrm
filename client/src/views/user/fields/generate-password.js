@@ -166,14 +166,20 @@ class UserGeneratePasswordFieldView extends BaseFieldView {
         const setList = [letters, numbers, either, upperCase, lowerCase, specialCharacters];
 
         const shuffle = function (array) {
-            let currentIndex = array.length, temporaryValue, randomIndex;
+            let currentIndex = array.length;
 
             while (0 !== currentIndex) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
+                const randomArray = new Uint32Array(1);
+                crypto.getRandomValues(randomArray);
+
+                const randomIndex = Math.floor((randomArray[0] / (0xFFFFFFFF + 1)) * currentIndex);
+
                 currentIndex -= 1;
-                temporaryValue = array[currentIndex];
+
+                const tempValue = array[currentIndex];
+
                 array[currentIndex] = array[randomIndex];
-                array[randomIndex] = temporaryValue;
+                array[randomIndex] = tempValue;
             }
 
             return array;
