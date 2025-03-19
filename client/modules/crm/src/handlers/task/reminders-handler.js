@@ -54,7 +54,6 @@ class RemindersHandler  {
             if (
                 !this.model.hasChanged('assignedUserId') &&
                 !this.model.hasChanged('assignedUsersIds') &&
-                !this.model.hasChanged('assignedUsersIds') &&
                 !this.model.hasChanged('dateEnd') &&
                 !this.model.hasChanged('dateEndDate') &&
                 !this.model.hasChanged('status')
