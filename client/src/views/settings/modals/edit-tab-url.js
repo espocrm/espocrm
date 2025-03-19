@@ -119,11 +119,13 @@ class SettingsEditTabUrlModalView extends Modal {
                 url: {
                     type: 'url',
                     required: true,
+                    tooltip: 'Admin.tabUrl',
                 },
                 aclScope: {
                     type: 'enum',
                     translation: 'Global.scopeNames',
                     options: ['', ...this.getAclScopes()],
+                    tooltip: 'Admin.tabUrlAclScope',
                 },
                 onlyAdmin: {
                     type: 'bool',

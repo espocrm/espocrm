@@ -375,5 +375,9 @@
         "notePostNoParent": "Note about Post (no Parent)",
         "noteStatus": "Note about Status Update",
         "passwordChangeLink": "Password Change Link"
+    },
+    "tooltips": {
+        "tabUrl": "Can start with `#` to navigate to an application page.",
+        "tabUrlAclScope": "The tab will be available for users who have access to the specified scope."
     }
 }
