@@ -665,10 +665,6 @@ class Util
      */
     public static function generateCryptId(): string
     {
-        if (!function_exists('random_bytes')) {
-            return self::generateMoreEntropyId();
-        }
-
         return bin2hex(random_bytes(16));
     }
 

@@ -159,17 +159,6 @@ class EspoManager implements Manager
     {
         $length = self::TOKEN_RANDOM_LENGTH;
 
-        if (function_exists('random_bytes')) {
-            /** @noinspection PhpUnhandledExceptionInspection */
-            return bin2hex(random_bytes($length));
-        }
-
-        if (function_exists('openssl_random_pseudo_bytes')) {
-            $randomValue = openssl_random_pseudo_bytes($length);
-
-            return bin2hex($randomValue);
-        }
-
-        throw new RuntimeException("Could not generate token.");
+        return bin2hex(random_bytes($length));
     }
 }
