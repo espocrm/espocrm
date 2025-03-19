@@ -76,6 +76,10 @@ class Applier
             if ($this->metadataProvider->isFieldOrderDisabled($this->entityType, $orderBy)) {
                 throw new Forbidden("Order by the field '$orderBy' is disabled.");
             }
+
+            if ($this->metadataProvider->getFieldType($this->entityType, $orderBy) === FieldType::PASSWORD) {
+                throw new Forbidden("Order by field '$orderBy' is not allowed.");
+            }
         }
 
         if ($orderBy === null) {

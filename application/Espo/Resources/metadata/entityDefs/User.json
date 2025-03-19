@@ -52,7 +52,8 @@
             "directAccessDisabled": true,
             "fieldManagerParamList": [
                 "tooltipText"
-            ]
+            ],
+            "orderDisabled": true
         },
         "passwordConfirm": {
             "type": "password",
@@ -88,7 +89,8 @@
                 "tooltipText"
             ],
             "copyToClipboard": true,
-            "dynamicLogicVisibleDisabled": true
+            "dynamicLogicVisibleDisabled": true,
+            "orderDisabled": true
         },
         "secretKey": {
             "type": "varchar",
