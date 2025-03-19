@@ -185,11 +185,21 @@ class UserGeneratePasswordFieldView extends BaseFieldView {
             return array;
         };
 
-        const array = setList.map(
-            (len, i) => Array(len).fill(chars[i]).map(
-                x => x[Math.floor(Math.random() * x.length)]
-            ).join('')
-        ).concat();
+        const array = setList
+            .map((len, i) => {
+                return Array(len)
+                    .fill(chars[i])
+                    .map(x => {
+                        const randomArray = new Uint32Array(1);
+                        crypto.getRandomValues(randomArray);
+
+                        const randomIndex = Math.floor((randomArray[0] / (0xFFFFFFFF + 1)) * x.length);
+
+                        return x[randomIndex];
+                    })
+                    .join('');
+            })
+            .concat();
 
         return shuffle(array).join('');
     }
