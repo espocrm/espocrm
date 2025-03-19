@@ -63,4 +63,5 @@ class FieldType
     public const WYSIWYG = 'wysiwyg';
     public const JSON_ARRAY = 'jsonArray';
     public const JSON_OBJECT = 'jsonObject';
+    public const PASSWORD = 'password';
 }

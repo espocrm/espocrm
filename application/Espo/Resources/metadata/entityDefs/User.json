@@ -45,7 +45,8 @@
             "directAccessDisabled": true,
             "fieldManagerParamList": [
                 "tooltipText"
-            ]
+            ],
+            "orderDisabled": true
         },
         "passwordConfirm": {
             "type": "password",
