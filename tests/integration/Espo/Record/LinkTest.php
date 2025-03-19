@@ -445,7 +445,7 @@ class LinkTest extends BaseTestCase
 
         $this->assertEquals(
             (object) [
-                $contact->getId() => $contact->get('name'),
+                $contact->getId() => $contact->get('lastName'),
             ],
             $case->get('contactsNames')
         );
@@ -457,8 +457,8 @@ class LinkTest extends BaseTestCase
 
         $this->assertEquals(
             (object) [
-                $contact->getId() => $contact->get('name'),
-                $contact1->getId() => $contact1->get('name'),
+                $contact->getId() => $contact->get('lastName'),
+                $contact1->getId() => $contact1->get('lastName'),
             ],
             $case->get('contactsNames')
         );
