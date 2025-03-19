@@ -82,7 +82,8 @@
                 "tooltipText"
             ],
             "copyToClipboard": true,
-            "dynamicLogicVisibleDisabled": true
+            "dynamicLogicVisibleDisabled": true,
+            "orderDisabled": true
         },
         "secretKey": {
             "type": "varchar",
