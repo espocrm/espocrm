@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\Applier;
 
+use Espo\Core\AclManager;
 use Espo\Core\Select\Text\Applier as TextFilterApplier;
 use Espo\Core\Select\AccessControl\Applier as AccessControlFilterApplier;
 use Espo\Core\Select\Where\Applier as WhereApplier;
@@ -45,6 +46,7 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\Select\SelectManager;
 use Espo\Core\Select\SelectManagerFactory;
 
+use Espo\Core\Utils\Acl\UserAclManagerProvider;
 use Espo\Entities\User;
 use RuntimeException;
 
@@ -77,6 +79,7 @@ class Factory
 
     public function __construct(
         private InjectableFactory $injectableFactory,
+        private UserAclManagerProvider $userAclManagerProvider,
         private SelectManagerFactory $selectManagerFactory
     ) {}
 
@@ -87,11 +90,14 @@ class Factory
         // SelectManager is used for backward compatibility.
         $selectManager = $this->selectManagerFactory->create($entityType, $user);
 
+        $aclManager = $this->userAclManagerProvider->get($user);
+
         $bindingData = new BindingData();
 
         $binder = new Binder($bindingData);
         $binder
             ->bindInstance(User::class, $user)
+            ->bindInstance(AclManager::class, $aclManager)
             ->bindInstance(SelectManager::class, $selectManager)
             ->for($className)
             ->bindValue('$entityType', $entityType)

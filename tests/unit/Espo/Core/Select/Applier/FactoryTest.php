@@ -29,6 +29,7 @@
 
 namespace tests\unit\Espo\Core\Select\Applier;
 
+use Espo\Core\AclManager;
 use Espo\Core\Binding\Binder;
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\BindingData;
@@ -46,21 +47,34 @@ use Espo\Core\Select\SelectManagerFactory;
 use Espo\Core\Select\Text\Applier as TextFilterApplier;
 use Espo\Core\Select\Where\Applier as WhereApplier;
 
+use Espo\Core\Utils\Acl\UserAclManagerProvider;
 use Espo\Entities\User;
+use PHPUnit\Framework\TestCase;
 
-class FactoryTest extends \PHPUnit\Framework\TestCase
+class FactoryTest extends TestCase
 {
+    private $aclManager;
+
     protected function setUp(): void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
-        $this->selectManagerFactory = $this->createMock(SelectManagerFactory::class);
         $this->selectManagerFactory = $this->createMock(SelectManagerFactory::class);
         $this->user = $this->createMock(User::class);
 
         $this->selectManager = $this->createMock(SelectManager::class);
 
+        $userAclManagerProvider = $this->createMock(UserAclManagerProvider::class);
+
+        $this->aclManager = $this->createMock(AclManager::class);
+
+        $userAclManagerProvider
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn($this->aclManager);
+
         $this->factory = new ApplierFactory(
             $this->injectableFactory,
+            $userAclManagerProvider,
             $this->selectManagerFactory
         );
     }
@@ -134,6 +148,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
         $binder
             ->bindInstance(User::class, $this->user)
             ->bindInstance(SelectManager::class, $this->selectManager)
+            ->bindInstance(AclManager::class, $this->aclManager)
             ->for($applierClassName)
             ->bindValue('$entityType', $entityType)
             ->bindValue('$selectManager', $this->selectManager);
