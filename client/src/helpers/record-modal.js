@@ -75,6 +75,7 @@ class RecordModalHelper {
      *   afterDestroy?: function(import('model').default),
      *   beforeRender?: function(import('views/modals/detail').default),
      *   onClose?: function(),
+     *   collapseDisabled: boolean,
      * }} params
      * @return {Promise<import('views/modals/detail').default>}
      */
@@ -99,7 +100,7 @@ class RecordModalHelper {
 
         Espo.Ui.notifyWait();
 
-        /** @type {module:views/modals/detail~options} */
+        /** @type {module:views/modals/detail~options & module:views/modal~Options} */
         const options = {
             entityType: entityType,
             model: model,
@@ -110,6 +111,7 @@ class RecordModalHelper {
             layoutName: params.layoutName,
             fullFormDisabled: params.fullFormDisabled,
             fullFormUrl: params.fullFormUrl,
+            collapseDisabled: params.collapseDisabled,
         };
 
         Espo.Ui.notifyWait();
@@ -166,6 +168,7 @@ class RecordModalHelper {
      *       action: string|null,
      *       options: {isReturn?: boolean} & Record,
      *   },
+     *   collapseDisabled: boolean,
      * }} params
      * @return {Promise<import('views/modals/edit').default>}
      * @since 9.1.0
@@ -178,7 +181,7 @@ class RecordModalHelper {
         const viewName = this.metadata.get(`clientDefs.${entityType}.modalViews.edit`) ||
             'views/modals/edit';
 
-        /** @type {module:views/modals/edit~options} */
+        /** @type {module:views/modals/edit~options & module:views/modal~Options} */
         const options = {
             entityType: entityType,
             id: id,
@@ -188,6 +191,7 @@ class RecordModalHelper {
             returnDispatchParams: params.returnDispatchParams,
             layoutName: params.layoutName,
             fullFormUrl: params.fullFormUrl,
+            collapseDisabled: params.collapseDisabled,
         };
 
         if (params.rootUrl) {
@@ -245,6 +249,7 @@ class RecordModalHelper {
      *       action: string|null,
      *       options: {isReturn?: boolean} & Record,
      *   },
+     *   collapseDisabled: boolean,
      * }} params
      * @return {Promise<import('views/modals/edit').default>}
      * @since 9.1.0
@@ -255,7 +260,7 @@ class RecordModalHelper {
         const viewName = this.metadata.get(`clientDefs.${entityType}.modalViews.edit`) ||
             'views/modals/edit';
 
-        /** @type {module:views/modals/edit~options} */
+        /** @type {module:views/modals/edit~options & module:views/modal~Options} */
         const options = {
             entityType: entityType,
             fullFormDisabled: params.fullFormDisabled,
@@ -266,6 +271,7 @@ class RecordModalHelper {
             focusForCreate: params.focusForCreate,
             layoutName: params.layoutName,
             fullFormUrl: params.fullFormUrl,
+            collapseDisabled: params.collapseDisabled,
         };
 
         if (params.rootUrl) {

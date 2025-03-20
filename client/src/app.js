@@ -1213,13 +1213,13 @@ class App {
                             break;
                         }
 
-                        if (this.auth && this.router && !this.router.confirmLeaveOut) {
+                        if (this.auth && this.router && !this.router.hasConfirmLeaveOut()) {
                             this.logout(true);
 
                             break;
                         }
 
-                        if (this.auth && this.router && this.router.confirmLeaveOut) {
+                        if (this.auth && this.router && this.router.hasConfirmLeaveOut()) {
                             Ui.error(this.language.translate('loggedOutLeaveOut', 'messages'), true);
 
                             this.router.trigger('logout');
@@ -1441,7 +1441,7 @@ class App {
             }
 
             if (event.data === 'logged-out' && this.started) {
-                if (this.auth && this.router.confirmLeaveOut) {
+                if (this.auth && this.router.hasConfirmLeaveOut()) {
                     Ui.error(this.language.translate('loggedOutLeaveOut', 'messages'), true);
 
                     this.router.trigger('logout');

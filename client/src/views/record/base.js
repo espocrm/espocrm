@@ -510,7 +510,11 @@ class BaseRecordView extends View {
             return;
         }
 
-        this.getRouter().confirmLeaveOut = value;
+        if (value) {
+            this.getRouter().addLeaveOutObject(this);
+        } else {
+            this.getRouter().removeLeaveOutObject(this);
+        }
     }
 
     /**

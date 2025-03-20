@@ -639,10 +639,12 @@ class DetailModalView extends ModalView {
 
         const helper = new RecordModal();
 
+        // noinspection UnnecessaryLocalVariableJS
         const modalView = await helper.showEdit(this, {
             entityType: this.entityType,
             id: this.id,
             fullFormDisabled: this.fullFormDisabled,
+            collapseDisabled: true,
             afterSave: (model, o) => {
                 this.model.set(model.getClonedAttributes());
 
@@ -661,7 +663,8 @@ class DetailModalView extends ModalView {
             },
         });
 
-        this.dialog.hide();
+        // Not to hidden as it interferes with the collapsable modal.
+        //this.dialog.hide();
 
         return modalView;
     }

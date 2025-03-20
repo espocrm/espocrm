@@ -70,6 +70,7 @@ class ModalView extends View {
      * @property {'static'|boolean} [backdrop] A backdrop.
      * @property {module:views/modal~Button} [buttonList] Buttons.
      * @property {module:views/modal~Button} [dropdownItemList] Buttons.
+     * @property {boolean} [collapseDisabled] Not collapsable. As of v9.1.0.
      */
 
     /**
@@ -313,6 +314,10 @@ class ModalView extends View {
 
         if (this.shortcutKeys) {
             this.shortcutKeys = Espo.Utils.cloneDeep(this.shortcutKeys);
+        }
+
+        if (this.options.collapseDisabled) {
+            this.isCollapsable = false;
         }
 
         this.on('render', () => {

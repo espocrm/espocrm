@@ -261,17 +261,33 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
             this.history.push(Backbone.history.fragment);
         });
 
-        window.addEventListener('beforeunload', (e) => {
-            e = e || window.event;
+        window.addEventListener('beforeunload', event => {
+            event = event || window.event;
 
-            if (this.confirmLeaveOut) {
-                e.preventDefault();
+            if (
+                this.confirmLeaveOut ||
+                this._leaveOutMap.size ||
+                this._windowLeaveOutMap.size
+            ) {
+                event.preventDefault();
 
-                e.returnValue = this.confirmLeaveOutMessage;
+                event.returnValue = this.confirmLeaveOutMessage;
 
                 return this.confirmLeaveOutMessage;
             }
         });
+
+        /**
+         * @private
+         * @type {Map<Object, true>}
+         */
+        this._leaveOutMap = new Map();
+
+        /**
+         * @private
+         * @type {Map<Object, true>}
+         */
+        this._windowLeaveOutMap = new Map();
     },
 
     /**
@@ -281,6 +297,60 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
      */
     getCurrentUrl: function () {
         return '#' + Backbone.history.fragment;
+    },
+
+    /**
+     * Whether there's any confirm-leave-out.
+     *
+     * @since 9.1.0
+     * @return {boolean}
+     */
+    hasConfirmLeaveOut() {
+        return this.confirmLeaveOut || this._leaveOutMap.size || this._windowLeaveOutMap.size;
+    },
+
+    /**
+     * Refer an object (usually a view). Page won't be possible to close or change if there's at least one object.
+     *
+     * @param {Object} object
+     * @since 9.1.0
+     * @internal
+     */
+    addLeaveOutObject(object) {
+        this._leaveOutMap.set(object, true);
+    },
+
+    /**
+     * Un-refer an object.
+     *
+     * @param {Object} object
+     * @since 9.1.0
+     * @internal
+     */
+    removeLeaveOutObject(object) {
+        this._leaveOutMap.delete(object);
+    },
+
+    /**
+     * Refer an object (usually a view). Window won't be possible to close if there's at least one object.
+     *
+     * @param {Object} object
+     * @since 9.1.0
+     * @internal
+     */
+    addWindowLeaveOutObject(object) {
+        this._windowLeaveOutMap.set(object, true);
+    },
+
+    /**
+     * Un-refer an object.
+     *
+     * @param {Object} object
+     * @since 9.1.0
+     * @internal
+     */
+    removeWindowLeaveOutObject(object) {
+        this._windowLeaveOutMap.delete(object);
     },
 
     /**
@@ -305,7 +375,7 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
 
         context = context || this;
 
-        if (this.confirmLeaveOut) {
+        if (this.confirmLeaveOut || this._leaveOutMap.size) {
             this.confirmLeaveOutDisplayed = true;
             this.confirmLeaveOutCanceled = false;
 
@@ -326,6 +396,8 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
                 () => {
                     this.confirmLeaveOutDisplayed = false;
                     this.confirmLeaveOut = false;
+
+                    this._leaveOutMap.clear();
 
                     if (!this.confirmLeaveOutCanceled) {
                         callback.call(context);

@@ -54,6 +54,12 @@ class EditModalView extends ModalView {
 
     /**
      * @private
+     * @type {boolean}
+     */
+    wasModified = false
+
+    /**
+     * @private
      * @type {string}
      */
     nameAttribute
@@ -241,6 +247,12 @@ class EditModalView extends ModalView {
             }
 
             this.createRecordView(model);
+        });
+
+        this.listenTo(this.model, 'change', (m, o) => {
+            if (o.ui) {
+                this.wasModified = true;
+            }
         });
     }
 
@@ -477,6 +489,21 @@ class EditModalView extends ModalView {
 
         this.trigger('leave');
         this.dialog.close();
+    }
+
+    async beforeCollapse() {
+        if (this.wasModified) {
+            this.getRecordView().setConfirmLeaveOut(false);
+            this.getRouter().addWindowLeaveOutObject(this);
+        }
+    }
+
+    afterExpand() {
+        if (this.wasModified) {
+            this.getRecordView().setConfirmLeaveOut(true);
+        }
+
+        this.getRouter().removeWindowLeaveOutObject(this);
     }
 }
 
