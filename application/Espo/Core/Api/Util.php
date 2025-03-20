@@ -76,6 +76,8 @@ class Util
 
     public function obtainIpFromRequest(Request $request): ?string
     {
+        // Do not add support of any more parameters here.
+
         $param = $this->config->get('ipAddressServerParam') ?? 'REMOTE_ADDR';
 
         return $request->getServerParam($param);
