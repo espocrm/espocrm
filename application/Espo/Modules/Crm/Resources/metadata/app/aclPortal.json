@@ -22,7 +22,10 @@
         "scopeFieldLevel": {
             "KnowledgeBaseArticle": {
                 "portals": false,
-                "order": false,
+                "order": {
+                    "read": "yes",
+                    "edit": "no"
+                },
                 "status": false,
                 "assignedUser": false
             },
