@@ -30,7 +30,6 @@
 
 import Exceptions from 'exceptions';
 import {Events, View as BullView} from 'bullbone';
-import $ from 'jquery';
 
 /**
  * @callback module:controller~viewCallback
@@ -647,7 +646,7 @@ class Controller {
         if (masterView.currentViewKey) {
             const scrollKey = this._composeScrollKey(masterView.currentViewKey, masterView.currentName);
 
-            this.set(scrollKey, $(window).scrollTop());
+            this.set(scrollKey, window.scrollY);
 
             if (!dto.isSet) {
                 this._unchainMainView(masterView);
@@ -669,12 +668,12 @@ class Controller {
             const scrollKey = this._composeScrollKey(key);
 
             if (dto.useStored && this.has(scrollKey)) {
-                $(window).scrollTop(this.get(scrollKey));
+                window.scrollTo({top: this.get(scrollKey)})
 
                 return;
             }
 
-            $(window).scrollTop(0);
+            window.scrollTo({top: 0})
         };
 
         if (dto.callback) {
