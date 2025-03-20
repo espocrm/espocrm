@@ -31,23 +31,21 @@ namespace Espo\Core\Portal;
 
 use Espo\Entities\Portal;
 use Espo\ORM\EntityManager;
-
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
-
 use Espo\Core\Application as BaseApplication;
 use Espo\Core\Container\ContainerBuilder;
 use Espo\Core\Portal\Container as PortalContainer;
 use Espo\Core\Portal\Container\ContainerConfiguration as PortalContainerConfiguration;
 use Espo\Core\Portal\Utils\Config;
+use LogicException;
 
 class Application extends BaseApplication
 {
     /**
      * @throws Forbidden
-     * @throws Error
      * @throws NotFound
+     * @noinspection PhpMissingParentConstructorInspection
      */
     public function __construct(?string $portalId)
     {
@@ -59,15 +57,6 @@ class Application extends BaseApplication
         $this->initPreloads();
     }
 
-    public function getContainer(): Container
-    {
-        /** @var Container */
-        return parent::getContainer();
-    }
-
-    /**
-     * @throws Error
-     */
     protected function initContainer(): void
     {
         $container = (new ContainerBuilder())
@@ -77,7 +66,7 @@ class Application extends BaseApplication
             ->build();
 
         if (!$container instanceof PortalContainer) {
-            throw new Error("Wrong container created.");
+            throw new LogicException("Wrong container created.");
         }
 
         $this->container = $container;
@@ -85,13 +74,12 @@ class Application extends BaseApplication
 
     /**
      * @throws Forbidden
-     * @throws Error
      * @throws NotFound
      */
     protected function initPortal(?string $portalId): void
     {
         if (!$portalId) {
-            throw new Error("Portal ID was not passed to Portal\Application.");
+            throw new LogicException("Portal ID was not passed to Portal\Application.");
         }
 
         $entityManager = $this->container->getByClass(EntityManager::class);
@@ -100,21 +88,24 @@ class Application extends BaseApplication
 
         if (!$portal) {
             $portal = $entityManager
-                ->getRDBRepository(Portal::ENTITY_TYPE)
+                ->getRDBRepositoryByClass(Portal::class)
                 ->where(['customId' => $portalId])
                 ->findOne();
         }
 
         if (!$portal) {
-            throw new NotFound("Portal {$portalId} not found.");
+            throw new NotFound("Portal $portalId not found.");
         }
 
-        if (!$portal->get('isActive')) {
-            throw new Forbidden("Portal {$portalId} is not active.");
+        if (!$portal->isActive()) {
+            throw new Forbidden("Portal $portalId is not active.");
         }
 
-        /** @var PortalContainer $container */
         $container = $this->container;
+
+        if (!$container instanceof PortalContainer) {
+            throw new LogicException();
+        }
 
         $container->setPortal($portal);
     }

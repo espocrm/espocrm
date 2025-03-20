@@ -30,9 +30,10 @@
 namespace Espo\Entities;
 
 use Espo\Core\Field\Link;
+use Espo\Core\ORM\Entity;
 use Espo\Repositories\Portal as PortalRepository;
 
-class Portal extends \Espo\Core\ORM\Entity
+class Portal extends Entity
 {
     public const ENTITY_TYPE = 'Portal';
 
@@ -86,5 +87,10 @@ class Portal extends \Espo\Core\ORM\Entity
     {
         /** @var ?Link */
         return $this->getValueObject('layoutSet');
+    }
+
+    public function isActive(): bool
+    {
+        return $this->get('isActive');
     }
 }

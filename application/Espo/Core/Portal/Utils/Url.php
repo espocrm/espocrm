@@ -39,8 +39,12 @@ class Url
             return $portalId;
        }
 
-        $url = $_SERVER['REQUEST_URI'];
+        $url = $_SERVER['REQUEST_URI'] ?? null;
         $scriptName = $_SERVER['SCRIPT_NAME'];
+
+        if (!$url) {
+            return null;
+        }
 
         $scriptNameModified = str_replace('public/api/', 'api/', $scriptName);
 
@@ -60,15 +64,17 @@ class Url
             return $portalId;
         }
 
-        $url = $_SERVER['REQUEST_URI'];
+        $url = $_SERVER['REQUEST_URI'] ?? null;
         $scriptName = $_SERVER['SCRIPT_NAME'];
 
         $scriptNameModified = str_replace('public/api/', 'api/', $scriptName);
 
-        $portalId = explode('/', $url)[count(explode('/', $scriptNameModified)) - 1] ?? null;
+        if ($url) {
+            $portalId = explode('/', $url)[count(explode('/', $scriptNameModified)) - 1] ?? null;
 
-        if (strpos($url, '=') !== false) {
-            $portalId = null;
+            if (str_contains($url, '=')) {
+                $portalId = null;
+            }
         }
 
         if ($portalId) {
