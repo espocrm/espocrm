@@ -29,6 +29,7 @@
 /** @module views/modal */
 
 import View from 'view';
+import CollapsedModalBarView from 'views/collapsed-modal-bar';
 
 /**
  * A base modal view. Can be extended or used directly.
@@ -1107,53 +1108,53 @@ class ModalView extends View {
     /**
      * Collapse.
      */
-    collapse() {
-        this.beforeCollapse().then(data => {
-            if (!this.getParentView()) {
-                throw new Error("Can't collapse w/o parent view.");
+    async collapse() {
+        let data = await this.beforeCollapse();
+
+        if (!this.getParentView()) {
+            throw new Error("Can't collapse w/o parent view.");
+        }
+
+        this.isCollapsed = true;
+
+        data = data || {};
+
+        let title;
+
+        if (data.title) {
+            title = data.title;
+        } else {
+            const titleElement = this.containerElement.querySelector('.modal-header .modal-title .modal-title-text');
+
+            if (titleElement) {
+                title = titleElement.textContent;
             }
+        }
 
-            this.isCollapsed = true;
+        this.dialog.close();
 
-            data = data || {};
+        let masterView = this;
 
-            let title;
+        while (masterView.getParentView()) {
+            masterView = masterView.getParentView();
+        }
 
-            if (data.title) {
-                title = data.title;
-            } else {
-                const $title = $(this.containerElement).find('.modal-header .modal-title .modal-title-text');
+        this.unchainFromParent();
 
-                title = $title.text();
-            }
+        /** @type {CollapsedModalBarView} */
+        let barView;
 
-            this.dialog.close();
+        const key = 'collapsedModalBar';
 
-            let masterView = this;
+        if (masterView.hasView(key)) {
+            barView = masterView.getView(key);
+        } else {
+            barView = new CollapsedModalBarView({fullSelector: 'body > .collapsed-modal-bar'});
 
-            while (masterView.getParentView()) {
-                masterView = masterView.getParentView();
-            }
+            await masterView.assignView(key, barView);
+        }
 
-            this.unchainFromParent();
-
-            (new Promise(resolve => {
-                if (masterView.hasView('collapsedModalBar')) {
-                    resolve(masterView.getView('collapsedModalBar'));
-
-                    return;
-                }
-
-                masterView
-                    .createView('collapsedModalBar', 'views/collapsed-modal-bar', {
-                        fullSelector: 'body > .collapsed-modal-bar',
-                    })
-                    .then(view => resolve(view));
-            }))
-            .then(barView => {
-                barView.addModalView(this, {title: title});
-            });
-        });
+        barView.addModalView(this, {title: title});
     }
 
     unchainFromParent() {

@@ -28,7 +28,7 @@
 
 import View from 'view';
 
-class CollapsedModalBar extends View {
+class CollapsedModalBarView extends View {
 
     // language=Handlebars
     templateContent = `
@@ -196,5 +196,4 @@ class CollapsedModalBar extends View {
     }
 }
 
-// noinspection JSUnusedGlobalSymbols
-export default CollapsedModalBar;
+export default CollapsedModalBarView;
