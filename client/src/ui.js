@@ -736,21 +736,6 @@ class Dialog {
 
         this.$el.find('.modal-content').removeClass('hidden');
 
-        /*const $modalBackdrop = $('.modal-backdrop');
-
-        $modalBackdrop.each((i, el) => {
-            if (i < $modalBackdrop.length - 1) {
-                $(el).addClass('hidden');
-            }
-        });
-        const $modalContainer = $('.modal-container');
-
-        $modalContainer.each((i, el) => {
-            if (i < $modalContainer.length - 1) {
-                $(el).addClass('overlaid');
-            }
-        });*/
-
         for (const [i, dialog] of shownDialogList.entries()) {
             if (
                 i < shownDialogList.length - 1 &&
@@ -812,22 +797,13 @@ class Dialog {
 
     /**
      * Hide with a backdrop.
-     *
-     * @todo Test.
      */
     hideWithBackdrop() {
-        // const $modalBackdrop = $('.modal-backdrop');
-        //$modalBackdrop.last().addClass('hidden');
-        //$($modalBackdrop.get($modalBackdrop.length - 2)).removeClass('hidden');
-
         if (this._backdropElement) {
             this._backdropElement.classList.add('hidden');
         }
 
         this._hideInternal();
-
-        //const $modalContainer = $('.modal-container');
-        //$($modalContainer.get($modalContainer.length - 2)).removeClass('overlaid');
 
         this.skipRemove = true;
 
