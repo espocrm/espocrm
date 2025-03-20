@@ -86,7 +86,7 @@ class CollapsedModalBarView extends View {
             .forEach((number, i) => {
                 list.push({
                     number: number.toString(),
-                    key: `key-${number}`,
+                    key: this.composeKey(number),
                     index: i,
                 });
             });
@@ -126,7 +126,7 @@ class CollapsedModalBarView extends View {
      * @return {import('views/modal').default|null}
      */
     getModalViewByNumber(number) {
-        const key = `key-${number}`;
+        const key = this.composeKey(number);
 
         return this.getView(key);
     }
@@ -140,7 +140,7 @@ class CollapsedModalBarView extends View {
 
         this.numberList.push(this.lastNumber);
 
-        const key = `key-${number}`;
+        const key = this.composeKey(number);
 
         this.lastNumber++;
 
@@ -175,7 +175,7 @@ class CollapsedModalBarView extends View {
      * @param {boolean} [noReRender]
      */
     removeModalView(number, noReRender = false) {
-        const key = `key-${number}`;
+        const key = this.composeKey(number);
 
         const index = this.numberList.indexOf(number);
 
@@ -196,6 +196,15 @@ class CollapsedModalBarView extends View {
         }
 
         this.clearView(key);
+    }
+
+    /**
+     * @private
+     * @param {number} number
+     * @return {string}
+     */
+    composeKey(number) {
+        return `key-${number}`;
     }
 }
 
