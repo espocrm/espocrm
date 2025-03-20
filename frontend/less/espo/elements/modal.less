@@ -135,6 +135,10 @@
     background-color: var(--modal-backdrop-bg);
     backdrop-filter: var(--modal-backdrop-filter);
     opacity: 1;
+
+    &.backdrop-confirm {
+        z-index: 1051;
+    }
 }
 
 .modal-dialog > .modal-content {
@@ -163,12 +167,19 @@
     z-index: 4;
 }
 
-.dialog-confirm .modal-footer > .main-btn-group {
-    float: right;
-}
 
-.dialog-confirm .modal-footer > .additional-btn-group {
-    float: left;
+.dialog-confirm {
+    .modal-footer > .main-btn-group {
+        float: right;
+    }
+
+    .modal-footer > .additional-btn-group {
+        float: left;
+    }
+
+    &.modal {
+        z-index: 1052;
+    }
 }
 
 .modal-container {

@@ -60,6 +60,7 @@ import $ from 'jquery';
  * @property {boolean} [maximizeButton] Is maximizable.
  * @property {function()} [onMaximize] On maximize handler.
  * @property {function()} [onMinimize] On minimize handler.
+ * @property {string} [backdropClassName] A backdrop class name. As of v9.1.0.
  */
 
 /**
@@ -81,6 +82,11 @@ import $ from 'jquery';
  */
 
 /**
+ * @type {Espo.Ui.Dialog[]}
+ */
+const shownDialogList = [];
+
+/**
  * @alias Espo.Ui.Dialog
  */
 class Dialog {
@@ -92,6 +98,7 @@ class Dialog {
     onBackdropClick
     buttons
     screenWidthXs
+    backdropClassName
 
     /**
      * @private
@@ -187,6 +194,7 @@ class Dialog {
             'onClose',
             'onBackdropClick',
             'maximizeButton',
+            'backdropClassName',
         ];
 
         params.forEach(param => {
@@ -702,32 +710,60 @@ class Dialog {
     }
 
     /**
+     * @internal
+     * @type {HTMLElement}
+     */
+    _backdropElement
+
+    /**
      * Show.
      */
     show() {
-        // noinspection JSUnresolvedReference
+        shownDialogList.push(this);
+
+        // noinspection JSUnresolvedReference,JSUnusedGlobalSymbols
         this.$el.modal({
-             backdrop: this.backdrop,
-             keyboard: this.keyboard,
+            backdrop: this.backdrop,
+            keyboard: this.keyboard,
+            onBackdropCreate: element => {
+                this._backdropElement = element;
+
+                if (this.backdropClassName) {
+                    this._backdropElement.classList.add(this.backdropClassName);
+                }
+            },
         });
 
         this.$el.find('.modal-content').removeClass('hidden');
 
-        const $modalBackdrop = $('.modal-backdrop');
+        /*const $modalBackdrop = $('.modal-backdrop');
 
         $modalBackdrop.each((i, el) => {
             if (i < $modalBackdrop.length - 1) {
                 $(el).addClass('hidden');
             }
         });
-
         const $modalContainer = $('.modal-container');
 
         $modalContainer.each((i, el) => {
             if (i < $modalContainer.length - 1) {
                 $(el).addClass('overlaid');
             }
-        });
+        });*/
+
+        for (const [i, dialog] of shownDialogList.entries()) {
+            if (
+                i < shownDialogList.length - 1 &&
+                dialog.getElement() &&
+                dialog.getElement().parentElement
+            ) {
+                if (dialog._backdropElement) {
+                    dialog._backdropElement.classList.add('hidden');
+                }
+
+                dialog.getElement().parentElement.classList.add('overlaid');
+            }
+        }
 
         this.$el.off('click.dismiss.bs.modal');
 
@@ -767,6 +803,8 @@ class Dialog {
 
     /**
      * Hide.
+     *
+     * @todo Check usage. Deprecate?
      */
     hide() {
         this.$el.find('.modal-content').addClass('hidden');
@@ -774,22 +812,26 @@ class Dialog {
 
     /**
      * Hide with a backdrop.
+     *
+     * @todo Test.
      */
     hideWithBackdrop() {
-        const $modalBackdrop = $('.modal-backdrop');
+        // const $modalBackdrop = $('.modal-backdrop');
+        //$modalBackdrop.last().addClass('hidden');
+        //$($modalBackdrop.get($modalBackdrop.length - 2)).removeClass('hidden');
 
-        $modalBackdrop.last().addClass('hidden');
-        $($modalBackdrop.get($modalBackdrop.length - 2)).removeClass('hidden');
+        if (this._backdropElement) {
+            this._backdropElement.classList.add('hidden');
+        }
 
-        const $modalContainer = $('.modal-container');
+        this._hideInternal();
 
-        $($modalContainer.get($modalContainer.length - 2)).removeClass('overlaid');
+        //const $modalContainer = $('.modal-container');
+        //$($modalContainer.get($modalContainer.length - 2)).removeClass('overlaid');
 
         this.skipRemove = true;
 
-        setTimeout(() => {
-            this.skipRemove = false;
-        }, 50);
+        setTimeout(() => this.skipRemove = false, 50);
 
         // noinspection JSUnresolvedReference
         this.$el.modal('hide');
@@ -799,14 +841,29 @@ class Dialog {
     /**
      * @private
      */
+    _hideInternal() {
+        const findIndex = shownDialogList.findIndex(it => it === this);
+
+        if (findIndex >= 0) {
+            shownDialogList.splice(findIndex, 1);
+        }
+
+        const last = shownDialogList[shownDialogList.length - 1];
+
+        if (last && last._backdropElement) {
+            last._backdropElement.classList.remove('hidden')
+        }
+
+        if (last && last.getElement() && last.getElement().parentElement) {
+            last.getElement().parentElement.classList.remove('overlaid')
+        }
+    }
+
+    /**
+     * @private
+     */
     _close() {
-        const $modalBackdrop = $('.modal-backdrop');
-
-        $modalBackdrop.last().removeClass('hidden');
-
-        const $modalContainer = $('.modal-container');
-
-        $($modalContainer.get($modalContainer.length - 2)).removeClass('overlaid');
+        this._hideInternal();
     }
 
     /**
@@ -953,6 +1010,7 @@ Espo.Ui = {
                 backdrop: backdrop,
                 header: null,
                 className: 'dialog-confirm',
+                backdropClassName: 'backdrop-confirm',
                 body: '<span class="confirm-message">' + message + '</a>',
                 buttonList: [
                     {
