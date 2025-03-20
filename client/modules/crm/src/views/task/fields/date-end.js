@@ -36,35 +36,17 @@ class TaskDateEndFieldView extends DatetimeOptionalFieldView {
     data() {
         const data = super.data();
 
-        const status = this.model.get('status');
+        const status = this.model.attributes.status;
 
         if (!status || this.notActualStatusList.includes(status)) {
             return data;
         }
 
         if (this.mode === this.MODE_DETAIL || this.mode === this.MODE_LIST) {
-            if (this.isDate()) {
-                const value = this.model.get(this.nameDate);
-
-                if (value) {
-                    const d = moment.tz(value + ' 23:59', this.getDateTime().getTimeZone());
-                    const now = this.getDateTime().getNowMoment();
-
-                    if (d.unix() < now.unix()) {
-                        data.isOverdue = true;
-                    }
-                }
-            } else {
-                const value = this.model.get(this.name);
-
-                if (value) {
-                    const d = this.getDateTime().toMoment(value);
-                    const now = moment().tz(this.getDateTime().timeZone || 'UTC');
-
-                    if (d.unix() < now.unix()) {
-                        data.isOverdue = true;
-                    }
-                }
+            if (this.isDateInPast()) {
+                data.isOverdue = true;
+            } else if (this.isDateToday()) {
+                data.style = 'warning';
             }
         }
 
@@ -90,6 +72,50 @@ class TaskDateEndFieldView extends DatetimeOptionalFieldView {
                 }
             });
         }
+    }
+
+    /**
+     * @private
+     * @return {boolean}
+     */
+    isDateInPast() {
+        if (this.isDate()) {
+            const value = this.model.get(this.nameDate);
+
+            if (value) {
+                const d = moment.tz(value + ' 23:59', this.getDateTime().getTimeZone());
+                const now = this.getDateTime().getNowMoment();
+
+                if (d.unix() < now.unix()) {
+                    return true;
+                }
+            }
+        }
+
+        const value = this.model.get(this.name);
+
+        if (value) {
+            const d = this.getDateTime().toMoment(value);
+            const now = moment().tz(this.getDateTime().timeZone || 'UTC');
+
+            if (d.unix() < now.unix()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @private
+     * @return {boolean}
+     */
+    isDateToday() {
+        if (!this.isDate()) {
+            return false;
+        }
+
+        return this.getDateTime().getToday() === this.model.attributes[this.nameDate];
     }
 }
 
