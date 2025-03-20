@@ -29,7 +29,8 @@
 /** @module views/modal */
 
 import View from 'view';
-import CollapsedModalBarView from 'views/collapsed-modal-bar';
+import {inject} from 'di';
+import ModalBarProvider from 'helpers/site/modal-bar-provider';
 
 /**
  * A base modal view. Can be extended or used directly.
@@ -288,6 +289,13 @@ class ModalView extends View {
      * @since 9.0.0
      */
     containerElement
+
+    /**
+     * @private
+     * @type {ModalBarProvider}
+     */
+    @inject(ModalBarProvider)
+    modalBarProvider
 
     /**
      * @inheritDoc
@@ -1141,17 +1149,10 @@ class ModalView extends View {
 
         this.unchainFromParent();
 
-        /** @type {CollapsedModalBarView} */
-        let barView;
+        const barView = this.modalBarProvider.get();
 
-        const key = 'collapsedModalBar';
-
-        if (masterView.hasView(key)) {
-            barView = masterView.getView(key);
-        } else {
-            barView = new CollapsedModalBarView({fullSelector: 'body > .collapsed-modal-bar'});
-
-            await masterView.assignView(key, barView);
+        if (!barView) {
+            return;
         }
 
         barView.addModalView(this, {title: title});

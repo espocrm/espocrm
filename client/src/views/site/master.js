@@ -30,6 +30,7 @@
 
 import View from 'view';
 import $ from 'jquery';
+import CollapsedModalBarView from 'views/collapsed-modal-bar';
 
 class MasterSiteView extends View {
 
@@ -60,6 +61,12 @@ class MasterSiteView extends View {
      */
     currentName
 
+    /**
+     * @internal
+     * @type {CollapsedModalBarView}
+     */
+    collapsedModalBarView
+
     showLoadingNotification() {
         Espo.Ui.notifyWait();
     }
@@ -72,6 +79,10 @@ class MasterSiteView extends View {
         $(window).on('resize.' + this.cid, () => {
             this.adjustContent();
         });
+
+        this.collapsedModalBarView = new CollapsedModalBarView({fullSelector: 'body > .collapsed-modal-bar'});
+
+        this.assignView('collapsedModalBar', this.collapsedModalBarView);
     }
 
     /**

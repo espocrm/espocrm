@@ -30,6 +30,8 @@
 
 import Exceptions from 'exceptions';
 import {Events, View as BullView} from 'bullbone';
+import {inject} from 'di';
+import ModalBarProvider from 'helpers/site/modal-bar-provider';
 
 /**
  * @callback module:controller~viewCallback
@@ -125,6 +127,13 @@ class Controller {
      * @type {string|null}
      */
     masterView = null
+
+    /**
+     * @private
+     * @type {ModalBarProvider}
+     */
+    @inject(ModalBarProvider)
+    modalBarProvider
 
     /**
      * Set the router.
@@ -431,21 +440,24 @@ class Controller {
 
         const viewName = this.masterView || 'views/site/master';
 
-        this.viewFactory.create(viewName, {fullSelector: 'body'}, async /** module:view */masterView => {
-            this.setMasterView(masterView);
+        this.viewFactory.create(viewName, {fullSelector: 'body'},
+            async /** import('views/site/master').default */masterView => {
+                this.setMasterView(masterView);
 
-            if (this.isMasterRendered()) {
+                if (this.isMasterRendered()) {
+                    callback.call(this, masterView);
+
+                    return;
+                }
+
+                this.modalBarProvider.set(masterView.collapsedModalBarView || null)
+
+                await masterView.render();
+
+                this.setMasterRendered(true);
+
                 callback.call(this, masterView);
-
-                return;
-            }
-
-            await masterView.render();
-
-            this.setMasterRendered(true);
-
-            callback.call(this, masterView);
-        });
+            });
     }
 
     /**
@@ -477,6 +489,10 @@ class Controller {
      * @param {import('view').default|null} view
      */
     setMasterView(view) {
+        if (!view) {
+            this.modalBarProvider.set(null);
+        }
+
         this.set('master', view);
     }
 
