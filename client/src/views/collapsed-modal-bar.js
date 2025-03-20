@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import View from 'view';
+import CollapsedModalView from 'views/collapsed-modal';
 
 class CollapsedModalBarView extends View {
 
@@ -51,11 +52,14 @@ class CollapsedModalBarView extends View {
 
     init() {
         this.on('render', () => {
-            if ($('.collapsed-modal-bar').length === 0) {
-                $('<div />')
-                    .addClass('collapsed-modal-bar')
-                    .appendTo('body');
+            if (document.querySelector('.collapsed-modal-bar')) {
+                return;
             }
+
+            const div = document.createElement('div');
+            div.classList.add('collapsed-modal-bar');
+
+            document.body.append(div);
         });
     }
 
@@ -82,7 +86,7 @@ class CollapsedModalBarView extends View {
             .forEach((number, i) => {
                 list.push({
                     number: number.toString(),
-                    key: 'key-' + number,
+                    key: `key-${number}`,
                     index: i,
                 });
             });
@@ -98,17 +102,17 @@ class CollapsedModalBarView extends View {
     calculateDuplicateNumber(title) {
         let duplicateNumber = 0;
 
-        this.numberList.forEach(number => {
+        for (const number of this.numberList) {
             const view = this.getModalViewByNumber(number);
 
             if (!view) {
-                return;
+                continue;
             }
 
             if (view.title === title) {
                 duplicateNumber++;
             }
-        });
+        }
 
         if (duplicateNumber === 0) {
             return null;
@@ -122,7 +126,7 @@ class CollapsedModalBarView extends View {
      * @return {import('views/modal').default|null}
      */
     getModalViewByNumber(number) {
-        const key = 'key-' + number;
+        const key = `key-${number}`;
 
         return this.getView(key);
     }
@@ -131,52 +135,47 @@ class CollapsedModalBarView extends View {
      * @param {import('views/modal').default} modalView
      * @param {{title: string}} options
      */
-    addModalView(modalView, options) {
+    async addModalView(modalView, options) {
         const number = this.lastNumber;
 
         this.numberList.push(this.lastNumber);
 
         const key = `key-${number}`;
 
-        this.createView(key, 'views/collapsed-modal', {
+        this.lastNumber++;
+
+        const view = new CollapsedModalView({
             title: options.title,
             duplicateNumber: this.calculateDuplicateNumber(options.title),
-            selector: `[data-number="${number}"]`,
-        })
-        .then(view => {
-            this.listenToOnce(view, 'close', () => this.removeModalView(number));
-
-            this.listenToOnce(view, 'expand', () => {
+            onClose: () => this.removeModalView(number),
+            onExpand: () => {
                 this.removeModalView(number, true);
 
                 // Use timeout to prevent DOM being updated after modal is re-rendered.
-                setTimeout(() => {
+                setTimeout(async () => {
                     const key = `dialog-${number}`;
 
                     this.setView(key, modalView);
-
                     modalView.setSelector(modalView.containerSelector);
 
-                    this.getView(key).render()
-                        .then(() => {
-                            modalView.trigger('after:expand');
-                        });
-                }, 5);
-            });
+                    await this.getView(key).render();
 
-            this.reRender(true);
+                    modalView.trigger('after:expand');
+                }, 5);
+            },
         });
 
-        this.lastNumber++;
+        await this.assignView(key, view, `[data-number="${number}"]`);
+
+        await this.reRender(true);
     }
 
     /**
-     *
      * @param {number} number
      * @param {boolean} [noReRender]
      */
     removeModalView(number, noReRender = false) {
-        const key = 'key-' + number;
+        const key = `key-${number}`;
 
         const index = this.numberList.indexOf(number);
 
@@ -185,7 +184,11 @@ class CollapsedModalBarView extends View {
         }
 
         if (this.isRendered()) {
-            this.$el.find('.collapsed-modal[data-number="' + number + '"]').remove();
+            const element = this.element.querySelector(`.collapsed-modal[data-number="${number}"]`);
+
+            if (element) {
+                element.remove();
+            }
         }
 
         if (!noReRender) {

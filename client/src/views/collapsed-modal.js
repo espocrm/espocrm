@@ -50,11 +50,30 @@ class CollapsedModalView extends View {
         },
     }
 
+    /**
+     * @private
+     */
+    title
+
+    /**
+     * @param {{
+     *     onClose: function(),
+     *     onExpand: function(),
+     *     duplicateNumber?: number|null,
+     *     title?: string,
+     * }} options
+     */
+    constructor(options) {
+        super(options);
+
+        this.options = options;
+    }
+
     data() {
         let title = this.title;
 
-        if (this.duplicateNumber) {
-            title = this.title + ' ' + this.duplicateNumber;
+        if (this.options.duplicateNumber) {
+            title = `${this.title} ${this.options.duplicateNumber}`;
         }
 
         return {
@@ -64,15 +83,14 @@ class CollapsedModalView extends View {
 
     setup() {
         this.title = this.options.title || 'no-title';
-        this.duplicateNumber = this.options.duplicateNumber || null;
     }
 
     expand() {
-        this.trigger('expand');
+        this.options.onExpand();
     }
 
     close() {
-        this.trigger('close');
+        this.options.onClose();
     }
 }
 
