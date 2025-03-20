@@ -43,11 +43,33 @@ export default class LeadCaptureFormView extends View {
                 </div>
             {{else}}
                 <div class="record">{{{record}}}</div>
+                <div class="button-container center-align">
+                    <button
+                        class="btn btn-primary btn-x-wide"
+                        data-action="submit"
+                    >{{translate 'Submit'}}</button>
+                </div>
             {{/if}}
         </div>
     `
 
+    /**
+     * @private
+     * @type {boolean}
+     */
     isPosted = false
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    isPosting = false
+
+    /**
+     * @private
+     * @type {HTMLElement}
+     */
+    submitButtonElement
 
     /**
      * @param {{
@@ -128,18 +150,11 @@ export default class LeadCaptureFormView extends View {
         this.recordView = new CustomEditView({
             model: this.model,
             detailLayout: detailLayout,
-            buttonList: [
-                {
-                    name: 'save',
-                    text: this.translate('Submit'),
-                    style: 'primary',
-                    onClick: () => this.actionCreate(),
-                }
-            ],
             sideView: null,
             bottomView: null,
             isWide: true,
             shortcutKeysEnabled: true,
+            buttonsDisabled: true,
         });
 
         this.assignView('record', this.recordView, '.record');
@@ -147,6 +162,8 @@ export default class LeadCaptureFormView extends View {
         this.whenReady().then(() => this.initAutocomplete());
 
         this.listenTo(this.recordView, 'save', () => this.actionCreate());
+
+        this.addActionHandler('submit', () => this.actionCreate());
     }
 
     afterRender() {
@@ -155,16 +172,27 @@ export default class LeadCaptureFormView extends View {
         if (subContainer) {
             subContainer.classList.add('sub-container-center-5');
         }
+
+        this.submitButtonElement = this.element.querySelector('button[data-action="submit"]');
     }
 
     async actionCreate() {
+        if (this.isPosting) {
+            return;
+        }
+
         if (this.recordView.validate()) {
             Espo.Ui.error(this.translate('Not valid'));
 
             return;
         }
 
+        this.isPosting = true;
+
         this.recordView.disableActionItems();
+
+        this.submitButtonElement.classList.add('disabled');
+        this.submitButtonElement.setAttribute('disabled', 'disabled');
 
         Espo.Ui.notifyWait()
 
@@ -180,11 +208,18 @@ export default class LeadCaptureFormView extends View {
         } catch (e) {
             this.recordView.enableActionItems();
 
+            this.submitButtonElement.classList.remove('disabled');
+            this.submitButtonElement.removeAttribute('disabled');
+
+            this.isPosting = false;
+
             return;
         }
 
         Espo.Ui.notify();
+
         this.isPosted = true;
+        this.isPosting = false;
 
         this.recordView.remove();
 
@@ -292,7 +327,7 @@ export default class LeadCaptureFormView extends View {
 
 class CustomEditView extends EditRecordView {
 
-    async actionSave(data) {
+    handleShortcutKeyCtrlEnter(e) {
         this.trigger('save');
     }
 }
