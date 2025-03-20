@@ -78,7 +78,7 @@ class Controller {
         this._dateTime = injections.dateTime || null;
         this._broadcastChannel = injections.broadcastChannel || null;
 
-        this.set('masterRendered', false);
+        this.setMasterRendered(false);
     }
 
     /**
@@ -414,40 +414,87 @@ class Controller {
      * @private
      */
     master(callback) {
-        const entire = this.get('entire');
+        const entireView = this.getEntireView();
 
-        if (entire) {
-            entire.remove();
+        if (entireView) {
+            entireView.remove();
 
-            this.set('entire', null);
+            this.setEntireView(null);
         }
 
-        const master = this.get('master');
+        const masterView = this.getMasterView();
 
-        if (master) {
-            callback.call(this, master);
+        if (masterView) {
+            callback.call(this, masterView);
 
             return;
         }
 
-        const masterView = this.masterView || 'views/site/master';
+        const viewName = this.masterView || 'views/site/master';
 
-        this.viewFactory.create(masterView, {fullSelector: 'body'}, /** module:view */master => {
-            this.set('master', master);
+        this.viewFactory.create(viewName, {fullSelector: 'body'}, async /** module:view */masterView => {
+            this.setMasterView(masterView);
 
-            if (this.get('masterRendered')) {
-                callback.call(this, master);
+            if (this.isMasterRendered()) {
+                callback.call(this, masterView);
 
                 return;
             }
 
-            master.render()
-                .then(() => {
-                    this.set('masterRendered', true);
+            await masterView.render();
 
-                    callback.call(this, master);
-                })
+            this.setMasterRendered(true);
+
+            callback.call(this, masterView);
         });
+    }
+
+    /**
+     * @private
+     * @return {import('view').default|null}
+     */
+    getEntireView() {
+        return this.get('entire');
+    }
+
+    /**
+     * @private
+     * @param {import('view').default|null} view
+     */
+    setEntireView(view) {
+        this.set('entire', view);
+    }
+
+    /**
+     * @private
+     * @return {import('view').default|null}
+     */
+    getMasterView() {
+        return this.get('master');
+    }
+
+    /**
+     * @private
+     * @param {import('view').default|null} view
+     */
+    setMasterView(view) {
+        this.set('master', view);
+    }
+
+    /**
+     * @private
+     * @param {boolean} value
+     */
+    setMasterRendered(value) {
+        this.set('masterRendered', value);
+    }
+
+    /**
+     * @private
+     * @return {boolean}
+     */
+    isMasterRendered() {
+        return !!this.get('masterRendered');
     }
 
     /**
@@ -507,7 +554,7 @@ class Controller {
         const viewName = !mainView ?
             (view || 'views/base') : undefined;
 
-        this.master(masterView => {
+        this.master(async masterView => {
             if (dto.isCanceled) {
                 return;
             }
@@ -552,12 +599,11 @@ class Controller {
             if (mainView) {
                 this._unchainMainView(masterView);
 
-                masterView.assignView('main', mainView, selector)
-                    .then(() => {
-                        dto.isSet = true;
+                await masterView.assignView('main', mainView, selector)
 
-                        this._processMain(view, masterView, dto);
-                    });
+                dto.isSet = true;
+
+                this._processMain(view, masterView, dto);
 
                 return;
             }
@@ -647,7 +693,7 @@ class Controller {
      * Show a loading notify-message.
      */
     showLoadingNotification() {
-        const master = this.get('master');
+        const master = this.getMasterView();
 
         if (!master) {
             return;
@@ -660,7 +706,7 @@ class Controller {
      * Hide a loading notify-message.
      */
     hideLoadingNotification() {
-        const master = this.get('master');
+        const master = this.getMasterView();
 
         if (!master) {
             return;
@@ -678,14 +724,14 @@ class Controller {
      * @param {module:controller~viewCallback} [callback] A callback with a created view.
      */
     entire(view, options, callback) {
-        const masterView = this.get('master');
+        const masterView = this.getMasterView();
 
         if (masterView) {
             masterView.remove();
         }
 
-        this.set('master', null);
-        this.set('masterRendered', false);
+        this.setMasterView(null);
+        this.setMasterRendered(false);
 
         if (typeof view === 'object') {
             view.setElement('body');
@@ -707,7 +753,7 @@ class Controller {
         options.fullSelector = 'body';
 
         this.viewFactory.create(view, options, view => {
-            this.set('entire', view);
+            this.setEntireView(view);
 
             if (!callback) {
                 view.render();

@@ -30,8 +30,17 @@ import Controller from 'controller';
 import SearchManager from 'search-manager';
 import SettingsEditView from 'views/settings/edit';
 import AdminIndexView from 'views/admin/index';
+import {inject} from 'di';
+import Language from 'language';
 
 class AdminController extends Controller {
+
+    /**
+     * @private
+     * @type {Language}
+     */
+    @inject(Language)
+    language
 
     checkAccessGlobal() {
         if (this.getUser().isAdmin()) {
@@ -444,14 +453,12 @@ class AdminController extends Controller {
 
         this.rebuildRunning = true;
 
-        const master = this.get('master');
-
-        Espo.Ui.notify(master.translate('pleaseWait', 'messages'));
+        Espo.Ui.notify(this.language.translate('pleaseWait', 'messages'));
 
         Espo.Ajax
             .postRequest('Admin/rebuild')
             .then(() => {
-                const msg = master.translate('Rebuild has been done', 'labels', 'Admin');
+                const msg = this.language.translate('Rebuild has been done', 'labels', 'Admin');
 
                 Espo.Ui.success(msg);
 
@@ -469,13 +476,11 @@ class AdminController extends Controller {
 
         this.clearCacheRunning = true;
 
-        const master = this.get('master');
-
-        Espo.Ui.notify(master.translate('pleaseWait', 'messages'));
+        Espo.Ui.notify(this.language.translate('pleaseWait', 'messages'));
 
         Espo.Ajax.postRequest('Admin/clearCache')
             .then(() => {
-                const msg = master.translate('Cache has been cleared', 'labels', 'Admin');
+                const msg = this.language.translate('Cache has been cleared', 'labels', 'Admin');
 
                 Espo.Ui.success(msg);
 
