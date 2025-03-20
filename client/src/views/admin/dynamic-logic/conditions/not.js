@@ -55,7 +55,10 @@ export default class extends DynamicLogicConditionGroupBaseView {
         const i = 0;
         const key = this.getKey();
 
-        this.createItemView(i, key, this.itemData.value);
+        if (this.itemData.value) {
+            this.createItemView(i, key, this.itemData.value);
+        }
+
         this.viewKey = key;
     }
 

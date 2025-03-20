@@ -47,6 +47,12 @@ export default class DynamicLogicConditionGroupBaseView extends View {
      */
     viewList
 
+    /**
+     * @protected
+     * @type {Record}
+     */
+    itemData
+
     data() {
         return {
             viewDataList: this.viewDataList,
@@ -121,6 +127,12 @@ export default class DynamicLogicConditionGroupBaseView extends View {
         return `view-${this.level.toString()}-${this.number.toString()}-${i.toString()}`;
     }
 
+    /**
+     * @protected
+     * @param {number} number
+     * @param {string} key
+     * @param {Record} item
+     */
     createItemView(number, key, item) {
         this.viewList.push(key);
 
@@ -169,7 +181,7 @@ export default class DynamicLogicConditionGroupBaseView extends View {
             itemData: item,
             scope: scope,
             level: this.level + 1,
-            selector: '[data-view-key="' + key + '"]',
+            selector: `[data-view-key="${key}"]`,
             number: number,
             type: type,
             field: field,
@@ -306,6 +318,11 @@ export default class DynamicLogicConditionGroupBaseView extends View {
         return (this.viewDataList[this.viewDataList.length - 1]).index + 1;
     }
 
+    /**
+     * @private
+     * @param {number} i
+     * @param {string} key
+     */
     addViewDataListItem(i, key) {
         this.viewDataList.push({
             index: i,
@@ -313,6 +330,10 @@ export default class DynamicLogicConditionGroupBaseView extends View {
         });
     }
 
+    /**
+     * @private
+     * @param {number} i
+     */
     addItemContainer(i) {
         const $item = $(`<div data-view-key="${this.getKey(i)}"></div>`);
         this.$el.find('> .item-list').append($item);
@@ -325,6 +346,10 @@ export default class DynamicLogicConditionGroupBaseView extends View {
         this.$el.find('> .item-list').append($operatorItem);
     }
 
+    /**
+     * @private
+     * @param {'and'|'or'|'not'} operator
+     */
     actionAddGroup(operator) {
         const i = this.getIndexForNewItem();
         const key = this.getKey(i);
@@ -332,9 +357,11 @@ export default class DynamicLogicConditionGroupBaseView extends View {
         this.addItemContainer(i);
         this.addViewDataListItem(i, key);
 
+        const value = operator !== 'not' ? [] : undefined;
+
         this.createItemView(i, key, {
             type: operator,
-            value: [],
+            value: value,
         });
     }
 
