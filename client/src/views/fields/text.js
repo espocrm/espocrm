@@ -31,6 +31,7 @@
 import BaseFieldView from 'views/fields/base';
 import MailtoHelper from 'helpers/misc/mailto';
 import Modal from 'views/modal';
+import TextPreviewModalView from 'views/modals/text-preview';
 
 /**
  * A text field.
@@ -560,15 +561,11 @@ class TextFieldView extends BaseFieldView {
      * @return {Promise<void>}
      */
     async preview() {
-        const view = new Modal({
-            templateContent:
-                `<div class="complex-text">{{complexText viewObject.options.text linksInNewTab=true}}</div>`,
-            text: this.model.attributes[this.name] || '',
-            headerText: this.translate('Preview'),
-            backdrop: true,
-        });
+        const text = this.model.attributes[this.name] || '';
 
-        await this.assignView('dialog', view);
+        const view = new TextPreviewModalView({text: text});
+
+        await this.assignView('modal', view);
         await view.render();
     }
 
