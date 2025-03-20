@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\Applier;
 
+use Espo\Core\Acl;
 use Espo\Core\AclManager;
 use Espo\Core\Select\Text\Applier as TextFilterApplier;
 use Espo\Core\Select\AccessControl\Applier as AccessControlFilterApplier;
@@ -80,7 +81,7 @@ class Factory
     public function __construct(
         private InjectableFactory $injectableFactory,
         private UserAclManagerProvider $userAclManagerProvider,
-        private SelectManagerFactory $selectManagerFactory
+        private SelectManagerFactory $selectManagerFactory,
     ) {}
 
     private function create(string $entityType, User $user, string $type): object
@@ -91,14 +92,19 @@ class Factory
         $selectManager = $this->selectManagerFactory->create($entityType, $user);
 
         $aclManager = $this->userAclManagerProvider->get($user);
+        $acl = $aclManager->createUserAcl($user);
 
         $bindingData = new BindingData();
 
         $binder = new Binder($bindingData);
+
         $binder
             ->bindInstance(User::class, $user)
             ->bindInstance(AclManager::class, $aclManager)
-            ->bindInstance(SelectManager::class, $selectManager)
+            ->bindInstance(Acl::class, $acl)
+            ->bindInstance(SelectManager::class, $selectManager);
+
+        $binder
             ->for($className)
             ->bindValue('$entityType', $entityType)
             ->bindValue('$selectManager', $selectManager);

@@ -31,53 +31,37 @@ namespace tests\unit\Espo\Core\Select\AccessControl;
 
 use Espo\Core\Utils\Acl\UserAclManagerProvider;
 
-use Espo\Core\{
-    Select\AccessControl\FilterResolverFactory,
-    Select\AccessControl\DefaultFilterResolver,
-    Select\AccessControl\DefaultPortalFilterResolver,
-    Utils\Metadata,
-    InjectableFactory,
-    AclManager,
-    Acl,
-    Portal\Acl as PortalAcl,
-    Portal\AclManager as PortalAclManager,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\Acl;
+use Espo\Core\AclManager;
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Portal\Acl as PortalAcl;
+use Espo\Core\Portal\AclManager as PortalAclManager;
+use Espo\Core\Select\AccessControl\DefaultFilterResolver;
+use Espo\Core\Select\AccessControl\DefaultPortalFilterResolver;
+use Espo\Core\Select\AccessControl\FilterResolverFactory;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\User;
+use PHPUnit\Framework\TestCase;
 
-use Espo\{
-    Entities\User,
-};
-
-class FilterResolverFactoryTest extends \PHPUnit\Framework\TestCase
+class FilterResolverFactoryTest extends TestCase
 {
     protected function setUp() : void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
         $this->metadata = $this->createMock(Metadata::class);
         $this->user = $this->createMock(User::class);
-        $this->userAclFilterResolver = $this->createMock(UserAclManagerProvider::class);
         $this->aclManager = $this->createMock(AclManager::class);
         $this->acl = $this->createMock(Acl::class);
 
         $this->factory = new FilterResolverFactory(
             $this->injectableFactory,
             $this->metadata,
-            $this->userAclFilterResolver
+            $this->aclManager,
+            $this->acl,
         );
-
-        $this->userAclFilterResolver
-            ->expects($this->any())
-            ->method('get')
-            ->with($this->user)
-            ->willReturn($this->aclManager);
-
-        $this->aclManager
-            ->expects($this->any())
-            ->method('createUserAcl')
-            ->with($this->user)
-            ->willReturn($this->acl);
     }
 
     public function testCreate1()
@@ -96,14 +80,6 @@ class FilterResolverFactoryTest extends \PHPUnit\Framework\TestCase
             ->expects($this->any())
             ->method('isPortal')
             ->willReturn(true);
-
-        $this->aclManager = $this->createMock(PortalAclManager::class);
-
-        $this->aclManager
-            ->expects($this->any())
-            ->method('createUserAcl')
-            ->with($this->user)
-            ->willReturn($this->acl);
 
         $this->prepareFactoryTest(null);
     }
@@ -137,7 +113,9 @@ class FilterResolverFactoryTest extends \PHPUnit\Framework\TestCase
 
         $binder
             ->bindInstance(User::class, $this->user)
+            ->bindInstance(AclManager::class, $this->aclManager)
             ->bindInstance(Acl::class, $this->acl);
+
 
         if ($this->user->isPortal()) {
             $binder->bindInstance(PortalAcl::class, $this->acl);

@@ -29,6 +29,7 @@
 
 namespace tests\unit\Espo\Core\Select\Applier;
 
+use Espo\Core\Acl;
 use Espo\Core\AclManager;
 use Espo\Core\Binding\Binder;
 use Espo\Core\Binding\BindingContainer;
@@ -54,6 +55,7 @@ use PHPUnit\Framework\TestCase;
 class FactoryTest extends TestCase
 {
     private $aclManager;
+    private $acl;
 
     protected function setUp(): void
     {
@@ -77,6 +79,13 @@ class FactoryTest extends TestCase
             $userAclManagerProvider,
             $this->selectManagerFactory
         );
+
+        $this->acl = $this->createMock(Acl::class);
+
+        $this->aclManager
+            ->expects($this->any())
+            ->method('createUserAcl')
+            ->willReturn($this->acl);
     }
 
     public function testCreate1()
@@ -149,6 +158,7 @@ class FactoryTest extends TestCase
             ->bindInstance(User::class, $this->user)
             ->bindInstance(SelectManager::class, $this->selectManager)
             ->bindInstance(AclManager::class, $this->aclManager)
+            ->bindInstance(Acl::class, $this->acl)
             ->for($applierClassName)
             ->bindValue('$entityType', $entityType)
             ->bindValue('$selectManager', $this->selectManager);

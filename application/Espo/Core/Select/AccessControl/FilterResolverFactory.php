@@ -29,11 +29,11 @@
 
 namespace Espo\Core\Select\AccessControl;
 
+use Espo\Core\AclManager;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Acl;
 use Espo\Core\Portal\Acl as PortalAcl;
 use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\Acl\UserAclManagerProvider;
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\Binder;
 use Espo\Core\Binding\BindingData;
@@ -44,7 +44,8 @@ class FilterResolverFactory
     public function __construct(
         private InjectableFactory $injectableFactory,
         private Metadata $metadata,
-        private UserAclManagerProvider $userAclManagerProvider
+        private AclManager $aclManager,
+        private Acl $acl,
     ) {}
 
     public function create(string $entityType, User $user): FilterResolver
@@ -53,19 +54,17 @@ class FilterResolverFactory
             $this->getClassName($entityType) :
             $this->getPortalClassName($entityType);
 
-        $acl = $this->userAclManagerProvider
-            ->get($user)
-            ->createUserAcl($user);
-
         $bindingData = new BindingData();
 
         $binder = new Binder($bindingData);
+
         $binder
             ->bindInstance(User::class, $user)
-            ->bindInstance(Acl::class, $acl);
+            ->bindInstance(AclManager::class, $this->aclManager)
+            ->bindInstance(Acl::class, $this->acl);
 
         if ($user->isPortal()) {
-            $binder->bindInstance(PortalAcl::class, $acl);
+            $binder->bindInstance(PortalAcl::class, $this->acl);
         }
 
         $binder

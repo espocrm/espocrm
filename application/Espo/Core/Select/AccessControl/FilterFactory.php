@@ -37,9 +37,7 @@ use Espo\Core\Binding\BindingData;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Select\Helpers\FieldHelper;
 use Espo\Core\Utils\Metadata;
-
 use Espo\Entities\User;
-
 use RuntimeException;
 
 class FilterFactory
@@ -47,7 +45,8 @@ class FilterFactory
     public function __construct(
         private InjectableFactory $injectableFactory,
         private Metadata $metadata,
-        private AclManager $aclManager
+        private AclManager $aclManager,
+        private Acl $acl,
     ) {}
 
     public function create(string $entityType, User $user, string $name): Filter
@@ -55,18 +54,22 @@ class FilterFactory
         $className = $this->getClassName($entityType, $name);
 
         if (!$className) {
-            throw new RuntimeException("Access control filter '{$name}' for '{$entityType}' does not exist.");
+            throw new RuntimeException("Access control filter '$name' for '$entityType' does not exist.");
         }
 
         $bindingData = new BindingData();
 
         $binder = new Binder($bindingData);
+
         $binder
             ->bindInstance(User::class, $user)
-            ->bindInstance(Acl::class, $this->aclManager->createUserAcl($user));
+            ->bindInstance(AclManager::class, $this->aclManager)
+            ->bindInstance(Acl::class, $this->acl);
+
         $binder
             ->for($className)
             ->bindValue('$entityType', $entityType);
+
         $binder
             ->for(FieldHelper::class)
             ->bindValue('$entityType', $entityType);

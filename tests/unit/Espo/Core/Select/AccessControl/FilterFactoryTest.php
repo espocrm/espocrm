@@ -45,6 +45,11 @@ use PHPUnit\Framework\TestCase;
 
 class FilterFactoryTest extends TestCase
 {
+    protected $aclManager;
+    protected $acl;
+    protected $metadata;
+    protected $injectableFactory;
+
     protected function setUp() : void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
@@ -52,19 +57,13 @@ class FilterFactoryTest extends TestCase
         $this->user = $this->createMock(User::class);
         $this->fieldHelper = $this->createMock(FieldHelper::class);
         $this->aclManager = $this->createMock(AclManager::class);
-
         $this->acl = $this->createMock(Acl::class);
-
-        $this->aclManager
-            ->expects($this->any())
-            ->method('createUserAcl')
-            ->with($this->user)
-            ->willReturn($this->acl);
 
         $this->factory = new FilterFactory(
             $this->injectableFactory,
             $this->metadata,
-            $this->aclManager
+            $this->aclManager,
+            $this->acl,
         );
     }
 
@@ -99,6 +98,7 @@ class FilterFactoryTest extends TestCase
 
         $binder
             ->bindInstance(User::class, $this->user)
+            ->bindInstance(AclManager::class, $this->aclManager)
             ->bindInstance(Acl::class, $this->acl);
 
         $binder
