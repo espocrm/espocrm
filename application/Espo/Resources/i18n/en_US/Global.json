@@ -434,7 +434,8 @@
         "selectAtLeastOneRecord": "Select at least one record",
         "duplicateConflict": "A record already exists.",
         "cannotRemoveCategoryWithChildCategory": "Cannot remove a category that has a child category.",
-        "cannotRemoveNotEmptyCategory": "Cannot remove a non-empty category."
+        "cannotRemoveNotEmptyCategory": "Cannot remove a non-empty category.",
+        "sameRecordIsAlreadyBeingEdited": "The record is already being edited."
     },
     "boolFilters": {
         "onlyMy": "Only My",

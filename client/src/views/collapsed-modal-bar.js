@@ -44,6 +44,18 @@ class CollapsedModalBarView extends View {
      */
     maxNumberToDisplay = 3
 
+    /**
+     * @private
+     * @type {number[]}
+     */
+    numberList
+
+    /**
+     * @private
+     * @type {number}
+     */
+    lastNumber
+
     data() {
         return {
             dataList: this.getDataList(),
@@ -103,7 +115,7 @@ class CollapsedModalBarView extends View {
         let duplicateNumber = 0;
 
         for (const number of this.numberList) {
-            const view = this.getModalViewByNumber(number);
+            const view = this.getCollapsedModalViewByNumber(number);
 
             if (!view) {
                 continue;
@@ -123,12 +135,22 @@ class CollapsedModalBarView extends View {
 
     /**
      * @param {number} number
-     * @return {import('views/modal').default|null}
+     * @return {import('views/collapsed-modal').default|null}
      */
-    getModalViewByNumber(number) {
+    getCollapsedModalViewByNumber(number) {
         const key = this.composeKey(number);
 
         return this.getView(key);
+    }
+
+    /**
+     * @type {import('views/modal').default[]}
+     */
+    getModalViewList() {
+        return this.numberList
+            .map(number => this.getCollapsedModalViewByNumber(number))
+            .filter(it => it)
+            .map(it => it.modalView);
     }
 
     /**
@@ -145,6 +167,7 @@ class CollapsedModalBarView extends View {
         this.lastNumber++;
 
         const view = new CollapsedModalView({
+            modalView: modalView,
             title: options.title,
             duplicateNumber: this.calculateDuplicateNumber(options.title),
             onClose: () => this.removeModalView(number),

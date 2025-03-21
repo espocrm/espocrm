@@ -30,6 +30,9 @@ import {inject} from 'di';
 import Metadata from 'metadata';
 import AclManager from 'acl-manager';
 import Router from 'router';
+import ModalBarProvider from 'helpers/site/modal-bar-provider';
+import EditModalView from 'views/modals/edit';
+import Language from 'language';
 
 /**
  * A record-modal helper. Use to render the quick view and quick edit modals.
@@ -56,6 +59,20 @@ class RecordModalHelper {
      */
     @inject(Router)
     router
+
+    /**
+     * @private
+     * @type {Language}
+     */
+    @inject(Language)
+    language
+
+    /**
+     * @private
+     * @type {ModalBarProvider}
+     */
+    @inject(ModalBarProvider)
+    modalBarProvider
 
     /**
      * Show the 'detail' modal.
@@ -177,6 +194,25 @@ class RecordModalHelper {
         const id = params.id;
         const entityType = params.entityType;
         const model = params.model;
+
+        if (this.modalBarProvider.get()) {
+            const barView = this.modalBarProvider.get();
+
+            const foundModalView = barView.getModalViewList().find(view => {
+                console.log(view);
+
+                return view instanceof EditModalView &&
+                    view.id === id && view.entityType === entityType;
+            });
+
+            if (foundModalView) {
+                const message = this.language.translate('sameRecordIsAlreadyBeingEdited', 'messages');
+
+                Espo.Ui.warning(message);
+
+                throw new Error();
+            }
+        }
 
         const viewName = this.metadata.get(`clientDefs.${entityType}.modalViews.edit`) ||
             'views/modals/edit';

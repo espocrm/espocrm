@@ -57,6 +57,7 @@ class CollapsedModalView extends View {
 
     /**
      * @param {{
+     *     modalView: import('views/modal').default,
      *     onClose: function(),
      *     onExpand: function(),
      *     duplicateNumber?: number|null,
@@ -67,6 +68,8 @@ class CollapsedModalView extends View {
         super(options);
 
         this.options = options;
+
+        this.modalView = options.modalView;
     }
 
     data() {
