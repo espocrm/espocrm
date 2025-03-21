@@ -318,5 +318,9 @@ return [
     'emailScheduledBatchCount' => 50,
     'emailAddressMaxCount' => 10,
     'phoneNumberMaxCount' => 10,
+    'iframeSandboxExcludeDomainList' => [
+        'youtube.com',
+        'www.google.com',
+    ],
     'isInstalled' => false,
 ];
