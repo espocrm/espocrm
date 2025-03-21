@@ -201,6 +201,8 @@ class WysiwygFieldView extends TextFieldView {
         data.useIframe = this.useIframe;
         data.isPlain = !this.isHtml();
 
+        data.isNone = !data.isNotEmpty && data.valueIsSet && this.isDetailMode();
+
         // noinspection JSValidateTypes
         return data;
     }

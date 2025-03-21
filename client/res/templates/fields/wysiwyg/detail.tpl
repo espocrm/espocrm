@@ -9,4 +9,4 @@
 {{else}}
 <div class="plain complex-text hidden">{{complexText value}}</div>
 {{/unless}}
-{{#unless isNotEmpty}}{{#if valueIsSet}}<span class="none-value">{{translate 'None'}}</span>{{/if}}{{/unless}}
+{{#if isNone}}<span class="none-value">{{translate 'None'}}</span>{{/if}}
