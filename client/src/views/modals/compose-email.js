@@ -36,7 +36,7 @@ class ComposeEmailModalView extends EditModalView {
     layoutName = 'composeSmall'
     saveDisabled = true
     fullFormDisabled = true
-    isCollapsable = true
+    isCollapsible = true
     wasModified = false
 
     shortcutKeys = {

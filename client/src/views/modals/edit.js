@@ -52,7 +52,7 @@ class EditModalView extends ModalView {
     /** @protected */
     bottomDisabled = false
 
-    isCollapsable = true
+    isCollapsible = true
 
     /**
      * @private

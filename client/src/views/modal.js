@@ -72,7 +72,7 @@ class ModalView extends View {
      * @property {'static'|boolean} [backdrop] A backdrop.
      * @property {module:views/modal~Button} [buttonList] Buttons.
      * @property {module:views/modal~Button} [dropdownItemList] Buttons.
-     * @property {boolean} [collapseDisabled] Not collapsable. As of v9.1.0.
+     * @property {boolean} [collapseDisabled] Not collapsible. As of v9.1.0.
      */
 
     /**
@@ -234,7 +234,7 @@ class ModalView extends View {
      * @protected
      * @type {boolean}
      */
-    isCollapsable = false
+    isCollapsible = false
 
     /**
      * Is maximizable.
@@ -326,7 +326,7 @@ class ModalView extends View {
         }
 
         if (this.options.collapseDisabled) {
-            this.isCollapsable = false;
+            this.isCollapsible = false;
         }
 
         this.on('render', () => {
@@ -387,7 +387,7 @@ class ModalView extends View {
                 screenWidthXs: this.getThemeManager().getParam('screenWidthXs'),
                 fixedHeaderHeight: this.fixedHeaderHeight,
                 closeButton: !this.noCloseButton,
-                collapseButton: this.isCollapsable,
+                collapseButton: this.isCollapsible,
                 maximizeButton: this.isMaximizable && !this.getHelper().isXsScreen(),
                 onRemove: () => this.onDialogClose(),
                 onBackdropClick: () => this.onBackdropClick(),
@@ -436,7 +436,7 @@ class ModalView extends View {
             $(this.containerSelector).remove();
         });
 
-        if (this.isCollapsable) {
+        if (this.isCollapsible) {
             this.addActionHandler('collapseModal', () => this.collapse());
         }
 

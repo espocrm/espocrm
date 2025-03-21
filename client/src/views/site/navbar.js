@@ -264,7 +264,7 @@ class NavbarSiteView extends View {
     /**
      * @private
      */
-    isCollapsableVisible() {
+    isCollapsibleVisible() {
         return this.$el.find('.navbar-body').hasClass('in');
     }
 
@@ -272,7 +272,7 @@ class NavbarSiteView extends View {
      * @private
      */
     toggleCollapsable() {
-        if (this.isCollapsableVisible()) {
+        if (this.isCollapsibleVisible()) {
             this.hideCollapsable();
         } else {
             this.showCollapsable();

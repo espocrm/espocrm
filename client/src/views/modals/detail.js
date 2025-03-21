@@ -663,7 +663,7 @@ class DetailModalView extends ModalView {
             },
         });
 
-        // Not to hidden as it interferes with the collapsable modal.
+        // Not to be hidden as it interferes with the collapsible modal.
         //this.dialog.hide();
 
         return modalView;
