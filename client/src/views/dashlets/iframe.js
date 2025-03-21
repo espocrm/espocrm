@@ -32,7 +32,44 @@ class IframeDashletView extends BaseDashletView {
 
     name = 'Iframe'
 
-    templateContent = '<iframe style="margin: 0; border: 0;" sandbox="allow-scripts"></iframe>'
+    /**
+     * @private
+     * @type {boolean}
+     */
+    sandboxDisabled = false
+
+    // language=Handlebars
+    templateContent = `
+        <iframe
+            style="margin: 0; border: 0;"
+            {{#unless viewObject.sandboxDisabled}}
+                sandbox="allow-scripts"
+            {{/unless}}
+        ></iframe>
+    `
+
+    setup() {
+        const url = this.getOption('url');
+
+        /** @type {string[]} */
+        const excludeDomains = this.getConfig().get('iframeSandboxExcludeDomainList') || [];
+
+        if (url) {
+            for (const domain of excludeDomains) {
+                try {
+                    const urlObject = new URL(url);
+
+                    if (urlObject.hostname === domain) {
+                        this.sandboxDisabled = true;
+
+                        break;
+                    }
+                } catch (e) {
+                    console.warn(`Invalid URL ${url}.`);
+                }
+            }
+        }
+    }
 
     afterRender() {
         const $iframe = this.$el.find('iframe');
