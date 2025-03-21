@@ -227,6 +227,10 @@ class ArrayFieldView extends BaseFieldView {
         if (this.params.allowCustomOptions || !this.params.options) {
             this.allowCustomOptions = true;
         }
+
+        if (this.type === 'array') {
+            this.validations.push('noInputValue')
+        }
     }
 
     focusOnElement() {
@@ -904,6 +908,33 @@ class ArrayFieldView extends BaseFieldView {
                 view.close();
             });
         });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @protected
+     * @return {boolean}
+     */
+    validateNoInputValue() {
+        if (!this.element) {
+            return false;
+        }
+
+        const input = this.element.querySelector('input.select');
+
+        if (!(input instanceof HTMLInputElement)) {
+            return false;
+        }
+
+        if (!input.value) {
+            return false;
+        }
+
+        const message = this.translate('arrayInputNotEmpty', 'messages');
+
+        this.showValidationMessage(message, 'input.select');
+
+        return true;
     }
 }
 

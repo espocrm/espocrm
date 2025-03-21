@@ -367,6 +367,7 @@
         "fieldExceedsMaxCount": "Count exceeds max allowed {maxCount}",
         "barcodeInvalid": "{field} is not valid {type}",
         "arrayItemMaxLength": "Item shouldn't be longer than {max} characters",
+        "arrayInputNotEmpty": "Item is entered but not added",
         "resetPreferencesDone": "Preferences has been reset to defaults",
         "confirmation": "Are you sure?",
         "unlinkAllConfirmation": "Are you sure you want to unlink all related records?",
