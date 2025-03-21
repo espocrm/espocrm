@@ -320,7 +320,7 @@ return [
     'phoneNumberMaxCount' => 10,
     'iframeSandboxExcludeDomainList' => [
         'youtube.com',
-        'www.google.com',
+        'google.com',
     ],
     'isInstalled' => false,
 ];
