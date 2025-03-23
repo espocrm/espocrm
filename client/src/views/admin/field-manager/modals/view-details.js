@@ -201,6 +201,7 @@ export default class ViewDetailsModalView extends ModalView {
                 {
                     name: this.field + 'Name',
                     type: 'string',
+                    notStorable: true,
                     readOnly: true,
                 },
             ];
@@ -422,6 +423,41 @@ export default class ViewDetailsModalView extends ModalView {
                 {
                     name: this.field,
                     type: 'string[]',
+                    notStorable: this.fieldDefs.notStorable || false,
+                    readOnly: this.fieldDefs.readOnly || false,
+                },
+            ];
+        }
+
+        if (this.fieldType === 'email') {
+            return [
+                {
+                    name: this.field,
+                    type: 'string',
+                    notStorable: this.fieldDefs.notStorable || false,
+                    readOnly: this.fieldDefs.readOnly || false,
+                },
+                {
+                    name: this.field + 'Data',
+                    type:
+                        '{emailAddress: string, lower: string, primary: boolean, optOut: boolean, invalid: boolean}[]',
+                    notStorable: this.fieldDefs.notStorable || false,
+                    readOnly: this.fieldDefs.readOnly || false,
+                },
+            ];
+        }
+
+        if (this.fieldType === 'phone') {
+            return [
+                {
+                    name: this.field,
+                    type: 'string',
+                    notStorable: this.fieldDefs.notStorable || false,
+                    readOnly: this.fieldDefs.readOnly || false,
+                },
+                {
+                    name: this.field + 'Data',
+                    type: '{phoneNumber: string, primary: boolean, optOut: boolean, invalid: boolean}[]',
                     notStorable: this.fieldDefs.notStorable || false,
                     readOnly: this.fieldDefs.readOnly || false,
                 },
