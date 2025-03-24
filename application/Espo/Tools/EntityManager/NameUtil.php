@@ -155,6 +155,10 @@ class NameUtil
         Field::CREATED_AT,
         Field::MODIFIED_BY,
         Field::MODIFIED_AT,
+
+        'emailAddressList',
+        'userEmailAddressList',
+        'excludeFromReplyEmailAddressList',
     ];
 
     /**
