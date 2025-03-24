@@ -33,6 +33,9 @@ use Espo\Core\Utils\Crypt;
 use Espo\Entities\OAuthProvider;
 use League\OAuth2\Client\Provider\GenericProvider;
 
+/**
+ * @internal
+ */
 class GenericProviderFactory
 {
     public function __construct(
