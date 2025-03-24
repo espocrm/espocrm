@@ -49,6 +49,7 @@ class TokensProvider
     public function __construct(
         private EntityManager $entityManager,
         private GenericProviderFactory $genericProviderFactory,
+        private TokenSetter $tokenSetter,
     ) {}
 
     /**
@@ -155,13 +156,7 @@ class TokensProvider
             throw new TokenObtainingFailure($e->getMessage(), $e->getCode(), $e);
         }
 
-        $expires = $tokens->getExpires() !== null ?
-            DateTime::fromTimestamp($tokens->getExpires()) :
-            null;
-
-        $account->setAccessToken($tokens->getToken());
-        $account->setRefreshToken($tokens->getToken());
-        $account->setExpiresAt($expires);
+        $this->tokenSetter->set($account, $tokens);
 
         $this->entityManager->saveEntity($account);
     }

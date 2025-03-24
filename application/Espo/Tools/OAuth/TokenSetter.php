@@ -29,54 +29,34 @@
 
 namespace Espo\Tools\OAuth;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Field\DateTime;
+use Espo\Core\Utils\Crypt;
 use Espo\Entities\OAuthAccount;
-use Espo\ORM\EntityManager;
-use GuzzleHttp\Exception\GuzzleException;
-use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use League\OAuth2\Client\Token\AccessTokenInterface;
 
-class ConnectionService
+/**
+ * @internal
+ */
+class TokenSetter
 {
     public function __construct(
-        private EntityManager $entityManager,
-        private GenericProviderFactory $genericProviderFactory,
-        private TokenSetter $tokenSetter,
+        private Crypt $crypt,
     ) {}
 
-    /**
-     * @throws Forbidden
-     * @throws Error
-     */
-    public function connect(OAuthAccount $account, string $code): void
+    public function set(OAuthAccount $account, AccessTokenInterface $tokens): void
     {
-        $provider = $account->getProvider();
+        $accessToken = $this->crypt->encrypt($tokens->getToken());
 
-        if (!$provider->isActive()) {
-            throw new Forbidden("Provider is not active.");
-        }
+        $refreshToken = $tokens->getRefreshToken() ?
+            $this->crypt->encrypt($tokens->getRefreshToken()) :
+            null;
 
-        $genericProvider = $this->genericProviderFactory->create($provider);
+        $expires = $tokens->getExpires() !== null ?
+            DateTime::fromTimestamp($tokens->getExpires()) :
+            null;
 
-        try {
-            $tokens = $genericProvider->getAccessToken('authorization_code', ['code' => $code]);
-        } catch (GuzzleException $e) {
-            throw new Error("Token request error.", 500, $e);
-        } catch (IdentityProviderException $e) {
-            throw new Error("Token request response error.", 500, $e);
-        }
-
-        $this->tokenSetter->set($account, $tokens);
-
-        $this->entityManager->saveEntity($account);
-    }
-
-    public function disconnect(OAuthAccount $account): void
-    {
-        $account->setAccessToken(null);
-        $account->setRefreshToken(null);
-        $account->setExpiresAt(null);
-
-        $this->entityManager->saveEntity($account);
+        $account->setAccessToken($accessToken);
+        $account->setRefreshToken($refreshToken);
+        $account->setExpiresAt($expires);
     }
 }
