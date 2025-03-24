@@ -335,6 +335,30 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {
+                                        "const": "multiEnum"
+                                    },
+                                    {
+                                        "const": "array"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "displayAsList": {
+                                "type": "boolean",
+                                "description": "Display as a list."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
                                     {"const": "enum"},
                                     {"const": "multiEnum"},
                                     {"const": "array"}
