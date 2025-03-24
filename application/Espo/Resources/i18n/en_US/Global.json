@@ -64,7 +64,8 @@
         "AuthenticationProvider": "Authentication Provider",
         "GlobalStream": "Global Stream",
         "AddressCountry": "Address Country",
-        "AppSecret": "App Secret"
+        "AppSecret": "App Secret",
+        "OAuthProvider": "OAuth OAuthProvide"
     },
     "scopeNamesPlural": {
         "Note": "Notes",
@@ -119,7 +120,8 @@
         "AuthenticationProvider": "Authentication Providers",
         "GlobalStream": "Global Stream",
         "AddressCountry": "Address Countries",
-        "AppSecret": "App Secrets"
+        "AppSecret": "App Secrets",
+        "OAuthProvider": "OAuth Providers"
     },
     "labels": {
         "Previous Page": "Previous Page",

@@ -1,0 +1,47 @@
+{
+    "controller": "controllers/record",
+    "dynamicLogic": {
+        "fields": {
+            "clientId": {
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isActive"
+                        }
+                    ]
+                }
+            },
+            "clientSecret": {
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isActive"
+                        }
+                    ]
+                }
+            },
+            "authorizationEndpoint": {
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isActive"
+                        }
+                    ]
+                }
+            },
+            "tokenEndpoint": {
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isActive"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -351,6 +351,12 @@
                 "description": "appSecrets"
             },
             {
+                "url": "#Admin/oAuthProviders",
+                "label": "OAuth Providers",
+                "iconClass": "fas fa-sign-in-alt",
+                "description": "oAuthProviders"
+            },
+            {
                 "url": "#Admin/appLog",
                 "label": "App Log",
                 "iconClass": "fas fa-list",

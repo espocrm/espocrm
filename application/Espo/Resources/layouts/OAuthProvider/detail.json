@@ -7,12 +7,12 @@
     },
     {
         "rows": [
-            [{"name": "redirectUri"}, false]
+            [{"name": "authorizationRedirectUri"}, false]
         ]
     },
     {
         "rows": [
-            [{"name": "authorizeEndpoint"}, {"name": "tokenEndpoint"}],
+            [{"name": "authorizationEndpoint"}, {"name": "tokenEndpoint"}],
             [{"name": "resourceEndpoint"}, false]
         ]
     }

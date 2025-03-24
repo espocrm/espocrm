@@ -1,0 +1,16 @@
+{
+    "labels": {
+        "Create OAuthProvider": "Create OAuth Provider"
+    },
+    "fields": {
+        "isActive": "Is Active",
+        "clientId": "Client ID",
+        "clientSecret": "Client Secret",
+        "authorizationEndpoint": "Authorization Endpoint",
+        "tokenEndpoint": "Token Endpoint",
+        "resourceEndpoint": "Resource Endpoint",
+        "authorizationRedirectUri": "Authorization Redirect URI",
+        "scopes": "Scopes",
+        "scopeSeparator": "Scope Separator"
+    }
+}
