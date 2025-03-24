@@ -33,6 +33,7 @@ use Espo\Core\Field\DateTime;
 use Espo\Entities\OAuthAccount;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\Tools\OAuth\Exceptions\NoToken;
 use Espo\Tools\OAuth\Exceptions\ProviderNotAvailable;
 use Espo\Tools\OAuth\Exceptions\AccountNotFound;
@@ -84,7 +85,21 @@ class TokensProvider
      */
     private function fetch(string $id): OAuthAccount
     {
-        $account = $this->entityManager->getRDBRepositoryByClass(OAuthAccount::class)->getById($id);
+        // Ensuring the token is not being refreshed.
+        $this->entityManager->getTransactionManager()->start();
+
+        $account = $this->entityManager
+            ->getRDBRepositoryByClass(OAuthAccount::class)
+            ->clone(
+                SelectBuilder::create()
+                    ->from(OAuthAccount::ENTITY_TYPE)
+                    ->forShare()
+                    ->build()
+            )
+            ->where([Attribute::ID => $id])
+            ->findOne();
+
+        $this->entityManager->getTransactionManager()->commit();
 
         if (!$account) {
             throw new AccountNotFound();

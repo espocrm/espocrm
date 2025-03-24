@@ -9,6 +9,16 @@
     },
     "dynamicLogic": {
         "fields": {
+            "authorizationRedirectUri": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "id"
+                        }
+                    ]
+                }
+            },
             "clientId": {
                 "required": {
                     "conditionGroup": [

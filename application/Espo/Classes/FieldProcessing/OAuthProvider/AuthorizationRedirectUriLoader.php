@@ -27,21 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Classes\FieldProcessing\OAuthProvider;
 
-use Espo\Core\Controllers\Record;
+use Espo\Core\FieldProcessing\Loader;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Entities\OAuthProvider;
+use Espo\ORM\Entity;
+use Espo\Tools\OAuth\ConfigDataProvider;
 
 /**
- * @noinspection PhpUnused
+ * @implements Loader<OAuthProvider>
  */
-class OAuthProvider extends Record
+class AuthorizationRedirectUriLoader implements Loader
 {
-    protected function checkAccess(): bool
-    {
-        if (!$this->user->isAdmin()) {
-            return false;
-        }
+    public function __construct(
+        private ConfigDataProvider $configDataProvider,
+    ) {}
 
-        return true;
+    public function process(Entity $entity, Params $params): void
+    {
+        $entity->set('authorizationRedirectUri', $this->configDataProvider->getRedirectUri());
     }
 }

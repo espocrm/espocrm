@@ -75,7 +75,8 @@
         "accounts": {
             "type": "hasMany",
             "entity": "OAuthAccount",
-            "foreign": "OAuthProvider"
+            "foreign": "provider",
+            "readOnly": true
         },
         "createdBy": {
             "type": "belongsTo",

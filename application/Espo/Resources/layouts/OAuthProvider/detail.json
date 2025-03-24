@@ -2,11 +2,7 @@
     {
         "rows": [
             [{"name": "name"}, {"name": "isActive"}],
-            [{"name": "clientId"}, {"name": "clientSecret"}]
-        ]
-    },
-    {
-        "rows": [
+            [{"name": "clientId"}, {"name": "clientSecret"}],
             [{"name": "authorizationRedirectUri"}, false]
         ]
     },
