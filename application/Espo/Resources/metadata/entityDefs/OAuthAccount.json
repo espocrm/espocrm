@@ -1,0 +1,46 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 100
+        },
+        "isActive": {
+            "type": "bool",
+            "default": true
+        },
+        "clientId": {
+            "type": "varchar",
+            "maxLength": 150
+        },
+        "clientSecret": {
+            "type": "password",
+            "maxLength": 512,
+            "dbType": "text"
+        },
+        "urlAuthorize": {
+            "type": "url",
+            "maxLength": 512,
+            "dbType": "text"
+        },
+        "urlAccessToken": {
+            "type": "url",
+            "maxLength": 512,
+            "dbType": "text"
+        },
+        "urlResourceOwnerDetails": {
+            "type": "url",
+            "maxLength": 512,
+            "dbType": "text"
+        },
+        "scopes": {
+            "type": "array",
+            "noEmptyString": true,
+            "allowCustomOptions": true
+        },
+        "scopeSeparator": {
+            "type": "varchar",
+            "maxLength": 1
+        }
+    }
+}
