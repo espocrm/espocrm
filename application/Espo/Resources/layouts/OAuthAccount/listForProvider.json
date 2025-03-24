@@ -2,5 +2,9 @@
     {
         "name": "name",
         "link": true
+    },
+    {
+        "name": "hasAccessToken",
+        "width": 50
     }
 ]

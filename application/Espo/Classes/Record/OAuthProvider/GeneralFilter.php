@@ -27,28 +27,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuth;
+namespace Espo\Classes\Record\OAuthProvider;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Record\Input\Data;
+use Espo\Core\Record\Input\Filter;
 use Espo\Core\Utils\Crypt;
-use Espo\Entities\OAuthProvider;
-use League\OAuth2\Client\Provider\GenericProvider;
 
-class GenericProviderFactory
+/**
+ * @noinspection PhpUnused
+ */
+class GeneralFilter implements Filter
 {
-    public function __construct(
-        private ConfigDataProvider $configDataProvider,
-        private Crypt $crypt,
-    ) {}
+    private const ATTR_CLIENT_SECRET = 'clientSecret';
 
-    public function create(OAuthProvider $provider): GenericProvider
+    public function __construct(private Crypt $crypt) {}
+
+    /**
+     * @throws BadRequest
+     */
+    public function filter(Data $data): void
     {
-        $secret = $this->crypt->decrypt($provider->getClientSecret());
+        $this->processClientSecret($data);
+    }
 
-        return new GenericProvider([
-            'clientId' => $provider->getClientId(),
-            'clientSecret' => $secret,
-            'redirectUri'  => $this->configDataProvider->getRedirectUri(),
-            'urlAccessToken' => $provider->getTokenEndpoint(),
-        ]);
+    /**
+     * @throws BadRequest
+     */
+    private function processClientSecret(Data $data): void
+    {
+        $value = $data->get(self::ATTR_CLIENT_SECRET);
+
+        if ($value === null) {
+            return;
+        }
+
+        if (!is_string($value)) {
+            throw new BadRequest();
+        }
+
+        $data->set(self::ATTR_CLIENT_SECRET, $this->crypt->encrypt($value));
     }
 }

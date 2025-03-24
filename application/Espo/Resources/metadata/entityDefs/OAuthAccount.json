@@ -12,7 +12,6 @@
         },
         "user": {
             "type": "link",
-            "required": true,
             "readOnly": true
         },
         "hasAccessToken": {
