@@ -1,0 +1,16 @@
+{
+    "fields": {
+        "clientSecret": {
+            "internal": true
+        },
+        "accessToken": {
+            "forbidden": true
+        },
+        "refreshToken": {
+            "forbidden": true
+        },
+        "expiresAt": {
+            "forbidden": true
+        }
+    }
+}

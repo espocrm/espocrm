@@ -18,20 +18,30 @@
             "maxLength": 512,
             "dbType": "text"
         },
-        "urlAuthorize": {
+        "authorizeEndpoint": {
             "type": "url",
             "maxLength": 512,
-            "dbType": "text"
+            "dbType": "text",
+            "strip": false
         },
-        "urlAccessToken": {
+        "tokenEndpoint": {
             "type": "url",
             "maxLength": 512,
-            "dbType": "text"
+            "dbType": "text",
+            "strip": false
         },
-        "urlResourceOwnerDetails": {
+        "resourceEndpoint": {
             "type": "url",
             "maxLength": 512,
-            "dbType": "text"
+            "dbType": "text",
+            "strip": false
+        },
+        "authorizationRedirectUri": {
+            "type": "url",
+            "notStorable": true,
+            "readOnly": true,
+            "copyToClipboard": true,
+            "directAccessDisabled": true
         },
         "scopes": {
             "type": "array",
@@ -43,6 +53,20 @@
         "scopeSeparator": {
             "type": "varchar",
             "maxLength": 1
+        },
+        "accessToken": {
+            "type": "password",
+            "readOnly": true,
+            "dbType": "text"
+        },
+        "refreshToken": {
+            "type": "password",
+            "readOnly": true,
+            "dbType": "text"
+        },
+        "expiresAt": {
+            "type": "datetime",
+            "readOnly": true
         }
     }
 }

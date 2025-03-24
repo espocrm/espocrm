@@ -1,0 +1,19 @@
+[
+    {
+        "rows": [
+            [{"name": "name"}, {"name": "isActive"}],
+            [{"name": "clientId"}, {"name": "clientSecret"}]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "redirectUri"}, false]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "authorizeEndpoint"}, {"name": "tokenEndpoint"}],
+            [{"name": "resourceEndpoint"}, false]
+        ]
+    }
+]
