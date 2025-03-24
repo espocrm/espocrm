@@ -48,7 +48,6 @@ class MultiEnumFieldView extends ArrayFieldView {
 
     /**
      * @typedef {Object} module:views/fields/multi-enumeration~params
-     * @property {number} [maxLength] A max length.
      * @property {string} [translation] A translation string. E.g. `Global.scopeNames`.
      * @property {string[]} [options] Select options.
      * @property {boolean} [required] Required.
