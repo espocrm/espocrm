@@ -31,11 +31,7 @@
 
 namespace Espo\Entities;
 
-/** @noinspection PhpMultipleClassDeclarationsInspection */
-
-use Espo\Core\Field\DateTime;
 use Espo\Core\ORM\Entity;
-
 use ValueError;
 
 class OAuthProvider extends Entity
@@ -107,36 +103,5 @@ class OAuthProvider extends Entity
     public function getScopeSeparator(): ?string
     {
         return $this->get('scopeSeparator');
-    }
-
-    public function getAccessToken(): ?string
-    {
-        return $this->get('accessToken');
-    }
-
-    public function getRefreshToken(): ?string
-    {
-        return $this->get('refreshToken');
-    }
-
-    public function getExpiresAt(): ?DateTime
-    {
-        /** @var ?DateTime */
-        return $this->getValueObject('expiresAt');
-    }
-
-    public function setAccessToken(?string $accessToken): self
-    {
-        return $this->set('accessToken', $accessToken);
-    }
-
-    public function setRefreshToken(?string $refreshToken): self
-    {
-        return $this->set('refreshToken', $refreshToken);
-    }
-
-    public function setExpiresAt(?DateTime $expiresAt): self
-    {
-        return $this->setValueObject('expiresAt', $expiresAt);
     }
 }

@@ -27,44 +27,57 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthProvider;
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 
-use Espo\Entities\OAuthProvider;
-use Espo\ORM\EntityManager;
-use Espo\Tools\OAuthProvider\Exceptions\ProviderNotAvailable;
-use Espo\Tools\OAuthProvider\Exceptions\ProviderNotFound;
+namespace Espo\Entities;
 
-class ProviderProvider
+use Espo\Core\Field\DateTime;
+use Espo\Core\ORM\Entity;
+use ValueError;
+
+class OAuthAccount extends Entity
 {
-    public function __construct(
-        private EntityManager $entityManager,
-    ) {}
+    public const ENTITY_TYPE = 'OAuthAccount';
 
-    /**
-     * @throws ProviderNotFound
-     * @throws ProviderNotAvailable
-     */
-    public function get(string $id): OAuthProvider
+    public function getProvider(): OAuthProvider
     {
-        $account = $this->fetch($id);
+        $provider = $this->relations->getOne('provider');
+
+        if (!$provider instanceof OAuthProvider) {
+            throw new ValueError("No provider.");
+        }
+
+        return $provider;
     }
 
-    /**
-     * @throws ProviderNotAvailable
-     * @throws ProviderNotFound
-     */
-    private function fetch(string $id): OAuthProvider
+    public function getAccessToken(): ?string
     {
-        $account = $this->entityManager->getRDBRepositoryByClass(OAuthProvider::class)->getById($id);
+        return $this->get('accessToken');
+    }
 
-        if (!$account) {
-            throw new ProviderNotFound();
-        }
+    public function getRefreshToken(): ?string
+    {
+        return $this->get('refreshToken');
+    }
 
-        if (!$account->isActive()) {
-            throw new ProviderNotAvailable();
-        }
+    public function getExpiresAt(): ?DateTime
+    {
+        /** @var ?DateTime */
+        return $this->getValueObject('expiresAt');
+    }
 
-        return $account;
+    public function setAccessToken(?string $accessToken): self
+    {
+        return $this->set('accessToken', $accessToken);
+    }
+
+    public function setRefreshToken(?string $refreshToken): self
+    {
+        return $this->set('refreshToken', $refreshToken);
+    }
+
+    public function setExpiresAt(?DateTime $expiresAt): self
+    {
+        return $this->setValueObject('expiresAt', $expiresAt);
     }
 }

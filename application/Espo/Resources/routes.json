@@ -654,5 +654,15 @@
             "id": ":id",
             "link": ":link"
         }
+    },
+    {
+        "method": "post",
+        "route": "/OAuth/:id/connection",
+        "actionClassName": "Espo\\Tools\\OAuth\\Api\\PostConnection"
+    },
+    {
+        "method": "delete",
+        "route": "/OAuth/:id/connection",
+        "actionClassName": "Espo\\Tools\\OAuth\\Api\\DeleteConnection"
     }
 ]

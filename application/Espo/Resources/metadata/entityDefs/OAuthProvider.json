@@ -54,20 +54,6 @@
             "type": "varchar",
             "maxLength": 1
         },
-        "accessToken": {
-            "type": "password",
-            "readOnly": true,
-            "dbType": "text"
-        },
-        "refreshToken": {
-            "type": "password",
-            "readOnly": true,
-            "dbType": "text"
-        },
-        "expiresAt": {
-            "type": "datetime",
-            "readOnly": true
-        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -86,6 +72,11 @@
         }
     },
     "links": {
+        "accounts": {
+            "type": "hasMany",
+            "entity": "OAuthAccount",
+            "foreign": "OAuthProvider"
+        },
         "createdBy": {
             "type": "belongsTo",
             "entity": "User"

@@ -1,5 +1,12 @@
 {
     "controller": "controllers/record",
+    "relationshipPanels": {
+        "accounts": {
+            "layout": "listForProvider",
+            "selectDisabled": true,
+            "unlinkDisabled": true
+        }
+    },
     "dynamicLogic": {
         "fields": {
             "clientId": {

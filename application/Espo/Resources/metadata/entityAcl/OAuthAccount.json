@@ -1,0 +1,13 @@
+{
+    "fields": {
+        "accessToken": {
+            "forbidden": true
+        },
+        "refreshToken": {
+            "forbidden": true
+        },
+        "expiresAt": {
+            "forbidden": true
+        }
+    }
+}

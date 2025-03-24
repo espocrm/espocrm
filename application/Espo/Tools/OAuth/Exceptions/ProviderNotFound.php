@@ -27,9 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthProvider\Exceptions;
+namespace Espo\Tools\OAuth\Exceptions;
 
 use Exception;
 
-class ProviderNotAvailable extends Exception
+class ProviderNotFound extends Exception
 {}

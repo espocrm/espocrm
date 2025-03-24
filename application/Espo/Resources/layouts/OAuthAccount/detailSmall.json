@@ -1,0 +1,8 @@
+[
+    {
+        "rows": [
+            [{"name": "name"}, {"name": "provider"}],
+            [{"name": "user"}, {"name": "hasAccessToken"}]
+        ]
+    }
+]
