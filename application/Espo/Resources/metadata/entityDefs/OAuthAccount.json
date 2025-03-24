@@ -36,7 +36,9 @@
         "scopes": {
             "type": "array",
             "noEmptyString": true,
-            "allowCustomOptions": true
+            "allowCustomOptions": true,
+            "storeArrayValues": false,
+            "displayAsList": true
         },
         "scopeSeparator": {
             "type": "varchar",
