@@ -41,7 +41,6 @@ use Espo\Entities\InboundEmail as InboundEmailEntity;
 use Espo\Entities\Settings;
 use Espo\ORM\Name\Attribute;
 use Espo\Tools\App\SettingsService as SettingsService;
-
 use Espo\Core\Acl;
 use Espo\Core\Authentication\Logins\Espo;
 use Espo\Core\InjectableFactory;
@@ -50,18 +49,44 @@ use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata;
-
 use Espo\Entities\User;
 use Espo\Entities\Preferences;
-
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
-
 use stdClass;
 use Throwable;
 
 class AppService
 {
+    /** @var string[] */
+    private array $forbiddenUserAttributeList = [
+        'apiKey',
+        'authTokenId',
+        'password',
+        'rolesIds',
+        'rolesNames',
+    ];
+
+    /** @var string[] */
+    private array $allowedUserAttributeList = [
+        'type',
+    ];
+
+    /** @var string[] */
+    private array $allowedInternalUserAttributeList = [
+        'teamsIds',
+        'defaultTeamId',
+        'defaultTeamName',
+    ];
+
+    /** @var string[] */
+    private array $allowedPortalUserAttributeList = [
+        'contactId',
+        'contactName',
+        'accountId',
+        'accountsIds',
+    ];
+
     public function __construct(
         private Config $config,
         private EntityManager $entityManager,
@@ -188,34 +213,33 @@ class AppService
     {
         $user = $this->user;
 
-        $emailAddressData = $this->getEmailAddressData();
-
         $data = $user->getValueMap();
+
+        $emailAddressData = $this->getEmailAddressData();
 
         $data->emailAddressList = $emailAddressData['emailAddressList'];
         $data->userEmailAddressList = $emailAddressData['userEmailAddressList'];
         $data->excludeFromReplyEmailAddressList = $emailAddressData['excludeFromReplyEmailAddressList'];
 
-        unset($data->authTokenId);
-        unset($data->password);
+        foreach ($this->forbiddenUserAttributeList as $attribute) {
+            unset($data->$attribute);
+        }
 
         $forbiddenAttributeList = $this->acl->getScopeForbiddenAttributeList(User::ENTITY_TYPE);
 
         $isPortal = $user->isPortal();
 
         foreach ($forbiddenAttributeList as $attribute) {
-            if ($attribute === 'type') {
+            if (in_array($attribute, $this->allowedUserAttributeList)) {
                 continue;
             }
 
-            if ($isPortal) {
-                if (in_array($attribute, ['contactId', 'contactName', 'accountId', 'accountsIds'])) {
-                    continue;
-                }
-            } else {
-                if (in_array($attribute, ['teamsIds', 'defaultTeamId', 'defaultTeamName'])) {
-                    continue;
-                }
+            if ($isPortal && in_array($attribute, $this->allowedPortalUserAttributeList)) {
+                continue;
+            }
+
+            if (!$isPortal && in_array($attribute, $this->allowedInternalUserAttributeList)) {
+                continue;
             }
 
             unset($data->$attribute);
