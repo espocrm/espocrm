@@ -27,9 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuth\Exceptions;
+namespace Espo\Tools\OAuth;
 
-use Exception;
+use Espo\Core\Field\DateTime;
 
-class ProviderNotFound extends Exception
-{}
+/**
+ * @immutable
+ */
+class Tokens
+{
+    public function __construct(
+        private ?string $accessToken,
+        private ?string $refreshToken,
+        private ?DateTime $expiresAt,
+    ) {}
+
+    public function getAccessToken(): ?string
+    {
+        return $this->accessToken;
+    }
+
+    public function getRefreshToken(): ?string
+    {
+        return $this->refreshToken;
+    }
+
+    public function getExpiresAt(): ?DateTime
+    {
+        return $this->expiresAt;
+    }
+}

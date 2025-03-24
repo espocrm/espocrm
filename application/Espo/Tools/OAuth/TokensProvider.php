@@ -29,17 +29,18 @@
 
 namespace Espo\Tools\OAuth;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Field\DateTime;
 use Espo\Entities\OAuthAccount;
-use Espo\Entities\OAuthProvider;
 use Espo\ORM\EntityManager;
+use Espo\Tools\OAuth\Exceptions\NoToken;
+use Espo\Tools\OAuth\Exceptions\ProviderNotAvailable;
+use Espo\Tools\OAuth\Exceptions\AccountNotFound;
+use Espo\Tools\OAuth\Exceptions\TokenObtainingFailure;
 use GuzzleHttp\Exception\GuzzleException;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use LogicException;
 
-class ConnectionService
+class TokensProvider
 {
     public function __construct(
         private EntityManager $entityManager,
@@ -47,25 +48,71 @@ class ConnectionService
     ) {}
 
     /**
-     * @throws Forbidden
-     * @throws Error
+     * @throws AccountNotFound
+     * @throws ProviderNotAvailable
+     * @throws NoToken
+     * @throws TokenObtainingFailure
      */
-    public function connect(OAuthAccount $account, string $code): void
+    public function get(string $id): Tokens
     {
-        $provider = $account->getProvider();
+        $account = $this->fetch($id);
 
-        if (!$provider->isActive()) {
-            throw new Forbidden("Provider is not active.");
+        if (
+            $account->getRefreshToken() &&
+            $account->getExpiresAt() &&
+            $account->getExpiresAt()->isGreaterThan(DateTime::createNow())
+        ) {
+            $this->refresh($account);
         }
 
-        $genericProvider = $this->genericProviderFactory->create($provider);
+        return new Tokens(
+            accessToken: $account->getAccessToken(),
+            refreshToken: $account->getRefreshToken(),
+            expiresAt: $account->getExpiresAt(),
+        );
+    }
+
+    /**
+     * @throws ProviderNotAvailable
+     * @throws AccountNotFound
+     * @throws NoToken
+     */
+    private function fetch(string $id): OAuthAccount
+    {
+        $account = $this->entityManager->getRDBRepositoryByClass(OAuthAccount::class)->getById($id);
+
+        if (!$account) {
+            throw new AccountNotFound();
+        }
+
+        if (!$account->getProvider()->isActive()) {
+            throw new ProviderNotAvailable();
+        }
+
+        if (!$account->getAccessToken()) {
+            throw new NoToken();
+        }
+
+        return $account;
+    }
+
+    /**
+     * @throws TokenObtainingFailure
+     */
+    private function refresh(OAuthAccount $account): void
+    {
+        $refreshToken = $account->getRefreshToken();
+
+        if (!$refreshToken) {
+            throw new LogicException();
+        }
+
+        $genericProvider = $this->genericProviderFactory->create($account->getProvider());
 
         try {
-            $tokens = $genericProvider->getAccessToken('authorization_code', ['code' => $code]);
-        } catch (GuzzleException $e) {
-            throw new Error("Token request error.", 500, $e);
-        } catch (IdentityProviderException $e) {
-            throw new Error("Token request response error.", 500, $e);
+            $tokens = $genericProvider->getAccessToken('refresh_token', ['refresh_token' => $refreshToken]);
+        } catch (GuzzleException|IdentityProviderException $e) {
+            throw new TokenObtainingFailure($e->getMessage(), $e->getCode(), $e);
         }
 
         $expires = $tokens->getExpires() !== null ?
@@ -77,28 +124,5 @@ class ConnectionService
         $account->setExpiresAt($expires);
 
         $this->entityManager->saveEntity($account);
-    }
-
-    public function disconnect(OAuthAccount $account): void
-    {
-        $account->setAccessToken(null);
-        $account->setRefreshToken(null);
-        $account->setExpiresAt(null);
-
-        $this->entityManager->saveEntity($account);
-    }
-
-    /**
-     * @throws NotFound
-     */
-    private function fetch(string $id): OAuthProvider
-    {
-        $provider = $this->entityManager->getRDBRepositoryByClass(OAuthProvider::class)->getById($id);
-
-        if (!$provider) {
-            throw new NotFound("Provider not found.");
-        }
-
-        return $provider;
     }
 }

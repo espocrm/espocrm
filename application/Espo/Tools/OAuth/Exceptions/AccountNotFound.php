@@ -27,44 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuth;
+namespace Espo\Tools\OAuth\Exceptions;
 
-use Espo\Entities\OAuthProvider;
-use Espo\ORM\EntityManager;
-use Espo\Tools\OAuth\Exceptions\ProviderNotAvailable;
-use Espo\Tools\OAuth\Exceptions\ProviderNotFound;
-
-class AccountProvider
-{
-    public function __construct(
-        private EntityManager $entityManager,
-    ) {}
-
-    /**
-     * @throws ProviderNotFound
-     * @throws ProviderNotAvailable
-     */
-    public function get(string $id): OAuthProvider
-    {
-        $account = $this->fetch($id);
-    }
-
-    /**
-     * @throws ProviderNotAvailable
-     * @throws ProviderNotFound
-     */
-    private function fetch(string $id): OAuthProvider
-    {
-        $account = $this->entityManager->getRDBRepositoryByClass(OAuthProvider::class)->getById($id);
-
-        if (!$account) {
-            throw new ProviderNotFound();
-        }
-
-        if (!$account->isActive() || !$account->getAccessToken()) {
-            throw new ProviderNotAvailable();
-        }
-
-        return $account;
-    }
-}
+class AccountNotFound extends OAuthException
+{}

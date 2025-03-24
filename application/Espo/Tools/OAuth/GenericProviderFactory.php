@@ -27,7 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuth\Exceptions;
+namespace Espo\Tools\OAuth;
 
-class ProviderNotAvailable extends OAuthException
-{}
+use Espo\Entities\OAuthProvider;
+use League\OAuth2\Client\Provider\GenericProvider;
+
+class GenericProviderFactory
+{
+    public function __construct(
+        private ConfigDataProvider $configDataProvider,
+    ) {}
+
+    public function create(OAuthProvider $provider): GenericProvider
+    {
+        return new GenericProvider([
+            'clientId' => $provider->getClientId(),
+            'clientSecret' => $provider->getClientSecret(),
+            'redirectUri'  => $this->configDataProvider->getRedirectUri(),
+            'urlAccessToken' => $provider->getTokenEndpoint(),
+        ]);
+    }
+}

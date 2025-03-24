@@ -29,5 +29,7 @@
 
 namespace Espo\Tools\OAuth\Exceptions;
 
-class ProviderNotAvailable extends OAuthException
+use Exception;
+
+class OAuthException extends Exception
 {}
