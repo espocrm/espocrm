@@ -107,13 +107,6 @@ class TextFieldView extends BaseFieldView {
         'isNotEmpty',
     ]
 
-    events = {
-        /** @this TextFieldView */
-        'click [data-action="mailTo"]': function (e) {
-            this.mailTo($(e.currentTarget).data('email-address'));
-        },
-    }
-
     /** @private */
     _lastLength
 
@@ -136,6 +129,7 @@ class TextFieldView extends BaseFieldView {
         super.setup();
 
         this.addActionHandler('seeMoreText', () => this.seeMore());
+        this.addActionHandler('mailTo', (e, target) => this.mailTo(target.dataset.emailAddress));
 
         this.maxRows = this.params.rows || this.rowsDefault;
         this.noResize = this.options.noResize || this.params.noResize || this.noResize;
