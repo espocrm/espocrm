@@ -31,10 +31,8 @@ namespace Espo\Tools\OAuth;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Field\DateTime;
 use Espo\Entities\OAuthAccount;
-use Espo\Entities\OAuthProvider;
 use Espo\ORM\EntityManager;
 use GuzzleHttp\Exception\GuzzleException;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
@@ -86,19 +84,5 @@ class ConnectionService
         $account->setExpiresAt(null);
 
         $this->entityManager->saveEntity($account);
-    }
-
-    /**
-     * @throws NotFound
-     */
-    private function fetch(string $id): OAuthProvider
-    {
-        $provider = $this->entityManager->getRDBRepositoryByClass(OAuthProvider::class)->getById($id);
-
-        if (!$provider) {
-            throw new NotFound("Provider not found.");
-        }
-
-        return $provider;
     }
 }

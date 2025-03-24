@@ -32,6 +32,7 @@ namespace Espo\Tools\OAuth;
 use Espo\Core\Field\DateTime;
 use Espo\Entities\OAuthAccount;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\Tools\OAuth\Exceptions\NoToken;
 use Espo\Tools\OAuth\Exceptions\ProviderNotAvailable;
 use Espo\Tools\OAuth\Exceptions\AccountNotFound;
@@ -42,6 +43,8 @@ use LogicException;
 
 class TokensProvider
 {
+    private const EXPIRATION_LEAD_TIME = 60;
+
     public function __construct(
         private EntityManager $entityManager,
         private GenericProviderFactory $genericProviderFactory,
@@ -60,7 +63,9 @@ class TokensProvider
         if (
             $account->getRefreshToken() &&
             $account->getExpiresAt() &&
-            $account->getExpiresAt()->isGreaterThan(DateTime::createNow())
+            $account->getExpiresAt()->isGreaterThan(
+                DateTime::createNow()->addSeconds(- self::EXPIRATION_LEAD_TIME)
+            )
         ) {
             $this->refresh($account);
         }
@@ -98,14 +103,34 @@ class TokensProvider
 
     /**
      * @throws TokenObtainingFailure
+     * @noinspection PhpDocRedundantThrowsInspection
      */
     private function refresh(OAuthAccount $account): void
+    {
+        $this->entityManager
+            ->getTransactionManager()
+            ->run(function () use ($account) {
+                $this->refreshInTransaction($account);
+            });
+    }
+
+    /**
+     * @throws TokenObtainingFailure
+     */
+    private function refreshInTransaction(OAuthAccount $account): void
     {
         $refreshToken = $account->getRefreshToken();
 
         if (!$refreshToken) {
             throw new LogicException();
         }
+
+        $this->entityManager
+            ->getRDBRepositoryByClass(OAuthAccount::class)
+            ->forUpdate()
+            ->sth()
+            ->where([Attribute::ID => $account->getId()])
+            ->find();
 
         $genericProvider = $this->genericProviderFactory->create($account->getProvider());
 
