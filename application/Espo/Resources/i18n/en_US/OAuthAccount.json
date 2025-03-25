@@ -1,6 +1,7 @@
 {
     "labels": {
-        "Create OAuthAccount": "Create OAuth Account"
+        "Create OAuthAccount": "Create OAuth Account",
+        "Connection": "Connection"
     },
     "fields": {
         "provider": "Provider",
