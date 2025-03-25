@@ -33,6 +33,7 @@ namespace Espo\Entities;
 
 use Espo\Core\Field\DateTime;
 use Espo\Core\ORM\Entity;
+use SensitiveParameter;
 use ValueError;
 
 class OAuthAccount extends Entity
@@ -66,12 +67,12 @@ class OAuthAccount extends Entity
         return $this->getValueObject('expiresAt');
     }
 
-    public function setAccessToken(?string $accessToken): self
+    public function setAccessToken(#[SensitiveParameter] ?string $accessToken): self
     {
         return $this->set('accessToken', $accessToken);
     }
 
-    public function setRefreshToken(?string $refreshToken): self
+    public function setRefreshToken(#[SensitiveParameter] ?string $refreshToken): self
     {
         return $this->set('refreshToken', $refreshToken);
     }
