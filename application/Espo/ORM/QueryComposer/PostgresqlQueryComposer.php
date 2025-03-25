@@ -591,4 +591,23 @@ class PostgresqlQueryComposer extends BaseQueryComposer
 
         return $sql;
     }
+
+    /**
+     * @param array<string, mixed> $params
+     */
+    protected function getSelectTailPart(array $params): ?string
+    {
+        $forShare = $params['forShare'] ?? null;
+        $forUpdate = $params['forUpdate'] ?? null;
+
+        if ($forShare) {
+            return "FOR SHARE";
+        }
+
+        if ($forUpdate) {
+            return "FOR UPDATE";
+        }
+
+        return null;
+    }
 }

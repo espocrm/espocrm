@@ -2032,7 +2032,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $forUpdate = $params['forUpdate'] ?? null;
 
         if ($forShare) {
-            return "FOR SHARE";
+            return "LOCK IN SHARE MODE";
         }
 
         if ($forUpdate) {

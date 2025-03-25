@@ -3031,7 +3031,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT account.id AS `id` ".
             "FROM `account` ".
-            "FOR SHARE";
+            "LOCK IN SHARE MODE";
 
         $this->assertEquals($expectedSql, $sql);
     }
