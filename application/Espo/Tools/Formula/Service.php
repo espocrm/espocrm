@@ -92,7 +92,7 @@ class Service
         } catch (Error $e) {
             $output = $variables->__output ?? null;
 
-            $this->log->error("Formula sandbox run error.", ['exception' => $e->getPrevious()]);
+            $this->log->error("Formula sandbox run error.", ['exception' => $e]);
 
             return RunResult::createError($e, $output);
         }
