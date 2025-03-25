@@ -30,31 +30,33 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Api\Request;
-
+use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Tools\Formula\Service;
-
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ForbiddenSilent;
-
 use Espo\Entities\User;
-
 use Espo\Core\Field\LinkParent;
 
 use stdClass;
 
 class Formula
 {
-    private Service $service;
 
-    public function __construct(Service $service, User $user)
-    {
-        $this->service = $service;
-
+    /**
+     * @throws ForbiddenSilent
+     */
+    public function __construct(
+        private Service $service,
+        User $user,
+    ) {
         if (!$user->isAdmin()) {
             throw new ForbiddenSilent();
         }
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionCheckSyntax(Request $request): stdClass
     {
         $expression = $request->getParsedBody()->expression ?? null;
@@ -66,6 +68,10 @@ class Formula
         return $this->service->checkSyntax($expression)->toStdClass();
     }
 
+    /**
+     * @throws BadRequest
+     * @throws NotFoundSilent
+     */
     public function postActionRun(Request $request): stdClass
     {
         $expression = $request->getParsedBody()->expression ?? null;

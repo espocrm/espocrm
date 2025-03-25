@@ -34,26 +34,19 @@ use Espo\Core\Formula\Exceptions\SyntaxError;
 use Espo\Core\Formula\Exceptions\Error;
 use Espo\Core\Formula\Manager;
 use Espo\Core\Field\LinkParent;
-
 use Espo\Core\Exceptions\NotFoundSilent;
-
+use Espo\Core\Utils\Log;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 
 class Service
 {
-    private Parser $parser;
-
-    private Manager $manager;
-
-    private EntityManager $entityManager;
-
-    public function __construct(Parser $parser, Manager $manager, EntityManager $entityManager)
-    {
-        $this->parser = $parser;
-        $this->manager = $manager;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        private Parser $parser,
+        private Manager $manager,
+        private EntityManager $entityManager,
+        private Log $log,
+    ) {}
 
     public function checkSyntax(string $expression): SyntaxCheckResult
     {
@@ -68,6 +61,9 @@ class Service
         return $result;
     }
 
+    /**
+     * @throws NotFoundSilent
+     */
     public function run(string $expression, ?LinkParent $targetLink = null): RunResult
     {
         $syntaxCheckResult = $this->checkSyntax($expression);
@@ -95,6 +91,8 @@ class Service
             $this->manager->run($expression, $target, $variables);
         } catch (Error $e) {
             $output = $variables->__output ?? null;
+
+            $this->log->error("Formula sandbox run error.", ['exception' => $e->getPrevious()]);
 
             return RunResult::createError($e, $output);
         }
