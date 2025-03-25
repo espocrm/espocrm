@@ -377,7 +377,7 @@ class BottomPanelView extends View {
 
         // noinspection JSUnresolvedReference
         if (parentView && parentView.hasTabs) {
-            return parentView.currentTab !== defs.tabNumber;
+            return parentView.currentTab !== this.defs.tabNumber;
         }
 
         return false;
