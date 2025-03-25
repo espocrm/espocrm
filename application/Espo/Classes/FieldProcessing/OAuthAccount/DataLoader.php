@@ -46,14 +46,24 @@ class DataLoader implements Loader
 
     public function process(Entity $entity, Params $params): void
     {
-        if (!$entity->get('provider')) {
+        if (!$entity->get('providerId')) {
             return;
         }
 
+        $provider = $entity->getProvider();
+
+        $scope = null;
+
+        if ($provider->getScopes()) {
+            $scope = implode($provider->getScopeSeparator() ?? ' ', $provider->getScopes());
+        }
+
         $data = [
-            'endpoint' => $entity->getProvider()->getAuthorizationEndpoint(),
-            'clientId' => $entity->getProvider()->getClientId(),
+            'endpoint' => $provider->getAuthorizationEndpoint(),
+            'clientId' => $provider->getClientId(),
             'redirectUri' => $this->configDataProvider->getRedirectUri(),
+            'scope' => $scope,
+            'prompt' => $provider->getAuthorizationPrompt(),
         ];
 
         $entity->set('data', $data);

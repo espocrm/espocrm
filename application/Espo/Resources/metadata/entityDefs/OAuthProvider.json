@@ -43,6 +43,17 @@
             "copyToClipboard": true,
             "directAccessDisabled": true
         },
+        "authorizationPrompt": {
+            "type": "enum",
+            "default": "none",
+            "options": [
+                "none",
+                "consent",
+                "login",
+                "select_account"
+            ],
+            "maxLength": 14
+        },
         "scopes": {
             "type": "array",
             "noEmptyString": true,
@@ -53,6 +64,9 @@
         "scopeSeparator": {
             "type": "varchar",
             "maxLength": 1
+        },
+        "description": {
+            "type": "text"
         },
         "createdAt": {
             "type": "datetime",

@@ -12,7 +12,8 @@
         "authorizationRedirectUri": "Authorization Redirect URI",
         "scopes": "Scopes",
         "scopeSeparator": "Scope Separator",
-        "hasAccessToken": "Has Access Token"
+        "hasAccessToken": "Has Access Token",
+        "authorizationPrompt": "Authorization Prompt"
     },
     "links": {
         "accounts": "Accounts"

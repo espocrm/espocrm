@@ -104,4 +104,9 @@ class OAuthProvider extends Entity
     {
         return $this->get('scopeSeparator');
     }
+
+    public function getAuthorizationPrompt(): string
+    {
+        return $this->get('authorizationPrompt');
+    }
 }

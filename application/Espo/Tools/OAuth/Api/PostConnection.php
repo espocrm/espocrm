@@ -51,7 +51,7 @@ class PostConnection implements Action
     public function process(Request $request): Response
     {
         $id = $request->getRouteParam('id') ?? throw new BadRequest();
-        $code = $request->getQueryParam('code');
+        $code = $request->getParsedBody()->code ?? null;
 
         if (!is_string($code)) {
             throw new BadRequest("No code.");

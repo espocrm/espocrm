@@ -52,6 +52,9 @@ class GenericProviderFactory
             'clientSecret' => $secret,
             'redirectUri'  => $this->configDataProvider->getRedirectUri(),
             'urlAccessToken' => $provider->getTokenEndpoint(),
+
+            'urlAuthorize' => 'dummy',
+            'urlResourceOwnerDetails' => 'dummy',
         ]);
     }
 }

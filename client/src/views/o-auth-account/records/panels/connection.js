@@ -122,6 +122,8 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
         const endpoint = data.endpoint;
         const redirectUri = data.redirectUri;
         const clientId = data.clientId;
+        const scope = data.scope;
+        const prompt = data.prompt;
 
         const proxy = window.open('about:blank', 'ConnectWithOAuth', 'location=0,status=0,width=800,height=800');
 
@@ -129,6 +131,8 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
             endpoint,
             redirectUri,
             clientId,
+            scope,
+            prompt,
         }, proxy);
 
         this.inProcess = true;
@@ -137,7 +141,15 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
 
         Espo.Ui.notify(' ... ');
 
-        await Espo.Ajax.postRequest(`OAuth/${this.model.id}/connection`, {code: info.code});
+        try {
+            await Espo.Ajax.postRequest(`OAuth/${this.model.id}/connection`, {code: info.code});
+        } catch (e) {
+            this.inProcess = false;
+
+            await this.reRender();
+
+            return;
+        }
 
         await this.model.fetch();
 
@@ -154,7 +166,8 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
      *     endpoint: string,
      *     clientId: string,
      *     redirectUri: string,
-     *     scope?: string,
+     *     scope: string|null,
+     *     prompt: string,
      * }} data
      * @param {WindowProxy} proxy
      * @return {Promise<{code: string}>}
@@ -166,6 +179,8 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
             client_id: data.clientId,
             redirect_uri: data.redirectUri,
             response_type: 'code',
+            prompt: data.prompt,
+            access_type: 'offline',
         };
 
         if (data.scope) {

@@ -9,12 +9,18 @@
     {
         "rows": [
             [{"name": "authorizationEndpoint"}, {"name": "tokenEndpoint"}],
-            [{"name": "resourceEndpoint"}, false]
+            [{"name": "resourceEndpoint"}, {"name": "authorizationPrompt"}]
         ]
     },
     {
         "rows": [
-            [{"name": "scopes"}, {"name": "scopeSeparator"}]
+            [{"name": "scopes"}],
+            [{"name": "scopeSeparator"}, false]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "description"}]
         ]
     }
 ]
