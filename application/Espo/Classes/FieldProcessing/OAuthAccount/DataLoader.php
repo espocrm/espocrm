@@ -44,10 +44,6 @@ class DataLoader implements Loader
         private ConfigDataProvider $configDataProvider,
     ) {}
 
-
-    /**
-     * @inheritDoc
-     */
     public function process(Entity $entity, Params $params): void
     {
         if (!$entity->get('provider')) {

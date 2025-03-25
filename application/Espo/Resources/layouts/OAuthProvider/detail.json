@@ -11,5 +11,10 @@
             [{"name": "authorizationEndpoint"}, {"name": "tokenEndpoint"}],
             [{"name": "resourceEndpoint"}, false]
         ]
+    },
+    {
+        "rows": [
+            [{"name": "scopes"}, {"name": "scopeSeparator"}]
+        ]
     }
 ]
