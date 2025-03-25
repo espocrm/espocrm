@@ -1,0 +1,109 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 100
+        },
+        "isActive": {
+            "type": "bool",
+            "default": true
+        },
+        "clientId": {
+            "type": "varchar",
+            "maxLength": 150
+        },
+        "clientSecret": {
+            "type": "password",
+            "maxLength": 512,
+            "dbType": "text"
+        },
+        "authorizationEndpoint": {
+            "type": "url",
+            "maxLength": 512,
+            "dbType": "text",
+            "strip": false
+        },
+        "tokenEndpoint": {
+            "type": "url",
+            "maxLength": 512,
+            "dbType": "text",
+            "strip": false
+        },
+        "resourceEndpoint": {
+            "type": "url",
+            "maxLength": 512,
+            "dbType": "text",
+            "strip": false
+        },
+        "authorizationRedirectUri": {
+            "type": "url",
+            "notStorable": true,
+            "readOnly": true,
+            "copyToClipboard": true,
+            "directAccessDisabled": true
+        },
+        "authorizationPrompt": {
+            "type": "enum",
+            "default": "none",
+            "options": [
+                "none",
+                "consent",
+                "login",
+                "select_account"
+            ],
+            "maxLength": 14
+        },
+        "scopes": {
+            "type": "array",
+            "noEmptyString": true,
+            "allowCustomOptions": true,
+            "storeArrayValues": false,
+            "displayAsList": true
+        },
+        "authorizationParams": {
+            "type": "jsonObject",
+            "view": "views/o-auth-provider/fields/authorization-params",
+            "tooltip": true
+        },
+        "scopeSeparator": {
+            "type": "varchar",
+            "maxLength": 1
+        },
+        "description": {
+            "type": "text"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "accounts": {
+            "type": "hasMany",
+            "entity": "OAuthAccount",
+            "foreign": "provider",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    }
+}

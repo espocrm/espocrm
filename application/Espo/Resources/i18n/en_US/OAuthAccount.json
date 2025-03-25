@@ -1,0 +1,16 @@
+{
+    "labels": {
+        "Create OAuthAccount": "Create OAuth Account",
+        "Connection": "Connection"
+    },
+    "fields": {
+        "provider": "Provider",
+        "hasAccessToken": "Has Access Token",
+        "user": "User",
+        "providerIsActive": "Provider is Active",
+        "data": "Data"
+    },
+    "links": {
+        "provider": "Provider"
+    }
+}

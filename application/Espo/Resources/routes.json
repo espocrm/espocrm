@@ -486,6 +486,16 @@
         "noAuth": true
     },
     {
+        "method": "post",
+        "route": "/OAuth/:id/connection",
+        "actionClassName": "Espo\\Tools\\OAuth\\Api\\PostConnection"
+    },
+    {
+        "method": "delete",
+        "route": "/OAuth/:id/connection",
+        "actionClassName": "Espo\\Tools\\OAuth\\Api\\DeleteConnection"
+    },
+    {
         "route": "/:controller/:id",
         "method": "get",
         "params": {

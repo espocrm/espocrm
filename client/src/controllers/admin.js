@@ -399,6 +399,11 @@ class AdminController extends Controller {
     }
 
     // noinspection JSUnusedGlobalSymbols
+    actionOAuthProviders() {
+        this.getRouter().dispatch('OAuthProvider', 'list', {fromAdmin: true});
+    }
+
+    // noinspection JSUnusedGlobalSymbols
     actionJobs() {
         this.collectionFactory.create('Job', collection => {
             const searchManager = new SearchManager(collection, {storageKey: 'list'});

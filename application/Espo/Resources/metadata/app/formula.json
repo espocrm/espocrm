@@ -625,6 +625,12 @@
             "insertText": "ext\\acl\\getPermissionLevel(USER_ID, PERMISSION)",
             "returnType": "string",
             "unsafe": true
+        },
+        {
+            "name": "ext\\oauth\\getAccessToken",
+            "insertText": "ext\\oauth\\getAccessToken(ID)",
+            "returnType": "string",
+            "unsafe": true
         }
     ],
     "functionClassNameMap": {
@@ -637,6 +643,7 @@
         "ext\\acl\\getLevel": "Espo\\Core\\Formula\\Functions\\ExtGroup\\AclGroup\\GetLevelType",
         "ext\\acl\\getPermissionLevel": "Espo\\Core\\Formula\\Functions\\ExtGroup\\AclGroup\\GetPermissionLevelType",
         "util\\base64Encode": "Espo\\Core\\Formula\\Functions\\UtilGroup\\Base64EncodeType",
-        "util\\base64Decode": "Espo\\Core\\Formula\\Functions\\UtilGroup\\Base64DecodeType"
+        "util\\base64Decode": "Espo\\Core\\Formula\\Functions\\UtilGroup\\Base64DecodeType",
+        "ext\\oauth\\getAccessToken": "Espo\\Core\\Formula\\Functions\\ExtGroup\\OauthGroup\\GetAccessTokenType"
     }
 }

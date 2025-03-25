@@ -1,0 +1,6 @@
+{
+    "entity": true,
+    "duplicateCheckFieldList": [
+        "name"
+    ]
+}

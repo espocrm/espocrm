@@ -158,6 +158,11 @@
         "exportsTo": "ace.require.define.modules",
         "exportsAs": "ace/mode/javascript"
     },
+    "ace-mode-json": {
+        "path": "client/lib/ace-mode-json.js",
+        "exportsTo": "ace.require.define.modules",
+        "exportsAs": "ace/mode/json"
+    },
     "ace-ext-language_tools": {
         "path": "client/lib/ace-ext-language_tools.js",
         "exportsTo": "ace.require.define.modules",

@@ -1,0 +1,7 @@
+{
+    "fields": {
+        "clientSecret": {
+            "internal": true
+        }
+    }
+}

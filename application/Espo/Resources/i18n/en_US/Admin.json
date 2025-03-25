@@ -82,6 +82,7 @@
         "Group Email Folders": "Group Email Folders",
         "Authentication Providers": "Authentication Providers",
         "Address Countries": "Address Countries",
+        "OAuth Providers": "OAuth Providers",
         "Success": "Success",
         "Fail": "Fail",
         "Configuration Instructions": "Configuration Instructions",
@@ -318,7 +319,8 @@
         "sms": "SMS settings.",
         "pdfTemplates": "Templates for printing to PDF.",
         "formulaSandbox": "Write and test formula scripts.",
-        "addressCountries": "Countries available for address fields."
+        "addressCountries": "Countries available for address fields.",
+        "oAuthProviders": "OAuth providers for integrations."
     },
     "keywords": {
         "settings": "system",

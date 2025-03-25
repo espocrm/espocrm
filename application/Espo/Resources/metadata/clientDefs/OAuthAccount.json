@@ -1,0 +1,13 @@
+{
+    "controller": "controllers/record",
+    "sidePanels": {
+        "detail": [
+            {
+                "name": "connection",
+                "label": "Connection",
+                "view": "views/o-auth-account/records/panels/connection",
+                "notRefreshable": true
+            }
+        ]
+    }
+}

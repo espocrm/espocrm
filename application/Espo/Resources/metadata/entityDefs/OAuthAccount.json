@@ -1,0 +1,91 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 100
+        },
+        "provider": {
+            "type": "link",
+            "required": true,
+            "readOnlyAfterCreate": true
+        },
+        "user": {
+            "type": "link",
+            "readOnly": true
+        },
+        "hasAccessToken": {
+            "type": "bool",
+            "readOnly": true,
+            "notStorable": true,
+            "orderDisabled": true,
+            "directAccessDisabled": true,
+            "select": {
+                "select": "IS_NOT_NULL:(accessToken)"
+            }
+        },
+        "providerIsActive": {
+            "type": "foreign",
+            "link": "provider",
+            "field": "isActive"
+        },
+        "data": {
+            "type": "jsonObject",
+            "notStorable": true,
+            "directAccessDisabled": true,
+            "readOnly": true
+        },
+        "accessToken": {
+            "type": "password",
+            "readOnly": true,
+            "dbType": "text"
+        },
+        "refreshToken": {
+            "type": "password",
+            "readOnly": true,
+            "dbType": "text"
+        },
+        "description": {
+            "type": "text"
+        },
+        "expiresAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "provider": {
+            "type": "belongsTo",
+            "entity": "OAuthProvider",
+            "foreign": "accounts"
+        },
+        "user": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "readLoaderClassNameList": [
+        "Espo\\Classes\\FieldProcessing\\OAuthProvider\\AuthorizationRedirectUriLoader"
+    ],
+    "createInputFilterClassNameList": [
+        "Espo\\Classes\\Record\\OAuthProvider\\GeneralFilter"
+    ],
+    "updateInputFilterClassNameList": [
+        "Espo\\Classes\\Record\\OAuthProvider\\GeneralFilter"
+    ],
+    "duplicateWhereBuilderClassName": "Espo\\Classes\\DuplicateWhereBuilders\\General"
+}
