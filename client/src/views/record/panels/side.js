@@ -36,6 +36,7 @@ import View from 'view';
  * @property [actionList]
  * @property [fieldList]
  * @property [tabNumber] For internal purposes.
+ * @property [isForm] Is form.
  */
 
 /**
@@ -198,7 +199,7 @@ class SidePanelView extends View {
     }
 
     afterRender() {
-        if (this.$el.children().length === 0) {
+        if (this.$el.children().length === 0 && this.defs.isForm) {
             this.$el.parent().addClass('hidden');
         }
     }
@@ -412,7 +413,7 @@ class SidePanelView extends View {
 
         // noinspection JSUnresolvedReference
         if (parentView && parentView.hasTabs) {
-            return parentView.currentTab !== defs.tabNumber;
+            return parentView.currentTab !== this.defs.tabNumber;
         }
 
         return false;
