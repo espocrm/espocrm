@@ -66,6 +66,7 @@ class ArrayFieldView extends BaseFieldView {
      * @property {boolean} [allowCustomOptions] Allow custom options.
      * @property {string} [pattern] A regular expression pattern.
      * @property {boolean} [keepItems] Disable the ability to add or remove items. Reordering is allowed.
+     * @property {number} [maxItemLength] Max item length. If not specified, 100 is used.
      */
 
     /**
@@ -164,6 +165,10 @@ class ArrayFieldView extends BaseFieldView {
         super.setup();
 
         this.noEmptyString = this.params.noEmptyString;
+
+        if (this.params.maxItemLength != null) {
+            this.maxItemLength = this.params.maxItemLength;
+        }
 
         this.listenTo(this.model, 'change:' + this.name, () => {
             this.selected = Espo.Utils.clone(this.model.get(this.name)) || [];

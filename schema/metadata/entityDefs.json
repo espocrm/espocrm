@@ -265,6 +265,10 @@
                             "noEmptyString": {
                                 "type": "boolean",
                                 "description": "Don't allow empty string."
+                            },
+                            "maxItemLength": {
+                                "type": "number",
+                                "description": "Max item length. If greater than 100, than storing array values must be explicitly disabled. As of v9.1."
                             }
                         }
                     }
@@ -285,6 +289,10 @@
                             "allowCustomOptions": {
                                 "type": "boolean",
                                 "description": "Allow custom options."
+                            },
+                            "storeArrayValues": {
+                                "type": "boolean",
+                                "description": "To store values in the ArrayValue table. Enables search capabilities. Enabled by default."
                             }
                         }
                     }

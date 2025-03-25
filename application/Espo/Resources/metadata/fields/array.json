@@ -75,6 +75,11 @@
             "name": "keepItems",
             "type": "bool",
             "hidden": true
+        },
+        {
+            "name": "maxItemLength",
+            "type": "int",
+            "hidden": true
         }
     ],
     "validationList": [

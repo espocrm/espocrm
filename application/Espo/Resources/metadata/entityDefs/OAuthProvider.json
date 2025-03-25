@@ -59,7 +59,8 @@
             "noEmptyString": true,
             "allowCustomOptions": true,
             "storeArrayValues": false,
-            "displayAsList": true
+            "displayAsList": true,
+            "maxItemLength": 255
         },
         "authorizationParams": {
             "type": "jsonObject",
