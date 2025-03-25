@@ -6,7 +6,9 @@
     "fields": {
         "provider": "Provider",
         "hasAccessToken": "Has Access Token",
-        "user": "User"
+        "user": "User",
+        "providerIsActive": "Provider is Active",
+        "data": "Data"
     },
     "links": {
         "provider": "Provider"

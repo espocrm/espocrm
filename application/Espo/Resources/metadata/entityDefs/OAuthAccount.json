@@ -24,6 +24,17 @@
                 "select": "IS_NOT_NULL:(accessToken)"
             }
         },
+        "providerIsActive": {
+            "type": "foreign",
+            "link": "provider",
+            "field": "isActive"
+        },
+        "data": {
+            "type": "jsonObject",
+            "notStorable": true,
+            "directAccessDisabled": true,
+            "readOnly": true
+        },
         "accessToken": {
             "type": "password",
             "readOnly": true,
