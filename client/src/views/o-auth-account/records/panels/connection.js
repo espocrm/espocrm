@@ -100,7 +100,7 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
 
         await this.reRender();
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         await Espo.Ajax.deleteRequest(`OAuth/${this.model.id}/connection`);
 
@@ -141,7 +141,7 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
 
         await this.reRender()
 
-        Espo.Ui.notify(' ... ');
+        Espo.Ui.notifyWait();
 
         try {
             await Espo.Ajax.postRequest(`OAuth/${this.model.id}/connection`, {code: info.code});
