@@ -32,6 +32,7 @@
 namespace Espo\Entities;
 
 use Espo\Core\ORM\Entity;
+use stdClass;
 use ValueError;
 
 class OAuthProvider extends Entity
@@ -108,5 +109,10 @@ class OAuthProvider extends Entity
     public function getAuthorizationPrompt(): string
     {
         return $this->get('authorizationPrompt');
+    }
+
+    public function getAuthorizationParams(): ?stdClass
+    {
+        return $this->get('authorizationParams') ?? null;
     }
 }

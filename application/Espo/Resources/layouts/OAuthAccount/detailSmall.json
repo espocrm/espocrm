@@ -5,5 +5,10 @@
             [{"name": "provider"}],
             [{"name": "user"}, {"name": "hasAccessToken"}]
         ]
+    },
+    {
+        "rows": [
+            [{"name": "description"}]
+        ]
     }
 ]

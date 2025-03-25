@@ -124,6 +124,7 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
         const clientId = data.clientId;
         const scope = data.scope;
         const prompt = data.prompt;
+        const params = data.params;
 
         const proxy = window.open('about:blank', 'ConnectWithOAuth', 'location=0,status=0,width=800,height=800');
 
@@ -133,6 +134,7 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
             clientId,
             scope,
             prompt,
+            params,
         }, proxy);
 
         this.inProcess = true;
@@ -168,6 +170,7 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
      *     redirectUri: string,
      *     scope: string|null,
      *     prompt: string,
+     *     params: Record|null,
      * }} data
      * @param {WindowProxy} proxy
      * @return {Promise<{code: string}>}
@@ -180,11 +183,16 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
             redirect_uri: data.redirectUri,
             response_type: 'code',
             prompt: data.prompt,
-            access_type: 'offline',
         };
 
         if (data.scope) {
             params.scope = data.scope;
+        }
+
+        if (data.params) {
+            for (const name in data.params) {
+                params[name] = data.params[name];
+            }
         }
 
         const partList = Object.entries(params)

@@ -45,6 +45,9 @@
             "readOnly": true,
             "dbType": "text"
         },
+        "description": {
+            "type": "text"
+        },
         "expiresAt": {
             "type": "datetime",
             "readOnly": true

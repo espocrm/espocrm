@@ -61,6 +61,11 @@
             "storeArrayValues": false,
             "displayAsList": true
         },
+        "authorizationParams": {
+            "type": "jsonObject",
+            "view": "views/o-auth-provider/fields/authorization-params",
+            "tooltip": true
+        },
         "scopeSeparator": {
             "type": "varchar",
             "maxLength": 1

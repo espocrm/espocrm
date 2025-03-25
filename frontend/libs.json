@@ -197,6 +197,10 @@
                 "dest": "client/lib/ace-mode-html.js"
             },
             {
+                "src": "node_modules/ace-builds/src-noconflict/mode-json.js",
+                "dest": "client/lib/ace-mode-json.js"
+            },
+            {
                 "src": "node_modules/ace-builds/src-noconflict/mode-handlebars.js",
                 "dest": "client/lib/ace-mode-handlebars.js"
             },

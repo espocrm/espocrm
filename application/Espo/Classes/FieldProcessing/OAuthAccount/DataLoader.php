@@ -64,6 +64,7 @@ class DataLoader implements Loader
             'redirectUri' => $this->configDataProvider->getRedirectUri(),
             'scope' => $scope,
             'prompt' => $provider->getAuthorizationPrompt(),
+            'params' => $provider->getAuthorizationParams(),
         ];
 
         $entity->set('data', $data);
