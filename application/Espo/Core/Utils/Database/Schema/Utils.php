@@ -98,7 +98,7 @@ class Utils
         }
 
         /** @var array<string, array<string, mixed>> */
-        return $indexList;
+        return $indexList; /** @phpstan-ignore-line */
     }
 
     private static function getIndexTypeByIndexDefs(IndexDefs $indexDefs): string

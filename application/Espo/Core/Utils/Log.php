@@ -47,7 +47,7 @@ class Log implements LoggerInterface
     private Logger $logger;
 
     /**
-     * @param HandlerInterface[] $handlers
+     * @param list<HandlerInterface> $handlers
      * @param callable[] $processors
      * @param ?DateTimeZone $timezone
      */

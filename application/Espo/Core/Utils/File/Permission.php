@@ -243,7 +243,10 @@ class Permission
 
                 $count++;
             }
-        } else if (is_int((int) $octal)) { // Always true. @todo Fix.
+        } else if (
+            /** @phpstan-ignore-next-line  */
+            is_int((int) $octal) // Always true. @todo Fix.
+        ) {
             $permission = [
                 'file' => $octal,
                 'dir' => $octal,

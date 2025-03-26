@@ -32,20 +32,15 @@ namespace Espo\Modules\Crm\Tools\Case\Distribution;
 use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\ORM\EntityManager;
 use Espo\Core\Utils\Metadata;
-
 use Espo\Entities\User;
 use Espo\Entities\Team;
 
 class LeastBusy
 {
-    private EntityManager $entityManager;
-    private Metadata $metadata;
-
-    public function __construct(EntityManager $entityManager, Metadata $metadata)
-    {
-        $this->entityManager = $entityManager;
-        $this->metadata = $metadata;
-    }
+    public function __construct(
+        private EntityManager $entityManager,
+        private Metadata $metadata
+    ) {}
 
     public function getUser(Team $team, ?string $targetUserPosition = null): ?User
     {
@@ -64,7 +59,7 @@ class LeastBusy
             ->order('id')
             ->find();
 
-        if (is_countable($userList) && count($userList) == 0) {
+        if (count($userList) === 0) {
             return null;
         }
 

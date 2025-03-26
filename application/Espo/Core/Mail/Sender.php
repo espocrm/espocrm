@@ -564,8 +564,7 @@ class Sender
             $messageId = $email->getMessageId();
 
             if (
-                empty($messageId) ||
-                !is_string($messageId) ||
+                !$messageId ||
                 strlen($messageId) < 4 ||
                 str_starts_with($messageId, 'dummy:')
             ) {

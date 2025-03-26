@@ -240,9 +240,6 @@ class Database extends RDBRepository
      */
     protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
-        /** @noinspection PhpDeprecationInspection */
-        parent::afterRelate($entity, $relationName, $foreign, $data, $options);
-
         if ($this->hooksDisabled || !empty($options[SaveOption::SKIP_HOOKS])) {
             return;
         }
@@ -284,9 +281,6 @@ class Database extends RDBRepository
      */
     protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
-        /** @noinspection PhpDeprecationInspection */
-        parent::afterUnrelate($entity, $relationName, $foreign, $options);
-
         if ($this->hooksDisabled || !empty($options[SaveOption::SKIP_HOOKS])) {
             return;
         }

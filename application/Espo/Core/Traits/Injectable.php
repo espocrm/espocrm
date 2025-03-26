@@ -29,7 +29,11 @@
 
 namespace Espo\Core\Traits;
 
-/** @deprecated */
+/**
+ * @deprecated
+ * @todo Remove in v10.0.
+ * @phpstan-ignore-next-line
+ */
 trait Injectable
 {
     protected $injections = []; /** @phpstan-ignore-line */

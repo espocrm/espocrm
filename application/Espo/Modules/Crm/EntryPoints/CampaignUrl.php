@@ -72,7 +72,7 @@ class CampaignUrl implements EntryPoint
         $hash = $request->getQueryParam('hash') ?? null;
         $uid = $request->getQueryParam('uid') ?? null;
 
-        if (!$trackingUrlId || !is_string($trackingUrlId)) {
+        if (!$trackingUrlId) {
             throw new BadRequest("No tracking URL ID.");
         }
 
@@ -88,7 +88,7 @@ class CampaignUrl implements EntryPoint
         } else if ($uid && $hash) {
             $this->processWithUniqueId($trackingUrl, $uid, $hash);
         } else {
-            if (!$queueItemId || !is_string($queueItemId)) {
+            if (!$queueItemId) {
                 throw new BadRequest("No item ID.");
             }
 

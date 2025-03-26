@@ -36,9 +36,9 @@ use stdClass;
 class DataUtil
 {
     /**
-     * @param array<string|int, mixed> $data
+     * @param array<string|int, mixed>|stdClass $data
      * @param array<int, string|string[]>|string $unsetList
-     * @return array<string|int, mixed>
+     * @return array<string|int, mixed>|stdClass
      */
     public static function unsetByKey(&$data, $unsetList, bool $removeEmptyItems = false)
     {
@@ -168,7 +168,7 @@ class DataUtil
             }
 
             /** @var array<string|int, mixed>|stdClass */
-            return $overrideData;
+            return $overrideData; /** @phpstan-ignore-line */
         }
 
         if (is_object($overrideData)) {

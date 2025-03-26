@@ -845,7 +845,7 @@ class Parser
             return $this->split($expression, true);
         }
 
-        if (count($statementList)) {
+        if ($statementList !== null && count($statementList)) {
             return $this->processStatementList($expression, $statementList, $isRoot);
         }
 

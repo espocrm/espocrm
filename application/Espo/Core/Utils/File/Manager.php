@@ -926,7 +926,7 @@ class Manager
         if (is_dir($path)) {
             $fileList = $this->getFileList($path, true);
 
-            if (is_array($fileList) && empty($fileList)) {
+            if (empty($fileList)) {
                 return true;
             }
         }

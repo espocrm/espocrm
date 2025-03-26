@@ -71,7 +71,6 @@ class Applier
 
         if ($orderBy) {
             if (
-                !is_string($orderBy) ||
                 str_contains($orderBy, '.') ||
                 str_contains($orderBy, ':')
             ) {

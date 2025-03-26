@@ -31,6 +31,8 @@ namespace Espo\Core\EntryPoint\Traits;
 
 /**
  * @deprecated
+ * @todo Remove in v10.0.
+ * @phpstan-ignore-next-line
  */
 trait NotStrictAuth
 {

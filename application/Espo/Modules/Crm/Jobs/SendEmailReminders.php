@@ -65,7 +65,7 @@ class SendEmailReminders implements JobDataLess
         $maxPortionSize = $this->config->get('emailReminderPortionSize') ?? self::MAX_PORTION_SIZE;
 
         $collection = $this->entityManager
-            ->getRDBRepository(Reminder::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(Reminder::class)
             ->where([
                 'type' => Reminder::TYPE_EMAIL,
                 'remindAt<=' => $now,
@@ -74,7 +74,7 @@ class SendEmailReminders implements JobDataLess
             ->limit(0, $maxPortionSize)
             ->find();
 
-        if (is_countable($collection) && count($collection) === 0) {
+        if (count($collection) === 0) {
             return;
         }
 

@@ -313,7 +313,6 @@ class MailMimeParser implements Parser
 
             $content = '';
 
-            /** @var StreamInterface|null $binaryContentStream */
             $binaryContentStream = $attachmentPart->getBinaryContentStream();
 
             if ($binaryContentStream) {

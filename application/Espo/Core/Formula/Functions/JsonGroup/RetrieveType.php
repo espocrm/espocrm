@@ -80,7 +80,7 @@ class RetrieveType extends BaseFunction
             return [];
         }
 
-        /** @var string[] $pathArray */
+        /** @var list<string> $pathArray */
         $pathArray = preg_split('/(?<!\\\)\./', $path);
 
         foreach ($pathArray as $i => $item) {

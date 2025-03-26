@@ -42,9 +42,9 @@ use Espo\Entities\User;
 class Applier
 {
     /** @todo Move to metadata. */
-    private ?int $fullTextRelevanceThreshold = null;
+    private ?int $fullTextRelevanceThreshold = null; /** @phpstan-ignore-line */
     /** @todo Move to metadata. */
-    private int $fullTextOrderRelevanceDivider = 5;
+    private int $fullTextOrderRelevanceDivider = 5; /** @phpstan-ignore-line */
 
     private const DEFAULT_FT_ORDER = self::FT_ORDER_COMBINED;
     private const DEFAULT_ATTRIBUTE_LIST = ['name'];

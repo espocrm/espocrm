@@ -997,7 +997,6 @@ class Converter
             }
         }
 
-        /** @var array<string, mixed> */
         return $indexList;
     }
 

@@ -169,8 +169,7 @@ class SelectBuilder
 
         $this->applyAdditional();
 
-        /** @var QueryBuilder */
-        return $this->queryBuilder;
+        return $this->queryBuilder ?? throw new LogicException();
     }
 
     /**

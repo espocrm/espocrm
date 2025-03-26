@@ -247,7 +247,7 @@ abstract class OAuth2Abstract implements IClient
         $data['refreshToken'] = $result['refresh_token'] ?? null;
 
         /**
-         * @var ?array{
+         * @var array{
          *   accessToken: ?string,
          *   tokenType: ?string,
          *   expiresAt: ?string,

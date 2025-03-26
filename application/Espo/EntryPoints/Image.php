@@ -48,6 +48,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
 
 use GdImage;
+use RuntimeException;
 use Throwable;
 
 class Image implements EntryPoint
@@ -258,6 +259,10 @@ class Image implements EntryPoint
             }
         }
 
+        if ($targetWidth < 1 || $targetHeight < 1) {
+            throw new RuntimeException("No width or height.");
+        }
+
         $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
 
         if ($targetImage === false) {
@@ -378,7 +383,7 @@ class Image implements EntryPoint
         $orientation = $this->getOrientation($filePath);
 
         if ($orientation) {
-            $angle = array_values([0, 0, 0, 180, 0, 0, -90, 0, 90])[$orientation];
+            $angle = [0, 0, 0, 180, 0, 0, -90, 0, 90][$orientation];
 
             $targetImage = imagerotate($targetImage, $angle, 0) ?: $targetImage;
         }

@@ -60,7 +60,7 @@ use stdClass;
  */
 class LinkCheck
 {
-    /** @var array<string, LinkChecker<Entity, Entity>>> */
+    /** @var array<string, LinkChecker<Entity, Entity>> */
     private $linkCheckerCache = [];
 
     /** @var string[] */

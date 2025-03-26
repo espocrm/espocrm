@@ -409,7 +409,7 @@ class DefaultImporter implements Importer
             $subject = $parser->getHeader($message, 'subject');
         }
 
-        if (!empty($subject) && is_string($subject)) {
+        if (!empty($subject)) {
             $subject = trim($subject);
         }
 

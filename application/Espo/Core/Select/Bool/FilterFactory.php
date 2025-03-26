@@ -111,7 +111,7 @@ class FilterFactory
         $className1 = $this->metadata->get(['app', 'select', 'boolFilterClassNameMap', $name]);
 
         if ($className1) {
-            /** @var ?class-string<Filter> */
+            /** @var class-string<Filter> */
             return $className1;
         }
 
@@ -121,7 +121,7 @@ class FilterFactory
             return null;
         }
 
-        /** @var ?class-string<Filter> */
+        /** @var class-string<Filter> */
         return $className;
     }
 }

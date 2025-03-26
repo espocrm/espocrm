@@ -55,7 +55,6 @@ use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\Modules\Crm\Tools\Lead\Convert\Params;
 use Espo\Modules\Crm\Tools\Lead\Convert\Values;
 use Espo\ORM\Collection;
-use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
 use Espo\Repositories\Attachment as AttachmentRepository;
@@ -281,7 +280,7 @@ class ConvertService
     }
 
     /**
-     * @param Entity[] $duplicateList
+     * @param object[] $duplicateList
      * @throws Forbidden
      * @throws BadRequest
      * @throws Conflict
@@ -334,7 +333,7 @@ class ConvertService
     }
 
     /**
-     * @param Entity[] $duplicateList
+     * @param object[] $duplicateList
      * @throws Forbidden
      * @throws BadRequest
      * @throws Conflict
@@ -391,7 +390,7 @@ class ConvertService
     }
 
     /**
-     * @param Entity[] $duplicateList
+     * @param object[] $duplicateList
      * @throws Forbidden
      * @throws BadRequest
      * @throws Conflict

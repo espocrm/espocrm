@@ -31,18 +31,13 @@ namespace Espo\Modules\Crm\Tools\Case\Distribution;
 
 use Espo\Entities\User;
 use Espo\Entities\Team;
-
 use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\ORM\EntityManager;
 
 class RoundRobin
 {
-    private EntityManager $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     public function getUser(Team $team, ?string $targetUserPosition = null): ?User
     {
@@ -55,13 +50,13 @@ class RoundRobin
         }
 
         $userList = $this->entityManager
-            ->getRDBRepository(Team::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(Team::class)
             ->getRelation($team, 'users')
             ->where($where)
             ->order('id')
             ->find();
 
-        if (is_countable($userList) && count($userList) == 0) {
+        if (count($userList) === 0) {
             return null;
         }
 

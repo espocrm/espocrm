@@ -164,9 +164,10 @@ class Util
     /**
      * Merge arrays recursively. $newArray overrides $currentArray.
      *
-     * @param array<int|string, mixed> $currentArray A source array.
-     * @param array<int|string, mixed> $newArray A merge-array (priority is same as for array_merge()).
-     * @return array<int|string, mixed>
+     * @template T of array<int|string, mixed>
+     * @param T $currentArray A source array.
+     * @param T $newArray A merge-array (priority is same as for array_merge()).
+     * @return T
      */
     public static function merge($currentArray, $newArray)
     {
@@ -176,13 +177,16 @@ class Util
         $mergeIdentifier = '__APPEND__';
 
         if (is_array($currentArray) && !is_array($newArray)) {
+            /** @var T */
             return $currentArray;
         } else if (!is_array($currentArray) && is_array($newArray)) {
-            return $newArray;
+            /** @var T */
+            return $newArray; /** @phpstan-ignore-line */
         } else if (
             (!is_array($currentArray) || empty($currentArray)) &&
             (!is_array($newArray) || empty($newArray))
         ) {
+            /** @var T */
             return [];
         }
 
@@ -482,26 +486,28 @@ class Util
                 $elementArr[] = &$elem;
 
                 for ($i = 0; $i <= $keyChainCount; $i++) {
-                    if (is_array($elem) && array_key_exists($keyArr[$i], $elem)) {
-                        if ($i == $keyChainCount) {
-                            unset($elem[$keyArr[$i]]);
+                    if (!array_key_exists($keyArr[$i], $elem)) {
+                        continue;
+                    }
 
-                            if ($unsetParentEmptyArray) {
-                                for ($j = count($elementArr); $j > 0; $j--) {
-                                    $pointer =& $elementArr[$j];
+                    if ($i == $keyChainCount) {
+                        unset($elem[$keyArr[$i]]);
 
-                                    if (is_array($pointer) && empty($pointer)) {
-                                        $previous =& $elementArr[$j - 1];
-                                        unset($previous[$keyArr[$j - 1]]);
-                                    }
+                        if ($unsetParentEmptyArray) {
+                            for ($j = count($elementArr); $j > 0; $j--) {
+                                $pointer =& $elementArr[$j];
+
+                                if (empty($pointer)) {
+                                    $previous =& $elementArr[$j - 1];
+
+                                    unset($previous[$keyArr[$j - 1]]);
                                 }
                             }
-                        } else if (is_array($elem[$keyArr[$i]])) {
-                            $elem = &$elem[$keyArr[$i]];
-
-                            $elementArr[] = &$elem;
                         }
+                    } else if (is_array($elem[$keyArr[$i]])) {
+                        $elem = &$elem[$keyArr[$i]];
 
+                        $elementArr[] = &$elem;
                     }
                 }
             }

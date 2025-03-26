@@ -68,7 +68,9 @@ class FieldHelper
 
     private function getSeed(): Entity
     {
-        return $this->seed ?? $this->entityManager->getNewEntity($this->entityType);
+        $this->seed ??= $this->entityManager->getNewEntity($this->entityType);
+
+        return $this->seed;
     }
 
     public function hasAssignedUsersField(): bool

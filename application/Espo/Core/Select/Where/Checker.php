@@ -227,7 +227,9 @@ class Checker
 
     private function getSeed(): Entity
     {
-        return $this->seed ?? $this->entityManager->getNewEntity($this->entityType);
+        $this->seed ??= $this->entityManager->getNewEntity($this->entityType);
+
+        return $this->seed;
     }
 
     private function getRelationParam(Entity $entity, string $relation, string $param): mixed

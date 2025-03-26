@@ -45,7 +45,7 @@ class StreamUpdatedAtField implements AdditionalBuilder
         $field = Field::STREAM_UPDATED_AT;
 
         foreach (get_object_vars($data->entityDefs) as $entityType => $entityDefsItem) {
-            $hasStream = $data->scopes?->$entityType?->stream ?? false;
+            $hasStream = $data->scopes?->$entityType->stream ?? false;
 
             if (!$hasStream) {
                 continue;

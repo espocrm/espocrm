@@ -31,6 +31,8 @@ namespace Espo\Core\EntryPoints;
 
 /**
  * @deprecated Use `Espo\Core\EntryPoint\Traits\NoAuth` instead.
+ * @todo Remove in v10.0.
+ * @phpstan-ignore-next-line
  */
 trait NoAuth
 {

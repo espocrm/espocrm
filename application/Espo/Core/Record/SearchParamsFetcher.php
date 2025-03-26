@@ -144,7 +144,7 @@ class SearchParamsFetcher
 
         $q = $request->getQueryParam('q');
 
-        if ($q && is_string($q)) {
+        if ($q) {
             $params['q'] = trim($q);
         }
 

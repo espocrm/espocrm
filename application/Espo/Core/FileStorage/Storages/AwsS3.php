@@ -63,6 +63,7 @@ class AwsS3 implements Storage
             throw new RuntimeException("AWS S3 bucket name is not specified in config.");
         }
 
+        /** @var array<\AsyncAws\Core\Configuration::OPTION_*, string|null> $clientOptions */
         $clientOptions = [
             'region' => $region,
         ];

@@ -36,7 +36,7 @@ use RuntimeException;
 
 class Helper
 {
-    private ?Base $actionObject;
+    private ?Base $actionObject = null;
 
     public function __construct(private EntityManager $entityManager)
     {}

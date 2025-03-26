@@ -450,7 +450,7 @@ class Entity extends BaseEntity
             throw new LogicException("Non-object value in `$columnsAttribute`.");
         }
 
-        return $object->$id?->$column ?? null;
+        return $object->$id->$column ?? null;
     }
 
     /**
