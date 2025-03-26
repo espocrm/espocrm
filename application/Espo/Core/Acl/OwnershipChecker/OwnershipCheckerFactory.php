@@ -58,7 +58,7 @@ class OwnershipCheckerFactory
     {
         $className = $this->getClassName($scope);
 
-        $bindingContainer = $this->createBindingContainer($aclManager);
+        $bindingContainer = $this->createBindingContainer($className, $aclManager, $scope);
 
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
@@ -83,13 +83,20 @@ class OwnershipCheckerFactory
         return $this->defaultClassName;
     }
 
-    private function createBindingContainer(AclManager $aclManager): BindingContainer
+    /**
+     * @param class-string<OwnershipChecker> $className
+     */
+    private function createBindingContainer(string $className, AclManager $aclManager, string $scope): BindingContainer
     {
         $bindingData = new BindingData();
 
         $binder = new Binder($bindingData);
 
         $binder->bindInstance(AclManager::class, $aclManager);
+
+        $binder
+            ->for($className)
+            ->bindValue('$entityType', $scope);
 
         return new BindingContainer($bindingData);
     }

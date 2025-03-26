@@ -31,6 +31,7 @@ namespace Espo\Core\Portal\Acl\AccessChecker;
 
 use Espo\Core\Acl\AccessChecker;
 use Espo\Core\Acl\Exceptions\NotImplemented;
+use Espo\Core\AclManager;
 use Espo\Core\Binding\Binder;
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\BindingData;
@@ -58,7 +59,7 @@ class AccessCheckerFactory
     {
         $className = $this->getClassName($scope);
 
-        $bindingContainer = $this->createBindingContainer($aclManager);
+        $bindingContainer = $this->createBindingContainer($className, $aclManager, $scope);
 
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
@@ -82,12 +83,25 @@ class AccessCheckerFactory
         return $this->defaultClassName;
     }
 
-    private function createBindingContainer(PortalAclManager $aclManager): BindingContainer
-    {
+    /**
+     * @param class-string<AccessChecker> $className
+     */
+    private function createBindingContainer(
+        string $className,
+        PortalAclManager $aclManager,
+        string $scope
+    ): BindingContainer {
+
         $bindingData = new BindingData();
         $binder = new Binder($bindingData);
 
-        $binder->bindInstance(PortalAclManager::class, $aclManager);
+        $binder
+            ->bindInstance(PortalAclManager::class, $aclManager)
+            ->bindInstance(AclManager::class, $aclManager);
+
+        $binder
+            ->for($className)
+            ->bindValue('$entityType', $scope);
 
         return new BindingContainer($bindingData);
     }

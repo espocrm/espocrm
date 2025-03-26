@@ -58,7 +58,7 @@ class AccessCheckerFactory
     {
         $className = $this->getClassName($scope);
 
-        $bindingContainer = $this->createBindingContainer($aclManager);
+        $bindingContainer = $this->createBindingContainer($className, $aclManager, $scope);
 
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
@@ -77,18 +77,26 @@ class AccessCheckerFactory
         }
 
         if (!$this->metadata->get(['scopes', $scope])) {
-            throw new NotImplemented("Access checker is not implemented for '{$scope}'.");
+            throw new NotImplemented("Access checker is not implemented for '$scope'.");
         }
 
         return $this->defaultClassName;
     }
 
-    private function createBindingContainer(AclManager $aclManager): BindingContainer
+    /**
+     * @param class-string<AccessChecker> $className
+     */
+    private function createBindingContainer(string $className, AclManager $aclManager, string $scope): BindingContainer
     {
         $bindingData = new BindingData();
 
         $binder = new Binder($bindingData);
+
         $binder->bindInstance(AclManager::class, $aclManager);
+
+        $binder
+            ->for($className)
+            ->bindValue('$entityType', $scope);
 
         return new BindingContainer($bindingData);
     }
