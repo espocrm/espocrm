@@ -39,11 +39,12 @@ use InvalidArgumentException;
  */
 class Currency
 {
+    /** @var numeric-string */
     private string $amount;
     private string $code;
 
     /**
-     * @param string|float $amount An amount.
+     * @param numeric-string|float $amount An amount.
      * @param string $code A currency code.
      * @throws RuntimeException
      */
@@ -67,6 +68,8 @@ class Currency
 
     /**
      * Get an amount as string.
+     *
+     * @return numeric-string
      */
     public function getAmountAsString(): string
     {
@@ -194,7 +197,7 @@ class Currency
     /**
      * Create from an amount and code.
      *
-     * @param string|float $amount An amount.
+     * @param numeric-string|float $amount An amount.
      * @param string $code A currency code.
      * @throws RuntimeException
      */

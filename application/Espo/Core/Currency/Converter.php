@@ -100,6 +100,10 @@ class Converter
         return $this->convert($value, $targetCurrencyCode);
     }
 
+    /**
+     * @param numeric-string $amount
+     * @return numeric-string
+     */
     private function convertAmount(string $amount, float $rate, float $targetRate): string
     {
         return CalculatorUtil::divide(

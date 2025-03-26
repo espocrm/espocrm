@@ -70,6 +70,8 @@ class ConvertType implements Func
             throw BadArgumentType::create(3, 'string');
         }
 
+        assert(is_numeric($amount));
+
         $value = Currency::create($amount, $fromCode);
 
         $convertedValue = $this->converter->convert($value, $toCode);

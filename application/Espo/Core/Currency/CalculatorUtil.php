@@ -35,6 +35,11 @@ class CalculatorUtil
 {
     private const SCALE = 14;
 
+    /**
+     * @param numeric-string $arg1
+     * @param numeric-string $arg2
+     * @return numeric-string
+     */
     public static function add(string $arg1, string $arg2): string
     {
         if (!function_exists('bcadd')) {
@@ -50,6 +55,11 @@ class CalculatorUtil
         );
     }
 
+    /**
+     * @param numeric-string $arg1
+     * @param numeric-string $arg2
+     * @return numeric-string
+     */
     public static function subtract(string $arg1, string $arg2): string
     {
         if (!function_exists('bcsub')) {
@@ -65,6 +75,11 @@ class CalculatorUtil
         );
     }
 
+    /**
+     * @param numeric-string $arg1
+     * @param numeric-string $arg2
+     * @return numeric-string
+     */
     public static function multiply(string $arg1, string $arg2): string
     {
         if (!function_exists('bcmul')) {
@@ -80,6 +95,11 @@ class CalculatorUtil
         );
     }
 
+    /**
+     * @param numeric-string $arg1
+     * @param numeric-string $arg2
+     * @return numeric-string
+     */
     public static function divide(string $arg1, string $arg2): string
     {
         if (!function_exists('bcdiv')) {
@@ -88,20 +108,23 @@ class CalculatorUtil
             );
         }
 
-        /** @var ?string $result */
         $result = bcdiv(
             $arg1,
             $arg2,
             self::SCALE
         );
 
-        if ($result === null) {
+        if ($result === null) { /** @phpstan-ignore-line  */
             throw new DivisionByZeroError();
         }
 
         return $result;
     }
 
+    /**
+     * @param numeric-string $arg
+     * @return numeric-string
+     */
     public static function round(string $arg, int $precision = 0): string
     {
         if (!function_exists('bcadd')) {
@@ -114,6 +137,8 @@ class CalculatorUtil
             $addition = '-' . $addition;
         }
 
+        assert(is_numeric($addition));
+
         return bcadd(
             $arg,
             $addition,
@@ -121,6 +146,10 @@ class CalculatorUtil
         );
     }
 
+    /**
+     * @param numeric-string $arg1
+     * @param numeric-string $arg2
+     */
     public static function compare(string $arg1, string $arg2): int
     {
         if (!function_exists('bccomp')) {
