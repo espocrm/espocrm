@@ -31,6 +31,11 @@ namespace Espo\Core\Acl;
 
 use Espo\Entities\User;
 
+/**
+ * Bindings:
+ *   - `$entityType` – as of v9.1.0.
+ *   - `Espo\Core\AclManager`
+ */
 interface AccessChecker
 {
     /**

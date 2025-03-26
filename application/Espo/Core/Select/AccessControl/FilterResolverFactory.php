@@ -33,6 +33,7 @@ use Espo\Core\AclManager;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Acl;
 use Espo\Core\Portal\Acl as PortalAcl;
+use Espo\Core\Portal\AclManager as PortalAclManager;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\Binder;
@@ -65,6 +66,7 @@ class FilterResolverFactory
 
         if ($user->isPortal()) {
             $binder->bindInstance(PortalAcl::class, $this->acl);
+            $binder->bindInstance(PortalAclManager::class, $this->aclManager);
         }
 
         $binder

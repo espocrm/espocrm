@@ -29,4 +29,9 @@
 
 namespace Espo\Core\Acl;
 
+/**
+ * Bindings:
+ *   - `$entityType` – as of v9.1.0.
+ *   - `Espo\Core\AclManager`
+ */
 interface OwnershipChecker {}

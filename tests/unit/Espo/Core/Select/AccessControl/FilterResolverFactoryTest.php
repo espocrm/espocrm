@@ -119,6 +119,7 @@ class FilterResolverFactoryTest extends TestCase
 
         if ($this->user->isPortal()) {
             $binder->bindInstance(PortalAcl::class, $this->acl);
+            $binder->bindInstance(PortalAclManager::class, $this->aclManager);
         }
 
         $binder

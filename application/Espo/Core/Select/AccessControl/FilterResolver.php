@@ -31,6 +31,12 @@ namespace Espo\Core\Select\AccessControl;
 
 /**
  * Resolves an access filter. An entity type, acl and user to be passed to the constructor.
+ *
+ * Bindings:
+ *   - `$entityType`
+ *   - `Espo\Entities\User`
+ *   - `Espo\Core\AclManager` – as of v9.1.
+ *   - `Espo\Core\Acl`
  */
 interface FilterResolver
 {

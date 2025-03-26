@@ -31,6 +31,15 @@ namespace Espo\Core\Select\AccessControl;
 
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
+/**
+ * An access filter.
+ *
+ * Bindings:
+ *   - `$entityType`
+ *   - `Espo\Entities\User`
+ *   - `Espo\Core\AclManager` – as of v9.1.
+ *   - `Espo\Core\Acl`
+ */
 interface Filter
 {
     public function apply(QueryBuilder $queryBuilder): void;
