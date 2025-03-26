@@ -187,13 +187,19 @@ class Container implements ContainerInterface
         }
 
         if ($id === self::ID_CONTAINER) {
-            $this->classCache[$id] = new ReflectionClass(Container::class);
+            /** @var ReflectionClass<object> $object */
+            $object = new ReflectionClass(Container::class);
+
+            $this->classCache[$id] = $object;
 
             return;
         }
 
         if ($id === self::ID_INJECTABLE_FACTORY) {
-            $this->classCache[$id] = new ReflectionClass(InjectableFactory::class);
+            /** @var ReflectionClass<object> $object */
+            $object = new ReflectionClass(InjectableFactory::class);
+
+            $this->classCache[$id] = $object;
 
             return;
         }
