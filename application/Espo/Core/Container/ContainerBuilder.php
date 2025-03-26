@@ -168,12 +168,14 @@ class ContainerBuilder
             )
         );
 
+        /** @var FileManager $fileManager */
         $fileManager = $this->services['fileManager'] ?? (
             new $this->fileManagerClassName(
                 $config->get('defaultPermissions')
             )
         );
 
+        /** @var DataCache $dataCache */
         $dataCache = $this->services['dataCache'] ?? (
             new $this->dataCacheClassName($fileManager)
         );

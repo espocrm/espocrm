@@ -495,13 +495,19 @@ class Upgrade implements Command
             return null;
         }
 
-        /** @var string */
-        return realpath($localFilePath);
+        $path = realpath($localFilePath);
+
+        assert($path !== false);
+
+        return $path;
     }
 
     private function isShellEnabled(): bool
     {
-        if (!function_exists('exec') || !is_callable('shell_exec')) {
+        if (
+            !function_exists('exec') ||
+            !is_callable('shell_exec') /** @phpstan-ignore-line */
+        ) {
             return false;
         }
 

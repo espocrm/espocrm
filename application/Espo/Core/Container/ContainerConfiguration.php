@@ -39,8 +39,8 @@ class ContainerConfiguration implements Configuration
 {
     /**
      * Log must be loaded before anything.
-     * @phpstan-ignore-next-line
      * @noinspection PhpPropertyOnlyWrittenInspection
+     * @phpstan-ignore-next-line
      */
     private Log $log;
 

@@ -308,6 +308,7 @@ class AclManager
 
         $checker = $this->getAccessChecker($scope);
 
+        /** @var non-falsy-string $methodName */
         $methodName = 'checkEntity' . ucfirst($action);
 
         $interface = $this->entityActionInterfaceMap[$action] ?? null;
@@ -322,7 +323,7 @@ class AclManager
     /**
      * Check 'read' access to a specific entity.
      *
-     * @throws NotImplemented.
+     * @throws NotImplemented
      */
     public function checkEntityRead(User $user, Entity $entity): bool
     {

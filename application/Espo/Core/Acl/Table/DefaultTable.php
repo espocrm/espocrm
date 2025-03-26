@@ -35,7 +35,6 @@ use Espo\Entities\User;
 use Espo\Core\Acl\FieldData;
 use Espo\Core\Acl\ScopeData;
 use Espo\Core\Acl\Table;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\Metadata;
 use stdClass;
@@ -219,7 +218,7 @@ class DefaultTable implements Table
             $this->applyAdminMandatory($aclTable, $fieldTable);
         }
 
-        foreach ($aclTable as $scope => $data) {
+        foreach (get_object_vars($aclTable) as $scope => $data) {
             if (is_string($data) && isset($aclTable->$data)) {
                 $aclTable->$scope = $aclTable->$data;
             }

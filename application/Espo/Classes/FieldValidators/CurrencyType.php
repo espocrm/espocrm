@@ -96,6 +96,8 @@ class CurrencyType extends FloatType
 
         $pad = str_pad('', $precision, '9');
 
+        assert(is_numeric($pad));
+
         $limit = Currency::create($pad, 'USD');
 
         if ($currency->compare($limit) === 1) {

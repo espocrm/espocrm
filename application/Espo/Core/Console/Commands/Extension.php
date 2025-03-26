@@ -248,11 +248,10 @@ class Extension implements Command
     private function printList(IO $io): void
     {
         $collection = $this->entityManager
-            ->getRDBRepository(ExtensionEntity::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(ExtensionEntity::class)
             ->find();
 
-        /** @noinspection PhpParamsInspection */
-        $count = is_countable($collection) ? count($collection) : iterator_count($collection);
+        $count = count($collection);
 
         /** @noinspection PhpIfWithCommonPartsInspection */
         if ($count === 0) {
@@ -268,9 +267,9 @@ class Extension implements Command
         $io->writeLine("");
 
         foreach ($collection as $extension) {
-            $isInstalled = $extension->get('isInstalled');
+            $isInstalled = $extension->isInstalled();
 
-            $io->writeLine(' Name: ' . $extension->get(Field::NAME));
+            $io->writeLine(' Name: ' . $extension->getName());
             $io->writeLine(' ID: ' . $extension->getId());
             $io->writeLine(' Version: ' . $extension->getVersion());
             $io->writeLine(' Installed: ' . ($isInstalled ? 'yes' : 'no'));

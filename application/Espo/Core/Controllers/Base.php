@@ -63,12 +63,12 @@ abstract class Base
     private $container;
 
     /**
-     * @var User;
+     * @var User
      */
     protected $user;
 
     /**
-     * @var Acl;
+     * @var Acl
      */
     protected $acl;
 
@@ -161,12 +161,11 @@ abstract class Base
     }
 
     /**
-     * @return void;
+     * @return void
      * @deprecated
      */
     protected function checkControllerAccess()
     {
-        return;
     }
 
     /**

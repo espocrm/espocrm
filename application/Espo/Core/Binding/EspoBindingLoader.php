@@ -73,6 +73,7 @@ class EspoBindingLoader implements BindingLoader
 
     private function loadCustom(Binder $binder): void
     {
+        /** @var class-string<BindingProcessor>|string $className */
         $className = 'Espo\\Custom\\Binding';
 
         if (!class_exists($className)) {

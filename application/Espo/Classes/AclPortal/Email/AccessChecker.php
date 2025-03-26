@@ -70,7 +70,7 @@ class AccessChecker implements AccessEntityCREDSChecker
 
         $userIdList = $entity->getLinkMultipleIdList('users');
 
-        if (is_array($userIdList) && in_array($user->getId(), $userIdList)) {
+        if (in_array($user->getId(), $userIdList)) {
             return true;
         }
 

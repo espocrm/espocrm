@@ -32,30 +32,26 @@ namespace Espo\Classes\TemplateHelpers;
 use Espo\Core\Htmlizer\Helper;
 use Espo\Core\Htmlizer\Helper\Data;
 use Espo\Core\Htmlizer\Helper\Result;
-
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
+use const CURLOPT_FOLLOWLOCATION;
+use const CURLOPT_HEADER;
+use const CURLOPT_HTTPHEADER;
+use const CURLOPT_RETURNTRANSFER;
+use const CURLOPT_TIMEOUT;
+use const CURLOPT_URL;
+use const CURLOPT_USERAGENT;
 
 class GoogleMaps implements Helper
 {
     private const DEFAULT_SIZE = '400x400';
 
-    private $metadata;
-
-    private $config;
-
-    private $log;
-
     public function __construct(
-        Metadata $metadata,
-        Config $config,
-        Log $log
-    ) {
-        $this->metadata = $metadata;
-        $this->config = $config;
-        $this->log = $log;
-    }
+        private Metadata $metadata,
+        private Config $config,
+        private Log $log,
+    ) {}
 
     public function render(Data $data): Result
     {
@@ -194,6 +190,7 @@ class GoogleMaps implements Helper
     }
 
     /**
+     * @param non-empty-string $url
      * @return string|bool
      */
     private function getImage(string $url)
@@ -207,13 +204,13 @@ class GoogleMaps implements Helper
 
         $c = curl_init();
 
-        curl_setopt($c, \CURLOPT_URL, $url);
-        curl_setopt($c, \CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($c, \CURLOPT_HEADER, 0);
-        curl_setopt($c, \CURLOPT_USERAGENT, $agent);
-        curl_setopt($c, \CURLOPT_TIMEOUT, 10);
-        curl_setopt($c, \CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($c, \CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($c, CURLOPT_URL, $url);
+        curl_setopt($c, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($c, CURLOPT_HEADER, false);
+        curl_setopt($c, CURLOPT_USERAGENT, $agent);
+        curl_setopt($c, CURLOPT_TIMEOUT, 10);
+        curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($c, CURLOPT_FOLLOWLOCATION, true);
 
         $raw = curl_exec($c);
 
