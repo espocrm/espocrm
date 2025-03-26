@@ -76,7 +76,7 @@ class SpecificCalendar implements Calendar
     /** @noinspection PhpUnused */
     public function isAvailable(): bool
     {
-        return $this->workingTimeCalendar !== null;
+        return true;
     }
 
     public function getTimezone(): DateTimeZone

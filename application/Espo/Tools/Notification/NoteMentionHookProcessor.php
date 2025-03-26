@@ -73,7 +73,7 @@ class NoteMentionHookProcessor
 
         $mentionCount = 0;
 
-        if (is_array($matches) && !empty($matches[0]) && is_array($matches[0])) {
+        if (!empty($matches[0]) && is_array($matches[0])) {
             $mentionCount = $this->processMatches($matches[0], $note, $mentionData, $previousMentionList);
         }
 

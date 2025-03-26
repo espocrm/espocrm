@@ -35,7 +35,7 @@ use Espo\Core\Select\Where\Item as WhereItem;
 use RuntimeException;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Params
 {

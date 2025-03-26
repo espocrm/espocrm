@@ -33,8 +33,6 @@ use Espo\Core\Field\Address\AddressBuilder;
 
 /**
  * An address value object. Immutable.
- *
- * @immutable
  */
 class Address
 {

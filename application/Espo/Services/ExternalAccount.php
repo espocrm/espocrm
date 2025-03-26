@@ -89,7 +89,7 @@ class ExternalAccount extends Record implements Di\HookManagerAware
             $client = $this->getClient($integration, $userId);
 
             if ($client && method_exists($client, 'ping')) {
-                /** @var @bool */
+                /** @var bool */
                 return $client->ping();
             }
         } catch (Exception) {}

@@ -34,7 +34,7 @@ use RuntimeException;
 /**
  * Insert parameters.
  *
- * @immutable
+ * Immutable.
  */
 class Insert implements Query
 {

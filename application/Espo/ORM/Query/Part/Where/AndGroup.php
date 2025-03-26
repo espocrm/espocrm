@@ -34,8 +34,6 @@ use Espo\ORM\Query\Part\WhereItem;
 
 /**
  * AND-group. Immutable.
- *
- * @immutable
  */
 class AndGroup implements WhereItem
 {
@@ -86,6 +84,7 @@ class AndGroup implements WhereItem
             new WhereClause() :
             new self();
 
+        /** @phpstan-ignore-next-line */
         $obj->rawValue = $whereClause;
 
         return $obj;

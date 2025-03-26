@@ -30,7 +30,7 @@
 namespace Espo\Core\Utils\Resource\FileReader;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Params
 {

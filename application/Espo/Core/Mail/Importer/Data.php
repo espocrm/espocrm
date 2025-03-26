@@ -32,7 +32,7 @@ namespace Espo\Core\Mail\Importer;
 use Espo\Entities\EmailFilter;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Data
 {

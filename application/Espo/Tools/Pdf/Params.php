@@ -30,7 +30,7 @@
 namespace Espo\Tools\Pdf;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Params
 {

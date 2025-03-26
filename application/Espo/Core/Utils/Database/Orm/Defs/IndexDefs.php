@@ -33,7 +33,7 @@ use Espo\Core\Utils\Util;
 use Espo\ORM\Defs\Params\IndexParam;
 
 /**
- * @immutable
+ * Immutable.
  */
 class IndexDefs
 {

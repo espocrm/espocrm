@@ -39,8 +39,6 @@ use RuntimeException;
 
 /**
  * A date value object. Immutable.
- *
- * @immutable
  */
 class Date implements DateTimeable
 {

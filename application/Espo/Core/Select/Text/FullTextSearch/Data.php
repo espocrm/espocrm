@@ -34,7 +34,7 @@ use Espo\ORM\Query\Part\Expression;
 use InvalidArgumentException;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Data
 {

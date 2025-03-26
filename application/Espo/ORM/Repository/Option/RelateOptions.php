@@ -34,7 +34,7 @@ use Espo\ORM\Repository\Option\Traits\Options;
 /**
  * Relate options.
  *
- * @immutable
+ * Immutable.
  */
 class RelateOptions
 {

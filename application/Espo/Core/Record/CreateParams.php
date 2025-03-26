@@ -30,7 +30,7 @@
 namespace Espo\Core\Record;
 
 /**
- * @immutable
+ * Immutable.
  */
 class CreateParams
 {

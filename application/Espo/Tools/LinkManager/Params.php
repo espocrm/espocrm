@@ -32,7 +32,7 @@ namespace Espo\Tools\LinkManager;
 use Espo\Tools\LinkManager\ParamsBuilder;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Params
 {

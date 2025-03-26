@@ -157,7 +157,7 @@ class RecordService
         Notification $entity,
         int $index,
         EntityCollection $collection,
-        int &$count,
+        ?int &$count,
         User $user
     ): void {
 
@@ -181,7 +181,10 @@ class RecordService
 
         if (!$note) {
             unset($collection[$index]);
-            $count--;
+
+            if ($count !== null) {
+                $count--;
+            }
 
             $this->entityManager->removeEntity($entity);
 

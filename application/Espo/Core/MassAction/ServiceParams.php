@@ -30,7 +30,7 @@
 namespace Espo\Core\MassAction;
 
 /**
- * @immutable
+ * Immutable.
  */
 class ServiceParams
 {

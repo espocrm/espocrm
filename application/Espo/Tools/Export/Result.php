@@ -30,7 +30,7 @@
 namespace Espo\Tools\Export;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Result
 {

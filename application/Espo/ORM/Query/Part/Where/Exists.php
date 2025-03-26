@@ -34,8 +34,6 @@ use Espo\ORM\Query\Select;
 
 /**
  * An EXISTS-operator. Immutable.
- *
- * @immutable
  */
 class Exists implements WhereItem
 {

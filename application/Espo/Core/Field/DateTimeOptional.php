@@ -39,8 +39,6 @@ use RuntimeException;
 
 /**
  * A date-time or date. Immutable.
- *
- * @immutable
  */
 class DateTimeOptional implements DateTimeable
 {

@@ -34,7 +34,7 @@ use Espo\ORM\Repository\Option\Traits\Options;
 /**
  * Mass-relate options.
  *
- * @immutable
+ * Immutable.
  */
 class MassRelateOptions
 {

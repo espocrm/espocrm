@@ -33,8 +33,6 @@ use Espo\ORM\Query\Part\WhereItem;
 
 /**
  * OR-group. Immutable.
- *
- * @immutable
  */
 class OrGroup implements WhereItem
 {

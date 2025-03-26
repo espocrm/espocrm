@@ -32,7 +32,7 @@ namespace Espo\Tools\Attachment;
 use Espo\Core\Exceptions\Error;
 
 /**
- * @immutable
+ * Immutable.
  */
 class FieldData
 {

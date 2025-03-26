@@ -122,7 +122,7 @@ class Util
             self::getAllAttributesFromComplexExpressionImplementation($argument, $list);
         }
 
-        return $list;
+        return $list ?? [];
     }
 
     /**

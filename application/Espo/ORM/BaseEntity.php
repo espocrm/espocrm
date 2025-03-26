@@ -1091,14 +1091,8 @@ class BaseEntity implements Entity
 
         $copy = (object) [];
 
-        foreach (get_object_vars($value) as $k => $item) {
+        foreach (get_object_vars($value) as $key => $item) {
             /** @var stdClass|mixed[]|scalar|null $item */
-
-            $key = $k;
-
-            if (!is_string($key)) {
-                $key = strval($key);
-            }
 
             if (is_object($item)) {
                 $copy->$key = $this->cloneObject($item);

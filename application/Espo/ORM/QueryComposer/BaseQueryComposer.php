@@ -1196,8 +1196,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $entityType = $entity->getEntityType();
 
         if (strpos($attribute, ':') && !Util::isArgumentString($attribute)) {
-            /** @var int $delimiterPosition */
-            $delimiterPosition = strpos($attribute, ':');
+            $delimiterPosition = (int) strpos($attribute, ':');
             $function = substr($attribute, 0, $delimiterPosition);
             $attribute = substr($attribute, $delimiterPosition + 1);
 
@@ -1211,38 +1210,29 @@ abstract class BaseQueryComposer implements QueryComposer
             $function = strtoupper($this->sanitize($function));
         }
 
-        $argumentPartList = null;
+        if (!$function) {
+            return $this->getFunctionArgumentPart($entity, $attribute, $distinct, $params);
 
-        if ($function) {
-            $arguments = $attribute;
-
-            $argumentList = Util::parseArgumentListFromFunctionContent($arguments);
-
-            $argumentPartList = [];
-
-            foreach ($argumentList as $argument) {
-                $argumentPartList[] = $this->getFunctionArgumentPart($entity, $argument, $distinct, $params);
-            }
-
-            $part = implode(', ', $argumentPartList);
-        } else {
-            $part = $this->getFunctionArgumentPart($entity, $attribute, $distinct, $params);
         }
 
-        if ($function) {
-            /** @var string[] $argumentPartList */
+        $argumentList = Util::parseArgumentListFromFunctionContent($attribute);
 
-            $part = $this->getFunctionPart(
-                $function,
-                $part,
-                $params,
-                $entityType,
-                $distinct,
-                $argumentPartList
-            );
+        $argumentPartList = [];
+
+        foreach ($argumentList as $argument) {
+            $argumentPartList[] = $this->getFunctionArgumentPart($entity, $argument, $distinct, $params);
         }
 
-        return $part;
+        $part = implode(', ', $argumentPartList);
+
+        return $this->getFunctionPart(
+            $function,
+            $part,
+            $params,
+            $entityType,
+            $distinct,
+            $argumentPartList
+        );
     }
 
     /**
@@ -1300,7 +1290,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $entityType = $entity->getEntityType();
 
         if (strpos($argument, '.')) {
-            list($relName, $attribute) = explode('.', $argument);
+            [$relName, $attribute] = explode('.', $argument);
         }
 
         if (!empty($relName)) {
@@ -1390,12 +1380,12 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string, mixed>|null $params
+     * @param array<string, mixed> $params
      */
     protected function getAttributeOrderSql(
         Entity $entity,
         string $attribute,
-        ?array &$params,
+        array &$params,
         string $order
     ): string {
 
@@ -1465,13 +1455,13 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string, mixed>|null $params
+     * @param array<string, mixed> $params
      */
     protected function getAttributeSql(
         Entity $entity,
         string $attribute,
         string $type,
-        ?array &$params = null,
+        array &$params = [],
         ?string $alias = null
     ): string {
 
@@ -2154,7 +2144,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string, mixed>|null $params
+     * @param array<string, mixed> $params
      * @param mixed $orderBy
      * @param mixed $order
      */
@@ -2162,7 +2152,7 @@ abstract class BaseQueryComposer implements QueryComposer
         Entity $entity,
         $orderBy = null,
         $order = null,
-        ?array &$params = null,
+        array &$params = [],
         bool $noCustom = false
     ): ?string {
 
@@ -2234,7 +2224,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return $this->getAttributeOrderSql($entity, $orderBy, $params, $order);
         }
 
-        $fieldPath = $this->getAttributePathForOrderBy($entity, $orderBy, $params ?? []);
+        $fieldPath = $this->getAttributePathForOrderBy($entity, $orderBy, $params);
 
         if ($fieldPath === null || $fieldPath === '') {
             throw new LogicException("Could not handle 'order' for '".$entity->getEntityType()."'.");
@@ -2244,11 +2234,11 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string, mixed>|null $params
+     * @param array<string, mixed> $params
      * @param mixed $orderBy
      * @param mixed $order
      */
-    protected function getOrderPart(Entity $entity, $orderBy = null, $order = null, &$params = null): ?string
+    protected function getOrderPart(Entity $entity, $orderBy = null, $order = null, &$params = []): ?string
     {
         return $this->getOrderExpressionPart($entity, $orderBy, $order, $params);
     }

@@ -30,7 +30,7 @@
 namespace Espo\ORM;
 
 /**
- * @immutable
+ * Immutable.
  */
 class DatabaseParams
 {

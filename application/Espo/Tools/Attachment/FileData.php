@@ -32,7 +32,7 @@ namespace Espo\Tools\Attachment;
 use Psr\Http\Message\StreamInterface;
 
 /**
- * @immutable
+ * Immutable.
  */
 class FileData
 {

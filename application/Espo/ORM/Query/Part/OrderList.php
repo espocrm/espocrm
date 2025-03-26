@@ -35,7 +35,8 @@ use Iterator;
 /**
  * A list of order items.
  *
- * @immutable
+ * Immutable.
+ *
  * @implements Iterator<Order>
  */
 class OrderList implements Iterator

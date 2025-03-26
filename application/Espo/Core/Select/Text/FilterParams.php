@@ -30,7 +30,7 @@
 namespace Espo\Core\Select\Text;
 
 /**
- * @immutable
+ * Immutable.
  */
 class FilterParams
 {

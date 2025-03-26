@@ -236,7 +236,9 @@ class HookProcessor
         $link = $defs->getName();
         $foreign = $defs->getForeignRelationName();
 
+        /** @var ?string $foreignEntityType */
         $foreignEntityType = $entity->get($link . 'Type');
+
         $id = $entity->get($link . 'Id');
 
         if (!$foreignEntityType || !$id) {

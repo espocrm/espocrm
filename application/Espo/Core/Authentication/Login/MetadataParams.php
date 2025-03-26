@@ -30,7 +30,7 @@
 namespace Espo\Core\Authentication\Login;
 
 /**
- * @immutable
+ * Immutable.
  */
 class MetadataParams
 {

@@ -30,7 +30,7 @@
 namespace Espo\Tools\EmailTemplate;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Params
 {

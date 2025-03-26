@@ -33,8 +33,6 @@ use Espo\ORM\Query\Part\WhereItem;
 
 /**
  * A NOT-operator. Immutable.
- *
- * @immutable
  */
 class Not implements WhereItem
 {

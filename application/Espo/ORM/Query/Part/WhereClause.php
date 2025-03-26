@@ -34,7 +34,7 @@ use Espo\ORM\Query\Part\Where\AndGroup;
 /**
  * A where-clause. Immutable.
  *
- * @immutable
+ * Immutable.
  */
 class WhereClause extends AndGroup
 {

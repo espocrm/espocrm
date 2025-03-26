@@ -890,7 +890,7 @@ class Import
                 return intval($value);
 
             case Entity::BOOL:
-                if ($value && strtolower($value) !== 'false' && $value !== '0') {
+                if ($value !== '0' && $value && strtolower($value) !== 'false') {
                     return true;
                 }
 

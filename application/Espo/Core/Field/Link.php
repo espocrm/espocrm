@@ -33,8 +33,6 @@ use RuntimeException;
 
 /**
  * A link value object. Immutable.
- *
- * @immutable
  */
 class Link
 {

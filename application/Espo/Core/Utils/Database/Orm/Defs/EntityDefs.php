@@ -32,7 +32,7 @@ namespace Espo\Core\Utils\Database\Orm\Defs;
 use Espo\ORM\Defs\Params\EntityParam;
 
 /**
- * @immutable
+ * Immutable.
  */
 class EntityDefs
 {

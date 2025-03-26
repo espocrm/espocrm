@@ -36,7 +36,7 @@ use UnexpectedValueException;
 /**
  * Raw attribute values of multiple records.
  *
- * @immutable
+ * Immutable.
  */
 class Values
 {

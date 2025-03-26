@@ -36,7 +36,7 @@ use InvalidArgumentException;
 /**
  * Order parameters.
  *
- * @immutable
+ * Immutable.
  */
 class Params
 {

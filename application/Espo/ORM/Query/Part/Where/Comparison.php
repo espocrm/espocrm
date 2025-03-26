@@ -37,8 +37,6 @@ use RuntimeException;
 
 /**
  * Compares an expression to a value or another expression. Immutable.
- *
- * @immutable
  */
 class Comparison implements WhereItem
 {

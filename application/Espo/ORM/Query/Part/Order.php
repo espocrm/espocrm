@@ -34,7 +34,7 @@ use RuntimeException;
 /**
  * An order item. Immutable.
  *
- * @immutable
+ * Immutable.
  */
 class Order
 {

@@ -34,7 +34,7 @@ use UnexpectedValueException;
 use stdClass;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Rsa implements Key
 {

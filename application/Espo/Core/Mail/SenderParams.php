@@ -32,7 +32,7 @@ namespace Espo\Core\Mail;
 /**
  * Sender parameters.
  *
- * @immutable
+ * Immutable.
  */
 class SenderParams
 {

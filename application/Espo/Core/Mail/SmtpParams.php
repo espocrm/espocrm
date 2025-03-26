@@ -34,7 +34,7 @@ use RuntimeException;
 /**
  * SMTP parameters.
  *
- * @immutable
+ * Immutable.
  */
 class SmtpParams
 {

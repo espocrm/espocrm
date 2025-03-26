@@ -33,8 +33,6 @@ use RuntimeException;
 
 /**
  * A phone number value. Immutable.
- *
- * @immutable
  */
 class PhoneNumber
 {

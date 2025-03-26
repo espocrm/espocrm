@@ -30,7 +30,7 @@
 namespace Espo\Core\Select\Text\FullTextSearch\DataComposer;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Params
 {

@@ -97,7 +97,6 @@ class NotificationService
 
     public function removeNoteUnread(Note $note, User $user, ?string $type = null): void
     {
-        /** @var Notification[] $notifications */
         $notifications = $this->entityManager
             ->getRDBRepositoryByClass(Notification::class)
             ->where([

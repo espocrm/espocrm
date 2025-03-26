@@ -282,9 +282,13 @@ class FormService
             ];
 
             foreach ($subList as $sub) {
-                $fieldDefs[$sub] = $this->metadata->get("entityDefs.Lead.fields.$sub");
+                /** @var array<string, mixed> $subItem */
+                $subItem = $this->metadata->get("entityDefs.Lead.fields.$sub");
+
+                $fieldDefs[$sub] = $subItem;
             }
         }
+
         if ($type === FieldType::PERSON_NAME) {
             $subList = [
                 'first' . ucfirst($field),
@@ -294,7 +298,10 @@ class FormService
             ];
 
             foreach ($subList as $sub) {
-                $fieldDefs[$sub] = $this->metadata->get("entityDefs.Lead.fields.$sub");
+                /** @var array<string, mixed> $subItem */
+                $subItem = $this->metadata->get("entityDefs.Lead.fields.$sub");
+
+                $fieldDefs[$sub] = $subItem;
             }
         }
 

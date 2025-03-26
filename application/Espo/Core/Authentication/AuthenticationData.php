@@ -30,7 +30,7 @@
 namespace Espo\Core\Authentication;
 
 /**
- * @immutable
+ * Immutable.
  */
 class AuthenticationData
 {

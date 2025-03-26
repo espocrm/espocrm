@@ -34,8 +34,6 @@ use RuntimeException;
 /**
  * A phone number group. Contains a list of phone numbers. One phone number is set as primary.
  * If not empty, then there always should be a primary number. Immutable.
- *
- * @immutable
  */
 class PhoneNumberGroup
 {

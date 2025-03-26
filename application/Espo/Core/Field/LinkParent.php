@@ -34,8 +34,6 @@ use RuntimeException;
 
 /**
  * A link-parent value object. Immutable.
- *
- * @immutable
  */
 class LinkParent
 {

@@ -34,7 +34,7 @@ use Espo\ORM\Repository\Option\Traits\Options;
 /**
  * Remove options.
  *
- * @immutable
+ * Immutable.
  */
 class RemoveOptions
 {

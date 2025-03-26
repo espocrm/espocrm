@@ -32,7 +32,7 @@ namespace Espo\Tools\Export\Processor;
 use RuntimeException;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Params
 {

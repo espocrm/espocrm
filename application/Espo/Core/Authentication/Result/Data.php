@@ -32,7 +32,7 @@ namespace Espo\Core\Authentication\Result;
 use stdClass;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Data
 {

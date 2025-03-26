@@ -32,7 +32,7 @@ namespace Espo\Core\Utils\Client\ActionRenderer;
 use Espo\Core\Utils\Client\Script;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Params
 {

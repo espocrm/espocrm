@@ -35,7 +35,7 @@ use SensitiveParameter;
 /**
  * An auth token data. Used for auth token creation.
  *
- * @immutable
+ * Immutable.
  */
 class Data
 {

@@ -35,8 +35,6 @@ use RuntimeException;
 
 /**
  * A complex expression. Can be a function or a simple column reference. Immutable.
- *
- * @immutable
  */
 class Expression implements WhereItem
 {

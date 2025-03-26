@@ -33,7 +33,7 @@ use Espo\Core\Field\DateTime;
 use SensitiveParameter;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Tokens
 {

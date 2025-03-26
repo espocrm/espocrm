@@ -32,7 +32,7 @@ namespace Espo\Core\Action;
 use RuntimeException;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Params
 {

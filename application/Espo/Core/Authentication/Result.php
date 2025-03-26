@@ -37,7 +37,7 @@ use stdClass;
 /**
  * An authentication result.
  *
- * @immutable
+ * Immutable.
  */
 class Result
 {

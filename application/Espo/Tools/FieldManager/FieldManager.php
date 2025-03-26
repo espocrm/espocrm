@@ -607,7 +607,7 @@ class FieldManager
 
     private function setTooltipText(string $scope, string $name, string $value): void
     {
-        if ($value && $value !== '') {
+        if ($value !== '' && $value) {
             $this->language->set($scope, 'tooltips', $name, $value);
             $this->baseLanguage->set($scope, 'tooltips', $name, $value);
         } else {
@@ -877,7 +877,7 @@ class FieldManager
         ?string $type,
         string $scope,
         string $name,
-        &$defs = null,
+        &$defs = [],
         $options = []
     ): void {
 

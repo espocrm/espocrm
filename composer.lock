@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c9e886d22a6f5af3773701b37aa6cf97",
+    "content-hash": "b96d1d5b9be20903a58eabebb584962e",
     "packages": [
         {
             "name": "async-aws/core",
@@ -7745,20 +7745,20 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.12",
+            "version": "2.1.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "b5ae1b88f471d3fd4ba1aa0046234b5ca3776dd0"
+                "reference": "8ca5f79a8f63c49b2359065832a654e1ec70ac30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/b5ae1b88f471d3fd4ba1aa0046234b5ca3776dd0",
-                "reference": "b5ae1b88f471d3fd4ba1aa0046234b5ca3776dd0",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8ca5f79a8f63c49b2359065832a654e1ec70ac30",
+                "reference": "8ca5f79a8f63c49b2359065832a654e1ec70ac30",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2|^8.0"
+                "php": "^7.4|^8.0"
             },
             "conflict": {
                 "phpstan/phpstan-shim": "*"
@@ -7799,7 +7799,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-28T22:13:23+00:00"
+            "time": "2025-03-24T13:45:00+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

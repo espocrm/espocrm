@@ -34,7 +34,7 @@ use Espo\Core\Utils\Util;
 /**
  * Command parameters.
  *
- * @immutable
+ * Immutable.
  */
 class Params
 {

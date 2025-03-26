@@ -35,7 +35,7 @@ use InvalidArgumentException;
 use UnexpectedValueException;
 
 /**
- * @immutable
+ * Immutable.
  */
 class DateRange
 {

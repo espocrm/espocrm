@@ -35,8 +35,6 @@ use FILTER_VALIDATE_EMAIL;
 
 /**
  * An email address value. Immutable.
- *
- * @immutable
  */
 class EmailAddress
 {

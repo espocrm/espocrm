@@ -34,7 +34,7 @@ use RuntimeException;
 /**
  * LOCK TABLE parameters.
  *
- * @immutable
+ * Immutable.
  */
 class LockTable implements Query
 {

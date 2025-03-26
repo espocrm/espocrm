@@ -35,7 +35,7 @@ use RuntimeException;
 /**
  * Update parameters.
  *
- * @immutable
+ * Immutable.
  */
 class Update implements Query
 {

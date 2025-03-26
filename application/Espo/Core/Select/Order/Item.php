@@ -34,7 +34,7 @@ use Espo\Core\Select\SearchParams;
 use InvalidArgumentException;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Item
 {

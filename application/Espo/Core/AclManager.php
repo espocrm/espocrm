@@ -312,7 +312,7 @@ class AclManager
 
         $interface = $this->entityActionInterfaceMap[$action] ?? null;
 
-        if ($interface && $checker instanceof $interface) {
+        if ($interface && $checker instanceof $interface && method_exists($checker, $methodName)) {
             return $checker->$methodName($user, $entity, $data);
         }
 

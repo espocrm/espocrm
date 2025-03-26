@@ -30,7 +30,7 @@
 namespace Espo\Core\Mail\Account\Storage;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Params
 {

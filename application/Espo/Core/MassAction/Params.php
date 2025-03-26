@@ -34,7 +34,7 @@ use Espo\Core\Select\SearchParams;
 use RuntimeException;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Params
 {

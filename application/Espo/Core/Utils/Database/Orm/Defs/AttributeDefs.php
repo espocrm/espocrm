@@ -34,7 +34,7 @@ use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Type\AttributeType;
 
 /**
- * @immutable
+ * Immutable.
  */
 class AttributeDefs
 {

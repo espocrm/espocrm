@@ -36,8 +36,6 @@ use InvalidArgumentException;
 
 /**
  * A currency value object. Immutable.
- *
- * @immutable
  */
 class Currency
 {

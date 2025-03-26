@@ -34,7 +34,7 @@ use Espo\ORM\Repository\Option\Traits\Options;
 /**
  * Unrelate options.
  *
- * @immutable
+ * Immutable.
  */
 class UnrelateOptions
 {

@@ -39,7 +39,7 @@ use RuntimeException;
 /**
  * Select parameters.
  *
- * @immutable
+ * Immutable.
  *
  * @todo Add validation and normalization.
  */

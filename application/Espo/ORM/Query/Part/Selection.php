@@ -32,7 +32,7 @@ namespace Espo\ORM\Query\Part;
 /**
  * A select item. Immutable.
  *
- * @immutable
+ * Immutable.
  */
 class Selection
 {

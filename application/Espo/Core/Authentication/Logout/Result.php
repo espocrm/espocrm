@@ -30,7 +30,7 @@
 namespace Espo\Core\Authentication\Logout;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Result
 {

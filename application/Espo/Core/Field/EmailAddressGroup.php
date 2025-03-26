@@ -34,8 +34,6 @@ use RuntimeException;
 /**
  * An email address group. Contains a list of email addresses. One email address is set as primary.
  * If not empty, then there always should be a primary address. Immutable.
- *
- * @immutable
  */
 class EmailAddressGroup
 {

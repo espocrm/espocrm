@@ -35,8 +35,6 @@ use RuntimeException;
 
 /**
  * A join item. Immutable.
- *
- * @immutable
  */
 class Join
 {

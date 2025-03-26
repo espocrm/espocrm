@@ -32,7 +32,7 @@ namespace Espo\Core\MassAction;
 use RuntimeException;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Result
 {

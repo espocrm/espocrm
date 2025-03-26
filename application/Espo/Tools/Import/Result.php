@@ -32,7 +32,7 @@ namespace Espo\Tools\Import;
 use stdClass;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Result
 {

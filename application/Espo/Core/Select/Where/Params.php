@@ -34,7 +34,7 @@ use InvalidArgumentException;
 /**
  * Where parameters.
  *
- * @immutable
+ * Immutable.
  */
 class Params
 {

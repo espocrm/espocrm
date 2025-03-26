@@ -32,7 +32,7 @@ namespace Espo\Core\Select\Text\Filter;
 use Espo\ORM\Query\Part\WhereItem;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Data
 {

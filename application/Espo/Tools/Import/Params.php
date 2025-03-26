@@ -34,7 +34,7 @@ use stdClass;
 use TypeError;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Params
 {

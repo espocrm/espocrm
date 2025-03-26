@@ -38,7 +38,7 @@ use stdClass;
 /**
  * Search parameters.
  *
- * @immutable
+ * Immutable.
  */
 class SearchParams
 {

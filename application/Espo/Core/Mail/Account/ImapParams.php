@@ -30,7 +30,7 @@
 namespace Espo\Core\Mail\Account;
 
 /**
- * @immutable
+ * Immutable.
  */
 class ImapParams
 {

@@ -577,8 +577,6 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
 
         $cell = $sheet->getCell($coordinate);
 
-        assert($cell !== null);
-
         $hyperLink = $cell->getHyperlink();
 
         $hyperLink->setUrl($link);

@@ -35,7 +35,7 @@ use JsonException;
 use stdClass;
 
 /**
- * @immutable
+ * Immutable.
  */
 class Header
 {

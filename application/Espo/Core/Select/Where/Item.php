@@ -37,7 +37,7 @@ use RuntimeException;
 /**
  * A where item.
  *
- * @immutable
+ * Immutable.
  */
 class Item
 {

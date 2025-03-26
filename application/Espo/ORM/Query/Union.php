@@ -34,7 +34,7 @@ use RuntimeException;
 /**
  * Union parameters.
  *
- * @immutable
+ * Immutable.
  */
 class Union implements SelectingQuery
 {
