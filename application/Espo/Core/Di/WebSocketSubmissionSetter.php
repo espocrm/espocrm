@@ -31,6 +31,9 @@ namespace Espo\Core\Di;
 
 use Espo\Core\WebSocket\Submission;
 
+/**
+ * @phpstan-ignore-next-line
+ */
 trait WebSocketSubmissionSetter
 {
     /**

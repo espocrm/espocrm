@@ -31,6 +31,9 @@ namespace Espo\Core\Di;
 
 use Espo\Core\Select\SelectManagerFactory;
 
+/**
+ * @phpstan-ignore-next-line
+ */
 trait SelectManagerFactorySetter
 {
     /**

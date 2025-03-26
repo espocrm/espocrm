@@ -31,6 +31,9 @@ namespace Espo\Core\Di;
 
 use Espo\Core\Utils\Language;
 
+/**
+ * @phpstan-ignore-next-line
+ */
 trait LanguageSetter
 {
     /**

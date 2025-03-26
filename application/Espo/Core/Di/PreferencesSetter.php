@@ -31,6 +31,9 @@ namespace Espo\Core\Di;
 
 use Espo\Entities\Preferences;
 
+/**
+ * @phpstan-ignore-next-line
+ */
 trait PreferencesSetter
 {
     /**

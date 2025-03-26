@@ -31,11 +31,12 @@ namespace Espo\Core\Di;
 
 use Espo\Core\Webhook\Manager;
 
+/**
+ * @phpstan-ignore-next-line
+ */
 trait WebhookManagerSetter
 {
-    /**
-     * @var Manager
-     */
+    /** @var Manager */
     protected $webhookManager;
 
     public function setWebhookManager(Manager $webhookManager): void

@@ -31,6 +31,9 @@ namespace Espo\Core\Di;
 
 use Espo\Core\Utils\Crypt;
 
+/**
+ * @phpstan-ignore-next-line
+ */
 trait CryptSetter
 {
     /**

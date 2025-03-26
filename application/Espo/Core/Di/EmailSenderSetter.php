@@ -31,6 +31,9 @@ namespace Espo\Core\Di;
 
 use Espo\Core\Mail\EmailSender as EmailSender;
 
+/**
+ * @phpstan-ignore-next-line
+ */
 trait EmailSenderSetter
 {
     /**

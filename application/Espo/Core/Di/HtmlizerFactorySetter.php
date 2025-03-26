@@ -31,6 +31,9 @@ namespace Espo\Core\Di;
 
 use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
 
+/**
+ * @phpstan-ignore-next-line
+ */
 trait HtmlizerFactorySetter
 {
     /**

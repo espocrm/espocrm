@@ -31,6 +31,9 @@ namespace Espo\Core\Di;
 
 use Espo\Core\DataManager;
 
+/**
+ * @phpstan-ignore-next-line
+ */
 trait DataManagerSetter
 {
     /**
