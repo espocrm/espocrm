@@ -108,8 +108,23 @@ class Parser
             if ($firstPart[0] == '$') {
                 $variable = substr($firstPart, 1);
 
+                $isArrayAppend = false;
+
+                if (str_ends_with($firstPart, '[]')) {
+                    $variable = substr($firstPart, 1, -2);
+
+                    $isArrayAppend = true;
+                }
+
                 if ($variable === '' || !preg_match($this->variableNameRegExp, $variable)) {
                     throw new SyntaxError("Bad variable name `$variable`.");
+                }
+
+                if ($isArrayAppend) {
+                    return new Node('arrayAppend', [
+                        new Value($variable),
+                        $this->split($secondPart)
+                    ]);
                 }
 
                 return new Node('assign', [

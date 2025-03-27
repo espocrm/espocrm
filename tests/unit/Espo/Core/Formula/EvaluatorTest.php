@@ -1690,4 +1690,45 @@ class EvaluatorTest extends TestCase
 
         $this->assertEquals(null, $result);
     }
+
+    public function testArrayAppend1(): void
+    {
+        $expression = "
+            \$test = list();
+            \$test[] = 'a';
+            array\\at(\$test, 0);
+        ";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals('a', $result);
+    }
+
+    public function testArrayAppendError1(): void
+    {
+        $expression = "
+            \$test[] = 'a';
+            array\\at(\$test, 0);
+        ";
+
+        $this->expectException(Error::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+    }
+
+    public function testArrayAppendError2(): void
+    {
+        $expression = "
+            \$test = '';
+            \$test[] = 'a';
+            array\\at(\$test, 0);
+        ";
+
+        $this->expectException(Error::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+    }
 }
