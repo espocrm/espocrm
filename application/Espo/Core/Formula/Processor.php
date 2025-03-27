@@ -33,6 +33,7 @@ use Espo\Core\Formula\Exceptions\BadArgumentType;
 use Espo\Core\Formula\Exceptions\BadArgumentValue;
 use Espo\Core\Formula\Exceptions\ExecutionException;
 use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Espo\Core\Formula\Exceptions\UndefinedKey;
 use Espo\Core\Formula\Functions\Base as DeprecatedBaseFunction;
 use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Formula\Parser\Ast\Attribute;
@@ -102,7 +103,11 @@ class Processor
             return $function->process(self::dataToStdClass($item->getData()));
         }
 
-        return $function->process($item->getArgumentList());
+        try {
+            return $function->process($item->getArgumentList());
+        } catch (UndefinedKey $e) {
+            throw UndefinedKey::cloneWithLevelRisen($e);
+        }
     }
 
     /**

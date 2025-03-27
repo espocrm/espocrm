@@ -31,6 +31,7 @@ namespace Espo\Core\Formula\Functions;
 
 use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\UndefinedKey;
 use stdClass;
 
 /**
@@ -83,15 +84,15 @@ class VariableGetValueByKeyType extends BaseFunction
             }
 
             if ($key < 0) {
-                throw new Error("Cannot get array item value by key that is less than zero.");
+                throw new UndefinedKey("Cannot get array item value by key that is less than zero.");
             }
 
             if ($key > count($reference) - 1) {
-                throw new Error("Cannot get array item value by key that is out of array end.");
+                throw new UndefinedKey("Cannot get array item value by key that is out of array end.");
             }
 
             if (!array_key_exists($key, $reference)) {
-                throw new Error("Cannot get array item value by non-existent key.");
+                throw new UndefinedKey("Cannot get array item value by non-existent key.");
             }
 
             /** @noinspection PhpUnnecessaryLocalVariableInspection */
@@ -109,7 +110,7 @@ class VariableGetValueByKeyType extends BaseFunction
         }
 
         if (!property_exists($reference, $key)) {
-            throw new Error("Cannot get object item value by non-existent key.");
+            throw new UndefinedKey("Cannot get object item value by non-existent key.");
         }
 
         /** @noinspection PhpUnnecessaryLocalVariableInspection */

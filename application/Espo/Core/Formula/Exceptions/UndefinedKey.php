@@ -27,43 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\ComparisonGroup;
+namespace Espo\Core\Formula\Exceptions;
 
-use Espo\Core\Formula\Exceptions\UndefinedKey;
-use Espo\Core\Formula\Functions\BaseFunction;
-use Espo\Core\Formula\ArgumentList;
-
-class NullCoalescingType extends BaseFunction
+class UndefinedKey extends Error
 {
-    public function process(ArgumentList $args)
+    private int $levelsRisen = 0;
+
+    public function getLevelsRisen(): int
     {
-        if (count($args) < 2) {
-            $this->throwTooFewArguments();
-        }
+        return $this->levelsRisen;
+    }
 
-        $array = [];
+    public static function cloneWithLevelRisen(self $exception): UndefinedKey
+    {
+        $obj = new UndefinedKey($exception->getMessage(), $exception->getCode(), $exception);
 
-        foreach ($args as $arg) {
-            $array[] = $arg;
-        }
+        $obj->levelsRisen = $exception->getLevelsRisen() + 1;
 
-        foreach (array_slice($array, 0, -1) as $arg) {
-            try {
-                $value = $this->evaluate($arg);
-            } catch (UndefinedKey $e) {
-                if ($e->getLevelsRisen() > 1) {
-                    throw $e;
-                }
-
-                $value = null;
-            }
-
-
-            if ($value !== null) {
-                return $value;
-            }
-        }
-
-        return $this->evaluate($array[count($array) - 1]);
+        return $obj;
     }
 }

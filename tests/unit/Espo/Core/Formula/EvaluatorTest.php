@@ -31,6 +31,7 @@ namespace tests\unit\Espo\Core\Formula;
 
 use Espo\Core\Formula\Evaluator;
 use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\UndefinedKey;
 use Espo\Core\Formula\Exceptions\UnsafeFunction;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Formula\Exceptions\SyntaxError;
@@ -2017,5 +2018,84 @@ class EvaluatorTest extends TestCase
         $result = $this->evaluator->process($expression);
 
         $this->assertEquals('1', $result);
+    }
+
+    public function testGetByKeyObjectCoalescing1(): void
+    {
+        $expression = "
+            \$o = object\\create();
+            \$o['a'] ?? '2';
+        ";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals('2', $result);
+    }
+
+    public function testGetByKeyObjectCoalescing2(): void
+    {
+        $expression = "
+            \$o = object\\create();
+            \$o['a']['b'] ?? '2';
+        ";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals('2', $result);
+    }
+
+    public function testGetByKeyArrayCoalescing1(): void
+    {
+        $expression = "
+            \$o = list();
+            \$o[0] ?? '2';
+        ";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals('2', $result);
+    }
+
+    public function testGetByKeyArrayCoalescing2(): void
+    {
+        $expression = "
+            \$o = list();
+            \$o[0][0] ?? '2';
+        ";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals('2', $result);
+    }
+
+    public function testGetByKeyArrayCoalescing3(): void
+    {
+        $expression = "
+            \$o = list();
+            \$o[-1] ?? '2';
+        ";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals('2', $result);
+    }
+
+    public function testGetByKeyArrayCoalescingNestedError(): void
+    {
+        $expression = "
+            \$a = list();
+            \$b = list();
+            \$a[ (\$b[0]) ] ?? '2';
+        ";
+
+        $this->expectException(UndefinedKey::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
     }
 }
