@@ -10,7 +10,7 @@
         },
         {
             "name": "list",
-            "insertText": "list(ITEM_1, ITEM_2)",
+            "insertText": "list()",
             "returnType": "array"
         },
         {
