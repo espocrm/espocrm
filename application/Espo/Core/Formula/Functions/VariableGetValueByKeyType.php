@@ -57,6 +57,14 @@ class VariableGetValueByKeyType extends BaseFunction
 
         $reference =& $this->getVariables()->$name;
 
+        return $this->getByKey($reference, $key);
+    }
+
+    /**
+     * @throws Error
+     */
+    private function getByKey(mixed &$reference, mixed $key): mixed
+    {
         if (!is_array($reference) && !$reference instanceof stdClass) {
             throw new Error("Cannot access by key of variable that is non-array and non-object.");
         }
