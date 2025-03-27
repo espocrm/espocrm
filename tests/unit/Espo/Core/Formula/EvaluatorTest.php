@@ -1841,4 +1841,152 @@ class EvaluatorTest extends TestCase
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->evaluator->process($expression);
     }
+
+    public function testArrayGetSetByKey(): void
+    {
+        $expression = "
+            \$v = list('a', 'b');
+            \$v[0] = 'a1';
+            \$v[0 + 1] = 'b1';
+            \$v[0 + 1];
+        ";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals('b1', $result);
+    }
+
+    public function testArrayGetByKeyError1(): void
+    {
+        $expression = "
+            \$v = list('a', 'b');
+            \$v[0 + 2];
+        ";
+
+        $this->expectException(Error::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+    }
+
+    public function testArrayGetByKeyError2(): void
+    {
+        $expression = "
+            \$v = list('a', 'b');
+            \$v[-1];
+        ";
+
+        $this->expectException(Error::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+    }
+
+    public function testArrayGetByKeyError3(): void
+    {
+        $expression = "
+            \$v = list('a', 'b');
+            \$v['0'];
+        ";
+
+        $this->expectException(Error::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+    }
+
+    public function testArraySetByKeyError1(): void
+    {
+        $expression = "
+            \$v = list('a', 'b');
+            \$v[0 + 3] = 'c';
+        ";
+
+        $this->expectException(Error::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+    }
+
+    public function testArraySetByKeyError2(): void
+    {
+        $expression = "
+            \$v = list('a', 'b');
+            \$v[-1] = 'c';
+        ";
+
+        $this->expectException(Error::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+    }
+
+    public function testArraySetByKeyError3(): void
+    {
+        $expression = "
+            \$v = list('a', 'b');
+            \$v['0'] = 'c';
+        ";
+
+        $this->expectException(Error::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+    }
+
+    public function testObjectGetSetByKey(): void
+    {
+        $expression = "
+            \$o = object\\create();
+            \$o['a'] = 'v';
+            \$o['a'];
+        ";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals('v', $result);
+    }
+
+    public function testObjecSetByKeyError1(): void
+    {
+        $expression = "
+            \$o = object\\create();
+            \$o[1] = 'v';
+        ";
+
+        $this->expectException(Error::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+    }
+
+    public function testObjectSetByKeyError2(): void
+    {
+        $expression = "
+            \$o = object\\create();
+            \$o[''] = 'v';
+        ";
+
+        $this->expectException(Error::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+    }
+
+
+    public function testObjectGetByKeyError1(): void
+    {
+        $expression = "
+            \$o = object\\create();
+            \$o['a'] = 'v';
+            \$o['b'];
+        ";
+
+        $this->expectException(Error::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+    }
 }

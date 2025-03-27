@@ -106,31 +106,7 @@ class Parser
             }
 
             if ($firstPart[0] == '$') {
-                $variable = substr($firstPart, 1);
-
-                $isArrayAppend = false;
-
-                if (str_ends_with($firstPart, '[]')) {
-                    $variable = substr($firstPart, 1, -2);
-
-                    $isArrayAppend = true;
-                }
-
-                if ($variable === '' || !preg_match($this->variableNameRegExp, $variable)) {
-                    throw new SyntaxError("Bad variable name `$variable`.");
-                }
-
-                if ($isArrayAppend) {
-                    return new Node('arrayAppend', [
-                        new Value($variable),
-                        $this->split($secondPart)
-                    ]);
-                }
-
-                return new Node('assign', [
-                    new Value($variable),
-                    $this->split($secondPart)
-                ]);
+                return $this->applyOperatorVariableAssign($firstPart, $secondPart);
             }
 
             if ($secondPart === '') {
@@ -181,6 +157,7 @@ class Parser
         $isLineComment = false;
         $parenthesisCounter = 0;
         $braceCounter = 0;
+        $bracketCounter = 0;
 
         $modifiedString = $string;
 
@@ -210,7 +187,7 @@ class Parser
             }
 
             if ($isString) {
-                if (in_array($char, ['(', ')', '{', '}'])) {
+                if (in_array($char, ['(', ')', '{', '}', '[', ']'])) {
                     $modifiedString[$i] = '_';
                 } else if (!$isStringStart) {
                     $modifiedString[$i] = ' ';
@@ -261,18 +238,23 @@ class Parser
                     $braceCounter++;
                 } else if ($char === '}') {
                     $braceCounter--;
+                } else if ($char === '[') {
+                    $bracketCounter++;
+                } else if ($char === ']') {
+                    $bracketCounter--;
                 }
             }
 
             if ($statementList !== null) {
                 $this->processStringIteration(
-                    $string,
-                    $i,
-                    $statementList,
-                    $parenthesisCounter,
-                    $braceCounter,
-                    $isLineComment,
-                    $isComment
+                    string: $string,
+                    i: $i,
+                    statementList: $statementList,
+                    parenthesisCounter: $parenthesisCounter,
+                    braceCounter: $braceCounter,
+                    bracketCounter: $bracketCounter,
+                    isLineComment: $isLineComment,
+                    isComment: $isComment,
                 );
             }
 
@@ -337,8 +319,9 @@ class Parser
         array &$statementList,
         int $parenthesisCounter,
         int $braceCounter,
+        int $bracketCounter,
         bool $isLineComment,
-        bool $isComment
+        bool $isComment,
     ): void {
 
         $char = $string[$i];
@@ -353,7 +336,8 @@ class Parser
         ) {
             if (
                 $parenthesisCounter === 0 &&
-                $braceCounter === 0
+                $braceCounter === 0 &&
+                $bracketCounter === 0
             ) {
                 if ($char === ';') {
                     $lastStatement->setEnd($i, true);
@@ -374,11 +358,11 @@ class Parser
             !$lastStatement->isReady()
         ) {
             $toContinue = $this->processStringIfStatement(
-                $string,
-                $i,
-                $parenthesisCounter,
-                $braceCounter,
-                $lastStatement
+                string: $string,
+                i: $i,
+                parenthesisCounter: $parenthesisCounter,
+                braceCounter: $braceCounter,
+                statement: $lastStatement,
             );
 
             if ($toContinue) {
@@ -422,7 +406,8 @@ class Parser
                 $parenthesisCounter === 0 ||
                 $parenthesisCounter === 1 && $char === '('
             ) &&
-            $braceCounter === 0
+            $braceCounter === 0 &&
+            $bracketCounter === 0
         ) {
             if ($isLineComment || $isComment) {
                 return;
@@ -801,9 +786,10 @@ class Parser
 
         $parenthesisCounter = 0;
         $braceCounter = 0;
+        $bracketCounter = 0;
         $hasExcessParenthesis = true;
         $modifiedExpression = '';
-        $expressionOutOfParenthesisList = [];
+        $topLevelExpressionList = [];
 
         $statementList = [];
 
@@ -826,13 +812,17 @@ class Parser
                 $braceCounter++;
             } else if ($value === '}') {
                 $braceCounter--;
+            } else if ($value === '[') {
+                $bracketCounter++;
+            } else if ($value === ']') {
+                $bracketCounter--;
             }
 
             if ($parenthesisCounter === 0 && $i < $expressionLength - 1) {
                 $hasExcessParenthesis = false;
             }
 
-            $expressionOutOfParenthesisList[] = $parenthesisCounter === 0;
+            $topLevelExpressionList[] = $parenthesisCounter === 0 && $bracketCounter === 0;
         }
 
         if ($parenthesisCounter !== 0) {
@@ -846,6 +836,13 @@ class Parser
             throw SyntaxError::create(
                 'Incorrect braces usage in expression ' . $expression . '.',
                 'Incorrect braces.'
+            );
+        }
+
+        if ($bracketCounter !== 0) {
+            throw SyntaxError::create(
+                'Incorrect bracket usage in expression ' . $expression . '.',
+                'Incorrect brackets.'
             );
         }
 
@@ -883,7 +880,7 @@ class Parser
                     }
 
                     if (
-                        $expressionOutOfParenthesisList[$index] &&
+                        $topLevelExpressionList[$index] &&
                         !$this->isAtAnotherOperator($index, $operator, $modifiedExpression)
                     ) {
                         break;
@@ -985,40 +982,7 @@ class Parser
         }
 
         if ($expression[0] === "$") {
-            $value = substr($expression, 1);
-
-            $isIncrement = false;
-            $isDecrement = false;
-
-            if (str_ends_with($expression, '++')) {
-                $isIncrement = true;
-
-                $value = rtrim(substr($value, 0, -2));
-            }
-
-            if (str_ends_with($expression, '--')) {
-                $isDecrement = true;
-
-                $value = rtrim(substr($value, 0, -2));
-            }
-
-            if ($value === '' || !preg_match($this->variableNameRegExp, $value)) {
-                throw new SyntaxError("Bad variable name `$value`.");
-            }
-
-            if ($isIncrement) {
-                return new Node('variableIncrement', [
-                    new Value($value),
-                ]);
-            }
-
-            if ($isDecrement) {
-                return new Node('variableDecrement', [
-                    new Value($value),
-                ]);
-            }
-
-            return new Variable($value);
+            return $this->splitVariable($expression);
         }
 
         if (is_numeric($expression)) {
@@ -1386,5 +1350,119 @@ class Parser
         }
 
         return $result;
+    }
+
+    /**
+     * @throws SyntaxError
+     */
+    private function applyOperatorVariableAssign(string $firstPart, string $secondPart): Node
+    {
+        $variable = substr($firstPart, 1);
+
+        $isArrayAppend = false;
+        $isKeyValue = false;
+        $keyExpression = '';
+
+        if (str_ends_with($firstPart, '[]')) {
+            $variable = substr($firstPart, 1, -2);
+
+            $isArrayAppend = true;
+        } else if (str_ends_with($firstPart, ']') && str_contains($firstPart, '[')) {
+            $bracketPosition = strpos($firstPart, '[');
+
+            $variable = substr($firstPart, 1, $bracketPosition - 1);
+            $keyExpression = trim(substr($firstPart, $bracketPosition + 1, -1));
+
+            $isKeyValue = true;
+
+            if ($keyExpression === '') {
+                throw new SyntaxError("No expression inside brackets.");
+            }
+        }
+
+        if ($variable === '' || !preg_match($this->variableNameRegExp, $variable)) {
+            throw new SyntaxError("Bad variable name `$variable`.");
+        }
+
+        if ($isArrayAppend) {
+            return new Node('arrayAppend', [
+                new Value($variable),
+                $this->split($secondPart)
+            ]);
+        }
+
+        if ($isKeyValue) {
+            return new Node('variableSetKeyValue', [
+                new Value($variable),
+                $this->split($keyExpression),
+                $this->split($secondPart)
+            ]);
+        }
+
+        return new Node('assign', [
+            new Value($variable),
+            $this->split($secondPart)
+        ]);
+    }
+
+    /**
+     * @throws SyntaxError
+     */
+    private function splitVariable(string $expression): Node|Variable
+    {
+        $value = substr($expression, 1);
+
+        $isIncrement = false;
+        $isDecrement = false;
+        $isKeyValue = false;
+        $keyExpression = '';
+
+        if (str_ends_with($expression, '++')) {
+            $isIncrement = true;
+
+            $value = rtrim(substr($value, 0, -2));
+        }
+
+        if (str_ends_with($expression, '--')) {
+            $isDecrement = true;
+
+            $value = rtrim(substr($value, 0, -2));
+        }  else if (str_ends_with($expression, ']') && str_contains($expression, '[')) {
+            $bracketPosition = strpos($expression, '[');
+
+            $value = substr($expression, 1, $bracketPosition - 1);
+            $keyExpression = trim(substr($expression, $bracketPosition + 1, -1));
+
+            $isKeyValue = true;
+
+            if ($keyExpression === '') {
+                throw new SyntaxError("No expression inside brackets.");
+            }
+        }
+
+        if ($value === '' || !preg_match($this->variableNameRegExp, $value)) {
+            throw new SyntaxError("Bad variable name `$value`.");
+        }
+
+        if ($isIncrement) {
+            return new Node('variableIncrement', [
+                new Value($value),
+            ]);
+        }
+
+        if ($isDecrement) {
+            return new Node('variableDecrement', [
+                new Value($value),
+            ]);
+        }
+
+        if ($isKeyValue) {
+            return new Node('variableGetValueByKey', [
+                new Value($value),
+                $this->split($keyExpression),
+            ]);
+        }
+
+        return new Variable($value);
     }
 }
