@@ -987,8 +987,35 @@ class Parser
         if ($expression[0] === "$") {
             $value = substr($expression, 1);
 
+            $isIncrement = false;
+            $isDecrement = false;
+
+            if (str_ends_with($expression, '++')) {
+                $isIncrement = true;
+
+                $value = rtrim(substr($value, 0, -2));
+            }
+
+            if (str_ends_with($expression, '--')) {
+                $isDecrement = true;
+
+                $value = rtrim(substr($value, 0, -2));
+            }
+
             if ($value === '' || !preg_match($this->variableNameRegExp, $value)) {
                 throw new SyntaxError("Bad variable name `$value`.");
+            }
+
+            if ($isIncrement) {
+                return new Node('variableIncrement', [
+                    new Value($value),
+                ]);
+            }
+
+            if ($isDecrement) {
+                return new Node('variableDecrement', [
+                    new Value($value),
+                ]);
             }
 
             return new Variable($value);

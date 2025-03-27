@@ -1731,4 +1731,114 @@ class EvaluatorTest extends TestCase
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->evaluator->process($expression);
     }
+
+    public function testIncrementInt(): void
+    {
+        $expression = "
+            \$v = 0;
+            \$v ++;
+            \$v++;
+            \$v;
+        ";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals(2, $result);
+    }
+
+    public function testIncrementFloat(): void
+    {
+        $expression = "
+            \$v = 0.0;
+            \$v ++;
+            \$v++;
+            \$v;
+        ";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals(2.0, $result);
+    }
+
+    public function testDecrementInt(): void
+    {
+        $expression = "
+            \$v = 2;
+            \$v --;
+            \$v--;
+            \$v;
+        ";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals(0, $result);
+    }
+
+    public function testDecrementFloat(): void
+    {
+        $expression = "
+            \$v = 2.0;
+            \$v --;
+            \$v--;
+            \$v;
+        ";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals(0.0, $result);
+    }
+
+    public function testIncrementError1(): void
+    {
+        $expression = "
+            \$v++;
+        ";
+
+        $this->expectException(Error::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+    }
+
+    public function testIncrementError2(): void
+    {
+        $expression = "
+            \$v = '1';
+            \$v++;
+        ";
+
+        $this->expectException(Error::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+    }
+
+    public function testDecrementError1(): void
+    {
+        $expression = "
+            \$v--;
+        ";
+
+        $this->expectException(Error::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+    }
+
+    public function testDecrementError2(): void
+    {
+        $expression = "
+            \$v = '1';
+            \$v--;
+        ";
+
+        $this->expectException(Error::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+    }
 }
