@@ -1427,7 +1427,7 @@ class Parser
             $isDecrement = true;
 
             $value = rtrim(substr($value, 0, -2));
-        }  else if (str_ends_with($expression, ']') && str_contains($expression, '[')) {
+        } else if (str_ends_with($expression, ']') && str_contains($expression, '[')) {
             $bracketPosition = strpos($expression, '[');
 
             $value = substr($expression, 1, $bracketPosition - 1);
