@@ -45,7 +45,7 @@ class VariableGetValueByKeyType extends BaseFunction
         }
 
         $name = $this->evaluate($args[0]);
-        $key = $this->evaluate($args[1]);
+        $keys = $this->evaluate($args[1]);
 
         if (!is_string($name)) {
             $this->throwBadArgumentValue(1, 'string');
@@ -57,13 +57,21 @@ class VariableGetValueByKeyType extends BaseFunction
 
         $reference =& $this->getVariables()->$name;
 
-        return $this->getByKey($reference, $key);
+        $value = null;
+
+        foreach ($keys as $key) {
+            $value =& $this->getByKey($reference, $key);
+
+            $reference =& $value;
+        }
+
+        return $value;
     }
 
     /**
      * @throws Error
      */
-    private function getByKey(mixed &$reference, mixed $key): mixed
+    private function &getByKey(mixed &$reference, mixed $key): mixed
     {
         if (!is_array($reference) && !$reference instanceof stdClass) {
             throw new Error("Cannot access by key of variable that is non-array and non-object.");
@@ -86,7 +94,10 @@ class VariableGetValueByKeyType extends BaseFunction
                 throw new Error("Cannot get array item value by non-existent key.");
             }
 
-            return $reference[$key];
+            /** @noinspection PhpUnnecessaryLocalVariableInspection */
+            $value =& $reference[$key];
+
+            return $value;
         }
 
         if (!is_string($key)) {
@@ -101,6 +112,9 @@ class VariableGetValueByKeyType extends BaseFunction
             throw new Error("Cannot get object item value by non-existent key.");
         }
 
-        return $reference->$key;
+        /** @noinspection PhpUnnecessaryLocalVariableInspection */
+        $value =& $reference->$key;
+
+        return $value;
     }
 }

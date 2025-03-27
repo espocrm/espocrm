@@ -1989,4 +1989,33 @@ class EvaluatorTest extends TestCase
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->evaluator->process($expression);
     }
+
+    public function testArrayGetSetNested(): void
+    {
+        $expression = "
+            \$a = list(list(0, 1));
+            \$a[0][2] = 2;
+            \$a[0][2];
+        ";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals(2, $result);
+    }
+
+    public function testObjectGetSetNested(): void
+    {
+        $expression = "
+            \$o = object\\create();
+            \$o['a'] = object\\create();
+            \$o['a']['a1'] = '1';
+            \$o['a']['a1'];
+        ";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals('1', $result);
+    }
 }

@@ -1361,23 +1361,21 @@ class Parser
 
         $isArrayAppend = false;
         $isKeyValue = false;
-        $keyExpression = '';
+        $keyPath = [];
 
         if (str_ends_with($firstPart, '[]')) {
             $variable = substr($firstPart, 1, -2);
 
             $isArrayAppend = true;
         } else if (str_ends_with($firstPart, ']') && str_contains($firstPart, '[')) {
-            $bracketPosition = strpos($firstPart, '[');
+            $bracketPosition = strpos($firstPart, '[') ?: 0;
 
             $variable = substr($firstPart, 1, $bracketPosition - 1);
-            $keyExpression = trim(substr($firstPart, $bracketPosition + 1, -1));
+
+            $keyPart = trim(substr($firstPart, $bracketPosition));
+            $keyPath = array_map(fn ($it) => $this->split($it), $this->splitKeys($keyPart));
 
             $isKeyValue = true;
-
-            if ($keyExpression === '') {
-                throw new SyntaxError("No expression inside brackets.");
-            }
         }
 
         if ($variable === '' || !preg_match($this->variableNameRegExp, $variable)) {
@@ -1394,7 +1392,7 @@ class Parser
         if ($isKeyValue) {
             return new Node('variableSetKeyValue', [
                 new Value($variable),
-                $this->split($keyExpression),
+                new Node('list', $keyPath),
                 $this->split($secondPart)
             ]);
         }
@@ -1415,7 +1413,7 @@ class Parser
         $isIncrement = false;
         $isDecrement = false;
         $isKeyValue = false;
-        $keyExpression = '';
+        $keyPath = [];
 
         if (str_ends_with($expression, '++')) {
             $isIncrement = true;
@@ -1428,16 +1426,12 @@ class Parser
 
             $value = rtrim(substr($value, 0, -2));
         } else if (str_ends_with($expression, ']') && str_contains($expression, '[')) {
-            $bracketPosition = strpos($expression, '[');
-
+            $bracketPosition = strpos($expression, '[') ?: 0;
             $value = substr($expression, 1, $bracketPosition - 1);
-            $keyExpression = trim(substr($expression, $bracketPosition + 1, -1));
+            $keyPart = trim(substr($expression, $bracketPosition));
+            $keyPath = array_map(fn ($it) => $this->split($it), $this->splitKeys($keyPart));
 
             $isKeyValue = true;
-
-            if ($keyExpression === '') {
-                throw new SyntaxError("No expression inside brackets.");
-            }
         }
 
         if ($value === '' || !preg_match($this->variableNameRegExp, $value)) {
@@ -1459,10 +1453,83 @@ class Parser
         if ($isKeyValue) {
             return new Node('variableGetValueByKey', [
                 new Value($value),
-                $this->split($keyExpression),
+                new Node('list', $keyPath),
             ]);
         }
 
         return new Variable($value);
+    }
+
+    /**
+     * @return string[]
+     * @throws SyntaxError
+     */
+    private function splitKeys(string $expression): array
+    {
+        $modifiedExpression = '';
+
+        $this->processString($expression, $modifiedExpression, $statementList, true);
+
+        $expressionLength = strlen($modifiedExpression);
+
+        $parenthesisCounter = 0;
+        $bracketCounter = 0;
+
+        $output = [];
+
+        /** @var array{int, int}[] $indexPairs */
+        $indexPairs = [];
+
+        $startIndex = -1;
+
+        for ($i = 0; $i < $expressionLength; $i++) {
+            $value = $modifiedExpression[$i];
+
+            if ($value === '(') {
+                $parenthesisCounter++;
+            } else if ($value === ')') {
+                $parenthesisCounter--;
+            } else if ($value === '[') {
+                $bracketCounter++;
+            } else if ($value === ']') {
+                $bracketCounter--;
+            }
+
+            if (
+                $value === '[' &&
+                $parenthesisCounter === 0 &&
+                $bracketCounter === 1
+            ) {
+                $startIndex = $i;
+            }
+
+            if (
+                $value === ']' &&
+                $parenthesisCounter === 0 &&
+                $bracketCounter === 0
+            ) {
+                $indexPairs[] = [$startIndex + 1, $i];
+
+                $startIndex = -1;
+            }
+        }
+
+        foreach ($indexPairs as $i => $pair) {
+            if ($i > 0) {
+                if ($indexPairs[$i - 1][1] !== $pair[0] - 2) {
+                    throw new SyntaxError("Nested brackets must have no gaps in between.");
+                }
+            }
+
+            $itemExpression = trim(substr($expression, $pair[0], $pair[1] - $pair[0]));
+
+            if ($itemExpression === '') {
+                throw new SyntaxError("No expression inside brackets.");
+            }
+
+            $output[] = $itemExpression;
+        }
+
+        return $output;
     }
 }
