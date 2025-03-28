@@ -1,32 +1,45 @@
 {
-  "fields": {
-    "title": "عنوان",
-    "dateFrom": "تاریخ از",
-    "dateTo": "تاریخ به",
-    "displayRecords": "نمایش سوابق",
-    "isDoubleHeight": "ارتفاع 2x",
-    "mode": "حالت",
-    "enabledScopeList": "چه چیزی باید نمایش داده شود",
-    "users": "کاربران",
-    "entityType": "نوع موجودیت",
-    "primaryFilter": "فیلتر اولیه",
-    "boolFilterList": "فیلترهای اضافی",
-    "sortBy": "سفارش (فیلد)",
-    "sortDirection": "سفارش (جهت)",
-    "expandedLayout": "طرح",
-    "dateFilter": "فیلتر تاریخ"
-  },
-  "options": {
-    "mode": {
-      "agendaWeek": "هفته (دستور کار)",
-      "basicWeek": "هفته",
-      "month": "ماه",
-      "basicDay": "روز",
-      "agendaDay": "روز (دستور کار)",
-      "timeline": "گاهشمار"
+    "fields": {
+        "title": "عنوان",
+        "dateFrom": "تاریخ از",
+        "dateTo": "تاریخ به",
+        "autorefreshInterval": "فاصله به‌روزرسانی خودکار",
+        "displayRecords": "نمایش سوابق",
+        "isDoubleHeight": "ارتفاع 2x",
+        "mode": "حالت",
+        "enabledScopeList": "چه چیزی باید نمایش داده شود",
+        "users": "کاربران",
+        "entityType": "نوع موجودیت",
+        "primaryFilter": "فیلتر اولیه",
+        "boolFilterList": "فیلترهای اضافی",
+        "sortBy": "سفارش (فیلد)",
+        "sortDirection": "سفارش (جهت)",
+        "expandedLayout": "طرح",
+        "skipOwn": "سوابق خودم را نمایش نده",
+        "url": "آدرس اینترنتی",
+        "dateFilter": "فیلتر تاریخ",
+        "text": "متن",
+        "folder": "پوشه",
+        "includeShared": "شامل به اشتراک گذاشته شده"
+    },
+    "options": {
+        "mode": {
+            "agendaWeek": "هفته (دستور کار)",
+            "basicWeek": "هفته",
+            "month": "ماه",
+            "basicDay": "روز",
+            "agendaDay": "روز (دستور کار)",
+            "timeline": "گاهشمار"
+        },
+        "sortDirection": {
+            "asc": "صعودی",
+            "desc": "نزولی"
+        }
+    },
+    "messages": {
+        "selectEntityType": "نوع موجودیت را در تنظیمات داشلت انتخاب کنید."
+    },
+    "tooltips": {
+        "skipOwn": "اقدامات انجام شده توسط حساب کاربری شما نمایش داده نخواهد شد."
     }
-  },
-  "messages": {
-    "selectEntityType": "انتخاب نوع موجودیت در گزینه های dashlet ."
-  }
 }
