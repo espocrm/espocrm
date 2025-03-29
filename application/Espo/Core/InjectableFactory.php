@@ -35,6 +35,8 @@ use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\Binding;
 use Espo\Core\Binding\Factory;
 
+use Espo\Core\Di\Inject;
+
 use ReflectionClass;
 use ReflectionParameter;
 use ReflectionFunction;
@@ -42,6 +44,7 @@ use ReflectionNamedType;
 use Throwable;
 use RuntimeException;
 use Closure;
+use TypeError;
 
 /**
  * Creates an instance by a class name. Uses constructor param names and type hinting to detect which
@@ -55,7 +58,8 @@ class InjectableFactory
     public function __construct(
         private Container $container,
         private ?BindingContainer $bindingContainer = null
-    ) {}
+    ) {
+    }
 
     /**
      * Create an instance by a class name.
@@ -171,6 +175,8 @@ class InjectableFactory
         $obj = $class->newInstanceArgs($injectionList);
 
         $this->applyAwareInjections($class, $obj);
+
+        $this->applyAttributeInjections($class, $obj);
 
         return $obj;
     }
@@ -398,6 +404,47 @@ class InjectableFactory
             $methodName = 'set' . ucfirst($name);
 
             $obj->$methodName($injection);
+        }
+    }
+
+    /**
+     * @param ReflectionClass<object> $class
+     * @param string[] $ignoreList
+     */
+    private function applyAttributeInjections(ReflectionClass $class, object $obj, array $ignoreList = []): void
+    {
+        /** @var \ReflectionProperty<object> $property */
+        foreach ($class->getProperties() as $property) {
+            $attributes = $property->getAttributes(Inject::class);
+
+            if (empty($attributes)) {
+                continue;
+            }
+
+            $name = $attributes[0]->newInstance()->name;
+
+            if ($name === null) {
+                $type = $property->getType();
+
+                if (!$type || !$type instanceof ReflectionNamedType || $type->isBuiltin()) {
+                    continue;
+                }
+
+                $name = lcfirst(basename(str_replace('\\', '/', $type->getName())));
+            }
+
+            if (in_array($name, $ignoreList) || !$this->container->has($name)) {
+                continue;
+            }
+
+            $injection = $this->container->get($name);
+
+            $property->setAccessible(true);
+            try {
+                $property->setValue($obj, $injection);
+            } catch (TypeError $e) {
+                throw new RuntimeException("InjectableFactory: Could not inject '{$property->getName()}' in class '{$class->getName()}', the type of injected dependency does not match the type hint.");
+            }
         }
     }
 
