@@ -75,7 +75,7 @@ class ContextualBinder
      *
      * @template T of object
      * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
-     * @param class-string<T> $serviceName A service name.
+     * @param string $serviceName A service name.
      */
     public function bindService(string|NamedClassKey $key, string $serviceName): self
     {
