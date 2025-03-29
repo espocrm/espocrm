@@ -395,7 +395,7 @@ class RoleRecordTableView extends View {
 
             this.formModel.set(scope, scopeItem.access, {silent: true});
 
-            const view = new EnumFieldView({
+            const view = new CustomEnumFieldView({
                 name: scope,
                 model: this.formModel,
                 mode: this.mode,
@@ -429,7 +429,7 @@ class RoleRecordTableView extends View {
 
                 this.formModel.set(name, actionItem.level, {silent: true});
 
-                const view = new EnumFieldView({
+                const view = new CustomEnumFieldView({
                     name: name,
                     model: this.formModel,
                     mode: this.mode,
@@ -513,7 +513,7 @@ class RoleRecordTableView extends View {
 
             this.formModel.set(name, actionItem.value, {silent: true});
 
-            const view = new EnumFieldView({
+            const view = new CustomEnumFieldView({
                 name: name,
                 model: this.formModel,
                 mode: this.mode,
@@ -1212,6 +1212,11 @@ class RoleRecordTableView extends View {
             $row.removeClass('hidden');
         });
     }
+}
+
+class CustomEnumFieldView extends EnumFieldView {
+
+    requestAnimationFrame = true
 }
 
 export default RoleRecordTableView;

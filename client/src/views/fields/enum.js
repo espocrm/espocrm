@@ -97,6 +97,12 @@ class EnumFieldView extends BaseFieldView {
 
     validationElementSelector = '.selectize-control'
 
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    requestAnimationFrame = false
+
     // noinspection JSCheckFunctionSignatures
     /** @inheritDoc */
     data() {
@@ -423,7 +429,10 @@ class EnumFieldView extends BaseFieldView {
         }
 
         if (this.isEditMode() || this.isSearchMode()) {
-            Select.init(this.$element, {matchAnyWord: true});
+            Select.init(this.$element, {
+                matchAnyWord: true,
+                requestAnimationFrame: this.requestAnimationFrame,
+            });
         }
     }
 
