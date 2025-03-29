@@ -32,6 +32,7 @@ namespace Espo\Core\Mail;
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Mail\Account\SendingAccountProvider;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
@@ -148,6 +149,16 @@ class EmailSender
      */
     static public function generateMessageId(Email $email): string
     {
-        return Sender::generateMessageId($email);
+        $rand = mt_rand(1000, 9999);
+
+        $messageId = $email->getParentType() && $email->getParentId() ?
+            sprintf("%s/%s/%s/%s@espo", $email->getParentType(), $email->getParentId(), time(), $rand) :
+            sprintf("%s/%s/%s@espo", md5($email->get(Field::NAME)), time(), $rand);
+
+        if ($email->get('isSystem')) {
+            $messageId .= '-system';
+        }
+
+        return $messageId;
     }
 }

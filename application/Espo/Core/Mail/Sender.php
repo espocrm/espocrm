@@ -32,7 +32,6 @@ namespace Espo\Core\Mail;
 use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Smtp\TransportFactory;
-use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\EntityCollection;
 use Espo\Core\Field\DateTime;
@@ -407,19 +406,14 @@ class Sender
         throw new SendingError($e->getMessage());
     }
 
+    /**
+     * @deprecated Since v9.1.0. Use EmailSender::generateMessageId.
+     * @noinspection PhpUnused
+     * @todo Remove in v10.0.
+     */
     static public function generateMessageId(Email $email): string
     {
-        $rand = mt_rand(1000, 9999);
-
-        $messageId = $email->getParentType() && $email->getParentId() ?
-            sprintf("%s/%s/%s/%s@espo", $email->getParentType(), $email->getParentId(), time(), $rand) :
-            sprintf("%s/%s/%s@espo", md5($email->get(Field::NAME)), time(), $rand);
-
-        if ($email->get('isSystem')) {
-            $messageId .= '-system';
-        }
-
-        return $messageId;
+        return EmailSender::generateMessageId($email);
     }
 
     /**
@@ -588,7 +582,7 @@ class Sender
             strlen($messageId) < 4 ||
             str_starts_with($messageId, 'dummy:')
         ) {
-            $messageId = $this->generateMessageId($email);
+            $messageId = EmailSender::generateMessageId($email);
 
             $email->setMessageId('<' . $messageId . '>');
 

@@ -29,7 +29,7 @@
 
 namespace Espo\Classes\RecordHooks\Email;
 
-use Espo\Core\Mail\Sender;
+use Espo\Core\Mail\EmailSender;
 use Espo\Core\Record\Hook\SaveHook;
 use Espo\Entities\Email;
 use Espo\ORM\Entity;
@@ -42,7 +42,7 @@ class BeforeCreate implements SaveHook
     public function process(Entity $entity): void
     {
         if ($entity->getStatus() === Email::STATUS_SENDING) {
-            $messageId = Sender::generateMessageId($entity);
+            $messageId = EmailSender::generateMessageId($entity);
 
             $entity->setMessageId('<' . $messageId . '>');
         }
