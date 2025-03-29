@@ -90,7 +90,6 @@ class RoleRecordTableView extends View {
     scopeLevelMemory
 
     /**
-     * @private
      * @type {import('model').default}
      */
     formModel
@@ -710,7 +709,6 @@ class RoleRecordTableView extends View {
     }
 
     /**
-     * @private
      * @param {string} [onlyScope]
      * @return {Object.<string, Object.<string, string>|false|true>}
      */
@@ -763,7 +761,6 @@ class RoleRecordTableView extends View {
     }
 
     /**
-     * @private
      * @return {Object.<string, Object.<string, Record.<string, string>|false>>}
      */
     fetchFieldData() {

@@ -39,40 +39,6 @@ class RoleEditRecordView extends EditRecordView {
     fetch() {
         const data = super.fetch();
 
-        data['data'] = {};
-
-        const scopeList = this.getTableView().scopeList;
-        const actionList = this.getTableView().actionList;
-        const aclTypeMap = this.getTableView().aclTypeMap;
-
-        for (const i in scopeList) {
-            const scope = scopeList[i];
-
-            if (this.$el.find('select[name="' + scope + '"]').val() === 'not-set') {
-                continue;
-            }
-
-            if (this.$el.find('select[name="' + scope + '"]').val() === 'disabled') {
-                data['data'][scope] = false;
-
-                continue;
-            }
-
-            let o = true;
-
-            if (aclTypeMap[scope] !== 'boolean') {
-                o = {};
-
-                for (const j in actionList) {
-                    const action = actionList[j];
-
-                    o[action] = this.$el.find('select[name="' + scope + '-' + action + '"]').val();
-                }
-            }
-
-            data['data'][scope] = o;
-        }
-
         data['data'] = this.getTableView().fetchScopeData();
         data['fieldData'] = this.getTableView().fetchFieldData();
 
