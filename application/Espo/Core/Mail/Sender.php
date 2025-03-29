@@ -188,6 +188,7 @@ class Sender
     /**
      * @deprecated As of v6.0. Use withParams.
      * @param array<string, mixed> $params
+     * @todo Remove in v10.0.
      */
     public function setParams(array $params = []): self
     {
@@ -200,6 +201,7 @@ class Sender
     /**
      * @deprecated As of 6.0. Use withSmtpParams.
      * @param array<string, mixed> $params
+     * @todo Make private in v10.0.
      */
     public function useSmtp(array $params = []): self
     {
@@ -424,6 +426,7 @@ class Sender
      * @deprecated As of v6.0. Use withEnvelopeOptions.
      *
      * @param array<string, mixed> $options
+     * @todo Remove in v10.0.
      */
     public function setEnvelopeOptions(array $options): self
     {
