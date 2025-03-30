@@ -94,6 +94,7 @@ class EmailSender
      * With specific attachments.
      *
      * @param iterable<Attachment> $attachmentList
+     * @noinspection PhpUnused
      */
     public function withAttachments(iterable $attachmentList): Sender
     {
@@ -104,6 +105,7 @@ class EmailSender
      * With envelope options.
      *
      * @param array<string, mixed> $options
+     * @noinspection PhpUnused
      */
     public function withEnvelopeOptions(array $options): Sender
     {
