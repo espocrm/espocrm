@@ -73,7 +73,7 @@
     "moment-timezone": "^0.5.41",
     "moment-timezone-data-build": "github:yurikuzn/moment-timezone-data-build#0.1.1",
     "qrcodejs": "^1.0.0",
-    "selectize": "github:yurikuzn/selectize-for-espo#0.1.0",
+    "selectize": "github:yurikuzn/selectize-for-espo#0.1.1",
     "set-value": ">=4.0.1",
     "summernote": "^0.9.1",
     "timepicker": "^1.11.15",
