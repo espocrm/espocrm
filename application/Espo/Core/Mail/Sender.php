@@ -326,7 +326,7 @@ class Sender
         $params = array_merge($this->params, $this->overrideParams);
 
         $this->applyFrom($email, $message, $params);
-        $this->applyReplyTo($message, $params);
+        $this->applyReplyTo($email, $message, $params);
         $this->addRecipientAddresses($email, $message);
         $this->applySubject($email, $message);
         $this->applyBody($email, $message);
@@ -561,7 +561,7 @@ class Sender
     /**
      * @param array<string, mixed> $params
      */
-    private function applyReplyTo(Message $message, array $params): void
+    private function applyReplyTo(Email $email, Message $message, array $params): void
     {
         $address = $params['replyToAddress'] ?? null;
         $name = $params['replyToName'] ?? null;
@@ -571,6 +571,8 @@ class Sender
         }
 
         $message->setReplyTo($address, $name);
+
+        $email->setReplyToAddressList([$address]);
     }
 
     private function applyMessageId(Email $email, Message $message): void
