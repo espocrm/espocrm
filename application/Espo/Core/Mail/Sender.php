@@ -31,6 +31,7 @@ namespace Espo\Core\Mail;
 
 use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\Mail\Exceptions\NoSmtp;
+use Espo\Core\Mail\Sender\DefaultTransportPreparator;
 use Espo\Core\Mail\Sender\TransportPreparator;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\EntityCollection;
@@ -84,7 +85,7 @@ class Sender
         private SendingAccountProvider $accountProvider,
         private FileStorageManager $fileStorageManager,
         private ConfigDataProvider $configDataProvider,
-        private TransportPreparator $transportPreparator,
+        private DefaultTransportPreparator $transportPreparator,
     ) {
         $this->useGlobal();
     }

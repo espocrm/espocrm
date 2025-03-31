@@ -55,7 +55,6 @@ class SmtpParams
     public const AUTH_MECHANISM_PLAIN = 'plain';
     public const AUTH_MECHANISM_XOAUTH = 'xoauth';
 
-
     /** @var string[] */
     private array $paramList = [
         'server',
@@ -158,8 +157,6 @@ class SmtpParams
 
     /**
      * @return ?array<string, mixed>
-     * @deprecated As of v9.1.0.
-     * @todo Remove in v10.0. Fix usage of 'connectionOptions'.
      */
     public function getConnectionOptions(): ?array
     {
@@ -217,8 +214,6 @@ class SmtpParams
 
     /**
      * @param ?array<string, mixed> $connectionOptions
-     * @deprecated As of v9.1.
-     * @todo Remove in v10.0.
      */
     public function withConnectionOptions(?array $connectionOptions): self
     {

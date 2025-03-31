@@ -312,11 +312,6 @@ class Binding implements BindingProcessor
             'Espo\\Core\\Mail\\Importer',
             'Espo\\Core\\Mail\\Importer\\DefaultImporter'
         );
-
-        $binder->bindImplementation(
-            'Espo\\Core\\Mail\\Sender\\TransportPreparator',
-            'Espo\\Core\\Mail\\Sender\\DefaultTransportPreparator'
-        );
     }
 
     private function bindAcl(Binder $binder): void

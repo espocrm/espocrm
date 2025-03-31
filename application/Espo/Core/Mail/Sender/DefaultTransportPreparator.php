@@ -44,7 +44,7 @@ use Symfony\Component\Mailer\Transport\TransportInterface;
 class DefaultTransportPreparator implements TransportPreparator
 {
     public function __construct(
-        private Config $config
+        private Config $config,
     ) {}
 
     public function prepare(SmtpParams $smtpParams): TransportInterface
@@ -79,6 +79,7 @@ class DefaultTransportPreparator implements TransportPreparator
 
         $authMechanism = null;
 
+        // @todo For xoauth, set authMechanism, username, password in handlers.
         $connectionOptions = $smtpParams->getConnectionOptions() ?? [];
         $authString = $connectionOptions['authString'] ?? null;
 
