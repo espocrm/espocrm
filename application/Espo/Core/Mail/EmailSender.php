@@ -102,10 +102,22 @@ class EmailSender
     }
 
     /**
+     * With an envelope from address.
+     *
+     * @since 9.1.0
+     * @noinspection PhpUnused
+     */
+    public function withEnvelopeFromAddress(string $fromAddress): void
+    {
+        $this->createSender()->withEnvelopeFromAddress($fromAddress);
+    }
+
+    /**
      * With envelope options.
      *
-     * @param array<string, mixed> $options
-     * @noinspection PhpUnused
+     * @param array{from: string} $options
+     * @deprecated As of v9.1.
+     * @todo Remove in v10.0. Use `withEnvelopeFromAddress`.
      */
     public function withEnvelopeOptions(array $options): Sender
     {
@@ -114,10 +126,25 @@ class EmailSender
 
     /**
      * Set a message instance.
+     *
+     * @deprecated As of v9.1. Use `withAddedHeader`.
+     *  @todo Remove in v10.0.
      */
     public function withMessage(Message $message): Sender
     {
         return $this->createSender()->withMessage($message);
+    }
+
+    /**
+     * Add a header.
+     *
+     * @param string $name A header name.
+     * @param string $value A header value.
+     * @since 9.1.0
+     */
+    public function withAddedHeader(string $name, string $value): Sender
+    {
+        return $this->createSender()->withAddedHeader($name, $value);
     }
 
     /**

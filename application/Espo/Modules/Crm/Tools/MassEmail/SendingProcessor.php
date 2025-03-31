@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Tools\MassEmail;
 
+use Espo\Modules\Crm\Tools\MassEmail\MessagePreparator\Headers;
 use Laminas\Mail\Message;
 
 use Espo\Core\Field\DateTime;
@@ -193,13 +194,14 @@ class SendingProcessor
     private function prepareQueueItemMessage(
         EmailQueueItem $queueItem,
         Sender $sender,
-        Message $message,
-        SenderParams $senderParams
+        SenderParams $senderParams,
     ): void {
 
         $id = $queueItem->getId();
 
-        $this->headersPreparator->prepare($message->getHeaders(), new Data($id, $senderParams, $queueItem));
+        $headers = new Headers($sender);
+
+        $this->headersPreparator->prepare($headers, new Data($id, $senderParams, $queueItem));
 
         $fromAddress = $senderParams->getFromAddress();
 
@@ -211,7 +213,7 @@ class SendingProcessor
             $bounceAddress = explode('@', $fromAddress)[0] . '+bounce-qid-' . $id .
                 '@' . explode('@', $fromAddress)[1];
 
-            $sender->withEnvelopeOptions(['from' => $bounceAddress]);
+            $sender->withEnvelopeFromAddress($bounceAddress);
         }
     }
 
@@ -300,14 +302,11 @@ class SendingProcessor
             $sender->withSmtpParams($smtpParams);
         }
 
-        $message = new Message();
-
         try {
-            $this->prepareQueueItemMessage($queueItem, $sender, $message, $senderParams);
+            $this->prepareQueueItemMessage($queueItem, $sender, $senderParams);
 
             $sender
                 ->withParams($senderParams)
-                ->withMessage($message)
                 ->withAttachments($attachmentList)
                 ->send($email);
         } catch (Exception $e) {

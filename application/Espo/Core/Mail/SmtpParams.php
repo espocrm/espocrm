@@ -152,6 +152,8 @@ class SmtpParams
 
     /**
      * @return ?array<string, mixed>
+     * @deprecated As of v9.1.0.
+     * @todo Remove in v10.0.
      */
     public function getConnectionOptions(): ?array
     {
@@ -209,6 +211,8 @@ class SmtpParams
 
     /**
      * @param ?array<string, mixed> $connectionOptions
+     * @deprecated As of v9.1.
+     * @todo Remove in v10.0.
      */
     public function withConnectionOptions(?array $connectionOptions): self
     {

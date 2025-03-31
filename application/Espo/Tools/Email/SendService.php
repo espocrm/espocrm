@@ -48,6 +48,7 @@ use Espo\Core\Mail\ConfigDataProvider;
 use Espo\Core\Mail\EmailSender;
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Exceptions\SendingError;
+use Espo\Core\Mail\Sender;
 use Espo\Core\Mail\SenderParams;
 use Espo\Core\Mail\Smtp\HandlerProcessor;
 use Espo\Core\Mail\SmtpParams;
@@ -130,7 +131,7 @@ class SendService
         $systemFromName = $this->config->get('outboundEmailFromName');
         $systemFromAddress = $this->configDataProvider->getSystemOutboundAddress();
 
-        $emailSender = $this->emailSender->create();
+        $sender = $this->emailSender->create();
 
         $userAddressList = [];
 
@@ -167,14 +168,14 @@ class SendService
         }
 
         if ($user && $smtpParams) {
-            $emailSender->withSmtpParams($smtpParams);
+            $sender->withSmtpParams($smtpParams);
         }
 
         if (!$smtpParams) {
             [$smtpParams, $groupAccount] = $this->getGroupAccount($user, $originalFromAddress);
 
             if ($smtpParams) {
-                $emailSender->withSmtpParams($smtpParams);
+                $sender->withSmtpParams($smtpParams);
             }
         }
 
@@ -213,19 +214,25 @@ class SendService
 
         $message = new Message();
 
-        $this->applyReplied($entity, $message);
+        if (
+            $groupAccount instanceof GroupAccount && $groupAccount->storeSentEmails() ||
+            $personalAccount instanceof PersonalAccount && $personalAccount->storeSentEmails()
+        ) {
+            $sender->withMessage($message);
+        }
+
+        $this->applyReplied($entity, $sender);
+
+        $sender->withParams($params);
 
         try {
-            $emailSender
-                ->withParams($params)
-                ->withMessage($message)
-                ->send($entity);
+            $sender->send($entity);
         } catch (Exception $e) {
             $entity->setStatus(Email::STATUS_DRAFT);
 
             $this->entityManager->saveEntity($entity, [SaveOption::SILENT => true]);
 
-            $this->log->error("Email sending:" . $e->getMessage() . "; " . $e->getCode());
+            $this->log->error("Email sending: " . $e->getMessage(), ['exception' => $e]);
 
             $errorData = [
                 'id' => $entity->getId(),
@@ -569,13 +576,13 @@ class SendService
         return $this->config->get('smtpPassword');
     }
 
-    private function applyReplied(Email $entity, Message $message): void
+    private function applyReplied(Email $entity, Sender $sender): void
     {
         $replied = $entity->getReplied();
 
         if ($replied && $replied->getMessageId()) {
-            $message->getHeaders()->addHeaderLine('In-Reply-To', $replied->getMessageId());
-            $message->getHeaders()->addHeaderLine('References', $replied->getMessageId());
+            $sender->withAddedHeader('In-Reply-To', $replied->getMessageId());
+            $sender->withAddedHeader('References', $replied->getMessageId());
         }
 
         if ($replied && $replied->getGroupFolder()) {

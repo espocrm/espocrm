@@ -27,14 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Smtp;
+namespace Espo\Modules\Crm\Tools\MassEmail\MessagePreparator;
 
-use Laminas\Mail\Transport\Smtp as SmtpTransport;
+use Espo\Core\Mail\Sender;
 
-class TransportFactory
+class Headers
 {
-    public function create(): SmtpTransport
+    public function __construct(
+        private Sender $sender,
+    ) {}
+
+    public function addTextHeader(string $name, string $value): void
     {
-        return new SmtpTransport();
+        $this->sender->withAddedHeader($name, $value);
     }
 }
