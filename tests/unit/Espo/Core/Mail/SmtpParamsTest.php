@@ -30,8 +30,9 @@
 namespace tests\unit\Espo\Core\Mail;
 
 use Espo\Core\Mail\SmtpParams;
+use PHPUnit\Framework\TestCase;
 
-class SmtpParamsTest extends \PHPUnit\Framework\TestCase
+class SmtpParamsTest extends TestCase
 {
     public function testFromArray1(): void
     {
@@ -56,7 +57,6 @@ class SmtpParamsTest extends \PHPUnit\Framework\TestCase
             'auth' => true,
             'connectionOptions' => ['test' => 'test'],
             'authMechanism' => 'login',
-            'authClassName' => 'Test',
             'username' => 'tester',
             'password' => 'password',
             'security' => 'ssl',
@@ -74,7 +74,6 @@ class SmtpParamsTest extends \PHPUnit\Framework\TestCase
             ->withUsername('tester')
             ->withPassword('test')
             ->withAuthMechanism('login')
-            ->withAuthClassName('Test')
             ->withConnectionOptions(['test' => 'test']);
 
         $this->assertEquals('localhost', $params->getServer());
@@ -88,6 +87,5 @@ class SmtpParamsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('tester', $params->getUsername());
         $this->assertEquals('test', $params->getPassword());
         $this->assertEquals(['test' => 'test'], $params->getConnectionOptions());
-        $this->assertEquals('Test', $params->getAuthClassName());
     }
 }

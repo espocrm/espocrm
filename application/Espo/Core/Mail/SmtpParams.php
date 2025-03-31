@@ -44,8 +44,6 @@ class SmtpParams
     private ?array $connectionOptions = null;
     private bool $auth = false;
     private ?string $authMechanism = null;
-    /** @var ?class-string */
-    private ?string $authClassName = null;
     private ?string $username = null;
     private ?string $password = null;
     private ?string $security = null;
@@ -64,7 +62,6 @@ class SmtpParams
         'connectionOptions',
         'auth',
         'authMechanism',
-        'authClassName',
         'username',
         'password',
         'security',
@@ -127,11 +124,6 @@ class SmtpParams
             }
         }
 
-        if (isset($params['smtpAuthClassName'])) {
-            // For bc.
-            $obj->authClassName = $params['smtpAuthClassName'];
-        }
-
         return $obj;
     }
 
@@ -171,14 +163,6 @@ class SmtpParams
     public function getAuthMechanism(): ?string
     {
         return $this->authMechanism;
-    }
-
-    /**
-     * @return ?class-string
-     */
-    public function getAuthClassName(): ?string
-    {
-        return $this->authClassName;
     }
 
     public function getUsername(): ?string
@@ -235,17 +219,6 @@ class SmtpParams
     {
         $obj = clone $this;
         $obj->authMechanism = $authMechanism;
-
-        return $obj;
-    }
-
-    /**
-     * @param ?class-string $authClassName
-     */
-    public function withAuthClassName(?string $authClassName): self
-    {
-        $obj = clone $this;
-        $obj->authClassName = $authClassName;
 
         return $obj;
     }
