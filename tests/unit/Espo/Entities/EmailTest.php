@@ -473,7 +473,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
                             ->will($this->returnValue($attachment));
 
         $body = $this->email->getBodyForSending();
-        $this->assertEquals('test <img src="cid:Id01">', $body);
+        $this->assertEquals('test <img src="cid:Id01@espo">', $body);
     }
 
     public function testBodyPlain(): void

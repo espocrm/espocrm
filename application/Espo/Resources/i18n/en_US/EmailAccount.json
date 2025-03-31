@@ -38,6 +38,10 @@
             "plain": "PLAIN",
             "login": "LOGIN",
             "crammd5": "CRAM-MD5"
+        },
+        "smtpSecurity": {
+            "SSL": "SSL/TLS",
+            "TLS": "STARTTLS"
         }
     },
     "labels": {

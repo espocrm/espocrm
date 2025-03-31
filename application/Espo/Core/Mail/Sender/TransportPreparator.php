@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,24 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import ListRecordView from 'views/record/list';
-import MassEmailSendTestModalView from 'crm:views/mass-email/modals/send-test';
+namespace Espo\Core\Mail\Sender;
 
-export default class extends ListRecordView {
+use Espo\Core\Mail\SmtpParams;
+use Symfony\Component\Mailer\Transport\TransportInterface;
 
-    // noinspection JSUnusedGlobalSymbols
-    async actionSendTest(data) {
-        const id = data.id;
-
-        const model = this.collection.get(id);
-
-        if (!model) {
-            return;
-        }
-
-        const view = new MassEmailSendTestModalView({model: model});
-
-        await this.assignView('modal', view);
-        await view.render();
-    }
+/**
+ * @since 9.1.0
+ */
+interface TransportPreparator
+{
+    public function prepare(SmtpParams $smtpParams): TransportInterface;
 }

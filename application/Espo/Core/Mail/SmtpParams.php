@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Mail;
 
+use Espo\Core\Mail\Sender\TransportPreparator;
 use RuntimeException;
 
 /**
@@ -44,11 +45,16 @@ class SmtpParams
     private ?array $connectionOptions = null;
     private bool $auth = false;
     private ?string $authMechanism = null;
-    /** @var ?class-string */
-    private ?string $authClassName = null;
     private ?string $username = null;
     private ?string $password = null;
     private ?string $security = null;
+    /** @var ?class-string<TransportPreparator> */
+    private ?string $transportPreparatorClassName = null;
+
+    public const AUTH_MECHANISM_LOGIN = 'login';
+    public const AUTH_MECHANISM_CRAMMD5 = 'crammd5';
+    public const AUTH_MECHANISM_PLAIN = 'plain';
+    public const AUTH_MECHANISM_XOAUTH = 'xoauth';
 
     /** @var string[] */
     private array $paramList = [
@@ -59,7 +65,6 @@ class SmtpParams
         'connectionOptions',
         'auth',
         'authMechanism',
-        'authClassName',
         'username',
         'password',
         'security',
@@ -122,11 +127,6 @@ class SmtpParams
             }
         }
 
-        if (isset($params['smtpAuthClassName'])) {
-            // For bc.
-            $obj->authClassName = $params['smtpAuthClassName'];
-        }
-
         return $obj;
     }
 
@@ -166,14 +166,6 @@ class SmtpParams
     public function getAuthMechanism(): ?string
     {
         return $this->authMechanism;
-    }
-
-    /**
-     * @return ?class-string
-     */
-    public function getAuthClassName(): ?string
-    {
-        return $this->authClassName;
     }
 
     public function getUsername(): ?string
@@ -234,17 +226,6 @@ class SmtpParams
         return $obj;
     }
 
-    /**
-     * @param ?class-string $authClassName
-     */
-    public function withAuthClassName(?string $authClassName): self
-    {
-        $obj = clone $this;
-        $obj->authClassName = $authClassName;
-
-        return $obj;
-    }
-
     public function withUsername(?string $username): self
     {
         $obj = clone $this;
@@ -267,5 +248,27 @@ class SmtpParams
         $obj->security = $security;
 
         return $obj;
+    }
+
+    /**
+     * @param ?class-string<TransportPreparator> $transportPreparatorClassName
+     * @since 9.1.0.
+     * @noinspection PhpUnused
+     */
+    public function withTransportPreparatorClassName(?string $transportPreparatorClassName): self
+    {
+        $obj = clone $this;
+        $obj->transportPreparatorClassName = $transportPreparatorClassName;
+
+        return $obj;
+    }
+
+    /**
+     * @return ?class-string<TransportPreparator>
+     * @since 9.1.0.
+     */
+    public function getTransportPreparatorClassName(): ?string
+    {
+        return $this->transportPreparatorClassName;
     }
 }

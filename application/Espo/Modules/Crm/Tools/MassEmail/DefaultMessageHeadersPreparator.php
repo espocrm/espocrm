@@ -29,11 +29,10 @@
 
 namespace Espo\Modules\Crm\Tools\MassEmail;
 
-use Espo\Core\Mail\Mail\Header\XQueueItemId;
 use Espo\Core\Utils\Config;
 use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Modules\Crm\Tools\MassEmail\MessagePreparator\Data;
-use Laminas\Mail\Headers;
+use Espo\Modules\Crm\Tools\MassEmail\MessagePreparator\Headers;
 
 class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
 {
@@ -42,13 +41,8 @@ class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
 
     public function prepare(Headers $headers, Data $data): void
     {
-        $id = $data->getId();
-
-        $header = new XQueueItemId();
-        $header->setId($id);
-
-        $headers->addHeader($header);
-        $headers->addHeaderLine('Precedence', 'bulk');
+        $headers->addTextHeader('X-Queue-Item-Id', $data->getId());
+        $headers->addTextHeader('Precedence', 'bulk');
 
         $this->addMandatoryOptOut($headers, $data);
     }
@@ -76,7 +70,7 @@ class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
 
         $url = "{$this->getSiteUrl()}/api/v1/Campaign/unsubscribe/$id";
 
-        $headers->addHeaderLine('List-Unsubscribe-Post', 'List-Unsubscribe=One-Click');
-        $headers->addHeaderLine('List-Unsubscribe', "<$url>");
+        $headers->addTextHeader('List-Unsubscribe-Post', 'List-Unsubscribe=One-Click');
+        $headers->addTextHeader('List-Unsubscribe', "<$url>");
     }
 }

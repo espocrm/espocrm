@@ -32,6 +32,7 @@ namespace Espo\Core\Mail;
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Mail\Account\SendingAccountProvider;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
@@ -93,6 +94,7 @@ class EmailSender
      * With specific attachments.
      *
      * @param iterable<Attachment> $attachmentList
+     * @noinspection PhpUnused
      */
     public function withAttachments(iterable $attachmentList): Sender
     {
@@ -100,9 +102,22 @@ class EmailSender
     }
 
     /**
+     * With an envelope from address.
+     *
+     * @since 9.1.0
+     * @noinspection PhpUnused
+     */
+    public function withEnvelopeFromAddress(string $fromAddress): void
+    {
+        $this->createSender()->withEnvelopeFromAddress($fromAddress);
+    }
+
+    /**
      * With envelope options.
      *
-     * @param array<string, mixed> $options
+     * @param array{from: string} $options
+     * @deprecated As of v9.1.
+     * @todo Remove in v10.0. Use `withEnvelopeFromAddress`.
      */
     public function withEnvelopeOptions(array $options): Sender
     {
@@ -111,10 +126,25 @@ class EmailSender
 
     /**
      * Set a message instance.
+     *
+     * @deprecated As of v9.1. Use `withAddedHeader`.
+     *  @todo Remove in v10.0.
      */
     public function withMessage(Message $message): Sender
     {
         return $this->createSender()->withMessage($message);
+    }
+
+    /**
+     * Add a header.
+     *
+     * @param string $name A header name.
+     * @param string $value A header value.
+     * @since 9.1.0
+     */
+    public function withAddedHeader(string $name, string $value): Sender
+    {
+        return $this->createSender()->withAddedHeader($name, $value);
     }
 
     /**
@@ -148,6 +178,16 @@ class EmailSender
      */
     static public function generateMessageId(Email $email): string
     {
-        return Sender::generateMessageId($email);
+        $rand = mt_rand(1000, 9999);
+
+        $messageId = $email->getParentType() && $email->getParentId() ?
+            sprintf("%s/%s/%s/%s@espo", $email->getParentType(), $email->getParentId(), time(), $rand) :
+            sprintf("%s/%s/%s@espo", md5($email->get(Field::NAME)), time(), $rand);
+
+        if ($email->get('isSystem')) {
+            $messageId .= '-system';
+        }
+
+        return $messageId;
     }
 }

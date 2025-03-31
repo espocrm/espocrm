@@ -253,10 +253,11 @@ class Email extends Entity
 
             foreach ($attachmentList as $attachment) {
                 $id = $attachment->getId();
+                $partId = $id . '@espo';
 
                 $body = str_replace(
                     "\"?entryPoint=attachment&amp;id=$id\"",
-                    "\"cid:$id\"",
+                    "\"cid:$partId\"",
                     $body
                 );
             }

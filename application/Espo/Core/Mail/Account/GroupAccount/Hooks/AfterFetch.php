@@ -192,17 +192,16 @@ class AfterFetch implements AfterFetchInterface
             }
         }
 
-        $message = new Message();
+        $sender = $this->emailSender->create();
 
-        $messageId = $email->getMessageId();
-
-        if ($messageId) {
-            $message->getHeaders()->addHeaderLine('In-Reply-To', $messageId);
+        if ($email->getMessageId()) {
+            $sender->withAddedHeader('In-Reply-To', $email->getMessageId());
         }
 
-        $message->getHeaders()->addHeaderLine('Auto-Submitted', 'auto-replied');
-        $message->getHeaders()->addHeaderLine('X-Auto-Response-Suppress', 'All');
-        $message->getHeaders()->addHeaderLine('Precedence', 'auto_reply');
+        $sender
+            ->withAddedHeader('Auto-Submitted', 'auto-replied')
+            ->withAddedHeader('X-Auto-Response-Suppress', 'All')
+            ->withAddedHeader('Precedence', 'auto_reply');
 
         try {
             $entityHash = [];
@@ -268,8 +267,6 @@ class AfterFetch implements AfterFetchInterface
 
             $this->entityManager->saveEntity($reply);
 
-            $sender = $this->emailSender->create();
-
             $senderParams = SenderParams::create();
 
             if ($inboundEmail->isAvailableForSending()) {
@@ -304,13 +301,12 @@ class AfterFetch implements AfterFetchInterface
 
             $sender
                 ->withParams($senderParams)
-                ->withMessage($message)
                 ->withAttachments($replyData->getAttachmentList())
                 ->send($reply);
 
             $this->entityManager->saveEntity($reply);
         } catch (Throwable $e) {
-            $this->log->error("Inbound Email: Auto-reply error: " . $e->getMessage());
+            $this->log->error("Inbound Email: Auto-reply error: " . $e->getMessage(), ['exception' => $e]);
         }
     }
 

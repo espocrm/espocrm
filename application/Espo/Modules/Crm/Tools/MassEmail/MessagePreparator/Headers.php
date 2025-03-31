@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,24 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import ListRecordView from 'views/record/list';
-import MassEmailSendTestModalView from 'crm:views/mass-email/modals/send-test';
+namespace Espo\Modules\Crm\Tools\MassEmail\MessagePreparator;
 
-export default class extends ListRecordView {
+use Espo\Core\Mail\Sender;
 
-    // noinspection JSUnusedGlobalSymbols
-    async actionSendTest(data) {
-        const id = data.id;
+class Headers
+{
+    public function __construct(
+        private Sender $sender,
+    ) {}
 
-        const model = this.collection.get(id);
-
-        if (!model) {
-            return;
-        }
-
-        const view = new MassEmailSendTestModalView({model: model});
-
-        await this.assignView('modal', view);
-        await view.render();
+    public function addTextHeader(string $name, string $value): void
+    {
+        $this->sender->withAddedHeader($name, $value);
     }
 }

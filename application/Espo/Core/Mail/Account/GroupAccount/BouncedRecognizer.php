@@ -32,6 +32,8 @@ namespace Espo\Core\Mail\Account\GroupAccount;
 use Espo\Core\Mail\Message;
 use Espo\Core\Mail\Message\Part;
 
+use const PREG_SPLIT_NO_EMPTY;
+
 class BouncedRecognizer
 {
     /** @var string[] */
@@ -52,7 +54,7 @@ class BouncedRecognizer
             return true;
         }
 
-        if (strpos($contentType ?? '', 'multipart/report') === 0) {
+        if (str_starts_with($contentType ?? '', 'multipart/report')) {
             // @todo Check whether ever works.
             $deliveryStatusPart = $this->getDeliveryStatusPart($message);
 
@@ -63,8 +65,8 @@ class BouncedRecognizer
             $content = $message->getRawContent();
 
             if (
-                strpos($content, 'message/delivery-status') !== false &&
-                strpos($content, 'Status: ') !== false
+                str_contains($content, 'message/delivery-status') &&
+                str_contains($content, 'Status: ')
             ) {
                 return true;
             }
@@ -77,6 +79,8 @@ class BouncedRecognizer
     {
         $content = $message->getRawContent();
 
+        /** @noinspection RegExpSimplifiable */
+        /** @noinspection RegExpDuplicateCharacterInClass */
         if (preg_match('/permanent[ ]*[error|failure]/', $content)) {
             return true;
         }
@@ -105,9 +109,7 @@ class BouncedRecognizer
         $hasStatus = preg_match('/Status: ([0-9]\.[0-9]\.[0-9])/', $content, $m);
 
         if ($hasStatus) {
-            $status = $m[1] ?? null;
-
-            return $status;
+            return $m[1] ?? null;
         }
 
         return null;
@@ -119,7 +121,7 @@ class BouncedRecognizer
 
         if (preg_match('/X-Queue-Item-Id: [a-z0-9\-]*/', $content, $m)) {
             /** @var array{string} $arr */
-            $arr = preg_split('/X-Queue-Item-Id: /', $m[0], -1, \PREG_SPLIT_NO_EMPTY);
+            $arr = preg_split('/X-Queue-Item-Id: /', $m[0], -1, PREG_SPLIT_NO_EMPTY);
 
             return $arr[0];
         }
@@ -128,7 +130,7 @@ class BouncedRecognizer
 
         if (preg_match('/\+bounce-qid-[a-z0-9\-]*/', $to ?? '', $m)) {
             /** @var array{string} $arr */
-            $arr = preg_split('/\+bounce-qid-/', $m[0], -1, \PREG_SPLIT_NO_EMPTY);
+            $arr = preg_split('/\+bounce-qid-/', $m[0], -1, PREG_SPLIT_NO_EMPTY);
 
             return $arr[0];
         }

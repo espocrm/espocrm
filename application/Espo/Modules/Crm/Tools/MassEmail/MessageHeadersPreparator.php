@@ -30,7 +30,7 @@
 namespace Espo\Modules\Crm\Tools\MassEmail;
 
 use Espo\Modules\Crm\Tools\MassEmail\MessagePreparator\Data;
-use Laminas\Mail\Headers;
+use Espo\Modules\Crm\Tools\MassEmail\MessagePreparator\Headers;
 
 /**
  * Applies additional headers to a mass email message.
