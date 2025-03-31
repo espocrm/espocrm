@@ -199,7 +199,7 @@ export default class MassEmailSendTestModalView extends ModalView {
         this.disableButton('sendTest');
 
         Espo.Ajax.postRequest('MassEmail/action/sendTest', {
-            id: this.formModel.id,
+            id: this.model.id,
             targetList: list,
         })
         .then(() => {

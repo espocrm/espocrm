@@ -41,7 +41,7 @@ export default class extends ListRecordView {
             return;
         }
 
-        const view = new MassEmailSendTestModalView({model: this.model});
+        const view = new MassEmailSendTestModalView({model: model});
 
         await this.assignView('modal', view);
         await view.render();
