@@ -31,6 +31,7 @@ namespace Espo\Core\Mail;
 
 use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\Mail\Exceptions\NoSmtp;
+use Espo\Core\Mail\Sender\TransportPreparator;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\EntityCollection;
 use Espo\Core\Field\DateTime;
@@ -45,22 +46,15 @@ use Espo\ORM\EntityManager;
 use Laminas\Mail\Headers;
 use Laminas\Mail\Message as LaminasMessage;
 
-use LogicException;
-use RuntimeException;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\Transport\Dsn;
-use Symfony\Component\Mailer\Transport\Smtp\Auth\CramMd5Authenticator;
-use Symfony\Component\Mailer\Transport\Smtp\Auth\LoginAuthenticator;
-use Symfony\Component\Mailer\Transport\Smtp\Auth\PlainAuthenticator;
-use Symfony\Component\Mailer\Transport\Smtp\Auth\XOAuth2Authenticator;
-use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
-use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransportFactory;
+use Symfony\Component\Mailer\Transport\TransportInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email as Message;
 use Symfony\Component\Mime\Part\DataPart;
 
 use Exception;
+use LogicException;
 use InvalidArgumentException;
 
 /**
@@ -68,7 +62,7 @@ use InvalidArgumentException;
  */
 class Sender
 {
-    private ?EsmtpTransport $transport = null;
+    private ?TransportInterface $transport = null;
     private bool $isGlobal = false;
     /** @var array<string, mixed> */
     private array $params = [];
@@ -90,6 +84,7 @@ class Sender
         private SendingAccountProvider $accountProvider,
         private FileStorageManager $fileStorageManager,
         private ConfigDataProvider $configDataProvider,
+        private TransportPreparator $transportPreparator,
     ) {
         $this->useGlobal();
     }
@@ -253,82 +248,9 @@ class Sender
     {
         $this->params = $params;
 
-        $config = $this->config;
+        $smtpParams = SmtpParams::fromArray($params);
 
-        $localHostName = $config->get('smtpLocalHostName', gethostname());
-
-        $security = strtolower($params['security'] ?? '');
-
-        // SSL is treated as implicit SSL/TLS. TLS is treated as STARTTLS.
-        // STARTTLS is the most common method.
-        $scheme = $security == 'ssl' ? 'smtps' : 'smtp';
-
-        if ($security === 'starttls' && !defined('OPENSSL_VERSION_NUMBER')) {
-            throw new RuntimeException("OpenSSL is not available.");
-        }
-
-        // @todo Use `auto_tls=false` if no security when Symfony v7.1 is installed.
-        // @todo If starttls, it should be enforced.
-
-        $transport = (new EsmtpTransportFactory())
-            ->create(
-                new Dsn(
-                    scheme: $scheme,
-                    host: $params['server'],
-                    port:  $params['port'],
-                )
-            );
-
-        if (!$transport instanceof EsmtpTransport) {
-            throw new RuntimeException();
-        }
-
-        $this->transport = $transport;
-
-        $this->transport->setLocalDomain($localHostName);
-
-        $authMechanism = null;
-
-        $connectionOptions = $params['connectionOptions'] ?? [];
-        $authString = $connectionOptions['authString'] ?? null;
-
-        if ($authString) {
-            $decodedAuthString = base64_decode($authString);
-
-            /** @noinspection RegExpRedundantEscape */
-            if (preg_match("/user=(.*?)\\\1auth=Bearer (.*?)\\\1\\\1/", $decodedAuthString, $matches) !== false) {
-                $username = $matches[1];
-                $token = $matches[2];
-
-                $this->transport->setUsername($username);
-                $this->transport->setPassword($token);
-            }
-
-            $authMechanism = 'xoauth';
-        } else if ($params['auth'] ?? false) {
-            $authMechanism = ($params['authMechanism'] ?? $params['smtpAuthMechanism']) ?: 'login';
-
-            $this->transport->setUsername($params['username'] ?? '');
-            $this->transport->setPassword($params['password'] ?? '');
-        }
-
-        if ($authMechanism === 'login') {
-            $this->transport->setAuthenticators([new LoginAuthenticator()]);
-        } else if ($authMechanism === 'crammd5') {
-            $this->transport->setAuthenticators([new CramMd5Authenticator()]);
-        } else if ($authMechanism === 'plain') {
-            $this->transport->setAuthenticators([new PlainAuthenticator()]);
-        } else if ($authMechanism === 'xoauth') {
-            $this->transport->setAuthenticators([new XOAuth2Authenticator()]);
-        }
-
-        if (array_key_exists('fromName', $params)) {
-            $this->params['fromName'] = $params['fromName'];
-        }
-
-        if (array_key_exists('fromAddress', $params)) {
-            $this->params['fromAddress'] = $params['fromAddress'];
-        }
+        $this->transport = $this->transportPreparator->prepare($smtpParams);
     }
 
     /**

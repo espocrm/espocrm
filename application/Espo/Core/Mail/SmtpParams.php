@@ -50,6 +50,12 @@ class SmtpParams
     private ?string $password = null;
     private ?string $security = null;
 
+    public const AUTH_MECHANISM_LOGIN = 'login';
+    public const AUTH_MECHANISM_CRAMMD5 = 'crammd5';
+    public const AUTH_MECHANISM_PLAIN = 'plain';
+    public const AUTH_MECHANISM_XOAUTH = 'xoauth';
+
+
     /** @var string[] */
     private array $paramList = [
         'server',
@@ -153,7 +159,7 @@ class SmtpParams
     /**
      * @return ?array<string, mixed>
      * @deprecated As of v9.1.0.
-     * @todo Remove in v10.0.
+     * @todo Remove in v10.0. Fix usage of 'connectionOptions'.
      */
     public function getConnectionOptions(): ?array
     {
