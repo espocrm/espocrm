@@ -116,7 +116,18 @@ export default class DynamicLogicConditionFieldTypeBaseView extends View {
         Select.init(this.$type.get(0));
 
         this.$type.on('change', () => {
+            const previousType = this.type;
             this.type = this.$type.val();
+
+            if (previousType === 'matches' && this.type !== 'matches') {
+                const fieldName = this.getValueFieldName();
+                const maxLength = this.getMetadata().get(['entityDefs', this.scope, 'fields', fieldName, 'maxLength']);
+
+                const currentValue = this.model.get(fieldName);
+                if (currentValue && currentValue.length > maxLength) {
+                    this.model.set(fieldName, currentValue.substring(0, maxLength));
+                }
+            }
 
             this.manageValue();
         });
@@ -172,12 +183,15 @@ export default class DynamicLogicConditionFieldTypeBaseView extends View {
             this[methodName]();
         }
         else if (valueType === 'varchar') {
+            const params = this.type === 'matches' ? { maxLength: 100 } : {};
+
             this.createView('value', 'views/fields/varchar', {
                 model: this.model,
                 name: this.getValueFieldName(),
                 selector: '.value-container',
                 mode: 'edit',
                 readOnlyDisabled: true,
+                params: params
             }, (view) => {
                 if (this.isRendered()) {
                     view.render();
