@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Mail;
 
+use Espo\Core\Mail\Sender\TransportPreparator;
 use RuntimeException;
 
 /**
@@ -47,6 +48,8 @@ class SmtpParams
     private ?string $username = null;
     private ?string $password = null;
     private ?string $security = null;
+    /** @var ?class-string<TransportPreparator> */
+    private ?string $transportPreparatorClassName = null;
 
     public const AUTH_MECHANISM_LOGIN = 'login';
     public const AUTH_MECHANISM_CRAMMD5 = 'crammd5';
@@ -245,5 +248,27 @@ class SmtpParams
         $obj->security = $security;
 
         return $obj;
+    }
+
+    /**
+     * @param ?class-string<TransportPreparator> $transportPreparatorClassName
+     * @since 9.1.0.
+     * @noinspection PhpUnused
+     */
+    public function withTransportPreparatorClassName(?string $transportPreparatorClassName): self
+    {
+        $obj = clone $this;
+        $obj->transportPreparatorClassName = $transportPreparatorClassName;
+
+        return $obj;
+    }
+
+    /**
+     * @return ?class-string<TransportPreparator>
+     * @since 9.1.0.
+     */
+    public function getTransportPreparatorClassName(): ?string
+    {
+        return $this->transportPreparatorClassName;
     }
 }
