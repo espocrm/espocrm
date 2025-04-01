@@ -330,7 +330,7 @@
             "valueType": "varchar"
         },
         "matches": {
-            "valueType": "varchar"
+            "valueType": "varchar-matches"
         }
     }
 }

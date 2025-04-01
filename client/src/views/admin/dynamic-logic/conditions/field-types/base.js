@@ -28,6 +28,7 @@
 
 import View from 'view';
 import Select from 'ui/select';
+import Model from 'model';
 
 export default class DynamicLogicConditionFieldTypeBaseView extends View {
 
@@ -60,6 +61,16 @@ export default class DynamicLogicConditionFieldTypeBaseView extends View {
      */
     scope
 
+    /**
+     * @type {string[]}
+     */
+    typeList
+
+    /**
+     * @type {Model}
+     */
+    baseModel
+
     events = {
         'click > div > div > [data-action="remove"]': function (e) {
             e.stopPropagation();
@@ -91,8 +102,9 @@ export default class DynamicLogicConditionFieldTypeBaseView extends View {
         this.itemData = this.options.itemData;
         this.additionalData = (this.itemData.data || {});
 
-        this.typeList = this.getMetadata()
-            .get(['clientDefs', 'DynamicLogic', 'fieldTypes', this.fieldType, 'typeList']);
+        this.typeList = this.getMetadata().get(`clientDefs.DynamicLogic.fieldTypes.${this.fieldType}.typeList`);
+
+        this.baseModel = new Model();
 
         this.wait(true);
 
@@ -106,7 +118,10 @@ export default class DynamicLogicConditionFieldTypeBaseView extends View {
         });
     }
 
-    createModel() {
+    /**
+     * @return {Promise<Model>}
+     */
+    async createModel() {
         return this.getModelFactory().create(this.scope);
     }
 
@@ -123,6 +138,14 @@ export default class DynamicLogicConditionFieldTypeBaseView extends View {
     }
 
     populateValues() {
+        if (this.getValueType() === 'varchar-matches') {
+            if (this.itemData.attribute) {
+                this.baseModel.set(this.itemData.attribute, this.itemData.value);
+            }
+
+            return;
+        }
+
         if (this.itemData.attribute) {
             this.model.set(this.itemData.attribute, this.itemData.value);
         }
@@ -130,23 +153,35 @@ export default class DynamicLogicConditionFieldTypeBaseView extends View {
         this.model.set(this.additionalData.values || {});
     }
 
+    /**
+     * @return {string}
+     */
     getValueViewName() {
-        const fieldType = this.getMetadata()
-            .get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
+        const fieldType = this.getMetadata().get(`entityDefs.${this.scope}.fields.${this.field}.type`) || 'base';
 
-        return this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) ||
+        return this.getMetadata().get(`entityDefs.${this.scope}.fields.${this.field}.view`) ||
             this.getFieldManager().getViewName(fieldType);
     }
 
+    /**
+     * @return {string}
+     */
     getValueFieldName() {
         return this.field;
     }
 
+    /**
+     * @return {string}
+     */
+    getValueType() {
+        return this.getMetadata()
+                .get(`clientDefs.DynamicLogic.fieldTypes.${this.fieldType}.conditionTypes.${this.type}.valueType`) ||
+            this.getMetadata()
+                .get(`clientDefs.DynamicLogic.conditionTypes.${this.type}.valueType`);
+    }
+
     manageValue() {
-        const valueType = this.getMetadata()
-            .get(['clientDefs', 'DynamicLogic', 'fieldTypes', this.fieldType, 'conditionTypes',
-                this.type, 'valueType']) ||
-            this.getMetadata() .get(['clientDefs', 'DynamicLogic', 'conditionTypes', this.type, 'valueType']);
+        const valueType = this.getValueType();
 
         if (valueType === 'field') {
             const viewName = this.getValueViewName();
@@ -163,34 +198,66 @@ export default class DynamicLogicConditionFieldTypeBaseView extends View {
                     view.render();
                 }
             });
+
+            return;
         }
-        else if (valueType === 'custom') {
+
+        if (valueType === 'custom') {
             this.clearView('value');
 
             const methodName = 'createValueView' + Espo.Utils.upperCaseFirst(this.type);
 
             this[methodName]();
+
+            return;
         }
-        else if (valueType === 'varchar') {
+
+        if (valueType === 'varchar') {
             this.createView('value', 'views/fields/varchar', {
                 model: this.model,
                 name: this.getValueFieldName(),
                 selector: '.value-container',
                 mode: 'edit',
                 readOnlyDisabled: true,
-            }, (view) => {
+            }, view => {
                 if (this.isRendered()) {
                     view.render();
                 }
             });
+
+            return;
         }
-        else {
-            this.clearView('value');
+
+        if (valueType === 'varchar-matches') {
+            this.createView('value', 'views/fields/varchar', {
+                model: this.baseModel,
+                name: this.getValueFieldName(),
+                selector: '.value-container',
+                mode: 'edit',
+                readOnlyDisabled: true,
+            }, view => {
+                if (this.isRendered()) {
+                    view.render();
+                }
+            });
+
+            return;
         }
+
+        this.clearView('value');
+    }
+
+    /**
+     * @return {import('views/fields/base')}
+     */
+    getValueView() {
+        return this.getView('value');
     }
 
     fetch() {
-        const valueView = this.getView('value');
+        const valueView = this.getValueView();
+
+        const model = this.getValueType() === 'varchar-matches' ? this.baseModel : this.model;
 
         const item = {
             type: this.type,
@@ -200,7 +267,7 @@ export default class DynamicLogicConditionFieldTypeBaseView extends View {
         if (valueView) {
             valueView.fetchToModel();
 
-            item.value = this.model.get(this.field);
+            item.value = model.get(this.field);
         }
 
         return item;
