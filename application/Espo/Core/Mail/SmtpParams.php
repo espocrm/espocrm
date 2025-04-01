@@ -69,6 +69,7 @@ class SmtpParams
         'username',
         'password',
         'security',
+        'transportPreparatorClassName',
     ];
 
     public function __construct(
