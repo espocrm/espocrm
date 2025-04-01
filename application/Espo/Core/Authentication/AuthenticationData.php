@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Authentication;
 
+use SensitiveParameter;
+
 /**
  * Immutable.
  */
@@ -87,7 +89,7 @@ class AuthenticationData
         return $obj;
     }
 
-    public function withPassword(?string $password): self
+    public function withPassword(#[SensitiveParameter] ?string $password): self
     {
         $obj = clone $this;
         $obj->password = $password;

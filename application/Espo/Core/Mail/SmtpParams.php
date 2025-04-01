@@ -31,6 +31,7 @@ namespace Espo\Core\Mail;
 
 use Espo\Core\Mail\Sender\TransportPreparator;
 use RuntimeException;
+use SensitiveParameter;
 
 /**
  * SMTP parameters.
@@ -234,7 +235,7 @@ class SmtpParams
         return $obj;
     }
 
-    public function withPassword(?string $password): self
+    public function withPassword(#[SensitiveParameter] ?string $password): self
     {
         $obj = clone $this;
         $obj->password = $password;

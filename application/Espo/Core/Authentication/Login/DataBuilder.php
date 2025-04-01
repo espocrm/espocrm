@@ -30,6 +30,7 @@
 namespace Espo\Core\Authentication\Login;
 
 use Espo\Core\Authentication\AuthToken\AuthToken;
+use SensitiveParameter;
 
 class DataBuilder
 {
@@ -44,7 +45,7 @@ class DataBuilder
         return $this;
     }
 
-    public function setPassword(?string $password): self
+    public function setPassword(#[SensitiveParameter] ?string $password): self
     {
         $this->password = $password;
 

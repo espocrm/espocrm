@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Mail\Account\Storage;
 
+use SensitiveParameter;
+
 /**
  * Immutable.
  */
@@ -107,7 +109,7 @@ class Params
         return $this->emailAddress;
     }
 
-    public function withPassword(?string $password): self
+    public function withPassword(#[SensitiveParameter] ?string $password): self
     {
         $obj = clone $this;
         $obj->password = $password;

@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Mail\Account\Storage;
 
+use SensitiveParameter;
+
 class ParamsBuilder
 {
     private ?string $host = null;
@@ -78,7 +80,7 @@ class ParamsBuilder
         return $this;
     }
 
-    public function setPassword(?string $password): self
+    public function setPassword(#[SensitiveParameter] ?string $password): self
     {
         $this->password = $password;
 
