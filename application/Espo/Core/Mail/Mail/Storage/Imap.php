@@ -62,7 +62,7 @@ class Imap extends \Laminas\Mail\Storage\Imap
     {
         assert($this->protocol !== null);
 
-        /** @var array{'RFC822.HEADER': string, FLAGS: string[]} $data */
+        /** @var array{'RFC822.HEADER': string, 'FLAGS': string[]} $data */
         $data = $this->protocol->fetch(['FLAGS', 'RFC822.HEADER'], $id);
 
         $header = $data['RFC822.HEADER'];
