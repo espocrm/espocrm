@@ -1,9 +1,10 @@
 {
-    "entity":true,
-    "layouts":false,
-    "tab":false,
+    "entity": true,
+    "layouts": false,
+    "tab": false,
     "acl": "boolean",
     "aclPortal": false,
     "aclFieldLevelDisabled": true,
-    "customizable":false
+    "customizable": false,
+    "languageIsGlobal": true
 }
