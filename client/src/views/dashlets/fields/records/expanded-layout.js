@@ -31,33 +31,22 @@ import MultiSelect from 'ui/multi-select';
 
 class ExpandedLayoutDashletFieldView extends BaseFieldView {
 
-    listTemplate = 'dashlets/fields/records/expanded-layout/edit'
-    detailTemplate = 'dashlets/fields/records/expanded-layout/edit'
-    editTemplate ='dashlets/fields/records/expanded-layout/edit'
+    // language=Handlebars
+    editTemplateContent = `
+        <div class="layout-container"></div>
+    `
 
     delimiter = ':,:'
 
-    getRowHtml(row, i) {
-        row = row || [];
-
-        const list = [];
-
-        row.forEach(item => {
-            list.push(item.name);
+    setup() {
+        this.addHandler('change', 'div[data-role="layoutRow"] input', () => {
+            this.trigger('change');
+            this.reRender();
         });
-
-        return $('<div>')
-            .append(
-                $('<input>')
-                    .attr('type', 'text')
-                    .addClass('row-' + i.toString())
-                    .attr('value', list.join(this.delimiter))
-            )
-            .get(0).outerHTML;
     }
 
-    afterRender() {
-        this.$container = this.$el.find('>.layout-container');
+    afterRenderEdit() {
+        const containerElement = this.element.querySelector(`:scope > .layout-container`);
 
         let rowList = (this.model.get(this.name) || {}).rows || [];
 
@@ -68,12 +57,11 @@ class ExpandedLayoutDashletFieldView extends BaseFieldView {
         const fieldDataList = this.getFieldDataList();
 
         rowList.forEach((row, i) => {
-            const rowHtml = this.getRowHtml(row, i);
-            const $row = $(rowHtml);
+            const rowElement = this.createRowElement(row, i);
 
-            this.$container.append($row);
+            containerElement.append(rowElement);
 
-            const $input = $row.find('input');
+            const inputElement = rowElement.querySelector('input');
 
             /** @type {module:ui/multi-select~Options} */
             const multiSelectOptions = {
@@ -83,15 +71,42 @@ class ExpandedLayoutDashletFieldView extends BaseFieldView {
                 draggable: true,
             };
 
-            MultiSelect.init($input, multiSelectOptions);
-
-            $input.on('change', () => {
-                this.trigger('change');
-                this.reRender();
-            });
+            MultiSelect.init(inputElement, multiSelectOptions);
         });
     }
 
+    /**
+     * @private
+     * @param {Record[]} row
+     * @param {number} i
+     * @return {HTMLDivElement}
+     */
+    createRowElement(row, i) {
+        row = row || [];
+
+        const list = [];
+
+        row.forEach(item => {
+            list.push(item.name);
+        });
+
+        const div = document.createElement('div');
+        div.dataset.role = 'layoutRow';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.classList.add('row-' + i.toString());
+        input.value = list.join(this.delimiter);
+
+        div.append(input);
+
+        return div;
+    }
+
+    /**
+     * @private
+     * @return {{value: string, text: string}[]}
+     */
     getFieldDataList() {
         const scope = this.model.get('entityType') ||
             this.getMetadata().get(['dashlets', this.dataObject.dashletName, 'entityType']);
