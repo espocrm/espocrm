@@ -87,6 +87,10 @@
         "smtpSecurity": {
             "SSL": "SSL/TLS",
             "TLS": "STARTTLS"
+        },
+        "security": {
+            "SSL": "SSL/TLS",
+            "TLS": "STARTTLS"
         }
     },
     "labels": {

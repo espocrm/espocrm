@@ -266,7 +266,7 @@ export default class extends DetailRecordView {
                 return;
             }
 
-            if (value) {
+            if (value === 'SSL') {
                 this.model.set('port', 993);
             } else {
                 this.model.set('port', 143);
