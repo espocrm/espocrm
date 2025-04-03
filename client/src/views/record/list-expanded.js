@@ -191,14 +191,14 @@ class ListExpandedRecordView extends ListRecordView {
     prepareInternalLayout(internalLayout, model) {
         const rows = internalLayout.rows || [];
 
-        rows.forEach((row) => {
-            row.forEach((col) => {
-                col.el = this.getCellSelector(model, col);
+        rows.forEach(row => {
+            row.forEach(col => {
+                col.fullSelector = this.getCellSelector(model, col);
             });
         });
 
         if (internalLayout.right) {
-            internalLayout.right.el = this.getCellSelector(model, internalLayout.right);
+            internalLayout.right.fullSelector = this.getCellSelector(model, internalLayout.right);
         }
     }
 
