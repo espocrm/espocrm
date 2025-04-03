@@ -41,5 +41,9 @@
     },
     "tooltips": {
         "skipOwn": "Actions made by your user account won't be displayed."
+    },
+    "otherFields": {
+        "soft": "Soft Color",
+        "small": "Small Font"
     }
 }

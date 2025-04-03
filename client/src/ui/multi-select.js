@@ -33,7 +33,7 @@ import Selectize from 'lib!selectize';
 /**
  * @typedef module:ui/multi-select~Options
  * @type {Object}
- * @property {{value: string, text: string, style?: string}[]} items
+ * @property {{value: string, text: string, style?: string, small?: boolean}[]} items
  * @property {string} [delimiter=':,:']
  * @property {boolean} [restoreOnBackspace=false]
  * @property {boolean} [removeButton=true]
@@ -165,11 +165,20 @@ const MultiSelect = {
             ...o,
         }), {});
 
+        const classMap = {};
+
+        (options.items || []).forEach(it => {
+            if (it.small) {
+                classMap[it.value] = 'small';
+            }
+        });
+
         selectizeOptions.render.item = (/** {text: string, value: string} */data, escape) => {
             const text = escape(data.text);
             const style = escape(styleMap[data.value] || '');
+            const classString = escape(classMap[data.value] || '');
 
-            return `<div class="item ${style}"><span>${text}</span> ` +
+            return `<div class="item ${style}"><span class="${classString}">${text}</span> ` +
                 `<a href="javascript:" class="remove">&times;</a></div>`;
         };
 

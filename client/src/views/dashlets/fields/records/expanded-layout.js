@@ -28,44 +28,144 @@
 
 import BaseFieldView from 'views/fields/base';
 import MultiSelect from 'ui/multi-select';
+import ExpandedLayoutEditItemModalFieldView from 'views/dashlets/fields/records/expanded-layout/modals/edit-item';
 
 class ExpandedLayoutDashletFieldView extends BaseFieldView {
 
     // language=Handlebars
     editTemplateContent = `
-        <div class="layout-container"></div>
+        <div class="layout-container">
+            {{#each rowDataList}}
+                <div data-role="layoutRow">
+                    <div
+                        style="display: inline-block; width: calc(100% - var(--40px));"
+                    >
+                        <input
+                            type="text"
+                            value="{{value}}"
+                            data-index="{{index}}"
+                        >
+                    </div>
+                    {{#if hasEdit}}
+                        <div class="btn-group pull-right">
+                            <button
+                                class="btn btn-text dropdown-toggle"
+                                data-toggle="dropdown"
+                            ><span class="caret"></span></button>
+                            <ul class="dropdown-menu pull-right">
+                                <li class="dropdown-header">{{translate 'Edit'}}</li>
+                                {{#each itemList}}
+                                    <li>
+                                        <a
+                                            role="button"
+                                            tabindex="0"
+                                            data-action="editItem"
+                                            data-name="{{name}}"
+                                        >{{label}}</a>
+                                    </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    {{/if}}
+                </div>
+            {{/each}}
+        </div>
     `
 
     delimiter = ':,:'
 
+    /**
+     * @private
+     * @type {string}
+     */
+    targetEntityType
+
+    data() {
+        const rowList = this.getRowList();
+
+        const dataList = [...rowList, []].map((it, i) => ({
+            index: i,
+            value: it.map(subIt => subIt.name).join(this.delimiter),
+            hasEdit: i < rowList.length,
+            itemList: it.map(subIt => ({
+                name: subIt.name,
+                label: this.translate(subIt.name, 'fields', this.targetEntityType),
+            })),
+        }));
+
+        return {
+            rowDataList: dataList,
+        }
+    }
+
     setup() {
         this.addHandler('change', 'div[data-role="layoutRow"] input', () => {
-            this.trigger('change');
-            this.reRender();
+            setTimeout(() => {
+                this.trigger('change');
+                this.reRender();
+            }, 1);
         });
+
+        this.addActionHandler('editItem', (event, target) => this.editItem(target.dataset.name));
+
+        this.targetEntityType = this.model.get('entityType') ||
+            this.getMetadata().get(['dashlets', this.dataObject.dashletName, 'entityType']);
+    }
+
+    /**
+     * @private
+     * @return {Array.<{name: string, link?: boolean, soft?: boolean, small?: boolean}>[]}
+     */
+    getRowList() {
+        return Espo.Utils.cloneDeep((this.model.get(this.name) || {}).rows || []);
     }
 
     afterRenderEdit() {
-        const containerElement = this.element.querySelector(`:scope > .layout-container`);
-
-        let rowList = (this.model.get(this.name) || {}).rows || [];
-
-        rowList = Espo.Utils.cloneDeep(rowList);
+        const rowList = Espo.Utils.cloneDeep(this.getRowList());
 
         rowList.push([]);
 
         const fieldDataList = this.getFieldDataList();
 
         rowList.forEach((row, i) => {
-            const rowElement = this.createRowElement(row, i);
+            const usedOtherList = [];
+            const usedList = [];
 
-            containerElement.append(rowElement);
+            rowList.forEach((it, j) => {
+                usedList.push(...it.map(it => it.name));
 
-            const inputElement = rowElement.querySelector('input');
+                if (j === i) {
+                    return;
+                }
+
+                usedOtherList.push(...it.map(it => it.name));
+            });
+
+            const preparedList = fieldDataList
+                .filter(it => !usedOtherList.includes(it.value))
+                .map(it => {
+                    if (!usedList.includes(it.value)) {
+                        return it;
+                    }
+
+                    const itemData = this.getItemData(it.value) || {};
+
+                    if (itemData.soft) {
+                        it.style = 'soft';
+                    }
+
+                    if (itemData.small) {
+                        it.small = true;
+                    }
+
+                    return it;
+                });
+
+            const inputElement = this.element.querySelector(`input[data-index="${i.toString()}"]`);
 
             /** @type {module:ui/multi-select~Options} */
             const multiSelectOptions = {
-                items: fieldDataList,
+                items: preparedList,
                 delimiter: this.delimiter,
                 matchAnyWord: this.matchAnyWord,
                 draggable: true,
@@ -73,34 +173,6 @@ class ExpandedLayoutDashletFieldView extends BaseFieldView {
 
             MultiSelect.init(inputElement, multiSelectOptions);
         });
-    }
-
-    /**
-     * @private
-     * @param {Record[]} row
-     * @param {number} i
-     * @return {HTMLDivElement}
-     */
-    createRowElement(row, i) {
-        row = row || [];
-
-        const list = [];
-
-        row.forEach(item => {
-            list.push(item.name);
-        });
-
-        const div = document.createElement('div');
-        div.dataset.role = 'layoutRow';
-
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.classList.add('row-' + i.toString());
-        input.value = list.join(this.delimiter);
-
-        div.append(input);
-
-        return div;
     }
 
     /**
@@ -166,14 +238,70 @@ class ExpandedLayoutDashletFieldView extends BaseFieldView {
         return dataList;
     }
 
-    fetch() {
-        const value = {
-            rows: [],
-        };
+    /**
+     * @private
+     * @param {string} name
+     */
+    async editItem(name) {
+        const inputData = this.getItemData(name);
 
-        this.$el.find('input').each((i, el) => {
+        const view = new ExpandedLayoutEditItemModalFieldView({
+            label: this.translate(name, 'fields', this.targetEntityType),
+            data: inputData,
+            onApply: data => this.applyItem(name, data),
+        });
+
+        await this.assignView('modal', view);
+        await view.render();
+    }
+
+    /**
+     * @private
+     * @param {string} name
+     * @return {{
+     *     soft: boolean,
+     *     small: boolean,
+     * }}
+     */
+    getItemData(name) {
+        /**
+         * @type {{
+         *     soft: boolean,
+         *     small: boolean,
+         * }}
+         */
+        let inputData;
+
+        for (const row of this.getRowList()) {
+            for (const item of row) {
+                if (item.name === name) {
+                    inputData = {
+                        soft: item.soft || false,
+                        small: item.small || false,
+                    };
+                }
+            }
+        }
+
+        return inputData;
+    }
+
+    fetch() {
+        const value = {rows: []};
+
+        /** @type {Record.<string, Record>} */
+        const params = {};
+
+        for (const row of this.getRowList()) {
+            for (const item of row) {
+                params[item.name] = item;
+            }
+        }
+
+        this.element.querySelectorAll('input').forEach(/** HTMLInputElement*/inputElement => {
             const row = [];
-            let list = ($(el).val() || '').split(this.delimiter);
+
+            let list = inputElement.value.split(this.delimiter);
 
             if (list.length === 1 && list[0] === '') {
                 list = [];
@@ -183,24 +311,47 @@ class ExpandedLayoutDashletFieldView extends BaseFieldView {
                 return;
             }
 
-            list.forEach(item => {
-                const o = {name: item};
+            list.forEach(name => {
+                const item = {name: name};
 
-                if (item === 'name') {
-                    o.link = true;
+                if (name === 'name') {
+                    item.link = true;
                 }
 
-                row.push(o);
+                if (params[name]) {
+                    item.soft = params[name].soft || false;
+                    item.small = params[name].small || false;
+                }
+
+                row.push(item);
             });
 
             value.rows.push(row);
         });
 
-        const data = {};
+        return {[this.name]: value};
+    }
 
-        data[this.name] = value;
+    /**
+     * @private
+     * @param {string} name
+     * @param {{soft: boolean, small: boolean}} data
+     */
+    applyItem(name, data) {
+        const rowList = this.getRowList();
 
-        return data;
+        for (const row of rowList) {
+            for (const item of row) {
+                if (item.name === name) {
+                    item.soft = data.soft;
+                    item.small = data.small;
+                }
+            }
+        }
+
+        this.model.set(this.name, {rows: rowList}, {ui: true});
+
+        this.reRender();
     }
 }
 
