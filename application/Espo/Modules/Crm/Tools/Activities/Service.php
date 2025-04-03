@@ -131,7 +131,7 @@ class Service
                     'parentId',
                     'status',
                     Field::CREATED_AT,
-                    [false, 'hasAttachment'],
+                    ['false', 'hasAttachment'],
                 ])
                 ->leftJoin(
                     'MeetingUser',
