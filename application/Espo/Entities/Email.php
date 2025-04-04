@@ -70,6 +70,8 @@ class Email extends Entity
     public const SAVE_OPTION_IS_BEING_IMPORTED = 'isBeingImported';
     public const SAVE_OPTION_IS_JUST_SENT = 'isJustSent';
 
+    private const ATTR_BODY_PLAIN = 'bodyPlain';
+
     public function get(string $attribute): mixed
     {
         if ($attribute === 'subject') {
@@ -92,7 +94,7 @@ class Email extends Entity
             return $this->getReplyToAddressInternal();
         }
 
-        if ($attribute === 'bodyPlain') {
+        if ($attribute === self::ATTR_BODY_PLAIN) {
             return $this->getBodyPlain();
         }
 
@@ -172,6 +174,7 @@ class Email extends Entity
 
     /**
      * @deprecated As of v7.4. As the system user ID may be not constant in the future.
+     * @todo Remove in v10.0.
      */
     public function isManuallyArchived(): bool
     {
@@ -204,7 +207,7 @@ class Email extends Entity
 
     public function hasBodyPlain(): bool
     {
-        return $this->hasInContainer('bodyPlain') && $this->getFromContainer('bodyPlain');
+        return $this->hasInContainer(self::ATTR_BODY_PLAIN) && $this->getFromContainer(self::ATTR_BODY_PLAIN);
     }
 
     /**
@@ -223,20 +226,13 @@ class Email extends Entity
 
     public function getBodyPlain(): ?string
     {
-        if ($this->getFromContainer('bodyPlain')) {
-            return $this->getFromContainer('bodyPlain');
+        if ($this->getFromContainer(self::ATTR_BODY_PLAIN)) {
+            return $this->getFromContainer(self::ATTR_BODY_PLAIN);
         }
 
-        /** @var string $body */
-        $body = $this->get('body') ?? '';
+        $body = $this->getBody() ?: '';
 
-        $body = EmailUtil::stripHtml($body);
-
-        if (!$body) {
-            return null;
-        }
-
-        return $body;
+        return EmailUtil::stripHtml($body) ?: null;
     }
 
     public function getBodyPlainForSending(): string
@@ -246,9 +242,9 @@ class Email extends Entity
 
     public function getBodyForSending(): string
     {
-        $body = $this->get('body') ?? '';
+        $body = $this->getBody() ?: '';
 
-        if (!empty($body)) {
+        if ($body && $this->isHtml()) {
             $attachmentList = $this->getInlineAttachmentList();
 
             foreach ($attachmentList as $attachment) {
@@ -273,9 +269,9 @@ class Email extends Entity
     {
         $idList = [];
 
-        $body = $this->get('body');
+        $body = $this->getBody();
 
-        if (empty($body)) {
+        if (!$body) {
             return [];
         }
 
@@ -302,8 +298,7 @@ class Email extends Entity
                 throw new RuntimeException();
             }
 
-            /** @var Attachment|null $attachment */
-            $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $id);
+            $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
 
             if ($attachment) {
                 $attachmentList[] = $attachment;
@@ -372,7 +367,7 @@ class Email extends Entity
 
     public function setBodyPlain(?string $bodyPlain): self
     {
-        $this->set('bodyPlain', $bodyPlain);
+        $this->set(self::ATTR_BODY_PLAIN, $bodyPlain);
 
         return $this;
     }

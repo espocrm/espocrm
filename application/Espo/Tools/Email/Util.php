@@ -29,6 +29,8 @@
 
 namespace Espo\Tools\Email;
 
+use League\HTMLToMarkdown\HtmlConverter;
+
 class Util
 {
     static public function parseFromName(string $string): string
@@ -71,18 +73,19 @@ class Util
      */
     static public function stripHtml(string $string): string
     {
-        $breaks = [
-            "<br />",
-            "<br>",
-            "<br/>",
-            "<br />",
-            "&lt;br /&gt;",
-            "&lt;br/&gt;",
-            "&lt;br&gt;",
-        ];
+        if (!$string) {
+            return '';
+        }
 
-        $string = str_ireplace($breaks, "\r\n", $string);
-        $string = strip_tags($string);
+        $converter = new HtmlConverter();
+        $converter->setOptions([
+            'remove_nodes' => 'img',
+            'strip_tags' => true,
+        ]);
+
+        $string = $converter->convert($string) ?: '';
+
+        $string = (string) preg_replace('~\R~u', "\r\n", $string);
 
         $reList = [
             '&(quot|#34);',
@@ -111,9 +114,10 @@ class Util
         ];
 
         foreach ($reList as $i => $re) {
-            /** @var string $string */
-            $string = mb_ereg_replace($re, $replaceList[$i], $string, 'i');
+            $string = (string) mb_ereg_replace($re, $replaceList[$i], $string, 'i');
         }
+
+
 
         return $string;
     }

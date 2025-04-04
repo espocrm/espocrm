@@ -343,11 +343,11 @@
         "bodyPlain": {
             "type": "text",
             "seeMoreDisabled": true,
-            "clientReadOnly": true,
             "customizationDisabled": true,
             "layoutDefaultSidePanelDisabled": true,
             "layoutMassUpdateDisabled": true,
-            "massUpdateDisabled": true
+            "massUpdateDisabled": true,
+            "readOnly": true
         },
         "body": {
             "type": "wysiwyg",

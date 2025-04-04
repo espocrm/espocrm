@@ -33,13 +33,14 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Record\Hook\SaveHook;
 use Espo\Entities\Email;
 use Espo\ORM\Entity;
+use Espo\Tools\Email\Util;
+use League\HTMLToMarkdown\HtmlConverter;
 
 /**
  * @implements SaveHook<Email>
  */
 class BeforeSave implements SaveHook
 {
-
     public function process(Entity $entity): void
     {
         if (
@@ -49,5 +50,22 @@ class BeforeSave implements SaveHook
         ) {
             throw new BadRequest("Cannot set send-at if status is not Draft.");
         }
+
+        $this->processBodyPlain($entity);
+    }
+
+    private function processBodyPlain(Email $entity): void
+    {
+        if (!$entity->isHtml() || !$entity->isAttributeChanged('body')) {
+            return;
+        }
+
+        $body = $entity->getBody();
+
+        if ($body) {
+            $body = Util::stripHtml($body) ?: null;
+        }
+
+        $entity->setBodyPlain($body);
     }
 }

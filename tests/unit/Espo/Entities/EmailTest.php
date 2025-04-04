@@ -29,8 +29,10 @@
 
 namespace tests\unit\Espo\Entities;
 
+use Espo\Entities\Attachment;
 use Espo\Entities\Email;
-use Espo\Tools\Email\Util;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Repository\RDBRepository;
 
 class EmailTest extends \PHPUnit\Framework\TestCase
 {
@@ -38,6 +40,16 @@ class EmailTest extends \PHPUnit\Framework\TestCase
      * @var Email
      */
     private $email;
+
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @var RDBRepository
+     */
+    private $attachmentRepository;
 
     // TODO defs test helper
     protected $defs = [
@@ -425,62 +437,75 @@ class EmailTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->entityManager = $this->getMockBuilder('\Espo\Core\ORM\EntityManager')->disableOriginalConstructor()->getMock();
+        $this->entityManager = $this->createMock(EntityManager::class);
+
+        $this->attachmentRepository = $this->createMock(RDBRepository::class);
+
+        $this->entityManager
+            ->expects($this->any())
+            ->method('getRDBRepositoryByClass')
+            ->willReturnMap([
+                [Attachment::class, $this->attachmentRepository],
+            ]);
 
         $this->repository =
           $this->getMockBuilder('Espo\Core\ORM\Repositories\Database')->disableOriginalConstructor()->getMock();
 
-        $this->entityManager->expects($this->any())
-                            ->method('getRepository')
-                            ->will($this->returnValue($this->repository));
+        $this->entityManager
+            ->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValue($this->repository));
 
-        $this->email = new Email('Email', $this->defs, $this->entityManager);
+        $this->email = new Email(
+            entityType: 'Email',
+            defs: $this->defs,
+            entityManager: $this->entityManager,
+        );
     }
 
-    protected function tearDown() : void
-    {
-        $this->entityManager = null;
-        $this->repository = null;
-        $this->email = null;
-    }
-
-
-    function testGetInlineAttachments()
+    public function testGetInlineAttachments(): void
     {
         $this->email->set('body', 'test <img src="?entryPoint=attachment&amp;id=Id01">');
 
-        $this->entityManager->expects($this->exactly(1))
-                            ->method('getEntityById')
-                            ->with('Attachment', 'Id01');
+        $this->attachmentRepository
+            ->expects($this->once())
+            ->method('getById')
+            ->with('Id01');
 
         $this->email->getInlineAttachmentList();
     }
 
-    function testGetBodyForSending()
+    public function testGetBodyForSending(): void
     {
-        $attachment =
-            $this->getMockBuilder('Espo\Entities\Attachment')->disableOriginalConstructor()->getMock();
+        $attachment = $this->createMock(Attachment::class);
 
         $attachment
+            ->expects($this->any())
             ->method('getId')
             ->willReturn('Id01');
 
-        $this->email->set('body', 'test <img src="?entryPoint=attachment&amp;id=Id01">');
+        $this->attachmentRepository
+            ->expects($this->once())
+            ->method('getById')
+            ->with('Id01')
+            ->willReturn($attachment);
 
-        $this->entityManager->expects($this->any())
-                            ->method('getEntityById')
-                            ->with('Attachment', 'Id01')
-                            ->will($this->returnValue($attachment));
+        $body = 'test <img src="?entryPoint=attachment&amp;id=Id01">';
+
+        $this->email->setBody($body);
+        $this->email->setIsHtml();
 
         $body = $this->email->getBodyForSending();
+
         $this->assertEquals('test <img src="cid:Id01@espo">', $body);
     }
 
     public function testBodyPlain(): void
     {
-        $this->email->set('body', '<br />&nbsp;&amp;');
+        $this->email->setBody('<br />&nbsp;&amp;');
         $bodyPlain = $this->email->getBodyPlain();
-        $this->assertEquals("\r\n &", $bodyPlain);
+
+        $this->assertEquals("  \r\n &", $bodyPlain);
     }
 
     public function testBodyPlainWithoutQuotePart(): void

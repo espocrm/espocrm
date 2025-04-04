@@ -860,18 +860,6 @@ class WysiwygFieldView extends TextFieldView {
             data[this.name] = null;
         }
 
-        if (this.hasBodyPlainField && this.model.has('isHtml')) {
-            const plainAttribute = this.name + 'Plain';
-
-            if (data[this.name] === null) {
-                data[plainAttribute] = null;
-            } else {
-                data[plainAttribute] = this.isHtml() ?
-                    this.htmlToPlain(data[this.name]) :
-                    data[this.name];
-            }
-        }
-
         return data;
     }
 
