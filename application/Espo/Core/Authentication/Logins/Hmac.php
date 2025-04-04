@@ -50,7 +50,7 @@ class Hmac implements Login
     {
         $authString = base64_decode($request->getHeader('X-Hmac-Authorization') ?? '');
 
-        list($apiKey, $hash) = explode(':', $authString, 2);
+        [$apiKey, $hash] = explode(':', $authString, 2);
 
         if (!$apiKey) {
             return Result::fail(FailReason::WRONG_CREDENTIALS);
