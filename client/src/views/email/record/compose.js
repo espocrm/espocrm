@@ -226,6 +226,10 @@ class EmailComposeRecordView extends EditRecordView {
         EmailDetailRecordView.prototype.send.call(this);
     }
 
+    /**
+     * @param {module:views/record/base~saveOptions} [options] Options.
+     * @return {Promise}
+     */
     saveDraft(options) {
         const model = this.model;
 

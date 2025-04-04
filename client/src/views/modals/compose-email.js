@@ -91,6 +91,7 @@ class ComposeEmailModalView extends EditModalView {
             name: 'saveDraft',
             text: this.translate('Save Draft', 'labels', 'Email'),
             title: 'Ctrl+S',
+            onClick: () => this.actionSaveDraft(),
         });
 
         this.buttonList.unshift({
@@ -98,6 +99,7 @@ class ComposeEmailModalView extends EditModalView {
             text: this.translate('Send', 'labels', 'Email'),
             style: 'primary',
             title: 'Ctrl+Enter',
+            onClick: () => this.actionSend(),
         });
 
         this.dropdownItemList.push({
@@ -162,7 +164,6 @@ class ComposeEmailModalView extends EditModalView {
     actionSend() {
         const dialog = this.dialog;
 
-
         const editView = /** @type {module:views/email/record/compose} */this.getRecordView();
 
         const model = editView.model;
@@ -222,6 +223,10 @@ class ComposeEmailModalView extends EditModalView {
         editView.send();
     }
 
+    /**
+     * @param {module:views/record/base~saveOptions} [options] Options.
+     * @return {Promise}
+     */
     actionSaveDraft(options) {
         const editView = /** @type {module:views/email/record/compose} */this.getRecordView();
 
