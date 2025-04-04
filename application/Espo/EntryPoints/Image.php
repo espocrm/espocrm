@@ -90,7 +90,7 @@ class Image implements EntryPoint
         string $id,
         ?string $size,
         bool $disableAccessCheck = false,
-        ?string $etag = null,
+        bool $noCache = false,
     ): void {
 
         $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
@@ -155,10 +155,7 @@ class Image implements EntryPoint
             ->setHeader('Content-Length', (string) $fileSize)
             ->setHeader('Content-Security-Policy', "default-src 'self'");
 
-        if ($etag) {
-            $response->setHeader('Cache-Control', 'max-age=600, stale-while-revalidate=864000');
-            $response->setHeader('Etag', $etag);
-        } else {
+        if (!$noCache) {
             $response->setHeader('Cache-Control', 'private, max-age=864000, immutable');
         }
     }

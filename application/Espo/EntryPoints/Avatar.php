@@ -76,6 +76,9 @@ class Avatar extends Image
      */
     private string $fontFile = 'vendor/lasserafn/php-initial-avatar-generator/src/fonts/OpenSans-Semibold.ttf';
 
+    private int $maxAge = 600;
+    private int $staleWhileRevalidate = 864000;
+
     private function getColor(User $user): string
     {
         if ($user->getUserName() === SystemUser::NAME) {
@@ -147,8 +150,11 @@ class Avatar extends Image
                 id: $user->getAvatarId(),
                 size: $size,
                 disableAccessCheck: true,
-                etag: $user->getAvatarId(),
+                noCache: true,
             );
+
+            $response->setHeader('Cache-Control', $this->composeCacheControlHeader());
+            $response->setHeader('Etag', $user->getAvatarId());
 
             return;
         }
@@ -192,11 +198,16 @@ class Avatar extends Image
             ->generate();
 
         $response
-            ->setHeader('Cache-Control', 'max-age=600, stale-while-revalidate=864000')
+            ->setHeader('Cache-Control', $this->composeCacheControlHeader())
             ->setHeader('Content-Type', 'image/png')
             ->setHeader('Etag', $etag);
 
         $response->writeBody($image->stream('png', 100));
+    }
+
+    private function composeCacheControlHeader(): string
+    {
+        return "max-age=$this->maxAge, stale-while-revalidate=$this->staleWhileRevalidate";
     }
 
     /**
@@ -242,7 +253,7 @@ class Avatar extends Image
 
         $response
             ->setHeader('Content-Type', 'image/png')
-            ->setHeader('Cache-Control', 'max-age=600, stale-while-revalidate=864000')
+            ->setHeader('Cache-Control', $this->composeCacheControlHeader())
             ->setHeader('Etag', $etag)
             ->writeBody($contents);
     }
