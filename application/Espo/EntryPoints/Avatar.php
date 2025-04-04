@@ -138,7 +138,17 @@ class Avatar extends Image
         }
 
         if ($user->getAvatarId()) {
-            $this->show($response, $user->getAvatarId(), $size, true);
+            if ($this->processEtagMatch($request, $response, $user->getAvatarId())) {
+                return;
+            }
+
+            $this->show(
+                response: $response,
+                id: $user->getAvatarId(),
+                size: $size,
+                disableAccessCheck: true,
+                etag: $user->getAvatarId(),
+            );
 
             return;
         }
@@ -159,6 +169,12 @@ class Avatar extends Image
 
         $name = $this->getName($user, $userId);
 
+        $etag = md5($color . $name);
+
+        if ($this->processEtagMatch($request, $response, $etag)) {
+            return;
+        }
+
         $avatar = (new InitialAvatar())->name($name);
 
         if ($user->getName() && !self::isAllowedLanguage($avatar)) {
@@ -176,8 +192,9 @@ class Avatar extends Image
             ->generate();
 
         $response
-            ->setHeader('Cache-Control', 'max-age=360000, must-revalidate')
-            ->setHeader('Content-Type', 'image/png');
+            ->setHeader('Cache-Control', 'max-age=600, stale-while-revalidate=864000')
+            ->setHeader('Content-Type', 'image/png')
+            ->setHeader('Etag', $etag);
 
         $response->writeBody($image->stream('png', 100));
     }
@@ -298,5 +315,22 @@ class Avatar extends Image
         }
 
         return $name;
+    }
+
+    private function processEtagMatch(Request $request, Response $response, string $etag): bool
+    {
+        $matchEtag = $request->getHeader('If-None-Match');
+
+        if (!$matchEtag) {
+            return false;
+        }
+
+        if ($matchEtag === $etag) {
+            $response->setStatus(304);
+
+            return true;
+        }
+
+        return false;
     }
 }

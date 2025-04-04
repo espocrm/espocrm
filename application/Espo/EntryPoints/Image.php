@@ -85,10 +85,15 @@ class Image implements EntryPoint
      * @throws NotFound
      * @throws ForbiddenSilent
      */
-    protected function show(Response $response, string $id, ?string $size, bool $disableAccessCheck = false): void
-    {
-        /** @var ?Attachment $attachment */
-        $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $id);
+    protected function show(
+        Response $response,
+        string $id,
+        ?string $size,
+        bool $disableAccessCheck = false,
+        ?string $etag = null,
+    ): void {
+
+        $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
 
         if (!$attachment) {
             throw new NotFoundSilent("Attachment not found.");
@@ -147,9 +152,15 @@ class Image implements EntryPoint
 
         $response
             ->setHeader('Content-Disposition', 'inline;filename="' . $fileName . '"')
-            ->setHeader('Cache-Control', 'private, max-age=864000, immutable')
             ->setHeader('Content-Length', (string) $fileSize)
             ->setHeader('Content-Security-Policy', "default-src 'self'");
+
+        if ($etag) {
+            $response->setHeader('Cache-Control', 'max-age=600, stale-while-revalidate=864000');
+            $response->setHeader('Etag', $etag);
+        } else {
+            $response->setHeader('Cache-Control', 'private, max-age=864000, immutable');
+        }
     }
 
     /**
