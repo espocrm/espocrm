@@ -132,7 +132,7 @@ class Avatar extends Image
         $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getById( $userId);
 
         if (!$user) {
-            $this->renderBlank($response);
+            $this->renderBlank($request, $response);
 
             return;
         }
@@ -156,7 +156,7 @@ class Avatar extends Image
         $sizes = $this->getSizes()[$size];
 
         if (empty($sizes)) {
-            $this->renderBlank($response);
+            $this->renderBlank($request, $response);
 
             return;
         }
@@ -202,8 +202,14 @@ class Avatar extends Image
     /**
      * @throws Error
      */
-    private function renderBlank(Response $response): void
+    private function renderBlank(Request $request, Response $response): void
     {
+        $etag = 'blank';
+
+        if ($this->processEtagMatch($request, $response, $etag)) {
+            return;
+        }
+
         ob_start();
 
         $img  = imagecreatetruecolor(14, 14);
@@ -236,6 +242,8 @@ class Avatar extends Image
 
         $response
             ->setHeader('Content-Type', 'image/png')
+            ->setHeader('Cache-Control', 'max-age=600, stale-while-revalidate=864000')
+            ->setHeader('Etag', $etag)
             ->writeBody($contents);
     }
 
