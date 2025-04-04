@@ -791,6 +791,10 @@ class WysiwygFieldView extends TextFieldView {
 
             if (node.nodeType === Node.ELEMENT_NODE) {
                 if (node instanceof HTMLAnchorElement) {
+                    if (node.textContent === node.href) {
+                        return node.href;
+                    }
+
                     return `${node.textContent} (${node.href})`;
                 }
 
