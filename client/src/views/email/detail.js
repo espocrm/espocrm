@@ -492,7 +492,7 @@ class EmailDetailView extends DetailView {
     }
 
     getHeader() {
-        const name = this.model.get('name');
+        const name = this.model.attributes.name;
 
         const isImportant = this.model.attributes.isImportant;
 
@@ -528,7 +528,7 @@ class EmailDetailView extends DetailView {
             root.insertAdjacentHTML('afterbegin', iconHtml);
         }
 
-        let styleClass = '';
+        let styleClass = null;
 
         if (isImportant) {
             styleClass = 'text-warning'
@@ -538,12 +538,23 @@ class EmailDetailView extends DetailView {
             styleClass = 'text-info';
         }
 
+        const title = document.createElement('span');
+        title.classList.add('font-size-flexible', 'title')
+        title.textContent = name;
+
+        if (styleClass) {
+            title.classList.add(styleClass);
+        }
+
+        if (this.getRecordMode() === 'detail') {
+            title.title = this.translate('clickToRefresh', 'messages');
+            title.dataset.action = 'fullRefresh';
+            title.style.cursor = 'pointer';
+        }
+
         return this.buildHeaderHtml([
             root,
-            $('<span>')
-                .addClass('font-size-flexible title')
-                .addClass(styleClass)
-                .text(name),
+            title,
         ]);
     }
 
