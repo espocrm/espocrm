@@ -94,6 +94,7 @@ class Attachment implements EntryPoint
 
         $response
             ->setHeader('Content-Length', (string) $size)
+            ->setHeader('Cache-Control', 'private, max-age=864000, immutable')
             ->setHeader('Content-Security-Policy', "default-src 'self'")
             ->setBody($stream);
     }

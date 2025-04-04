@@ -147,7 +147,7 @@ class Image implements EntryPoint
 
         $response
             ->setHeader('Content-Disposition', 'inline;filename="' . $fileName . '"')
-            ->setHeader('Cache-Control', 'max-age=360000, must-revalidate')
+            ->setHeader('Cache-Control', 'private, max-age=864000, immutable')
             ->setHeader('Content-Length', (string) $fileSize)
             ->setHeader('Content-Security-Policy', "default-src 'self'");
     }
