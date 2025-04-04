@@ -200,6 +200,9 @@ class ComposeEmailModalView extends EditModalView {
             if (this.isRendered()) {
                 dialog.show();
             }
+
+            this.stopListening(editView, 'before:save', beforeSave);
+            this.stopListening(editView, 'error:save', errorSave);
         };
 
         this.listenToOnce(editView, 'after:send', afterSend);
