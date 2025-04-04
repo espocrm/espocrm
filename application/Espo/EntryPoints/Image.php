@@ -90,7 +90,7 @@ class Image implements EntryPoint
         string $id,
         ?string $size,
         bool $disableAccessCheck = false,
-        bool $noCache = false,
+        bool $noCacheHeaders = false,
     ): void {
 
         $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
@@ -155,7 +155,7 @@ class Image implements EntryPoint
             ->setHeader('Content-Length', (string) $fileSize)
             ->setHeader('Content-Security-Policy', "default-src 'self'");
 
-        if (!$noCache) {
+        if (!$noCacheHeaders) {
             $response->setHeader('Cache-Control', 'private, max-age=864000, immutable');
         }
     }

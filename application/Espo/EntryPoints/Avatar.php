@@ -150,7 +150,7 @@ class Avatar extends Image
                 id: $user->getAvatarId(),
                 size: $size,
                 disableAccessCheck: true,
-                noCache: true,
+                noCacheHeaders: true,
             );
 
             $response->setHeader('Cache-Control', $this->composeCacheControlHeader());
