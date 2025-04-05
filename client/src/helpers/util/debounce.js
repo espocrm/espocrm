@@ -49,7 +49,7 @@ export default class DebounceHelper {
 
     /**
      * @param {{
-     *     handler: function(),
+     *     handler: function(...*),
      *     interval: number,
      * }} options
      * @param options
@@ -57,7 +57,7 @@ export default class DebounceHelper {
     constructor(options) {
         /**
          * @private
-         * @type {function}
+         * @type {function(...*)}
          */
         this.handler = options.handler;
 
@@ -70,6 +70,8 @@ export default class DebounceHelper {
 
     /**
      * Process.
+     *
+     * @param {...*} [arguments]
      */
     process() {
         const handle = () => {
@@ -79,7 +81,7 @@ export default class DebounceHelper {
                 return;
             }
 
-            this.handler();
+            this.handler(arguments);
 
             this._blocked = true;
 
