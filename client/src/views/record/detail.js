@@ -1890,9 +1890,7 @@ class DetailRecordView extends BaseRecordView {
 
         if (this.getUser().isPortal() && !this.portalLayoutDisabled) {
             if (
-                this.getMetadata().get(
-                    ['clientDefs', this.scope, 'additionalLayouts', this.layoutName + 'Portal']
-                )
+                this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts', this.layoutName + 'Portal'])
             ) {
                 this.layoutName += 'Portal';
             }
@@ -1913,8 +1911,7 @@ class DetailRecordView extends BaseRecordView {
             $(window).off('fetch-record.' + this.cid);
         });
 
-        this.id = Espo.Utils.toDom(this.entityType) + '-' +
-            Espo.Utils.toDom(this.type) + '-' + this.numId;
+        this.id = Espo.Utils.toDom(this.entityType) + '-' + Espo.Utils.toDom(this.type) + '-' + this.numId;
 
         this.isNew = this.model.isNew();
 
@@ -1952,8 +1949,7 @@ class DetailRecordView extends BaseRecordView {
         this.readOnly = this.options.readOnly || this.readOnly;
 
         if (!this.readOnly && !this.isNew) {
-            this.readOnly = this.getMetadata()
-                .get(['clientDefs', this.scope, 'editDisabled']) || false;
+            this.readOnly = this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) || false;
         }
 
         if (this.getMetadata().get(['clientDefs', this.scope, 'createDisabled'])) {
@@ -2014,8 +2010,8 @@ class DetailRecordView extends BaseRecordView {
 
         this.initInlineEditDynamicWithLogicInteroperability();
 
-        this.forcePatchAttributeDependencyMap = this.getMetadata()
-            .get(['clientDefs', this.scope, 'forcePatchAttributeDependencyMap']) || {};
+        this.forcePatchAttributeDependencyMap =
+            this.getMetadata().get(['clientDefs', this.scope, 'forcePatchAttributeDependencyMap']) || {};
     }
 
     setupBeforeFinal() {
@@ -3562,8 +3558,11 @@ class DetailRecordView extends BaseRecordView {
         this.getRouter().navigate(url, {trigger: true});
     }
 
+    /**
+     * @protected
+     */
     subscribeToWebSocket() {
-        const topic = 'recordUpdate.' + this.entityType + '.' + this.model.id;
+        const topic = `recordUpdate.${this.entityType}.${this.model.id}`;
 
         this.recordUpdateWebSocketTopic = topic;
         this.isSubscribedToWebSocket = true;
@@ -3571,6 +3570,9 @@ class DetailRecordView extends BaseRecordView {
         this.getHelper().webSocketManager.subscribe(topic, () => this._webSocketDebounceHelper.process());
     }
 
+    /**
+     * @protected
+     */
     unsubscribeFromWebSocket() {
         if (!this.isSubscribedToWebSocket) {
             return;
@@ -3602,7 +3604,11 @@ class DetailRecordView extends BaseRecordView {
         await this.model.fetch({highlight: true});
     }
 
-    blockUpdateWebSocket(toUnblock) {
+    /**
+     * @private
+     * @param {boolean} [toUnblock]
+     */
+    blockUpdateWebSocket(toUnblock = false) {
         this.updateWebSocketIsBlocked = true;
 
         if (toUnblock) {
@@ -3612,6 +3618,9 @@ class DetailRecordView extends BaseRecordView {
         }
     }
 
+    /**
+     * @private
+     */
     unblockUpdateWebSocket() {
         this.updateWebSocketIsBlocked = false;
     }
