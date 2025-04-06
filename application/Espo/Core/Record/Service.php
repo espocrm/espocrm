@@ -41,6 +41,7 @@ use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\FieldSanitize\SanitizeManager;
 use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\Access\LinkCheck;
 use Espo\Core\Record\ActionHistory\Action;
@@ -730,9 +731,12 @@ class Service implements Crud,
         /** @noinspection PhpDeprecationInspection */
         $this->beforeUpdateEntity($entity, $data);
 
+        $context = new SaveContext();
+
         $this->entityManager->saveEntity($entity, [
             SaveOption::API => true,
             SaveOption::KEEP_DIRTY => true,
+            SaveContext::NAME => $context,
         ]);
 
         $this->getRecordHookManager()->processAfterUpdate($entity, $params);
@@ -748,6 +752,10 @@ class Service implements Crud,
         /** @noinspection PhpDeprecationInspection */
         $this->prepareEntityForOutput($entity);
         $this->processActionHistoryRecord(Action::UPDATE, $entity);
+
+        if ($context->isLinkUpdated() && $params->getContext()) {
+            $params->getContext()->linkUpdated = true;
+        }
 
         return $entity;
     }

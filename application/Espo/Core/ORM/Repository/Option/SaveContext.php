@@ -27,69 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Record;
+namespace Espo\Core\ORM\Repository\Option;
 
 /**
- * Immutable.
+ * @since 9.1.0
  */
-class UpdateParams
+class SaveContext
 {
-    private bool $skipDuplicateCheck = false;
-    private ?int $versionNumber = null;
+    public const NAME = 'context';
 
-    private ?UpdateContext $context = null;
+    private bool $linkUpdated = false;
 
-    public function __construct() {}
-
-    public function withSkipDuplicateCheck(bool $skipDuplicateCheck = true): self
+    public function setLinkUpdated(): self
     {
-        $obj = clone $this;
-        $obj->skipDuplicateCheck = $skipDuplicateCheck;
+        $this->linkUpdated = true;
 
-        return $obj;
+        return $this;
     }
 
-    public function withVersionNumber(?int $versionNumber): self
+    public function isLinkUpdated(): bool
     {
-        $obj = clone $this;
-        $obj->versionNumber = $versionNumber;
-
-        return $obj;
-    }
-
-    public function skipDuplicateCheck(): bool
-    {
-        return $this->skipDuplicateCheck;
-    }
-
-    public function getVersionNumber(): ?int
-    {
-        return $this->versionNumber;
-    }
-
-    public static function create(): self
-    {
-        return new self();
-    }
-
-    /**
-     * @internal
-     * @todo Remove in v10.0.
-     */
-    public function withContext(?UpdateContext $context): self
-    {
-        $obj = clone $this;
-        $obj->context = $context;
-
-        return $obj;
-    }
-
-    /**
-     * @internal
-     * @todo Remove in v10.0.
-     */
-    public function getContext(): ?UpdateContext
-    {
-        return $this->context;
+        return $this->linkUpdated;
     }
 }
