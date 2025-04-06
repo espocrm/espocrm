@@ -42,8 +42,6 @@ class UpdateParamsFetcher
         $skipDuplicateCheck = $request->hasHeader('X-Skip-Duplicate-Check') ?
             strtolower($request->getHeader('X-Skip-Duplicate-Check') ?? '') === 'true' :
             $data->_skipDuplicateCheck ?? // legacy
-            $data->skipDuplicateCheck ?? // legacy
-            $data->forceDuplicate ?? // legacy
             false;
 
         $versionNumber = $request->getHeader('X-Version-Number');

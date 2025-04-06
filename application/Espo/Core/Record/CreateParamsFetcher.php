@@ -42,8 +42,6 @@ class CreateParamsFetcher
         $skipDuplicateCheck = $request->hasHeader('X-Skip-Duplicate-Check') ?
             strtolower($request->getHeader('X-Skip-Duplicate-Check') ?? '') === 'true' :
             $data->_skipDuplicateCheck ?? // legacy
-            $data->skipDuplicateCheck ?? // legacy
-            $data->forceDuplicate ?? // legacy
             false;
 
         $duplicateSourceId = $request->getHeader('X-Duplicate-Source-Id');
