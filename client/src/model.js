@@ -528,7 +528,7 @@ class Model {
      *     wait?: boolean,
      * } & Object.<string, *>} [options] Options. Use `patch` to send a PATCH request. If `wait`, attributes will be
      *     set only after the request is completed.
-     * @returns {Promise<Object.<string, *>>}
+     * @returns {Promise<Object.<string, *>> & module:ajax.AjaxPromise}
      * @fires Model#sync
      * @copyright Credits to Backbone.js.
      */

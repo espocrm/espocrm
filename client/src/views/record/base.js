@@ -1101,11 +1101,13 @@ class BaseRecordView extends View {
         const initialAttributes = this.attributes;
 
         return new Promise((resolve, reject) => {
-            model
+            const ajaxPromise = model
                 .save(setAttributes, {
                     patch: !model.isNew(),
                     headers: headers,
-                })
+                });
+
+            ajaxPromise
                 .then(() => {
                     this.trigger('save', initialAttributes, Object.keys(setAttributes));
 
@@ -1117,6 +1119,10 @@ class BaseRecordView extends View {
 
                     this.trigger('after:save');
                     model.trigger('after:save');
+
+                    if (ajaxPromise.xhr.getResponseHeader('X-Record-Link-Updated')) {
+                        model.trigger('update-all');
+                    }
 
                     resolve();
                 })
