@@ -192,11 +192,14 @@ class Service implements Crud,
     /**
      * Read a record by ID. Access control check is performed.
      *
+     * Is not supposed to be directly used in customizations.
+     *
      * @param non-empty-string $id
      * @return TEntity
      * @throws NotFoundSilent If not found.
      * @throws Forbidden If no read access.
      * @noinspection PhpDocSignatureInspection
+     * @todo In v10.0, return ReadResult instead of Entity.
      */
     public function read(string $id, ReadParams $params): Entity
     {
@@ -597,11 +600,14 @@ class Service implements Crud,
     /**
      * Create a record.
      *
+     * Is not supposed to be directly used in customizations.
+     *
      * @return TEntity
      * @throws BadRequest
      * @throws Forbidden If no create access.
      * @throws Conflict
      * @noinspection PhpDocSignatureInspection
+     * @todo In v10.0, return CreateResult instead of Entity.
      */
     public function create(stdClass $data, CreateParams $params): Entity
     {
@@ -661,12 +667,15 @@ class Service implements Crud,
     /**
      * Update a record.
      *
+     * Is not supposed to be directly used in customizations.
+     *
      * @return TEntity
      * @throws NotFound If record not found.
      * @throws Forbidden If no access.
      * @throws Conflict
      * @throws BadRequest
      * @noinspection PhpDocSignatureInspection
+     * @todo In v10.0, return UpdateResult instead of Entity.
      */
     public function update(string $id, stdClass $data, UpdateParams $params): Entity
     {
@@ -745,6 +754,8 @@ class Service implements Crud,
 
     /**
      * Delete a record.
+     *
+     * Is not supposed to be directly used in customizations.
      *
      * @throws Forbidden
      * @throws BadRequest
