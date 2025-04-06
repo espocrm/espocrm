@@ -242,8 +242,7 @@ class DynamicLogic {
     }
 
     /**
-     * Check a condition.
-     *
+     * @private
      * @param {Object} defs Definitions.
      * @returns {boolean}
      */
