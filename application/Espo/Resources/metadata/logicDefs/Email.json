@@ -1,0 +1,78 @@
+{
+    "fields": {
+        "replied": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isNotEmpty",
+                        "attribute": "repliedId",
+                        "data": {
+                            "field": "replied"
+                        }
+                    }
+                ]
+            }
+        },
+        "replies": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isNotEmpty",
+                        "attribute": "repliesIds",
+                        "data": {
+                            "field": "replies"
+                        }
+                    }
+                ]
+            }
+        },
+        "folderString": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "or",
+                        "value": [
+                            {
+                                "type": "and",
+                                "value": [
+                                    {
+                                        "type": "isTrue",
+                                        "attribute": "isUsers"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "isNotEmpty",
+                                "attribute": "groupFolderId"
+                            }
+                        ]
+                    }
+
+                ]
+            }
+        },
+        "sendAt": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "in",
+                        "attribute": "status",
+                        "value": ["Draft"]
+                    }
+                ]
+            }
+        }
+    },
+    "panels": {
+        "event": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isNotEmpty",
+                        "attribute": "icsEventDateStart"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "dateCompleted": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "status",
+                        "value": "Completed"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "fields": {
+        "title": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isNotEmpty",
+                        "attribute": "accountId"
+                    }
+                ]
+            }
+        },
+        "portalUser": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isNotEmpty",
+                        "attribute": "portalUserId",
+                        "data": {
+                            "field": "portalUser"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

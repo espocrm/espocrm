@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "assignmentEmailNotificationsIgnoreEntityTypeList": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "receiveAssignmentEmailNotifications"
+                    }
+                ]
+            }
+        }
+    }
+}

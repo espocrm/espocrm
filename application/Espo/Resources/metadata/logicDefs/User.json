@@ -1,0 +1,44 @@
+{
+    "fields": {
+        "avatarColor": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "avatarId",
+                        "value": null,
+                        "data": {
+                            "field": "avatar"
+                        }
+                    },
+                    {
+                        "type": "in",
+                        "attribute": "type",
+                        "value": [
+                            "regular",
+                            "admin",
+                            "api"
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "options": {
+        "authMethod": [
+            {
+                "optionList": [
+                    "ApiKey",
+                    "Hmac"
+                ],
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "type",
+                        "value": "api"
+                    }
+                ]
+            }
+        ]
+    }
+}

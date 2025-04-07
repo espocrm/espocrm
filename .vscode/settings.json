@@ -84,6 +84,12 @@
         },
         {
             "fileMatch": [
+                "*/metadata/logicDefs/*.json"
+            ],
+            "url": "./schema/metadata/logicDefs.json"
+        },
+        {
+            "fileMatch": [
                 "*/metadata/notificationDefs/*.json"
             ],
             "url": "./schema/metadata/notificationDefs.json"

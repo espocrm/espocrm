@@ -1,0 +1,44 @@
+{
+    "fields": {
+        "url": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "action",
+                        "value": "Redirect"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "action",
+                        "value": "Redirect"
+                    }
+                ]
+            }
+        },
+        "message": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "action",
+                        "value": "Show Message"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "action",
+                        "value": "Show Message"
+                    }
+                ]
+            }
+        }
+    }
+}

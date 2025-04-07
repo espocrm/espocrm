@@ -46,21 +46,6 @@
             "checkVisibilityFunction": "isCompleteAvailable"
         }
     ],
-    "dynamicLogic": {
-        "fields": {
-            "dateCompleted": {
-                "visible": {
-                    "conditionGroup": [
-                        {
-                            "type": "equals",
-                            "attribute": "status",
-                            "value": "Completed"
-                        }
-                    ]
-                }
-            }
-        }
-    },
     "filterList": [
         "actual",
         {

@@ -31,19 +31,24 @@ namespace Espo\Core\Upgrades\Migrations\V9_1;
 
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Upgrades\Migration\Script;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\ObjectUtil;
 use Espo\Modules\Crm\Entities\KnowledgeBaseArticle;
 use Espo\ORM\EntityManager;
 use Espo\Tools\Email\Util;
+use stdClass;
 
 class AfterUpgrade implements Script
 {
     public function __construct(
         private EntityManager $entityManager,
+        private Metadata $metadata,
     ) {}
 
     public function run(): void
     {
         $this->processKbArticles();
+        $this->processDynamicLogicMetadata();
     }
 
     private function processKbArticles(): void
@@ -69,6 +74,34 @@ class AfterUpgrade implements Script
             $article->set('bodyPlain', $plain);
 
             $this->entityManager->saveEntity($article, [SaveOption::SKIP_HOOKS => true]);
+        }
+    }
+
+    private function processDynamicLogicMetadata(): void
+    {
+        /** @var string[] $scopes */
+        $scopes = array_keys($this->metadata->get('clientDefs', []));
+
+        foreach ($scopes as $scope) {
+            $customClientDefs = $this->metadata->getCustom('clientDefs', $scope);
+
+            if (!$customClientDefs instanceof stdClass) {
+                continue;
+            }
+
+            if (
+                !property_exists($customClientDefs, 'dynamicLogic') ||
+                !$customClientDefs->dynamicLogic instanceof stdClass
+            ) {
+                continue;
+            }
+
+            $this->metadata->saveCustom('logicDefs', $scope, $customClientDefs->dynamicLogic);
+
+            $customClientDefs = ObjectUtil::clone($customClientDefs);
+            unset($customClientDefs->dynamicLogic);
+
+            $this->metadata->saveCustom('clientDefs', $scope, $customClientDefs);
         }
     }
 }

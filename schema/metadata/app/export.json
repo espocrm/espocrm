@@ -68,7 +68,7 @@
                                     "properties": {
                                         "visible": {
                                             "description": "Conditions making the parameter visible.",
-                                            "$ref": "./../clientDefs.json#/definitions/dynamicLogicVisible"
+                                            "$ref": "./../logicDefs.json#/definitions/dynamicLogicVisible"
                                         }
                                     }
                                 }

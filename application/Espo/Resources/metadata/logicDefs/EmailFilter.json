@@ -1,0 +1,132 @@
+{
+    "fields": {
+        "parent": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "attribute": "isGlobal",
+                        "type": "isFalse"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "attribute": "isGlobal",
+                        "type": "isFalse"
+                    }
+                ]
+            }
+        },
+        "emailFolder": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "attribute": "action",
+                        "type": "equals",
+                        "value": "Move to Folder"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "attribute": "action",
+                        "type": "equals",
+                        "value": "Move to Folder"
+                    }
+                ]
+            }
+        },
+        "groupEmailFolder": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "attribute": "action",
+                        "type": "equals",
+                        "value": "Move to Group Folder"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "attribute": "action",
+                        "type": "equals",
+                        "value": "Move to Group Folder"
+                    }
+                ]
+            }
+        },
+        "markAsRead": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "attribute": "parentType",
+                        "type": "equals",
+                        "value": "User"
+                    }
+                ]
+            }
+        },
+        "skipNotification": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "attribute": "parentType",
+                        "type": "equals",
+                        "value": "User"
+                    }
+                ]
+            }
+        }
+    },
+    "options": {
+        "action": [
+            {
+                "conditionGroup": [
+                    {
+                        "attribute": "isGlobal",
+                        "type": "isTrue"
+                    }
+                ],
+                "optionList": [
+                    "Skip"
+                ]
+            },
+            {
+                "conditionGroup": [
+                    {
+                        "attribute": "parentType",
+                        "type": "equals",
+                        "value": "User"
+                    }
+                ],
+                "optionList": [
+                    "Skip",
+                    "Move to Folder",
+                    "None"
+                ]
+            },
+            {
+                "conditionGroup": [
+                    {
+                        "attribute": "parentType",
+                        "type": "equals",
+                        "value": "InboundEmail"
+                    }
+                ],
+                "optionList": [
+                    "Skip",
+                    "Move to Group Folder"
+                ]
+            },
+            {
+                "conditionGroup": [],
+                "optionList": [
+                    "Skip"
+                ]
+            }
+        ]
+    }
+}

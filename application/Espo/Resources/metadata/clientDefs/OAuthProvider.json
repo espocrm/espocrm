@@ -6,59 +6,5 @@
             "selectDisabled": true,
             "unlinkDisabled": true
         }
-    },
-    "dynamicLogic": {
-        "fields": {
-            "authorizationRedirectUri": {
-                "visible": {
-                    "conditionGroup": [
-                        {
-                            "type": "isNotEmpty",
-                            "attribute": "id"
-                        }
-                    ]
-                }
-            },
-            "clientId": {
-                "required": {
-                    "conditionGroup": [
-                        {
-                            "type": "isTrue",
-                            "attribute": "isActive"
-                        }
-                    ]
-                }
-            },
-            "clientSecret": {
-                "required": {
-                    "conditionGroup": [
-                        {
-                            "type": "isTrue",
-                            "attribute": "isActive"
-                        }
-                    ]
-                }
-            },
-            "authorizationEndpoint": {
-                "required": {
-                    "conditionGroup": [
-                        {
-                            "type": "isTrue",
-                            "attribute": "isActive"
-                        }
-                    ]
-                }
-            },
-            "tokenEndpoint": {
-                "required": {
-                    "conditionGroup": [
-                        {
-                            "type": "isTrue",
-                            "attribute": "isActive"
-                        }
-                    ]
-                }
-            }
-        }
     }
 }

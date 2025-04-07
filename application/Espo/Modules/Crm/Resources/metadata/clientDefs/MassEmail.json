@@ -28,65 +28,6 @@
             ]
         }
     },
-    "dynamicLogic": {
-        "fields": {
-            "status": {
-                "readOnly": {
-                    "conditionGroup": [
-                        {
-                            "type": "and",
-                            "value": [
-                                {
-                                    "type": "or",
-                                    "value": [
-                                        {
-                                            "type": "equals",
-                                            "attribute": "status",
-                                            "value": "Complete"
-                                        },
-                                        {
-                                            "type": "equals",
-                                            "attribute": "status",
-                                            "value": "In Process"
-                                        },
-                                        {
-                                            "type": "equals",
-                                            "attribute": "status",
-                                            "value": "Failed"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "type": "isNotEmpty",
-                                    "attribute": "id"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        "options": {
-            "status": [
-                {
-                    "optionList": [
-                        "Draft",
-                        "Pending"
-                    ],
-                    "conditionGroup": [
-                        {
-                            "type": "in",
-                            "attribute": "status",
-                            "value": [
-                                "Draft",
-                                "Pending"
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
-    },
     "filterList": [
         {
             "name":"actual"

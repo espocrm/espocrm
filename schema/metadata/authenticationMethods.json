@@ -80,16 +80,16 @@
                                 "properties": {
                                     "visible": {
                                         "description": "Conditions making the field visible.",
-                                        "$ref": "./clientDefs.json#/definitions/dynamicLogicVisible"
+                                        "$ref": "./logicDefs.json#/definitions/dynamicLogicVisible"
                                     },
                                     "required": {
-                                        "$ref": "./clientDefs.json#/definitions/dynamicLogicRequired"
+                                        "$ref": "./logicDefs.json#/definitions/dynamicLogicRequired"
                                     },
                                     "readOnly": {
-                                        "$ref": "./clientDefs.json#/definitions/dynamicLogicReadOnly"
+                                        "$ref": "./logicDefs.json#/definitions/dynamicLogicReadOnly"
                                     },
                                     "invalid": {
-                                        "$ref": "./clientDefs.json#/definitions/dynamicLogicInvalid"
+                                        "$ref": "./logicDefs.json#/definitions/dynamicLogicInvalid"
                                     }
                                 }
                             }

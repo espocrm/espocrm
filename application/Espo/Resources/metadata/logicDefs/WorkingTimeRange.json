@@ -1,0 +1,38 @@
+{
+    "fields": {
+        "timeRanges": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "type",
+                        "value": "Working"
+                    }
+                ]
+            }
+        },
+        "users": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "or",
+                        "value": [
+                            {
+                                "type": "isNotEmpty",
+                                "attribute": "id"
+                            },
+                            {
+                                "type": "isNotEmpty",
+                                "attribute": "usersIds"
+                            },
+                            {
+                                "type": "isEmpty",
+                                "attribute": "calendarsIds"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

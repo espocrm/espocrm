@@ -1386,6 +1386,25 @@
             </SchemaInfo>
           </value>
         </entry>
+        <entry key="metadata/logicDefs">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/logicDefs" />
+              <option name="relativePathToSchema" value="schema/metadata/logicDefs.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/metadata/logicDefs/*.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
         <entry key="metadata/notificationDefs">
           <value>
             <SchemaInfo>

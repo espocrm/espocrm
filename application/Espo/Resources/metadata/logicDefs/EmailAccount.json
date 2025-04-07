@@ -1,0 +1,49 @@
+{
+    "fields": {
+        "smtpUsername": {
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "and",
+                        "value": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "useSmtp"
+                            },
+                            {
+                                "type": "isTrue",
+                                "attribute": "smtpAuth"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "fetchSince": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "useImap"
+                    }
+                ]
+            },
+            "readOnly": {
+                "conditionGroup": [
+                    {
+                        "type": "isNotEmpty",
+                        "attribute": "fetchData"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "useImap"
+                    }
+                ]
+            }
+        }
+    }
+}

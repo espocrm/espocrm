@@ -1,0 +1,237 @@
+{
+    "fields": {
+        "targetList": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "subscribeToTargetList"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "subscribeToTargetList"
+                    }
+                ]
+            }
+        },
+        "subscribeContactToTargetList": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "subscribeToTargetList"
+                    }
+                ]
+            }
+        },
+        "optInConfirmationLifetime": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "optInConfirmation"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "optInConfirmation"
+                    }
+                ]
+            }
+        },
+        "optInConfirmationSuccessMessage": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "optInConfirmation"
+                    }
+                ]
+            }
+        },
+        "createLeadBeforeOptInConfirmation": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "optInConfirmation"
+                    }
+                ]
+            }
+        },
+        "smtpAccount": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "optInConfirmation"
+                    }
+                ]
+            }
+        },
+        "skipOptInConfirmationIfSubscribed": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "and",
+                        "value": [
+                            {
+                                "type": "isTrue",
+                                "attribute": "optInConfirmation"
+                            },
+                            {
+                                "type": "isNotEmpty",
+                                "attribute": "targetListId",
+                                "data": {
+                                    "field": "targetList"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "optInConfirmationEmailTemplate": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "optInConfirmation"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "optInConfirmation"
+                    }
+                ]
+            }
+        },
+        "apiKey": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isNotEmpty",
+                        "attribute": "id"
+                    }
+                ]
+            }
+        },
+        "phoneNumberCountry": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "contains",
+                        "attribute": "fieldList",
+                        "value": "phoneNumber"
+                    }
+                ]
+            }
+        },
+        "formSuccessText": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "formEnabled"
+                    }
+                ]
+            }
+        },
+        "formTitle": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "formEnabled"
+                    }
+                ]
+            }
+        },
+        "formTheme": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "formEnabled"
+                    }
+                ]
+            }
+        },
+        "formText": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "formEnabled"
+                    }
+                ]
+            }
+        },
+        "formSuccessRedirectUrl": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "formEnabled"
+                    }
+                ]
+            }
+        },
+        "formLanguage": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "formEnabled"
+                    }
+                ]
+            }
+        },
+        "formFrameAncestors": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "formEnabled"
+                    }
+                ]
+            }
+        },
+        "formCaptcha": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "formEnabled"
+                    }
+                ]
+            }
+        }
+    },
+    "panels": {
+        "form": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isNotEmpty",
+                        "attribute": "id"
+                    },
+                    {
+                        "type": "isTrue",
+                        "attribute": "formEnabled"
+                    }
+                ]
+            }
+        }
+    }
+}

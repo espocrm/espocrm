@@ -92,6 +92,7 @@ class MetadataService
                 unset($data->clientDefs->$scope);
                 unset($data->entityAcl->$scope);
                 unset($data->scopes->$scope);
+                unset($data->logicDefs->$scope);
             }
         }
 

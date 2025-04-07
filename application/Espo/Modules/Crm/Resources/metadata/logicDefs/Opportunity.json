@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "lastStage": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "stage",
+                        "value": "Closed Lost"
+                    }
+                ]
+            }
+        }
+    }
+}

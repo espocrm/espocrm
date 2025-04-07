@@ -75,6 +75,7 @@ class Renamer
         MetadataType::RECORD_DEFS,
         MetadataType::SCOPES,
         MetadataType::SELECT_DEFS,
+        MetadataType::LOGIC_DEFS,
     ];
 
     private NameUtil $nameUtil;

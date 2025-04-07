@@ -104,20 +104,6 @@
         "filter": "open"
     },
     "allowInternalNotes": true,
-    "dynamicLogic": {
-        "fields": {
-            "number": {
-                "visible": {
-                    "conditionGroup": [
-                        {
-                            "type": "isNotEmpty",
-                            "attribute": "id"
-                        }
-                    ]
-                }
-            }
-        }
-    },
     "additionalLayouts": {
         "detailPortal": {
             "type": "detail"

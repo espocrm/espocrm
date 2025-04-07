@@ -98,33 +98,6 @@
     "filterList": [
         "portalUsers"
     ],
-    "dynamicLogic": {
-        "fields": {
-            "title": {
-                "visible": {
-                    "conditionGroup": [
-                        {
-                            "type": "isNotEmpty",
-                            "attribute": "accountId"
-                        }
-                    ]
-                }
-            },
-            "portalUser": {
-                "visible": {
-                    "conditionGroup": [
-                        {
-                            "type": "isNotEmpty",
-                            "attribute": "portalUserId",
-                            "data": {
-                                "field": "portalUser"
-                            }
-                        }
-                    ]
-                }
-            }
-        }
-    },
     "color": "#a4c5e0",
     "iconClass": "fas fa-id-badge"
 }

@@ -88,29 +88,5 @@
             "massSelect": true
         }
     },
-    "dynamicLogic": {
-        "fields": {
-            "entryCount": {
-                "visible": {
-                    "conditionGroup": [
-                        {
-                            "type": "isNotEmpty",
-                            "attribute": "id"
-                        }
-                    ]
-                }
-            },
-            "optedOutCount": {
-                "visible": {
-                    "conditionGroup": [
-                        {
-                            "type": "isNotEmpty",
-                            "attribute": "id"
-                        }
-                    ]
-                }
-            }
-        }
-    },
     "iconClass":"fas fa-crosshairs"
 }

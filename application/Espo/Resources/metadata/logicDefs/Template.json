@@ -1,0 +1,104 @@
+{
+    "fields": {
+        "entityType": {
+            "readOnly": {
+                "conditionGroup": [
+                    {
+                        "type": "isNotEmpty",
+                        "attribute": "id"
+                    }
+                ]
+            }
+        },
+        "footer": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "printFooter"
+                    }
+                ]
+            }
+        },
+        "footerPosition": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "printFooter"
+                    }
+                ]
+            }
+        },
+        "header": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "printHeader"
+                    }
+                ]
+            }
+        },
+        "headerPosition": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "printHeader"
+                    }
+                ]
+            }
+        },
+        "body": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isNotEmpty",
+                        "attribute": "entityType"
+                    }
+                ]
+            }
+        },
+        "pageWidth": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "pageFormat",
+                        "value": "Custom"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "pageFormat",
+                        "value": "Custom"
+                    }
+                ]
+            }
+        },
+        "pageHeight": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "pageFormat",
+                        "value": "Custom"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "pageFormat",
+                        "value": "Custom"
+                    }
+                ]
+            }
+        }
+    }
+}

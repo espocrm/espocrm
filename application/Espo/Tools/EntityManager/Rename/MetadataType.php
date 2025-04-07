@@ -50,4 +50,6 @@ class MetadataType
     public const PDF_DEFS = 'pdfDefs';
 
     public const FORMULA = 'formula';
+
+    public const LOGIC_DEFS = 'logicDefs';
 }

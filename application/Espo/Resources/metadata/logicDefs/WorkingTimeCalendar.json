@@ -1,0 +1,84 @@
+{
+    "fields": {
+        "weekday0TimeRanges": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "weekday0"
+                    }
+                ]
+            }
+        },
+        "weekday1TimeRanges": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "weekday1"
+                    }
+                ]
+            }
+        },
+        "weekday2TimeRanges": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "weekday2"
+                    }
+                ]
+            }
+        },
+        "weekday3TimeRanges": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "weekday3"
+                    }
+                ]
+            }
+        },
+        "weekday4TimeRanges": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "weekday4"
+                    }
+                ]
+            }
+        },
+        "weekday5TimeRanges": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "weekday5"
+                    }
+                ]
+            }
+        },
+        "weekday6TimeRanges": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "weekday6"
+                    }
+                ]
+            }
+        },
+        "teams": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isNotEmpty",
+                        "attribute": "teamsIds"
+                    }
+                ]
+            }
+        }
+    }
+}

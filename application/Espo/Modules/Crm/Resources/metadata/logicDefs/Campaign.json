@@ -1,0 +1,160 @@
+{
+    "fields": {
+        "targetLists": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "or",
+                        "value": [
+                            {
+                                "type": "equals",
+                                "attribute": "type",
+                                "value": "Email"
+                            },
+                            {
+                                "type": "equals",
+                                "attribute": "type",
+                                "value": "Newsletter"
+                            },
+                            {
+                                "type": "equals",
+                                "attribute": "type",
+                                "value": "Informational Email"
+                            },
+                            {
+                                "type": "equals",
+                                "attribute": "type",
+                                "value": "Mail"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "excludingTargetLists": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "or",
+                        "value": [
+                            {
+                                "type": "equals",
+                                "attribute": "type",
+                                "value": "Email"
+                            },
+                            {
+                                "type": "equals",
+                                "attribute": "type",
+                                "value": "Newsletter"
+                            },
+                            {
+                                "type": "equals",
+                                "attribute": "type",
+                                "value": "Informational Email"
+                            },
+                            {
+                                "type": "equals",
+                                "attribute": "type",
+                                "value": "Mail"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "contactsTemplate": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "type",
+                        "value": "Mail"
+                    }
+                ]
+            }
+        },
+        "leadsTemplate": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "type",
+                        "value": "Mail"
+                    }
+                ]
+            }
+        },
+        "accountsTemplate": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "type",
+                        "value": "Mail"
+                    }
+                ]
+            }
+        },
+        "usersTemplate": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "type",
+                        "value": "Mail"
+                    }
+                ]
+            }
+        },
+        "mailMergeOnlyWithAddress": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "type",
+                        "value": "Mail"
+                    }
+                ]
+            }
+        }
+    },
+    "panels": {
+        "massEmails": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "in",
+                        "attribute": "type",
+                        "value": [
+                            "Email",
+                            "Newsletter",
+                            "Informational Email"
+                        ]
+                    }
+                ]
+            }
+        },
+        "trackingUrls": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "in",
+                        "attribute": "type",
+                        "value": ["Email", "Newsletter"]
+                    }
+                ]
+            }
+        },
+        "mailMerge": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "in",
+                        "attribute": "type",
+                        "value": ["Mail"]
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -2062,8 +2062,7 @@ class DetailRecordView extends BaseRecordView {
 
         this.initDependency();
 
-        const dynamicLogic = Espo.Utils.clone(
-            this.getMetadata().get(['clientDefs', this.entityType, 'dynamicLogic']) || {});
+        const dynamicLogic = {...this.getMetadata().get(`logicDefs.${this.entityType}`, {})};
 
         this.dynamicLogicDefs = _.extend(dynamicLogic, this.dynamicLogicDefs);
 

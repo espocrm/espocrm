@@ -451,8 +451,8 @@ class FieldManagerEditView extends View {
         const promiseList = [];
 
         if (!defs.dynamicLogicVisibleDisabled) {
-            const isVisible = this.getMetadata()
-                .get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'visible']);
+            const isVisible =
+                this.getMetadata().get(['logicDefs', this.scope, 'fields', this.field, 'visible']);
 
             this.model.set(
                 'dynamicLogicVisible',
@@ -472,8 +472,8 @@ class FieldManagerEditView extends View {
         const readOnly = this.getMetadata().get(['fields', this.type, 'readOnly']);
 
         if (!defs.dynamicLogicRequiredDisabled && !readOnly && hasRequired) {
-            const dynamicLogicRequired = this.getMetadata()
-                .get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'required']);
+            const dynamicLogicRequired =
+                this.getMetadata().get(['logicDefs', this.scope, 'fields', this.field, 'required']);
 
             this.model.set('dynamicLogicRequired', dynamicLogicRequired);
 
@@ -489,7 +489,7 @@ class FieldManagerEditView extends View {
 
         if (!defs.dynamicLogicReadOnlyDisabled && !readOnly) {
             const dynamicLogicReadOnly = this.getMetadata()
-                .get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'readOnly']);
+                .get(['logicDefs', this.scope, 'fields', this.field, 'readOnly']);
 
             this.model.set('dynamicLogicReadOnly', dynamicLogicReadOnly);
 
@@ -506,8 +506,8 @@ class FieldManagerEditView extends View {
         const typeDynamicLogicOptions = this.getMetadata().get(['fields', this.type, 'dynamicLogicOptions']);
 
         if (typeDynamicLogicOptions && !defs.dynamicLogicOptionsDisabled) {
-            const dynamicLogicOptions = this.getMetadata()
-                .get(['clientDefs', this.scope, 'dynamicLogic', 'options', this.field]);
+            const dynamicLogicOptions =
+                this.getMetadata().get(['logicDefs', this.scope, 'options', this.field]);
 
             this.model.set('dynamicLogicOptions', dynamicLogicOptions);
 
@@ -522,8 +522,8 @@ class FieldManagerEditView extends View {
         }
 
         if (!defs.dynamicLogicInvalidDisabled && !readOnly) {
-            const dynamicLogicInvalid = this.getMetadata()
-                .get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'invalid']);
+            const dynamicLogicInvalid =
+                this.getMetadata().get(['logicDefs', this.scope, 'fields', this.field, 'invalid']);
 
             this.model.set('dynamicLogicInvalid', dynamicLogicInvalid);
 
