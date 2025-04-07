@@ -54,7 +54,8 @@
         "tholu/php-cidr-match": "^0.4",
         "league/oauth2-client": "^2.8",
         "symfony/mailer": "^6",
-        "league/html-to-markdown": "^5.1"
+        "league/html-to-markdown": "^5.1",
+        "psr/clock": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
