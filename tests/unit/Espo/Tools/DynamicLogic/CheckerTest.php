@@ -613,7 +613,7 @@ class CheckerTest extends TestCase
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
-    public function testIn(): void
+    public function testHas(): void
     {
         $map = [
             'array' => ['test'],
@@ -625,7 +625,7 @@ class CheckerTest extends TestCase
             $checker->check(
                 Item::fromGroupDefinition([
                     (object) [
-                        'type' => 'in',
+                        'type' => 'has',
                         'attribute' => 'array',
                         'value' => 'test',
                     ]
@@ -637,9 +637,81 @@ class CheckerTest extends TestCase
             $checker->check(
                 Item::fromGroupDefinition([
                     (object) [
-                        'type' => 'in',
+                        'type' => 'has',
                         'attribute' => 'array',
                         'value' => 'hello',
+                    ]
+                ])
+            )
+        );
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testNotHas(): void
+    {
+        $map = [
+            'array' => ['test'],
+        ];
+
+        $checker = new ConditionChecker($this->initEntity($map));
+
+        $this->assertFalse(
+            $checker->check(
+                Item::fromGroupDefinition([
+                    (object) [
+                        'type' => 'notHas',
+                        'attribute' => 'array',
+                        'value' => 'test',
+                    ]
+                ])
+            )
+        );
+
+        $this->assertTrue(
+            $checker->check(
+                Item::fromGroupDefinition([
+                    (object) [
+                        'type' => 'notHas',
+                        'attribute' => 'array',
+                        'value' => 'hello',
+                    ]
+                ])
+            )
+        );
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testIn(): void
+    {
+        $map = [
+            'value' => 'test',
+        ];
+
+        $checker = new ConditionChecker($this->initEntity($map));
+
+        $this->assertTrue(
+            $checker->check(
+                Item::fromGroupDefinition([
+                    (object) [
+                        'type' => 'in',
+                        'attribute' => 'value',
+                        'value' => ['test'],
+                    ]
+                ])
+            )
+        );
+
+        $this->assertFalse(
+            $checker->check(
+                Item::fromGroupDefinition([
+                    (object) [
+                        'type' => 'in',
+                        'attribute' => 'value',
+                        'value' => ['hello'],
                     ]
                 ])
             )
@@ -652,7 +724,7 @@ class CheckerTest extends TestCase
     public function testNotIn(): void
     {
         $map = [
-            'array' => ['test'],
+            'value' => 'test',
         ];
 
         $checker = new ConditionChecker($this->initEntity($map));
@@ -662,8 +734,8 @@ class CheckerTest extends TestCase
                 Item::fromGroupDefinition([
                     (object) [
                         'type' => 'notIn',
-                        'attribute' => 'array',
-                        'value' => 'test',
+                        'attribute' => 'value',
+                        'value' => ['test'],
                     ]
                 ])
             )
@@ -674,8 +746,8 @@ class CheckerTest extends TestCase
                 Item::fromGroupDefinition([
                     (object) [
                         'type' => 'notIn',
-                        'attribute' => 'array',
-                        'value' => 'hello',
+                        'attribute' => 'value',
+                        'value' => ['hello'],
                     ]
                 ])
             )

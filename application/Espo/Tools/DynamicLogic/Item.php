@@ -65,6 +65,10 @@ readonly class Item
             throw new BadCondition("No type.");
         }
 
+        if ($type === 'has') {
+            $type = 'contains';
+        }
+
         if ($type === Type::And->value || $type === Type::Or->value) {
             if (!is_array($value)) {
                 throw new BadCondition("Non-array value.");

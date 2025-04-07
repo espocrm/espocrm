@@ -173,6 +173,22 @@ class ConditionChecker
             return true;
         }
 
+        if ($type === Type::Has) {
+            if (is_array($setValue)) {
+                return in_array($value, $setValue);
+            }
+
+            return false;
+        }
+
+        if ($type === Type::NotHas) {
+            if (is_array($setValue)) {
+                return !in_array($value, $setValue);
+            }
+
+            return true;
+        }
+
         if ($type === Type::StartsWith) {
             if (is_string($setValue) && is_string($value)) {
                 return str_starts_with($setValue, $value);
@@ -214,16 +230,16 @@ class ConditionChecker
         }
 
         if ($type === Type::In) {
-            if (is_array($setValue)) {
-                return in_array($value, $setValue);
+            if (is_array($value)) {
+                return in_array($setValue, $value);
             }
 
             return false;
         }
 
         if ($type === Type::NotIn) {
-            if (is_array($setValue)) {
-                return !in_array($value, $setValue);
+            if (is_array($value)) {
+                return !in_array($setValue, $value);
             }
 
             return true;
@@ -278,6 +294,7 @@ class ConditionChecker
             return $setDate->isLessThan($today);
         }
 
+        /** @phpstan-ignore-next-line deadCode.unreachable */
         throw new BadCondition("Unimplemented type '$type->value'.");
     }
 
