@@ -31,6 +31,7 @@ namespace tests\unit\Espo\Tools\DynamicLogic;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\Tools\DynamicLogic\ConditionChecker;
 use Espo\Tools\DynamicLogic\Item;
@@ -1165,5 +1166,61 @@ class CheckerTest extends TestCase
                 ])
             )
         );
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testUserId(): void
+    {
+        $map = [];
+
+        $user = $this->createMock(User::class);
+
+        $user->expects($this->any())
+            ->method('getId')
+            ->willReturn('ID');
+
+        $checker = new ConditionChecker($this->initEntity($map), $user);
+
+        $item = Item::fromItemDefinition((object) [
+            'type' => 'equals',
+            'attribute' => '$user.id',
+            'value' => 'ID',
+        ]);
+
+        $this->assertTrue($checker->check($item));
+
+        $item = Item::fromItemDefinition((object) [
+            'type' => 'equals',
+            'attribute' => '$user.id',
+            'value' => 'BAD',
+        ]);
+
+        $this->assertFalse($checker->check($item));
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testUserTeamsIds(): void
+    {
+        $map = [];
+
+        $user = $this->createMock(User::class);
+
+        $user->expects($this->any())
+            ->method('getTeamIdList')
+            ->willReturn(['ID']);
+
+        $checker = new ConditionChecker($this->initEntity($map), $user);
+
+        $item = Item::fromItemDefinition((object) [
+            'type' => 'contains',
+            'attribute' => '$user.teamsIds',
+            'value' => 'ID',
+        ]);
+
+        $this->assertTrue($checker->check($item));
     }
 }
