@@ -27,13 +27,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\DynamicLogic\ConditionChecker;
+namespace Espo\Tools\DynamicLogic;
 
 use DateTimeZone;
+use Espo\Core\Utils\Config\ApplicationConfig;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
+use Espo\Tools\DynamicLogic\ConditionChecker\Options;
+use Exception;
+use RuntimeException;
 
-readonly class Options
+/**
+ * @since 9.1.0
+ * @noinspection PhpUnused
+ */
+class ConditionCheckerFactory
 {
     public function __construct(
-        public DateTimeZone $timezone = new DateTimeZone('UTC'),
+        private User $user,
+        private ApplicationConfig $applicationConfig,
     ) {}
+
+    /**
+     * @param Entity $entity An entity to check.
+     */
+    public function create(Entity $entity): ConditionChecker
+    {
+        try {
+            $timezone = new DateTimeZone($this->applicationConfig->getTimeZone());
+        } catch (Exception $e) {
+            throw new RuntimeException('', 0, $e);
+        }
+
+        return new ConditionChecker(
+            entity: $entity,
+            user: $this->user,
+            options: new Options(
+                timezone: $timezone,
+            ),
+        );
+    }
 }

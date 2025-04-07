@@ -44,8 +44,14 @@ use RuntimeException;
 use DateTimeImmutable;
 use DateTimeZone;
 
+/**
+ * @since 9.1.0
+ */
 class ConditionChecker
 {
+    /**
+     * Use `ConditionCheckerFactory` instead.
+     */
     public function __construct(
         private Entity $entity,
         private ?User $user = null,
@@ -296,7 +302,7 @@ class ConditionChecker
 
     private function getTimeZone(): DateTimeZone
     {
-        return $this->options->timeZone;
+        return $this->options->timezone;
     }
 
     private function createDateTime(string $value): DateTimeImmutable
