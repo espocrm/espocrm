@@ -702,8 +702,20 @@ class MainView extends View {
         }
 
         const processUi = () => {
-            this.$headerActionsContainer.find(`li > .action[data-name="${name}"]`).parent().removeClass('hidden');
-            this.$headerActionsContainer.find(`a.action[data-name="${name}"]`).removeClass('hidden');
+            const $dropdownItem = this.$headerActionsContainer.find(`li > .action[data-name="${name}"]`).parent();
+            const $button = this.$headerActionsContainer.find(`a.action[data-name="${name}"]`);
+
+            // Item can be available but not rendered as it was skipped by access check in getMenu.
+            if (item && !$dropdownItem.length && !$button.length) {
+                if (this.getHeaderView()) {
+                    this.getHeaderView().reRender();
+                }
+
+                return;
+            }
+
+            $dropdownItem.removeClass('hidden');
+            $button.removeClass('hidden');
 
             this.controlMenuDropdownVisibility();
             this.adjustButtons();
