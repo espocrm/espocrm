@@ -21,6 +21,9 @@
                     "readOnly": {
                         "$ref": "#/definitions/dynamicLogicReadOnly"
                     },
+                    "readOnlySaved": {
+                        "$ref": "#/definitions/dynamicLogicReadOnlySaved"
+                    },
                     "invalid": {
                         "$ref": "#/definitions/dynamicLogicInvalid"
                     }
@@ -97,6 +100,19 @@
         "dynamicLogicReadOnly": {
             "type": "object",
             "description": "Conditions making the field read-only.",
+            "properties": {
+                "conditionGroup": {
+                    "type": "array",
+                    "description": "An AND where clause.",
+                    "items": {
+                        "$ref": "#/definitions/dynamicLogicItem"
+                    }
+                }
+            }
+        },
+        "dynamicLogicReadOnlySaved": {
+            "type": "object",
+            "description": "Saved-state conditions making the field read-only. As of v9.1.",
             "properties": {
                 "conditionGroup": {
                     "type": "array",
