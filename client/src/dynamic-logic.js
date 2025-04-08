@@ -91,7 +91,7 @@ class DynamicLogic {
                     return;
                 }
 
-                const result = this.checkConditionGroup(typeItem.conditionGroup);
+                const result = this.checkConditionGroupInternal(typeItem.conditionGroup);
 
                 if (type === 'required') {
                     result ?
@@ -131,7 +131,7 @@ class DynamicLogic {
             for (const i in itemList) {
                 const item = itemList[i];
 
-                if (this.checkConditionGroup(item.conditionGroup)) {
+                if (this.checkConditionGroupInternal(item.conditionGroup)) {
                     this.setOptionList(field, item.optionList || []);
 
                     isMet = true;
@@ -165,7 +165,7 @@ class DynamicLogic {
             return;
         }
 
-        const result = this.checkConditionGroup(typeItem.conditionGroup);
+        const result = this.checkConditionGroupInternal(typeItem.conditionGroup);
 
         if (type === 'visible') {
             result ?
@@ -182,10 +182,19 @@ class DynamicLogic {
      * Check a condition group.
      *
      * @param {Object} data A condition group.
+     * @returns {boolean}
+     */
+    checkConditionGroup(data) {
+        return this.checkConditionGroupInternal(data);
+    }
+
+    /**
+     * @private
+     * @param {Object} data A condition group.
      * @param {'and'|'or'|'not'} [type='and'] A type.
      * @returns {boolean}
      */
-    checkConditionGroup(data, type) {
+    checkConditionGroupInternal(data, type) {
         type = type || 'and';
 
         let list;
@@ -256,7 +265,7 @@ class DynamicLogic {
         const type = defs.type || 'equals';
 
         if (['or', 'and', 'not'].includes(type)) {
-            return this.checkConditionGroup(defs.value, /** @type {'or'|'and'|'not'} */ type);
+            return this.checkConditionGroupInternal(defs.value, /** @type {'or'|'and'|'not'} */ type);
         }
 
         const attribute = defs.attribute;
