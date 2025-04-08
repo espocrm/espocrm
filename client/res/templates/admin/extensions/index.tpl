@@ -12,7 +12,11 @@
         </div>
         <div class="message-container text-danger" style="height: 20px; margin-bottom: 10px; margin-top: 10px;"></div>
         <div class="buttons-container">
-            <button class="btn btn-primary disabled" data-action="upload">{{translate 'Upload' scope='Admin'}}</button>
+            <button
+                class="btn btn-primary disabled"
+                data-action="upload"
+                disabled="disabled"
+            >{{translate 'Upload' scope='Admin'}}</button>
         </div>
     </div>
 </div>
