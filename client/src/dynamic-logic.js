@@ -93,13 +93,19 @@ class DynamicLogic {
 
                 const result = this.checkConditionGroup(typeItem.conditionGroup);
 
-                let methodName;
-
-                methodName = result ?
-                    'makeField' + Espo.Utils.upperCaseFirst(type) + 'True' :
-                    'makeField' + Espo.Utils.upperCaseFirst(type) + 'False';
-
-                this[methodName](field);
+                if (type === 'required') {
+                    result ?
+                        this.makeFieldRequiredTrue(field) :
+                        this.makeFieldRequiredFalse(field);
+                } else if (type === 'readOnly') {
+                    result ?
+                        this.makeFieldReadOnlyTrue(field) :
+                        this.makeFieldReadOnlyFalse(field);
+                } else if (type === 'visible') {
+                    result ?
+                        this.makeFieldVisibleTrue(field) :
+                        this.makeFieldVisibleFalse(field);
+                }
             });
         });
 
@@ -161,20 +167,20 @@ class DynamicLogic {
 
         const result = this.checkConditionGroup(typeItem.conditionGroup);
 
-        let methodName;
-
-        if (result) {
-            methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'True';
+        if (type === 'visible') {
+            result ?
+                this.makePanelVisibleTrue(panel) :
+                this.makePanelVisibleFalse(panel);
+        } if (type === 'styled') {
+            result ?
+                this.makePanelStyledTrue(panel) :
+                this.makePanelStyledFalse(panel);
         }
-        else {
-            methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'False';
-        }
-
-        this[methodName](panel);
     }
 
     /**
      * Check a condition group.
+     *
      * @param {Object} data A condition group.
      * @param {'and'|'or'|'not'} [type='and'] A type.
      * @returns {boolean}
@@ -197,8 +203,7 @@ class DynamicLogic {
                     break;
                 }
             }
-        }
-        else if (type === 'or') {
+        } else if (type === 'or') {
             list =  data || [];
 
             for (const i in list) {
@@ -208,8 +213,7 @@ class DynamicLogic {
                     break;
                 }
             }
-        }
-        else if (type === 'not') {
+        } else if (type === 'not') {
             if (data) {
                 result = !this.checkCondition(data);
             }
@@ -428,7 +432,6 @@ class DynamicLogic {
         this.recordView.resetFieldOptionList(field);
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} field
      * @private
@@ -437,7 +440,6 @@ class DynamicLogic {
         this.recordView.showField(field);
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} field
      * @private
@@ -446,7 +448,6 @@ class DynamicLogic {
         this.recordView.hideField(field);
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} field
      * @private
@@ -455,7 +456,6 @@ class DynamicLogic {
         this.recordView.setFieldRequired(field);
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} field
      * @private
@@ -464,7 +464,6 @@ class DynamicLogic {
         this.recordView.setFieldNotRequired(field);
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} field
      * @private
@@ -473,7 +472,6 @@ class DynamicLogic {
         this.recordView.setFieldReadOnly(field);
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} field
      * @private
@@ -482,7 +480,6 @@ class DynamicLogic {
         this.recordView.setFieldNotReadOnly(field);
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} panel
      * @private
@@ -491,7 +488,6 @@ class DynamicLogic {
         this.recordView.showPanel(panel, 'dynamicLogic');
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} panel
      * @private
@@ -500,7 +496,6 @@ class DynamicLogic {
         this.recordView.hidePanel(panel, false, 'dynamicLogic');
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} panel
      * @private
@@ -509,7 +504,6 @@ class DynamicLogic {
         this.recordView.stylePanel(panel);
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} panel
      * @private
