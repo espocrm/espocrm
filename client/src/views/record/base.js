@@ -101,6 +101,13 @@ class BaseRecordView extends View {
     lastSaveCancelReason = null
 
     /**
+     * Pre-save attribute values.
+     *
+     * @type {Record.<string, *>|undefined}
+     */
+    attributes
+
+    /**
      * A record-helper.
      *
      * @type {module:view-record-helper}
