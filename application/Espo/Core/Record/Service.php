@@ -49,6 +49,7 @@ use Espo\Core\Record\ActionHistory\ActionLogger;
 use Espo\Core\Record\ConcurrencyControl\OptimisticProcessor;
 use Espo\Core\Record\Defaults\Populator as DefaultsPopulator;
 use Espo\Core\Record\Defaults\PopulatorFactory as DefaultsPopulatorFactory;
+use Espo\Core\Record\DynamicLogic\InputFilterProcessor;
 use Espo\Core\Record\Formula\Processor as FormulaProcessor;
 use Espo\Core\Record\Input\Data;
 use Espo\Core\Record\Input\Filter;
@@ -702,6 +703,8 @@ class Service implements Crud,
         if (!$this->getEntityBeforeUpdate) {
             $this->loadAdditionalFields($entity);
         }
+
+        $this->filterInputReadOnlySaved($entity, $data);
 
         if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
             throw new ForbiddenSilent("No edit access.");
@@ -1718,5 +1721,18 @@ class Service implements Crud,
         if (!$this->acl->check($entity, AclTable::ACTION_CREATE)) {
             throw new ForbiddenSilent("No create access.");
         }
+    }
+
+    /**
+     * Filter input by the read-only-pre-save dynamic logic.
+     *
+     * @since 9.1.0
+     * @internal
+     */
+    public function filterInputReadOnlySaved(Entity $entity, stdClass $data): void
+    {
+        $processor = $this->injectableFactory->create(InputFilterProcessor::class);
+
+        $processor->process($entity, $data);
     }
 }

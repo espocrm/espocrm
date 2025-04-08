@@ -387,6 +387,24 @@ class FieldManager
             }
         }
 
+        if (array_key_exists('dynamicLogicReadOnlySaved', $fieldDefs)) {
+            if (!is_null($fieldDefs['dynamicLogicReadOnlySaved'])) {
+                $this->prepareLogicDefsFields($logicDefs, $name);
+
+                $logicDefs['fields'][$name]['readOnlySaved'] = $fieldDefs['dynamicLogicReadOnlySaved'];
+
+                $logicDefsToBeSet = true;
+            } else {
+                if ($this->metadata->get(['logicDefs', $scope, 'fields', $name, 'readOnlySaved'])) {
+                    $this->prepareLogicDefsFields($logicDefs, $name);
+
+                    $logicDefs['fields'][$name]['readOnlySaved'] = null;
+
+                    $logicDefsToBeSet = true;
+                }
+            }
+        }
+
         if ($logicDefsToBeSet) {
             $this->metadata->set('logicDefs', $scope, $logicDefs);
 

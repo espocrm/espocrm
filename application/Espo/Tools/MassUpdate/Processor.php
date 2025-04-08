@@ -30,7 +30,6 @@
 namespace Espo\Tools\MassUpdate;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\FieldProcessing\LinkMultiple\ListLoader as LinkMultipleLoader;
 use Espo\Core\FieldProcessing\Loader\Params as LoaderParams;
 use Espo\Core\MassAction\QueryBuilder;
@@ -46,6 +45,7 @@ use Espo\Core\Record\Service;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Log;
+use Espo\Core\Utils\ObjectUtil;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 use Espo\Repositories\Attachment as AttachmentRepository;
@@ -75,7 +75,6 @@ class Processor
     /**
      * @throws BadRequest
      * @throws Forbidden
-     * @throws Error
      */
     public function process(Params $params, Data $data): Result
     {
@@ -111,7 +110,13 @@ class Processor
         $count = 0;
 
         foreach ($collection as $i => $entity) {
-            $itemResult = $this->processEntity($entity, $filteredData, $i, $copyFieldList, $service);
+            $itemResult = $this->processEntity(
+                entity: $entity,
+                data: $filteredData,
+                i: $i,
+                fieldToCopyList: $copyFieldList,
+                service: $service,
+            );
 
             if (!$itemResult) {
                 continue;
@@ -157,20 +162,27 @@ class Processor
      * @param string[] $fieldToCopyList
      * @param Service<Entity> $service
      */
-    private function processEntity(Entity $entity, Data $data, int $i, array $fieldToCopyList, Service $service): bool
-    {
+    private function processEntity(
+        Entity $entity,
+        Data $data,
+        int $i,
+        array $fieldToCopyList,
+        Service $service
+    ): bool {
+
+        $service->loadAdditionalFields($entity);
+
         if (!$this->acl->check($entity, Table::ACTION_EDIT)) {
             return false;
         }
 
         $values = $this->prepareItemValueMap($entity, $data, $i, $fieldToCopyList);
 
-        // Needed for link check.
-        $this->linkMultipleLoader->process(
-            $entity,
-            LoaderParams::create()
-                ->withSelect($data->getAttributeList())
-        );
+        $service->filterInputReadOnlySaved($entity, $values);
+
+        if (count(get_object_vars($values)) === 0) {
+            return false;
+        }
 
         $entity->set($values);
 
@@ -217,7 +229,9 @@ class Processor
     {
         $dataModified = $this->copy($entity->getEntityType(), $data, $i, $copyFieldList);
 
-        return $this->valueMapPreparator->prepare($entity, $dataModified);
+        $values = $this->valueMapPreparator->prepare($entity, $dataModified);
+
+        return ObjectUtil::clone($values);
     }
 
     /**

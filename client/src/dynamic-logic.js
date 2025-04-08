@@ -58,7 +58,12 @@ class DynamicLogic {
          * @type {string[]}
          * @private
          */
-        this.fieldTypeList = ['visible', 'required', 'readOnly'];
+        this.fieldTypeList = [
+            'visible',
+            'required',
+            'readOnlySaved',
+            'readOnly',
+        ];
 
         /**
          * @type {string[]}
@@ -74,34 +79,58 @@ class DynamicLogic {
         const fields = this.defs.fields || {};
 
         Object.keys(fields).forEach(field => {
-            const item = (fields[field] || {});
+            /** @type {Record} */
+            const item = fields[field] || {};
+
+            let readOnlyIsProcessed = false;
 
             this.fieldTypeList.forEach(type => {
-                if (!(type in item)) {
+                if (!(type in item) || !item[type]) {
                     return;
                 }
 
-                if (!item[type]) {
-                    return;
-                }
-
-                const typeItem = (item[type] || {});
+                /** @type {Record} */
+                const typeItem = item[type] || {};
 
                 if (!typeItem.conditionGroup) {
                     return;
                 }
 
+                if (type === 'readOnlySaved') {
+                    if (this.recordView.model.isNew()) {
+                        return;
+                    }
+
+                    if (this.checkConditionGroupInternal(typeItem.conditionGroup, 'and', true)) {
+                        this.makeFieldReadOnlyTrue(field);
+
+                        readOnlyIsProcessed = true;
+                    } else {
+                        this.makeFieldReadOnlyFalse(field);
+                    }
+
+                    return
+                }
+
                 const result = this.checkConditionGroupInternal(typeItem.conditionGroup);
 
-                if (type === 'required') {
+                if (type === 'required' && !readOnlyIsProcessed) {
                     result ?
                         this.makeFieldRequiredTrue(field) :
                         this.makeFieldRequiredFalse(field);
-                } else if (type === 'readOnly') {
+
+                    return;
+                }
+
+                if (type === 'readOnly') {
                     result ?
                         this.makeFieldReadOnlyTrue(field) :
                         this.makeFieldReadOnlyFalse(field);
-                } else if (type === 'visible') {
+
+                    return;
+                }
+
+                if (type === 'visible') {
                     result ?
                         this.makeFieldVisibleTrue(field) :
                         this.makeFieldVisibleFalse(field);
@@ -190,11 +219,12 @@ class DynamicLogic {
 
     /**
      * @private
-     * @param {Object} data A condition group.
-     * @param {'and'|'or'|'not'} [type='and'] A type.
+     * @param {Object} data
+     * @param {'and'|'or'|'not'} [type='and']
+     * @param {boolean} [preSave]
      * @returns {boolean}
      */
-    checkConditionGroupInternal(data, type) {
+    checkConditionGroupInternal(data, type, preSave = false) {
         type = type || 'and';
 
         let list;
@@ -206,7 +236,7 @@ class DynamicLogic {
             result = true;
 
             for (const i in list) {
-                if (!this.checkCondition(list[i])) {
+                if (!this.checkCondition(list[i], preSave)) {
                     result = false;
 
                     break;
@@ -216,7 +246,7 @@ class DynamicLogic {
             list =  data || [];
 
             for (const i in list) {
-                if (this.checkCondition(list[i])) {
+                if (this.checkCondition(list[i], preSave)) {
                     result = true;
 
                     break;
@@ -224,7 +254,7 @@ class DynamicLogic {
             }
         } else if (type === 'not') {
             if (data) {
-                result = !this.checkCondition(data);
+                result = !this.checkCondition(data, preSave);
             }
         }
 
@@ -234,9 +264,10 @@ class DynamicLogic {
     /**
      * @private
      * @param {string} attribute
+     * @param {boolean} preSave
      * @return {*}
      */
-    getAttributeValue(attribute) {
+    getAttributeValue(attribute, preSave) {
         if (attribute.startsWith('$')) {
             if (attribute === '$user.id') {
                 return this.recordView.getUser().id;
@@ -245,6 +276,10 @@ class DynamicLogic {
             if (attribute === '$user.teamsIds') {
                 return this.recordView.getUser().getTeamIdList();
             }
+        }
+
+        if (preSave) {
+            return this.recordView.attributes[attribute];
         }
 
         if (!this.recordView.model.has(attribute)) {
@@ -256,16 +291,17 @@ class DynamicLogic {
 
     /**
      * @private
-     * @param {Object} defs Definitions.
+     * @param {Object} defs
+     * @param {boolean} preSave
      * @returns {boolean}
      */
-    checkCondition(defs) {
+    checkCondition(defs, preSave) {
         defs = defs || {};
 
         const type = defs.type || 'equals';
 
         if (['or', 'and', 'not'].includes(type)) {
-            return this.checkConditionGroupInternal(defs.value, /** @type {'or'|'and'|'not'} */ type);
+            return this.checkConditionGroupInternal(defs.value, /** @type {'or'|'and'|'not'} */type, preSave);
         }
 
         const attribute = defs.attribute;
@@ -275,7 +311,7 @@ class DynamicLogic {
             return false;
         }
 
-        const setValue = this.getAttributeValue(attribute);
+        const setValue = this.getAttributeValue(attribute, preSave);
 
         if (type === 'equals') {
             return setValue === value;

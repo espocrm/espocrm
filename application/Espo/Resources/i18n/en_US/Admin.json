@@ -203,6 +203,7 @@
         "dynamicLogicRequired": "Conditions making field required",
         "dynamicLogicOptions": "Conditional options",
         "dynamicLogicInvalid": "Conditions making field invalid",
+        "dynamicLogicReadOnlySaved": "Saved state conditions making field read-only",
         "probabilityMap": "Stage Probabilities (%)",
         "notActualOptions": "Not Actual Options",
         "activeOptions": "Active Options",

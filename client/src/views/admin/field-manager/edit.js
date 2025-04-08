@@ -537,6 +537,22 @@ class FieldManagerEditView extends View {
             this.hasDynamicLogicPanel = true;
         }
 
+        if (!defs.dynamicLogicReadOnlySavedDisabled && !readOnly) {
+            const dynamicLogicReadOnlySaved = this.getMetadata()
+                .get(['logicDefs', this.scope, 'fields', this.field, 'readOnlySaved']);
+
+            this.model.set('dynamicLogicReadOnlySaved', dynamicLogicReadOnlySaved);
+
+            promiseList.push(
+                this.createFieldView(null, 'dynamicLogicReadOnlySaved', null, {
+                    view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
+                    scope: this.scope,
+                })
+            );
+
+            this.hasDynamicLogicPanel = true;
+        }
+
         return Promise.all(promiseList);
     }
 
@@ -577,12 +593,14 @@ class FieldManagerEditView extends View {
             this.hideField('dynamicLogicRequired');
             this.hideField('dynamicLogicOptions');
             this.hideField('dynamicLogicInvalid');
+            this.hideField('dynamicLogicPreSave');
         }
         else {
             this.showField('dynamicLogicReadOnly');
             this.showField('dynamicLogicRequired');
             this.showField('dynamicLogicOptions');
             this.showField('dynamicLogicInvalid');
+            this.showField('dynamicLogicPreSave');
         }
     }
 

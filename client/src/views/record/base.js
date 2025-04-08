@@ -748,7 +748,24 @@ class BaseRecordView extends View {
 
         this.dynamicLogic = new DynamicLogic(this.dynamicLogicDefs, this);
 
-        this.listenTo(this.model, 'change', () => this.processDynamicLogic());
+        this.listenTo(this.model, 'sync', (m, a, /** Record */o) => {
+            if (o.action !== 'save' && o.action !== 'fetch') {
+                return;
+            }
+
+            // Pre-save attributes not yet prepared.
+            setTimeout(() => this.processDynamicLogic(), 0);
+        });
+
+        this.listenTo(this.model, 'change', (m, /** Record */o) => {
+            if (o.action === 'save' || o.action === 'fetch') {
+                // To be processed by the 'sync' handler.
+                return;
+            }
+
+            this.processDynamicLogic();
+        });
+
         this.processDynamicLogic();
     }
 
