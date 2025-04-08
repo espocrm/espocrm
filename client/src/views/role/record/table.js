@@ -1216,7 +1216,7 @@ class RoleRecordTableView extends View {
 
 class CustomEnumFieldView extends EnumFieldView {
 
-    requestAnimationFrame = true
+    nativeSelect = true
 }
 
 export default RoleRecordTableView;

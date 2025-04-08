@@ -101,7 +101,7 @@ class EnumFieldView extends BaseFieldView {
      * @protected
      * @type {boolean}
      */
-    requestAnimationFrame = false
+    nativeSelect = false;
 
     // noinspection JSCheckFunctionSignatures
     /** @inheritDoc */
@@ -428,10 +428,9 @@ class EnumFieldView extends BaseFieldView {
             this.$element.on('change', () => this.trigger('change'));
         }
 
-        if (this.isEditMode() || this.isSearchMode()) {
+        if ((this.isEditMode() || this.isSearchMode()) && !this.nativeSelect) {
             Select.init(this.$element, {
                 matchAnyWord: true,
-                requestAnimationFrame: this.requestAnimationFrame,
             });
         }
     }

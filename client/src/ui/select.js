@@ -42,8 +42,6 @@ import Selectize from 'lib!selectize';
  * @property {'value'|'text'|'$order'|'$score'} [sortBy='$order'] Item sorting.
  * @property {'asc'|'desc'} [sortDirection='asc'] Sort direction.
  * @property {function()} [onFocus] On-focus callback.
- * @property {boolean} [requestAnimationFrame] If many elements rendered on the same form, it significantly
- *     boosts rendering performance.
  */
 
 /**
@@ -121,7 +119,6 @@ const Select = {
             allowEmptyOption: allowedValues.includes(''),
             showEmptyOptionInDropdown: true,
             $relativeParent: $relativeParent,
-            requestAnimationFrame: options.requestAnimationFrame,
             render: {
                 item: function (data) {
                     return $('<div>')
