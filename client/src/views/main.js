@@ -167,6 +167,8 @@ class MainView extends View {
             itemList.forEach(item => {
                 const viewObject = this;
 
+                // @todo Set _reRenderHeaderOnSync to true if `acl` is set `ascScope` is not set?
+
                 if (
                     (item.initFunction || item.checkVisibilityFunction) &&
                     (item.handler || item.data && item.data.handler)
