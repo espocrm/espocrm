@@ -167,6 +167,9 @@ class MainView extends View {
             itemList.forEach(item => {
                 const viewObject = this;
 
+                // @todo Set _reRenderHeaderOnSync to true if `acl` is set `ascScope` is not set?
+                //     Set _reRenderHeaderOnSync in `addMenuItem` method.
+
                 if (
                     (item.initFunction || item.checkVisibilityFunction) &&
                     (item.handler || item.data && item.data.handler)
@@ -702,8 +705,20 @@ class MainView extends View {
         }
 
         const processUi = () => {
-            this.$headerActionsContainer.find(`li > .action[data-name="${name}"]`).parent().removeClass('hidden');
-            this.$headerActionsContainer.find(`a.action[data-name="${name}"]`).removeClass('hidden');
+            const $dropdownItem = this.$headerActionsContainer.find(`li > .action[data-name="${name}"]`).parent();
+            const $button = this.$headerActionsContainer.find(`a.action[data-name="${name}"]`);
+
+            // Item can be available but not rendered as it was skipped by access check in getMenu.
+            if (item && !$dropdownItem.length && !$button.length) {
+                if (this.getHeaderView()) {
+                    this.getHeaderView().reRender();
+                }
+
+                return;
+            }
+
+            $dropdownItem.removeClass('hidden');
+            $button.removeClass('hidden');
 
             this.controlMenuDropdownVisibility();
             this.adjustButtons();
