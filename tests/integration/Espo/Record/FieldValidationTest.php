@@ -31,6 +31,7 @@ namespace tests\integration\Espo\Record;
 
 use Espo\Core\Application;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\FieldValidation\Type;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Record\UpdateParams;
@@ -514,5 +515,64 @@ class FieldValidationTest extends BaseTestCase
         }
 
         $this->assertTrue($thrown);
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testDynamicLogicRequired(): void
+    {
+        $metadata = $this->getMetadata();
+
+        $metadata->set('logicDefs', Account::ENTITY_TYPE, [
+            'fields' => [
+                'description' => [
+                    Type::REQUIRED => [
+                        'conditionGroup' => [
+                            [
+                                'type' => 'equals',
+                                'attribute' => 'type',
+                                'value' => 'Customer',
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $metadata->save();
+
+        $this->reCreateApplication();
+
+        $service = $this->getContainer()->getByClass(ServiceContainer::class)->getByClass(Account::class);
+
+        $account = $service->create((object) [
+            'name' => 'Test',
+        ], CreateParams::create());
+
+        $isThrown = false;
+
+        try {
+            $service->update($account->getId(), (object) [
+                'type' => 'Customer',
+            ], UpdateParams::create());
+        } catch (BadRequest) {
+            $isThrown = true;
+        }
+
+        $this->assertTrue($isThrown);
+
+        $isThrown = false;
+
+        try {
+            $service->update($account->getId(), (object) [
+                'type' => 'Customer',
+                'description' => 'Test.',
+            ], UpdateParams::create());
+        } catch (BadRequest) {
+            $isThrown = true;
+        }
+
+        $this->assertFalse($isThrown);
     }
 }

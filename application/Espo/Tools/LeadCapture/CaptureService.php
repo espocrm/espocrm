@@ -32,7 +32,8 @@ namespace Espo\Tools\LeadCapture;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Field\Link;
 use Espo\Core\FieldValidation\Exceptions\ValidationError;
-use Espo\Core\FieldValidation\Failure;
+use Espo\Core\FieldValidation\Failure as ValidationFailure;
+use Espo\Core\FieldValidation\Type as ValidationType;
 use Espo\Core\Name\Field;
 use Espo\Core\PhoneNumber\Sanitizer as PhoneNumberSanitizer;
 use Espo\Core\Job\JobSchedulerFactory;
@@ -511,7 +512,7 @@ class CaptureService
             $lead->addLinkMultipleId(Field::TEAMS, $leadCapture->getTargetTeamId());
         }
 
-        $validationParams = ValidationParams::create()->withTypeSkipFieldList('required', $fieldList);
+        $validationParams = ValidationParams::create()->withTypeSkipFieldList(ValidationType::REQUIRED, $fieldList);
 
         $this->fieldValidationManager->process($lead, $data, $validationParams);
 
@@ -520,10 +521,10 @@ class CaptureService
                 continue;
             }
 
-            $notValid = $this->fieldValidationManager->check($lead, $field, 'required', $data, true);
+            $notValid = $this->fieldValidationManager->check($lead, $field, ValidationType::REQUIRED, $data, true);
 
             if (!$notValid) {
-                $failure = new Failure(Lead::ENTITY_TYPE, $field, 'required');
+                $failure = new ValidationFailure(Lead::ENTITY_TYPE, $field, ValidationType::REQUIRED);
 
                 throw ValidationError::create($failure);
             }

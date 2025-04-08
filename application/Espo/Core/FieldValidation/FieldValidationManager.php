@@ -29,14 +29,16 @@
 
 namespace Espo\Core\FieldValidation;
 
-use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
+use Espo\Core\Utils\Log;
 use Espo\ORM\Defs;
 use Espo\ORM\Entity;
-
 use Espo\Core\FieldValidation\Exceptions\ValidationError;
 use Espo\Core\FieldValidation\Validator\Data;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\FieldUtil;
+use Espo\Tools\DynamicLogic\ConditionCheckerFactory;
+use Espo\Tools\DynamicLogic\Exceptions\BadCondition;
+use Espo\Tools\DynamicLogic\Item as LogicItem;
 
 use LogicException;
 use stdClass;
@@ -59,7 +61,9 @@ class FieldValidationManager
         private FieldUtil $fieldUtil,
         CheckerFactory $factory,
         private ValidatorFactory $validatorFactory,
-        private Defs $defs
+        private Defs $defs,
+        private ConditionCheckerFactory $conditionCheckerFactory,
+        private Log $log,
     ) {
         $this->checkerFactory = $factory;
     }
@@ -107,30 +111,38 @@ class FieldValidationManager
     ): array {
 
         $dataIsSet = $data !== null;
+        $entityType = $entity->getEntityType();
 
         $data ??= (object) [];
         $params ??= new FieldValidationParams();
-
-        $fieldList = array_filter(
-            $this->fieldUtil->getEntityTypeFieldList($entity->getEntityType()),
-            fn ($field) => !in_array($field, $params->getSkipFieldList())
-        );
-
         $failureList = [];
-
-        $entityDefs = $this->defs->getEntity($entity->getEntityType());
+        $fieldList = $this->getFieldList($entityType, $params);
+        $entityDefs = $this->defs->getEntity($entityType);
 
         foreach ($fieldList as $field) {
+            $typeList = null;
+
             if (
                 !$entity->isNew() &&
                 $dataIsSet &&
                 !$entityDefs->tryGetField($field)?->getParam('forceValidation') &&
-                !$this->isFieldSetInData($entity->getEntityType(), $field, $data)
+                !$this->isFieldSetInData($entityType, $field, $data)
             ) {
-                continue;
+                if (!$this->hasRequiredLogic($entityType, $field)) {
+                    continue;
+                }
+
+                $typeList = [Type::REQUIRED];
             }
 
-            $itemFailureList = $this->processField($entity, $field, $params, $data, $throw);
+            $itemFailureList = $this->processField(
+                entity: $entity,
+                field: $field,
+                params: $params,
+                data: $data,
+                throw: $throw,
+                typeList: $typeList,
+            );
 
             $failureList = array_merge($failureList, $itemFailureList);
         }
@@ -192,6 +204,14 @@ class FieldValidationManager
 
         $validationValue = $value ?? $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, $type);
         $isMandatory = in_array($type, $this->getMandatoryValidationList($entityType, $field));
+
+        if (
+            $type === Type::REQUIRED &&
+            !$validationValue &&
+            $this->checkDynamicLogicRequired($entity, $field)
+        ) {
+            $validationValue = true;
+        }
 
         $skip = !$isMandatory && (is_null($validationValue) || $validationValue === false);
 
@@ -256,6 +276,7 @@ class FieldValidationManager
     }
 
     /**
+     * @param ?string[] $typeList
      * @return Failure[]
      * @throws ValidationError
      */
@@ -264,12 +285,17 @@ class FieldValidationManager
         string $field,
         FieldValidationParams $params,
         stdClass $data,
-        bool $throw
+        bool $throw,
+        ?array $typeList = null,
     ): array {
 
         $validationList = $this->getAllValidationList($entity->getEntityType(), $field, $params);
 
         foreach ($validationList as $type) {
+            if ($typeList !== null && !in_array($type, $typeList)) {
+                continue;
+            }
+
             $result = $this->check($entity, $field, $type, $data);
 
             if ($result) {
@@ -434,5 +460,45 @@ class FieldValidationManager
         }
 
         return null;
+    }
+
+    private function checkDynamicLogicRequired(Entity $entity, string $field): bool
+    {
+        $entityType = $entity->getEntityType();
+
+        /** @var stdClass[] $group */
+        $group = $this->metadata->getObjects("logicDefs.$entityType.fields.$field.required.conditionGroup");
+
+        if (!is_array($group)) {
+            return false;
+        }
+
+        $checker = $this->conditionCheckerFactory->create($entity);
+
+        try {
+            $item = LogicItem::fromGroupDefinition($group);
+
+            return $checker->check($item);
+        } catch (BadCondition $e) {
+            $this->log->warning("Bad logic condition for $entityType $field.", ['exception' => $e]);
+        }
+
+        return false;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getFieldList(string $entityType, FieldValidationParams $params): array
+    {
+        return array_filter(
+            $this->fieldUtil->getEntityTypeFieldList($entityType),
+            fn($field) => !in_array($field, $params->getSkipFieldList())
+        );
+    }
+
+    private function hasRequiredLogic(string $entityType, string $field): bool
+    {
+        return (bool) $this->metadata->get("logicDefs.$entityType.fields.$field.required");
     }
 }
