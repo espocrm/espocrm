@@ -77,6 +77,22 @@ class ViewHelper {
             if (node instanceof HTMLOListElement && node.start && node.start > 99) {
                 node.removeAttribute('start');
             }
+
+            if (node instanceof HTMLFormElement) {
+                if (node.action) {
+                    node.removeAttribute('action');
+                }
+
+                if (node.hasAttribute('method')) {
+                    node.removeAttribute('method');
+                }
+            }
+
+            if (node instanceof HTMLButtonElement) {
+                if (node.type === 'submit') {
+                    node.type = 'button';
+                }
+            }
         });
 
         DOMPurify.addHook('afterSanitizeAttributes', function (node) {
@@ -91,6 +107,29 @@ class ViewHelper {
                     node.setAttribute('target', '_blank');
                     node.setAttribute('rel', 'noopener noreferrer');
                 }
+            }
+        });
+
+        DOMPurify.addHook('uponSanitizeAttribute', (node, data) => {
+            if (data.attrName === 'style') {
+                const style = data.attrValue
+                    .split(';')
+                    .map(s => s.trim())
+                    .filter(rule => {
+                        const [property, value] = rule.split(':')
+                            .map(s => s.trim().toLowerCase());
+
+                        if (
+                            property === 'position' &&
+                            ['absolute', 'fixed', 'sticky'].includes(value)
+                        ) {
+                            return false;
+                        }
+
+                        return true;
+                    });
+
+                data.attrValue = style.join('; ');
             }
         });
     }
