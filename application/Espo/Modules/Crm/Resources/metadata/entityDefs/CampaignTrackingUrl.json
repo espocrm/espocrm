@@ -12,7 +12,8 @@
             "type": "varchar",
             "notStorable": true,
             "orderDisabled": true,
-            "readOnly": true
+            "readOnly": true,
+            "copyToClipboard": true
         },
         "campaign": {
             "type": "link",

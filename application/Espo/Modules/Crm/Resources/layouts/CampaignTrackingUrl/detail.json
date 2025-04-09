@@ -1,6 +1,5 @@
 [
     {
-        "label": "",
         "rows": [
             [
                 {"name": "name"},
@@ -17,7 +16,8 @@
                 {"name": "message"}
             ],
             [
-                {"name": "urlToUse"}
+                {"name": "urlToUse"},
+                false
             ]
         ]
     }
