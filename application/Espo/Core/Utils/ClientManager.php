@@ -112,6 +112,10 @@ class ClientManager
             $string .= ' ' . $src;
         }
 
+        if (!$this->config->get('clientCspFormActionDisabled')) {
+            $string .= "; form-action 'self'";
+        }
+
         // Checking the parameter for bc.
         if (!$this->config->get('clientXFrameOptionsHeaderDisabled')) {
             $string .= '; frame-ancestors';
