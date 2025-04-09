@@ -51,7 +51,8 @@
                             "name": "status"
                         },
                         {
-                            "name": "priority"
+                            "name": "priority",
+                            "soft": true
                         },
                         {
                             "name": "account"

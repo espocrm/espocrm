@@ -46,6 +46,10 @@
                         },
                         {
                             "name": "amount"
+                        },
+                        {
+                            "name": "closeDate",
+                            "soft": true
                         }
                     ]
                 ]

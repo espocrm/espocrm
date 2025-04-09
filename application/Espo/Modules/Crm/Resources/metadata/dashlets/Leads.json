@@ -38,9 +38,6 @@
                         {
                             "name": "name",
                             "link": true
-                        },
-                        {
-                            "name": "addressCity"
                         }
                     ],
                     [
@@ -48,7 +45,9 @@
                             "name": "status"
                         },
                         {
-                            "name": "source"
+                            "name": "source",
+                            "soft": true,
+                            "small": true
                         }
                     ]
                 ]

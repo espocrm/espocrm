@@ -84,6 +84,9 @@ class ActivitiesDashletView extends BaseDashletView {
                 ],
                 [
                     {
+                        name: 'status',
+                    },
+                    {
                         name: 'dateEnd',
                         soft: true
                     },
