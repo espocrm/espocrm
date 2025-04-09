@@ -929,6 +929,7 @@ class DetailRecordView extends BaseRecordView {
                     name: 'saveAndContinueEditing',
                     label: 'Save & Continue Editing',
                     title: 'Ctrl+S',
+                    groupIndex: 0,
                 });
             }
         }

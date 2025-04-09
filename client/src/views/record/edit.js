@@ -62,8 +62,12 @@ class EditRecordView extends DetailRecordView {
             title: 'Esc',
         }
     ]
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     * @type {Array<module:views/record/detail~dropdownItem>}
+     */
     dropdownItemList = []
+
     /** @inheritDoc */
     sideView = 'views/record/edit-side'
     /** @inheritDoc */
@@ -180,6 +184,7 @@ class EditRecordView extends DetailRecordView {
                 name: 'saveAndContinueEditing',
                 label: 'Save & Continue Editing',
                 title: 'Ctrl+S',
+                groupIndex: 0,
             });
         }
 
@@ -192,6 +197,7 @@ class EditRecordView extends DetailRecordView {
                 name: 'saveAndNew',
                 label: 'Save & New',
                 title: 'Ctrl+Alt+Enter',
+                groupIndex: 0,
             });
         }
     }
