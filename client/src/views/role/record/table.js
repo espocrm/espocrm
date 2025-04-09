@@ -977,10 +977,15 @@ class RoleRecordTableView extends View {
     async reRenderPreserveSearch() {
         const searchText = this.$quickSearch.val();
 
+        const scrollY = window.scrollY;
+
         await this.reRender();
+
+        window.scrollTo({top: scrollY});
 
         this.$quickSearch.val(searchText);
         this.processQuickSearch(searchText);
+
     }
 
     /**
@@ -989,7 +994,6 @@ class RoleRecordTableView extends View {
      */
     initStickyHeader(type) {
         const $sticky = this.$el.find(`.sticky-header-${type}`);
-        const $window = $(window);
 
         const screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
@@ -1008,7 +1012,7 @@ class RoleRecordTableView extends View {
             this.getThemeManager().getFontSizeFactor();
 
         const handle = () => {
-            if ($(window.document).width() < screenWidthXs) {
+            if (window.innerWidth < screenWidthXs) {
                 $sticky.addClass('hidden');
 
                 return;
@@ -1024,7 +1028,7 @@ class RoleRecordTableView extends View {
             topEdge -= navbarHeight;
 
             const bottomEdge = topEdge + $table.outerHeight(true) - $buttonContainer.height();
-            const scrollTop = $window.scrollTop();
+            const scrollTop = window.scrollY;
             const width = $table.width();
 
             if (scrollTop > topEdge && scrollTop < bottomEdge) {
@@ -1042,11 +1046,13 @@ class RoleRecordTableView extends View {
             }
         };
 
-        $window.off('scroll.' + type + '-' + this.cid);
-        $window.on('scroll.' + type + '-' + this.cid, handle);
+        const $window = $(window);
 
-        $window.off('resize.' + type + '-' + this.cid);
-        $window.on('resize.' + type + '-' + this.cid, handle);
+        $window.off(`scroll.${type}-${this.cid}`);
+        $window.on(`scroll.${type}-${this.cid}`, handle);
+
+        $window.off(`resize.${type}-${this.cid}`);
+        $window.on(`resize.${type}-${this.cid}`, handle);
 
         handle();
     }
