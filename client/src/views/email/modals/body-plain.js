@@ -32,7 +32,14 @@ export default class extends ModalView {
 
     backdrop = true
 
-    templateContent = `<div class="field" data-name="body-plain">{{{bodyPlain}}}</div>`
+    templateContent = `
+        <div class="panel no-side-margin">
+            <div class="panel-body">
+                <div class="field" data-name="body-plain">{{{bodyPlain}}}</div>
+            </div>
+
+        </div>
+    `
 
     setup() {
         super.setup();
@@ -52,6 +59,7 @@ export default class extends ModalView {
                 params: {
                     readOnly: true,
                     inlineEditDisabled: true,
+                    displayRawText: true,
                 },
             },
         });
