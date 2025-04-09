@@ -522,21 +522,18 @@ select.form-control {
     }
 
     &::picker(select) {
+        background-color: var(--dropdown-bg);
+
+        padding-top: var(--4px);
+        padding-bottom: var(--4px);
     }
 
     option {
         padding: var(--3px) var(--padding-base-horizontal);
 
-        &:first-child {
-            margin-top: var(--4px);
-        }
-
-        &:last-child {
-            margin-bottom: var(--4px);
-        }
-
         &:focus-visible {
             outline: var(--1px) solid var(--input-border-focus-rgba);
+            background-color: var(--dropdown-link-hover-bg);
             //outline-offset: var(--minus-1px);
         }
 
@@ -546,19 +543,15 @@ select.form-control {
     }
 
     &::picker-icon {
+        content: "\f0d7";
+        //noinspection CssNoGenericFontName
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        font-size: var(--10px);
         color: var(--text-muted-color);
-        display: inline-block;
-        width: 0;
-        height: 0;
-        top: var(--16px);
-        right: var(--8px);
-        margin-left: var(--2px);
-        vertical-align: middle;
-        border-top: var(--4px) dashed;
-        border-right: var(--4px) solid transparent;
-        border-left: var(--4px) solid transparent;
-        position: absolute;
-        content: ' ';
+        top: var(--4px);
+        right: var(--1px);
+        position: relative;
     }
 
     &:has(option.text-success:checked) {
