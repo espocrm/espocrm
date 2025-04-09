@@ -37,8 +37,6 @@ use Espo\Core\Mail\Parser;
 use Espo\Core\Mail\Message\Part;
 use Espo\Core\Mail\Message\MailMimeParser\Part as WrapperPart;
 
-use Psr\Http\Message\StreamInterface;
-
 use ZBateson\MailMimeParser\Header\AddressHeader;
 use ZBateson\MailMimeParser\Header\HeaderConsts;
 use ZBateson\MailMimeParser\IMessage;
