@@ -1,4 +1,4 @@
-<div class="formula-edit-container">
+<div class="formula-edit-container clearfix">
     <div>
         <div id="{{containerId}}">{{value}}</div>
     </div>
