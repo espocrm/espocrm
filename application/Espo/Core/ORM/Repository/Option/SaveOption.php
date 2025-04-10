@@ -108,4 +108,10 @@ class SaveOption
      * @since 9.0.0
      */
     public const NO_NOTIFICATIONS = 'noNotifications';
+
+    /**
+     * Skip audit log records.
+     * @since 9.1.0
+     */
+    public const SKIP_AUDITED = 'skipAudited';
 }

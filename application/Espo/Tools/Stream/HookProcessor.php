@@ -451,16 +451,18 @@ class HookProcessor
             $this->afterSaveStreamNotNewAssignedUsersIdsChanged($entity, $options);
         }
 
-        $this->service->handleAudited($entity, $options);
+        if (empty($options[SaveOption::SKIP_AUDITED])) {
+            $this->service->handleAudited($entity, $options);
 
-        $statusField = $this->getStatusField($entity->getEntityType());
+            $statusField = $this->getStatusField($entity->getEntityType());
 
-        if (
-            $statusField &&
-            $entity->get($statusField) &&
-            $entity->isAttributeChanged($statusField)
-        ) {
-            $this->service->noteStatus($entity, $statusField, $options);
+            if (
+                $statusField &&
+                $entity->get($statusField) &&
+                $entity->isAttributeChanged($statusField)
+            ) {
+                $this->service->noteStatus($entity, $statusField, $options);
+            }
         }
 
         $multipleField = $this->metadata->get(['streamDefs', $entity->getEntityType(), 'followingUsersField']) ??
@@ -677,7 +679,9 @@ class HookProcessor
         }
 
         if (!$entity->isNew()) {
-            $this->service->handleAudited($entity, $options);
+            if (empty($options[SaveOption::SKIP_AUDITED])) {
+                $this->service->handleAudited($entity, $options);
+            }
         }
     }
 
