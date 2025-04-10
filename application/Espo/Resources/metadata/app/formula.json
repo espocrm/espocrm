@@ -224,34 +224,34 @@
         },
         {
             "name": "entity\\isAttributeChanged",
-            "insertText": "entity\\isAttributeChanged(ATTRIBUTE)",
+            "insertText": "entity\\isAttributeChanged('ATTRIBUTE')",
             "returnType": "bool"
         },
         {
             "name": "entity\\isAttributeNotChanged",
-            "insertText": "entity\\isAttributeNotChanged(ATTRIBUTE)",
+            "insertText": "entity\\isAttributeNotChanged('ATTRIBUTE')",
             "returnType": "bool"
         },
         {
             "name": "entity\\attribute",
-            "insertText": "entity\\attribute(ATTRIBUTE)",
+            "insertText": "entity\\attribute('ATTRIBUTE')",
             "returnType": "mixed",
             "unsafe": true
         },
         {
             "name": "entity\\attributeFetched",
-            "insertText": "entity\\attributeFetched(ATTRIBUTE)",
+            "insertText": "entity\\attributeFetched('ATTRIBUTE')",
             "returnType": "mixed",
             "unsafe": true
         },
         {
             "name": "entity\\setAttribute",
-            "insertText": "entity\\setAttribute(ATTRIBUTE, VALUE)",
+            "insertText": "entity\\setAttribute('ATTRIBUTE', VALUE)",
             "unsafe": true
         },
         {
             "name": "entity\\clearAttribute",
-            "insertText": "entity\\clearAttribute(ATTRIBUTE)",
+            "insertText": "entity\\clearAttribute('ATTRIBUTE')",
             "unsafe": true
         },
         {
