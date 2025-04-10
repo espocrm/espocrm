@@ -31,8 +31,10 @@ namespace Espo\Services;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\Integration as IntegrationEntity;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
@@ -46,7 +48,8 @@ class Integration
         private EntityManager $entityManager,
         private User $user,
         private Config $config,
-        private ConfigWriter $configWriter
+        private ConfigWriter $configWriter,
+        private Metadata $metadata,
     ) {}
 
     /**
@@ -68,11 +71,14 @@ class Integration
     {
         $this->processAccessCheck();
 
+        /** @var ?IntegrationEntity $entity */
         $entity = $this->entityManager->getEntityById(IntegrationEntity::ENTITY_TYPE, $id);
 
         if (!$entity) {
             throw new NotFound();
         }
+
+        $this->prepareEntity($entity);
 
         return $entity;
     }
@@ -85,6 +91,7 @@ class Integration
     {
         $this->processAccessCheck();
 
+        /** @var ?IntegrationEntity $entity */
         $entity = $this->entityManager->getEntityById(IntegrationEntity::ENTITY_TYPE, $id);
 
         if (!$entity) {
@@ -106,6 +113,22 @@ class Integration
         $this->configWriter->set('integrations', $configData);
         $this->configWriter->save();
 
+        $this->prepareEntity($entity);
+
         return $entity;
+    }
+
+    private function prepareEntity(IntegrationEntity $entity): void
+    {
+        /** @var array<string, array<string, mixed>> $fields */
+        $fields = $this->metadata->get("integrations.{$entity->getId()}.fields") ?? [];
+
+        foreach ($fields as $field => $fieldDefs) {
+            $type = $fieldDefs['type'] ?? null;
+
+            if ($type === FieldType::PASSWORD) {
+                $entity->clear($field);
+            }
+        }
     }
 }
