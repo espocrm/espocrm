@@ -547,7 +547,7 @@ class SendService
 
             if (
                 !$this->user->isAdmin() &&
-                $personalAccount->getUser()->getId() !== $id
+                $personalAccount->getUser()->getId() !== $this->user->getId()
             ) {
                 throw new Forbidden();
             }
