@@ -386,7 +386,7 @@
         },
         {
             "name": "env\\userAttribute",
-            "insertText": "env\\userAttribute(ATTRIBUTE)",
+            "insertText": "env\\userAttribute('ATTRIBUTE')",
             "returnType": "mixed",
             "unsafe": true
         },
