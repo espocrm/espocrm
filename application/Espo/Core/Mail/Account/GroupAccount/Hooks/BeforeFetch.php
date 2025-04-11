@@ -38,7 +38,6 @@ use Espo\Core\Utils\Log;
 use Espo\Entities\EmailAddress;
 use Espo\ORM\EntityManager;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
-use Espo\Modules\Crm\Entities\MassEmail;
 use Espo\Modules\Crm\Entities\EmailQueueItem;
 use Espo\Modules\Crm\Tools\Campaign\LogService as CampaignService;
 
@@ -46,22 +45,12 @@ use Throwable;
 
 class BeforeFetch implements BeforeFetchInterface
 {
-    private Log $log;
-    private EntityManager $entityManager;
-    private BouncedRecognizer $bouncedRecognizer;
-    private CampaignService $campaignService;
-
     public function __construct(
-        Log $log,
-        EntityManager $entityManager,
-        BouncedRecognizer $bouncedRecognizer,
-        CampaignService $campaignService
-    ) {
-        $this->log = $log;
-        $this->entityManager = $entityManager;
-        $this->bouncedRecognizer = $bouncedRecognizer;
-        $this->campaignService = $campaignService;
-    }
+        private Log $log,
+        private EntityManager $entityManager,
+        private BouncedRecognizer $bouncedRecognizer,
+        private CampaignService $campaignService,
+    ) {}
 
     public function process(Account $account, Message $message): BeforeFetchResult
     {
@@ -69,10 +58,10 @@ class BeforeFetch implements BeforeFetchInterface
             try {
                 $toSkip = $this->processBounced($message);
             } catch (Throwable $e) {
-                $this->log->error(
-                    'InboundEmail ' . $account->getId() . ' ' .
-                    'Process Bounced Message; ' . $e->getCode() . ' ' . $e->getMessage()
-                );
+                $logMessage  = 'InboundEmail ' . $account->getId() . ' ' .
+                    'Process Bounced Message; ' . $e->getCode() . ' ' . $e->getMessage();
+
+                $this->log->error($logMessage, ['exception' => $e]);
 
                 return BeforeFetchResult::create()->withToSkip();
             }
@@ -116,7 +105,7 @@ class BeforeFetch implements BeforeFetchInterface
             $emailAddressEntity = $emailAddressRepository->getByAddress($emailAddress);
 
             if ($emailAddressEntity) {
-                $emailAddressEntity->set('invalid', true);
+                $emailAddressEntity->setInvalid(true);
 
                 $this->entityManager->saveEntity($emailAddressEntity);
             }
