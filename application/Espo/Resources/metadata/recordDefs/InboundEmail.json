@@ -15,5 +15,8 @@
     ],
     "readLoaderClassNameList": [
         "Espo\\Classes\\FieldProcessing\\InboundEmail\\IsSystemLoader"
+    ],
+    "listLoaderClassNameList": [
+        "Espo\\Classes\\FieldProcessing\\InboundEmail\\IsSystemLoader"
     ]
 }

@@ -3,7 +3,8 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "pattern": "$noBadCharacters"
+            "pattern": "$noBadCharacters",
+            "view": "views/inbound-email/fields/name"
         },
         "emailAddress": {
             "type": "varchar",
