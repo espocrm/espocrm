@@ -193,13 +193,15 @@
                 "url": "#Admin/groupEmailAccounts",
                 "label": "Group Email Accounts",
                 "iconClass": "fas fa-inbox",
-                "description": "groupEmailAccounts"
+                "description": "groupEmailAccounts",
+                "tabQuickSearch": true
             },
             {
                 "url": "#Admin/personalEmailAccounts",
                 "label": "Personal Email Accounts",
                 "iconClass": "fas fa-inbox",
-                "description": "personalEmailAccounts"
+                "description": "personalEmailAccounts",
+                "tabQuickSearch": true
             },
             {
                 "url": "#Admin/emailFilters",
