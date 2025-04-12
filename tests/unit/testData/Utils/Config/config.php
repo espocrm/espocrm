@@ -5,7 +5,7 @@ return array (
   'removeOption' => 'Test',
   'testOption' => 'Another Wrong Value',
   'testOption2' => 'Test2',
-  'database' => 
+  'database' =>
   array (
     'driver' => 'pdo_mysql',
     'host' => 'localhost',
@@ -24,16 +24,16 @@ return array (
   'weekStart' => 1,
   'thousandSeparator' => ',',
   'decimalMark' => '.',
-  'currencyList' => 
+  'currencyList' =>
   array (
     0 => 'USD',
     1 => 'EUR',
   ),
   'defaultCurrency' => 'USD',
-  'currency' => 
+  'currency' =>
   array (
     'base' => 'USD',
-    'rate' => 
+    'rate' =>
     array (
       'EUR' => '1.37',
     ),
@@ -41,38 +41,32 @@ return array (
   'outboundEmailIsShared' => true,
   'outboundEmailFromName' => 'EspoCRM',
   'outboundEmailFromAddress' => '',
-  'smtpServer' => '',
-  'smtpPort' => 25,
-  'smtpAuth' => true,
-  'smtpSecurity' => '',
-  'smtpUsername' => '',
-  'smtpPassword' => '',
-  'languageList' => 
+  'languageList' =>
   array (
     0 => 'en_US',
   ),
   'language' => 'en_US',
-  'logger' => 
+  'logger' =>
   array (
     'path' => 'data/logs/espo.log',
     'level' => 'INFO',
     'isRotate' => true,
     'maxRotateFiles' => 5,
   ),
-  'defaultPermissions' => 
+  'defaultPermissions' =>
   array (
     'dir' => '0775',
     'file' => '0664',
     'user' => '',
     'group' => '',
   ),
-  'cron' => 
+  'cron' =>
   array (
     'maxJobNumber' => 15,
     'jobPeriod' => 7800,
     'minExecutionTime' => 50,
   ),
-  'globalSearchEntityList' => 
+  'globalSearchEntityList' =>
   array (
     0 => 'Account',
     1 => 'Contact',
@@ -80,7 +74,7 @@ return array (
     3 => 'Prospect',
     4 => 'Opportunity',
   ),
-  'tabList' => 
+  'tabList' =>
   array (
     0 => 'Contact',
     1 => 'Account',
@@ -93,7 +87,7 @@ return array (
     8 => 'Case',
     9 => 'Prospect',
   ),
-  'quickCreateList' => 
+  'quickCreateList' =>
   array (
     0 => 'Account',
     1 => 'Contact',

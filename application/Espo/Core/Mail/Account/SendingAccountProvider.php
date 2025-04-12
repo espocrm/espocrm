@@ -36,7 +36,6 @@ use Espo\Core\Mail\Account\GroupAccount\AccountFactory as GroupAccountFactory;
 use Espo\Core\Mail\Account\PersonalAccount\AccountFactory as PersonalAccountFactory;
 use Espo\Core\Mail\ConfigDataProvider;
 use Espo\Core\Name\Field;
-use Espo\Core\Utils\Config;
 use Espo\Entities\EmailAccount as EmailAccountEntity;
 use Espo\Entities\InboundEmail as InboundEmailEntity;
 use Espo\Entities\User;
@@ -53,11 +52,9 @@ class SendingAccountProvider
 
     public function __construct(
         private EntityManager $entityManager,
-        private Config $config,
         private GroupAccountFactory $groupAccountFactory,
         private PersonalAccountFactory $personalAccountFactory,
         private AclManager $aclManager,
-        private SystemSettingsAccount $systemSettingsAccount,
         private ConfigDataProvider $configDataProvider,
     ) {}
 
@@ -219,12 +216,6 @@ class SendingAccountProvider
         $address = $this->configDataProvider->getSystemOutboundAddress();
 
         if (!$address) {
-            return;
-        }
-
-        if ($this->config->get('smtpServer')) {
-            $this->system = $this->systemSettingsAccount;
-
             return;
         }
 

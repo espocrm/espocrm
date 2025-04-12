@@ -26,9 +26,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import TestSendView from 'views/outbound-email/fields/test-send';
+import BaseFieldView from 'views/fields/base';
 
-export default class extends TestSendView {
+export default class EmailAccountTestSendFieldView extends BaseFieldView {
+
+    templateContent = `
+        <button
+            class="btn btn-default hidden"
+            data-action="sendTestEmail"
+        >{{translate 'Send Test Email' scope='Email'}}</button>
+    `
+
+    setup() {
+        super.setup();
+
+        this.addActionHandler('sendTestEmail', () => this.send());
+    }
+
+    fetch() {
+        return {};
+    }
 
     checkAvailability() {
         if (this.model.get('smtpHost')) {
@@ -45,6 +62,96 @@ export default class extends TestSendView {
 
         this.listenTo(this.model, 'change:smtpHost', () => {
             this.checkAvailability();
+        });
+    }
+
+    /**
+     * @protected
+     */
+    enableButton() {
+        this.$el.find('button').removeClass('disabled').removeAttr('disabled');
+    }
+
+    /**
+     * @protected
+     */
+    disabledButton() {
+        this.$el.find('button').addClass('disabled').attr('disabled', 'disabled');
+    }
+
+    /**
+     * @private
+     */
+    send() {
+        const data = this.getSmtpData();
+
+        this.createView('popup', 'views/outbound-email/modals/test-send', {
+            emailAddress: this.getUser().get('emailAddress'),
+        }).then(view => {
+            view.render();
+
+            this.listenToOnce(view, 'send', (emailAddress) => {
+                this.disabledButton();
+
+                data.emailAddress = emailAddress;
+
+                Espo.Ui.notify(this.translate('Sending...'));
+
+                view.close();
+
+                Espo.Ajax.postRequest('Email/sendTest', data)
+                    .then(() => {
+                        this.enableButton();
+
+                        Espo.Ui.success(this.translate('testEmailSent', 'messages', 'Email'));
+                    })
+                    .catch(xhr => {
+                            let reason = xhr.getResponseHeader('X-Status-Reason') || '';
+
+                            reason = reason
+                                .replace(/ $/, '')
+                                .replace(/,$/, '');
+
+                            let msg = this.translate('Error');
+
+                            if (xhr.status !== 200) {
+                                msg += ' ' + xhr.status;
+                            }
+
+                            if (xhr.responseText) {
+                                try {
+                                    const data = /** @type {Record} */JSON.parse(xhr.responseText);
+
+                                    if (data.messageTranslation) {
+                                        this.enableButton();
+
+                                        return;
+                                    }
+
+                                    reason = data.message || reason;
+                                }
+                                catch (e) {
+                                    this.enableButton();
+
+                                    console.error('Could not parse error response body.');
+
+                                    return;
+                                }
+                            }
+
+                            if (reason) {
+                                msg += ': ' + reason;
+                            }
+
+                            Espo.Ui.error(msg, true);
+                            console.error(msg);
+
+                            xhr.errorIsHandled = true;
+
+                            this.enableButton();
+                        }
+                    );
+            });
         });
     }
 
