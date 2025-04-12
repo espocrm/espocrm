@@ -28,17 +28,11 @@
  ************************************************************************/
 
 ob_start();
-$result = array('success' => false, 'errorMsg' => '');
+$result = ['success' => false, 'errorMsg' => ''];
 
 if (!empty($_SESSION['install'])) {
 
     $paramList = [
-        'smtpServer',
-        'smtpPort',
-        'smtpAuth',
-        'smtpSecurity',
-        'smtpUsername',
-        'smtpPassword',
         'outboundEmailFromName',
         'outboundEmailFromAddress',
         'outboundEmailIsShared',

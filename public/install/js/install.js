@@ -25,6 +25,7 @@
  * In accordance with Section 7(b) of the GNU Affero General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
+
 var InstallScript = function(opt) {
 	this.reChecking = false;
 
@@ -169,18 +170,16 @@ InstallScript.prototype.step2 = function() {
 }
 
 InstallScript.prototype.setupConfirmation = function() {
-	var self = this;
-	var backAction = 'step2';
-	var nextAction = 'step3';
+    const self = this;
+    const backAction = 'step2';
 
-	$('#back').click(function(){
+    $('#back').click(function(){
 
 		$(this).attr('disabled', 'disabled');
 		self.goTo(backAction);
 	})
 
 	$("#next").click(function(){
-
 		$(this).attr('disabled', 'disabled');
 		self.showLoading();
 		self.actionsChecking();
@@ -188,13 +187,13 @@ InstallScript.prototype.setupConfirmation = function() {
 }
 
 InstallScript.prototype.step3 = function() {
-	var self = this;
-	var backAction = '';
-	var nextAction = 'step4';
+    const self = this;
+    const backAction = '';
+    const nextAction = 'step4';
 
-	$('input[name="user-name"]').blur(function(){
-		var value = $(this).val();
-		value = value.replace(/[^a-z0-9_\s]/gi, '').replace(/[\s]/g, '_').toLowerCase();
+    $('input[name="user-name"]').blur(function(){
+        let value = $(this).val();
+        value = value.replace(/[^a-z0-9_\s]/gi, '').replace(/[\s]/g, '_').toLowerCase();
 		$(this).val(value);
 	})
 
@@ -213,8 +212,9 @@ InstallScript.prototype.step3 = function() {
 
 		self.checkPass({
 			success: function(){
-				var data = self.userSett;
-				data['user-name'] = self.userSett.name;
+                const data = self.userSett;
+
+                data['user-name'] = self.userSett.name;
 				data['user-pass'] = self.userSett.pass;
 
 				data.action = 'createUser';
@@ -242,122 +242,59 @@ InstallScript.prototype.step3 = function() {
 }
 
 InstallScript.prototype.step4 = function() {
-	var self = this;
-	var backAction = 'step3';
-	var nextAction = 'step5';
+    const self = this;
+    const backAction = 'step3';
+    const nextAction = 'finish';
 
-	$('#back').click(function(){
+    $('#back').click(function(){
 		$(this).attr('disabled', 'disabled');
 		self.goTo(backAction);
 	})
 
 	$("#next").click(function(){
 		$(this).attr('disabled', 'disabled');
+
 		self.setSystemSett();
 		if (!self.validate()) {
 			$(this).removeAttr('disabled');
 			return;
 		}
-		var data = self.systemSettings;
 
-		data.action = 'savePreferences';
+        const data = self.systemSettings;
+
+        data.action = 'savePreferences';
+
 		$.ajax({
 			url: "index.php",
 			type: "POST",
 			data: data,
 			dataType: 'json',
 		})
-		.done(function(ajaxData){
+		.done(ajaxData => {
 			if (typeof(ajaxData) != 'undefined' && ajaxData.success) {
 				self.goTo(nextAction);
 			}
-		})
-		.fail(function(ajaxData){
-
-		})
-
-	})
-}
-
-InstallScript.prototype.step5 = function() {
-	var self = this;
-	var backAction = 'step4';
-	var nextAction = 'finish';
-
-	$('#back').click(function(){
-		$(this).attr('disabled', 'disabled');
-		self.goTo(backAction);
-	})
-
-	$("#next").click(function(){
-		$(this).attr('disabled', 'disabled');
-		self.saveEmailSettings();
-		if (!self.validate()) {
-			$(this).removeAttr('disabled');
-			return;
-		}
-		var data = self.emailSettings;
-
-		data.action = 'saveEmailSettings';
-		$.ajax({
-			url: "index.php",
-			type: "POST",
-			data: data,
-			dataType: 'json',
-		})
-		.done(function(ajaxData){
-			if (typeof(ajaxData) != 'undefined' && ajaxData.success) {
-				self.goTo(nextAction);
-			}
-		})
-		.fail(function(ajaxData){
-
 		});
 	})
-
-	$('.field-smtpAuth').find('input[type="checkbox"]').change( function(e){
-		if ($(this).is(':checked')) {
-			$('.cell-smtpPassword').removeClass('hide');
-			$('.cell-smtpUsername').removeClass('hide');
-		}
-		else {
-			$('.cell-smtpPassword').addClass('hide');
-			$('.cell-smtpUsername').addClass('hide');
-			$('.cell-smtpUsername').find('input').val('');
-			$('.cell-smtpPassword').find('input').val('');
-		}
-	});
-	$('[name="smtpSecurity"]').change( function(e){
-
-		var smtpPorts = {
-			"": "25",
-			"SSL": "465",
-			"TLS": "587"
-		}
-
-		var portVal = $(this).val();
-
-		$('[name="smtpPort"]').val(smtpPorts[portVal]);
-	});
 }
 
 InstallScript.prototype.errors = function() {
-	var self = this;
+    const self = this;
 
-	this.reChecking = true;
-	var nextAction = '';
-	$("#re-check").click(function(){
+    this.reChecking = true;
+
+	$("#re-check").click(function () {
 		$(this).attr('disabled', 'disabled');
+
 		self.showLoading();
 		self.actionsChecking();
 	})
 }
 
 InstallScript.prototype.finish = function() {
-	var self = this;
+    const self = this;
 
-	var nextAction = '';
-	$("#start").click(function(){
+    $("#start").click(() => {
 		self.goToEspo();
 	})
 }
@@ -388,66 +325,67 @@ InstallScript.prototype.setSystemSett = function() {
 	this.systemSettings.language = $('[name="language"]').val();
 }
 
-InstallScript.prototype.saveEmailSettings = function() {
-	this.emailSettings.smtpServer = $('[name="smtpServer"]').val();
-	this.emailSettings.smtpPort = $('[name="smtpPort"]').val();
-	this.emailSettings.smtpAuth = $('[name="smtpAuth"]').is(':checked');
-	this.emailSettings.smtpSecurity = $('[name="smtpSecurity"]').val();
-	this.emailSettings.smtpUsername = $('[name="smtpUsername"]').val();
-	this.emailSettings.smtpPassword = $('[name="smtpPassword"]').val();
-	this.emailSettings.outboundEmailFromName = $('[name="outboundEmailFromName"]').val();
-	this.emailSettings.outboundEmailFromAddress = $('[name="outboundEmailFromAddress"]').val();
-	this.emailSettings.outboundEmailIsShared = $('[name="outboundEmailIsShared"]').is(':checked');
-}
-
 InstallScript.prototype.checkSett = function(opt) {
-	var self = this;
-	this.hideMsg();
+    const self = this;
+    this.hideMsg();
 
-	var data = this.connSett;
-	data.action = 'settingsTest';
+    const data = this.connSett;
+    data.action = 'settingsTest';
+
 	$.ajax({
 		url: "index.php",
 		data: data,
 		type: "POST",
 		dataType: 'json',
 	})
-	.done(function(data){
+	.done(data => {
 		if (typeof(data.success) !== 'undefined' && data.success) {
 			data.success = true;
-		}
-		else {
-			var msg = '';
-			var rowDelim = '<br>';
-			if (typeof(data.errors)) {
-				var errors = data.errors;
+		} else {
+            let msg = '';
+            const rowDelim = '<br>';
 
-				Object.keys(errors).forEach(function (errorName) {
-					let errorData = errors[errorName];
+            if (typeof(data.errors)) {
+                const errors = data.errors;
 
-					switch(errorName) {
+                Object.keys(errors).forEach(function (errorName) {
+                    const errorData = errors[errorName];
+
+                    switch(errorName) {
 					    case 'phpRequires':
-							var len = errorData.length;
-							for (var index = 0; index < len; index++) {
-								var temp = self.getLang('The PHP extension was not found...', 'messages');
+                            const len = errorData.length;
+
+                            for (let index = 0; index < len; index++) {
+								let temp = self.getLang('The PHP extension was not found...', 'messages');
+
 								temp = temp.replace('{extName}', errorData[index]);
-								msg += temp+rowDelim;
+
+								msg += temp + rowDelim;
 							}
+
 					        break;
 
 					    case 'modRewrite':
 					        msg += errorData + rowDelim;
+
 					        break;
 
 					    case 'dbConnect':
+                            let temp;
+
 					        if (typeof(errorData.errorCode) !== 'undefined') {
-								var temp = self.getLang(errorData.errorCode, 'messages');
-								if (temp == errorData.errorCode && typeof(errorData.errorMsg) !== 'undefined') temp = errorData.errorMsg;
+								temp = self.getLang(errorData.errorCode, 'messages');
+
+								if (temp == errorData.errorCode && typeof(errorData.errorMsg) !== 'undefined') {
+                                    temp = errorData.errorMsg;
+                                }
 							}
 							else if (typeof(errorData.errorMsg) !== 'undefined') {
 								temp = errorData.errorMsg;
 							}
-							msg += temp+rowDelim;
+
+							msg += temp + rowDelim;
+
 					        break;
 
 					    default:
@@ -466,9 +404,9 @@ InstallScript.prototype.checkSett = function(opt) {
 
 		opt.success(data);
 	})
-	.fail(function(){
-		let msg = self.getLang('Ajax failed', 'messages');
-		self.showMsg({msg: msg, error: true});
+	.fail(() => {
+        const msg = self.getLang('Ajax failed', 'messages');
+        self.showMsg({msg: msg, error: true});
 		opt.error();
 	})
 }
@@ -476,27 +414,27 @@ InstallScript.prototype.checkSett = function(opt) {
 InstallScript.prototype.validate = function() {
 	this.hideMsg();
 
-	var valid = true;
-	var elem = null;
-	var fieldRequired = [];
-	switch (this.action) {
+    let valid = true;
+    let elem = null;
+    let fieldRequired = [];
+
+    switch (this.action) {
 		case 'step2':
 			fieldRequired = ['db-name', 'host-name', 'db-user-name', 'db-driver'];
 			break;
+
 		case 'step3':
 			fieldRequired = ['user-name', 'user-pass', 'user-confirm-pass'];
 			break;
+
 		case 'step4':
 			fieldRequired = ['decimalMark'];
 			break;
-			break;
-		case 'step5':
-			fieldRequired = ['smtpUsername'];
-			break;
 	}
 
-	var len = fieldRequired.length;
-	for (var index = 0; index < len; index++) {
+    const len = fieldRequired.length;
+
+    for (let index = 0; index < len; index++) {
 		elem = $('[name="'+fieldRequired[index]+'"]').filter(':visible');
 		if (elem.length > 0) {
 			if (elem.val() == '') {
@@ -511,6 +449,7 @@ InstallScript.prototype.validate = function() {
 
 	// decimal and group sep
 	$('[name="thousandSeparator"]').parent().parent().removeClass('has-error');
+
 	if (typeof(this.systemSettings.thousandSeparator) !== 'undefined'
 		&& typeof(this.systemSettings.decimalMark) !== 'undefined'
 		&& this.systemSettings.thousandSeparator == this.systemSettings.decimalMark
@@ -518,8 +457,9 @@ InstallScript.prototype.validate = function() {
 
 		$('[name="thousandSeparator"]').parent().parent().addClass('has-error');
 		$('[name="decimalMark"]').parent().parent().addClass('has-error');
-		let msg = this.getLang('Thousand Separator and Decimal Mark equal', 'messages');
-		this.showMsg({msg: msg, error: true});
+
+        const msg = this.getLang('Thousand Separator and Decimal Mark equal', 'messages');
+        this.showMsg({msg: msg, error: true});
 		valid = false;
 	}
 
@@ -527,12 +467,12 @@ InstallScript.prototype.validate = function() {
 }
 
 InstallScript.prototype.setForm = function(opt) {
-	var formId = opt.formId || 'nav';
-	var action = opt.action || 'main';
+    const formId = opt.formId || 'nav';
+    const action = opt.action || 'main';
 
-	var actionField = $('<input>', {'name': 'action', 'value': action, 'type': 'hidden'});
-	$('#'+formId).append(actionField);
+    const actionField = $('<input>', {'name': 'action', 'value': action, 'type': 'hidden'});
 
+    $('#'+formId).append(actionField);
 	$('#'+formId).attr('method', 'POST');
 }
 
@@ -542,14 +482,18 @@ InstallScript.prototype.goTo = function(action) {
 }
 
 InstallScript.prototype.getLang = function(key, type) {
-	return (typeof(this.langs) !== 'undefined' && typeof(this.langs[type]) !== 'undefined' && typeof(this.langs[type][key]) !== 'undefined')? this.langs[type][key] : key;
+	return (
+        typeof(this.langs) !== 'undefined' &&
+        typeof(this.langs[type]) !== 'undefined' &&
+        typeof(this.langs[type][key]) !== 'undefined'
+    ) ? this.langs[type][key] : key;
 }
 
 InstallScript.prototype.showMsg = function(opt) {
 	this.hideMsg();
 
-	var message = opt.msg || '';
-	var error = opt.error || false;
+    let message = opt.msg || '';
+    const error = opt.error || false;
 
     if (message) {
         message = this.sanitizeHtml(message);
@@ -593,21 +537,22 @@ InstallScript.prototype.hideLoading = function() {
 }
 
 InstallScript.prototype.checkPass = function(opt) {
-	var succesHand = opt.success || function(){};
-	var errorHand = opt.error || function(msg){};
+    const successHand = opt.success || (() => {});
+    const errorHand = opt.error || (() => {});
 
-	if (this.userSett.pass != this.userSett.confPass) {
+    if (this.userSett.pass !== this.userSett.confPass) {
 		errorHand('Passwords do not match');
+
 		return;
 	}
 
-	succesHand();
+	successHand();
 }
 
 InstallScript.prototype.actionsChecking = function() {
-	var self = this;
 	this.checkIndex = 0;
 	this.checkErrors = [];
+
 	this.checkAction({
 		'success': true,
 	});
@@ -617,7 +562,7 @@ InstallScript.prototype.checkAction = function(dataMain) {
 	var self = this;
 	var data = {};
 
-	if (this.checkIndex == this.checkActions.length) {
+	if (this.checkIndex === this.checkActions.length) {
 		self.callbackChecking(dataMain);
 		return;
 	}
@@ -626,11 +571,11 @@ InstallScript.prototype.checkAction = function(dataMain) {
 	var checkAction = this.checkActions[currIndex].action;
 	this.checkIndex++;
 
-	if (checkAction == 'checkModRewrite') {
+	if (checkAction === 'checkModRewrite') {
 		this.checkModRewrite();
 		return;
 	}
-	if (checkAction == 'saveSettings') {
+	if (checkAction === 'saveSettings') {
 		data['user-name'] = this.userSett.name;
 		data['user-pass'] = this.userSett.pass;
 	}
@@ -643,12 +588,11 @@ InstallScript.prototype.checkAction = function(dataMain) {
 		data: data,
 		dataType: 'json',
 	})
-	.done(function(ajaxData){
+	.done(ajaxData => {
 		if (typeof(ajaxData) != 'undefined' && ajaxData.success) {
 
 			self.checkAction(ajaxData);
-		}
-		else {
+		} else {
 			if (typeof(self.checkActions[currIndex]) != 'undefined'
 				&& typeof(self.checkActions[currIndex].break) != 'undefined'
 				&& self.checkActions[currIndex].break) {
@@ -657,12 +601,14 @@ InstallScript.prototype.checkAction = function(dataMain) {
 			}
 		}
 	})
-	.fail(function(ajaxData){
-		if (typeof(self.checkActions[currIndex]) != 'undefined'
+	.fail(ajaxData => {
+		if (
+            typeof(self.checkActions[currIndex]) != 'undefined'
 			&& typeof(self.checkActions[currIndex].break) != 'undefined'
 			&& self.checkActions[currIndex].break) {
 			// break next checking
-			var ajaxData = {
+
+			ajaxData = {
 				'success': false,
 				'errorMsg': [self.getLang('Ajax failed', 'messages')]
 			}
@@ -678,15 +624,17 @@ InstallScript.prototype.checkModRewrite = function() {
 	var self = this;
 	this.modRewriteUrl;
 
-	var urlAjax = '..'+this.modRewriteUrl;
-	var realJqXHR = $.ajax({
+    const urlAjax = '..' + this.modRewriteUrl;
+    var realJqXHR = $.ajax({
 		url: urlAjax,
 		type: "GET",
 	})
 	.always(function(data, textStatus, jqXHR){
-		var status = jqXHR.status || realJqXHR.status || 404;
-		status += '';
+        let status = jqXHR.status || realJqXHR.status || 404;
+        status += '';
+
 		var data = {'success': 0};
+
 		if (status == '200' || status == '401') {
 			var data = {'success': 1};
 		}
@@ -706,16 +654,18 @@ InstallScript.prototype.callbackModRewrite = function(data) {
 	}
 
 	ajaxData.success = false;
-	ajaxData.errorMsg = this.getModRewriteErrorMesssage();
+	ajaxData.errorMsg = this.getModRewriteErrorMessage();
 
-	var realCheckIndex = this.checkIndex - 1;
-	if (typeof(this.checkActions[realCheckIndex]) != 'undefined'
-		&& typeof(this.checkActions[realCheckIndex].break) != 'undefined') {
+    const realCheckIndex = this.checkIndex - 1;
+
+    if (
+        typeof(this.checkActions[realCheckIndex]) != 'undefined' &&
+        typeof(this.checkActions[realCheckIndex].break) != 'undefined'
+    ) {
 		if (this.checkActions[realCheckIndex].break) {
 			// break next checking
 			this.callbackChecking(ajaxData);
-		}
-		else {
+		} else {
 			this.checkAction(ajaxData);
 		}
 	}
@@ -723,17 +673,18 @@ InstallScript.prototype.callbackModRewrite = function(data) {
 
 InstallScript.prototype.callbackChecking = function(data) {
 	this.hideLoading();
+
 	if (typeof(data) != 'undefined' && data.success) {
 		this.goTo('step3');
-	}
-	else {
-		var errorMsg = (typeof(data.errorMsg))? data.errorMsg : '';
-		errorMsg += (typeof(data.errorFixInstruction) != 'undefined')? data.errorFixInstruction : '';
+	} else {
+        let errorMsg = (typeof (data.errorMsg)) ? data.errorMsg : '';
+
+        errorMsg += (typeof(data.errorFixInstruction) != 'undefined')? data.errorFixInstruction : '';
+
 		if (this.reChecking) {
 			this.showMsg({msg: errorMsg, error: true});
 			$("#re-check").removeAttr('disabled');
-		}
-		else {
+		} else {
 			this.setForm({action: 'errors'});
 			$('#nav').submit();
 		}
@@ -741,11 +692,11 @@ InstallScript.prototype.callbackChecking = function(data) {
 }
 
 InstallScript.prototype.getEspoPath = function(onlyPath) {
-
 	onlyPath = typeof onlyPath !== 'undefined' ? onlyPath : false;
 
-	var location = window.location.href;
-	if (onlyPath) {
+    let location = window.location.href;
+
+    if (onlyPath) {
 		location = window.location.pathname;
 	}
 
@@ -754,22 +705,31 @@ InstallScript.prototype.getEspoPath = function(onlyPath) {
 	return location;
 }
 
-InstallScript.prototype.getModRewriteErrorMesssage = function() {
+InstallScript.prototype.getModRewriteErrorMessage = function() {
+    let message = '';
 
-	var message = '';
-	if (typeof(this.langs) !== 'undefined') {
-		message = (typeof(this.langs['options']['modRewriteTitle'][this.serverType]) !== 'undefined')? this.langs['options']['modRewriteTitle'][this.serverType] : this.langs['options']['modRewriteTitle']['default'];
-		message += (typeof(this.langs['options']['modRewriteInstruction'][this.serverType]) !== 'undefined' && typeof(this.langs['options']['modRewriteInstruction'][this.serverType][this.OS]) !== 'undefined') ? this.langs['options']['modRewriteInstruction'][this.serverType][this.OS] : '';
-		message = message.replace("{ESPO_PATH}", this.getEspoPath(true)).replace("{API_PATH}", this.apiPath).replace("{API_PATH}", this.apiPath);
+    if (typeof(this.langs) !== 'undefined') {
+		message = (typeof(this.langs['options']['modRewriteTitle'][this.serverType]) !== 'undefined') ?
+            this.langs['options']['modRewriteTitle'][this.serverType] :
+            this.langs['options']['modRewriteTitle']['default'];
+
+		message += (
+            typeof(this.langs['options']['modRewriteInstruction'][this.serverType]) !== 'undefined' &&
+            typeof(this.langs['options']['modRewriteInstruction'][this.serverType][this.OS]) !== 'undefined'
+        ) ? this.langs['options']['modRewriteInstruction'][this.serverType][this.OS] : '';
+
+		message = message
+            .replace("{ESPO_PATH}", this.getEspoPath(true))
+            .replace("{API_PATH}", this.apiPath).replace("{API_PATH}", this.apiPath);
 	}
 
 	return message;
 }
 
 InstallScript.prototype.goToEspo = function() {
+    const location = this.getEspoPath();
 
-	var location = this.getEspoPath();
-	window.location.replace(location);
+    window.location.replace(location);
 }
 
 window.InstallScript = InstallScript;
