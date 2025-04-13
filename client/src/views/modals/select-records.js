@@ -408,7 +408,7 @@ class SelectRecordsModalView extends ModalView {
             return;
         }
 
-        // @todo Remove in v9.1.0. Kept bc.
+        // @todo Remove in v10.0. Kept bc.
         // noinspection JSUnresolvedReference
         if (this.options.triggerCreateEvent) {
             this.trigger('create');
