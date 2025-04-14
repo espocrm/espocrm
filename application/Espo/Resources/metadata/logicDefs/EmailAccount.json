@@ -44,6 +44,24 @@
                     }
                 ]
             }
+        },
+        "sentFolder": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "storeSentEmails"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "storeSentEmails"
+                    }
+                ]
+            }
         }
     }
 }

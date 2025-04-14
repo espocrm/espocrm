@@ -54,6 +54,62 @@
                     }
                 ]
             }
+        },
+        "replyEmailTemplate": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "reply"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "reply"
+                    }
+                ]
+            }
+        },
+        "replyFromAddress": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "reply"
+                    }
+                ]
+            }
+        },
+        "replyFromName": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "reply"
+                    }
+                ]
+            }
+        },
+        "sentFolder": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "storeSentEmails"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "storeSentEmails"
+                    }
+                ]
+            }
         }
     }
 }

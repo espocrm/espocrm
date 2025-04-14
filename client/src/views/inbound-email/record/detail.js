@@ -62,10 +62,8 @@ export default class extends DetailRecordView {
 
     initSmtpFieldsControl() {
         this.controlSmtpFields();
-        this.controlSentFolderField();
         this.listenTo(this.model, 'change:useSmtp', this.controlSmtpFields, this);
         this.listenTo(this.model, 'change:smtpAuth', this.controlSmtpFields, this);
-        this.listenTo(this.model, 'change:storeSentEmails', this.controlSentFolderField, this);
     }
 
     controlSmtpFields() {
@@ -78,7 +76,6 @@ export default class extends DetailRecordView {
             this.showField('fromName');
             this.showField('smtpIsShared');
             this.showField('smtpIsForMassEmail');
-            this.showField('storeSentEmails');
 
             this.setFieldRequired('smtpHost');
             this.setFieldRequired('smtpPort');
@@ -99,24 +96,10 @@ export default class extends DetailRecordView {
         this.hideField('fromName');
         this.hideField('smtpIsShared');
         this.hideField('smtpIsForMassEmail');
-        this.hideField('storeSentEmails');
-        this.hideField('sentFolder');
 
         this.setFieldNotRequired('smtpHost');
         this.setFieldNotRequired('smtpPort');
         this.setFieldNotRequired('smtpUsername');
-    }
-
-    controlSentFolderField() {
-        if (this.model.get('useSmtp') && this.model.get('storeSentEmails')) {
-            this.showField('sentFolder');
-            this.setFieldRequired('sentFolder');
-
-            return;
-        }
-
-        this.hideField('sentFolder');
-        this.setFieldNotRequired('sentFolder');
     }
 
     controlSmtpAuthField() {

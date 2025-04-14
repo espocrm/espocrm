@@ -9,32 +9,6 @@
     	"list": "views/email-account/list"
     },
     "inlineEditDisabled": true,
-    "formDependency": {
-        "storeSentEmails": {
-            "map": {
-                "true" : [
-                    {
-                        "action": "show",
-                        "fields": ["sentFolder"]
-                    },
-                    {
-                        "action": "setRequired",
-                        "fields": ["sentFolder"]
-                    }
-                ]
-            },
-            "default": [
-                {
-                    "action": "hide",
-                    "fields": ["sentFolder"]
-                },
-                {
-                    "action": "setNotRequired",
-                    "fields": ["sentFolder"]
-                }
-            ]
-        }
-    },
     "filterList": [
         {
             "name": "active"
