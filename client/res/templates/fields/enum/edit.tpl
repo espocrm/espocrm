@@ -1,4 +1,7 @@
-<select data-name="{{name}}" class="form-control main-element">
+<select
+    data-name="{{name}}"
+    class="form-control main-element {{#if nativeSelect}} native-select {{/if}}"
+>
     {{options
         params.options value
         scope=scope

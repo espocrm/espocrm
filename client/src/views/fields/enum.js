@@ -155,6 +155,10 @@ class EnumFieldView extends BaseFieldView {
 
         }
 
+        if (this.isEditMode()) {
+            data.nativeSelect = this.nativeSelect;
+        }
+
         // noinspection JSValidateTypes
         return data;
     }
