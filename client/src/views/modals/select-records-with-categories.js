@@ -70,7 +70,9 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
     }
 
     setup() {
-        this.scope = this.entityType = this.options.scope || this.scope;
+        // noinspection JSUnresolvedReference
+        this.scope = this.entityType = this.options.scope || this.scope || this.options.entityType;
+
         this.categoryScope = this.categoryScope || this.scope + 'Category';
         this.categoryField = this.getMetadata().get(`scopes.${this.categoryScope}.categoryField`) || this.categoryField;
 
