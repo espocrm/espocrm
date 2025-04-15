@@ -749,7 +749,7 @@ class BaseRecordView extends View {
         this.dynamicLogic = new DynamicLogic(this.dynamicLogicDefs, this);
 
         this.listenTo(this.model, 'sync', (m, a, /** Record */o) => {
-            if (o.action !== 'save' && o.action !== 'fetch') {
+            if (o && o.action !== 'save' && o.action !== 'fetch') {
                 return;
             }
 

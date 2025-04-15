@@ -655,7 +655,7 @@ class DetailModalView extends ModalView {
                 this.trigger('model-sync');
 
                 // Triggers stream panel update.
-                this.model.trigger('sync');
+                this.model.trigger('sync', this.model, null, {});
             },
             beforeRender: view => {
                 this.listenToOnce(view, 'remove', () => this.dialog.show());
