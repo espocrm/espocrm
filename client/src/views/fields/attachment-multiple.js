@@ -87,6 +87,8 @@ class AttachmentMultipleFieldView extends BaseFieldView {
     /** @protected */
     showPreviewsInListMode = false
 
+    initialSearchIsNotIdle = true;
+
     /**
      * @inheritDoc
      * @type {Array<(function (): boolean)|string>}
@@ -291,11 +293,11 @@ class AttachmentMultipleFieldView extends BaseFieldView {
     }
 
     setupSearch() {
-        this.events['change select.search-type'] = e => {
-            const type = $(e.currentTarget).val();
+        this.addHandler('change', 'select.search-type', (e, /** HTMLSelectElement */target) => {
+            this.handleSearchType(target.value);
 
-            this.handleSearchType(type);
-        };
+            this.trigger('change');
+        });
     }
 
     focusOnInlineEdit() {
