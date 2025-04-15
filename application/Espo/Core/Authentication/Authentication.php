@@ -211,7 +211,7 @@ class Authentication
 
         if (!$user->isAdmin() && $this->configDataProvider->isMaintenanceMode()) {
             throw ServiceUnavailable::createWithBody(
-                "Application is in maintenance mod1e.",
+                "Application is in maintenance mode.",
                 Body::create()
                     ->withMessage($this->language->translateLabel('maintenanceModeError', 'messages'))
             );
