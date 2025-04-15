@@ -135,6 +135,17 @@ class Service
 
             $workingRangeItemList = $workingCalendar->isAvailable() ?
                 $this->getWorkingRangeList($workingCalendar, $fetchParams) : [];
+
+            if (
+                $workingCalendar->isAvailable() &&
+                !$fetchParams->workingTimeRangesInverted() &&
+                $workingRangeItemList === []
+            ) {
+                // Empty range for fullcalendar. The whole range is non-working.
+                $workingRangeItemList = [
+                    new WorkingRange($fetchParams->getFrom(), $fetchParams->getFrom())
+                ];
+            }
         }
 
         $queryList = [];
