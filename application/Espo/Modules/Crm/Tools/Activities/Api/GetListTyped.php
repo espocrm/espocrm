@@ -81,9 +81,6 @@ class GetListTyped implements Action
             $searchParams
         );
 
-        return ResponseComposer::json([
-            'total' => $result->getTotal(),
-            'list' => $result->getValueMapList(),
-        ]);
+        return ResponseComposer::json($result->toApiOutput());
     }
 }

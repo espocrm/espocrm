@@ -59,12 +59,9 @@ class GetUpcoming implements Action
 
         $params = $this->fetchParams($request);
 
-        $recordCollection = $this->service->get($userId, $params);
+        $result = $this->service->get($userId, $params);
 
-        return ResponseComposer::json([
-            'total' => $recordCollection->getTotal(),
-            'list' => $recordCollection->getValueMapList(),
-        ]);
+        return ResponseComposer::json($result->toApiOutput());
     }
 
     /**

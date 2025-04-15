@@ -30,6 +30,7 @@
 namespace Espo\Core\Record;
 
 use Espo\ORM\Collection as OrmCollection;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
 use stdClass;
@@ -37,7 +38,7 @@ use stdClass;
 /**
  * Contains an ORM collection and total number of records.
  *
- * @template-covariant TEntity of \Espo\ORM\Entity
+ * @template-covariant TEntity of Entity
  */
 class Collection
 {
@@ -100,7 +101,7 @@ class Collection
     /**
      * Create.
      *
-     * @template CEntity of \Espo\ORM\Entity
+     * @template CEntity of Entity
      * @param OrmCollection<CEntity> $collection
      * @return self<CEntity>
      */
@@ -112,7 +113,7 @@ class Collection
     /**
      * Create w/o count.
      *
-     * @template CEntity of \Espo\ORM\Entity
+     * @template CEntity of Entity
      * @param OrmCollection<CEntity> $collection
      * @return self<CEntity>
      */
@@ -131,5 +132,18 @@ class Collection
         }
 
         return new self($collection, self::TOTAL_HAS_NO_MORE);
+    }
+
+    /**
+     * To API output. To be used in API actions.
+     *
+     * @since 9.1.0
+     */
+    public function toApiOutput(): stdClass
+    {
+        return (object) [
+            'total' => $this->getTotal(),
+            'list' => $this->getValueMapList(),
+        ];
     }
 }

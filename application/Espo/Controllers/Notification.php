@@ -83,10 +83,7 @@ class Notification extends RecordBase
 
         $recordCollection = $this->getNotificationService()->get($userId, $searchParams);
 
-        return (object) [
-            'total' => $recordCollection->getTotal(),
-            'list' => $recordCollection->getValueMapList(),
-        ];
+        return $recordCollection->toApiOutput();
     }
 
     public function getActionNotReadCount(): int

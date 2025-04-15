@@ -57,11 +57,8 @@ class PostRecordUsersAccess implements Action
 
         $entity = $this->entityProvider->get($entityType, $id);
 
-        $collection = $this->usersAccessService->get($entity, $searchParams);
+        $result = $this->usersAccessService->get($entity, $searchParams);
 
-        return ResponseComposer::json([
-            'list' => $collection->getValueMapList(),
-            'total' => $collection->getTotal(),
-        ]);
+        return ResponseComposer::json($result->toApiOutput());
     }
 }

@@ -79,12 +79,12 @@ class Stream
 
             $reactionsCheckDate = DateTime::createNow();
 
-            return (object) [
-                'total' => $collection->getTotal(),
-                'list' => $collection->getValueMapList(),
-                'reactionsCheckDate' => $reactionsCheckDate->toString(),
-                'updatedReactions' => $this->getReactionUpdates($request, $id),
-            ];
+            $output = $collection->toApiOutput();
+
+            $output->reactionsCheckDate = $reactionsCheckDate->toString();
+            $output->updatedReactions = $this->getReactionUpdates($request, $id);
+
+            return $output;
         }
 
         if ($id === null) {
@@ -94,11 +94,11 @@ class Stream
         $collection = $this->service->find($scope, $id, $searchParams);
         $pinnedCollection = $this->service->getPinned($scope, $id);
 
-        return (object) [
-            'total' => $collection->getTotal(),
-            'list' => $collection->getValueMapList(),
-            'pinnedList' => $pinnedCollection->getValueMapList(),
-        ];
+        $output = $collection->toApiOutput();
+
+        $output->pinnedList = $pinnedCollection->getValueMapList();
+
+        return $output;
     }
 
     /**
@@ -126,10 +126,7 @@ class Stream
             $this->userRecordService->find($id, $searchParams) :
             $this->service->find($scope, $id ?? '', $searchParams);
 
-        return (object) [
-            'total' => $result->getTotal(),
-            'list' => $result->getValueMapList(),
-        ];
+        return $result->toApiOutput();
     }
 
     /**
@@ -150,10 +147,7 @@ class Stream
 
         $result = $this->service->findUpdates($scope, $id, $searchParams);
 
-        return (object) [
-            'total' => $result->getTotal(),
-            'list' => $result->getValueMapList(),
-        ];
+        return $result->toApiOutput();
     }
 
     /**

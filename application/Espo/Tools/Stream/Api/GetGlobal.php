@@ -61,12 +61,9 @@ class GetGlobal implements Action
 
         $searchParams = $this->fetchSearchParams($request);
 
-        $collection = $this->service->find($searchParams);
+        $result = $this->service->find($searchParams);
 
-        return ResponseComposer::json([
-            'list' => $collection->getValueMapList(),
-            'total' => $collection->getTotal(),
-        ]);
+        return ResponseComposer::json($result->toApiOutput());
     }
 
     /**

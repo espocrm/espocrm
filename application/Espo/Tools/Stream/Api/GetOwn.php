@@ -61,10 +61,7 @@ class GetOwn implements Action
 
         $collection = $this->service->findOwn($userId, $searchParams);
 
-        return ResponseComposer::json([
-            'list' => $collection->getValueMapList(),
-            'total' => $collection->getTotal(),
-        ]);
+        return ResponseComposer::json($collection->toApiOutput());
     }
 
     /**

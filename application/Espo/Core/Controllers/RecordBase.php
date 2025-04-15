@@ -255,10 +255,7 @@ class RecordBase extends Base implements
 
         $recordCollection = $this->getRecordService()->find($searchParams, $findParams);
 
-        return (object) [
-            'total' => $recordCollection->getTotal(),
-            'list' => $recordCollection->getValueMapList(),
-        ];
+        return $recordCollection->toApiOutput();
     }
 
     /**

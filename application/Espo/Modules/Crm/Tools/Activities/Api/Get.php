@@ -78,13 +78,10 @@ class Get implements Action
 
         $fetchParams = new ActivitiesFetchParams($maxSize, $offset, $targetEntityType);
 
-        $recordCollection = $type === 'history' ?
+        $result = $type === 'history' ?
             $this->service->getHistory($parentType, $id, $fetchParams) :
             $this->service->getActivities($parentType, $id, $fetchParams);
 
-        return ResponseComposer::json([
-            'total' => $recordCollection->getTotal(),
-            'list' => $recordCollection->getValueMapList(),
-        ]);
+        return ResponseComposer::json($result->toApiOutput());
     }
 }

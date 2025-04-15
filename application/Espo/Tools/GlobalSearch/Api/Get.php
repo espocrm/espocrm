@@ -59,9 +59,6 @@ class Get implements Action
 
         $result = $this->service->find($query, $offset, $maxSize);
 
-        return ResponseComposer::json([
-            'total' => $result->getTotal(),
-            'list' => $result->getValueMapList(),
-        ]);
+        return ResponseComposer::json($result->toApiOutput());
     }
 }

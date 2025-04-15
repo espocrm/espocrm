@@ -35,6 +35,9 @@ use Espo\Tools\ActionHistory\Service as Service;
 
 use stdClass;
 
+/**
+ * @noinspection PhpUnused
+ */
 class LastViewed
 {
     public function __construct(private SearchParamsFetcher $searchParamsFetcher, private Service $service)
@@ -49,9 +52,6 @@ class LastViewed
 
         $result = $this->service->getLastViewed($maxSize, $offset);
 
-        return (object) [
-            'total' => $result->getTotal(),
-            'list' => $result->getValueMapList(),
-        ];
+        return $result->toApiOutput();
     }
 }

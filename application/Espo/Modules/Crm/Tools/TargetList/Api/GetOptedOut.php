@@ -65,11 +65,8 @@ class GetOptedOut implements Action
 
         $searchParams = $this->searchParamsFetcher->fetch($request);
 
-        $collection = $this->service->find($id, $searchParams);
+        $result = $this->service->find($id, $searchParams);
 
-        return ResponseComposer::json((object) [
-            'total' => $collection->getTotal(),
-            'list' => $collection->getValueMapList(),
-        ]);
+        return ResponseComposer::json($result->toApiOutput());
     }
 }

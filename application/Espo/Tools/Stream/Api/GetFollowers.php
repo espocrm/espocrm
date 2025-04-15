@@ -67,9 +67,6 @@ class GetFollowers implements Action
 
         $collection = $this->service->find($entityType, $id, $searchParams);
 
-        return ResponseComposer::json((object) [
-            'total' => $collection->getTotal(),
-            'list' => $collection->getValueMapList(),
-        ]);
+        return ResponseComposer::json($collection->toApiOutput());
     }
 }

@@ -31,7 +31,6 @@ namespace Espo\Core\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
@@ -65,12 +64,9 @@ class Record extends RecordBase
 
         $searchParams = $this->fetchSearchParamsFromRequest($request);
 
-        $recordCollection = $this->getRecordService()->findLinked($id, $link, $searchParams);
+        $result = $this->getRecordService()->findLinked($id, $link, $searchParams);
 
-        return (object) [
-            'total' => $recordCollection->getTotal(),
-            'list' => $recordCollection->getValueMapList(),
-        ];
+        return $result->toApiOutput();
     }
 
     /**
