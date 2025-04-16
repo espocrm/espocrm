@@ -34,8 +34,11 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Name\Field;
 use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\Attachment;
 use Espo\ORM\Collection;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
 use Espo\Entities\Note;
@@ -43,6 +46,8 @@ use Espo\Entities\Email;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
 use Espo\Core\Record\Collection as RecordCollection;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Tools\Stream\RecordService\Helper;
 use Espo\Tools\Stream\RecordService\NoteHelper;
@@ -62,6 +67,7 @@ class RecordService
         private Metadata $metadata,
         private NoteHelper $noteHelper,
         private MassNotePreparator $massNotePreparator,
+        private SelectBuilderFactory $selectBuilderFactory,
     ) {}
 
     /**
@@ -174,33 +180,7 @@ class RecordService
      */
     private function findInternal(string $scope, string $id, SearchParams $searchParams): RecordCollection
     {
-        $builder = $this->queryHelper->buildBaseQueryBuilder($searchParams);
-
-        $where = $this->user->isPortal() ?
-            [
-                'parentType' => $scope,
-                'parentId' => $id,
-                'isInternal' => false,
-            ] :
-            [
-                'OR' => [
-                    [
-                        'parentType' => $scope,
-                        'parentId' => $id,
-                    ],
-                    [
-                        'superParentType' => $scope,
-                        'superParentId' => $id,
-                    ],
-                ]
-            ];
-
-        $this->applyPortalAccess($builder, $where);
-        $this->applyAccess($builder, $id, $scope, $where);
-        $this->applyIgnore($where);
-        $this->applyStatusIgnore($scope, $where);
-
-        $builder->where($where);
+        $builder = $this->prepareSelectBuilder($scope, $id, $searchParams);
 
         $offset = $searchParams->getOffset();
         $maxSize = $searchParams->getMaxSize();
@@ -467,5 +447,100 @@ class RecordService
         if (!$this->acl->checkEntity($entity, Table::ACTION_STREAM)) {
             throw new Forbidden("No stream access.");
         }
+    }
+
+    /**
+     * @return RecordCollection<Attachment>
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     * @since 9.1.0
+     * @internal
+     */
+    public function findAttachments(Entity $entity, SearchParams $searchParams): RecordCollection
+    {
+        $entityType = $entity->getEntityType();
+        $id = $entity->getId();
+
+        $this->checkAccess($entityType, $id);
+
+        $noteBuilder = $this->prepareSelectBuilder($entityType, $id, SearchParams::create());
+
+        $noteBuilder->select(['id']);
+
+        $searchParams = $searchParams->withSelect([
+            'id',
+            'name',
+            'type',
+            'size',
+            'parentType',
+            'parentId',
+            'createdAt',
+            'createdById',
+            'createdByName',
+        ]);
+
+        $query = $this->selectBuilderFactory
+            ->create()
+            ->from(Attachment::ENTITY_TYPE)
+            ->withSearchParams($searchParams)
+            ->buildQueryBuilder()
+            ->where(
+                Condition::in(
+                    Expression::column('parentId'),
+                    $noteBuilder->build()
+                )
+            )
+            ->where(['parentType' => Note::ENTITY_TYPE])
+            ->build();
+
+        $collection = $this->entityManager
+            ->getRDBRepositoryByClass(Attachment::class)
+            ->clone($query)
+            ->find();
+
+        $total = $this->entityManager
+            ->getRDBRepositoryByClass(Attachment::class)
+            ->clone($query)
+            ->count();
+
+        return RecordCollection::create($collection, $total);
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    private function prepareSelectBuilder(string $scope, string $id, SearchParams $searchParams): SelectBuilder
+    {
+        $builder = $this->queryHelper->buildBaseQueryBuilder($searchParams);
+
+        $where = $this->user->isPortal() ?
+            [
+                'parentType' => $scope,
+                'parentId' => $id,
+                'isInternal' => false,
+            ] :
+            [
+                'OR' => [
+                    [
+                        'parentType' => $scope,
+                        'parentId' => $id,
+                    ],
+                    [
+                        'superParentType' => $scope,
+                        'superParentId' => $id,
+                    ],
+                ]
+            ];
+
+        $this->applyPortalAccess($builder, $where);
+        $this->applyAccess($builder, $id, $scope, $where);
+        $this->applyIgnore($where);
+        $this->applyStatusIgnore($scope, $where);
+
+        $builder->where($where);
+
+        return $builder;
     }
 }

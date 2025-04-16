@@ -781,6 +781,14 @@ class PanelStreamView extends RelationshipPanelView {
             onClick: () => this.actionViewPostList(),
         });
 
+        if (this.model.entityType !== 'User') {
+            this.actionList.push({
+                action: 'viewAttachmentList',
+                text: this.translate('View Attachments', 'labels', 'Note'),
+                onClick: () => this.actionViewAttachmentList(),
+            });
+        }
+
         if (this.model.entityType === 'User') {
             this.actionList.push({
                 action: 'viewUserActivity',
@@ -832,6 +840,47 @@ class PanelStreamView extends RelationshipPanelView {
         };
 
         this.actionViewRelatedList(data);
+    }
+
+    /**
+     * @private
+     */
+    actionViewAttachmentList() {
+        const url = `${this.model.entityType}/${this.model.id}/streamAttachments`;
+
+        const title = `${this.translate('Stream')} @right ${this.translate('Attachment', 'scopeNamesPlural')}`;
+
+        const options = {
+            model: this.model,
+            link: 'streamAttachments',
+            entityType: 'Attachment',
+            title: title,
+            layoutName: 'listForStream',
+            defaultOrder: 'desc',
+            defaultOrderBy: 'createdAt',
+            url: url,
+            listViewName: this.listViewName,
+            createDisabled: true,
+            selectDisabled: true,
+            unlinkDisabled: true,
+            removeDisabled: true,
+            rowActionsView: null,
+            filtersDisabled: true,
+            searchPanelDisabled: true,
+            massActionRemoveDisabled: true,
+        };
+
+        Espo.Ui.notifyWait();
+
+        this.createView('modal', 'views/modals/related-list', options, view => {
+            Espo.Ui.notify();
+
+            view.render();
+
+            this.listenTo(view, 'action', (event, element) => {
+                Espo.Utils.handleAction(this, event, element);
+            });
+        });
     }
 
     actionViewUserActivity() {

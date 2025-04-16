@@ -1,0 +1,8 @@
+[
+    {
+        "name": "name",
+        "view": "views/attachment/fields/name-for-stream"
+    },
+    {"name": "createdBy", "width": 18},
+    {"name": "createdAt", "width": 18}
+]

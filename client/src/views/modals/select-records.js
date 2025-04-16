@@ -104,6 +104,7 @@ class SelectRecordsModalView extends ModalView {
      * @property {function({where: Record[], searchParams: module:collection~Data})} [onMassSelect]
      *     On record select. As of 9.1.0.
      * @property {function()} [onCreate] On create click. As of 9.0.5.
+     * @property {boolean} [searchPanelDisabled] Disable the search panel.
      */
 
     /**
@@ -220,6 +221,10 @@ class SelectRecordsModalView extends ModalView {
             if (this.getMetadata().get(['clientDefs', this.scope, 'searchPanelInPortalDisabled'])) {
                 this.searchPanel = false;
             }
+        }
+
+        if (this.options.searchPanelDisabled) {
+            this.searchPanel = false;
         }
 
         if (!this.options.headerText) {

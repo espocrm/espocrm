@@ -167,6 +167,7 @@ class NameUtil
     public const LINK_FORBIDDEN_NAME_LIST = [
         'posts',
         'stream',
+        'streamAttachments',
         'subscription',
         'starSubscription',
         'action',

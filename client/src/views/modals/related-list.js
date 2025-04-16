@@ -36,6 +36,8 @@ import CreateRelatedHelper from 'helpers/record/create-related';
 
 /**
  * A related-list modal.
+ *
+ * @todo JSDocs constructor options.
  */
 class RelatedListModalView extends ModalView {
 
@@ -134,6 +136,10 @@ class RelatedListModalView extends ModalView {
             this.massActionMassUpdateDisabled;
 
         this.panelCollection = this.options.panelCollection;
+
+        if (this.options.searchPanelDisabled) {
+            this.searchPanel = false;
+        }
 
         if (this.panelCollection) {
             this.listenTo(this.panelCollection, 'sync', (c, r, o) => {

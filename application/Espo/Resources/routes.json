@@ -611,6 +611,11 @@
         }
     },
     {
+        "route": "/:entityType/:id/streamAttachments",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\Stream\\Api\\GetStreamAttachments"
+    },
+    {
         "route": "/:Note/:id/pin",
         "method": "post",
         "actionClassName": "Espo\\Tools\\Stream\\Api\\PostNotePin"
