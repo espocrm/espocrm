@@ -41,7 +41,6 @@ use Espo\Entities\ArrayValue;
 use Espo\Entities\Attachment;
 use Espo\Entities\AuthLogRecord;
 use Espo\Entities\AuthToken;
-use Espo\Entities\Email;
 use Espo\Entities\Job;
 use Espo\Entities\Note;
 use Espo\Entities\Notification;
@@ -98,7 +97,6 @@ class Cleanup implements JobDataLess
         $this->cleanupJobs();
         $this->cleanupScheduledJobLog();
         $this->cleanupAttachments();
-        $this->cleanupEmails();
         $this->cleanupNotifications();
         $this->cleanupActionHistory();
         $this->cleanupAuthToken();
@@ -473,68 +471,6 @@ class Cleanup implements JobDataLess
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
-    private function cleanupEmails(): void
-    {
-        $dateBefore = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, time() - 3600 * 24 * 20);
-
-        $query = $this->entityManager
-            ->getQueryBuilder()
-            ->select()
-            ->from(Email::ENTITY_TYPE)
-            ->withDeleted()
-            ->build();
-
-        /** @var iterable<Email> $emails */
-        $emails = $this->entityManager
-            ->getRDBRepository(Email::ENTITY_TYPE)
-            ->clone($query)
-            ->sth()
-            ->select([Attribute::ID])
-            ->where([
-                'createdAt<' => $dateBefore,
-                Attribute::DELETED => true,
-            ])
-            ->find();
-
-        foreach ($emails as $email) {
-            $id = $email->getId();
-
-            $attachments = $this->entityManager
-                ->getRDBRepository(Attachment::ENTITY_TYPE)
-                ->where([
-                    'parentId' => $id,
-                    'parentType' => Email::ENTITY_TYPE,
-                ])
-                ->find();
-
-            foreach ($attachments as $attachment) {
-                $this->entityManager->removeEntity($attachment);
-            }
-
-            $delete = $this->entityManager
-                ->getQueryBuilder()
-                ->delete()
-                ->from(Email::ENTITY_TYPE)
-                ->where([
-                    Attribute::DELETED => true,
-                    Attribute::ID => $id,
-                ])
-                ->build();
-
-            $this->entityManager->getQueryExecutor()->execute($delete);
-
-            $delete = $this->entityManager
-                ->getQueryBuilder()
-                ->delete()
-                ->from(Email::RELATIONSHIP_EMAIL_USER)
-                ->where([
-                    'emailId' => $id,
-                ])
-                ->build();
-
-            $this->entityManager->getQueryExecutor()->execute($delete);
-        }
-    }
 
     private function cleanupNotifications(): void
     {
@@ -590,11 +526,10 @@ class Cleanup implements JobDataLess
 
         $repository = $this->entityManager->getRepository($scope);
 
-        if (!$repository instanceof RDBRepository) {
-            return;
-        }
-
-        if (!$entity instanceof CoreEntity) {
+        if (
+            !$repository instanceof RDBRepository ||
+            !$entity instanceof CoreEntity
+        ) {
             return;
         }
 
@@ -647,82 +582,14 @@ class Cleanup implements JobDataLess
             }
         }
 
-        $query = $this->entityManager
-            ->getQueryBuilder()
-            ->select()
-            ->from(Note::ENTITY_TYPE)
-            ->withDeleted()
-            ->build();
-
-        $noteList = $this->entityManager
-            ->getRDBRepository(Note::ENTITY_TYPE)
-            ->clone($query)
-            ->sth()
-            ->where([
-                'OR' => [
-                    [
-                        'relatedType' => $scope,
-                        'relatedId' => $entity->getId(),
-                    ],
-                    [
-                        'parentType' => $scope,
-                        'parentId' => $entity->getId(),
-                    ]
-                ]
-            ])
-            ->find();
-
-        foreach ($noteList as $note) {
-            $this->entityManager->removeEntity($note);
-
-            $note->set(Attribute::DELETED, true);
-
-            $this->cleanupDeletedEntity($note);
-        }
+        $this->cleanupEntityNotes($entity);
+        $this->cleanupEntityAttachments($entity);
 
         if ($scope === Note::ENTITY_TYPE) {
-            $attachmentList = $this->entityManager
-                ->getRDBRepository(Attachment::ENTITY_TYPE)
-                ->where([
-                    'parentId' => $entity->getId(),
-                    'parentType' => Note::ENTITY_TYPE,
-                ])
-                ->find();
-
-            foreach ($attachmentList as $attachment) {
-                $this->entityManager->removeEntity($attachment);
-                $this->entityManager
-                    ->getRDBRepository(Attachment::ENTITY_TYPE)
-                    ->deleteFromDb($attachment->getId());
-            }
-
-            // @todo If ever reactions are supported not only for notes, then move out of the if-block.
-
-            $deleteReactionsQuery = DeleteBuilder::create()
-                ->from(UserReaction::ENTITY_TYPE)
-                ->where([
-                    'parentId' => $entity->getId(),
-                    'parentType' => Note::ENTITY_TYPE,
-                ])
-                ->build();
-
-            $this->entityManager->getQueryExecutor()->execute($deleteReactionsQuery);
+            $this->cleanupNoteReactions($entity);
         }
 
-        $arrayValueList = $this->entityManager
-            ->getRDBRepository(ArrayValue::ENTITY_TYPE)
-            ->sth()
-            ->where([
-                'entityType' => $entity->getEntityType(),
-                'entityId' => $entity->getId(),
-            ])
-            ->find();
-
-        foreach ($arrayValueList as $arrayValue) {
-            $this->entityManager
-                ->getRDBRepository(ArrayValue::ENTITY_TYPE)
-                ->deleteFromDb($arrayValue->getId());
-        }
+        $this->cleanupEntityArrayValues($entity);
     }
 
     private function cleanupDeletedRecords(): void
@@ -815,5 +682,97 @@ class Cleanup implements JobDataLess
         }
 
         return $datetime;
+    }
+
+    private function cleanupEntityAttachments(CoreEntity $entity): void
+    {
+        // @todo Add file, image types support.
+
+        $attachments = $this->entityManager
+            ->getRDBRepository(Attachment::ENTITY_TYPE)
+            ->where([
+                'parentId' => $entity->getId(),
+                'parentType' => $entity->getEntityType(),
+            ])
+            ->find();
+
+        foreach ($attachments as $attachment) {
+            $this->entityManager->removeEntity($attachment);
+
+            $this->entityManager
+                ->getRDBRepository(Attachment::ENTITY_TYPE)
+                ->deleteFromDb($attachment->getId());
+        }
+    }
+
+    private function cleanupEntityNotes(CoreEntity $entity): void
+    {
+        $scope = $entity->getEntityType();
+
+        $query = $this->entityManager
+            ->getQueryBuilder()
+            ->select()
+            ->from(Note::ENTITY_TYPE)
+            ->withDeleted()
+            ->build();
+
+        $noteList = $this->entityManager
+            ->getRDBRepository(Note::ENTITY_TYPE)
+            ->clone($query)
+            ->sth()
+            ->where([
+                'OR' => [
+                    [
+                        'relatedType' => $scope,
+                        'relatedId' => $entity->getId(),
+                    ],
+                    [
+                        'parentType' => $scope,
+                        'parentId' => $entity->getId(),
+                    ]
+                ]
+            ])
+            ->find();
+
+        foreach ($noteList as $note) {
+            $this->entityManager->removeEntity($note);
+
+            $note->set(Attribute::DELETED, true);
+
+            $this->cleanupDeletedEntity($note);
+        }
+    }
+
+    private function cleanupNoteReactions(CoreEntity $entity): void
+    {
+        // @todo If ever reactions are supported not only for notes, then move out of the if-block.
+
+        $deleteReactionsQuery = DeleteBuilder::create()
+            ->from(UserReaction::ENTITY_TYPE)
+            ->where([
+                'parentId' => $entity->getId(),
+                'parentType' => Note::ENTITY_TYPE,
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($deleteReactionsQuery);
+    }
+
+    private function cleanupEntityArrayValues(CoreEntity $entity): void
+    {
+        $arrayValues = $this->entityManager
+            ->getRDBRepository(ArrayValue::ENTITY_TYPE)
+            ->sth()
+            ->where([
+                'entityType' => $entity->getEntityType(),
+                'entityId' => $entity->getId(),
+            ])
+            ->find();
+
+        foreach ($arrayValues as $arrayValue) {
+            $this->entityManager
+                ->getRDBRepository(ArrayValue::ENTITY_TYPE)
+                ->deleteFromDb($arrayValue->getId());
+        }
     }
 }
