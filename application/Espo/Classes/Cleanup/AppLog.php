@@ -47,6 +47,10 @@ class AppLog implements Cleanup
 
     public function process(): void
     {
+        if (!$this->config->get('cleanupAppLog')) {
+            return;
+        }
+
         $query = DeleteBuilder::create()
             ->from(AppLogRecord::ENTITY_TYPE)
             ->where(['createdAt<' => $this->getBefore()->toString()])
