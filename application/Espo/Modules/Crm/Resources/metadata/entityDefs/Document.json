@@ -106,11 +106,14 @@
         },
         "accounts": {
             "type": "linkMultiple",
-            "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
-            "layoutMassUpdateDisabled": true,
             "importDisabled": true,
-            "noLoad": true
+            "exportDisabled": true,
+            "noLoad": true,
+            "directAccessDisabled": true,
+            "directUpdateDisabled": true,
+            "layoutAvailabilityList": [
+                "filters"
+            ]
         },
         "folder": {
             "type": "link",
