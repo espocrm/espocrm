@@ -8,8 +8,7 @@
     },
     {
         "rows": [
-            [{"name": "authorizationEndpoint"}, {"name": "tokenEndpoint"}],
-            [{"name": "resourceEndpoint"}, false]
+            [{"name": "authorizationEndpoint"}, {"name": "tokenEndpoint"}]
         ]
     },
     {
