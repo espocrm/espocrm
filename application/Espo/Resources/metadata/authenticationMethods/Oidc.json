@@ -50,6 +50,12 @@
                 ],
                 [
                     {
+                        "name": "oidcUserInfoEndpoint"
+                    },
+                    false
+                ],
+                [
+                    {
                         "name": "oidcScopes"
                     },
                     {

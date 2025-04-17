@@ -104,6 +104,11 @@ class ConfigDataProvider
         return $this->object->get('oidcTokenEndpoint');
     }
 
+    public function getUserInfoEndpoint(): ?string
+    {
+        return $this->object->get('oidcUserInfoEndpoint');
+    }
+
     public function getJwksEndpoint(): ?string
     {
         return $this->object->get('oidcJwksEndpoint');

@@ -824,6 +824,10 @@
             "type": "url",
             "strip": false
         },
+        "oidcUserInfoEndpoint": {
+            "type": "url",
+            "strip": false
+        },
         "oidcTokenEndpoint": {
             "type": "url",
             "strip": false

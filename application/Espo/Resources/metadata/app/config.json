@@ -70,6 +70,9 @@
         "oidcAuthorizationEndpoint": {
             "level": "admin"
         },
+        "oidcUserInfoEndpoint": {
+            "level": "admin"
+        },
         "oidcTokenEndpoint": {
             "level": "admin"
         },

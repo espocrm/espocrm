@@ -38,6 +38,7 @@ use Espo\Core\Authentication\Logins\Espo;
 use Espo\Core\Authentication\Jwt\Exceptions\Invalid;
 use Espo\Core\Authentication\Jwt\Exceptions\SignatureNotVerified;
 use Espo\Core\Authentication\Jwt\Validator;
+use Espo\Core\Authentication\Oidc\UserProvider\UserInfo;
 use Espo\Core\Authentication\Result;
 use Espo\Core\Authentication\Result\FailReason;
 use Espo\Core\Utils\Json;
@@ -45,6 +46,7 @@ use Espo\Core\Utils\Log;
 use JsonException;
 use LogicException;
 use RuntimeException;
+use SensitiveParameter;
 use stdClass;
 
 class Login implements LoginInterface
@@ -62,7 +64,8 @@ class Login implements LoginInterface
         private Validator $validator,
         private TokenValidator $tokenValidator,
         private UserProvider $userProvider,
-        private ApplicationState $applicationState
+        private ApplicationState $applicationState,
+        private UserInfoDataProvider $userInfoDataProvider,
     ) {}
 
     public function login(Data $data, Request $request): Result
@@ -99,7 +102,8 @@ class Login implements LoginInterface
             throw new RuntimeException("No client secret.");
         }
 
-        [$rawToken, $failResult] = $this->requestToken($endpoint, $clientId, $code, $redirectUri, $clientSecret);
+        [$rawToken, $failResult, $accessToken] =
+            $this->requestToken($endpoint, $clientId, $code, $redirectUri, $clientSecret);
 
         if ($failResult) {
             return $failResult;
@@ -144,7 +148,9 @@ class Login implements LoginInterface
             return Result::fail(FailReason::DENIED);
         }
 
-        $user = $this->userProvider->get($tokenPayload);
+        $userInfo = $this->getUserInfo($tokenPayload, $accessToken);
+
+        $user = $this->userProvider->get($userInfo);
 
         if (!$user) {
             return Result::fail(FailReason::USER_NOT_FOUND);
@@ -198,7 +204,7 @@ class Login implements LoginInterface
     }
 
     /**
-     * @return array{?string, ?Result}
+     * @return array{?string, ?Result, ?string}
      */
     private function requestToken(
         string $endpoint,
@@ -250,7 +256,7 @@ class Login implements LoginInterface
 
             $this->log->warning(self::composeLogMessage('Token request error.', $status, $response));
 
-            return [null, Result::fail(FailReason::DENIED)];
+            return [null, Result::fail(FailReason::DENIED), null];
         }
 
         $parsedResponse = null;
@@ -266,6 +272,7 @@ class Login implements LoginInterface
         }
 
         $token = $parsedResponse->id_token ?? null;
+        $accessToken = $parsedResponse->access_token ?? null;
 
         if (!$token || !is_string($token)) {
             $this->log->error(self::composeLogMessage('Bad token response.', $status, $response));
@@ -273,7 +280,7 @@ class Login implements LoginInterface
             throw new RuntimeException();
         }
 
-        return [$token, null];
+        return [$token, null, $accessToken];
     }
 
     private static function composeLogMessage(string $text, ?int $status = null, ?string $response = null): string
@@ -294,5 +301,22 @@ class Login implements LoginInterface
         $this->validator->validate($token);
         $this->tokenValidator->validateFields($token);
         $this->tokenValidator->validateSignature($token);
+    }
+
+    private function getUserInfo(Token\Payload $payload, #[SensitiveParameter] ?string $accessToken): UserInfo
+    {
+        $endpoint = $this->configDataProvider->getUserInfoEndpoint();
+
+        if (!$endpoint) {
+            return new UserInfo($payload, []);
+        }
+
+        if (!$accessToken) {
+            throw new RuntimeException("OIDC: No access token received.");
+        }
+
+        $data = $this->userInfoDataProvider->get($accessToken);
+
+        return new UserInfo($payload, $data);
     }
 }

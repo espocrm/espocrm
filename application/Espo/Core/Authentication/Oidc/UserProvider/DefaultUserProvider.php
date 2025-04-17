@@ -30,11 +30,11 @@
 namespace Espo\Core\Authentication\Oidc\UserProvider;
 
 use Espo\Core\ApplicationState;
-use Espo\Core\Authentication\Jwt\Token\Payload;
 use Espo\Core\Authentication\Oidc\ConfigDataProvider;
 use Espo\Core\Authentication\Oidc\UserProvider;
 use Espo\Core\Utils\Log;
 use Espo\Entities\User;
+
 use RuntimeException;
 
 class DefaultUserProvider implements UserProvider
@@ -44,30 +44,30 @@ class DefaultUserProvider implements UserProvider
         private Sync $sync,
         private UserRepository $userRepository,
         private ApplicationState $applicationState,
-        private Log $log
+        private Log $log,
     ) {}
 
-    public function get(Payload $payload): ?User
+    public function get(UserInfo $userInfo): ?User
     {
-        $user = $this->findUser($payload);
+        $user = $this->findUser($userInfo);
 
         if ($user === false) {
             return null;
         }
 
         if ($user) {
-            $this->syncUser($user, $payload);
+            $this->syncUser($user, $userInfo);
 
             return $user;
         }
 
-        return $this->tryToCreateUser($payload);
+        return $this->tryToCreateUser($userInfo);
     }
 
     /**
      * @return User|false|null
      */
-    private function findUser(Payload $payload): User|bool|null
+    private function findUser(UserInfo $userInfo): User|bool|null
     {
         $usernameClaim = $this->configDataProvider->getUsernameClaim();
 
@@ -75,10 +75,10 @@ class DefaultUserProvider implements UserProvider
             throw new RuntimeException("No username claim in config.");
         }
 
-        $username = $payload->get($usernameClaim);
+        $username = $userInfo->get($usernameClaim);
 
         if (!$username) {
-            throw new RuntimeException("No username claim `$usernameClaim` in token.");
+            throw new RuntimeException("No username claim `$usernameClaim` in token and userinfo.");
         }
 
         $username = $this->sync->normalizeUsername($username);
@@ -136,7 +136,7 @@ class DefaultUserProvider implements UserProvider
         return $user;
     }
 
-    private function tryToCreateUser(Payload $payload): ?User
+    private function tryToCreateUser(UserInfo $userInfo): ?User
     {
         if (!$this->configDataProvider->createUser()) {
             return null;
@@ -148,16 +148,16 @@ class DefaultUserProvider implements UserProvider
             throw new RuntimeException("Could not create a user. No OIDC username claim in config.");
         }
 
-        $username = $payload->get($usernameClaim);
+        $username = $userInfo->get($usernameClaim);
 
         if (!$username) {
-            throw new RuntimeException("Could not create a user. No username claim returned in token.");
+            throw new RuntimeException("Could not create a user. No username claim in token and userinfo.");
         }
 
-        return $this->sync->createUser($payload);
+        return $this->sync->createUser($userInfo);
     }
 
-    private function syncUser(User $user, Payload $payload): void
+    private function syncUser(User $user, UserInfo $userInfo): void
     {
         if (
             !$this->configDataProvider->sync() &&
@@ -166,6 +166,6 @@ class DefaultUserProvider implements UserProvider
             return;
         }
 
-        $this->sync->syncUser($user, $payload);
+        $this->sync->syncUser($user, $userInfo);
     }
 }

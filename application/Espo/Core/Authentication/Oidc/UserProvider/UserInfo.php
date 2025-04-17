@@ -27,12 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\Oidc;
+namespace Espo\Core\Authentication\Oidc\UserProvider;
 
-use Espo\Core\Authentication\Oidc\UserProvider\UserInfo;
-use Espo\Entities\User;
+use Espo\Core\Authentication\Jwt\Token\Payload;
 
-interface UserProvider
+class UserInfo
 {
-    public function get(UserInfo $userInfo): ?User;
+    /**
+     * @internal
+     * @param array<string, mixed> $data
+     */
+    public function __construct(
+        private Payload $payload,
+        private array $data,
+    ) {}
+
+    public function get(string $name): mixed
+    {
+        return $this->payload->get($name) ?? $this->data[$name] ?? null;
+    }
 }

@@ -151,6 +151,7 @@
         "oidcAuthorizationRedirectUri": "OIDC Authorization Redirect URI",
         "oidcAuthorizationEndpoint": "OIDC Authorization Endpoint",
         "oidcTokenEndpoint": "OIDC Token Endpoint",
+        "oidcUserInfoEndpoint": "OIDC UserInfo Endpoint",
         "oidcJwksEndpoint": "OIDC JSON Web Key Set Endpoint",
         "oidcJwtSignatureAlgorithmList": "OIDC JWT Allowed Signature Algorithms",
         "oidcScopes": "OIDC Scopes",

@@ -31,7 +31,6 @@ namespace Espo\Core\Authentication\Oidc\UserProvider;
 
 use Espo\Core\Acl\Cache\Clearer as AclCacheClearer;
 use Espo\Core\ApplicationState;
-use Espo\Core\Authentication\Jwt\Token\Payload;
 use Espo\Core\Authentication\Oidc\ConfigDataProvider;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Name\Field;
@@ -50,30 +49,31 @@ class Sync
         private UserRepository $userRepository,
         private PasswordHash $passwordHash,
         private AclCacheClearer $aclCacheClearer,
-        private ApplicationState $applicationState
+        private ApplicationState $applicationState,
     ) {}
 
-    public function createUser(Payload $payload): User
+    public function createUser(UserInfo $userInfo): User
     {
-        $username = $this->getUsernameFromToken($payload);
+        $username = $this->getUsernameFromToken($userInfo);
 
         $this->usernameValidator->validate($username);
 
         $user = $this->userRepository->getNew();
 
-        $user->set([
-            'type' => User::TYPE_REGULAR,
-            'userName' => $username,
+        $user->setType(User::TYPE_REGULAR);
+        $user->setUserName($username);
+
+        $user->setMultiple([
             'password' => $this->passwordHash->hash(Util::generatePassword(10, 4, 2, true)),
         ]);
 
-        $user->set($this->getUserDataFromToken($payload));
-        $user->set($this->getUserTeamsDataFromToken($payload));
+        $user->set($this->getUserDataFromToken($userInfo));
+        $user->set($this->getUserTeamsDataFromToken($userInfo));
 
         if ($this->applicationState->isPortal()) {
             $portalId = $this->applicationState->getPortalId();
 
-            $user->set('type', User::TYPE_PORTAL);
+            $user->setType(User::TYPE_PORTAL);
             $user->setPortals(LinkMultiple::create()->withAddedId($portalId));
         }
 
@@ -82,7 +82,7 @@ class Sync
         return $user;
     }
 
-    public function syncUser(User $user, Payload $payload): void
+    public function syncUser(User $user, UserInfo $payload): void
     {
         $username = $this->getUsernameFromToken($payload);
 
@@ -116,19 +116,19 @@ class Sync
     /**
      * @return array<string, mixed>
      */
-    private function getUserDataFromToken(Payload $payload): array
+    private function getUserDataFromToken(UserInfo $userInfo): array
     {
         return [
-            'emailAddress' => $payload->get('email'),
-            'phoneNumber' => $payload->get('phone_number'),
+            'emailAddress' => $userInfo->get('email'),
+            'phoneNumber' => $userInfo->get('phone_number'),
             'emailAddressData' => null,
             'phoneNumberData' => null,
-            'firstName' => $payload->get('given_name'),
-            'lastName' => $payload->get('family_name'),
-            'middle_name' => $payload->get('middle_name'),
+            'firstName' => $userInfo->get('given_name'),
+            'lastName' => $userInfo->get('family_name'),
+            'middle_name' => $userInfo->get('middle_name'),
             'gender' =>
-                in_array($payload->get('gender'), ['male', 'female']) ?
-                    ucfirst($payload->get('gender') ?? '') :
+                in_array($userInfo->get('gender'), ['male', 'female']) ?
+                    ucfirst($userInfo->get('gender') ?? '') :
                     null,
         ];
     }
@@ -136,14 +136,14 @@ class Sync
     /**
      * @return array<string, mixed>
      */
-    private function getUserTeamsDataFromToken(Payload $payload): array
+    private function getUserTeamsDataFromToken(UserInfo $userInfo): array
     {
         return [
-            'teamsIds' => $this->getTeamIdList($payload),
+            'teamsIds' => $this->getTeamIdList($userInfo),
         ];
     }
 
-    private function getUsernameFromToken(Payload $payload): string
+    private function getUsernameFromToken(UserInfo $userInfo): string
     {
         $usernameClaim = $this->configDataProvider->getUsernameClaim();
 
@@ -151,7 +151,7 @@ class Sync
             throw new RuntimeException("No OIDC username claim in config.");
         }
 
-        $username = $payload->get($usernameClaim);
+        $username = $userInfo->get($usernameClaim);
 
         if (!$username) {
             throw new RuntimeException("No username claim returned in token.");
@@ -167,7 +167,7 @@ class Sync
     /**
      * @return string[]
      */
-    private function getTeamIdList(Payload $payload): array
+    private function getTeamIdList(UserInfo $userInfo): array
     {
         $idList = $this->configDataProvider->getTeamIds() ?? [];
         $columns = $this->configDataProvider->getTeamColumns() ?? (object) [];
@@ -176,7 +176,7 @@ class Sync
             return [];
         }
 
-        $groupList = $this->getGroups($payload);
+        $groupList = $this->getGroups($userInfo);
 
         $resultIdList = [];
 
@@ -194,7 +194,7 @@ class Sync
     /**
      * @return string[]
      */
-    private function getGroups(Payload $payload): array
+    private function getGroups(UserInfo $userInfo): array
     {
         $groupClaim = $this->configDataProvider->getGroupClaim();
 
@@ -202,7 +202,7 @@ class Sync
             return [];
         }
 
-        $value = $payload->get($groupClaim);
+        $value = $userInfo->get($groupClaim);
 
         if (!$value) {
             return [];
