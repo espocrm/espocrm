@@ -30,12 +30,6 @@
             "dbType": "text",
             "strip": false
         },
-        "resourceEndpoint": {
-            "type": "url",
-            "maxLength": 512,
-            "dbType": "text",
-            "strip": false
-        },
         "authorizationRedirectUri": {
             "type": "url",
             "notStorable": true,

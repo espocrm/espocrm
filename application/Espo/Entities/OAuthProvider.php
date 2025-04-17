@@ -88,11 +88,6 @@ class OAuthProvider extends Entity
         return $value;
     }
 
-    public function getResourceEndpoint(): ?string
-    {
-        return $this->get('resourceEndpoint');
-    }
-
     /**
      * @return string[]
      */
