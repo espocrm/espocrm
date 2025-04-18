@@ -204,10 +204,14 @@ const MultiSelect = {
 
         $el.selectize(selectizeOptions);
 
-        $el[0].selectize.on('item_before_remove', (v, $item) => {
-            // Otherwise, the item is left active.
-            $item.removeClass('active');
-        });
+        if ($el[0]) {
+            // Check for compatibility with existing code where initialing is called against non-existing element.
+
+            $el[0].selectize.on('item_before_remove', (v, $item) => {
+                // Otherwise, the item is left active.
+                $item.removeClass('active');
+            });
+        }
     },
 
     /**
