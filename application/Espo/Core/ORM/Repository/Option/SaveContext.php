@@ -29,6 +29,8 @@
 
 namespace Espo\Core\ORM\Repository\Option;
 
+use Espo\Core\Utils\Util;
+
 /**
  * @since 9.1.0
  */
@@ -36,7 +38,21 @@ class SaveContext
 {
     public const NAME = 'context';
 
+    private string $id;
     private bool $linkUpdated = false;
+
+    public function __construct()
+    {
+        $this->id = Util::generateId();
+    }
+
+    /**
+     * An action ID.
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
 
     public function setLinkUpdated(): self
     {

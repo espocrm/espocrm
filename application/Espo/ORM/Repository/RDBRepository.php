@@ -29,6 +29,7 @@
 
 namespace Espo\ORM\Repository;
 
+use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
@@ -132,6 +133,10 @@ class RDBRepository implements Repository
      */
     public function save(Entity $entity, array $options = []): void
     {
+        if (!isset($options[SaveContext::NAME])) {
+            $options[SaveContext::NAME] = new SaveContext();
+        }
+
         $this->processCheckEntity($entity);
 
         if ($entity instanceof BaseEntity) {
