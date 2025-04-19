@@ -58,10 +58,15 @@ function uiAppInit() {
     $document.on('show.bs.dropdown', e => {
         let isUp;
 
+        /** @type {HTMLElement} */
         const target = e.target;
         const $dropdown = $(e.target).find('.dropdown-menu');
 
+        /** @type {HTMLElement} */
+        const dropdownElement = $dropdown.get(0);
+
         const height = $dropdown.outerHeight();
+        const width = $dropdown.outerWidth();
 
         {
             const $target = $(target);
@@ -82,6 +87,20 @@ function uiAppInit() {
             } else {
                 $target.removeClass('dropup');
             }
+        }
+
+        if (target.getBoundingClientRect().left - width < 0) {
+            const maxWidth = target.getBoundingClientRect().right - target.getBoundingClientRect().width / 2;
+
+            dropdownElement.style.maxWidth = maxWidth + 'px';
+
+            const $group = $(target);
+
+            $group.one('hidden.bs.dropdown', () => {
+                dropdownElement.style.maxWidth = '';
+            });
+
+            return;
         }
 
         const $dashletBody = $(target).closest('.dashlet-body');

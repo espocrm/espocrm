@@ -201,6 +201,23 @@ ul.dropdown-menu {
     }
 }
 
+@media screen and (max-width: @screen-xs-max) {
+    ul.dropdown-menu {
+        max-width: 100vw;
+
+        > li {
+            > a {
+
+                &,
+                > div {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+    }
+}
+
 ul.dropdown-menu {
     > li.divider:first-child {
         display: none;
