@@ -138,6 +138,7 @@ class BeforeUpgrade
     {
         $errorMessageList = [];
 
+        $this->processCheckExtension('Advanced Pack', '3.2.0', $errorMessageList);
         $this->processCheckExtension('VoIP Integration', '2.0.0', $errorMessageList);
         $this->processCheckExtension('Real Estate', '1.8.2', $errorMessageList);
         $this->processCheckExtension('Google Integration', '1.7.6', $errorMessageList);
