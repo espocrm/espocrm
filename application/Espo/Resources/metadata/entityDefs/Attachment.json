@@ -96,7 +96,11 @@
     },
     "collection": {
         "orderBy": "createdAt",
-        "order": "desc"
+        "order": "desc",
+        "textFilterFields": [
+            "id",
+            "name"
+        ]
     },
     "indexes": {
         "parent": {
