@@ -38,7 +38,7 @@ class QueryTest extends \tests\integration\Core\BaseTestCase
         $entityManager = $app->getContainer()->get('entityManager');
 
         $account = $entityManager->getEntity('Account');
-        $account->set('name', 'Test');;
+        $account->set('name', 'Test');
         $entityManager->saveEntity($account);
 
         $query = $entityManager->getQueryBuilder()

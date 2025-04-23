@@ -136,7 +136,7 @@ class AttributeFetcher
             $data = $emailAddressRepository->getEmailAddressData($entity);
 
             $entity->set($attribute, $data);
-            $entity->setFetched($attribute, $data);;
+	    $entity->setFetched($attribute, $data);
 
             return;
         }
@@ -155,7 +155,7 @@ class AttributeFetcher
             $data = $phoneNumberRepository->getPhoneNumberData($entity);
 
             $entity->set($attribute, $data);
-            $entity->setFetched($attribute, $data);;
+            $entity->setFetched($attribute, $data);
 
             return;
         }

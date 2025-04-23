@@ -63,7 +63,7 @@ class Formula implements BeforeSave
         $variables = (object) [];
 
         foreach ($scriptList as $script) {
-            $this->runScript($script, $entity, $variables);;
+            $this->runScript($script, $entity, $variables);
         }
 
         $customScript = $this->metadata->get(['formula', $entity->getEntityType(), 'beforeSaveCustomScript']);
@@ -72,7 +72,7 @@ class Formula implements BeforeSave
             return;
         }
 
-        $this->runScript($customScript, $entity, $variables);;
+        $this->runScript($customScript, $entity, $variables);
     }
 
     private function runScript(string $script, Entity $entity, stdClass $variables): void

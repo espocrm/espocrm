@@ -1368,7 +1368,7 @@ class EvaluatorTest extends TestCase
 
         $this->evaluator->process($expression, null, $vars);
 
-        $this->assertEquals(2, $vars->a);;
+        $this->assertEquals(2, $vars->a);
     }
 
     public function testSemicolonAndParentheses1(): void

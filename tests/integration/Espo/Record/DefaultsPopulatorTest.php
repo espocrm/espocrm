@@ -77,7 +77,7 @@ class DefaultsPopulatorTest extends BaseTestCase
         ], true);
 
         $this->auth('tester', null, $portal->getId());
-        $this->reCreateApplication();;
+        $this->reCreateApplication();
 
         $service = $this->getContainer()->getByClass(ServiceContainer::class)->getByClass(CaseObj::class);
 
