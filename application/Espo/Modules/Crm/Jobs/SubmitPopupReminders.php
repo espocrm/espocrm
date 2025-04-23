@@ -148,7 +148,7 @@ class SubmitPopupReminders implements JobDataLess
                         $dateField . 'Date' => $entity->get($dateField . 'Date'),
                     ],
                 ],
-            ];;
+            ];
 
             $reminder->set('isSubmitted', true);
 

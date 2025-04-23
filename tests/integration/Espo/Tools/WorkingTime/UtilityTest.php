@@ -65,7 +65,7 @@ class UtilityTest extends BaseTestCase
 
         $configWriter = $this->getInjectableFactory()->create(ConfigWriter::class);
         $configWriter->set('workingTimeCalendarId', $calendar->getId());
-        $configWriter->save();;
+        $configWriter->save();
 
         $utility = $this->getInjectableFactory()
             ->create(CalendarUtilityFactory::class)

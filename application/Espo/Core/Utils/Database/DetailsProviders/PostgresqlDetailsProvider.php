@@ -62,7 +62,7 @@ class PostgresqlDetailsProvider implements DetailsProvider
 
     public function getParam(string $name): ?string
     {
-        $name = preg_replace('/[^A-Za-z0-9_]+/', '', $name);;
+        $name = preg_replace('/[^A-Za-z0-9_]+/', '', $name);
 
         $sql = "SHOW {$name}";
 

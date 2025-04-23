@@ -70,7 +70,7 @@ class MysqlDetailsProvider implements DetailsProvider
 
     public function getParam(string $name): ?string
     {
-        $sql = "SHOW VARIABLES LIKE :param";;
+        $sql = "SHOW VARIABLES LIKE :param";
 
         $sth = $this->pdo->prepare($sql);
         $sth->execute([':param' => $name]);
