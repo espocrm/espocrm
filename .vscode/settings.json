@@ -192,6 +192,12 @@
         },
         {
             "fileMatch": [
+                "*/Resources/metadata/app/clientIcons.json"
+            ],
+            "url": "./schema/metadata/app/clientIcons.json"
+        },
+        {
+            "fileMatch": [
                 "*/Resources/metadata/app/clientRecord.json"
             ],
             "url": "./schema/metadata/app/clientRecord.json"

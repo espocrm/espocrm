@@ -1611,6 +1611,8 @@ export default class extends ModalView {
             "far fa-window-minimize",
             "far fa-window-restore"
         ];
+
+        this.iconList.push(...this.getMetadata().get('app.clientIcons.classList', []));
     }
 
     // noinspection JSUnusedGlobalSymbols

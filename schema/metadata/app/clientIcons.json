@@ -1,0 +1,19 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/clientIcons.json",
+    "title": "app/icons",
+    "description": "Client icons.",
+    "type": "object",
+    "properties": {
+        "classList": {
+            "description": "Icon classes.",
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"type": "string"},
+                    {"enum": ["__APPEND__"]}
+                ]
+            }
+        }
+    }
+}

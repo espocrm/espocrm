@@ -341,6 +341,25 @@
             </SchemaInfo>
           </value>
         </entry>
+        <entry key="metadata/app/clientIcons">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/clientIcons" />
+              <option name="relativePathToSchema" value="schema/metadata/app/clientIcons.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/clientIcons.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
         <entry key="metadata/app/clientRecord">
           <value>
             <SchemaInfo>
