@@ -89,7 +89,10 @@ function uiAppInit() {
             }
         }
 
-        if (target.getBoundingClientRect().left - width < 0) {
+        if (
+            dropdownElement.classList.contains('pull-right') &&
+            target.getBoundingClientRect().left - width < 0
+        ) {
             const maxWidth = target.getBoundingClientRect().right - target.getBoundingClientRect().width / 2;
 
             dropdownElement.style.maxWidth = maxWidth + 'px';
