@@ -341,12 +341,39 @@ div.list-expanded > ul > li > div.expanded-row {
     }
 }
 
-.list > table.table td > span.list-icon-container.pull-right {
-    margin-left: var(--5px);
+.list > table.table td {
+     > span.list-icon-container.pull-right {
+        margin-left: var(--5px);
+    }
+
+    > span.list-icon-container.pull-left {
+        margin-right: var(--5px);
+    }
 }
 
-.list > table.table td > span.list-icon-container.pull-left {
-    margin-right: var(--5px);
+.list[data-scope="Email"] {
+    > table.table td.cell[data-name="subject"] {
+        &:has(.list-icon-container) {
+            > span {
+                display: flex;
+                width: 100%;
+                white-space: nowrap;
+
+                > span:first-child {
+                    display: inline-block;
+                    width: calc(100% - var(--18px));
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+
+                > span.list-icon-container {
+                    width: var(--18px);
+                    display: inline-block;
+                }
+            }
+        }
+    }
 }
 
 .cell span + span.list-icon-container {
