@@ -6,7 +6,8 @@
 	},
 	"fields": {
 	   "optOut": "Opted Out",
-	   "invalid": "Invalid"
+	   "invalid": "Invalid",
+        "lower": "Lower-case Name"
 	},
 	"presetFilters": {
 	   "orphan": "Orphan"
