@@ -39,13 +39,15 @@
             "type": "varchar",
             "customizationDisabled": true,
             "layoutDefaultSidePanelDisabled": true,
-            "massUpdateDisabled": true
+            "massUpdateDisabled": true,
+            "textFilterDisabled": true
         },
         "replyToString": {
             "type": "varchar",
             "customizationDisabled": true,
             "layoutDefaultSidePanelDisabled": true,
-            "massUpdateDisabled": true
+            "massUpdateDisabled": true,
+            "textFilterDisabled": true
         },
         "replyToName": {
             "type": "varchar",
