@@ -159,8 +159,12 @@
             "type": "varchar",
             "notStorable": true,
             "orderDisabled": true,
-            "utility": true,
             "view": "views/email/fields/person-string-data",
+            "layoutAvailabilityList": [
+                "list"
+            ],
+            "directAccessDisabled": true,
+            "directUpdateDisabled": true,
             "customizationDisabled": true,
             "massUpdateDisabled": true
         },
