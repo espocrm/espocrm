@@ -93,21 +93,25 @@ class KanbanMoveOverModalView extends ModalView {
             });
     }
 
+    /**
+     * @private
+     * @param {string} status
+     */
     moveTo(status) {
-        const attributes = {};
-
-        attributes[this.statusField] = status;
+        const previousStatus = this.model.attributes[this.statusField];
 
         this.model
-            .save(
-                attributes,
-                {
-                    patch: true,
-                    isMoveTo: true,
-                }
-            )
+            .save({[this.statusField]: status}, {
+                patch: true,
+                isMoveTo: true,
+            })
             .then(() => {
                 Espo.Ui.success(this.translate('Done'));
+            })
+            .catch(() => {
+                this.model.setMultiple({[this.statusField]: previousStatus}, {
+                    isMoveTo: true,
+                });
             });
 
         this.close();
