@@ -12,7 +12,11 @@
             "notStorable": true,
             "orderDisabled": true,
             "view": "views/email/fields/subject",
-            "utility": true
+            "layoutAvailabilityList": [
+                "list"
+            ],
+            "directAccessDisabled": true,
+            "directUpdateDisabled": true
         },
         "fromName": {
             "type": "varchar",
