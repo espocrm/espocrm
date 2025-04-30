@@ -111,10 +111,28 @@ ul.dropdown-menu {
         span.fa-check {
             position: relative;
             top: var(--1px);
+
+            + div {
+                display: inline-block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+                max-width: 100%;
+            }
         }
 
         &.disabled {
             color: var(--text-muted-color);
+        }
+
+        &:not(:has(.check-icon)) {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        > div {
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 
@@ -197,19 +215,6 @@ ul.dropdown-menu {
             border-left: 0;
             border-right: 0;
             border-radius: 0;
-        }
-    }
-}
-
-ul.dropdown-menu {
-    > li {
-        > a {
-
-            &,
-            > div {
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
         }
     }
 }
