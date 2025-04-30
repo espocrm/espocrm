@@ -65,6 +65,10 @@ function uiAppInit() {
         /** @type {HTMLElement} */
         const dropdownElement = $dropdown.get(0);
 
+        if (!dropdownElement) {
+            return;
+        }
+
         const height = $dropdown.outerHeight();
         const width = $dropdown.outerWidth();
 
