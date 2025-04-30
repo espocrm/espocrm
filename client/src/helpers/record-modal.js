@@ -199,8 +199,6 @@ class RecordModalHelper {
             const barView = this.modalBarProvider.get();
 
             const foundModalView = barView.getModalViewList().find(view => {
-                console.log(view);
-
                 return view instanceof EditModalView &&
                     view.id === id && view.entityType === entityType;
             });

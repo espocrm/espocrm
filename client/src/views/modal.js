@@ -1155,7 +1155,7 @@ class ModalView extends View {
             return;
         }
 
-        barView.addModalView(this, {title: title});
+        await barView.addModalView(this, {title: title});
     }
 
     unchainFromParent() {

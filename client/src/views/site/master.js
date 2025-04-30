@@ -80,9 +80,9 @@ class MasterSiteView extends View {
             this.adjustContent();
         });
 
-        this.collapsedModalBarView = new CollapsedModalBarView({fullSelector: 'body > .collapsed-modal-bar'});
+        this.collapsedModalBarView = new CollapsedModalBarView();
 
-        this.assignView('collapsedModalBar', this.collapsedModalBarView);
+        this.assignView('collapsedModalBar', this.collapsedModalBarView, '> .collapsed-modal-bar');
     }
 
     /**
