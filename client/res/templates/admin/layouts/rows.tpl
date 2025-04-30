@@ -6,6 +6,20 @@
     </div>
 </div>
 
+<style>
+    ul.enabled {
+        li {
+            &[data-hidden="true"] {
+                .left {
+                    color: var(--text-muted-color);
+                }
+            }
+        }
+    }
+
+
+</style>
+
 <div id="layout" class="row">
     <div class="col-sm-5">
         <div class="well enabled-well" tabindex="-1">
