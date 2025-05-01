@@ -102,8 +102,9 @@
             "notStorable": true,
             "orderDisabled": true,
             "directAccessDisabled": true,
+            "directUpdateDisabled": true,
             "readOnly": true,
-            "utility": true
+            "loaderClassName": "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Campaign\\StatsLoader"
         },
         "openedCount": {
             "view": "crm:views/campaign/fields/int-with-percentage",
@@ -111,8 +112,9 @@
             "notStorable": true,
             "orderDisabled": true,
             "directAccessDisabled": true,
+            "directUpdateDisabled": true,
             "readOnly": true,
-            "utility": true
+            "loaderClassName": "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Campaign\\StatsLoader"
         },
         "clickedCount": {
             "view": "crm:views/campaign/fields/int-with-percentage",
@@ -120,16 +122,18 @@
             "notStorable": true,
             "orderDisabled": true,
             "directAccessDisabled": true,
+            "directUpdateDisabled": true,
             "readOnly": true,
-            "utility": true
+            "loaderClassName": "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Campaign\\StatsLoader"
         },
         "optedInCount": {
             "type": "int",
             "notStorable": true,
             "orderDisabled": true,
             "directAccessDisabled": true,
+            "directUpdateDisabled": true,
             "readOnly": true,
-            "utility": true
+            "loaderClassName": "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Campaign\\StatsLoader"
         },
         "optedOutCount": {
             "view": "crm:views/campaign/fields/int-with-percentage",
@@ -137,8 +141,9 @@
             "notStorable": true,
             "orderDisabled": true,
             "directAccessDisabled": true,
+            "directUpdateDisabled": true,
             "readOnly": true,
-            "utility": true
+            "loaderClassName": "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Campaign\\StatsLoader"
         },
         "bouncedCount": {
             "view": "crm:views/campaign/fields/int-with-percentage",
@@ -146,72 +151,85 @@
             "notStorable": true,
             "orderDisabled": true,
             "directAccessDisabled": true,
+            "directUpdateDisabled": true,
             "readOnly": true,
-            "utility": true
+            "loaderClassName": "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Campaign\\StatsLoader"
         },
         "hardBouncedCount": {
             "type": "int",
             "notStorable": true,
             "orderDisabled": true,
             "directAccessDisabled": true,
+            "directUpdateDisabled": true,
             "readOnly": true,
-            "utility": true
+            "loaderClassName": "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Campaign\\StatsLoader"
         },
         "softBouncedCount": {
             "type": "int",
             "notStorable": true,
             "orderDisabled": true,
             "directAccessDisabled": true,
+            "directUpdateDisabled": true,
             "readOnly": true,
-            "utility": true
+            "loaderClassName": "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Campaign\\StatsLoader"
         },
         "leadCreatedCount": {
             "type": "int",
             "notStorable": true,
             "orderDisabled": true,
             "directAccessDisabled": true,
+            "directUpdateDisabled": true,
             "readOnly": true,
-            "utility": true
+            "loaderClassName": "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Campaign\\StatsLoader"
         },
         "openedPercentage": {
             "type": "int",
             "notStorable": true,
             "orderDisabled": true,
             "directAccessDisabled": true,
+            "directUpdateDisabled": true,
             "readOnly": true,
-            "utility": true
+            "utility": true,
+            "loaderClassName": "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Campaign\\StatsLoader"
         },
         "clickedPercentage": {
             "type": "int",
             "notStorable": true,
             "orderDisabled": true,
             "directAccessDisabled": true,
+            "directUpdateDisabled": true,
             "readOnly": true,
-            "utility": true
+            "utility": true,
+            "loaderClassName": "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Campaign\\StatsLoader"
         },
         "optedOutPercentage": {
             "type": "int",
             "notStorable": true,
             "orderDisabled": true,
             "directAccessDisabled": true,
+            "directUpdateDisabled": true,
             "readOnly": true,
-            "utility": true
+            "utility": true,
+            "loaderClassName": "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Campaign\\StatsLoader"
         },
         "bouncedPercentage": {
             "type": "int",
             "notStorable": true,
             "orderDisabled": true,
             "directAccessDisabled": true,
+            "directUpdateDisabled": true,
             "readOnly": true,
-            "utility": true
+            "utility": true,
+            "loaderClassName": "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Campaign\\StatsLoader"
         },
         "revenue": {
             "type": "currency",
             "notStorable": true,
             "orderDisabled": true,
             "directAccessDisabled": true,
+            "directUpdateDisabled": true,
             "readOnly": true,
-            "utility": true
+            "loaderClassName": "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Campaign\\StatsLoader"
         },
         "budget": {
             "type": "currency"

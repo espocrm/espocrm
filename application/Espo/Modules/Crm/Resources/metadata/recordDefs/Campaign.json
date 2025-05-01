@@ -1,7 +1,4 @@
 {
-    "readLoaderClassNameList": [
-        "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Campaign\\StatsLoader"
-    ],
     "beforeUpdateHookClassNameList": [
         "Espo\\Modules\\Crm\\Classes\\RecordHooks\\Campaign\\BeforeUpdate"
     ]
