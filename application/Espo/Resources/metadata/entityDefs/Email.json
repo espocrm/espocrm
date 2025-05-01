@@ -93,7 +93,8 @@
                 "detail",
                 "filters"
             ],
-            "massUpdateDisabled": true
+            "massUpdateDisabled": true,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\Email\\AddressDataLoader"
         },
         "to": {
             "type": "varchar",
@@ -112,7 +113,8 @@
                 "detail",
                 "filters"
             ],
-            "massUpdateDisabled": true
+            "massUpdateDisabled": true,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\Email\\AddressDataLoader"
         },
         "cc": {
             "type": "varchar",
@@ -129,7 +131,8 @@
                 "detail",
                 "filters"
             ],
-            "massUpdateDisabled": true
+            "massUpdateDisabled": true,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\Email\\AddressDataLoader"
         },
         "bcc": {
             "type": "varchar",
@@ -145,7 +148,8 @@
             "layoutAvailabilityList": [
                 "detail"
             ],
-            "massUpdateDisabled": true
+            "massUpdateDisabled": true,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\Email\\AddressDataLoader"
         },
         "replyTo": {
             "type": "varchar",
@@ -157,7 +161,8 @@
             "layoutAvailabilityList": [
                 "detail"
             ],
-            "massUpdateDisabled": true
+            "massUpdateDisabled": true,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\Email\\AddressDataLoader"
         },
         "personStringData": {
             "type": "varchar",

@@ -1057,6 +1057,10 @@
                     "type": "string",
                     "description": "Converts field defs to ORM metadata. Should implement Espo\\Core\\Utils\\Database\\Orm\\FieldConverter."
                 },
+                "loaderClassName": {
+                    "type": "string",
+                    "description": "Loader. Must implement Espo\\Core\\FieldProcessing\\Loader. As of v9.1."
+                },
                 "duplicateIgnore": {
                     "type": "boolean",
                     "description": "Ignore when duplicating a record."

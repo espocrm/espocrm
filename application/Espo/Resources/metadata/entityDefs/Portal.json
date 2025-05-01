@@ -11,7 +11,8 @@
         "url": {
             "type": "url",
             "notStorable": true,
-            "readOnly": true
+            "readOnly": true,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\Portal\\UrlLoader"
         },
         "customId": {
             "type": "varchar",

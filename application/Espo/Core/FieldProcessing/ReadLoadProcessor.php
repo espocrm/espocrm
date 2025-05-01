@@ -33,6 +33,7 @@ use Espo\Core\Acl;
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Entities\User;
+use Espo\ORM\Defs;
 use Espo\ORM\Entity;
 
 use Espo\Core\FieldProcessing\Loader\Params;
@@ -53,7 +54,8 @@ class ReadLoadProcessor
         private InjectableFactory $injectableFactory,
         private Metadata $metadata,
         private Acl $acl,
-        private User $user
+        private User $user,
+        private Defs $defs,
     ) {
         $this->bindingContainer = BindingContainerBuilder::create()
             ->bindInstance(User::class, $this->user)
@@ -97,14 +99,18 @@ class ReadLoadProcessor
      */
     private function getLoaderClassNameList(string $entityType): array
     {
+        $entityLevelList = $this->getEntityLevelClassNameList($entityType);
+
         $list = $this->metadata
             ->get(['app', 'fieldProcessing', 'readLoaderClassNameList']) ?? [];
 
         $additionalList = $this->metadata
             ->get(['recordDefs', $entityType, 'readLoaderClassNameList']) ?? [];
 
-        /** @var class-string<Loader<Entity>>[] */
-        return array_merge($list, $additionalList);
+        /** @var class-string<Loader<Entity>>[] $list */
+        $list = array_merge($entityLevelList, $list, $additionalList);
+
+        return array_values(array_unique($list));
     }
 
     /**
@@ -114,5 +120,27 @@ class ReadLoadProcessor
     private function createLoader(string $className): Loader
     {
         return $this->injectableFactory->createWithBinding($className, $this->bindingContainer);
+    }
+
+    /**
+     * @return class-string<Loader<Entity>>[]
+     */
+    private function getEntityLevelClassNameList(string $entityType): array
+    {
+        $entityLevelList = [];
+
+        $fieldList = $this->defs->getEntity($entityType)->getFieldList();
+
+        foreach ($fieldList as $fieldDefs) {
+            $className = $fieldDefs->getParam('loaderClassName');
+
+            if (!$className || in_array($className, $entityLevelList)) {
+                continue;
+            }
+
+            $entityLevelList[] = $className;
+        }
+
+        return $entityLevelList;
     }
 }

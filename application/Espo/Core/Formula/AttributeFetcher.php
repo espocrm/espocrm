@@ -29,7 +29,9 @@
 
 namespace Espo\Core\Formula;
 
+use Espo\Core\FieldProcessing\SpecificFieldLoader;
 use Espo\Core\ORM\Defs\AttributeParam;
+use Espo\Core\Utils\FieldUtil;
 use Espo\Entities\EmailAddress;
 use Espo\Entities\PhoneNumber;
 use Espo\ORM\Defs\Params\AttributeParam as OrmAttributeParam;
@@ -47,7 +49,11 @@ class AttributeFetcher
     /** @var array<string, mixed> */
     private $relatedEntitiesCacheMap = [];
 
-    public function __construct(private EntityManager $entityManager) {}
+    public function __construct(
+        private EntityManager $entityManager,
+        private FieldUtil $fieldUtil,
+        private SpecificFieldLoader $specificFieldLoader,
+    ) {}
 
     public function fetch(Entity $entity, string $attribute, bool $getFetchedAttribute = false): mixed
     {
@@ -159,6 +165,14 @@ class AttributeFetcher
 
             return;
         }
+
+        $field = $this->fieldUtil->getFieldOfAttribute($entity->getEntityType(), $attribute);
+
+        if (!$field) {
+            return;
+        }
+
+        $this->specificFieldLoader->process($entity, $field);
     }
 
     public function resetRuntimeCache(): void

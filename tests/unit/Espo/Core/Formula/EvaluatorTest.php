@@ -29,12 +29,15 @@
 
 namespace tests\unit\Espo\Core\Formula;
 
+use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\FieldProcessing\SpecificFieldLoader;
 use Espo\Core\Formula\Evaluator;
 use Espo\Core\Formula\Exceptions\Error;
 use Espo\Core\Formula\Exceptions\UndefinedKey;
 use Espo\Core\Formula\Exceptions\UnsafeFunction;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Formula\Exceptions\SyntaxError;
+use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Log;
 use Espo\ORM\EntityManager;
 
@@ -58,9 +61,14 @@ class EvaluatorTest extends TestCase
         $container = $containerMocker->create([
             'log' => $log,
             'entityManager' => $entityManager,
+            'fieldUtil' => $this->createMock(FieldUtil::class),
         ]);
 
-        $injectableFactory = new InjectableFactory($container);
+        $bindingContainer = BindingContainerBuilder::create()
+            ->bindInstance(SpecificFieldLoader::class, $this->createMock(SpecificFieldLoader::class))
+            ->build();
+
+        $injectableFactory = new InjectableFactory($container, $bindingContainer);
 
         $this->evaluator = new Evaluator($injectableFactory, [], ['test\\unsafe']);
     }

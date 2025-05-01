@@ -32,7 +32,9 @@ namespace Espo\Core\FieldProcessing;
 use Espo\Core\Acl;
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\Utils\FieldUtil;
 use Espo\Entities\User;
+use Espo\ORM\Defs;
 use Espo\ORM\Entity;
 
 use Espo\Core\FieldProcessing\Loader\Params;
@@ -53,7 +55,9 @@ class ListLoadProcessor
         private InjectableFactory $injectableFactory,
         private Metadata $metadata,
         private Acl $acl,
-        private User $user
+        private User $user,
+        private Defs $defs,
+        private FieldUtil $fieldUtil,
     ) {
         $this->bindingContainer = BindingContainerBuilder::create()
             ->bindInstance(User::class, $this->user)
@@ -67,7 +71,7 @@ class ListLoadProcessor
             $params = new Params();
         }
 
-        foreach ($this->getLoaderList($entity->getEntityType()) as $processor) {
+        foreach ($this->getLoaderList($entity->getEntityType(), $params) as $processor) {
             $processor->process($entity, $params);
         }
     }
@@ -75,7 +79,7 @@ class ListLoadProcessor
     /**
      * @return Loader<Entity>[]
      */
-    private function getLoaderList(string $entityType): array
+    private function getLoaderList(string $entityType, Params $params): array
     {
         if (array_key_exists($entityType, $this->loaderListMapCache)) {
             return $this->loaderListMapCache[$entityType];
@@ -83,7 +87,7 @@ class ListLoadProcessor
 
         $list = [];
 
-        foreach ($this->getLoaderClassNameList($entityType) as $className) {
+        foreach ($this->getLoaderClassNameList($entityType, $params) as $className) {
             $list[] = $this->createLoader($className);
         }
 
@@ -95,15 +99,19 @@ class ListLoadProcessor
     /**
      * @return class-string<Loader<Entity>>[]
      */
-    private function getLoaderClassNameList(string $entityType): array
+    private function getLoaderClassNameList(string $entityType, Params $params): array
     {
+        $entityLevelList = $this->getEntityLevelClassNameList($entityType, $params);
+
         $list = $this->metadata
             ->get(['app', 'fieldProcessing', 'listLoaderClassNameList']) ?? [];
 
         $additionalList = $this->metadata
             ->get(['recordDefs', $entityType, 'listLoaderClassNameList']) ?? [];
 
-        return array_merge($list, $additionalList);
+        $list = array_merge($entityLevelList, $list, $additionalList);
+
+        return array_values(array_unique($list));
     }
 
     /**
@@ -113,5 +121,43 @@ class ListLoadProcessor
     private function createLoader(string $className): Loader
     {
         return $this->injectableFactory->createWithBinding($className, $this->bindingContainer);
+    }
+
+    /**
+     * @return class-string<Loader<Entity>>[]
+     */
+    private function getEntityLevelClassNameList(string $entityType, Params $params): array
+    {
+        $entityLevelList = [];
+
+        $fieldList = $this->defs->getEntity($entityType)->getFieldList();
+
+        foreach ($fieldList as $fieldDefs) {
+            $className = $fieldDefs->getParam('loaderClassName');
+
+            if (!$className || in_array($className, $entityLevelList)) {
+                continue;
+            }
+
+            if ($params->hasSelect()) {
+                $hasAttribute = false;
+
+                foreach ($this->fieldUtil->getAttributeList($entityType, $fieldDefs->getName()) as $attribute) {
+                    if ($params->hasInSelect($attribute)) {
+                        $hasAttribute = true;
+
+                        break;
+                    }
+                }
+
+                if (!$hasAttribute) {
+                    continue;
+                }
+            }
+
+            $entityLevelList[] = $className;
+        }
+
+        return $entityLevelList;
     }
 }

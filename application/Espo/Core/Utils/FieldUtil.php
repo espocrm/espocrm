@@ -289,4 +289,20 @@ class FieldUtil
 
         return $attributeList;
     }
+
+    /**
+     * Get a field an attribute belongs to.
+     *
+     * @since 9.1.0
+     */
+    public function getFieldOfAttribute(string $entityType, string $attribute): ?string
+    {
+        foreach ($this->getEntityTypeFieldList($entityType) as $field) {
+            if (in_array($attribute, $this->getAttributeList($entityType, $field))) {
+                return $field;
+            }
+        }
+
+        return null;
+    }
 }

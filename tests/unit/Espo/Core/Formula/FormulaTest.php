@@ -30,6 +30,7 @@
 namespace tests\unit\Espo\Core\Formula;
 
 use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\FieldProcessing\SpecificFieldLoader;
 use Espo\Core\Formula\AttributeFetcher;
 use Espo\Core\Formula\Parser\Ast\Attribute;
 use Espo\Core\Formula\Parser\Ast\Node;
@@ -38,6 +39,7 @@ use Espo\Core\Formula\Parser\Ast\Variable;
 use Espo\Core\Formula\Processor;
 use Espo\Core\Formula\Argument;
 use Espo\Core\Utils\DateTime;
+use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\NumberUtil;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
@@ -142,7 +144,10 @@ class FormulaTest extends TestCase
                 ->build()
         );
 
-        $attributeFetcher = new AttributeFetcher($this->entityManager);
+        $fieldUtil = $this->createMock(FieldUtil::class);
+        $loader = $this->createMock(SpecificFieldLoader::class);
+
+        $attributeFetcher = new AttributeFetcher($this->entityManager, $fieldUtil, $loader);
 
         return new Processor(
             $injectableFactory,

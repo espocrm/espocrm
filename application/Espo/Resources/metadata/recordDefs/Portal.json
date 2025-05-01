@@ -1,10 +1,4 @@
 {
-    "readLoaderClassNameList": [
-        "Espo\\Classes\\FieldProcessing\\Portal\\UrlLoader"
-    ],
-    "listLoaderClassNameList": [
-        "Espo\\Classes\\FieldProcessing\\Portal\\UrlLoader"
-    ],
     "massActions": {
         "delete": {
             "allowed": true
