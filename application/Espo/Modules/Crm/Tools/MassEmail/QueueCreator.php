@@ -127,13 +127,12 @@ class QueueCreator
 
             $emailAddressRecord = $this->getEmailAddressRepository()->getByAddress($emailAddress);
 
-            if ($emailAddressRecord && !$withOptedOut) {
-                if (
-                    $emailAddressRecord->isInvalid() ||
-                    $emailAddressRecord->isOptedOut()
-                ) {
-                    continue;
-                }
+            if ($emailAddressRecord && !$withOptedOut && $emailAddressRecord->isOptedOut()) {
+                continue;
+            }
+
+            if ($emailAddressRecord && $emailAddressRecord->isInvalid()) {
+                continue;
             }
 
             $queueItem = $this->entityManager->getNewEntity(EmailQueueItem::ENTITY_TYPE);
