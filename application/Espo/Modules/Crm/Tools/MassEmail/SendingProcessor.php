@@ -271,13 +271,21 @@ class SendingProcessor
 
         $emailAddressRecord = $this->getEmailAddressRepository()->getByAddress($emailAddress);
 
-        if (
-            $emailAddressRecord &&
-            ($emailAddressRecord->isInvalid() || $emailAddressRecord->isOptedOut())
-        ) {
-            $this->setItemFailed($queueItem);
+        if ($emailAddressRecord) {
+            if ($emailAddressRecord->isInvalid()) {
+                $this->setItemFailed($queueItem);
 
-            return;
+                return;
+            }
+
+            if (
+                $emailAddressRecord->isOptedOut() &&
+                $massEmail->getCampaign()?->getType() !== Campaign::TYPE_INFORMATIONAL_EMAIL
+            ) {
+                $this->setItemFailed($queueItem);
+
+                return;
+            }
         }
 
         $email = $this->getPreparedEmail(
