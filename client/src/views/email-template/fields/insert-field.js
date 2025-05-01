@@ -112,7 +112,7 @@ export default class extends BaseFieldView {
                         return;
                     }
 
-                    const attributeList = this.getScopeAttributeList(foreignScope);
+                    const attributeList = this.getScopeAttributeList(foreignScope, true);
 
                     attributeList.forEach(item => {
                         entityPlaceholders[scope].push(`${link}.${item}`);
@@ -142,9 +142,10 @@ export default class extends BaseFieldView {
     /**
      * @private
      * @param {string} scope
+     * @param {boolean} [isForeign]
      * @return {string[]}
      */
-    getScopeAttributeList(scope) {
+    getScopeAttributeList(scope, isForeign = false) {
         let fieldList = this.getFieldManager().getEntityTypeFieldList(scope);
 
         let list = [];
@@ -167,7 +168,7 @@ export default class extends BaseFieldView {
                 aclDefs.internal ||
                 fieldDefs.disabled ||
                 fieldDefs.utility ||
-                fieldDefs.directAccessDisabled ||
+                fieldDefs.directAccessDisabled && (isForeign || !fieldDefs.loaderClassName) ||
                 fieldDefs.templatePlaceholderDisabled
             ) {
                 return false;
