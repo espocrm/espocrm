@@ -93,7 +93,7 @@ export default class extends BaseFieldView {
                 aclDefs.internal ||
                 fieldDefs.disabled ||
                 fieldDefs.utility ||
-                fieldDefs.directAccessDisabled ||
+                fieldDefs.directAccessDisabled && !fieldDefs.loaderClassName ||
                 fieldDefs.templatePlaceholderDisabled
             ) {
                 ignoreFieldList.push(field);
