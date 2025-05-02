@@ -927,6 +927,8 @@ class RoleRecordTableView extends View {
                 await Promise.all(promises);
 
                 await this.reRenderPreserveSearch();
+
+                this.trigger('change');
             });
         });
     }
