@@ -469,7 +469,9 @@ class Email extends Database implements
      */
     private function addAddresses(EmailEntity $entity, string $type, array &$addressList): void
     {
-        $splitList = explode(';', $entity->get($type));
+        $value = $entity->get($type) ?? '';
+
+        $splitList = explode(';', $value);
 
         foreach ($splitList as $address) {
             if (!in_array($address, $addressList)) {
