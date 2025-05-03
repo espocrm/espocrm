@@ -48,6 +48,7 @@ use stdClass;
 
 /**
  * @extends Database<EmailEntity>
+ * @internal
  */
 class Email extends Database implements
 
@@ -139,6 +140,9 @@ class Email extends Database implements
         }
     }
 
+    /**
+     * @internal
+     */
     public function loadFromField(EmailEntity $entity): void
     {
         $fromEmailAddressName = $entity->get(self::ATTR_FROM_EMAIL_ADDRESS_NAME);
@@ -191,27 +195,40 @@ class Email extends Database implements
         $entity->set($type, implode(';', $addresses));
     }
 
+    /**
+     * @internal
+     */
     public function loadToField(EmailEntity $entity): void
     {
         $this->loadAddressMultiField($entity, self::ADDRESS_TO);
     }
 
+    /**
+     * @internal
+     */
     public function loadCcField(EmailEntity $entity): void
     {
         $this->loadAddressMultiField($entity, self::ADDRESS_CC);
     }
 
+    /**
+     * @internal
+     */
     public function loadBccField(EmailEntity $entity): void
     {
         $this->loadAddressMultiField($entity, self::ADDRESS_BCC);
     }
 
+    /**
+     * @internal
+     */
     public function loadReplyToField(EmailEntity $entity): void
     {
         $this->loadAddressMultiField($entity, self::ADDRESS_REPLY_TO);
     }
 
     /**
+     * @internal
      * @param string[] $fieldList
      */
     public function loadNameHash(EmailEntity $entity, array $fieldList = self::ADDRESS_TYPE_LIST): void
@@ -325,6 +342,9 @@ class Email extends Database implements
         }
     }
 
+    /**
+     * @internal
+     */
     public function fillAccount(EmailEntity $entity): void
     {
         if (!$entity->isNew()) {
@@ -361,6 +381,9 @@ class Email extends Database implements
         }
     }
 
+    /**
+     * @internal
+     */
     public function applyUsersFilters(EmailEntity $entity): void
     {
         foreach ($entity->getUsers()->getIdList() as $userId) {
