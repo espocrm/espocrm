@@ -1,6 +1,7 @@
 {
     "loadAdditionalFieldsAfterUpdate": true,
     "readLoaderClassNameList": [
+        "Espo\\Classes\\FieldProcessing\\Email\\AddressLoader",
         "Espo\\Classes\\FieldProcessing\\Email\\AddressDataLoader",
         "Espo\\Classes\\FieldProcessing\\Email\\UserColumnsLoader",
         "Espo\\Classes\\FieldProcessing\\Email\\FolderDataLoader",
