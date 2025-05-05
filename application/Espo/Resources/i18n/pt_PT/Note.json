@@ -23,13 +23,6 @@
     "writeMessage": "Escreve a sua mensagem aqui"
   },
   "options": {
-    "targetType": {
-      "self": "para mim mesmo",
-      "users": "para utilizador(s) em particular",
-      "teams": "para equipa(s) em particular",
-      "all": "para utilizadores internos",
-      "portals": "para utilizadores do portal"
-    },
     "type": {
       "Post": "Publicar"
     }

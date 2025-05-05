@@ -36,12 +36,17 @@
     "calendarScrollHour": "Orario Predefinito Scorrimento Calendario",
     "defaultRemindersTask": "Promemoria Predefiniti per i Compiti",
     "addCustomTabs": "Aggiungi Schede Personalizzate",
-    "reactionNotifications": "Notifiche in-app per le reazioni"
+    "reactionNotifications": "Notifiche in-app per le reazioni",
+    "pageContentWidth": "Larghezza contenuto"
   },
   "options": {
     "weekStart": {
       "0": "Domenica",
       "1": "Lunedì"
+    },
+    "pageContentWidth": {
+      "": "Normale",
+      "Wide": "Largo"
     }
   },
   "labels": {

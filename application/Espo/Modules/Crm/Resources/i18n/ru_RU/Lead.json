@@ -64,7 +64,6 @@
   },
   "presetFilters": {
     "active": "Активный",
-    "actual": "Актуальный",
     "converted": "Конвертированны"
   }
 }

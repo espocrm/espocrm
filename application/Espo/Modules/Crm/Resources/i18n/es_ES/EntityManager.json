@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "activityStatusList": "Estados de actividad",
+    "historyStatusList": "Estados del historial",
+    "completedStatusList": "Estados completados",
+    "canceledStatusList": "Estados cancelados"
+  },
+  "tooltips": {
+    "activityStatusList": "Valores de estado que determinan que un registro de actividad debe mostrarse en el panel Actividad y considerarse como real.",
+    "historyStatusList": "Valores de estado que determinan que un registro de actividad debe mostrarse en el panel Historial.",
+    "completedStatusList": "Valores de estado que determinan que una actividad se ha completado.",
+    "canceledStatusList": "Valores de estado que determinan que una actividad está cancelada y no se tendrán en cuenta en los rangos de libre/ocupado."
+  }
+}

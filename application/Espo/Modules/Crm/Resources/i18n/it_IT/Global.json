@@ -31,7 +31,8 @@
     "Activities": "Attività",
     "KnowledgeBaseArticle": "Articolo Base di Conoscenza",
     "KnowledgeBaseCategory": "Categoria Base di Conoscenza",
-    "CampaignLogRecord": "Registro Campagna"
+    "CampaignLogRecord": "Registro Campagna",
+    "TargetListCategory": "Categoria lista di destinazione"
   },
   "scopeNamesPlural": {
     "Account": "Account",
@@ -52,7 +53,8 @@
     "Activities": "Attività",
     "KnowledgeBaseArticle": "Base di Conoscenza",
     "KnowledgeBaseCategory": "Categorie Base di Conoscenza",
-    "CampaignLogRecord": "Registro Campagne"
+    "CampaignLogRecord": "Registro Campagne",
+    "TargetListCategory": "Categorie lista di destinazione"
   },
   "dashlets": {
     "Leads": "I miei Lead",

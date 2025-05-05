@@ -19,9 +19,10 @@
       "CheckEmailAccounts": "Comprobar cuentas de correo personales",
       "SendEmailReminders": "Enviar Recordatorios por Email",
       "AuthTokenControl": "Control del Token de Autenticación",
-      "SendEmailNotifications": "Enviar notificaciones por correo electrónico",
+      "SendEmailNotifications": "Enviar notificaciones por correo",
       "CheckNewVersion": "Verificar nueva versión",
-      "ProcessWebhookQueue": "Procesar cola de webhook"
+      "ProcessWebhookQueue": "Procesar cola de webhook",
+      "SendScheduledEmails": "Enviar correos programados"
     },
     "cronSetup": {
       "linux": "Nota: añada esta línea al archivo crontab para que EspoCRM pueda ejecutar las tareas programadas:",

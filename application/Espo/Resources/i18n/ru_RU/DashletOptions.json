@@ -12,8 +12,6 @@
     "entityType": "Тип объекта",
     "primaryFilter": "Первичный фильтр",
     "boolFilterList": "Дополнительные фильтры",
-    "sortBy": "Сортировка (поле)",
-    "sortDirection": "Сортировка (направление)",
     "expandedLayout": "Макет",
     "dateFilter": "Фильтр даты",
     "skipOwn": "Не показывать собственные записи",

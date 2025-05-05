@@ -16,8 +16,6 @@
     "entityForeign": "Fremdentität",
     "linkForeign": "Fremdrelation",
     "labelForeign": "Fremdbezeichnung",
-    "sortBy": "Standardmäßig sortieren nach",
-    "sortDirection": "Standardmäßig sortieren in Reihenfolge",
     "relationName": "Mittlerer Tabellenname",
     "linkMultipleField": "Mehrere Felder verlinken",
     "linkMultipleFieldForeign": "Fremdlink mehrere Felder",
@@ -48,7 +46,9 @@
     "assignedUsers": "Mehrere zugewiesene Benutzer",
     "collaborators": "Mitarbeiter",
     "aclContactLink": "ACL-Kontakt-Link",
-    "aclAccountLink": "ACL-Konto-Link"
+    "aclAccountLink": "ACL-Konto-Link",
+    "sortBy": "Standardsortierung nach Feld",
+    "sortDirection": "Standard-Sortierrichtung"
   },
   "options": {
     "type": {

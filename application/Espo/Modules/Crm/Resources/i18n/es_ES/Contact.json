@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "Nombre",
-    "emailAddress": "Correo electrónico",
+    "emailAddress": "Correo",
     "accountRole": "Título",
     "account": "Cuenta",
     "accounts": "Cuentas",
@@ -21,7 +21,8 @@
     "acceptanceStatusMeetings": "Estado de aceptación (Reuniones)",
     "acceptanceStatusCalls": "Estado de aceptación (Llamadas)",
     "title": "Titulo de cuenta",
-    "hasPortalUser": "Tiene usuario del portal"
+    "hasPortalUser": "Tiene usuario del portal",
+    "originalEmail": "Correo original"
   },
   "links": {
     "opportunities": "Oportunidades",

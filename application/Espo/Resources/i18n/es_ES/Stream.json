@@ -1,7 +1,8 @@
 {
   "messages": {
     "infoMention": "Escriba **@nombredeusuario** para mencionar al usuario en la publicación.",
-    "infoSyntax": "Sintaxis de markdown disponible"
+    "infoSyntax": "Sintaxis de markdown disponible",
+    "couldNotAddFollowerUserHasNoAccessToStream": "No se pudo agregar al usuario '{userName}' a la lista de seguidores. El usuario no tiene acceso de transmisión al registro."
   },
   "syntaxItems": {
     "code": "código",
@@ -10,6 +11,6 @@
     "emphasizedText": "texto enfatizado",
     "deletedText": "texto eliminado",
     "blockquote": "bloque de cita",
-    "link": "enlace"
+    "link": "texto del enlace"
   }
 }

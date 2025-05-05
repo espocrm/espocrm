@@ -28,8 +28,6 @@
     "followCreatedEntities": "Автоматически подписаться на созданные записи",
     "followCreatedEntityTypeList": "Автоматически подписаться на созданные записи конкретных типов объектов",
     "emailUseExternalClient": "Использовать внешний почтовый клиент",
-    "scopeColorsDisabled": "Отключить цвета границ",
-    "tabColorsDisabled": "Отключить цвета вкладок",
     "assignmentNotificationsIgnoreEntityTypeList": "Оповещения о назначении в приложении",
     "assignmentEmailNotificationsIgnoreEntityTypeList": "Оповещения по эл.почте о назначении",
     "dashboardLocked": "Приборная панель блокировки",

@@ -10,7 +10,6 @@
     "strongText": "жирный текст",
     "emphasizedText": "курсивный текст",
     "deletedText": "зачеркнутый текст",
-    "blockquote": "цитата",
-    "link": "ссылка"
+    "blockquote": "цитата"
   }
 }

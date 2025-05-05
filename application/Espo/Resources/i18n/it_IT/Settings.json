@@ -13,14 +13,10 @@
     "currencyList": "Elenco Valute",
     "language": "Lingua",
     "companyLogo": "Logo Aziendale",
-    "smtpPort": "Porta",
     "ldapPort": "Porta",
-    "smtpAuth": "Autenticazione",
     "ldapAuth": "Autenticazione",
-    "smtpSecurity": "Sicurezza",
     "ldapSecurity": "Sicurezza",
     "outboundEmailFromName": "Nome Mittente",
-    "outboundEmailFromAddress": "Indirizzo mittente",
     "outboundEmailIsShared": "Condivisa",
     "recordsPerPage": "Elementi Per Pagina",
     "recordsPerPageSmall": "Elementi Per Pagina (Ridotto)",
@@ -154,7 +150,8 @@
     "streamEmailWithContentEntityTypeList": "Entità con il corpo dell'email nelle note",
     "emailScheduledBatchCount": "Numero massimo di email programmate inviate per ogni gruppo",
     "passwordStrengthSpecialCharacterCount": "Numero di caratteri speciali richiesti nella password",
-    "availableReactions": "Reazioni disponibili"
+    "availableReactions": "Reazioni disponibili",
+    "outboundEmailFromAddress": "Indirizzo e-mail di sistema"
   },
   "tooltips": {
     "recordsPerPage": "Numero di record inizialmente mostrati in vista lista.",
@@ -222,8 +219,6 @@
     "passwordRecoveryNoExposure": "Non sarà possibile determinare se uno specifico indirizzo email è registrato nel sistema.",
     "emailAddressLookupEntityTypeList": "Per il riempimento automatico degli indirizzi e-mail.",
     "emailNotificationsDelay": "Un messaggio può essere modificato entro l'intervallo di tempo specificato prima dell'invio della notifica.",
-    "outboundEmailFromAddress": "L'indirizzo email del sistema.",
-    "smtpServer": "Se vuoto, verrà utilizzato l'account e-mail di gruppo con l'indirizzo email corrispondente.",
     "busyRangesEntityList": "Cosa viene preso in considerazione quando vengono mostrati gli intervalli di tempo occupati nello scheduler e nella timeline.",
     "recordsPerPageSelect": "Numero di record visualizzati inizialmente quando si selezionano i record.",
     "workingTimeCalendar": "Un Calendario Lavorativo che sarà applicato a tutti gli utenti per impostazione predefinita.",
@@ -241,7 +236,8 @@
     "authIpAddressWhitelist": "Un elenco di indirizzi o intervalli IP in notazione CIDR.\n\nI portali non sono interessati dalla restrizione.",
     "emailAddressIsOptedOutByDefault": "Quando si crea un nuovo record, l'indirizzo e-mail viene contrassegnato come opt-out.",
     "oidcGroupClaim": "Un claim da utilizzare per il mapping dei team.",
-    "quickSearchFullTextAppendWildcard": "Aggiunge una wildcard a una query di ricerca con completamento automatico quando è abilitata la ricerca a tutto testo. Riduce le prestazioni della ricerca."
+    "quickSearchFullTextAppendWildcard": "Aggiunge una wildcard a una query di ricerca con completamento automatico quando è abilitata la ricerca a tutto testo. Riduce le prestazioni della ricerca.",
+    "outboundEmailFromAddress": "Le e-mail di sistema saranno inviate da questo indirizzo e-mail. È necessario impostare e configurare correttamente un [account e-mail di gruppo](#InboundEmail) con lo stesso indirizzo e-mail per inviare le e-mail."
   },
   "labels": {
     "System": "Sistema",

@@ -43,7 +43,6 @@
     "overdue": "просроченный"
   },
   "presetFilters": {
-    "actual": "Актуальные",
     "completed": "Завершенные",
     "todays": "На сегодня",
     "overdue": "Просроченные",

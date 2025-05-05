@@ -53,7 +53,9 @@
     "AppLogRecord": "App Log Datensatz",
     "WorkingTimeRange": "Arbeitszeitausnahme",
     "AddressCountry": "Adresse Land",
-    "AppSecret": "App-Geheimnis"
+    "AppSecret": "App-Geheimnis",
+    "OAuthProvider": "OAuth-Anbieter",
+    "OAuthAccount": "OAuth-Konto"
   },
   "scopeNamesPlural": {
     "Email": "E-Mails",
@@ -101,7 +103,9 @@
     "WebhookQueueItem": "Webhook-Warteschlangenelemente",
     "WorkingTimeRange": "Arbeitszeitausnahmen",
     "AddressCountry": "Adresse Länder",
-    "AppSecret": "App-Geheimnisse"
+    "AppSecret": "App-Geheimnisse",
+    "OAuthProvider": "OAuth-Anbieter",
+    "OAuthAccount": "OAuth-Konten"
   },
   "labels": {
     "Misc": "Verschiedenes",
@@ -328,14 +332,14 @@
     "checkForNewNotes": "Nach neuen Ereignissen überprüfen",
     "internalPost": "Beitrag kann nur von internen Benutzern gesehen werden",
     "done": "Fertig",
-    "confirmMassFollow": "Sind Sie sicher, dass Sie den ausgewählten Datensätzen folgen wollen?",
-    "confirmMassUnfollow": "Sind Sie sicher, dass Sie den ausgewählten Datensätzen nicht folgen wollen?",
-    "massFollowResult": "{count} Datensätze wird jetzt gefolgt",
-    "massUnfollowResult": "{count} Datensätze wird nicht mehr gefolgt",
-    "massFollowResultSingle": "{count} Datensätze wird jetzt gefolgt",
-    "massUnfollowResultSingle": "{count} Datensätze wird nicht gefolgt",
-    "massFollowZeroResult": "Es wurde keinem Datensatz gefolgt",
-    "massUnfollowZeroResult": "Keinem Datensatz wurd nicht gefolgt",
+    "confirmMassFollow": "Sind Sie sicher, dass Sie die ausgewählten Datensätze abonnieren möchten?",
+    "confirmMassUnfollow": "Sind Sie sicher, dass Sie die ausgewählten Datensätze nicht mehr abonnieren möchten?",
+    "massFollowResult": "{count} Datensätze sind nun abonniert",
+    "massUnfollowResult": "{count} Datensätze werden nicht mehr abonniert",
+    "massFollowResultSingle": "{count} Datensätze sind nun abonniert",
+    "massUnfollowResultSingle": "{count} Datensätze sind nun nicht mehr abonniert",
+    "massFollowZeroResult": "Es wurde kein Datensatz abonniert",
+    "massUnfollowZeroResult": "Kein Datensatz wurde nicht mehr abonniert",
     "fieldShouldBeEmail": "{field} muss eine gültige E-Mail sein",
     "fieldShouldBeFloat": "{field} muss eine gültige Fließkomma Zahl sein",
     "fieldShouldBeInt": "{field} muss eine gültige Ganzzahl sein",
@@ -372,7 +376,6 @@
     "validationFailure": "Fehler bei der Backend-Validierung.\n\nFeld: `{field}`\nValidierung: `{type}`",
     "confirmAppRefresh": "Die Anwendung wurde aktualisiert. Es wird empfohlen die Seite neu zu laden, um eine problemlose Funktionsweise sicherzustellen.",
     "error404": "Die von Ihnen angeforderte URL kann nicht verarbeitet werden.",
-    "error403": "Sie haben keinen Zugang zu diesem Bereich.",
     "extensionLicenseInvalid": "Ungültige '{name}'-Erweiterungslizenz.",
     "extensionLicenseExpired": "Das Abonnement der Lizenz für die Erweiterung '{name}' ist abgelaufen.",
     "extensionLicenseSoftExpired": "Das Abonnement der Lizenz für die Erweiterung '{name}' ist abgelaufen.",
@@ -407,7 +410,10 @@
     "duplicateConflict": "Ein Datensatz existiert bereits.",
     "confirmMassUpdate": "Sind Sie sicher, dass Sie eine Massenaktualisierung ausgewählter Datensätze durchführen wollen?",
     "cannotRemoveCategoryWithChildCategory": "Eine Kategorie, die eine untergeordnete Kategorie hat, kann nicht entfernt werden.",
-    "cannotRemoveNotEmptyCategory": "Eine nicht leere Kategorie kann nicht entfernt werden."
+    "cannotRemoveNotEmptyCategory": "Eine nicht leere Kategorie kann nicht entfernt werden.",
+    "arrayInputNotEmpty": "Artikel wird eingegeben, aber nicht hinzugefügt",
+    "error403": "Sie haben keinen Zugang zu diesem Bereich.",
+    "sameRecordIsAlreadyBeingEdited": "Der Datensatz wird bereits bearbeitet."
   },
   "boolFilters": {
     "onlyMy": "Nur meine",
@@ -426,7 +432,7 @@
     "massUpdate": "Massenänderung",
     "export": "Exportieren",
     "follow": "Abonnieren",
-    "unfollow": "nicht gefolgt",
+    "unfollow": "Nicht mehr abonnieren",
     "convertCurrency": "Währung umrechnen",
     "printPdf": "Als PDF drucken",
     "unlink": "Link entfernen",
@@ -674,7 +680,9 @@
       "isNotEmpty": "Ist nicht leer",
       "notLike": "Ist nicht wie (%)",
       "notContains": "Enthält nicht",
-      "notEquals": "Nicht gleich"
+      "notEquals": "Nicht gleich",
+      "anyOf": "Jeder von",
+      "noneOf": "Keiner von"
     },
     "intSearchRanges": {
       "equals": "Gleich",

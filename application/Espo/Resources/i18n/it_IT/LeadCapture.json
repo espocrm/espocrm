@@ -30,7 +30,9 @@
     "formSuccessRedirectUrl": "URL a cui reindirizzare dopo l'invio del modulo",
     "formLanguage": "Lingua utilizzata nel modulo",
     "formFrameAncestors": "Host consentiti per l'embedding del modulo",
-    "formCaptcha": "Usa captcha"
+    "formCaptcha": "Usa captcha",
+    "formTitle": "Titolo modulo",
+    "formTheme": "Tema modulo"
   },
   "links": {
     "targetList": "Lista di Destinazione",

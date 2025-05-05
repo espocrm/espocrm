@@ -12,12 +12,12 @@
     "entityType": "Entitätstyp",
     "primaryFilter": "Primärfilter",
     "boolFilterList": "Zusätzliche Filter",
-    "sortBy": "Reihenfolge (Feld)",
-    "sortDirection": "Reihenfolge (Richtung)",
     "dateFilter": "Datumsfilter",
     "skipOwn": "Eigene Einträge nicht zeigen",
     "folder": "Ordner",
-    "includeShared": "Gemeinsame miteinbeziehen"
+    "includeShared": "Gemeinsame miteinbeziehen",
+    "sortBy": "Sortiert nach",
+    "sortDirection": "Sortierrichtung"
   },
   "options": {
     "mode": {
@@ -38,5 +38,9 @@
   },
   "tooltips": {
     "skipOwn": "Von Ihrem Benutzerkonto durchgeführte Aktionen werden nicht angezeigt."
+  },
+  "otherFields": {
+    "soft": "Weiche Farbe",
+    "small": "Kleiner Font"
   }
 }

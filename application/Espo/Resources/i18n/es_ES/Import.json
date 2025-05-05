@@ -55,7 +55,8 @@
     "Import Results": "Importar resultados",
     "Silent Mode": "Modo silencioso",
     "New import with same params": "Nueva importación con los mismos parámetros",
-    "Run Manually": "Ejecutar manualmente"
+    "Run Manually": "Ejecutar manualmente",
+    "Export": "Exportar"
   },
   "messages": {
     "utf8": "Debe ser codificado en UTF-8",
@@ -66,7 +67,9 @@
     "confirmRevert": "Esto eliminará todos los registros importados de forma permanente. ¿Estás seguro?",
     "confirmRemoveDuplicates": "Esto eliminará permanentemente todos los registros importados que fueron reconocidos como duplicados. ¿Estás seguro?",
     "removeImportLog": "Esto eliminará el registro de importación. Todos los registros importados se mantendrán. Úselo si está seguro de que la importación está bien.",
-    "confirmRemoveImportLog": "Esto eliminará el registro de importación. Se conservarán todos los registros importados. No podrá revertir los resultados de la importación. ¿Está seguro?"
+    "confirmRemoveImportLog": "Esto eliminará el registro de importación. Se conservarán todos los registros importados. No podrá revertir los resultados de la importación. ¿Está seguro?",
+    "importRunning": "Importación en ejecución...",
+    "noErrors": "Sin errores"
   },
   "fields": {
     "file": "Archivo",
@@ -99,5 +102,11 @@
   "tooltips": {
     "manualMode": "Si está marcado, deberá ejecutar la importación manualmente desde CLI. El comando se mostrará después de configurar la importación.",
     "silentMode": "Se omitirá la mayoría de los scripts posteriores a guardar, no se crearán notas de transmisión. La importación se ejecutará más rápido."
+  },
+  "links": {
+    "errors": "Errores"
+  },
+  "params": {
+    "phoneNumberCountry": "Código telefónico del país"
   }
 }

@@ -42,7 +42,8 @@
   "options": {
     "type": {
       "Email": "E-Mail",
-      "Television": "Fernsehen"
+      "Television": "Fernsehen",
+      "Informational Email": "Informationelle E-Mail"
     },
     "status": {
       "Planning": "Planung",
@@ -71,7 +72,8 @@
   },
   "messages": {
     "unsubscribed": "Sie wurden erfolgreich aus unserem Verteiler entfernt.",
-    "subscribedAgain": "Sie sind wieder angemeldet."
+    "subscribedAgain": "Sie sind wieder angemeldet.",
+    "cannotChangeType": "Der Typ kann nicht geändert werden."
   },
   "tooltips": {
     "targetLists": "Zielkontakte, die Nachrichten empfangen sollen.",

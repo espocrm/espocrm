@@ -2,7 +2,8 @@
   "labels": {
     "Dynamic Logic": "Dynamische Logik",
     "Label": "Bezeichnung",
-    "Type": "Typ"
+    "Type": "Typ",
+    "View Details": "Details anzeigen"
   },
   "options": {
     "dateTimeDefault": {
@@ -162,5 +163,8 @@
     "confirmRemove": "Sind Sie sicher, dass Sie das Feld *{field}* entfernen wollen?\n\nDurch das Entfernen von Feldern werden keine Daten aus der Datenbank entfernt. Die Daten werden aus der Datenbank entfernt, wenn Sie einen Hard Rebuild durchführen.",
     "fieldCreatedAddToLayouts": "Feld wurde erstellt. Jetzt können Sie es zu [layouts]({link}) hinzufügen",
     "namingFieldLinkConflict": "Der Name '{field}' steht im Konflikt mit dem Link."
+  },
+  "otherFields": {
+    "attributes": "Attribute"
   }
 }

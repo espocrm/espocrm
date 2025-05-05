@@ -4,7 +4,6 @@
     "align": "Allinea",
     "panelName": "Nome del pannello",
     "style": "Stile",
-    "sticked": "Fissato",
     "isLarge": "Carattere Grande",
     "dynamicLogicVisible": "Condizioni che rendono visibile il pannello",
     "hidden": "Nascosto",
@@ -15,7 +14,8 @@
     "width": "Larghezza",
     "noteText": "Testo Nota",
     "noteStyle": "Stile Nota",
-    "isMuted": "Colore tenue"
+    "isMuted": "Colore tenue",
+    "sticked": "Attaccato alla parte superiore"
   },
   "options": {
     "align": {

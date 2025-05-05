@@ -9,14 +9,6 @@
     "defaultCurrency": "Moneda por defecto",
     "currencyList": "Lista de monedas",
     "language": "Idioma",
-    "smtpServer": "Servidor",
-    "smtpPort": "Puerto",
-    "smtpAuth": "¿Requiere autenticación?",
-    "smtpSecurity": "Seguridad",
-    "smtpUsername": "Nombre de usuario",
-    "emailAddress": "Correo electrónico",
-    "smtpPassword": "Contraseña",
-    "smtpEmailAddress": "Correo electrónico",
     "exportDelimiter": "Separador de campos",
     "signature": "Firma de correo",
     "dashboardTabList": "Lista de pestañas",
@@ -24,9 +16,9 @@
     "defaultReminders": "Recordatorios por defecto",
     "theme": "Tema",
     "useCustomTabList": "Lista de pestañas personalizadas",
-    "receiveAssignmentEmailNotifications": "Recibir notificaciones por correo electrónico al ser asignado",
-    "receiveMentionEmailNotifications": "Notificaciones por correo electrónico acerca de menciones en los mensajes",
-    "receiveStreamEmailNotifications": "Notificaciones por correo electrónico sobre los mensajes y actualizaciones de estado",
+    "receiveAssignmentEmailNotifications": "Recibir notificaciones por correo al ser asignado",
+    "receiveMentionEmailNotifications": "Notificaciones por correo acerca de menciones en los mensajes",
+    "receiveStreamEmailNotifications": "Notificaciones por correo sobre los mensajes y actualizaciones de estado",
     "dashboardLayout": "Diseño del escritorio",
     "emailReplyForceHtml": "Correo: responder en formato HTML",
     "autoFollowEntityTypeList": "Seguir automaticamente (global)",
@@ -35,16 +27,25 @@
     "followEntityOnStreamPost": "Seguimiento automático después de publicar en la historia",
     "followCreatedEntities": "Seguimiento automático de registros creados",
     "followCreatedEntityTypeList": "Seguimiento automático de registros creados de tipos de entidades específicos",
-    "emailUseExternalClient": "Use un cliente de correo electrónico externo",
-    "scopeColorsDisabled": "Deshabilitar color de los ámbitos",
-    "tabColorsDisabled": "Deshabilitar colores de pestañas",
+    "emailUseExternalClient": "Use un cliente de correo externo",
     "assignmentNotificationsIgnoreEntityTypeList": "Asignación de notificaciones del sistema",
-    "assignmentEmailNotificationsIgnoreEntityTypeList": "Notificaciones de asignación de correo electrónico"
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Notificaciones de asignación de correo",
+    "dashboardLocked": "Bloquear el tablero",
+    "textSearchStoringDisabled": "Deshabilitar el almacenamiento del filtro de texto",
+    "calendarSlotDuration": "Duración del espacio del calendario",
+    "calendarScrollHour": "Calendario desplazarse hasta la hora",
+    "defaultRemindersTask": "Recordatorios predeterminados para tareas",
+    "addCustomTabs": "Agregar pestañas personalizadas",
+    "reactionNotifications": "Notificaciones en la aplicación sobre reacciones",
+    "pageContentWidth": "Ancho del contenido"
   },
   "options": {
     "weekStart": {
       "0": "Domingo",
       "1": "Lunes"
+    },
+    "pageContentWidth": {
+      "Wide": "Ancho"
     }
   },
   "labels": {
@@ -58,6 +59,11 @@
     "autoFollowEntityTypeList": "Siguirá automáticamente todos los registros nuevos (creados por cualquier usuario) de los tipos de entidad seleccionados. Para poder ver información en la historia y recibir notificaciones sobre todos los registros en el sistema.",
     "doNotFillAssignedUserIfNotRequired": "Cuando cree un registro, el usuario asignado no se completará con su propio usuario a menos que el campo sea obligatorio.",
     "followCreatedEntities": "Al crear nuevos registros, se seguirán automáticamente incluso si se asignan a otro usuario.",
-    "followCreatedEntityTypeList": "Al crear nuevos registros de los tipos de entidades seleccionados, se seguirán automáticamente incluso si se asignan a otro usuario."
+    "followCreatedEntityTypeList": "Al crear nuevos registros de los tipos de entidades seleccionados, se seguirán automáticamente incluso si se asignan a otro usuario.",
+    "addCustomTabs": "Si se marca esta opción, las pestañas personalizadas se añadirán a las predeterminadas. De lo contrario, se usarán en lugar de las predeterminadas."
+  },
+  "tabFields": {
+    "label": "Etiqueta",
+    "iconClass": "Ícono"
   }
 }

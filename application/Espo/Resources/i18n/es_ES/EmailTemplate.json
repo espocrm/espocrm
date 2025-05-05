@@ -2,7 +2,6 @@
   "fields": {
     "name": "Nombre",
     "status": "Estado",
-    "isHtml": "Es HTML",
     "body": "Cuerpo",
     "subject": "Asunto",
     "attachments": "Adjuntos",
@@ -25,7 +24,8 @@
     "optOutLink": "un enlace para darse de baja",
     "today": "El día de hoy",
     "now": "Fecha y hora actual",
-    "currentYear": "Año actual"
+    "currentYear": "Año actual",
+    "optOutUrl": "URL para un enlace para cancelar la suscripción"
   },
   "messages": {
     "infoText": "Marcadores de posición disponibles:\n\n{optOutUrl} & # 8211; URL para un enlace para darse de baja;\n\n{optOutLink} & # 8211; un enlace para darse de baja."

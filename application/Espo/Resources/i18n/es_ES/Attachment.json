@@ -10,7 +10,8 @@
     "field": "Campo",
     "sourceId": "Origen ID",
     "storage": "Almacenamiento",
-    "size": "Tamaño (bytes)"
+    "size": "Tamaño (bytes)",
+    "isBeingUploaded": "Se está cargando"
   },
   "options": {
     "role": {

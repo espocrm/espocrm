@@ -1,17 +1,14 @@
 {
   "fields": {
-    "width": "Comprimento (%) ",
     "link": "Ligação",
     "notSortable": "Não ordenável",
     "align": "Alinhar",
     "panelName": "Nome do painel",
     "style": "Estilo",
-    "sticked": "Colado",
     "isLarge": "Tamanho de fonte grande",
     "dynamicLogicVisible": "Condições que tornam o painel visível",
     "hidden": "Escondido",
     "dynamicLogicStyled": "Condições que aplicam o estilo",
-    "widthPx": "Largura (px)",
     "noLabel": "Sem etiqueta",
     "tabLabel": "Etiqueta de aba",
     "tabBreak": "Quebra de tabulação"
@@ -42,9 +39,7 @@
     "dynamicLogicStyled": "A cor será aplicada se determinada condição for atendida. A cor é definida pelo parâmetro *Estilo*.",
     "tabBreak": "Uma aba separada para o painel e para todos os paineis seguintes, até à próxima quebra.",
     "noLabel": "Não exiba um rótulo de coluna no cabeçalho.",
-    "notSortable": "Desativa a capacidade de classificar por coluna.",
-    "width": "Largura da coluna em percentagem. É recomendado que haja uma coluna com a largura não definida, geralmente é o campo *Nome*.",
-    "widthPx": "Largura da coluna em pixels. Tem efeito apenas quando o valor em percentagem não está definido. Torna a largura fixa."
+    "notSortable": "Desativa a capacidade de classificar por coluna."
   },
   "messages": {
     "cantBeEmpty": "O layout não pode estar vazio.",

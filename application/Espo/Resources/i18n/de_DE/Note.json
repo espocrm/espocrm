@@ -25,13 +25,6 @@
     "pinnedMaxCountExceeded": "Es können nicht mehr Notizen angeheftet werden. Die maximal zulässige Anzahl ist {count}."
   },
   "options": {
-    "targetType": {
-      "self": "An sich selbst",
-      "users": "An (einen) bestimmte(n) Benutzer",
-      "teams": "An (ein) bestimmte(s) Team(s)",
-      "all": "An alle Benutzer",
-      "portals": "An alle Portal Benutzer"
-    },
     "type": {
       "Post": "Senden",
       "Create": "Erstellen",
@@ -42,6 +35,12 @@
       "Unrelate": "Verknüpfung lösen",
       "EmailReceived": "E-Mail erhalten",
       "EmailSent": "E-Mail gesendet"
+    },
+    "targetType": {
+      "self": "Selbst",
+      "users": "Benutzer",
+      "all": "Alle interne Benutzer",
+      "portals": "Portalbenutzer"
     }
   },
   "links": {
@@ -56,6 +55,10 @@
     "Pin": "Anheften",
     "Unpin": "Lösen",
     "Pinned": "Angeheftet",
-    "Quote Reply": "Antwort zitieren"
+    "Quote Reply": "Antwort zitieren",
+    "View Attachments": "Anhänge anzeigen"
+  },
+  "otherFields": {
+    "to": "An"
   }
 }

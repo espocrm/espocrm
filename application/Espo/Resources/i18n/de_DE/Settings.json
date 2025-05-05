@@ -13,16 +13,11 @@
     "currencyList": "Währungsliste",
     "language": "Sprache",
     "companyLogo": "Firmenlogo",
-    "smtpAuth": "Authentifizierung",
     "ldapAuth": "Authentifizierung",
-    "smtpSecurity": "Transportsicherheit",
     "ldapSecurity": "Transportsicherheit",
-    "smtpUsername": "Benutzername",
     "emailAddress": "E-Mail",
-    "smtpPassword": "Passwort",
     "ldapPassword": "Passwort",
     "outboundEmailFromName": "Absendername",
-    "outboundEmailFromAddress": "Absenderadresse",
     "outboundEmailIsShared": "Kann von allen Benutzern verwendet werden",
     "recordsPerPage": "Datensätze pro Seite",
     "recordsPerPageSmall": "Datensätze pro Seite (Klein)",
@@ -169,7 +164,9 @@
     "streamEmailWithContentEntityTypeList": "Entitäten mit E-Mail-Text in Ereignis-Notizen",
     "emailScheduledBatchCount": "Maximale Anzahl von geplanten E-Mails pro Stapel",
     "passwordStrengthSpecialCharacterCount": "Anzahl der erforderlichen Sonderzeichen im Passwort",
-    "availableReactions": "Verfügbare Reaktionen"
+    "availableReactions": "Verfügbare Reaktionen",
+    "outboundEmailFromAddress": "System-E-Mail-Adresse",
+    "oidcUserInfoEndpoint": "OIDC-UserInfo-Endpunkt"
   },
   "tooltips": {
     "recordsPerPage": "Anzahl Sätze In Listenansichten (Standard) ",
@@ -238,8 +235,6 @@
     "passwordRecoveryNoExposure": "Es wird nicht möglich sein, festzustellen, ob eine bestimmte E-Mail-Adresse im System registriert ist.",
     "emailAddressLookupEntityTypeList": "Für E-Mail-Adresse automatisch ausfüllen.",
     "emailNotificationsDelay": "Eine Nachricht kann innerhalb des angegebenen Zeitrahmens bearbeitet werden, bevor die Benachrichtigung gesendet wird.",
-    "outboundEmailFromAddress": "Die E-Mail-Adresse des Systems.",
-    "smtpServer": "Wenn leer, dann wird das Gruppen-E-Mail-Konto mit der entsprechenden E-Mail-Adresse verwendet.",
     "busyRangesEntityList": "Was wird bei der Anzeige belegter Zeitbereiche in Scheduler & Timeline berücksichtigt.",
     "recordsPerPageSelect": "Anzahl der Datensätze, die initial bei der Auswahl von Datensätzen angezeigt werden.",
     "workingTimeCalendar": "Ein Arbeitszeitkalender, der standardmäßig auf alle Benutzer angewendet wird.",
@@ -257,7 +252,8 @@
     "authIpAddressWhitelist": "Eine Liste von IP-Adressen oder Bereichen in CIDR-Notation.\n\nPortale sind von der Einschränkung nicht betroffen.",
     "emailAddressIsOptedOutByDefault": "Beim Erstellen eines neuen Datensatzes wird die E-Mail-Adresse als Opted-Out markiert.",
     "oidcGroupClaim": "Ein Claim, der für die Teamzuordnung genutzt wird.",
-    "quickSearchFullTextAppendWildcard": "Fügen Sie einen Platzhalter an eine Autovervollständigung-Suchanfrage an, wenn die Volltextsuche aktiviert ist. Verringert die Suchleistung."
+    "quickSearchFullTextAppendWildcard": "Fügen Sie einen Platzhalter an eine Autovervollständigung-Suchanfrage an, wenn die Volltextsuche aktiviert ist. Verringert die Suchleistung.",
+    "outboundEmailFromAddress": "System-E-Mails werden von dieser E-Mail-Adresse aus versandt. Ein [Gruppen-E-Mail-Konto](#InboundEmail) mit der gleichen E-Mail-Adresse muss eingerichtet und ordnungsgemäß konfiguriert sein, um E-Mails zu versenden."
   },
   "labels": {
     "Locale": "Lokale Einstellungen",

@@ -6,5 +6,8 @@
     "Create Case": "Crear ticket",
     "Add to Contact": "Agregar a contacto",
     "Add to Lead": "Agregar a posible cliente"
+  },
+  "fields": {
+    "tasks": "Tareas"
   }
 }

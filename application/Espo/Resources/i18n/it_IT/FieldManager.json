@@ -3,7 +3,8 @@
     "Dynamic Logic": "Logica dinamica",
     "Name": "Nome",
     "Label": "Etichetta",
-    "Type": "Tipo"
+    "Type": "Tipo",
+    "View Details": "Vedi dettagli"
   },
   "options": {
     "dateTimeDefault": {
@@ -160,5 +161,8 @@
     "confirmRemove": "Si è sicuri di voler rimuovere il campo *{field}*?\n\nLa rimozione del campo non rimuove i dati dal database. I dati del database verranno rimossi solo se si esegue un hard rebuild.",
     "fieldCreatedAddToLayouts": "Il campo è stato creato. Ora è possibile aggiungerlo ai [layout]({link}).",
     "namingFieldLinkConflict": "Il nome '{field}' è in conflitto con un collegamento."
+  },
+  "otherFields": {
+    "attributes": "Attributi"
   }
 }

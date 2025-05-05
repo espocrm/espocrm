@@ -10,14 +10,16 @@
     "optedOutCount": "gesetzte Opt-Out Anzahl",
     "targetStatus": "Zielstatus",
     "isOptedOut": "Ist Opt-Out gesetzt",
-    "sourceCampaign": "Kampagnenquelle"
+    "sourceCampaign": "Kampagnenquelle",
+    "category": "Kategorie"
   },
   "links": {
     "accounts": "Firmen",
     "contacts": "Kontakte",
     "leads": "Interessenten",
     "campaigns": "Kampagnen",
-    "massEmails": "Massen E-Mails"
+    "massEmails": "Massen E-Mails",
+    "category": "Kategorie"
   },
   "options": {
     "type": {

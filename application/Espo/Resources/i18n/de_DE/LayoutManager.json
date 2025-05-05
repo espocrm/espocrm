@@ -2,7 +2,6 @@
   "fields": {
     "notSortable": "Nicht sortierbar",
     "align": "Ausrichten",
-    "sticked": "Gepinnt",
     "isLarge": "Große Schriftgröße",
     "dynamicLogicVisible": "Bedingungen, die das Panel sichtbar machen",
     "hidden": "Versteckt",
@@ -13,7 +12,8 @@
     "width": "Breite",
     "noteText": "Notiztext",
     "noteStyle": "Notizstil",
-    "isMuted": "Gedeckte Farbe"
+    "isMuted": "Gedeckte Farbe",
+    "sticked": "Oben anheften"
   },
   "options": {
     "align": {

@@ -1,7 +1,8 @@
 {
   "fields": {
     "enabled": "Aktiv",
-    "clientSecret": "Client Geheimnis",
+    "clientId": "Client-ID",
+    "clientSecret": "Client-Geheimnis",
     "redirectUri": "Weiterleitungs URI",
     "siteKey": "Website-Schlüssel",
     "secretKey": "Geheimer Schlüssel",

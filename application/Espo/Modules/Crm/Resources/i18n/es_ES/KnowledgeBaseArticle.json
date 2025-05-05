@@ -19,7 +19,8 @@
     "body": "Cuerpo",
     "categories": "Categorías",
     "language": "Idioma",
-    "portals": "Portales"
+    "portals": "Portales",
+    "bodyPlain": "Cuerpo plano"
   },
   "links": {
     "cases": "Tickets",

@@ -5,7 +5,7 @@
     "target": "Objetivo",
     "sentAt": "Fecha de envío",
     "attemptCount": "Intentos",
-    "emailAddress": "Correo electrónico",
+    "emailAddress": "Dirección de correo",
     "massEmail": "Correo masivo",
     "isTest": "Es una prueba"
   },

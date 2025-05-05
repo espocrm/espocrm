@@ -6,7 +6,11 @@
     "bodyContains": "Contenido del cuerpo",
     "action": "Acción",
     "isGlobal": "Es global",
-    "emailFolder": "Carpeta"
+    "emailFolder": "Carpeta",
+    "groupEmailFolder": "Carpeta de correo grupal",
+    "markAsRead": "Marcar como leído",
+    "bodyContainsAll": "El cuerpo contiene todo",
+    "skipNotification": "Omitir notificación"
   },
   "labels": {
     "Create EmailFilter": "Crear un filtro de email",
@@ -18,12 +22,19 @@
     "name": "Dé al filtro un nombre descriptivo.",
     "bodyContains": "Filtra los correos que en el cuerpo contengan cualquiera de estas palabras o frases.",
     "isGlobal": "Aplica este filtro a todos los correos entrantes del sistema.",
-    "subject": "Utilice un comodín *:\n\n * `texto *` - comienza con texto,\n * `* texto *` - contiene texto,\n * `* texto` - termina con texto."
+    "subject": "Utilice un comodín *:\n\n * `texto *` - comienza con texto,\n * `* texto *` - contiene texto,\n * `* texto` - termina con texto.",
+    "bodyContainsAll": "El cuerpo de un correo electrónico contiene todas las palabras o frases especificadas."
   },
   "options": {
     "action": {
       "Skip": "Ignorar",
-      "Move to Folder": "Poner en la carpeta"
+      "Move to Folder": "Poner en la carpeta",
+      "None": "Ninguno",
+      "Move to Group Folder": "Poner en carpeta de grupo"
     }
+  },
+  "links": {
+    "emailFolder": "Carpeta",
+    "groupEmailFolder": "Carpeta de correo grupal"
   }
 }

@@ -15,8 +15,9 @@
     "current": "In Corso",
     "time": "ora",
     "User List": "Lista Utenti",
-    "Manage Users": "Gestione utenti",
     "View Calendar": "Mostra calendario",
-    "Create Shared View": "Crea vista condivisa"
+    "Create Shared View": "Crea vista condivisa",
+    "Edit Shared View": "Modifica vista condivisa",
+    "Shared Mode Options": "Opzioni modalità condivisa"
   }
 }

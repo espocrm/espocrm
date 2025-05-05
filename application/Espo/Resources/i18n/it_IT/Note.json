@@ -24,14 +24,13 @@
     "writeMessage": "Scrivi il tuo messaggio qui",
     "pinnedMaxCountExceeded": "Non è possibile fissare altre note. Il numero massimo consentito è {count}."
   },
+  "links": {
+    "superParent": "Super Genitore",
+    "related": "Correlato",
+    "portals": "Portali",
+    "attachments": "Allegati"
+  },
   "options": {
-    "targetType": {
-      "self": "a me stesso",
-      "users": "Ad un utente particolare",
-      "teams": "Ad un team particolare",
-      "all": "A tutti gli utenti interni",
-      "portals": "Agli utenti del portale"
-    },
     "type": {
       "Create": "Crea",
       "CreateRelated": "Crea correlato",
@@ -42,13 +41,14 @@
       "Unrelate": "Scollega",
       "EmailReceived": "Email Ricevuta",
       "EmailSent": "Email Inviata"
+    },
+    "targetType": {
+      "self": "Se stessi",
+      "users": "Utenti",
+      "teams": "Team",
+      "all": "Tutti gli utenti interni",
+      "portals": "Utenti portale"
     }
-  },
-  "links": {
-    "superParent": "Super Genitore",
-    "related": "Correlato",
-    "portals": "Portali",
-    "attachments": "Allegati"
   },
   "labels": {
     "View Posts": "Vedi Post",
@@ -56,6 +56,10 @@
     "Pin": "Fissa",
     "Unpin": "Stacca",
     "Pinned": "Fissato",
-    "Quote Reply": "Cita risposta"
+    "Quote Reply": "Cita risposta",
+    "View Attachments": "Vedi allegati"
+  },
+  "otherFields": {
+    "to": "A"
   }
 }

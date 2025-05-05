@@ -28,7 +28,6 @@
     "Install": "Instalar",
     "Configuration Instructions": "Instruções de configuração",
     "phpVersion": "Versão PHP",
-    "requiredMysqlVersion": "Versão mySql",
     "dbHostName": "Nome do Host",
     "dbName": "Nome de base de dados",
     "dbUserName": "Utilizador de base de dados",

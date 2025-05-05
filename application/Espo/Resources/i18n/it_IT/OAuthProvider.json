@@ -1,0 +1,22 @@
+{
+  "labels": {
+    "Create OAuthProvider": "Crea fornitore OAuth"
+  },
+  "fields": {
+    "isActive": "Attivo",
+    "authorizationEndpoint": "Endpoint autorizzazione",
+    "tokenEndpoint": "Endpoint Token",
+    "authorizationRedirectUri": "URI reindirizzamento autorizzazione",
+    "scopes": "Scopi",
+    "scopeSeparator": "Separatore scopi",
+    "hasAccessToken": "Ha token di accesso",
+    "authorizationPrompt": "Prompt di autorizzazione",
+    "authorizationParams": "Parametri autorizzazione"
+  },
+  "links": {
+    "accounts": "Account"
+  },
+  "tooltips": {
+    "authorizationParams": "Parametri di query aggiuntivi da inviare all'endpoint di autorizzazione. Specificati in formato JSON."
+  }
+}

@@ -42,9 +42,6 @@
     "fromName": "Da nome",
     "fromString": "Da stringa",
     "isSystem": "È sistema",
-    "toEmailAddresses": "A Email Destinatario",
-    "bccEmailAddresses": "CCN Email Destinatario",
-    "replyToEmailAddresses": "Rispondi A (IndirizzI Email)",
     "fromEmailAddress": "Dall'Indirizzo (collegamento)",
     "replyToName": "Rispondi A (Nome)",
     "replyToAddress": "Rispondi A (Indirizzo)",
@@ -58,7 +55,10 @@
     "isUsersSent": "Inviata da un utente",
     "inArchive": "In Archivio",
     "groupStatusFolder": "Cartella di stato del gruppo",
-    "sendAt": "Invia alle"
+    "sendAt": "Invia alle",
+    "toEmailAddresses": "Indirizzi email A",
+    "bccEmailAddresses": "Indirizzi email CCN",
+    "replyToEmailAddresses": "Indirizzi email Rispondi a"
   },
   "links": {
     "replied": "Risposto",

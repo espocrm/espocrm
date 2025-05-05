@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "Nombre",
-    "emailAddress": "Correo electrónico",
+    "emailAddress": "Correo",
     "website": "Sitio web",
     "phoneNumber": "Teléfono",
     "billingAddress": "Dirección de facturación",
@@ -30,7 +30,8 @@
     "campaignLogRecords": "Registro de Campaña",
     "campaign": "Campaña",
     "portalUsers": "Usuarios del portal",
-    "originalLead": "Posible cliente de origen"
+    "originalLead": "Posible cliente de origen",
+    "contactsPrimary": "Contactos (primario)"
   },
   "options": {
     "type": {
@@ -100,5 +101,9 @@
     "customers": "Clientes",
     "partners": "Socios",
     "recentlyCreated": "Creado recientemente"
+  },
+  "tabs": {
+    "Account": "Cuenta",
+    "Support": "Soporte"
   }
 }

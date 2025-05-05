@@ -64,8 +64,7 @@
     "confirmRevert": "A ação removerá todos os registos importados permanentemente. Tem a certeza?",
     "confirmRemoveDuplicates": "A ação removerá permanentemente todos os registos importados que foram reconhecidos como duplicados. Tem a certeza?",
     "removeImportLog": "A ação removerá o log de importação. Todos os registos importados serão mantidos. Use-o se tiver certeza de que a importação está correta.",
-    "confirmRemoveImportLog": "A ação removerá o log de importação. Todos os registos importados serão mantidos. Não poderá reverter os resultados da importação. Tem a certeza?",
-    "noErrors": "Sem erros."
+    "confirmRemoveImportLog": "A ação removerá o log de importação. Todos os registos importados serão mantidos. Não poderá reverter os resultados da importação. Tem a certeza?"
   },
   "fields": {
     "file": "Ficheiro",

@@ -18,8 +18,6 @@
     "linkForeign": "Collegamento Esterno",
     "link": "Collegamento",
     "labelForeign": "Label  esterna",
-    "sortBy": "Ordinamento Predefinito (campo)",
-    "sortDirection": "Ordinamento Predefinito (direzione)",
     "relationName": "Secondo Nome Tabella",
     "linkMultipleField": "Collegamento Multiplo Campi",
     "linkMultipleFieldForeign": "Collegamento Multiplo Campi Esterno",
@@ -49,7 +47,9 @@
     "assignedUsers": "Utenti assegnati multipli",
     "collaborators": "Collaboratori",
     "aclContactLink": "Collegamento ACL Contatto",
-    "aclAccountLink": "Collegamento ACL Account"
+    "aclAccountLink": "Collegamento ACL Account",
+    "sortBy": "Campo ordine predefinito",
+    "sortDirection": "Direzione ordine predefinita"
   },
   "options": {
     "type": {

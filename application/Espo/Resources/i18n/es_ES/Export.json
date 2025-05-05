@@ -2,6 +2,26 @@
   "fields": {
     "fieldList": "Lista de campos",
     "exportAllFields": "Exportar todos los campos",
-    "format": "Formato"
+    "format": "Formato",
+    "status": "Estado",
+    "xlsxLite": "Ligero",
+    "xlsxRecordLinks": "Enlaces de registros",
+    "xlsxTitle": "Título"
+  },
+  "options": {
+    "status": {
+      "Pending": "Pendiente",
+      "Running": "Corriendo",
+      "Success": "Éxito",
+      "Failed": "Fallido"
+    }
+  },
+  "messages": {
+    "exportProcessed": "Se ha procesado la exportación. Descargue el [archivo]({url}).",
+    "infoText": "La exportación se está procesando en modo inactivo por cron. Puede tardar un tiempo en completarse. Cerrar este cuadro de diálogo modal no afectará la ejecución."
+  },
+  "tooltips": {
+    "xlsxLite": "Consume mucha menos memoria. Recomendado si se exporta una gran cantidad de registros.",
+    "xlsxTitle": "Imprima un título y una fecha actual en el encabezado."
   }
 }

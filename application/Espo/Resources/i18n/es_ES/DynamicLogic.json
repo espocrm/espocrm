@@ -19,7 +19,10 @@
       "contains": "Contiene",
       "has": "Contiene",
       "notContains": "No Contiene",
-      "notHas": "No Contiene"
+      "notHas": "No Contiene",
+      "startsWith": "Comienza con",
+      "endsWith": "Termina con",
+      "matches": "Coincidencias (expresiones regulares)"
     }
   },
   "labels": {

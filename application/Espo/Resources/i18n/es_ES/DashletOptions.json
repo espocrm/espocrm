@@ -12,11 +12,14 @@
     "entityType": "Tipo de entidad",
     "primaryFilter": "Filtro principal",
     "boolFilterList": "Filtros adicionales",
-    "sortBy": "Ordenar (campo)",
-    "sortDirection": "Ordenar (dirección)",
     "expandedLayout": "Diseño",
     "dateFilter": "Filtro de fecha",
-    "skipOwn": "No mostrar registros propios"
+    "skipOwn": "No mostrar registros propios",
+    "text": "Texto",
+    "folder": "Carpeta",
+    "includeShared": "Incluir compartido",
+    "sortBy": "Ordenar por",
+    "sortDirection": "Dirección del orden"
   },
   "options": {
     "mode": {
@@ -26,6 +29,10 @@
       "basicDay": "Día",
       "agendaDay": "Día (agenda)",
       "timeline": "Línea de tiempo"
+    },
+    "sortDirection": {
+      "asc": "Ascendente",
+      "desc": "Descendiendo"
     }
   },
   "messages": {
@@ -33,5 +40,9 @@
   },
   "tooltips": {
     "skipOwn": "Las acciones realizadas por su cuenta de usuario no se mostrarán."
+  },
+  "otherFields": {
+    "soft": "Color suave",
+    "small": "Fuente pequeña"
   }
 }

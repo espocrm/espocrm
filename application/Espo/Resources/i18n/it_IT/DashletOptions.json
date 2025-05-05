@@ -12,13 +12,13 @@
     "entityType": "Tipo di Entità",
     "primaryFilter": "Filtro primario",
     "boolFilterList": "Filtri Aggiuntivi",
-    "sortBy": "Ordina (campo)",
-    "sortDirection": "Ordina (direzione)",
     "dateFilter": "Filtro data",
     "skipOwn": "Non mostrare i propri record",
     "text": "Testo",
     "folder": "Cartella",
-    "includeShared": "Includi condivisi"
+    "includeShared": "Includi condivisi",
+    "sortBy": "Ordina per",
+    "sortDirection": "Direzione ordine"
   },
   "options": {
     "mode": {
@@ -39,5 +39,9 @@
   },
   "tooltips": {
     "skipOwn": "Le azioni eseguite dal tuo account utente non verranno visualizzate."
+  },
+  "otherFields": {
+    "soft": "Colore tenue",
+    "small": "Carattere piccolo"
   }
 }

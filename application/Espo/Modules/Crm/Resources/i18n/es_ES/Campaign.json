@@ -45,10 +45,11 @@
   },
   "options": {
     "type": {
-      "Email": "Correo electrónico",
+      "Email": "Correo",
       "Television": "Televisión",
       "Newsletter": "Boletín de noticias",
-      "Mail": "Correo"
+      "Mail": "Correo",
+      "Informational Email": "Correo informativo"
     },
     "status": {
       "Planning": "Planificación",
@@ -77,7 +78,8 @@
   },
   "messages": {
     "unsubscribed": "Usted ha cancelado la suscripción a nuestra lista de correo.",
-    "subscribedAgain": "Se ha vuelto a suscribir."
+    "subscribedAgain": "Se ha vuelto a suscribir.",
+    "cannotChangeType": "No se puede cambiar el tipo."
   },
   "tooltips": {
     "targetLists": "Los objetivos que deben recibir los mensajes.",

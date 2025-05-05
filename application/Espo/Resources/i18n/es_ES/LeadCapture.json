@@ -10,7 +10,7 @@
     "optInConfirmation": "Doble confirmación de suscripción",
     "optInConfirmationEmailTemplate": "Plantilla de email de cofirmación de suscripción",
     "optInConfirmationLifetime": "Tiempo de vida del enlace de confirmación de suscripción (horas)",
-    "optInConfirmationSuccessMessage": "Texto para mostrar después de la confirmación de correo electrónico",
+    "optInConfirmationSuccessMessage": "Texto para mostrar después de la confirmación de correo",
     "leadSource": "Toma de contacto del posible cliente",
     "apiKey": "Clave de API",
     "targetTeam": "Equipo objetivo",
@@ -20,7 +20,21 @@
     "duplicateCheck": "Duplicar verificación",
     "skipOptInConfirmationIfSubscribed": "Omitir confirmación si el cliente potencial ya está en la lista de objetivos",
     "smtpAccount": "Cuenta SMTP",
-    "inboundEmail": "Cuenta de correo electrónico grupal"
+    "inboundEmail": "Cuenta de correo grupal",
+    "exampleRequestHeaders": "Cabeceras",
+    "phoneNumberCountry": "Código telefónico del país",
+    "fieldParams": "Parámetros de campo",
+    "formId": "ID del formulario",
+    "formEnabled": "Formulario web",
+    "formUrl": "URL del formulario",
+    "formSuccessText": "Texto a mostrar después de enviar el formulario",
+    "formText": "Texto para mostrar en el formulario",
+    "formSuccessRedirectUrl": "URL a la que redirigir después de enviar el formulario",
+    "formLanguage": "Lenguaje utilizado en el formulario",
+    "formFrameAncestors": "Hosts permitidos para incrustar formularios",
+    "formCaptcha": "Utilice Captcha",
+    "formTitle": "Título del formulario",
+    "formTheme": "Tema del formulario"
   },
   "links": {
     "targetList": "Lista de objetivos",
@@ -28,20 +42,23 @@
     "optInConfirmationEmailTemplate": "Plantilla de email de cofirmación de suscripción",
     "targetTeam": "Equipo objetivo",
     "logRecords": "Registro",
-    "inboundEmail": "Cuenta de correo electrónico grupal"
+    "inboundEmail": "Cuenta de correo grupal"
   },
   "labels": {
     "Create LeadCapture": "Crear punto de entrada",
     "Generate New API Key": "Generar una nueva clave de API",
     "Request": "Solicitud",
-    "Confirm Opt-In": "Confirmar suscripción"
+    "Confirm Opt-In": "Confirmar suscripción",
+    "Generate New Form ID": "Generar nuevo ID de formulario",
+    "Web Form": "Formulario web"
   },
   "messages": {
     "generateApiKey": "Crear nueva clave de API",
     "optInConfirmationExpired": "El enlace de confirmación de suscripción ha caducado.",
-    "optInIsConfirmed": "Correo electrónico está confirmado"
+    "optInIsConfirmed": "Correo está confirmado."
   },
   "tooltips": {
-    "optInConfirmationSuccessMessage": "Markdown es soportado"
+    "optInConfirmationSuccessMessage": "Markdown es soportado",
+    "formCaptcha": "Para poder utilizar Captcha, debes configurarlo en **Administración** > **Integraciones**."
   }
 }

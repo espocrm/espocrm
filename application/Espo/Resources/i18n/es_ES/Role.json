@@ -7,20 +7,18 @@
     "groupEmailAccountPermission": "Permiso de la cuenta de correo grupal",
     "exportPermission": "Permisos de exportación",
     "dataPrivacyPermission": "Permiso de privacidad de datos",
-    "massUpdatePermission": "Permiso de actualización masiva"
+    "massUpdatePermission": "Permiso de actualización masiva",
+    "followerManagementPermission": "Permiso de gestión de seguidores",
+    "data": "Datos",
+    "fieldData": "Campo de datos",
+    "messagePermission": "Permiso de mensaje",
+    "auditPermission": "Permiso de auditoría",
+    "mentionPermission": "Permiso de mencionar",
+    "userCalendarPermission": "Permiso de calendario de usuario"
   },
   "links": {
     "users": "Usuarios",
     "teams": "Equipos"
-  },
-  "tooltips": {
-    "assignmentPermission": "Permite restringir la capacidad de los usuarios para que asignen registros y publicaciones a otros usuarios.\n\ntodo - sin restricción\n\nequipo - puede asignar a usuarios de su propio equipo\n\nno - solo puede asignarse a sí mismo",
-    "userPermission": "Permite restringir la capacidad de los usuarios para ver tareas, calendarios y la historia de otros usuarios.\n\ntodo - pueden ver todo\n\nequipo - pueden ver las actividades de su equipo\n\nno - solo las propias",
-    "portalPermission": "Define un acceso a la información del portal, la capacidad de publicar mensajes a los usuarios del portal.\n",
-    "groupEmailAccountPermission": "Define el acceso a las cuentas de correo grupales, la capacidad de enviar correos a través del SMTP grupal.",
-    "dataPrivacyPermission": "Permite ver y borrar datos personales.",
-    "exportPermission": "Define si los usuarios tienen la capacidad de exportar registros.",
-    "massUpdatePermission": "Define si los usuarios tienen la capacidad de realizar actualizaciones masivas de registros."
   },
   "labels": {
     "Access": "Acceso",
@@ -54,5 +52,19 @@
   },
   "messages": {
     "changesAfterClearCache": "Todos los cambios en el control de acceso serán aplicacados después de limpiar la caché"
+  },
+  "tooltips": {
+    "dataPrivacyPermission": "Permite ver y borrar datos personales.",
+    "followerManagementPermission": "Permite gestionar seguidores de registros específicos.",
+    "messagePermission": "Permite enviar mensajes a otros usuarios.\n\n* Todos: permite enviar mensajes a todos.\n* Equipo: permite enviar mensajes solo a compañeros.\n* No: no permite enviar mensajes.",
+    "assignmentPermission": "Permite asignar registros a otros usuarios.\n\n* Todos: sin restricciones\n* Equipo: solo se puede asignar a compañeros\n* No: solo se puede asignar a uno mismo",
+    "portalPermission": "Acceso a la información del portal, capacidad de publicar mensajes para los usuarios del portal.",
+    "groupEmailAccountPermission": "Acceso a cuentas de correo grupales, capacidad de enviar correos desde el SMTP grupal.",
+    "exportPermission": "Permite exportar registros.",
+    "massUpdatePermission": "La capacidad de realizar actualizaciones masivas de registros.",
+    "auditPermission": "Permite ver el registro de auditoría.",
+    "mentionPermission": "Permite mencionar a otros usuarios en la historia.\n\n* Todos: se pueden mencionar a todos\n* Equipo: solo se pueden mencionar a compañeros de equipo\n* No: no se pueden mencionar",
+    "userPermission": "Permite ver el historial de otros usuarios. Permite a los usuarios ver los niveles de acceso que tienen otros usuarios para registros específicos.",
+    "userCalendarPermission": "Permite ver calendarios de otros usuarios."
   }
 }

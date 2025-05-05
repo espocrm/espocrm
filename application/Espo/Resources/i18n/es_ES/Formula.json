@@ -1,0 +1,20 @@
+{
+  "labels": {
+    "Check Syntax": "Comprobar sintaxis",
+    "Run": "Ejecutar"
+  },
+  "fields": {
+    "target": "Objetivo",
+    "targetType": "Tipo de objetivo",
+    "output": "Salida"
+  },
+  "messages": {
+    "runSuccess": "Ejecutado exitosamente.",
+    "checkSyntaxSuccess": "La sintaxis es correcta.",
+    "checkSyntaxError": "Error de sintaxis.",
+    "emptyScript": "El script está vacío."
+  },
+  "tooltips": {
+    "output": "Imprima valores con la función `output\\printLine`."
+  }
+}

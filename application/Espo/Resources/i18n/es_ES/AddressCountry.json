@@ -1,0 +1,19 @@
+{
+  "labels": {
+    "Create AddressCountry": "Crear dirección de país",
+    "Populate": "Rellenar"
+  },
+  "fields": {
+    "code": "Código",
+    "isPreferred": "¿Es preferido?"
+  },
+  "messages": {
+    "confirmPopulateDefaults": "Se eliminarán todos los países existentes y se creará la lista de países predeterminada. No será posible revertir la operación.\n\n¿Está seguro?"
+  },
+  "strings": {
+    "populateDefaults": "Rellenar con la lista de países predeterminada"
+  },
+  "tooltips": {
+    "isPreferred": "Los países preferidos aparecen primero en la lista de selección."
+  }
+}

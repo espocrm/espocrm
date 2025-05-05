@@ -28,8 +28,6 @@
     "followCreatedEntities": "Siga automaticamente os registos criados",
     "followCreatedEntityTypeList": "Siga automaticamente os registos criados de tipos de entidade específicos",
     "emailUseExternalClient": "Use um cliente de email externo",
-    "scopeColorsDisabled": "Desativar cores do âmbito",
-    "tabColorsDisabled": "Desativar cores das guias",
     "assignmentNotificationsIgnoreEntityTypeList": "Notificações de atribuição no aplicativo",
     "assignmentEmailNotificationsIgnoreEntityTypeList": "Notificações de atribuição via email"
   },

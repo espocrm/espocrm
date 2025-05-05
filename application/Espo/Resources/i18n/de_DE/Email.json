@@ -40,9 +40,6 @@
     "fromName": "Absendername",
     "fromString": "Von String",
     "isSystem": "Ist System",
-    "toEmailAddresses": "An E-Mail Adressen",
-    "bccEmailAddresses": "BCC E-Mail Adressen",
-    "replyToEmailAddresses": "Antwort-an E-Mail Adressen",
     "personStringData": "Personenstring-Daten",
     "fromEmailAddress": "Absenderadresse (link)",
     "replyToName": "Antwort-an Name",
@@ -55,7 +52,10 @@
     "isUsersSent": "Ist Benutzer gesendet",
     "inArchive": "Im Archiv",
     "groupStatusFolder": "Gruppenstatus-Ordner",
-    "sendAt": "Senden um"
+    "sendAt": "Senden um",
+    "toEmailAddresses": "An E-Mail-Adressen",
+    "bccEmailAddresses": "BCC E-Mail-Adressen",
+    "replyToEmailAddresses": "Antwort-an-E-Mail-Adressen"
   },
   "links": {
     "replied": "Beantwortet",

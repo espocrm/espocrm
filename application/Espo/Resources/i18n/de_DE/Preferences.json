@@ -35,12 +35,16 @@
     "calendarScrollHour": "Kalender - Zur Stunde springen",
     "defaultRemindersTask": "Standard-Erinnerungen für Aufgaben",
     "addCustomTabs": "Benutzerdefinierte Registerkarten hinzufügen",
-    "reactionNotifications": "In-App-Benachrichtigungen über Reaktionen"
+    "reactionNotifications": "In-App-Benachrichtigungen über Reaktionen",
+    "pageContentWidth": "Inhaltsbreite"
   },
   "options": {
     "weekStart": {
       "0": "Sonntag",
       "1": "Montag"
+    },
+    "pageContentWidth": {
+      "Wide": "Breit"
     }
   },
   "labels": {

@@ -35,7 +35,6 @@
     "Install": "Установить",
     "Configuration Instructions": "Инструкции по конфигурации",
     "phpVersion": "Версия PHP",
-    "requiredMysqlVersion": "Версия MySQL",
     "dbHostName": "Сервер БД",
     "dbName": "Имя БД",
     "dbUserName": "Имя пользователя БД",

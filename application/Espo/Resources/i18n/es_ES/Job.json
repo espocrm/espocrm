@@ -16,7 +16,10 @@
     "targetId": "ID Objetivo",
     "number": "Numero",
     "queue": "Cola",
-    "job": "Trabajo"
+    "job": "Trabajo",
+    "group": "Grupo",
+    "className": "Nombre de la clase",
+    "targetGroup": "Grupo objetivo"
   },
   "options": {
     "status": {

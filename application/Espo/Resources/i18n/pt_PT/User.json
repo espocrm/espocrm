@@ -51,8 +51,7 @@
     "defaultTeam": "Equipa padrão",
     "dashboardTemplate": "Template do dashboard",
     "userData": "Dados do utilizador",
-    "workingTimeCalendar": "Calendário do horário de trabalho",
-    "workingTimeRanges": "Intervalos de tempo de trabalho"
+    "workingTimeCalendar": "Calendário do horário de trabalho"
   },
   "labels": {
     "Create User": "Criar utilizador",

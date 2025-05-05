@@ -15,16 +15,6 @@
     "users": "Utilizadores",
     "teams": "Equipas"
   },
-  "tooltips": {
-    "assignmentPermission": "Permite restringir a capacidade de atribuir registos e publicar mensagens a outros utilizadores.\n\ntodos - nenhuma restrição\n\nequipa - pode atribuir e publicar apenas a membros de equipa\n\nno - pode atribuir e publicar apenas para si mesmo",
-    "userPermission": "Permite restringir a capacidade dos utilizadores visualizarem atividades, calendário e fluxo de outros utilizadores.\n\nTodos - pode visualizar todos os grupos\n\nequipa - só pode ver atividades dos membros de equipa\n\nno - não é possível ver",
-    "portalPermission": "Define o acesso às informações do portal, capacidade de publicar mensagens para utilizadores do portal.",
-    "groupEmailAccountPermission": "Define o acesso a contas de email de grupo, uma capacidade de enviar emails do grupo SMTP.",
-    "dataPrivacyPermission": "Permite visualizar e apagar dados pessoais.",
-    "exportPermission": "Define se os utilizadores têm a capacidade de exportar registos.",
-    "massUpdatePermission": "Define se os utilizadores têm a capacidade de fazer atualizações em massa de registos.",
-    "followerManagementPermission": "Permite gerenciar seguidores de registos específicos"
-  },
   "labels": {
     "Access": "Acesso",
     "Create Role": "Criar função",
@@ -57,5 +47,9 @@
   },
   "messages": {
     "changesAfterClearCache": "Todas as alterações de um controlo de acesso serão aplicadas após o cache ser limpo."
+  },
+  "tooltips": {
+    "dataPrivacyPermission": "Permite visualizar e apagar dados pessoais.",
+    "followerManagementPermission": "Permite gerenciar seguidores de registos específicos"
   }
 }

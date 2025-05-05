@@ -29,6 +29,7 @@
     "isReplied": "Ответили",
     "isNotReplied": "Не ответили",
     "folder": "Папка",
+    "folderString": "Папка",
     "inboundEmails": "Учетные записи групп",
     "emailAccounts": "Личные учетные записи",
     "hasAttachment": "Имеет Вложения",
@@ -42,9 +43,6 @@
     "fromName": "Имя отправителя",
     "fromString": "Строка От",
     "isSystem": "Системный",
-    "toEmailAddresses": "Адреса эл. почты получателей",
-    "bccEmailAddresses": "BCC Адреса эл. почты получателей",
-    "replyToEmailAddresses": "Обратные адреса эл. почты",
     "personStringData": "Данные личности в формате string",
     "fromEmailAddress": "Адрес отправителя (ссылка)",
     "replyToName": "Имя для обратного адреса",
@@ -66,10 +64,6 @@
     "sentBy": "Отправлено (кем)",
     "attachments": "Вложения",
     "fromEmailAddress": "Адрес эл. почты отправителя",
-    "toEmailAddresses": "Адрес эл. почты получателя",
-    "ccEmailAddresses": "CC Адреса эл. почты получателей",
-    "bccEmailAddresses": "BCC Адреса эл. почты получателей",
-    "replyToEmailAddresses": "Обратные адреса эл. почты",
     "groupFolder": "Групповая папка"
   },
   "options": {
@@ -77,7 +71,6 @@
       "Draft": "Черновик",
       "Sending": "Отправляется",
       "Sent": "Отправлено",
-      "Archived": "В архиве",
       "Received": "Получено",
       "Failed": "Сбой"
     }
@@ -113,7 +106,6 @@
     "No Subject": "Без темы",
     "Insert Field": "Вставить поле",
     "Event": "Событие",
-    "Moving to folder": "Перемещение в папку",
     "Group Folders": "Групповые папки"
   },
   "messages": {
@@ -122,13 +114,13 @@
     "savedAsDraft": "Сохранено как черновик",
     "confirmInsertTemplate": "Текст эл. письма будет потерян. Вы действительно хотите вставить шаблон?",
     "noSmtpSetup": "SMTP не настроен: {link}",
+    "confirmSend": "Отправить письмо?",
     "sendConfirm": "Отправить письмо?",
     "removeSelectedRecordsConfirmation": "Вы действительно хотите удалить выбранные электронные письма?\n\nОни будут удалены и для других пользователей.",
     "removeRecordConfirmation": "Вы уверены, что хотите удалить письмо?\n\nОн будет удален и для других пользователей."
   },
   "presetFilters": {
     "sent": "Отправленные",
-    "archived": "В архиве",
     "inbox": "Входящие",
     "drafts": "Черновики",
     "trash": "Корзина",

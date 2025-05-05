@@ -30,7 +30,9 @@
     "formSuccessRedirectUrl": "URL, zu der nach dem Absenden des Formulars umgeleitet wird",
     "formLanguage": "Verwendete Sprache im Formular",
     "formFrameAncestors": "Erlaubte Hosts für die Formulareinbettung",
-    "formCaptcha": "Captcha verwenden"
+    "formCaptcha": "Captcha verwenden",
+    "formTitle": "Formulartitel",
+    "formTheme": "Formular-Theme"
   },
   "links": {
     "targetList": "Kontaktliste",

@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "type": "Tipo",
+    "validationFailures": "Fallos de validación",
+    "import": "Importar",
+    "rowIndex": "Índice de fila",
+    "exportRowIndex": "Índice de fila de exportación",
+    "lineNumber": "Número de línea",
+    "exportLineNumber": "Número de línea de exportación",
+    "row": "Fila",
+    "entityType": "Tipo de entidad"
+  },
+  "options": {
+    "type": {
+      "Validation": "Validación",
+      "Access": "Acceso",
+      "Not-Found": "No encontrado"
+    }
+  },
+  "tooltips": {
+    "lineNumber": "Un número de línea en el CSV original.",
+    "exportLineNumber": "Un número de línea en el CSV de exportación."
+  }
+}

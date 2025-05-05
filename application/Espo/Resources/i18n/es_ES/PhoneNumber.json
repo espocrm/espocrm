@@ -1,7 +1,8 @@
 {
   "fields": {
     "type": "Escribe",
-    "invalid": "Inválido"
+    "invalid": "Inválido",
+    "numeric": "Valor numérico"
   },
   "presetFilters": {
     "orphan": "Huérfano"

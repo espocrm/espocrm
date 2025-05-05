@@ -1,0 +1,26 @@
+{
+  "labels": {
+    "Create WorkingTimeCalendar": "Crear calendario"
+  },
+  "fields": {
+    "timeZone": "Zona horaria",
+    "timeRanges": "Horario de jornada laboral",
+    "weekday0": "Dom",
+    "weekday1": "Lun",
+    "weekday2": "Mar",
+    "weekday3": "Mié",
+    "weekday4": "Jue",
+    "weekday5": "Vie",
+    "weekday6": "Sáb",
+    "weekday0TimeRanges": "Horario del domingo",
+    "weekday1TimeRanges": "Horario del lunes",
+    "weekday2TimeRanges": "Horario del martes",
+    "weekday3TimeRanges": "Horario del miércoles",
+    "weekday4TimeRanges": "Horario del jueves",
+    "weekday5TimeRanges": "Horario del viernes",
+    "weekday6TimeRanges": "Horario del sábado"
+  },
+  "links": {
+    "ranges": "Excepciones"
+  }
+}

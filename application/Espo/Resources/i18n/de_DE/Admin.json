@@ -77,7 +77,8 @@
     "Authentication Providers": "Authentifizierungsanbieter",
     "Setup": "Einrichtung",
     "Address Countries": "Länderliste",
-    "App Secrets": "App-Geheimnisse"
+    "App Secrets": "App-Geheimnisse",
+    "OAuth Providers": "OAuth-Anbieter"
   },
   "layouts": {
     "list": "Liste",
@@ -141,7 +142,8 @@
     "datetimeOptional": "Datum/Datum-Uhrzeit",
     "checklist": "Checkliste",
     "linkOne": "Link Eins",
-    "urlMultiple": "URL - Mehrere"
+    "urlMultiple": "URL - Mehrere",
+    "base": "Basis"
   },
   "fields": {
     "type": "Typ",
@@ -212,7 +214,9 @@
     "activeOptions": "Aktive Optionen",
     "labelType": "Bezeichnungstyp",
     "preview": "Vorschau",
-    "attachmentField": "Feld für Anhänge"
+    "attachmentField": "Feld für Anhänge",
+    "dynamicLogicReadOnlySaved": "Gespeicherte Zustandsbedingungen, die das Feld schreibgeschützt machen",
+    "notStorable": "Nicht speicherbar"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
@@ -289,7 +293,8 @@
     "appLog": "Anwendungsprotokoll.",
     "addressCountries": "Verfügbare Länder für Adressfelder.",
     "appSecrets": "Speichert sensible Informationen wie API-Schlüssel, Kennwörter und andere Geheimnisse.",
-    "leadCapture": "Endpunkte zur Interessenten-Erfassung und Webformulare."
+    "leadCapture": "Endpunkte zur Interessenten-Erfassung und Webformulare.",
+    "oAuthProviders": "OAuth-Anbieter für Integrationen."
   },
   "options": {
     "previewSize": {
@@ -334,5 +339,9 @@
     "labelManager": "Sprache,Übersetzung",
     "appSecrets": "Schlüssel,Passwort",
     "leadCapture": "Webformulare"
+  },
+  "tooltips": {
+    "tabUrl": "Kann mit `#` beginnen, um zu einer Anwendungsseite zu navigieren.",
+    "tabUrlAclScope": "Die Registerkarte ist für Benutzer verfügbar, die Zugriff auf den angegebenen Bereich haben."
   }
 }

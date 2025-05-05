@@ -26,6 +26,7 @@
     "isReplied": "Respondido",
     "isNotReplied": "Não respondido",
     "folder": "Pasta",
+    "folderString": "Pasta",
     "inboundEmails": "Grupo de contas",
     "emailAccounts": "Contas pessoais",
     "hasAttachment": "Tem anexo",
@@ -39,9 +40,6 @@
     "fromName": "A partir do nome",
     "fromString": "Do string",
     "isSystem": "No sistema",
-    "toEmailAddresses": "Para endereço email",
-    "bccEmailAddresses": "BCC Endereços de email",
-    "replyToEmailAddresses": "Responder para Endereços de email",
     "personStringData": "Dados pessoais",
     "fromEmailAddress": "Endereço de",
     "replyToName": "Responder ao nome",
@@ -56,18 +54,13 @@
     "assignedUsers": "Utilizadores atribuídos",
     "sentBy": "Enviado de",
     "attachments": "Anexos",
-    "fromEmailAddress": "A partir do endereço",
-    "toEmailAddresses": "Para endereços de email",
-    "ccEmailAddresses": "CC Para endereços de email",
-    "bccEmailAddresses": "BCC Para endereços de email",
-    "replyToEmailAddresses": "Responder a endereços de email"
+    "fromEmailAddress": "A partir do endereço"
   },
   "options": {
     "status": {
       "Draft": "Rascunho",
       "Sending": "A enviar",
       "Sent": "Enviado",
-      "Archived": "Arquivado",
       "Received": "Recebido",
       "Failed": "Falhado"
     }
@@ -110,13 +103,13 @@
     "savedAsDraft": "Guardado como rascunho",
     "confirmInsertTemplate": "O corpo do email será perdido. Tem certeza de que deseja inserir o modelo?",
     "noSmtpSetup": "Nenhuma configuração de SMTP. {link}.",
+    "confirmSend": "Enviar email?",
     "sendConfirm": "Enviar email?",
     "removeSelectedRecordsConfirmation": "Tem a certeza que quer remover os emails selecionados?\n\nEles também serão removidos para outros utilizadores.",
     "removeRecordConfirmation": "Tem a certeza que quer remover o email?\n\nEle será removido para os outros utilizadores."
   },
   "presetFilters": {
     "sent": "Enviado",
-    "archived": "Arquivado",
     "inbox": "Caixa de Entrada",
     "drafts": "Rascunhos",
     "trash": "Lixeira",

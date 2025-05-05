@@ -37,7 +37,7 @@
       "all": "Tutti",
       "team": "Team",
       "contact": "Contatto",
-      "own": "proprio",
+      "own": "Proprio",
       "no": "No",
       "yes": "Sì",
       "not-set": "Non Impostato"
@@ -57,7 +57,7 @@
     "dataPrivacyPermission": "Consente di visualizzare e cancellare i dati personali.",
     "followerManagementPermission": "Permette di gestire i follower dei record.",
     "messagePermission": "Permette di inviare messaggi ad altri utenti.\n\n* tutti - può inviare a tutti\n* team - può inviare solo ai membri del team\n* no - non può inviare",
-    "assignmentPermission": "Permette di assegnare i record ad altri utenti.\n\n* tutti - nessuna restrizione\n* team - può assegnare solo ai membri del team\n* no - può essere assegnato solo a se stessi",
+    "assignmentPermission": "Permette di assegnare i record ad altri utenti.\n\n* tutti - nessuna restrizione\n* team - può assegnare solo ai membri del team\n* no - può assegnare solo a se stesso",
     "portalPermission": "Accesso alle informazioni del portale, possibilità di inviare messaggi agli utenti del portale.",
     "groupEmailAccountPermission": "Accesso agli account di posta elettronica di gruppo, possibilità di inviare e-mail da SMTP di gruppo.",
     "exportPermission": "Permette di esportare i record.",

@@ -29,7 +29,6 @@
     "Install": "Instalar",
     "Configuration Instructions": "Instrucciones de Configuración",
     "phpVersion": "Versión PHP",
-    "requiredMysqlVersion": "Versión MySQL",
     "dbHostName": "Servidor (usualmente localhost)",
     "dbName": "Nombre de la Base de Datos",
     "dbUserName": "Usuario de la Base de Datos",
@@ -42,8 +41,11 @@
     "is recommended": "¿Es recomendado?",
     "extension is missing": "falta la extensión",
     "headerTitle": "Instalación de EspoCRM",
-    "Crontab setup instructions": "Sin ejecutar trabajos programados, los correos electrónicos entrantes, las notificaciones y los recordatorios no funcionarán. Aquí puede leer {SETUP_INSTRUCTIONS}.",
-    "Setup instructions": "instrucciones de configuración"
+    "Crontab setup instructions": "Sin ejecutar trabajos programados, los correos entrantes, las notificaciones y los recordatorios no funcionarán. Aquí puede leer {SETUP_INSTRUCTIONS}.",
+    "Setup instructions": "instrucciones de configuración",
+    "requiredMysqlVersion": "Versión de MySQL",
+    "requiredMariadbVersion": "Versión de MariaDB",
+    "requiredPostgresqlVersion": "Versión de PostgreSQL"
   },
   "fields": {
     "Choose your language": "Seleccione su idioma",
@@ -74,7 +76,8 @@
     "smtpAuth": "¿Requiere autenticación?",
     "smtpSecurity": "Seguridad",
     "smtpUsername": "Nombre de usuario",
-    "emailAddress": "Correo electrónico"
+    "emailAddress": "Correo",
+    "Platform": "Plataforma"
   },
   "messages": {
     "1045": "Acceso denegado para el usuario",
@@ -119,5 +122,22 @@
     "writable": "Escribible",
     "readable": "Legible",
     "requiredMariadbVersion": "Version de MariaDB"
+  },
+  "options": {
+    "modRewriteTitle": {
+      "apache": "<h3>Error de API: La API de EspoCRM no está disponible.</h3><br> Realice solo los pasos necesarios. Después de cada paso, compruebe si el problema se ha solucionado.",
+      "nginx": "<h3>Error de API: La API de EspoCRM no está disponible.</h3>",
+      "microsoft-iis": "<h3>Error de API: La API de EspoCRM no está disponible.</h3><br> Posible problema: La \"Reescritura de URL\" está deshabilitada. Verifique y habilite el módulo \"Reescritura de URL\" en el servidor IIS",
+      "default": "<h3>Error de API: La API de EspoCRM no está disponible.</h3><br> Posibles problemas: Módulo de reescritura deshabilitado. Verifique y habilite el Módulo de reescritura en su servidor (por ejemplo, mod_rewrite en Apache) y la compatibilidad con .htaccess."
+    },
+    "modRewriteInstruction": {
+      "apache": {
+        "linux": "<br><br><h4>1. Habilite \"mod_rewrite\".</h4>Para habilitar <i>mod_rewrite</i>, ejecute estos comandos en una terminal:<br><br><pre>{APACHE1}</pre><hr><h4>2. Si el paso anterior no funcionó, intente habilitar la compatibilidad con .htaccess.</h4> Agregue o edite la configuración del servidor <code>{APACHE2_PATH1}</code> o <code>{APACHE2_PATH2}</code> (o <code>{APACHE2_PATH3}</code>):<br><br><pre>{APACHE2}</pre>\nDespués, ejecute este comando en una terminal:<br><br><pre>{APACHE3}</pre><hr><h4>3. Si el paso anterior no ayudó, intente agregar la ruta RewriteBase.</h4> Abra un archivo <code>{API_PATH}.htaccess</code> y reemplace la siguiente línea:<br><br><pre>{APACHE4}</pre>Para<br><br><pre>{APACHE5}</pre><hr>Para obtener más información, visite la guía <a href=\"{APACHE_LINK}\" target=\"_blank\">Configuración del servidor Apache para EspoCRM</a>.<br><br>",
+        "windows": "<br><br><h4>1. Busque el archivo httpd.conf.</h4> Normalmente se encuentra en una carpeta llamada \"conf\", \"config\" o similar.<br><br><h4>2. Edite el archivo httpd.conf.</h4> Dentro del archivo httpd.conf, descomente la línea <code>{WINDOWS_APACHE1}</code> (elimine el signo almohadilla '#' de delante de la línea).<br><br><h4>3. Verifique los demás parámetros.</h4> También verifique que la línea <code>ClearModuleList</code> no esté comentada y asegúrese de que la línea <code>AddModule mod_rewrite.c</code> no esté comentada.\n"
+      },
+      "nginx": {
+        "linux": "<br> Agregue este código al archivo de configuración de su servidor Nginx <code>{NGINX_PATH}</code> dentro de la sección \"server\":<br><br><pre>{NGINX}</pre> <br> Para obtener más información, visite la guía <a href=\"{NGINX_LINK}\" target=\"_blank\">Configuración del servidor Nginx para EspoCRM</a>.<br><br>"
+      }
+    }
   }
 }

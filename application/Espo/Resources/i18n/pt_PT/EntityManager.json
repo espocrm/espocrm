@@ -16,8 +16,6 @@
     "entityForeign": "Entidade estrangeira",
     "linkForeign": "Link estrangeiro",
     "labelForeign": "Label estrangeira",
-    "sortBy": "Ordenação por defeito (campo)",
-    "sortDirection": "Ordenação por defeito (orientação)",
     "relationName": "Nome da tabela intermédia",
     "linkMultipleField": "Link múltiplo campo",
     "linkMultipleFieldForeign": "Link estrangeiro múltiplo campo",
@@ -69,7 +67,6 @@
   "tooltips": {
     "statusField": "Atualizações desse campo são registradas no fluxo.",
     "textFilterFields": "Campos usados pela pesquisa de texto.",
-    "stream": "Se a entidade tem um fluxo.",
     "disabled": "Verifique se não precisa dessa entidade no sistema.",
     "linkAudited": "A criação de registos e links relacionados com registos existentes será registrada no fluxo.",
     "linkMultipleField": "Link Multiple field fornece uma maneira prática de editar relações. Não use se tem um grande número de registos relacionados.",

@@ -2,18 +2,23 @@
   "fields": {
     "name": "Nombre",
     "positionList": "Lista de puestos",
-    "layoutSet": "Conjunto de diseño"
+    "layoutSet": "Conjunto de diseño",
+    "workingTimeCalendar": "Calendario de jornada laboral",
+    "userRole": "Rol de usuario"
   },
   "links": {
     "users": "Usuarios",
     "notes": "Notas",
     "inboundEmails": "Cuentas de correo grupales",
-    "layoutSet": "Conjunto de diseño"
+    "layoutSet": "Conjunto de diseño",
+    "workingTimeCalendar": "Calendario de jornada laboral",
+    "groupEmailFolders": "Carpetas de correo grupales"
   },
   "tooltips": {
     "roles": "Todos los usuarios de este equipo tendrán acceso a la configuración desde los roles seleccionados",
     "positionList": "Puestos disponibles en este equipo. Por ejemplo Vendedor, Gerente.",
-    "layoutSet": "Proporciona la capacidad de tener diseños que difieran de los estándar. El Conjunto de diseño se aplicará a los usuarios que tengan este equipo configurado como Equipo predeterminado."
+    "layoutSet": "Proporciona la capacidad de tener diseños que difieran de los estándar. El Conjunto de diseño se aplicará a los usuarios que tengan este equipo configurado como Equipo predeterminado.",
+    "workingTimeCalendar": "Se aplicará un calendario a los usuarios que tengan este equipo configurado como Equipo predeterminado."
   },
   "labels": {
     "Create Team": "Crear equipo"

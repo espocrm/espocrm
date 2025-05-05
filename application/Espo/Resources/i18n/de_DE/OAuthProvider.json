@@ -1,0 +1,24 @@
+{
+  "labels": {
+    "Create OAuthProvider": "OAuth-Anbieter erstellen"
+  },
+  "fields": {
+    "isActive": "Ist aktiv",
+    "clientId": "Client-ID",
+    "clientSecret": "Client-Geheimnis",
+    "authorizationEndpoint": "Autorisierungsendpunkt",
+    "tokenEndpoint": "Token-Endpunkt",
+    "authorizationRedirectUri": "Autorisierungsumleitung-URI",
+    "scopes": "Zugriffsbereiche",
+    "scopeSeparator": "Zugriffsbereichunterteiler",
+    "hasAccessToken": "Hat Zugriffstoken",
+    "authorizationPrompt": "Autorisierungspromt",
+    "authorizationParams": "Autorisierungsparameter"
+  },
+  "links": {
+    "accounts": "Konten"
+  },
+  "tooltips": {
+    "authorizationParams": "Zusätzliche Abfrageparameter, die an den Autorisierungsendpunkt zu senden sind. Angegeben im JSON-Format."
+  }
+}

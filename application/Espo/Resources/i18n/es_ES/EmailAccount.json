@@ -8,7 +8,7 @@
     "port": "Puerto",
     "monitoredFolders": "Carpetas sincronizadas",
     "fetchSince": "Traer correos desde",
-    "emailAddress": "Correo electrónico",
+    "emailAddress": "Dirección de correo",
     "sentFolder": "Carpeta de enviados",
     "storeSentEmails": "Almacenar correos enviados",
     "keepFetchedEmailsUnread": "Mantener los correos que se han obtenido sin leer",
@@ -20,9 +20,10 @@
     "smtpSecurity": "Seguridad SMTP",
     "smtpUsername": "Usuario SMTP",
     "smtpPassword": "Contraseña SMTP",
-    "useImap": "Obtener correos electrónicos",
+    "useImap": "Obtener correos",
     "smtpAuthMechanism": "Mecanismo de autenticación SMTP",
-    "security": "Seguridad"
+    "security": "Seguridad",
+    "connectedAt": "Conectado en"
   },
   "links": {
     "filters": "Filtros",
@@ -42,16 +43,20 @@
     "Create EmailAccount": "Crear cuenta pesonal",
     "Main": "Principal",
     "Test Connection": "Probar conexión",
-    "Send Test Email": "Enviar correo electrónico de prueba"
+    "Send Test Email": "Enviar correo de prueba"
   },
   "messages": {
     "couldNotConnectToImap": "No se pudo conectar con el servidor IMAP",
-    "connectionIsOk": "Conexión correcta"
+    "connectionIsOk": "Conexión correcta",
+    "imapNotConnected": "No se pudo conectar a [cuenta IMAP](#EmailAccount/view/{id})."
   },
   "tooltips": {
-    "monitoredFolders": "Las carpetas deben estar separadas por comas.\n\nPuede agregar una carpeta 'Enviados' para sincronizar los correos electrónicos enviados desde un cliente externo.",
-    "storeSentEmails": "Los correos electrónicos enviados se almacenarán en el servidor IMAP. El campo Dirección de correo electrónico debe coincidir con la dirección desde donde se enviarán los correos electrónicos.",
-    "useSmtp": "La capacidad de enviar correos electrónicos.",
-    "emailAddress": "El registro de usuario (usuario asignado) debe tener la misma dirección de correo electrónico para poder utilizar esta cuenta de correo electrónico para enviar."
+    "monitoredFolders": "Las carpetas deben estar separadas por comas.\n\nPuede agregar una carpeta 'Enviados' para sincronizar los correos enviados desde un cliente externo.",
+    "storeSentEmails": "Los correos enviados se almacenarán en el servidor IMAP. El campo Dirección de correo debe coincidir con la dirección desde donde se enviarán los correos.",
+    "useSmtp": "La capacidad de enviar correos.",
+    "emailAddress": "El registro de usuario (usuario asignado) debe tener la misma dirección de correo para poder utilizar esta cuenta de correo para enviar."
+  },
+  "presetFilters": {
+    "active": "Activo"
   }
 }

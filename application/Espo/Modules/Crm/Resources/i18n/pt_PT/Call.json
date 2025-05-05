@@ -17,8 +17,8 @@
   "options": {
     "status": {
       "Planned": "Planeamento",
-      "Held": "Manter",
-      "Not Held": "Não manter"
+      "Held": "Realizado",
+      "Not Held": "Não realizado"
     },
     "direction": {
       "Outbound": "Saída",
@@ -32,18 +32,18 @@
     }
   },
   "massActions": {
-    "setHeld": "Configurar manter",
-    "setNotHeld": "Configurar não manter"
+    "setHeld": "Configurar como Realizado",
+    "setNotHeld": "Configurar como Não realizado"
   },
   "labels": {
     "Create Call": "Criar chamada",
-    "Set Held": "Configurar manter",
-    "Set Not Held": "Configurar não manter",
+    "Set Held": "Configurar como Realizado",
+    "Set Not Held": "Configurar como Não Realizado",
     "Send Invitations": "Enviar convites"
   },
   "presetFilters": {
     "planned": "Planeado",
-    "held": "Manter",
+    "held": "Realizada",
     "todays": "Hoje"
   }
 }

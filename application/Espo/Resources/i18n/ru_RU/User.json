@@ -57,7 +57,6 @@
     "dashboardTemplate": "Шаблон панели виджетов",
     "userData": "Данные пользователя",
     "workingTimeCalendar": "Календарь рабочего времени",
-    "workingTimeRanges": "Диапазоны рабочего времени",
     "layoutSet": "Комплект макетов"
   },
   "labels": {

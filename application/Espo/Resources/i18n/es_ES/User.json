@@ -5,7 +5,7 @@
     "title": "Título",
     "isAdmin": "Es administrador",
     "defaultTeam": "Equipo por defecto",
-    "emailAddress": "Correo electrónico",
+    "emailAddress": "Correo",
     "phoneNumber": "Teléfono",
     "portals": "Portales",
     "portalRoles": "Roles del portal",
@@ -35,7 +35,10 @@
     "dashboardTemplate": "Plantilla de escritorio",
     "auth2FAEnable": "Habilitar autenticación de 2 factores",
     "auth2FAMethod": "Método 2FA",
-    "auth2FATotpSecret": "2FA TOTP Secreto"
+    "auth2FATotpSecret": "2FA TOTP Secreto",
+    "workingTimeCalendar": "Calendario de jornada laboral",
+    "layoutSet": "Conjunto de diseño",
+    "avatarColor": "Color del avatar"
   },
   "links": {
     "teams": "Equipos",
@@ -48,7 +51,10 @@
     "tasks": "Tareas",
     "defaultTeam": "Equipo predeterminado",
     "dashboardTemplate": "Plantilla de escritorio",
-    "userData": "Datos del usuario"
+    "userData": "Datos del usuario",
+    "workingTimeCalendar": "Calendario de jornada laboral",
+    "layoutSet": "Conjunto de diseño",
+    "workingTimeRanges": "Excepciones al tiempo de trabajo"
   },
   "labels": {
     "Create User": "Crear usuario",
@@ -59,7 +65,7 @@
     "Teams and Access Control": "Equipos y control de acceso",
     "Forgot Password?": "¿Olvidó la Contraseña?",
     "Password Change Request": "Solicitar Cambio de Contraseña",
-    "Email Address": "Correo electrónico",
+    "Email Address": "Dirección de correo",
     "External Accounts": "Cuentas externas",
     "Email Accounts": "Cuentas de correo",
     "Create Portal User": "Crear usuario del portal",
@@ -71,7 +77,10 @@
     "Requirements": "Requisitos",
     "Security": "Seguridad",
     "Reset 2FA": "Reiniciar 2FA",
-    "Secret": "Secreto"
+    "Secret": "Secreto",
+    "Send Password Change Link": "Enviar enlace de cambio de contraseña",
+    "Send Code": "Enviar código",
+    "Login Link": "Enlace de inicio de sesión"
   },
   "tooltips": {
     "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo por defecto.",
@@ -81,20 +90,21 @@
     "teams": "Equipos a los que este usuario pertenece. Nivel de control de acceso se hereda de los roles de equipo.",
     "roles": "Roles de acceso adicionales. Úsalo si el usuario no pertenece a ningún equipo o si necesita ampliar el nivel de control de acceso solo para este usuario.",
     "portalRoles": "Roles adicionales del portal. Utilícelos para extender el nivel de acceso exclusivamente para este usuario.",
-    "portals": "El usuario tiene accesos a los siguientes portales."
+    "portals": "El usuario tiene accesos a los siguientes portales.",
+    "layoutSet": "Se aplicarán al usuario los diseños de un conjunto específico en lugar de los predeterminados."
   },
   "messages": {
-    "passwordWillBeSent": "La Contraseña será enviada al correo electrónico del usuario",
+    "passwordWillBeSent": "La Contraseña será enviada al correo del usuario.",
     "passwordChanged": "La Contraseña ha sido cambiada",
     "userCantBeEmpty": "El nombre de usuario no puede estar vacío",
     "wrongUsernamePassword": "Nombre de usuario/contraseña incorrectos",
     "emailAddressCantBeEmpty": "La dirección de correo no puede estar vacía",
     "userNameEmailAddressNotFound": "Nombre de Usuario/Correo no encontrado",
     "forbidden": "Prohibido, por favor intente después",
-    "uniqueLinkHasBeenSent": "El enlace único ha sido enviado a la dirección de correo electrónico especificada.",
+    "uniqueLinkHasBeenSent": "El enlace único ha sido enviado a la dirección de correo especificada.",
     "passwordChangedByRequest": "La contraseña ha sido cambiada.",
     "userNameExists": "Nombre de usuario ya existe",
-    "setupSmtpBefore": "Debe configurar [Configuración SMTP]({url}) para que el sistema pueda enviar la contraseña por correo electrónico.",
+    "setupSmtpBefore": "Debe configurar [Configuración SMTP]({url}) para que el sistema pueda enviar la contraseña por correo.",
     "passwordStrengthLength": "Debe tener al menos {length} caracteres de longitud.",
     "passwordStrengthLetterCount": "Debe contener al menos {count} letras.",
     "passwordStrengthNumberCount": "Debe contener al menos {count} dígito(s).",
@@ -103,15 +113,29 @@
     "codeIsRequired": "El código es obligatorio",
     "enterTotpCode": "Ingrese un código de su aplicación de autenticación.",
     "verifyTotpCode": "Escanee el código QR con su aplicación de autenticación móvil. Si tiene problemas para escanear, puede ingresar el secreto manualmente. Después de eso, verá un código de 6 dígitos en su aplicación. Ingresar este código en el campo de abajo.",
-    "generateAndSendNewPassword": "Se generará una nueva contraseña y se enviará a la dirección de correo electrónico del usuario.",
+    "generateAndSendNewPassword": "Se generará una nueva contraseña y se enviará a la dirección de correo del usuario.",
     "security2FaResetConfirmation": "¿Está seguro de que desea restablecer la configuración actual de 2FA?",
     "ldapUserInEspoNotFound": "El usuario no se encuentra en EspoCRM. Póngase en contacto con su administrador para crear el usuario.",
     "passwordRecoverySentIfMatched": "Suponiendo que los datos ingresados coincidieran con cualquier cuenta de usuario.",
     "auth2FARequiredHeader": "Se requiere autenticación de 2 factores",
-    "auth2FARequired": "Debe configurar la autenticación de 2 factores. Utilice una aplicación de autenticación en su teléfono móvil (por ejemplo, Google Authenticator)."
+    "auth2FARequired": "Debe configurar la autenticación de 2 factores. Utilice una aplicación de autenticación en su teléfono móvil (por ejemplo, Google Authenticator).",
+    "sendPasswordChangeLinkConfirmation": "Se enviará un correo con un enlace único al usuario para que pueda cambiar su contraseña. El enlace caducará después de un tiempo determinado.",
+    "yourAuthenticationCode": "Su código de autenticación: {code}.",
+    "choose2FaSmsPhoneNumber": "Seleccione un número de teléfono que se utilizará para 2FA.",
+    "choose2FaEmailAddress": "Seleccione una dirección de correo para la autenticación de dos factores (2FA). Se recomienda usar una dirección de correo que no sea la principal.",
+    "enterCodeSentInEmail": "Introduzca el código enviado a su dirección de correo.",
+    "enterCodeSentBySms": "Introduzca el código enviado por SMS a su número de teléfono.",
+    "passwordChangeRequestNotFound": "No se encuentra la solicitud de cambio de contraseña. Podría estar caducada. Intente recuperarla desde la [página de inicio de sesión]({url}).",
+    "loginAs": "Abra el enlace de inicio de sesión en una ventana de incógnito para conservar su sesión actual. Use sus credenciales de administrador para iniciar sesión.",
+    "failedToLogIn": "No se pudo iniciar sesión",
+    "2faMethodNotConfigured": "El método 2FA no está completamente configurado en el sistema.",
+    "loginError": "Se produjo un error",
+    "defaultTeamIsNotUsers": "El equipo predeterminado debe ser uno de los equipos del usuario",
+    "passwordStrengthSpecialCharacterCount": "Debe contener al menos {count} caracteres especiales."
   },
   "boolFilters": {
-    "onlyMyTeam": "Solo de mi equipo"
+    "onlyMyTeam": "Solo de mi equipo",
+    "onlyMe": "Sólo yo"
   },
   "presetFilters": {
     "active": "Activo",
@@ -132,5 +156,8 @@
     "authMethod": {
       "ApiKey": "Clave de API"
     }
+  },
+  "actions": {
+    "changePosition": "Cambiar de posición"
   }
 }

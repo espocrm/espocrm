@@ -1,15 +1,22 @@
 {
   "fields": {
-    "width": "Ancho (%)",
     "link": "Enlace",
     "notSortable": "No ordenable",
     "align": "Alinear",
     "panelName": "Nombre del Panel",
     "style": "Estilo",
-    "sticked": "Pegado",
     "isLarge": "Tamaño de fuente grande",
     "dynamicLogicVisible": "Condiciones que hacen visible el panel",
-    "hidden": "Oculto"
+    "hidden": "Oculto",
+    "dynamicLogicStyled": "Condiciones que hacen que se aplique el estilo",
+    "noLabel": "Sin etiqueta",
+    "tabLabel": "Etiqueta de pestaña",
+    "tabBreak": "Salto de pestaña",
+    "width": "Ancho",
+    "noteText": "Texto de la nota",
+    "noteStyle": "Estilo de nota",
+    "isMuted": "Color apagado",
+    "sticked": "Quédate arriba"
   },
   "options": {
     "align": {
@@ -31,6 +38,21 @@
   },
   "tooltips": {
     "link": "Si se marca, se mostrará un valor de campo como un enlace que apunta a la vista detallada del registro. Por lo general, se usa para los campos *Name*.",
-    "hiddenPanel": "Necesita hacer clic en \"mostrar más\" para ver el panel."
+    "hiddenPanel": "Necesita hacer clic en \"mostrar más\" para ver el panel.",
+    "sticked": "El panel se pegará al panel superior. Sin espacio entre paneles.",
+    "panelStyle": "Un color del panel.",
+    "dynamicLogicVisible": "Si se configura, el panel se ocultará a menos que se cumpla la condición.",
+    "dynamicLogicStyled": "Se aplicará un color si se cumple una condición específica. El color se define mediante el parámetro *Estilo*.",
+    "tabBreak": "Una pestaña separada para el panel y todos los paneles siguientes hasta el siguiente salto de pestaña.",
+    "noLabel": "No mostrar una etiqueta de columna en el encabezado.",
+    "notSortable": "Desactiva la capacidad de ordenar por columna.",
+    "width": "Ancho de columna. Se recomienda tener una columna sin ancho especificado; normalmente debería ser el campo *Nombre*.",
+    "noteText": "Texto que se mostrará en el panel. Compatible con Markdown."
+  },
+  "messages": {
+    "cantBeEmpty": "El diseño no puede estar vacío.",
+    "fieldsIncompatible": "Los campos no pueden estar juntos en el diseño: {fields}.",
+    "alreadyExists": "El diseño `{name}` ya existe.",
+    "createInfo": "Los paneles de relaciones pueden utilizar diseños de listas personalizados."
   }
 }

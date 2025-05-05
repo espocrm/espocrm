@@ -21,11 +21,11 @@
     "Portal": "Portales",
     "Portals": "Portales",
     "Portal Roles": "Roles del portal",
-    "Outbound Emails": "Salientes",
-    "Group Email Accounts": "Grupales",
-    "Personal Email Accounts": "Personales",
-    "Inbound Emails": "Entrantes",
-    "Email Templates": "Plantillas",
+    "Outbound Emails": "Correos salientes",
+    "Group Email Accounts": "Cuentas de correo grupales",
+    "Personal Email Accounts": "Cuentas de correo personales",
+    "Inbound Emails": "Correos entrantes",
+    "Email Templates": "Plantillas de correo",
     "Import": "Importar",
     "Layout Manager": "Diseño",
     "User Interface": "Interfaz de usuario",
@@ -52,7 +52,7 @@
     "Notifications": "Notificaciones",
     "Jobs": "Trabajos",
     "Reset to Default": "Aplicar a valores por defecto",
-    "Email Filters": "Filtros",
+    "Email Filters": "Filtros de correo",
     "Portal Users": "Usuarios del portal",
     "Action History": "Histórico",
     "Label Manager": "Etiquetas",
@@ -71,9 +71,22 @@
     "extension is missing": "no se encuentra la extensión",
     "PDF Templates": "Plantillas PDF",
     "Dashboard Templates": "Plantilla de escritorio",
-    "Email Addresses": "Correos electrónicos",
+    "Email Addresses": "Direcciones de correo",
     "Phone Numbers": "Números de teléfono",
-    "Layout Sets": "Conjuntos de diseño"
+    "Layout Sets": "Conjuntos de diseño",
+    "Messaging": "Mensajería",
+    "Misc": "Varios",
+    "Job Settings": "Configuración de trabajos",
+    "Configuration Instructions": "Instrucciones de configuración",
+    "Formula Sandbox": "Fórmula sandbox",
+    "Working Time Calendars": "Calendarios de tiempo de trabajo",
+    "Group Email Folders": "Carpetas de correo grupales",
+    "Authentication Providers": "Proveedores de autenticación",
+    "Setup": "Configuración",
+    "App Log": "Registro de la aplicación",
+    "Address Countries": "Dirección Países",
+    "App Secrets": "Secretos de la aplicación",
+    "OAuth Providers": "Proveedores de OAuth"
   },
   "layouts": {
     "list": "Lista",
@@ -109,7 +122,7 @@
     "bool": "SI / NO",
     "currency": "Moneda",
     "date": "Fecha",
-    "email": "Correo electrónico",
+    "email": "Correo",
     "enum": "Lista",
     "enumInt": "Lista de enteros",
     "enumFloat": "Lista de decimales",
@@ -139,7 +152,8 @@
     "datetimeOptional": "Fecha / Fecha-Hora",
     "checklist": "Lista de verificación",
     "linkOne": "Enlace uno",
-    "barcode": "Código de barras"
+    "barcode": "Código de barras",
+    "urlMultiple": "URL Múltiple"
   },
   "fields": {
     "type": "Tipo",
@@ -167,7 +181,6 @@
     "minHeight": "Altura mínima (px)",
     "provider": "Proveedor",
     "typeList": "Tipo de lista",
-    "rows": "Número de filas del área de texto",
     "lengthOfCut": "Longitud del corte",
     "sourceList": "Lista de tomas de contacto",
     "tooltipText": "Texto de la ayuda",
@@ -201,7 +214,27 @@
     "codeType": "Tipo de código",
     "lastChar": "Último personaje",
     "listPreviewSize": "Vista previa del tamaño en la vista de lista",
-    "onlyDefaultCurrency": "Única moneda predeterminada"
+    "onlyDefaultCurrency": "Única moneda predeterminada",
+    "dynamicLogicInvalid": "Condiciones que hacen que el campo sea inválido",
+    "conversionDisabled": "Deshabilitar conversión",
+    "decimalPlaces": "Lugares decimales",
+    "pattern": "Patrón",
+    "globalRestrictions": "Restricciones globales",
+    "optionsReference": "Referencia de opciones",
+    "copyToClipboard": "Botón copiar al portapapeles",
+    "rows": "Número máximo de filas",
+    "readOnlyAfterCreate": "Sólo lectura después de crear",
+    "createButton": "Botón Crear",
+    "autocompleteOnEmpty": "Autocompletar si la entrada está vacía",
+    "relateOnImport": "Relación con la importación",
+    "aclScope": "Alcance de ACL",
+    "onlyAdmin": "Solo para administradores",
+    "activeOptions": "Opciones activas",
+    "labelType": "Tipo de etiqueta",
+    "preview": "Vista previa",
+    "attachmentField": "Campo de adjuntos",
+    "dynamicLogicReadOnlySaved": "Las condiciones de estado guardadas hacen que el campo sea de solo lectura",
+    "notStorable": "No almacenable"
   },
   "messages": {
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",
@@ -212,9 +245,9 @@
     "installExtension": "La extensión {name} {version} está lista para ser instalada.",
     "upgradeBackup": "Recomendamos hacer una copia de seguridad de los archivos y datos de EspoCRM antes de actualizar.",
     "thousandSeparatorEqualsDecimalMark": "El símbolo de separador de miles no puede ser el mismo que el de punto decimal.",
-    "userHasNoEmailAddress": "El usuario no tiene dirección de correo electrónico.",
+    "userHasNoEmailAddress": "El usuario no tiene dirección de correo.",
     "uninstallConfirmation": "¿Seguro que quieres desinstalar la extensión?",
-    "cronIsNotConfigured": "Los trabajos programados no se están ejecutando. Por lo tanto, los correos electrónicos entrantes, las notificaciones y los recordatorios no funcionan. Siga las [instrucciones](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) para configurar el trabajo cron.",
+    "cronIsNotConfigured": "Los trabajos programados no se están ejecutando. Por lo tanto, los correos entrantes, las notificaciones y los recordatorios no funcionan. Siga las [instrucciones](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) para configurar el trabajo cron.",
     "newExtensionVersionIsAvailable": "La nueva versión {latestVersion} de {extensionName} está disponible.",
     "upgradeVersion": "EspoCRM se actualizará a la versión **{version}**. Tenga paciencia ya que esto puede llevar un tiempo.",
     "upgradeDone": "EspoCRM se ha actualizado a la versión **{version}**.",
@@ -223,7 +256,9 @@
     "upgradeRecommendation": "No se recomienda esta forma de actualización. Es mejor actualizar desde CLI.",
     "newVersionIsAvailable": "La nueva versión de EspoCRM {latestVersion} está disponible. Siga las [instrucciones](https://www.espocrm.com/documentation/administration/upgrading/) para actualizar su instancia.",
     "formulaFunctions": "Se pueden encontrar más funciones en [documentación] ({documentationUrl}).",
-    "rebuildRequired": "Necesita ejecutar la reconstrucción desde CLI."
+    "rebuildRequired": "Necesita ejecutar la reconstrucción desde CLI.",
+    "cronIsDisabled": "Cron está deshabilitado, la aplicación no funciona correctamente. Habilítelo en [Configuración](#Admin/Configuración).",
+    "cacheIsDisabled": "La caché está deshabilitada, la aplicación funcionará lentamente. Habilítela en [Configuración](#Admin/Configuración)."
   },
   "descriptions": {
     "settings": "Ajustes generales del sistema.",
@@ -248,7 +283,7 @@
     "currency": "Ajustes de moneda y tipos de cambio.",
     "extensions": "Instalar o desinstalar extensiones.",
     "integrations": "Integración con los servicios de terceros.",
-    "notifications": "Ajustes de notificaciones del sistema y por correo electrónico.",
+    "notifications": "Ajustes de notificaciones del sistema y por correo.",
     "inboundEmails": "Ajustes para los correos entrantes.",
     "portalUsers": "Usuarios del portal.",
     "entityManager": "Crear y editar entidades personalizadas. Administrar campos y relaciones.",
@@ -256,7 +291,6 @@
     "actionHistory": "Registro de las acciones del usuario.",
     "labelManager": "Personaliza las etiquetas de las aplicaciones.",
     "authLog": "Historial de acceso.",
-    "leadCapture": "Puntos de acceso al API para Web-to-Lead.",
     "attachments": "Todos los archivos adjuntos almacenados en el sistema.",
     "templateManager": "Personalice las plantillas de mensajes.",
     "systemRequirements": "Requerimientos del sistema para EspoCRM.",
@@ -266,8 +300,19 @@
     "webhooks": "Administrar webhooks.",
     "dashboardTemplates": "Implemente paneles para los usuarios.",
     "phoneNumbers": "Todos los números de teléfono almacenados en el sistema.",
-    "emailAddresses": "Todas las direcciones de correo electrónico almacenadas en el sistema.",
-    "layoutSets": "Colecciones de diseños que se pueden asignar a equipos y portales."
+    "emailAddresses": "Todas las direcciones de correo almacenadas en el sistema.",
+    "layoutSets": "Colecciones de diseños que se pueden asignar a equipos y portales.",
+    "jobsSettings": "Configuración del procesamiento de trabajos. Los trabajos se ejecutan en segundo plano.",
+    "sms": "Configuración de SMS.",
+    "formulaSandbox": "Escribir y probar scripts de fórmulas.",
+    "workingTimeCalendars": "Horario de trabajo.",
+    "groupEmailFolders": "Carpetas de correo compartidas para equipos.",
+    "authenticationProviders": "Proveedores de autenticación adicionales para portales.",
+    "appLog": "Registro de la aplicación.",
+    "addressCountries": "Países disponibles para los campos de dirección.",
+    "appSecrets": "Almacene información confidencial, como claves API, contraseñas y otros secretos.",
+    "leadCapture": "Puntos finales de captura de clientes potenciales y formularios web.",
+    "oAuthProviders": "Proveedores de OAuth para integraciones."
   },
   "options": {
     "previewSize": {
@@ -276,6 +321,9 @@
       "medium": "Mediano",
       "large": "Grande",
       "": "Defecto"
+    },
+    "labelType": {
+      "state": "Estado"
     }
   },
   "logicalOperators": {
@@ -291,7 +339,8 @@
     "user": "Nombre de usuario",
     "writable": "Escribible",
     "readable": "Legible",
-    "requiredMariadbVersion": "Version de MariaDB"
+    "requiredMariadbVersion": "Version de MariaDB",
+    "requiredPostgresqlVersion": "Versión de PostgreSQL"
   },
   "templates": {
     "accessInfo": "Información de acceso",
@@ -302,7 +351,8 @@
     "notePostNoParent": "Nota sobre la publicación (sin padre)",
     "noteStatus": "Nota sobre la actualización de estado",
     "passwordChangeLink": "Enlace de cambio de contraseña",
-    "noteEmailReceived": "Nota sobre el correo electrónico recibido"
+    "noteEmailReceived": "Nota sobre el correo recibido",
+    "twoFactorCode": "Código 2FA"
   },
   "strings": {
     "rebuildRequired": "Se requiere reconstrucción"
@@ -310,12 +360,19 @@
   "keywords": {
     "settings": "sistema",
     "userInterface": "interfaz de usuario, tema, pestañas, logotipo, tablero",
-    "authentication": "contraseña",
     "scheduledJob": "cron, trabajos",
     "integrations": "google, mapas, mapas de google",
     "authLog": "registro, historia",
     "authTokens": "historial, acceso, registro",
     "entityManager": "campos, relaciones, relaciones",
-    "templateManager": "notificaciones"
+    "templateManager": "notificaciones",
+    "authentication": "contraseña,seguridad,ldap",
+    "labelManager": "idioma,traducción",
+    "appSecrets": "clave,claves,contraseña",
+    "leadCapture": "formularios web"
+  },
+  "tooltips": {
+    "tabUrl": "Puede comenzar con `#` para navegar a una página de la aplicación.",
+    "tabUrlAclScope": "La pestaña estará disponible para los usuarios que tengan acceso al ámbito especificado."
   }
 }

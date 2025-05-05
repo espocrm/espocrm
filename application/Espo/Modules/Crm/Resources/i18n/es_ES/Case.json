@@ -11,7 +11,9 @@
     "description": "Descripción",
     "lead": "Posible cliente",
     "attachments": "Adjuntos",
-    "inboundEmail": "Cuenta de correo electrónico grupal"
+    "inboundEmail": "Cuenta de correo grupal",
+    "originalEmail": "Correo original",
+    "isInternal": "Oculto del portal"
   },
   "links": {
     "account": "Cuenta",
@@ -24,7 +26,7 @@
     "articles": "Artículos de la base de conocimiento",
     "lead": "Posible cliente",
     "attachments": "Adjuntos",
-    "inboundEmail": "Cuenta de correo electrónico grupal"
+    "inboundEmail": "Cuenta de correo grupal"
   },
   "options": {
     "status": {

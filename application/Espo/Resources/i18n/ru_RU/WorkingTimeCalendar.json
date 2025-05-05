@@ -1,7 +1,6 @@
 {
   "labels": {
-    "Create WorkingTimeCalendar": "Создать календарь",
-    "Ranges": "Диапазоны"
+    "Create WorkingTimeCalendar": "Создать календарь"
   },
   "fields": {
     "timeZone": "Часовой пояс",
@@ -18,8 +17,5 @@
     "weekday4TimeRanges": "Расписание",
     "weekday5TimeRanges": "Расписание на пятницу",
     "weekday6TimeRanges": "Расписание на субботу"
-  },
-  "links": {
-    "ranges": "Диапазоны"
   }
 }

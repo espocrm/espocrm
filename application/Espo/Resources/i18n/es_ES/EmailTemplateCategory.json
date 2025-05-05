@@ -2,13 +2,13 @@
   "labels": {
     "Create EmailTemplateCategory": "Crear categoría",
     "Manage Categories": "Administrar categorías",
-    "EmailTemplates": "Plantillas de correo electrónico"
+    "EmailTemplates": "Plantillas de correo"
   },
   "fields": {
     "order": "Orden",
     "childList": "Lista hija"
   },
   "links": {
-    "emailTemplates": "Plantillas de correo electrónico"
+    "emailTemplates": "Plantillas de correo"
   }
 }

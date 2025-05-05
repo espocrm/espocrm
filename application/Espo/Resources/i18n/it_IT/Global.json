@@ -58,7 +58,9 @@
     "WebhookQueueItem": "Elemento Coda Webhook",
     "AppLogRecord": "Record Log Applicazione",
     "WorkingTimeRange": "Eccezione Lavorativa",
-    "AddressCountry": "Indirizzo Paese"
+    "AddressCountry": "Indirizzo Paese",
+    "OAuthProvider": "Fornitore OAuth",
+    "OAuthAccount": "Account OAuth"
   },
   "scopeNamesPlural": {
     "Email": "Email",
@@ -111,7 +113,9 @@
     "AppLogRecord": "Log Applicazione",
     "WorkingTimeRange": "Eccezioni Lavorative",
     "AddressCountry": "Indirizzi Paesi",
-    "AppSecret": "App Secret"
+    "AppSecret": "App Secret",
+    "OAuthProvider": "Fornitori OAuth",
+    "OAuthAccount": "Account OAuth"
   },
   "labels": {
     "Misc": "Varie",
@@ -381,7 +385,6 @@
     "validationFailure": "Errore di convalida nel backend.\n\nCampo: `{field}`\nConvalida: `{type}`",
     "confirmAppRefresh": "L'applicazione è stata aggiornata. Si consiglia di aggiornare la pagina per garantirne il corretto funzionamento.",
     "error404": "L'url richiesto non può essere elaborato.",
-    "error403": "Non hai l'accesso a quest'area.",
     "extensionLicenseInvalid": "Licenza estensione '{name}' non valida.",
     "extensionLicenseExpired": "L'abbonamento alla licenza dell'estensione '{name}' è scaduto.",
     "extensionLicenseSoftExpired": "L'abbonamento alla licenza dell'estensione '{name}' è scaduto.",
@@ -416,7 +419,10 @@
     "duplicateConflict": "Esiste già un record.",
     "confirmMassUpdate": "Sei sicuro di voler aggiornare in massa i record selezionati?",
     "cannotRemoveCategoryWithChildCategory": "Non è possibile rimuovere una categoria che ha una categoria figlio.",
-    "cannotRemoveNotEmptyCategory": "Impossibile rimuovere una categoria non vuota."
+    "cannotRemoveNotEmptyCategory": "Impossibile rimuovere una categoria non vuota.",
+    "arrayInputNotEmpty": "L' elemento è stato inserito ma non aggiunto",
+    "error403": "Non hai accesso a quest'area.",
+    "sameRecordIsAlreadyBeingEdited": "Il record è attualmente in fase di modifica."
   },
   "boolFilters": {
     "onlyMy": "Solo i miei",
@@ -681,7 +687,9 @@
       "isNotEmpty": "Non è vuoto",
       "notLike": "Non è come",
       "notContains": "Non contiene",
-      "notEquals": "Non uguale"
+      "notEquals": "Non uguale",
+      "anyOf": "Qualsiasi di",
+      "noneOf": "Nessuno di"
     },
     "intSearchRanges": {
       "equals": "Uguale",

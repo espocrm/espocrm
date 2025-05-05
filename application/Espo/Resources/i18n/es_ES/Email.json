@@ -8,18 +8,17 @@
     "bcc": "CCO",
     "replyTo": "Responder a",
     "replyToString": "Responder a (string)",
-    "isHtml": "Es HTML",
     "body": "Cuerpo",
     "subject": "Asunto",
     "attachments": "Adjuntos",
     "selectTemplate": "Seleccione una plantilla",
     "fromAddress": "De (email)",
-    "emailAddress": "Dirección de correo electrónico",
+    "emailAddress": "Dirección de correo",
     "deliveryDate": "Fecha de entrega",
     "account": "Cuenta",
     "users": "Usuarios",
     "replied": "Es una respuesta a:",
-    "replies": "Respondiste en:",
+    "replies": "Respuestas",
     "isRead": "Es leído",
     "isNotRead": "No leído",
     "isImportant": "Es importante",
@@ -29,49 +28,67 @@
     "isReplied": "Tiene respuesta",
     "isNotReplied": "No se respondieron",
     "folder": "Carpeta",
+    "folderString": "Carpeta",
     "inboundEmails": "Cuentas grupales",
     "emailAccounts": "Cuentas personales",
     "hasAttachment": "Tiene adjunto",
     "sentBy": "Enviado por",
     "assignedUsers": "Usuarios asignados",
     "bodyPlain": "Cuerpo (plano)",
-    "ccEmailAddresses": "Correos electrónicos CC",
+    "ccEmailAddresses": "Correos CC",
     "messageId": "ID del mensaje",
     "messageIdInternal": "ID del mensaje (interno)",
     "folderId": "ID de carpeta",
     "fromName": "De Nombre",
     "fromString": "De cadena",
     "isSystem": "¿Es sistema?",
-    "toEmailAddresses": "A dirección de correo electrónico",
-    "bccEmailAddresses": "Correos electrónicos BBC",
-    "replyToEmailAddresses": "Responder a la dirección de correo electrónico",
     "personStringData": "Datos de cadena de personas",
     "fromEmailAddress": "De dirección (enlace)",
     "replyToName": "Responder a nombre",
-    "replyToAddress": "Responder a la dirección"
+    "replyToAddress": "Responder a la dirección",
+    "icsContents": "Contenido del ICS",
+    "icsEventData": "Datos de eventos del ICS",
+    "icsEventUid": "UID del evento ICS",
+    "createdEvent": "Evento creado",
+    "event": "Evento",
+    "icsEventDateStart": "Fecha de inicio del evento ICS",
+    "groupFolder": "Carpeta de grupo",
+    "isUsersSent": "¿Es envío del usuario?",
+    "inArchive": "En archivo",
+    "groupStatusFolder": "Carpeta de estado del grupo",
+    "sendAt": "Enviar a",
+    "toEmailAddresses": "A direcciones de correo",
+    "bccEmailAddresses": "Direcciones de correo CCO",
+    "replyToEmailAddresses": "Direcciones de correo de respuesta"
   },
   "links": {
     "replied": "Es una respuesta a:",
-    "replies": "Respondiste en:",
+    "replies": "Respuestas",
     "inboundEmails": "Cuentas grupales",
     "emailAccounts": "Cuentas personales",
     "assignedUsers": "Usuarios asignados",
     "sentBy": "Enviado por",
     "attachments": "Adjuntos",
-    "fromEmailAddress": "De correo electrónico",
-    "toEmailAddresses": "A dirección de correo electrónico",
-    "ccEmailAddresses": "Correos electrónicos CC",
-    "bccEmailAddresses": "Correos electrónicos BBC",
-    "replyToEmailAddresses": "Responder a la dirección de correo electrónico"
+    "fromEmailAddress": "De correo",
+    "groupFolder": "Carpeta de grupo",
+    "createdEvent": "Evento creado",
+    "toEmailAddresses": "A direcciones de correo",
+    "ccEmailAddresses": "Direcciones de correo CC",
+    "bccEmailAddresses": "Direcciones de correo CCO",
+    "replyToEmailAddresses": "Direcciones de correo de respuesta"
   },
   "options": {
     "status": {
       "Draft": "Borrador",
       "Sending": "Enviando",
       "Sent": "Enviado",
-      "Archived": "Archivado",
       "Received": "Recibido",
-      "Failed": "Falló"
+      "Failed": "Falló",
+      "Archived": "Importado"
+    },
+    "groupStatusFolder": {
+      "Archive": "Archivo",
+      "Trash": "Papelera"
     }
   },
   "labels": {
@@ -86,9 +103,9 @@
     "Email Accounts": "Ir a cuentas de correo personales",
     "Inbound Emails": "Ir a cuentas de correo grupales",
     "Email Templates": "Plantillas de correo",
-    "Send Test Email": "Enviar correo electrónico de prueba",
+    "Send Test Email": "Enviar correo de prueba",
     "Send": "Enviar",
-    "Email Address": "Correo electrónico",
+    "Email Address": "Dirección de correo",
     "Mark Read": "Marcar como leído",
     "Sending...": "Enviando...",
     "Save Draft": "Guardar borrador",
@@ -103,25 +120,47 @@
     "Folders": "Ir a carpetas de correo",
     "View Users": "Ver usuarios",
     "No Subject": "Sin asunto",
-    "Insert Field": "Insertar campo"
+    "Insert Field": "Insertar campo",
+    "Event": "Evento",
+    "Group Folders": "Carpetas de grupo",
+    "View Attachments": "Ver archivos adjuntos",
+    "Import EML": "Importar EML",
+    "Moved to Archive": "Movido al archivo",
+    "Moved to Trash": "Movido a la papelera",
+    "Retrieved from Trash": "Recuperado de la papelera",
+    "No Records Moved": "No se movieron registros",
+    "Schedule Send": "Programar envío"
   },
   "messages": {
     "testEmailSent": "El correo de prueba ha sido enviado.",
-    "emailSent": "El correo electrónico ha sido enviada",
+    "emailSent": "El correo ha sido enviado",
     "savedAsDraft": "Guardado como borrador",
-    "confirmInsertTemplate": "El cuerpo del correo electrónico se perderá. ¿Seguro que quieres insertar la plantilla?",
+    "confirmInsertTemplate": "El cuerpo del correo se perderá. ¿Seguro que quieres insertar la plantilla?",
     "noSmtpSetup": "SMTP no está configurado: {link}",
-    "sendConfirm": "¿Enviar el correo electrónico?",
-    "removeSelectedRecordsConfirmation": "¿Está seguro de que desea eliminar los correos electrónicos seleccionados?\n\nTambién se eliminarán para otros usuarios.",
-    "removeRecordConfirmation": "¿Estás seguro de que deseas eliminar el correo electrónico?\n\nTambién se eliminará para otros usuarios."
+    "confirmSend": "¿Enviar el correo?",
+    "sendConfirm": "¿Enviar el correo?",
+    "removeSelectedRecordsConfirmation": "¿Está seguro de que desea eliminar los correos seleccionados?\n\nTambién se eliminarán para otros usuarios.",
+    "removeRecordConfirmation": "¿Estás seguro de que deseas eliminar el correo?\n\nTambién se eliminará para otros usuarios.",
+    "invalidCredentials": "Credenciales inválidas.",
+    "unknownError": "Error desconocido.",
+    "recipientAddressRejected": "Dirección del destinatario rechazada.",
+    "alreadyImported": "El [correo]({link}) ya existe en el sistema.",
+    "couldNotSentScheduledEmail": "No se pudo enviar el [correo]({link}) programado",
+    "notEditAccess": "Sin acceso de edición al correo.",
+    "groupFolderNoAccess": "Sin acceso a la carpeta del grupo.",
+    "groupMoveOutNoEditAccess": "No se puede sacar de la carpeta del grupo. No se puede editar el correo.",
+    "groupMoveToNoEditAccess": "No se puede acceder a la carpeta del grupo. No se puede editar el correo.",
+    "groupMoveToTrashNoEditAccess": "No se puede mover el correo de la carpeta de grupo a la papelera. No se puede editar el correo.",
+    "groupMoveToArchiveNoEditAccess": "No se puede mover de la carpeta de grupo al archivo. No se puede editar el correo."
   },
   "presetFilters": {
     "sent": "Enviados",
-    "archived": "Archivado",
     "inbox": "Bandeja de entrada",
     "drafts": "Borradores",
     "trash": "Papelera",
-    "important": "Importante"
+    "important": "Importante",
+    "archived": "Importado",
+    "archive": "Archivo"
   },
   "massActions": {
     "markAsRead": "Marcar como leído",
@@ -130,9 +169,17 @@
     "markAsNotImportant": "Marcar como No importante",
     "moveToTrash": "Mover a la papelera",
     "moveToFolder": "Mover a la carpeta",
-    "retrieveFromTrash": "Recuperar de la papelera"
+    "retrieveFromTrash": "Recuperar de la papelera",
+    "moveToArchive": "Archivo"
   },
   "strings": {
-    "sendingFailed": "Error al enviar el correo electrónico"
+    "sendingFailed": "Error al enviar el correo",
+    "group": "Grupo"
+  },
+  "actions": {
+    "moveToArchive": "Archivo"
+  },
+  "otherFields": {
+    "file": "Archivo"
   }
 }

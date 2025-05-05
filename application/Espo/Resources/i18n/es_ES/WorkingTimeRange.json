@@ -1,0 +1,28 @@
+{
+  "labels": {
+    "Calendars": "Calendarios",
+    "Create WorkingTimeRange": "Crear excepción"
+  },
+  "fields": {
+    "timeRanges": "Cronograma",
+    "dateStart": "Fecha de inicio",
+    "dateEnd": "Fecha de finalización",
+    "type": "Tipo",
+    "calendars": "Calendarios",
+    "users": "Usuarios"
+  },
+  "links": {
+    "calendars": "Calendarios",
+    "users": "Usuarios"
+  },
+  "options": {
+    "type": {
+      "Non-working": "No laborable",
+      "Working": "Laborable"
+    }
+  },
+  "tooltips": {
+    "calendars": "Calendarios a los que se aplicará la excepción. La excepción se aplicará a todos los usuarios de los calendarios seleccionados.\n\nDeje este campo en blanco si necesita aplicar la excepción solo a usuarios específicos.",
+    "users": "Usuarios específicos a los que se aplicará la excepción."
+  }
+}

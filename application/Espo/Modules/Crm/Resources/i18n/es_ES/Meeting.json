@@ -16,7 +16,8 @@
     "dateStartDate": "Fecha de inicio (todo el día)",
     "dateEndDate": "Fecha de finalización (todo el día)",
     "isAllDay": "Es todo el día",
-    "Acceptance": "Aceptación"
+    "sourceEmail": "Correo de origen",
+    "joinUrl": "URL para unirse"
   },
   "options": {
     "status": {
@@ -42,7 +43,9 @@
     "Send Invitations": "Enviar Invitaciones",
     "on time": "a tiempo",
     "before": "antes",
-    "All-Day": "Todo el día"
+    "All-Day": "Todo el día",
+    "Send Cancellation": "Enviar cancelación",
+    "Acceptance": "Aceptación"
   },
   "presetFilters": {
     "planned": "Planeadas",
@@ -51,6 +54,8 @@
   },
   "messages": {
     "nothingHasBeenSent": "No se ha enviado nada",
-    "selectAcceptanceStatus": "Establece tu estado de aceptación."
+    "selectAcceptanceStatus": "Establece tu estado de aceptación.",
+    "sendInvitationsToSelectedAttendees": "Se enviarán correos de invitación a los asistentes seleccionados.",
+    "sendCancellationsToSelectedAttendees": "Se enviarán correos de cancelación a los asistentes seleccionados."
   }
 }

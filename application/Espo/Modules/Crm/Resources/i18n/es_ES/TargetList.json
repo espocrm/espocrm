@@ -10,18 +10,21 @@
     "excludingActionList": "Excluyendo",
     "optedOutCount": "Contador de bajas",
     "targetStatus": "Estado del objetivo",
-    "isOptedOut": "Se dieró de baja"
+    "isOptedOut": "Se dieró de baja",
+    "sourceCampaign": "Campaña de origen",
+    "category": "Categoría"
   },
   "links": {
     "accounts": "Cuentas",
     "contacts": "Contactos",
     "leads": "Posibles clientes",
     "campaigns": "Campañas",
-    "massEmails": "Correos masivos"
+    "massEmails": "Correos masivos",
+    "category": "Categoría"
   },
   "options": {
     "type": {
-      "Email": "Correo electrónico",
+      "Email": "Correo",
       "Television": "Televisión",
       "Newsletter": "Boletín de noticias"
     },

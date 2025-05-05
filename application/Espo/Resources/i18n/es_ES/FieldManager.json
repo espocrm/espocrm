@@ -3,7 +3,8 @@
     "Dynamic Logic": "Lógica dinámica",
     "Name": "Nombre",
     "Label": "Etiqueta",
-    "Type": "Tipo"
+    "Type": "Tipo",
+    "View Details": "Ver detalles"
   },
   "options": {
     "dateTimeDefault": {
@@ -63,6 +64,13 @@
     },
     "barcodeType": {
       "QRcode": "Código QR"
+    },
+    "globalRestrictions": {
+      "forbidden": "Prohibido",
+      "internal": "Interno",
+      "onlyAdmin": "Solo para administradores",
+      "readOnly": "Sólo lectura",
+      "nonAdminReadOnly": "Solo lectura para no administradores"
     }
   },
   "tooltips": {
@@ -79,7 +87,22 @@
     "readOnly": "El usuario no puede especificar el valor del campo. Pero se puede calcular por fórmula.",
     "maxFileSize": "Si está vacío o es 0, entonces no limitar",
     "fileAccept": "Qué tipos de archivos aceptar. Es posible agregar elementos personalizados.",
-    "barcodeLastChar": "Para el tipo EAN-13."
+    "barcodeLastChar": "Para el tipo EAN-13.",
+    "conversionDisabled": "La acción de conversión de moneda no se aplicará a este campo.",
+    "cutHeight": "Un texto con un valor superior a un valor especificado se cortará y se mostrará un botón 'mostrar más'.",
+    "urlStrip": "Quitar el protocolo y la barra diagonal final.",
+    "pattern": "Una expresión regular para comparar el valor de un campo. Define una expresión o selecciona una predefinida.",
+    "options": "Una lista de posibles valores y sus etiquetas.",
+    "optionsArray": "Una lista de posibles valores y sus etiquetas. Si está vacío, el campo permitirá introducir valores personalizados.",
+    "maxCount": "Número máximo de elementos que se pueden seleccionar.",
+    "displayAsList": "Cada elemento en una nueva línea.",
+    "optionsVarchar": "Una lista de valores de autocompletar.",
+    "currencyDecimal": "Utilice el tipo decimal en la base de datos. En la aplicación, los valores se representarán como cadenas. Marque este parámetro si se requiere precisión.",
+    "optionsReference": "Reutilizar opciones de otro campo.",
+    "readOnlyAfterCreate": "El valor del campo se puede especificar al crear un nuevo registro. Después, el campo pasa a ser de solo lectura. Aún se puede calcular mediante fórmulas.",
+    "linkReadOnly": "El usuario no puede especificar el valor del campo, pero sí puede calcularlo mediante una fórmula.\n\nTambién deshabilitará la posibilidad de crear un registro relacionado desde los paneles de relaciones.",
+    "relateOnImport": "Al importar con este campo, se relacionará automáticamente un registro con un registro externo coincidente. Utilice esta función solo si el campo externo se considera único.",
+    "preview": "Mostrar el botón de vista previa. Aplicable si Markdown está habilitado."
   },
   "fieldParts": {
     "address": {
@@ -126,10 +149,23 @@
     "number": "Un número de tipo de cadena que se incrementa automáticamente con un posible prefijo y una longitud específica.",
     "autoincrement": "Un número entero generado de solo lectura que se incrementa automáticamente.",
     "barcode": "Un código de barras. Puede imprimirse en PDF.",
-    "email": "Un conjunto de direcciones de correo electrónico con sus parámetros: inhabilitado, no válido, principal.",
+    "email": "Un conjunto de direcciones de correo con sus parámetros: inhabilitado, no válido, principal.",
     "phone": "Un conjunto de números de teléfono con sus parámetros: tipo, inhabilitado, no válido, principal.",
     "foreign": "Un campo de un registro relacionado. Solo lectura.",
     "link": "Un registro relacionado a través de la relación Pertenece a (varios a uno o uno a uno).",
-    "linkParent": "Un registro relacionado a través de la relación Pertenece a los padres. Puede ser de diferentes tipos de entidad."
+    "linkParent": "Un registro relacionado a través de la relación Pertenece a los padres. Puede ser de diferentes tipos de entidad.",
+    "linkMultiple": "Un conjunto de registros relacionados mediante una relación Has-Many varios (many-to-many o one-to-many). No todas las relaciones tienen campos de enlace múltiple. Solo los tienen aquellas donde el parámetro de enlace múltiple está habilitado.",
+    "urlMultiple": "Enlaces múltiples."
+  },
+  "messages": {
+    "fieldNameIsNotAllowed": "El nombre de campo '{field}' no está permitido.",
+    "fieldAlreadyExists": "El campo '{field}' ya existe en '{entityType}'.",
+    "linkWithSameNameAlreadyExists": "El enlace con el nombre '{field}' ya existe en '{entityType}'.",
+    "confirmRemove": "¿Está seguro de que desea eliminar el campo *{field}*?\n\nLa eliminación del campo no elimina los datos de la base de datos. Los datos se eliminarán si realiza una reconstrucción completa.",
+    "fieldCreatedAddToLayouts": "Se ha creado el campo. Ahora puedes añadirlo a [Diseño]({link})",
+    "namingFieldLinkConflict": "El nombre '{field}' entra en conflicto con el enlace."
+  },
+  "otherFields": {
+    "attributes": "Atributos"
   }
 }

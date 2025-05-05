@@ -17,7 +17,10 @@
     "fontFace": "Fuente",
     "pageWidth": "Ancho de página (mm)",
     "pageHeight": "Altura de página (mm)",
-    "headerPosition": "Posición del encabezado"
+    "headerPosition": "Posición del encabezado",
+    "printHeader": "Encabezado de impresión",
+    "title": "Título",
+    "style": "Estilo"
   },
   "labels": {
     "Create Template": "Crear plantilla"
@@ -35,13 +38,6 @@
       "today": "Hoy (fecha)",
       "now": "Ahora (fecha/hora)",
       "pagebreak": "Salto de página"
-    },
-    "fontFace": {
-      "kozgopromedium": "\nKozgo Pro Medium",
-      "kozminproregular": "\nKozmin Pro Regular",
-      "msungstdlight": "\nMsung Std Light",
-      "stsongstdlight": "\nSTSong Std Light",
-      "symbol": "Símbolo"
     },
     "pageFormat": {
       "Custom": "Personalizada"

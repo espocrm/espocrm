@@ -12,8 +12,6 @@
     "entityType": "Tipo de entidade",
     "primaryFilter": "Filtro primário",
     "boolFilterList": "Filtros adicionais",
-    "sortBy": "Ordenação (campo)",
-    "sortDirection": "Ordenação (direção)",
     "dateFilter": "Filtro data",
     "skipOwn": "Não mostrar registos próprios"
   },

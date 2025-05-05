@@ -36,7 +36,8 @@
     "Activities": "Actividades",
     "KnowledgeBaseArticle": "Artículo de la base de conocimiento",
     "KnowledgeBaseCategory": "Categoría de la base de conocimiento",
-    "CampaignLogRecord": "Registro del registro de la campaña"
+    "CampaignLogRecord": "Registro del registro de la campaña",
+    "TargetListCategory": "Categoría de la lista de objetivos"
   },
   "scopeNamesPlural": {
     "Account": "Cuentas",
@@ -59,7 +60,8 @@
     "Activities": "Actividades",
     "KnowledgeBaseArticle": "Base de conocimiento",
     "KnowledgeBaseCategory": "Categorías de la base de conocimiento",
-    "CampaignLogRecord": "Registros del registro de la campaña"
+    "CampaignLogRecord": "Registros del registro de la campaña",
+    "TargetListCategory": "Categorías de la lista de objetivos"
   },
   "dashlets": {
     "Leads": "Mis posibles clientes",
@@ -88,7 +90,9 @@
     "Archive Email": "Nuevo Correo Archivado",
     "Create Task": "Crear tarea",
     "Tasks": "Tareas",
-    "Scheduler": "Programador"
+    "Scheduler": "Programador",
+    "Schedule": "Cronograma",
+    "Log": "Registro"
   },
   "fields": {
     "billingAddressCity": "Ciudad",
@@ -113,7 +117,18 @@
   "options": {
     "reminderTypes": {
       "Popup": "Ventana emergente",
-      "Email": "Correo electrónico"
+      "Email": "Correo"
     }
+  },
+  "notificationMessages": {
+    "eventAttendee": "{user} te agregó a {entityType} {entity}"
+  },
+  "streamMessages": {
+    "eventConfirmationAccepted": "{invitee} aceptó participar en {entityType} {entity}",
+    "eventConfirmationDeclined": "{invitee} rechazó participar en {entityType} {entity}",
+    "eventConfirmationTentative": "{invitee} tiene intenciones de participar en {entityType} {entity}",
+    "eventConfirmationAcceptedThis": "{invitado} aceptó participar",
+    "eventConfirmationDeclinedThis": "{invitee} declinó participar",
+    "eventConfirmationTentativeThis": "{invitee} tiene intenciones de participar"
   }
 }

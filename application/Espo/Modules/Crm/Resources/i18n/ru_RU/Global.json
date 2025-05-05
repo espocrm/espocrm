@@ -119,14 +119,14 @@
     }
   },
   "notificationMessages": {
-    "eventAttendee": "{user} добавил вас в {entityType} {сущность}"
+    "eventAttendee": "{user} добавил вас в {entityType} {entity}"
   },
   "streamMessages": {
-    "eventConfirmationAccepted": "{инвиит} принял участие в {entityType} {субъект}",
-    "eventConfirmationDeclined": "{приглашенный} отказался от участия в {типе организации} {субъект}",
-    "eventConfirmationTentative": "{приглашенный} предварительно намерен принять участие в {entityType} {субъект}",
-    "eventConfirmationAcceptedThis": "{принято участие",
-    "eventConfirmationDeclinedThis": "{приглашенный} отказался от участия",
+    "eventConfirmationAccepted": "{invitee} принял участие в {entityType} {entity}",
+    "eventConfirmationDeclined": "{invitee} отказался от участия в {entityType} {entity}",
+    "eventConfirmationTentative": "{invitee} предварительно намерен принять участие в {entityType} {entity}",
+    "eventConfirmationAcceptedThis": "{invitee} принял участие",
+    "eventConfirmationDeclinedThis": "{invitee} отказался от участия",
     "eventConfirmationTentativeThis": "{инвитируемый} проявляет осторожность в отношении участия"
   }
 }

@@ -16,24 +16,24 @@
   "options": {
     "status": {
       "Planned": "Planeado",
-      "Held": "Manter",
-      "Not Held": "Não manter"
+      "Held": "Realizada",
+      "Not Held": "Não Realizada"
     }
   },
   "labels": {
     "Create {entityType}": "Criar {entityTypeTranslated}",
     "Schedule {entityType}": "Planeamento {entityTypeTranslated}",
     "Log {entityType}": "Registo {entityTypeTranslated}",
-    "Set Held": "Configurar manter",
-    "Set Not Held": "Configurar não manter"
+    "Set Held": "Configurar como Realizada",
+    "Set Not Held": "Configurar como Não Realizada"
   },
   "massActions": {
-    "setHeld": "Configurar manter",
-    "setNotHeld": "Configurar não manter"
+    "setHeld": "Configurar como Realizada",
+    "setNotHeld": "Configurar como Não Realizado"
   },
   "presetFilters": {
     "planned": "Planeado",
-    "held": "Manter",
+    "held": "Realizado",
     "todays": "Hoje"
   }
 }

@@ -14,12 +14,14 @@
     "dateCompleted": "Fecha de completado",
     "attachments": "Adjuntos",
     "reminders": "Recordatorios",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "originalEmail": "Correo original"
   },
   "links": {
     "attachments": "Adjuntos",
     "account": "Cuenta",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "email": "Correo"
   },
   "options": {
     "status": {
@@ -41,10 +43,13 @@
     "overdue": "atrasado"
   },
   "presetFilters": {
-    "actual": "Actuales",
     "completed": "Completado",
     "todays": "De hoy",
     "overdue": "Atrazadas",
-    "deferred": "Diferido"
+    "deferred": "Diferido",
+    "actual": "Abiertos"
+  },
+  "nameOptions": {
+    "replyToEmail": "Responder al correo"
   }
 }

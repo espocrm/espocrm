@@ -15,8 +15,9 @@
     "current": "actual",
     "time": "hora",
     "User List": "Lista de usuarios",
-    "Manage Users": "Administrar usuarios",
     "View Calendar": "Ver calendario",
-    "Create Shared View": "Crear vista compartida"
+    "Create Shared View": "Crear vista compartida",
+    "Edit Shared View": "Editar vista compartida",
+    "Shared Mode Options": "Opciones del modo compartido"
   }
 }

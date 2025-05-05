@@ -20,8 +20,8 @@
   "options": {
     "status": {
       "Planned": "Planeado",
-      "Held": "Manter",
-      "Not Held": "Não manter"
+      "Held": "Realizada",
+      "Not Held": "Não Realizada"
     },
     "acceptanceStatus": {
       "None": "Nenhum",
@@ -31,13 +31,13 @@
     }
   },
   "massActions": {
-    "setHeld": "Configurar manter",
-    "setNotHeld": "Configurar não manter"
+    "setHeld": "Configurar como Realizada",
+    "setNotHeld": "Configurar como Não Realizada"
   },
   "labels": {
     "Create Meeting": "Criar reunião",
-    "Set Held": "Configurar manter",
-    "Set Not Held": "Configurar não manter",
+    "Set Held": "Configurar como Realizada",
+    "Set Not Held": "Configurar como Não Realizada",
     "Send Invitations": "Enviar convites",
     "on time": "na hora",
     "before": "antes",
@@ -45,7 +45,7 @@
   },
   "presetFilters": {
     "planned": "Planeado",
-    "held": "Manter",
+    "held": "Realizada",
     "todays": "Hoje"
   },
   "messages": {

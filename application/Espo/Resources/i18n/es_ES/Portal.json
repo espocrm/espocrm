@@ -17,12 +17,17 @@
     "defaultCurrency": "Moneda por defecto",
     "customUrl": "URL personalizada",
     "customId": "ID personalizado",
-    "layoutSet": "Conjunto de diseño"
+    "layoutSet": "Conjunto de diseño",
+    "authenticationProvider": "Proveedor de autenticación",
+    "authTokenLifetime": "Duración del token de autorización (horas)",
+    "authTokenMaxIdleTime": "Tiempo máximo de inactividad del token de autenticación (horas)",
+    "applicationName": "Nombre de la aplicación"
   },
   "links": {
     "users": "Usuarios",
     "notes": "Notas",
-    "layoutSet": "Conjunto de diseño"
+    "layoutSet": "Conjunto de diseño",
+    "authenticationProvider": "Proveedor de autenticación"
   },
   "tooltips": {
     "portalRoles": "Los roles del portal indicados se aplicarán a todos los usuarios de este portal.",

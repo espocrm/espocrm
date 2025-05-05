@@ -42,7 +42,8 @@
   },
   "options": {
     "type": {
-      "Television": "Televisione"
+      "Television": "Televisione",
+      "Informational Email": "Email informativa"
     },
     "status": {
       "Planning": "Pianificazione",
@@ -71,7 +72,8 @@
   },
   "messages": {
     "unsubscribed": "Sei stato rimosso dalla nostra mailing list.",
-    "subscribedAgain": "Sei di nuovo iscritto."
+    "subscribedAgain": "Sei di nuovo iscritto.",
+    "cannotChangeType": "Non è possibile modificare il tipo."
   },
   "tooltips": {
     "targetLists": "Obiettivi che devono ricevere messaggi.",

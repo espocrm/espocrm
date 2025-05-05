@@ -52,8 +52,7 @@
     "Mass Action": "Ação em massa",
     "Note": "Nota",
     "ImportError": "Erro de importação",
-    "WorkingTimeCalendar": "Calendário de tempo de trabalho",
-    "WorkingTimeRange": "Faixa de tempo de trabalho"
+    "WorkingTimeCalendar": "Calendário de tempo de trabalho"
   },
   "scopeNamesPlural": {
     "Email": "emails",
@@ -98,8 +97,7 @@
     "LayoutSet": "Conjuntos de layout",
     "Note": "Notas",
     "ImportError": "Erro de importação",
-    "WorkingTimeCalendar": "Calendários de tempo de trabalho",
-    "WorkingTimeRange": "Faixas de tempo de trabalho"
+    "WorkingTimeCalendar": "Calendários de tempo de trabalho"
   },
   "labels": {
     "Merge": "Unificar",
@@ -114,7 +112,6 @@
     "Loading...": "A Carregar...",
     "Uploading...": "A Carregar...",
     "Sending...": "A Enviar...",
-    "Merging...": "A Unificar...",
     "Merged": "Unificado",
     "Removed": "Removido",
     "Posted": "Publicado",
@@ -128,14 +125,10 @@
     "Record has been removed": "O registo foi eliminado",
     "Wrong username/password": "utilizador/senha errados",
     "Post cannot be empty": "A publicação não deve ser vazia",
-    "Removing...": "A remover...",
-    "Unlinking...": "A desconectar...",
-    "Posting...": "A publicar...",
     "Username can not be empty!": "O nome de utilizador não deve ser vazio!",
     "Cache is not enabled": "Cache não está ativa.   ",
     "Cache has been cleared": "Cache limpa",
     "Rebuild has been done": "Reconstrução foi realizada.",
-    "Saving...": "A Salvar...",
     "Modified": "Modificado",
     "Created": "Criado",
     "Create": "Criar",
@@ -266,7 +259,6 @@
   },
   "messages": {
     "pleaseWait": "Por favor, aguarde...",
-    "posting": "A publicar...",
     "confirmLeaveOutMessage": "Tem a certeza que deseja sair do formulário?",
     "notModified": "Não efetuou alterações no registo",
     "fieldIsRequired": "{field} é obrigatório",
@@ -315,8 +307,6 @@
     "loading": "A carregar...",
     "saving": "A salvar...",
     "fieldMaxFileSizeError": "O ficheiro não deve exceder {max} Mb",
-    "fieldShouldBeLess": "{field} não deve ser maior que {value}",
-    "fieldShouldBeGreater": "{field} não deve ser menor que {value}",
     "fieldIsUploading": "Carregamento em curso",
     "erasePersonalDataConfirmation": "Os campos marcados serão apagados permanentemente. Tem certeza?",
     "massPrintPdfMaxCountError": "Impossível imprimir mais que {maxCount} registos.",
@@ -327,6 +317,7 @@
     "notUpdated": "Não atualizado",
     "maintenanceMode": "A aplicação está atualmente no modo de manutenção. Apenas administradores têm acesso. \n\\ O modo de manutenção pode ser desativado em Administração → Defenições. ",
     "fieldInvalid": "{field}  é inválido",
+    "fieldPhoneInvalid": "{field}  é inválido",
     "resolveSaveConflict": "O registo foi modificado. Deve resolver o conflito antes de salvar o registo.",
     "massActionProcessed": "Ação em massa foi processada.",
     "fieldUrlExceedsMaxLength": "O URL codificado excede a largura máxima de {maxLength} ",
@@ -342,8 +333,7 @@
     "arrayItemMaxLength": "O item não deve ser maior do que {max} caracteres.",
     "validationFailure": "Falha na validação de back-end. \n\nField: `{field}`\nValidation: `{type}`",
     "confirmAppRefresh": "A aplicação foi atualizada. É recomendado que atualize a página para assegurar o bom funcionamento.",
-    "error404": "O url que solicitou não pode ser tratado.",
-    "error403": "Não tem acesso a esta área."
+    "error404": "O url que solicitou não pode ser tratado."
   },
   "boolFilters": {
     "onlyMy": "Apenas eu",
@@ -448,6 +438,7 @@
     "createAssigned": "{user} criou {entityType} {entity} e atribuiu a {assignee}",
     "assign": "{user} atribuiu {entityType} {entity} a {assignee}",
     "assignThis": "{user} atribuiu esta {entityType} ao {assignee}",
+    "assignMultiAddThis": "{user} atribuiu esta {entityType} ao {assignee}",
     "postThis": "{user} publicou",
     "attachThis": "{user} anexou",
     "statusThis": "{user} atualizou {field}",
@@ -702,8 +693,6 @@
       "color": {
         "recent": "Cor recente",
         "more": "Mais cores",
-        "background": "Cor de fundo",
-        "foreground": "Cor de letra",
         "transparent": "Transparente",
         "setTransparent": "Definir transparência",
         "reset": "Redefinir",
@@ -744,7 +733,6 @@
     "emailAddress": "Endereço de email válido",
     "phoneNumber": "Número de telemóvel válido",
     "arrayOfString": "Array de Strings",
-    "valid": "Válido",
     "noEmptyString": "Array não vazio",
     "max": "Valor máximo",
     "min": "Valor mínimo"

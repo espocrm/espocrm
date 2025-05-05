@@ -30,7 +30,7 @@
   },
   "options": {
     "pageOrientation": {
-      "Portrait": "Vertital",
+      "Portrait": "Vertical",
       "Landscape": "Horizontal"
     },
     "placeholders": {

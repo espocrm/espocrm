@@ -7,7 +7,7 @@
   },
   "fields": {
     "name": "Nombre",
-    "emailAddress": "Correo electrónico",
+    "emailAddress": "Correo",
     "title": "Título",
     "website": "Sitio web",
     "phoneNumber": "Teléfono",
@@ -30,7 +30,8 @@
     "opportunityAmountCurrency": "Moneda del costo de oportunidad",
     "acceptanceStatusMeetings": "Estado de aceptación (Reuniones)",
     "acceptanceStatusCalls": "Estado de aceptación (Llamadas)",
-    "convertedAt": "Convertido en"
+    "convertedAt": "Convertido en",
+    "originalEmail": "Correo original"
   },
   "links": {
     "targetLists": "Lista de objetivos",
@@ -53,7 +54,7 @@
     },
     "source": {
       "Call": "Llamada",
-      "Email": "Correo electrónico",
+      "Email": "Correo",
       "Existing Customer": "Cliente Existente",
       "Partner": "Socio",
       "Public Relations": "Relaciones Públicas",
@@ -64,7 +65,7 @@
   },
   "presetFilters": {
     "active": "Activo",
-    "actual": "Actuales",
-    "converted": "Convertidos"
+    "converted": "Convertidos",
+    "actual": "Abiertos"
   }
 }

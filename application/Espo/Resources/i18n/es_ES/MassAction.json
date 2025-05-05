@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "status": "Estado",
+    "processedCount": "Recuento procesado"
+  },
+  "options": {
+    "status": {
+      "Pending": "Pendiente",
+      "Running": "En ejecución",
+      "Success": "Éxito",
+      "Failed": "Fallido"
+    }
+  },
+  "messages": {
+    "infoText": "La acción masiva se está procesando en modo inactivo por cron. Puede tardar un tiempo en completarse. Cerrar este cuadro de diálogo modal no afectará el proceso de ejecución."
+  }
+}

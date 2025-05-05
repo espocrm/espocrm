@@ -10,10 +10,8 @@
   },
   "fields": {
     "exportPermission": "Permisos de exportación",
-    "massUpdatePermission": "Permiso de actualización masiva"
-  },
-  "tooltips": {
-    "exportPermission": "Define si los usuarios del portal tienen la capacidad de exportar registros.",
-    "massUpdatePermission": "Define si los usuarios del portal tienen la capacidad de realizar una actualización masiva de registros."
+    "massUpdatePermission": "Permiso de actualización masiva",
+    "data": "Datos",
+    "fieldData": "Campo de datos"
   }
 }

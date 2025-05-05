@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "message": "Mensaje",
+    "code": "Código",
+    "level": "Nivel",
+    "exceptionClass": "Clase de excepción",
+    "file": "Archivo",
+    "line": "Línea",
+    "requestMethod": "Método de solicitud",
+    "requestResourcePath": "Ruta de solicitud de recursos"
+  },
+  "presetFilters": {
+    "errors": "Errores"
+  }
+}

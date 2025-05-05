@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "Nombre",
-    "emailAddress": "Dirección de correo electrónico",
+    "emailAddress": "Dirección de correo",
     "status": "Estado",
     "assignToUser": "Asignar al usuario",
     "host": "Servidor",
@@ -34,10 +34,14 @@
     "fromName": "De (nombre):",
     "smtpIsShared": "SMTP ¿Es compartido?",
     "smtpIsForMassEmail": "SMTP es para envíos masivos",
-    "useImap": "Obtener correos electrónicos",
-    "keepFetchedEmailsUnread": "Mantenga los correos electrónicos recuperados como no leídos",
+    "useImap": "Obtener correos",
+    "keepFetchedEmailsUnread": "Mantenga los correos recuperados como no leídos",
     "smtpAuthMechanism": "Mecanismo de autenticación SMTP",
-    "security": "Seguridad"
+    "security": "Seguridad",
+    "groupEmailFolder": "Carpeta de correo grupal",
+    "connectedAt": "Conectado en",
+    "excludeFromReply": "Excluir de la respuesta",
+    "isSystem": "¿Es sistema?"
   },
   "tooltips": {
     "reply": "Notifique a los remitentes de correo que han recibido sus mensajes.\n\nSolo un correo será enviado a un destinatario particular durante un período de tiempo para evitar bucles.",
@@ -52,13 +56,17 @@
     "monitoredFolders": "Las carpetas deben estar separadas por comas.",
     "smtpIsShared": "Si se marca, entonces los usuarios podrán enviar correos usando este SMTP. La disponibilidad está controlada por Roles a través de los permisos de la cuenta de correo grupal.",
     "smtpIsForMassEmail": "Si está marcado, SMTP estará disponible para correo masivo.",
-    "storeSentEmails": "Los correos electrónicos enviados se almacenarán en el servidor IMAP.",
-    "useSmtp": "La capacidad de enviar correos electrónicos."
+    "storeSentEmails": "Los correos enviados se almacenarán en el servidor IMAP.",
+    "useSmtp": "La capacidad de enviar correos.",
+    "groupEmailFolder": "Coloque los correos entrantes en una carpeta grupal.",
+    "excludeFromReply": "Al responder correos enviados a la dirección de esta cuenta, esta no se añadirá a la sección de CC.\n\nTen en cuenta que, al habilitar este parámetro, la dirección de esta cuenta estará disponible para los usuarios con acceso para enviar correos.",
+    "isSystem": "Es la cuenta de correo del sistema."
   },
   "links": {
     "filters": "Filtros",
     "emails": "Correos",
-    "assignToUser": "Asignar al usuario"
+    "assignToUser": "Asignar al usuario",
+    "groupEmailFolder": "Carpeta de correo grupal"
   },
   "options": {
     "status": {
@@ -81,6 +89,7 @@
     "Main": "Principal"
   },
   "messages": {
-    "couldNotConnectToImap": "No se pudo conectar con el servidor IMAP"
+    "couldNotConnectToImap": "No se pudo conectar con el servidor IMAP",
+    "imapNotConnected": "No se pudo conectar al grupo [cuenta IMAP](#InboundEmail/view/{id})."
   }
 }
