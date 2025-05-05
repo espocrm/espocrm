@@ -332,6 +332,41 @@ export default class ViewDetailsModalView extends ModalView {
         }
 
         if (
+            ['enum'].includes(this.fieldType)
+        ) {
+            let valueTypeString = 'string'
+
+            if (this.fieldDefs.options && Array.isArray(this.fieldDefs.options)) {
+                /** @type {string[]} */
+                let options = this.fieldDefs.options;
+
+
+                if (this.fieldDefs.required) {
+                    options = options.filter(it => it !== '');
+                }
+
+                valueTypeString = options
+                    .map(it => {
+                        if (it === '') {
+                            return 'null';
+                        }
+
+                        return `"${it}"`;
+                    })
+                    .join('|');
+            }
+
+            return [
+                {
+                    name: this.field,
+                    type: valueTypeString,
+                    notStorable: this.fieldDefs.notStorable || false,
+                    readOnly: this.fieldDefs.readOnly || false,
+                },
+            ];
+        }
+
+        if (
             [
                 'varchar',
                 'text',
