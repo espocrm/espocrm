@@ -102,7 +102,7 @@
             "orderDisabled": true,
             "required": true,
             "view": "views/email/fields/email-address-varchar",
-            "validatorClassName": "Espo\\Classes\\FieldValidators\\Email\\AddressLoader",
+            "validatorClassName": "Espo\\Classes\\FieldValidators\\Email\\EmailAddresses",
             "validatorClassNameList": [
                 "Espo\\Classes\\FieldValidators\\Email\\Addresses\\Valid",
                 "Espo\\Classes\\FieldValidators\\Email\\Addresses\\MaxCount"
