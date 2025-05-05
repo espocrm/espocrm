@@ -29,7 +29,7 @@
 import _ from 'underscore';
 import {Events} from 'bullbone';
 
-let Handler = function (view) {
+const Handler = function (view) {
     this.view = view;
 };
 
@@ -41,9 +41,9 @@ _.extend(Handler.prototype, {
     },
 
     disable: function () {
-        let $el = this.view.$el.parent();
+        const $el = this.view.$el.parent();
         /** @type {Element} */
-        let el = $el.get(0);
+        const el = $el.get(0);
 
         $el.off('drop');
 
@@ -63,8 +63,8 @@ _.extend(Handler.prototype, {
     initDragDrop: function () {
         this.disable();
 
-        let $el = this.view.$el.parent();
-        let el = $el.get(0);
+        const $el = this.view.$el.parent();
+        const el = $el.get(0);
 
         $el.on('drop', e => {
             e.preventDefault();
@@ -103,7 +103,7 @@ _.extend(Handler.prototype, {
     renderDrop: function () {
         this.dropEntered = true;
 
-        let $backdrop =
+        const $backdrop =
             $('<div class="dd-backdrop">')
                 .css('pointer-events', 'none')
                 .append('<span class="fas fa-paperclip"></span>')
@@ -126,10 +126,10 @@ _.extend(Handler.prototype, {
         this.view
             .actionQuickCreate()
             .then(view => {
-                let fileView = view.getRecordView().getFieldView('file');
+                const fileView = view.getRecordView().getFieldView('file');
 
                 if (!fileView) {
-                    let msg = "No 'file' field on the layout.";
+                    const msg = "No 'file' field on the layout.";
 
                     Espo.Ui.error(msg);
                     console.error(msg);
