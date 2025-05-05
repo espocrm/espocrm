@@ -1,6 +1,6 @@
 <div class="input-group has-feedback">
     <input
-        type="text"
+        type="search"
         class="form-control global-search-input"
         placeholder="{{translate 'Search'}}"
         autocomplete="espo-global-search"

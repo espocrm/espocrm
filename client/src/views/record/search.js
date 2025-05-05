@@ -391,7 +391,7 @@ class SearchView extends View {
         'keydown input[data-name="textFilter"]': function (e) {
             const key = Espo.Utils.getKeyFromKeyEvent(e);
 
-            if (e.code === 'Enter' || key === 'Enter' || key === 'Control+Enter') {
+            if (e.key === 'Enter' || key === 'Enter' || key === 'Control+Enter') {
                 this.search();
 
                 this.hideApplyFiltersButton();

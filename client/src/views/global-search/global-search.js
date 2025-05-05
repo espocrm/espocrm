@@ -137,7 +137,7 @@ class GlobalSearchView extends SiteNavbarItemView {
 
         const key = Espo.Utils.getKeyFromKeyEvent(e);
 
-        if (e.code === 'Enter' || key === 'Enter' || key === 'Control+Enter') {
+        if (e.key === 'Enter' || key === 'Enter' || key === 'Control+Enter') {
             this.runSearch();
 
             return;

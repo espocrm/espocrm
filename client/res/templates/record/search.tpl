@@ -68,7 +68,7 @@
                 </ul>
             </div>
             <input
-                type="text"
+                type="search"
                 class="form-control text-filter"
                 data-name="textFilter"
                 value="{{textFilter}}"
