@@ -807,7 +807,7 @@ class ListView extends MainView {
 
         const helper = new RecordModal();
 
-        helper.showCreate(this, {
+        return helper.showCreate(this, {
             entityType: this.scope,
             attributes: attributes,
             rootUrl: this.keepCurrentRootUrl ? this.getRouter().getCurrentUrl() : undefined,
