@@ -33,7 +33,7 @@ export default class FieldAttributesFieldView extends BaseFieldView {
     // language=Handlebars
     detailTemplateContent = `
         {{#if dataList.length}}
-            <table class="table table-bordered">
+            <table class="table table-bordered" style="table-layout: fixed;">
                 <thead>
                     <tr>
                         <th
