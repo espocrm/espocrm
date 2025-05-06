@@ -172,6 +172,8 @@ class ConvertLeadView extends MainView {
         scopeList.forEach(scope => {
             const editView = /** @type {import('views/record/edit').default} */this.getView(scope);
 
+            editView.setConfirmLeaveOut(false);
+
             editView.model.set(editView.fetch());
             notValid = editView.validate() || notValid;
         });
