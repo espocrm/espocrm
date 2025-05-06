@@ -2178,6 +2178,10 @@ class ListRecordView extends View {
         };
 
         this.listenTo(collection, 'model-sync', (/** Model */m, /** Record */o) => {
+            if (o.action === 'destroy') {
+                this.removeRecordFromList(m.id);
+            }
+
             const model = this.collection.get(m.id);
 
             if (!model) {

@@ -612,9 +612,11 @@ class Model {
 
         const success = options.success;
 
+        const collection = this.collection;
+
         const destroy = () => {
             this.stopListening();
-            this.trigger('destroy', this, this.collection, options);
+            this.trigger('destroy', this, collection, options);
         };
 
         options.success = response => {
@@ -633,8 +635,8 @@ class Model {
 
                 this.trigger('sync', this, response, syncOptions);
 
-                if (this.collection) {
-                    this.collection.trigger('model-sync', this, syncOptions);
+                if (collection) {
+                    collection.trigger('model-sync', this, syncOptions);
                 }
             }
         };
