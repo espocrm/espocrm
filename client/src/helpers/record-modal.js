@@ -283,7 +283,7 @@ class RecordModalHelper {
      *       action: string|null,
      *       options: {isReturn?: boolean} & Record,
      *   },
-     *   collapseDisabled: boolean,
+     *   collapseDisabled?: boolean,
      * }} params
      * @return {Promise<import('views/modals/edit').default>}
      * @since 9.1.0

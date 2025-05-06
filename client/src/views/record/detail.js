@@ -3605,7 +3605,7 @@ class DetailRecordView extends BaseRecordView {
     }
 
     /**
-     * @private
+     * @internal
      * @param {boolean} [toUnblock]
      */
     blockUpdateWebSocket(toUnblock = false) {
