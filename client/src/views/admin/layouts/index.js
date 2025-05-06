@@ -41,6 +41,7 @@ class LayoutIndexView extends View {
         'detail',
         'listSmall',
         'detailSmall',
+        'defaultSidePanel',
         'bottomPanelsDetail',
         'filters',
         'massUpdate',
@@ -435,10 +436,10 @@ class LayoutIndexView extends View {
             }
 
             if (
-                !this.getMetadata().get(['clientDefs', scope, 'defaultSidePanelDisabled']) &&
-                !this.getMetadata().get(['clientDefs', scope, 'defaultSidePanelFieldList'])
+                this.getMetadata().get(['clientDefs', scope, 'defaultSidePanelDisabled']) ||
+                this.getMetadata().get(['clientDefs', scope, 'defaultSidePanelFieldList'])
             ) {
-                typeList.push('defaultSidePanel');
+                typeList = typeList.filter(it => it !== 'defaultSidePanel');
             }
 
             if (this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode'])) {
