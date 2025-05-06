@@ -198,7 +198,7 @@ class EmailDetailView extends DetailView {
     }
 
     // noinspection JSUnusedGlobalSymbols
-    actionCreateLead() {
+    async actionCreateLead() {
         const attributes = {};
 
         const emailHelper = new EmailHelper();
@@ -242,7 +242,7 @@ class EmailDetailView extends DetailView {
 
         const helper = new RecordModal();
 
-        const modalView = helper.showCreate(this, {
+        const modalView = await helper.showCreate(this, {
             entityType: 'Lead',
             attributes: attributes,
             afterSave: () => {
@@ -367,7 +367,7 @@ class EmailDetailView extends DetailView {
     }
 
     // noinspection JSUnusedGlobalSymbols
-    actionCreateContact() {
+    async actionCreateContact() {
         const attributes = {};
 
         const emailHelper = new EmailHelper();
@@ -411,7 +411,7 @@ class EmailDetailView extends DetailView {
 
         const helper = new RecordModal();
 
-        const modalView = helper.showCreate(this, {
+        const modalView = await helper.showCreate(this, {
             entityType: 'Contact',
             attributes: attributes,
             afterSave: () => {
