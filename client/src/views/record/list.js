@@ -599,6 +599,13 @@ class ListRecordView extends View {
      */
     _columnResizeHelper
 
+    /**
+     * @protected
+     * @type {string[]}
+     * @since 9.1.1
+     */
+    collectionEventSyncList
+
     /** @inheritDoc */
     events = {
         /**
@@ -1045,6 +1052,12 @@ class ListRecordView extends View {
         this.layoutAclDisabled = this.options.layoutAclDisabled || this.layoutAclDisabled;
         this.headerDisabled = this.options.headerDisabled || this.headerDisabled;
         this.noDataDisabled = this.options.noDataDisabled || this.noDataDisabled;
+
+        if (!this.collectionEventSyncList) {
+            this.collectionEventSyncList = [];
+        } else {
+            this.collectionEventSyncList = [...this.collectionEventSyncList];
+        }
 
         if (!this.headerDisabled) {
             this.header = _.isUndefined(this.options.header) ? this.header : this.options.header;
@@ -2176,6 +2189,14 @@ class ListRecordView extends View {
             id: id,
             model: collection.get(id),
         };
+
+        if (this.collectionEventSyncList) {
+            this.listenTo(collection, 'all', (event, ...parameters) => {
+                if (this.collectionEventSyncList.includes(event)) {
+                    this.collection.trigger(event, ...parameters);
+                }
+            });
+        }
 
         this.listenTo(collection, 'model-sync', (/** Model */m, /** Record */o) => {
             if (o.action === 'destroy') {

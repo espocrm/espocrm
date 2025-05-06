@@ -46,6 +46,12 @@ class EmailListRecordView extends ListRecordView {
      */
     toRemoveIdList
 
+    collectionEventSyncList = [
+        'moving-to-trash',
+        'retrieving-from-trash',
+        'moving-to-archive',
+    ]
+
     setup() {
         super.setup();
 

@@ -101,12 +101,12 @@ class EmailDetailRecordView extends DetailRecordView {
         this.listenTo(this.model, 'change:status', () => this.controlSendButton());
 
         if (this.model.get('status') !== 'Draft' && this.model.has('isRead') && !this.model.get('isRead')) {
-            this.model.set('isRead', true);
+            this.model.set('isRead', true, {sync: true});
         }
 
         this.listenTo(this.model, 'sync', () => {
             if (!this.model.get('isRead') && this.model.get('status') !== 'Draft') {
-                this.model.set('isRead', true);
+                this.model.set('isRead', true, {sync: true});
             }
         });
 
@@ -303,13 +303,13 @@ class EmailDetailRecordView extends DetailRecordView {
     actionMarkAsImportant() {
         Espo.Ajax.postRequest('Email/inbox/important', {id: this.model.id});
 
-        this.model.set('isImportant', true);
+        this.model.set('isImportant', true, {sync: true});
     }
 
     actionMarkAsNotImportant() {
         Espo.Ajax.deleteRequest('Email/inbox/important', {id: this.model.id});
 
-        this.model.set('isImportant', false);
+        this.model.set('isImportant', false, {sync: true});
     }
 
     actionMoveToTrash() {
@@ -318,9 +318,9 @@ class EmailDetailRecordView extends DetailRecordView {
         });
 
         if (this.model.attributes.groupFolderId) {
-            this.model.set('groupStatusFolder', 'Trash');
+            this.model.set('groupStatusFolder', 'Trash', {sync: true});
         } else {
-            this.model.set('inTrash', true);
+            this.model.set('inTrash', true, {sync: true});
         }
 
         if (this.model.collection) {
@@ -334,10 +334,10 @@ class EmailDetailRecordView extends DetailRecordView {
             Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
         });
 
-        this.model.set('inTrash', false);
+        this.model.set('inTrash', false, {sync: true});
 
         if (this.model.attributes.groupFolderId) {
-            this.model.set('groupStatusFolder', null);
+            this.model.set('groupStatusFolder', null, {sync: true});
         }
 
         if (this.model.collection) {
@@ -406,8 +406,8 @@ class EmailDetailRecordView extends DetailRecordView {
         Espo.Ajax.postRequest(`Email/inbox/folders/archive`, {id: this.model.id})
             .then(() => {
                 this.model.attributes.groupFolderId ?
-                    this.model.set('groupStatusFolder', 'Archive') :
-                    this.model.set('inArchive', true);
+                    this.model.set('groupStatusFolder', 'Archive', {sync: true}) :
+                    this.model.set('inArchive', true, {sync: true});
 
                 Espo.Ui.info(this.translate('Moved to Archive', 'labels', 'Email'));
 
@@ -576,7 +576,7 @@ class EmailDetailRecordView extends DetailRecordView {
     actionSend() {
         this.send()
             .then(() => {
-                this.model.set('status', 'Sent');
+                this.model.set('status', 'Sent', {sync: true});
 
                 if (this.mode !== this.MODE_DETAIL) {
                     this.setDetailMode();
