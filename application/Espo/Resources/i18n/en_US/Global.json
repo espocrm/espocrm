@@ -162,6 +162,7 @@
         "Access": "Access",
         "Timeout": "Timeout",
         "No internet": "No internet",
+        "Network error": "Network error",
         "Are you sure?": "Are you sure?",
         "Record has been removed": "Record has been removed",
         "Wrong username/password": "Wrong username/password",
