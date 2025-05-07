@@ -45,7 +45,7 @@
         "passwordWillBeSent": "Heslo bude posláno na emailovou adresu uživatele.",
         "passwordChanged": "Heslo bylo změněno",
         "userCantBeEmpty": "Uživatelské jméno nemůže být prázdné",
-        "wrongUsernamePassword": "Nesprávné uživatelské jmén/heslo",
+        "wrongUsernamePassword": "Nesprávné uživatelské jméno/heslo",
         "emailAddressCantBeEmpty": "Emailová adresa nemůže zůstat prázdná",
         "userNameEmailAddressNotFound": "Uživatelské jméno/heslo nebylo nalezeno",
         "forbidden": "Tato operace není povolena, prosím zkuste to později",
