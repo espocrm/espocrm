@@ -28,7 +28,7 @@
 
 /** @module view-helper */
 
-import {marked} from 'marked';
+import {marked, Lexer} from 'marked';
 import DOMPurify from 'dompurify';
 import Handlebars from 'handlebars';
 
@@ -62,6 +62,46 @@ class ViewHelper {
             breaks: true,
             tables: false,
             headerIds: false,
+        });
+
+        // @todo Review after updating the marked library.
+        marked.use({
+            tokenizer: {
+                tag(src) {
+                    const cap = Lexer.rules.inline.tag.exec(src);
+
+                    if (!cap) {
+                        return;
+                    }
+
+                    return {
+                        type: 'text',
+                        raw: cap[0],
+                        inLink: this.lexer.state.inLink,
+                        inRawBlock: this.lexer.state.inRawBlock,
+                        text: Handlebars.Utils.escapeExpression(cap[0]),
+                    };
+                },
+                html(src) {
+                    const cap = Lexer.rules.block.html.exec(src);
+
+                    if (!cap) {
+                        return;
+                    }
+
+                    const token = {
+                        type: 'paragraph',
+                        raw: cap[0],
+                        pre: (cap[1] === 'pre' || cap[1] === 'script' || cap[1] === 'style'),
+                        text: Handlebars.Utils.escapeExpression(cap[0]),
+                    };
+
+                    token.tokens = [];
+                    this.lexer.inline(token.text, token.tokens);
+
+                    return token;
+                },
+            },
         });
 
         DOMPurify.addHook('beforeSanitizeAttributes', function (node) {
@@ -741,9 +781,6 @@ class ViewHelper {
      */
     transformMarkdownText(text, options) {
         text = text || '';
-
-        // noinspection RegExpRedundantEscape
-        text = text.replace(/\</g, '\\<');
 
         this.mdBeforeList.forEach(item => {
             text = text.replace(item.regex, item.value);
