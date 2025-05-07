@@ -1411,6 +1411,27 @@ section {
     }
 }
 
+.list-kanban {
+    .panel.starred {
+        > .panel-body {
+            position: relative;
+
+            &::before {
+                content: " ";
+                inset: 0;
+                position: absolute;
+                left: 0;
+                top: calc(50% - var(--8px));
+                height: var(--16px);
+                width: var(--3px);
+                background-color: var(--brand-warning);
+                border-top-right-radius: var(--2px);
+                border-bottom-right-radius: var(--2px);
+            }
+        }
+    }
+}
+
 .list > {
     table > tbody,
     ul.list-group {

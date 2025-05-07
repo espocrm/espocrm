@@ -433,6 +433,12 @@ class KanbanRecordView extends ListRecordView {
         this.wait(
             this.getHelper().processSetupHandlers(this, 'record/kanban')
         );
+
+        /**
+         * @private
+         * @type {boolean}
+         */
+        this.hasStars = this.getMetadata().get(`scopes.${this.entityType}.stars`) || false;
     }
 
     afterRender() {
@@ -1026,6 +1032,7 @@ class KanbanRecordView extends ListRecordView {
             moveOverRowAction: this.moveOverRowAction,
             additionalRowActionList: this._additionalRowActionList,
             scope: this.scope,
+            hasStars: this.hasStars,
         }, callback);
     }
 

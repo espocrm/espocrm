@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-default {{#if isStarred}} starred {{~/if}} ">
     <div class="panel-body">
         {{#each layoutDataList}}
         <div>
