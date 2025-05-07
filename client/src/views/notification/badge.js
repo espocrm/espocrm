@@ -304,7 +304,13 @@ class NotificationBadgeView extends View {
             }, this.waitInterval * 1000);
         };
 
-        this.getHelper().webSocketManager.subscribe('newNotification', () => onWebSocketNewNotification());
+        const webSocketManager = this.getHelper().webSocketManager;
+
+        webSocketManager.subscribe('newNotification', () => onWebSocketNewNotification());
+        webSocketManager.subscribeToReconnect(onWebSocketNewNotification);
+
+        this.once('remove', () => webSocketManager.unsubscribe('newNotification'));
+        this.once('remove', () => webSocketManager.unsubscribeFromReconnect(onWebSocketNewNotification));
     }
 
     /**
