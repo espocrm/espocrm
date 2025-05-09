@@ -101,6 +101,12 @@ class AttachmentMultipleFieldView extends BaseFieldView {
 
     searchTypeList = ['isNotEmpty', 'isEmpty']
 
+    /**
+     * @private
+     * @type {Object.<string, true>}
+     */
+    uploadedIdMap
+
     events = {
         /** @this AttachmentMultipleFieldView */
         'click a.remove-attachment': function (e) {
@@ -275,6 +281,8 @@ class AttachmentMultipleFieldView extends BaseFieldView {
             if (this.resizeIsBeingListened) {
                 $(window).off('resize.' + this.cid);
             }
+
+            this.uploadedIdMap = {};
         });
 
         this.on('inline-edit-off', () => {
@@ -290,6 +298,8 @@ class AttachmentMultipleFieldView extends BaseFieldView {
                 this.uploadFiles(files);
             });
         }
+
+        this.uploadedIdMap = {};
     }
 
     setupSearch() {
@@ -434,6 +444,8 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         nameHash[attachment.id] = attachment.get('name');
 
         this.model.set(this.nameHashName, nameHash, {ui: ui});
+
+        this.uploadedIdMap[attachment.id] = true;
     }
 
     /**
@@ -448,9 +460,11 @@ class AttachmentMultipleFieldView extends BaseFieldView {
             return null;
         }
 
+        const size = (id in this.uploadedIdMap) ? undefined : 'small';
+
         // noinspection HtmlRequiredAltAttribute,RequiredAttributes
         return $('<img>')
-            .attr('src', this.getImageUrl(id, 'small'))
+            .attr('src', this.getImageUrl(id, size))
             .attr('title', name)
             .attr('alt', name)
             .attr('draggable', 'false')
