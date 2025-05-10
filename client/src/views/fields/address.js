@@ -469,7 +469,14 @@ class AddressFieldView extends BaseFieldView {
     setup() {
         super.setup();
 
-        const actualAttributePartList = this.getMetadata().get(['fields', this.type, 'actualFields']) || [];
+        const actualAttributePartList = this.getMetadata().get(['fields', this.type, 'actualFields']) ||
+            [
+                'street',
+                'city',
+                'state',
+                'country',
+                'postalCode',
+            ];
 
         this.addressAttributeList = [];
         this.addressPartList = [];
