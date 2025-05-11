@@ -5,4 +5,4 @@ contact_links:
     about: "Use our forum for feature requests."
   - name: Forum
     url: https://forum.espocrm.com/
-    about: "Use our forum for help requests and questions not related to product development. We don't provide support on GitHub."
+    about: "Use our forum for help requests and questions. We don't provide support on GitHub."
