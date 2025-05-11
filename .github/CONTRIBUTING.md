@@ -16,6 +16,10 @@ For this, please use our [forum](https://forum.espocrm.com).
 If you are very new to EspoCRM, it's probable that an issue you ran into is not a bug.
 Consider creating a topic on our [forum](https://forum.espocrm.com/forum/general) instead.
 
+#### Upgrade issues
+
+For upgrade-related issues, create a topic on the forum in the appropriate [section](https://forum.espocrm.com/forum/installation-and-upgrade-help). Upgrade-related issues posted on GitHub are removed.
+
 #### Project's best interest
 
 The issue tracker is for the benefit of the EspoCRM project. The project maintainers are going to handle issues in the project's best interest.
