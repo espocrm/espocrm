@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Upgrade issue
+    url: https://forum.espocrm.com/forum/installation-and-upgrade-help
+    about: "If something went wrong with upgrade."
   - name: Freature request
     url: https://forum.espocrm.com/forum/feature-requests
     about: "Use our forum for feature requests."
