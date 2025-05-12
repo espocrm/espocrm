@@ -58,7 +58,7 @@ class GoogleMapsRenderer extends MapRenderer {
         // noinspection SpellCheckingInspection
         window.mapapiloaded = () => this.initMapGoogle(addressData);
 
-        let src = 'https://maps.googleapis.com/maps/api/js?callback=mapapiloaded&loading=async';
+        let src = 'https://maps.googleapis.com/maps/api/js?callback=mapapiloaded&loading=async&v=weekly&libraries=marker';
         const apiKey = this.view.getConfig().get('googleMapsApiKey');
 
         if (apiKey) {
@@ -67,7 +67,7 @@ class GoogleMapsRenderer extends MapRenderer {
 
         const scriptElement = document.createElement('script');
 
-        scriptElement.setAttribute('async', 'async');
+        scriptElement.setAttribute('defer', 'defer');
         scriptElement.src = src;
 
         document.head.appendChild(scriptElement);
@@ -87,6 +87,7 @@ class GoogleMapsRenderer extends MapRenderer {
                 zoom: 15,
                 center: {lat: 0, lng: 0},
                 scrollwheel: false,
+                mapId: 'DEMO_MAP_ID', // @todo Use user defined. Fallback to 'DEMO_MAP_ID'.
             });
         }
         catch (e) {
@@ -146,7 +147,7 @@ class GoogleMapsRenderer extends MapRenderer {
                 map.setCenter(results[0].geometry.location);
 
                 // noinspection JSUnresolvedReference
-                new google.maps.Marker({
+                new google.maps.marker.AdvancedMarkerElement({
                     map: map,
                     position: results[0].geometry.location,
                 });
