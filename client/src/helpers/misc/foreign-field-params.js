@@ -26,19 +26,46 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import PhoneFieldView from 'views/fields/phone';
+import {inject} from 'di';
+import Metadata from 'metadata';
 
-class ForeignPhoneFieldView extends PhoneFieldView {
+/**
+ * @since 9.1.1
+ * @internal For future use.
+ */
+export default class {
 
-    type = 'foreign'
-    readOnly = true
+    /**
+     * @type {Metadata}
+     * @private
+     */
+    @inject(Metadata)
+    metadata
 
-    setup() {
-        super.setup();
+    /**
+     * Get foreign field params.
+     *
+     * @param {string} entityType
+     * @param {string} field
+     * @return {Record|null}
+     */
+    get(entityType, field) {
+        /** @type {Record|null} */
+        const params = this.metadata.get(`entityDefs.${entityType}.fields.${field}`);
 
-        // Numeric search does not work for foreign.
-        this.isNumeric = false;
+        if (!params) {
+            return null;
+        }
+
+        const foreignField = params.field;
+        const link = params.link;
+
+        const foreignEntityType = this.metadata.get(`entityDefs.${entityType}.links.${link}.entity`);
+
+        if (!foreignEntityType) {
+            return null;
+        }
+
+        return this.metadata.get(`entityDefs.${foreignEntityType}.links.${foreignField}`);
     }
 }
-
-export default ForeignPhoneFieldView;

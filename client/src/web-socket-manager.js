@@ -64,6 +64,12 @@ class WebSocketManager {
 
         /**
          * @private
+         * @type {Function[]}
+         */
+        this.subscribeToReconnectQueue = [];
+
+        /**
+         * @private
          * @type {{category: string, callback: Function}[]}
          */
         this.subscribeQueue = [];
@@ -171,6 +177,8 @@ class WebSocketManager {
      * @param {string} url
      */
     connectInternal(auth, userId, url) {
+        let wasConnected = false;
+
         this.connection = new ab.Session(
             url,
             () => {
@@ -182,7 +190,13 @@ class WebSocketManager {
 
                 this.subscribeQueue = [];
 
+                if (wasConnected) {
+                    this.subscribeToReconnectQueue.forEach(callback => callback());
+                }
+
                 this.schedulePing();
+
+                wasConnected = true;
             },
             code => {
                 if (code === ab.CONNECTION_CLOSED) {
@@ -202,6 +216,26 @@ class WebSocketManager {
             },
             {skipSubprotocolCheck: true}
         );
+    }
+
+    /**
+     * Subscribe to reconnecting.
+     *
+     * @param {function(): void} callback A callback.
+     * @since 9.1.1
+     */
+    subscribeToReconnect(callback) {
+        this.subscribeToReconnectQueue.push(callback);
+    }
+
+    /**
+     * Unsubscribe from reconnecting.
+     *
+     * @param {function(): void} callback A callback.
+     * @since 9.1.1
+     */
+    unsubscribeFromReconnect(callback) {
+        this.subscribeToReconnectQueue = this.subscribeToReconnectQueue.filter(it => it !== callback);
     }
 
     /**
@@ -254,11 +288,19 @@ class WebSocketManager {
         }
 
         this.subscribeQueue = this.subscribeQueue.filter(item => {
-            return item.category !== category && item.callback !== callback;
+            if (callback === undefined) {
+                return item.category !== category;
+            }
+
+            return item.category !== category || item.callback !== callback;
         });
 
         this.subscriptions = this.subscriptions.filter(item => {
-            return item.category !== category && item.callback !== callback;
+            if (callback === undefined) {
+                return item.category !== category;
+            }
+
+            return item.category !== category || item.callback !== callback;
         });
 
         try {

@@ -86,9 +86,9 @@
         }
     },
     "collection": {
-        "orderBy": "createdAt",
-        "order": "desc",
-        "textFilterFields": ["name", "subject"]
+        "orderBy": "name",
+        "order": "asc",
+        "textFilterFields": ["name"]
     },
     "optimisticConcurrencyControl": true
 }

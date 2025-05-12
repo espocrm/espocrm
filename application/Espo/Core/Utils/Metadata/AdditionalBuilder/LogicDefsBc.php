@@ -103,7 +103,7 @@ class LogicDefsBc implements AdditionalBuilder
         }
 
         foreach ($keys as $key) {
-            if (!isset($dynamicLogic->$key)) {
+            if (!isset($dynamicLogic->$key) || !is_object($dynamicLogic->$key)) {
                 continue;
             }
 

@@ -145,11 +145,11 @@ class SelectCategoryTreeRecordsModalView extends SelectRecordsModalView {
                     checkAllResultDisabled: true,
                     buttonsDisabled: true,
                 }, listView => {
-                    listView.once('select', model => {
-                        this.trigger('select', model);
+                    listView.once('select', models => {
+                        this.trigger('select', models);
 
                         if (this.options.onSelect) {
-                            this.options.onSelect([model]);
+                            this.options.onSelect(models);
                         }
 
                         this.close();

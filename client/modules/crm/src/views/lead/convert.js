@@ -172,6 +172,8 @@ class ConvertLeadView extends MainView {
         scopeList.forEach(scope => {
             const editView = /** @type {import('views/record/edit').default} */this.getView(scope);
 
+            editView.setConfirmLeaveOut(false);
+
             editView.model.set(editView.fetch());
             notValid = editView.validate() || notValid;
         });
@@ -196,7 +198,7 @@ class ConvertLeadView extends MainView {
                 this.getRouter().confirmLeaveOut = false;
                 this.getRouter().navigate('#Lead/view/' + this.model.id, {trigger: true});
 
-                this.notify('Converted', 'success');
+                Espo.Ui.notify(this.translate('Converted', 'labels', 'Lead'));
             })
             .catch(xhr => {
                 Espo.Ui.notify(false);

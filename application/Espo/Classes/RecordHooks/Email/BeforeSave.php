@@ -34,7 +34,6 @@ use Espo\Core\Record\Hook\SaveHook;
 use Espo\Entities\Email;
 use Espo\ORM\Entity;
 use Espo\Tools\Email\Util;
-use League\HTMLToMarkdown\HtmlConverter;
 
 /**
  * @implements SaveHook<Email>

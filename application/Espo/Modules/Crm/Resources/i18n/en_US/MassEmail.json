@@ -52,7 +52,7 @@
         "storeSentEmails": "Emails will be stored in CRM."
     },
     "presetFilters": {
-        "actual": "Actual",
+        "actual": "Active",
         "complete": "Complete"
     }
 }

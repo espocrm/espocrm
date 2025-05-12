@@ -24,7 +24,7 @@
         "oneOff": "Check if you are going to use this template only once. E.g. for Mass Email."
     },
     "presetFilters": {
-        "actual": "Actual"
+        "actual": "Active"
     },
     "placeholderTexts": {
         "today": "Today's date",

@@ -86,6 +86,12 @@ class PhoneFieldView extends VarcharFieldView {
      */
     validationRegExp
 
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    isNumeric
+
     events = {
         /** @this PhoneFieldView */
         'click [data-action="switchPhoneProperty"]': function (e) {
@@ -696,6 +702,8 @@ class PhoneFieldView extends VarcharFieldView {
         });
 
         this.validations.push(() => this.validateMaxCount());
+
+        this.isNumeric = this.getConfig().get('phoneNumberNumericSearch');
     }
 
     /**
@@ -819,9 +827,7 @@ class PhoneFieldView extends VarcharFieldView {
     fetchSearch() {
         const type = this.fetchSearchType() || 'startsWith';
 
-        const isNumeric = this.getConfig().get('phoneNumberNumericSearch');
-
-        const name = isNumeric ?
+        const name = this.isNumeric ?
             this.name + 'Numeric' :
             this.name;
 
@@ -852,7 +858,7 @@ class PhoneFieldView extends VarcharFieldView {
 
         const originalValue = value;
 
-        if (isNumeric && value) {
+        if (this.isNumeric && value) {
             value = value.replace(/[^0-9]/g, '');
         }
 

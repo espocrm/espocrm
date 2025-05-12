@@ -36,6 +36,7 @@ class KanbanRecordItem extends View {
         return {
             layoutDataList: this.layoutDataList,
             rowActionsDisabled: this.rowActionsDisabled,
+            isStarred: this.hasStars && this.model.attributes.isStarred,
         };
     }
 
@@ -43,6 +44,7 @@ class KanbanRecordItem extends View {
         this.itemLayout = this.options.itemLayout;
         this.rowActionsView = this.options.rowActionsView;
         this.rowActionsDisabled = this.options.rowActionsDisabled;
+        this.hasStars = this.options.hasStars;
 
         this.layoutDataList = [];
 

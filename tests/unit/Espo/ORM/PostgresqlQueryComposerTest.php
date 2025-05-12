@@ -278,4 +278,73 @@ class PostgresqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($expectedSql, $sql);
     }
+
+    public function testSelectFunctionTz1()
+    {
+        $query = SelectBuilder::create()
+            ->from('Comment')
+            ->select(
+                Expression::convertTimezone(
+                    Expression::column('createdAt'),
+                    5.5
+                ),
+                'createdAt'
+            )
+            ->withDeleted()
+            ->build();
+
+        $sql = $this->queryComposer->composeSelect($query);
+
+        $expectedSql =
+            'SELECT "comment"."created_at" + INTERVAL \'MINUTE 330\' AS "createdAt" ' .
+            'FROM "comment"';
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectFunctionTz2()
+    {
+        $query = SelectBuilder::create()
+            ->from('Comment')
+            ->select(
+                Expression::convertTimezone(
+                    Expression::column('createdAt'),
+                    -5.5
+                ),
+                'createdAt'
+            )
+            ->withDeleted()
+            ->build();
+
+        $sql = $this->queryComposer->composeSelect($query);
+
+        $expectedSql =
+            'SELECT "comment"."created_at" + INTERVAL \'MINUTE -330\' AS "createdAt" ' .
+            'FROM "comment"';
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectFunctionTz3()
+    {
+        $query = SelectBuilder::create()
+            ->from('Comment')
+            ->select(
+                Expression::convertTimezone(
+                    Expression::column('createdAt'),
+                    5
+                ),
+                'createdAt'
+            )
+            ->withDeleted()
+            ->build();
+
+        $sql = $this->queryComposer->composeSelect($query);
+
+        $expectedSql =
+            'SELECT "comment"."created_at" + INTERVAL \'HOUR 5\' AS "createdAt" ' .
+            'FROM "comment"';
+
+        $this->assertEquals($expectedSql, $sql);
+    }
 }

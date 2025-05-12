@@ -192,6 +192,13 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                 $offsetHoursString = substr($offsetHoursString, 1, -1);
             }
 
+            if (str_contains($offsetHoursString, '.')) {
+                $minutes = (int) (floatval($offsetHoursString) * 60);
+                $minutesString = (string) $minutes;
+
+                return "$argumentPartList[0] + INTERVAL 'MINUTE $minutesString'";
+            }
+
             return "$argumentPartList[0] + INTERVAL 'HOUR $offsetHoursString'";
         }
 

@@ -1308,7 +1308,11 @@ class App {
         let msg = '';
 
         if (!label) {
-            msg += this.language.translate('Error') + ' ' + xhr.status;
+            if (xhr.status === 0) {
+                msg += this.language.translate('Network error');
+            } else {
+                msg += this.language.translate('Error') + ' ' + xhr.status;
+            }
         } else {
             msg += this.language.translate(label);
         }
