@@ -81,13 +81,15 @@ class GoogleMapsRenderer extends MapRenderer {
         const geocoder = new google.maps.Geocoder();
         let map;
 
+        const mapId = this.view.getConfig().get('googleMapsMapId') || 'DEMO_MAP_ID';
+
         try {
             // noinspection SpellCheckingInspection,JSUnresolvedReference
             map = new google.maps.Map(this.view.$el.find('.map').get(0), {
                 zoom: 15,
                 center: {lat: 0, lng: 0},
                 scrollwheel: false,
-                mapId: 'DEMO_MAP_ID', // @todo Use user defined. Fallback to 'DEMO_MAP_ID'.
+                mapId: mapId,
             });
         }
         catch (e) {
