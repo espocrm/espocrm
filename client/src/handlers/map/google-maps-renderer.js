@@ -58,7 +58,7 @@ class GoogleMapsRenderer extends MapRenderer {
         // noinspection SpellCheckingInspection
         window.mapapiloaded = () => this.initMapGoogle(addressData);
 
-        let src = 'https://maps.googleapis.com/maps/api/js?callback=mapapiloaded';
+        let src = 'https://maps.googleapis.com/maps/api/js?callback=mapapiloaded&loading=async';
         const apiKey = this.view.getConfig().get('googleMapsApiKey');
 
         if (apiKey) {
