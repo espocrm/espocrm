@@ -49,6 +49,8 @@ class EmailComposeRecordView extends EditRecordView {
     initialIsHtml
 
     setupBeforeFinal() {
+        super.setupBeforeFinal();
+
         this.initialBody = this.model.attributes.body;
         this.initialIsHtml = this.model.attributes.isHtml;
 
@@ -74,8 +76,6 @@ class EmailComposeRecordView extends EditRecordView {
 
         this.model.set('body', body, {silent: true});
         this.model.set('isHtml', this.initialIsHtml, {silent: true});
-
-        super.setupBeforeFinal();
     }
 
     setup() {
