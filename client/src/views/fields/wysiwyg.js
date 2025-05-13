@@ -977,6 +977,18 @@ class WysiwygFieldView extends TextFieldView {
             this.$summernote.summernote('insertText', text);
         }
     }
+
+    toSkipReRenderOnChange() {
+        if (!this.element || !this.element.contains(document.activeElement)) {
+            return false;
+        }
+
+        if (!this.model.hasChanged(this.name)) {
+            return true;
+        }
+
+        return false;
+    }
 }
 
 export default WysiwygFieldView;
