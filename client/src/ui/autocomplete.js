@@ -117,6 +117,7 @@ class Autocomplete {
             autoSelectFirst: options.autoSelectFirst,
             appendTo: $modalBody.length ? $modalBody : 'body',
             forceFixPosition: true,
+            maxHeight: 308,
             formatResult: item => {
                 if (options.formatResult) {
                     return options.formatResult(item);

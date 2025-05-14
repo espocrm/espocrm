@@ -53,15 +53,16 @@ class GoogleMaps
             return;
         }
 
-        if (!$entity->get('enabled') || !$entity->get('apiKey')) {
-            $this->configWriter->set('googleMapsApiKey', null);
+        $apiKey = $entity->get('apiKey');
+        $mapId = $entity->get('mapId');
 
-            $this->configWriter->save();
-
-            return;
+        if (!$entity->isEnabled()) {
+            $apiKey = null;
+            $mapId = null;
         }
 
-        $this->configWriter->set('googleMapsApiKey', $entity->get('apiKey'));
+        $this->configWriter->set('googleMapsApiKey', $apiKey);
+        $this->configWriter->set('googleMapsMapId', $mapId);
 
         $this->configWriter->save();
     }

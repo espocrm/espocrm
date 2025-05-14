@@ -4,6 +4,11 @@
             "type": "varchar",
             "maxLength": 255,
             "required": true
+        },
+        "mapId": {
+            "type": "varchar",
+            "maxLength": 64,
+            "required": false
         }
     },
     "allowUserAccounts": false,

@@ -1404,10 +1404,10 @@ class DetailRecordView extends BaseRecordView {
     }
 
     afterRender() {
-        this.$middle = this.$el.find('.middle');
+        this.$middle = this.$el.find('.middle').first();
 
         if (this.bottomView) {
-            this.$bottom = this.$el.find('.bottom');
+            this.$bottom = this.$el.find('.bottom').first();
         }
 
         this.initElementReferences();

@@ -1,5 +1,5 @@
 [
-    {"name":"name", "link": true},
-    {"name":"isActive", "widthPx": "100"},
-    {"name":"campaign", "width": "30"}
+    {"name": "name", "link": true},
+    {"name": "isActive", "widthPx": 120},
+    {"name": "campaign", "width": 25}
 ]

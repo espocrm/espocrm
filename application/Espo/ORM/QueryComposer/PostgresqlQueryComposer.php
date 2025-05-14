@@ -617,4 +617,40 @@ class PostgresqlQueryComposer extends BaseQueryComposer
 
         return null;
     }
+
+    protected function composeDeleteQuery(
+        string $table,
+        ?string $alias,
+        string $where,
+        ?string $joins,
+        ?string $order,
+        ?int $limit
+    ): string {
+
+        $sql = "DELETE ";
+
+        $sql .= "FROM " . $this->quoteIdentifier($table);
+
+        if ($alias) {
+            $sql .= " AS " . $this->quoteIdentifier($alias);
+        }
+
+        if ($joins) {
+            $sql .= " $joins";
+        }
+
+        if ($where) {
+            $sql .= " WHERE $where";
+        }
+
+        if ($order) {
+            $sql .= " ORDER BY $order";
+        }
+
+        if ($limit !== null) {
+            $sql = $this->limit($sql, null, $limit);
+        }
+
+        return $sql;
+    }
 }

@@ -355,7 +355,7 @@ class Sender
 
             $part = new DataPart(
                 body: $contents,
-                filename: $this->prepareAttachmentFileName($attachment),
+                filename: $attachment->getName() ?? '',
                 contentType: $attachment->getType(),
             );
 
@@ -468,15 +468,6 @@ class Sender
                 $message->addReplyTo(trim($address));
             }
         }
-    }
-
-
-
-    private function prepareAttachmentFileName(mixed $attachment): string
-    {
-        $namePart = base64_encode($attachment->getName() ?? '');
-
-        return "=?utf-8?B?$namePart?=";
     }
 
     /**

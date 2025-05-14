@@ -347,4 +347,23 @@ class PostgresqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($expectedSql, $sql);
     }
+
+    public function testDeleteWithAlias()
+    {
+        $query = $this->queryBuilder
+            ->delete()
+            ->from('Account', 'a')
+            ->where([
+                'a.name' => 'test',
+            ])
+            ->build();
+
+        $sql = $this->queryComposer->compose($query);
+
+        $expectedSql =
+            "DELETE FROM \"account\" AS \"a\" " .
+            "WHERE \"a\".\"name\" = 'test'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
 }

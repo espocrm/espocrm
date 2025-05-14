@@ -30,7 +30,6 @@
 
 import BaseFieldView from 'views/fields/base';
 import MailtoHelper from 'helpers/misc/mailto';
-import Modal from 'views/modal';
 import TextPreviewModalView from 'views/modals/text-preview';
 
 /**
@@ -643,10 +642,8 @@ class TextFieldView extends BaseFieldView {
 
         if (!match) {
             // Prevent unwanted scroll applied by the browser on enter.
-            event.preventDefault();
-
-            target.value = before + "\n" + after;
-            target.selectionStart = target.selectionEnd = before.length + 1;
+            const previousWindowScroll = window.scrollY;
+            setTimeout(() => window.scrollTo({top: previousWindowScroll}), 0);
 
             this.controlTextareaHeight();
 

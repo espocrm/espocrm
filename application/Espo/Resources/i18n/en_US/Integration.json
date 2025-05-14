@@ -7,7 +7,8 @@
         "apiKey": "API Key",
         "siteKey": "Site Key",
         "secretKey": "Secret Key",
-        "scoreThreshold": "Score Threshold"
+        "scoreThreshold": "Score Threshold",
+        "mapId": "Map ID"
     },
     "titles": {
         "GoogleMaps": "Google Maps",

@@ -36,23 +36,33 @@ class EmailComposeRecordView extends EditRecordView {
     isWide = true
     sideView = false
 
+    /**
+     * @private
+     * @type {string|null}
+     */
+    initialBody
+
+    /**
+     * @private
+     * @type {boolean|null}
+     */
+    initialIsHtml
+
     setupBeforeFinal() {
         super.setupBeforeFinal();
 
-        this.initialBody = null;
-        this.initialIsHtml = null;
+        this.initialBody = this.model.attributes.body;
+        this.initialIsHtml = this.model.attributes.isHtml;
 
-        if (!this.model.get('isHtml') && this.getPreferences().get('emailReplyForceHtml')) {
-            const body = (this.model.get('body') || '').replace(/\n/g, '<br>');
-
-            this.model.set('body', body, {silent: true});
-            this.model.set('isHtml', true, {silent: true});
+        if (
+            !this.model.attributes.isHtml &&
+            this.getPreferences().get('emailReplyForceHtml')
+        ) {
+            this.initialBody = (this.initialBody || '').replace(/\n/g, '<br>') || null;
+            this.initialIsHtml = true;
         }
 
-        if (this.model.get('body')) {
-            this.initialBody = this.model.get('body');
-            this.initialIsHtml = this.model.get('isHtml');
-        }
+        let body = this.initialBody;
 
         if (!this.options.signatureDisabled && this.hasSignature()) {
             let addSignatureMethod = 'prependSignature';
@@ -61,10 +71,11 @@ class EmailComposeRecordView extends EditRecordView {
                 addSignatureMethod = 'appendSignature';
             }
 
-            const body = this[addSignatureMethod](this.model.get('body') || '', this.model.get('isHtml'));
-
-            this.model.set('body', body, {silent: true});
+            body = this[addSignatureMethod](body || '', this.initialIsHtml) || null;
         }
+
+        this.model.set('body', body, {silent: true});
+        this.model.set('isHtml', this.initialIsHtml, {silent: true});
     }
 
     setup() {

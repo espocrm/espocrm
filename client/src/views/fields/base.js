@@ -905,6 +905,10 @@ class BaseFieldView extends View {
                     return;
                 }
 
+                if (this.isEditMode() && this.toSkipReRenderOnChange()) {
+                    return;
+                }
+
                 const reRender = () => {
                     if (!this.isRendered() && !this.isBeingRendered()) {
                         return;
@@ -1687,6 +1691,16 @@ class BaseFieldView extends View {
      */
     fetchSearchType() {
         return this.$el.find('select.search-type').val();
+    }
+
+    /**
+     * To skip re-render on change in edit mode.
+     *
+     * @protected
+     * @since 9.1.2
+     */
+    toSkipReRenderOnChange() {
+        return false;
     }
 }
 
