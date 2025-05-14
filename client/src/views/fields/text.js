@@ -644,8 +644,7 @@ class TextFieldView extends BaseFieldView {
             // Prevent unwanted scroll applied by the browser on enter.
             event.preventDefault();
 
-            target.value = before + "\n" + after;
-            target.selectionStart = target.selectionEnd = before.length + 1;
+            target.setRangeText('\n', selectionStart, selectionEnd, 'end');
 
             this.controlTextareaHeight();
 
