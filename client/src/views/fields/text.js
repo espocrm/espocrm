@@ -30,7 +30,6 @@
 
 import BaseFieldView from 'views/fields/base';
 import MailtoHelper from 'helpers/misc/mailto';
-import Modal from 'views/modal';
 import TextPreviewModalView from 'views/modals/text-preview';
 
 /**
