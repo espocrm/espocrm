@@ -292,8 +292,8 @@ class Sender
 
         $this->applyHeaders($message);
         $this->applyFrom($email, $message, $params);
-        $this->applyReplyTo($email, $message, $params);
         $this->addRecipientAddresses($email, $message);
+        $this->applyReplyTo($email, $message, $params);
         $this->applySubject($email, $message);
         $this->applyBody($email, $message);
         $this->applyMessageId($email, $message);
