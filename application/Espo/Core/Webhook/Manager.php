@@ -53,6 +53,9 @@ class Manager
     /** @var string[] */
     protected $skipAttributeList = [
         Field::IS_FOLLOWED,
+        Field::IS_STARRED,
+        Field::FOLLOWERS . 'Ids',
+        Field::FOLLOWERS . 'Names',
         Field::MODIFIED_AT,
         Field::MODIFIED_BY,
         Field::STREAM_UPDATED_AT,
