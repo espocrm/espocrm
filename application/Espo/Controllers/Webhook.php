@@ -31,11 +31,10 @@ namespace Espo\Controllers;
 
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
-use Espo\Core\Controllers\RecordBase;
-
+use Espo\Core\Controllers\Record;
 use stdClass;
 
-class Webhook extends RecordBase
+class Webhook extends Record
 {
     protected function checkAccess(): bool
     {

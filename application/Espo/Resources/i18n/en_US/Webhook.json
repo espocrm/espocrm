@@ -12,6 +12,7 @@
         "secretKey": "Secret Key"
     },
     "links": {
-        "user": "User"
+        "user": "User",
+        "queueItems": "Queue Items"
     }
 }

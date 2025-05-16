@@ -69,6 +69,12 @@
             "type": "belongsTo",
             "entity": "User"
         },
+        "queueItems": {
+            "type": "hasMany",
+            "entity": "WebhookQueueItem",
+            "foreign": "webhook",
+            "readOnly": true
+        },
         "createdBy": {
             "type": "belongsTo",
             "entity": "User"

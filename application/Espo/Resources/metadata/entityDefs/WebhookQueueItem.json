@@ -51,7 +51,8 @@
         "webhook": {
             "type": "belongsTo",
             "entity": "Webhook",
-            "foreignName": "id"
+            "foreignName": "id",
+            "foreign": "queueItems"
         }
     },
     "collection": {

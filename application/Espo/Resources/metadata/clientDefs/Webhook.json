@@ -14,5 +14,13 @@
                 }
             ]
         }
+    },
+    "relationshipPanels": {
+        "queueItems": {
+            "unlinkDisabled": true,
+            "createDisabled": true,
+            "selectDisabled": true,
+            "layout": "listForWebhook"
+        }
     }
 }
