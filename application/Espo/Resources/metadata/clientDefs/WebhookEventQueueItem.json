@@ -1,0 +1,8 @@
+{
+    "controller": "controllers/record",
+    "createDisabled": true,
+    "editDisabled": true,
+    "mergeDisabled": true,
+    "exportDisabled": true,
+    "textFilterDisabled": true
+}
