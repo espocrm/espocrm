@@ -4,5 +4,16 @@
     "editDisabled": true,
     "mergeDisabled": true,
     "exportDisabled": true,
-    "textFilterDisabled": true
+    "textFilterDisabled": true,
+    "menu": {
+        "list": {
+            "dropdown": [
+                {
+                    "labelTranslation": "Global.scopeNamesPlural.Webhook",
+                    "link": "#Webhook",
+                    "aclScope": "Webhook"
+                }
+            ]
+        }
+    }
 }
