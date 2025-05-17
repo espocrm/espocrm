@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "message": "پیام",
+        "code": "کد",
+        "level": "سطح",
+        "exceptionClass": "کلاس خطا",
+        "file": "فایل",
+        "line": "خط",
+        "requestMethod": "متد درخواست",
+        "requestResourcePath": "مسیر منبع درخواست"
+    },
+    "presetFilters": {
+        "errors": "خطاها"
+    }
+}

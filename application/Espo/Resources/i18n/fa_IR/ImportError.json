@@ -1,0 +1,24 @@
+{
+    "fields": {
+        "type": "نوع",
+        "validationFailures": "خطاهای اعتبارسنجی",
+        "import": "درون‌ریزی",
+        "rowIndex": "شاخص ردیف",
+        "exportRowIndex": "شاخص ردیف برون‌ریزی",
+        "lineNumber": "شماره خط",
+        "exportLineNumber": "شماره خط برون‌ریزی",
+        "row": "ردیف",
+        "entityType": "نوع موجودیت"
+    },
+    "options": {
+        "type": {
+            "Validation": "اعتبارسنجی",
+            "Access": "دسترسی",
+            "Not-Found": "یافت نشد"
+        }
+    },
+    "tooltips": {
+        "lineNumber": "شماره خط در فایل CSV اصلی.",
+        "exportLineNumber": "شماره خط در فایل CSV برون‌ریزی."
+    }
+}
