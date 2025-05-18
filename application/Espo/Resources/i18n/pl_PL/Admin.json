@@ -204,7 +204,7 @@
   },
   "messages": {
     "selectEntityType": "Wybierz jednostkę z menu po lewej stonie.",
-    "selectUpgradePackage": "Wypierz paczkę do aktualizacji",
+    "selectUpgradePackage": "Wybierz paczkę do aktualizacji",
     "selectLayout": "Wybierz interesujący Cię układ z menu po lewej stronie i zacznij go edytować.",
     "selectExtensionPackage": "Wybierz paczkę rozszerzeń",
     "extensionInstalled": "Rozszerzenie {name} {version} zostało zainstalowane.",
