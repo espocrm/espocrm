@@ -212,7 +212,9 @@
     "Misc": "Różne",
     "Passwords": "Hasła",
     "2-Factor Authentication": "Dwuetapowa weryfikacja",
-    "Group Tab": "Grupuj zakładkę"
+    "Group Tab": "Grupuj zakładkę",
+    "General": "Ogólne",
+    "Dashboard": "Pulpit"
   },
   "messages": {
     "ldapTestConnection": "Połączenie zostało nawiązane poprawnie."
