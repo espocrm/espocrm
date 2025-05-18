@@ -248,7 +248,13 @@
     "Preview": "Podgląd",
     "Star": "Dodaj do ulubionych",
     "Unstar": "Usuń z ulubionych",
-    "Starred": "Ulubione"
+    "Starred": "Ulubione",
+    "Audit Log": "Audit Log",
+    "View Audit Log": "Audyt",
+    "View User Access": "Dostęp",
+    "Reacted": "Dodano reakcje",
+    "Reaction Removed": "Usunięto reakcję",
+    "Reactions": "Reakcje"
   },
   "messages": {
     "pleaseWait": "Proszę czekać...",
