@@ -245,7 +245,10 @@
     "View on Map": "Wyświetl na mapie",
     "Proceed": "Kontynuuj",
     "Attached": "Załączony",
-    "Preview": "Podgląd"
+    "Preview": "Podgląd",
+    "Star": "Dodaj do ulubionych",
+    "Unstar": "Usuń z ulubionych",
+    "Starred": "Ulubione"
   },
   "messages": {
     "pleaseWait": "Proszę czekać...",
