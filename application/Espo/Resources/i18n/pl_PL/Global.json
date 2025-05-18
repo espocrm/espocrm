@@ -47,7 +47,16 @@
     "ApiUser": "Użytkownik API",
     "DashboardTemplate": "Szablon pulpitu",
     "Currency": "Waluta",
-    "LayoutSet": "Zestaw układu"
+    "LayoutSet": "Zestaw układu",
+    "Mass Action": "Masowa akcja",
+    "WorkingTimeCalendar": "Kalendarz czasu pracy",
+    "WorkingTimeRange": "Wyjątek od czasu pracy",
+    "AuthenticationProvider": "Dostawca uwierzytelniania",
+    "GlobalStream": "Globalny strumień",
+    "AddressCountry": "Address Country",
+    "AppSecret": "Sekret aplikacji",
+    "OAuthProvider": "Dostawca OAuth",
+    "OAuthAccount": "Konto OAuth"
   },
   "scopeNamesPlural": {
     "Email": "Wiadomości",
