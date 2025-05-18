@@ -112,6 +112,15 @@ class TreeCollection extends Collection {
 
         return super.fetch(options);
     }
+
+    clone(options = {}) {
+        options = {...options};
+
+        // Prevents recurring clone.
+        options.withModels = false;
+
+        return super.clone(options);
+    }
 }
 
 export default TreeCollection;
