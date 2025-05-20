@@ -33,10 +33,24 @@ class LinkOneFieldView extends LinkFieldView {
     searchTypeList = ['is', 'isEmpty', 'isNotEmpty', 'isOneOf']
 
     fetchSearch() {
-        let type = this.$el.find('select.search-type').val();
-        let value = this.$el.find('[data-name="' + this.idName + '"]').val();
+        const type = this.$el.find('select.search-type').val();
+        const value = this.$el.find('[data-name="' + this.idName + '"]').val();
+
+        if (['isOneOf'].includes(type) && !this.searchData.oneOfIdList.length) {
+            return {
+                type: 'isNotNull',
+                attribute: 'id',
+                data: {
+                    type: type,
+                },
+            };
+        }
 
         if (type === 'isOneOf') {
+            if (!value) {
+                return false;
+            }
+
             return  {
                 type: 'linkedWith',
                 field: this.name,
@@ -48,7 +62,8 @@ class LinkOneFieldView extends LinkFieldView {
                 },
             };
         }
-        else if (type === 'is' || !type) {
+
+        if (type === 'is' || !type) {
             if (!value) {
                 return false;
             }
@@ -63,7 +78,8 @@ class LinkOneFieldView extends LinkFieldView {
                 },
             };
         }
-        else if (type === 'isEmpty') {
+
+        if (type === 'isEmpty') {
             return  {
                 type: 'isNotLinked',
                 data: {
@@ -71,7 +87,8 @@ class LinkOneFieldView extends LinkFieldView {
                 },
             };
         }
-        else if (type === 'isNotEmpty') {
+
+        if (type === 'isNotEmpty') {
             return  {
                 type: 'isLinked',
                 data: {
