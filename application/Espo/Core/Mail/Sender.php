@@ -46,6 +46,7 @@ use Espo\ORM\EntityManager;
 use Laminas\Mail\Headers;
 use Laminas\Mail\Message as LaminasMessage;
 
+use RuntimeException;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\Transport\TransportInterface;
@@ -609,11 +610,17 @@ class Sender
             return;
         }
 
+        $parts = preg_split("/\R\R/", $message->toString(), 2);
+
+        if (!is_array($parts) || count($parts) < 2) {
+            throw new RuntimeException("Could not split email.");
+        }
+
         /** @noinspection PhpMultipleClassDeclarationsInspection */
         $this->laminasMessage
             ->setHeaders(
-                Headers::fromString($message->getPreparedHeaders()->toString())
+                Headers::fromString($parts[0])
             )
-            ->setBody($message->getBody()->toString());
+            ->setBody($parts[1]);
     }
 }
