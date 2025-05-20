@@ -333,7 +333,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                     return "EXTRACT(YEAR FROM $to - $from)";
 
                 case 'TIMESTAMPDIFF_MONTH':
-                    return "EXTRACT(MONTH FROM $to) - $from)";
+                    return "EXTRACT(MONTH FROM $to - $from)";
 
                 case 'TIMESTAMPDIFF_WEEK':
                     return "FLOOR(EXTRACT(DAY FROM $to - $from) / 7)";

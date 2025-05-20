@@ -1,0 +1,17 @@
+[
+    {
+        "name": "target"
+    },
+    {
+        "name": "status",
+        "width": 20
+    },
+    {
+        "name": "createdAt",
+        "width": 20
+    },
+    {
+        "name": "processedAt",
+        "width": 20
+    }
+]

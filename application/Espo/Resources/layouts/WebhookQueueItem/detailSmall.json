@@ -16,6 +16,9 @@
             [
                 {"name": "attempts"},
                 {"name": "processAt"}
+            ],
+            [
+                {"name": "data"}
             ]
         ]
     }

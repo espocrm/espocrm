@@ -11,8 +11,21 @@
                     "labelTranslation": "Global.scopeNamesPlural.WebhookQueueItem",
                     "link": "#WebhookQueueItem",
                     "aclScope": "WebhookQueueItem"
+                },
+                {
+                    "labelTranslation": "Global.scopeNamesPlural.WebhookEventQueueItem",
+                    "link": "#WebhookEventQueueItem",
+                    "aclScope": "WebhookEventQueueItem"
                 }
             ]
+        }
+    },
+    "relationshipPanels": {
+        "queueItems": {
+            "unlinkDisabled": true,
+            "createDisabled": true,
+            "selectDisabled": true,
+            "layout": "listForWebhook"
         }
     }
 }

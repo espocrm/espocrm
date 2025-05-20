@@ -31,14 +31,18 @@ namespace Espo\Controllers;
 
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
-use Espo\Core\Controllers\Record;
+use Espo\Core\Controllers\RecordBase;
+use Espo\Core\Exceptions\Forbidden;
 use stdClass;
 
-class Webhook extends Record
+/**
+ * @noinspection PhpUnused
+ */
+class WebhookEventQueueItem extends RecordBase
 {
     protected function checkAccess(): bool
     {
-        if (!$this->user->isAdmin() && !$this->user->isApi()) {
+        if (!$this->user->isAdmin()) {
             return false;
         }
 
@@ -47,10 +51,11 @@ class Webhook extends Record
 
     public function postActionCreate(Request $request, Response $response): stdClass
     {
-        $result = parent::postActionCreate($request, $response);
+        throw new Forbidden();
+    }
 
-        $response->setStatus(201);
-
-        return $result;
+    public function putActionUpdate(Request $request, Response $response): stdClass
+    {
+        throw new Forbidden();
     }
 }

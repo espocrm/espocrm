@@ -7,7 +7,8 @@
         "event": {
             "type": "varchar",
             "maxLength": 100,
-            "required": true
+            "required": true,
+            "view": "views/webhook/fields/event"
         },
         "webhook": {
             "type": "link"
@@ -51,7 +52,8 @@
         "webhook": {
             "type": "belongsTo",
             "entity": "Webhook",
-            "foreignName": "id"
+            "foreignName": "id",
+            "foreign": "queueItems"
         }
     },
     "collection": {
