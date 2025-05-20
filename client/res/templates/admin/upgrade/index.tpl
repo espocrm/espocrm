@@ -31,7 +31,7 @@
         </div>
         <div class="message-container text-danger" style="height: 20px; margin-bottom: 10px; margin-top: 10px;"></div>
         <div class="buttons-container">
-            <button class="btn btn-primary disabled" disabled="disabled" data-action="upload">{{translate 'Upload'}}</button>
+            <button class="btn btn-primary disabled" disabled="disabled" data-action="upload">{{translate 'Upload' scope='Admin'}}</button>
         </div>
     </div>
 </div>
