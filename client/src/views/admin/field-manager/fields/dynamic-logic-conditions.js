@@ -28,6 +28,9 @@
 
 import BaseFieldView from 'views/fields/base';
 
+/**
+ * Important. Used in extensions.
+ */
 export default class extends BaseFieldView {
 
     detailTemplate = 'admin/field-manager/fields/dynamic-logic-conditions/detail'
