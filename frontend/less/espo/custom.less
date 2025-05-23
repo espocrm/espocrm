@@ -2835,6 +2835,17 @@ table.table td.cell .html-container {
     ul, ol {
         padding-left: var(--30px);
     }
+
+    table {
+        table-layout: fixed;
+        width: 100%;
+
+        td, th {
+            padding: var(--table-cell-padding-half) var(--table-cell-padding);
+            border: var(--1px) solid var(--default-border-color);
+            vertical-align: top;
+        }
+    }
 }
 
 .field > .html-container {
