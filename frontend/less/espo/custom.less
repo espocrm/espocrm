@@ -2305,6 +2305,28 @@ td > span.color-icon {
         text-align: center;
         margin-right: var(--6px);
     }
+
+    [data-key="user"] {
+        > a {
+            &,
+            &:hover,
+            &:focus {
+                color: var(--btn-text-color);
+            }
+        }
+    }
+
+    .message {
+        a {
+            &[data-scope="User"] {
+                &,
+                &:hover,
+                &:focus {
+                    color: var(--btn-text-color);
+                }
+            }
+        }
+    }
 }
 
 .stream-post-container,
