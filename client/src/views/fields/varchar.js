@@ -282,10 +282,12 @@ class VarcharFieldView extends BaseFieldView {
             mainElement.classList.remove('hidden');
         }
 
-        if (['anyOf', 'noneOf'].includes(type)) {
-            multiSelectContainer.classList.remove('hidden');
-        } else {
-            multiSelectContainer.classList.add('hidden');
+        if (multiSelectContainer) {
+            if (['anyOf', 'noneOf'].includes(type)) {
+                multiSelectContainer.classList.remove('hidden');
+            } else {
+                multiSelectContainer.classList.add('hidden');
+            }
         }
     }
 
