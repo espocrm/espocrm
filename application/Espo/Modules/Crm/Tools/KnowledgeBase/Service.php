@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Tools\KnowledgeBase;
 
 use Espo\Core\Acl;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -46,25 +47,13 @@ use Espo\Tools\Attachment\FieldData;
 
 class Service
 {
-    private EntityManager $entityManager;
-    private AttachmentAccessChecker $attachmentAccessChecker;
-    private ServiceContainer $serviceContainer;
-    private SelectBuilderFactory $selectBuilderFactory;
-    private Acl $acl;
-
     public function __construct(
-        EntityManager $entityManager,
-        AttachmentAccessChecker $attachmentAccessChecker,
-        ServiceContainer $serviceContainer,
-        SelectBuilderFactory $selectBuilderFactory,
-        Acl $acl
-    ) {
-        $this->entityManager = $entityManager;
-        $this->attachmentAccessChecker = $attachmentAccessChecker;
-        $this->serviceContainer = $serviceContainer;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-        $this->acl = $acl;
-    }
+        private EntityManager $entityManager,
+        private AttachmentAccessChecker $attachmentAccessChecker,
+        private ServiceContainer $serviceContainer,
+        private SelectBuilderFactory $selectBuilderFactory,
+        private Acl $acl,
+    ) {}
 
     /**
      * Copy article attachments for re-using (e.g. in an email).
@@ -132,8 +121,9 @@ class Service
      * @throws NotFound
      * @throws Forbidden
      * @throws Error
+     * @throws BadRequest
      */
-    public function moveUp(string $id, ?WhereItem $where = null): void
+    public function moveUp(string $id, SearchParams $params): void
     {
         /** @var ?KnowledgeBaseArticle $entity */
         $entity = $this->entityManager->getEntityById(KnowledgeBaseArticle::ENTITY_TYPE, $id);
@@ -150,12 +140,6 @@ class Service
 
         if (!is_int($currentIndex)) {
             throw new Error();
-        }
-
-        $params = SearchParams::create();
-
-        if ($where) {
-            $params = $params->withWhere($where);
         }
 
         $query = $this->selectBuilderFactory
@@ -194,8 +178,9 @@ class Service
      * @throws NotFound
      * @throws Forbidden
      * @throws Error
+     * @throws BadRequest
      */
-    public function moveDown(string $id, ?WhereItem $where = null): void
+    public function moveDown(string $id, SearchParams $params): void
     {
         /** @var ?KnowledgeBaseArticle $entity */
         $entity = $this->entityManager->getEntityById(KnowledgeBaseArticle::ENTITY_TYPE, $id);
@@ -212,12 +197,6 @@ class Service
 
         if (!is_int($currentIndex)) {
             throw new Error();
-        }
-
-        $params = SearchParams::create();
-
-        if ($where) {
-            $params = $params->withWhere($where);
         }
 
         $query = $this->selectBuilderFactory
@@ -256,8 +235,9 @@ class Service
      * @throws NotFound
      * @throws Forbidden
      * @throws Error
+     * @throws BadRequest
      */
-    public function moveToTop(string $id, ?WhereItem $where = null): void
+    public function moveToTop(string $id, SearchParams $params): void
     {
         /** @var ?KnowledgeBaseArticle $entity */
         $entity = $this->entityManager->getEntityById(KnowledgeBaseArticle::ENTITY_TYPE, $id);
@@ -274,12 +254,6 @@ class Service
 
         if (!is_int($currentIndex)) {
             throw new Error();
-        }
-
-        $params = SearchParams::create();
-
-        if ($where) {
-            $params = $params->withWhere($where);
         }
 
         $query = $this->selectBuilderFactory
@@ -315,8 +289,9 @@ class Service
      * @throws NotFound
      * @throws Forbidden
      * @throws Error
+     * @throws BadRequest
      */
-    public function moveToBottom(string $id, ?WhereItem $where = null): void
+    public function moveToBottom(string $id, SearchParams $params): void
     {
         /** @var ?KnowledgeBaseArticle $entity */
         $entity = $this->entityManager->getEntityById(KnowledgeBaseArticle::ENTITY_TYPE, $id);
@@ -333,12 +308,6 @@ class Service
 
         if (!is_int($currentIndex)) {
             throw new Error();
-        }
-
-        $params = SearchParams::create();
-
-        if ($where) {
-            $params = $params->withWhere($where);
         }
 
         $query = $this->selectBuilderFactory
