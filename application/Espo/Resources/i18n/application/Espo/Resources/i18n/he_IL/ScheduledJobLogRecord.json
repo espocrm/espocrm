@@ -1,0 +1,7 @@
+{
+    "fields": {
+        "status": "סטטוס",
+        "executionTime": "זמן ביצוע",
+        "target": "יעד"
+    }
+}

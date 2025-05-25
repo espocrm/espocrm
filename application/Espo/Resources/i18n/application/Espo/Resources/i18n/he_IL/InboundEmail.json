@@ -1,0 +1,99 @@
+{
+    "fields": {
+      "name": "שם",
+      "emailAddress": "כתובת דוא\"ל",
+      "team": "צוות יעד",
+      "status": "סטטוס",
+      "assignToUser": "הקצה למשתמש",
+      "host": "שרת",
+      "username": "שם משתמש",
+      "password": "סיסמה",
+      "port": "פורט",
+      "monitoredFolders": "תיקיות מנוטרות",
+      "trashFolder": "תיקיית אשפה",
+      "security": "אבטחה",
+      "createCase": "צור פנייה",
+      "reply": "תגובה אוטומטית",
+      "caseDistribution": "חלוקת פניות",
+      "replyEmailTemplate": "תבנית תגובה בדוא\"ל",
+      "replyFromAddress": "כתובת שולח",
+      "replyToAddress": "כתובת תגובה",
+      "replyFromName": "שם השולח",
+      "targetUserPosition": "תפקיד יעד למשתמש",
+      "fetchSince": "שלוף מיום",
+      "addAllTeamUsers": "עבור כל משתמשי הצוות",
+      "teams": "צוותים",
+      "sentFolder": "תיקיית דוא\"ל יוצא",
+      "storeSentEmails": "שמור דוא\"ל יוצא",
+      "keepFetchedEmailsUnread": "השאר דוא\"ל שהתקבל כלא נקרא",
+      "connectedAt": "חובר בתאריך",
+      "excludeFromReply": "אל תכלול בתגובה",
+      "useImap": "שלוף דוא\"ל",
+      "useSmtp": "השתמש ב-SMTP",
+      "smtpHost": "שרת SMTP",
+      "smtpPort": "פורט SMTP",
+      "smtpAuth": "אימות SMTP",
+      "smtpSecurity": "אבטחת SMTP",
+      "smtpAuthMechanism": "מנגנון אימות SMTP",
+      "smtpUsername": "שם משתמש SMTP",
+      "smtpPassword": "סיסמת SMTP",
+      "fromName": "שם השולח",
+      "smtpIsShared": "SMTP משותף",
+      "smtpIsForMassEmail": "SMTP לדוא\"ל קבוצתי",
+      "groupEmailFolder": "תיקיית דוא\"ל קבוצתית",
+      "isSystem": "חשבון מערכת"
+    },
+    "tooltips": {
+      "isSystem": "חשבון דוא\"ל של מערכת.",
+      "useSmtp": "היכולת לשלוח דוא\"ל.",
+      "reply": "שליחת תגובה אוטומטית לשולח שההודעה שלו התקבלה.\n\n תישלח הודעה אחת בלבד לאותו נמען בפרק זמן מסוים כדי למנוע לולאה.",
+      "createCase": "צור אוטומטית פנייה מהודעות נכנסות.",
+      "replyToAddress": "ציין את כתובת תיבת הדוא\"ל שאליה יגיעו תגובות.",
+      "caseDistribution": "איך הפניות יחולקו – ישירות למשתמש או בתוך הצוות.",
+      "assignToUser": "המשתמש אליו יוקצו הפניות.",
+      "team": "הצוות אליו יוקצו הפניות.",
+      "teams": "הצוותים שאליהם יוקצו הדוא\"לים.",
+      "targetUserPosition": "משתמשים בעלי תפקיד מסוים יקבלו את הפניות.",
+      "addAllTeamUsers": "הודעות יופיעו בתיבת הדוא\"ל של כל המשתמשים בצוותים שצוינו.",
+      "monitoredFolders": "יש להפריד בין מספר תיקיות בפסיק.",
+      "smtpIsShared": "אם סומן, משתמשים יוכלו לשלוח דוא\"ל דרך SMTP זה. הגישה נשלטת ע\"י הרשאות בקבוצת הדוא\"ל.",
+      "smtpIsForMassEmail": "אם סומן, SMTP זה יהיה זמין לדוא\"ל קבוצתי.",
+      "storeSentEmails": "הודעות שיישלחו יישמרו בשרת IMAP.",
+      "groupEmailFolder": "שמור דוא\"ל נכנס בתיקיית קבוצה.",
+      "excludeFromReply": "בעת תגובה להודעות שהתקבלו לחשבון זה, כתובת הדוא\"ל לא תיכלל בעותק (CC).\n\n שים לב: סימון אפשרות זו חושף את כתובת הדוא\"ל של החשבון למשתמשים שיכולים לשלוח הודעות."
+    },
+    "links": {
+      "filters": "מסננים",
+      "emails": "דוא\"ל",
+      "assignToUser": "הקצה למשתמש",
+      "groupEmailFolder": "תיקיית דוא\"ל קבוצתית"
+    },
+    "options": {
+      "status": {
+        "Active": "פעיל",
+        "Inactive": "לא פעיל"
+      },
+      "caseDistribution": {
+        "": "ללא",
+        "Direct-Assignment": "הקצה ישירה",
+        "Round-Robin": "סבב",
+        "Least-Busy": "הפחות עסוק"
+      },
+      "smtpAuthMechanism": {
+        "plain": "PLAIN",
+        "login": "LOGIN",
+        "crammd5": "CRAM-MD5"
+      }
+    },
+    "labels": {
+      "Create InboundEmail": "צור חשבון דוא\"ל",
+      "IMAP": "IMAP",
+      "Actions": "פעולות",
+      "Main": "ראשי"
+    },
+    "messages": {
+      "couldNotConnectToImap": "לא ניתן להתחבר לשרת IMAP",
+      "imapNotConnected": "לא ניתן להתחבר לחשבון [IMAP](#InboundEmail/view/{id})."
+    }
+  }
+  

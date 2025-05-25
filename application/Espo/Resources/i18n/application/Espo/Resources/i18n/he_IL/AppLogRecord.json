@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "message": "הודעה",
+        "code": "קוד",
+        "level": "רמה",
+        "exceptionClass": "מחלקה חריגה",
+        "file": "קובץ",
+        "line": "קו",
+        "requestMethod": "שיטת בקשה",
+        "requestResourcePath": "בקש נתיב משאבים"
+    },
+    "presetFilters": {
+        "errors": "שגיאות"
+    }
+}
