@@ -303,10 +303,10 @@ class SendService
             try {
                 $this->groupAccountService->storeSentMessage($id, $message);
             } catch (Exception $e) {
-                $message = "Could not store sent email; group account {$groupAccount->getId()}); " .
+                $text = "Could not store sent email; group account {$groupAccount->getId()}); " .
                     $e->getMessage() . ".";
 
-                $this->log->error($message, ['exception' => $e]);
+                $this->log->error($text, ['exception' => $e]);
             }
         }
 
@@ -320,10 +320,10 @@ class SendService
             try {
                 $this->personalAccountService->storeSentMessage($id, $message);
             } catch (Exception $e) {
-                $message = "Could not store sent email; personal account {$personalAccount->getId()}; " .
+                $text = "Could not store sent email; personal account {$personalAccount->getId()}; " .
                     $e->getMessage() . ".";
 
-                $this->log->error($message, ['exception' => $e]);
+                $this->log->error($text, ['exception' => $e]);
             }
         }
     }
