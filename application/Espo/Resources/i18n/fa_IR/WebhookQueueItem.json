@@ -1,0 +1,22 @@
+{
+    "fields": {
+        "event": "رویداد",
+        "webhook": "وب‌هوک",
+        "target": "هدف",
+        "data": "داده‌ها",
+        "status": "وضعیت",
+        "processedAt": "پردازش شده در",
+        "attempts": "تلاش‌ها",
+        "processAt": "پردازش در"
+    },
+    "links": {
+        "webhook": "وب‌هوک"
+    },
+    "options": {
+        "status": {
+            "Pending": "در انتظار",
+            "Success": "موفق",
+            "Failed": "ناموفق"
+        }
+    }
+}
