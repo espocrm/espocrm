@@ -36,12 +36,13 @@
 .selectize-dropdown,
 .selectize-dropdown.form-control,
 .autocomplete-suggestions,
-.ui-timepicker-wrapper,
+.ui-timepicker-wrapper {
+    .dropdown-border();
+}
+
+// Separately intentionally as this one is not supported in FF.
 select.form-control::picker(select) {
-    border: var(--dropdown-border-width) solid var(--dropdown-border);
-    box-shadow: var(--dropdown-box-shadow);
-    border-radius: var(--dropdown-border-radius);
-    border-width: var(--dropdown-border-width);
+    .dropdown-border();
 }
 
 .popover {
