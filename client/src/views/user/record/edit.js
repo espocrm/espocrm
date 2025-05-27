@@ -175,9 +175,13 @@ class UserEditRecordView extends EditRecordView {
     getGridLayout(callback) {
         this.getHelper().layoutManager
             .get(this.model.entityType, this.options.layoutName || this.layoutName, simpleLayout => {
+                /** @type {module:views/record/detail~panelDefs[]} */
                 const layout = Espo.Utils.cloneDeep(simpleLayout);
 
-                layout.push({
+                /** @type {module:views/record/detail~panelDefs[]} */
+                const panels = [];
+
+                panels.push({
                     "label": "Teams and Access Control",
                     "name": "accessControl",
                     "rows": [
@@ -187,17 +191,17 @@ class UserEditRecordView extends EditRecordView {
                     ]
                 });
 
-                layout.push({
+                panels.push({
                     "label": "Portal",
                     "name": "portal",
                     "rows": [
-                        [{"name": "portals"}, {"name": "contact"}],
-                        [{"name": "portalRoles"}, {"name": "accounts"}]
+                        [{"name": "portals"}, {"name": "accounts"}],
+                        [{"name": "portalRoles"}, {"name": "contact"}]
                     ]
                 });
 
                 if (this.getUser().isAdmin() && this.model.isPortal()) {
-                    layout.push({
+                    panels.push({
                         "label": "Misc",
                         "name": "portalMisc",
                         "rows": [
@@ -207,7 +211,7 @@ class UserEditRecordView extends EditRecordView {
                 }
 
                 if (this.model.isAdmin() || this.model.isRegular()) {
-                    layout.push({
+                    panels.push({
                         "label": "Misc",
                         "name": "misc",
                         "rows": [
@@ -221,7 +225,7 @@ class UserEditRecordView extends EditRecordView {
                     this.getUser().isAdmin() &&
                     !this.model.isApi()
                 ) {
-                    layout.push({
+                    panels.push({
                         label: 'Password',
                         rows: [
                             [
@@ -273,13 +277,31 @@ class UserEditRecordView extends EditRecordView {
                 }
 
                 if (this.getUser().isAdmin() && this.model.isApi()) {
-                    layout.push({
+                    panels.push({
                         "name": "auth",
                         "rows": [
                             [{"name": "authMethod"}, false]
                         ]
                     });
                 }
+
+                let hasTab = false;
+
+                for (const [i, panel] of layout.entries()) {
+                    if (panel.tabBreak && i > 0) {
+                        layout.splice(i, 0, ...panels);
+
+                        hasTab = true;
+
+                        break;
+                    }
+                }
+
+                if (!hasTab) {
+                    layout.push(...panels);
+                }
+
+                this.detailLayout = layout;
 
                 const gridLayout = {
                     type: 'record',

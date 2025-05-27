@@ -35,6 +35,7 @@ use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\Where\Item as WhereItem;
 use Espo\Core\Utils\Json;
 use Espo\Modules\Crm\Tools\KnowledgeBase\Service as KBService;
@@ -105,15 +106,9 @@ class KnowledgeBaseArticle extends Record
             throw new BadRequest();
         }
 
-        $where = null;
+        $searchParams = $this->fetchSearchParams($request);
 
-        if (!empty($data->where)) {
-            $where = WhereItem::fromRawAndGroup(
-                Json::decode(Json::encode($data->where), true)
-            );
-        }
-
-        $this->getArticleService()->moveToTop($data->id, $where);
+        $this->getArticleService()->moveToTop($data->id, $searchParams);
 
         return true;
     }
@@ -132,15 +127,9 @@ class KnowledgeBaseArticle extends Record
             throw new BadRequest();
         }
 
-        $where = null;
+        $searchParams = $this->fetchSearchParams($request);
 
-        if (!empty($data->where)) {
-            $where = WhereItem::fromRawAndGroup(
-                Json::decode(Json::encode($data->where), true)
-            );
-        }
-
-        $this->getArticleService()->moveUp($data->id, $where);
+        $this->getArticleService()->moveUp($data->id, $searchParams);
 
         return true;
     }
@@ -159,15 +148,9 @@ class KnowledgeBaseArticle extends Record
             throw new BadRequest();
         }
 
-        $where = null;
+        $searchParams = $this->fetchSearchParams($request);
 
-        if (!empty($data->where)) {
-            $where = WhereItem::fromRawAndGroup(
-                Json::decode(Json::encode($data->where), true)
-            );
-        }
-
-        $this->getArticleService()->moveDown($data->id, $where);
+        $this->getArticleService()->moveDown($data->id, $searchParams);
 
         return true;
     }
@@ -186,15 +169,9 @@ class KnowledgeBaseArticle extends Record
             throw new BadRequest();
         }
 
-        $where = null;
+        $searchParams = $this->fetchSearchParams($request);
 
-        if (!empty($data->where)) {
-            $where = WhereItem::fromRawAndGroup(
-                Json::decode(Json::encode($data->where), true)
-            );
-        }
-
-        $this->getArticleService()->moveToBottom($data->id, $where);
+        $this->getArticleService()->moveToBottom($data->id, $searchParams);
 
         return true;
     }
@@ -202,5 +179,20 @@ class KnowledgeBaseArticle extends Record
     private function getArticleService(): KBService
     {
         return $this->injectableFactory->create(KBService::class);
+    }
+
+    private function fetchSearchParams(Request $request): SearchParams
+    {
+        $body = $request->getParsedBody();
+
+        $searchParams = SearchParams::create();
+
+        if ($body->whereGroup ?? null) {
+            $rawWhere = Json::decode(Json::encode($body->whereGroup), true);
+
+            $searchParams = SearchParams::fromRaw(['where' => $rawWhere]);
+        }
+
+        return $searchParams;
     }
 }

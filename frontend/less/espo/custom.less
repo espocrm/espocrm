@@ -2305,6 +2305,28 @@ td > span.color-icon {
         text-align: center;
         margin-right: var(--6px);
     }
+
+    [data-key="user"] {
+        > a {
+            &,
+            &:hover,
+            &:focus {
+                color: var(--btn-text-color);
+            }
+        }
+    }
+
+    .message {
+        a {
+            &[data-scope="User"] {
+                &,
+                &:hover,
+                &:focus {
+                    color: var(--btn-text-color);
+                }
+            }
+        }
+    }
 }
 
 .stream-post-container,
@@ -2767,7 +2789,7 @@ table.table td.cell .html-container {
         font-weight: normal;
     }
 
-   h5, h6 {
+    h5, h6 {
         margin-top: calc(var(--line-height-computed) / 2);
         margin-bottom: calc(var(--line-height-computed) / 2);
     }
@@ -2834,6 +2856,21 @@ table.table td.cell .html-container {
 
     ul, ol {
         padding-left: var(--30px);
+    }
+
+    table {
+        table-layout: fixed;
+        width: 100%;
+
+        td, th {
+            padding: var(--table-cell-padding-half) var(--table-cell-padding);
+            border: var(--1px) solid var(--default-border-color);
+            vertical-align: top;
+        }
+
+        + table {
+            margin-top: var(--line-height-computed);
+        }
     }
 }
 

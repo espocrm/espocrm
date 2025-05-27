@@ -346,8 +346,8 @@ class UserDetailRecordView extends DetailRecordView {
                         "label": "Portal",
                         "name": "portal",
                         "rows": [
-                            [{"name":"portals"}, {"name":"contact"}],
-                            [{"name":"portalRoles"}, {"name":"accounts"}],
+                            [{"name": "portals"}, {"name": "accounts"}],
+                            [{"name": "portalRoles"}, {"name": "contact"}],
                         ]
                     });
 

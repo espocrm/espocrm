@@ -77,6 +77,10 @@ class PostNoteStreamView extends NoteStreamView {
             }
         });
 
+        if (this.messageName === 'postThis') {
+            this.messageTemplate = '{user}';
+        }
+
         if (this.model.get('parentId')) {
             this.createMessage();
 

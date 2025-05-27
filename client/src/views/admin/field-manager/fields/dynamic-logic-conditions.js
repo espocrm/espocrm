@@ -28,10 +28,20 @@
 
 import BaseFieldView from 'views/fields/base';
 
+/**
+ * Important. Used in extensions.
+ */
 export default class extends BaseFieldView {
 
     detailTemplate = 'admin/field-manager/fields/dynamic-logic-conditions/detail'
     editTemplate = 'admin/field-manager/fields/dynamic-logic-conditions/edit'
+
+    data() {
+        return {
+            isSet: this.model.has(this.name),
+            isNotEmpty: this.conditionGroup && this.conditionGroup.length,
+        };
+    }
 
     setup() {
         this.addActionHandler('editConditions', () => this.edit());

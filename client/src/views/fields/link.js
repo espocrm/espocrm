@@ -424,7 +424,7 @@ class LinkFieldView extends BaseFieldView {
             this.model.set({
                 ...attributes,
                 ...(await handler.getAttributes(model)),
-            });
+            }, {fromField: this.name});
         });
     }
 

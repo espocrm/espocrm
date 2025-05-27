@@ -107,6 +107,9 @@
             "rowActionsView": "crm:views/record/row-actions/relationship-target",
             "layout": "listForTarget",
             "view": "crm:views/record/panels/target-lists"
+        },
+        "contact": {
+            "selectHandler": "handlers/user/select-contact"
         }
     },
     "layoutDefaultSidePanelDisabled": true,
