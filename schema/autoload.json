@@ -19,7 +19,7 @@
                 "type": "string"
             }
         },
-        "autoloadFileList": {
+        "files": {
             "description": "Autoload PHP files.",
             "type": "array",
             "items": {
