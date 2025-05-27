@@ -38,7 +38,7 @@ class AddressBuilder
 {
     private ?string $street;
 
-    private ?string$city;
+    private ?string $city;
 
     private ?string $country;
 
