@@ -185,7 +185,10 @@ module.exports = grunt => {
                 },
                 beautify: false,
                 mangle: true,
-                compress: true
+                compress: {
+                    sequences: false,
+                    collapse_vars: false,
+                },
             },
             bundle: {
                 options: {
