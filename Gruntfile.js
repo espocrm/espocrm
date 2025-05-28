@@ -184,10 +184,11 @@ module.exports = grunt => {
                     comments: /^!/,
                 },
                 beautify: false,
-                mangle: true,
                 compress: {
                     sequences: false,
                     collapse_vars: false,
+                    keep_fargs: true,
+                    webkit: true,
                 },
             },
             bundle: {
