@@ -1,0 +1,19 @@
+{
+  "name": "חבילת שפה עברית - משה רבנו",
+  "description": "חבילת תרגום מלאה לעברית עבור מערכת EspoCRM, באדיבות משה רבנו",
+  "version": "1.0.0",
+  "author": "משה רבנו",
+  "type": "extension",
+  "installDefs": {
+    "copy": [
+      {
+        "from": "custom/ESPO/Resources/i18n/he_IL",
+        "to": "custom/ESPO/Resources/i18n/he_IL"
+      },
+      {
+        "from": "custom/ESPO/Resources/metadata/app/languages.json",
+        "to": "custom/ESPO/Resources/metadata/app/languages.json"
+      }
+    ]
+  }
+}
