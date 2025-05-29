@@ -29,7 +29,7 @@
 import BaseFieldView from 'views/fields/base';
 
 /**
- * Important. Used in extensions.
+ * Important. Extended in extensions.
  */
 export default class extends BaseFieldView {
 
@@ -46,25 +46,23 @@ export default class extends BaseFieldView {
     setup() {
         this.addActionHandler('editConditions', () => this.edit());
 
-        this.conditionGroup = Espo.Utils.cloneDeep((this.model.get(this.name) || {}).conditionGroup || []);
-
         this.scope = this.params.scope || this.options.scope;
-
-        this.createStringView();
     }
 
-    createStringView() {
-        this.createView('conditionGroup', 'views/admin/dynamic-logic/conditions-string/group-base', {
+    async prepare() {
+        this.conditionGroup = Espo.Utils.cloneDeep((this.model.attributes[this.name] || {}).conditionGroup || []);
+
+        return this.createStringView();
+    }
+
+    async createStringView() {
+        return this.createView('conditionGroup', 'views/admin/dynamic-logic/conditions-string/group-base', {
             selector: '.top-group-string-container',
             itemData: {
                 value: this.conditionGroup
             },
             operator: 'and',
             scope: this.scope,
-        }, view => {
-            if (this.isRendered()) {
-                view.render();
-            }
         });
     }
 
@@ -75,12 +73,13 @@ export default class extends BaseFieldView {
         }, view => {
             view.render();
 
-            this.listenTo(view, 'apply', conditionGroup => {
+            this.listenTo(view, 'apply', async conditionGroup => {
                 this.conditionGroup = conditionGroup;
 
                 this.trigger('change');
 
-                this.createStringView();
+                await this.createStringView();
+                await this.reRender();
             });
         });
     }
