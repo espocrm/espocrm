@@ -196,10 +196,10 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                 $minutes = (int) (floatval($offsetHoursString) * 60);
                 $minutesString = (string) $minutes;
 
-                return "$argumentPartList[0] + INTERVAL 'MINUTE $minutesString'";
+                return "$argumentPartList[0] + INTERVAL '$minutesString MINUTE'";
             }
 
-            return "$argumentPartList[0] + INTERVAL 'HOUR $offsetHoursString'";
+            return "$argumentPartList[0] + INTERVAL '$offsetHoursString HOUR'";
         }
 
         if ($function === 'POSITION_IN_LIST') {

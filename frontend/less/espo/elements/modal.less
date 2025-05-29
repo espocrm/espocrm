@@ -214,13 +214,26 @@
     }
 }
 
-.modal-dialog .modal-body .list-sticky-bar {
-    top: var(--94px) !important;
-    width: 100% !important;
-    right: 0 !important;
-    left: unset !important;
-    padding-left: calc(var(--container-padding) - var(--1px));
-    padding-right: calc(var(--container-padding) - var(--1px) + var(--scroll-width));
+.modal-dialog {
+
+    .modal-body {
+        .list-sticky-bar {
+            top: var(--94px) !important;
+            width: 100% !important;
+            right: 0 !important;
+            left: unset !important;
+            padding-left: calc(var(--container-padding) - var(--1px));
+            padding-right: calc(var(--container-padding) - var(--1px) + var(--scroll-width));
+        }
+    }
+
+    &:not(:has(footer.modal-footer)) {
+        .modal-body {
+            .list-sticky-bar {
+                top: var(--43px) !important;
+            }
+        }
+    }
 }
 
 @media screen and (max-width: @screen-xs-max) {

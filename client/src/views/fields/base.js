@@ -875,7 +875,7 @@ class BaseFieldView extends View {
             this.attributeList = this.getAttributeList(); // for backward compatibility, to be removed
 
             this.listenTo(this.model, 'change', (model, options) => {
-                if (options.ui) {
+                if (options.ui && (!options.fromField || options.fromField === this.name)) {
                     return;
                 }
 
@@ -950,6 +950,7 @@ class BaseFieldView extends View {
                 this.model.set(attributes, {
                     ui: true,
                     fromView: this,
+                    fromField: this.name,
                     action: 'ui',
                 });
             });

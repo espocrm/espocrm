@@ -296,7 +296,7 @@ class PostgresqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->queryComposer->composeSelect($query);
 
         $expectedSql =
-            'SELECT "comment"."created_at" + INTERVAL \'MINUTE 330\' AS "createdAt" ' .
+            'SELECT "comment"."created_at" + INTERVAL \'330 MINUTE\' AS "createdAt" ' .
             'FROM "comment"';
 
         $this->assertEquals($expectedSql, $sql);
@@ -319,7 +319,7 @@ class PostgresqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->queryComposer->composeSelect($query);
 
         $expectedSql =
-            'SELECT "comment"."created_at" + INTERVAL \'MINUTE -330\' AS "createdAt" ' .
+            'SELECT "comment"."created_at" + INTERVAL \'-330 MINUTE\' AS "createdAt" ' .
             'FROM "comment"';
 
         $this->assertEquals($expectedSql, $sql);
@@ -342,7 +342,7 @@ class PostgresqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->queryComposer->composeSelect($query);
 
         $expectedSql =
-            'SELECT "comment"."created_at" + INTERVAL \'HOUR 5\' AS "createdAt" ' .
+            'SELECT "comment"."created_at" + INTERVAL \'5 HOUR\' AS "createdAt" ' .
             'FROM "comment"';
 
         $this->assertEquals($expectedSql, $sql);
