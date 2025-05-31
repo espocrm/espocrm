@@ -31,6 +31,7 @@ namespace Espo\Core\Utils;
 
 use Espo\Core\Api\Response;
 use Espo\Core\Api\ResponseWrapper;
+use Espo\Core\Utils\Client\DevModeExtensionInitJsFileListProvider;
 use Espo\Core\Utils\Client\DevModeJsFileListProvider;
 use Espo\Core\Utils\Client\LoaderParamsProvider;
 use Espo\Core\Utils\Client\RenderParams;
@@ -67,6 +68,7 @@ class ClientManager
         private Metadata $metadata,
         private FileManager $fileManager,
         private DevModeJsFileListProvider $devModeJsFileListProvider,
+        private DevModeExtensionInitJsFileListProvider $devModeExtensionInitJsFileListProvider,
         private Module $module,
         private LoaderParamsProvider $loaderParamsProvider,
         private SystemConfig $systemConfig,
@@ -304,6 +306,7 @@ class ClientManager
             return array_merge(
                 $this->metadata->get(['app', 'client', 'developerModeScriptList']) ?? [],
                 $this->getDeveloperModeBundleLibFileList(),
+                $this->devModeExtensionInitJsFileListProvider->get(),
             );
         }
 
