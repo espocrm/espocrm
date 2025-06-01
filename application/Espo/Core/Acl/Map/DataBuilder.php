@@ -58,6 +58,9 @@ class DataBuilder
     public function __construct(private MetadataProvider $metadataProvider, private FieldUtil $fieldUtil)
     {}
 
+    /**
+     * @return stdClass&object{table: stdClass, fieldTable: stdClass}
+     */
     public function build(Table $table): stdClass
     {
         $data = (object) [
