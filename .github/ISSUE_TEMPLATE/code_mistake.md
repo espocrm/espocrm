@@ -13,7 +13,7 @@ A clear and concise description of the mistake or typo.
 **Location**
 Path of the file where the mistake is found. Paste the incorrect line or snippet if helpful.
 
-****Suggested correction**
+**Suggested correction**
 How it should be fixed.
 
 **Additional context**
