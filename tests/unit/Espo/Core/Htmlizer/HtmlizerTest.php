@@ -207,7 +207,7 @@ class HtmlizerTest extends TestCase
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('test', $html);
 
-        $template = "{{#if (or (notEqual name 'test') false 0)}}test{{/if}}";
+        $template = "{{#if (or (equal name 'test') false 0)}}test{{/if}}";
         $entity->set('name', 'test');
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('test', $html);
