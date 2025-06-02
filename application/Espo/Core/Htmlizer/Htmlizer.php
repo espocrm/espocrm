@@ -550,7 +550,7 @@ class Htmlizer
                 for ($i = 0; $i < count($args) - 1; $i++) {
                     $arg = $args[$i];
 
-                    if (!$arg) {
+                    if ($arg) {
                         return true;
                     }
                 }
