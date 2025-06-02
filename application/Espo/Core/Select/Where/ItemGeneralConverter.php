@@ -128,6 +128,7 @@ class ItemGeneralConverter implements ItemConverter
             case 'columnLike':
             case 'columnIn':
             case 'columnNotIn':
+            case 'columnIsNull':
             case 'columnIsNotNull':
             case 'columnEquals':
             case 'columnNotEquals':
