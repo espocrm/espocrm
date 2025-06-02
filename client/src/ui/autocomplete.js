@@ -93,6 +93,8 @@ class Autocomplete {
 
         const $modalBody = this.$element.closest('.modal-body');
 
+        const isModal = !!$modalBody.length;
+
         this.$element.autocomplete({
             beforeRender: $container => {
                 if (options.beforeRender) {
@@ -109,6 +111,13 @@ class Autocomplete {
                     if (this.$element.get(0) !== document.activeElement) {
                         setTimeout(() => this.$element.autocomplete('hide'), 30);
                     }
+                }
+
+                if (isModal) {
+                    // Fixes dropdown dissapearing when clicking scrollbar.
+                    $container.on('mousedown', e => {
+                        e.preventDefault();
+                    });
                 }
             },
             lookup: lookup,

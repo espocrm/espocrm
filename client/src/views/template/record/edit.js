@@ -52,9 +52,9 @@ export default class extends EditRecordView {
                 const entityType = this.model.get('entityType');
 
                 if (!entityType) {
-                    this.model.set('header', '');
-                    this.model.set('body', '');
-                    this.model.set('footer', '');
+                    this.model.set('header', null);
+                    this.model.set('body', null);
+                    this.model.set('footer', null);
 
                     this.hideField('variables');
 
@@ -67,6 +67,7 @@ export default class extends EditRecordView {
                     this.model.set('header', storedData[entityType].header);
                     this.model.set('body', storedData[entityType].body);
                     this.model.set('footer', storedData[entityType].footer);
+                    this.model.set('style', storedData[entityType].style);
 
                     return;
                 }
@@ -74,6 +75,7 @@ export default class extends EditRecordView {
                 let header, body, footer;
 
                 let sourceType = null;
+                let style = null;
 
                 if (
                     this.getMetadata().get(['entityDefs', 'Template', 'defaultTemplates', entityType])
@@ -102,15 +104,18 @@ export default class extends EditRecordView {
                     footer = this.getMetadata().get(
                         ['entityDefs', 'Template', 'defaultTemplates', sourceType, 'footer']
                     );
+
+                    style = this.getMetadata().get(['entityDefs', 'Template', 'defaultTemplates', sourceType, 'style']);
                 }
 
-                body = body || '';
+                body = body || null;
                 header = header || null;
                 footer = footer || null;
 
                 this.model.set('body', body);
                 this.model.set('header', header);
                 this.model.set('footer', footer);
+                this.model.set('style', style);
             });
 
             this.listenTo(this.model, 'change', (e, o) => {
@@ -121,7 +126,8 @@ export default class extends EditRecordView {
                 if (
                     !this.model.hasChanged('header') &&
                     !this.model.hasChanged('body') &&
-                    !this.model.hasChanged('footer')
+                    !this.model.hasChanged('footer') &&
+                    !this.model.hasChanged('style')
                 ) {
                     return;
                 }
@@ -136,6 +142,7 @@ export default class extends EditRecordView {
                     header: this.model.get('header'),
                     body: this.model.get('body'),
                     footer: this.model.get('footer'),
+                    style: this.model.get('style'),
                 };
             });
         }
