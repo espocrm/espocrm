@@ -52,7 +52,7 @@ class CheckEmailAccounts implements Job
         try {
             $this->service->fetch($targetId);
         } catch (Throwable $e) {
-            throw new RuntimeException("CheckInboundEmails job failed, $targetId; {$e->getMessage()}", 0, $e);
+            throw new RuntimeException("CheckEmailAccounts job failed, $targetId; {$e->getMessage()}", 0, $e);
         }
     }
 }
