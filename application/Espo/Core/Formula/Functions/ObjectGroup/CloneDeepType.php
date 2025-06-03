@@ -36,7 +36,7 @@ use Espo\Core\Utils\ObjectUtil;
 
 use stdClass;
 
-class cloneDeepType extends BaseFunction
+class CloneDeepType extends BaseFunction
 {
     public function process(ArgumentList $args)
     {
