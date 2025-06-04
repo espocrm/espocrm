@@ -507,6 +507,10 @@
                         "type": "boolean",
                         "description": "Re-fetch records when the parent model is saved or refreshed by WebSocket."
                     },
+                    "syncBackWithModel": {
+                        "type": "boolean",
+                        "description": "Re-fetch the parent model when the relationship is updated. Ignored if WebSocked is enabled."
+                    },
                     "massSelect": {
                         "type": "boolean",
                         "description": "Allow mass select."

@@ -390,6 +390,10 @@ class RelationshipPanelView extends BottomPanelView {
 
                         this.once('show', () => collection.fetch());
                     });
+
+                    if (this.defs.syncBackWithModel) {
+                        this.listenTo(view, 'after:save after:delete', () => this.processSyncBack());
+                    }
                 });
             });
 
@@ -750,8 +754,11 @@ class RelationshipPanelView extends BottomPanelView {
                 model: model,
             })
             .then(view => {
+                // @todo Move to afterSave?
                 this.listenTo(view, 'after:save', () => {
                     this.collection.fetch();
+
+                    this.processSyncBack();
                 });
             });
     }
@@ -773,6 +780,8 @@ class RelationshipPanelView extends BottomPanelView {
             id: id,
             afterSave: () => {
                 this.collection.fetch();
+
+                this.processSyncBack();
             },
         });
     }
@@ -801,6 +810,8 @@ class RelationshipPanelView extends BottomPanelView {
 
                     this.model.trigger('after:unrelate');
                     this.model.trigger('after:unrelate:' + this.link);
+
+                    this.processSyncBack();
                 });
         });
     }
@@ -831,6 +842,8 @@ class RelationshipPanelView extends BottomPanelView {
 
                     this.model.trigger('after:unrelate');
                     this.model.trigger('after:unrelate:' + this.link);
+
+                    this.processSyncBack();
                 });
         });
     }
@@ -857,6 +870,8 @@ class RelationshipPanelView extends BottomPanelView {
 
                     this.model.trigger('after:unrelate');
                     this.model.trigger('after:unrelate:' + this.link);
+
+                    this.processSyncBack();
                 });
         });
     }
@@ -869,7 +884,22 @@ class RelationshipPanelView extends BottomPanelView {
     actionCreateRelated() {
         const helper = new CreateRelatedHelper(this);
 
-        helper.process(this.model, this.link);
+        helper.process(this.model, this.link, {
+            afterSave: () => {
+                this.processSyncBack();
+            },
+        });
+    }
+
+    /**
+     * @protected
+     */
+    processSyncBack() {
+        if (!this.defs.syncBackWithModel || this.getHelper().webSocketManager) {
+            return;
+        }
+
+        this.model.fetch({highlight: true});
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -912,8 +942,6 @@ class RelationshipPanelView extends BottomPanelView {
 
         this.defs.create = false;
     }
-
-
 }
 
 export default RelationshipPanelView;
