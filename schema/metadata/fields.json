@@ -176,6 +176,11 @@
             "type": "array",
             "items": {"type": "string"},
             "description": "Sanitizers. Classes should implement Espo\\Core\\FieldSanitize\\Sanitizer. As of v8.2."
+        },
+        "massUpdateActionList": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Actions for mass update."
         }
     }
 }
