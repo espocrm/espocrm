@@ -298,7 +298,7 @@ class Service
             'assignedUserId' => $userId,
         ];
 
-        if ($seed->hasRelation('users')) {
+        if ($seed->hasRelation('users') && $seed->getRelationType('users') === Entity::MANY_MANY) {
             $orGroup['usersMiddle.userId'] = $userId;
         }
 
@@ -343,7 +343,7 @@ class Service
             throw new RuntimeException($e->getMessage());
         }
 
-        if ($seed->hasRelation('users')) {
+        if ($seed->hasRelation('users') && $seed->getRelationType('users') === Entity::MANY_MANY) {
             $queryBuilder
                 ->distinct()
                 ->leftJoin('users');
