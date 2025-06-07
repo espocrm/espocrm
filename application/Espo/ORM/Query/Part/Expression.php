@@ -764,6 +764,16 @@ class Expression implements WhereItem
     }
 
     /**
+     * 'ANY_VALUE' function.
+     *
+     * @since 9.1.6
+     */
+    public function anyValue(Expression $expression): self
+    {
+        return self::composeFunction('ANY_VALUE', $expression);
+    }
+
+    /**
      * 'AND' operator. Returns TRUE if all arguments are TRUE.
      */
     public static function and(Expression ...$arguments): self
