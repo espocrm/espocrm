@@ -47,6 +47,7 @@ class Join
 
     private ?WhereItem $conditions = null;
     private bool $onlyMiddle = false;
+    private bool $isLateral = false;
 
     private function __construct(
         private string|Select $target,
@@ -133,6 +134,16 @@ class Join
     }
 
     /**
+     * Is LATERAL.
+     *
+     * @since 9.1.6
+     */
+    public function isLateral(): bool
+    {
+        return $this->isLateral;
+    }
+
+    /**
      * Create.
      *
      * @param string|Select $target
@@ -213,6 +224,23 @@ class Join
 
         $obj = clone $this;
         $obj->onlyMiddle = $onlyMiddle;
+
+        return $obj;
+    }
+
+    /**
+     * With LATERAL. Only for a sub-query join.
+     *
+     * @since 9.1.6
+     */
+    public function withLateral(bool $isLateral = true): self
+    {
+        if (!$this->isSubQuery()) {
+            throw new LogicException("Lateral can be used only with sub-query joins.");
+        }
+
+        $obj = clone $this;
+        $obj->isLateral = $isLateral;
 
         return $obj;
     }

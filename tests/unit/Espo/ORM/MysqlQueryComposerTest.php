@@ -1057,6 +1057,39 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testJoinSubQueryLateral(): void
+    {
+        $sql =
+            "SELECT post.id AS `id` FROM `post` " .
+            "JOIN LATERAL (SELECT post.id AS `id` FROM `post` LIMIT 0, 1) AS `a` ON TRUE";
+
+        $select = SelectBuilder::create()
+            ->select('id')
+            ->from('Post')
+            ->join(
+                Join::createWithSubQuery(
+                    SelectBuilder::create()
+                        ->select('id')
+                        ->from('Post')
+                        ->limit(0, 1)
+                        ->withDeleted()
+                        ->build(),
+                    'a',
+                )
+                ->withLateral()
+                ->withConditions(
+                    Expression::value(true)
+                )
+            )
+            ->withDeleted()
+            ->build();
+
+        $this->assertEquals(
+            $sql,
+            $this->query->composeSelect($select)
+        );
+    }
+
     public function testJoinSubQueryException1(): void
     {
         $this->expectException(LogicException::class);
