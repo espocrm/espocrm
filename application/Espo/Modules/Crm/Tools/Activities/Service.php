@@ -156,18 +156,12 @@ class Service
         );
 
         if ($entity->isPortal() && $entity->getContactId()) {
-            $contactsRelation = $this->entityManager
-                ->getDefs()
-                ->getEntity(Meeting::ENTITY_TYPE)
-                ->getRelation('contacts');
-
             $orBuilder->add(
-                $this->relationQueryHelper->prepareLinkWhere(
-                    $contactsRelation,
+                $this->relationQueryHelper->prepareLinkWhereMany(
                     Meeting::ENTITY_TYPE,
-                    $entity->getContactId(),
-                    $builder
-                ) ?? throw new RuntimeException()
+                    'contacts',
+                    $entity->getContactId()
+                )
             );
         }
 
@@ -235,18 +229,12 @@ class Service
         );
 
         if ($entity->isPortal() && $entity->getContactId()) {
-            $contactsRelation = $this->entityManager
-                ->getDefs()
-                ->getEntity(Meeting::ENTITY_TYPE)
-                ->getRelation('contacts');
-
             $orBuilder->add(
-                $this->relationQueryHelper->prepareLinkWhere(
-                    $contactsRelation,
+                $this->relationQueryHelper->prepareLinkWhereMany(
                     Call::ENTITY_TYPE,
-                    $entity->getContactId(),
-                    $builder
-                ) ?? throw new RuntimeException()
+                    'contacts',
+                    $entity->getContactId()
+                )
             );
         }
 

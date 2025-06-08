@@ -39,8 +39,11 @@ use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\WhereItem;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\Type\RelationType;
+use LogicException;
+use RuntimeException;
 
 /**
  * @since 9.0.0
@@ -106,6 +109,32 @@ class RelationQueryHelper
             Expression::column('id'),
             $subQuery
         );
+    }
+
+    /**
+     * @param string|string[] $id
+     *
+     * @since 9.1.6
+     */
+    public function prepareLinkWhereMany(string $entityType, string $link, string|array $id): WhereItem
+    {
+        $defs = $this->defs
+            ->getEntity($entityType)
+            ->getRelation($link);
+
+        if (!in_array($defs->getType(), [RelationType::HAS_MANY, RelationType::MANY_MANY])) {
+            throw new LogicException("Only many-many and has-many allowed.");
+        }
+
+        $builder = SelectBuilder::create()->from($entityType);
+
+        $whereItem = $this->prepareLinkWhere($defs, $entityType, $id, $builder);
+
+        if (!$whereItem) {
+            throw new RuntimeException("Not supported relationship.");
+        }
+
+        return $whereItem;
     }
 
     /**

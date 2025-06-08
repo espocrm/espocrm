@@ -329,11 +329,9 @@ class Service
             $usersRelation->getType() === RelationType::MANY_MANY &&
             $usersRelation->getForeignEntityType() === User::ENTITY_TYPE
         ) {
-            $whereItem = $this->relationQueryHelper->prepareLinkWhere($usersRelation, $scope, $userId, $queryBuilder);
+            $whereItem = $this->relationQueryHelper->prepareLinkWhereMany($scope, $usersLink, $userId);
 
-            if ($whereItem) {
-                $orBuilder->add($whereItem);
-            }
+            $orBuilder->add($whereItem);
         }
 
         $queryBuilder
