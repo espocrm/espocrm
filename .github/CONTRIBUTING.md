@@ -29,6 +29,13 @@ The maintainers have right to close issues without explanation.
 
 As we reference GitHub issues in release notes, we strive to keep them free of off-topic comments.
 
+#### Code-level issues
+
+If an issue is not reproducible by actions made via the UI but only by coding, the reporter is expected to have a clear
+understanding of its cause and to provide an explanation of it — unless the cause is obvious from the context.
+
+Otherwise, it's advisable to post on the forum in the Developer Help section.
+
 ## Pull Requests
 
 We are open for contributions that are bug fixes and small improvements. If you would like to contribute something that is not a small fix, please reach out to maintainers before submitting your PR (by creating a GitHub issue).
