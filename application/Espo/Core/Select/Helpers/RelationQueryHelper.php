@@ -109,6 +109,8 @@ class RelationQueryHelper
     }
 
     /**
+     * @internal Signature can be changed in future.
+     *
      * @param string|string[] $id
      */
     public function prepareLinkWhere(
