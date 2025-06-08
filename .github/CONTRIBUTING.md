@@ -38,7 +38,9 @@ Otherwise, it's advisable to post on the forum in the Developer Help section.
 
 ## Pull Requests
 
-We are open for contributions that are bug fixes and small improvements. If you would like to contribute something that is not a small fix, please reach out to maintainers before submitting your PR (by creating a GitHub issue).
+We are open for contributions that are bug fixes and small improvements. If you would like to contribute something
+that is not a small fix, please reach out to maintainers before submitting your PR
+(by creating a GitHub issue or a forum post).
 
 Before we can merge your pull request, you need to accept our CLA [here](https://github.com/espocrm/cla).
 
