@@ -141,6 +141,7 @@ class Functions
         'POSITION_IN_LIST',
         'MATCH_BOOLEAN',
         'MATCH_NATURAL_LANGUAGE',
+        'ANY_VALUE',
     ];
 
     public const COMPARISON_FUNCTION_LIST = [

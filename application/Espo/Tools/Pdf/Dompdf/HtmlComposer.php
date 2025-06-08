@@ -196,7 +196,7 @@ class HtmlComposer
         ) ?? '';
 
         return preg_replace_callback(
-            "/src=\"\?entryPoint=attachment&id=([A-Za-z0-9]*)\"/",
+            "/src=\"\?entryPoint=attachment&id=([A-Za-z0-9\-]*)\"/",
             function ($matches) {
                 $id = $matches[1];
 

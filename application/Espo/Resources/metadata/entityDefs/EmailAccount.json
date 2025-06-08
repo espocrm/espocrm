@@ -15,6 +15,9 @@
         "status": {
             "type": "enum",
             "options": ["Active", "Inactive"],
+            "style": {
+                "Inactive": "info"
+            },
             "default": "Active"
         },
         "host": {

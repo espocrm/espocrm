@@ -201,6 +201,7 @@ trait SelectingBuilderTrait
     ): self {
 
         $onlyMiddle = false;
+        $isLateral = false;
 
         /** @var string|Join|array<int, mixed> $target */
 
@@ -208,6 +209,8 @@ trait SelectingBuilderTrait
             $alias = $alias ?? $target->getAlias();
             $conditions = $conditions ?? $target->getConditions();
             $onlyMiddle = $target->isOnlyMiddle();
+            $isLateral = $target->isLateral();
+
             $target = $target->getTarget();
         }
 
@@ -254,6 +257,10 @@ trait SelectingBuilderTrait
 
         if ($onlyMiddle) {
             $params['onlyMiddle'] = true;
+        }
+
+        if ($isLateral) {
+            $params['isLateral'] = true;
         }
 
         if ($params !== []) {

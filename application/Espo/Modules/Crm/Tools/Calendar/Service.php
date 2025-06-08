@@ -298,7 +298,10 @@ class Service
             'assignedUserId' => $userId,
         ];
 
-        if ($seed->hasRelation('users')) {
+        // @todo Use a metadata parameter scope > usersLink. Populate in an upgrade script.
+        $hasUsers = $seed->hasRelation('users') && $seed->getRelationType('users') === Entity::MANY_MANY;
+
+        if ($hasUsers) {
             $orGroup['usersMiddle.userId'] = $userId;
         }
 
@@ -343,13 +346,15 @@ class Service
             throw new RuntimeException($e->getMessage());
         }
 
-        if ($seed->hasRelation('users')) {
+        if ($hasUsers) {
+            // @todo Use sub-query.
             $queryBuilder
                 ->distinct()
                 ->leftJoin('users');
         }
 
         if ($seed->hasRelation(Field::ASSIGNED_USERS)) {
+            // @todo Use sub-query.
             $queryBuilder
                 ->distinct()
                 ->leftJoin(Field::ASSIGNED_USERS);

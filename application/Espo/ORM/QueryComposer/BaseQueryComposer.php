@@ -3140,20 +3140,24 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $value = $right;
 
+        if ($isNotValue) {
+            if (is_null($value)) {
+                return $sql;
+            }
+
+            $rightPart = $this->convertComplexExpression($entity, $value, false, $params);
+
+            $sql .= " " . $operator . " " . $rightPart;
+
+            return $sql;
+        }
+
         if (is_null($value)) {
             if ($operator === '=') {
                 $sql .= " IS NULL";
             } else if ($operator === '<>') {
                 $sql .= " IS NOT NULL";
             }
-
-            return $sql;
-        }
-
-        if ($isNotValue) {
-            $rightPart = $this->convertComplexExpression($entity, $value, false, $params);
-
-            $sql .= " " . $operator . " " . $rightPart;
 
             return $sql;
         }
@@ -3206,7 +3210,13 @@ abstract class BaseQueryComposer implements QueryComposer
 
             $aliasPart = $this->quoteIdentifier($alias);
 
-            $sql = $prefixPart . "JOIN $targetPart AS $aliasPart";
+            $sql = $prefixPart . "JOIN ";
+
+            if (!empty($joinParams['isLateral'])) {
+                $sql .= "LATERAL ";
+            }
+
+            $sql .= "$targetPart AS $aliasPart";
 
             if ($conditions === []) {
                 return $sql;

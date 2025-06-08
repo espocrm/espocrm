@@ -1184,6 +1184,11 @@
                                 "description": "Apply DISTINCT to the query."
                             }
                         }
+                    },
+                    "massUpdateActionList": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Actions for mass update. Overrides the value from fields metadata."
                     }
                 }
             }
