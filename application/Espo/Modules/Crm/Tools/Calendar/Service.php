@@ -658,21 +658,20 @@ class Service
 
         $userIdList = [];
 
-        $userList = $this->entityManager
+        $users = $this->entityManager
             ->getRDBRepositoryByClass(User::class)
             ->select([Attribute::ID, 'name'])
-            ->leftJoin(Field::TEAMS)
-            ->where([
-                'isActive' => true,
-                'teamsMiddle.teamId' => $teamIdList,
-            ])
-            ->distinct()
+            ->where(['isActive' => true])
+            ->where(
+                $this->relationQueryHelper->prepareLinkWhereMany(User::ENTITY_TYPE, 'teams', $teamIdList)
+            )
             ->find();
 
         $userNames = [];
 
-        foreach ($userList as $user) {
+        foreach ($users as $user) {
             $userIdList[] = $user->getId();
+
             $userNames[$user->getId()] = $user->getName();
         }
 
