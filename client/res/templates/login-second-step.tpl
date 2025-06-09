@@ -10,6 +10,7 @@
                         <input
                             type="text"
                             data-name="field-code"
+                            id="field-code"
                             class="form-control"
                             autocapitalize="off"
                             spellcheck="false"
