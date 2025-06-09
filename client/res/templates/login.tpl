@@ -29,7 +29,7 @@
                     </div>
                     {{/if}}
                     <div class="form-group cell" data-name="username">
-                        <label for="field-username">{{translate 'Username'}}</label>
+                        <label for="field-userName">{{translate 'Username'}}</label>
                         <input
                             type="text"
                             name="username"
@@ -43,16 +43,24 @@
                         >
                     </div>
                     <div class="form-group cell" data-name="password">
-                        <label for="login">{{translate 'Password'}}</label>
-                        <input
-                            type="password"
-                            name="password"
-                            id="field-password"
-                            class="form-control"
-                            tabindex="2"
-                            autocomplete="current-password"
-                            maxlength="255"
-                        >
+                        <label for="field-password">{{translate 'Password'}}</label>
+                        <div data-role="password-input-container">
+                            <input
+                                type="password"
+                                name="password"
+                                id="field-password"
+                                class="form-control"
+                                tabindex="2"
+                                autocomplete="current-password"
+                                maxlength="255"
+                            >
+                            <a
+                                role="button"
+                                data-action="toggleShowPassword"
+                                class="text-soft"
+                                title="{{translate 'View'}}"
+                            ><span class="far fa-eye"></span></a>
+                        </div>
                     </div>
                     {{#if anotherUser}}
                     <div class="form-group cell">
