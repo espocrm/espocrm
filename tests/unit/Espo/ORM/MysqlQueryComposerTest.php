@@ -1090,6 +1090,38 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testJoinSubQueryInOn(): void
+    {
+        $sql =
+            "SELECT post.id AS `id` FROM `post` " .
+            "JOIN `post` AS `p` ON p.id IN (SELECT p1.id AS `id` FROM `post` AS `p1` LIMIT 0, 1)";
+
+        $select = SelectBuilder::create()
+            ->select('id')
+            ->from('Post')
+            ->join(
+                Join::createWithTableTarget('Post', 'p')
+                    ->withConditions(
+                        Condition::in(
+                            Expression::column('p.id'),
+                            SelectBuilder::create()
+                                ->select('id')
+                                ->from('Post', 'p1')
+                                ->limit(0, 1)
+                                ->withDeleted()
+                                ->build()
+                        )
+                    )
+            )
+            ->withDeleted()
+            ->build();
+
+        $this->assertEquals(
+            $sql,
+            $this->query->composeSelect($select)
+        );
+    }
+
     public function testJoinSubQueryException1(): void
     {
         $this->expectException(LogicException::class);

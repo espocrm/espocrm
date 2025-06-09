@@ -930,12 +930,9 @@ class CalendarView extends View {
                 });
             },
             datesSet: () => {
-                const date = this.getDateTime().fromIso(this.calendar.getDate().toISOString());
-                const m = this.dateToMoment(this.calendar.getDate());
+                this.date = this.dateToMoment(this.calendar.getDate()).format('YYYY-MM-DD');
 
-                this.date = date;
-
-                this.trigger('view', m.format('YYYY-MM-DD'), this.mode);
+                this.trigger('view', this.date, this.mode);
             },
             events: (info, callback) => {
                 const dateTimeFormat = this.getDateTime().internalDateTimeFormat;

@@ -57,12 +57,16 @@ use Espo\Modules\Crm\Tools\Calendar\Items\WorkingRange;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\Part\Expression as Expr;
+use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Select;
+use Espo\ORM\Type\RelationType;
 use Espo\Tools\WorkingTime\Calendar as WorkingCalendar;
 use Espo\Tools\WorkingTime\CalendarFactory as WorkingCalendarFactory;
 use Espo\Core\ServiceFactory;
-
 use Espo\Tools\WorkingTime\Extractor;
+
 use PDO;
 use Exception;
 use RuntimeException;
@@ -284,9 +288,7 @@ class Service
             Field::CREATED_AT,
         ];
 
-        $additionalAttributeList = $this->metadata->get(
-            ['app', 'calendar', 'additionalAttributeList']
-        ) ?? [];
+        $additionalAttributeList = $this->metadata->get(['app', 'calendar', 'additionalAttributeList']) ?? [];
 
         foreach ($additionalAttributeList as $attribute) {
             $select[] = $seed->hasAttribute($attribute) ?
@@ -294,71 +296,75 @@ class Service
                 ['null', $attribute];
         }
 
-        $orGroup = [
-            'assignedUserId' => $userId,
-        ];
-
-        // @todo Use a metadata parameter scope > usersLink. Populate in an upgrade script.
-        $hasUsers = $seed->hasRelation('users') && $seed->getRelationType('users') === Entity::MANY_MANY;
-
-        if ($hasUsers) {
-            $orGroup['usersMiddle.userId'] = $userId;
-        }
-
-        if ($seed->hasRelation(Field::ASSIGNED_USERS)) {
-            $orGroup['assignedUsersMiddle.userId'] = $userId;
-        }
+        $hasAssignedUsers = $seed->hasRelation(Field::ASSIGNED_USERS);
 
         try {
-            $queryBuilder = $builder
-                ->buildQueryBuilder()
-                ->select($select)
-                ->where([
-                    'OR' => $orGroup,
-                    [
-                        'OR' => [
-                            [
-                                'dateEnd' => null,
-                                'dateStart>=' => $from,
-                                'dateStart<' => $to,
-                            ],
-                            [
-                                'dateStart>=' => $from,
-                                'dateStart<' => $to,
-                            ],
-                            [
-                                'dateEnd>=' => $from,
-                                'dateEnd<' => $to,
-                            ],
-                            [
-                                'dateStart<=' => $from,
-                                'dateEnd>=' => $to,
-                            ],
-                            [
-                                'dateEndDate!=' => null,
-                                'dateEndDate>=' => $from,
-                                'dateEndDate<' => $to,
-                            ],
-                        ],
-                    ],
-                ]);
+            $queryBuilder = $builder->buildQueryBuilder();
         } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 
-        if ($hasUsers) {
-            // @todo Use sub-query.
-            $queryBuilder
-                ->distinct()
-                ->leftJoin('users');
+        $orBuilder = OrGroup::createBuilder();
+
+        if ($hasAssignedUsers) {
+            $orBuilder->add(
+                $this->relationQueryHelper->prepareAssignedUsersWhere($scope, $userId)
+            );
+        } else {
+            $orBuilder->add(
+                Cond::equal(Expr::column('assignedUserId'), $userId)
+            );
         }
 
-        if ($seed->hasRelation(Field::ASSIGNED_USERS)) {
-            // @todo Use sub-query.
-            $queryBuilder
-                ->distinct()
-                ->leftJoin(Field::ASSIGNED_USERS);
+        // @todo Introduce a metadata scopes parameter 'usersLink'. Populate in an upgrade script.
+        $usersLink = 'users';
+
+        $usersRelation = $this->entityManager
+            ->getDefs()
+            ->getEntity($scope)
+            ->tryGetRelation($usersLink);
+
+        if (
+            $usersRelation &&
+            $usersRelation->getType() === RelationType::MANY_MANY &&
+            $usersRelation->getForeignEntityType() === User::ENTITY_TYPE
+        ) {
+            $whereItem = $this->relationQueryHelper->prepareLinkWhereMany($scope, $usersLink, $userId);
+
+            $orBuilder->add($whereItem);
         }
+
+        $queryBuilder
+            ->select($select)
+            ->where($orBuilder->build())
+            ->where([
+                [
+                    'OR' => [
+                        [
+                            'dateEnd' => null,
+                            'dateStart>=' => $from,
+                            'dateStart<' => $to,
+                        ],
+                        [
+                            'dateStart>=' => $from,
+                            'dateStart<' => $to,
+                        ],
+                        [
+                            'dateEnd>=' => $from,
+                            'dateEnd<' => $to,
+                        ],
+                        [
+                            'dateStart<=' => $from,
+                            'dateEnd>=' => $to,
+                        ],
+                        [
+                            'dateEndDate!=' => null,
+                            'dateEndDate>=' => $from,
+                            'dateEndDate<' => $to,
+                        ],
+                    ],
+                ],
+            ]);
 
         return $queryBuilder->build();
     }
@@ -652,21 +658,20 @@ class Service
 
         $userIdList = [];
 
-        $userList = $this->entityManager
+        $users = $this->entityManager
             ->getRDBRepositoryByClass(User::class)
             ->select([Attribute::ID, 'name'])
-            ->leftJoin(Field::TEAMS)
-            ->where([
-                'isActive' => true,
-                'teamsMiddle.teamId' => $teamIdList,
-            ])
-            ->distinct()
+            ->where(['isActive' => true])
+            ->where(
+                $this->relationQueryHelper->prepareLinkWhereMany(User::ENTITY_TYPE, 'teams', $teamIdList)
+            )
             ->find();
 
         $userNames = [];
 
-        foreach ($userList as $user) {
+        foreach ($users as $user) {
             $userIdList[] = $user->getId();
+
             $userNames[$user->getId()] = $user->getName();
         }
 

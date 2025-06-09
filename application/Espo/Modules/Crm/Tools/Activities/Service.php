@@ -36,6 +36,7 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
 
 use Espo\Core\Name\Field;
+use Espo\Core\Select\Helpers\RelationQueryHelper;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Templates\Entities\Company;
 use Espo\Core\Templates\Entities\Person;
@@ -51,6 +52,9 @@ use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Reminder;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\Part\Expression as Expr;
+use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\UnionBuilder;
 use Espo\ORM\Query\SelectBuilder;
 
@@ -86,7 +90,8 @@ class Service
         private Acl $acl,
         private ServiceFactory $serviceFactory,
         private EntityManager $entityManager,
-        private User $user
+        private User $user,
+        private RelationQueryHelper $relationQueryHelper,
     ) {}
 
     protected function isPerson(string $scope): bool
@@ -144,22 +149,23 @@ class Service
             throw new RuntimeException($e->getMessage());
         }
 
-        $where = [
-            'usersLeftMiddle.userId' => $entity->getId(),
-        ];
+        $orBuilder = OrGroup::createBuilder();
 
-        if ($entity->isPortal() && $entity->get('contactId')) {
-            $where['contactsLeftMiddle.contactId'] = $entity->get('contactId');
+        $orBuilder->add(
+            Cond::equal(Expr::column('usersLeftMiddle.userId'), $entity->getId())
+        );
 
-            $builder
-                ->leftJoin('contacts', 'contactsLeft')
-                ->distinct()
-                ->where([
-                    'OR' => $where,
-                ]);
-        } else {
-            $builder->where($where);
+        if ($entity->isPortal() && $entity->getContactId()) {
+            $orBuilder->add(
+                $this->relationQueryHelper->prepareLinkWhereMany(
+                    Meeting::ENTITY_TYPE,
+                    'contacts',
+                    $entity->getContactId()
+                )
+            );
         }
+
+        $builder->where($orBuilder->build());
 
         if (!empty($statusList)) {
             $builder->where([
@@ -216,22 +222,23 @@ class Service
             throw new RuntimeException($e->getMessage());
         }
 
-        $where = [
-            'usersLeftMiddle.userId' => $entity->getId(),
-        ];
+        $orBuilder = OrGroup::createBuilder();
 
-        if ($entity->isPortal() && $entity->get('contactId')) {
-            $where['contactsLeftMiddle.contactId'] = $entity->get('contactId');
+        $orBuilder->add(
+            Cond::equal(Expr::column('usersLeftMiddle.userId'), $entity->getId())
+        );
 
-            $builder
-                ->leftJoin('contacts', 'contactsLeft')
-                ->distinct()
-                ->where([
-                    'OR' => $where,
-                ]);
-        } else {
-            $builder->where($where);
+        if ($entity->isPortal() && $entity->getContactId()) {
+            $orBuilder->add(
+                $this->relationQueryHelper->prepareLinkWhereMany(
+                    Call::ENTITY_TYPE,
+                    'contacts',
+                    $entity->getContactId()
+                )
+            );
         }
+
+        $builder->where($orBuilder->build());
 
         if (!empty($statusList)) {
             $builder->where([

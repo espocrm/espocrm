@@ -2492,28 +2492,28 @@ abstract class BaseQueryComposer implements QueryComposer
     protected function getWherePartItem(
         Entity $entity,
         mixed $leftKey,
-        mixed $value,
+        mixed $right,
         array &$params,
         int $level,
         bool $noCustomWhere = false
     ): ?string {
 
-        if (is_int($leftKey) && is_string($value)) {
-            return $this->convertComplexExpression($entity, $value, false, $params);
+        if (is_int($leftKey) && is_string($right)) {
+            return $this->convertComplexExpression($entity, $right, false, $params);
         }
 
-        $field = $leftKey;
+        $left = $leftKey;
 
-        if (is_int($field)) {
-            $field = 'AND';
+        if (is_int($left)) {
+            $left = 'AND';
         }
 
         if ($leftKey === 'NOT') {
-            $field = 'AND';
+            $left = 'AND';
         }
 
-        if (in_array($field, self::SQL_OPERATORS)) {
-            $internalPart = $this->getWherePart($entity, $value, $field, $params, $level + 1);
+        if (in_array($left, self::SQL_OPERATORS)) {
+            $internalPart = $this->getWherePart($entity, $right, $left, $params, $level + 1);
 
             if (!$internalPart && $internalPart !== '0') {
                 return null;
@@ -2526,11 +2526,11 @@ abstract class BaseQueryComposer implements QueryComposer
             return "(" . $internalPart . ")";
         }
 
-        if ($field === self::EXISTS_OPERATOR) {
-            if ($value instanceof Select) {
-                $subQueryPart = $this->composeSelect($value);
-            } else if (is_array($value)) {
-                $subQueryPart = $this->createSelectQueryInternal($value);
+        if ($left === self::EXISTS_OPERATOR) {
+            if ($right instanceof Select) {
+                $subQueryPart = $this->composeSelect($right);
+            } else if (is_array($right)) {
+                $subQueryPart = $this->createSelectQueryInternal($right);
             } else {
                 throw new RuntimeException("Bad EXISTS usage in where-clause.");
             }
@@ -2541,75 +2541,99 @@ abstract class BaseQueryComposer implements QueryComposer
         $isComplex = false;
         $isNotValue = false;
 
-        if (str_ends_with($field, ':')) {
-            $field = substr($field, 0, strlen($field) - 1);
+        if (str_ends_with($left, ':')) {
+            $left = substr($left, 0, strlen($left) - 1);
 
             $isNotValue = true;
         }
 
-        [$field, $operator, $operatorOrm] = $this->splitWhereLeftItem($field);
+        [$left, $operator, $operatorOrm] = $this->splitWhereLeftItem($left);
 
         $leftPart = null;
 
-        if (Util::isComplexExpression($field)) {
-            $leftPart = $this->convertComplexExpression($entity, $field, false, $params);
+        if (Util::isComplexExpression($left)) {
+            $leftPart = $this->convertComplexExpression($entity, $left, false, $params);
 
             $isComplex = true;
         }
 
         if (!$isComplex) {
-            if (!$entity->hasAttribute($field)) {
+            if (!$entity->hasAttribute($left)) {
                 return $this->quote(false);
             }
 
             $operatorKey = $this->getWhereOperatorKey(
                 $operator,
                 $operatorOrm,
-                $value,
-                $entity->getAttributeType($field)
+                $right,
+                $entity->getAttributeType($left)
             );
 
             if (
                 !$noCustomWhere &&
-                $this->getAttributeParam($entity, $field, 'where') &&
-                isset($this->getAttributeParam($entity, $field, 'where')[$operatorKey])
+                $this->getAttributeParam($entity, $left, 'where') &&
+                isset($this->getAttributeParam($entity, $left, 'where')[$operatorKey])
             ) {
-                $whereDefs = $this->getAttributeParam($entity, $field, 'where')[$operatorKey];
+                $whereDefs = $this->getAttributeParam($entity, $left, 'where')[$operatorKey];
 
-                return $this->getWherePartItemCustom($entity, $value, $whereDefs, $params, $level);
+                return $this->getWherePartItemCustom($entity, $right, $whereDefs, $params, $level);
             }
 
-            $leftPart = $this->getWherePartItemAttributeLeftPart($entity, $field, $params);
+            $leftPart = $this->getWherePartItemAttributeLeftPart($entity, $left, $params);
         }
+
+        return $this->addRightWherePartItem(
+            leftPart: $leftPart,
+            operatorOrm: $operatorOrm,
+            operator: $operator,
+            right: $right,
+            entity: $entity,
+            isNotValue: $isNotValue,
+            params: $params,
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     */
+    private function addRightWherePartItem(
+        ?string $leftPart,
+        string $operatorOrm,
+        string $operator,
+        mixed $right,
+        Entity $entity,
+        bool $isNotValue,
+        array $params,
+    ): string {
 
         if ($leftPart === null) {
             return $this->quote(false);
         }
 
         if ($operatorOrm === '=s' || $operatorOrm === '!=s') {
-            if ($value instanceof Select) {
-                $subSql = $this->composeSelect($value);
+            if ($right instanceof Select) {
+                $subSql = $this->composeSelect($right);
 
                 return "$leftPart $operator ($subSql)";
             }
 
-            if (!is_array($value)) {
+            if (!is_array($right)) {
                 throw new RuntimeException("Bad `=s` operator usage, value must be sub-query.");
             }
 
-            $subQuerySelectParams = !empty($value['selectParams']) ?
-                $value['selectParams'] :
-                $value;
+            $subQuerySelectParams = !empty($right['selectParams']) ?
+                $right['selectParams'] :
+                $right;
 
             if (
                 !isset($subQuerySelectParams['from']) &&
                 !isset($subQuerySelectParams['fromQuery'])
             ) {
                 // 'entityType' is for backward compatibility.
-                $subQuerySelectParams['from'] = $value['entityType'] ?? $entity->getEntityType();
+                $subQuerySelectParams['from'] = $right['entityType'] ?? $entity->getEntityType();
             }
 
-            if (!empty($value['withDeleted'])) {
+            if (!empty($right['withDeleted'])) {
                 $subQuerySelectParams['withDeleted'] = true;
             }
 
@@ -2618,12 +2642,12 @@ abstract class BaseQueryComposer implements QueryComposer
             return "$leftPart $operator ($subSql)";
         }
 
-        if ($value instanceof Select) {
+        if ($right instanceof Select) {
             if ($operatorOrm === '*' || $operatorOrm === '!*') {
                 throw new RuntimeException("LIKE operator is not compatible with sub-query.");
             }
 
-            $subQueryPart = $this->composeSelect($value);
+            $subQueryPart = $this->composeSelect($right);
 
             return "$leftPart $operator ($subQueryPart)";
         }
@@ -2632,14 +2656,14 @@ abstract class BaseQueryComposer implements QueryComposer
             throw new RuntimeException("ANY/ALL operators can be used only with sub-query.");
         }
 
-        if ($value instanceof Expression) {
+        if ($right instanceof Expression) {
             $isNotValue = true;
 
-            $value = $value->getValue();
+            $right = $right->getValue();
         }
 
-        if (is_array($value)) {
-            $valuePartList = $value;
+        if (is_array($right)) {
+            $valuePartList = $right;
 
             foreach ($valuePartList as $k => $v) {
                 $valuePartList[$k] = $this->quote($v);
@@ -2663,16 +2687,16 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if ($isNotValue) {
-            if (is_null($value)) {
+            if (is_null($right)) {
                 return $leftPart;
             }
 
-            $expressionSql = $this->convertComplexExpression($entity, $value, false, $params);
+            $expressionSql = $this->convertComplexExpression($entity, $right, false, $params);
 
             return "$leftPart $operator $expressionSql";
         }
 
-        if (is_null($value)) {
+        if (is_null($right)) {
             if ($operator === '=') {
                 return "$leftPart IS NULL";
             }
@@ -2684,7 +2708,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return $this->quote(false);
         }
 
-        $valuePart = $this->quote($value);
+        $valuePart = $this->quote($right);
 
         return "$leftPart $operator $valuePart";
     }
@@ -3031,38 +3055,56 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * @param array<string, mixed> $params
-     * @param string $alias
-     * @param mixed $left
-     * @param mixed $right
+     * @noinspection PhpDeprecationInspection
      */
     protected function buildJoinConditionStatement(
         Entity $entity,
         string $alias,
-        $left,
-        $right,
+        mixed $leftKey,
+        mixed $right,
         array $params,
         bool $noLeftAlias = false
     ): string {
 
-        $sql = '';
+        // @todo Unify with `getWherePartItem`. If reasonable.
 
-        if (is_array($right) && (is_int($left) || in_array($left, ['AND', 'OR']))) {
+        $left = $leftKey;
+
+        if (is_int($left)) {
+            $left = 'AND';
+        }
+
+        if ($leftKey === 'NOT') {
+            $left = 'AND';
+        }
+
+        if (in_array($left, self::SQL_OPERATORS)) {
             $logicalOperator = 'AND';
 
             if ($left === 'OR') {
                 $logicalOperator = 'OR';
             }
 
-            $sqlList = [];
+            $parts = [];
 
             foreach ($right as $k => $v) {
-                $sqlList[] = $this->buildJoinConditionStatement($entity, $alias, $k, $v, $params, $noLeftAlias);
+                $part = $this->buildJoinConditionStatement($entity, $alias, $k, $v, $params, $noLeftAlias);
+
+                if ($part === '') {
+                    continue;
+                }
+
+                $parts[] = $part;
             }
 
-            $sql = implode(' ' . $logicalOperator . ' ', $sqlList);
+            $sql = implode(' ' . $logicalOperator . ' ', $parts);
 
-            if (count($sqlList) > 1) {
+            if (count($parts) > 1) {
                 $sql = '(' . $sql . ')';
+            }
+
+            if ($leftKey === 'NOT') {
+                return "NOT ($sql)";
             }
 
             return $sql;
@@ -3073,98 +3115,43 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if (str_ends_with($left, ':')) {
             $left = substr($left, 0, strlen($left) - 1);
+
             $isNotValue = true;
         }
 
-        [$left, $operator] = $this->splitWhereLeftItem($left);
+        [$left, $operator, $operatorOrm] = $this->splitWhereLeftItem($left);
+
+        $leftPart = null;
 
         if (Util::isComplexExpression($left)) {
             $isComplex = true;
-            $stub = [];
 
-            $sql .= $this->convertComplexExpression($entity, $left, false, $stub);
+            // Differs from where logic.
+            $stub = []; // @todo Revise the need.
+            $leftPart = $this->convertComplexExpression($entity, $left, false, $stub);
         }
 
         if (!$isComplex) {
-            if (strpos($left, '.') > 0) {
-                list($leftAlias, $attribute) = explode('.', $left);
+            // Differs from where logic.
 
-                /** @noinspection PhpDeprecationInspection */
-                $leftAlias = $this->sanitize($leftAlias);
-                /** @noinspection PhpDeprecationInspection */
-                $column = $this->toDb($this->sanitize($attribute));
-            } else {
-                /** @noinspection PhpDeprecationInspection */
-                $column = $this->toDb($this->sanitize($left));
+            $column = $this->toDb($this->sanitize($left));
 
-                /** @noinspection PhpDeprecationInspection */
-                $leftAlias = $noLeftAlias ?
-                    $this->getFromAlias($params, $entity->getEntityType()) :
-                    $this->sanitize($alias);
-            }
+            $leftAlias = $noLeftAlias ?
+                $this->getFromAlias($params, $entity->getEntityType()) :
+                $this->sanitize($alias);
 
-            $sql .= $this->quoteColumn("$leftAlias.$column");
+            $leftPart = $this->quoteColumn("$leftAlias.$column");
         }
 
-        if ($right instanceof Expression) {
-            $isNotValue = true;
-
-            $right = $right->getValue();
-        }
-
-        if (is_array($right)) {
-            $arr = [];
-
-            foreach ($right as $item) {
-                $arr[] = $this->quote($item);
-            }
-
-            $operator = $operator === '<>' ? 'NOT IN' : 'IN';
-
-            if (count($arr)) {
-                $sql .= " " . $operator . " (" . implode(', ', $arr) . ")";
-
-                return $sql;
-            }
-
-            if ($operator === 'IN') {
-                $sql .= " IS NULL";
-
-                return $sql;
-            }
-
-            $sql .= " IS NOT NULL";
-
-            return $sql;
-        }
-
-        $value = $right;
-
-        if ($isNotValue) {
-            if (is_null($value)) {
-                return $sql;
-            }
-
-            $rightPart = $this->convertComplexExpression($entity, $value, false, $params);
-
-            $sql .= " " . $operator . " " . $rightPart;
-
-            return $sql;
-        }
-
-        if (is_null($value)) {
-            if ($operator === '=') {
-                $sql .= " IS NULL";
-            } else if ($operator === '<>') {
-                $sql .= " IS NOT NULL";
-            }
-
-            return $sql;
-        }
-
-        $sql .= " " . $operator . " " . $this->quote($value);
-
-        return $sql;
+        return $this->addRightWherePartItem(
+            leftPart: $leftPart,
+            operatorOrm: $operatorOrm,
+            operator: $operator,
+            right: $right,
+            entity: $entity,
+            isNotValue: $isNotValue,
+            params: $params,
+        );
     }
 
     /**
