@@ -444,6 +444,7 @@ class LoginView extends View {
     toggleShowPassword() {
         const input = this.element.querySelector('[id="field-password"]');
         const button = this.element.querySelector('[data-action="toggleShowPassword"]');
+        const icon = button.children[0];
 
         if (!(input instanceof HTMLInputElement)) {
             return;
@@ -452,14 +453,21 @@ class LoginView extends View {
         if (input.type === 'password') {
             input.type = 'text';
 
-            button.classList.remove('text-soft');
-            button.classList.add('text-primary');
+            //button.classList.remove('text-soft');
+            //button.classList.add('text-primary');
+
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
         } else {
             input.type = 'password';
 
-            button.classList.remove('text-primary');
-            button.classList.add('text-soft');
+            //button.classList.remove('text-primary');
+            //button.classList.add('text-soft');
+
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
         }
+
 
         input.focus();
         input.setSelectionRange(input.value.length, input.value.length);
