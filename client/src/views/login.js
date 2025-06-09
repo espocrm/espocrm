@@ -460,6 +460,9 @@ class LoginView extends View {
             button.classList.remove('text-primary');
             button.classList.add('text-soft');
         }
+
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
     }
 }
 
