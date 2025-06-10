@@ -11,6 +11,8 @@
             "type": "enum",
             "options": ["Standby", "Pending", "In Process", "Complete", "Failed"],
             "readOnly": true,
+            "displayAsLabel": true,
+            "labelType": "state",
             "style": {
                 "Complete": "success",
                 "Failed": "danger"
@@ -54,7 +56,8 @@
         },
         "createdBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/user-with-avatar"
         }
     },
     "links": {

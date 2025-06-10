@@ -38,7 +38,7 @@
 	    	}
 	    ]
     },
-    "searchPanelDisabled": true,
+    "textFilterDisabled": true,
     "relationshipPanels": {
         "errors": {
             "unlinkDisabled": true,
