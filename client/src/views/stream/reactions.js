@@ -27,7 +27,6 @@
  ************************************************************************/
 
 import View from 'view';
-import Collection from 'collection';
 import ListRecordView from 'views/record/list';
 import ReactionsHelper from 'helpers/misc/reactions';
 
@@ -42,7 +41,7 @@ export default class NoteReactionsView extends View {
                 title="{{label}}"
                 data-type="{{type}}"
             >
-                <span data-role="icon" class="{{iconClass}} {{#if reacted}} text-primary {{/if}}"></span>
+                <span data-role="icon" class="{{iconClass}} {{#if reacted}} text-warning {{/if}}"></span>
                 <span data-role="count">{{count}}</span>
             </a>
         {{/each}}

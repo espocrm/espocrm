@@ -76,7 +76,6 @@ class LinkMultipleFieldView extends BaseFieldView {
     editTemplate = 'fields/link-multiple/edit'
     searchTemplate = 'fields/link-multiple/search'
 
-
     // noinspection JSUnusedGlobalSymbols
     listLinkTemplateContent = `
         {{#if value}}
@@ -246,6 +245,14 @@ class LinkMultipleFieldView extends BaseFieldView {
      * @type {string}
      */
     iconHtml = ''
+
+    /**
+     * A link element class name. Applicable in the detail mode.
+     *
+     * @protected
+     * @since 9.1.6
+     */
+    linkClass
 
     /** @inheritDoc */
     events = {
@@ -834,6 +841,8 @@ class LinkMultipleFieldView extends BaseFieldView {
 
         if (this.mode === this.MODE_LIST) {
             $a.addClass('text-default');
+        } else if (this.linkClass) {
+            $a.addClass(this.linkClass);
         }
 
         if (iconHtml) {

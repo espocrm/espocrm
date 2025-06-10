@@ -32,6 +32,7 @@ import Autocomplete from 'ui/autocomplete';
 class UserFieldView extends LinkFieldView {
 
     searchTemplate = 'fields/user/search'
+    linkClass = 'text-default'
 
     setupSearch() {
         super.setupSearch();
