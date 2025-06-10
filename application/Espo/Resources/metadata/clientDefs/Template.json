@@ -5,5 +5,11 @@
         "edit": "views/template/record/edit"
     },
     "mergeDisabled": true,
+    "filterList": [
+        "active"
+    ],
+    "selectDefaultFilters": {
+        "filter": "active"
+    },
     "iconClass": "fas fa-file-pdf"
 }

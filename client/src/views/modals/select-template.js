@@ -47,6 +47,8 @@ class SelectTemplateModalView extends SelectRecordsModalView {
         });
 
         this.collection.where = this.searchManager.getWhere();
+
+        this.collection.data.primaryFilter = 'active';
     }
 
     afterRender() {

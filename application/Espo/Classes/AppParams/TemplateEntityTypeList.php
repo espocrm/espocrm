@@ -30,29 +30,27 @@
 namespace Espo\Classes\AppParams;
 
 use Espo\Core\Acl;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Entities\Template;
 use Espo\Tools\App\AppParam;
+use RuntimeException;
 
 /**
  * Returns a list of entity types for which a PDF template exists.
+ *
+ * @noinspection PhpUnused
  */
 class TemplateEntityTypeList implements AppParam
 {
-    private Acl $acl;
-    private SelectBuilderFactory $selectBuilderFactory;
-    private EntityManager $entityManager;
 
     public function __construct(
-        Acl $acl,
-        SelectBuilderFactory $selectBuilderFactory,
-        EntityManager $entityManager
-    ) {
-        $this->acl = $acl;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-        $this->entityManager = $entityManager;
-    }
+        private Acl $acl,
+        private SelectBuilderFactory $selectBuilderFactory,
+        private EntityManager $entityManager,
+    ) {}
 
     /**
      * @return string[]
@@ -65,14 +63,19 @@ class TemplateEntityTypeList implements AppParam
 
         $list = [];
 
-        $query = $this->selectBuilderFactory
-            ->create()
-            ->from(Template::ENTITY_TYPE)
-            ->withAccessControlFilter()
-            ->buildQueryBuilder()
-            ->select(['entityType'])
-            ->group(['entityType'])
-            ->build();
+        try {
+            $query = $this->selectBuilderFactory
+                ->create()
+                ->from(Template::ENTITY_TYPE)
+                ->withAccessControlFilter()
+                ->buildQueryBuilder()
+                ->select(['entityType'])
+                ->where(['status' => Template::STATUS_ACTIVE])
+                ->group(['entityType'])
+                ->build();
+        } catch (BadRequest|Forbidden $e) {
+            throw new RuntimeException('', 0, $e);
+        }
 
         $templateCollection = $this->entityManager
             ->getRDBRepositoryByClass(Template::class)

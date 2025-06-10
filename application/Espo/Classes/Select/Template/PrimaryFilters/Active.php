@@ -27,30 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Classes\Select\Template\PrimaryFilters;
 
-use Espo\Core\ORM\Entity;
-use UnexpectedValueException;
+use Espo\Core\Select\Primary\Filter;
+use Espo\Entities\Template;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
-class Template extends Entity
+class Active implements Filter
 {
-    public const ENTITY_TYPE = 'Template';
-
-    public const STATUS_ACTIVE = 'Active';
-
-    public function getTargetEntityType(): string
+    public function apply(QueryBuilder $queryBuilder): void
     {
-        $entityType = $this->get('entityType');
-
-        if ($entityType === null) {
-            throw new UnexpectedValueException();
-        }
-
-        return $entityType;
-    }
-
-    public function isActive(): bool
-    {
-        return $this->get('status') === self::STATUS_ACTIVE;
+        $queryBuilder->where(['status' => Template::STATUS_ACTIVE]);
     }
 }

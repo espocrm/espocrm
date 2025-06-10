@@ -1,4 +1,5 @@
 [
-    {"name": "name", "width": 50, "link": true},
-    {"name": "entityType"}
+    {"name": "name", "link": true},
+    {"name": "entityType", "width": 25},
+    {"name": "status", "width": 25}
 ]

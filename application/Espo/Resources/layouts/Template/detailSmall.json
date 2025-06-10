@@ -1,10 +1,9 @@
 [
     {
-        "label": "",
         "rows": [
-            [{"name":"name"}],
-            [{"name":"entityType"}, false],
-            [{"name":"body"}]
+            [{"name": "name"}],
+            [{"name": "entityType"}, {"name": "status"}],
+            [{"name": "body"}]
         ]
     }
 ]

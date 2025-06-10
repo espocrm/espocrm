@@ -453,7 +453,8 @@
     "presetFilters": {
         "followed": "Followed",
         "all": "All",
-        "starred": "Starred"
+        "starred": "Starred",
+        "active": "Active"
     },
     "massActions": {
         "delete": "Delete",

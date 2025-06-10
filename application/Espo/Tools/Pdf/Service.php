@@ -43,28 +43,14 @@ class Service
 {
     private const DEFAULT_ENGINE = 'Dompdf';
 
-    private EntityManager $entityManager;
-    private Acl $acl;
-    private ServiceContainer $serviceContainer;
-    private DataLoaderManager $dataLoaderManager;
-    private Config $config;
-    private Builder $builder;
-
     public function __construct(
-        EntityManager $entityManager,
-        Acl $acl,
-        ServiceContainer $serviceContainer,
-        DataLoaderManager $dataLoaderManager,
-        Config $config,
-        Builder $builder
-    ) {
-        $this->entityManager = $entityManager;
-        $this->acl = $acl;
-        $this->serviceContainer = $serviceContainer;
-        $this->dataLoaderManager = $dataLoaderManager;
-        $this->config = $config;
-        $this->builder = $builder;
-    }
+        private EntityManager $entityManager,
+        private Acl $acl,
+        private ServiceContainer $serviceContainer,
+        private DataLoaderManager $dataLoaderManager,
+        private Config $config,
+        private Builder $builder,
+    ) {}
 
     /**
      * Generate a PDF.
@@ -97,11 +83,16 @@ class Service
             throw new NotFound("Record not found.");
         }
 
-        /** @var ?TemplateEntity $template */
-        $template = $this->entityManager->getEntityById(TemplateEntity::ENTITY_TYPE, $templateId);
+        $template = $this->entityManager
+            ->getRDBRepositoryByClass(TemplateEntity::class)
+            ->getById($templateId);
 
         if (!$template) {
             throw new NotFound("Template not found.");
+        }
+
+        if (!$template->isActive()) {
+            throw new Forbidden("Template is not active.");
         }
 
         if ($applyAcl && !$this->acl->checkEntityRead($entity)) {
