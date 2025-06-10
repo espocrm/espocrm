@@ -30,6 +30,8 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Api\Request;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\SearchParamsFetcher;
 use Espo\Tools\ActionHistory\Service as Service;
 
@@ -43,6 +45,10 @@ class LastViewed
     public function __construct(private SearchParamsFetcher $searchParamsFetcher, private Service $service)
     {}
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function getActionIndex(Request $request): stdClass
     {
         $searchParams = $this->searchParamsFetcher->fetch($request);
