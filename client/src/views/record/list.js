@@ -98,6 +98,7 @@ class ListRecordView extends View {
      * @property {boolean} [columnResize] Column resize. Actual only if the settings is enabled.
      * @property {function(import('model').default[])} [onSelect] An on-select callback. Actual if selectable.
      *     As of v9.1.0.
+     * @property {boolean} [forceSettings] Force settings. As of v9.2.0.
      */
 
     /**
@@ -2051,6 +2052,10 @@ class ListRecordView extends View {
 
         if (!this.massActionList.length && !this.selectable) {
             this.checkboxes = false;
+        }
+
+        if (this.options.forceSettings) {
+            this.forceSettings = true;
         }
 
         /**

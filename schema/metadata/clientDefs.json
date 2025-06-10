@@ -53,6 +53,10 @@
             "type": "boolean",
             "description": "Disables remove."
         },
+        "forceListViewSettings": {
+            "type": "boolean",
+            "description": "Force list view settings for non-object entity types. As of v9.2.0."
+        },
         "views": {
             "description": "View classes. Available views: list, detail, edit, listRelated.",
             "type": "object",

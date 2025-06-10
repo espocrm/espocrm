@@ -637,6 +637,7 @@ class ListView extends MainView {
             forceDisplayTopBar: true,
             additionalRowActionList: this.getMetadata().get(`clientDefs.${this.scope}.rowActionList`),
             settingsEnabled: true,
+            forceSettings: this.getMetadata().get(`clientDefs.${this.scope}.forceListViewSettings`),
         };
 
         if (this.getHelper().isXsScreen()) {
