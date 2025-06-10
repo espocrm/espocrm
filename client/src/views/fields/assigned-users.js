@@ -30,6 +30,8 @@ import LinkMultipleFieldView from 'views/fields/link-multiple';
 
 class AssignedUsersFieldView extends LinkMultipleFieldView {
 
+    linkClass = 'text-default'
+
     init() {
         this.assignmentPermission = this.getAcl().getPermissionLevel('assignmentPermission');
 

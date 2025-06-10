@@ -32,6 +32,7 @@ class FollowersFieldView extends LinkMultipleFieldView {
 
     foreignScope = 'User'
     portionSize = 6
+    linkClass = 'text-default'
 
     setup() {
         super.setup();
