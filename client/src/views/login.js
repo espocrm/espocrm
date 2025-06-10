@@ -127,6 +127,8 @@ class LoginView extends View {
 
     /** @inheritDoc */
     setup() {
+        this.addActionHandler('toggleShowPassword', () => this.toggleShowPassword());
+
         this.anotherUser = this.options.anotherUser || null;
 
         const loginData = this.getConfig().get('loginData') || {};
@@ -434,6 +436,41 @@ class LoginView extends View {
 
             Espo.Ui.notify(false);
         });
+    }
+
+    /**
+     * @private
+     */
+    toggleShowPassword() {
+        const input = this.element.querySelector('[id="field-password"]');
+        const button = this.element.querySelector('[data-action="toggleShowPassword"]');
+        const icon = button.children[0];
+
+        if (!(input instanceof HTMLInputElement)) {
+            return;
+        }
+
+        if (input.type === 'password') {
+            input.type = 'text';
+
+            //button.classList.remove('text-soft');
+            //button.classList.add('text-primary');
+
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+
+            //button.classList.remove('text-primary');
+            //button.classList.add('text-soft');
+
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+
+
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
     }
 }
 

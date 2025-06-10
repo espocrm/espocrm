@@ -4280,6 +4280,24 @@ body > .autocomplete-suggestions.text-search-suggestions {
     }
 }
 
+[data-role="password-input-container"] {
+    position: relative;
+
+    input {
+        padding-right: var(--32px);
+    }
+
+    a[data-action="toggleShowPassword"] {
+        position: absolute;
+        right: var(--8px);
+        top: var(--8px);
+        user-select: none;
+        width: var(--22px);
+        display: inline-block;
+        text-align: center;
+    }
+}
+
 @import "misc/kanban.less";
 @import "misc/wysiwyg.less";
 
