@@ -255,6 +255,11 @@ class Binding implements BindingProcessor
             'Espo\\Core\\Utils\\Database\\ConfigDataProvider',
             'Espo\\Core\\Utils\\Database\\DefaultConfigDataProvider'
         );
+
+        $binder->bindImplementation(
+            'Espo\\Core\\Job\\JobSchedulerCreator',
+            'Espo\\Core\\Job\\JobScheduler\\Creators\\EntityJobSchedulerCreator',
+        );
     }
 
     private function bindMisc(Binder $binder): void

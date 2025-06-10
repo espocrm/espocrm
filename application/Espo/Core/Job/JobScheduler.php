@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Job;
 
-use Espo\ORM\EntityManager;
-use Espo\Core\Utils\DateTime;
+use Espo\Core\Field\DateTime as DateTimeField;
 use Espo\Core\Job\Job\Data;
-use Espo\Entities\Job as JobEntity;
 
 use ReflectionClass;
 use DateTimeInterface;
@@ -42,11 +40,11 @@ use RuntimeException;
 use TypeError;
 
 /**
- * Creates a job record in database.
+ * Creates jobs in a queue.
  */
 class JobScheduler
 {
-    /** @var ?class-string */
+    /** @var ?class-string<Job|JobDataLess> */
     private ?string $className = null;
     private ?string $queue = null;
     private ?string $group = null;
@@ -54,8 +52,9 @@ class JobScheduler
     private ?DateTimeImmutable $time = null;
     private ?DateInterval $delay = null;
 
-    public function __construct(private EntityManager $entityManager)
-    {}
+    public function __construct(
+        private JobSchedulerCreator $creator,
+    ) {}
 
     /**
      * A class name of the job. Should implement the `Job` interface.
@@ -158,7 +157,7 @@ class JobScheduler
         return $this;
     }
 
-    public function schedule(): JobEntity
+    public function schedule(): void
     {
         if (!$this->className) {
             throw new RuntimeException("Class name is not set.");
@@ -168,24 +167,26 @@ class JobScheduler
             throw new RuntimeException("Can't have both queue and group.");
         }
 
-        $time = $this->time ?? new DateTimeImmutable();
+        $time = $this->time;
 
-        if ($this->delay) {
+        if (!$this->time && $this->delay) {
+            $time = new DateTimeImmutable();
+        }
+
+        if ($time && $this->delay) {
             $time = $time->add($this->delay);
         }
 
         $data = $this->data ?? Data::create();
 
-        /** @var JobEntity */
-        return $this->entityManager->createEntity(JobEntity::ENTITY_TYPE, [
-            'name' => $this->className,
-            'className' => $this->className,
-            'queue' => $this->queue,
-            'group' => $this->group,
-            'targetType' => $data->getTargetType(),
-            'targetId' => $data->getTargetId(),
-            'data' => $data->getRaw(),
-            'executeTime' => $time->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
-        ]);
+        $creatorData = new JobScheduler\Data(
+            className: $this->className,
+            queue: $this->queue,
+            group: $this->group,
+            data: $data,
+            time: $time ? DateTimeField::fromDateTime($time) : null,
+        );
+
+        $this->creator->create($creatorData);
     }
 }
