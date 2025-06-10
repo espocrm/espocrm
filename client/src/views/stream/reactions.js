@@ -27,7 +27,6 @@
  ************************************************************************/
 
 import View from 'view';
-import Collection from 'collection';
 import ListRecordView from 'views/record/list';
 import ReactionsHelper from 'helpers/misc/reactions';
 
