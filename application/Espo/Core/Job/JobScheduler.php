@@ -31,6 +31,7 @@ namespace Espo\Core\Job;
 
 use Espo\Core\Field\DateTime as DateTimeField;
 use Espo\Core\Job\Job\Data;
+use Espo\Core\Job\JobScheduler\Creator;
 
 use ReflectionClass;
 use DateTimeInterface;
@@ -53,7 +54,7 @@ class JobScheduler
     private ?DateInterval $delay = null;
 
     public function __construct(
-        private JobSchedulerCreator $creator,
+        private Creator $creator,
     ) {}
 
     /**
@@ -179,7 +180,7 @@ class JobScheduler
 
         $data = $this->data ?? Data::create();
 
-        $creatorData = new JobScheduler\Data(
+        $creatorData = new Creator\Data(
             className: $this->className,
             queue: $this->queue,
             group: $this->group,

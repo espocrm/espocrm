@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Job;
 
 use Espo\Core\Field\DateTime as DateTimeField;
 use Espo\Core\Job\JobScheduler;
-use Espo\Core\Job\JobSchedulerCreator;
+use Espo\Core\Job\JobScheduler\Creator;
 use Espo\Core\Job\QueueName;
 use Espo\Core\Job\Job\Data;
 use PHPUnit\Framework\TestCase;
@@ -42,11 +42,11 @@ use DateInterval;
 
 class JobSchedulerTest extends TestCase
 {
-    private ?JobSchedulerCreator $creator = null;
+    private ?JobScheduler\Creator $creator = null;
 
     protected function setUp(): void
     {
-        $this->creator = $this->createMock(JobSchedulerCreator::class);
+        $this->creator = $this->createMock(JobScheduler\Creator::class);
     }
 
     public function testSchedule1(): void
@@ -57,7 +57,7 @@ class JobSchedulerTest extends TestCase
 
         $delay = DateInterval::createFromDateString('1 minute');
 
-        $expectedData = new JobScheduler\Data(
+        $expectedData = new Creator\Data(
             className: TestJob::class,
             queue: QueueName::Q0,
             group: null,
@@ -87,7 +87,7 @@ class JobSchedulerTest extends TestCase
 
         $time = new DateTimeImmutable();
 
-        $expectedData = new JobScheduler\Data(
+        $expectedData = new Creator\Data(
             className: TestJob::class,
             queue: null,
             group: 'g-1',

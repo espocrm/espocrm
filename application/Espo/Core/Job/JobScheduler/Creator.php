@@ -27,12 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job;
+namespace Espo\Core\Job\JobScheduler;
+
+use Espo\Core\Job\JobScheduler\Creator\Data;
 
 /**
  * @since 9.2.0
  */
-interface JobSchedulerCreator
+interface Creator
 {
-    public function create(JobScheduler\Data $data): void;
+    public function create(Data $data): void;
 }

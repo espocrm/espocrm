@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Field\DateTime;
 use Espo\Core\Job\Job as JobJob;
 use Espo\Core\Job\Job\Status;
 use Espo\Core\Job\JobDataLess;
@@ -211,5 +212,49 @@ class Job extends Entity
     public function setExecutedAtNow(): self
     {
         return $this->set('executedAt', DateTimeUtil::getSystemNowString());
+    }
+
+    public function setName(?string $name): self
+    {
+        return $this->set('name', $name);
+    }
+
+    public function setClassName(?string $className): self
+    {
+        return $this->set('className', $className);
+    }
+
+    public function setQueue(?string $queue): self
+    {
+        return $this->set('queue', $queue);
+    }
+
+    public function setGroup(?string $group): self
+    {
+        return $this->set('group', $group);
+    }
+
+    public function setTargetId(?string $targetId): self
+    {
+        return $this->set('targetId', $targetId);
+    }
+
+    public function setTargetType(?string $targetType): self
+    {
+        return $this->set('targetType', $targetType);
+    }
+
+    public function setData(?JobJob\Data $data): self
+    {
+        if (!$data) {
+            return $this->set('data', $data);
+        }
+
+        return $this->set('data', $data->getRaw());
+    }
+
+    public function setExecuteTime(?DateTime $executeTime): self
+    {
+        return $this->setValueObject('executeTime', $executeTime);
     }
 }

@@ -27,33 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job\JobScheduler\Creators;
+namespace Espo\Core\Job\JobScheduler\Creator;
 
 use Espo\Core\Field\DateTime;
-use Espo\Core\Job\JobScheduler;
-use Espo\Core\Job\JobSchedulerCreator;
-use Espo\Entities\Job;
-use Espo\ORM\EntityManager;
+use Espo\Core\Job\Job;
+use Espo\Core\Job\Job\Data as JobData;
+use Espo\Core\Job\JobDataLess;
 
-class EntityJobSchedulerCreator implements JobSchedulerCreator
+readonly class Data
 {
+    /**
+     * @param class-string<Job|JobDataLess> $className
+     */
     public function __construct(
-        private EntityManager $entityManager,
+        public string $className,
+        public ?string $queue,
+        public ?string $group,
+        public JobData $data,
+        public ?DateTime $time,
     ) {}
-
-    public function create(JobScheduler\Data $data): void
-    {
-        $time = $data->time ?? DateTime::createNow();
-
-        $this->entityManager->createEntity(Job::ENTITY_TYPE, [
-            'name' => $data->className,
-            'className' => $data->className,
-            'queue' => $data->queue,
-            'group' => $data->group,
-            'targetType' => $data->data->getTargetType(),
-            'targetId' => $data->data->getTargetId(),
-            'data' => $data->data->getRaw(),
-            'executeTime' => $time->toString(),
-        ]);
-    }
 }

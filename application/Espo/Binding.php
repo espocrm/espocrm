@@ -257,8 +257,8 @@ class Binding implements BindingProcessor
         );
 
         $binder->bindImplementation(
-            'Espo\\Core\\Job\\JobSchedulerCreator',
-            'Espo\\Core\\Job\\JobScheduler\\Creators\\EntityJobSchedulerCreator',
+            'Espo\\Core\\Job\\JobScheduler\\Creator',
+            'Espo\\Core\\Job\\JobScheduler\\Creators\\EntityCreator',
         );
     }
 
