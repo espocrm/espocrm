@@ -315,6 +315,10 @@
                 "type": "string"
             }
         },
+        "lastViewed": {
+            "type": "boolean",
+            "description": "Force to be available in Last Viewed."
+        },
         "entityManager": {
             "description": "Entity manager items availability.",
             "type": "object",
