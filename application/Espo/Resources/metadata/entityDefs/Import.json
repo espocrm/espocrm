@@ -57,7 +57,7 @@
         "createdBy": {
             "type": "link",
             "readOnly": true,
-            "view": "views/fields/user-with-avatar"
+            "view": "views/fields/user"
         }
     },
     "links": {
