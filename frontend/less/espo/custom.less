@@ -4102,21 +4102,36 @@ body > .autocomplete-suggestions.text-search-suggestions {
         width: var(--220px);
     }
 
+    &:has(.popover-content > .list > table) {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
     .popover-content {
         &:has(> .list > table) {
             padding: 0;
         }
 
-        > .list > table > tbody {
-            > tr {
-                > td:first-child {
-                    padding-left: var(--14px);
-                }
+        > .list > table {
+            > tbody {
+                > tr {
+                    > td:first-child {
+                        padding-left: var(--14px);
+                    }
 
-                > td:last-child {
-                    padding-right: var(--14px);
+                    > td:last-child {
+                        padding-right: var(--14px);
+                        border-bottom: 0;
+                    }
+
+                    > td {
+                        border-left: 0;
+                        border-right: 0;
+                    }
                 }
             }
+
+            background-color: unset;
         }
     }
 }
