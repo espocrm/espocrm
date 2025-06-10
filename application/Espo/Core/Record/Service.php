@@ -41,6 +41,7 @@ use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\FieldSanitize\SanitizeManager;
 use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\ORM\Repository\Option\RemoveOption;
 use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\Access\LinkCheck;
@@ -797,7 +798,7 @@ class Service implements Crud,
         /** @noinspection PhpDeprecationInspection */
         $this->beforeDeleteEntity($entity);
 
-        $this->getRepository()->remove($entity);
+        $this->getRepository()->remove($entity, [RemoveOption::API => true]);
 
         /** @noinspection PhpDeprecationInspection */
         $this->afterDeleteEntity($entity);

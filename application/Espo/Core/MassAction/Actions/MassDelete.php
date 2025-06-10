@@ -29,6 +29,7 @@
 
 namespace Espo\Core\MassAction\Actions;
 
+use Espo\Core\ORM\Repository\Option\RemoveOption;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\ActionHistory\Action;
 use Espo\Core\Utils\Log;
@@ -92,8 +93,9 @@ class MassDelete implements MassAction
 
             try {
                 $repository->remove($entity, [
-                    SaveOption::MASS_UPDATE => true,
-                    SaveOption::MODIFIED_BY_ID => $this->user->getId(),
+                    RemoveOption::MASS_REMOVE => true,
+                    RemoveOption::MODIFIED_BY_ID => $this->user->getId(),
+                    SaveOption::MASS_UPDATE => true, // Legacy.
                 ]);
             } catch (Exception $e) {
                 $this->log->info("Mass delete exception. Record: {id}.", [
@@ -104,7 +106,6 @@ class MassDelete implements MassAction
                 continue;
             }
 
-            /** @var string $id */
             $id = $entity->getId();
 
             $ids[] = $id;
