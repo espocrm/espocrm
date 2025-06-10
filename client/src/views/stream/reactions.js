@@ -41,7 +41,7 @@ export default class NoteReactionsView extends View {
                 title="{{label}}"
                 data-type="{{type}}"
             >
-                <span data-role="icon" class="{{iconClass}} {{#if reacted}} text-primary {{/if}}"></span>
+                <span data-role="icon" class="{{iconClass}} {{#if reacted}} text-warning {{/if}}"></span>
                 <span data-role="count">{{count}}</span>
             </a>
         {{/each}}
