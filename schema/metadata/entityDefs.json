@@ -748,6 +748,10 @@
                             "entity": {
                                 "type": "string",
                                 "description": "An entity type. To be specified if there's no corresponding link defined."
+                            },
+                            "createButton": {
+                                "type": "boolean",
+                                "description": "To display the create button."
                             }
                         }
                     }
