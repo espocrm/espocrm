@@ -30,6 +30,7 @@
 
 import {Events, View as BullView} from 'bullbone';
 import _ from 'underscore';
+import DefaultValueProvider from 'helpers/model/default-value-provider';
 
 /**
  * When attributes have changed.
@@ -123,7 +124,6 @@ class Model {
      *     url?: string,
      *     defs?: module:model~defs,
      *     user?: module:models/user,
-     *     dateTime?: module:date-time,
      * }} [options]
      */
     constructor(attributes, options) {
@@ -176,9 +176,6 @@ class Model {
 
         this.urlRoot = options.urlRoot || this.urlRoot;
         this.url = options.url || this.url;
-
-        /** @private */
-        this.dateTime = options.dateTime || null;
 
         /** @private */
         this.changed = {};
@@ -726,7 +723,6 @@ class Model {
                 urlRoot: this.urlRoot,
                 url: this.url,
                 defs: this.defs,
-                dateTime: this.dateTime,
             }
         );
     }
@@ -765,8 +761,7 @@ class Model {
             if (this.hasFieldParam(field, 'default')) {
                 try {
                     defaultHash[field] = this.parseDefaultValue(this.getFieldParam(field, 'default'));
-                }
-                catch (e) {
+                } catch (e) {
                     console.error(e);
                 }
             }
@@ -792,7 +787,7 @@ class Model {
     }
 
     /**
-     * @protected
+     * @private
      * @param {*} defaultValue
      * @returns {*}
      */
@@ -801,9 +796,11 @@ class Model {
             typeof defaultValue === 'string' &&
             defaultValue.indexOf('javascript:') === 0
         ) {
-            const code = defaultValue.substring(11);
+            const code = defaultValue.substring(11).trim();
 
-            defaultValue = (new Function( "with(this) { " + code + "}")).call(this);
+            const provider = new DefaultValueProvider();
+
+            defaultValue = provider.get(code);
         }
 
         return defaultValue;

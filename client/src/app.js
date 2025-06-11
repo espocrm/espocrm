@@ -728,7 +728,6 @@ class App {
      */
     initUtils() {
         this.dateTime = new DateTime();
-        this.modelFactory.dateTime = this.dateTime;
         this.dateTime.setSettingsAndPreferences(this.settings, this.preferences);
         this.numberUtil = new NumberUtil(this.settings, this.preferences);
 
