@@ -36,6 +36,8 @@ class EmailTemplate extends Entity
 {
     public const ENTITY_TYPE = 'EmailTemplate';
 
+    public const STATUS_ACTIVE = 'Active';
+
     public function getSubject(): ?string
     {
         return $this->get('subject');

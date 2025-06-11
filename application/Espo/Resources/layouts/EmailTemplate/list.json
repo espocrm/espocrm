@@ -8,13 +8,17 @@
         "width": 20
     },
     {
+        "name": "status",
+        "width": 13
+    },
+    {
         "name": "oneOff",
         "width": 11,
         "hidden": true
     },
     {
         "name": "createdAt",
-        "width": 20,
+        "width": 18,
         "hidden": true
     }
 ]
