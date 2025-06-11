@@ -122,6 +122,9 @@
 
             this._addLibsConfigCallCount = 0;
             this._addLibsConfigCallMaxCount = 2;
+
+            /** @type {Object.<string, string>} */
+            this._urlIdMap = {};
         }
 
         /**
@@ -263,61 +266,6 @@
 
         /**
          * @private
-         * @param {string} script
-         * @param {string} id
-         * @param {string} path
-         */
-        _execute(script, id, path) {
-            /** @var {?string} */
-            let module = null;
-
-            const colonIndex = id.indexOf(':');
-
-            if (colonIndex > 0) {
-                module = id.substring(0, colonIndex);
-            }
-
-            let noStrictMode = false;
-
-            if (!module && id.indexOf('lib!') === 0) {
-                noStrictMode = true;
-
-                const realName = id.substring(4);
-
-                const libsData = this._libsConfig[realName] || {};
-
-                if (!this._isDeveloperMode) {
-                    if (libsData.sourceMap) {
-                        const realPath = path.split('?')[0];
-
-                        script += `\n//# sourceMappingURL=${this._baseUrl + realPath}.map`;
-                    }
-                }
-
-                if (libsData.exportsTo === 'window' && libsData.exportsAs) {
-                    script += `\nwindow.${libsData.exportsAs} = ` +
-                        `window.${libsData.exportsAs} || ${libsData.exportsAs}\n`;
-                }
-            }
-
-            script += `\n//# sourceURL=${this._baseUrl + path}`;
-
-            // For bc.
-            if (module && module !== 'crm') {
-                noStrictMode = true;
-            }
-
-            if (noStrictMode) {
-                (new Function(script)).call(root);
-
-                return;
-            }
-
-            (new Function("'use strict'; " + script))();
-        }
-
-        /**
-         * @private
          * @param {string} id
          * @param {*} value
          */
@@ -344,11 +292,19 @@
                 id = this._normalizeId(id);
             }
 
-            if (this._contextId) {
-                id = id || this._contextId;
+            if (!id && document.currentScript) {
+                const src = document.currentScript.src;
 
-                this._contextId = null;
+                id = this._urlIdMap[src];
+
+                delete this._urlIdMap[src];
             }
+
+            if (!id && this._contextId) {
+                id = this._contextId;
+            }
+
+            this._contextId = null;
 
             const existing = this._get(id);
 
@@ -674,8 +630,7 @@
 
                     return;
                 }
-            }
-            else if (id.indexOf('res!') === 0) {
+            } else if (id.indexOf('res!') === 0) {
                 dataType = 'text';
                 type = 'res';
 
@@ -687,8 +642,7 @@
 
                     throw new Error();
                 }
-            }
-            else {
+            } else {
                 dataType = 'script';
                 type = 'amd';
 
@@ -771,6 +725,61 @@
             dto.url = url;
             dto.useCache = useCache;
 
+            if (dto.dataType === 'script') {
+                this._addLoadCallback(id, callback);
+
+                const urlObj = new URL(this._baseUrl + url);
+
+                if (!useCache) {
+                    urlObj.searchParams.append('_', Date.now().toString())
+                }
+
+                const fullUrl = urlObj.toString();
+
+                if (suppressAmd) {
+                    define.amd = false;
+                }
+
+                if (type === 'amd') {
+                    this._urlIdMap[fullUrl] = id;
+                }
+
+                this._addScript(fullUrl, () => {
+                    if (suppressAmd) {
+                        define.amd = true;
+                    }
+
+                    let value;
+
+                    if (type === 'amd') {
+                        value = this._get(id);
+
+                        if (typeof value !== 'undefined') {
+                            this._executeLoadCallback(id, value);
+
+                            return;
+                        }
+
+                        // Supposed to be handled by the added callback.
+
+                        return;
+                    }
+
+                    if (exportsTo && exportsAs) {
+                        value = this._fetchObject(exportsTo, exportsAs);
+
+                        this._dataLoaded[id] = value;
+                        this._executeLoadCallback(id, value);
+
+                        return;
+                    }
+
+                    console.warn(`Could not obtain ${id}.`);
+                });
+
+                return;
+            }
+
             if (!this._responseCache) {
                 this._processRequest(dto);
 
@@ -789,6 +798,27 @@
                     response.text()
                         .then(text => this._handleResponseText(dto, text));
                 });
+        }
+
+        /**
+         * @private
+         * @param {string} url
+         * @param {function} callback
+         * @return {Promise}
+         */
+        _addScript(url, callback) {
+            const script = document.createElement('script');
+
+            script.src = url;
+            script.async = true;
+
+            script.addEventListener('error', e => {
+                console.error(`Could not load script '${url}'.`, e);
+            });
+
+            document.head.appendChild(script);
+
+            script.addEventListener('load', () => callback());
         }
 
         /**
@@ -846,17 +876,19 @@
 
             src = this._basePath + src;
 
-            const scriptEl = document.createElement('script');
-            scriptEl.setAttribute('src', src);
+            const script = document.createElement('script');
 
-            scriptEl.addEventListener('error', event => {
+            script.src = src;
+            script.async = true;
+
+            script.addEventListener('error', event => {
                 console.error(`Could not load bundle '${name}'.`, event);
             });
 
             return new Promise(resolve => {
-                document.head.appendChild(scriptEl);
+                document.head.appendChild(script);
 
-                scriptEl.addEventListener('load', () => resolve());
+                script.addEventListener('load', () => resolve());
             });
         }
 
@@ -942,51 +974,12 @@
         _handleResponseText(dto, text) {
             const id = dto.id;
             const callback = dto.callback;
-            const type = dto.type;
-            const dataType = dto.dataType;
-            const exportsAs = dto.exportsAs;
-            const exportsTo = dto.exportsTo;
-            const suppressAmd = dto.suppressAmd;
 
             this._addLoadCallback(id, callback);
 
-            if (type === 'amd') {
-                this._contextId = id;
-            }
+            this._dataLoaded[id] = text;
 
-            if (suppressAmd) {
-                define.amd = false;
-            }
-
-            if (dataType === 'script') {
-                this._execute(text, id, dto.path);
-            }
-
-            if (suppressAmd) {
-                define.amd = true;
-            }
-
-            let value;
-
-            if (type === 'amd') {
-                value = this._get(id);
-
-                if (typeof value !== 'undefined') {
-                    this._executeLoadCallback(id, value);
-                }
-
-                return;
-            }
-
-            value = text;
-
-            if (exportsTo && exportsAs) {
-                value = this._fetchObject(exportsTo, exportsAs);
-            }
-
-            this._dataLoaded[id] = value;
-
-            this._executeLoadCallback(id, value);
+            this._executeLoadCallback(id, text);
         }
 
         /**
@@ -1191,6 +1184,11 @@
         setContextId: function (id) {
             loader.setContextId(id);
         },
+
+        // @todo Remove.
+        getContextId() {
+            return loader._contextId;
+        },
     };
 
     /**
@@ -1232,8 +1230,7 @@
 
         if (typeof arg1 === 'function') {
             callback = arg1;
-        }
-        else if (typeof arg1 !== 'undefined' && typeof arg2 === 'function') {
+        } else if (typeof arg1 !== 'undefined' && typeof arg2 === 'function') {
             if (Array.isArray(arg1)) {
                 depIds = arg1;
             } else {
@@ -1242,8 +1239,7 @@
             }
 
             callback = arg2;
-        }
-        else {
+        } else {
             id = arg1;
             depIds = arg2;
             callback = arg3;
