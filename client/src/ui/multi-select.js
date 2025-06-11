@@ -62,8 +62,10 @@ const MultiSelect = {
     init: function (element, options) {
         const $el = $(element);
 
+        const delimiter = options.delimiter || this.defaultDelimiter;
+
         if (options.values) {
-            $el.val(options.values.join(this.itemDelimiter));
+            $el.val(options.values.join(delimiter));
         }
 
         options = MultiSelect.applyDefaultOptions(options);
@@ -91,7 +93,7 @@ const MultiSelect = {
         const selectizeOptions = {
             options: options.items,
             plugins: plugins,
-            delimiter: options.delimiter,
+            delimiter: delimiter,
             labelField: 'text',
             valueField: 'value',
             searchField: ['text'],
