@@ -73,7 +73,6 @@ class PhoneNumber extends Database implements
         $phoneNumbers = $this
             ->where([
                 'name' => $numberList,
-                'hash' => null,
             ])
             ->find();
 
