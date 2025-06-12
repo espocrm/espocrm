@@ -1184,11 +1184,6 @@
         setContextId: function (id) {
             loader.setContextId(id);
         },
-
-        // @todo Remove.
-        getContextId() {
-            return loader._contextId;
-        },
     };
 
     /**
