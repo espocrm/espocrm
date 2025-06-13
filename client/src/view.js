@@ -404,6 +404,7 @@ class View extends BullView {
             confirmStyle: confirmStyle,
             backdrop: ('backdrop' in o) ? o.backdrop : true,
             isHtml: true,
+            cancelCallback: o.cancelCallback,
         }, callback, context);
     }
 }
