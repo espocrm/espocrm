@@ -60,7 +60,11 @@ export default class extends EnumFieldView {
         options.unshift('');
 
         this.translatedOptions =
-            options.reduce((p, it) => ({[it]: this.translate(it, 'links', entityType), ...p}), {});
+            options.reduce((p, it) => {
+                p[it] = this.translate(it, 'links', entityType);
+
+                return p;
+            }, {});
 
         this.params.options = options;
     }

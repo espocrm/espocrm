@@ -48,10 +48,9 @@ export default class extends ArrayFieldView {
         this.reactionsHelper = new ReactionsHelper();
 
         this.iconClassMap = this.reactionsHelper.getDefinitionList().reduce((o, it) => {
-            return {
-                [it.type]: it.iconClass,
-                ...o,
-            };
+            o[it.type] = it.iconClass;
+
+            return o;
         }, {});
 
         super.setup();
@@ -63,10 +62,9 @@ export default class extends ArrayFieldView {
         this.params.options = list.map(it => it.type);
 
         this.translatedOptions = list.reduce((o, it) => {
-            return {
-                [it.type]: this.translate(it.type, 'reactions'),
-                ...o
-            };
+            o[it.type] = this.translate(it.type, 'reactions');
+
+            return o;
         }, {});
     }
 

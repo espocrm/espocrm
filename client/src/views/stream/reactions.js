@@ -103,7 +103,9 @@ export default class NoteReactionsView extends View {
         const list = reactionsHelper.getDefinitionList();
 
         this.iconClassMap = list.reduce((o, it) => {
-            return {[it.type]: it.iconClass, ...o};
+            o[it.type] = it.iconClass;
+
+            return o;
         }, {});
 
         this.addHandler('click', 'a.reaction-count', (e, target) => this.showUsers(target.dataset.type));
