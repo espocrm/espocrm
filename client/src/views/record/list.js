@@ -2593,6 +2593,8 @@ class ListRecordView extends View {
      * Get a select-attribute list.
      *
      * @param {function(string[]):void} callback A callback.
+     *
+     * @todo Return promise. But support callback for bc.
      */
     getSelectAttributeList(callback) {
         if (this.scope === null) {
