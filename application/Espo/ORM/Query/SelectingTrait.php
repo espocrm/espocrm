@@ -97,21 +97,28 @@ trait SelectingTrait
                 }
 
                 $conditions = isset($item[2]) ?
-                    WhereClause::fromRaw($item[2]) :
-                    null;
+                    WhereClause::fromRaw($item[2]) : null;
 
-                return Join::create($item[0])
+                $params = $item[3] ?? [];
+                $type = $params['type'] ?? null;
+
+                $join = Join::create($item[0])
                     ->withAlias($item[1] ?? null)
                     ->withConditions($conditions);
+
+                if ($type === Join\JoinType::left) {
+                    $join = $join->withLeft();
+                }
+
+                return $join;
             },
             $this->params['joins'] ?? []
         );
     }
 
     /**
-     * Get LEFT JOIN items.
-     *
      * @return Join[]
+     * @deprecated As of 9.2.0. Use getJoins and check join type.
      */
     public function getLeftJoins(): array
     {
@@ -122,12 +129,12 @@ trait SelectingTrait
                 }
 
                 $conditions = isset($item[2]) ?
-                    WhereClause::fromRaw($item[2]) :
-                    null;
+                    WhereClause::fromRaw($item[2]) : null;
 
                 return Join::create($item[0])
                     ->withAlias($item[1] ?? null)
-                    ->withConditions($conditions);
+                    ->withConditions($conditions)
+                    ->withLeft();
             },
             $this->params['leftJoins'] ?? []
         );

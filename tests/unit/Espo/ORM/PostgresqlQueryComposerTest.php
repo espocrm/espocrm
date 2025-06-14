@@ -42,12 +42,13 @@ use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\UpdateBuilder;
 use Espo\ORM\QueryBuilder;
 use Espo\ORM\QueryComposer\PostgresqlQueryComposer as QueryComposer;
+use PHPUnit\Framework\TestCase;
 
 require_once 'tests/unit/testData/DB/Entities.php';
 require_once 'tests/unit/testData/DB/MockPDO.php';
 require_once 'tests/unit/testData/DB/MockDBResult.php';
 
-class PostgresqlQueryComposerTest extends \PHPUnit\Framework\TestCase
+class PostgresqlQueryComposerTest extends TestCase
 {
     private ?QueryComposer $queryComposer;
     private ?EntityManager $entityManager;
