@@ -162,12 +162,20 @@ const MultiSelect = {
             }
         }
 
-        const styleMap = (options.items || []).reduce((o, it) => ({
-            [it.value]: it.style,
-            ...o,
-        }), {});
-
         const classMap = {};
+        const styleMap = {};
+
+        (options.items || []).forEach(it => {
+            if (it.small) {
+                classMap[it.value] = 'small';
+            }
+
+            if (it.style) {
+                styleMap[it.value] = it.style;
+            }
+
+        });
+
 
         (options.items || []).forEach(it => {
             if (it.small) {

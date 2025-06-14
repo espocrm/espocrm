@@ -646,6 +646,15 @@ class DetailRecordView extends BaseRecordView {
             model: this.model.clone(),
         };
 
+        if (this.model.collection) {
+            const index = this.model.collection.indexOf(this.model);
+
+            if (index > -1) {
+                options.model.collection = this.model.collection;
+                options.model.collection.models[index] = options.model;
+            }
+        }
+
         if (this.options.rootUrl) {
             options.rootUrl = this.options.rootUrl;
         }
