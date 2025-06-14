@@ -1456,6 +1456,14 @@ class KanbanRecordView extends ListRecordView {
     async afterSettingsChange(options) {
         this._internalLayout = null;
 
+        if (options.action === 'toggleColumn' || options.action === 'resetToDefault') {
+            const selectAttributes = await this.getSelectAttributeList();
+
+            if (selectAttributes) {
+                this.collection.data.select = selectAttributes.join(',');
+            }
+        }
+
         Espo.Ui.notifyWait();
 
         await this.collection.fetch({maxSize: this.collection.maxSize});

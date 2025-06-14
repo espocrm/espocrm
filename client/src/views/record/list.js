@@ -2609,31 +2609,25 @@ class ListRecordView extends View {
             return null;
         }
 
-        if (this.listLayout) {
-            const attributeList = this.fetchAttributeListFromLayout();
-
-            callback(attributeList);
-
-            return attributeList;
-        }
-
-        return await (
-            new Promise(resolve => {
+        if (!this.listLayout) {
+            await new Promise(resolve => {
                 this._loadListLayout(listLayout => {
                     this.listLayout = listLayout;
 
-                    let attributeList = this.fetchAttributeListFromLayout();
-
-                    if (this.mandatorySelectAttributeList) {
-                        attributeList = attributeList.concat(this.mandatorySelectAttributeList);
-                    }
-
-                    callback(attributeList);
-
-                    resolve(attributeList);
+                    resolve();
                 });
-            })
-        );
+            });
+        }
+
+        const attributeList = this.fetchAttributeListFromLayout();
+
+        if (this.mandatorySelectAttributeList) {
+            attributeList.push(...this.mandatorySelectAttributeList);
+        }
+
+        callback(attributeList);
+
+        return attributeList;
     }
 
     /**
@@ -2641,13 +2635,9 @@ class ListRecordView extends View {
      * @return {string[]}
      */
     fetchAttributeListFromLayout() {
-        const selectProvider = new SelectProvider(
-            this.getHelper().layoutManager,
-            this.getHelper().metadata,
-            this.getHelper().fieldManager
-        );
+        const selectProvider = new SelectProvider();
 
-        return selectProvider.getFromLayout(this.entityType, this.listLayout);
+        return selectProvider.getFromLayout(this.entityType, this.listLayout, this._listSettingsHelper);
     }
 
     /**
@@ -3739,6 +3729,14 @@ class ListRecordView extends View {
             return;
         }
 
+        if (options.action === 'toggleColumn' || options.action === 'resetToDefault') {
+            const selectAttributes = await this.getSelectAttributeList();
+
+            if (selectAttributes) {
+                this.collection.data.select = selectAttributes.join(',');
+            }
+        }
+
         if (
             options.action === 'toggleColumn' &&
             !this._listSettingsHelper.getHiddenColumnMap()[options.column] &&
@@ -3759,7 +3757,7 @@ class ListRecordView extends View {
 
         await this.collection.fetch();
 
-        Espo.Ui.notify(false);
+        Espo.Ui.notify();
     }
 
     /**

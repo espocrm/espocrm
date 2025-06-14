@@ -88,11 +88,7 @@ class IndexExtensionsView extends View {
     }
 
     setup() {
-        const selectProvider = new SelectProvider(
-            this.getHelper().layoutManager,
-            this.getHelper().metadata,
-            this.getHelper().fieldManager
-        );
+        const selectProvider = new SelectProvider();
 
         this.wait(
             this.getCollectionFactory()
