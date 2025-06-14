@@ -1105,7 +1105,8 @@
                         },
                         "joins": {
                             "description": "JOINs",
-                            "type": "array"
+                            "type": "array",
+                            "$ref": "#/definitions/joins"
                         }
                     }
                 },
@@ -1466,6 +1467,20 @@
                                 "type": "object",
                                 "additionalProperties": true,
                                 "description": "Join conditions."
+                            },
+                            {
+                                "type": "object",
+                                "description": "Parameters.",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "description": "A join type",
+                                        "enum": [
+                                            "inner",
+                                            "left"
+                                        ]
+                                    }
+                                }
                             }
                         ]
                     }

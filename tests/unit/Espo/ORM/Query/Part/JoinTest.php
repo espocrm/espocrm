@@ -53,7 +53,7 @@ class JoinTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($join->isRelation());
         $this->assertFalse($join->isTable());
 
-        $this->assertEquals(Join::TYPE_RELATION, $join->getType());
+        $this->assertEquals(Join::MODE_RELATION, $join->getMode());
     }
 
     public function testCreate2(): void
@@ -73,7 +73,7 @@ class JoinTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($join->isTable());
         $this->assertFalse($join->isRelation());
 
-        $this->assertEquals(Join::TYPE_TABLE, $join->getType());
+        $this->assertEquals(Join::MODE_TABLE, $join->getMode());
     }
 
     public function testCreate3(): void
@@ -95,6 +95,6 @@ class JoinTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->assertTrue($join->isSubQuery());
-        $this->assertEquals(Join::TYPE_SUB_QUERY, $join->getType());
+        $this->assertEquals(Join::MODE_SUB_QUERY, $join->getMode());
     }
 }

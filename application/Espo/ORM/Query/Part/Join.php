@@ -29,6 +29,7 @@
 
 namespace Espo\ORM\Query\Part;
 
+use Espo\ORM\Query\Part\Join\JoinType;
 use Espo\ORM\Query\Select;
 use LogicException;
 use RuntimeException;
@@ -39,15 +40,16 @@ use RuntimeException;
 class Join
 {
     /** A table join. */
-    public const TYPE_TABLE = 0;
+    public const MODE_TABLE = 0;
     /** A relation join. */
-    public const TYPE_RELATION = 1;
+    public const MODE_RELATION = 1;
     /** A sub-query join. */
-    public const TYPE_SUB_QUERY = 3;
+    public const MODE_SUB_QUERY = 3;
 
     private ?WhereItem $conditions = null;
     private bool $onlyMiddle = false;
     private bool $isLateral = false;
+    private ?JoinType $type = null;
 
     private function __construct(
         private string|Select $target,
@@ -108,21 +110,21 @@ class Join
     }
 
     /**
-     * Get a join type.
+     * Get a join mode.
      *
-     * @return self::TYPE_TABLE|self::TYPE_RELATION|self::TYPE_SUB_QUERY
+     * @return self::MODE_TABLE|self::MODE_RELATION|self::MODE_SUB_QUERY
      */
-    public function getType(): int
+    public function getMode(): int
     {
         if ($this->isSubQuery()) {
-            return self::TYPE_SUB_QUERY;
+            return self::MODE_SUB_QUERY;
         }
 
         if ($this->isRelation()) {
-            return self::TYPE_RELATION;
+            return self::MODE_RELATION;
         }
 
-        return self::TYPE_TABLE;
+        return self::MODE_TABLE;
     }
 
     /**
@@ -141,6 +143,18 @@ class Join
     public function isLateral(): bool
     {
         return $this->isLateral;
+    }
+
+    /**
+     * Get a join type.
+     *
+     * @return JoinType|null
+     *
+     * @since 9.2.0
+     */
+    public function getType(): ?JoinType
+    {
+        return $this->type;
     }
 
     /**
@@ -241,6 +255,45 @@ class Join
 
         $obj = clone $this;
         $obj->isLateral = $isLateral;
+
+        return $obj;
+    }
+
+    /**
+     * With LEFT type.
+     *
+     * @since 9.2.0.
+     */
+    public function withLeft(): self
+    {
+        $obj = clone $this;
+        $obj->type = JoinType::left;
+
+        return $obj;
+    }
+
+    /**
+     * With INNER type.
+     *
+     * @since 9.2.0.
+     */
+    public function withInner(): self
+    {
+        $obj = clone $this;
+        $obj->type = JoinType::inner;
+
+        return $obj;
+    }
+
+    /**
+     * With a join type.
+     *
+     * @since 9.2.0.
+     */
+    public function withType(JoinType $type): self
+    {
+        $obj = clone $this;
+        $obj->type = $type;
 
         return $obj;
     }

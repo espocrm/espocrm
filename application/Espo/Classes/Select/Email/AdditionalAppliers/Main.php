@@ -145,7 +145,7 @@ class Main implements AdditionalApplier
             }
         }
 
-        if ($queryBuilder->hasLeftJoinAlias('teamsAccess')) {
+        if ($queryBuilder->hasJoinAlias('teamsAccess')) {
             return false;
         }
 
