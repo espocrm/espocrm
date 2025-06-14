@@ -845,16 +845,23 @@ class KanbanRecordView extends ListRecordView {
         });
     }
 
-    getSelectAttributeList(callback) {
-        super.getSelectAttributeList(attributeList => {
-            if (attributeList) {
-                if (!~attributeList.indexOf(this.statusField)) {
-                    attributeList.push(this.statusField);
-                }
-            }
+    async getSelectAttributeList(callback) {
+        const attributeList = await super.getSelectAttributeList();
 
+        if (!attributeList) {
+            return null;
+        }
+
+        if (!attributeList.includes(this.statusField)) {
+            attributeList.push(this.statusField);
+        }
+
+        if (callback) {
+            // For bc.
             callback(attributeList);
-        });
+        }
+
+        return attributeList;
     }
 
     buildRows(callback) {

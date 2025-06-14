@@ -2597,15 +2597,16 @@ class ListRecordView extends View {
     /**
      * Get a select-attribute list.
      *
-     * @param {function(string[]):void} callback A callback.
-     *
-     * @todo Return promise. But support callback for bc.
+     * @param {function(string[]): void} [callback] A callback. For bc.
+     * @return {Promise<string[]|null>}
      */
-    getSelectAttributeList(callback) {
+    async getSelectAttributeList(callback) {
+        callback ??= () => {};
+
         if (this.scope === null) {
             callback(null);
 
-            return;
+            return null;
         }
 
         if (this.listLayout) {
@@ -2613,20 +2614,26 @@ class ListRecordView extends View {
 
             callback(attributeList);
 
-            return;
+            return attributeList;
         }
 
-        this._loadListLayout(listLayout => {
-            this.listLayout = listLayout;
+        return await (
+            new Promise(resolve => {
+                this._loadListLayout(listLayout => {
+                    this.listLayout = listLayout;
 
-            let attributeList = this.fetchAttributeListFromLayout();
+                    let attributeList = this.fetchAttributeListFromLayout();
 
-            if (this.mandatorySelectAttributeList) {
-                attributeList = attributeList.concat(this.mandatorySelectAttributeList);
-            }
+                    if (this.mandatorySelectAttributeList) {
+                        attributeList = attributeList.concat(this.mandatorySelectAttributeList);
+                    }
 
-            callback(attributeList);
-        });
+                    callback(attributeList);
+
+                    resolve(attributeList);
+                });
+            })
+        );
     }
 
     /**
