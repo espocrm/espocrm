@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Job;
 
+use Espo\Core\Job\QueueProcessor\Picker;
 use Espo\Entities\Job as JobEntity;
 use Espo\Core\Job\QueueProcessor\Params;
 use Espo\Core\ORM\EntityManager;
@@ -46,6 +47,7 @@ class QueueProcessor
         private JobRunner $jobRunner,
         private AsyncPoolFactory $asyncPoolFactory,
         private EntityManager $entityManager,
+        private Picker $picker,
         ConfigDataProvider $configDataProvider
     ) {
         $this->noTableLocking = $configDataProvider->noTableLocking();
@@ -54,12 +56,9 @@ class QueueProcessor
     public function process(Params $params): void
     {
         $pool = $params->useProcessPool() ?
-            $this->asyncPoolFactory->create() :
-            null;
+            $this->asyncPoolFactory->create() : null;
 
-        $pendingJobList = $this->queueUtil->getPendingJobList($params);
-
-        foreach ($pendingJobList as $job) {
+        foreach ($this->picker->pick($params) as $job) {
             $this->processJob($params, $job, $pool);
         }
 

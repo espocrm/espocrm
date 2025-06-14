@@ -32,17 +32,25 @@ namespace Espo\Core\Job;
 class QueueName
 {
     /**
-     * Executes as soon as possible.
+     * Executes as soon as possible. Non-parallel.
      */
     public const Q0 = 'q0';
 
     /**
-     * Executes every minute.
+     * Executes every minute. Non-parallel.
      */
     public const Q1 = 'q1';
 
     /**
-     * Executes as soon as possible. For email processing.
+     * Executes as soon as possible. For email processing. Non-parallel.
      */
     public const E0 = 'e0';
+
+    /**
+     * Executes in the main queue pool in parallel. Along with jobs without specified queue.
+     * A portion is always picked for a queue iteration, even if there are no-queue
+     * jobs ordered before. E.g. if the portion size is 100, and there are 200 empty-queue
+     * jobs and 5 m0 jobs, 95 and 5 will be picked respectfully.
+     */
+    const M0 = 'm0';
 }
