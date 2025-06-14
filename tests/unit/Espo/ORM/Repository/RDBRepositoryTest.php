@@ -40,6 +40,7 @@ use Espo\ORM\Metadata;
 use Espo\ORM\MetadataDataProvider;
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Expression as Expr;
+use Espo\ORM\Query\Part\Join\JoinType;
 use Espo\ORM\Query\Part\Order as OrderExpr;
 use Espo\ORM\Query\Select;
 use Espo\ORM\QueryBuilder;
@@ -425,7 +426,9 @@ class RDBRepositoryTest extends TestCase
             ->will($this->returnValue($this->collection))
             ->with($paramsExpected);
 
-        $this->repository->where('name', 'test')->findOne();
+        $this->repository
+            ->where('name', 'test')
+            ->findOne();
     }
 
     public function testJoin1()
@@ -433,7 +436,7 @@ class RDBRepositoryTest extends TestCase
         $paramsExpected = Select::fromRaw([
             'from' => 'Test',
             'joins' => [
-                'Test',
+                ['Test', null, null, ['type' => null]],
             ],
         ]);
 
@@ -443,7 +446,9 @@ class RDBRepositoryTest extends TestCase
             ->will($this->returnValue($this->collection))
             ->with($paramsExpected);
 
-        $this->repository->join('Test')->find();
+        $this->repository
+            ->join('Test')
+            ->find();
     }
 
     public function testJoin2()
@@ -465,6 +470,7 @@ class RDBRepositoryTest extends TestCase
         $this->repository->join(['Test1', 'Test2'])->find();
     }
 
+    // Bc.
     public function testJoin3()
     {
         $paramsExpected = Select::fromRaw([
@@ -481,7 +487,9 @@ class RDBRepositoryTest extends TestCase
             ->will($this->returnValue($this->collection))
             ->with($paramsExpected);
 
-        $this->repository->join([['Test1', 'test1'], ['Test2', 'test2']])->find();
+        $this->repository
+            ->join([['Test1', 'test1'], ['Test2', 'test2']])
+            ->find();
     }
 
     public function testJoin4()
@@ -489,7 +497,7 @@ class RDBRepositoryTest extends TestCase
         $paramsExpected = Select::fromRaw([
             'from' => 'Test',
             'joins' => [
-                ['Test1', 'test1', ['k' => 'v']],
+                ['Test1', 'test1', ['k' => 'v'], ['type' => null]],
             ],
         ]);
 
@@ -499,7 +507,9 @@ class RDBRepositoryTest extends TestCase
             ->will($this->returnValue($this->collection))
             ->with($paramsExpected);
 
-        $this->repository->join('Test1', 'test1', ['k' => 'v'])->find();
+        $this->repository
+            ->join('Test1', 'test1', ['k' => 'v'])
+            ->find();
     }
 
     public function testJoin5()
@@ -525,8 +535,8 @@ class RDBRepositoryTest extends TestCase
     {
         $paramsExpected = Select::fromRaw([
             'from' => 'Test',
-            'leftJoins' => [
-                'Test',
+            'joins' => [
+                ['Test', null, null, ['type' => JoinType::left]],
             ],
         ]);
 
@@ -536,7 +546,9 @@ class RDBRepositoryTest extends TestCase
             ->will($this->returnValue($this->collection))
             ->with($paramsExpected);
 
-        $this->repository->leftJoin('Test')->find();
+        $this->repository
+            ->leftJoin('Test')
+            ->find();
     }
 
     public function testLeftJoin2()
@@ -562,9 +574,9 @@ class RDBRepositoryTest extends TestCase
     {
         $paramsExpected = Select::fromRaw([
             'from' => 'Test',
-            'leftJoins' => [
-                'Test1',
-                ['Test2', 'test2'],
+            'joins' => [
+                ['Test1', null, null, ['type' => JoinType::left]],
+                ['Test2', 'test2', null, ['type' => JoinType::left]],
             ],
         ]);
 
@@ -574,7 +586,10 @@ class RDBRepositoryTest extends TestCase
             ->will($this->returnValue($this->collection))
             ->with($paramsExpected);
 
-        $this->repository->leftJoin('Test1')->leftJoin('Test2', 'test2')->find();
+        $this->repository
+            ->leftJoin('Test1')
+            ->leftJoin('Test2', 'test2')
+            ->find();
     }
 
     public function testDistinct()

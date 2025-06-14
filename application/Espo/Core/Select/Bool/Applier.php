@@ -114,8 +114,8 @@ class Applier
     {
         $queryAfter = $queryBuilder->build();
 
-        $joinCountBefore = count($queryBefore->getJoins()) + count($queryBefore->getLeftJoins());
-        $joinCountAfter = count($queryAfter->getJoins()) + count($queryAfter->getLeftJoins());
+        $joinCountBefore = count($queryBefore->getJoins());
+        $joinCountAfter = count($queryAfter->getJoins());
 
         if ($joinCountBefore < $joinCountAfter) {
             $queryBuilder->distinct();

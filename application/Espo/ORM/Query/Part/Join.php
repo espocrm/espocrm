@@ -29,6 +29,7 @@
 
 namespace Espo\ORM\Query\Part;
 
+use Espo\ORM\Query\Part\Join\JoinType;
 use Espo\ORM\Query\Select;
 use LogicException;
 use RuntimeException;
@@ -48,6 +49,7 @@ class Join
     private ?WhereItem $conditions = null;
     private bool $onlyMiddle = false;
     private bool $isLateral = false;
+    private ?JoinType $joinType = null;
 
     private function __construct(
         private string|Select $target,
@@ -141,6 +143,18 @@ class Join
     public function isLateral(): bool
     {
         return $this->isLateral;
+    }
+
+    /**
+     * Get a join type.
+     *
+     * @return JoinType|null
+     *
+     * @since 9.2.0
+     */
+    public function getJoinType(): ?JoinType
+    {
+        return $this->joinType;
     }
 
     /**
@@ -241,6 +255,32 @@ class Join
 
         $obj = clone $this;
         $obj->isLateral = $isLateral;
+
+        return $obj;
+    }
+
+    /**
+     * With LEFT type.
+     *
+     * @since 9.2.0.
+     */
+    public function withLeft(): self
+    {
+        $obj = clone $this;
+        $obj->joinType = JoinType::left;
+
+        return $obj;
+    }
+
+    /**
+     * With INNER type.
+     *
+     * @since 9.2.0.
+     */
+    public function withInner(): self
+    {
+        $obj = clone $this;
+        $obj->joinType = JoinType::inner;
 
         return $obj;
     }

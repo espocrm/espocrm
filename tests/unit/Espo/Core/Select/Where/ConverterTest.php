@@ -46,6 +46,7 @@ use Espo\ORM\Defs\EntityDefs;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Metadata as ormMetadata;
+use Espo\ORM\Query\Part\Join\JoinType;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
@@ -359,7 +360,7 @@ class ConverterTest extends TestCase
             'id=s' => Select::fromRaw([
                 'select' => ['id'],
                 'from' => 'Test',
-                'leftJoins' => [
+                'joins' => [
                     [
                         'test',
                         $alias,
@@ -367,6 +368,7 @@ class ConverterTest extends TestCase
                         [
                             'noLeftAlias' => true,
                             'onlyMiddle' => true,
+                            'type' => JoinType::left,
                         ],
                     ],
                 ],
