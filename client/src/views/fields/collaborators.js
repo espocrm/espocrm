@@ -75,7 +75,12 @@ export default class CollaboratorsFieldView extends LinkMultipleFieldView {
             return Promise.resolve([]);
         }
 
-        return Promise.resolve([]);
+        return Promise.resolve([
+            {
+                id: this.getUser().id,
+                name: this.getUser().attributes.name,
+            }
+        ]);
     }
 
     /**
