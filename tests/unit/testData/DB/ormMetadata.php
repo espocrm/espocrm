@@ -1,6 +1,7 @@
 <?php
 
 use Espo\ORM\Entity;
+use Espo\ORM\Query\Part\Join\JoinType;
 
 return [
     'Account' => [
@@ -479,7 +480,7 @@ return [
                              ],
                          ],
                          'joins' => [
-                             ['Test', 't', ['t.id:' => 'id']],
+                             ['Test', 't', ['t.id:' => 'id'], ["type" => JoinType::left->value]],
                          ],
                      ],
                      "IN" => [
@@ -505,7 +506,7 @@ return [
                          ['t.id', '{direction}'],
                      ],
                      'joins' => [
-                         ['Test', 't', ['t.id:' => 'id']],
+                         ['Test', 't', ['t.id:' => 'id'], ["type" => JoinType::left->value]],
                      ],
                 ],
                 'select' => [
@@ -525,6 +526,20 @@ return [
                              'id!=' => null,
                          ],
                      ],
+                ],
+            ],
+            'test3' => [
+                'type' => Entity::VARCHAR,
+                'notStorable' => true,
+                'where' => [
+                    '=' => [
+                        'whereClause' => [
+                            'test' => '{value}',
+                        ],
+                        'leftJoins' => [
+                            ['Test', 't', ['t.id:' => 'id']],
+                        ],
+                    ],
                 ],
             ],
         ],

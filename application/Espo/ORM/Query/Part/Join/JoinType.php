@@ -27,23 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Select\Email\Helpers;
+namespace Espo\ORM\Query\Part\Join;
 
-use Espo\Entities\Email;
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
-
-class JoinHelper
+/**
+ * @since 9.2.0
+ */
+enum JoinType: string
 {
-    public function joinEmailUser(QueryBuilder $queryBuilder, string $userId): void
-    {
-        if ($queryBuilder->hasJoinAlias(Email::ALIAS_INBOX)) {
-            return;
-        }
+    /**
+     * An INNER join.
+     */
+    case inner = 'inner';
 
-        $queryBuilder->leftJoin(Email::RELATIONSHIP_EMAIL_USER, Email::ALIAS_INBOX, [
-            Email::ALIAS_INBOX . '.emailId:' => 'id',
-            Email::ALIAS_INBOX . '.deleted' => false,
-            Email::ALIAS_INBOX . '.userId' => $userId,
-        ]);
-    }
+    /**
+     * A LEFT join.
+     */
+    case left = 'left';
 }
