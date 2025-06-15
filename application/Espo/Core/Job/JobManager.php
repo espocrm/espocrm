@@ -123,6 +123,13 @@ class JobManager
             ->withUseProcessPool($this->useProcessPool)
             ->withLimit($limit);
 
+        $subQueueParams = [
+            $params->withWeight(0.5),
+            $params->withQueue(QueueName::M0)->withWeight(0.5),
+        ];
+
+        $params = $params->withSubQueueParamsList($subQueueParams);
+
         $this->queueProcessor->process($params);
     }
 
