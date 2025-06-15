@@ -34,7 +34,7 @@
         },
         "order": {
             "type": "int",
-            "required": true,
+            "minValue": 1,
             "disableFormatting": true,
             "textFilterDisabled": true
         },

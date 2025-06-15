@@ -31,6 +31,8 @@ namespace Espo\Core\Repositories;
 
 use Espo\ORM\Entity;
 use Espo\ORM\Mapper\BaseMapper;
+use Espo\ORM\Name\Attribute;
+use Espo\ORM\Query\Part\Order;
 
 /**
  * @template TEntity of Entity
@@ -38,6 +40,18 @@ use Espo\ORM\Mapper\BaseMapper;
  */
 class CategoryTree extends Database
 {
+    private const ATTR_ORDER = 'order';
+    private const ATTR_PARENT_ID = 'parentId';
+
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->get(self::ATTR_ORDER) === null) {
+            $this->setOrderToEnd($entity);
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
     /**
      * @param array<string, mixed> $options
      * @return void
@@ -46,7 +60,7 @@ class CategoryTree extends Database
     {
         parent::afterSave($entity, $options);
 
-        $parentId = $entity->get('parentId');
+        $parentId = $entity->get(self::ATTR_PARENT_ID);
 
         $em = $this->entityManager;
 
@@ -102,7 +116,7 @@ class CategoryTree extends Database
             return;
         }
 
-        if (!$entity->isAttributeChanged('parentId')) {
+        if (!$entity->isAttributeChanged(self::ATTR_PARENT_ID)) {
             return;
         }
 
@@ -180,5 +194,25 @@ class CategoryTree extends Database
         }
 
         $mapper->deleteFromDb($entity->getEntityType(), $entity->getId());
+    }
+
+    private function setOrderToEnd(Entity $entity): void
+    {
+        $parentId = $entity->get(self::ATTR_PARENT_ID);
+
+        $where = [self::ATTR_PARENT_ID => $parentId];
+
+        if (!$entity->isNew()) {
+            $where[Attribute::ID . '!='] = $entity->getId();
+        }
+
+        $last = $this
+            ->where($where)
+            ->order(self::ATTR_ORDER, Order::DESC)
+            ->findOne();
+
+        $order = $last ? ($last->get(self::ATTR_ORDER) + 1) : 1;
+
+        $entity->set(self::ATTR_ORDER, $order);
     }
 }

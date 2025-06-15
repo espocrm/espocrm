@@ -59,6 +59,20 @@ class RecordTreeController extends RecordController {
             });
         });
     }
+
+    async create(options = {}) {
+        if (options.parentId) {
+            options.attributes ??= {};
+
+            options.attributes.parentId = options.parentId;
+            options.attributes.parentName = options.parentName;
+
+            delete options.parentId;
+            delete options.parentName;
+        }
+
+        return super.create(options);
+    }
 }
 
 export default RecordTreeController;

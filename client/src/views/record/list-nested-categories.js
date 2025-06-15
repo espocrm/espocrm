@@ -29,6 +29,7 @@
 /** @module views/record/list-nested-categories */
 
 import View from 'view';
+import RecordModalHelper from 'helpers/record-modal';
 
 class ListNestedCategoriesRecordView extends View {
 
@@ -74,6 +75,17 @@ class ListNestedCategoriesRecordView extends View {
      */
     subjectEntityType
 
+    /**
+     * @protected
+     * @type {string}
+     */
+    categoryEntityType
+
+    /**
+     * @private
+     */
+    showCreate
+
     data() {
         const data = {};
 
@@ -90,9 +102,29 @@ class ListNestedCategoriesRecordView extends View {
         data.showFolders = !this.isExpanded;
         data.hasExpandedToggler = this.options.hasExpandedToggler;
         data.showEditLink = this.options.showEditLink;
+        data.showCreate = this.showCreate;
         data.hasNavigationPanel = this.hasNavigationPanel;
 
+        data.createCategoryLabel =
+            this.translate(`Create ${this.categoryEntityType}`, 'labels', this.categoryEntityType);
+
         const categoryData = this.collection.categoryData || {};
+
+        if (this.showCreate) {
+            data.createLink = `#${this.categoryEntityType}/create`;
+
+            let createReturnUrl = `#${this.subjectEntityType}`;
+
+            if (categoryData.id) {
+                createReturnUrl += `/list/categoryId=${categoryData.id}`;
+            }
+
+            data.createLink +=  `?returnUrl=${encodeURIComponent(createReturnUrl)}`;
+
+            if (categoryData.id) {
+                data.createLink += `&parentId=${categoryData.id}&parentName=${categoryData.name}`;
+            }
+        }
 
         data.upperLink = categoryData.upperId ?
             '#' + this.subjectEntityType + '/list/categoryId=' + categoryData.upperId:
@@ -158,8 +190,14 @@ class ListNestedCategoriesRecordView extends View {
         this.hasNavigationPanel = this.options.hasNavigationPanel;
         this.itemCollection = this.options.itemCollection;
 
+        this.categoryEntityType = this.collection.entityType;
+
+        this.showCreate = this.getAcl().check(this.categoryEntityType, 'create');
+
         this.listenTo(this.collection, 'sync', () => this.reRender());
         this.listenTo(this.itemCollection, 'sync', () => this.reRender());
+
+        this.addActionHandler('createCategory', () => this.actionCreateCategory());
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -170,6 +208,27 @@ class ListNestedCategoriesRecordView extends View {
             remove: false,
             more: true,
         });
+    }
+
+    /**
+     * @private
+     */
+    async actionCreateCategory() {
+        const categoryData = this.collection.categoryData || {};
+
+        const view = await new RecordModalHelper().showCreate(this, {
+            entityType: this.categoryEntityType,
+            attributes: {
+                parentId: categoryData.id ?? null,
+                parentName: categoryData.name ?? null,
+            },
+            rootUrl: this.getRouter().getCurrentUrl(),
+            afterSave: () => {
+                this.collection.fetch();
+            },
+        });
+
+        await view.render();
     }
 }
 

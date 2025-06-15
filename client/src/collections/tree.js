@@ -57,6 +57,7 @@ class TreeCollection extends Collection {
         this.path = response.path;
         /**
          * @type {{
+         *     id: string,
          *     name: string,
          *     upperId?: string,
          *     upperName?: string,

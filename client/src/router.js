@@ -540,7 +540,7 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
                 options[p[0]] = true;
 
                 if (p.length > 1) {
-                    options[p[0]] = p[1];
+                    options[p[0]] = decodeURIComponent(p[1]);
                 }
             });
         }
