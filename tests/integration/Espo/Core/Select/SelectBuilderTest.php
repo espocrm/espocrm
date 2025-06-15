@@ -42,6 +42,7 @@ use Espo\Entities\Email;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Query\Part\Join\JoinType;
 use Espo\ORM\Query\Select;
 use tests\integration\Core\BaseTestCase;
 
@@ -191,7 +192,7 @@ class SelectBuilderTest extends BaseTestCase
                         'id',
                     ],
                     'from' => 'Account',
-                    'leftJoins' => [
+                    'joins' => [
                         [
                             'EntityTeam',
                             'entityTeam',
@@ -200,6 +201,7 @@ class SelectBuilderTest extends BaseTestCase
                                 'entityTeam.entityType' => 'Account',
                                 'entityTeam.deleted' => false,
                             ],
+                            ['type' => JoinType::left]
                         ],
                     ],
                     'whereClause' => [
@@ -260,43 +262,43 @@ class SelectBuilderTest extends BaseTestCase
                                 0 => 'id',
                             ],
                         'from' => 'Meeting',
-                        'leftJoins' =>
+                        'joins' =>
                             [
                                 0 =>
                                     [
-                                        0 => 'EntityTeam',
-                                        1 => 'entityTeam',
-                                        2 =>
+                                        'EntityTeam',
+                                        'entityTeam',
                                             [
                                                 'entityTeam.entityId:' => 'id',
                                                 'entityTeam.entityType' => 'Meeting',
                                                 'entityTeam.deleted' => false,
                                             ],
+                                        ['type' => JoinType::left]
                                     ],
                                 1 =>
                                     [
-                                        0 => 'MeetingUser',
-                                        1 => 'usersMiddle',
-                                        2 =>
-                                            [
-                                                'usersMiddle.meetingId:' => 'id',
-                                                'usersMiddle.deleted' => false,
-                                            ],
+                                        'MeetingUser',
+                                        'usersMiddle',
+                                        [
+                                            'usersMiddle.meetingId:' => 'id',
+                                            'usersMiddle.deleted' => false,
+                                        ],
+                                        ['type' => JoinType::left]
                                     ],
                             ],
                         'whereClause' =>
                             [
                                 'OR' =>
                                     [
-                                        0 =>
+
                                             [
                                                 'entityTeam.teamId=' => [],
                                             ],
-                                        1 =>
+
                                             [
                                                 'usersMiddle.userId=' => $userId,
                                             ],
-                                        2 =>
+
                                             [
                                                 'assignedUserId=' => $userId,
                                             ],
@@ -335,18 +337,17 @@ class SelectBuilderTest extends BaseTestCase
 
         $expected = [
             'from' => 'Email',
-            'leftJoins' =>
+            'joins' =>
                 [
-                    0 =>
                         [
-                            0 => 'EmailUser',
-                            1 => Email::ALIAS_INBOX,
-                            2 =>
-                                [
-                                    Email::ALIAS_INBOX . '.emailId:' => 'id',
-                                    Email::ALIAS_INBOX . '.deleted' => false,
-                                    Email::ALIAS_INBOX . '.userId' => $userId,
-                                ],
+                            'EmailUser',
+                            Email::ALIAS_INBOX,
+                            [
+                                Email::ALIAS_INBOX . '.emailId:' => 'id',
+                                Email::ALIAS_INBOX . '.deleted' => false,
+                                Email::ALIAS_INBOX . '.userId' => $userId,
+                            ],
+                            ['type' => JoinType::left]
                         ],
                 ],
             'whereClause' =>
@@ -393,29 +394,29 @@ class SelectBuilderTest extends BaseTestCase
                                     0 => 'id',
                                 ],
                             'from' => 'Email',
-                            'leftJoins' =>
+                            'joins' =>
                                 [
                                     0 =>
                                         [
-                                            0 => 'EntityTeam',
-                                            1 => 'entityTeam',
-                                            2 =>
+                                            'EntityTeam',
+                                            'entityTeam',
                                                 [
                                                     'entityTeam.entityId:' => 'id',
                                                     'entityTeam.entityType' => 'Email',
                                                     'entityTeam.deleted' => false,
                                                 ],
+                                            ['type' => JoinType::left]
                                         ],
                                     1 =>
                                         [
-                                            0 => 'EmailUser',
-                                            1 => Email::ALIAS_INBOX,
-                                            2 =>
+                                            'EmailUser',
+                                            Email::ALIAS_INBOX,
                                                 [
                                                     Email::ALIAS_INBOX . '.emailId:' => 'id',
                                                     Email::ALIAS_INBOX . '.deleted' => false,
                                                     Email::ALIAS_INBOX . '.userId' => $userId,
                                                 ],
+                                            ['type' => JoinType::left]
                                         ],
                                 ],
                             'whereClause' =>
@@ -456,8 +457,7 @@ class SelectBuilderTest extends BaseTestCase
         /** @noinspection PhpArrayWriteIsNotUsedInspection */
         $expected = [
             'from' => 'Email',
-            'joins' => [],
-            'leftJoins' => [
+            'joins' => [
                 [
                     'EmailUser',
                     Email::ALIAS_INBOX,
@@ -465,7 +465,8 @@ class SelectBuilderTest extends BaseTestCase
                         Email::ALIAS_INBOX . '.emailId:' => 'id',
                         Email::ALIAS_INBOX . '.deleted' => false,
                         Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
-                    ]
+                    ],
+                    ['type' => JoinType::left]
                 ],
             ],
             'whereClause' => [
@@ -481,7 +482,7 @@ class SelectBuilderTest extends BaseTestCase
         ];
 
         $this->assertEquals($expected['whereClause'], $raw['whereClause']);
-        $this->assertEquals($expected['leftJoins'], $raw['leftJoins']);
+        $this->assertEquals($expected['joins'], $raw['joins']);
     }
 
     public function testEmailAccessFilterOnlyContact()
@@ -507,8 +508,7 @@ class SelectBuilderTest extends BaseTestCase
         /** @noinspection PhpArrayWriteIsNotUsedInspection */
         $expected = [
             'from' => 'Email',
-            'joins' => [],
-            'leftJoins' => [
+            'joins' => [
                 [
                     'EmailUser',
                     Email::ALIAS_INBOX,
@@ -516,7 +516,8 @@ class SelectBuilderTest extends BaseTestCase
                         Email::ALIAS_INBOX . '.emailId:' => 'id',
                         Email::ALIAS_INBOX . '.deleted' => false,
                         Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
-                    ]
+                    ],
+                    ['type' => JoinType::left]
                 ],
             ],
             'whereClause' => [
@@ -531,7 +532,7 @@ class SelectBuilderTest extends BaseTestCase
         ];
 
         $this->assertEquals($expected['whereClause'], $raw['whereClause']);
-        $this->assertEquals($expected['leftJoins'], $raw['leftJoins']);
+        $this->assertEquals($expected['joins'], $raw['joins']);
     }
 
     public function testBuildDefaultOrder()
@@ -658,7 +659,7 @@ class SelectBuilderTest extends BaseTestCase
             ],
         ];
 
-        $expectedLeftJoins = [
+        $joins = [
             [
                 'EmailUser',
                 Email::ALIAS_INBOX,
@@ -667,6 +668,7 @@ class SelectBuilderTest extends BaseTestCase
                     Email::ALIAS_INBOX . '.deleted' => false,
                     Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
                 ],
+                ['type' => JoinType::left]
             ],
         ];
 
@@ -679,12 +681,9 @@ class SelectBuilderTest extends BaseTestCase
             [Email::ALIAS_INBOX . '.folderId', 'folderId'],
         ];
 
-        //$expectedUseIndex = ['dateSent'];
-
         $this->assertEquals($expectedWhereClause, $raw['whereClause']);
-        $this->assertEquals($expectedLeftJoins, $raw['leftJoins']);
+        $this->assertEquals($joins, $raw['joins']);
         $this->assertEquals($expectedSelect, $raw['select']);
-        //$this->assertEquals($expectedUseIndex, $raw['useIndex']);
     }
 
     public function testEmailSent()
@@ -737,7 +736,7 @@ class SelectBuilderTest extends BaseTestCase
             ]
         ];
 
-        $expectedLeftJoins = [
+        $expectedJoins = [
             [
                 'EmailUser',
                 Email::ALIAS_INBOX,
@@ -746,11 +745,12 @@ class SelectBuilderTest extends BaseTestCase
                     Email::ALIAS_INBOX . '.deleted' => false,
                     Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
                 ],
+                ['type' => JoinType::left]
             ],
         ];
 
         $this->assertEquals($expectedWhereClause, $raw['whereClause']);
-        $this->assertEquals($expectedLeftJoins, $raw['leftJoins']);
+        $this->assertEquals($expectedJoins, $raw['joins']);
     }
 
     public function testEmailEmailAddressEquals()
