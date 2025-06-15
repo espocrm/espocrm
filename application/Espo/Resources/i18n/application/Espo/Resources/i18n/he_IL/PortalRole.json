@@ -1,0 +1,17 @@
+{
+    "fields": {
+        "exportPermission": "הרשאת ייצוא",
+        "massUpdatePermission": "הרשאת עדכון המוני",
+        "data": "נתונים",
+        "fieldData": "נתוני שדות"
+    },
+    "links": {
+        "users": "משתמשים"
+    },
+    "labels": {
+        "Access": "גישה",
+        "Create PortalRole": "יצירת תפקיד בפורטל",
+        "Scope Level": "רמת היקף",
+        "Field Level": "רמת שדה"
+    }
+}
