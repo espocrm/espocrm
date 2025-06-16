@@ -599,7 +599,8 @@ class Model {
     /**
      * Delete the record in the backend.
      *
-     * @param {{wait?: boolean} & Object.<string, *>} [options] Options.
+     * @param {{wait?: boolean} & Object.<string, *>} [options] Options. If `wait`, unsubscribing and
+     *     removal from the collection will wait for a successful response.
      * @returns {Promise}
      * @fires Model#sync
      * @copyright Credits to Backbone.js.

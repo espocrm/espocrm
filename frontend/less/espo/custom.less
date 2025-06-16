@@ -4107,17 +4107,15 @@ body > .autocomplete-suggestions.text-search-suggestions {
         width: var(--220px);
     }
 
-    &:has(.popover-content > .list > table) {
-        padding-left: 0;
-        padding-right: 0;
-    }
-
     .popover-content {
         &:has(> .list > table) {
             padding: 0;
         }
 
         > .list > table {
+            margin-left: var(--minus-1px);
+            margin-right: var(--minus-1px);
+
             > tbody {
                 > tr {
                     > td:first-child {
