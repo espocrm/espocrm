@@ -3521,7 +3521,12 @@ class ListRecordView extends View {
     }
 
     // noinspection JSUnusedGlobalSymbols
-    actionQuickRemove(data) {
+    /**
+     * @protected
+     * @param {{id?: string}} [data]
+     * @return {Promise<void>}
+     */
+    async actionQuickRemove(data) {
         data = data || {};
 
         const id = data.id;
@@ -3531,6 +3536,11 @@ class ListRecordView extends View {
         }
 
         const model = this.collection.get(id);
+        const index = this.collection.indexOf(model);
+
+        if (!model) {
+            throw new Error("No model.");
+        }
 
         if (!this.getAcl().checkModel(model, 'delete')) {
             Espo.Ui.error(this.translate('Access denied'));
@@ -3538,27 +3548,30 @@ class ListRecordView extends View {
             return;
         }
 
-        this.confirm({
+        await this.confirm({
             message: this.translate('removeRecordConfirmation', 'messages', this.scope),
             confirmText: this.translate('Remove'),
-        }, () => {
-            this.collection.trigger('model-removing', id);
-            this.collection.remove(model);
-
-            Espo.Ui.notifyWait();
-
-            model.destroy({wait: true, fromList: true})
-                .then(() => {
-                    Espo.Ui.success(this.translate('Removed'));
-
-                    this.trigger('after:delete', model);
-                    this.removeRecordFromList(id);
-                })
-                .catch(() => {
-                    // @todo Revert to the same position.
-                    this.collection.push(model);
-                });
         });
+
+        this.collection.trigger('model-removing', id);
+        this.collection.remove(model);
+
+        Espo.Ui.notifyWait();
+
+        try {
+            await model.destroy({wait: true, fromList: true});
+        } catch (e) {
+            if (!this.collection.models.includes(model)) {
+                this.collection.add(model, {at: index});
+            }
+
+            return;
+        }
+
+        Espo.Ui.success(this.translate('Removed'));
+
+        this.trigger('after:delete', model);
+        this.removeRecordFromList(id);
     }
 
     /**

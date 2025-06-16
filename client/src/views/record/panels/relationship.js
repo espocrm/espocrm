@@ -821,31 +821,45 @@ class RelationshipPanelView extends BottomPanelView {
      * A `remove-related` action.
      *
      * @protected
+     * @param {{id?: string}} [data]
+     * @return {Promise<void>}
      */
-    actionRemoveRelated(data) {
+    async actionRemoveRelated(data) {
         const id = data.id;
 
-        this.confirm({
+        const model = this.collection.get(id);
+        const index = this.collection.indexOf(model);
+
+        if (!model) {
+            throw new Error("No model.");
+        }
+
+        await this.confirm({
             message: this.translate('removeRecordConfirmation', 'messages'),
             confirmText: this.translate('Remove'),
-        }, () => {
-            const model = this.collection.get(id);
-
-            Espo.Ui.notifyWait();
-
-            model
-                .destroy()
-                .then(() => {
-                    Espo.Ui.success(this.translate('Removed'));
-
-                    this.collection.fetch();
-
-                    this.model.trigger('after:unrelate');
-                    this.model.trigger('after:unrelate:' + this.link);
-
-                    this.processSyncBack();
-                });
         });
+
+        Espo.Ui.notifyWait();
+
+        try {
+            await model.destroy({wait: true});
+        } catch (e) {
+            if (!this.collection.models.includes(model)) {
+                this.collection.add(model, {at: index});
+            }
+
+            return;
+        }
+
+
+        Espo.Ui.success(this.translate('Removed'));
+
+        this.collection.fetch().then(() => {});
+
+        this.model.trigger('after:unrelate');
+        this.model.trigger(`after:unrelate:${this.link}`);
+
+        this.processSyncBack();
     }
 
     // noinspection JSUnusedGlobalSymbols
