@@ -29,6 +29,22 @@
 const fs = require('fs');
 const buildUtils = require('../build-utils');
 
+/**
+ * @type {{
+ *     src?: string,
+ *     dest?: string,
+ *     bundle?: boolean,
+ *     amdId?: string,
+ *     suppressAmd?: boolean,
+ *     minify?: boolean,
+ *     prepareCommand?: string,
+ *     name?: string,
+ *     files?: {
+ *         src: string,
+ *         dest: string,
+ *     }[],
+ * }[]}
+ */
 const libs = require('./../../frontend/libs.json');
 
 const stripSourceMappingUrl = path => {

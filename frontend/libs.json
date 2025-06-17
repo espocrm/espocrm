@@ -130,6 +130,12 @@
         "amdId": "intl-tel-input-globals"
     },
     {
+        "src": "client/lib/original/shopify-draggable.js",
+        "bundle": true,
+        "amdId": "@shopify/draggable",
+        "prepareCommand": "npx rollup node_modules/@shopify/draggable/build/esm/index.mjs --format amd --file client/lib/original/shopify-draggable.js --amd.id @shopify/draggable"
+    },
+    {
         "src": "node_modules/summernote/dist/summernote.js",
         "amdId": "summernote",
         "minify": true
