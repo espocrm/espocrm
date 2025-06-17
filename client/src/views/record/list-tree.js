@@ -30,6 +30,7 @@
 
 import ListRecordView from 'views/record/list';
 import RecordModal from 'helpers/record-modal';
+import {Draggable} from '@shopify/draggable';
 
 class ListTreeRecordView extends ListRecordView {
 
@@ -51,7 +52,30 @@ class ListTreeRecordView extends ListRecordView {
     level = 0
     itemViewName = 'views/record/list-tree-item'
 
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    readOnly
+
     expandToggleInactive = false;
+
+    /**
+     * @private
+     * @type {ListTreeRecordView}
+     */
+    rootView
+
+    /**
+     * @type {string|null}
+     */
+    movedId = null
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    blockDraggable = false
 
     // noinspection JSCheckFunctionSignatures
     data() {
@@ -76,6 +100,8 @@ class ListTreeRecordView extends ListRecordView {
         data.noData = data.createDisabled && !data.rowDataList.length && !data.showRoot;
         data.expandToggleInactive = this.expandToggleInactive;
         data.hasExpandToggle = !this.getUser().isPortal();
+
+        data.isEditable = this.level === 0 && !this.readOnly;
 
         return data;
     }
@@ -136,6 +162,14 @@ class ListTreeRecordView extends ListRecordView {
                     this.getParentView().trigger('select', o);
                 }
             });
+        }
+    }
+
+    afterRender() {
+        super.afterRender();
+
+        if (this.level === 0 && !this.readOnly) {
+            this.initDraggableRoot();
         }
     }
 
@@ -295,6 +329,189 @@ class ListTreeRecordView extends ListRecordView {
 
             this.setSelected(null);
         }
+    }
+
+    /**
+     * @private
+     */
+    initDraggableRoot() {
+        // @todo Test touchscreen.
+
+        const draggable = new Draggable(this.element, {
+            distance: 8,
+            draggable: '.list-group-item > .cell > .link',
+            mirror: {
+                cursorOffsetX: 5,
+                cursorOffsetY: 5,
+                appendTo: 'body',
+            },
+        });
+
+        /** @type {HTMLElement[]} */
+        let rows;
+        /** @type {Map<HTMLElement, number>} */
+        let levelMap;
+        /** @type {HTMLElement|null} */
+        let movedLink = null;
+        /** @type {HTMLElement|null} */
+        let movedFromLi = null;
+
+        draggable.on('mirror:created', event => {
+            const mirror = event.mirror;
+            const source = event.source;
+            const originalSource = event.originalSource;
+
+            originalSource.style.display = '';
+            source.style.display = 'none';
+
+            mirror.style.display = 'block';
+            mirror.style.cursor = 'grabbing';
+            mirror.classList.add('draggable-helper', 'draggable-helper-transparent', 'text-info');
+            mirror.classList.remove('link');
+            mirror.style.pointerEvents = 'auto';
+            mirror.removeAttribute('href');
+            mirror.style.textDecoration = 'none';
+        });
+
+        draggable.on('mirror:move', event => {
+            event.mirror.style.pointerEvents = 'auto';
+        });
+
+        draggable.on('drag:start', event => {
+            if (this.blockDraggable) {
+                event.cancel();
+
+                return;
+            }
+
+            rows = Array.from(this.element.querySelectorAll('.list-group-tree > .list-group-item'));
+
+            levelMap = new Map();
+
+            rows.forEach(row => {
+                let depth = 0;
+                let current = row;
+
+                while (current && current !== this.element) {
+                    current = current.parentElement;
+
+                    depth ++;
+                }
+
+                levelMap.set(row, depth);
+            });
+
+            rows.sort((a, b) => levelMap.get(b) - levelMap.get(a));
+
+            this.movedId = event.source.dataset.id;
+            movedLink = event.originalSource;
+            movedFromLi = movedLink.parentElement.parentElement;
+
+            movedLink.classList.add('text-info');
+        });
+
+        let overId = null;
+        let overParentId = null;
+        let isAfter = false;
+        let wasOutOfSelf = false;
+
+        draggable.on('drag:move', event => {
+            isAfter = false;
+            overId = null;
+
+            let rowFound = null;
+
+            for (const row of rows) {
+                const rect = row.getBoundingClientRect();
+
+                const isIn =
+                    rect.left < event.sensorEvent.clientX &&
+                    rect.right > event.sensorEvent.clientX &&
+                    rect.top < event.sensorEvent.clientY &&
+                    rect.bottom >= event.sensorEvent.clientY;
+
+                if (!isIn) {
+                    continue;
+                }
+
+                const itemId = row.dataset.id ?? null;
+                let itemParentId = null;
+
+                if (!itemId) {
+                    const parent = row.closest(`.list-group-item[data-id]`);
+
+                    if (parent instanceof HTMLElement) {
+                        // Over a plus row.
+                        itemParentId = parent.dataset.id;
+                    }
+                }
+
+                const itemIsAfter = event.sensorEvent.clientY - rect.top >= rect.bottom - event.sensorEvent.clientY;
+
+                if (itemParentId && itemIsAfter) {
+                    continue;
+                }
+
+                if (itemId === this.movedId) {
+                    break;
+                }
+
+                if (movedFromLi.contains(row)) {
+                    break;
+                }
+
+                isAfter = itemIsAfter;
+                overParentId = itemParentId;
+                overId = itemId;
+                rowFound = row;
+
+                break;
+            }
+
+            for (const row of rows) {
+                row.classList.remove('border-top-highlighted');
+                row.classList.remove('border-bottom-highlighted');
+            }
+
+            if (!rowFound) {
+                return;
+            }
+
+            if (isAfter) {
+                rowFound.classList.add('border-bottom-highlighted');
+                rowFound.classList.remove('border-top-highlighted');
+            } else {
+                rowFound.classList.add('border-top-highlighted');
+                rowFound.classList.remove('border-bottom-highlighted');
+            }
+        });
+
+        draggable.on('drag:stop', () => {
+            if (movedLink) {
+                movedLink.classList.remove('text-info');
+            }
+
+            rows.forEach(row => {
+                row.classList.remove('border-bottom-highlighted');
+                row.classList.remove('border-top-highlighted');
+            });
+
+            rows = undefined;
+
+            this.movedId = null;
+            movedLink = null;
+            movedFromLi = null;
+            levelMap = undefined;
+            overParentId = null;
+            overId = null;
+            isAfter = false;
+            wasOutOfSelf = false;
+
+            // @todo Skip if no change.
+
+
+            //this.blockDraggable = true;
+        });
     }
 }
 
