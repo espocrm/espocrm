@@ -77,6 +77,18 @@ class ListTreeRecordView extends ListRecordView {
      */
     blockDraggable = false
 
+    /**
+     * @private
+     * @type {boolean}
+     */
+    moveSupported
+
+    /**
+     * @private
+     * {Draggable}
+     */
+    draggable
+
     // noinspection JSCheckFunctionSignatures
     data() {
         const data = super.data();
@@ -163,12 +175,14 @@ class ListTreeRecordView extends ListRecordView {
                 }
             });
         }
+
+        this.moveSupported = !!this.getMetadata().get(`entityDefs.${this.entityType}.fields.order`);
     }
 
     afterRender() {
         super.afterRender();
 
-        if (this.level === 0 && !this.readOnly) {
+        if (this.level === 0 && !this.readOnly && this.moveSupported) {
             this.initDraggableRoot();
         }
     }
@@ -179,8 +193,7 @@ class ListTreeRecordView extends ListRecordView {
     setSelected(id) {
         if (id === null) {
             this.selectedData.id = null;
-        }
-        else {
+        } else {
             this.selectedData.id = id;
         }
 
@@ -198,6 +211,13 @@ class ListTreeRecordView extends ListRecordView {
                 view.getChildrenView().setSelected(id);
             }
         });
+    }
+
+    /**
+     * @return {import('views/record/list-tree-item').default[]}
+     */
+    getItemViews() {
+        return this.rowList.map(key => this.getView(key));
     }
 
     buildRows(callback) {
@@ -285,12 +305,10 @@ class ListTreeRecordView extends ListRecordView {
             attributes.parentName = this.model.attributes.name;
         }
 
-        const scope = this.collection.entityType;
-
         const helper = new RecordModal();
 
         helper.showCreate(this, {
-            entityType: scope,
+            entityType: this.entityType,
             attributes: attributes,
             afterSave: model => {
                 const collection = /** @type {import('collections/tree').default} collection */
@@ -335,9 +353,11 @@ class ListTreeRecordView extends ListRecordView {
      * @private
      */
     initDraggableRoot() {
-        // @todo Test touchscreen.
+        if (this.draggable) {
+            this.draggable.destroy();
+        }
 
-        const draggable = new Draggable(this.element, {
+        const draggable = this.draggable = new Draggable(this.element, {
             distance: 8,
             draggable: '.list-group-item > .cell > .link',
             mirror: {
@@ -460,6 +480,10 @@ class ListTreeRecordView extends ListRecordView {
                     break;
                 }
 
+                if (!itemId && !itemParentId) {
+                    continue;
+                }
+
                 isAfter = itemIsAfter;
                 overParentId = itemParentId;
                 overId = itemId;
@@ -486,7 +510,7 @@ class ListTreeRecordView extends ListRecordView {
             }
         });
 
-        draggable.on('drag:stop', () => {
+        draggable.on('drag:stop', async () => {
             if (movedLink) {
                 movedLink.classList.remove('text-info');
             }
@@ -498,7 +522,78 @@ class ListTreeRecordView extends ListRecordView {
 
             rows = undefined;
 
+            let moveType;
+            let referenceId = overId;
+
+            if (overParentId || overId) {
+                if (overParentId) {
+                    moveType = 'into';
+                    referenceId = overParentId;
+                } else if (isAfter) {
+                    moveType = 'after';
+                } else {
+                    moveType = 'before';
+                }
+            }
+
+            if (moveType) {
+                this.blockDraggable = true;
+
+                const movedId = this.movedId;
+                const affectedId = referenceId;
+
+                Espo.Ui.notifyWait();
+
+                Espo.Ajax
+                    .postRequest(`${this.entityType}/action/move`, {
+                        id: this.movedId,
+                        referenceId: referenceId,
+                        type: moveType,
+                    })
+                    .then(async () => {
+                        /**
+                         *
+                         * @param {ListTreeRecordView} view
+                         * @param {string} movedId
+                         * @return {Promise}
+                         */
+                        const update = async (view, movedId) => {
+                            if (view.collection.has(movedId)) {
+                                await view.collection.fetch();
+
+                                return;
+                            }
+
+                            for (const subView of view.getItemViews()) {
+                                if (!subView.getChildrenView()) {
+                                    continue;
+                                }
+
+                                await update(subView.getChildrenView(), movedId);
+                            }
+                        };
+
+                        const promises = [];
+
+                        if (movedId) {
+                            promises.push(update(this, movedId));
+                        }
+
+                        if (affectedId) {
+                            promises.push(update(this, affectedId));
+                        }
+
+                        await Promise.all(promises);
+
+                        Espo.Ui.success(this.translate('Done'));
+                    })
+                    .finally(() => {
+                        this.blockDraggable = false;
+                    });
+            }
+
             this.movedId = null;
+
             movedLink = null;
             movedFromLi = null;
             levelMap = undefined;
@@ -506,11 +601,6 @@ class ListTreeRecordView extends ListRecordView {
             overId = null;
             isAfter = false;
             wasOutOfSelf = false;
-
-            // @todo Skip if no change.
-
-
-            //this.blockDraggable = true;
         });
     }
 }
