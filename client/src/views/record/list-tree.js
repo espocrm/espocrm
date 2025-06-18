@@ -493,6 +493,20 @@ class ListTreeRecordView extends ListRecordView {
                     continue;
                 }
 
+                if (itemParentId) {
+                    const parent = row.closest(`.list-group-item[data-id]`);
+
+                    if (parent) {
+                        const childCount = parent
+                            .querySelectorAll(':scope > .children > .list > .list-group > [data-id]')
+                            .length
+
+                        if (childCount) {
+                            continue;
+                        }
+                    }
+                }
+
                 isAfter = itemIsAfter;
                 overParentId = itemParentId;
                 overId = itemId;
@@ -520,14 +534,16 @@ class ListTreeRecordView extends ListRecordView {
         });
 
         draggable.on('drag:stop', async () => {
-            if (movedLink) {
-                movedLink.classList.remove('text-info');
-            }
+            const finalize = () => {
+                if (movedLink) {
+                    movedLink.classList.remove('text-info');
+                }
 
-            rows.forEach(row => {
-                row.classList.remove('border-bottom-highlighted');
-                row.classList.remove('border-top-highlighted');
-            });
+                rows.forEach(row => {
+                    row.classList.remove('border-bottom-highlighted');
+                    row.classList.remove('border-top-highlighted');
+                });
+            };
 
             rows = undefined;
 
@@ -561,7 +577,6 @@ class ListTreeRecordView extends ListRecordView {
                     })
                     .then(async () => {
                         /**
-                         *
                          * @param {ListTreeRecordView} view
                          * @param {string} movedId
                          * @return {Promise}
@@ -598,6 +613,8 @@ class ListTreeRecordView extends ListRecordView {
                     })
                     .finally(() => {
                         this.blockDraggable = false;
+
+                        finalize();
                     });
             }
 
