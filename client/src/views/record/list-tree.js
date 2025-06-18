@@ -376,6 +376,8 @@ class ListTreeRecordView extends ListRecordView {
         /** @type {Map<HTMLElement, number>} */
         let levelMap;
         /** @type {HTMLElement|null} */
+        let movedHandle = null;
+        /** @type {HTMLElement|null} */
         let movedLink = null;
         /** @type {HTMLElement|null} */
         let movedFromLi = null;
@@ -430,8 +432,9 @@ class ListTreeRecordView extends ListRecordView {
             rows.sort((a, b) => levelMap.get(b) - levelMap.get(a));
 
             this.movedId = event.source.dataset.id;
-            movedLink = event.originalSource;
-            movedFromLi = movedLink.parentElement.parentElement;
+            movedHandle = event.originalSource;
+            movedFromLi = movedHandle.parentElement.parentElement;
+            movedLink = movedHandle.parentElement.querySelector(`:scope > a.link`);
 
             movedLink.classList.add('text-info');
         });
@@ -600,7 +603,7 @@ class ListTreeRecordView extends ListRecordView {
 
             this.movedId = null;
 
-            movedLink = null;
+            movedHandle = null;
             movedFromLi = null;
             levelMap = undefined;
             overParentId = null;
