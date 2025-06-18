@@ -50,6 +50,7 @@ class ListTreeRecordView extends ListRecordView {
     createDisabled = false
     selectedData = null
     level = 0
+
     itemViewName = 'views/record/list-tree-item'
 
     /**
@@ -153,6 +154,10 @@ class ListTreeRecordView extends ListRecordView {
             this.selectedData = this.options.selectedData;
         }
 
+        this.entityType = this.collection.entityType;
+
+        this.moveSupported = !!this.getMetadata().get(`entityDefs.${this.entityType}.fields.order`);
+
         super.setup();
 
         if (this.selectable) {
@@ -175,8 +180,6 @@ class ListTreeRecordView extends ListRecordView {
                 }
             });
         }
-
-        this.moveSupported = !!this.getMetadata().get(`entityDefs.${this.entityType}.fields.order`);
     }
 
     afterRender() {
@@ -248,6 +251,7 @@ class ListTreeRecordView extends ListRecordView {
                     selectable: this.selectable,
                     setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
                     rootView: this.rootView,
+                    moveSupported: this.moveSupported,
                 }, () => {
                     built++;
 
@@ -359,7 +363,7 @@ class ListTreeRecordView extends ListRecordView {
 
         const draggable = this.draggable = new Draggable(this.element, {
             distance: 8,
-            draggable: '.list-group-item > .cell > .link',
+            draggable: '.list-group-item > .cell > [data-role="moveHandle"]',
             mirror: {
                 cursorOffsetX: 5,
                 cursorOffsetY: 5,
@@ -391,6 +395,8 @@ class ListTreeRecordView extends ListRecordView {
             mirror.style.pointerEvents = 'auto';
             mirror.removeAttribute('href');
             mirror.style.textDecoration = 'none';
+
+            mirror.innerText = mirror.dataset.title;
         });
 
         draggable.on('mirror:move', event => {

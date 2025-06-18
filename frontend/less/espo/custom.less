@@ -2956,9 +2956,9 @@ table.table td.cell .html-container {
                         display: block;
                         content: " ";
                         height: var(--2px);
-                        width: var(--20px);
+                        width: var(--11px);
                         background-color: var(--gray-soft);
-                        left: var(--30px);
+                        left: var(--32px);
                         position: absolute;
                         border-radius: var(--1px);
                     }
@@ -2988,6 +2988,19 @@ table.table td.cell .html-container {
                     &:hover {
                         color: var(--btn-text-color);
                     }
+                }
+
+                a[data-role="moveHandle"] {
+                    &,
+                    &:hover {
+                        color: var(--text-muted-color);
+                    }
+
+                    margin-left: var(--2px);
+                    margin-right: var(--2px);
+
+                    font-size: var(--12px);
+                    cursor: grab;
                 }
             }
         }

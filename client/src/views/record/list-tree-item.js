@@ -53,6 +53,7 @@ class ListTreeRecordItemView extends View {
             isEnd: this.isEnd,
             isSelected: this.isSelected,
             readOnly: this.readOnly,
+            isMovable: this.options.moveSupported && !this.options.readOnly,
         };
     }
 
@@ -75,6 +76,24 @@ class ListTreeRecordItemView extends View {
 
             e.stopPropagation();
         }
+    }
+
+    /**
+     * @param {{
+     *     moveSupported: boolean,
+     *     readOnly: boolean,
+     *     isSelected?: boolean,
+     *     level?: number,
+     *     selectedData?: {path: string, name: Record},
+     *     rootView: import('views/record/list-tree').default,
+     *     selectable?: boolean,
+     *     createDisabled?: boolean,
+     * }} options
+     */
+    constructor(options) {
+        super(options);
+
+        this.options = options;
     }
 
     setIsSelected() {
@@ -200,6 +219,7 @@ class ListTreeRecordItemView extends View {
                         model.isEnd = true;
                     }
 
+                    /** @type {ListTreeRecordItemView|null} */
                     const itemView = childrenView.getView(id);
 
                     if (!itemView) {
@@ -211,6 +231,7 @@ class ListTreeRecordItemView extends View {
                     itemView.afterIsEnd();
                 });
 
+                // @todo Refactor.
                 this.model.lastAreChecked = true;
             });
     }
@@ -320,7 +341,7 @@ class ListTreeRecordItemView extends View {
         this.$el.find(' > .children').addClass('hidden');
     }
 
-    getCurrentPath() {
+    /*getCurrentPath() {
         let pointer = this;
         const path = [];
 
@@ -335,7 +356,7 @@ class ListTreeRecordItemView extends View {
         }
 
         return path;
-    }
+    }*/
 
     actionRemove() {
         this.confirm({
