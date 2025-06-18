@@ -618,6 +618,10 @@ class ListTreeRecordView extends ListRecordView {
                     });
             }
 
+            if (!moveType) {
+                finalize();
+            }
+
             this.movedId = null;
 
             movedHandle = null;
