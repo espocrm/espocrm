@@ -2928,18 +2928,69 @@ table.table td.cell .html-container {
 
 .list-group-tree {
     border: 0;
-}
-.list-group-tree > li {
-    border: 0;
-    padding: 0 0 0 var(--panel-padding);
+
+    > li {
+        border: 0;
+        padding: 0 0 0 var(--panel-padding);
+
+        .cell {
+            padding: var(--3px) 0;
+
+            .remove-link {
+                margin-left: var(--4px);
+                margin-right: var(--4px);
+            }
+        }
+    }
 }
 
-.list-group-tree > li .cell {
-    padding: var(--3px) 0;
+.list-tree {
+    &[data-editable="true"] {
+        .list-group-tree {
+            > li {
+                position: relative;
 
-    .remove-link {
-        margin-left: var(--4px);
-        margin-right: var(--4px);
+                &.border-bottom-highlighted,
+                &.border-top-highlighted {
+                    &::after {
+                        display: block;
+                        content: " ";
+                        height: var(--2px);
+                        width: var(--20px);
+                        background-color: var(--gray-soft);
+                        left: var(--30px);
+                        position: absolute;
+                        border-radius: var(--1px);
+                    }
+                }
+
+                &.border-bottom-highlighted {
+                    &::after {
+                        bottom: var(--minus-1px);
+                    }
+                }
+
+                &.border-top-highlighted {
+                    &::after {
+                        top: var(--minus-1px);
+                    }
+                }
+
+                > .cell {
+                    user-select: none;
+                }
+
+                a[data-action="fold"],
+                a[data-action="unfold"],
+                a[data-action="remove"],
+                a[data-action="create"] {
+                    &,
+                    &:hover {
+                        color: var(--btn-text-color);
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -3978,6 +4029,10 @@ body:has(.modal-backdrop) {
     opacity: 1;
     position: absolute;
     z-index: 10002;
+
+    &.draggable-helper-transparent {
+        opacity: 0.5;
+    }
 }
 
 .reminders-container {

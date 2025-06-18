@@ -35,6 +35,7 @@
         "order": {
             "type": "int",
             "minValue": 1,
+            "readOnly": true,
             "disableFormatting": true,
             "textFilterDisabled": true
         },

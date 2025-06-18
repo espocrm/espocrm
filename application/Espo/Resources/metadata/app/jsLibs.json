@@ -77,6 +77,9 @@
         "exportsTo": "window",
         "exportsAs": "Selectize"
     },
+    "@shopify/draggable": {
+        "devPath": "client/lib/original/shopify-draggable.js"
+    },
     "autonumeric": {},
     "intl-tel-input": {
         "exportsTo": "window",

@@ -86,7 +86,14 @@ class DevModeJsFileListProvider
         $amdId = $item->amdId ?? null;
 
         if ($amdId) {
-            return 'client/lib/original/' . $amdId . '.js';
+            $file = $amdId;
+
+            if (str_starts_with($amdId, '@')) {
+                $file = substr($amdId, 1);
+                $file = str_replace('/', '-', $file);
+            }
+
+            return 'client/lib/original/' . $file . '.js';
         }
 
         $src = $item->src ?? null;

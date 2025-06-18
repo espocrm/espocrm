@@ -27,9 +27,28 @@
  ************************************************************************/
 
 const fs = require('fs');
+const cp = require('child_process');
 const buildUtils = require('../build-utils');
 
+// @todo Introduce libs-provider.
+/**
+ * @type {{
+ *     src?: string,
+ *     dest?: string,
+ *     bundle?: boolean,
+ *     amdId?: string,
+ *     suppressAmd?: boolean,
+ *     minify?: boolean,
+ *     prepareCommand?: string,
+ *     name?: string,
+ *     files?: {
+ *         src: string,
+ *         dest: string,
+ *     }[],
+ * }[]}
+ */
 const libs = require('./../../frontend/libs.json');
+
 const bundleConfig = require('../../frontend/bundle-config.json');
 
 const libDir = './client/lib';
@@ -54,6 +73,11 @@ fs.readdirSync(originalLibDir)
 
 fs.readdirSync(originalLibCrmDir)
     .forEach(file => fs.unlinkSync(originalLibCrmDir + '/' + file));
+
+libs.filter(it => it.prepareCommand)
+    .forEach(it => {
+        cp.execSync(it.prepareCommand, {stdio: ['ignore', 'ignore', 'pipe']});
+    });
 
 const stripSourceMappingUrl = path => {
     /** @var {string} */
@@ -94,8 +118,6 @@ const addSuppressAmd = path => {
     fs.writeFileSync(path, contents, {encoding: 'utf-8'});
 }
 
-const bundleLibDataList = buildUtils.getBundleLibList(libs);
-
 const amdIdMap = {};
 const suppressAmdMap = {};
 
@@ -113,7 +135,7 @@ libs.forEach(item => {
     amdIdMap[item.src] = 'lib!' + item.amdId;
 });
 
-bundleLibDataList.forEach(item => {
+buildUtils.getBundleLibList(libs, true).forEach(item => {
     const src = item.src;
 
     const dest = originalLibDir + '/' + item.file;

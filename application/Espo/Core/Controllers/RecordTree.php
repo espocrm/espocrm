@@ -29,15 +29,20 @@
 
 namespace Espo\Core\Controllers;
 
+use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\Entity;
+use Espo\Core\Templates\Entities\CategoryTree;
 use Espo\Services\RecordTree as Service;
 use Espo\Core\Api\Request;
 
+use Espo\Tools\CategoryTree\Move\MoveParams;
+use Espo\Tools\CategoryTree\MoveService;
+use RuntimeException;
 use stdClass;
 
 class RecordTree extends Record
@@ -58,11 +63,6 @@ class RecordTree extends Record
      */
     public function getActionListTree(Request $request): stdClass
     {
-        if (method_exists($this, 'actionListTree')) {
-            // For backward compatibility.
-            return (object) $this->actionListTree($request->getRouteParams(), $request->getParsedBody(), $request);
-        }
-
         $selectParams = $this->fetchSearchParamsFromRequest($request);
 
         $parentId = $request->getQueryParam('parentId');
@@ -101,7 +101,7 @@ class RecordTree extends Record
      */
     public function getActionLastChildrenIdList(Request $request): array
     {
-        if (!$this->acl->check($this->name, 'read')) {
+        if (!$this->acl->check($this->name, Table::ACTION_READ)) {
             throw new Forbidden();
         }
 
@@ -111,13 +111,77 @@ class RecordTree extends Record
     }
 
     /**
+     * @throws Forbidden
+     * @throws BadRequest
+     * @throws NotFound
+     * @throws Error
+     * @noinspection PhpUnused
+     */
+    public function postActionMove(Request $request): bool
+    {
+        if (!$this->acl->check($this->name, Table::ACTION_EDIT)) {
+            throw new Forbidden();
+        }
+
+        $id = $request->getParsedBody()->id ?? null;
+        $referenceId = $request->getParsedBody()->referenceId ?? null;
+        $type = $request->getParsedBody()->type ?? null;
+
+        if (!is_string($id)) {
+            throw new BadRequest("Bad id.");
+        }
+
+        if (!is_string($referenceId)) {
+            throw new BadRequest("Bad referenceId.");
+        }
+
+        $typeInternal = match ($type) {
+            'into' => MoveParams::TYPE_INTO,
+            'before' => MoveParams::TYPE_BEFORE,
+            'after' => MoveParams::TYPE_AFTER,
+            default => null,
+        };
+
+        if ($typeInternal === null) {
+            throw new BadRequest("Bad type.");
+        }
+
+        $entity = $this->getRecordService()->getEntity($id);
+
+        if (!$entity) {
+            throw new NotFound("Record not found.");
+        }
+
+        if (!$entity instanceof CategoryTree) {
+            throw new RuntimeException("Non-tree entity.");
+        }
+
+        if (!$this->acl->checkEntityEdit($entity)) {
+            throw new Forbidden("No edit access.");
+        }
+
+        $params = new MoveParams(
+            type: $typeInternal,
+            referenceId: $referenceId,
+        );
+
+        $service = $this->injectableFactory->create(MoveService::class);
+
+        $service->move($entity, $params);
+
+        return true;
+    }
+
+    /**
      * @return Service<Entity>
      */
     protected function getRecordTreeService(): Service
     {
         $service = $this->getRecordService();
 
-        assert($service instanceof Service);
+        if (!$service instanceof Service) {
+            throw new RuntimeException();
+        }
 
         return $service;
     }

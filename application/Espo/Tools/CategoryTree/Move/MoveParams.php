@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,44 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-const fs = require('fs');
-const buildUtils = require('../build-utils');
+namespace Espo\Tools\CategoryTree\Move;
 
-/**
- * @type {{
- *     src?: string,
- *     dest?: string,
- *     bundle?: boolean,
- *     amdId?: string,
- *     suppressAmd?: boolean,
- *     minify?: boolean,
- *     prepareCommand?: string,
- *     name?: string,
- *     files?: {
- *         src: string,
- *         dest: string,
- *     }[],
- * }[]}
- */
-const libs = require('./../../frontend/libs.json');
+readonly class MoveParams
+{
+    public const TYPE_INTO = 0;
+    public const TYPE_BEFORE = 1;
+    public const TYPE_AFTER = 2;
 
-const stripSourceMappingUrl = path => {
-    /** @var {string} */
-    const originalContents = fs.readFileSync(path, {encoding: 'utf-8'});
-
-    const re = /\/\/# sourceMappingURL.*/g;
-
-    if (!originalContents.match(re)) {
-        return;
-    }
-
-    const contents = originalContents.replaceAll(re, '');
-
-    fs.writeFileSync(path, contents, {encoding: 'utf-8'});
-};
-
-buildUtils.getCopyLibDataList(libs)
-    .filter(item => !item.minify)
-    .forEach(item => {
-        stripSourceMappingUrl(item.dest);
-    });
+    public function __construct(
+        public int $type,
+        public ?string $referenceId = null,
+    ) {}
+}

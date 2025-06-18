@@ -78,7 +78,7 @@
         }
     },
     "collection": {
-        "orderBy": "parent",
+        "orderBy": "name",
         "order": "asc"
     },
     "additionalTables": {

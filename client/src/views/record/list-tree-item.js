@@ -38,6 +38,12 @@ class ListTreeRecordItemView extends View {
     level = 0
     listViewName = 'views/record/list-tree'
 
+    /**
+     * @private
+     * @type {import('views/record/list-tree').default}
+     */
+    rootView
+
     data() {
         return {
             name: this.model.get('name'),
@@ -282,11 +288,14 @@ class ListTreeRecordItemView extends View {
         if (!this.readOnly) {
             const $remove = this.$el.find('> .cell [data-action="remove"]');
 
-            this.$el.find('> .cell').on('mouseenter', function () {
+            this.$el.find('> .cell').on('mouseenter', () => {
+                if (this.rootView.movedId) {
+                    return;
+                }
                 $remove.removeClass('hidden');
             });
 
-            this.$el.find('> .cell').on('mouseleave', function () {
+            this.$el.find('> .cell').on('mouseleave', () => {
                 $remove.addClass('hidden');
             });
         }
