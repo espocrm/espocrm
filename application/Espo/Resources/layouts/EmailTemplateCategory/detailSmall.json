@@ -1,15 +1,9 @@
 [
     {
-        "label": "",
         "rows": [
             [
                 {
                     "name": "name"
-                }
-            ],
-            [
-                {
-                    "name": "order"
                 }
             ],
             [
