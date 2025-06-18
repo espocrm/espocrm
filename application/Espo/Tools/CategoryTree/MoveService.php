@@ -161,7 +161,6 @@ class MoveService
     private function processAfter(Entity $reference, CategoryTree $entity): void
     {
         $this->incrementAfter($reference);
-        $this->rearrange($reference);
 
         $order = ($reference->get(self::ATTR_ORDER) ?? 0) + 1;
 
