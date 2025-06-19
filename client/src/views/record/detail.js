@@ -2046,9 +2046,7 @@ class DetailRecordView extends BaseRecordView {
                         continue;
                     }
 
-                    this.attributes[attribute] = Espo.Utils.cloneDeep(
-                        m.get(attribute)
-                    );
+                    this.attributes[attribute] = Espo.Utils.cloneDeep(m.get(attribute));
                 }
 
                 return;
