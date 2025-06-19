@@ -45,7 +45,7 @@ class CategoryTree extends Database
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->get(self::ATTR_ORDER) === null) {
+        if ($entity->get(self::ATTR_ORDER) === null && $entity->hasAttribute(self::ATTR_ORDER)) {
             $this->setOrderToEnd($entity);
         }
 
