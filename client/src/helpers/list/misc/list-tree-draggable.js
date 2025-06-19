@@ -173,7 +173,7 @@ export default class ListTreeDraggableHelper {
                     continue;
                 }
 
-                const itemId = row.dataset.id ?? null;
+                let itemId = row.dataset.id ?? null;
                 let itemParentId = null;
 
                 if (!itemId) {
@@ -207,12 +207,12 @@ export default class ListTreeDraggableHelper {
                     const parent = row.closest(`.list-group-item[data-id]`);
 
                     if (parent) {
-                        const childCount = parent
-                            .querySelectorAll(':scope > .children > .list > .list-group > [data-id]')
-                            .length
+                        /** @type {NodeListOf<HTMLElement>} */
+                        const items = parent.querySelectorAll(':scope > .children > .list > .list-group > [data-id]');
 
-                        if (childCount) {
-                            continue;
+                        if (items.length) {
+                            itemId = Array.from(items).pop().dataset.id;
+                            itemParentId = null;
                         }
                     }
                 }
