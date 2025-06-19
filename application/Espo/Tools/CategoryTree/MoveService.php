@@ -39,6 +39,7 @@ use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\UpdateBuilder;
 use Espo\ORM\Repository\Option\SaveOption;
+use Espo\Tools\CategoryTree\Move\LoopReferenceChecker;
 use Espo\Tools\CategoryTree\Move\MoveParams;
 
 class MoveService
@@ -49,6 +50,7 @@ class MoveService
     public function __construct(
         private EntityManager $entityManager,
         private Acl $acl,
+        private LoopReferenceChecker $loopReferenceChecker,
     ) {}
 
     /**
@@ -212,22 +214,6 @@ class MoveService
      */
     private function checkReferenceNoLoop(Entity $reference, CategoryTree $entity): void
     {
-        $parentId = $reference->get(self::ATTR_PARENT_ID);
-
-        if (!$parentId) {
-            return;
-        }
-
-        if ($parentId === $entity->getId()) {
-            throw new Forbidden("Cannot move. Circle reference.");
-        }
-
-        $parent = $this->entityManager->getEntityById($entity->getEntityType(), $parentId);
-
-        if (!$parent) {
-            return;
-        }
-
-        $this->checkReferenceNoLoop($parent, $entity);
+        $this->loopReferenceChecker->check($entity, $reference);
     }
 }

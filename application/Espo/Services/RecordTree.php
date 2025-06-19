@@ -32,6 +32,7 @@ namespace Espo\Services;
 use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Name\Field;
+use Espo\Core\Templates\Entities\CategoryTree;
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 use Espo\ORM\Name\Attribute;
@@ -46,6 +47,7 @@ use Espo\Core\Select\Where\Item as WhereItem;
 use Espo\Core\Acl\Exceptions\NotImplemented;
 
 use ArrayAccess;
+use Espo\Tools\CategoryTree\Move\LoopReferenceChecker;
 use stdClass;
 
 /**
@@ -339,6 +341,30 @@ class RecordTree extends Record
                 'cannotRemoveNotEmptyCategory',
                 Error\Body::create()->withMessageTranslation('cannotRemoveNotEmptyCategory')
             );
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    protected function beforeUpdateEntity(Entity $entity, $data)
+    {
+        parent::beforeUpdateEntity($entity, $data);
+
+        if (
+            !$entity->isNew() &&
+            $entity->isAttributeChanged('parentId') &&
+            $entity->get('parentId') &&
+            $entity instanceof CategoryTree
+        ) {
+            $parentId = $entity->get('parentId');
+
+            $parent = $this->entityManager->getEntityById($this->entityType, $parentId);
+
+            if ($parent) {
+                $this->injectableFactory->create(LoopReferenceChecker::class)
+                    ->check($entity, $parent);
+            }
         }
     }
 
