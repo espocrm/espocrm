@@ -286,35 +286,14 @@ export default class ListTreeDraggableHelper {
                         type: moveType,
                     })
                     .then(async () => {
-                        /**
-                         * @param {ListTreeRecordView} view
-                         * @param {string} movedId
-                         * @return {Promise}
-                         */
-                        const update = async (view, movedId) => {
-                            if (view.collection.has(movedId)) {
-                                await view.collection.fetch();
-
-                                return;
-                            }
-
-                            for (const subView of view.getItemViews()) {
-                                if (!subView.getChildrenView()) {
-                                    continue;
-                                }
-
-                                await update(subView.getChildrenView(), movedId);
-                            }
-                        };
-
                         const promises = [];
 
                         if (movedId) {
-                            promises.push(update(this.view, movedId));
+                            promises.push(this.updateAfter(this.view, movedId));
                         }
 
                         if (affectedId) {
-                            promises.push(update(this.view, affectedId));
+                            promises.push(this.updateAfter(this.view, affectedId));
                         }
 
                         await Promise.all(promises);
@@ -342,6 +321,28 @@ export default class ListTreeDraggableHelper {
             isAfter = false;
             wasOutOfSelf = false;
         });
+    }
+
+    /**
+     * @private
+     * @param {ListTreeRecordView} view
+     * @param {string} movedId
+     * @return {Promise}
+     */
+    async updateAfter(view, movedId) {
+        if (view.collection.has(movedId)) {
+            await view.collection.fetch();
+
+            return;
+        }
+
+        for (const subView of view.getItemViews()) {
+            if (!subView.getChildrenView()) {
+                continue;
+            }
+
+            await this.updateAfter(subView.getChildrenView(), movedId);
+        }
     }
 }
 
