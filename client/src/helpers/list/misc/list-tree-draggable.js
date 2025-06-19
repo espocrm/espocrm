@@ -331,7 +331,15 @@ export default class ListTreeDraggableHelper {
      */
     async updateAfter(view, movedId) {
         if (view.collection.has(movedId)) {
-            await view.collection.fetch();
+            const unfoldedIds = view.getItemViews()
+                .filter(view => view.isUnfolded && view.model)
+                .map(view => view.model.id);
+
+            await view.collection.fetch({noRebuild: false});
+
+            view.getItemViews()
+                .filter(view => view && view.model && unfoldedIds.includes(view.model.id))
+                .forEach(view => view.unfold());
 
             return;
         }
