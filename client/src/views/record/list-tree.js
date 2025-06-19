@@ -30,7 +30,7 @@
 
 import ListRecordView from 'views/record/list';
 import RecordModal from 'helpers/record-modal';
-import {Draggable} from '@shopify/draggable';
+import ListTreeDraggableHelper from 'helpers/list/misc/list-tree-draggable';
 
 class ListTreeRecordView extends ListRecordView {
 
@@ -76,19 +76,13 @@ class ListTreeRecordView extends ListRecordView {
      * @private
      * @type {boolean}
      */
-    blockDraggable = false
-
-    /**
-     * @private
-     * @type {boolean}
-     */
     moveSupported
 
     /**
      * @private
-     * {Draggable}
+     * @type {ListTreeDraggableHelper}
      */
-    draggable
+    draggableHelper
 
     // noinspection JSCheckFunctionSignatures
     data() {
@@ -179,6 +173,14 @@ class ListTreeRecordView extends ListRecordView {
                     this.getParentView().trigger('select', o);
                 }
             });
+        }
+    }
+
+    onRemove() {
+        super.onRemove();
+
+        if (this.draggableHelper) {
+            this.draggableHelper.destroy();
         }
     }
 
@@ -357,281 +359,11 @@ class ListTreeRecordView extends ListRecordView {
      * @private
      */
     initDraggableRoot() {
-        if (this.draggable) {
-            this.draggable.destroy();
+        if (!this.draggableHelper) {
+            this.draggableHelper = new ListTreeDraggableHelper(this);
         }
 
-        const draggable = this.draggable = new Draggable(this.element, {
-            distance: 8,
-            draggable: '.list-group-item > .cell > [data-role="moveHandle"]',
-            mirror: {
-                cursorOffsetX: 5,
-                cursorOffsetY: 5,
-                appendTo: 'body',
-            },
-        });
-
-        /** @type {HTMLElement[]} */
-        let rows;
-        /** @type {Map<HTMLElement, number>} */
-        let levelMap;
-        /** @type {HTMLElement|null} */
-        let movedHandle = null;
-        /** @type {HTMLElement|null} */
-        let movedLink = null;
-        /** @type {HTMLElement|null} */
-        let movedFromLi = null;
-
-        draggable.on('mirror:created', event => {
-            const mirror = event.mirror;
-            const source = event.source;
-            const originalSource = event.originalSource;
-
-            originalSource.style.display = '';
-            source.style.display = 'none';
-
-            mirror.style.display = 'block';
-            mirror.style.cursor = 'grabbing';
-            mirror.classList.add('draggable-helper', 'draggable-helper-transparent', 'text-info');
-            mirror.classList.remove('link');
-            mirror.style.pointerEvents = 'auto';
-            mirror.removeAttribute('href');
-            mirror.style.textDecoration = 'none';
-
-            mirror.innerText = mirror.dataset.title;
-        });
-
-        draggable.on('mirror:move', event => {
-            event.mirror.style.pointerEvents = 'auto';
-        });
-
-        draggable.on('drag:start', event => {
-            if (this.blockDraggable) {
-                event.cancel();
-
-                return;
-            }
-
-            rows = Array.from(this.element.querySelectorAll('.list-group-tree > .list-group-item'));
-
-            levelMap = new Map();
-
-            rows.forEach(row => {
-                let depth = 0;
-                let current = row;
-
-                while (current && current !== this.element) {
-                    current = current.parentElement;
-
-                    depth ++;
-                }
-
-                levelMap.set(row, depth);
-            });
-
-            rows.sort((a, b) => levelMap.get(b) - levelMap.get(a));
-
-            this.movedId = event.source.dataset.id;
-            movedHandle = event.originalSource;
-            movedFromLi = movedHandle.parentElement.parentElement;
-            movedLink = movedHandle.parentElement.querySelector(`:scope > a.link`);
-
-            movedLink.classList.add('text-info');
-        });
-
-        let overId = null;
-        let overParentId = null;
-        let isAfter = false;
-        let wasOutOfSelf = false;
-
-        draggable.on('drag:move', event => {
-            isAfter = false;
-            overId = null;
-
-            let rowFound = null;
-
-            for (const row of rows) {
-                const rect = row.getBoundingClientRect();
-
-                const isIn =
-                    rect.left < event.sensorEvent.clientX &&
-                    rect.right > event.sensorEvent.clientX &&
-                    rect.top < event.sensorEvent.clientY &&
-                    rect.bottom >= event.sensorEvent.clientY;
-
-                if (!isIn) {
-                    continue;
-                }
-
-                const itemId = row.dataset.id ?? null;
-                let itemParentId = null;
-
-                if (!itemId) {
-                    const parent = row.closest(`.list-group-item[data-id]`);
-
-                    if (parent instanceof HTMLElement) {
-                        // Over a plus row.
-                        itemParentId = parent.dataset.id;
-                    }
-                }
-
-                const itemIsAfter = event.sensorEvent.clientY - rect.top >= rect.bottom - event.sensorEvent.clientY;
-
-                if (itemParentId && itemIsAfter) {
-                    continue;
-                }
-
-                if (itemId === this.movedId) {
-                    break;
-                }
-
-                if (movedFromLi.contains(row)) {
-                    break;
-                }
-
-                if (!itemId && !itemParentId) {
-                    continue;
-                }
-
-                if (itemParentId) {
-                    const parent = row.closest(`.list-group-item[data-id]`);
-
-                    if (parent) {
-                        const childCount = parent
-                            .querySelectorAll(':scope > .children > .list > .list-group > [data-id]')
-                            .length
-
-                        if (childCount) {
-                            continue;
-                        }
-                    }
-                }
-
-                isAfter = itemIsAfter;
-                overParentId = itemParentId;
-                overId = itemId;
-                rowFound = row;
-
-                break;
-            }
-
-            for (const row of rows) {
-                row.classList.remove('border-top-highlighted');
-                row.classList.remove('border-bottom-highlighted');
-            }
-
-            if (!rowFound) {
-                return;
-            }
-
-            if (isAfter) {
-                rowFound.classList.add('border-bottom-highlighted');
-                rowFound.classList.remove('border-top-highlighted');
-            } else {
-                rowFound.classList.add('border-top-highlighted');
-                rowFound.classList.remove('border-bottom-highlighted');
-            }
-        });
-
-        draggable.on('drag:stop', async () => {
-            const finalize = () => {
-                if (movedLink) {
-                    movedLink.classList.remove('text-info');
-                }
-
-                rows.forEach(row => {
-                    row.classList.remove('border-bottom-highlighted');
-                    row.classList.remove('border-top-highlighted');
-                });
-            };
-
-            rows = undefined;
-
-            let moveType;
-            let referenceId = overId;
-
-            if (overParentId || overId) {
-                if (overParentId) {
-                    moveType = 'into';
-                    referenceId = overParentId;
-                } else if (isAfter) {
-                    moveType = 'after';
-                } else {
-                    moveType = 'before';
-                }
-            }
-
-            if (moveType) {
-                this.blockDraggable = true;
-
-                const movedId = this.movedId;
-                const affectedId = referenceId;
-
-                Espo.Ui.notifyWait();
-
-                Espo.Ajax
-                    .postRequest(`${this.entityType}/action/move`, {
-                        id: this.movedId,
-                        referenceId: referenceId,
-                        type: moveType,
-                    })
-                    .then(async () => {
-                        /**
-                         * @param {ListTreeRecordView} view
-                         * @param {string} movedId
-                         * @return {Promise}
-                         */
-                        const update = async (view, movedId) => {
-                            if (view.collection.has(movedId)) {
-                                await view.collection.fetch();
-
-                                return;
-                            }
-
-                            for (const subView of view.getItemViews()) {
-                                if (!subView.getChildrenView()) {
-                                    continue;
-                                }
-
-                                await update(subView.getChildrenView(), movedId);
-                            }
-                        };
-
-                        const promises = [];
-
-                        if (movedId) {
-                            promises.push(update(this, movedId));
-                        }
-
-                        if (affectedId) {
-                            promises.push(update(this, affectedId));
-                        }
-
-                        await Promise.all(promises);
-
-                        Espo.Ui.success(this.translate('Done'));
-                    })
-                    .finally(() => {
-                        this.blockDraggable = false;
-
-                        finalize();
-                    });
-            }
-
-            if (!moveType) {
-                finalize();
-            }
-
-            this.movedId = null;
-
-            movedHandle = null;
-            movedFromLi = null;
-            levelMap = undefined;
-            overParentId = null;
-            overId = null;
-            isAfter = false;
-            wasOutOfSelf = false;
-        });
+        this.draggableHelper.init();
     }
 }
 
