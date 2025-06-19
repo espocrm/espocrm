@@ -2304,6 +2304,7 @@ class DetailRecordView extends BaseRecordView {
 
     setIsChanged() {
         this.isChanged = true;
+        this.recordHelper.setIsChanged(true);
 
         if (this.confirmLeaveDisabled) {
             return;
@@ -2314,6 +2315,7 @@ class DetailRecordView extends BaseRecordView {
 
     setIsNotChanged() {
         this.isChanged = false;
+        this.recordHelper.setIsChanged(false);
 
         if (this.confirmLeaveDisabled) {
             return;

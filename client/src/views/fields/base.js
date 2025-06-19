@@ -1411,64 +1411,65 @@ class BaseFieldView extends View {
      *
      * @return {Promise}
      */
-    inlineEdit() {
+    async inlineEdit() {
+        if (this.recordHelper && this.recordHelper.isChanged()) {
+            await this.confirm(this.translate('changesLossConfirmation', 'messages'));
+        }
+
         this.trigger('edit', this);
 
         this.initialAttributes = this.model.getClonedAttributes();
 
         this._isInlineEditMode = true;
 
-        const promise = this.setEditMode()
-            .then(() => this.reRender(true))
-            .then(() => this.addInlineEditLinks())
-            .then(() => {
-                this.$el.on('keydown.inline-edit', e => {
-                    const key = Espo.Utils.getKeyFromKeyEvent(e);
-
-                    if (key === 'Control+Enter') {
-                        e.stopPropagation();
-
-                        if (document.activeElement instanceof HTMLInputElement) {
-                            // Fields may need to fetch data first.
-                            document.activeElement.dispatchEvent(new Event('change', {bubbles: true}));
-                        }
-
-                        this.fetchToModel();
-                        this.inlineEditSave();
-
-                        setTimeout(() => {
-                            this.get$cell().focus();
-                        }, 100);
-
-                        return;
-                    }
-
-                    if (key === 'Escape') {
-                        e.stopPropagation();
-
-                        this.inlineEditClose()
-                            .then(() => {
-                                this.get$cell().focus();
-                            });
-
-                        return;
-                    }
-
-                    if (key === 'Control+KeyS') {
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        this.fetchToModel();
-                        this.inlineEditSave({bypassClose: true});
-                    }
-                });
-
-                setTimeout(() => this.focusOnInlineEdit(), 10);
-            });
-
         this.trigger('inline-edit-on');
 
-        return promise;
+        await this.setEditMode();
+        await this.reRender(true);
+        await this.addInlineEditLinks();
+
+        this.$el.on('keydown.inline-edit', e => {
+            const key = Espo.Utils.getKeyFromKeyEvent(e);
+
+            if (key === 'Control+Enter') {
+                e.stopPropagation();
+
+                if (document.activeElement instanceof HTMLInputElement) {
+                    // Fields may need to fetch data first.
+                    document.activeElement.dispatchEvent(new Event('change', {bubbles: true}));
+                }
+
+                this.fetchToModel();
+                this.inlineEditSave();
+
+                setTimeout(() => {
+                    this.get$cell().focus();
+                }, 100);
+
+                return;
+            }
+
+            if (key === 'Escape') {
+                e.stopPropagation();
+
+                this.inlineEditClose()
+                    .then(() => {
+                        this.get$cell().focus();
+                    });
+
+                return;
+            }
+
+            if (key === 'Control+KeyS') {
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.fetchToModel();
+                this.inlineEditSave({bypassClose: true});
+            }
+        });
+
+        setTimeout(() => this.focusOnInlineEdit(), 10);
     }
 
     /**
