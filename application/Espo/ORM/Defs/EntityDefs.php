@@ -360,7 +360,7 @@ class EntityDefs
 
     private function loadAttribute(string $name): ?AttributeDefs
     {
-        $raw = $this->data[EntityParam::ATTRIBUTES][$name] ?? $this->data['fields'][$name] ?? null;
+        $raw = $this->data[EntityParam::ATTRIBUTES][$name] ?? null;
 
         if (!$raw) {
             return null;
