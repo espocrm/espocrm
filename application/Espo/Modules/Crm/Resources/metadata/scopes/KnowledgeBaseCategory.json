@@ -2,11 +2,20 @@
     "entity": true,
     "layouts": false,
     "tab": false,
-    "acl": "recordAllTeamNo",
-    "aclPortal": "recordAllNo",
+    "aclLevelList": [
+        "all",
+        "team",
+        "no"
+    ],
+    "aclPortalLevelList": [
+        "all",
+        "no"
+    ],
+    "acl": true,
+    "aclPortal": true,
     "aclPortalActionList": ["read"],
     "module": "Crm",
-    "customizable": true,
+    "customizable": false,
     "importable": false,
     "type": "CategoryTree",
     "stream": false,
