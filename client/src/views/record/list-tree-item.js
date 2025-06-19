@@ -44,9 +44,14 @@ class ListTreeRecordItemView extends View {
      */
     rootView
 
+    /**
+     * @type {boolean}
+     */
+    isUnfolded = false
+
     data() {
         return {
-            name: this.model.get('name'),
+            name: this.model.attributes.name,
             isUnfolded: this.isUnfolded,
             showFold: this.isUnfolded && !this.isEnd,
             showUnfold: !this.isUnfolded && !this.isEnd,
@@ -55,27 +60,6 @@ class ListTreeRecordItemView extends View {
             readOnly: this.readOnly,
             isMovable: this.options.moveSupported && !this.options.readOnly,
         };
-    }
-
-    events = {
-        /** @this ListTreeRecordItemView */
-        'click [data-action="unfold"]': function (e) {
-            this.unfold();
-
-            e.stopPropagation();
-        },
-        /** @this ListTreeRecordItemView */
-        'click [data-action="fold"]': function (e) {
-            this.fold();
-
-            e.stopPropagation();
-        },
-        /** @this ListTreeRecordItemView */
-        'click [data-action="remove"]': function (e) {
-            this.actionRemove();
-
-            e.stopPropagation();
-        }
     }
 
     /**
@@ -109,7 +93,7 @@ class ListTreeRecordItemView extends View {
 
         while (1) {
             path.unshift(view.model.id);
-            names[view.model.id] = view.model.get('name');
+            names[view.model.id] = view.model.attributes.name;
 
             if (view.getParentListView().level) {
                 view = view.getParentView().getParentView();
@@ -120,6 +104,24 @@ class ListTreeRecordItemView extends View {
     }
 
     setup() {
+        this.addActionHandler('unfold', e => {
+            this.unfold();
+
+            e.stopPropagation();
+        });
+
+        this.addActionHandler('fold', e => {
+            this.fold()
+
+            e.stopPropagation();
+        });
+
+        this.addActionHandler('remove', e => {
+            this.actionRemove();
+
+            e.stopPropagation();
+        });
+
         if ('level' in this.options) {
             this.level = this.options.level;
         }
