@@ -406,7 +406,7 @@ class Cleanup implements JobDataLess
 
             $query = $this->entityManager
                 ->getQueryBuilder()
-                ->select()
+                ->select(['id'])
                 ->from($scope)
                 ->withDeleted()
                 ->where([
@@ -416,12 +416,12 @@ class Cleanup implements JobDataLess
                 ])
                 ->build();
 
-            $deletedEntityList = $repository
+            $deletedEntities = $repository
                 ->clone($query)
                 ->sth()
                 ->find();
 
-            foreach ($deletedEntityList as $deletedEntity) {
+            foreach ($deletedEntities as $deletedEntity) {
                 $attachmentToRemoveList = $this->entityManager
                     ->getRDBRepository(Attachment::ENTITY_TYPE)
                     ->sth()
