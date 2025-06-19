@@ -348,13 +348,12 @@ class BaseFieldView extends View {
         return this.$el.parent();
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
-     * @deprecated
-     * @returns {JQuery}
+     * @protected
+     * @returns {HTMLElement|null}
      */
     getCellElement() {
-        return this.get$cell();
+        return this.get$cell().get(0) ?? null;
     }
 
     /**
@@ -1085,53 +1084,60 @@ class BaseFieldView extends View {
         return this.searchTypeList;
     }
 
+
+
     /**
      * @private
      * @internal
      */
     initInlineEdit() {
-        const $cell = this.get$cell();
+        const cell = this.getCellElement();
 
-        const $editLink = $('<a>')
-            .attr('role', 'button')
-            .addClass('pull-right inline-edit-link hidden')
-            .append(
-                $('<span>').addClass('fas fa-pencil-alt fa-sm')
-            );
+        const edit = document.createElement('a');
+        edit.role = 'button';
+        edit.classList.add('pull-right', 'inline-edit-link' ,'hidden');
+        edit.append(
+            (() => {
+                const span = document.createElement('span');
+                span.classList.add('fas', 'fa-pencil-alt', 'fa-sm');
 
-        if ($cell.length === 0) {
+                return span;
+            })()
+        )
+
+        if (!cell) {
             this.listenToOnce(this, 'after:render', () => this.initInlineEdit());
 
             return;
         }
 
-        $cell.prepend($editLink);
+        cell.prepend(edit);
 
-        $editLink.on('click', () => this.inlineEdit());
+        edit.addEventListener('click', () => this.inlineEdit());
 
-        $cell
-            .on('mouseenter', (e) => {
-                e.stopPropagation();
+        cell.addEventListener('mouseenter', e => {
+            e.stopPropagation();
 
-                if (this.disabled || this.readOnly) {
-                    return;
-                }
+            if (this.disabled || this.readOnly) {
+                return;
+            }
 
-                if (this.isDetailMode()) {
-                    $editLink.removeClass('hidden');
-                }
-            })
-            .on('mouseleave', (e) => {
-                e.stopPropagation();
+            if (this.isDetailMode()) {
+                edit.classList.remove('hidden');
+            }
+        });
 
-                if (this.isDetailMode()) {
-                    $editLink.addClass('hidden');
-                }
-            });
+        cell.addEventListener('mouseleave', e => {
+            e.stopPropagation();
+
+            if (this.isDetailMode()) {
+                edit.classList.add('hidden');
+            }
+        });
 
         this.on('after:render', () => {
             if (!this.isDetailMode()) {
-                $editLink.addClass('hidden');
+                edit.classList.add('hidden');
             }
         });
     }
