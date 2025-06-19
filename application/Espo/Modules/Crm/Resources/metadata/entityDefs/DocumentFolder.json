@@ -37,7 +37,8 @@
             "view": "views/fields/teams"
         },
         "parent": {
-            "type": "link"
+            "type": "link",
+            "view": "views/fields/link-category-tree"
         },
         "childList": {
             "type": "jsonArray",
