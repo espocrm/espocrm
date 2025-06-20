@@ -148,8 +148,10 @@ class DefaultPopulator implements Populator
                 continue;
             }
 
-            if ($entity->get($field) && !$entity->get($field . 'Currency')) {
-                $entity->set($field . 'Currency', $this->currencyConfig->getDefaultCurrency());
+            $currencyAttribute = $field . 'Currency';
+
+            if ($entity->get($field) !== null && !$entity->get($currencyAttribute)) {
+                $entity->set($currencyAttribute, $this->currencyConfig->getDefaultCurrency());
             }
         }
     }
