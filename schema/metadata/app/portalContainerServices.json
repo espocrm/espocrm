@@ -1,5 +1,5 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/consoleCommands",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://www.espocrm.com/schema/metadata/app/portalContainerServices.json",
     "title": "app/portalContainerServices",
     "description": "Overriding of container services for portals. Provides the ability to define custom implementations for portals.",
