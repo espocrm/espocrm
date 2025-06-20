@@ -755,6 +755,20 @@ class DetailView extends MainView {
 
         return 'detail';
     }
+
+    setupReuse(params) {
+        const recordView = this.getRecordView();
+
+        if (!recordView) {
+            return;
+        }
+
+        if (!recordView.setupReuse) {
+            return;
+        }
+
+        recordView.setupReuse();
+    }
 }
 
 export default DetailView;

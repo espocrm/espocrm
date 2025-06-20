@@ -404,6 +404,8 @@ class EmailListView extends ListView {
 
     /** @inheritDoc */
     setupReuse(params) {
+        super.setupReuse(params);
+
         this.applyRoutingParams(params);
         this.initDroppable();
         this.initStickableFolders();

@@ -28,6 +28,8 @@
 
 import View from 'view';
 import CalendarEditViewModal from 'crm:views/calendar/modals/edit-view';
+import {inject} from 'di';
+import {ShortcutManager} from 'helpers/site/shortcut-manager';
 
 class CalendarPage extends View {
 
@@ -54,6 +56,13 @@ class CalendarPage extends View {
             this.editCustomView();
         },
     }
+
+    /**
+     * @private
+     * @type {ShortcutManager}
+     */
+    @inject(ShortcutManager)
+    shortcutManager
 
     /**
      * A shortcut-key => action map.
@@ -84,6 +93,14 @@ class CalendarPage extends View {
         },
         /** @this CalendarPage */
         'ArrowRight': function (e) {
+            this.handleShortcutKeyArrowRight(e);
+        },
+        /** @this CalendarPage */
+        'Control+ArrowLeft': function (e) {
+            this.handleShortcutKeyArrowLeft(e);
+        },
+        /** @this CalendarPage */
+        'Control+ArrowRight': function (e) {
             this.handleShortcutKeyArrowRight(e);
         },
         /** @this CalendarPage */
@@ -160,13 +177,11 @@ class CalendarPage extends View {
             }
         }
 
-        this.events['keydown.main'] = e => {
-            const key = Espo.Utils.getKeyFromKeyEvent(e);
+        this.shortcutManager.add(this, this.shortcutKeys);
 
-            if (typeof this.shortcutKeys[key] === 'function') {
-                this.shortcutKeys[key].call(this, e.originalEvent);
-            }
-        }
+        this.once('remove', () => {
+            this.shortcutManager.remove(this);
+        });
 
         if (!this.mode || ~this.fullCalendarModeList.indexOf(this.mode) || this.mode.indexOf('view-') === 0) {
             this.setupCalendar();
