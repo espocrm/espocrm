@@ -238,6 +238,20 @@ class EditView extends MainView {
 
         this.setPageTitle(title);
     }
+
+    setupReuse(params) {
+        const recordView = this.getRecordView();
+
+        if (!recordView) {
+            return;
+        }
+
+        if (!recordView.setupReuse) {
+            return;
+        }
+
+        recordView.setupReuse();
+    }
 }
 
 export default EditView;

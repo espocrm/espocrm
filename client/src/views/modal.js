@@ -31,6 +31,7 @@
 import View from 'view';
 import {inject} from 'di';
 import ModalBarProvider from 'helpers/site/modal-bar-provider';
+import {ShortcutManager} from 'helpers/site/shortcut-manager';
 
 /**
  * A base modal view. Can be extended or used directly.
@@ -298,6 +299,13 @@ class ModalView extends View {
     modalBarProvider
 
     /**
+     * @private
+     * @type {ShortcutManager}
+     */
+    @inject(ShortcutManager)
+    shortcutManager
+
+    /**
      * @inheritDoc
      */
     init() {
@@ -426,6 +434,8 @@ class ModalView extends View {
             if (this.getParentView()) {
                 this.getParentView().trigger('modal-shown');
             }
+
+            this.initShortcuts();
         });
 
         this.once('remove', () => {
@@ -443,41 +453,23 @@ class ModalView extends View {
         this.on('after:expand', () => this.afterExpand());
     }
 
-    setupFinal() {
-        if (this.shortcutKeys) {
-            this.events['keydown.modal-base'] = e => {
-                const key = Espo.Utils.getKeyFromKeyEvent(e);
-
-                if (typeof this.shortcutKeys[key] === 'function') {
-                    this.shortcutKeys[key].call(this, e.originalEvent);
-
-                    return;
-                }
-
-                const actionName = this.shortcutKeys[key];
-
-                if (!actionName) {
-                    return;
-                }
-
-                if (this.hasActionItem(actionName) && !this.hasAvailableActionItem(actionName)) {
-                    return;
-                }
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                const methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
-
-                if (typeof this[methodName] === 'function') {
-                    this[methodName]();
-
-                    return;
-                }
-
-                this[actionName]();
-            };
+    /**
+     * @private
+     */
+    initShortcuts() {
+        if (!this.shortcutKeys) {
+            return;
         }
+
+        this.shortcutManager.add(this, this.shortcutKeys, {stack: true});
+
+        this.once('remove', () => {
+            this.shortcutManager.remove(this);
+        });
+    }
+
+    setupFinal() {
+        this.initShortcuts();
     }
 
     /**
@@ -640,6 +632,8 @@ class ModalView extends View {
             this.trigger('close');
             this.remove();
         }
+
+        this.shortcutManager.remove(this);
     }
 
     /**

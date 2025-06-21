@@ -34,6 +34,8 @@ import ActionItemSetup from 'helpers/action-item-setup';
 import StickyBarHelper from 'helpers/record/misc/sticky-bar';
 import SelectTemplateModalView from 'views/modals/select-template';
 import DebounceHelper from 'helpers/util/debounce';
+import {inject} from 'di';
+import {ShortcutManager} from 'helpers/site/shortcut-manager';
 
 /**
  * A detail record view.
@@ -68,6 +70,13 @@ class DetailRecordView extends BaseRecordView {
      * @property {Record} [rootData] Data from the root view.
      * @property {boolean} [shortcutKeysEnabled] Enable shortcut keys.
      */
+
+    /**
+     * @private
+     * @type {ShortcutManager}
+     */
+    @inject(ShortcutManager)
+    shortcutManager
 
     /**
      * @param {module:views/record/detail~options | Object.<string, *>} options Options.
@@ -2263,39 +2272,23 @@ class DetailRecordView extends BaseRecordView {
         }
     }
 
+    /**
+     * @private
+     */
+    initShortcuts() {
+        if (this.shortcutKeys && this.options.shortcutKeysEnabled) {
+            this.shortcutManager.add(this, this.shortcutKeys);
+
+            this.once('remove', () => {
+                this.shortcutManager.remove(this);
+            });
+        }
+    }
+
     setupFinal() {
         this.build();
 
-        if (this.shortcutKeys && this.options.shortcutKeysEnabled) {
-            this.events['keydown.record-detail'] = e => {
-                const key = Espo.Utils.getKeyFromKeyEvent(e);
-
-                if (typeof this.shortcutKeys[key] === 'function') {
-                    this.shortcutKeys[key].call(this, e.originalEvent);
-
-                    return;
-                }
-
-                const actionName = this.shortcutKeys[key];
-
-                if (!actionName) {
-                    return;
-                }
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                const methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
-
-                if (typeof this[methodName] === 'function') {
-                    this[methodName]();
-
-                    return;
-                }
-
-                this[actionName]();
-            };
-        }
+        this.initShortcuts();
 
         if (!this.options.focusForCreate) {
             this.once('after:render', () => this.focusOnFirstDiv());
@@ -4264,6 +4257,14 @@ class DetailRecordView extends BaseRecordView {
      */
     getMode() {
         return this.mode;
+    }
+
+    /**
+     * @internal
+     * @since 9.2.0
+     */
+    setupReuse() {
+        this.initShortcuts();
     }
 }
 

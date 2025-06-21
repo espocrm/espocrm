@@ -166,6 +166,8 @@ class ListWithCategories extends ListView {
      * @inheritDoc
      */
     setupReuse(params) {
+        super.setupReuse(params);
+
         this.applyRoutingParams(params);
     }
 
