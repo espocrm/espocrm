@@ -4087,8 +4087,6 @@ class DetailRecordView extends BaseRecordView {
             return;
         }
 
-        $(e.currentTarget)
-
         e.preventDefault();
         e.stopPropagation();
 
