@@ -53,7 +53,7 @@ export class ShortcutManager {
     constructor() {
         this.items = [];
 
-        document.addEventListener('keydown', event => this.handle(event));
+        document.addEventListener('keydown', event => this.handle(event), {capture: true});
     }
 
     /**
