@@ -61,6 +61,7 @@ class ForeignEnumFieldView extends EnumFieldView {
             isSorted,
             displayAsLabel,
             style,
+            labelType,
         } = fieldDefs;
 
         options = optionsPath ? this.getMetadata().get(optionsPath) : options;
@@ -69,6 +70,7 @@ class ForeignEnumFieldView extends EnumFieldView {
         this.params.translation = translation;
         this.params.isSorted = isSorted || false;
         this.params.displayAsLabel = displayAsLabel || false;
+        this.params.labelType = labelType;
         this.styleMap = style || {};
 
         this.translatedOptions = Object.fromEntries(
