@@ -1,66 +1,54 @@
 {
-    "fields": {
-        "name": "Jméno",
-        "parent": "Rodič",
-        "status": "Status",
-        "dateSent": "Datum odeslání",
-        "from": "Od",
-        "to": "Komu",
-        "cc": "Kopie",
-        "bcc": "Skrytá kopie",
-        "isHtml": "Je HTML",
-        "body": "Tělo",
-        "subject": "Předmět",
-        "attachments": "Přílohy",
-        "selectTemplate": "Vybrat šablonu",
-        "fromEmailAddress": "Adresa od",
-        "toEmailAddresses": "Adresa komu",
-        "emailAddress": "Emailová adresa",
-        "deliveryDate": "Datum doručení",
-        "account": "Účet",
-        "users": "Uživatelé"
-    },
-    "links": {
-    },
-    "options": {
-        "Draft": "Koncept",
-        "Sending": "Odesílání",
-        "Sent": "Odesláno",
-        "Archived": "Archivováno",
-        "Received": "Přijato"
-    },
-    "labels": {
-        "Create Email": "Vytvořit email",
-        "Archive Email": "Archivovat email",
-        "Compose": "Vytvořit",
-        "Reply": "Odpovědět",
-        "Reply to All": "Odpovědět všem",
-        "Forward": "Přeposlat",
-        "Original message": "Původní zpráva",
-        "Forwarded message": "Přeposlaná zpráva",
-        "Email Accounts": "Emailové účty",
-        "Send Test Email": "Poslat zkušební email",
-        "Send": "Odeslat",
-        "Email Address": "Emailová adresa",
-        "Mark Read": "Označit jako přečtěné",
-        "Sending...": "Odesílání...",
-        "Save Draft": "Uložit koncept",
-        "Mark all as read": "Označit vše jako přečtené",
-        "Show Plain Text": "Zobrazit Plain Text"
-    },
-    "messages": {
-        "noSmtpSetup": "Chybí nastavení SMTP. {link}.",
-        "testEmailSent": "Zkušební email byl odeslán",
-        "emailSent": "Email byl odeslán",
-        "savedAsDraft": "Uloženo jako koncept"
-    },
-    "presetFilters": {
-        "sent": "Odeslané",
-        "archived": "Archivované",
-        "inbox": "Doručené",
-        "drafts": "Koncepty"
-    },
-    "massActions": {
-        "markAsRead": "Označit jako přečtené"
-    }
+  "fields": {
+    "parent": "Rodič",
+    "dateSent": "Datum odeslání",
+    "from": "Od",
+    "to": "Komu",
+    "cc": "Kopie",
+    "bcc": "Skrytá kopie",
+    "body": "Tělo",
+    "subject": "Předmět",
+    "attachments": "Přílohy",
+    "selectTemplate": "Vybrat šablonu",
+    "fromAddress": "Adresa od",
+    "emailAddress": "Emailová adresa",
+    "deliveryDate": "Datum doručení",
+    "account": "Účet",
+    "users": "Uživatelé",
+    "name": "Jméno",
+    "fromEmailAddress": "Adresa od"
+  },
+  "labels": {
+    "Create Email": "Archivovat email",
+    "Archive Email": "Archivovat email",
+    "Compose": "Vytvořit",
+    "Reply": "Odpovědět",
+    "Reply to All": "Odpovědět všem",
+    "Forward": "Přeposlat",
+    "Original message": "Původní zpráva",
+    "Forwarded message": "Přeposlaná zpráva",
+    "Email Accounts": "Emailové účty",
+    "Send Test Email": "Poslat zkušební email",
+    "Send": "Odeslat",
+    "Email Address": "Emailová adresa",
+    "Mark Read": "Označit jako přečtěné",
+    "Sending...": "Odesílání...",
+    "Save Draft": "Uložit koncept",
+    "Mark all as read": "Označit vše jako přečtené",
+    "Show Plain Text": "Zobrazit Plain Text"
+  },
+  "messages": {
+    "testEmailSent": "Zkušební email byl odeslán",
+    "emailSent": "Email byl odeslán",
+    "savedAsDraft": "Uloženo jako koncept",
+    "noSmtpSetup": "Chybí nastavení SMTP. {link}."
+  },
+  "presetFilters": {
+    "sent": "Odeslané",
+    "inbox": "Doručené",
+    "drafts": "Koncepty"
+  },
+  "massActions": {
+    "markAsRead": "Označit jako přečtené"
+  }
 }

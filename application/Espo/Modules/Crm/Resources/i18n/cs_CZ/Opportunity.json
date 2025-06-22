@@ -1,29 +1,35 @@
 {
-    "fields": {
-        "name": "Název",
-        "account": "Organizace",
-        "stage": "Stav",
-        "amount": "Částka",
-        "probability": "Pravděpodobnost, %",
-        "leadSource": "Zdrojová stopa",
-        "doNotCall": "Nevolat",
-        "closeDate": "Deadline",
-        "contacts": "Kontakty",
-        "description": "Popis",
-        "amountConverted": "Částka (konvertováno)",
-        "amountWeightedConverted": "Vážená částka",
-        "campaign": "Kampaň"
-    },
-    "links": {
-        "contacts": "Kontakty",
-        "documents": "Dokumenty",
-        "campaign": "Kampaň"
-    },
-    "labels": {
-        "Create Opportunity": "Vytvořit případ"
-    },
-    "presetFilters": {
-        "open": "Otevřený",
-        "won": "Vyhraný"
+  "fields": {
+    "name": "Název",
+    "account": "Organizace",
+    "stage": "Stav",
+    "amount": "Částka",
+    "probability": "Pravděpodobnost, %",
+    "leadSource": "Zdrojová stopa",
+    "doNotCall": "Nevolat",
+    "closeDate": "Deadline",
+    "contacts": "Kontakty",
+    "description": "Popis",
+    "amountConverted": "Částka (konvertováno)",
+    "amountWeightedConverted": "Vážená částka",
+    "campaign": "Kampaň"
+  },
+  "links": {
+    "contacts": "Kontakty",
+    "documents": "Dokumenty",
+    "campaign": "Kampaň"
+  },
+  "options": {
+    "stage": {
+      "Closed Won": "VYFAKTUROVÁNO",
+      "Closed Lost": "ODMÍTNUTO"
     }
+  },
+  "labels": {
+    "Create Opportunity": "Vytvořit případ"
+  },
+  "presetFilters": {
+    "open": "Otevřený",
+    "won": "Vyhraný"
+  }
 }

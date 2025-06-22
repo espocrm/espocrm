@@ -1,14 +1,12 @@
 {
-    "fields": {
-        "width": "Šířka (%)",
-        "link": "Link",
-        "notSortable": "Neřaditelné",
-        "align": "Zarovnání"
-    },
-    "options": {
-        "align": {
-            "left": "Vlevo",
-            "right": "Vpravo"
-        }
+  "fields": {
+    "notSortable": "Neřaditelné",
+    "align": "Zarovnání"
+  },
+  "options": {
+    "align": {
+      "left": "Vlevo",
+      "right": "Vpravo"
     }
+  }
 }

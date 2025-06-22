@@ -1,42 +1,38 @@
 {
-    "fields": {
-        "name": "Název",
-        "number": "Číslo",
-        "status": "Status",
-        "account": "Organizace",
-        "contact": "Kontakt",
-        "priority": "Priorita",
-        "type": "Typ",
-        "description": "Popis"
+  "fields": {
+    "name": "Název",
+    "number": "Číslo",
+    "account": "Organizace",
+    "contact": "Kontakt",
+    "priority": "Priorita",
+    "type": "Typ",
+    "description": "Popis"
+  },
+  "options": {
+    "status": {
+      "New": "Nový",
+      "Assigned": "Přiřazený",
+      "Pending": "Čekající",
+      "Closed": "Uzavřený",
+      "Rejected": "Odmítnutý",
+      "Duplicate": "Duplikovaný"
     },
-    "links": {
+    "priority": {
+      "Low": "Malá",
+      "Normal": "Normální",
+      "High": "Vysoká",
+      "Urgent": "Urgentní"
     },
-    "options": {
-        "status": {
-            "New": "Nový",
-            "Assigned": "Přiřazený",
-            "Pending": "Čekající",
-            "Closed": "Uzavřený",
-            "Rejected": "Odmítnutý",
-            "Duplicate": "Duplikovaný"
-        },
-        "priority" : {
-            "Low": "Malá",
-            "Normal": "Normální",
-            "High": "Vysoká",
-            "Urgent": "Urgentní"
-        },
-        "type": {
-            "Question": "Otázka",
-            "Incident": "Incident",
-            "Problem": "Problém"
-        }
-    },
-    "labels": {
-        "Create Case": "Vytvořit událost"
-    },
-    "presetFilters": {
-        "open": "Otevřený",
-        "closed": "Zavřený"
+    "type": {
+      "Question": "Otázka",
+      "Problem": "Problém"
     }
+  },
+  "labels": {
+    "Create Case": "Vytvořit událost"
+  },
+  "presetFilters": {
+    "open": "Otevřený",
+    "closed": "Zavřený"
+  }
 }

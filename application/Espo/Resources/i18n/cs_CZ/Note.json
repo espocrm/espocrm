@@ -1,6 +1,5 @@
 {
-    "fields": {
-        "post": "Post",
-        "attachments": "Přílohy"
-    }
+  "fields": {
+    "attachments": "Přílohy"
+  }
 }

@@ -1,8 +1,6 @@
 {
-    "labels": {
-        "Connect": "Připojit",
-        "Connected": "Připojeno"
-    },
-    "help": {
-    }
+  "labels": {
+    "Connect": "Připojit",
+    "Connected": "Připojeno"
+  }
 }
