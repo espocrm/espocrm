@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\Template as TemplateEntity;
 use Espo\ORM\EntityManager;
 use Espo\Tools\Pdf\Data\DataLoaderManager;
@@ -50,6 +51,7 @@ class Service
         private DataLoaderManager $dataLoaderManager,
         private Config $config,
         private Builder $builder,
+        private Metadata $metadata,
     ) {}
 
     /**
@@ -115,6 +117,10 @@ class Service
         if ($template->getTargetEntityType() !== $entityType) {
             throw new Error("Not matching entity types.");
         }
+
+        $pdfA = $this->metadata->get("pdfDefs.{$entity->getEntityType()}.pdfA") ?? false;
+
+        $params = $params->withPdfA($pdfA);
 
         $data = $this->dataLoaderManager->load($entity, $params, $data);
         $engine = $this->config->get('pdfEngine') ?? self::DEFAULT_ENGINE;
