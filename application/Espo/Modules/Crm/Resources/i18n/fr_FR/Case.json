@@ -7,7 +7,8 @@
     "priority": "Priorité",
     "lead": "Prospect",
     "attachments": "Les pièces jointes",
-    "inboundEmail": "Compte de messagerie de groupe"
+    "inboundEmail": "Compte de messagerie de groupe",
+    "originalEmail": "\n"
   },
   "links": {
     "account": "Compte",

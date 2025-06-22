@@ -1,13 +1,13 @@
 {
   "messages": {
     "infoMention": "Tapez ** @ username ** pour mentionner l'utilisateur dans le message.",
-    "infoSyntax": "Syntaxe de marquage disponible"
+    "infoSyntax": "Syntaxe de marquage disponible",
+    "couldNotAddFollowerUserHasNoAccessToStream": "Impossible d'ajouter l'utilisateur '{userName}' aux abonnés. L'utilisateur n'a pas d'accès 'stream' (flux) à l'enregistrement."
   },
   "syntaxItems": {
     "multilineCode": "code multiligne",
     "strongText": "texte fort",
     "emphasizedText": "texte souligné",
-    "deletedText": "texte supprimé",
-    "link": "lien"
+    "deletedText": "texte supprimé"
   }
 }

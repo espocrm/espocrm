@@ -9,6 +9,7 @@
     "Install": "Installer"
   },
   "messages": {
-    "uninstalled": "L'extension {name} a bien été désinstallée"
+    "uninstalled": "L'extension {name} a bien été désinstallée",
+    "fileExceedsMaxUploadSize": "La taille du fichier dépasse la taille maximale de téléchargement {maxSize}. Envisagez d'augmenter `post_max_size` ou installez l'extension via CLI."
   }
 }

@@ -4,12 +4,26 @@
     "panelName": "Nom du volet",
     "isLarge": "Grande taille de police",
     "dynamicLogicVisible": "Conditions rendant le volet visible",
-    "hidden": "Caché"
+    "hidden": "Caché",
+    "dynamicLogicStyled": "Conditions qui déterminent l'application du style",
+    "noLabel": "Pas d'étiquette",
+    "tabLabel": "Étiquette de tabulation",
+    "tabBreak": "Rupture de tabulation",
+    "width": "Largeur",
+    "noteText": "texte de la note",
+    "noteStyle": "Style de la note",
+    "isMuted": "Couleur atténuée"
   },
   "options": {
     "align": {
       "left": "Gauche",
       "right": "Droite"
+    },
+    "style": {
+      "default": "Défaut",
+      "success": "Succès",
+      "warning": "Attention",
+      "primary": "Principale"
     }
   },
   "labels": {
@@ -18,6 +32,21 @@
   },
   "tooltips": {
     "link": "Si cette case est cochée, une valeur de champ sera affichée sous forme de lien pointant vers la vue détaillée de l'enregistrement. Habituellement, il est utilisé pour les champs * Nom *.",
-    "notSortable": "Désactiver la possibilité de trier par colonne."
+    "hiddenPanel": "\nVous devez cliquer sur 'Afficher plus' pour voir le panneau.",
+    "sticked": "Le panneau se collera au panneau du dessus. Il n'y a pas d'espace entre les panneaux.",
+    "panelStyle": "Une couleur  de la palette.",
+    "dynamicLogicVisible": "S’il est défini, le panneau sera masqué sauf si la condition est remplie.",
+    "dynamicLogicStyled": "Une couleur sera appliquée si une condition spécifique est remplie. La couleur est définie par le paramètre *Style*.",
+    "tabBreak": "Une tabulation séparée pour le panneau et tous les panneaux suivants jusqu'à la prochaine coupure de tabulation.",
+    "noLabel": "Ne pas afficher d'étiquette de colonne dans l'en-tête.",
+    "notSortable": "Désactiver la possibilité de trier par colonne.",
+    "width": "Une largeur de colonne. Il est recommandé d'avoir une colonne sans largeur spécifiée, généralement il s'agit du champ *Nom*.",
+    "noteText": "Un texte à afficher dans le panneau. La démarque est prise en charge."
+  },
+  "messages": {
+    "cantBeEmpty": "Le thème ne peut être vide.",
+    "fieldsIncompatible": "Les champs ne peuvent pas figurer ensemble sur la mise en page :  {fields}.",
+    "alreadyExists": "Le thème `{name}` existe déjà.",
+    "createInfo": "Les présentations de listes personnalisées peuvent être utilisées par les panneaux de relations."
   }
 }

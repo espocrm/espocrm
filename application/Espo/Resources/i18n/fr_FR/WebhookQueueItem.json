@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "event": "Événement",
+    "target": "Cible",
+    "data": "Donnée",
+    "status": "Statut",
+    "processedAt": "Traité à",
+    "attempts": "Tentatives",
+    "processAt": "Traiter à"
+  },
+  "options": {
+    "status": {
+      "Pending": "En attente",
+      "Success": "Réussite",
+      "Failed": "Échec"
+    }
+  }
+}

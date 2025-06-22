@@ -14,7 +14,10 @@
     "targetType": "Type de cible",
     "targetId": "ID cible",
     "number": "Nombre",
-    "job": "Emploi"
+    "job": "Emploi",
+    "group": "Groupe",
+    "className": "Nom de classe",
+    "targetGroup": "Groupe cible"
   },
   "options": {
     "status": {

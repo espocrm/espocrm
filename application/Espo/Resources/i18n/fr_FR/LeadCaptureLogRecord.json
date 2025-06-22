@@ -3,12 +3,12 @@
     "number": "Nombre",
     "data": "Les données",
     "target": "Cible",
-    "leadCapture": "Capture de plomb",
+    "leadCapture": "Capture de leads",
     "createdAt": "Entré à",
-    "isCreated": "Le plomb est-il créé?"
+    "isCreated": "Le lead est-il créé ?"
   },
   "links": {
-    "leadCapture": "Capture de plomb",
+    "leadCapture": "Capture de leads",
     "target": "Cible"
   }
 }

@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "level": "Niveau",
+    "exceptionClass": "Classe d'exception",
+    "file": "Fichier",
+    "line": "Ligne",
+    "requestMethod": "Méthode de requête",
+    "requestResourcePath": "Demande de chemin d'accès aux ressources"
+  },
+  "presetFilters": {
+    "errors": "Erreurs"
+  }
+}

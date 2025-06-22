@@ -1,1 +1,8 @@
-{}
+{
+  "fields": {
+    "method": "Méthode"
+  },
+  "labels": {
+    "Create AuthenticationProvider": "Créer un prestataire"
+  }
+}

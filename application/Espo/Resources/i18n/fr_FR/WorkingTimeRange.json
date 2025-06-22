@@ -1,1 +1,30 @@
-{}
+{
+  "labels": {
+    "Calendars": "Calendriers",
+    "Create WorkingTimeRange": "Créer une exception"
+  },
+  "fields": {
+    "timeRanges": "Horaire",
+    "dateStart": "Date de début",
+    "dateEnd": "Date de fin",
+    "calendars": "Calendriers",
+    "users": "Utilisateurs"
+  },
+  "links": {
+    "calendars": "Calendrier",
+    "users": "Utilisateurs"
+  },
+  "options": {
+    "type": {
+      "Non-working": "Non-travaillé",
+      "Working": "Travaillé"
+    }
+  },
+  "presetFilters": {
+    "actual": "Actuel"
+  },
+  "tooltips": {
+    "calendars": "Calendriers auxquels appliquer l'exception. L'exception sera appliquée à tous les utilisateurs des calendriers sélectionnés.\n\nLaissez le champ vide si vous souhaitez appliquer l'exception uniquement à des utilisateurs spécifiques.",
+    "users": "Utilisateurs spécifiques auxquels s'applique l'exception."
+  }
+}

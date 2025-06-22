@@ -1,8 +1,55 @@
 {
+  "labels": {
+    "Dynamic Logic": "Logique dynamique",
+    "Name": "Nom",
+    "Label": "Étiquette"
+  },
+  "options": {
+    "dateDefault": {
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 mois"
+    },
+    "globalRestrictions": {
+      "forbidden": "Interdit",
+      "internal": "Interne",
+      "onlyAdmin": "Seulement administrateur",
+      "readOnly": "Lecture seule",
+      "nonAdminReadOnly": "Lecture seule pour non administrateur"
+    }
+  },
   "tooltips": {
+    "audited": "Les mises à jour seront écrites dans le flux.\n",
+    "required": "Le champ sera obligatoire. On ne peut pas le laisser vide.",
+    "default": "La valeur qui sera définie par défaut lors de la création.",
+    "min": "Valeur minimale acceptée.",
+    "max": "Valeur maximale acceptée.",
+    "maxLength": "taille du texte maximale acceptée.",
+    "readOnly": "La valeur du champ ne peut pas être spécifiée par l'utilisateur. Mais peut être calculée par formule.",
     "maxFileSize": "Si vide ou 0 alors pas de limite.",
-    "fileAccept": "Quels types de fichiers accepter? Il est possible d'ajouter des éléments personnalisés.",
-    "barcodeLastChar": "Pour le type EAN-13."
+    "fileAccept": "Types de fichiers acceptés. Ajouts personnalisés possibles.",
+    "barcodeLastChar": "Pour le type EAN-13.",
+    "conversionDisabled": "L'action de conversion de devise ne sera pas appliquée à ce champ.",
+    "cutHeight": "Un texte plus grand que la valeur spécifiée sera coupé avec l'affichage  d'un bouton supplémentaire.",
+    "urlStrip": "Supprimer un protocole et une barre oblique finale.",
+    "pattern": "Une expression régulière pour vérifier la valeur d'un champ. Définissez une expression ou sélectionnez-en une prédéfinie.",
+    "options": "Une liste de valeurs possibles et leurs étiquettes.",
+    "optionsArray": "Une liste de valeurs possibles et leurs étiquettes. S'il est vide, le champ permettra de saisir des valeurs personnalisées.",
+    "maxCount": "Nombre maximum d'éléments pouvant être sélectionnés.",
+    "displayAsList": "Chaque élément est à mettre dans une nouvelle ligne.",
+    "optionsVarchar": "Une liste de valeurs de saisie semi-automatique.",
+    "currencyDecimal": "Utilisez le type de base de données décimale. Dans l'application, les valeurs seront représentées sous forme de chaînes de caractères (strings). Cochez ce paramètre si vous avez besoin de précision.",
+    "optionsReference": "Réutiliser les options d'un autre champ.",
+    "readOnlyAfterCreate": "La valeur du champ peut être spécifiée lors de la création d'un nouvel enregistrement. Après cela, le champ passe en lecture seule. Il peut toujours être calculé par formule.",
+    "linkReadOnly": "La valeur du champ ne peut pas être spécifiée par l'utilisateur. Mais peut être calculé par formule.\n\nCela désactivera également la possibilité de créer un enregistrement associé à partir des panneaux de relations.",
+    "relateOnImport": "Lors de l'importation avec ce champ, un enregistrement sera automatiquement associé à un enregistrement étranger correspondant. Utilisez cette fonctionnalité uniquement si le champ étranger est considéré comme unique."
   },
   "fieldParts": {
     "address": {
@@ -23,12 +70,10 @@
       "currency": "(Devise)"
     }
   },
-  "labels": {
-    "Name": "Nom",
-    "Label": "Étiquette"
-  },
   "fieldInfo": {
     "varchar": "Texte sur une seule ligne.",
+    "enum": "Selectbox, une seule valeur peut être sélectionnée.",
+    "text": "Un texte multiligne avec prise en charge des marques de formatage.",
     "date": "Date sans horaire.",
     "datetime": "Date et horaire",
     "currency": "Une valeur de change. Une valeur à virgule variable avec un code de devise.",
@@ -38,8 +83,27 @@
     "multiEnum": "Une liste de valeurs, éventuellement multiples, peuvent être sélectionnées. Cette liste est soumise à un tri.",
     "checklist": "Une liste de cases à cocher.",
     "array": "Une liste de valeurs, semblables au champ Multi-Enum (énumération multiple).",
+    "address": "Une adresse avec rue, ville, état, code postal et pays.",
+    "url": "Pour stocker des liens.",
+    "wysiwyg": "Un texte en HTML",
+    "file": "Pour l'envois de fichiers.",
+    "image": "Pour envoyer une image",
+    "attachmentMultiple": "Permet d'envoyer plusieurs fichiers.",
+    "number": "Un nombre auto-incrémenté de type chaîne avec un préfixe possible et une longueur définie.",
     "autoincrement": "Un nombre entier généré automatiquement et en lecture seule.",
     "barcode": "Un code-barre. Peut être enregistré en PDF.",
-    "foreign": "Un champ d'éléments liés. En lecture seule."
+    "email": "Un ensemble d'adresses e-mail avec leurs paramètres : Désactivé, Invalide, Principal.",
+    "phone": "Un ensemble de numéros de téléphone avec leurs paramètres : Type, Désactivé, Invalide, Principal.",
+    "foreign": "Un champ d'éléments liés. En lecture seule.",
+    "link": "Un enregistrement lié par la relation Belongs-To (plusieurs à un ou un à un).",
+    "linkParent": "Un enregistrement lié par une relation Belongs-To-Parent. Il peut s'agir de différents types d'entités.",
+    "linkMultiple": "Ensemble d'enregistrements liés par une relation de type Has-Many (plusieurs à plusieurs ou un à plusieurs). Toutes les relations n'ont pas de champs lien-multiple. Seules celles pour lesquelles le paramètre Lien-Multiple est activé le possèdent.",
+    "urlMultiple": "Multiples liens."
+  },
+  "messages": {
+    "fieldNameIsNotAllowed": "Le nom '{field}' n'est pas autorisé.",
+    "fieldAlreadyExists": "'{field}' existe déjà dans '{entityType}'.",
+    "linkWithSameNameAlreadyExists": "Le lien portant le nom '{field}' existe déjà dans '{entityType}'.",
+    "confirmRemove": "Êtes-vous sûr de vouloir supprimer le champ *{field}* ?\n\nLa suppression de champ ne supprime pas les données de la base de données. Les données de la base de données seront supprimées si vous exécutez une reconstruction lourde."
   }
 }

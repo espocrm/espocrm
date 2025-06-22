@@ -1,5 +1,10 @@
 {
   "links": {
     "targetLists": "Listes de cibles"
+  },
+  "fields": {
+    "acceptanceStatus": "Statut d'acceptation",
+    "acceptanceStatusMeetings": "Statut d'acceptation (Rendez-vous)",
+    "acceptanceStatusCalls": "Statut d'acceptation (Appels)"
   }
 }

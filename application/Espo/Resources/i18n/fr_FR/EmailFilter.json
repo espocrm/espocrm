@@ -3,7 +3,11 @@
     "from": "De",
     "to": "A",
     "subject": "Objet",
-    "bodyContains": "Corps de texte contient"
+    "bodyContains": "Corps de texte contient",
+    "groupEmailFolder": "Dossier eMail du groupe",
+    "markAsRead": "Marquer comme lu",
+    "bodyContainsAll": "Corps contient tout",
+    "skipNotification": "Ignorer la notification"
   },
   "labels": {
     "Create EmailFilter": "Créer un filtre email"
@@ -11,8 +15,19 @@
   "tooltips": {
     "from": "Emails envoyés de cette adresse. Laisser vide si inutile. Vous pouvez utiliser des caractères de substitution: *",
     "to": "Emails envoyés de cette adresse. Laisser vide si inutile. Vous pouvez utiliser des caractères de substitution: *",
-    "name": "Juste un nom de filtre",
+    "name": "Donnez au filtre une description.",
     "bodyContains": "Le corps de l'email contient l'un des mots ou phrases",
-    "subject": "* `texte*` – commence par texte,\n* `*texte*` – contient texte,\n* `*texte` – finit par texte."
+    "subject": "Utilisez un caractère `étoile`  :\n\n* `texte*` – commence par le texte,\n* `*texte*` – contient le texte,\n* `*texte` – finit par le texte.",
+    "bodyContainsAll": "Le corps du mail contient tous les mots ou phrases spécifiés."
+  },
+  "links": {
+    "emailFolder": "Dossier",
+    "groupEmailFolder": "Dossier eMail du groupe"
+  },
+  "options": {
+    "action": {
+      "None": "Aucun",
+      "Move to Group Folder": "Mettre dans le dossier du groupe"
+    }
   }
 }

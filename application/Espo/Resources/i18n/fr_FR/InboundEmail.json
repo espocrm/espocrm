@@ -16,6 +16,7 @@
     "replyFromAddress": "Adresse de réponse",
     "replyToAddress": "Adresse de  destination",
     "replyFromName": "Nom pour répondre",
+    "fetchSince": "Récupérer depuis",
     "addAllTeamUsers": "Pour tous les membres de l'équipe",
     "sentFolder": "Dossier envoyé",
     "storeSentEmails": "Stocker les emails envoyés",
@@ -32,18 +33,26 @@
     "useImap": "Récupérer des emails",
     "keepFetchedEmailsUnread": "Conserver les e-mails non lus",
     "smtpAuthMechanism": "Mécanisme d'authentification SMTP",
-    "security": "Sécurité"
+    "security": "Sécurité",
+    "groupEmailFolder": "Dossier eMail de groupe",
+    "connectedAt": "Connecté à",
+    "excludeFromReply": "Exclure de la réponse",
+    "isSystem": "Est Système"
   },
   "tooltips": {
     "createCase": "Création automatique de tickets à partir des emails entrant",
     "smtpIsShared": "Si cette case est cochée, les utilisateurs pourront envoyer des courriels à l'aide de ce protocole SMTP. La disponibilité est contrôlée par les rôles via l'autorisation Compte de groupe électronique.",
     "smtpIsForMassEmail": "Si cette case est cochée, SMTP sera disponible pour le courrier électronique en masse.",
     "storeSentEmails": "Les emails envoyés seront stockés sur le serveur IMAP.",
-    "useSmtp": "Capacité à envoyer des courriels"
+    "useSmtp": "Capacité à envoyer des courriels",
+    "groupEmailFolder": "Placez les e-mails entrants dans un dossier de groupe.",
+    "excludeFromReply": "Lorsque vous répondez à des e-mails envoyés à l'adresse e-mail de ce compte, l'adresse e-mail de ce dernier ne sera pas ajoutée à la liste CC.\n\nNotez qu'en activant ce paramètre, l'adresse e-mail de ce compte sera exposée aux utilisateurs qui ont accès à l'envoi d'e-mails.",
+    "isSystem": "Est le compte e-mail du système."
   },
   "links": {
     "filters": "Filtre",
-    "assignToUser": "Attribuer à l'utilisateur"
+    "assignToUser": "Attribuer à l'utilisateur",
+    "groupEmailFolder": "Dossier eMail de groupe"
   },
   "options": {
     "status": {
@@ -63,6 +72,7 @@
     "Main": "Principal"
   },
   "messages": {
-    "couldNotConnectToImap": "Impossible de se connecter au serveur IMAP"
+    "couldNotConnectToImap": "Impossible de se connecter au serveur IMAP",
+    "imapNotConnected": "Ne peut pas se connecter au groupe [compte IMAP](#InboundEmail/view/{id})."
   }
 }

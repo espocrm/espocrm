@@ -14,7 +14,7 @@
     "Congratulation! Welcome to EspoCRM": "Félicitation! EspoCRM a été installé avec succès.",
     "share": "Si vous appréciez EspoCRM, partagez le avec vos amis. Faites leur connaître le produit",
     "Installation Guide": "Instructions d'installation",
-    "Locale": "Local",
+    "Locale": "Région",
     "Outbound Email Configuration": "Configuration de l'envoi d'email",
     "Start": "Lancement",
     "Back": "Retour",
@@ -26,7 +26,6 @@
     "Install": "Installation",
     "Configuration Instructions": "Instructions de configuration",
     "phpVersion": "Version PHP",
-    "requiredMysqlVersion": "Version MySQL",
     "dbHostName": "Nom d'hôte",
     "dbName": "Nom de la base de donnée",
     "dbUserName": "Nom d'utilisateur de la base de données",
@@ -40,7 +39,10 @@
     "extension is missing": "l'extension est manquante",
     "headerTitle": "Installation EspoCRM",
     "Crontab setup instructions": "Sans exécuter les e-mails entrants des travaux planifiés, les notifications et les rappels ne fonctionneront pas. Ici vous pouvez lire {SETUP_INSTRUCTIONS}.",
-    "Setup instructions": "instructions d'installation"
+    "Setup instructions": "instructions d'installation",
+    "requiredMysqlVersion": "Version MySQL",
+    "requiredMariadbVersion": "Version MariaDB",
+    "requiredPostgresqlVersion": "Version PostgreSQL"
   },
   "fields": {
     "Choose your language": "Choisissez votre langue",
@@ -68,7 +70,8 @@
     "smtpServer": "Serveur",
     "smtpAuth": "Autorisation",
     "smtpSecurity": "Sécurité",
-    "smtpUsername": "Nom d'utilisateur"
+    "smtpUsername": "Nom d'utilisateur",
+    "Platform": "Plateforme"
   },
   "messages": {
     "1049": "Base de donnée inconnue",
@@ -108,5 +111,22 @@
     "writable": "Enregistrable",
     "readable": "Lisible",
     "requiredMariadbVersion": "Version de MariaDB"
+  },
+  "options": {
+    "modRewriteTitle": {
+      "apache": "<h3>Erreur API : l'API EspoCRM n'est pas disponible.</h3><br>Effectuez uniquement les étapes nécessaires. Après chaque étape, vérifiez si le problème est résolu.",
+      "nginx": "<h3>Erreur API : EspoCRM API est indisponible.</h3>",
+      "microsoft-iis": "<h3>Erreur API : l'API EspoCRM n'est pas disponible.</h3><br> Problème possible : \"URL Rewrite\" désactivée. Veuillez vérifier et activer le module \"URL Rewrite\" sur le serveur IIS.",
+      "default": "\n<h3>Erreur API : l'API EspoCRM n'est pas disponible.</h3><br> Problèmes possibles : module Rewrite  désactivé. Veuillez vérifier et activer le module Rewrite sur votre serveur (par exemple mod_rewrite dans Apache) et la prise en charge .htaccess."
+    },
+    "modRewriteInstruction": {
+      "apache": {
+        "linux": "<br><br><h4>1. Activez « mod_rewrite ».</h4>Pour activer <i>mod_rewrite</i>, exécutez les commandes suivantes dans un terminal:<br><br><pre>{APACHE1}</pre><hr><h4>2. Si l'étape précédente ne vous a pas aidé, essayez d'activer la prise en charge du . htaccess.</h4> Ajoutez/modifiez les paramètres de configuration du serveur <code>{APACHE2_PATH1}</code> ou <code>{APACHE2_PATH2}</code> (ou <code>{APACHE2_PATH3}</code>):<br><br><pre>{APACHE2}</pre>\n Ensuite, exécutez cette commande dans un terminal:<br><br><pre>{APACHE3}</pre><hr><h4>3. Si l'étape précédente n'a pas aidé, essayez d'ajouter le chemin RewriteBase.</h4>Ouvrez un fichier <code>{API_PATH}. htaccess</code> et remplacez la ligne suivante:<br><br><pre>{APACHE4}</pre>A<br><br><pre>{APACHE5}</pre><hr>Pour plus d'informations, veuillez consulter la ligne directrice <a href=« {APACHE_LINK} » target=« _blank »>Configuration du serveur Apache pour EspoCRM</a>.<br><br>",
+        "windows": "<br><br> <h4>1. Trouvez le fichier httpd.conf.</h4>En général, il se trouve dans un dossier appelé « conf », « config » ou quelque chose de ce genre.<br><br><h4>2. Editez le fichier httpd.conf.</h4> Dans le fichier httpd.conf, décommentez la ligne <code>{WINDOWS_APACHE1}</code> (supprimez le signe dièse '#' devant la ligne). 3. <br><br><h4>3. vérifiez les autres paramètres.</h4>Vérifiez également si la ligne <code>ClearModuleList</code> est décommentée et assurez-vous que la ligne <code>AddModule mod_rewrite.c</code> n'est pas commentée."
+      },
+      "nginx": {
+        "linux": "<br>Ajouter ce code à votre fichier de configuration du serveur Nginx <code>{NGINX_PATH}</code> dans la section « server »:<br><br><pre>{NGINX}</pre> <br>Pour plus d'informations, veuillez consulter le guide <a href=« {NGINX_LINK} » target=« _blank »>configuration du serveur Nginx pour EspoCRM</a>.<br><br>"
+      }
+    }
   }
 }

@@ -8,7 +8,13 @@
     "groupEmailAccountPermission": "Autorisation de compte de messagerie de groupe",
     "exportPermission": "Permission d'exportation",
     "dataPrivacyPermission": "Permission de confidentialité des données",
-    "massUpdatePermission": "Autorisation de mise à jour en masse"
+    "massUpdatePermission": "Autorisation de mise à jour en masse",
+    "followerManagementPermission": "Autorisation de gestion des abonnés",
+    "data": "Donnée",
+    "fieldData": "Champ Data",
+    "messagePermission": "Permission de message",
+    "auditPermission": "Permission d'audit",
+    "mentionPermission": "Permission de mentionner"
   },
   "links": {
     "users": "Utilisateurs",
@@ -16,7 +22,8 @@
   },
   "labels": {
     "Access": "Accès",
-    "Create Role": "Créer un rôle"
+    "Create Role": "Créer un rôle",
+    "Scope Level": "Niveau de vision"
   },
   "options": {
     "accessList": {
@@ -46,6 +53,15 @@
     "changesAfterClearCache": "Veuillez vider le cache pour que les changements soient pris en compte."
   },
   "tooltips": {
-    "dataPrivacyPermission": "Permet d'afficher et d'effacer des données personnelles."
+    "dataPrivacyPermission": "Permet d'afficher et d'effacer des données personnelles.",
+    "followerManagementPermission": "Permet de gérer les abonnés d'enregistrements.",
+    "messagePermission": "Permet d'envoyer des messages à d'autres utilisateurs.\n\n* tous - peut envoyer un message à tous\n* équipe - peut envoyer un message uniquement à ses coéquipiers\n* non - ne peut pas envoyer de message",
+    "assignmentPermission": "Permet d'attribuer des enregistrements à d'autres utilisateurs.\n\n* tous – aucune restriction\n* équipe – ne peut être attribué qu'à des coéquipiers\n* non – ne peut s'attribuer qu'à soi-même",
+    "portalPermission": "Accès aux informations du portail, possibilité d'envoyer des messages aux utilisateurs du portail.",
+    "groupEmailAccountPermission": "Accès aux comptes de groupe e-mail, possibilité d'envoyer des e-mails à partir d'un groupe SMTP.",
+    "exportPermission": "Permet d'exporter des enregistrements.",
+    "massUpdatePermission": "La possibilité d'effectuer des mises à jour en masse des enregistrements.",
+    "auditPermission": "Permet d'afficher le journal d'audit.",
+    "mentionPermission": "Permet de mentionner d'autres utilisateurs dans le flux.\n\n* tous - peut mentionner tous les utilisateurs\n* équipe - peut mentionner uniquement les coéquipiers\n* non - ne peut pas mentionner"
   }
 }

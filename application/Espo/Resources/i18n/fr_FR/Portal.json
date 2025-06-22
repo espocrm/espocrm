@@ -8,24 +8,31 @@
     "quickCreateList": "Liste de création rapide",
     "theme": "Thème",
     "language": "Langue",
-    "dashboardLayout": "Organisation Dashboard",
+    "dashboardLayout": "Thème de Tableau de bords",
     "dateFormat": "Format date",
     "timeFormat": "Format heure",
     "timeZone": "Fuseau",
     "weekStart": "Premier jour de la semaine",
     "defaultCurrency": "Devise par défaut",
     "customUrl": "Lien personnalisé",
-    "layoutSet": "Agencements des champs"
+    "layoutSet": "Agencements des champs",
+    "authenticationProvider": "Prestataire d'authentification",
+    "authTokenLifetime": "Durée de vie du jeton d'authentification (heures)",
+    "authTokenMaxIdleTime": "Jeton d'authentification Temps d'inactivité maximal (heures)"
   },
   "links": {
     "users": "Utilisateurs",
     "portalRoles": "Rôles",
-    "layoutSet": "Agencements des champs"
+    "layoutSet": "Agencements des champs",
+    "authenticationProvider": "Prestataire d'authentification"
   },
   "labels": {
     "Create Portal": "Créer un Portail",
     "User Interface": "Interface utilisateur",
     "General": "Général",
     "Settings": "Paramètres"
+  },
+  "tooltips": {
+    "layoutSet": "Offre la possibilité d’avoir des mises en page différentes des mises en page standard."
   }
 }

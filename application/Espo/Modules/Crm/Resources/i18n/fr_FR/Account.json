@@ -21,7 +21,8 @@
     "targetLists": "Listes de cibles",
     "campaignLogRecords": "Log de campagne",
     "campaign": "Campagne",
-    "portalUsers": "Utilisateurs Portail"
+    "portalUsers": "Utilisateurs Portail",
+    "contactsPrimary": "Contacts (primaires)"
   },
   "options": {
     "type": {

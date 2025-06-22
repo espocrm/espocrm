@@ -754,7 +754,7 @@ class ListView extends MainView {
         if (this._primaryFilter) {
             const label = this.translate(this._primaryFilter, 'presetFilters', this.entityType);
 
-            root.insertAdjacentHTML('afterend', ' · ' + label);
+            root.insertAdjacentHTML('beforeend', ' · ' + label);
         }
 
         return this.buildHeaderHtml([root]);

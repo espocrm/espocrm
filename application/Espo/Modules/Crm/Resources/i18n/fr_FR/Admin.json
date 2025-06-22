@@ -5,6 +5,7 @@
     "listForContact": "Liste (pour contact)"
   },
   "templates": {
-    "reminder": "Rappel"
+    "reminder": "Rappel",
+    "cancellation": "Annulation"
   }
 }

@@ -1,16 +1,11 @@
 {
-    "fields": {
-        "name": "Jméno",
-        "status": "Status",
-        "isHtml": "Je HTML",
-        "body": "Tělo",
-        "subject": "Předmět",
-        "attachments": "Přílohy",
-        "insertField": ""
-    },
-    "links": {
-    },
-    "labels": {
-        "Create EmailTemplate": "Vytvořit šablonu"
-    }
+  "fields": {
+    "name": "Jméno",
+    "body": "Tělo",
+    "subject": "Předmět",
+    "attachments": "Přílohy"
+  },
+  "labels": {
+    "Create EmailTemplate": "Vytvořit šablonu"
+  }
 }

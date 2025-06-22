@@ -1,16 +1,17 @@
 {
   "scopeNames": {
+    "Email": "eMail",
     "User": "Utilisateur",
     "Team": "Équipe",
     "Role": "Rôle",
-    "EmailTemplate": "Modèle d'email",
+    "EmailTemplate": "Modèle d'eMail",
     "EmailAccount": "Compte Email",
     "EmailAccountScope": "Compte Email",
-    "OutboundEmail": "Email Sortant",
+    "OutboundEmail": "eMail Sortant",
     "ScheduledJob": "Tâche planifiée",
     "ExternalAccount": "Compte externe",
     "Dashboard": "Tableau de bord",
-    "InboundEmail": "Email entrant",
+    "InboundEmail": "eMail entrant",
     "Stream": "Flux",
     "Template": "Modèle",
     "Job": "Tâche",
@@ -18,19 +19,36 @@
     "Portal": "Portail",
     "PortalRole": "Rôle Portail",
     "Attachment": "Pièce jointe",
+    "PasswordChangeRequest": "Demande de changement de mot de passe",
+    "ActionHistoryRecord": "Enregistrement de l'historique action",
     "LastViewed": "Dernier enregistrement",
     "Settings": "Paramètres",
+    "FieldManager": "Gestionnaire de champ",
+    "LayoutManager": "Gestionnaire de la mise en page",
     "EntityManager": "Gestionnaire de Fonctionnalités",
     "Export": "Exporter",
+    "DynamicLogic": "Logique dynamique",
+    "PhoneNumber": "Numéro de téléphone",
     "AuthLogRecord": "Enregistrement du journal d'authentification",
     "AuthFailLogRecord": "Enregistrement du journal d'échec d'authentification",
     "EmailTemplateCategory": "Catégories de modèles de courrier électronique",
-    "LeadCapture": "Point d'entrée de capture de plomb",
-    "LeadCaptureLogRecord": "Enregistrement du journal de capture de plomb",
+    "LeadCapture": "Point d'entrée de capture de leads",
+    "LeadCaptureLogRecord": "Enregistrement du journal de capture de leads",
     "ArrayValue": "Valeur du tableau",
     "ApiUser": "API utilisateur",
     "DashboardTemplate": "Modèle de tableau de bord",
-    "Currency": "Devise"
+    "Currency": "Devise",
+    "LayoutSet": "Thèmes",
+    "Mass Action": "Action groupée",
+    "ImportError": "Erreur d'import",
+    "WorkingTimeCalendar": "Calendriers des jours travaillés",
+    "GroupEmailFolder": "Dossier eMail du groupe",
+    "AuthenticationProvider": "Prestataire d'authentification",
+    "GlobalStream": "Flux global",
+    "WebhookQueueItem": "Élément de la file d'attente du webhook",
+    "AppLogRecord": "Enregistrement du journal d'application",
+    "WorkingTimeRange": "Exception au temps de travail",
+    "AddressCountry": "Adresse Pays"
   },
   "scopeNamesPlural": {
     "User": "Utilisateurs",
@@ -51,19 +69,31 @@
     "Portal": "Portails",
     "PortalRole": "Roles Portail",
     "Attachment": "Pièces jointes",
+    "PasswordChangeRequest": "Demandes de changement de mot de passe",
+    "ActionHistoryRecord": "Historique Action",
     "LastViewed": "Dernières vues",
     "AuthLogRecord": "Journal d'authentification",
     "AuthFailLogRecord": "Journal d'échec d'authentification",
     "EmailTemplateCategory": "Catégories de modèles de courrier électronique",
     "Import": "Importation",
-    "LeadCapture": "Capture de plomb",
-    "LeadCaptureLogRecord": "Journal de capture de plomb",
+    "LeadCapture": "Capture de leads",
+    "LeadCaptureLogRecord": "Journal de capture de leads",
     "ArrayValue": "Valeurs de tableau",
     "ApiUser": "Utilisateurs d'API",
-    "DashboardTemplate": "Modèles de tableau de bord",
+    "DashboardTemplate": "Modèles de tableaux de bord",
     "EmailAddress": "Adresses email",
     "PhoneNumber": "Numéros de téléphone",
-    "Currency": "Devise"
+    "Currency": "Devise",
+    "LayoutSet": "Thèmes",
+    "ImportError": "Erreurs d'importation",
+    "WorkingTimeCalendar": "Calendriers des jours travaillés",
+    "GroupEmailFolder": "Dossiers eMail du groupe",
+    "AuthenticationProvider": "Prestataires d'authentification",
+    "GlobalStream": "Flux globaux",
+    "WebhookQueueItem": "Éléments de la file d'attente du webhook",
+    "AppLogRecord": "Journal de l'application",
+    "WorkingTimeRange": "Exceptions au temps de travail",
+    "AddressCountry": "Adresse Pays"
   },
   "labels": {
     "Misc": "Divers",
@@ -204,11 +234,43 @@
     "Convert Currency": "Convertir la monnaie",
     "Middle Name": "Second prénom",
     "View on Map": "Voir sur la carte",
+    "Proceed": "Procéder",
+    "Attached": "Attaché",
     "Preview": "Prévisualisation",
+    "Up": "Haut",
+    "Save & Continue Editing": "Sauvegarder et continuer l'édition",
+    "Save & New": "Sauvegarder  Nouveau",
+    "Field": "Champ",
+    "Resolution": "Résolution",
+    "Resolve Conflict": "Résolution de problème",
+    "Download": "Télécharger",
     "Sort": "Trier",
+    "Log in": "Se connecter",
+    "Log in as": "Se connecter en tant que",
+    "Sign in": "S'inscrire",
     "Global Search": "Recherche générale",
+    "Navigation Panel": "Afficher le panneau de navigation",
+    "Print": "Imprimer",
     "Copy to Clipboard": "Copier dans le presse-papiers",
-    "Copied to clipboard": "Copié dans le presse-papiers"
+    "Copied to clipboard": "Copié dans le presse-papiers",
+    "Audit Log": "Journal d'audit",
+    "View Audit Log": "Afficher le journal d'audit",
+    "Previous Page": "Page Précédente",
+    "Next Page": "Page Suivante",
+    "First Page": "Première Page",
+    "Last Page": "Dernière Page",
+    "Star": "Etoile",
+    "Unstar": "Déétoiler",
+    "Starred": "Etoilé",
+    "Remove Filter": "Supprimer le filtre",
+    "Ready": "Prêt",
+    "Column Resize": "Redimensionner la colonne",
+    "General": "Général",
+    "Send": "Envoyer",
+    "Scheduled": "Planifié",
+    "Now": "Maintenant",
+    "Fields": "Champs",
+    "Reactions": "Réactions"
   },
   "messages": {
     "pleaseWait": "Veuillez patienter...",
@@ -251,6 +313,9 @@
     "maintenanceMode": "L'application est actuellement en mode maintenance. Seuls les utilisateurs administrateurs ont accès. \n\nLe mode maintenance peut être désactivé dans Administration → Paramètres.",
     "fieldInvalid": "{field} n'est pas valide",
     "fieldPhoneInvalid": "{field} n'est pas valide",
+    "resolveSaveConflict": "La fiche a été modifiée. Vous devez résoudre le conflit avant de pouvoir enregistrer la fiche.",
+    "massActionProcessed": "L'action groupée a été executée.",
+    "fieldUrlExceedsMaxLength": "L'URL codée dépasse la longueur maximale de {maxLength}",
     "fieldNotMatchingPattern": "{field} ne correspond pas au modèle `{pattern}`",
     "fieldNotMatchingPattern$noBadCharacters": "{field} contient des caractères interdits",
     "fieldNotMatchingPattern$noAsciiSpecialCharacters": "{field} ne devrait pas contenir des caractères spéciaux ASCII",
@@ -259,22 +324,57 @@
     "fieldNotMatchingPattern$latinLettersDigitsWhitespace": "{field} ne peut contenir que des lettres latines, des chiffres et des espaces",
     "fieldNotMatchingPattern$latinLettersWhitespace": "{field} ne peut contenir que des lettres latines et des espaces",
     "fieldNotMatchingPattern$digits": "{field} ne peut contenir que des chiffres",
+    "fieldPhoneInvalidCharacters": "Seuls les chiffres, les lettres latines et les caractères `-+_@:#().` sont autorisés",
+    "arrayItemMaxLength": "L'élément ne doit pas comporter plus de {max} caractères",
+    "validationFailure": "Échec de la validation du backend.\n\nChamp : `{field}`\nValidation : `{type}`",
     "confirmAppRefresh": "L'application a été mise à jour. Il est recommandé de rafraîchir la page pour en assurer le bon fonctionnement.",
+    "error404": "L'URL que vous avez demandée ne peut pas être gérée.",
+    "extensionLicenseInvalid": "Licence d'extension '{name}' non valide.",
+    "extensionLicenseExpired": "L'abonnement à la licence d'extension '{name}' a expiré.",
+    "extensionLicenseSoftExpired": "L'abonnement à la licence d'extension '{name}' a expiré.",
+    "loggedOutLeaveOut": "Déconnecté. La session est inactive. Vous risquez de perdre les données de formulaire non enregistrées après l'actualisation de la page. Vous devriez peut-être en faire une copie.",
+    "noAccessToRecord": "L'opération nécessite l'accès de `{action}` à l'enregistrement.",
+    "noAccessToForeignRecord": "L'opération nécessite l'accès `{action}` à l'enregistrement étranger.",
     "fieldShouldBeNumber": "{field} devrait être un nombre valide",
     "maintenanceModeError": "L'application est actuellement en mode maintenance.",
+    "cannotRelateNonExisting": "Impossible d'établir un lien avec un enregistrement {foreignEntityType} inexistant.",
+    "cannotRelateForbidden": "Impossible d'établir une relation avec un enregistrement {foreignEntityType} interdit. Accès `{action}` requis.",
+    "cannotRelateForbiddenLink": "Aucun accès au lien '{link}'.",
+    "emptyMassUpdate": "Aucun champ n'est disponible pour la mise à jour en masse.",
     "fieldNotMatchingPattern$uriOptionalProtocol": "{field} doit être une URL valide",
     "fieldShouldBeLess": "{field} ne devrait pas être supérieur à {value}",
     "fieldShouldBeGreater": "{field} ne devrait pas être inférieur à {value}",
-    "fieldPhoneInvalidCode": "Le code du pays est invalide"
+    "cannotUnrelateRequiredLink": "Vous ne pouvez pas dissocier un lien requis.",
+    "fieldPhoneInvalidCode": "Le code du pays est invalide",
+    "fieldPhoneTooShort": "{field} est trop court\n",
+    "fieldPhoneTooLong": "{field} est trop long\n",
+    "barcodeInvalid": "{field} n'est pas un {type} conforme",
+    "noLinkAccess": "Impossible d'établir une relation avec l'enregistrement {foreignEntityType} via le lien '{link}'. Pas d'accès.",
+    "attemptIntervalFailure": "L'opération n'est pas autorisée pendant un intervalle de temps. Attendez un peu avant la prochaine tentative.",
+    "confirmRestoreFromAudit": "Les valeurs précédentes seront définies dans un formulaire. Ensuite, vous pouvez sauvegarder l'enregistrement pour restaurer les valeurs précédentes.",
+    "pageNumberIsOutOfBound": "Le numéro de page est en dehors de la reliure",
+    "fieldPhoneExtensionTooLong": "L'extension ne doit pas être plus longue que {maxLength}",
+    "cannotLinkAlreadyLinked": "Ne peut pas lier un enregistrement déjà lié.",
+    "starsLimitExceeded": "Le nombre d'étoiles a dépassé la limite.",
+    "select2OrMoreRecords": "Sélectionnez 2 enregistrements ou plus",
+    "selectNotMoreThanNumberRecords": "Ne pas sélectionner plus de {nombre} enregistrements",
+    "selectAtLeastOneRecord": "Sélectionner au moins un enregistrement",
+    "fieldNotMatchingPattern$phoneNumberLoose": "{field} contient des caractères non autorisés dans un numéro de téléphone",
+    "duplicateConflict": "Un enregistrement existe déjà.",
+    "confirmMassUpdate": "Êtes-vous sûr de vouloir modifier tous les enregistrements sélectionnés ?",
+    "cannotRemoveCategoryWithChildCategory": "Vous ne pouvez pas supprimer une catégorie ayant des sous-catégories",
+    "cannotRemoveNotEmptyCategory": "Impossible de supprimer une catégorie qui contient des éléments"
   },
   "boolFilters": {
     "onlyMy": "Perso",
     "followed": "Suivi",
-    "onlyMyTeam": "Mon équipe"
+    "onlyMyTeam": "Mon équipe",
+    "shared": "Partagé"
   },
   "presetFilters": {
     "followed": "Suivi",
-    "all": "Tous"
+    "all": "Tous",
+    "starred": "Etoilé"
   },
   "massActions": {
     "remove": "Supprimer",
@@ -286,7 +386,9 @@
     "convertCurrency": "Convertir la monnaie",
     "printPdf": "Imprimer en PDF",
     "unlink": "Dissocier",
-    "recalculateFormula": "Recalculer la formule"
+    "recalculateFormula": "Recalculer la formule",
+    "update": "Mise à jour",
+    "delete": "Supprimer"
   },
   "fields": {
     "name": "Nom",
@@ -318,7 +420,11 @@
     "phoneNumberIsOptedOut": "Le numéro de téléphone est désactivé",
     "types": "Les types",
     "middleName": "Second prénom",
-    "phoneNumberIsInvalid": "Le numéro de téléphone est invalide"
+    "emailAddressIsInvalid": "L'adresse e-mail est invalide",
+    "phoneNumberIsInvalid": "Numéro de téléphone invalide",
+    "users": "Utilisateurs",
+    "childList": "Liste enfant",
+    "collaborators": "Collaborateurs"
   },
   "links": {
     "assignedUser": "Utilisateur assigné",
@@ -328,15 +434,18 @@
     "roles": "Rôles",
     "teams": "Équipes",
     "users": "Utilisateurs",
-    "children": "Enfants"
+    "children": "Enfants",
+    "collaborators": "Collaborateurs"
   },
   "dashlets": {
     "Stream": "Flux",
-    "Emails": "Ma boite de réception"
+    "Emails": "Ma boite de réception",
+    "Records": "Données CRM",
+    "Memo": "Mémo"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} vous a été assigné",
-    "emailReceived": "Email reçu de la part de {from}",
+    "emailReceived": "Email reçu de {from}",
     "entityRemoved": "{user} a supprimé {entityType} {entity}"
   },
   "streamMessages": {
@@ -364,6 +473,7 @@
     "createAssigned": "{user} a créé {entityType} {entity} et l'a assigné à {assignee}",
     "assign": "{user} a assigné {entityType} {entity} à {assignee}",
     "assignThis": "{user} a assigné {entityType} à {assignee}",
+    "assignMultiAddThis": "{user} a assigné {entityType} à {assignee}",
     "postThis": "{user} a posté",
     "attachThis": "{user} a joint un fichier",
     "statusThis": "{user} a mis à jour {field}",
@@ -372,8 +482,8 @@
     "createRelated": "{user} a créé {relatedEntityType} {relatedEntity} relié au {entityType} {entity}",
     "relate": "{user} a relié {relatedEntityType} {relatedEntity} avec {entityType} {entity}",
     "relateThis": "{user} a relié {relatedEntityType} {relatedEntity} avec {entityType}",
-    "emailReceivedFromThis": "Email reçu de la part de {from}",
-    "emailReceivedInitialFromThis": "Email reçu de la part de {from}, {entityType} créé",
+    "emailReceivedFromThis": "Email reçu de {from}",
+    "emailReceivedInitialFromThis": "Email reçu de {from}, {entityType} créé",
     "emailReceivedThis": "Email reçu",
     "emailReceivedInitialThis": "Email reçu, {entityType} créé",
     "emailReceivedFrom": "Email reçu de la part de  {from}, relié à {entityType} {entity}",
@@ -390,7 +500,9 @@
     "assignThisVoid": "{user} a retiré l'attribution de {entityType}",
     "assignVoid": "{user} a retiré l'attribution de {entityType} {entity}",
     "assignThisSelf": "{user} a mis {entityType} en auto-attribution",
-    "assignSelf": "{user} a mis {entityType} {entity} en auto-attribution"
+    "assignSelf": "{user} a mis {entityType} {entity} en auto-attribution",
+    "unrelate": "{user} a dissocié {relatedEntityType} {relatedEntity} de {entityType} {entity}",
+    "unrelateThis": "{user} a dissocié {relatedEntityType} {relatedEntity} de cette {entityType}"
   },
   "lists": {
     "monthNames": [
@@ -465,7 +577,7 @@
       "past": "Passé",
       "future": "Futur",
       "currentMonth": "Mois en cours",
-      "lastMonth": "Dernier mois",
+      "lastMonth": "Mois passé",
       "currentQuarter": "Quinzaine en cours",
       "lastQuarter": "Dernière quinzaine",
       "currentYear": "Année en cours",
@@ -474,6 +586,7 @@
       "lastXDays": "Derniers X jours",
       "nextXDays": "Prochains X jours",
       "ever": "Toujours",
+      "isEmpty": "Est vide",
       "nextMonth": "Le mois prochain",
       "currentFiscalYear": "Année fiscale en cours",
       "lastFiscalYear": "Dernier exercice financier",
@@ -485,6 +598,10 @@
       "isEmpty": "Est vide",
       "isNotEmpty": "Non vide",
       "isFromTeams": "Provient de l’équipe",
+      "isOneOf": "Parmi",
+      "anyOf": "Parmi",
+      "isNotOneOf": "Exclure",
+      "noneOf": "Exclure",
       "allOf": "Tous de",
       "any": "Parmi"
     },
@@ -498,7 +615,9 @@
       "isNotEmpty": "Non vide",
       "notLike": "N'est pas (%)",
       "notContains": "Ne contient pas",
-      "notEquals": "N'est pas égale"
+      "notEquals": "N'est pas égale",
+      "anyOf": "Parmi",
+      "noneOf": "Exclure"
     },
     "intSearchRanges": {
       "equals": "Egale",
@@ -507,7 +626,8 @@
       "lessThan": "Moins grand que",
       "greaterThanOrEquals": "Plus grand que ou égale",
       "lessThanOrEquals": "Moins grand que ou égale",
-      "between": "Entre"
+      "between": "Entre",
+      "isEmpty": "Est vide"
     },
     "autorefreshInterval": {
       "0": "Aucun",
@@ -517,6 +637,10 @@
       "Office": "Bureau",
       "Home": "Maison",
       "Other": "Autre"
+    },
+    "saveConflictResolution": {
+      "current": "Actuel",
+      "actual": "Réel"
     }
   },
   "sets": {
@@ -598,11 +722,10 @@
       "color": {
         "recent": "Couleur récente",
         "more": "Plus de couleurs",
-        "background": "Couleur de fond",
-        "foreground": "Couleur de la police",
         "setTransparent": "Rendre transparent",
         "reset": "Réinitialiser",
-        "resetToDefault": "Remettre à zéro"
+        "resetToDefault": "Remettre à zéro",
+        "foreground": "Couleur de police"
       },
       "shortcut": {
         "shortcuts": "Raccourcis clavier",
@@ -623,7 +746,92 @@
   "listViewModes": {
     "list": "liste"
   },
+  "themes": {
+    "Dark": "Noir",
+    "Hazyblue": "Bleu brumeux",
+    "Glass": "Verre",
+    "Light": "Lumineux"
+  },
+  "themeNavbars": {
+    "side": "Menu de côté",
+    "top": "Menu du haut"
+  },
   "fieldValidations": {
-    "phoneNumber": "Numéro de téléphone valide"
+    "required": "Obligatoire",
+    "maxCount": "Comptage maximal",
+    "maxLength": "Longueur maximale",
+    "pattern": "Correspondance de motifs",
+    "emailAddress": "Adresse e-mail valide",
+    "phoneNumber": "Numéro de téléphone valide",
+    "array": "Tableau",
+    "arrayOfString": "Tableau de chaînes de caractères",
+    "noEmptyString": "Aucune chaîne vide",
+    "max": "Valeur maximale\n",
+    "min": "Valeur minimale",
+    "valid": "Validité"
+  },
+  "fieldValidationExplanations": {
+    "url_valid": "Donnée URL invalide.",
+    "currency_valid": "Valeur du montant invalide.",
+    "currency_validCurrency": "La valeur du code devise n'est pas valide ou n'est pas autorisée.",
+    "varchar_pattern": "Probablement, la valeur contient des caractères non autorisés.",
+    "email_emailAddress": "Adresse eMail invalide",
+    "phone_phoneNumber": "Numéro de téléphone invalide.",
+    "datetimeOptional_valid": "Date-heure invalide.",
+    "datetime_valid": "Date-heure invalide.",
+    "date_valid": "Date invalide.\n",
+    "enum_valid": "Énumération (enum) invalide. La valeur doit être l’une des options énumérée. Une valeur vide n'est autorisée que si le champ a une option vide.",
+    "multiEnum_valid": "Valeur multi-enum non valide. Les valeurs doivent correspondre à l'une des options de champ définies.",
+    "int_valid": "Numérique entier non valide.",
+    "float_valid": "Nombre invalide.",
+    "valid": "Valeur invalide.",
+    "maxLength": "La longueur de la valeur dépasse la valeur maximale.",
+    "phone_valid": "Le numéro de téléphone n'est pas valide. Cela peut être dû à un code de pays erroné ou vide."
+  },
+  "navbarTabs": {
+    "Activities": "Activités"
+  },
+  "wysiwygLabels": {
+    "cell": "Cellule",
+    "align": "Aligner",
+    "width": "Largeur",
+    "height": "Hauteur",
+    "borderWidth": "Largeur de la bordure",
+    "borderColor": "Couleur de la bordure",
+    "cellPadding": "Rembourrage de cellule",
+    "backgroundColor": "Couleur de fond",
+    "verticalAlign": "Alignement vertical"
+  },
+  "wysiwygOptions": {
+    "align": {
+      "left": "Gauche",
+      "center": "Centre",
+      "right": "Droit"
+    },
+    "verticalAlign": {
+      "top": "Haut",
+      "middle": "Milieu",
+      "bottom": "Bas"
+    }
+  },
+  "detailViewModes": {
+    "detail": "Détail"
+  },
+  "reactions": {
+    "Smile": "Sourire",
+    "Surprise": "Surpris",
+    "Laugh": "Rire",
+    "Meh": "Mouais",
+    "Sad": "Triste",
+    "Love": "Amour",
+    "Like": "Aime",
+    "Dislike": "N'aime pas"
+  },
+  "recordActions": {
+    "create": "Créer",
+    "read": "Lire",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "stream": "Flux"
   }
 }

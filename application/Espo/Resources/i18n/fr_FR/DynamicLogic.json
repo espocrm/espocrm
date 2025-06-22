@@ -2,8 +2,12 @@
   "options": {
     "operators": {
       "notEquals": "N'est pas égale",
+      "isEmpty": "Est vide",
       "notContains": "Ne contient pas",
-      "notHas": "Ne contient pas"
+      "notHas": "Ne contient pas",
+      "startsWith": "Commence avec",
+      "endsWith": "Termine avec",
+      "matches": "Correspondance (reg exp)"
     }
   },
   "labels": {

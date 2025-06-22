@@ -1,1 +1,8 @@
-{}
+{
+  "links": {
+    "emails": "eMails"
+  },
+  "labels": {
+    "Create GroupEmailFolder": "Créer un dossier"
+  }
+}

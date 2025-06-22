@@ -1,10 +1,9 @@
 {
-    "labels": {
-        "Create DocumentFolder": "Vytvořit složku",
-        "Manage Categories": "Spravovat složky",
-        "documents": "Dokumenty"
-    },
-    "links": {
-        "documents": "Dokumenty"
-    }
+  "labels": {
+    "Create DocumentFolder": "Vytvořit složku",
+    "Manage Categories": "Spravovat složky"
+  },
+  "links": {
+    "documents": "Dokumenty"
+  }
 }

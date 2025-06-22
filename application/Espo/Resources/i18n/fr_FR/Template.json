@@ -16,13 +16,16 @@
     "fontFace": "Police de caractère",
     "pageWidth": "Largeur de page (mm)",
     "pageHeight": "Hauteur de la page (mm)",
-    "headerPosition": "Position de l'entête"
+    "headerPosition": "Position de l'entête",
+    "printHeader": "Impression de l'entête",
+    "title": "Titre"
   },
   "labels": {
     "Create Template": "Créer un modèle"
   },
   "tooltips": {
-    "footer": "Utiliser {pageNumber} pour imprimer la page."
+    "footer": "Utiliser {pageNumber} pour indiquer le numéro de la page.",
+    "variables": "Copiez-collez le code court dans l'entête, le corps ou le pieds de le page."
   },
   "options": {
     "pageOrientation": {
@@ -30,7 +33,8 @@
     },
     "placeholders": {
       "today": "La date d'aujourd'hui)",
-      "now": "Maintenant (date-heure)"
+      "now": "Maintenant (date-heure)",
+      "pagebreak": "Saut de page"
     },
     "pageFormat": {
       "Custom": "Douane"
