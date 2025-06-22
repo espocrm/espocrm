@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nom",
     "campaign": "Campagne",
-    "isActive": "C'est actif",
+    "isActive": "Actif",
     "subscribeToTargetList": "S'abonner à la liste des cibles",
     "subscribeContactToTargetList": "S'abonner Contact si existe",
     "targetList": "Liste de cibles",
@@ -20,7 +20,9 @@
     "duplicateCheck": "Contrôle en double",
     "skipOptInConfirmationIfSubscribed": "Ignorer la confirmation si le prospect est déjà dans la liste des cibles",
     "smtpAccount": "Compte SMTP",
-    "inboundEmail": "Compte de messagerie de groupe"
+    "inboundEmail": "Compte de messagerie de groupe",
+    "exampleRequestHeaders": "Entête",
+    "phoneNumberCountry": "Indicatif téléphonique national"
   },
   "links": {
     "targetList": "Liste de cibles",

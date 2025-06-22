@@ -64,7 +64,9 @@
     "Archive Email": "Archiver l'Email",
     "Create Task": "Créer une tâche",
     "Tasks": "Tâches",
-    "Scheduler": "Emploi du temps"
+    "Scheduler": "Emploi du temps",
+    "Schedule": "Calendrier",
+    "Log": "Journal"
   },
   "fields": {
     "billingAddressCity": "Ville",
@@ -97,7 +99,13 @@
     "account": "Compte",
     "opportunity": "Opportunité"
   },
+  "notificationMessages": {
+    "eventAttendee": "{user} vous a ajouté à {entityType} {entity}"
+  },
   "streamMessages": {
+    "eventConfirmationAccepted": "{invitee} a accepté de participer à {entityType} {entity}",
+    "eventConfirmationDeclined": "{invitee} a refusé de participer à {entityType} {entity}",
+    "eventConfirmationTentative": "{invitee} hésite à participer à {entityType} {entity}",
     "eventConfirmationAcceptedThis": "{invitee} a accepté de participer",
     "eventConfirmationDeclinedThis": "{invitee} a refusé de participer",
     "eventConfirmationTentativeThis": "{invitee} est hésitant à participer"

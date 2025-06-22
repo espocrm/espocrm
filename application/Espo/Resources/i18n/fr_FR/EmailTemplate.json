@@ -13,13 +13,17 @@
     "Create EmailTemplate": "Créer un modèle d'email",
     "Available placeholders": "Espaces réservés disponibles"
   },
-  "presetFilters": {
-    "actual": "Réel"
+  "tooltips": {
+    "oneOff": "Vérifiez si vous comptez utiliser ce modèle une seule fois. Par exple. pour les eMails de masse."
   },
   "placeholderTexts": {
     "optOutLink": "un lien de désabonnement",
     "today": "La date d'aujourd'hui",
     "now": "Date et heure actuelles",
-    "currentYear": "Année actuelle"
+    "currentYear": "Année actuelle",
+    "optOutUrl": "URL d'un lien de désabonnement"
+  },
+  "messages": {
+    "infoText": "Les espaces réservés disponibles :\n\n{optOutUrl} &#8211 ; URL pour un lien de désabonnement ;\n\n{optOutLink} &#8211 ; un lien de désabonnement."
   }
 }

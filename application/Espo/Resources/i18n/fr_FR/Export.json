@@ -1,6 +1,26 @@
 {
   "fields": {
     "fieldList": "Choix de champs",
-    "exportAllFields": "Exporter tous les champs"
+    "exportAllFields": "Exporter tous les champs",
+    "status": "Statut",
+    "xlsxLite": "Léger",
+    "xlsxRecordLinks": "Liens d'enregistrement",
+    "xlsxTitle": "Titre"
+  },
+  "options": {
+    "status": {
+      "Pending": "En attente",
+      "Running": "En cours",
+      "Success": "Réussi",
+      "Failed": "Erreur"
+    }
+  },
+  "messages": {
+    "exportProcessed": "L'exportation a été traitée. Téléchargez le [file] ({url}).",
+    "infoText": "L'exportation est traitée indépendamment par cron. Cela peut prendre un certain temps avant de se terminer. La fermeture de cette boîte de dialogue n'affectera pas le processus d'exécution."
+  },
+  "tooltips": {
+    "xlsxLite": "Consomme beaucoup moins de mémoire. Recommandé si un grand nombre d'enregistrements est exporté.",
+    "xlsxTitle": "Imprimez un titre et la date actuelle dans l'en-tête."
   }
 }

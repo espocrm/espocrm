@@ -8,7 +8,8 @@
     "users": "Utilisateurs",
     "leads": "Prospects",
     "reminders": "Notifications",
-    "account": "Compte"
+    "account": "Compte",
+    "acceptanceStatus": "Statut d'acceptation"
   },
   "options": {
     "status": {

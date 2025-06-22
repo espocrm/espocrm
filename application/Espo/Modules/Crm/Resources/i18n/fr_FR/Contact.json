@@ -13,8 +13,12 @@
     "targetLists": "Listes de cibles",
     "targetList": "Liste de cibles",
     "portalUser": "Utilisateur Portail",
+    "acceptanceStatus": "Statut d'acceptation",
+    "acceptanceStatusMeetings": "Statut d'acceptation (Rendez-vous)",
+    "acceptanceStatusCalls": "Statut d'acceptation (Appels)",
     "title": "Titre du Compte",
-    "hasPortalUser": "Dispose d'un utilisateur de Portail"
+    "hasPortalUser": "Dispose d'un utilisateur de Portail",
+    "originalEmail": "Email original"
   },
   "links": {
     "opportunities": "Opportunités",

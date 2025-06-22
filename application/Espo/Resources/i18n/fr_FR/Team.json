@@ -2,15 +2,23 @@
   "fields": {
     "name": "Nom",
     "roles": "Rôles",
-    "positionList": "Position de liste"
+    "positionList": "Position de liste",
+    "layoutSet": "Thèmes",
+    "workingTimeCalendar": "Calendriers des jours travaillés",
+    "userRole": "Rôle de l'utilisateur"
   },
   "links": {
     "users": "Utilisateurs",
-    "roles": "Rôles"
+    "roles": "Rôles",
+    "layoutSet": "Thèmes",
+    "workingTimeCalendar": "Calendriers des jours travaillés",
+    "groupEmailFolders": "Dossiers eMail de groupe"
   },
   "tooltips": {
     "roles": "Permissions. Les utilisateurs de cette équipe obtiennent le niveau d'accès des rôles sélectionnés.",
-    "positionList": "Postes disponibles dans cette équipe. Par exemple : conseiller, manager."
+    "positionList": "Postes disponibles dans cette équipe. Par exemple : conseiller, manager.",
+    "layoutSet": "Offre la possibilité d’avoir des mises en page différentes des mises en page standard. Le jeu de mise en page sera appliqué aux utilisateurs pour lesquels cette équipe est définie comme équipe par défaut.",
+    "workingTimeCalendar": "Un calendrier sera appliqué aux utilisateurs pour lesquels cette équipe est définie comme équipe par défaut."
   },
   "labels": {
     "Create Team": "Créer une équipe"

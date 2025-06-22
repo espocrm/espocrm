@@ -14,12 +14,13 @@
     "passwordConfirm": "Confirmer le mot de passe",
     "newPassword": "Nouveau mot de passe",
     "newPasswordConfirm": "Confirmer le nouveau mot de passe",
-    "isActive": "Est actif",
+    "isActive": "Actif",
     "isPortalUser": "Utilisateur de Portail",
     "accounts": "Comptes",
     "account": "Compte (principal)",
     "sendAccessInfo": "Envoyer un email avec ses accès à l'utilisateur",
     "portal": "Portail",
+    "gender": "Genre",
     "isSuperAdmin": "Est super admin",
     "lastAccess": "Dernier accès",
     "apiKey": "clé API",
@@ -28,7 +29,10 @@
     "yourPassword": "Votre mot de passe actuel",
     "dashboardTemplate": "Modèle de tableau de bord",
     "auth2FAEnable": "Activer l'authentification à 2 facteurs",
-    "auth2FAMethod": "Méthode 2FA"
+    "auth2FAMethod": "Méthode 2FA",
+    "workingTimeCalendar": "Calendriers des jours travaillés",
+    "layoutSet": "Thèmes",
+    "avatarColor": "Couleur d'Avatar"
   },
   "links": {
     "teams": "Équipes",
@@ -38,7 +42,11 @@
     "accounts": "Comptes",
     "account": "Compte (principal)",
     "defaultTeam": "Équipe par défaut",
-    "dashboardTemplate": "Modèle de tableau de bord"
+    "dashboardTemplate": "Modèle de tableau de bord",
+    "userData": "Donnée utilisateur",
+    "workingTimeCalendar": "Calendriers des jours travaillés",
+    "layoutSet": "Thèmes",
+    "workingTimeRanges": "Exceptions au temps de travail"
   },
   "labels": {
     "Create User": "Créer un utilisateur",
@@ -59,7 +67,10 @@
     "Back to login form": "Retour au formulaire de connexion",
     "Requirements": "Exigences",
     "Security": "Sécurité",
-    "Reset 2FA": "Réinitialiser 2FA"
+    "Reset 2FA": "Réinitialiser 2FA",
+    "Send Password Change Link": "Envoyer le lien de changement de mot de passe",
+    "Send Code": "Envois du code",
+    "Login Link": "Lien de connexion"
   },
   "tooltips": {
     "defaultTeam": "Toutes les données créées par cet utilisateur seront liés à cette équipe par défaut.",
@@ -69,7 +80,8 @@
     "teams": "Les équipes auxquelles l'utilisateur appartient. Permissions héritées de celles de l'équipe.",
     "roles": "Rôles d'accès supplémentaires. Utilisez-les si l'utilisateur ne fait pas partie d'une équipe ou si vous avez besoin d'étendre le niveau des permissions uniquement pour cet utilisateur.",
     "portalRoles": "Rôles de Portail additionnels",
-    "portals": "Portails auxquels cet utilisateur a accès"
+    "portals": "Portails auxquels cet utilisateur a accès",
+    "layoutSet": "Les thèmes d'un ensemble seront appliqués à l'utilisateur au lieu de celui par défaut."
   },
   "messages": {
     "passwordWillBeSent": "Les identifiants (y compris le mot de passe) seront envoyés à l'adresse email de l'utilisateur.",
@@ -94,11 +106,25 @@
     "generateAndSendNewPassword": "Un nouveau mot de passe sera généré et envoyé à l'adresse électronique de l'utilisateur.",
     "security2FaResetConfirmation": "Êtes-vous sûr de vouloir réinitialiser les paramètres 2FA actuels?",
     "ldapUserInEspoNotFound": "Utilisateur introuvable dans EspoCRM. Veuillez contacter votre administrateur pour en créer un.",
+    "passwordRecoverySentIfMatched": "En supposant que les données saisies correspondent à n’importe quel compte utilisateur.",
     "auth2FARequiredHeader": "Authentification à deux facteurs exigée",
-    "auth2FARequired": "Activez l'authentification à deux facteurs. Utilisez une application d'authentification dans votre mobile (comme Google Authentificator)."
+    "auth2FARequired": "Activez l'authentification à deux facteurs. Utilisez une application d'authentification dans votre mobile (comme Google Authentificator).",
+    "sendPasswordChangeLinkConfirmation": "Un email avec un lien unique sera envoyé à l'utilisateur lui permettant de modifier son mot de passe. Le lien expirera après un laps de temps déterminé.\n",
+    "yourAuthenticationCode": "Votre code d'authentification : {code}.",
+    "choose2FaSmsPhoneNumber": "Sélectionnez un numéro de téléphone qui sera utilisé pour l'authentification 2FA.",
+    "choose2FaEmailAddress": "Sélectionnez une adresse e-mail qui sera utilisée pour une vérification deux facteurs (2FA). Il est fortement recommandé d'utiliser une adresse e-mail non principale.",
+    "enterCodeSentInEmail": "Entrez le code envoyé sur votre adresse eMail.",
+    "enterCodeSentBySms": "Saisissez le code envoyé par SMS sur votre numéro de téléphone.",
+    "passwordChangeRequestNotFound": "La demande de changement de mot de passe est introuvable. Il est peut-être expiré. Essayez de lancer une nouvelle récupération de mot de passe à partir de la [login page] ({url}).",
+    "loginAs": "Ouvrez le lien de connexion dans une fenêtre de navigation privée pour conserver votre session en cours. Utilisez vos informations d'identification d'administrateur pour vous connecter.",
+    "failedToLogIn": "Échec de connexion",
+    "2faMethodNotConfigured": "La méthode d'authentification à 2 facteurs (2FA) n'est pas complètement configurée dans le système",
+    "loginError": "Une erreur est survenue.",
+    "defaultTeamIsNotUsers": "L'équipe par défaut doit être l'une des équipes de l'utilisateur."
   },
   "boolFilters": {
-    "onlyMyTeam": "De mon équipe"
+    "onlyMyTeam": "De mon équipe",
+    "onlyMe": "SeulMoi"
   },
   "presetFilters": {
     "active": "Actif",
@@ -106,6 +132,12 @@
     "activeApi": "API active"
   },
   "options": {
+    "gender": {
+      "": "Non défini",
+      "Male": "Masculin",
+      "Female": "Féminin",
+      "Neutral": "Neutre"
+    },
     "type": {
       "regular": "Ordinaire",
       "portal": "Portail",
@@ -115,5 +147,8 @@
     "authMethod": {
       "ApiKey": "clé API"
     }
+  },
+  "actions": {
+    "changePosition": "Changer de position"
   }
 }

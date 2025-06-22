@@ -14,7 +14,8 @@
   },
   "links": {
     "attachments": "Pièces jointes",
-    "account": "Compte"
+    "account": "Compte",
+    "email": "eMail"
   },
   "options": {
     "status": {
@@ -37,9 +38,11 @@
     "overdue": "dépassé"
   },
   "presetFilters": {
-    "actual": "En cours",
     "completed": "Terminés",
     "todays": "Aujourd'hui",
     "overdue": "En retard"
+  },
+  "nameOptions": {
+    "replyToEmail": "Répondre à l'e-mail"
   }
 }

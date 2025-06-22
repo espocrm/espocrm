@@ -30,7 +30,10 @@
       "INACTIVE_USER": "Utilisateur inactif",
       "IS_PORTAL_USER": "Utilisateur du portail",
       "IS_NOT_PORTAL_USER": "Pas un utilisateur du portail",
-      "USER_IS_NOT_IN_PORTAL": "L'utilisateur n'est pas lié au portail"
+      "USER_IS_NOT_IN_PORTAL": "L'utilisateur n'est pas lié au portail",
+      "IS_SYSTEM_USER": "Est l'utilisateur Système",
+      "FORBIDDEN": "Interdit",
+      "WRONG_CODE": "Code Erroné"
     }
   }
 }

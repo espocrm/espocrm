@@ -9,9 +9,11 @@
     "leads": "Prospects",
     "reminders": "Notifications",
     "account": "Compte",
+    "acceptanceStatus": "Statut d'acceptation",
     "dateStartDate": "Date de début (toute la journée)",
     "dateEndDate": "Date de fin (toute la journée)",
-    "isAllDay": "Est toute la journée"
+    "isAllDay": "Est toute la journée",
+    "sourceEmail": "Source E-mail"
   },
   "options": {
     "status": {
@@ -36,7 +38,9 @@
     "Send Invitations": "Envoyer des Invitations",
     "on time": "à l'heure",
     "before": "en avance",
-    "All-Day": "Toute la journée"
+    "All-Day": "Toute la journée",
+    "Send Cancellation": "Envoyer l'annulation",
+    "Acceptance": "Acceptation"
   },
   "presetFilters": {
     "planned": "Prévu",
@@ -45,6 +49,8 @@
   },
   "messages": {
     "nothingHasBeenSent": "Aucun envoi effectué",
-    "selectAcceptanceStatus": "Définissez votre statut d'acceptation."
+    "selectAcceptanceStatus": "Définissez votre statut d'acceptation.",
+    "sendInvitationsToSelectedAttendees": "Des eMails d'invitation seront envoyés aux sélectionnés.",
+    "sendCancellationsToSelectedAttendees": "Des eMails d'annulation seront envoyés aux sélectionnés."
   }
 }

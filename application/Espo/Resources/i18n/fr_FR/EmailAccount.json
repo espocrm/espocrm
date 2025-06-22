@@ -7,13 +7,14 @@
     "password": "Mot de passe",
     "monitoredFolders": "Dossiers surveillés",
     "fetchSince": "Apporté depuis",
-    "emailAddress": "Adresse email",
+    "emailAddress": "Adresse eMail",
     "sentFolder": "Dossier d'envoi",
-    "storeSentEmails": "Conserver les emails envoyés",
-    "keepFetchedEmailsUnread": "Conserver les emails reçu non lus",
+    "storeSentEmails": "Conserver les eMails envoyés",
+    "keepFetchedEmailsUnread": "Conserver les eMails reçu non lus",
     "useImap": "Récupérer des emails",
     "smtpAuthMechanism": "Mécanisme d'authentification SMTP",
-    "security": "Sécurité"
+    "security": "Sécurité",
+    "connectedAt": "Connecté à"
   },
   "links": {
     "filters": "Filtres"
@@ -29,16 +30,21 @@
     }
   },
   "labels": {
-    "Create EmailAccount": "Créer un compte email",
+    "Create EmailAccount": "Créer un compte eMail",
     "Main": "Principal",
     "Test Connection": "Tester la connexion",
-    "Send Test Email": "Envoyer un message de test"
+    "Send Test Email": "Envoyer message test"
   },
   "messages": {
     "couldNotConnectToImap": "Impossible de se connecter au serveur IMAP",
-    "connectionIsOk": "Connexion établie"
+    "connectionIsOk": "Connexion établie",
+    "imapNotConnected": "Ne peut pas se connecter au [compte IMAP] \n(#EmailAccount/view/{id})."
   },
   "tooltips": {
-    "useSmtp": "Possibilité d'envoyer des courriels."
+    "useSmtp": "Possibilité d'envoyer des courriels.",
+    "emailAddress": "L'enregistrement utilisateur (utilisateur attribué) doit avoir la même adresse e-mail pour pouvoir envoyer depuis ce compte de messagerie."
+  },
+  "presetFilters": {
+    "active": "Actif"
   }
 }

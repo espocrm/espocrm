@@ -1,1 +1,16 @@
-{}
+{
+  "fields": {
+    "processedCount": "Nombre traité"
+  },
+  "options": {
+    "status": {
+      "Pending": "En attente",
+      "Running": "En cours",
+      "Success": "Réussite",
+      "Failed": "Échec"
+    }
+  },
+  "messages": {
+    "infoText": "L'exportation est traitée indépendamment par cron. Cela peut prendre un certain temps avant de se terminer. La fermeture de cette boîte de dialogue n'affectera pas le processus d'exécution."
+  }
+}

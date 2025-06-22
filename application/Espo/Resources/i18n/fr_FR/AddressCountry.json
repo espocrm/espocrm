@@ -1,0 +1,19 @@
+{
+  "labels": {
+    "Create AddressCountry": "Créer une adresse Pays",
+    "Populate": "Remplir"
+  },
+  "fields": {
+    "isPreferred": "Est Préférée"
+  },
+  "tooltips": {
+    "code": "Code ISO 3166-1 alpha-2.",
+    "isPreferred": "Les pays préférés sont listés en premier."
+  },
+  "messages": {
+    "confirmPopulateDefaults": "Tous les pays existants seront supprimés et la liste de pays par défaut sera créée. Il ne sera pas possible de revenir en arrière.\n\nVous êtes sûr de vous ?"
+  },
+  "strings": {
+    "populateDefaults": "Remplir avec la liste de pays par défaut"
+  }
+}

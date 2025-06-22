@@ -3,7 +3,11 @@
     "user": "Utilisateur",
     "ipAddress": "Adresse IP",
     "lastAccess": "Dernière date d'accès",
-    "createdAt": "Date de connexion"
+    "createdAt": "Date de connexion",
+    "isActive": "Actif"
+  },
+  "links": {
+    "actionHistoryRecords": "Historique Action"
   },
   "massActions": {
     "setInactive": "Passer en inactif"

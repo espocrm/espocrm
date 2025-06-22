@@ -2,7 +2,8 @@
   "labels": {
     "Converted To": "Converti en",
     "Create Lead": "Créer un prospect",
-    "Convert": "Convertir"
+    "Convert": "Convertir",
+    "convert": "convertir"
   },
   "fields": {
     "name": "Nom",
@@ -20,7 +21,12 @@
     "campaign": "Campagne",
     "targetLists": "Listes de cibles",
     "targetList": "Liste de cibles",
-    "convertedAt": "Converti à"
+    "industry": "Industrie",
+    "acceptanceStatus": "Statut d'acceptation",
+    "acceptanceStatusMeetings": "Statut d'acceptation (Rendez-vous)",
+    "acceptanceStatusCalls": "Statut d'acceptation (Appels)",
+    "convertedAt": "Converti à",
+    "originalEmail": "Email original"
   },
   "links": {
     "targetLists": "Listes de cibles",
@@ -36,7 +42,8 @@
       "Assigned": "Assigné",
       "In Process": "En cours",
       "Converted": "Converti",
-      "Recycled": "Recyclé"
+      "Recycled": "Recyclé",
+      "Dead": "Mort"
     },
     "source": {
       "Call": "Appel",
@@ -50,7 +57,6 @@
   },
   "presetFilters": {
     "active": "Actif",
-    "actual": "En cours",
     "converted": "Converti"
   }
 }

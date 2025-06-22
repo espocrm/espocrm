@@ -11,7 +11,7 @@
     "attachments": "Pièces-jointes",
     "selectTemplate": "Sélectionner un modèle",
     "fromAddress": "Depuis l'adresse",
-    "emailAddress": "Adresse email",
+    "emailAddress": "Adresse eMail",
     "deliveryDate": "Date de remise",
     "account": "Compte",
     "users": "Utilisateurs",
@@ -30,35 +30,50 @@
     "fromName": "De nom",
     "fromString": "De la corde",
     "isSystem": "Est système",
-    "toEmailAddresses": "À EmailAddresses",
-    "replyToEmailAddresses": "Répondre à EmailAddresses",
     "personStringData": "Données de chaîne de personne",
     "fromEmailAddress": "De l'adresse (lien)",
     "replyToName": "Nom de réponse",
-    "replyToAddress": "Répondre à l'adresse"
+    "replyToAddress": "Répondre à l'adresse",
+    "icsContents": "Contenu de l'ICS",
+    "icsEventData": "Données d'événement ICS",
+    "icsEventUid": "UID de l'événement ICS",
+    "createdEvent": "Créer un évènement",
+    "event": "Évènement",
+    "icsEventDateStart": "Date de début de l'événement ICS",
+    "groupFolder": "Dossier du groupe",
+    "isUsersSent": "Est envoyé par l'utilisateur",
+    "inArchive": "En archive",
+    "sendAt": "Envoyer à"
   },
   "links": {
     "replied": "Répondu",
     "replies": "Réponses",
     "attachments": "Les pièces jointes",
     "fromEmailAddress": "De l'adresse e-mail",
-    "toEmailAddresses": "À EmailAddresses",
-    "replyToEmailAddresses": "Répondre à EmailAddresses"
+    "groupFolder": "Dossier du groupe",
+    "createdEvent": "Evénement créé",
+    "toEmailAddresses": "Email destinataires",
+    "ccEmailAddresses": "Destinataires en copie CC",
+    "bccEmailAddresses": "Destinataires en copie cachée BCC",
+    "replyToEmailAddresses": "Adresses e-mail de réponse"
   },
   "options": {
     "status": {
       "Draft": "Brouillon",
       "Sending": "En cours d'envoi",
       "Sent": "Envoyé",
-      "Archived": "Archivé",
       "Received": "Reçu",
-      "Failed": "Echec"
+      "Failed": "Échec",
+      "Archived": "Importé"
+    },
+    "groupStatusFolder": {
+      "Trash": "Corbeille"
     }
   },
   "labels": {
-    "Create Email": "Archiver l'Email",
-    "Archive Email": "Archiver l'Email",
-    "Compose": "Composer",
+    "Create Email": "Archiver l'eMail",
+    "Archive Email": "Archiver l'eMail",
+    "Compose": "Écrire",
     "Reply": "Répondre",
     "Reply to All": "Répondre à tous",
     "Forward": "Transférer",
@@ -67,9 +82,9 @@
     "Email Accounts": "Comptes emails",
     "Inbound Emails": "Comptes email communs",
     "Email Templates": "Modèles d'email",
-    "Send Test Email": "Envoyer un email test",
+    "Send Test Email": "Envoyer message test",
     "Send": "Envoyer",
-    "Email Address": "Adresse email",
+    "Email Address": "Adresse eMail",
     "Mark Read": "Marquer comme lu",
     "Sending...": "Envoi en cours...",
     "Save Draft": "Sauvegarder le brouillon",
@@ -81,24 +96,43 @@
     "Retrieve from Trash": "Enlever de la corbeille",
     "View Users": "Afficher les utilisateurs",
     "No Subject": "Aucun Objet",
-    "Insert Field": "Insère un champ"
+    "Insert Field": "Insère un champ",
+    "Event": "Évènement",
+    "Group Folders": "Dossier de groupe",
+    "View Attachments": "Voir les pièces jointes",
+    "Import EML": "Importer EML",
+    "Moved to Archive": "Déplacé vers l'archive",
+    "Moved to Trash": "Déplacé vers la corbeille",
+    "Retrieved from Trash": "Récupéré de la Corbeille",
+    "No Records Moved": "Aucun enregistrement déplacé",
+    "Schedule Send": "Planifier l'envoi"
   },
   "messages": {
-    "testEmailSent": "L'email de test a été envoyé",
-    "emailSent": "L'email a été envoyé",
+    "testEmailSent": "L'eMail de test a été envoyé",
+    "emailSent": "L'eMail a été envoyé",
     "savedAsDraft": "Sauvegardé en tant que brouillon",
     "confirmInsertTemplate": "Le corps de l'e-mail sera perdu. Êtes-vous sûr de vouloir insérer le modèle?",
     "noSmtpSetup": "SMTP n'est pas configuré: {link}",
+    "confirmSend": "Envoyer l'email ?",
     "sendConfirm": "Envoyer l'email ?",
     "removeSelectedRecordsConfirmation": "Êtes-vous sûr de vouloir supprimer les courriels sélectionnés ?\n\nIls seront supprimés pour tous les utilisateurs.",
-    "removeRecordConfirmation": "Êtes-vous sûr de vouloir supprimer ce courriel ?\n\nIl sera supprimé pour tous les utilisateurs."
+    "removeRecordConfirmation": "Êtes-vous sûr de vouloir supprimer ce courriel ?\n\nIl sera supprimé pour tous les utilisateurs.",
+    "invalidCredentials": "Informations d'identification invalides.",
+    "unknownError": "Erreur inconnue.",
+    "recipientAddressRejected": "L'adresse du destinataire a été rejetée.",
+    "alreadyImported": "Le [email]({link}) existe déjà dans le système.",
+    "groupFolderNoAccess": "Pas accès au dossier de groupe",
+    "groupMoveOutNoEditAccess": "Impossible de quitter le dossier de groupe. Droit manquant.",
+    "groupMoveToNoEditAccess": "Impossible de déplacer vers le dossier de groupe. Droit manquant.",
+    "groupMoveToTrashNoEditAccess": "Impossible de déplacer l’e-mail du dossier de groupe vers la corbeille. Droit manquant.",
+    "groupMoveToArchiveNoEditAccess": "Impossible de déplacer vers Archive. Droit manquant."
   },
   "presetFilters": {
     "sent": "Envoyé",
-    "archived": "Archivé",
     "inbox": "Boite de réception",
     "drafts": "Brouillons",
-    "trash": "Corbeille"
+    "trash": "Corbeille",
+    "archived": "Importé"
   },
   "massActions": {
     "markAsRead": "Marquer commer lu",
@@ -111,5 +145,8 @@
   },
   "strings": {
     "sendingFailed": "Échec d'envoi du courriel"
+  },
+  "otherFields": {
+    "file": "Fichier"
   }
 }

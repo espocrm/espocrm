@@ -36,7 +36,7 @@
   },
   "labels": {
     "Create MassEmail": "Créer un email groupé",
-    "Send Test": "Envoyer un message de test",
+    "Send Test": "Envoyer message test",
     "System SMTP": "Système SMTP",
     "system": "système",
     "group": "groupe"

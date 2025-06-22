@@ -4,7 +4,7 @@
   },
   "fields": {
     "event": "un événement",
-    "isActive": "C'est actif",
+    "isActive": "Actif",
     "user": "API utilisateur",
     "entityType": "Type de Fonctionnalité",
     "field": "Champ",

@@ -19,8 +19,8 @@
       "ProcessWebhookQueue": "Traiter la file d'attente Webhook"
     },
     "cronSetup": {
-      "linux": "Note: Ajoutez cette ligne dans le fichier crontab pour lancer les tâches planifiées:",
-      "mac": "Note: Ajoutez cette ligne dans le fichier crontab pour lancer les tâches planifiées:",
+      "linux": "Note: Ajoutez cette ligne dans les tâches planifiées afin de l'exécuter :",
+      "mac": "Note: Ajoutez cette ligne dans les tâches planifiées afin de l'exécuter :",
       "windows": "Note: Créez un fichier de commandes avec les commandes suivantes pour exécuter des tâches planifiées Windows",
       "default": "Note: Ajouter cette commande pour Cron (tâche planifiée):"
     },
@@ -28,5 +28,8 @@
       "Active": "Actif",
       "Inactive": "Inactif"
     }
+  },
+  "tooltips": {
+    "scheduling": "La notation des tâches automatiques (Crontab) marque la fréquence des exécutions de tâches.\n\n`*/5 * * * *` - toutes les 5 minutes\n\n`0 */2 * * *` - toutes les 2 heures\n\n`30 1 * * *` - à 01h30 une fois par jour\n\n`0 0 1 * *` - le premier jour du mois"
   }
 }

@@ -9,8 +9,11 @@
     "enabledScopeList": "Afficher",
     "users": "Utilisateurs",
     "entityType": "Type de Fonctionnalités",
+    "expandedLayout": "Thème",
     "dateFilter": "Filtre de date",
-    "skipOwn": "Ne pas montrer ses propres dossiers"
+    "skipOwn": "Ne pas montrer ses propres dossiers",
+    "text": "Texte",
+    "folder": "Dossier"
   },
   "options": {
     "mode": {
@@ -20,6 +23,10 @@
       "basicDay": "Jour",
       "agendaDay": "Jour (calendrier)",
       "timeline": "Plage de temps"
+    },
+    "sortDirection": {
+      "asc": "Ascendant",
+      "desc": "Descendant"
     }
   },
   "messages": {

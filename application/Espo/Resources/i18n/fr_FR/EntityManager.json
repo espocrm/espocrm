@@ -4,7 +4,8 @@
     "Relationships": "Relations",
     "Schedule": "Emploi du temps",
     "Formula": "Formule",
-    "Layouts": "Dispositions d'écran"
+    "Layouts": "Dispositions d'écran",
+    "Parameters": "Paramètres"
   },
   "fields": {
     "name": "Nom",
@@ -17,8 +18,6 @@
     "linkForeign": "Lien externe",
     "link": "Lien",
     "labelForeign": "Libellé externe",
-    "sortBy": "Tri par défaut (champ)",
-    "sortDirection": "Tri par défaut (direction)",
     "relationName": "Nom de table intermédiaire",
     "linkMultipleField": "Lier un champ multiple",
     "linkMultipleFieldForeign": "Lien externe vers un champ multiple",
@@ -33,15 +32,27 @@
     "fullTextSearch": "Recherche du texte complet",
     "countDisabled": "Désactiver le compteur de lignes",
     "parentEntityTypeList": "Types de Fonctionnalités parentes",
-    "foreignLinkEntityTypeList": "Liens externes"
+    "foreignLinkEntityTypeList": "Liens externes",
+    "entity": "Entité",
+    "optimisticConcurrencyControl": "Contrôle optimiste de la concurrence",
+    "beforeSaveApiScript": "API avant le script d'enregistrement",
+    "updateDuplicateCheck": "Vérification des doublons lors de la mise à jour",
+    "duplicateCheckFieldList": "Champs de contrôle en double",
+    "layout": "Thème",
+    "author": "Auteur",
+    "selectFilter": "Sélectionner un Filtre",
+    "primaryFilters": "Filtres Primaires",
+    "stars": "Etoiles",
+    "assignedUsers": "Plusieurs utilisateurs assignés",
+    "collaborators": "Collaborateurs"
   },
   "options": {
     "type": {
       "": "Aucun",
-      "Person": "Individu",
+      "Person": "Personne",
       "CategoryTree": "Arborescence des catégories",
       "Event": "Évènement",
-      "Company": "Structure"
+      "Company": "Structure (entreprise, association, ...)"
     },
     "linkType": {
       "manyToMany": "Plusieurs-à-Plusieurs",
@@ -55,22 +66,39 @@
     "sortDirection": {
       "asc": "Croissant",
       "desc": "Décroissant"
+    },
+    "module": {
+      "Custom": "Personnalisé"
     }
   },
   "messages": {
     "entityCreated": "La Fonctionnalités a bien été créée",
     "linkAlreadyExists": "Conflit : lien déjà existant.",
     "linkConflict": "Conflit de nom : un lien ou un champ portant ce nom existe déjà.",
-    "confirmRemove": "Êtes-vous sûr de vouloir supprimer ce type de Fonctionnalité du système ?"
+    "confirmRemove": "Êtes-vous sûr de vouloir supprimer ce type de Fonctionnalité du système ?",
+    "beforeSaveCustomScript": "Un script appelé à chaque fois avant la sauvegarde d'une entité. À utiliser pour définir les champs calculés.",
+    "beforeSaveApiScript": "Un script appelé sur les requêtes API de création et de mise à jour avant qu'une entité ne soit sauvegardée. À utiliser pour la validation personnalisée et la vérification des doublons.",
+    "nameIsAlreadyUsed": "Le nom '{name}' est déjà utilisé.",
+    "nameIsNotAllowed": "Le nom '{name}' n'est pas autorisé.",
+    "nameIsTooLong": "Le nom est trop long",
+    "confirmRemoveLink": "Êtes-vous sûr de vouloir supprimer la relation *{link}* ?",
+    "urlHashCopiedToClipboard": "Un fragment d'URL pour le filtre *{name}* est copié dans le presse-papiers. Vous pouvez l'ajouter à la barre de navigation."
   },
   "tooltips": {
     "statusField": "Les mises à jour de ce champ sont inscrites dans le Flux.",
     "textFilterFields": "Champs utilisés lors de recherches textuelles.",
-    "stream": "Quand la Fonctionnalité a un Flux.",
     "disabled": "Vérifiez que vous n'ayez pas besoin de cette Fonctionnalité dans votre système.",
+    "linkAudited": "La création d'un enregistrement lié et la liaison avec l'enregistrement existant seront consignées dans le flux.",
     "linkMultipleField": "Le champ de Liens multiples est très utile à la création de relations. Mais ne l'utilisez pas si un trop grand nombre d'éléments sont reliés.",
     "entityType": "Base Plus - ajoute les volets Activités, Historique et Tâches.\n\nÉvènement - est disponible dans les volets Calendrier and Activités.",
     "fullTextSearch": "Une reconstruction est requise.",
-    "countDisabled": "Le nombre total ne sera pas affiché en vue Liste. Cela peut faire baisser les temps de chargement quand la base de données est grande."
+    "countDisabled": "Le nombre total ne sera pas affiché en vue Liste. Cela peut faire baisser les temps de chargement quand la base de données est grande.",
+    "optimisticConcurrencyControl": "Empêche les conflits d’écriture.",
+    "duplicateCheckFieldList": "Les champs à vérifier lors de la recherche de doublons.",
+    "updateDuplicateCheck": "Vérifier la présence de doublons lors de la mise à jour d'un enregistrement.",
+    "linkSelectFilter": "Un filtre primaire à appliquer par défaut lors de la sélection d'un enregistrement.",
+    "stars": "La possibilité d'attribuer une étoile à un enregistrement. Les étoiles peuvent être utilisées par les utilisateurs pour mettre des enregistrements en favoris.",
+    "preserveAuditLog": "Désactive le nettoyage du journal d’audit. Ce paramètre s’applique uniquement si le Flux est désactivé, car quand il est activé, les enregistrements d’audit ne sont pas supprimés.",
+    "linkParamReadOnly": "Un lien en lecture seule ne peut pas être modifié via les requêtes API link et unlink. Il est impossible de lier ou délier des enregistrements via le panneau de relations. Cependant, il reste possible de modifier ces liens via les champs link et link-multiple."
   }
 }

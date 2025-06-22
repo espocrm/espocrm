@@ -1,1 +1,23 @@
-{}
+{
+  "labels": {
+    "Check Syntax": "Vérifier la syntaxe",
+    "Run": "Exécuter"
+  },
+  "fields": {
+    "target": "Cible",
+    "targetType": "Cible type",
+    "script": "Scripte",
+    "output": "Sortie",
+    "error": "Erreur"
+  },
+  "messages": {
+    "runSuccess": "Exécuté avec succès.",
+    "runError": "Erreur.",
+    "checkSyntaxSuccess": "La syntaxe est bonne.",
+    "checkSyntaxError": "Erreur de syntaxe.",
+    "emptyScript": "Le script est vide."
+  },
+  "tooltips": {
+    "output": "Imprimer les valeurs avec la fonction `output\\printLine`."
+  }
+}

@@ -1,1 +1,14 @@
-{}
+{
+  "fields": {
+    "activityStatusList": "Statuts d'activité",
+    "historyStatusList": "Statuts de l'historique",
+    "completedStatusList": "Statuts terminés",
+    "canceledStatusList": "Statuts annulés"
+  },
+  "tooltips": {
+    "activityStatusList": "Les valeurs de statut déterminent si un enregistrement d'activité doit être affiché dans le panneau Activité et considéré comme courant.",
+    "historyStatusList": "Les valeurs de statut déterminant l'affichage d'un enregistrement d'activité dans le panneau Historique.",
+    "completedStatusList": "Valeurs de statut qui détermine qu’une activité est terminée.",
+    "canceledStatusList": "Les valeurs de statut déterminent qu'une activité est annulée et ne sera pas prise en compte dans les plages libres/occupées."
+  }
+}

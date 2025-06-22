@@ -9,7 +9,8 @@
     "field": "Champ",
     "sourceId": "ID source",
     "storage": "Espace de rangement",
-    "size": "Taille (octets)"
+    "size": "Taille (octets)",
+    "isBeingUploaded": "Est en cours de téléchargement"
   },
   "options": {
     "role": {

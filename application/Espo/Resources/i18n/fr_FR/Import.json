@@ -52,7 +52,9 @@
     "New Import": "Nouvelle importation",
     "Import Results": "Résultats d'importation",
     "Silent Mode": "Mode silencieux",
-    "Run Manually": "Déclencher manuellement"
+    "New import with same params": "Nouvel import avec les mêmes paramètres",
+    "Run Manually": "Déclencher manuellement",
+    "Export": "Exportation"
   },
   "messages": {
     "utf8": "Devrait être en UTF-8",
@@ -61,7 +63,10 @@
     "removeDuplicates": "Cela supprimera définitivement tous les enregistrements importés qui ont été reconnus comme des doublons.",
     "confirmRevert": "Cela supprimera définitivement tous les enregistrements importés. Êtes-vous sûr?",
     "confirmRemoveDuplicates": "Cela supprimera définitivement tous les enregistrements importés qui ont été reconnus comme des doublons. Êtes-vous sûr?",
-    "removeImportLog": "Cela supprimera le journal d'importation. Tous les enregistrements importés seront conservés. Utilisez-le si vous êtes sûr que l'importation est correcte."
+    "removeImportLog": "Cela supprimera le journal d'importation. Tous les enregistrements importés seront conservés. Utilisez-le si vous êtes sûr que l'importation est correcte.",
+    "confirmRemoveImportLog": "Cela supprimera le journal d'importation. Tous les enregistrements importés seront conservés. Vous ne pourrez pas annuler les résultats de l'importation. Désirez-vous vraiment le faire ??",
+    "importRunning": "Import en cours...",
+    "noErrors": "Aucune erreur"
   },
   "fields": {
     "file": "Fichier",
@@ -86,5 +91,15 @@
   "strings": {
     "commandToRun": "Ligne de commande à opérer (depuis l'interface",
     "saveAsDefault": "Enregistrer comme élément par défaut"
+  },
+  "tooltips": {
+    "manualMode": "Si cette case est cochée, vous devrez lancer l'importation manuellement à partir de l'interface de ligne de commande (CLI). La commande sera affichée après la configuration de l'importation.",
+    "silentMode": "La majorité des scripts après sauvegarde seront ignorés et les notes de flux ne seront pas créées. L'importation sera plus rapide."
+  },
+  "links": {
+    "errors": "Erreurs"
+  },
+  "params": {
+    "phoneNumberCountry": "Indicatif téléphonique national"
   }
 }
