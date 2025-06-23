@@ -407,26 +407,23 @@ class LdapLogin implements Login
     }
 
     /**
-     * Find LDAP user DN by his username.
+     * Find LDAP user DN by thier username.
      *
      * @throws LdapException
      */
     private function findLdapUserDnByUsername(string $username): ?string
     {
         $ldapClient = $this->getLdapClient();
-
         $options = $this->utils->getOptions();
 
-        $loginFilterString = '';
+        $filterString = !empty($options['userLoginFilter']) ?
+            $this->convertToFilterFormat($options['userLoginFilter']) : '';
 
-        if (!empty($options['userLoginFilter'])) {
-            $loginFilterString = $this->convertToFilterFormat($options['userLoginFilter']);
-        }
+        $objectClass = $options['userObjectClass'];
+        $attribute = $options['userNameAttribute'];
+        $usernameEscaped = $this->escapeUsernameFilter($username);
 
-        $searchString =
-            '(&(objectClass=' . $options['userObjectClass'] . ')' .
-            '(' . $options['userNameAttribute'] . '=' . $username . ')' .
-            $loginFilterString . ')';
+        $searchString = "(&(objectClass=$objectClass)($attribute=$usernameEscaped)$filterString)";
 
         /** @var array<int, array{dn: string}> $result */
         /** @noinspection PhpRedundantOptionalArgumentInspection */
@@ -435,10 +432,23 @@ class LdapLogin implements Login
         $this->log->debug("LDAP: user search string: {string}.", ['string' => $searchString]);
 
         foreach ($result as $item) {
-            return $item["dn"];
+            return $item['dn'];
         }
 
         return null;
+    }
+
+    private function escapeUsernameFilter(string $username): string
+    {
+        $map = [
+            '\\' => '\\5c',
+            '*' => '\\2a',
+            '(' => '\\28',
+            ')' => '\\29',
+            "\x00" => '\\00',
+        ];
+
+        return strtr($username, $map);
     }
 
     /**
