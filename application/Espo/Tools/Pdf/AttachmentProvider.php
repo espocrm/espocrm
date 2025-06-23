@@ -29,56 +29,17 @@
 
 namespace Espo\Tools\Pdf;
 
-use stdClass;
+use Espo\ORM\Entity;
 
-class Data
+/**
+ * @template TEntity of Entity
+ * @since 9.2.0
+ */
+interface AttachmentProvider
 {
-    /** @var array<string, mixed> */
-    private $additionalTemplateData = [];
-    /** @var AttachmentWrapper[] */
-    private $attachments = [];
-
-    public function getAdditionalTemplateData(): stdClass
-    {
-        return (object) $this->additionalTemplateData;
-    }
-
-    public function withAdditionalTemplateData(stdClass $additionalTemplateData): self
-    {
-        $obj = clone $this;
-
-        $obj->additionalTemplateData = array_merge(
-            $obj->additionalTemplateData,
-            get_object_vars($additionalTemplateData)
-        );
-
-        return $obj;
-    }
-
     /**
-     * @param AttachmentWrapper[] $attachments
-     */
-    public function withAttachmentsAdded(array $attachments): self
-    {
-        $obj = clone $this;
-
-        foreach ($attachments as $attachment) {
-            $obj->attachments[] = $attachment;
-        }
-
-        return $obj;
-    }
-
-    /**
+     * @param TEntity $entity
      * @return AttachmentWrapper[]
      */
-    public function getAttachments(): array
-    {
-        return $this->attachments;
-    }
-
-    public static function create(): self
-    {
-        return new self();
-    }
+    public function get(Entity $entity, Params $params): array;
 }

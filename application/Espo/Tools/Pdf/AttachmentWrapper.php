@@ -29,56 +29,25 @@
 
 namespace Espo\Tools\Pdf;
 
-use stdClass;
+use Espo\Entities\Attachment;
 
-class Data
+/**
+ * @since 9.2.0
+ */
+readonly class AttachmentWrapper
 {
-    /** @var array<string, mixed> */
-    private $additionalTemplateData = [];
-    /** @var AttachmentWrapper[] */
-    private $attachments = [];
+    public function __construct(
+        private Attachment $attachment,
+        private ?string $description = null,
+    ) {}
 
-    public function getAdditionalTemplateData(): stdClass
+    public function getAttachment(): Attachment
     {
-        return (object) $this->additionalTemplateData;
+        return $this->attachment;
     }
 
-    public function withAdditionalTemplateData(stdClass $additionalTemplateData): self
+    public function getDescription(): ?string
     {
-        $obj = clone $this;
-
-        $obj->additionalTemplateData = array_merge(
-            $obj->additionalTemplateData,
-            get_object_vars($additionalTemplateData)
-        );
-
-        return $obj;
-    }
-
-    /**
-     * @param AttachmentWrapper[] $attachments
-     */
-    public function withAttachmentsAdded(array $attachments): self
-    {
-        $obj = clone $this;
-
-        foreach ($attachments as $attachment) {
-            $obj->attachments[] = $attachment;
-        }
-
-        return $obj;
-    }
-
-    /**
-     * @return AttachmentWrapper[]
-     */
-    public function getAttachments(): array
-    {
-        return $this->attachments;
-    }
-
-    public static function create(): self
-    {
-        return new self();
+        return $this->description;
     }
 }

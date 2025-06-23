@@ -35,16 +35,29 @@ namespace Espo\Tools\Pdf;
 class Params
 {
     private bool $applyAcl = false;
+    private bool $pdfA = false;
 
     public function applyAcl(): bool
     {
         return $this->applyAcl;
     }
 
+    public function isPdfA(): bool
+    {
+        return $this->pdfA;
+    }
+
+    public function withPdfA(bool $pdfA = true): self
+    {
+        $obj = clone $this;
+        $obj->pdfA = $pdfA;
+
+        return $obj;
+    }
+
     public function withAcl(bool $applyAcl = true): self
     {
         $obj = clone $this;
-
         $obj->applyAcl = $applyAcl;
 
         return $obj;
