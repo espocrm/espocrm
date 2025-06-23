@@ -345,10 +345,9 @@ class LdapLogin implements Login
     private function createUser(array $userData, bool $isPortal = false): ?User
     {
         $this->log->info("LDAP: Creating new user.");
+        $this->log->debug("LDAP: user data: {userData}", ['userData' => print_r($userData, true)]);
 
         $data = [];
-
-        $this->log->debug("LDAP: user data: {userData}", ['userData' => print_r($userData, true)]);
 
         $ldapFields = $this->loadFields('ldap');
 
@@ -366,21 +365,20 @@ class LdapLogin implements Login
         }
 
         if ($isPortal) {
-            $userFields = $this->loadFields('portalUser');
+            $userAttributes = $this->loadFields('portalUser');
 
-            $userFields['type'] = 'portal';
+            $userAttributes['type'] = User::TYPE_PORTAL;
         } else {
-            $userFields = $this->loadFields('user');
+            $userAttributes = $this->loadFields('user');
         }
 
-        foreach ($userFields as $fieldName => $fieldValue) {
-            $data[$fieldName] = $fieldValue;
+        foreach ($userAttributes as $key => $value) {
+            $data[$key] = $value;
         }
 
-        /** @var User $user */
-        $user = $this->entityManager->getNewEntity(User::ENTITY_TYPE);
+        $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getNew();
 
-        $user->set($data);
+        $user->setMultiple($data);
 
         $this->entityManager->saveEntity($user, [
             // Prevent `user` service being loaded by hooks.
@@ -388,10 +386,7 @@ class LdapLogin implements Login
             SaveOption::KEEP_NEW => true,
         ]);
 
-        $saverParams = SaverParams::create()
-            ->withRawOptions([
-                'skipLinkMultipleHooks' => true,
-            ]);
+        $saverParams = SaverParams::create()->withRawOptions(['skipLinkMultipleHooks' => true]);
 
         $this->linkMultipleSaver->process($user, Field::TEAMS, $saverParams);
         $this->linkMultipleSaver->process($user, 'portals', $saverParams);
@@ -402,12 +397,11 @@ class LdapLogin implements Login
         $user->setAsNotNew();
         $user->updateFetchedValues();
 
-        /** @var ?User */
-        return $this->entityManager->getEntityById(User::ENTITY_TYPE, $user->getId());
+        return $this->entityManager->getRDBRepositoryByClass(User::class)->getById($user->getId());
     }
 
     /**
-     * Find LDAP user DN by thier username.
+     * Find LDAP user DN by their username.
      *
      * @throws LdapException
      */
