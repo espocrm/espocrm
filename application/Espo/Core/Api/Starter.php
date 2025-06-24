@@ -35,7 +35,6 @@ use Espo\Core\Utils\Route as RouteUtil;
 use Espo\Core\Utils\Log;
 
 use Psr\Container\ContainerInterface;
-use Psr\Http\Server\RequestHandlerInterface as Psr7Handler;
 use Slim\App as SlimApp;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Factory\AppFactory as SlimAppFactory;
