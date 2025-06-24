@@ -34,11 +34,11 @@ use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Core\Utils\Route as RouteUtil;
 use Espo\Core\Utils\Log;
 
-use Psr\Container\ContainerInterface;
 use Slim\App as SlimApp;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Factory\AppFactory as SlimAppFactory;
 
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Psr7Response;
 use Psr\Http\Message\ServerRequestInterface as Psr7Request;
 
@@ -134,6 +134,9 @@ class Starter
         }
     }
 
+    /**
+     * @param SlimApp<ContainerInterface|null> $slim
+     */
     private function processError(SlimApp $slim): void
     {
         $slim->add(function (Psr7Request $request): Psr7Response {
