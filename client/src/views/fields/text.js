@@ -119,7 +119,7 @@ class TextFieldView extends BaseFieldView {
     previewButtonElement
 
     /**
-     * @private
+     * @protected
      * @type {HTMLTextAreaElement}
      */
     textAreaElement
@@ -151,6 +151,8 @@ class TextFieldView extends BaseFieldView {
 
             if (this.textAreaElement) {
                 this.textAreaElement.removeEventListener('keydown', this.onKeyDownMarkdownBind);
+
+                this.textAreaElement = undefined;
             }
         });
 
@@ -354,6 +356,12 @@ class TextFieldView extends BaseFieldView {
     }
 
     afterRender() {
+        this.textAreaElement = undefined;
+
+        if (this.mode === this.MODE_EDIT) {
+            this.textAreaElement = this.element ? this.element.querySelector('textarea') : undefined;
+        }
+
         super.afterRender();
 
         if (this.isReadMode()) {
@@ -396,8 +404,6 @@ class TextFieldView extends BaseFieldView {
 
             this.previewButtonElement = this.element ?
                 this.element.querySelector('a[data-action="previewText"]') : undefined;
-
-            this.textAreaElement = this.element ? this.element.querySelector('textarea') : undefined;
 
             const textAreaElement = this.textAreaElement
 

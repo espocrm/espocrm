@@ -59,11 +59,6 @@
         "suppressAmd": true
     },
     {
-        "src": "node_modules/jquery-textcomplete/dist/jquery.textcomplete.js",
-        "bundle": true,
-        "amdId": "jquery-textcomplete"
-    },
-    {
         "src": "node_modules/bootstrap/dist/js/bootstrap-for-espo.js",
         "bundle": true
     },
@@ -134,6 +129,18 @@
         "bundle": true,
         "amdId": "@shopify/draggable",
         "prepareCommand": "npx rollup node_modules/@shopify/draggable/build/esm/index.mjs --format amd --file client/lib/original/shopify-draggable.js --amd.id @shopify/draggable"
+    },
+    {
+        "src": "client/lib/original/textcomplete-core.js",
+        "bundle": true,
+        "amdId": "@textcomplete/core",
+        "prepareCommand": "npx rollup node_modules/@textcomplete/core/dist/index.js --format amd --file client/lib/original/textcomplete-core.js --amd.id @textcomplete/core --plugin @rollup/plugin-node-resolve --plugin @rollup/plugin-commonjs"
+    },
+    {
+        "src": "client/lib/original/textcomplete-textarea.js",
+        "bundle": true,
+        "amdId": "@textcomplete/textarea",
+        "prepareCommand": "npx rollup node_modules/@textcomplete/textarea/dist/index.js --format amd --file client/lib/original/textcomplete-textarea.js --amd.id @textcomplete/textarea --plugin @rollup/plugin-node-resolve --plugin @rollup/plugin-commonjs --external @textcomplete/core"
     },
     {
         "src": "node_modules/summernote/dist/summernote.js",
