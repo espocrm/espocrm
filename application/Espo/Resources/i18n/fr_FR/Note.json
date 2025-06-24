@@ -30,6 +30,13 @@
       "Unrelate": "Détacher",
       "EmailReceived": "eMail reçu",
       "EmailSent": "eMail envoyé\n"
+    },
+    "targetType": {
+      "self": "Autonome",
+      "users": "Utilisateurs",
+      "teams": "Équipes",
+      "all": "Tous les utilisateurs internes",
+      "portals": "Utilisateurs du portail"
     }
   },
   "links": {
@@ -43,6 +50,11 @@
     "View Activity": "Afficher l'activité",
     "Pin": "Epingler",
     "Unpin": "Désépingler",
-    "Pinned": "Epinglés"
+    "Pinned": "Epinglés",
+    "Quote Reply": "Citation Réponse",
+    "View Attachments": "Voir les pièces jointes"
+  },
+  "otherFields": {
+    "to": "À"
   }
 }

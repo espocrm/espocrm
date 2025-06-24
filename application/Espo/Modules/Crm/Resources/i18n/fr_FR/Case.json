@@ -8,7 +8,8 @@
     "lead": "Prospect",
     "attachments": "Les pièces jointes",
     "inboundEmail": "Compte de messagerie de groupe",
-    "originalEmail": "\n"
+    "originalEmail": "\n",
+    "isInternal": "Caché du portail"
   },
   "links": {
     "account": "Compte",

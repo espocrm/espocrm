@@ -12,7 +12,8 @@
     "width": "Largeur",
     "noteText": "texte de la note",
     "noteStyle": "Style de la note",
-    "isMuted": "Couleur atténuée"
+    "isMuted": "Couleur atténuée",
+    "sticked": "Coller en haut"
   },
   "options": {
     "align": {

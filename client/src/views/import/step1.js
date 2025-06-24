@@ -315,7 +315,7 @@ class Step1ImportView extends View {
             name: 'timezone',
             mode: 'edit',
             params: {
-                options: this.getMetadata().get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options']),
+                options:  Espo.Utils.clone(this.getHelper().getAppParam('timeZoneList')) || [],
             },
         });
 

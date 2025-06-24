@@ -12,7 +12,8 @@
     "body": "Corps de texte",
     "categories": "Catégories",
     "language": "Langue",
-    "portals": "Portails"
+    "portals": "Portails",
+    "bodyPlain": "Corps Plaine"
   },
   "links": {
     "cases": "Tickets",

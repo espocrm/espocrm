@@ -48,7 +48,10 @@
     "WebhookQueueItem": "Élément de la file d'attente du webhook",
     "AppLogRecord": "Enregistrement du journal d'application",
     "WorkingTimeRange": "Exception au temps de travail",
-    "AddressCountry": "Adresse Pays"
+    "AddressCountry": "Adresse Pays",
+    "AppSecret": "Secret d'application",
+    "OAuthProvider": "Prestataire OAuth",
+    "OAuthAccount": "Compte OAuth"
   },
   "scopeNamesPlural": {
     "User": "Utilisateurs",
@@ -93,7 +96,10 @@
     "WebhookQueueItem": "Éléments de la file d'attente du webhook",
     "AppLogRecord": "Journal de l'application",
     "WorkingTimeRange": "Exceptions au temps de travail",
-    "AddressCountry": "Adresse Pays"
+    "AddressCountry": "Adresse Pays",
+    "AppSecret": "Secrets d'application",
+    "OAuthProvider": "Prestataires OAuth",
+    "OAuthAccount": "Comptes OAuth"
   },
   "labels": {
     "Misc": "Divers",
@@ -267,9 +273,17 @@
     "Column Resize": "Redimensionner la colonne",
     "General": "Général",
     "Send": "Envoyer",
+    "Timeout": "Délai d'attente",
+    "No internet": "Pas d'internet",
     "Scheduled": "Planifié",
     "Now": "Maintenant",
+    "Expanded": "Étendue",
+    "Collapsed": "Effondré",
+    "Top Level": "Haut Niveau",
     "Fields": "Champs",
+    "View User Access": "Voir l'accès de l'utilisateur",
+    "Reacted": "Réagit",
+    "Reaction Removed": "Réaction supprimée",
     "Reactions": "Réactions"
   },
   "messages": {
@@ -363,7 +377,10 @@
     "duplicateConflict": "Un enregistrement existe déjà.",
     "confirmMassUpdate": "Êtes-vous sûr de vouloir modifier tous les enregistrements sélectionnés ?",
     "cannotRemoveCategoryWithChildCategory": "Vous ne pouvez pas supprimer une catégorie ayant des sous-catégories",
-    "cannotRemoveNotEmptyCategory": "Impossible de supprimer une catégorie qui contient des éléments"
+    "cannotRemoveNotEmptyCategory": "Impossible de supprimer une catégorie qui contient des éléments",
+    "arrayInputNotEmpty": "L'element est saisi mais n'est pas ajouté",
+    "error403": "Vous n'avez pas accès à cette zone.",
+    "sameRecordIsAlreadyBeingEdited": "L'enregistrement est déjà en cours d'édition."
   },
   "boolFilters": {
     "onlyMy": "Perso",
@@ -424,7 +441,8 @@
     "phoneNumberIsInvalid": "Numéro de téléphone invalide",
     "users": "Utilisateurs",
     "childList": "Liste enfant",
-    "collaborators": "Collaborateurs"
+    "collaborators": "Collaborateurs",
+    "streamUpdatedAt": "Flux mis à jour à"
   },
   "links": {
     "assignedUser": "Utilisateur assigné",
@@ -435,6 +453,7 @@
     "teams": "Équipes",
     "users": "Utilisateurs",
     "children": "Enfants",
+    "assignedUsers": "Utilisateurs Assignés",
     "collaborators": "Collaborateurs"
   },
   "dashlets": {
@@ -446,7 +465,10 @@
   "notificationMessages": {
     "assign": "{entityType} {entity} vous a été assigné",
     "emailReceived": "Email reçu de {from}",
-    "entityRemoved": "{user} a supprimé {entityType} {entity}"
+    "entityRemoved": "{user} a supprimé {entityType} {entity}",
+    "emailInbox": "{user} a ajouté l'email {entity} à votre boîte de réception",
+    "userPostReaction": "{user} a réagi à votre {post}",
+    "userPostInParentReaction": "{user} a réagi à votre {post} dans {entityType} {entity}"
   },
   "streamMessages": {
     "post": "{user} a posté sur {entityType} {entity}",
@@ -502,7 +524,12 @@
     "assignThisSelf": "{user} a mis {entityType} en auto-attribution",
     "assignSelf": "{user} a mis {entityType} {entity} en auto-attribution",
     "unrelate": "{user} a dissocié {relatedEntityType} {relatedEntity} de {entityType} {entity}",
-    "unrelateThis": "{user} a dissocié {relatedEntityType} {relatedEntity} de cette {entityType}"
+    "unrelateThis": "{user} a dissocié {relatedEntityType} {relatedEntity} de cette {entityType}",
+    "assignMultiAdd": "{user} a assigné {entity} à {assignee}",
+    "assignMultiRemove": "{user} a désaffecté {entity} de {removedAssignee}",
+    "assignMultiAddRemove": "{user} a attribué {entity} à {assignee} et l'a désattribué à {removedAssignee}",
+    "assignMultiRemoveThis": "{user} a retiré ce {entityType} de {removedAssignee}",
+    "assignMultiAddRemoveThis": "{user} a attribué ce {entityType} à {assignee} et l'a retiré de {removedAssignee}"
   },
   "lists": {
     "monthNames": [
@@ -725,6 +752,7 @@
         "setTransparent": "Rendre transparent",
         "reset": "Réinitialiser",
         "resetToDefault": "Remettre à zéro",
+        "background": "Couleur du fond",
         "foreground": "Couleur de police"
       },
       "shortcut": {
@@ -817,6 +845,9 @@
   "detailViewModes": {
     "detail": "Détail"
   },
+  "strings": {
+    "yesterdayShort": "Hier"
+  },
   "reactions": {
     "Smile": "Sourire",
     "Surprise": "Surpris",
@@ -833,5 +864,8 @@
     "edit": "Modifier",
     "delete": "Supprimer",
     "stream": "Flux"
+  },
+  "tabs": {
+    "Stream": "Flux"
   }
 }

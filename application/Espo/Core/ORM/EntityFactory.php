@@ -78,6 +78,14 @@ class EntityFactory implements EntityFactoryInterface
 
     public function create(string $entityType): Entity
     {
+        return $this->createInternal($entityType);
+    }
+
+    /**
+     * @param ?array<string, mixed> $attributeDefs
+     */
+    private function createInternal(string $entityType, ?array $attributeDefs = null): Entity
+    {
         $className = $this->getClassName($entityType);
 
         if (!$this->entityManager) {
@@ -88,6 +96,10 @@ class EntityFactory implements EntityFactoryInterface
 
         if (is_null($defs)) {
             throw new RuntimeException("Entity '$entityType' is not defined in metadata.");
+        }
+
+        if ($attributeDefs) {
+            $defs['attributes'] = array_merge($defs['attributes'] ?? [], $attributeDefs);
         }
 
         $relations = $this->injectableFactory->createWithBinding(
@@ -121,6 +133,16 @@ class EntityFactory implements EntityFactoryInterface
         $this->relationsMap->set($entity, $relations);
 
         return $entity;
+    }
+
+    /**
+     * @param array<string, mixed> $attributeDefs
+     * @internal
+     * @noinspection PhpUnused
+     */
+    public function createWithAdditionalAttributes(string $entityType, array $attributeDefs): Entity
+    {
+        return $this->createInternal($entityType, $attributeDefs);
     }
 
     /**

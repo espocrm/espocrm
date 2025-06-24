@@ -1,1 +1,23 @@
-{}
+{
+  "labels": {
+    "Create OAuthProvider": "Créer un prestataire OAuth"
+  },
+  "fields": {
+    "isActive": "Est actif",
+    "clientId": "ID Client",
+    "clientSecret": "Secret Client",
+    "authorizationEndpoint": "Point final d'autorisation",
+    "tokenEndpoint": "Point final du jeton",
+    "authorizationRedirectUri": "URI de redirection d'autorisation",
+    "scopeSeparator": "Séparateur Scope",
+    "hasAccessToken": "A un jeton d'accès",
+    "authorizationPrompt": "Demande d'autorisation",
+    "authorizationParams": "Paramètres d'autorisation"
+  },
+  "links": {
+    "accounts": "Comptes"
+  },
+  "tooltips": {
+    "authorizationParams": "Paramètres de requête supplémentaires à envoyer au point final d'autorisation. Spécifiés au format JSON."
+  }
+}

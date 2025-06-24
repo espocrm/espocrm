@@ -18,7 +18,8 @@
     "layoutSet": "Agencements des champs",
     "authenticationProvider": "Prestataire d'authentification",
     "authTokenLifetime": "Durée de vie du jeton d'authentification (heures)",
-    "authTokenMaxIdleTime": "Jeton d'authentification Temps d'inactivité maximal (heures)"
+    "authTokenMaxIdleTime": "Jeton d'authentification Temps d'inactivité maximal (heures)",
+    "applicationName": "Nom de l'application"
   },
   "links": {
     "users": "Utilisateurs",

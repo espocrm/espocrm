@@ -8,6 +8,7 @@
     "multilineCode": "code multiligne",
     "strongText": "texte fort",
     "emphasizedText": "texte souligné",
-    "deletedText": "texte supprimé"
+    "deletedText": "texte supprimé",
+    "link": "texte du lien"
   }
 }

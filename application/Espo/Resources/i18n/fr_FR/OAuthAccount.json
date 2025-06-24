@@ -1,1 +1,15 @@
-{}
+{
+  "labels": {
+    "Create OAuthAccount": "Créer un compte OAuth",
+    "Connection": "Connexion"
+  },
+  "fields": {
+    "provider": "Prestataire",
+    "hasAccessToken": "A un jeton d'accès",
+    "user": "Utilisateur",
+    "providerIsActive": "Le prestataire est actif"
+  },
+  "links": {
+    "provider": "Prestataire"
+  }
+}

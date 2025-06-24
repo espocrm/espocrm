@@ -14,7 +14,7 @@
     "stream": "Flux",
     "label": "Libellé",
     "linkType": "Type de lien",
-    "entityForeign": "Fonctionnalité externe",
+    "entityForeign": "Entité Etrangère",
     "linkForeign": "Lien externe",
     "link": "Lien",
     "labelForeign": "Libellé externe",
@@ -43,8 +43,13 @@
     "selectFilter": "Sélectionner un Filtre",
     "primaryFilters": "Filtres Primaires",
     "stars": "Etoiles",
+    "preserveAuditLog": "Préserver le journal d'audit",
     "assignedUsers": "Plusieurs utilisateurs assignés",
-    "collaborators": "Collaborateurs"
+    "collaborators": "Collaborateurs",
+    "aclContactLink": "Lien de contact ACL",
+    "aclAccountLink": "Lien du compte ACL",
+    "sortBy": "Champ d'ordre par défaut",
+    "sortDirection": "Direction de l'ordre par défaut"
   },
   "options": {
     "type": {
@@ -98,7 +103,12 @@
     "updateDuplicateCheck": "Vérifier la présence de doublons lors de la mise à jour d'un enregistrement.",
     "linkSelectFilter": "Un filtre primaire à appliquer par défaut lors de la sélection d'un enregistrement.",
     "stars": "La possibilité d'attribuer une étoile à un enregistrement. Les étoiles peuvent être utilisées par les utilisateurs pour mettre des enregistrements en favoris.",
+    "aclContactLink": "Le lien avec le contact à utiliser lors de l'application du contrôle d'accès pour les utilisateurs du portail.",
+    "aclAccountLink": "Le lien avec le compte à utiliser pour appliquer le contrôle d'accès aux utilisateurs du portail.",
+    "collaborators": "La possibilité de partager des enregistrements avec des utilisateurs spécifiques.",
+    "assignedUsers": "La possibilité d'affecter plusieurs utilisateurs à un enregistrement.\n\nNotez qu'après l'activation du paramètre, les utilisateurs assignés existants ne seront pas transférés dans le nouveau champ *Utilisateurs assignés*.",
     "preserveAuditLog": "Désactive le nettoyage du journal d’audit. Ce paramètre s’applique uniquement si le Flux est désactivé, car quand il est activé, les enregistrements d’audit ne sont pas supprimés.",
+    "stream": "Si l'entité dispose du flux.",
     "linkParamReadOnly": "Un lien en lecture seule ne peut pas être modifié via les requêtes API link et unlink. Il est impossible de lier ou délier des enregistrements via le panneau de relations. Cependant, il reste possible de modifier ces liens via les champs link et link-multiple."
   }
 }

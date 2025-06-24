@@ -13,7 +13,10 @@
     "dateFilter": "Filtre de date",
     "skipOwn": "Ne pas montrer ses propres dossiers",
     "text": "Texte",
-    "folder": "Dossier"
+    "folder": "Dossier",
+    "includeShared": "Inclure Partagés",
+    "sortBy": "Commande Par",
+    "sortDirection": "Direction de l'ordre"
   },
   "options": {
     "mode": {
@@ -34,5 +37,9 @@
   },
   "tooltips": {
     "skipOwn": "Les actions effectuées par votre compte d'utilisateur ne seront pas affichées."
+  },
+  "otherFields": {
+    "soft": "Couleur Douce",
+    "small": "Petite Police"
   }
 }

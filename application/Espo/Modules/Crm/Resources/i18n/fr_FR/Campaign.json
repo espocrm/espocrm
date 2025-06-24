@@ -40,7 +40,8 @@
   },
   "options": {
     "type": {
-      "Television": "Télévision"
+      "Television": "Télévision",
+      "Informational Email": "Email d'information"
     },
     "status": {
       "Active": "Actif",
@@ -67,7 +68,8 @@
   },
   "messages": {
     "unsubscribed": "Vous avez été désinscrit de notre liste d'envoi",
-    "subscribedAgain": "Vous vous êtes réinscrit."
+    "subscribedAgain": "Vous vous êtes réinscrit.",
+    "cannotChangeType": "Impossible de modifier le type."
   },
   "tooltips": {
     "targetLists": "Cibles devant recevoir les messages",

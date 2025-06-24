@@ -2,7 +2,8 @@
   "labels": {
     "Dynamic Logic": "Logique dynamique",
     "Name": "Nom",
-    "Label": "Étiquette"
+    "Label": "Étiquette",
+    "View Details": "Voir Détails"
   },
   "options": {
     "dateDefault": {
@@ -49,7 +50,8 @@
     "optionsReference": "Réutiliser les options d'un autre champ.",
     "readOnlyAfterCreate": "La valeur du champ peut être spécifiée lors de la création d'un nouvel enregistrement. Après cela, le champ passe en lecture seule. Il peut toujours être calculé par formule.",
     "linkReadOnly": "La valeur du champ ne peut pas être spécifiée par l'utilisateur. Mais peut être calculé par formule.\n\nCela désactivera également la possibilité de créer un enregistrement associé à partir des panneaux de relations.",
-    "relateOnImport": "Lors de l'importation avec ce champ, un enregistrement sera automatiquement associé à un enregistrement étranger correspondant. Utilisez cette fonctionnalité uniquement si le champ étranger est considéré comme unique."
+    "relateOnImport": "Lors de l'importation avec ce champ, un enregistrement sera automatiquement associé à un enregistrement étranger correspondant. Utilisez cette fonctionnalité uniquement si le champ étranger est considéré comme unique.",
+    "preview": "Affiche le bouton de prévisualisation. Applicable si l'option Markdown est activée."
   },
   "fieldParts": {
     "address": {
@@ -104,6 +106,11 @@
     "fieldNameIsNotAllowed": "Le nom '{field}' n'est pas autorisé.",
     "fieldAlreadyExists": "'{field}' existe déjà dans '{entityType}'.",
     "linkWithSameNameAlreadyExists": "Le lien portant le nom '{field}' existe déjà dans '{entityType}'.",
-    "confirmRemove": "Êtes-vous sûr de vouloir supprimer le champ *{field}* ?\n\nLa suppression de champ ne supprime pas les données de la base de données. Les données de la base de données seront supprimées si vous exécutez une reconstruction lourde."
+    "confirmRemove": "Êtes-vous sûr de vouloir supprimer le champ *{field}* ?\n\nLa suppression de champ ne supprime pas les données de la base de données. Les données de la base de données seront supprimées si vous exécutez une reconstruction lourde.",
+    "fieldCreatedAddToLayouts": "a été créé. Vous pouvez maintenant l'ajouter à [layouts]({link})",
+    "namingFieldLinkConflict": "Le nom '{field}' est en conflit avec le lien."
+  },
+  "otherFields": {
+    "attributes": "Attributs"
   }
 }

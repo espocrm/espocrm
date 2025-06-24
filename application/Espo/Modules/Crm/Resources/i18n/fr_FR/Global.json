@@ -15,7 +15,8 @@
     "MassEmail": "Emails groupé",
     "Activities": "Activités",
     "KnowledgeBaseArticle": "Article de la base de connaissance",
-    "KnowledgeBaseCategory": "Catégorie de la base de connaissance"
+    "KnowledgeBaseCategory": "Catégorie de la base de connaissance",
+    "TargetListCategory": "Catégorie de liste cible"
   },
   "scopeNamesPlural": {
     "Account": "Comptes",
@@ -35,7 +36,8 @@
     "Activities": "Activités",
     "KnowledgeBaseArticle": "Base de connaissance",
     "KnowledgeBaseCategory": "Catégories de la base de connaissance",
-    "CampaignLogRecord": "Logs"
+    "CampaignLogRecord": "Logs",
+    "TargetListCategory": "Catégories de liste cible"
   },
   "dashlets": {
     "Leads": "Mes prospects",

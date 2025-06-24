@@ -345,10 +345,9 @@ class LdapLogin implements Login
     private function createUser(array $userData, bool $isPortal = false): ?User
     {
         $this->log->info("LDAP: Creating new user.");
+        $this->log->debug("LDAP: user data: {userData}", ['userData' => print_r($userData, true)]);
 
         $data = [];
-
-        $this->log->debug("LDAP: user data: {userData}", ['userData' => print_r($userData, true)]);
 
         $ldapFields = $this->loadFields('ldap');
 
@@ -366,21 +365,20 @@ class LdapLogin implements Login
         }
 
         if ($isPortal) {
-            $userFields = $this->loadFields('portalUser');
+            $userAttributes = $this->loadFields('portalUser');
 
-            $userFields['type'] = 'portal';
+            $userAttributes['type'] = User::TYPE_PORTAL;
         } else {
-            $userFields = $this->loadFields('user');
+            $userAttributes = $this->loadFields('user');
         }
 
-        foreach ($userFields as $fieldName => $fieldValue) {
-            $data[$fieldName] = $fieldValue;
+        foreach ($userAttributes as $key => $value) {
+            $data[$key] = $value;
         }
 
-        /** @var User $user */
-        $user = $this->entityManager->getNewEntity(User::ENTITY_TYPE);
+        $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getNew();
 
-        $user->set($data);
+        $user->setMultiple($data);
 
         $this->entityManager->saveEntity($user, [
             // Prevent `user` service being loaded by hooks.
@@ -388,10 +386,7 @@ class LdapLogin implements Login
             SaveOption::KEEP_NEW => true,
         ]);
 
-        $saverParams = SaverParams::create()
-            ->withRawOptions([
-                'skipLinkMultipleHooks' => true,
-            ]);
+        $saverParams = SaverParams::create()->withRawOptions(['skipLinkMultipleHooks' => true]);
 
         $this->linkMultipleSaver->process($user, Field::TEAMS, $saverParams);
         $this->linkMultipleSaver->process($user, 'portals', $saverParams);
@@ -402,31 +397,27 @@ class LdapLogin implements Login
         $user->setAsNotNew();
         $user->updateFetchedValues();
 
-        /** @var ?User */
-        return $this->entityManager->getEntityById(User::ENTITY_TYPE, $user->getId());
+        return $this->entityManager->getRDBRepositoryByClass(User::class)->getById($user->getId());
     }
 
     /**
-     * Find LDAP user DN by his username.
+     * Find LDAP user DN by their username.
      *
      * @throws LdapException
      */
     private function findLdapUserDnByUsername(string $username): ?string
     {
         $ldapClient = $this->getLdapClient();
-
         $options = $this->utils->getOptions();
 
-        $loginFilterString = '';
+        $filterString = !empty($options['userLoginFilter']) ?
+            $this->convertToFilterFormat($options['userLoginFilter']) : '';
 
-        if (!empty($options['userLoginFilter'])) {
-            $loginFilterString = $this->convertToFilterFormat($options['userLoginFilter']);
-        }
+        $objectClass = $options['userObjectClass'];
+        $attribute = $options['userNameAttribute'];
+        $usernameEscaped = $this->escapeUsernameFilter($username);
 
-        $searchString =
-            '(&(objectClass=' . $options['userObjectClass'] . ')' .
-            '(' . $options['userNameAttribute'] . '=' . $username . ')' .
-            $loginFilterString . ')';
+        $searchString = "(&(objectClass=$objectClass)($attribute=$usernameEscaped)$filterString)";
 
         /** @var array<int, array{dn: string}> $result */
         /** @noinspection PhpRedundantOptionalArgumentInspection */
@@ -435,10 +426,23 @@ class LdapLogin implements Login
         $this->log->debug("LDAP: user search string: {string}.", ['string' => $searchString]);
 
         foreach ($result as $item) {
-            return $item["dn"];
+            return $item['dn'];
         }
 
         return null;
+    }
+
+    private function escapeUsernameFilter(string $username): string
+    {
+        $map = [
+            '\\' => '\\5c',
+            '*' => '\\2a',
+            '(' => '\\28',
+            ')' => '\\29',
+            "\x00" => '\\00',
+        ];
+
+        return strtr($username, $map);
     }
 
     /**

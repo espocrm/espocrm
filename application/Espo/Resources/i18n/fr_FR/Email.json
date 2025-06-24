@@ -43,7 +43,11 @@
     "groupFolder": "Dossier du groupe",
     "isUsersSent": "Est envoyé par l'utilisateur",
     "inArchive": "En archive",
-    "sendAt": "Envoyer à"
+    "groupStatusFolder": "Dossier D'état Du Groupe",
+    "sendAt": "Envoyer à",
+    "toEmailAddresses": "Vers les adresses e-mail",
+    "bccEmailAddresses": "BBC les adresses e-mail",
+    "replyToEmailAddresses": "Adresses e-mail de réponse"
   },
   "links": {
     "replied": "Répondu",
@@ -77,7 +81,7 @@
     "Reply": "Répondre",
     "Reply to All": "Répondre à tous",
     "Forward": "Transférer",
-    "Original message": "Message d'origine",
+    "Original message": "Message Original",
     "Forwarded message": "Message transféré",
     "Email Accounts": "Comptes emails",
     "Inbound Emails": "Comptes email communs",
@@ -121,6 +125,8 @@
     "unknownError": "Erreur inconnue.",
     "recipientAddressRejected": "L'adresse du destinataire a été rejetée.",
     "alreadyImported": "Le [email]({link}) existe déjà dans le système.",
+    "couldNotSentScheduledEmail": "Impossible d'envoyer le [email]({link}) programmé",
+    "notEditAccess": "Pas d'accès au courrier électronique pour l'édition.",
     "groupFolderNoAccess": "Pas accès au dossier de groupe",
     "groupMoveOutNoEditAccess": "Impossible de quitter le dossier de groupe. Droit manquant.",
     "groupMoveToNoEditAccess": "Impossible de déplacer vers le dossier de groupe. Droit manquant.",
@@ -144,7 +150,8 @@
     "retrieveFromTrash": "Récupérer de la corbeille"
   },
   "strings": {
-    "sendingFailed": "Échec d'envoi du courriel"
+    "sendingFailed": "Échec d'envoi du courriel",
+    "group": "Groupe"
   },
   "otherFields": {
     "file": "Fichier"

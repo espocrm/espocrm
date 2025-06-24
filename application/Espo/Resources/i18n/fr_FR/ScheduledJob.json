@@ -16,7 +16,8 @@
       "CheckEmailAccounts": "Vérifier ses comptes emails personnels",
       "SendEmailReminders": "Envoyer des notifications par email",
       "CheckNewVersion": "Vérifier la nouvelle version",
-      "ProcessWebhookQueue": "Traiter la file d'attente Webhook"
+      "ProcessWebhookQueue": "Traiter la file d'attente Webhook",
+      "SendScheduledEmails": "Envoyer des e-mails programmés"
     },
     "cronSetup": {
       "linux": "Note: Ajoutez cette ligne dans les tâches planifiées afin de l'exécuter :",

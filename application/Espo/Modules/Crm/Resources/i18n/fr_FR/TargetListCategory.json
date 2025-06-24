@@ -1,1 +1,8 @@
-{}
+{
+  "labels": {
+    "Create TargetListCategory": "Créer une catégorie"
+  },
+  "links": {
+    "targetLists": "Listes Cibles"
+  }
+}

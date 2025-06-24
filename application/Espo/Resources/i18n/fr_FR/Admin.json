@@ -79,7 +79,9 @@
     "Authentication Providers": "Prestataires d'authentification",
     "Setup": "Installation",
     "App Log": "Journal de l'application",
-    "Address Countries": "Adresse Pays"
+    "Address Countries": "Adresse Pays",
+    "App Secrets": "Secrets d'application",
+    "OAuth Providers": "Prestataires OAuth"
   },
   "layouts": {
     "list": "Liste",
@@ -154,13 +156,13 @@
     "previewSize": "Prévisualiser la taille",
     "defaultType": "Type par défaut",
     "seeMoreDisabled": "Désactiver l'abréviation de texte",
-    "entityList": "Liste des Fonctionnalités",
+    "entityList": "Liste des entités",
     "isSorted": "Trié (alphabétique)",
     "audited": "Audité",
     "trim": "Rogner",
     "height": "Hauteur (px)",
     "minHeight": "Hauteur min. (px)",
-    "provider": "Fournisseur",
+    "provider": "Prestataire",
     "typeList": "Liste de types",
     "lengthOfCut": "Longueur de coupe",
     "sourceList": "Liste des sources",
@@ -206,7 +208,9 @@
     "activeOptions": "Options actives",
     "labelType": "Type d'étiquette",
     "preview": "Aperçu",
-    "attachmentField": "Champ de pièce jointe"
+    "attachmentField": "Champ de pièce jointe",
+    "dynamicLogicReadOnlySaved": "Conditions d'état sauvegardé rendant le champ en lecture seule",
+    "notStorable": "Non stockable"
   },
   "messages": {
     "selectEntityType": "Sélectionner le type de Fonctionnalité dans le menu de gauche.",
@@ -277,7 +281,8 @@
     "appLog": "Journal d'application.",
     "addressCountries": "Pays disponibles pour les champs d'adresse.",
     "appSecrets": "Conserver les informations sensibles tels que clés API et mots de passe.",
-    "leadCapture": "Formulaires web et endpoints pour la génération de leads."
+    "leadCapture": "Formulaires web et endpoints pour la génération de leads.",
+    "oAuthProviders": "Fournisseurs OAuth pour les intégrations."
   },
   "options": {
     "previewSize": {
@@ -325,6 +330,11 @@
     "jobs": "Cron",
     "authentication": "mot de passe,sécurité,ldap",
     "labelManager": "langue,traduction",
-    "appSecrets": "clé, clés, mot de passe"
+    "appSecrets": "clé, clés, mot de passe",
+    "leadCapture": "formulaires web"
+  },
+  "tooltips": {
+    "tabUrl": "Peut commencer par `#` pour naviguer vers une page d'application.",
+    "tabUrlAclScope": "L'onglet sera disponible pour les utilisateurs qui ont accès à l'étendue spécifiée."
   }
 }
