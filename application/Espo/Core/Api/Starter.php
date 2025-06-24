@@ -35,7 +35,9 @@ use Espo\Core\Utils\Route as RouteUtil;
 use Espo\Core\Utils\Log;
 
 use Psr\Container\ContainerInterface;
+use Psr\Http\Server\RequestHandlerInterface as Psr7Handler;
 use Slim\App as SlimApp;
+use Slim\Exception\HttpBadRequestException;
 use Slim\Factory\AppFactory as SlimAppFactory;
 
 use Psr\Http\Message\ResponseInterface as Psr7Response;
@@ -63,6 +65,22 @@ class Starter
     public function start(): void
     {
         $slim = SlimAppFactory::create();
+
+        if (RouteUtil::isBadUri()) {
+            $slim->add(function (Psr7Request $request): Psr7Response {
+                throw new HttpBadRequestException($request, 'Malformed request path: starts with `//`.');
+            });
+
+            $slim->addErrorMiddleware(
+                displayErrorDetails: false,
+                logErrors: false,
+                logErrorDetails: false,
+            );
+
+            $slim->run();
+
+            return;
+        }
 
         if ($this->systemConfig->useCache()) {
             $slim->getRouteCollector()->setCacheFile($this->routeCacheFile);

@@ -29,10 +29,15 @@
 
 namespace Espo\Core\Application;
 
+use Espo\Core\Application\Exceptions\RunnerException;
+
 /**
  * Runs an application.
  */
 interface Runner
 {
+    /**
+     * @throws RunnerException
+     */
     public function run(): void;
 }

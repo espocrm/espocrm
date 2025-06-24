@@ -31,6 +31,7 @@ namespace Espo\Core\Utils;
 
 use Espo\Core\Api\Action;
 use Espo\Core\Api\Route as RouteItem;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Resource\PathProvider;
@@ -185,6 +186,22 @@ class Route
         }
 
         return $pathFormatted;
+    }
+
+    /**
+     * @internal
+     * @since 9.1.7
+     */
+    public static function isBadUri(): bool
+    {
+        /** @var string $serverRequestUri */
+        $serverRequestUri = $_SERVER['REQUEST_URI'];
+
+        if (str_starts_with($serverRequestUri, '//')) {
+            return true;
+        }
+
+        return false;
     }
 
     public static function detectBasePath(): string
