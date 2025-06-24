@@ -67,17 +67,7 @@ class Starter
         $slim = SlimAppFactory::create();
 
         if (RouteUtil::isBadUri()) {
-            $slim->add(function (Psr7Request $request): Psr7Response {
-                throw new HttpBadRequestException($request, 'Malformed request path: starts with `//`.');
-            });
-
-            $slim->addErrorMiddleware(
-                displayErrorDetails: false,
-                logErrors: false,
-                logErrorDetails: false,
-            );
-
-            $slim->run();
+            $this->processError($slim);
 
             return;
         }
@@ -143,5 +133,20 @@ class Starter
         foreach ($middlewareList as $middleware) {
             $slimRoute->addMiddleware($middleware);
         }
+    }
+
+    private function processError(SlimApp $slim): void
+    {
+        $slim->add(function (Psr7Request $request): Psr7Response {
+            throw new HttpBadRequestException($request, 'Malformed request path.');
+        });
+
+        $slim->addErrorMiddleware(
+            displayErrorDetails: false,
+            logErrors: false,
+            logErrorDetails: false,
+        );
+
+        $slim->run();
     }
 }
