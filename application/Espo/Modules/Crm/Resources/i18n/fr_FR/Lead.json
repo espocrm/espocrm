@@ -57,6 +57,7 @@
   },
   "presetFilters": {
     "active": "Actif",
-    "converted": "Converti"
+    "converted": "Converti",
+    "actual": "Ouvert"
   }
 }

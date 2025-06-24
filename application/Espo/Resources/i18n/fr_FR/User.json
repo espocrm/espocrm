@@ -120,7 +120,8 @@
     "failedToLogIn": "Échec de connexion",
     "2faMethodNotConfigured": "La méthode d'authentification à 2 facteurs (2FA) n'est pas complètement configurée dans le système",
     "loginError": "Une erreur est survenue.",
-    "defaultTeamIsNotUsers": "L'équipe par défaut doit être l'une des équipes de l'utilisateur."
+    "defaultTeamIsNotUsers": "L'équipe par défaut doit être l'une des équipes de l'utilisateur.",
+    "passwordStrengthSpecialCharacterCount": "Doit contenir au moins {count} caractère(s) spécial(s)."
   },
   "boolFilters": {
     "onlyMyTeam": "De mon équipe",

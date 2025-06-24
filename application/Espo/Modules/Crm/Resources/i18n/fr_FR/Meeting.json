@@ -13,7 +13,8 @@
     "dateStartDate": "Date de début (toute la journée)",
     "dateEndDate": "Date de fin (toute la journée)",
     "isAllDay": "Est toute la journée",
-    "sourceEmail": "Source E-mail"
+    "sourceEmail": "Source E-mail",
+    "joinUrl": "Rejoindre l'URL"
   },
   "options": {
     "status": {

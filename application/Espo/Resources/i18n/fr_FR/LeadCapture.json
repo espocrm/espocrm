@@ -22,7 +22,19 @@
     "smtpAccount": "Compte SMTP",
     "inboundEmail": "Compte de messagerie de groupe",
     "exampleRequestHeaders": "Entête",
-    "phoneNumberCountry": "Indicatif téléphonique national"
+    "phoneNumberCountry": "Indicatif téléphonique national",
+    "fieldParams": "Paramètres du champ",
+    "formId": "Formulaire ID",
+    "formEnabled": "Formulaire Web",
+    "formUrl": "URL du formulaire",
+    "formSuccessText": "Texte à afficher après la soumission du formulaire",
+    "formText": "Texte à afficher sur le formulaire",
+    "formSuccessRedirectUrl": "URL à rediriger après la soumission du formulaire",
+    "formLanguage": "Langue utilisée dans le formulaire",
+    "formFrameAncestors": "Hôtes autorisés pour l'intégration de formulaires",
+    "formCaptcha": "Utiliser Captcha",
+    "formTitle": "Titre du formulaire",
+    "formTheme": "Thème du formulaire"
   },
   "links": {
     "targetList": "Liste de cibles",
@@ -36,7 +48,9 @@
     "Create LeadCapture": "Créer un point d'entrée",
     "Generate New API Key": "Générer une nouvelle clé API",
     "Request": "Demande",
-    "Confirm Opt-In": "Confirmer la participation"
+    "Confirm Opt-In": "Confirmer la participation",
+    "Generate New Form ID": "Générer un nouvel ID de formulaire",
+    "Web Form": "Formulaire Web"
   },
   "messages": {
     "generateApiKey": "Créer une nouvelle clé API",
@@ -44,6 +58,7 @@
     "optInIsConfirmed": "L'inscription est confirmée."
   },
   "tooltips": {
-    "optInConfirmationSuccessMessage": "Markdown est pris en charge."
+    "optInConfirmationSuccessMessage": "Markdown est pris en charge.",
+    "formCaptcha": "Pour pouvoir utiliser Captcha, vous devez le configurer sous **Administration** > **Intégrations**."
   }
 }

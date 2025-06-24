@@ -14,7 +14,8 @@
     "fieldData": "Champ Data",
     "messagePermission": "Permission de message",
     "auditPermission": "Permission d'audit",
-    "mentionPermission": "Permission de mentionner"
+    "mentionPermission": "Permission de mentionner",
+    "userCalendarPermission": "Autorisation de calendrier pour l'utilisateur"
   },
   "links": {
     "users": "Utilisateurs",
@@ -62,6 +63,8 @@
     "exportPermission": "Permet d'exporter des enregistrements.",
     "massUpdatePermission": "La possibilité d'effectuer des mises à jour en masse des enregistrements.",
     "auditPermission": "Permet d'afficher le journal d'audit.",
-    "mentionPermission": "Permet de mentionner d'autres utilisateurs dans le flux.\n\n* tous - peut mentionner tous les utilisateurs\n* équipe - peut mentionner uniquement les coéquipiers\n* non - ne peut pas mentionner"
+    "mentionPermission": "Permet de mentionner d'autres utilisateurs dans le flux.\n\n* tous - peut mentionner tous les utilisateurs\n* équipe - peut mentionner uniquement les coéquipiers\n* non - ne peut pas mentionner",
+    "userPermission": "Permet de visualiser le flux des autres utilisateurs. Permet aux utilisateurs de voir les niveaux d'accès d'autres utilisateurs pour des enregistrements spécifiques.",
+    "userCalendarPermission": "Permet de visualiser les calendriers des autres utilisateurs."
   }
 }

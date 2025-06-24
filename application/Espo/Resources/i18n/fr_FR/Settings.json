@@ -139,12 +139,17 @@
     "authIpAddressWhitelist": "Liste blanche d'adresses IP",
     "authIpAddressCheckExcludedUsers": "Utilisateurs exclus de la vérification",
     "streamEmailWithContentEntityTypeList": "Fonctionnalités affichant le contenu des emails dans le flux",
-    "availableReactions": "Réactions disponibles"
+    "emailScheduledBatchCount": "Nombre maximal d'e-mails programmés envoyés par lot",
+    "passwordStrengthSpecialCharacterCount": "Nombre de caractères spéciaux requis dans le mot de passe",
+    "availableReactions": "Réactions disponibles",
+    "outboundEmailFromAddress": "Adresse e-mail du système",
+    "oidcUserInfoEndpoint": "Point final OIDC UserInfo"
   },
   "tooltips": {
     "recordsPerPageSmall": "Nombre d'enregistrements dans les volets Relations.",
     "followCreatedEntities": "Les utilisateurs suivront automatiquement leurs entrées",
     "userThemesDisabled": "Si coché alors les utilisateurs ne pourront pas sélectionner un autre thème",
+    "ldapUsername": "Le DN complet de l'utilisateur du système qui permet de rechercher d'autres utilisateurs. Par exemple \"CN=LDAP System User,OU=users,OU=espocrm, DC=test,DC=lan\".",
     "ldapPassword": "Le mot de passe pour accéder au serveur LDAP.",
     "ldapAuth": "Accédez aux informations d'identification du serveur LDAP.",
     "ldapUserNameAttribute": "Attribut permettant d'identifier l'utilisateur. \nPar exemple, « userPrincipalName » ou « sAMAccountName » pour Active Directory, « uid » pour OpenLDAP.",
@@ -210,7 +215,8 @@
     "authIpAddressWhitelist": "Une liste d'adresses IP ou de plages d'adresses IP en notation CIDR.\n\nLes portails ne sont pas concernés par cette restriction.",
     "emailAddressIsOptedOutByDefault": "Lors de la création d'un nouvel enregistrement, l'adresse électronique sera marquée comme opt-out.",
     "oidcGroupClaim": "Une revendication à utiliser pour la cartographie d'équipe.",
-    "quickSearchFullTextAppendWildcard": "Ajouter un joker (*) à une requête de recherche autocomplète lorsque la recherche en texte intégral est activée. Réduit les performances de la recherche."
+    "quickSearchFullTextAppendWildcard": "Ajouter un joker (*) à une requête de recherche autocomplète lorsque la recherche en texte intégral est activée. Réduit les performances de la recherche.",
+    "outboundEmailFromAddress": "Les e-mails système seront envoyés depuis cette adresse. Un [compte e-mail du groupe](#InboundEmail) avec la même adresse doit être configuré pour envoyer des e-mails."
   },
   "labels": {
     "System": "Système",
@@ -236,7 +242,8 @@
     "Phone Numbers": "Numéros de téléphone",
     "Access": "Accès",
     "Strength": "Force",
-    "Recovery": "Récupération"
+    "Recovery": "Récupération",
+    "Scheduled Send": "Envoi programmé"
   },
   "options": {
     "streamEmailNotificationsTypeList": {

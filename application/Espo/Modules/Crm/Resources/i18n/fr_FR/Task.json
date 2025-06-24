@@ -10,7 +10,8 @@
     "isOverdue": "En retard",
     "account": "Compte",
     "dateCompleted": "Date de Clôture",
-    "attachments": "Pièces jointes"
+    "attachments": "Pièces jointes",
+    "originalEmail": "E-mail Original"
   },
   "links": {
     "attachments": "Pièces jointes",
@@ -40,7 +41,8 @@
   "presetFilters": {
     "completed": "Terminés",
     "todays": "Aujourd'hui",
-    "overdue": "En retard"
+    "overdue": "En retard",
+    "actual": "Ouvert"
   },
   "nameOptions": {
     "replyToEmail": "Répondre à l'e-mail"

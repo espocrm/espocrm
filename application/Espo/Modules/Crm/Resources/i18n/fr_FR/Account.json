@@ -66,5 +66,8 @@
   "presetFilters": {
     "customers": "Clients",
     "partners": "Partenaires"
+  },
+  "tabs": {
+    "Account": "Compte"
   }
 }

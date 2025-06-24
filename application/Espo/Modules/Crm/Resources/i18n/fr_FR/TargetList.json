@@ -8,13 +8,15 @@
     "optedOutCount": "Décompté",
     "targetStatus": "Statut cible",
     "isOptedOut": "Est exclu",
-    "sourceCampaign": "Campagne Source"
+    "sourceCampaign": "Campagne Source",
+    "category": "Catégorie"
   },
   "links": {
     "accounts": "Comptes",
     "leads": "Prospects",
     "campaigns": "Campagnes",
-    "massEmails": "Emails groupés"
+    "massEmails": "Emails groupés",
+    "category": "Catégorie"
   },
   "options": {
     "type": {

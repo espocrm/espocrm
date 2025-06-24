@@ -1,6 +1,9 @@
 {
   "fields": {
-    "enabled": "Activé"
+    "enabled": "Activé",
+    "siteKey": "Clé du site",
+    "secretKey": "Clé Secrète",
+    "scoreThreshold": "Seuil du score"
   },
   "messages": {
     "selectIntegration": "Sélectionnez une intégration à partir du menu.",
@@ -8,6 +11,7 @@
   },
   "help": {
     "Google": "** Obtenez les informations d'identification OAuth 2.0 auprès de Google Developers Console. ** \n\nVisitez [Console Google Developers](https://console.developers.google.com/project) pour obtenir des informations d'identification OAuth 2.0, telles qu'un ID client et un client. Des secrets connus des applications Google et EspoCRM.",
-    "GoogleMaps": "Obtenir la clé d'API [ici](https://developers.google.com/maps/documentation/javascript/get-api-key)."
+    "GoogleMaps": "Obtenir la clé d'API [ici](https://developers.google.com/maps/documentation/javascript/get-api-key).",
+    "GoogleReCaptcha": "Obtenez la clé du site et la clé secrète auprès de [Google] (https://www.google.com/recaptcha/)."
   }
 }
