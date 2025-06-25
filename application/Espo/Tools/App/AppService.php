@@ -36,12 +36,11 @@ use Espo\Core\Name\Link;
 use Espo\Core\Utils\SystemUser;
 use Espo\Entities\DashboardTemplate;
 use Espo\Entities\Email;
-use Espo\Entities\EmailAccount as EmailAccountEntity;
+use Espo\Entities\EmailAccount;
 use Espo\Entities\EmailAddress;
-use Espo\Entities\InboundEmail as InboundEmailEntity;
+use Espo\Entities\InboundEmail;
 use Espo\Entities\Settings;
 use Espo\ORM\Name\Attribute;
-use Espo\Tools\App\SettingsService as SettingsService;
 use Espo\Core\Acl;
 use Espo\Core\Authentication\Logins\Espo;
 use Espo\Core\InjectableFactory;
@@ -281,53 +280,50 @@ class AppService
     {
         $user = $this->user;
 
-        $outboundEmailIsShared = $this->emailConfigDataProvider->isSystemOutboundAddressShared();
-        $outboundEmailFromAddress = $this->emailConfigDataProvider->getSystemOutboundAddress();
+        $systemIsShared = $this->emailConfigDataProvider->isSystemOutboundAddressShared();
+        $systemAddress = $this->emailConfigDataProvider->getSystemOutboundAddress();
 
-        $emailAddressList = [];
-        $userEmailAddressList = [];
+        $addressList = [];
+        $userAddressList = [];
 
-        /** @var iterable<EmailAddress> $emailAddressCollection */
-        $emailAddressCollection = $this->entityManager
+        /** @var iterable<EmailAddress> $emailAddresses */
+        $emailAddresses = $this->entityManager
             ->getRelation($user, Link::EMAIL_ADDRESSES)
             ->find();
 
-        foreach ($emailAddressCollection as $emailAddress) {
+        foreach ($emailAddresses as $emailAddress) {
             if ($emailAddress->isInvalid()) {
                 continue;
             }
 
-            $userEmailAddressList[] = $emailAddress->getAddress();
+            $userAddressList[] = $emailAddress->getAddress();
 
             if ($user->getEmailAddress() === $emailAddress->getAddress()) {
                 continue;
             }
 
-            $emailAddressList[] = $emailAddress->getAddress();
+            $addressList[] = $emailAddress->getAddress();
         }
 
         if ($user->getEmailAddress()) {
-            array_unshift($emailAddressList, $user->getEmailAddress());
+            array_unshift($addressList, $user->getEmailAddress());
         }
 
-        if (!$outboundEmailIsShared) {
-            $emailAddressList = $this->filterUserEmailAddressList($user, $emailAddressList);
+        if (!$systemIsShared) {
+            $addressList = $this->filterUserEmailAddressList($user, $addressList);
         }
 
-        $emailAddressList = array_merge(
-            $emailAddressList,
-            $this->getUserGroupEmailAddressList($user)
-        );
+        $addressList = array_merge($addressList, $this->getUserGroupEmailAddressList($user));
 
-        if ($outboundEmailIsShared && $outboundEmailFromAddress) {
-            $emailAddressList[] = $outboundEmailFromAddress;
+        if ($systemIsShared && $systemAddress) {
+            $addressList[] = $systemAddress;
         }
 
-        $emailAddressList = array_values(array_unique($emailAddressList));
+        $addressList = array_values(array_unique($addressList));
 
         return [
-            'emailAddressList' => $emailAddressList,
-            'userEmailAddressList' => $userEmailAddressList,
+            'emailAddressList' => $addressList,
+            'userEmailAddressList' => $userAddressList,
             'excludeFromReplyEmailAddressList' => $this->getExcludeFromReplyAddressList(),
         ];
     }
@@ -339,17 +335,20 @@ class AppService
     private function filterUserEmailAddressList(User $user, array $emailAddressList): array
     {
         $emailAccountCollection = $this->entityManager
-            ->getRDBRepositoryByClass(EmailAccountEntity::class)
-            ->select([Attribute::ID, 'emailAddress'])
+            ->getRDBRepositoryByClass(EmailAccount::class)
+            ->select([
+                Attribute::ID,
+                Field::EMAIL_ADDRESS,
+            ])
             ->where([
                 'assignedUserId' => $user->getId(),
                 'useSmtp' => true,
-                'status' => EmailAccountEntity::STATUS_ACTIVE,
+                'status' => EmailAccount::STATUS_ACTIVE,
             ])
             ->find();
 
         $inAccountList = array_map(
-            fn (EmailAccountEntity $e) => $e->getEmailAddress(),
+            fn (EmailAccount $e) => $e->getEmailAddress(),
             [...$emailAccountCollection]
         );
 
@@ -378,9 +377,9 @@ class AppService
             }
 
             $inboundEmailList = $this->entityManager
-                ->getRDBRepositoryByClass(InboundEmailEntity::class)
+                ->getRDBRepositoryByClass(InboundEmail::class)
                 ->where([
-                    'status' => InboundEmailEntity::STATUS_ACTIVE,
+                    'status' => InboundEmail::STATUS_ACTIVE,
                     'useSmtp' => true,
                     'smtpIsShared' => true,
                     'teamsMiddle.teamId' => $teamIdList,
@@ -404,9 +403,9 @@ class AppService
 
         if ($groupEmailAccountPermission === Acl\Table::LEVEL_ALL) {
             $inboundEmailList = $this->entityManager
-                ->getRDBRepositoryByClass(InboundEmailEntity::class)
+                ->getRDBRepositoryByClass(InboundEmail::class)
                 ->where([
-                    'status' => InboundEmailEntity::STATUS_ACTIVE,
+                    'status' => InboundEmail::STATUS_ACTIVE,
                     'useSmtp' => true,
                     'smtpIsShared' => true,
                 ])
@@ -494,9 +493,9 @@ class AppService
             return [];
         }
 
-        /** @var iterable<InboundEmailEntity> $accounts */
+        /** @var iterable<InboundEmail> $accounts */
         $accounts = $this->entityManager
-            ->getRDBRepositoryByClass(InboundEmailEntity::class)
+            ->getRDBRepositoryByClass(InboundEmail::class)
             ->select('emailAddress')
             ->where(['excludeFromReply' => true])
             ->find();
