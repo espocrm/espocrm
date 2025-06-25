@@ -370,7 +370,7 @@ class SettingsService
 
         if (
             !$this->acl->checkScope(Email::ENTITY_TYPE, Acl\Table::ACTION_CREATE) ||
-            !$this->emailConfigDataProvider->isOutboundEmailShared()
+            !$this->emailConfigDataProvider->isSystemOutboundAddressShared()
         ) {
             unset($data->outboundEmailFromAddress);
             unset($data->outboundEmailFromName);

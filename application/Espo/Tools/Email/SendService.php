@@ -130,7 +130,7 @@ class SendService
             throw new BadRequest("Empty To address.");
         }
 
-        $systemIsShared = $this->configDataProvider->isOutboundEmailShared();
+        $systemIsShared = $this->configDataProvider->isSystemOutboundAddressShared();
         $systemFromName = $this->config->get('outboundEmailFromName');
         $systemFromAddress = $this->configDataProvider->getSystemOutboundAddress();
 

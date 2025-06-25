@@ -88,7 +88,7 @@ class CheckFromAddress implements SaveHook
 
         if (
             $system &&
-            $this->configDataProvider->isOutboundEmailShared() &&
+            $this->configDataProvider->isSystemOutboundAddressShared() &&
             $system->getEmailAddress() &&
             $fromAddress === strtolower($system->getEmailAddress())
         ) {
