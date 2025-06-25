@@ -36,6 +36,7 @@ use Espo\Core\Formula\Exceptions\UnsafeFunction;
 use Espo\Core\Formula\Manager;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\EntityManager;
@@ -1015,5 +1016,160 @@ class FormulaTest extends BaseTestCase
 
         /** @noinspection PhpUnhandledExceptionInspection */
         $fm->runSafe($script);
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testFilterWhere(): void
+    {
+        $em = $this->getEntityManager();
+        $fm = $this->getContainer()->getByClass(Manager::class);
+
+        $account1 = $em->createEntity(Account::ENTITY_TYPE, ['name' => 'a1']);
+
+        $em->createEntity(Account::ENTITY_TYPE, ['name' => 'a2']);
+
+        $contact1 = $em->createEntity(Contact::ENTITY_TYPE, [
+            'lastName' => 'c1_1',
+            'accountId' => $account1->getId(),
+        ]);
+
+        $em->createEntity(Contact::ENTITY_TYPE, [
+            'lastName' => 'c1_2',
+            'accountId' => $account1->getId(),
+        ]);
+
+        $em->createEntity(Opportunity::ENTITY_TYPE, [
+            'accountId' => $account1->getId(),
+            'amount' => 100.0,
+            'name' => 'o1_1',
+        ]);
+
+        $em->createEntity(Opportunity::ENTITY_TYPE, [
+            'accountId' => $account1->getId(),
+            'amount' => 150.0,
+            'name' => 'o1_2',
+        ]);
+
+        $script = "
+            \$where = object\create(\$w);
+            \$where['type'] = 'and';
+            \$where['value'] = list(
+                (
+                    \$item1 = object\create();
+                    \$item1['type'] = 'equals';
+                    \$item1['attribute'] = 'name';
+                    \$item1['value'] = 'a1';
+                    \$item1;
+                )
+            );
+
+            record\\findMany('Account', 2, null, null, \$where);
+        ";
+        $result = $fm->run($script);
+        $this->assertEquals([$account1->getId()], $result);
+
+        $script = "
+            \$where = object\create(\$w);
+            \$where['type'] = 'and';
+            \$where['value'] = list(
+                (
+                    \$item1 = object\create();
+                    \$item1['type'] = 'equals';
+                    \$item1['attribute'] = 'name';
+                    \$item1['value'] = 'a1';
+                    \$item1;
+                )
+            );
+
+            record\\findOne('Account', null, null, \$where);
+        ";
+        $result = $fm->run($script);
+        $this->assertEquals($account1->getId(), $result);
+
+        $script = "
+            \$where = object\create(\$w);
+            \$where['type'] = 'and';
+            \$where['value'] = list(
+                (
+                    \$item1 = object\create();
+                    \$item1['type'] = 'equals';
+                    \$item1['attribute'] = 'name';
+                    \$item1['value'] = 'a1';
+                    \$item1;
+                )
+            );
+
+            record\\exists('Account', \$where);
+        ";
+        $result = $fm->run($script);
+        $this->assertTrue($result);
+
+        $script = "
+            \$where = object\create(\$w);
+            \$where['type'] = 'and';
+            \$where['value'] = list(
+                (
+                    \$item1 = object\create();
+                    \$item1['type'] = 'equals';
+                    \$item1['attribute'] = 'name';
+                    \$item1['value'] = 'a1';
+                    \$item1;
+                )
+            );
+
+            record\\count('Account', \$where);
+        ";
+        $result = $fm->run($script);
+        $this->assertEquals(1, $result);
+
+        $script = "
+            \$item = object\create();
+            \$item['type'] = 'equals';
+            \$item['attribute'] = 'lastName';
+            \$item['value'] = 'c1_1';
+            \$item;
+
+            record\\findRelatedOne('Account', '{$account1->getId()}', 'contacts', null, null, \$item);
+        ";
+        $result = $fm->run($script);
+        $this->assertEquals($contact1->getId(), $result);
+
+        $script = "
+            \$item = object\create();
+            \$item['type'] = 'equals';
+            \$item['attribute'] = 'lastName';
+            \$item['value'] = 'c1_1';
+            \$item;
+
+            record\\findRelatedMany('Account', '{$account1->getId()}', 'contacts', 2, null, null, \$item);
+        ";
+        $result = $fm->run($script);
+        $this->assertEquals([$contact1->getId()], $result);
+
+        $script = "
+            \$item = object\create();
+            \$item['type'] = 'equals';
+            \$item['attribute'] = 'lastName';
+            \$item['value'] = 'c1_1';
+            \$item;
+
+            entity\\countRelated('contacts', \$item);
+        ";
+        $result = $fm->run($script, $account1);
+        $this->assertEquals(1, $result);
+
+        $script = "
+            \$item = object\create();
+            \$item['type'] = 'equals';
+            \$item['attribute'] = 'name';
+            \$item['value'] = 'o1_1';
+            \$item;
+
+            entity\\sumRelated('opportunities', 'amount', \$item);
+        ";
+        $result = $fm->run($script, $account1);
+        $this->assertEquals(100.0, $result);
     }
 }

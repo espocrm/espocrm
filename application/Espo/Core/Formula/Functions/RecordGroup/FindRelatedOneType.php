@@ -32,16 +32,15 @@ namespace Espo\Core\Formula\Functions\RecordGroup;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\ORM\Entity as CoreEntity;
-
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
-use Espo\Core\Formula\{
-    Exceptions\Error,
-    Functions\BaseFunction,
-    ArgumentList,
-    Functions\RecordGroup\Util\FindQueryUtil};
-
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Functions\BaseFunction;
+use Espo\Core\Formula\Functions\RecordGroup\Util\FindQueryUtil;
 use Espo\Core\Di;
+use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Type\RelationType;
 
 class FindRelatedOneType extends BaseFunction implements
     Di\EntityManagerAware,
@@ -101,7 +100,13 @@ class FindRelatedOneType extends BaseFunction implements
 
         $relationType = $entity->getRelationParam($link, 'type');
 
-        if (in_array($relationType, ['belongsTo', 'hasOne', 'belongsToParent'])) {
+        if (
+            in_array($relationType, [
+                RelationType::BELONGS_TO,
+                RelationType::HAS_ONE,
+                RelationType::BELONGS_TO_PARENT,
+            ])
+        ) {
             $relatedEntity = $entityManager
                 ->getRDBRepository($entityType)
                 ->getRelation($entity, $link)
@@ -122,7 +127,7 @@ class FindRelatedOneType extends BaseFunction implements
                 $order = $metadata->get(['entityDefs', $entityType, 'collection', 'order']) ?? 'ASC';
             }
         } else {
-            $order = $order ?? 'ASC';
+            $order = $order ?? Order::ASC;
         }
 
         $foreignEntityType = $entity->getRelationParam($link, RelationParam::ENTITY);
@@ -174,7 +179,7 @@ class FindRelatedOneType extends BaseFunction implements
             $queryBuilder->where($whereClause);
         }
 
-        if ($relationType === 'hasChildren') {
+        if ($relationType === RelationType::HAS_CHILDREN) {
             $queryBuilder->where([
                 $foreignLink . 'Id' => $entity->getId(),
                 $foreignLink . 'Type' => $entity->getEntityType(),

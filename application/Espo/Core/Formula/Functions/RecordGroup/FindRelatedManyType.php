@@ -136,7 +136,13 @@ class FindRelatedManyType extends BaseFunction implements
 
         $relationType = $entity->getRelationParam($link, 'type');
 
-        if (in_array($relationType, ['belongsTo', 'hasOne', 'belongsToParent'])) {
+        if (
+            in_array($relationType, [
+                RelationType::BELONGS_TO,
+                RelationType::HAS_ONE,
+                RelationType::BELONGS_TO_PARENT,
+            ])
+        ) {
             $this->throwError("Not supported link type '$relationType'.");
         }
 

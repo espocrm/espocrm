@@ -34,7 +34,6 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Exceptions\Error;
 use Espo\Core\Formula\Functions\BaseFunction;
-
 use Espo\Core\Di;
 use Espo\Core\Formula\Functions\RecordGroup\Util\FindQueryUtil;
 
