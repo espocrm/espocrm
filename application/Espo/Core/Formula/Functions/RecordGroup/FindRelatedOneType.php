@@ -29,14 +29,17 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
 use Espo\Core\Formula\{
+    Exceptions\Error,
     Functions\BaseFunction,
     ArgumentList,
-};
+    Functions\RecordGroup\Util\FindQueryUtil};
 
 use Espo\Core\Di;
 
@@ -143,17 +146,11 @@ class FindRelatedOneType extends BaseFunction implements
         if (count($args) <= 6) {
             $filter = null;
 
-            if (count($args) == 6) {
+            if (count($args) === 6) {
                 $filter = $this->evaluate($args[5]);
             }
 
-            if ($filter && !is_string($filter)) {
-                $this->throwError("Bad filter.");
-            }
-
-            if ($filter) {
-                $builder->withPrimaryFilter($filter);
-            }
+            (new FindQueryUtil())->applyFilter($builder, $filter, 6);
         } else {
             $i = 5;
 
@@ -167,7 +164,11 @@ class FindRelatedOneType extends BaseFunction implements
             }
         }
 
-        $queryBuilder = $builder->buildQueryBuilder();
+        try {
+            $queryBuilder = $builder->buildQueryBuilder();
+        } catch (BadRequest|Forbidden $e) {
+            throw new Error($e->getMessage(), 0, $e);
+        }
 
         if (!empty($whereClause)) {
             $queryBuilder->where($whereClause);

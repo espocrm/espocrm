@@ -35,6 +35,7 @@ use Espo\Core\Formula\Exceptions\BadArgumentType;
 use Espo\Core\Formula\Exceptions\Error;
 use Espo\Core\Formula\Exceptions\ExecutionException;
 use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Espo\Core\Formula\Functions\RecordGroup\Util\FindQueryUtil;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Functions\BaseFunction;
@@ -42,6 +43,7 @@ use Espo\Core\Di;
 use Espo\Core\Select\Helpers\RandomStringGenerator;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
+use Espo\ORM\Type\RelationType;
 
 class FindRelatedManyType extends BaseFunction implements
     Di\EntityManagerAware,
@@ -56,10 +58,8 @@ class FindRelatedManyType extends BaseFunction implements
 
     /**
      * @throws Error
-     * @throws BadRequest
      * @throws TooFewArguments
      * @throws BadArgumentType
-     * @throws Forbidden
      * @throws ExecutionException
      */
     public function process(ArgumentList $args)
@@ -164,13 +164,7 @@ class FindRelatedManyType extends BaseFunction implements
                 $filter = $args[6];
             }
 
-            if ($filter && !is_string($filter)) {
-                $this->throwError("Bad filter.");
-            }
-
-            if ($filter) {
-                $builder->withPrimaryFilter($filter);
-            }
+            (new FindQueryUtil())->applyFilter($builder, $filter, 7);
         } else {
             $i = 6;
 
@@ -184,13 +178,17 @@ class FindRelatedManyType extends BaseFunction implements
             }
         }
 
-        $queryBuilder = $builder->buildQueryBuilder();
+        try {
+            $queryBuilder = $builder->buildQueryBuilder();
+        } catch (BadRequest|Forbidden $e) {
+            throw new Error($e->getMessage(), 0, $e);
+        }
 
         if (!empty($whereClause)) {
             $queryBuilder->where($whereClause);
         }
 
-        if ($relationType === 'hasChildren') {
+        if ($relationType === RelationType::HAS_CHILDREN) {
             $queryBuilder->where([
                 $foreignLink . 'Id' => $entity->getId(),
                 $foreignLink . 'Type' => $entity->getEntityType(),

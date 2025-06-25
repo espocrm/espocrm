@@ -29,16 +29,18 @@
 
 namespace Espo\Core\Formula\Functions\EntityGroup;
 
-use Espo\Core\Exceptions\Error;
-
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Formula\Exceptions\Error;
 use Espo\Core\Di;
-
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Formula\Functions\Base;
+use Espo\Core\Formula\Functions\RecordGroup\Util\FindQueryUtil;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
 use stdClass;
 use PDO;
 
-class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
+class SumRelatedType extends Base implements
     Di\EntityManagerAware,
     Di\SelectBuilderFactoryAware
 {
@@ -48,7 +50,6 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
     /**
      * @return float
      * @throws Error
-     * @throws \Espo\Core\Formula\Exceptions\Error
      */
     public function process(stdClass $item)
     {
@@ -96,10 +97,14 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
             ->from($foreignEntityType);
 
         if ($filter) {
-            $builder->withPrimaryFilter($filter);
+            (new FindQueryUtil())->applyFilter($builder, $filter, 3);
         }
 
-        $queryBuilder = $builder->buildQueryBuilder();
+        try {
+            $queryBuilder = $builder->buildQueryBuilder();
+        } catch (BadRequest|Forbidden $e) {
+            throw new Error($e->getMessage(), $e->getCode(), $e);
+        }
 
         $queryBuilder->select([
             [$foreignLinkAlias . '.id', 'foreignId'],
