@@ -1084,7 +1084,10 @@ class App {
 
         this.user.setMultiple(userData);
         this.preferences.setMultiple(preferencesData);
+
+        this.settings.clear();
         this.settings.setMultiple(settingData);
+
         this.acl.set(aclData);
         this.appParams.setAll(data.appParams);
 
