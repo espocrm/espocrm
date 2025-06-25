@@ -607,6 +607,12 @@ class ListRecordView extends View {
      */
     collectionEventSyncList
 
+    /**
+     * @private
+     * @type {boolean}
+     */
+    noAllResultMassActions
+
     /** @inheritDoc */
     events = {
         /**
@@ -2370,27 +2376,27 @@ class ListRecordView extends View {
             this.massActionList.push(item);
         });
 
+        this.noAllResultMassActions = this.collection.url !== this.entityType;
+
         this.checkAllResultMassActionList = this.checkAllResultMassActionList
             .filter(item => this.massActionList.includes(item));
 
         metadataCheckAllMassActionList.forEach(item => {
-            if (this.collection.url !== this.entityType) {
+            if (this.noAllResultMassActions || !this.massActionList.includes(item)) {
                 return;
             }
 
-            if (~this.massActionList.indexOf(item)) {
-                const defs = /** @type {Espo.Utils~ActionAccessDefs & Espo.Utils~ActionAvailabilityDefs} */
-                    this.massActionDefs[item] || {};
+            const defs = /** @type {Espo.Utils~ActionAccessDefs & Espo.Utils~ActionAvailabilityDefs} */
+                this.massActionDefs[item] || {};
 
-                if (
-                    !Espo.Utils.checkActionAvailability(this.getHelper(), defs) ||
-                    !Espo.Utils.checkActionAccess(this.getAcl(), this.entityType, defs)
-                ) {
-                    return;
-                }
-
-                this.checkAllResultMassActionList.push(item);
+            if (
+                !Espo.Utils.checkActionAvailability(this.getHelper(), defs) ||
+                !Espo.Utils.checkActionAccess(this.getAcl(), this.entityType, defs)
+            ) {
+                return;
             }
+
+            this.checkAllResultMassActionList.push(item);
         });
 
         metadataMassActionList
@@ -2481,8 +2487,8 @@ class ListRecordView extends View {
             }
         }
 
-        if (this.collection.url !== this.entityType) {
-            Espo.Utils.clone(this.checkAllResultMassActionList).forEach((item) => {
+        if (this.noAllResultMassActions) {
+            Espo.Utils.clone(this.checkAllResultMassActionList).forEach(item => {
                 this.removeAllResultMassAction(item);
             });
         }
