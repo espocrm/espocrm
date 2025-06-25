@@ -72,6 +72,8 @@ class Email extends Entity
 
     private const ATTR_BODY_PLAIN = 'bodyPlain';
 
+    public const LINK_REPLIES = 'replies';
+
     public function get(string $attribute): mixed
     {
         if ($attribute === 'subject') {
