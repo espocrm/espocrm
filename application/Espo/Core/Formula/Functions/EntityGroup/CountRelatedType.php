@@ -32,22 +32,18 @@ namespace Espo\Core\Formula\Functions\EntityGroup;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Functions\Base;
+use Espo\Core\Formula\Functions\RecordGroup\Util\FindQueryUtil;
 use Espo\ORM\Defs\Params\RelationParam;
-use Espo\ORM\EntityManager;
 use Espo\Core\Di;
 use stdClass;
 
-class CountRelatedType extends \Espo\Core\Formula\Functions\Base implements
+class CountRelatedType extends Base implements
     Di\EntityManagerAware,
     Di\SelectBuilderFactoryAware
 {
     use Di\EntityManagerSetter;
     use Di\SelectBuilderFactorySetter;
-
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
 
     /**
      * @return int
@@ -86,7 +82,7 @@ class CountRelatedType extends \Espo\Core\Formula\Functions\Base implements
             ->from($foreignEntityType);
 
         if ($filter) {
-              $builder->withPrimaryFilter($filter);
+            (new FindQueryUtil())->applyFilter($builder, $filter, 2);
         }
 
         try {

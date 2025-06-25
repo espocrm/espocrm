@@ -27,34 +27,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\EntityGroup;
+namespace Espo\Core\Formula\Functions\RecordGroup\Util;
 
+use Espo\Core\Formula\Exceptions\BadArgumentType;
 use Espo\Core\Formula\Exceptions\Error;
-use Espo\Core\Formula\Functions\Base;
+use Espo\Core\Select\SelectBuilder;
+use Espo\Core\Select\Where\Item;
+use Espo\Core\Utils\Json;
+use InvalidArgumentException;
+use stdClass;
 
-use Espo\Core\Di;
-
-class IsRelatedType extends Base implements
-    Di\EntityManagerAware
+class FindQueryUtil
 {
-    use Di\EntityManagerSetter;
+    public function __construct() {}
 
     /**
-     * @return bool
      * @throws Error
+     * @throws BadArgumentType
      */
-    public function process(\stdClass $item)
+    public function applyFilter(SelectBuilder $builder, mixed $filter, int $position): void
     {
-        if (count($item->value) < 2) {
-            throw new Error("isRelated: roo few arguments.");
+        if (is_string($filter)) {
+            $builder->withPrimaryFilter($filter);
+
+            return;
         }
 
-        $link = $this->evaluate($item->value[0]);
-        $id = $this->evaluate($item->value[1]);
+        if ($filter instanceof stdClass) {
+            $rawWhere = Json::decode(Json::encode($filter), true);
 
-        return $this->entityManager
-            ->getRDBRepository($this->getEntity()->getEntityType())
-            ->getRelation($this->getEntity(), $link)
-            ->isRelatedById($id);
+            try {
+                $where = Item::fromRaw($rawWhere);
+            } catch (InvalidArgumentException $e) {
+                throw new Error($e->getMessage(), 0, $e);
+            }
+
+            $builder->withWhere($where);
+
+            return;
+        }
+
+        if ($filter) {
+            throw BadArgumentType::create($position, 'string|object');
+        }
     }
 }

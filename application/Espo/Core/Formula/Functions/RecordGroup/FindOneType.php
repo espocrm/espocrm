@@ -35,8 +35,13 @@ use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Exceptions\Error as FormulaError;
 use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Di;
+use Espo\Core\Formula\Functions\RecordGroup\Util\FindQueryUtil;
 use Espo\ORM\Name\Attribute;
+use Espo\ORM\Query\Part\Order;
 
+/**
+ * @noinspection PhpUnused
+ */
 class FindOneType extends BaseFunction implements
     Di\EntityManagerAware,
     Di\SelectBuilderFactoryAware
@@ -52,7 +57,7 @@ class FindOneType extends BaseFunction implements
 
         $entityType = $this->evaluate($args[0]);
         $orderBy = $this->evaluate($args[1]);
-        $order = $this->evaluate($args[2]) ?? 'ASC';
+        $order = $this->evaluate($args[2]) ?? Order::ASC;
 
         $builder = $this->selectBuilderFactory
             ->create()
@@ -63,17 +68,11 @@ class FindOneType extends BaseFunction implements
         if (count($args) <= 4) {
             $filter = null;
 
-            if (count($args) == 4) {
+            if (count($args) === 4) {
                 $filter = $this->evaluate($args[3]);
             }
 
-            if ($filter && !is_string($filter)) {
-                $this->throwBadArgumentType(4, 'string');
-            }
-
-            if ($filter) {
-                $builder->withPrimaryFilter($filter);
-            }
+            (new FindQueryUtil())->applyFilter($builder, $filter, 4);
         } else {
             $i = 3;
 
