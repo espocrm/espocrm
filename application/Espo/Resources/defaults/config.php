@@ -67,7 +67,7 @@ return [
     'baseCurrency' => 'USD',
     'currencyRates' => [],
     'currencyNoJoinMode' => false,
-    'outboundEmailIsShared' => true,
+    'outboundEmailIsShared' => false,
     'outboundEmailFromName' => 'EspoCRM',
     'outboundEmailFromAddress' => null,
     'smtpServer' => null,
