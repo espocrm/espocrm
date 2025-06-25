@@ -31,6 +31,7 @@ namespace Espo\Tools\EmailNotification;
 
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
+use Espo\Core\Name\Link;
 use Espo\Core\Notification\EmailNotificationHandler;
 use Espo\Core\Mail\SenderParams;
 use Espo\Core\Utils\Config\ApplicationConfig;
@@ -766,7 +767,7 @@ class Processor
         }
 
         $emailAddresses = $this->entityManager
-            ->getRelation($user, 'emailAddresses')
+            ->getRelation($user, Link::EMAIL_ADDRESSES)
             ->find();
 
         foreach ($emailAddresses as $ea) {

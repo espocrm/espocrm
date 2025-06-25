@@ -27,23 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail;
+namespace Espo\Core\Name;
 
-use Espo\Core\Utils\Config;
-
-class ConfigDataProvider
+/**
+ * @since 9.2.0
+ */
+class Link
 {
-    public function __construct(
-        private Config $config,
-    ) {}
-
-    public function getSystemOutboundAddress(): ?string
-    {
-        return $this->config->get('outboundEmailFromAddress');
-    }
-
-    public function isOutboundEmailShared(): bool
-    {
-        return (bool) $this->config->get('outboundEmailIsShared');
-    }
+    public const EMAIL_ADDRESSES = 'emailAddresses';
 }

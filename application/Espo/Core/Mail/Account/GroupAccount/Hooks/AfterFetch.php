@@ -30,6 +30,7 @@
 namespace Espo\Core\Mail\Account\GroupAccount\Hooks;
 
 use Espo\Core\Name\Field;
+use Espo\Core\Name\Link;
 use Laminas\Mail\Message;
 
 use Espo\Core\Mail\Account\GroupAccount\AccountFactory as GroupAccountFactory;
@@ -543,7 +544,7 @@ class AfterFetch implements AfterFetchInterface
 
         $contact = $this->entityManager
             ->getRDBRepository(Contact::ENTITY_TYPE)
-            ->join('emailAddresses', 'emailAddressesMultiple')
+            ->join(Link::EMAIL_ADDRESSES, 'emailAddressesMultiple')
             ->where([
                 'emailAddressesMultiple.id' => $email->get('fromEmailAddressId'),
             ])
@@ -555,7 +556,7 @@ class AfterFetch implements AfterFetchInterface
             if (!$case->get('accountId')) {
                 $lead = $this->entityManager
                     ->getRDBRepository(Lead::ENTITY_TYPE)
-                    ->join('emailAddresses', 'emailAddressesMultiple')
+                    ->join(Link::EMAIL_ADDRESSES, 'emailAddressesMultiple')
                     ->where([
                         'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
                     ])

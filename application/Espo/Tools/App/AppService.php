@@ -32,6 +32,7 @@ namespace Espo\Tools\App;
 use Espo\Core\Authentication\Util\MethodProvider as AuthenticationMethodProvider;
 use Espo\Core\Mail\ConfigDataProvider as EmailConfigDataProvider;
 use Espo\Core\Name\Field;
+use Espo\Core\Name\Link;
 use Espo\Core\Utils\SystemUser;
 use Espo\Entities\DashboardTemplate;
 use Espo\Entities\Email;
@@ -51,7 +52,6 @@ use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\Entities\Preferences;
-use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
 use stdClass;
 use Throwable;
@@ -281,16 +281,15 @@ class AppService
     {
         $user = $this->user;
 
-        $outboundEmailIsShared = $this->config->get('outboundEmailIsShared');
+        $outboundEmailIsShared = $this->emailConfigDataProvider->isOutboundEmailShared();
         $outboundEmailFromAddress = $this->emailConfigDataProvider->getSystemOutboundAddress();
 
         $emailAddressList = [];
         $userEmailAddressList = [];
 
-        /** @var Collection<EmailAddress> $emailAddressCollection */
+        /** @var iterable<EmailAddress> $emailAddressCollection */
         $emailAddressCollection = $this->entityManager
-            ->getRDBRepositoryByClass(User::class)
-            ->getRelation($user, 'emailAddresses')
+            ->getRelation($user, Link::EMAIL_ADDRESSES)
             ->find();
 
         foreach ($emailAddressCollection as $emailAddress) {

@@ -31,6 +31,7 @@ namespace Espo\Tools\App;
 
 use Espo\Core\Mail\ConfigDataProvider as EmailConfigDataProvider;
 use Espo\Core\Utils\ThemeManager;
+use Espo\Entities\Email;
 use Espo\Entities\Settings;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -368,8 +369,8 @@ class SettingsService
         }
 
         if (
-            !$this->acl->checkScope('Email', 'create') ||
-            !$this->config->get('outboundEmailIsShared')
+            !$this->acl->checkScope(Email::ENTITY_TYPE, Acl\Table::ACTION_CREATE) ||
+            !$this->emailConfigDataProvider->isOutboundEmailShared()
         ) {
             unset($data->outboundEmailFromAddress);
             unset($data->outboundEmailFromName);

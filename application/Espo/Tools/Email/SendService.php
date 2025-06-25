@@ -52,6 +52,7 @@ use Espo\Core\Mail\Sender;
 use Espo\Core\Mail\SenderParams;
 use Espo\Core\Mail\Smtp\HandlerProcessor;
 use Espo\Core\Mail\SmtpParams;
+use Espo\Core\Name\Link;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
@@ -77,6 +78,8 @@ use const FILTER_VALIDATE_EMAIL;
  */
 class SendService
 {
+    private const LINK_EMAIL_ADDRESSES = Link::EMAIL_ADDRESSES;
+
     /** @var string[] */
     private array $notAllowedStatusList = [
         Email::STATUS_ARCHIVED,
@@ -127,7 +130,7 @@ class SendService
             throw new BadRequest("Empty To address.");
         }
 
-        $systemIsShared = $this->config->get('outboundEmailIsShared');
+        $systemIsShared = $this->configDataProvider->isOutboundEmailShared();
         $systemFromName = $this->config->get('outboundEmailFromName');
         $systemFromAddress = $this->configDataProvider->getSystemOutboundAddress();
 
@@ -139,7 +142,7 @@ class SendService
             // @todo Use getEmailAddressGroup.
             /** @var Collection<EmailAddress> $emailAddressCollection */
             $emailAddressCollection = $this->entityManager
-                ->getRelation($user, 'emailAddresses')
+                ->getRelation($user, self::LINK_EMAIL_ADDRESSES)
                 ->find();
 
             foreach ($emailAddressCollection as $ea) {

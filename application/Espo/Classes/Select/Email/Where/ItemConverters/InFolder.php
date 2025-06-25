@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\Select\Email\Where\ItemConverters;
 
+use Espo\Core\Name\Link;
 use Espo\Core\Select\Where\ItemConverter;
 use Espo\Core\Select\Where\Item;
 
@@ -237,8 +238,7 @@ class InFolder implements ItemConverter
     protected function getEmailAddressIdList(): array
     {
         $emailAddressList = $this->entityManager
-            ->getRDBRepository(User::ENTITY_TYPE)
-            ->getRelation($this->user, 'emailAddresses')
+            ->getRelation($this->user, Link::EMAIL_ADDRESSES)
             ->select([Attribute::ID])
             ->find();
 

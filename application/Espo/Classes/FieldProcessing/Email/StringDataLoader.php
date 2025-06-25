@@ -30,6 +30,7 @@
 namespace Espo\Classes\FieldProcessing\Email;
 
 use Espo\Core\Name\Field;
+use Espo\Core\Name\Link;
 use Espo\ORM\Entity;
 use Espo\ORM\Name\Attribute;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
@@ -44,17 +45,15 @@ use Espo\Entities\User;
  */
 class StringDataLoader implements Loader
 {
-    private EntityManager $entityManager;
-    private User $user;
+    private const LINK_EMAIL_ADDRESSES = Link::EMAIL_ADDRESSES;
 
     /** @var array<string, string> */
     private $fromEmailAddressNameCache = [];
 
-    public function __construct(EntityManager $entityManager, User $user)
-    {
-        $this->entityManager = $entityManager;
-        $this->user = $user;
-    }
+    public function __construct(
+        private EntityManager $entityManager,
+        private User $user
+    ) {}
 
     public function process(Entity $entity, Params $params): void
     {
@@ -63,8 +62,7 @@ class StringDataLoader implements Loader
         $userEmailAddressIdList = [];
 
         $emailAddressCollection = $this->entityManager
-            ->getRDBRepository(User::ENTITY_TYPE)
-            ->getRelation($this->user, 'emailAddresses')
+            ->getRelation($this->user, self::LINK_EMAIL_ADDRESSES)
             ->select([Attribute::ID])
             ->find();
 
