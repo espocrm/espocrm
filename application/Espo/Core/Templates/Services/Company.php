@@ -29,9 +29,12 @@
 
 namespace Espo\Core\Templates\Services;
 
+use Espo\Core\Templates\Entities\Company as CompanyEntity;
+use Espo\Services\Record;
+
 /**
- * @extends \Espo\Services\Record<\Espo\Core\Templates\Entities\Company>
+ * @extends Record<CompanyEntity>
  */
-class Company extends \Espo\Services\Record
+class Company extends Record
 {
 }

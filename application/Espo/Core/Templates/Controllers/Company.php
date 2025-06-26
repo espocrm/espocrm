@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Templates\Controllers;
 
-class Company extends \Espo\Core\Controllers\Record
-{
-}
+use Espo\Core\Controllers\Record;
+
+class Company extends Record
+{}

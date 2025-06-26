@@ -29,10 +29,11 @@
 
 namespace Espo\Core\Templates\Services;
 
+use Espo\Core\Templates\Entities\Person as PersonEntity;
 use Espo\Services\Record;
 
 /**
- * @extends Record<\Espo\Core\Templates\Entities\Person>
+ * @extends Record<PersonEntity>
  */
 class Person extends Record
 {}

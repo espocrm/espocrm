@@ -29,9 +29,11 @@
 
 namespace Espo\Core\Templates\Services;
 
+use Espo\Core\Templates\Entities\Base as BaseEntity;
+use Espo\Services\Record;
+
 /**
- * @extends \Espo\Services\Record<\Espo\Core\Templates\Entities\Base>
+ * @extends Record<BaseEntity>
  */
-class Base extends \Espo\Services\Record
-{
-}
+class Base extends Record
+{}

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Templates\Controllers;
 
-class CategoryTree extends \Espo\Core\Controllers\RecordTree
-{
-}
+use Espo\Core\Controllers\RecordTree;
+
+class CategoryTree extends RecordTree
+{}

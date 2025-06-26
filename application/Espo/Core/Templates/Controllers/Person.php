@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Templates\Controllers;
 
-class Person extends \Espo\Core\Controllers\Record
-{
-}
+use Espo\Core\Controllers\Record;
+
+class Person extends Record
+{}

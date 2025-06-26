@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Templates\Controllers;
 
-class BasePlus extends \Espo\Core\Controllers\Record
-{
-}
+use Espo\Core\Controllers\Record;
+
+class BasePlus extends Record
+{}
