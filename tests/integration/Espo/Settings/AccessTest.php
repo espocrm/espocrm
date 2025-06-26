@@ -71,7 +71,7 @@ class AccessTest extends \tests\integration\Core\BaseTestCase
             ->getConfigData();
 
         $this->assertTrue(property_exists($data, 'version'));
-        $this->assertTrue(property_exists($data, 'outboundEmailFromAddress'));
+        $this->assertFalse(property_exists($data, 'outboundEmailFromAddress'));
         $this->assertFalse(property_exists($data, 'jobPeriod'));
         $this->assertFalse(property_exists($data, 'cryptKey'));
     }
