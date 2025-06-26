@@ -830,7 +830,9 @@ class ListWithCategories extends ListView {
      * @protected
      */
     updateHeader() {
-        this.getView('header').reRender();
+        if (this.getView('header')) {
+            this.getView('header').reRender();
+        }
     }
 
     /**
