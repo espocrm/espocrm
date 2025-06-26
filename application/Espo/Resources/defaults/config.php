@@ -241,7 +241,7 @@ return [
     'cleanupAudit' => true,
     'cleanupAuditPeriod' => '3 months',
     'cleanupAppLog' => true,
-    'cleanupAppLogPeriod' => '30 days',
+    'cleanupAppLogPeriod' => '1 month',
     'appLogAdminAllowed' => false,
     'currencyFormat' => 2,
     'currencyDecimalPlaces' => 2,
