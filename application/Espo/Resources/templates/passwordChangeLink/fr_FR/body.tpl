@@ -1,1 +1,1 @@
-<p>You can change your password by following this link <a href="{{link}}">{{link}}</a>. This unique URL will be expired soon.</p>
+<p>Vous pouvez modifier votre mot de passe en suivant ce lien <a href="{{link}}">{{link}}</a>. Cette URL unique expirera bientôt.</p>
