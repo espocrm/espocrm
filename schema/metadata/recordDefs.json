@@ -35,7 +35,7 @@
             }
         },
         "selectApplierClassNameList": {
-            "description": "Classes for additional handling of a select query. Should implement Espo\\Core\\Select\\Applier\\AdditionalApplier interface.",
+            "description": "Classes for additional handling of a select query. Use for joining additional fields. Do not use for access control logic. Should implement Espo\\Core\\Select\\Applier\\AdditionalApplier interface.",
             "type": "array",
             "items": {
                 "type": "string"
