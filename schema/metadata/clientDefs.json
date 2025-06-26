@@ -597,7 +597,7 @@
                     },
                     "allResultDisabled": {
                         "type": "boolean",
-                        "description": "Disable the ability to select all result. Important for non-standard relationship panels. As of v9.2."
+                        "description": "Disable the ability to select all results. Important for non-standard relationship panels. As of v9.2."
                     }
                 }
             }
