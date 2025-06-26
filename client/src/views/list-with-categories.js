@@ -77,6 +77,7 @@ class ListWithCategories extends ListView {
         super.setup();
 
         this.addActionHandler('toggleExpandedFromNavigation', () => this.actionToggleExpandedFromNavigation());
+        this.addActionHandler('manageCategories', () => this.actionManageCategories());
 
         this.defaultMaxSize = this.collection.maxSize;
 
@@ -736,14 +737,19 @@ class ListWithCategories extends ListView {
         return this.currentCategoryId;
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @private
      */
     actionManageCategories() {
         this.clearCategoryViews();
 
-        this.getRouter().navigate('#' + this.categoryScope, {trigger: true});
+        let url =`#${this.categoryScope}`;
+
+        if (this.currentCategoryId) {
+            url += `/listTree/currentId=${this.currentCategoryId}`;
+        }
+
+        this.getRouter().navigate(url, {trigger: true});
     }
 
     /**

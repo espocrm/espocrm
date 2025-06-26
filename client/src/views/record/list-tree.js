@@ -174,6 +174,41 @@ class ListTreeRecordView extends ListRecordView {
                 }
             });
         }
+
+        if (this.level === 0) {
+            this.once('after:render', () => {
+                const collection = /** @type {import('collections/tree').default} */this.collection;
+
+                if (collection.openPath) {
+                    /**
+                     * @param {ListTreeRecordView} view
+                     * @param {string[]} path
+                     */
+                    const open = async (view, path) => {
+                        path = [...path];
+                        const id = path.shift()
+
+                        const itemView = view.getItemViews().find(view => view.model.id === id);
+
+                        if (!itemView) {
+                            return;
+                        }
+
+                        await itemView.unfold();
+
+                        if (!path.length) {
+                            return;
+                        }
+
+                        await open(itemView.getChildrenView(), path);
+                    }
+
+                    open(this, collection.openPath);
+
+                    collection.openPath = null;
+                }
+            });
+        }
     }
 
     onRemove() {

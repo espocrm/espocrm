@@ -48,6 +48,7 @@ use Espo\Core\Acl\Exceptions\NotImplemented;
 
 use ArrayAccess;
 use Espo\Tools\CategoryTree\Move\LoopReferenceChecker;
+use Espo\Tools\CategoryTree\Record\ReadTreeParams;
 use stdClass;
 
 /**
@@ -60,56 +61,45 @@ class RecordTree extends Record
 
     private ?Entity $seed = null;
 
-    /** @var ?string */
-    protected $subjectEntityType = null;
-    /** @var ?string */
-    protected $categoryField = null;
+    protected ?string $subjectEntityType = null;
+    protected ?string $categoryField = null;
 
     /**
-     * @param array{where?: ?WhereItem, onlyNotEmpty?: bool} $params
      * @return ?Collection<Entity>
      * @throws Forbidden
      * @throws BadRequest
      */
-    public function getTree(
-        ?string $parentId = null,
-        array $params = [],
-        ?int $maxDepth = null
-    ): ?Collection {
-
+    public function getTree(ReadTreeParams $params): ?Collection
+    {
         if (!$this->acl->check($this->entityType, Table::ACTION_READ)) {
             throw new Forbidden();
         }
 
-        /** @noinspection PhpRedundantOptionalArgumentInspection */
-        return $this->getTreeInternal($parentId, $params, $maxDepth, 0);
+        $path = $params->currentId ? $this->getTreeItemPath($params->currentId) : null;
+
+        return $this->getTreeInternal($params->parentId, $params, $path);
     }
 
     /**
-     * @param array{where?: ?WhereItem, onlyNotEmpty?: bool} $params
+     * @param string[] $path
      * @return ?Collection<Entity>
      * @throws BadRequest
      * @throws Forbidden
      */
-    private function getTreeInternal(
-        ?string $parentId = null,
-        array $params = [],
-        ?int $maxDepth = null,
-        int $level = 0
-    ): ?Collection {
-
-        if (!$maxDepth) {
-            $maxDepth = self::MAX_DEPTH;
-        }
+    private function getTreeInternal(?string $parentId, ReadTreeParams $params, ?array $path, int $level = 0): ?Collection
+    {
+        $maxDepth = $params->maxDepth ?? self::MAX_DEPTH;
 
         if ($level === $maxDepth) {
-            return null;
+            if ($path === null || !in_array($parentId, $path)) {
+                return null;
+            }
         }
 
         $searchParams = SearchParams::create();
 
-        if (isset($params['where'])) {
-            $searchParams = $searchParams->withWhere($params['where']);
+        if ($params->where) {
+            $searchParams = $searchParams->withWhere($params->where);
         }
 
         $selectBuilder = $this->selectBuilderFactory
@@ -118,9 +108,7 @@ class RecordTree extends Record
             ->withStrictAccessControl()
             ->withSearchParams($searchParams)
             ->buildQueryBuilder()
-            ->where([
-                'parentId' => $parentId,
-            ]);
+            ->where(['parentId' => $parentId]);
 
         $selectBuilder->order([]);
 
@@ -141,7 +129,7 @@ class RecordTree extends Record
             ->find();
 
         if (
-            (!empty($params['onlyNotEmpty']) || $filterItems) &&
+            ($params->onlyNotEmpty || $filterItems) &&
             $collection instanceof ArrayAccess
         ) {
             foreach ($collection as $i => $entity) {
@@ -152,7 +140,7 @@ class RecordTree extends Record
         }
 
         foreach ($collection as $entity) {
-            $childList = $this->getTreeInternal($entity->getId(), $params, $maxDepth, $level + 1);
+            $childList = $this->getTreeInternal($entity->getId(), $params, $path, $level + 1);
 
             $entity->set('childList', $childList?->getValueMapList());
         }

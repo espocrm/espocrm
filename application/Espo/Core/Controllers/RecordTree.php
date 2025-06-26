@@ -33,15 +33,14 @@ use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
-
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Templates\Entities\CategoryTree;
 use Espo\Services\RecordTree as Service;
 use Espo\Core\Api\Request;
-
 use Espo\Tools\CategoryTree\Move\MoveParams;
 use Espo\Tools\CategoryTree\MoveService;
+use Espo\Tools\CategoryTree\Record\ReadTreeParams;
 use RuntimeException;
 use stdClass;
 
@@ -56,7 +55,6 @@ class RecordTree extends Record
      * Get a category tree.
      *
      * @throws BadRequest
-     * @throws Error
      * @throws Forbidden
      * @throws NotFound
      * @noinspection PhpUnused
@@ -66,30 +64,45 @@ class RecordTree extends Record
         $selectParams = $this->fetchSearchParamsFromRequest($request);
 
         $parentId = $request->getQueryParam('parentId');
+        $currentId = $request->getQueryParam('currentId');
         $maxDepth = $request->getQueryParam('maxDepth');
         $onlyNotEmpty = (bool) $request->getQueryParam('onlyNotEmpty');
+
+        if ($parentId && $currentId) {
+            throw new BadRequest("Cannot have both parentId and currentId set.");
+        }
 
         if ($maxDepth !== null) {
             $maxDepth = (int) $maxDepth;
         }
 
-        $collection = $this->getRecordTreeService()->getTree(
-            $parentId,
-            [
-                'where' => $selectParams->getWhere(),
-                'onlyNotEmpty' => $onlyNotEmpty,
-            ],
-            $maxDepth
+        $params = new ReadTreeParams(
+            where: $selectParams->getWhere(),
+            onlyNotEmpty: $onlyNotEmpty,
+            currentId: $currentId,
+            maxDepth: $maxDepth,
+            parentId: $parentId,
         );
 
+        $service = $this->getRecordTreeService();
+
+        $collection = $service->getTree($params);
+
         if (!$collection) {
-            throw new Error();
+            throw new RuntimeException();
+        }
+
+        $openPath = null;
+
+        if ($params->currentId) {
+            $openPath = $service->getTreeItemPath($params->currentId);
         }
 
         return (object) [
             'list' => $collection->getValueMapList(),
-            'path' => $this->getRecordTreeService()->getTreeItemPath($parentId),
-            'data' => $this->getRecordTreeService()->getCategoryData($parentId),
+            'path' => $service->getTreeItemPath($parentId),
+            'data' => $service->getCategoryData($parentId),
+            'openPath' => $openPath,
         ];
     }
 

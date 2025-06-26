@@ -33,6 +33,26 @@ import Collection from 'collection';
 class TreeCollection extends Collection {
 
     /**
+     * @type {string}
+     */
+    parentId
+
+    /**
+     * @type {string|null}
+     */
+    currentId = null
+
+    /**
+     * @type {string[]|null}
+     */
+    path
+
+    /**
+     * @type {string[]|null}
+     */
+    openPath
+
+    /**
      * @return {TreeCollection}
      */
     createSeed() {
@@ -55,6 +75,8 @@ class TreeCollection extends Collection {
         seed.reset();
 
         this.path = response.path;
+        this.openPath = response.openPath ?? null;
+
         /**
          * @type {{
          *     id: string,
@@ -109,6 +131,10 @@ class TreeCollection extends Collection {
 
         if (this.parentId) {
             options.data.parentId = this.parentId;
+        }
+
+        if (this.currentId) {
+            options.data.currentId = this.currentId;
         }
 
         return super.fetch(options);

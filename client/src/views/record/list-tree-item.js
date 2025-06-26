@@ -242,7 +242,10 @@ class ListTreeRecordItemView extends View {
             });
     }
 
-    unfold() {
+    /**
+     * Unfold.
+     */
+    async unfold() {
         if (this.createDisabled) {
             this.once('children-created', () => {
                 if (!this.model.lastAreChecked) {
@@ -263,34 +266,34 @@ class ListTreeRecordItemView extends View {
             return;
         }
 
-        this.getCollectionFactory().create(this.scope, collection => {
-            collection.url = this.collection.url;
-            collection.parentId = this.model.id;
+        const collection = await this.getCollectionFactory().create(this.scope);
 
-            Espo.Ui.notifyWait();
+        collection.url = this.collection.url;
+        collection.parentId = this.model.id;
 
-            this.listenToOnce(collection, 'sync', () => {
-                Espo.Ui.notify(false);
+        Espo.Ui.notifyWait();
 
-                this.model.set('childCollection', collection);
+        this.listenToOnce(collection, 'sync', () => {
+            Espo.Ui.notify(false);
 
-                this.createChildren();
+            this.model.set('childCollection', collection);
 
-                this.isUnfolded = true;
+            this.createChildren();
 
-                if (collection.length || !this.createDisabled) {
-                    this.afterUnfold();
+            this.isUnfolded = true;
 
-                    this.trigger('after:unfold');
-                } else {
-                    this.isEnd = true;
+            if (collection.length || !this.createDisabled) {
+                this.afterUnfold();
 
-                    this.afterIsEnd();
-                }
-            });
+                this.trigger('after:unfold');
+            } else {
+                this.isEnd = true;
 
-            collection.fetch();
+                this.afterIsEnd();
+            }
         });
+
+        await collection.fetch();
     }
 
     fold() {
@@ -376,7 +379,7 @@ class ListTreeRecordItemView extends View {
     }
 
     /**
-     * @return module:views/record/list-tree
+     * @return {module:views/record/list-tree}
      */
     getChildrenView() {
         return /** @type module:views/record/list-tree */this.getView('children');

@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import RecordController from 'controllers/record';
+import TreeCollection from 'collections/tree';
 
 class RecordTreeController extends RecordController {
 
@@ -49,14 +50,27 @@ class RecordTreeController extends RecordController {
     }
 
     // noinspection JSUnusedGlobalSymbols
-    actionListTree() {
-        this.getCollection().then(collection => {
-            collection.url = collection.entityType + '/action/listTree';
+    /**
+     *
+     * @param {{
+     *     currentId?: string,
+     * }} options
+     */
+    async actionListTree(options) {
+        const currentId = options.currentId;
 
-            this.main(this.getViewName('listTree'), {
-                scope: this.name,
-                collection: collection
-            });
+        const collection = await this.getCollection();
+
+        if (!(collection instanceof TreeCollection)) {
+            throw new Error("Wrong collection.");
+        }
+
+        collection.url = `${collection.entityType}/action/listTree`;
+        collection.currentId = currentId ?? null;
+
+        this.main(this.getViewName('listTree'), {
+            scope: this.name,
+            collection: collection,
         });
     }
 
