@@ -63,6 +63,16 @@ class InCategory implements ItemConverter
             return WhereClause::create();
         }
 
+        if (!is_array($value)) {
+            $value = [$value];
+        }
+
+        foreach ($value as $it) {
+            if (!is_string($it) && !is_int($it)) {
+                throw new BadRequest("Bad where item. Bad array item.");
+            }
+        }
+
         $entityDefs = $this->ormDefs->getEntity($this->entityType);
 
         if (!$entityDefs->hasRelation($link)) {
