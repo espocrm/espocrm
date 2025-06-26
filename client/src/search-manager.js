@@ -48,7 +48,7 @@
  *
  * @property {string} type A type.
  * @property {string} [attribute] An attribute (field).
- * @property {module:search-manager~whereItem[]|string|number|boolean|null} [value] A value.
+ * @property {module:search-manager~whereItem[]|string|number|boolean|string[]|null} [value] A value.
  * @property {boolean} [dateTime] Is a date-time item.
  * @property {string} [timeZone] A time-zone.
  */

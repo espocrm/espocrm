@@ -141,6 +141,14 @@ class ListRelatedView extends MainView {
     nameAttribute
 
     /**
+     * Disable select-all-result.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    allResultDisabled = false
+
+    /**
      * @inheritDoc
      */
     shortcutKeys = {
@@ -596,11 +604,23 @@ class ListRelatedView extends MainView {
             o.type = 'listSmall';
         }
 
+        const foreignLink = this.model.getLinkParam(this.link, 'foreign');
+
+        if (!this.allResultDisabled && !this.panelDefs.allResultDisabled && foreignLink) {
+            o.forceAllResultSelectable = true;
+
+            o.allResultWhereItem = {
+                type: 'linkedWith',
+                attribute: foreignLink,
+                value: [this.model.id],
+            };
+        }
+
         this.prepareRecordViewOptions(o);
 
         const listViewName = this.getRecordViewName();
 
-        this.createView('list', listViewName, o, view =>{
+        this.createView('list', listViewName, o, view => {
             if (!this.hasParentView()) {
                 view.undelegateEvents();
 

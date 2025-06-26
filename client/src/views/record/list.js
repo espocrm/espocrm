@@ -99,6 +99,8 @@ class ListRecordView extends View {
      * @property {function(import('model').default[])} [onSelect] An on-select callback. Actual if selectable.
      *     As of v9.1.0.
      * @property {boolean} [forceSettings] Force settings. As of v9.2.0.
+     * @property {boolean} [forceAllResultSelectable] Force select all result. As of v9.2.0.
+     * @property {module:search-manager~whereItem} [allResultWhereItem] Where item for select all result. As of v9.2.0.
      */
 
     /**
@@ -1203,11 +1205,10 @@ class ListRecordView extends View {
             };
 
             if (this.allResultIsChecked) {
-                data.where = this.collection.getWhere();
+                data.where = this.getWhereForAllResult();
                 data.searchParams = this.collection.data || null;
                 data.searchData = this.collection.data || {}; // for bc;
-            }
-            else {
+            } else {
                 data.ids = this.checkedList;
             }
         }
@@ -1325,7 +1326,7 @@ class ListRecordView extends View {
             const data = {};
 
             if (this.allResultIsChecked) {
-                data.where = this.collection.getWhere();
+                data.where = this.getWhereForAllResult();
                 data.searchParams = this.collection.data || {};
                 data.selectData = data.searchData; // for bc;
                 data.byWhere = true; // for bc
@@ -1370,16 +1371,35 @@ class ListRecordView extends View {
         }
     }
 
+    /**
+     * Get the where clause for all result.
+     *
+     * @return {module:search-manager~whereItem[]}
+     * @since 9.2.0
+     */
+    getWhereForAllResult() {
+        const where = [...this.collection.getWhere()];
+
+        if (this.options.allResultWhereItem) {
+            where.push(this.options.allResultWhereItem);
+        }
+
+        return where;
+    }
+
+    /**
+     * @private
+     * @return {Record}
+     */
     getMassActionSelectionPostData() {
         const data = {};
 
         if (this.allResultIsChecked) {
-            data.where = this.collection.getWhere();
+            data.where = this.getWhereForAllResult();
             data.searchParams = this.collection.data || {};
             data.selectData = this.collection.data || {}; // for bc;
             data.byWhere = true; // for bc;
-        }
-        else {
+        } else {
             data.ids = [];
 
             for (const i in this.checkedList) {
@@ -1768,7 +1788,7 @@ class ListRecordView extends View {
             scope: this.scope,
             entityType: this.entityType,
             ids: ids,
-            where: this.collection.getWhere(),
+            where: this.getWhereForAllResult(),
             searchParams: this.collection.data,
             byWhere: this.allResultIsChecked,
             totalCount: this.collection.total,
@@ -1861,7 +1881,7 @@ class ListRecordView extends View {
         this.createView('modalConvertCurrency', 'views/modals/mass-convert-currency', {
             entityType: this.entityType,
             ids: ids,
-            where: this.collection.getWhere(),
+            where: this.getWhereForAllResult(),
             searchParams: this.collection.data,
             byWhere: this.allResultIsChecked,
             totalCount: this.collection.total,
@@ -1942,7 +1962,7 @@ class ListRecordView extends View {
             this.massActionList.unshift(item) :
             this.massActionList.push(item);
 
-        if (allResult && this.collection.url === this.entityType) {
+        if (allResult && !this.noAllResultMassActions) {
             toBeginning ?
                 this.checkAllResultMassActionList.unshift(item) :
                 this.checkAllResultMassActionList.push(item);
@@ -2376,7 +2396,7 @@ class ListRecordView extends View {
             this.massActionList.push(item);
         });
 
-        this.noAllResultMassActions = this.collection.url !== this.entityType;
+        this.noAllResultMassActions = this.collection.url !== this.entityType && !this.options.forceAllResultSelectable;
 
         this.checkAllResultMassActionList = this.checkAllResultMassActionList
             .filter(item => this.massActionList.includes(item));

@@ -594,6 +594,10 @@
                             }
                         },
                         "description": "Header dropdown actions. As of v8.4."
+                    },
+                    "allResultDisabled": {
+                        "type": "boolean",
+                        "description": "Disable the ability to select all result. Important for non-standard relationship panels. As of v9.2."
                     }
                 }
             }

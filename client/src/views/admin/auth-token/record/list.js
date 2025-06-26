@@ -53,7 +53,7 @@ export default class extends ListRecordView {
                 entityType: this.entityType,
                 params: {
                     ids: ids || null,
-                    where: (!ids || ids.length === 0) ? this.collection.getWhere() : null,
+                    where: (!ids || ids.length === 0) ? this.getWhereForAllResult() : null,
                     searchParams: (!ids || ids.length === 0) ? this.collection.data : null,
                 },
                 data: attributes,

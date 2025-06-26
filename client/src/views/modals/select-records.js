@@ -463,7 +463,7 @@ class SelectRecordsModalView extends ModalView {
         if (listView.allResultIsChecked) {
             const data = {
                 massRelate: true,
-                where: this.collection.getWhere(),
+                where: listView.getWhereForAllResult(),
                 searchParams: this.collection.data,
             };
 

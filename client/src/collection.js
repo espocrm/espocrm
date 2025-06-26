@@ -134,6 +134,7 @@ class Collection {
 
     /**
      * @deprecated
+     * @type {module:search-manager~whereItem[]|null}
      */
     whereAdditional = null
 
@@ -154,7 +155,7 @@ class Collection {
     /**
      * A where function.
      *
-     * @type {function(): Object[]}
+     * @type {function(): module:search-manager~whereItem[]}
      */
     whereFunction
 
@@ -897,10 +898,10 @@ class Collection {
     /**
      * Get a where clause.
      *
-     * @returns {Object[]}
+     * @returns {module:search-manager~whereItem[]}
      */
     getWhere() {
-        let where = (this.where || []).concat(this.whereAdditional || []);
+        let where = (this.where ?? []).concat(this.whereAdditional || []);
 
         if (this.whereFunction) {
             where = where.concat(this.whereFunction() || []);

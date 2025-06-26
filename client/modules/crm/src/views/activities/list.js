@@ -30,10 +30,10 @@ import ListRelatedView from 'views/list-related';
 
 export default class ActivitiesListView extends ListRelatedView {
 
-
     createButton = false
     unlinkDisabled = true
     filtersDisabled = true
+    allResultDisabled = true;
 
     setup() {
         this.rowActionsView = 'views/record/row-actions/default';
