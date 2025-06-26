@@ -89,7 +89,6 @@ class SelectProvider {
             }
 
             if (settings?.isColumnHidden(item.name, item.hidden)) {
-                console.log(item.name);
                 return;
             }
 
