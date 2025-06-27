@@ -1,20 +1,20 @@
 {
-    "controller":"crm:controllers/lead",
-    "views":{
-        "detail":"crm:views/lead/detail"
+    "controller": "crm:controllers/lead",
+    "views": {
+        "detail": "crm:views/lead/detail"
     },
-    "recordViews":{
-        "detail":"crm:views/lead/record/detail"
+    "recordViews": {
+        "detail": "crm:views/lead/record/detail"
     },
     "sidePanels": {
         "detail": [
             {
-                "name":"convertedTo",
-                "label":"Converted To",
-                "view":"crm:views/lead/record/panels/converted-to",
-                "notRefreshable":true,
-                "hidden":true,
-                "style":"success",
+                "name": "convertedTo",
+                "label": "Converted To",
+                "view": "crm:views/lead/record/panels/converted-to",
+                "notRefreshable": true,
+                "hidden": true,
+                "style": "success",
                 "isForm": true
             },
             {
@@ -30,25 +30,25 @@
                 "reference": "tasks"
             }
         ],
-        "edit":[
+        "edit": [
             {
-                "name":"convertedTo",
-                "label":"Converted To",
-                "view":"crm:views/lead/record/panels/converted-to",
-                "notRefreshable":true,
-                "hidden":true,
-                "style":"success",
+                "name": "convertedTo",
+                "label": "Converted To",
+                "view": "crm:views/lead/record/panels/converted-to",
+                "notRefreshable": true,
+                "hidden": true,
+                "style": "success",
                 "isForm": true
             }
         ],
         "detailSmall": [
             {
-                "name":"convertedTo",
-                "label":"Converted To",
-                "view":"crm:views/lead/record/panels/converted-to",
-                "notRefreshable":true,
-                "hidden":true,
-                "style":"success",
+                "name": "convertedTo",
+                "label": "Converted To",
+                "view": "crm:views/lead/record/panels/converted-to",
+                "notRefreshable": true,
+                "hidden": true,
+                "style": "success",
                 "isForm": true
             },
             {
@@ -64,14 +64,14 @@
                 "reference": "tasks"
             }
         ],
-        "editSmall":[
+        "editSmall": [
             {
-                "name":"convertedTo",
-                "label":"Converted To",
-                "view":"crm:views/lead/record/panels/converted-to",
-                "notRefreshable":true,
-                "hidden":true,
-                "style":"success",
+                "name": "convertedTo",
+                "label": "Converted To",
+                "view": "crm:views/lead/record/panels/converted-to",
+                "notRefreshable": true,
+                "hidden": true,
+                "style": "success",
                 "isForm": true
             }
         ]
@@ -90,47 +90,47 @@
             }
         ]
     },
-    "relationshipPanels":{
-        "campaignLogRecords":{
-            "rowActionsView":"views/record/row-actions/empty",
-            "select":false,
-            "create":false
+    "relationshipPanels": {
+        "campaignLogRecords": {
+            "rowActionsView": "views/record/row-actions/empty",
+            "select": false,
+            "create": false
         },
-        "targetLists":{
+        "targetLists": {
             "create": false,
             "rowActionsView": "crm:views/record/row-actions/relationship-target",
             "layout": "listForTarget",
             "view": "crm:views/record/panels/target-lists"
         }
     },
-    "filterList":[
+    "filterList": [
         {
-            "name":"actual"
+            "name": "actual"
         },
         {
-            "name":"converted",
-            "style":"success"
+            "name": "converted",
+            "style": "success"
         }
     ],
-    "boolFilterList":[
+    "boolFilterList": [
         "onlyMy"
     ],
-    "dynamicLogic":{
-        "fields":{
-            "name":{
-                "required":{
-                    "conditionGroup":[
+    "dynamicLogic": {
+        "fields": {
+            "name": {
+                "required": {
+                    "conditionGroup": [
                         {
-                            "type":"isEmpty",
-                            "attribute":"accountName"
+                            "type": "isEmpty",
+                            "attribute": "accountName"
                         },
                         {
-                            "type":"isEmpty",
-                            "attribute":"emailAddress"
+                            "type": "isEmpty",
+                            "attribute": "emailAddress"
                         },
                         {
-                            "type":"isEmpty",
-                            "attribute":"phoneNumber"
+                            "type": "isEmpty",
+                            "attribute": "phoneNumber"
                         }
                     ]
                 }
