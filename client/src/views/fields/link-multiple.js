@@ -1144,8 +1144,8 @@ class LinkMultipleFieldView extends BaseFieldView {
             return new Promise(resolve => {
                 Espo.loader.requirePromise(this.panelDefs.createHandler)
                     .then(Handler => new Handler(this.getHelper()))
-                    .then(handler => {
-                        handler.getAttributes(this.model)
+                    .then(/** import('handlers/create-related').default */handler => {
+                        handler.getAttributes(this.model, this.name)
                             .then(additionalAttributes => {
                                 resolve({
                                     ...attributes,

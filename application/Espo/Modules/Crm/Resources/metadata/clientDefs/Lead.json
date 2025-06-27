@@ -101,6 +101,12 @@
             "rowActionsView": "crm:views/record/row-actions/relationship-target",
             "layout": "listForTarget",
             "view": "crm:views/record/panels/target-lists"
+        },
+        "meetings": {
+            "createHandler": "handlers/create-related/set-parent"
+        },
+        "calls": {
+            "createHandler": "handlers/create-related/set-parent"
         }
     },
     "filterList": [

@@ -26,32 +26,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/**
- * Prepares attributes for a related record that is being created.
- *
- * @abstract
- */
-class CreateRelatedHandler {
+import CreateRelatedHandler from 'handlers/create-related';
+import {inject} from 'di';
+import ModelFactory from 'model-factory';
+
+export default class SetParentHandler extends CreateRelatedHandler {
 
     /**
-     * @param {module:view-helper} viewHelper
+     * @private
+     * @type {ModelFactory}
      */
-    constructor(viewHelper) {
-        // noinspection JSUnusedGlobalSymbols
-        this.viewHelper = viewHelper;
-    }
+    @inject(ModelFactory)
+    modelFactory
 
-    /**
-     * Get attributes for a new record.
-     *
-     * @abstract
-     * @param {module:model} model A model.
-     * @param {string} link A link name. As of v9.2.0.
-     * @return {Promise<Object.<string, *>>} Attributes.
-     */
-    getAttributes(model, link) {
-        return Promise.resolve({});
+    async getAttributes(model, link) {
+        const entityType = model.getLinkParam(link, 'entity');
+
+        if (!entityType) {
+            return {};
+        }
+
+        const seed = await this.modelFactory.create(entityType);
+
+        /** @type {string[]} */
+        const parentEntityTypeList = seed.getFieldParam('parent', 'entityList') ?? [];
+
+        if (!parentEntityTypeList.includes(model.entityType)) {
+            return {};
+        }
+
+        return {
+            parentId: model.id,
+            parentName: model.attributes.name,
+            parentType: model.entityType,
+        }
     }
 }
 
-export default CreateRelatedHandler;
