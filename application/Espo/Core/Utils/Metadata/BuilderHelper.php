@@ -103,6 +103,13 @@ class BuilderHelper
             $subName = Util::getNaming($field, $subField, $naming);
 
             $output[$subName] = array_merge($copiedParams, $subParams);
+
+            // A trick to allow some fields to be combined with the main field.
+            if (array_key_exists('detailLayoutIncompatibleFieldList', $output[$subName])) {
+                continue;
+            }
+
+            $output[$subName]['detailLayoutIncompatibleFieldList'] = [$field];
         }
 
         return $output;
