@@ -409,6 +409,7 @@ class LayoutGridView extends LayoutBaseView {
             update: () => {
                 this.setIsChanged();
             },
+            cursor: 'grabbing',
         });
 
         // noinspection JSUnresolvedReference
@@ -420,6 +421,7 @@ class LayoutGridView extends LayoutBaseView {
             update: () => {
                 this.setIsChanged();
             },
+            cursor: 'grabbing',
         });
 
         // noinspection JSUnresolvedReference
@@ -428,8 +430,13 @@ class LayoutGridView extends LayoutBaseView {
         const $li = $('#layout ul.cells > li');
 
         // noinspection JSValidateTypes
-        $li.draggable({revert: 'invalid', revertDuration: 200, zIndex: 10})
-            .css('cursor', 'pointer');
+        $li.draggable({
+            revert: 'invalid',
+            revertDuration: 200,
+            zIndex: 10,
+            cursor: 'grabbing',
+        })
+            .css('cursor', '');
 
         $li.droppable().droppable('destroy');
 

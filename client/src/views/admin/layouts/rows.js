@@ -88,6 +88,7 @@ class LayoutRowsView extends LayoutBaseView {
 
     afterRender() {
         $('#layout ul.enabled, #layout ul.disabled').sortable({
+            cursor: 'grabbing',
             connectWith: '#layout ul.connected',
             update: e => {
                 if (!$(e.target).hasClass('disabled')) {
