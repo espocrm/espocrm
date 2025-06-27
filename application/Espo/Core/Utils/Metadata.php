@@ -289,20 +289,20 @@ class Metadata
         switch ($key1) {
             case 'entityDefs':
                 // Unset related additional fields, e.g. a field with an 'address' type.
-                $fieldDefinitionList = $this->get('fields');
+                $defs = $this->get('fields');
 
                 $unsetList = $unsets;
 
                 foreach ($unsetList as $unsetItem) {
                     if (preg_match('/fields\.([^.]+)/', $unsetItem, $matches)) {
-                        $fieldName = $matches[1];
-                        $fieldPath = [$key1, $key2, 'fields', $fieldName];
+                        $field = $matches[1];
+                        $fieldPath = [$key1, $key2, 'fields', $field];
 
                         // @todo Revise the need. Additional fields are supposed to exist only in the build?
-                        $additionalFields = $this->builderHelper->getAdditionalFieldList(
-                            $fieldName,
-                            $this->get($fieldPath, []),
-                            $fieldDefinitionList
+                        $additionalFields = $this->builderHelper->getAdditionalFields(
+                            field: $field,
+                            params: $this->get($fieldPath, []),
+                            defs: $defs,
                         );
 
                         if (is_array($additionalFields)) {

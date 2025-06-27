@@ -32,6 +32,9 @@ namespace Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Defs\Params\FieldParam;
 
+/**
+ * @internal
+ */
 class BuilderHelper
 {
     /**
@@ -59,40 +62,49 @@ class BuilderHelper
     /**
      * Get additional field list based on field definition in metadata 'fields'.
      *
-     * @param string $fieldName
-     * @param array<string, mixed> $fieldParams
-     * @param array<string, mixed> $definitionList
+     * @param string $field
+     * @param array<string, mixed> $params
+     * @param array<string, mixed> $defs
      * @return ?array<string, mixed>
+     * @internal
      */
-    public function getAdditionalFieldList(string $fieldName, array $fieldParams, array $definitionList): ?array
+    public function getAdditionalFields(string $field, array $params, array $defs): ?array
     {
-        if (empty($fieldParams['type']) || empty($definitionList)) {
+        if (!$defs) {
             return null;
         }
 
-        $fieldType = $fieldParams['type'];
-        $fieldDefinition = $definitionList[$fieldType] ?? null;
+        $type = $params['type'] ?? null;
 
-        if (
-            isset($fieldDefinition) &&
-            !empty($fieldDefinition['fields']) &&
-            is_array($fieldDefinition['fields'])
-        ) {
-            $copiedParams = array_intersect_key($fieldParams, array_flip($this->copiedDefParams));
-
-            $additionalFields = [];
-
-            foreach ($fieldDefinition['fields'] as $subFieldName => $subFieldParams) {
-                $namingType = $fieldDefinition['naming'] ?? $this->defaultFieldNaming;
-
-                $subFieldNaming = Util::getNaming($fieldName, $subFieldName, $namingType);
-
-                $additionalFields[$subFieldNaming] = array_merge($copiedParams, $subFieldParams);
-            }
-
-            return $additionalFields;
+        if (!$type) {
+            return null;
         }
 
-        return null;
+        $typeDefs = $defs[$type] ?? null;
+
+        if (!$typeDefs) {
+            return null;
+        }
+
+        /** @var ?array<string, mixed> $fields */
+        $fields = $typeDefs['fields'] ?? null;
+        /** @var string $naming */
+        $naming = $typeDefs['naming'] ?? $this->defaultFieldNaming;;
+
+        if (!is_array($fields)) {
+            return null;
+        }
+
+        $copiedParams = array_intersect_key($params, array_flip($this->copiedDefParams));
+
+        $output = [];
+
+        foreach ($fields as $subField => $subParams) {
+            $subName = Util::getNaming($field, $subField, $naming);
+
+            $output[$subName] = array_merge($copiedParams, $subParams);
+        }
+
+        return $output;
     }
 }
