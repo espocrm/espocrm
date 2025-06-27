@@ -876,6 +876,17 @@ class PhoneFieldView extends VarcharFieldView {
             },
         };
     }
+
+    focusOnInlineEdit() {
+        /** @type {HTMLElement|null} */
+        const input = this.element.querySelector('input.phone-number');
+
+        if (!input) {
+            return;
+        }
+
+        input.focus({preventScroll: true});
+    }
 }
 
 export default PhoneFieldView;

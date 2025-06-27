@@ -289,6 +289,17 @@ class PersonNameFieldView extends VarcharFieldView {
 
         return name;
     }
+
+    focusOnInlineEdit() {
+        /** @type {HTMLElement|null} */
+        const input = this.element.querySelector('input.form-control[type="text"]');
+
+        if (!input) {
+            return;
+        }
+
+        input.focus({preventScroll: true});
+    }
 }
 
 export default PersonNameFieldView;
