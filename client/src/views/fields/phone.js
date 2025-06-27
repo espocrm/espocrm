@@ -521,8 +521,8 @@ class PhoneFieldView extends VarcharFieldView {
         const o = {
             phoneNumber: '',
             primary: !data.length,
-            type: undefined,
-            optOut: this.emailAddressOptedOutByDefault,
+            type: this.defaultType,
+            optOut: this.phoneNumberOptedOutByDefault,
             invalid: false,
         };
 
