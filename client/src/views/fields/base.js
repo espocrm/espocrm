@@ -279,9 +279,9 @@ class BaseFieldView extends View {
     /**
      * A view-record helper.
      *
-     * @type {module:view-record-helper}
+     * @type {import('view-record-helper').default|null}
      */
-    recordHelper
+    recordHelper = null
 
     /**
      * @type {JQuery|null}
@@ -726,7 +726,7 @@ class BaseFieldView extends View {
         this.fieldType = this.model.getFieldParam(this.name, 'type') || this.type;
         this.entityType = this.model.entityType || this.model.name;
 
-        this.recordHelper = this.options.recordHelper;
+        this.recordHelper = this.options.recordHelper ?? null;
         this.dataObject = Espo.Utils.clone(this.options.dataObject || {});
 
         if (!this.labelText) {
@@ -1382,6 +1382,10 @@ class BaseFieldView extends View {
     inlineEditClose(noReset) {
         this.trigger('inline-edit-off', {noReset: noReset});
 
+        if (this.recordHelper) {
+            this.recordHelper.off('continue-inline-edit');
+        }
+
         this.$el.off('keydown.inline-edit');
 
         this._isInlineEditMode = false;
@@ -1413,7 +1417,10 @@ class BaseFieldView extends View {
      */
     async inlineEdit() {
         if (this.recordHelper && this.recordHelper.isChanged()) {
-            await this.confirm(this.translate('changesLossConfirmation', 'messages'));
+            await this.confirm({
+                message: this.translate('changesLossConfirmation', 'messages'),
+                cancelCallback: this.recordHelper.trigger('continue-inline-edit'),
+            });
         }
 
         this.trigger('edit', this);
@@ -1427,6 +1434,10 @@ class BaseFieldView extends View {
         await this.setEditMode();
         await this.reRender(true);
         await this.addInlineEditLinks();
+
+        if (this.recordHelper) {
+            this.recordHelper.on('continue-inline-edit', () => this.focusOnInlineEdit())
+        }
 
         this.$el.on('keydown.inline-edit', e => {
             const key = Espo.Utils.getKeyFromKeyEvent(e);
