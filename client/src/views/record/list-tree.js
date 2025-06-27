@@ -209,6 +209,16 @@ class ListTreeRecordView extends ListRecordView {
                 }
             });
         }
+
+        this.listenTo(this.collection, 'model-sync', (/** import('model').default */m, /** Record */o) => {
+            if (o.action === 'destroy') {
+                const index = this.rowList.findIndex(it => it === m.id);
+
+                if (index > -1) {
+                    this.rowList.splice(index, 1);
+                }
+            }
+        });
     }
 
     onRemove() {
@@ -242,8 +252,7 @@ class ListTreeRecordView extends ListRecordView {
 
             if (view.model.id === id) {
                 view.setIsSelected();
-            }
-            else {
+            } else {
                 view.isSelected = false;
             }
 

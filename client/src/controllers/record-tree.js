@@ -54,6 +54,7 @@ class RecordTreeController extends RecordController {
      *
      * @param {{
      *     currentId?: string,
+     *     isReturn?: boolean,
      * }} options
      */
     async actionListTree(options) {
@@ -68,10 +69,12 @@ class RecordTreeController extends RecordController {
         collection.url = `${collection.entityType}/action/listTree`;
         collection.currentId = currentId ?? null;
 
+        const isReturn = options.isReturn || this.getRouter().backProcessed;
+
         this.main(this.getViewName('listTree'), {
             scope: this.name,
             collection: collection,
-        });
+        }, undefined, {key: 'listTree', useStored: isReturn});
     }
 
     async create(options = {}) {

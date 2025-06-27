@@ -180,6 +180,9 @@ class ListTreeRecordItemView extends View {
         return /** @type module:views/record/list-tree */this.getParentView();
     }
 
+    /**
+     * @private
+     */
     createChildren() {
         const childCollection = this.model.get('childCollection');
 
@@ -208,9 +211,12 @@ class ListTreeRecordItemView extends View {
         }, callback);
     }
 
+    /**
+     * @private
+     */
     checkLastChildren() {
         Espo.Ajax
-            .getRequest(this.collection.entityType + '/action/lastChildrenIdList', {parentId: this.model.id})
+            .getRequest(`${this.collection.entityType}/action/lastChildrenIdList`, {parentId: this.model.id})
             .then(idList => {
                 const childrenView = this.getChildrenView();
 
@@ -256,7 +262,7 @@ class ListTreeRecordItemView extends View {
 
         const childCollection = this.model.get('childCollection');
 
-        if (childCollection !== null) {
+        if (childCollection != null) {
             this.createChildren();
             this.isUnfolded = true;
             this.afterUnfold();
@@ -331,12 +337,18 @@ class ListTreeRecordItemView extends View {
         }
     }
 
+    /**
+     * @private
+     */
     afterFold() {
         this.$el.find('a[data-action="fold"][data-id="'+this.model.id+'"]').addClass('hidden');
         this.$el.find('a[data-action="unfold"][data-id="'+this.model.id+'"]').removeClass('hidden');
         this.$el.find(' > .children').addClass('hidden');
     }
 
+    /**
+     * @private
+     */
     afterUnfold() {
         this.$el.find('a[data-action="unfold"][data-id="'+this.model.id+'"]').addClass('hidden');
         this.$el.find('a[data-action="fold"][data-id="'+this.model.id+'"]').removeClass('hidden');
@@ -367,15 +379,18 @@ class ListTreeRecordItemView extends View {
         return path;
     }*/
 
-    actionRemove() {
-        this.confirm({
+    /**
+     * @private
+     */
+    async actionRemove() {
+        await this.confirm({
             message: this.translate('removeRecordConfirmation', 'messages', this.scope),
             confirmText: this.translate('Remove'),
-        }, () => {
-            this.model.destroy({wait: true})
-                .then(() => this.remove());
-
         });
+
+        await this.model.destroy({wait: true});
+
+        this.remove();
     }
 
     /**
