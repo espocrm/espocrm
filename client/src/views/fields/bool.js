@@ -48,7 +48,7 @@ class BoolFieldView extends BaseFieldView {
      */
 
     /**
-     * @typedef {Object} module:views/fields/varchar~params
+     * @typedef {Object} module:views/fields/bool~params
      */
 
     /**
