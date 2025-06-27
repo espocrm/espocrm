@@ -743,13 +743,16 @@ class ListWithCategories extends ListView {
     actionManageCategories() {
         this.clearCategoryViews();
 
-        let url =`#${this.categoryScope}`;
+        const url = `#${this.categoryScope}`;
+
+        const options = {};
 
         if (this.currentCategoryId) {
-            url += `/listTree/currentId=${this.currentCategoryId}`;
+            options.currentId = this.currentCategoryId;
         }
 
-        this.getRouter().navigate(url, {trigger: true});
+        this.getRouter().navigate(url, {trigger: false});
+        this.getRouter().dispatch(this.categoryScope, 'listTree', options);
     }
 
     /**
