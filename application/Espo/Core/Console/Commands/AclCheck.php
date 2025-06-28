@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Console\Commands;
 
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\Core\AclManager;
@@ -51,20 +53,22 @@ class AclCheck implements Command
 
     public function run(Params $params, IO $io): void
     {
-        $options = $params->getOptions();
-
-        $userId = $options['userId'] ?? null;
-        $scope = $options['scope'] ?? null;
-        $id = $options['id'] ?? null;
-
+        $userId = $params->getOption('userId');
+        $scope = $params->getOption('scope');
+        $id = $params->getOption('id');
         /** @var Table::ACTION_*|null $action */
-        $action = $options['action'] ?? null;
+        $action = $params->getOption('action');
 
-        if (!$userId || !$scope || !$id) {
+        $io->setExitStatus(1);
+
+        if (!$userId || !$scope) {
             return;
         }
 
-        $container = $this->container;
+        if ($params->hasOption('id') && !$id) {
+            return;
+        }
+
         $entityManager = $this->container->getByClass(EntityManager::class);
 
         $user = $entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
@@ -74,34 +78,22 @@ class AclCheck implements Command
         }
 
         if ($user->isPortal()) {
-            $portalIdList = $user->getLinkMultipleIdList('portals');
+            $this->processPortal(
+                io: $io,
+                userId: $userId,
+                scope: $scope,
+                action: $action,
+                id: $id,
+                user: $user,
+            );
+        }
 
-            foreach ($portalIdList as $portalId) {
-                $application = new PortalApplication($portalId);
-                $containerPortal = $application->getContainer();
-                $entityManager = $containerPortal->getByClass(EntityManager::class);
-
-                $user = $entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
-
-                if (!$user) {
-                    return;
-                }
-
-                $result = $this->check($user, $scope, $id, $action, $containerPortal);
-
-                if ($result) {
-                    $io->write('true');
-
-                    return;
-                }
-            }
-
+        if (!$this->check($user, $scope, $id, $action, $this->container)) {
             return;
         }
 
-        if ($this->check($user, $scope, $id, $action, $container)) {
-            $io->write('true');
-        }
+        $io->setExitStatus(0);
+        $io->write('true');
     }
 
     /**
@@ -111,10 +103,16 @@ class AclCheck implements Command
     private function check(
         User $user,
         string $scope,
-        string $id,
+        ?string $id,
         ?string $action,
         Container $container
     ): bool {
+
+        if (!$id) {
+            $aclManager = $container->getByClass(AclManager::class);
+
+            return $aclManager->check($user, $scope, $action);
+        }
 
         $entityManager = $container->getByClass(EntityManager::class);
 
@@ -127,5 +125,49 @@ class AclCheck implements Command
         $aclManager = $container->getByClass(AclManager::class);
 
         return $aclManager->check($user, $entity, $action);
+    }
+
+    /**
+     * @param Table::ACTION_*|null $action
+     * @noinspection PhpDocSignatureInspection
+     */
+    private function processPortal(
+        IO $io,
+        string $userId,
+        string $scope,
+        ?string $action,
+        ?string $id,
+        User $user,
+    ): void {
+
+        $portalIds = $user->getLinkMultipleIdList('portals');
+
+        foreach ($portalIds as $portalId) {
+            try {
+                $application = new PortalApplication($portalId);
+            } catch (Forbidden|NotFound) {
+                return;
+            }
+
+            $containerPortal = $application->getContainer();
+            $entityManager = $containerPortal->getByClass(EntityManager::class);
+
+            $user = $entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
+
+            if (!$user) {
+                return;
+            }
+
+            $result = $this->check($user, $scope, $id, $action, $containerPortal);
+
+            if (!$result) {
+                continue;
+            }
+
+            $io->setExitStatus(0);
+            $io->write('true');
+
+            return;
+        }
     }
 }
