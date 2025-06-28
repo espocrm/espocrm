@@ -67,8 +67,7 @@ class AclCheck implements Command
         $container = $this->container;
         $entityManager = $this->container->getByClass(EntityManager::class);
 
-        /** @var ?User $user */
-        $user = $entityManager->getEntityById(User::ENTITY_TYPE, $userId);
+        $user = $entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
 
         if (!$user) {
             return;
@@ -82,7 +81,7 @@ class AclCheck implements Command
                 $containerPortal = $application->getContainer();
                 $entityManager = $containerPortal->getByClass(EntityManager::class);
 
-                $user = $entityManager->getEntityById(User::ENTITY_TYPE, $userId);
+                $user = $entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
 
                 if (!$user) {
                     return;
