@@ -1,5 +1,8 @@
 {
     "categories": {
-        "popupNotifications.event": {}
+        "popupNotifications.event": {},
+        "calendarUpdate": {
+            "accessCheckCommand": "AclCheck --userId=:userId --scope=Calendar"
+        }
     }
 }

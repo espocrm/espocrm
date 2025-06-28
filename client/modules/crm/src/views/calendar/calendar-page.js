@@ -30,12 +30,13 @@ import View from 'view';
 import CalendarEditViewModal from 'crm:views/calendar/modals/edit-view';
 import {inject} from 'di';
 import {ShortcutManager} from 'helpers/site/shortcut-manager';
+import DebounceHelper from 'helpers/util/debounce';
 
 class CalendarPage extends View {
 
     template = 'crm:calendar/calendar-page'
 
-    el = '#main'
+    //el = '#main'
 
     fullCalendarModeList = [
         'month',
@@ -63,6 +64,18 @@ class CalendarPage extends View {
      */
     @inject(ShortcutManager)
     shortcutManager
+
+    /**
+     * @private
+     * @type {DebounceHelper}
+     */
+    webSocketDebounceHelper
+
+    /**
+     * @private
+     * @type {number}
+     */
+    webSocketDebounceInterval = 500
 
     /**
      * A shortcut-key => action map.
@@ -149,6 +162,20 @@ class CalendarPage extends View {
         },
     }
 
+    /**
+     * @param {{
+     *     userId?: string,
+     *     userName?: string|null,
+     *     mode?: string|null,
+     *     date?: string|null,
+     * }} options
+     */
+    constructor(options) {
+        super(options);
+
+        this.options = options;
+    }
+
     setup() {
         this.mode = this.mode || this.options.mode || null;
         this.date = this.date || this.options.date || null;
@@ -179,16 +206,52 @@ class CalendarPage extends View {
 
         this.shortcutManager.add(this, this.shortcutKeys);
 
-        this.once('remove', () => {
+        this.on('remove', () => {
             this.shortcutManager.remove(this);
         });
 
         if (!this.mode || ~this.fullCalendarModeList.indexOf(this.mode) || this.mode.indexOf('view-') === 0) {
             this.setupCalendar();
-        }
-        else if (this.mode === 'timeline') {
+        } else if (this.mode === 'timeline') {
             this.setupTimeline();
         }
+        this.initWebSocket();
+    }
+
+    /**
+     * @private
+     */
+    initWebSocket() {
+        if (this.options.userId && this.getUser().id !== this.options.userId) {
+            return;
+        }
+
+        this.webSocketDebounceHelper = new DebounceHelper({
+            interval: this.webSocketDebounceInterval,
+            handler: () => this.handleWebSocketUpdate(),
+        });
+
+        if (!this.getHelper().webSocketManager) {
+            const testHandler = () => this.webSocketDebounceHelper.process();
+
+            this.on('remove', () => window.removeEventListener('calendar-update', testHandler));
+
+            // For testing purpose.
+            window.addEventListener('calendar-update', testHandler);
+
+            return;
+        }
+
+        this.getHelper().webSocketManager.subscribe('calendarUpdate', () => this.webSocketDebounceHelper.process());
+
+        this.on('remove', () => this.getHelper().webSocketManager.unsubscribe('calendarUpdate'));
+    }
+
+    /**
+     * @private
+     */
+    handleWebSocketUpdate() {
+        this.getCalendarView()?.actionRefresh({suppressLoadingAlert: true});
     }
 
     afterRender() {

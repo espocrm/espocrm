@@ -27,36 +27,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Templates\Entities;
+namespace Espo\Modules\Crm\Hooks\Call;
 
-use Espo\Core\Field\Link;
-use Espo\Core\Name\Field;
-use Espo\Core\ORM\Entity;
+use Espo\Core\Hook\Hook\AfterRemove;
+use Espo\Core\Hook\Hook\AfterSave;
+use Espo\Core\WebSocket\Submission;
+use Espo\Modules\Crm\Entities\Call;
+use Espo\ORM\Entity;
+use Espo\ORM\Repository\Option\RemoveOptions;
+use Espo\ORM\Repository\Option\SaveOptions;
 
-class Event extends Entity
+/**
+ * @implements AfterSave<Call>
+ * @implements AfterRemove<Call>
+ */
+class CalendarWebSocket implements AfterSave, AfterRemove
 {
-    public const TEMPLATE_TYPE = 'Event';
+    public function __construct(
+        private Submission $submission,
+    ) {}
 
-    public const STATUS_PLANNED = 'Planned';
-    public const STATUS_HELD = 'Held';
-    public const STATUS_NOT_HELD = 'Not Held';
-
-    public function getStatus(): string
+    public function afterSave(Entity $entity, SaveOptions $options): void
     {
-        return $this->get('status');
+        $this->process($entity);
     }
 
-    public function setStatus(string $status): self
+    public function afterRemove(Entity $entity, RemoveOptions $options): void
     {
-        return $this->set('status', $status);
+        $this->process($entity);
     }
 
-    /**
-     * @since 9.2.0
-     */
-    public function getAssignedUser(): ?Link
+    private function process(Call $entity): void
     {
-        /** @var ?Link */
-        return $this->getValueObject(Field::ASSIGNED_USER);
+        foreach ($entity->getUsers()->getIdList() as $userId) {
+            $this->submission->submit('calendarUpdate', $userId);
+        }
     }
 }
