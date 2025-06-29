@@ -161,6 +161,7 @@ class CalendarView extends View {
      *     height?: number,
      *     enabledScopeList?: string[],
      *     header?: boolean,
+     *     onSave?: function(),
      * }} options
      */
     constructor(options) {
@@ -930,7 +931,9 @@ class CalendarView extends View {
             eventClick: async info => {
                 const event = info.event;
 
+                /** @type {string} */
                 const scope = event.extendedProps.scope;
+                /** @type {string} */
                 const recordId = event.extendedProps.recordId;
 
                 const helper = new RecordModal();
@@ -942,6 +945,16 @@ class CalendarView extends View {
                     entityType: scope,
                     id: recordId,
                     removeDisabled: false,
+                    beforeSave: () => {
+                        if (this.options.onSave) {
+                            this.options.onSave();
+                        }
+                    },
+                    beforeDestroy: () => {
+                        if (this.options.onSave) {
+                            this.options.onSave();
+                        }
+                    },
                     afterSave: (model, o) => {
                         if (!o.bypassClose) {
                             modalView.close();
@@ -970,7 +983,7 @@ class CalendarView extends View {
 
                 this.fetchEvents(fromStr, toStr, callback);
             },
-            eventDrop: info => {
+            eventDrop: async info => {
                 const event = /** @type {EventImpl} */info.event;
                 const delta = info.delta;
 
@@ -1049,21 +1062,26 @@ class CalendarView extends View {
 
                 Espo.Ui.notify(this.translate('saving', 'messages'));
 
-                this.getModelFactory().create(scope, model => {
-                    model.id = props.recordId;
+                const model = await this.getModelFactory().create(scope);
+                model.id = props.recordId;
 
-                    model.save(attributes, {patch: true})
-                        .then(() => {
-                            Espo.Ui.notify(false);
+                if (this.options.onSave) {
+                    this.options.onSave();
+                }
 
-                            this.applyPropsToEvent(event, props);
-                        })
-                        .catch(() => {
-                            info.revert();
-                        });
-                });
+                try {
+                    await model.save(attributes, {patch: true});
+                } catch (e) {
+                    info.revert();
+
+                    return;
+                }
+
+                Espo.Ui.notify();
+
+                this.applyPropsToEvent(event, props);
             },
-            eventResize: info => {
+            eventResize: async info => {
                 const event = info.event;
 
                 const attributes = {
@@ -1074,20 +1092,25 @@ class CalendarView extends View {
 
                 Espo.Ui.notify(this.translate('saving', 'messages'));
 
-                this.getModelFactory().create(event.extendedProps.scope, model => {
-                    model.id = event.extendedProps.recordId;
+                const model = await this.getModelFactory().create(event.extendedProps.scope);
+                model.id = event.extendedProps.recordId;
 
-                    model.save(attributes, {patch: true})
-                        .then(() => {
-                            Espo.Ui.notify(false);
+                if (this.options.onSave) {
+                    this.options.onSave();
+                }
 
-                            event.setExtendedProp('dateEnd', attributes.dateEnd);
-                            event.setExtendedProp('duration', duration);
-                        })
-                        .catch(() => {
-                            info.revert();
-                        });
-                });
+                try {
+                    await model.save(attributes, {patch: true})
+                } catch (e) {
+                    info.revert();
+
+                    return;
+                }
+
+                Espo.Ui.notify();
+
+                event.setExtendedProp('dateEnd', attributes.dateEnd);
+                event.setExtendedProp('duration', duration);
             },
             eventAllow: (info, event) => {
                 if (event.allDay && !info.allDay) {
@@ -1206,7 +1229,7 @@ class CalendarView extends View {
      *   [dateEndDate]: ?string,
      * }} [values]
      */
-    createEvent(values) {
+    async createEvent(values) {
         values = values || {};
 
         if (
@@ -1228,7 +1251,7 @@ class CalendarView extends View {
 
         Espo.Ui.notifyWait();
 
-        this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
+        const view = await this.createView('dialog', 'crm:views/calendar/modals/edit', {
             attributes: attributes,
             enabledScopeList: this.enabledScopeList,
             scopeList: this.scopeList,
@@ -1237,24 +1260,30 @@ class CalendarView extends View {
             dateEndDate: values.dateEndDate,
             dateStart: values.dateStart,
             dateEnd: values.dateEnd,
-        }, view => {
-            view.render();
-
-            Espo.Ui.notify(false);
-
-            let added = false;
-
-            this.listenTo(view, 'after:save', model => {
-                if (!added) {
-                    this.addModel(model);
-                    added = true;
-
-                    return;
-                }
-
-                this.updateModel(model);
-            });
         });
+
+        let added = false;
+
+        this.listenTo(view, 'before:save', () => {
+            if (this.options.onSave) {
+                this.options.onSave();
+            }
+        });
+
+        this.listenTo(view, 'after:save', model => {
+            if (!added) {
+                this.addModel(model);
+                added = true;
+
+                return;
+            }
+
+            this.updateModel(model);
+        });
+
+        await view.render();
+
+        Espo.Ui.notify();
     }
 
     /**

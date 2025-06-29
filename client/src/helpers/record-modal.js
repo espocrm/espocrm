@@ -88,7 +88,9 @@ class RecordModalHelper {
      *   rootUrl?: string,
      *   fullFormUrl?: string,
      *   layoutName?: string,
+     *   beforeSave?: function(import('model').default, Record),
      *   afterSave?: function(import('model').default, {bypassClose: boolean} & Record),
+     *   beforeDestroy?: function(import('model').default),
      *   afterDestroy?: function(import('model').default),
      *   beforeRender?: function(import('views/modals/detail').default),
      *   onClose?: function(),
@@ -139,14 +141,24 @@ class RecordModalHelper {
         // @todo Revise.
         view.listenToOnce(modalView, 'remove', () => view.clearView('modal'));
 
+        if (params.beforeSave) {
+            modalView.listenTo(modalView, 'before:save', (model, o) => {
+                params.beforeSave(model, o);
+            });
+        }
+
         if (params.afterSave) {
             modalView.listenTo(modalView, 'after:save', (model, /** Record */o) => {
                 params.afterSave(model, {...o});
             });
         }
 
+        if (params.beforeDestroy) {
+            modalView.listenToOnce(modalView, 'before:delete', model => params.beforeDestroy(model));
+        }
+
         if (params.afterDestroy) {
-            modalView.listenToOnce(modalView, 'after:destroy', model => params.afterDestroy(model));
+            modalView.listenToOnce(modalView, 'after:delete', model => params.afterDestroy(model));
         }
 
         if (params.beforeRender) {
@@ -177,6 +189,7 @@ class RecordModalHelper {
      *   fullFormUrl?: string,
      *   returnUrl?: string,
      *   layoutName?: string,
+     *   beforeSave?: function(import('model').default, Record),
      *   afterSave?: function(import('model').default, {bypassClose: boolean} & Record),
      *   beforeRender?: function(import('views/modals/edit').default),
      *   onClose?: function(),
@@ -239,6 +252,12 @@ class RecordModalHelper {
 
         // @todo Revise.
         modalView.listenToOnce(modalView, 'remove', () => view.clearView('modal'));
+
+        if (params.beforeSave) {
+            modalView.listenTo(modalView, 'before:save', (model, o) => {
+                params.beforeSave(model, o);
+            });
+        }
 
         if (params.afterSave) {
             modalView.listenTo(modalView, 'after:save', (model, /** Record */o) => {

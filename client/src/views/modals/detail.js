@@ -645,6 +645,9 @@ class DetailModalView extends ModalView {
             id: this.id,
             fullFormDisabled: this.fullFormDisabled,
             collapseDisabled: true,
+            beforeSave: (model, o) => {
+                this.trigger('before:save', model, o);
+            },
             afterSave: (model, o) => {
                 this.model.set(model.getClonedAttributes());
 
@@ -678,9 +681,13 @@ class DetailModalView extends ModalView {
 
             $buttons.addClass('disabled').attr('disabled', 'disabled');
 
+            this.trigger('before:delete', model);
+
             model.destroy()
                 .then(() => {
-                    this.trigger('after:destroy', model);
+                    this.trigger('after:delete', model);
+                    this.trigger('after:destroy', model); // For bc.
+
                     this.dialog.close();
 
                     Espo.Ui.success(this.translate('Removed'));

@@ -264,7 +264,8 @@ class CalenderEditModalView extends EditModalView {
 
             model.destroy()
                 .then(() => {
-                    this.trigger('after:destroy', model);
+                    this.trigger('after:delete', model);
+
                     this.dialog.close();
                 })
                 .catch(() => {
