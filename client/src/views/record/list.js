@@ -108,6 +108,8 @@ class ListRecordView extends View {
      */
     constructor(options) {
         super(options);
+
+        this.options = options;
     }
 
     /** @inheritDoc */
