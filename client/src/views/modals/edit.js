@@ -279,6 +279,7 @@ class EditModalView extends ModalView {
             bottomDisabled: this.bottomDisabled,
             focusForCreate: this.options.focusForCreate,
             recordHelper: this.options.recordHelper,
+            webSockedDisabled: true,
             exit: () => {},
         };
 
