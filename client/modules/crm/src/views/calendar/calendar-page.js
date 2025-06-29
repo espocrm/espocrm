@@ -67,15 +67,21 @@ class CalendarPage extends View {
 
     /**
      * @private
-     * @type {DebounceHelper}
+     * @type {DebounceHelper|null}
      */
-    webSocketDebounceHelper
+    webSocketDebounceHelper = null
 
     /**
      * @private
      * @type {number}
      */
     webSocketDebounceInterval = 500
+
+    /**
+     * @private
+     * @type {number}
+     */
+    webSocketBlockInterval = 1000
 
     /**
      * A shortcut-key => action map.
@@ -228,6 +234,7 @@ class CalendarPage extends View {
 
         this.webSocketDebounceHelper = new DebounceHelper({
             interval: this.webSocketDebounceInterval,
+            blockInterval: this.webSocketBlockInterval,
             handler: () => this.handleWebSocketUpdate(),
         });
 
@@ -252,6 +259,17 @@ class CalendarPage extends View {
      */
     handleWebSocketUpdate() {
         this.getCalendarView()?.actionRefresh({suppressLoadingAlert: true});
+    }
+
+    /**
+     * @private
+     */
+    onSave() {
+        if (!this.webSocketDebounceHelper) {
+            return;
+        }
+
+        this.webSocketDebounceHelper.block()
     }
 
     afterRender() {
@@ -284,6 +302,9 @@ class CalendarPage extends View {
         this.getRouter().navigate(url, {trigger: trigger});
     }
 
+    /**
+     * @private
+     */
     setupCalendar() {
         const viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'calendarView']) ||
             'crm:views/calendar/calendar';
@@ -294,6 +315,7 @@ class CalendarPage extends View {
             userName: this.options.userName,
             mode: this.mode,
             fullSelector: '#main > .calendar-container',
+            onSave: () => this.onSave(),
         }, view => {
             let initial = true;
 
@@ -330,6 +352,9 @@ class CalendarPage extends View {
         });
     }
 
+    /**
+     * @private
+     */
     setupTimeline() {
         const viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'timelineView']) ||
             'crm:views/calendar/timeline';
@@ -339,6 +364,7 @@ class CalendarPage extends View {
             userId: this.options.userId,
             userName: this.options.userName,
             fullSelector: '#main > .calendar-container',
+            onSave: () => this.onSave(),
         }, view => {
             let initial = true;
 
