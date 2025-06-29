@@ -360,6 +360,8 @@ class DatetimeFieldView extends DateFieldView {
 
         return data;
     }
+
+    onAfterChange() {}
 }
 
 export default DatetimeFieldView;
