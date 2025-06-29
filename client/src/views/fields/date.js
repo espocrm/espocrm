@@ -144,6 +144,20 @@ class DateFieldView extends BaseFieldView {
 
                 // Timeout prevents the picker popping one when the duration field adjusts the date end.
                 setTimeout(() => {
+                    /** @type {string} */
+                    const from = this.model.attributes[this.params.after];
+                    /** @type {string} */
+                    const currentValue = this.model.attributes[this.name];
+
+                    if (
+                        from &&
+                        currentValue &&
+                        this.getDateTime().toMomentDate(currentValue)
+                            .isBefore(this.getDateTime().toMomentDate(from))
+                    ) {
+                        this.model.set(this.name, from);
+                    }
+
                     this.datepicker.setStartDate(this.getStartDateForDatePicker());
                 }, 100);
             });
