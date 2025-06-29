@@ -123,6 +123,27 @@ class TimelineView extends View {
         },
     }
 
+    /**
+     * @param {{
+     *     userId?: string,
+     *     userName?: string|null,
+     *     mode?: string|null,
+     *     date?: string|null,
+     *     $container?: JQuery,
+     *     suppressLoadingAlert?: boolean,
+     *     containerSelector?: string,
+     *     enabledScopeList?: string[],
+     *     calendarType?: string,
+     *     userList?: string[],
+     *     header?: boolean,
+     * }} options
+     */
+    constructor(options) {
+        super(options);
+
+        this.options = options;
+    }
+
     data() {
         const calendarTypeDataList = this.getCalendarTypeDataList();
 
@@ -550,13 +571,14 @@ class TimelineView extends View {
                         onTag: (tag, html) => html,
                     },
                 },
-                moment: date => {
+                moment: /** Record */date => {
                     const m = moment(date);
 
                     if (date && date.noTimeZone) {
                         return m;
                     }
 
+                    // noinspection JSUnresolvedReference
                     return m.tz(this.getDateTime().getTimeZone());
                 },
                 format: this.getFormatObject(),
@@ -903,7 +925,7 @@ class TimelineView extends View {
     }
 
     fetchEvents(from, to, callback) {
-        if (!this.options.noFetchLoadingMessage) {
+        if (!this.options.suppressLoadingAlert) {
             Espo.Ui.notifyWait();
         }
 

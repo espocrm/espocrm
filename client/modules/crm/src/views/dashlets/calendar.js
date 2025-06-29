@@ -59,7 +59,7 @@ class CalendarDashletView extends BaseDashletView {
                 calendarType: 'shared',
                 userList: userList,
                 enabledScopeList: this.getOption('enabledScopeList'),
-                noFetchLoadingMessage: true,
+                suppressLoadingAlert: true,
             }, view => {
                 view.render();
             });

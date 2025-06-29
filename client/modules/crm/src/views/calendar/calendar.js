@@ -144,6 +144,31 @@ class CalendarView extends View {
         },
     }
 
+
+    /**
+     * @param {{
+     *     userId?: string,
+     *     userName?: string|null,
+     *     mode?: string|null,
+     *     date?: string|null,
+     *     scrollToNowSlots?: boolean,
+     *     $container?: JQuery,
+     *     suppressLoadingAlert?: boolean,
+     *     slotDuration?: number,
+     *     scrollHour?: number,
+     *     teamIdList?: string[],
+     *     containerSelector?: string,
+     *     height?: number,
+     *     enabledScopeList?: string[],
+     *     header?: boolean,
+     * }} options
+     */
+    constructor(options) {
+        super(options);
+
+        this.options = options;
+    }
+
     data() {
         return {
             mode: this.mode,
