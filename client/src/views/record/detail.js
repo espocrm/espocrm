@@ -69,7 +69,7 @@ class DetailRecordView extends BaseRecordView {
      * @property {Object.<string, *>} [dataObject] Additional data.
      * @property {Record} [rootData] Data from the root view.
      * @property {boolean} [shortcutKeysEnabled] Enable shortcut keys.
-     * @property {boolean} [webSockedDisabled] Disable WebSocket. As if v9.2.0.
+     * @property {boolean} [webSocketDisabled] Disable WebSocket. As of v9.2.0.
      */
 
     /**
@@ -2013,7 +2013,7 @@ class DetailRecordView extends BaseRecordView {
         });
 
         if (
-            !this.options.webSockedDisabled &&
+            !this.options.webSocketDisabled &&
             !this.isNew &&
             !!this.getHelper().webSocketManager &&
             this.getMetadata().get(['scopes', this.entityType, 'object'])
