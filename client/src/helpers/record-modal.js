@@ -92,7 +92,7 @@ class RecordModalHelper {
      *   afterDestroy?: function(import('model').default),
      *   beforeRender?: function(import('views/modals/detail').default),
      *   onClose?: function(),
-     *   collapseDisabled: boolean,
+     *   collapseDisabled?: boolean,
      * }} params
      * @return {Promise<import('views/modals/detail').default>}
      */
@@ -185,7 +185,7 @@ class RecordModalHelper {
      *       action: string|null,
      *       options: {isReturn?: boolean} & Record,
      *   },
-     *   collapseDisabled: boolean,
+     *   collapseDisabled?: boolean,
      * }} params
      * @return {Promise<import('views/modals/edit').default>}
      * @since 9.1.0
