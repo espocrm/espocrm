@@ -28,7 +28,7 @@
 
 import MainView from 'views/main';
 
-class NoteDetailView extends MainView {
+export default class NoteDetailView extends MainView {
 
     templateContent = `
         <div class="header page-header">{{{header}}}</div>
@@ -71,17 +71,16 @@ class NoteDetailView extends MainView {
      */
     setupRecord() {
         this.wait(
-            this.getCollectionFactory().create(this.scope)
-                .then(collection => {
-                    this.collection = collection;
-                    this.collection.add(this.model);
+            (async () => {
+                this.collection = await this.getCollectionFactory().create(this.scope);
+                this.collection.add(this.model);
 
-                    this.createView('record', 'views/stream/record/list', {
-                        selector: '> .record',
-                        collection: this.collection,
-                        isUserStream: true,
-                    });
-                })
+                await this.createView('record', 'views/stream/record/list', {
+                    selector: '> .record',
+                    collection: this.collection,
+                    isUserStream: true,
+                });
+            })()
         );
     }
 
@@ -148,5 +147,3 @@ class NoteDetailView extends MainView {
         Espo.Ui.notify();
     }
 }
-
-export default NoteDetailView;
