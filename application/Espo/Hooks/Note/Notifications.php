@@ -29,32 +29,37 @@
 
 namespace Espo\Hooks\Note;
 
+use Espo\Core\Hook\Hook\AfterSave;
+use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\ORM\Entity;
+use Espo\ORM\Repository\Option\SaveOptions;
+use Espo\Tools\Notification\HookProcessor\Params;
 use Espo\Tools\Notification\NoteHookProcessor;
 use Espo\Entities\Note;
 
-class Notifications
+/**
+ * @implements AfterSave<Note>
+ */
+class Notifications implements AfterSave
 {
     public static int $order = 14;
 
-    private $processor;
+    public function __construct(private NoteHookProcessor $processor)
+    {}
 
-    public function __construct(NoteHookProcessor $processor)
+    public function afterSave(Entity $entity, SaveOptions $options): void
     {
-        $this->processor = $processor;
-    }
-
-    /**
-     * @param array<string, mixed> $options
-     */
-    public function afterSave(Entity $entity, array $options): void
-    {
-        if (!$entity->isNew() && empty($options['forceProcessNotifications'])) {
+        if (!$entity->isNew() && !$options->get('forceProcessNotifications')) {
             return;
         }
 
-        assert($entity instanceof Note);
 
-        $this->processor->afterSave($entity);
+        $saveContext = $options->get(SaveContext::NAME);
+
+        $actionId = $saveContext instanceof SaveContext ? $saveContext->getId() : null;
+
+        $params = new Params(actionId: $actionId);
+
+        $this->processor->afterSave($entity, $params);
     }
 }

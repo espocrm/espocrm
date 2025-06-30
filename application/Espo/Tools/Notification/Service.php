@@ -42,6 +42,7 @@ use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
+use Espo\Tools\Notification\HookProcessor\Params;
 
 class Service
 {
@@ -67,8 +68,9 @@ class Service
 
     /**
      * @param string[] $userIdList
+     * @param ?Params $params Parameters. As of v9.2.0.
      */
-    public function notifyAboutNote(array $userIdList, Note $note): void
+    public function notifyAboutNote(array $userIdList, Note $note, ?Params $params = null): void
     {
         $related = null;
 
@@ -134,7 +136,8 @@ class Service
                 ->setRelatedParent(
                     $note->getParentType() && $note->getParentId() ?
                         LinkParent::create($note->getParentType(), $note->getParentId()) : null
-                );
+                )
+                ->setActionId($params?->actionId);
 
             $collection[] = $notification;
         }

@@ -34,10 +34,10 @@ namespace Espo\Core\Notification\AssignmentNotificator;
  */
 class Params
 {
-    /**
-     * @var array<string, mixed>
-     */
+    /** @var array<string, mixed> */
     private $options = [];
+
+    private ?string $actionId = null;
 
     /**
      * Whether an option is set.
@@ -96,5 +96,24 @@ class Params
     public static function create(): self
     {
         return new self();
+    }
+
+    /**
+     * @since 9.2.0
+     */
+    public function withActionId(?string $actionId): self
+    {
+        $obj = clone $this;
+        $obj->actionId = $actionId;
+
+        return $obj;
+    }
+
+    /**
+     * @since 9.2.0
+     */
+    public function getActionId(): ?string
+    {
+        return $this->actionId;
     }
 }

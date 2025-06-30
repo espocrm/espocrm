@@ -150,4 +150,14 @@ class Notification extends Entity
 
         return $this;
     }
+
+    /**
+     * @since 9.2.0
+     */
+    public function setActionId(?string $actionId): self
+    {
+        $this->set('actionId', $actionId);
+
+        return $this;
+    }
 }

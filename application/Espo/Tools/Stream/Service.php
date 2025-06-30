@@ -33,6 +33,7 @@ use Espo\Core\Field\DateTime;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
+use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\StreamSubscription;
@@ -691,6 +692,12 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::CREATED_BY_ID];
         }
 
+        $saveContext = $options[SaveContext::NAME] ?? null;
+
+        if ($saveContext instanceof SaveContext) {
+            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
+        }
+
         $this->entityManager->saveEntity($note, $noteOptions);
 
         $superParent = $note->getSuperParent();
@@ -754,6 +761,12 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::CREATED_BY_ID];
         }
 
+        $saveContext = $options[SaveContext::NAME] ?? null;
+
+        if ($saveContext instanceof SaveContext) {
+            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
+        }
+
         $this->entityManager->saveEntity($note, $noteOptions);
 
         $parent = $this->entityManager->getEntityById($parentType, $parentId);
@@ -782,6 +795,12 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::CREATED_BY_ID];
         }
 
+        $saveContext = $options[SaveContext::NAME] ?? null;
+
+        if ($saveContext instanceof SaveContext) {
+            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
+        }
+
         $this->entityManager->saveEntity($note, $noteOptions);
 
         if (!$this->checkIsEnabled($parent->getEntityType())) {
@@ -808,6 +827,12 @@ class Service
 
         if (!empty($options[SaveOption::MODIFIED_BY_ID])) {
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
+        }
+
+        $saveContext = $options[SaveContext::NAME] ?? null;
+
+        if ($saveContext instanceof SaveContext) {
+            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
         }
 
         $this->entityManager->saveEntity($note, $noteOptions);
@@ -840,6 +865,12 @@ class Service
 
         if (!empty($options[SaveOption::MODIFIED_BY_ID])) {
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
+        }
+
+        $saveContext = $options[SaveContext::NAME] ?? null;
+
+        if ($saveContext instanceof SaveContext) {
+            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
         }
 
         $this->entityManager->saveEntity($note, $noteOptions);
@@ -877,6 +908,12 @@ class Service
 
         if (!empty($options[SaveOption::MODIFIED_BY_ID])) {
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
+        }
+
+        $saveContext = $options[SaveContext::NAME] ?? null;
+
+        if ($saveContext instanceof SaveContext) {
+            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
         }
 
         $this->entityManager->saveEntity($note, $noteOptions);
@@ -1065,7 +1102,7 @@ class Service
         $note->setType(Note::TYPE_UPDATE);
         $note->setParent(LinkParent::createFromEntity($entity));
 
-        $note->set('data', [
+        $note->setData([
             'fields' => $updatedFieldList,
             'attributes' => [
                 'was' => (object) $was,
@@ -1073,13 +1110,19 @@ class Service
             ],
         ]);
 
-        $o = [];
+        $noteOptions = [];
 
         if (!empty($options['modifiedById'])) {
-            $o['createdById'] = $options['modifiedById'];
+            $noteOptions['createdById'] = $options['modifiedById'];
         }
 
-        $this->entityManager->saveEntity($note, $o);
+        $saveContext = $options[SaveContext::NAME] ?? null;
+
+        if ($saveContext instanceof SaveContext) {
+            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
+        }
+
+        $this->entityManager->saveEntity($note, $noteOptions);
     }
 
     /**
