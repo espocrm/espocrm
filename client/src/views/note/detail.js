@@ -51,6 +51,8 @@ class NoteDetailView extends MainView {
             this.isDeleted = true;
             this.getHeaderView().reRender();
         });
+
+        this.addActionHandler('fullRefresh', () => this.actionFullRefresh());
     }
 
     /**
@@ -84,37 +86,66 @@ class NoteDetailView extends MainView {
     }
 
     getHeader() {
-        const parentType = this.model.get('parentType');
-        const parentId = this.model.get('parentId');
-        const parentName = this.model.get('parentName');
-        const type = this.model.get('type');
+        const parentType = this.model.attributes.parentType;
+        const parentId = this.model.attributes.parentId;
 
-        const $type = $('<span>')
-            .text(this.getLanguage().translateOption(type, 'type', 'Note'));
+        const typeText = document.createElement('span');
+        typeText.textContent = this.getLanguage().translateOption(this.model.attributes.type, 'type', 'Note');
 
-        if (this.model.get('deleted') || this.isDeleted) {
-            $type.css('text-decoration', 'line-through');
+        if (this.model.attributes.deleted || this.isDeleted) {
+            typeText.style.textDecoration = 'line-through';
         }
+
+        typeText.title = this.translate('clickToRefresh', 'messages');
+        typeText.dataset.action = 'fullRefresh';
+        typeText.style.cursor = 'pointer';
 
         if (parentType && parentId) {
             return this.buildHeaderHtml([
-                $('<a>')
-                    .attr('href', `#${parentType}`)
-                    .text(this.translate(parentType, 'scopeNamesPlural')),
-                $('<a>')
-                    .attr('href', `#${parentType}/view/${parentId}`)
-                    .text(parentName || parentId),
-                $('<span>')
-                    .text(this.translate('Stream', 'scopeNames')),
-                $type,
+                (() => {
+                    const a = document.createElement('a');
+                    a.href = `#${parentType}`;
+                    a.textContent = this.translate(parentType, 'scopeNamesPlural');
+
+                    return a;
+                })(),
+                (() => {
+                    const a = document.createElement('a');
+                    a.href = `#${parentType}/view/${parentId}`;
+                    a.textContent = this.model.attributes.parentName || parentId;
+
+                    return a;
+                })(),
+                (() => {
+                    const span = document.createElement('span');
+                    span.textContent = this.translate('Stream', 'scopeNames');
+
+                    return span;
+                })(),
+                typeText,
             ]);
         }
 
         return this.buildHeaderHtml([
-            $('<span>')
-                .text(this.translate('Stream', 'scopeNames')),
-            $type,
+            (() => {
+                const span = document.createElement('span');
+                span.textContent = this.translate('Stream', 'scopeNames');
+
+                return span;
+            })(),
+            typeText,
         ]);
+    }
+
+    /**
+     * @private
+     */
+    async actionFullRefresh() {
+        Espo.Ui.notifyWait();
+
+        await this.model.fetch();
+
+        Espo.Ui.notify();
     }
 }
 
