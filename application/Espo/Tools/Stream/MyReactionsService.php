@@ -147,5 +147,9 @@ class MyReactionsService
         $topic = "streamUpdate.{$note->getParentType()}.{$note->getParentId()}";
 
         $this->webSocketSubmission->submit($topic, null, ['noteId' => $note->getId()]);
+
+        $topicUpdate = "recordUpdate.Note.{$note->getId()}";
+
+        $this->webSocketSubmission->submit($topicUpdate);
     }
 }

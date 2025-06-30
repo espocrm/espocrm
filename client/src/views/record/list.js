@@ -3433,6 +3433,14 @@ class ListRecordView extends View {
             model: model,
             rootUrl: rootUrl,
             editDisabled: this.quickEditDisabled,
+            beforeSave: m => {
+                if (!model) {
+                    // @todo Revise.
+                    return;
+                }
+
+                this.trigger('before:save', m);
+            },
             afterSave: m => {
                 if (!model) {
                     return;
@@ -3498,6 +3506,9 @@ class ListRecordView extends View {
                 model: model,
                 fullFormDisabled: data.noFullForm,
                 rootUrl: rootUrl,
+                beforeSave: m => {
+                    this.trigger('before:save', m);
+                },
                 afterSave: m => {
                     const model = this.collection.get(m.id);
 

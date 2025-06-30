@@ -48,6 +48,12 @@ class WebSocketSubmit implements AfterSave
 
     public function afterSave(Entity $entity, SaveOptions $options): void
     {
+        if (!$entity->isNew()) {
+            $updateTopic = "recordUpdate.Note.{$entity->getId()}";
+
+            $this->webSocketSubmission->submit($updateTopic);
+        }
+
         $parentId = $entity->getParentId();
         $parentType = $entity->getParentType();
 

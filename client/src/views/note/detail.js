@@ -27,6 +27,9 @@
  ************************************************************************/
 
 import MainView from 'views/main';
+import DebounceHelper from 'helpers/util/debounce';
+import {inject} from 'di';
+import WebSocketManager from 'web-socket-manager';
 
 export default class NoteDetailView extends MainView {
 
@@ -40,11 +43,25 @@ export default class NoteDetailView extends MainView {
      */
     isDeleted = false
 
+    /**
+     * @private
+     * @type {DebounceHelper}
+     */
+    webSocketDebounceHelper
+
+    /**
+     * @private
+     * @type {WebSocketManager}
+     */
+    @inject(WebSocketManager)
+    webSocketManager
+
     setup() {
         this.scope = this.model.entityType;
 
         this.setupHeader();
         this.setupRecord();
+        this.setupWebSocket();
 
         this.listenToOnce(this.model, 'remove', () => {
             this.clearView('record');
@@ -75,11 +92,15 @@ export default class NoteDetailView extends MainView {
                 this.collection = await this.getCollectionFactory().create(this.scope);
                 this.collection.add(this.model);
 
-                await this.createView('record', 'views/stream/record/list', {
+                const view = await this.createView('record', 'views/stream/record/list', {
                     selector: '> .record',
                     collection: this.collection,
                     isUserStream: true,
                 });
+
+                if (this.webSocketDebounceHelper) {
+                    this.listenTo(view, 'before:save', () => this.webSocketDebounceHelper.block());
+                }
             })()
         );
     }
@@ -145,5 +166,34 @@ export default class NoteDetailView extends MainView {
         await this.model.fetch();
 
         Espo.Ui.notify();
+    }
+
+    onRemove() {
+        super.onRemove();
+
+        if (this.webSocketManager.isEnabled()) {
+            this.webSocketManager.unsubscribe(`recordUpdate.Note.${this.model.id}`);
+        }
+    }
+
+    setupWebSocket() {
+        if (!this.webSocketManager.isEnabled()) {
+            return;
+        }
+
+        this.webSocketDebounceHelper = new DebounceHelper({
+            handler: () => this.handleRecordUpdate(),
+        });
+
+        const topic = `recordUpdate.Note.${this.model.id}`;
+
+        this.webSocketManager.subscribe(topic, () => this.webSocketDebounceHelper.process());
+    }
+
+    /**
+     * @private
+     */
+    async handleRecordUpdate() {
+        await this.model.fetch({highlight: true});
     }
 }
