@@ -1082,7 +1082,14 @@
                     "items": {
                         "type": "string"
                     },
-                    "description": "Additional attributes for a field. Attribute name will be derived by concatenation with the field name."
+                    "description": "Additional attributes for a field. Attribute names will be derived by concatenating specified names with the field name."
+                },
+                "fullNameAdditionalAttributeList": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Additional attributes for a field. As of v9.2."
                 },
                 "dependeeAttributeList": {
                     "type": "array",
