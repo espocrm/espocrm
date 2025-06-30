@@ -146,7 +146,7 @@ class Note extends Entity
 
     public function isAclProcessed(): bool
     {
-        return (bool) $this->aclIsProcessed;
+        return $this->aclIsProcessed;
     }
 
     public function loadAttachments(): void

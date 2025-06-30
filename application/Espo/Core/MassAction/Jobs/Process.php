@@ -103,8 +103,7 @@ class Process implements Job
 
     private function notifyFinish(MassActionEntity $entity): void
     {
-        /** @var Notification $notification */
-        $notification = $this->entityManager->getNewEntity(Notification::ENTITY_TYPE);
+        $notification = $this->entityManager->getRDBRepositoryByClass(Notification::class)->getNew();
 
         $message = $this->language->translateLabel('massActionProcessed', 'messages');
 
