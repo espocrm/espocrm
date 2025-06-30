@@ -31,6 +31,7 @@ import CalendarEditViewModal from 'crm:views/calendar/modals/edit-view';
 import {inject} from 'di';
 import {ShortcutManager} from 'helpers/site/shortcut-manager';
 import DebounceHelper from 'helpers/util/debounce';
+import WebSocketManager from 'web-socket-manager';
 
 class CalendarPage extends View {
 
@@ -82,6 +83,13 @@ class CalendarPage extends View {
      * @type {number}
      */
     webSocketBlockInterval = 1000
+
+    /**
+     * @private
+     * @type {WebSocketManager}
+     */
+    @inject(WebSocketManager)
+    webSocketManager
 
     /**
      * A shortcut-key => action map.
@@ -238,7 +246,7 @@ class CalendarPage extends View {
             handler: () => this.handleWebSocketUpdate(),
         });
 
-        if (!this.getHelper().webSocketManager) {
+        if (!this.webSocketManager.isEnabled()) {
             const testHandler = () => this.webSocketDebounceHelper.process();
 
             this.on('remove', () => window.removeEventListener('calendar-update', testHandler));
@@ -249,9 +257,9 @@ class CalendarPage extends View {
             return;
         }
 
-        this.getHelper().webSocketManager.subscribe('calendarUpdate', () => this.webSocketDebounceHelper.process());
+        this.webSocketManager.subscribe('calendarUpdate', () => this.webSocketDebounceHelper.process());
 
-        this.on('remove', () => this.getHelper().webSocketManager.unsubscribe('calendarUpdate'));
+        this.on('remove', () => this.webSocketManager.unsubscribe('calendarUpdate'));
     }
 
     /**

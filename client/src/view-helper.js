@@ -296,7 +296,7 @@ class ViewHelper {
     /**
      * A web-socket manager. Null if not enabled.
      *
-     * @type {?module:web-socket-manager}
+     * @type {module:web-socket-manager|null}
      */
     webSocketManager = null
 

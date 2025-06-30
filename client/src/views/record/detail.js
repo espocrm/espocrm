@@ -36,6 +36,7 @@ import SelectTemplateModalView from 'views/modals/select-template';
 import DebounceHelper from 'helpers/util/debounce';
 import {inject} from 'di';
 import {ShortcutManager} from 'helpers/site/shortcut-manager';
+import WebSocketManager from 'web-socket-manager';
 
 /**
  * A detail record view.
@@ -567,6 +568,13 @@ class DetailRecordView extends BaseRecordView {
      * @type {number}
      */
     _webSocketDebounceInterval = 500
+
+    /**
+     * @private
+     * @type {WebSocketManager}
+     */
+    @inject(WebSocketManager)
+    webSocketManager
 
     /**
      * A shortcut-key => action map.
@@ -2015,7 +2023,7 @@ class DetailRecordView extends BaseRecordView {
         if (
             !this.options.webSocketDisabled &&
             !this.isNew &&
-            !!this.getHelper().webSocketManager &&
+            this.webSocketManager.isEnabled() &&
             this.getMetadata().get(['scopes', this.entityType, 'object'])
         ) {
             this.subscribeToWebSocket();
@@ -3573,7 +3581,7 @@ class DetailRecordView extends BaseRecordView {
         this.recordUpdateWebSocketTopic = topic;
         this.isSubscribedToWebSocket = true;
 
-        this.getHelper().webSocketManager.subscribe(topic, () => this._webSocketDebounceHelper.process());
+        this.webSocketManager.subscribe(topic, () => this._webSocketDebounceHelper.process());
     }
 
     /**
@@ -3584,7 +3592,7 @@ class DetailRecordView extends BaseRecordView {
             return;
         }
 
-        this.getHelper().webSocketManager.unsubscribe(this.recordUpdateWebSocketTopic);
+        this.webSocketManager.unsubscribe(this.recordUpdateWebSocketTopic);
 
         this.isSubscribedToWebSocket = false;
     }
