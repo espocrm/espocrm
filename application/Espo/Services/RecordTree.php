@@ -61,8 +61,17 @@ class RecordTree extends Record
 
     private ?Entity $seed = null;
 
-    protected ?string $subjectEntityType = null;
-    protected ?string $categoryField = null;
+    /**
+     * @var ?string
+     * @todo Add native type in v9.3.
+     */
+    protected $subjectEntityType = null;
+
+    /**
+     * @var ?string
+     * @todo Add native type in v9.3.
+     */
+    protected $categoryField = null;
 
     /**
      * @return ?Collection<Entity>
