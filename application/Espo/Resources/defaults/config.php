@@ -176,7 +176,7 @@ return [
     'adminNotificationsNewExtensionVersion' => true,
     'assignmentEmailNotifications' => false,
     'assignmentEmailNotificationsEntityList' => ['Lead', 'Opportunity', 'Task', 'Case'],
-    'assignmentNotificationsEntityList' => ['Call', 'Email'],
+    'assignmentNotificationsEntityList' => ['Meeting', 'Call', 'Email'],
     "portalStreamEmailNotifications" => true,
     'streamEmailNotificationsEntityList' => ['Case'],
     'streamEmailNotificationsTypeList' => ['Post', 'Status', 'EmailReceived'],
