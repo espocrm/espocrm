@@ -1624,7 +1624,7 @@ section {
     }
 
     li.list-group-item {
-        &:has(.notification-grouped) {
+        &:has(.notification-grouped a[data-action="showGrouped"]) {
             padding-bottom: 0;
 
             a[data-action="showGrouped"] {
@@ -1648,7 +1648,8 @@ section {
                 }
 
                 &:last-child {
-                    border-bottom: 0;
+                    border-bottom-left-radius: var(--border-radius);
+                    border-bottom-right-radius: var(--border-radius);
                 }
             }
 
