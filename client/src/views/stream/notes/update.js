@@ -37,6 +37,12 @@ class UpdateNoteStreamView extends NoteStreamView {
     statusText
     statusStyle
 
+    /**
+     * @private
+     * @type {boolean}
+     */
+    isExpanded = false
+
     data() {
         const fieldsString = this.fieldDataList
             .map(it => it.label)
@@ -61,8 +67,18 @@ class UpdateNoteStreamView extends NoteStreamView {
         super.init();
     }
 
+    afterRender() {
+        super.afterRender();
+
+        if (this.isExpanded) {
+            this.isExpanded = false;
+
+            this.toggleDetails()
+        }
+    }
+
     setup() {
-        this.addActionHandler('expandDetails', (e, target) => this.toggleDetails(e, target));
+        this.addActionHandler('expandDetails', () => this.toggleDetails());
 
         this.createMessage();
 
@@ -156,15 +172,14 @@ class UpdateNoteStreamView extends NoteStreamView {
         });
     }
 
-    /**
-     * @param {MouseEvent} event
-     * @param {HTMLElement} target
-     */
-    toggleDetails(event, target) {
-        const $details = this.$el.find('> .details');
-        const $fields = this.$el.find('> .fields');
 
-        if ($details.hasClass('hidden')) {
+    toggleDetails() {
+        const target = this.element.querySelector('[data-action="expandDetails"]');
+
+        const $details = this.$el.find('> .details');
+        const $fields = this.$el.find('> .stream-details-container > .fields');
+
+        if (!this.isExpanded) {
             $details.removeClass('hidden');
             $fields.addClass('hidden');
 
@@ -182,6 +197,8 @@ class UpdateNoteStreamView extends NoteStreamView {
                 .removeClass('fa-chevron-down')
                 .addClass('fa-chevron-up');
 
+            this.isExpanded = true;
+
             return;
         }
 
@@ -191,6 +208,8 @@ class UpdateNoteStreamView extends NoteStreamView {
         $(target).find('span')
             .addClass('fa-chevron-down')
             .removeClass('fa-chevron-up');
+
+        this.isExpanded = false;
     }
 }
 

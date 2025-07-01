@@ -10,9 +10,6 @@
     </div>
     <div class="stream-head-text-container">
         {{#if iconHtml}}{{{iconHtml}}}{{/if}}<span class="text-muted message">{{{message}}}</span>
-        {{#if fieldDataList.length}}
-            <a role="button" tabindex="0" data-action="expandDetails"><span class="fas fa-chevron-down"></span></a>
-        {{/if}}
     </div>
 </div>
 
@@ -23,8 +20,14 @@
 {{/if}}
 
 {{#if fieldDataList.length}}
-    <div class="fields stream-details-container">
-        <span class="text-muted">{{fieldsString}}</span>
+    <div class="stream-details-container">
+        <a
+            role="button"
+            tabindex="0"
+            data-action="expandDetails"
+            class="text-soft"
+        ><span class="fas fa-chevron-down"></span></a><span style="user-select: none"> </span>
+        <span class="fields text-muted small">{{fieldsString}}</span>
     </div>
 {{/if}}
 
