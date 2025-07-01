@@ -77,7 +77,7 @@ class NotificationListView extends View {
             'views/notification/record/list';
 
         const options = {
-            selector: '.list-container',
+            selector: '.notification-list',
             collection: this.collection,
             showCount: false,
             listLayout: {

@@ -79,9 +79,7 @@ class Notification extends RecordBase
 
         }
 
-        $userId = $this->user->getId();
-
-        $recordCollection = $this->getNotificationService()->get($userId, $searchParams);
+        $recordCollection = $this->getNotificationService()->get($this->user, $searchParams);
 
         return $recordCollection->toApiOutput();
     }
