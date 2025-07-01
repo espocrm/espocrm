@@ -226,7 +226,6 @@ class RecordService
                     Cond::in(Expr::column(Notification::ATTR_ACTION_ID), $actionIds),
                 )
             )
-            ->where([Attribute::ID => $ids])
             ->build();
 
         $this->entityManager->getQueryExecutor()->execute($query);

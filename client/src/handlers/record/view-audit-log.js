@@ -36,11 +36,9 @@ class ViewAuditLogHandler {
         this.entityType = this.view.entityType;
         this.model = /** @type {module:model} */this.view.model;
 
-        this.hasAudited = (
-            this.metadata.get(`scopes.${this.entityType}.stream`) &&
-            this.metadata.get(`scopes.${this.entityType}.statusField`)
-        ) ||
-        this.model.getFieldList().find(field => this.model.getFieldParam(field, 'audited')) !== undefined;
+        this.hasAudited =
+            this.metadata.get(`scopes.${this.entityType}.statusField`) ||
+            this.model.getFieldList().find(field => this.model.getFieldParam(field, 'audited')) !== undefined;
 
         if (this.entityType === 'User' && !this.view.getUser().isAdmin()) {
             this.hasAudited = false;

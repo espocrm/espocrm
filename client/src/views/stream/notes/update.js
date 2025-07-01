@@ -34,6 +34,9 @@ class UpdateNoteStreamView extends NoteStreamView {
     messageName = 'update'
     rowActionsView = 'views/stream/record/row-actions/update'
 
+    statusText
+    statusStyle
+
     data() {
         const fieldsString = this.fieldDataList
             .map(it => it.label)
@@ -45,6 +48,8 @@ class UpdateNoteStreamView extends NoteStreamView {
             parentType: this.model.get('parentType'),
             iconHtml: this.getIconHtml(),
             fieldsString: fieldsString,
+            statusText: this.statusText,
+            statusStyle: this.statusStyle,
         };
     }
 
@@ -61,13 +66,25 @@ class UpdateNoteStreamView extends NoteStreamView {
 
         this.createMessage();
 
+        /** @type {Record} */
+        const data = this.model.attributes.data;
+
+        if (data.statusField) {
+            const statusField = this.statusField = data.statusField;
+            const statusValue = data.statusValue;
+
+            this.statusStyle = data.statusStyle || 'default';
+            this.statusText = this.getLanguage()
+                .translateOption(statusValue, statusField, this.model.attributes.parentType);
+        }
+
         this.wait(true);
 
         this.getModelFactory().create(this.model.get('parentType'), model => {
             const modelWas = model;
             const modelBecame = model.clone();
 
-            const data = this.model.get('data');
+
 
             data.attributes = data.attributes || {};
 

@@ -200,13 +200,11 @@ class NotificationContainerFieldView extends BaseFieldView {
 
         this.isGroupExpanded = true;
 
-        if (this.model.attributes.read === false) {
+        /*if (this.model.attributes.read === false) {
             collection.models.forEach(model => {
                 model.set('read', false);
             });
-        }
-
-        //console.log(this.getSelector());
+        }*/
 
         const view = new NotificationListRecordView({
             collection: collection,

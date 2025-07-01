@@ -878,6 +878,8 @@ class Service
 
     /**
      * @param array<string, mixed> $options
+     * @deprecated As of v9.2.0. The update note carries the status information now.
+     * @todo Remove in v9.3.0.
      */
     public function noteStatus(Entity $entity, string $field, array $options = []): void
     {
@@ -1041,59 +1043,11 @@ class Service
      */
     public function handleAudited(Entity $entity, array $options = []): void
     {
-        $auditedFields = $this->getAuditedFieldsData($entity);
+        [$updatedFieldList, $was, $became] = $this->getUpdates($entity);
 
-        $updatedFieldList = [];
+        $statusData = $this->getStatusUpdateDate($entity);
 
-        $was = [];
-        $became = [];
-
-        foreach ($auditedFields as $field => $item) {
-            $updated = false;
-
-            foreach ($item['actualList'] as $attribute) {
-                if ($entity->hasFetched($attribute) && $entity->isAttributeChanged($attribute)) {
-                    $updated = true;
-
-                    break;
-                }
-            }
-
-            if (!$updated) {
-                continue;
-            }
-
-            $updatedFieldList[] = $field;
-
-            foreach ($item['actualList'] as $attribute) {
-                $was[$attribute] = $entity->getFetched($attribute);
-                $became[$attribute] = $entity->get($attribute);
-            }
-
-            foreach ($item['notActualList'] as $attribute) {
-                $was[$attribute] = $entity->getFetched($attribute);
-                $became[$attribute] = $entity->get($attribute);
-            }
-
-            if ($item['fieldType'] === FieldType::LINK_PARENT) {
-                $wasParentType = $was[$field . 'Type'];
-                $wasParentId = $was[$field . 'Id'];
-
-                if (
-                    $wasParentType &&
-                    $wasParentId &&
-                    $this->entityManager->hasRepository($wasParentType)
-                ) {
-                    $wasParent = $this->entityManager->getEntityById($wasParentType, $wasParentId);
-
-                    if ($wasParent) {
-                        $was[$field . 'Name'] = $wasParent->get(Field::NAME);
-                    }
-                }
-            }
-        }
-
-        if (count($updatedFieldList) === 0) {
+        if (count($updatedFieldList) === 0 && !$statusData) {
             return;
         }
 
@@ -1108,6 +1062,7 @@ class Service
                 'was' => (object) $was,
                 'became' => (object) $became,
             ],
+            ...($statusData ?? []),
         ]);
 
         $noteOptions = [];
@@ -1437,5 +1392,90 @@ class Service
     private function toStoreEmailContent(string $entityType): bool
     {
         return in_array($entityType, $this->config->get('streamEmailWithContentEntityTypeList', []));
+    }
+
+    /**
+     * @return array{string[], array<string, mixed>, array<string, mixed>}
+     */
+    private function getUpdates(Entity $entity): array
+    {
+        $auditedFields = $this->getAuditedFieldsData($entity);
+
+        $updatedFieldList = [];
+        $was = [];
+        $became = [];
+
+        foreach ($auditedFields as $field => $item) {
+            $updated = false;
+
+            foreach ($item['actualList'] as $attribute) {
+                if ($entity->hasFetched($attribute) && $entity->isAttributeChanged($attribute)) {
+                    $updated = true;
+
+                    break;
+                }
+            }
+
+            if (!$updated) {
+                continue;
+            }
+
+            $updatedFieldList[] = $field;
+
+            foreach ($item['actualList'] as $attribute) {
+                $was[$attribute] = $entity->getFetched($attribute);
+                $became[$attribute] = $entity->get($attribute);
+            }
+
+            foreach ($item['notActualList'] as $attribute) {
+                $was[$attribute] = $entity->getFetched($attribute);
+                $became[$attribute] = $entity->get($attribute);
+            }
+
+            if ($item['fieldType'] === FieldType::LINK_PARENT) {
+                $wasParentType = $was[$field . 'Type'];
+                $wasParentId = $was[$field . 'Id'];
+
+                if (
+                    $wasParentType &&
+                    $wasParentId &&
+                    $this->entityManager->hasRepository($wasParentType)
+                ) {
+                    $wasParent = $this->entityManager->getEntityById($wasParentType, $wasParentId);
+
+                    if ($wasParent) {
+                        $was[$field . 'Name'] = $wasParent->get(Field::NAME);
+                    }
+                }
+            }
+        }
+
+        return [$updatedFieldList, $was, $became];
+    }
+
+    /**
+     * @param Entity $entity
+     * @return ?array<string, mixed>
+     */
+    private function getStatusUpdateDate(Entity $entity): ?array
+    {
+        $statusField = $this->metadata->get("scopes.{$entity->getEntityType()}.statusField");
+        $statusData = null;
+
+        if (
+            $statusField &&
+            $entity->isAttributeChanged($statusField) &&
+            $entity->get($statusField)
+        ) {
+            $style = $this->getStatusStyle($entity->getEntityType(), $statusField, $entity->get($statusField));
+
+            $statusData = [
+                'statusValue' => $entity->get($statusField),
+                'statusField' => $statusField,
+                'statusStyle' => $style,
+            ];
+        }
+
+        return $statusData;
     }
 }
