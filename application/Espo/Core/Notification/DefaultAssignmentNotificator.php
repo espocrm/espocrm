@@ -73,7 +73,7 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
                     continue;
                 }
 
-                $this->processForUser($entity, $userId, $params);
+                $this->processForUser($entity, $userId);
             }
 
             return;
@@ -89,10 +89,10 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
 
         $assignedUserId = $entity->get(self::ATTR_ASSIGNED_USER_ID);
 
-        $this->processForUser($entity, $assignedUserId, $params);
+        $this->processForUser($entity, $assignedUserId);
     }
 
-    protected function processForUser(Entity $entity, string $assignedUserId, Params $params): void
+    protected function processForUser(Entity $entity, string $assignedUserId): void
     {
         if (!$this->userChecker->checkAssignment($entity->getEntityType(), $assignedUserId)) {
             return;
@@ -127,8 +127,7 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
                 'userId' => $this->user->getId(),
                 'userName' => $this->user->getName(),
             ])
-            ->setRelated(LinkParent::createFromEntity($entity))
-            ->setActionId($params->getActionId());
+            ->setRelated(LinkParent::createFromEntity($entity));
 
         $this->entityManager->saveEntity($notification);
     }

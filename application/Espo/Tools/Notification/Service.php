@@ -103,8 +103,6 @@ class Service
             ->find();
 
         foreach ($users as $user) {
-            $userId = $user->getId();
-
             if (!$this->checkUserNoteAccess($user, $note)) {
                 continue;
             }
@@ -124,6 +122,16 @@ class Service
                 continue;
             }
 
+            $actionId = $params?->actionId;
+
+            if (
+                in_array($note->getType(), [Note::TYPE_ASSIGN, Note::TYPE_CREATE]) &&
+                ($note->getData()->assignedUserId ?? null) === $user->getId()
+            ) {
+                // Do not group notifications about assignment.
+                $actionId = null;
+            }
+
             $notification = $this->entityManager->getRDBRepositoryByClass(Notification::class)->getNew();
 
             $notification
@@ -131,13 +139,13 @@ class Service
                 ->set(Field::CREATED_AT, $now)
                 ->setData(['noteId' => $note->getId()])
                 ->setType(Notification::TYPE_NOTE)
-                ->setUserId($userId)
+                ->setUserId($user->getId())
                 ->setRelated(LinkParent::createFromEntity($notification))
                 ->setRelatedParent(
                     $note->getParentType() && $note->getParentId() ?
                         LinkParent::create($note->getParentType(), $note->getParentId()) : null
                 )
-                ->setActionId($params?->actionId);
+                ->setActionId($actionId);
 
             $collection[] = $notification;
         }
