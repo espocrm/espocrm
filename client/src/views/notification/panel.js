@@ -120,7 +120,7 @@ class NotificationPanelView extends View {
                 right: {
                     name: 'read',
                     view: 'views/notification/fields/read',
-                    width: '10px',
+                    width: 'var(--10px)',
                 },
             },
         });

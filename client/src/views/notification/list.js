@@ -95,7 +95,7 @@ class NotificationListView extends View {
                 right: {
                     name: 'read',
                     view: 'views/notification/fields/read-with-menu',
-                    width: '10px',
+                    width: 'var(--10px)',
                 },
             },
         };
