@@ -63,6 +63,7 @@ class GroupService
             ->where([
                 Attribute::ID . '!=' => $notification->getId(),
                 Notification::ATTR_ACTION_ID => $notification->getActionId(),
+                Notification::ATTR_USER_ID => $this->user->getId(),
             ])
             ->limit(0, self::LIMIT)
             ->order(Notification::ATTR_NUMBER)

@@ -80,7 +80,7 @@ class RecordService
             ->order(Notification::ATTR_NUMBER, SearchParams::ORDER_DESC);
 
         if ($this->isGroupingEnabled()) {
-            $queryBuilder->where($this->getActionIdWhere());
+            $queryBuilder->where($this->getActionIdWhere($user->getId()));
         }
 
         /*$queryBuilder
@@ -148,7 +148,7 @@ class RecordService
 
         $collection = $this->prepareCollection($collection, $user);
 
-        $groupedCountMap = $this->getGroupedCountMap($collection);
+        $groupedCountMap = $this->getGroupedCountMap($collection, $user->getId());
 
         $ids = [];
         $actionIds = [];
@@ -301,7 +301,7 @@ class RecordService
             ->where($whereClause);
 
         if ($this->isGroupingEnabled()) {
-            $builder->where($this->getActionIdWhere());
+            $builder->where($this->getActionIdWhere($userId));
         }
 
         return $builder->count();
@@ -413,7 +413,7 @@ class RecordService
         }
     }
 
-    private function getActionIdWhere(): WhereItem
+    private function getActionIdWhere(string $userId): WhereItem
     {
         return Cond::or(
             Expr::isNull(Expr::column('actionId')),
@@ -436,6 +436,7 @@ class RecordService
                                     Expr::column('notification.number')
                                 )
                             )
+                            ->where([Notification::ATTR_USER_ID => $userId])
                             ->build()
                     )
                 )
@@ -447,7 +448,7 @@ class RecordService
      * @param EntityCollection<Notification> $collection
      * @return array<string, int>
      */
-    private function getGroupedCountMap(EntityCollection $collection): array
+    private function getGroupedCountMap(EntityCollection $collection, string $userId): array
     {
         if (!$this->isGroupingEnabled()) {
             return [];
@@ -469,6 +470,7 @@ class RecordService
             ->select(Expr::column(Notification::ATTR_ACTION_ID))
             ->where([
                 Notification::ATTR_ACTION_ID => $actionIds,
+                Notification::ATTR_USER_ID => $userId,
             ])
             ->group(Expr::column(Notification::ATTR_ACTION_ID))
             ->build();
