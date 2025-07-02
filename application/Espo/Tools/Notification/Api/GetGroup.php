@@ -27,20 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Notification;
+namespace Espo\Tools\Notification\Api;
 
-use Espo\ORM\Entity;
-use Espo\Core\Notification\AssignmentNotificator\Params;
+use Espo\Core\Api\Action;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Record\EntityProvider;
+use Espo\Entities\Notification;
+use Espo\Tools\Notification\GroupService;
 
-/**
- * Processes assignment notifications. Called after entity is saved.
- *
- * @template TEntity of Entity
- */
-interface AssignmentNotificator
+class GetGroup implements Action
 {
-    /**
-     * @param TEntity $entity
-     */
-    public function process(Entity $entity, Params $params): void;
+    public function __construct(
+        private EntityProvider $entityProvider,
+        private GroupService $service,
+    ) {}
+
+    public function process(Request $request): Response
+    {
+        $id = $request->getRouteParam('id') ?? throw new BadRequest();
+
+        $notification = $this->entityProvider->getByClass(Notification::class, $id);
+
+        $collection = $this->service->get($notification);
+
+        return ResponseComposer::json(
+            $collection->toApiOutput()
+        );
+    }
 }

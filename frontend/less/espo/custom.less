@@ -1622,6 +1622,39 @@ section {
         white-space: normal;
         overflow: hidden;
     }
+
+    li.list-group-item {
+        &:has(.notification-grouped a[data-action="showGrouped"]) {
+            padding-bottom: 0;
+
+            a[data-action="showGrouped"] {
+                margin: 0 auto;
+                display: block;
+                width: 36px;
+            }
+        }
+
+        &:has(.notification-grouped > .list > .list-group) {
+            .notification-grouped {
+                margin-top: var(--5px);
+            }
+        }
+
+        .notification-grouped > .list > .list-group {
+            > li {
+                &:first-child {
+                    border-top-left-radius: var(--border-radius);
+                    border-top-right-radius: var(--border-radius);
+                }
+
+                &:last-child {
+                    border-bottom-left-radius: var(--border-radius);
+                    border-bottom-right-radius: var(--border-radius);
+                }
+            }
+
+        }
+    }
 }
 
 #notifications-panel .right {
@@ -2150,6 +2183,7 @@ textarea.auto-height {
             overflow-x: hidden;
 
             background-color: var(--dropdown-bg);
+            scrollbar-gutter: stable;
 
             ul > li.list-group-item {
                 background-color: var(--dropdown-bg);

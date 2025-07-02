@@ -33,6 +33,7 @@ use Espo\Core\Field\DateTime;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
+use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\StreamSubscription;
@@ -691,6 +692,12 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::CREATED_BY_ID];
         }
 
+        $saveContext = $options[SaveContext::NAME] ?? null;
+
+        if ($saveContext instanceof SaveContext) {
+            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
+        }
+
         $this->entityManager->saveEntity($note, $noteOptions);
 
         $superParent = $note->getSuperParent();
@@ -754,6 +761,12 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::CREATED_BY_ID];
         }
 
+        $saveContext = $options[SaveContext::NAME] ?? null;
+
+        if ($saveContext instanceof SaveContext) {
+            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
+        }
+
         $this->entityManager->saveEntity($note, $noteOptions);
 
         $parent = $this->entityManager->getEntityById($parentType, $parentId);
@@ -782,6 +795,12 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::CREATED_BY_ID];
         }
 
+        $saveContext = $options[SaveContext::NAME] ?? null;
+
+        if ($saveContext instanceof SaveContext) {
+            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
+        }
+
         $this->entityManager->saveEntity($note, $noteOptions);
 
         if (!$this->checkIsEnabled($parent->getEntityType())) {
@@ -808,6 +827,12 @@ class Service
 
         if (!empty($options[SaveOption::MODIFIED_BY_ID])) {
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
+        }
+
+        $saveContext = $options[SaveContext::NAME] ?? null;
+
+        if ($saveContext instanceof SaveContext) {
+            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
         }
 
         $this->entityManager->saveEntity($note, $noteOptions);
@@ -842,11 +867,19 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
         }
 
+        $saveContext = $options[SaveContext::NAME] ?? null;
+
+        if ($saveContext instanceof SaveContext) {
+            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
+        }
+
         $this->entityManager->saveEntity($note, $noteOptions);
     }
 
     /**
      * @param array<string, mixed> $options
+     * @deprecated As of v9.2.0. The update note carries the status information now.
+     * @todo Remove in v9.3.0.
      */
     public function noteStatus(Entity $entity, string $field, array $options = []): void
     {
@@ -877,6 +910,12 @@ class Service
 
         if (!empty($options[SaveOption::MODIFIED_BY_ID])) {
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
+        }
+
+        $saveContext = $options[SaveContext::NAME] ?? null;
+
+        if ($saveContext instanceof SaveContext) {
+            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
         }
 
         $this->entityManager->saveEntity($note, $noteOptions);
@@ -1004,59 +1043,11 @@ class Service
      */
     public function handleAudited(Entity $entity, array $options = []): void
     {
-        $auditedFields = $this->getAuditedFieldsData($entity);
+        [$updatedFieldList, $was, $became] = $this->getUpdates($entity);
 
-        $updatedFieldList = [];
+        $statusData = $this->getStatusUpdateDate($entity);
 
-        $was = [];
-        $became = [];
-
-        foreach ($auditedFields as $field => $item) {
-            $updated = false;
-
-            foreach ($item['actualList'] as $attribute) {
-                if ($entity->hasFetched($attribute) && $entity->isAttributeChanged($attribute)) {
-                    $updated = true;
-
-                    break;
-                }
-            }
-
-            if (!$updated) {
-                continue;
-            }
-
-            $updatedFieldList[] = $field;
-
-            foreach ($item['actualList'] as $attribute) {
-                $was[$attribute] = $entity->getFetched($attribute);
-                $became[$attribute] = $entity->get($attribute);
-            }
-
-            foreach ($item['notActualList'] as $attribute) {
-                $was[$attribute] = $entity->getFetched($attribute);
-                $became[$attribute] = $entity->get($attribute);
-            }
-
-            if ($item['fieldType'] === FieldType::LINK_PARENT) {
-                $wasParentType = $was[$field . 'Type'];
-                $wasParentId = $was[$field . 'Id'];
-
-                if (
-                    $wasParentType &&
-                    $wasParentId &&
-                    $this->entityManager->hasRepository($wasParentType)
-                ) {
-                    $wasParent = $this->entityManager->getEntityById($wasParentType, $wasParentId);
-
-                    if ($wasParent) {
-                        $was[$field . 'Name'] = $wasParent->get(Field::NAME);
-                    }
-                }
-            }
-        }
-
-        if (count($updatedFieldList) === 0) {
+        if (count($updatedFieldList) === 0 && !$statusData) {
             return;
         }
 
@@ -1065,21 +1056,28 @@ class Service
         $note->setType(Note::TYPE_UPDATE);
         $note->setParent(LinkParent::createFromEntity($entity));
 
-        $note->set('data', [
+        $note->setData([
             'fields' => $updatedFieldList,
             'attributes' => [
                 'was' => (object) $was,
                 'became' => (object) $became,
             ],
+            ...($statusData ?? []),
         ]);
 
-        $o = [];
+        $noteOptions = [];
 
         if (!empty($options['modifiedById'])) {
-            $o['createdById'] = $options['modifiedById'];
+            $noteOptions['createdById'] = $options['modifiedById'];
         }
 
-        $this->entityManager->saveEntity($note, $o);
+        $saveContext = $options[SaveContext::NAME] ?? null;
+
+        if ($saveContext instanceof SaveContext) {
+            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
+        }
+
+        $this->entityManager->saveEntity($note, $noteOptions);
     }
 
     /**
@@ -1394,5 +1392,90 @@ class Service
     private function toStoreEmailContent(string $entityType): bool
     {
         return in_array($entityType, $this->config->get('streamEmailWithContentEntityTypeList', []));
+    }
+
+    /**
+     * @return array{string[], array<string, mixed>, array<string, mixed>}
+     */
+    private function getUpdates(Entity $entity): array
+    {
+        $auditedFields = $this->getAuditedFieldsData($entity);
+
+        $updatedFieldList = [];
+        $was = [];
+        $became = [];
+
+        foreach ($auditedFields as $field => $item) {
+            $updated = false;
+
+            foreach ($item['actualList'] as $attribute) {
+                if ($entity->hasFetched($attribute) && $entity->isAttributeChanged($attribute)) {
+                    $updated = true;
+
+                    break;
+                }
+            }
+
+            if (!$updated) {
+                continue;
+            }
+
+            $updatedFieldList[] = $field;
+
+            foreach ($item['actualList'] as $attribute) {
+                $was[$attribute] = $entity->getFetched($attribute);
+                $became[$attribute] = $entity->get($attribute);
+            }
+
+            foreach ($item['notActualList'] as $attribute) {
+                $was[$attribute] = $entity->getFetched($attribute);
+                $became[$attribute] = $entity->get($attribute);
+            }
+
+            if ($item['fieldType'] === FieldType::LINK_PARENT) {
+                $wasParentType = $was[$field . 'Type'];
+                $wasParentId = $was[$field . 'Id'];
+
+                if (
+                    $wasParentType &&
+                    $wasParentId &&
+                    $this->entityManager->hasRepository($wasParentType)
+                ) {
+                    $wasParent = $this->entityManager->getEntityById($wasParentType, $wasParentId);
+
+                    if ($wasParent) {
+                        $was[$field . 'Name'] = $wasParent->get(Field::NAME);
+                    }
+                }
+            }
+        }
+
+        return [$updatedFieldList, $was, $became];
+    }
+
+    /**
+     * @param Entity $entity
+     * @return ?array<string, mixed>
+     */
+    private function getStatusUpdateDate(Entity $entity): ?array
+    {
+        $statusField = $this->metadata->get("scopes.{$entity->getEntityType()}.statusField");
+        $statusData = null;
+
+        if (
+            $statusField &&
+            $entity->isAttributeChanged($statusField) &&
+            $entity->get($statusField)
+        ) {
+            $style = $this->getStatusStyle($entity->getEntityType(), $statusField, $entity->get($statusField));
+
+            $statusData = [
+                'statusValue' => $entity->get($statusField),
+                'statusField' => $statusField,
+                'statusStyle' => $style,
+            ];
+        }
+
+        return $statusData;
     }
 }

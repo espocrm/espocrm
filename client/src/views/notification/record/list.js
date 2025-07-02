@@ -93,6 +93,17 @@ class NotificationListRecordView extends ListExpandedRecordView {
         };
     }
 
+    getCellSelector(model, item) {
+        const current = this.getSelector();
+        const row = this.getRowSelector(model.id);
+
+        if (item.field === 'right') {
+            return `${current} ${row} > .cell[data-name="${item.field}"]`;
+        }
+
+        return `${current} ${row} > .expanded-row > .cell[data-name="${item.field}"]`;
+    }
+
     /**
      * @return {Promise}
      */

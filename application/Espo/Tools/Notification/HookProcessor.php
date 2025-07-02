@@ -33,6 +33,7 @@ use Espo\Core\Name\Field;
 use Espo\Core\Notification\AssignmentNotificatorFactory;
 use Espo\Core\Notification\AssignmentNotificator;
 use Espo\Core\Notification\AssignmentNotificator\Params as AssignmentNotificatorParams;
+use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
 use Espo\Tools\Stream\Service as StreamService;
@@ -97,6 +98,12 @@ class HookProcessor
         $notificator = $this->getNotificator($entityType);
 
         $params = AssignmentNotificatorParams::create()->withRawOptions($options);
+
+        $saveContext = $options[SaveContext::NAME] ?? null;
+
+        if ($saveContext instanceof SaveContext) {
+            $params = $params->withActionId($saveContext->getId());
+        }
 
         $notificator->process($entity, $params);
     }

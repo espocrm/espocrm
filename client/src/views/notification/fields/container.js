@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import BaseFieldView from 'views/fields/base';
+import NotificationListRecordView from 'views/notification/record/list';
 
 class NotificationContainerFieldView extends BaseFieldView {
 
@@ -44,23 +45,38 @@ class NotificationContainerFieldView extends BaseFieldView {
         'UserReaction',
     ]
 
-    inlineEditDisabled = true;
+    inlineEditDisabled = true
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    isGroupExpanded = false
+
+    data() {
+        return {
+            hasGrouped: (this.model.attributes.groupedCount ?? 0) > 1,
+            isGroupExpanded: this.isGroupExpanded,
+        };
+    }
 
     setup() {
         switch (this.model.attributes.type) {
             case 'Note':
-                this.processNote(this.model.get('noteData'));
+                this.processNote(this.model.attributes.noteData);
 
                 break;
 
             case 'MentionInPost':
-                this.processMentionInPost(this.model.get('noteData'));
+                this.processMentionInPost(this.model.attributes.noteData);
 
                 break;
 
             default:
                 this.process();
         }
+
+        this.addActionHandler('showGrouped', () => this.showGrouped());
     }
 
     process() {
@@ -82,12 +98,18 @@ class NotificationContainerFieldView extends BaseFieldView {
             viewName = 'views/notification/items/' + Espo.Utils.camelCaseToHyphen(type);
         }
 
+        const parentSelector = this.options.containerSelector ?? this.getSelector();
+
         this.createView('notification', viewName, {
             model: this.model,
-            fullSelector: this.options.containerSelector  + ' li[data-id="' + this.model.id + '"]',
+            fullSelector: `${parentSelector} li[data-id="${this.model.id}"]`,
         });
     }
 
+    /**
+     * @private
+     * @param {Record} data
+     */
     processNote(data) {
         if (!data) {
             return;
@@ -105,10 +127,12 @@ class NotificationContainerFieldView extends BaseFieldView {
                 viewName = 'views/stream/notes/' + Espo.Utils.camelCaseToHyphen(data.type);
             }
 
+            const parentSelector = this.options.containerSelector ?? this.getSelector();
+
             this.createView('notification', viewName, {
                 model: model,
                 isUserStream: true,
-                fullSelector: `${this.options.containerSelector} li[data-id="${this.model.id}"] .cell[data-name="data"]`,
+                fullSelector: `${parentSelector} li[data-id="${this.model.id}"] .cell[data-name="data"]`,
                 onlyContent: true,
                 isNotification: true,
             });
@@ -117,6 +141,10 @@ class NotificationContainerFieldView extends BaseFieldView {
         });
     }
 
+    /**
+     * @private
+     * @param {Record} data
+     */
     processMentionInPost(data) {
         if (!data) {
             return;
@@ -129,17 +157,79 @@ class NotificationContainerFieldView extends BaseFieldView {
 
             const viewName = 'views/stream/notes/mention-in-post';
 
+            const parentSelector = this.options.containerSelector ?? this.getSelector();
+
             this.createView('notification', viewName, {
                 model: model,
                 userId: this.model.get('userId'),
                 isUserStream: true,
-                fullSelector: this.options.containerSelector + ' li[data-id="' + this.model.id + '"]',
+                fullSelector: `${parentSelector} li[data-id="${this.model.id}"]`,
                 onlyContent: true,
                 isNotification: true,
             });
 
             this.wait(false);
         });
+    }
+
+    /**
+     * @private
+     */
+    async showGrouped() {
+        const collection = await this.getCollectionFactory().create('Notification');
+
+        collection.url = `Notification/${this.model.id}/group`;
+
+        const button = this.element.querySelector('a[data-action="showGrouped"]');
+
+        if (button instanceof HTMLElement) {
+            button.classList.add('disabled');
+        }
+
+        Espo.Ui.notifyWait();
+
+        try {
+            await collection.fetch();
+        } catch (e) {
+            await this.reRender();
+
+            return;
+        }
+
+        Espo.Ui.notify();
+
+        this.isGroupExpanded = true;
+
+        /*if (this.model.attributes.read === false) {
+            collection.models.forEach(model => {
+                model.set('read', false);
+            });
+        }*/
+
+        const view = new NotificationListRecordView({
+            collection: collection,
+            showCount: false,
+            selector: '.notification-grouped',
+            listLayout: {
+                rows: [
+                    [
+                        {
+                            name: 'data',
+                            view: 'views/notification/fields/container',
+                        },
+                    ],
+                ],
+                right: {
+                    name: 'read',
+                    view: 'views/notification/fields/read',
+                    width: '10px',
+                },
+            },
+        });
+
+        await this.assignView('groupedList', view);
+
+        await this.reRender();
     }
 }
 

@@ -28,6 +28,9 @@
 
 import NoteStreamView from 'views/stream/note';
 
+/**
+ * Legacy as of v9.2.0.
+ */
 class StatusNoteStreamView extends NoteStreamView {
 
     template = 'stream/notes/status'

@@ -27,20 +27,49 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Notification;
+namespace Espo\Tools\Notification;
 
-use Espo\ORM\Entity;
-use Espo\Core\Notification\AssignmentNotificator\Params;
+use Espo\Core\Record\Collection as RecordCollection;
+use Espo\Entities\Notification;
+use Espo\Entities\User;
+use Espo\ORM\Collection;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 
-/**
- * Processes assignment notifications. Called after entity is saved.
- *
- * @template TEntity of Entity
- */
-interface AssignmentNotificator
+class GroupService
 {
+    private const LIMIT = 100;
+
+    public function __construct(
+        private EntityManager $entityManager,
+        private User $user,
+        private RecordService $recordService,
+    ) {}
+
     /**
-     * @param TEntity $entity
+     * @return RecordCollection<Notification>
      */
-    public function process(Entity $entity, Params $params): void;
+    public function get(Notification $notification): RecordCollection
+    {
+        if (!$notification->getActionId()) {
+            /** @var Collection<Notification> $collection */
+            $collection = $this->entityManager->getCollectionFactory()->create(Notification::ENTITY_TYPE);
+
+            return RecordCollection::create($collection, 0);
+        }
+
+        $collection = $this->entityManager
+            ->getRDBRepositoryByClass(Notification::class)
+            ->where([
+                Attribute::ID . '!=' => $notification->getId(),
+                Notification::ATTR_ACTION_ID => $notification->getActionId(),
+            ])
+            ->limit(0, self::LIMIT)
+            ->order(Notification::ATTR_NUMBER)
+            ->find();
+
+        $collection = $this->recordService->prepareCollection($collection, $this->user);
+
+        return RecordCollection::create($collection, count($collection));
+    }
 }

@@ -3146,6 +3146,8 @@ class ListRecordView extends View {
      */
     prepareInternalLayout(internalLayout, model) {
         internalLayout.forEach(item => {
+            // @todo Revise whether has any effect.
+            //     Has to be in options instead? item.options.fullSelector;
             item.fullSelector = this.getCellSelector(model, item);
 
             if (this.header && item.options && item.options.defs) {

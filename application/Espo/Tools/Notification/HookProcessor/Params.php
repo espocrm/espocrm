@@ -27,20 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Notification;
+namespace Espo\Tools\Notification\HookProcessor;
 
-use Espo\ORM\Entity;
-use Espo\Core\Notification\AssignmentNotificator\Params;
-
-/**
- * Processes assignment notifications. Called after entity is saved.
- *
- * @template TEntity of Entity
- */
-interface AssignmentNotificator
+readonly class Params
 {
-    /**
-     * @param TEntity $entity
-     */
-    public function process(Entity $entity, Params $params): void;
+    public function __construct(
+        public ?string $actionId = null,
+    ) {}
 }

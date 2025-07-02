@@ -61,8 +61,6 @@ class HookProcessor
     private $hasStreamCache = [];
     /** @var array<string, bool> */
     private $isLinkObservableInStreamCache = [];
-    /** @var ?array<string, ?string> */
-    private $statusFields = null;
 
     private const FIELD_ASSIGNED_USERS = Field::ASSIGNED_USERS;
 
@@ -453,16 +451,6 @@ class HookProcessor
 
         if (empty($options[SaveOption::SKIP_AUDITED])) {
             $this->service->handleAudited($entity, $options);
-
-            $statusField = $this->getStatusField($entity->getEntityType());
-
-            if (
-                $statusField &&
-                $entity->get($statusField) &&
-                $entity->isAttributeChanged($statusField)
-            ) {
-                $this->service->noteStatus($entity, $statusField, $options);
-            }
         }
 
         $multipleField = $this->metadata->get(['streamDefs', $entity->getEntityType(), 'followingUsersField']) ??
@@ -558,38 +546,6 @@ class HookProcessor
                 ])
                 ->schedule();
         }
-    }
-
-    private function getStatusField(string $entityType): ?string
-    {
-        return $this->getStatusFields()[$entityType] ?? null;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function getStatusFields(): array
-    {
-        if (is_null($this->statusFields)) {
-            $this->statusFields = [];
-
-            /** @var array<string, array<string, mixed>> $scopes */
-            $scopes = $this->metadata->get('scopes', []);
-
-            foreach ($scopes as $scope => $data) {
-                /** @var ?string $statusField */
-                $statusField = $data['statusField'] ?? null;
-
-                if (!$statusField) {
-                    continue;
-                }
-
-                $this->statusFields[$scope] = $statusField;
-            }
-        }
-
-        /** @var array<string, string> */
-        return $this->statusFields;
     }
 
     /**

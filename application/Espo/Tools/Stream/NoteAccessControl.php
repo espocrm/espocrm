@@ -31,17 +31,13 @@ namespace Espo\Tools\Stream;
 
 use Espo\Entities\Note;
 use Espo\Entities\User;
-
 use Espo\Core\Utils\Acl\UserAclManagerProvider;
 
 class NoteAccessControl
 {
-    private UserAclManagerProvider $userAclManagerProvider;
-
-    public function __construct(UserAclManagerProvider $userAclManagerProvider)
-    {
-        $this->userAclManagerProvider = $userAclManagerProvider;
-    }
+    public function __construct(
+        private UserAclManagerProvider $userAclManagerProvider,
+    ) {}
 
     public function apply(Note $note, User $user): void
     {
@@ -69,9 +65,22 @@ class NoteAccessControl
                 unset($data->attributes->became->$attribute);
             }
 
+            $statusField = $data->statusField ?? null;
+
+            if (
+                $statusField &&
+                !$this->userAclManagerProvider->get($user)
+                    ->checkField($user, $note->getParentType(), $statusField)
+            ) {
+                unset($data->statusField);
+                unset($data->statusValue);
+                unset($data->statusStyle);
+            }
+
             $note->setData($data);
         }
 
+        // Legacy as of v9.2.0.
         if ($note->getType() === Note::TYPE_STATUS && $note->getParentType()) {
             $forbiddenFieldList = $this->userAclManagerProvider
                 ->get($user)

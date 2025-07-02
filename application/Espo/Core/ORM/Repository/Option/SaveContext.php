@@ -41,9 +41,10 @@ class SaveContext
     private string $id;
     private bool $linkUpdated = false;
 
-    public function __construct()
-    {
-        $this->id = Util::generateId();
+    public function __construct(
+        ?string $id = null,
+    ) {
+        $this->id = $id ?? Util::generateId();
     }
 
     /**
