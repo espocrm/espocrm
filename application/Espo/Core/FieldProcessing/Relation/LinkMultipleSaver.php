@@ -203,7 +203,7 @@ class LinkMultipleSaver
             }
         }
 
-        $saveContext = $params->getOption(SaveContext::NAME);
+        $saveContext = SaveContext::obtainFromRawOptions($params->getRawOptions());
 
         foreach ($toCreateIdList as $id) {
             $data = null;

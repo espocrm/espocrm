@@ -692,9 +692,9 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::CREATED_BY_ID];
         }
 
-        $saveContext = $options[SaveContext::NAME] ?? null;
+        $saveContext = SaveContext::obtainFromRawOptions($options);
 
-        if ($saveContext instanceof SaveContext) {
+        if ($saveContext) {
             $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
         }
 
@@ -761,9 +761,9 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::CREATED_BY_ID];
         }
 
-        $saveContext = $options[SaveContext::NAME] ?? null;
+        $saveContext = SaveContext::obtainFromRawOptions($options);
 
-        if ($saveContext instanceof SaveContext) {
+        if ($saveContext) {
             $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
         }
 
@@ -795,9 +795,9 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::CREATED_BY_ID];
         }
 
-        $saveContext = $options[SaveContext::NAME] ?? null;
+        $saveContext = SaveContext::obtainFromRawOptions($options);
 
-        if ($saveContext instanceof SaveContext) {
+        if ($saveContext) {
             $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
         }
 
@@ -829,9 +829,9 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
         }
 
-        $saveContext = $options[SaveContext::NAME] ?? null;
+        $saveContext = SaveContext::obtainFromRawOptions($options);
 
-        if ($saveContext instanceof SaveContext) {
+        if ($saveContext) {
             $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
         }
 
@@ -867,9 +867,9 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
         }
 
-        $saveContext = $options[SaveContext::NAME] ?? null;
+        $saveContext = SaveContext::obtainFromRawOptions($options);
 
-        if ($saveContext instanceof SaveContext) {
+        if ($saveContext) {
             $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
         }
 
@@ -912,9 +912,9 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
         }
 
-        $saveContext = $options[SaveContext::NAME] ?? null;
+        $saveContext = SaveContext::obtainFromRawOptions($options);
 
-        if ($saveContext instanceof SaveContext) {
+        if ($saveContext) {
             $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
         }
 
@@ -1071,9 +1071,9 @@ class Service
             $noteOptions['createdById'] = $options['modifiedById'];
         }
 
-        $saveContext = $options[SaveContext::NAME] ?? null;
+        $saveContext = SaveContext::obtainFromRawOptions($options);
 
-        if ($saveContext instanceof SaveContext) {
+        if ($saveContext) {
             $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
         }
 

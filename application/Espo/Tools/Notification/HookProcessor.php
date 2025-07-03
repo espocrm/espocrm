@@ -99,9 +99,9 @@ class HookProcessor
 
         $params = AssignmentNotificatorParams::create()->withRawOptions($options);
 
-        $saveContext = $options[SaveContext::NAME] ?? null;
+        $saveContext = SaveContext::obtainFromRawOptions($options);
 
-        if ($saveContext instanceof SaveContext) {
+        if ($saveContext) {
             $params = $params->withActionId($saveContext->getId());
         }
 
