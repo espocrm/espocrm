@@ -52,6 +52,9 @@ class Note extends Entity
 
     public const TYPE_POST = 'Post';
     public const TYPE_UPDATE = 'Update';
+    /**
+     * @deprecated As of v9.2.0
+     */
     public const TYPE_STATUS = 'Status';
     public const TYPE_CREATE = 'Create';
     public const TYPE_CREATE_RELATED = 'CreateRelated';

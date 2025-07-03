@@ -27,18 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Select\Note\PrimaryFilters;
+namespace Espo\Core\Upgrades\Migrations\V9_2;
 
-use Espo\Core\Select\Primary\Filter;
+use Espo\Core\Upgrades\Migration\Script;
 use Espo\Entities\Note;
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Query\UpdateBuilder;
 
-class Updates implements Filter
+class AfterUpgrade implements Script
 {
-    public function apply(QueryBuilder $queryBuilder): void
+    public function __construct(
+        private EntityManager $entityManager,
+    ) {}
+
+    public function run(): void
     {
-        $queryBuilder->where([
-            'type' => Note::TYPE_UPDATE,
-        ]);
+        $this->updateNotes();
+    }
+
+    private function updateNotes(): void
+    {
+        $update = UpdateBuilder::create()
+            ->in(Note::ENTITY_TYPE)
+            ->set([
+                'type' => Note::TYPE_UPDATE,
+            ])
+            ->where(['type' => 'Status'])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($update);
     }
 }

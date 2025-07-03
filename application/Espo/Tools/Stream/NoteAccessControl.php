@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Stream;
 
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\Note;
 use Espo\Entities\User;
 use Espo\Core\Utils\Acl\UserAclManagerProvider;
@@ -37,6 +38,7 @@ class NoteAccessControl
 {
     public function __construct(
         private UserAclManagerProvider $userAclManagerProvider,
+        private Metadata $metadata,
     ) {}
 
     public function apply(Note $note, User $user): void
@@ -54,9 +56,9 @@ class NoteAccessControl
                 ->get($user)
                 ->getScopeForbiddenFieldList($user, $note->getParentType());
 
-            $forbiddenAttributeList = $this->userAclManagerProvider
-                ->get($user)
-                ->getScopeForbiddenAttributeList($user, $note->getParentType());
+            $aclManager = $this->userAclManagerProvider->get($user);
+
+            $forbiddenAttributeList = $aclManager->getScopeForbiddenAttributeList($user, $note->getParentType());
 
             $data->fields = array_values(array_diff($fields, $forbiddenFieldList));
 
@@ -65,34 +67,13 @@ class NoteAccessControl
                 unset($data->attributes->became->$attribute);
             }
 
-            $statusField = $data->statusField ?? null;
+            $statusField = $this->metadata->get("scopes.{$note->getParentType()}.statusField");
 
             if (
                 $statusField &&
-                !$this->userAclManagerProvider->get($user)
-                    ->checkField($user, $note->getParentType(), $statusField)
+                !$aclManager->checkField($user, $note->getParentType(), $statusField)
             ) {
-                unset($data->statusField);
-                unset($data->statusValue);
-                unset($data->statusStyle);
-            }
-
-            $note->setData($data);
-        }
-
-        // Legacy as of v9.2.0.
-        if ($note->getType() === Note::TYPE_STATUS && $note->getParentType()) {
-            $forbiddenFieldList = $this->userAclManagerProvider
-                ->get($user)
-                ->getScopeForbiddenFieldList($user, $note->getParentType());
-
-            $data = $note->getData();
-
-            $field = $data->field ?? null;
-
-            if (in_array($field, $forbiddenFieldList)) {
-                $data->value = null;
-                $data->style = null;
+                unset($data->value);
             }
 
             $note->setData($data);
@@ -109,7 +90,7 @@ class NoteAccessControl
 
             if (in_array($field, $forbiddenFieldList)) {
                 $data->statusValue = null;
-                $data->statusStyle = null;
+                $data->statusStyle = null; // Legacy.
             }
 
             $note->setData($data);

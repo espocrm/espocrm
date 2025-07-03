@@ -71,13 +71,18 @@ class CreateNoteStreamView extends NoteStreamView {
 
         this.setupUsersData();
 
-        if (data.statusField) {
-            const statusField = this.statusField = data.statusField;
+        const parentType = this.model.attributes.parentType;
+
+        if (data.statusValue != null) {
+            const statusField = this.statusField = this.getMetadata().get(`scopes.${parentType}.statusField`) ?? '';
             const statusValue = data.statusValue;
 
-            this.statusStyle = data.statusStyle || 'default';
+            this.statusStyle = this.getMetadata()
+                .get(`entityDefs.${parentType}.fields.${statusField}.style.${statusValue}`) ||
+                'default';
+
             this.statusText = this.getLanguage()
-                .translateOption(statusValue, statusField, this.model.attributes.parentType);
+                .translateOption(statusValue, statusField, parentType);
         }
     }
 

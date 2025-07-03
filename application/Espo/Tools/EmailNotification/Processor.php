@@ -656,8 +656,8 @@ class Processor
 
         $noteData = $note->getData();
 
-        $value = $noteData->statusValue ?? null;
-        $field = $noteData->statusField ?? null;
+        $value = $noteData->value ?? null;
+        $field = $this->metadata->get("scopes.$parentType.statusField");
 
         if ($value === null || !$field || !is_string($field)) {
             return;

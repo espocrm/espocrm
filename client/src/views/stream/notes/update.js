@@ -85,22 +85,25 @@ class UpdateNoteStreamView extends NoteStreamView {
         /** @type {Record} */
         const data = this.model.attributes.data;
 
-        if (data.statusField) {
-            const statusField = this.statusField = data.statusField;
-            const statusValue = data.statusValue;
+        const parentType = this.model.attributes.parentType;
 
-            this.statusStyle = data.statusStyle || 'default';
+        if (data.value != null) {
+            const statusField = this.statusField = this.getMetadata().get(`scopes.${parentType}.statusField`) ?? '';
+            const statusValue = data.value;
+
+            this.statusStyle = this.getMetadata()
+                .get(`entityDefs.${parentType}.fields.${statusField}.style.${statusValue}`) ||
+                'default';
+
             this.statusText = this.getLanguage()
                 .translateOption(statusValue, statusField, this.model.attributes.parentType);
         }
 
         this.wait(true);
 
-        this.getModelFactory().create(this.model.get('parentType'), model => {
+        this.getModelFactory().create(parentType, model => {
             const modelWas = model;
             const modelBecame = model.clone();
-
-
 
             data.attributes = data.attributes || {};
 
@@ -109,7 +112,7 @@ class UpdateNoteStreamView extends NoteStreamView {
 
             this.fieldDataList = [];
 
-            const fields = this.fieldList = data.fields;
+            const fields = this.fieldList = data.fields ?? [];
 
             fields.forEach(field => {
                 const type = model.getFieldType(field) || 'base';
