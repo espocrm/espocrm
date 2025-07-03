@@ -45,28 +45,38 @@ class SaveContext
 {
     public const NAME = 'context';
 
-    private string $id;
+    private string $actionId;
     private bool $linkUpdated = false;
 
     /** @var Closure[] */
     private array $deferredActions = [];
 
     /**
-     * @param ?string $id An action ID.
+     * @param ?string $actionId An action ID.
      */
     public function __construct(
-        ?string $id = null,
+        ?string $actionId = null,
     ) {
-        $this->id = $id ?? Util::generateId();
+        $this->actionId = $actionId ?? Util::generateId();
     }
 
     /**
      * An action ID. Used to group notifications. If a save invokes another save, the same ID can be re-used,
      * but the context instance should not be re-used. Create a derived context for this.
+     *
+     * @since 9.2.0
+     */
+    public function getActionId(): string
+    {
+        return $this->actionId;
+    }
+
+    /**
+     * @deprecated Since v9.2.0. Use `getActionId`.
      */
     public function getId(): string
     {
-        return $this->id;
+        return $this->getActionId();
     }
 
     public function setLinkUpdated(): self
@@ -147,6 +157,6 @@ class SaveContext
      */
     public function createDerived(): self
     {
-        return new self($this->id);
+        return new self($this->actionId);
     }
 }

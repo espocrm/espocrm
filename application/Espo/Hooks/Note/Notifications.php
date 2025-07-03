@@ -55,7 +55,7 @@ class Notifications implements AfterSave
 
         $saveContext = SaveContext::obtainFromOptions($options);
 
-        $params = new Params(actionId: $saveContext?->getId());
+        $params = new Params(actionId: $saveContext?->getActionId());
 
         $this->processor->afterSave($entity, $params);
     }

@@ -102,7 +102,7 @@ class HookProcessor
         $saveContext = SaveContext::obtainFromRawOptions($options);
 
         if ($saveContext) {
-            $params = $params->withActionId($saveContext->getId());
+            $params = $params->withActionId($saveContext->getActionId());
         }
 
         $notificator->process($entity, $params);
