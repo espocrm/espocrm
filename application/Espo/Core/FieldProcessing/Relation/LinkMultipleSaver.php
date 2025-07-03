@@ -33,6 +33,7 @@ use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\FieldProcessing\Saver\Params;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\Defs\Params\RelationParam;
 
@@ -202,6 +203,8 @@ class LinkMultipleSaver
             }
         }
 
+        $saveContext = $params->getOption(SaveContext::NAME);
+
         foreach ($toCreateIdList as $id) {
             $data = null;
 
@@ -219,6 +222,7 @@ class LinkMultipleSaver
                 SaveOption::SKIP_HOOKS => $skipHooks,
                 SaveOption::SILENT => $entity->isNew(),
                 self::RELATE_OPTION => $entity->hasLinkMultipleField($name),
+                SaveContext::NAME => $saveContext,
             ]);
         }
 
@@ -226,6 +230,7 @@ class LinkMultipleSaver
             $repository->getRelation($entity, $name)->unrelateById($id, [
                 SaveOption::SKIP_HOOKS => $skipHooks,
                 self::RELATE_OPTION => $entity->hasLinkMultipleField($name),
+                SaveContext::NAME => $saveContext,
             ]);
         }
 

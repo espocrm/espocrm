@@ -31,6 +31,7 @@ namespace Espo\Tools\Stream;
 
 use Espo\Core\Field\DateTime;
 use Espo\Core\Name\Field;
+use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Metadata;
@@ -157,7 +158,7 @@ class HookProcessor
             $type = $relation->getType();
 
             if ($type === Entity::BELONGS_TO) {
-                $this->handleCreateRelatedBelongsTo($entity, $relation, $notifiedEntityTypeList);
+                $this->handleCreateRelatedBelongsTo($entity, $relation, $notifiedEntityTypeList, $options);
 
                 continue;
             }
@@ -179,11 +180,13 @@ class HookProcessor
 
     /**
      * @param string[] $notifiedEntityTypeList
+     * @param array<string, mixed> $options
      */
     private function handleCreateRelatedBelongsTo(
         Entity $entity,
         RelationDefs $defs,
-        array &$notifiedEntityTypeList
+        array &$notifiedEntityTypeList,
+        array $options,
     ): void {
 
         if (
@@ -211,7 +214,7 @@ class HookProcessor
             return;
         }
 
-        $this->service->noteCreateRelated($entity, $foreignEntityType, $id);
+        $this->service->noteCreateRelated($entity, $foreignEntityType, $id, $options);
 
         $notifiedEntityTypeList[] = $foreignEntityType;
     }
@@ -573,12 +576,26 @@ class HookProcessor
         $audited = $this->metadata->get(['entityDefs', $entityType, 'links', $link, 'audited']);
         $auditedForeign = $this->metadata->get(['entityDefs', $foreignEntityType, 'links', $foreignLink, 'audited']);
 
+        $saveContext = SaveContext::obtainFromRawOptions($options);
+
         if ($audited) {
-            $this->service->noteRelate($foreignEntity, $entity);
+            if ($saveContext) {
+                $saveContext->addDeferredAction(
+                    fn () => $this->service->noteRelate($foreignEntity, $entity, $options)
+                );
+            } else {
+                $this->service->noteRelate($foreignEntity, $entity, $options);
+            }
         }
 
         if ($auditedForeign) {
-            $this->service->noteRelate($entity, $foreignEntity);
+            if ($saveContext) {
+                $saveContext->addDeferredAction(
+                    fn () => $this->service->noteRelate($entity, $foreignEntity, $options)
+                );
+            } else {
+                $this->service->noteRelate($entity, $foreignEntity, $options);
+            }
         }
     }
 
@@ -606,15 +623,29 @@ class HookProcessor
         $audited = $this->metadata->get(['entityDefs', $entityType, 'links', $link, 'audited']);
         $auditedForeign = $this->metadata->get(['entityDefs', $foreignEntityType, 'links', $foreignLink, 'audited']);
 
+        $saveContext = SaveContext::obtainFromRawOptions($options);
+
         if ($audited) {
-            $this->service->noteUnrelate($foreignEntity, $entity);
+            if ($saveContext) {
+                $saveContext->addDeferredAction(
+                    fn () => $this->service->noteUnrelate($foreignEntity, $entity, $options)
+                );
+            } else {
+                $this->service->noteUnrelate($foreignEntity, $entity, $options);
+            }
 
             // @todo
             // Add time period (a few minutes). If before, remove RELATE note, don't create 'unrelate' if before.
         }
 
         if ($auditedForeign) {
-            $this->service->noteUnrelate($entity, $foreignEntity);
+            if ($saveContext) {
+                $saveContext->addDeferredAction(
+                    fn () => $this->service->noteUnrelate($entity, $foreignEntity, $options)
+                );
+            } else {
+                $this->service->noteUnrelate($entity, $foreignEntity, $options);
+            }
 
             // @todo
             // Add time period (a few minutes). If before, remove RELATE note, don't create 'unrelate' if before.

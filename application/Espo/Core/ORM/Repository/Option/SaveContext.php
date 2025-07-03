@@ -29,7 +29,9 @@
 
 namespace Espo\Core\ORM\Repository\Option;
 
+use Closure;
 use Espo\Core\Utils\Util;
+use Espo\ORM\Repository\Option\SaveOptions;
 
 /**
  * @since 9.1.0
@@ -40,6 +42,9 @@ class SaveContext
 
     private string $id;
     private bool $linkUpdated = false;
+
+    /** @var Closure[] */
+    private array $deferredActions = [];
 
     public function __construct(
         ?string $id = null,
@@ -65,5 +70,64 @@ class SaveContext
     public function isLinkUpdated(): bool
     {
         return $this->linkUpdated;
+    }
+
+    /**
+     * Obtain from save options.
+     *
+     * @return ?self
+     * @since 9.2.0.
+     */
+    public static function obtainFromOptions(SaveOptions $options): ?self
+    {
+        $saveContext = $options->get(self::NAME);
+
+        if (!$saveContext instanceof self) {
+            return null;
+        }
+
+        return $saveContext;
+    }
+
+    /**
+     * Obtain from raw save options.
+     *
+     * @param array<string, mixed> $options
+     * @return ?self
+     * @since 9.2.0.
+     */
+    public static function obtainFromRawOptions(array $options): ?self
+    {
+        $saveContext = $options[self::NAME] ?? null;
+
+        if (!$saveContext instanceof self) {
+            return null;
+        }
+
+        return $saveContext;
+    }
+
+    /**
+     * Add a deferred action.
+     *
+     * @param Closure $callback A callback.
+     * @since 9.2.0.
+     */
+    public function addDeferredAction(Closure $callback): void
+    {
+        $this->deferredActions[] = $callback;
+    }
+
+    /**
+     * @internal
+     * @since 9.2.0.
+     */
+    public function callDeferredActions(): void
+    {
+        foreach ($this->deferredActions as $callback) {
+            $callback();
+        }
+
+        $this->deferredActions = [];
     }
 }

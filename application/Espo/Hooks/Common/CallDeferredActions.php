@@ -27,69 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Hooks\Opportunity;
+namespace Espo\Hooks\Common;
 
 use Espo\Core\Hook\Hook\AfterSave;
 use Espo\Core\ORM\Repository\Option\SaveContext;
-use Espo\Modules\Crm\Entities\Contact;
-use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityManager;
 use Espo\ORM\Repository\Option\SaveOptions;
 
 /**
- * @implements AfterSave<Opportunity>
+ * @implements AfterSave<Entity>
  */
-class Contacts implements AfterSave
+class CallDeferredActions implements AfterSave
 {
-    public function __construct(private EntityManager $entityManager) {}
+    public static int $order = 101;
 
-    /**
-     * @param Opportunity $entity
-     */
     public function afterSave(Entity $entity, SaveOptions $options): void
     {
-        if (!$entity->isAttributeChanged('contactId')) {
+        $saveContext = SaveContext::obtainFromOptions($options);
+
+        if (!$saveContext) {
             return;
         }
 
-        /** @var ?string $contactId */
-        $contactId = $entity->get('contactId');
-        $contactIdList = $entity->get('contactsIds') ?? [];
-        $fetchedContactId = $entity->getFetched('contactId');
-
-        $relation = $this->entityManager
-            ->getRDBRepositoryByClass(Opportunity::class)
-            ->getRelation($entity, 'contacts');
-
-        if (!$contactId) {
-            if ($fetchedContactId && $relation->isRelatedById($fetchedContactId)) {
-                $relation->unrelateById($fetchedContactId, [
-                    SaveContext::NAME => $options->get(SaveContext::NAME),
-                ]);
-            }
-
-            return;
-        }
-
-        if (in_array($contactId, $contactIdList)) {
-            return;
-        }
-
-        $contact = $this->entityManager
-            ->getRDBRepositoryByClass(Contact::class)
-            ->getById($contactId);
-
-        if (!$contact) {
-            return;
-        }
-
-        if ($relation->isRelated($contact)) {
-            return;
-        }
-
-        $relation->relateById($contactId, [
-            SaveContext::NAME => $options->get(SaveContext::NAME),
-        ]);
+        $saveContext->callDeferredActions();
     }
 }
