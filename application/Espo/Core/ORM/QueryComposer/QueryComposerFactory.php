@@ -67,7 +67,7 @@ class QueryComposerFactory implements \Espo\ORM\QueryComposer\QueryComposerFacto
         }
 
         if (!class_exists($className)) {
-            throw new RuntimeException("Query composer for '{$platform}' platform does not exits.");
+            throw new RuntimeException("Query composer for '{$platform}' platform does not exist.");
         }
 
         $bindingContainer = BindingContainerBuilder::create()
