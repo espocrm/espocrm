@@ -692,11 +692,7 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::CREATED_BY_ID];
         }
 
-        $saveContext = SaveContext::obtainFromRawOptions($options);
-
-        if ($saveContext) {
-            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
-        }
+        $noteOptions[SaveContext::NAME] = SaveContext::obtainFromRawOptions($options)?->createDerived();
 
         $this->entityManager->saveEntity($note, $noteOptions);
 
@@ -761,11 +757,7 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::CREATED_BY_ID];
         }
 
-        $saveContext = SaveContext::obtainFromRawOptions($options);
-
-        if ($saveContext) {
-            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
-        }
+        $noteOptions[SaveContext::NAME] = SaveContext::obtainFromRawOptions($options)?->createDerived();
 
         $this->entityManager->saveEntity($note, $noteOptions);
 
@@ -795,11 +787,7 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::CREATED_BY_ID];
         }
 
-        $saveContext = SaveContext::obtainFromRawOptions($options);
-
-        if ($saveContext) {
-            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
-        }
+        $noteOptions[SaveContext::NAME] = SaveContext::obtainFromRawOptions($options)?->createDerived();
 
         $this->entityManager->saveEntity($note, $noteOptions);
 
@@ -829,11 +817,7 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
         }
 
-        $saveContext = SaveContext::obtainFromRawOptions($options);
-
-        if ($saveContext) {
-            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
-        }
+        $noteOptions[SaveContext::NAME] = SaveContext::obtainFromRawOptions($options)?->createDerived();
 
         $this->entityManager->saveEntity($note, $noteOptions);
 
@@ -867,11 +851,7 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
         }
 
-        $saveContext = SaveContext::obtainFromRawOptions($options);
-
-        if ($saveContext) {
-            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
-        }
+        $noteOptions[SaveContext::NAME] = SaveContext::obtainFromRawOptions($options)?->createDerived();
 
         $this->entityManager->saveEntity($note, $noteOptions);
     }
@@ -912,11 +892,7 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
         }
 
-        $saveContext = SaveContext::obtainFromRawOptions($options);
-
-        if ($saveContext) {
-            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
-        }
+        $noteOptions[SaveContext::NAME] = SaveContext::obtainFromRawOptions($options)?->createDerived();
 
         $this->entityManager->saveEntity($note, $noteOptions);
     }
@@ -1071,11 +1047,7 @@ class Service
             $noteOptions['createdById'] = $options['modifiedById'];
         }
 
-        $saveContext = SaveContext::obtainFromRawOptions($options);
-
-        if ($saveContext) {
-            $noteOptions[SaveContext::NAME] = new SaveContext($saveContext->getId());
-        }
+        $noteOptions[SaveContext::NAME] = SaveContext::obtainFromRawOptions($options)?->createDerived();
 
         $this->entityManager->saveEntity($note, $noteOptions);
     }
