@@ -34,6 +34,11 @@ use Espo\Core\Utils\Util;
 use Espo\ORM\Repository\Option\SaveOptions;
 
 /**
+ * A save context.
+ *
+ * If a save invokes another save, the context instance should not be re-used.
+ * If a save invokes a relate action, the context can be passed to that action.
+ *
  * @since 9.1.0
  */
 class SaveContext
@@ -46,6 +51,9 @@ class SaveContext
     /** @var Closure[] */
     private array $deferredActions = [];
 
+    /**
+     * @param ?string $id An action ID.
+     */
     public function __construct(
         ?string $id = null,
     ) {
@@ -53,7 +61,8 @@ class SaveContext
     }
 
     /**
-     * An action ID.
+     * An action ID. Used to group notifications. If a save invokes another save, the same ID can be re-used,
+     * but the context instance should not be re-used. Create a derived context for this.
      */
     public function getId(): string
     {
@@ -129,5 +138,15 @@ class SaveContext
         }
 
         $this->deferredActions = [];
+    }
+
+    /**
+     * Create a derived context. To be used for nested saves.
+     *
+     * @since 9.2.0
+     */
+    public function createDerived(): self
+    {
+        return new self($this->id);
     }
 }
