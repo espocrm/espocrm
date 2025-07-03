@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://www.espocrm.com/schema/metadata/app/emailTemplates.json",
+    "$id": "https://www.espocrm.com/schema/metadata/app/emailTemplate.json",
     "title": "app/databasePlatforms",
     "description": "Email template definitions.",
     "type": "object",
