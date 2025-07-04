@@ -21,6 +21,18 @@
                     }
                 }
             }
+        },
+        "entityLinkMapping": {
+            "description": "EntityType => link mapping. As of v9.2.0.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "additionalProperties": {
+                    "type": "string",
+                    "description": "An entity type name mapped to a link."
+                },
+                "description": "A parent entity type name mapped to EntityType => link map.."
+            }
         }
     }
 }

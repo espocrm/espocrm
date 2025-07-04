@@ -64,7 +64,8 @@ class Processor
         private FileStorageManager $fileStorageManager,
         private User $user,
         private HtmlizerFactory $htmlizerFactory,
-        private PlaceholdersProvider $placeholdersProvider
+        private PlaceholdersProvider $placeholdersProvider,
+        private EntityMapProvider $entityMapProvider,
     ) {}
 
     public function process(EmailTemplate $template, Params $params, Data $data): Result
@@ -415,6 +416,15 @@ class Processor
             ) {
                 $entityHash[PersonTemplate::TEMPLATE_TYPE] = $parent;
             }
+        }
+
+        if ($data->getParent()) {
+            $entityHash = array_merge(
+                $entityHash,
+                $this->entityMapProvider->get($data->getParent(), $user, $params->applyAcl())
+            );
+
+            $entityHash[$data->getParent()->getEntityType()] = $data->getParent();
         }
 
         if ($data->getRelatedId() && $data->getRelatedType()) {
