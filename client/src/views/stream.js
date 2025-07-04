@@ -70,6 +70,7 @@ class StreamView extends View {
 
         this.addActionHandler('createPost', () => this.actionCreatePost());
         this.addHandler('keydown.stream', '', /** KeyboardEvent */event => this.onKeyDown(event));
+        this.addActionHandler('fullRefresh', () => this.actionFullRefresh());
     }
 
     afterRender() {
@@ -210,6 +211,17 @@ class StreamView extends View {
 
             this.actionCreatePost();
         }
+    }
+
+    /**
+     * @private
+     */
+    async actionFullRefresh() {
+        Espo.Ui.notifyWait();
+
+        await this.collection.fetch();
+
+        Espo.Ui.notify();
     }
 }
 
