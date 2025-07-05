@@ -53,12 +53,36 @@ class WebSocketManager {
     pingTimeout
 
     /**
+     * @private
+     * @type {boolean}
+     */
+    wasConnected = false
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    isConnecting = false
+
+    /**
+     * @private
+     * @type {number}
+     */
+    checkWakeInterval = 3
+
+    /**
+     * @private
+     * @type {number}
+     */
+    checkWakeThresholdInterval = 5
+
+    /**
      * @param {module:models/settings} config A config.
      */
     constructor(config) {
         /**
          * @private
-         * @type {module:models/settings}
+         * @type {import('models/settings').default}
          */
         this.config = config;
 
@@ -109,20 +133,17 @@ class WebSocketManager {
             if (url.indexOf('wss://') === 0) {
                 this.url = url.substring(6);
                 this.protocolPart = 'wss://';
-            }
-            else {
+            } else {
                 this.url = url.substring(5);
                 this.protocolPart = 'ws://';
             }
-        }
-        else {
+        } else {
             const siteUrl = this.config.get('siteUrl') || '';
 
             if (siteUrl.indexOf('https://') === 0) {
                 this.url = siteUrl.substring(8);
                 this.protocolPart = 'wss://';
-            }
-            else {
+            } else {
                 this.url = siteUrl.substring(7);
                 this.protocolPart = 'ws://';
             }
@@ -137,14 +158,40 @@ class WebSocketManager {
 
             if (~si) {
                 this.url = this.url.substring(0, si) + ':' + port;
-            }
-            else {
+            } else {
                 this.url += ':' + port;
             }
 
             if (this.protocolPart === 'wss://') {
                 this.url += '/wss';
             }
+        }
+
+        {
+            let lastTime = Date.now();
+            const interval = this.checkWakeInterval * 1000;
+            const thresholdInterval = this.checkWakeThresholdInterval * 1000;
+
+            setInterval(() => {
+                const timeDiff = Date.now() - lastTime;
+                lastTime = Date.now();
+
+                if (timeDiff <= interval + thresholdInterval) {
+                    return;
+                }
+
+                if (!this.isConnected || this.isConnecting) {
+                    return;
+                }
+
+                if (this.pingTimeout) {
+                    clearTimeout(this.pingTimeout);
+                }
+
+                this.connection.publish('', '');
+
+                this.schedulePing()
+            }, interval);
         }
     }
 
@@ -162,8 +209,7 @@ class WebSocketManager {
 
         try {
             this.connectInternal(auth, userId, url);
-        }
-        catch (e) {
+        } catch (e) {
             console.error(e.message);
 
             this.connection = null;
@@ -177,11 +223,12 @@ class WebSocketManager {
      * @param {string} url
      */
     connectInternal(auth, userId, url) {
-        let wasConnected = false;
+        this.isConnecting = true;
 
         this.connection = new ab.Session(
             url,
             () => {
+                this.isConnecting = false;
                 this.isConnected = true;
 
                 this.subscribeQueue.forEach(item => {
@@ -190,26 +237,29 @@ class WebSocketManager {
 
                 this.subscribeQueue = [];
 
-                if (wasConnected) {
+                if (this.wasConnected) {
                     this.subscribeToReconnectQueue.forEach(callback => callback());
                 }
 
                 this.schedulePing();
 
-                wasConnected = true;
+                this.wasConnected = true;
             },
             code => {
-                if (code === ab.CONNECTION_CLOSED) {
-                    this.subscribeQueue = [];
-                }
+                this.isConnecting = false;
 
-                if (code === ab.CONNECTION_LOST || code === ab.CONNECTION_UNREACHABLE) {
+                if (
+                    code === ab.CONNECTION_LOST ||
+                    code === ab.CONNECTION_UNREACHABLE
+                ) {
                     if (this.isConnected) {
                         this.subscribeQueue = this.subscriptions;
                         this.subscriptions = [];
                     }
 
                     setTimeout(() => this.connect(auth, userId), this.reconnectInterval * 1000);
+                } else if (code === ab.CONNECTION_CLOSED) {
+                    this.subscribeQueue = [];
                 }
 
                 this.isConnected = false;
@@ -265,12 +315,10 @@ class WebSocketManager {
                 category: category,
                 callback: callback,
             });
-        }
-        catch (e) {
+        } catch (e) {
             if (e.message) {
                 console.error(e.message);
-            }
-            else {
+            } else {
                 console.error("WebSocket: Could not subscribe to "+category+".");
             }
         }
@@ -305,12 +353,10 @@ class WebSocketManager {
 
         try {
             this.connection.unsubscribe(category, callback);
-        }
-        catch (e) {
+        } catch (e) {
             if (e.message) {
                 console.error(e.message);
-            }
-            else {
+            } else {
                 console.error("WebSocket: Could not unsubscribe from "+category+".");
             }
         }
@@ -331,12 +377,12 @@ class WebSocketManager {
 
         try {
             this.connection.close();
-        }
-        catch (e) {
+        } catch (e) {
             console.error(e.message);
         }
 
         this.isConnected = false;
+        this.wasConnected = true;
     }
 
     /**
@@ -363,7 +409,10 @@ class WebSocketManager {
                 return;
             }
 
-            this.connection.publish('', '');
+            if (!this.isConnecting) {
+                this.connection.publish('', '');
+            }
+
             this.schedulePing();
         }, this.pingInterval * 1000);
     }
