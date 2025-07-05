@@ -1,0 +1,23 @@
+{
+    "labels": {
+        "Check Syntax": "בדוק תחביר",
+        "Run": "הפעל"
+    },
+    "fields": {
+        "target": "יעד",
+        "targetType": "סוג יעד",
+        "script": "סקריפט",
+        "output": "פלט",
+        "error": "שגיאה"
+    },
+    "messages": {
+        "runSuccess": "בוצע בהצלחה.",
+        "runError": "שגיאה.",
+        "checkSyntaxSuccess": "התחביר תקין.",
+        "checkSyntaxError": "שגיאת תחביר.",
+        "emptyScript": "הסקריפט ריק."
+    },
+    "tooltips": {
+        "output": "הדפס ערכים באמצעות הפונקציה `output\\printLine`."
+    }
+}
