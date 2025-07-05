@@ -56,6 +56,30 @@ class WebSocketManager {
      * @private
      * @type {boolean}
      */
+    wasConnected = false
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    isConnecting = false
+
+    /**
+     * @private
+     * @type {number}
+     */
+    checkWakeInterval = 3
+
+    /**
+     * @private
+     * @type {number}
+     */
+    checkWakeThresholdInterval = 5
+
+    /**
+     * @private
+     * @type {boolean}
+     */
     enabled = false
 
     /**
@@ -148,6 +172,33 @@ class WebSocketManager {
                 this.url += '/wss';
             }
         }
+
+        {
+            let lastTime = Date.now();
+            const interval = this.checkWakeInterval * 1000;
+            const thresholdInterval = this.checkWakeThresholdInterval * 1000;
+
+            setInterval(() => {
+                const timeDiff = Date.now() - lastTime;
+                lastTime = Date.now();
+
+                if (timeDiff <= interval + thresholdInterval) {
+                    return;
+                }
+
+                if (!this.isConnected || this.isConnecting) {
+                    return;
+                }
+
+                if (this.pingTimeout) {
+                    clearTimeout(this.pingTimeout);
+                }
+
+                this.connection.publish('', '');
+
+                this.schedulePing()
+            }, interval);
+        }
     }
 
     /**
@@ -178,11 +229,12 @@ class WebSocketManager {
      * @param {string} url
      */
     connectInternal(auth, userId, url) {
-        let wasConnected = false;
+        this.isConnecting = true;
 
         this.connection = new ab.Session(
             url,
             () => {
+                this.isConnecting = false;
                 this.isConnected = true;
 
                 this.subscribeQueue.forEach(item => {
@@ -191,26 +243,29 @@ class WebSocketManager {
 
                 this.subscribeQueue = [];
 
-                if (wasConnected) {
+                if (this.wasConnected) {
                     this.subscribeToReconnectQueue.forEach(callback => callback());
                 }
 
                 this.schedulePing();
 
-                wasConnected = true;
+                this.wasConnected = true;
             },
             code => {
-                if (code === ab.CONNECTION_CLOSED) {
-                    this.subscribeQueue = [];
-                }
+                this.isConnecting = false;
 
-                if (code === ab.CONNECTION_LOST || code === ab.CONNECTION_UNREACHABLE) {
+                if (
+                    code === ab.CONNECTION_LOST ||
+                    code === ab.CONNECTION_UNREACHABLE
+                ) {
                     if (this.isConnected) {
                         this.subscribeQueue = this.subscriptions;
                         this.subscriptions = [];
                     }
 
                     setTimeout(() => this.connect(auth, userId), this.reconnectInterval * 1000);
+                } else if (code === ab.CONNECTION_CLOSED) {
+                    this.subscribeQueue = [];
                 }
 
                 this.isConnected = false;
@@ -333,6 +388,7 @@ class WebSocketManager {
         }
 
         this.isConnected = false;
+        this.wasConnected = true;
     }
 
     /**
@@ -359,7 +415,10 @@ class WebSocketManager {
                 return;
             }
 
-            this.connection.publish('', '');
+            if (!this.isConnecting) {
+                this.connection.publish('', '');
+            }
+
             this.schedulePing();
         }, this.pingInterval * 1000);
     }
