@@ -217,6 +217,7 @@ class Processor
             ->select()
             ->from(Notification::ENTITY_TYPE)
             ->join(Note::ENTITY_TYPE, 'note', ['note.id:' => 'relatedId'])
+            ->join('user')
             ->where([
                 'type' => Notification::TYPE_NOTE,
                 'relatedType' => Note::ENTITY_TYPE,
@@ -424,7 +425,7 @@ class Processor
             return;
         }
 
-        if ($type === Note::TYPE_UPDATE && isset($note->getData()->statusValue)) {
+        if ($type === Note::TYPE_UPDATE && isset($note->getData()->value)) {
             $this->processNotificationNoteStatus($note, $user);
 
             return;
