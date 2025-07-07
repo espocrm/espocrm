@@ -140,7 +140,7 @@ class Service
                 ->setData(['noteId' => $note->getId()])
                 ->setType(Notification::TYPE_NOTE)
                 ->setUserId($user->getId())
-                ->setRelated(LinkParent::createFromEntity($notification))
+                ->setRelated(LinkParent::createFromEntity($note))
                 ->setRelatedParent(
                     $note->getParentType() && $note->getParentId() ?
                         LinkParent::create($note->getParentType(), $note->getParentId()) : null
