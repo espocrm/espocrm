@@ -30,6 +30,7 @@
 namespace Espo\Core\Webhook;
 
 use Espo\Core\Field\DateTime;
+use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
 use Espo\Entities\User;
 use Espo\Entities\Webhook;
@@ -94,8 +95,14 @@ class Queue
 
     protected function createQueueFromEvent(WebhookEventQueueItem $item): void
     {
-        $webhookList = $this->entityManager
-            ->getRDBRepository(Webhook::ENTITY_TYPE)
+        if (!$item->getTargetId() || !$item->getTargetType()) {
+            return;
+        }
+
+        $target = LinkParent::create($item->getTargetType(), $item->getTargetId());
+
+        $webhooks = $this->entityManager
+            ->getRDBRepositoryByClass(Webhook::class)
             ->where([
                 'event' => $item->getEvent(),
                 'isActive' => true,
@@ -103,16 +110,18 @@ class Queue
             ->order(Field::CREATED_AT)
             ->find();
 
-        foreach ($webhookList as $webhook) {
-            $this->entityManager->createEntity(WebhookQueueItem::ENTITY_TYPE, [
-                'webhookId' => $webhook->getId(),
-                'event' => $item->getEvent(),
-                'targetId' => $item->getTargetId(),
-                'targetType' => $item->getTargetType(),
-                'status' => WebhookQueueItem::STATUS_PENDING,
-                'data' => $item->getData(),
-                'attempts' => 0,
-            ]);
+        foreach ($webhooks as $webhook) {
+            $queueItem = $this->entityManager->getRDBRepositoryByClass(WebhookQueueItem::class)->getNew();
+
+            $queueItem
+                ->setEvent($item->getEvent())
+                ->setWebhook($webhook)
+                ->setTarget($target)
+                ->setStatus(WebhookQueueItem::STATUS_PENDING)
+                ->setAttempts(0)
+                ->setData($item->getData());
+
+            $this->entityManager->saveEntity($queueItem);
         }
     }
 
@@ -122,7 +131,10 @@ class Queue
 
         $groupedItemList = $this->entityManager
             ->getRDBRepository(WebhookQueueItem::ENTITY_TYPE)
-            ->select(['webhookId', 'number'])
+            ->select([
+                'webhookId',
+                'number',
+            ])
             ->where(
                 Cond::in(
                     Cond::column('number'),
