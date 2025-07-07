@@ -98,6 +98,11 @@ class WebhookQueueItem extends Entity
         return $this->get('targetId');
     }
 
+    public function getWebhookId(): string
+    {
+        return $this->get('webhookId') ?? '';
+    }
+
     public function getData(): stdClass
     {
         return $this->get('data') ?? (object) [];

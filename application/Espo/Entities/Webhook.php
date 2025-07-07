@@ -35,9 +35,9 @@ class Webhook extends Entity
 {
     public const ENTITY_TYPE = 'Webhook';
 
-    public function getEvent(): ?string
+    public function getEvent(): string
     {
-        return $this->get('event');
+        return $this->get('event') ?? '';
     }
 
     public function getSecretKey(): ?string

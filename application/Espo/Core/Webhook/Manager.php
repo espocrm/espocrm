@@ -73,7 +73,6 @@ class Manager
         private Log $log,
         private SystemConfig $systemConfig,
     ) {
-
         $this->loadData();
     }
 
@@ -112,7 +111,7 @@ class Manager
         $data = [];
 
         $list = $this->entityManager
-            ->getRDBRepository(Webhook::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(Webhook::class)
             ->select(['event'])
             ->group(['event'])
             ->where([
@@ -122,7 +121,6 @@ class Manager
             ->find();
 
         foreach ($list as $webhook) {
-            /** @var string $event */
             $event = $webhook->getEvent();
 
             $data[$event] = true;
@@ -148,8 +146,8 @@ class Manager
      */
     public function removeEvent(string $event): void
     {
-        $notExists = !$this->entityManager
-            ->getRDBRepository(Webhook::ENTITY_TYPE)
+        $one = !$this->entityManager
+            ->getRDBRepositoryByClass(Webhook::class)
             ->select([Attribute::ID])
             ->where([
                 'event' => $event,
@@ -157,21 +155,23 @@ class Manager
             ])
             ->findOne();
 
-        if ($notExists) {
-            unset($this->data[$event]);
+        if (!$one) {
+            return;
+        }
 
-            if ($this->systemConfig->useCache()) {
-                $this->storeDataToCache();
-            }
+        unset($this->data[$event]);
+
+        if ($this->systemConfig->useCache()) {
+            $this->storeDataToCache();
         }
     }
 
-    protected function eventExists(string $event): bool
+    private function eventExists(string $event): bool
     {
         return isset($this->data[$event]);
     }
 
-    protected function logDebugEvent(string $event, Entity $entity): void
+    private function logDebugEvent(string $event, Entity $entity): void
     {
         $this->log->debug("Webhook: {$event} on record {$entity->getId()}.");
     }
@@ -181,7 +181,7 @@ class Manager
      */
     public function processCreate(Entity $entity): void
     {
-        $event = $entity->getEntityType() . '.create';
+        $event = "{$entity->getEntityType()}.create";
 
         if (!$this->eventExists($event)) {
             return;
@@ -202,7 +202,7 @@ class Manager
      */
     public function processDelete(Entity $entity): void
     {
-        $event = $entity->getEntityType() . '.delete';
+        $event = "{$entity->getEntityType()}.delete";
 
         if (!$this->eventExists($event)) {
             return;
@@ -225,7 +225,7 @@ class Manager
      */
     public function processUpdate(Entity $entity): void
     {
-        $event = $entity->getEntityType() . '.update';
+        $event = "{$entity->getEntityType()}.update";
 
         $data = (object) [];
 
@@ -257,7 +257,7 @@ class Manager
         }
 
         foreach ($this->fieldUtil->getEntityTypeFieldList($entity->getEntityType()) as $field) {
-            $itemEvent = $entity->getEntityType() . '.fieldUpdate.' . $field;
+            $itemEvent = "{$entity->getEntityType()}.fieldUpdate.$field";
 
             if (!$this->eventExists($itemEvent)) {
                 continue;
