@@ -64,7 +64,7 @@ class Queue
         private Config $config,
         private EntityManager $entityManager,
         private AclManager $aclManager,
-        private Log $log
+        private Log $log,
     ) {}
 
     public function process(): void
@@ -92,35 +92,25 @@ class Queue
         }
     }
 
-    protected function createQueueFromEvent(WebhookEventQueueItem $item): void
+    protected function createQueueFromEvent(WebhookEventQueueItem $eventItem): void
     {
-        if (!$item->getTargetId() || !$item->getTargetType()) {
+        if (!$eventItem->getTargetId() || !$eventItem->getTargetType()) {
             return;
         }
 
-        $target = LinkParent::create($item->getTargetType(), $item->getTargetId());
+        $target = LinkParent::create($eventItem->getTargetType(), $eventItem->getTargetId());
 
         $webhooks = $this->entityManager
             ->getRDBRepositoryByClass(Webhook::class)
             ->where([
-                'event' => $item->getEvent(),
+                'event' => $eventItem->getEvent(),
                 'isActive' => true,
             ])
             ->order(Field::CREATED_AT)
             ->find();
 
         foreach ($webhooks as $webhook) {
-            $queueItem = $this->entityManager->getRDBRepositoryByClass(WebhookQueueItem::class)->getNew();
-
-            $queueItem
-                ->setEvent($item->getEvent())
-                ->setWebhook($webhook)
-                ->setTarget($target)
-                ->setStatus(WebhookQueueItem::STATUS_PENDING)
-                ->setAttempts(0)
-                ->setData($item->getData());
-
-            $this->entityManager->saveEntity($queueItem);
+            $this->createItem($eventItem, $webhook, $target);
         }
     }
 
@@ -393,6 +383,29 @@ class Queue
             $item->setStatus(WebhookQueueItem::STATUS_FAILED);
             $item->setProcessAt(null);
         }
+
+        $this->entityManager->saveEntity($item);
+    }
+
+    private function createItem(WebhookEventQueueItem $eventItem, Webhook $webhook, LinkParent $target): void
+    {
+        if (
+            $webhook->skipOwn() &&
+            $webhook->getUserId() &&
+            $eventItem->getUserId() === $webhook->getUserId()
+        ) {
+            return;
+        }
+
+        $item = $this->entityManager->getRDBRepositoryByClass(WebhookQueueItem::class)->getNew();
+
+        $item
+            ->setEvent($eventItem->getEvent())
+            ->setWebhook($webhook)
+            ->setTarget($target)
+            ->setStatus(WebhookQueueItem::STATUS_PENDING)
+            ->setAttempts(0)
+            ->setData($eventItem->getData());
 
         $this->entityManager->saveEntity($item);
     }

@@ -64,4 +64,14 @@ class Webhook extends Entity
     {
         return $this->get('entityType');
     }
+
+    public function setSkipOwn(bool $skipOwn): self
+    {
+        return $this->set('skipOwn', $skipOwn);
+    }
+
+    public function skipOwn(): bool
+    {
+        return (bool) $this->get('skipOwn');
+    }
 }

@@ -64,6 +64,10 @@ class BeforeSave implements SaveHook
 
     public function process(Entity $entity): void
     {
+        if ($entity->skipOwn() && !$entity->getUserId()) {
+            $entity->setSkipOwn(false);
+        }
+
         $this->checkEntityUserIsApi($entity);
         $this->processEntityEventData($entity);
 

@@ -174,13 +174,16 @@ class Manager
 
     private function logDebugEvent(string $event, Entity $entity): void
     {
-        $this->log->debug("Webhook: $event on record {$entity->getId()}.");
+        $this->log->debug("Webhook: {event} on record {id}.", [
+            'id' => $entity->getId(),
+            'event' => $event,
+        ]);
     }
 
     /**
      * Process 'create' event.
      */
-    public function processCreate(Entity $entity): void
+    public function processCreate(Entity $entity, Options $options): void
     {
         $event = "{$entity->getEntityType()}.create";
 
@@ -193,7 +196,8 @@ class Manager
         $item
             ->setEvent($event)
             ->setTarget($entity)
-            ->setData($entity->getValueMap());
+            ->setData($entity->getValueMap())
+            ->setUserId($options->userId);
 
         $this->entityManager->saveEntity($item);
 
@@ -203,7 +207,7 @@ class Manager
     /**
      * Process 'delete' event.
      */
-    public function processDelete(Entity $entity): void
+    public function processDelete(Entity $entity, Options $options): void
     {
         $event = "{$entity->getEntityType()}.delete";
 
@@ -216,9 +220,8 @@ class Manager
         $item
             ->setEvent($event)
             ->setTarget($entity)
-            ->setData([
-                'id' => $entity->getId(),
-            ]);
+            ->setData(['id' => $entity->getId()])
+            ->setUserId($options->userId);
 
         $this->entityManager->saveEntity($item);
 
@@ -228,7 +231,7 @@ class Manager
     /**
      * Process 'update' event.
      */
-    public function processUpdate(Entity $entity): void
+    public function processUpdate(Entity $entity, Options $options): void
     {
         $event = "{$entity->getEntityType()}.update";
 
@@ -256,17 +259,18 @@ class Manager
             $item
                 ->setEvent($event)
                 ->setTarget($entity)
-                ->setData($data);
+                ->setData($data)
+                ->setUserId($options->userId);
 
             $this->entityManager->saveEntity($item);
 
             $this->logDebugEvent($event, $entity);
         }
 
-        $this->processUpdateFields($entity, $data);
+        $this->processUpdateFields($entity, $data, $options);
     }
 
-    private function processUpdateFields(Entity $entity, stdClass $data): void
+    private function processUpdateFields(Entity $entity, stdClass $data, Options $options): void
     {
         foreach ($this->fieldUtil->getEntityTypeFieldList($entity->getEntityType()) as $field) {
             $itemEvent = "{$entity->getEntityType()}.fieldUpdate.$field";
@@ -278,7 +282,7 @@ class Manager
                 continue;
             }
 
-            $this->processUpdateField($entity, $field, $itemEvent);
+            $this->processUpdateField($entity, $field, $itemEvent, $options);
         }
     }
 
@@ -303,7 +307,7 @@ class Manager
         return $isChanged;
     }
 
-    private function processUpdateField(Entity $entity, string $field, string $itemEvent): void
+    private function processUpdateField(Entity $entity, string $field, string $itemEvent, Options $options): void
     {
         $itemData = (object) [];
 
@@ -324,7 +328,8 @@ class Manager
         $item
             ->setEvent($itemEvent)
             ->setTarget($entity)
-            ->setData($itemData);
+            ->setData($itemData)
+            ->setUserId($options->userId);
 
         $this->entityManager->saveEntity($item);
 

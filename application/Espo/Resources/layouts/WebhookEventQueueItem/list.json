@@ -14,5 +14,10 @@
     {
         "name": "createdAt",
         "width": 14
+    },
+    {
+        "name": "user",
+        "width": 15,
+        "hidden": true
     }
 ]

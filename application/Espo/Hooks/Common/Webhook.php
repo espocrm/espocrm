@@ -31,6 +31,8 @@ namespace Espo\Hooks\Common;
 
 use Espo\Core\Hook\Hook\AfterRemove;
 use Espo\Core\Hook\Hook\AfterSave;
+use Espo\Core\Webhook\Options;
+use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 
@@ -48,8 +50,11 @@ class Webhook implements AfterSave, AfterRemove
 {
     public static int $order = 101;
 
-    public function __construct(private Metadata $metadata, private WebhookManager $webhookManager)
-    {}
+    public function __construct(
+        private Metadata $metadata,
+        private WebhookManager $webhookManager,
+        private User $user,
+    ) {}
 
     public function afterSave(Entity $entity, SaveOptions $options): void
     {
@@ -60,11 +65,19 @@ class Webhook implements AfterSave, AfterRemove
             return;
         }
 
+        $userIdParam = $entity->isNew() ? SaveOption::CREATED_BY_ID : SaveOption::MODIFIED_BY_ID;
+
+        $eventOptions = new Options(
+            userId: $options->get($userIdParam) ?? $this->user->getId(),
+        );
+
         if ($entity->isNew()) {
-            $this->webhookManager->processCreate($entity);
-        } else {
-            $this->webhookManager->processUpdate($entity);
+            $this->webhookManager->processCreate($entity, $eventOptions);
+
+            return;
         }
+
+        $this->webhookManager->processUpdate($entity, $eventOptions);
     }
 
     public function afterRemove(Entity $entity, RemoveOptions $options): void
@@ -76,7 +89,11 @@ class Webhook implements AfterSave, AfterRemove
             return;
         }
 
-        $this->webhookManager->processDelete($entity);
+        $eventOptions = new Options(
+            userId: $options->get(SaveOption::MODIFIED_BY_ID) ?? $this->user->getId(),
+        );
+
+        $this->webhookManager->processDelete($entity, $eventOptions);
     }
 
     private function toSkip(SaveOptions|RemoveOptions $options, Entity $entity): bool
