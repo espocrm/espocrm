@@ -210,7 +210,7 @@ class BaseTest extends TestCase
         $this->assertEquals( json_decode($manifest,true), $this->reflection->invokeMethod('getManifest') );
     }
 
-    public function acceptableVersions()
+    static public function acceptableVersions()
     {
         return [
           ['11.5.2'],
@@ -243,7 +243,7 @@ class BaseTest extends TestCase
         );
     }
 
-    public function unacceptableVersions()
+    static public function unacceptableVersions()
     {
         return [
           ['1.*',],

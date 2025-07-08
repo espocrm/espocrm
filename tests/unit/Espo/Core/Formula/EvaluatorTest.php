@@ -51,7 +51,7 @@ class EvaluatorTest extends TestCase
      */
     private $evaluator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $log = $this->createMock(Log::class);
         $entityManager = $this->createMock(EntityManager::class);

@@ -278,12 +278,20 @@ class ConverterTest extends TestCase
             ],
         ]);
 
+        $c = $this->exactly(2);
+
         $this->scanner
+            ->expects($c)
             ->method('apply')
-            ->withConsecutive(
-                [$this->isInstanceOf(QueryBuilder::class), $sqItem],
-                [$this->queryBuilder, $item]
-            );
+            ->willReturnCallback(function ($qb, $it) use ($c, $sqItem, $item) {
+                if ($c->numberOfInvocations() === 1) {
+                    $this->assertEquals($sqItem, $it);
+                }
+
+                if ($c->numberOfInvocations() === 2) {
+                    $this->assertEquals($item, $it);
+                }
+            });
 
         $whereClause = $this->converter->convert($this->queryBuilder, $item);
 
@@ -347,14 +355,6 @@ class ConverterTest extends TestCase
             ->expects($this->never())
             ->method('distinct');
 
-        $this->queryBuilder
-            ->method('leftJoin')
-            ->withConsecutive(
-                [
-                    $link,
-                    $alias,
-                ]
-            );
 
         $expected = [
             'id=s' => Select::fromRaw([

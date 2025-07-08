@@ -208,13 +208,22 @@ class TextFilterApplierTest extends TestCase
             ->method('where')
             ->with(OrGroup::fromRaw($expectedWhere));
 
+        $c = $this->exactly(2);
+
         $this->queryBuilder
-            ->expects($this->exactly(2))
+            ->expects($c)
             ->method('leftJoin')
-            ->withConsecutive(
-                ['link1'],
-                ['link2']
-            );
+            ->willReturnCallback(function ($link) use ($c) {
+                if ($c->numberOfInvocations() === 1) {
+                    $this->assertEquals('link1', $link);
+                }
+
+                if ($c->numberOfInvocations() === 2) {
+                    $this->assertEquals('link2', $link);
+                }
+
+                return $this->queryBuilder;
+            });
 
         $this->queryBuilder
             ->expects($this->once())

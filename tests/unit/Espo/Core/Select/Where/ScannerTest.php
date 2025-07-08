@@ -111,14 +111,26 @@ class ScannerTest extends TestCase
                 ])
             );
 
+        $c = $this->exactly(3);
+
         $this->queryBuilder
-            ->expects($this->exactly(3))
+            ->expects($c)
             ->method('leftJoin')
-            ->withConsecutive(
-                ['link2'],
-                ['link3'],
-                ['link4'],
-            );
+            ->willReturnCallback(function ($link) use ($c) {
+                if ($c->numberOfInvocations() === 1) {
+                    $this->assertEquals('link2', $link);
+                }
+
+                if ($c->numberOfInvocations() === 2) {
+                    $this->assertEquals('link3', $link);
+                }
+
+                if ($c->numberOfInvocations() === 3) {
+                    $this->assertEquals('link4', $link);
+                }
+
+                return $this->queryBuilder;
+            });
 
         /*$this->queryBuilder
             ->expects($this->once())

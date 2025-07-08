@@ -1179,7 +1179,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function getClassNames(): array
+    static public function getClassNames(): array
     {
         return [
             'application/Espo/EntryPoints/Download.php' => ['application/Espo/EntryPoints/Download.php'],
@@ -1599,10 +1599,10 @@ class UtilTest extends \PHPUnit\Framework\TestCase
           'newAttr2' => false,
         );
 
-        $this->assertEquals($result, \Espo\Core\Utils\Util::arrayDiff($array1, $array2));
+        $this->assertEquals($result, Util::arrayDiff($array1, $array2));
     }
 
-    public function htmlList()
+    static public function htmlList()
     {
         return [
             ['Test&lt;script&gt;alert(&quot;test&quot;)&lt;/script&gt;', 'Test<script>alert("test")</script>'],
@@ -1622,7 +1622,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedResult, Util::sanitizeHtml($html));
     }
 
-    public function urlAddParamList()
+    static public function urlAddParamList()
     {
         return [
             ['https://test.link/?param1=1111', 'https://test.link', 'param1', '1111'],
@@ -1644,7 +1644,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedResult, Util::urlAddParam($url, $paramName, $paramValue));
     }
 
-    public function urlRemoveParamList()
+    static public function urlRemoveParamList()
     {
         return [
             ['https://test.link', 'https://test.link', 'param1'],

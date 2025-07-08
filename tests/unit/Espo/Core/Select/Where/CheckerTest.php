@@ -114,15 +114,12 @@ class CheckerTest extends TestCase
         ]);
 
         $this->entity
+            ->expects(self::any())
             ->method('hasAttribute')
-            ->withConsecutive(
-                ['test1'],
-                ['test2']
-            )
-            ->willReturnOnConsecutiveCalls(
-                true,
-                true
-            );
+            ->willReturnMap([
+                ['test1', true],
+                ['test2', true],
+            ]);
 
         $this->entity
             ->expects($this->once())
@@ -158,13 +155,11 @@ class CheckerTest extends TestCase
         ]);
 
         $this->entity
+            ->expects(self::any())
             ->method('hasAttribute')
-            ->withConsecutive(
-                ['test1']
-            )
-            ->willReturnOnConsecutiveCalls(
-                false
-            );
+            ->willReturnMap([
+                ['test1', false]
+            ]);
 
         $this->expectException(BadRequest::class);
 

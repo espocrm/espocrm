@@ -29,12 +29,12 @@
 
 namespace tests\unit\Espo\Core\Field\Currency;
 
-use Espo\Core\{
-    Currency\ConfigDataProvider as CurrencyConfigDataProvider,
-    Utils\Config,
-};
+use Espo\Core\Currency\ConfigDataProvider as CurrencyConfigDataProvider;
+use Espo\Core\Utils\Config;
+use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
-class CurrencyConfigDataProviderTest extends \PHPUnit\Framework\TestCase
+class CurrencyConfigDataProviderTest extends TestCase
 {
     protected function setUp() : void
     {
@@ -97,19 +97,28 @@ class CurrencyConfigDataProviderTest extends \PHPUnit\Framework\TestCase
 
     public function testCurrencyRate1()
     {
+        $invokedCount = $this->exactly(2);
+
         $this->config
-            ->expects($this->exactly(2))
+            ->expects($invokedCount)
             ->method('get')
-            ->withConsecutive(
-                ['currencyRates'],
-                ['currencyList'],
-            )
-            ->willReturnOnConsecutiveCalls(
-                [
-                    'EUR' => 1.2,
-                ],
-                ['USD', 'EUR'],
-            );
+            ->willReturnCallback(function ($param) use ($invokedCount) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals('currencyRates', $param);
+
+                    return [
+                        'EUR' => 1.2,
+                    ];
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals('currencyList', $param);
+
+                    return ['USD', 'EUR'];
+                }
+
+                throw new RuntimeException();
+            });
 
         $result = $this->provider->getCurrencyRate('EUR');
 
@@ -118,19 +127,28 @@ class CurrencyConfigDataProviderTest extends \PHPUnit\Framework\TestCase
 
     public function testCurrencyRate2()
     {
+        $invokedCount = $this->exactly(2);
+
         $this->config
-            ->expects($this->exactly(2))
+            ->expects($invokedCount)
             ->method('get')
-            ->withConsecutive(
-                ['currencyRates'],
-                ['currencyList'],
-            )
-            ->willReturnOnConsecutiveCalls(
-                [
-                    'EUR' => 1.2,
-                ],
-                ['USD', 'EUR'],
-            );
+            ->willReturnCallback(function ($param) use ($invokedCount) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals('currencyRates', $param);
+
+                    return [
+                        'EUR' => 1.2,
+                    ];
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals('currencyList', $param);
+
+                    return ['USD', 'EUR'];
+                }
+
+                throw new RuntimeException();
+            });
 
         $result = $this->provider->getCurrencyRate('USD');
 
