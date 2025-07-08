@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Entity;
 use stdClass;
 
@@ -61,5 +62,23 @@ class WebhookEventQueueItem extends Entity
     public function getData(): stdClass
     {
         return $this->get('data') ?? (object) [];
+    }
+
+    public function setEvent(string $event): self
+    {
+        return $this->set('event', $event);
+    }
+
+    public function setTarget(LinkParent|Entity $target): self
+    {
+        return $this->setRelatedLinkOrEntity('target', $target);
+    }
+
+    /**
+     * @param stdClass|array<string, mixed> $data
+     */
+    public function setData(stdClass|array $data): self
+    {
+        return $this->set('data', $data);
     }
 }

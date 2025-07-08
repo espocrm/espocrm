@@ -42,6 +42,7 @@ use Espo\Entities\WebhookEventQueueItem;
 
 use Espo\ORM\Name\Attribute;
 use RuntimeException;
+use stdClass;
 
 /**
  * Processes events. Holds an information about existing events.
@@ -173,7 +174,7 @@ class Manager
 
     private function logDebugEvent(string $event, Entity $entity): void
     {
-        $this->log->debug("Webhook: {$event} on record {$entity->getId()}.");
+        $this->log->debug("Webhook: $event on record {$entity->getId()}.");
     }
 
     /**
@@ -187,12 +188,14 @@ class Manager
             return;
         }
 
-        $this->entityManager->createEntity(WebhookEventQueueItem::ENTITY_TYPE, [
-            'event' => $event,
-            'targetType' => $entity->getEntityType(),
-            'targetId' => $entity->getId(),
-            'data' => $entity->getValueMap(),
-        ]);
+        $item = $this->entityManager->getRDBRepositoryByClass(WebhookEventQueueItem::class)->getNew();
+
+        $item
+            ->setEvent($event)
+            ->setTarget($entity)
+            ->setData($entity->getValueMap());
+
+        $this->entityManager->saveEntity($item);
 
         $this->logDebugEvent($event, $entity);
     }
@@ -208,14 +211,16 @@ class Manager
             return;
         }
 
-        $this->entityManager->createEntity(WebhookEventQueueItem::ENTITY_TYPE, [
-            'event' => $event,
-            'targetType' => $entity->getEntityType(),
-            'targetId' => $entity->getId(),
-            'data' => (object) [
+        $item = $this->entityManager->getRDBRepositoryByClass(WebhookEventQueueItem::class)->getNew();
+
+        $item
+            ->setEvent($event)
+            ->setTarget($entity)
+            ->setData([
                 'id' => $entity->getId(),
-            ],
-        ]);
+            ]);
+
+        $this->entityManager->saveEntity($item);
 
         $this->logDebugEvent($event, $entity);
     }
@@ -246,63 +251,83 @@ class Manager
         $data->id = $entity->getId();
 
         if ($this->eventExists($event)) {
-            $this->entityManager->createEntity(WebhookEventQueueItem::ENTITY_TYPE, [
-                'event' => $event,
-                'targetType' => $entity->getEntityType(),
-                'targetId' => $entity->getId(),
-                'data' => $data,
-            ]);
+            $item = $this->entityManager->getRDBRepositoryByClass(WebhookEventQueueItem::class)->getNew();
+
+            $item
+                ->setEvent($event)
+                ->setTarget($entity)
+                ->setData($data);
+
+            $this->entityManager->saveEntity($item);
 
             $this->logDebugEvent($event, $entity);
         }
 
+        $this->processUpdateFields($entity, $data);
+    }
+
+    private function processUpdateFields(Entity $entity, stdClass $data): void
+    {
         foreach ($this->fieldUtil->getEntityTypeFieldList($entity->getEntityType()) as $field) {
             $itemEvent = "{$entity->getEntityType()}.fieldUpdate.$field";
 
-            if (!$this->eventExists($itemEvent)) {
+            if (
+                !$this->eventExists($itemEvent) ||
+                !$this->isFieldChanged($entity, $field, $data)
+            ) {
                 continue;
             }
 
-            $attributeList = $this->fieldUtil->getActualAttributeList($entity->getEntityType(), $field);
+            $this->processUpdateField($entity, $field, $itemEvent);
+        }
+    }
 
-            $isChanged = false;
+    private function isFieldChanged(Entity $entity, string $field, stdClass $data): bool
+    {
+        $attributes = $this->fieldUtil->getActualAttributeList($entity->getEntityType(), $field);
 
-            foreach ($attributeList as $attribute) {
-                if (in_array($attribute, $this->skipAttributeList)) {
-                    continue;
-                }
+        $isChanged = false;
 
-                if (property_exists($data, $attribute)) {
-                    $isChanged = true;
-
-                    break;
-                }
+        foreach ($attributes as $attribute) {
+            if (in_array($attribute, $this->skipAttributeList)) {
+                continue;
             }
 
-            if ($isChanged) {
-                $itemData = (object) [];
+            if (property_exists($data, $attribute)) {
+                $isChanged = true;
 
-                $itemData->id = $entity->getId();
-
-                $attributeList = $this->fieldUtil->getAttributeList($entity->getEntityType(), $field);
-
-                foreach ($attributeList as $attribute) {
-                    if (in_array($attribute, $this->skipAttributeList)) {
-                        continue;
-                    }
-
-                    $itemData->$attribute = $entity->get($attribute);
-                }
-
-                $this->entityManager->createEntity(WebhookEventQueueItem::ENTITY_TYPE, [
-                    'event' => $itemEvent,
-                    'targetType' => $entity->getEntityType(),
-                    'targetId' => $entity->getId(),
-                    'data' => $itemData,
-                ]);
-
-                $this->logDebugEvent($itemEvent, $entity);
+                break;
             }
         }
+
+        return $isChanged;
+    }
+
+    private function processUpdateField(Entity $entity, string $field, string $itemEvent): void
+    {
+        $itemData = (object) [];
+
+        $itemData->id = $entity->getId();
+
+        $attributeList = $this->fieldUtil->getAttributeList($entity->getEntityType(), $field);
+
+        foreach ($attributeList as $attribute) {
+            if (in_array($attribute, $this->skipAttributeList)) {
+                continue;
+            }
+
+            $itemData->$attribute = $entity->get($attribute);
+        }
+
+        $item = $this->entityManager->getRDBRepositoryByClass(WebhookEventQueueItem::class)->getNew();
+
+        $item
+            ->setEvent($itemEvent)
+            ->setTarget($entity)
+            ->setData($itemData);
+
+        $this->entityManager->saveEntity($item);
+
+        $this->logDebugEvent($itemEvent, $entity);
     }
 }
