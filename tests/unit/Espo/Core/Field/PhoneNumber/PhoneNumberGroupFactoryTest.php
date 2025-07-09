@@ -175,20 +175,20 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
 
         $entity
             ->method('has')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['testData', false],
                     ['test', true],
-                ])
+                ]
             );
 
         $entity
             ->method('get')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['testData', null],
                     ['test', '+1'],
-                ])
+                ]
             );
 
         $group = $this->factory->createFromEntity($entity, 'test');
@@ -296,20 +296,20 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
 
         $entity
             ->method('has')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['testData', false],
                     ['test', true],
-                ])
+                ]
             );
 
         $entity
             ->method('get')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['testData', null],
                     ['test', null],
-                ])
+                ]
             );
 
         $group = $this->factory->createFromEntity($entity, 'test');

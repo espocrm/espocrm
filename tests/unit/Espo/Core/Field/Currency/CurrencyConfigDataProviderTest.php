@@ -36,6 +36,9 @@ use RuntimeException;
 
 class CurrencyConfigDataProviderTest extends TestCase
 {
+    private $config;
+    private $provider;
+
     protected function setUp() : void
     {
         $this->config = $this->createMock(Config::class);

@@ -33,15 +33,18 @@ use Espo\Entities\Email;
 use Espo\Entities\EmailFilter;
 use Espo\Core\Mail\FiltersMatcher;
 use Espo\ORM\EntityManager;
+use PHPUnit\Framework\TestCase;
 
-class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
+class FiltersMatcherTest extends TestCase
 {
     private $object;
+    private $entityManager;
+    private $emailDefs;
+    private $filterDefs;
 
     protected function setUp() : void
     {
         $this->object = new FiltersMatcher();
-
         $this->entityManager = $this->createMock(EntityManager::class);
 
         $this->emailDefs = [

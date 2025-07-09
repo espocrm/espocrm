@@ -50,6 +50,7 @@ class MapTest extends TestCase
     private $table;
     private $metadataProvider;
     private $cacheKeyProvider;
+    private $dataCache;
 
     protected function setUp(): void
     {
