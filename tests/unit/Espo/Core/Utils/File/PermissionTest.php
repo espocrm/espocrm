@@ -30,6 +30,7 @@
 namespace tests\unit\Espo\Core\Utils\File;
 
 use Espo\Core\Utils\File\Permission;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use tests\unit\ReflectionHelper;
 
@@ -115,9 +116,7 @@ class PermissionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider requiredPermissionsData
-     */
+    #[DataProvider('requiredPermissionsData')]
     public function testGetRequiredPermissions($path, $dirPermission, $filePermission)
     {
         $result = $this->object->getRequiredPermissions($path);

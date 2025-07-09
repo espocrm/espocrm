@@ -50,11 +50,18 @@ use PHPUnit\Framework\TestCase;
 
 class TextFilterApplierTest extends TestCase
 {
-    private ?ConfigProvider $configProvider = null;
+    private $metadataProvider;
+    private $queryBuilder;
+    private $filterParams;
+    private $config;
+    private $fullTextSearchDataComposerFactory;
+    private $filterFactory;
+    private $applier;
+    private $entityType;
 
     protected function setUp(): void
     {
-        $this->user = $this->createMock(User::class);
+        $user = $this->createMock(User::class);
         $this->metadataProvider = $this->createMock(MetadataProvider::class);
         $this->queryBuilder = $this->createMock(QueryBuilder::class);
         $this->filterParams = $this->createMock(FilterParams::class);
@@ -62,17 +69,17 @@ class TextFilterApplierTest extends TestCase
         $this->fullTextSearchDataComposerFactory = $this->createMock(FullTextSearchDataComposerFactory::class);
         $this->filterFactory = $this->createMock(FilterFactory::class);
 
-        $this->configProvider = $this->createMock(ConfigProvider::class);
+        $configProvider = $this->createMock(ConfigProvider::class);
 
         $this->entityType = 'Test';
 
         $this->applier = new TextFilterApplier(
             $this->entityType,
-            $this->user,
+            $user,
             $this->metadataProvider,
             $this->fullTextSearchDataComposerFactory,
             $this->filterFactory,
-            $this->configProvider
+            $configProvider
         );
     }
 
@@ -105,13 +112,13 @@ class TextFilterApplierTest extends TestCase
         $this->config
             ->expects($this->any())
             ->method('get')
-            ->will(
-                $this->returnValueMap(
+            ->willReturnMap(
+
                     [
                         ['textFilterUseContainsForVarchar', false],
                         ['textFilterContainsMinLength', 4],
                     ]
-                )
+
             );
 
         $configProvider = new ConfigProvider($this->config);
@@ -138,8 +145,8 @@ class TextFilterApplierTest extends TestCase
         $this->metadataProvider
             ->expects($this->any())
             ->method('getAttributeType')
-            ->will(
-                $this->returnValueMap(
+            ->willReturnMap(
+
                     [
                         [$this->entityType, 'fieldVarchar', Entity::VARCHAR],
                         [$this->entityType, 'fieldText', Entity::TEXT],
@@ -148,7 +155,6 @@ class TextFilterApplierTest extends TestCase
                         [$this->entityType, 'fieldForeign', Entity::FOREIGN],
                         ['ForeignEntityType', 'field', Entity::VARCHAR],
                     ]
-                )
             );
 
         $this->metadataProvider
@@ -185,8 +191,6 @@ class TextFilterApplierTest extends TestCase
             ['fieldVarchar*' => $filter . '%'],
             ['fieldText*' => '%' . $filter . '%']
         ];
-
-
 
         if (is_numeric($filter)) {
             $expectedWhere[] = ['fieldInt=' => intval($filter)];

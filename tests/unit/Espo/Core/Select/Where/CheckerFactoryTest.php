@@ -31,43 +31,44 @@ namespace tests\unit\Espo\Core\Select\Where;
 
 use Espo\Core\Utils\Acl\UserAclManagerProvider;
 
-use Espo\Core\{
-    Select\Where\CheckerFactory,
-    Select\Where\Checker,
-    InjectableFactory,
-    AclManager,
-    Acl,
-};
+use Espo\Core\Acl;
+use Espo\Core\AclManager;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Select\Where\Checker;
+use Espo\Core\Select\Where\CheckerFactory;
+use Espo\Entities\User;
+use PHPUnit\Framework\TestCase;
 
-use Espo\{
-    Entities\User,
-};
-
-class CheckerFactoryTest extends \PHPUnit\Framework\TestCase
+class CheckerFactoryTest extends TestCase
 {
-    protected function setUp() : void
+    private $injectableFactory;
+    private $user;
+    private $acl;
+    private $factory;
+
+    protected function setUp(): void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
-        $this->aclManager = $this->createMock(AclManager::class);
+        $aclManager = $this->createMock(AclManager::class);
         $this->user = $this->createMock(User::class);
         $this->acl = $this->createMock(Acl::class);
-        $this->userAclFilterResolver = $this->createMock(UserAclManagerProvider::class);
+        $userAclFilterResolver = $this->createMock(UserAclManagerProvider::class);
 
-        $this->aclManager
+        $aclManager
             ->expects($this->any())
             ->method('createUserAcl')
             ->with($this->user)
             ->willReturn($this->acl);
 
-        $this->userAclFilterResolver
+        $userAclFilterResolver
             ->expects($this->any())
             ->method('get')
             ->with($this->user)
-            ->willReturn($this->aclManager);
+            ->willReturn($aclManager);
 
         $this->factory = new CheckerFactory(
             $this->injectableFactory,
-            $this->userAclFilterResolver
+            $userAclFilterResolver
         );
     }
 

@@ -30,6 +30,7 @@
 namespace tests\unit\Espo\Core\Upgrades\Actions;
 
 use Espo\Core\Utils\Id\RecordIdGenerator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use tests\unit\ReflectionHelper;
 use Espo\Core\Utils\Util;
@@ -47,7 +48,9 @@ class BaseTest extends TestCase
     protected $objects;
     protected $fileManager;
     protected $reflection;
-    private $systemConfig;
+    private $fileManagerOriginal;
+    private $config;
+
 
     protected $actionManagerParams = [
         'name' => 'Extension',
@@ -64,24 +67,24 @@ class BaseTest extends TestCase
 
     protected $currentVersion = '11.5.2';
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->container = $this->createMock(Container::class);
-        $this->actionManager = $this->createMock(ActionManager::class);
+        $container = $this->createMock(Container::class);
+        $actionManager = $this->createMock(ActionManager::class);
         $this->config = $this->createMock(Config::class);
         $this->fileManager = $this->createMock(FileManager::class);
-        $this->injectableFactory = $this->createMock(InjectableFactory::class);
-        $this->configWriter = $this->createMock(ConfigWriter::class);
-        $this->log = $this->createMock(Log::class);
+        $injectableFactory = $this->createMock(InjectableFactory::class);
+        $configWriter = $this->createMock(ConfigWriter::class);
+        $log = $this->createMock(Log::class);
 
-        $this->systemConfig = $this->createMock(Config\SystemConfig::class);
+        $systemConfig = $this->createMock(Config\SystemConfig::class);
 
         $map = [
             [Config::class, $this->config],
             [FileManager::class, $this->fileManager],
-            [InjectableFactory::class, $this->injectableFactory],
-            [Log::class, $this->log],
-            [Config\SystemConfig::class, $this->systemConfig]
+            [InjectableFactory::class, $injectableFactory],
+            [Log::class, $log],
+            [Config\SystemConfig::class, $systemConfig]
         ];
 
         $idGenerator = $this->createMock(RecordIdGenerator::class);
@@ -90,31 +93,31 @@ class BaseTest extends TestCase
             ->method('generate')
             ->willReturn(Util::generateId());
 
-        $this->injectableFactory
+        $injectableFactory
             ->expects($this->any())
             ->method('createResolved')
             ->willReturnMap([
                 [RecordIdGenerator::class, null, $idGenerator]
             ]);
 
-        $this->injectableFactory
+        $injectableFactory
             ->expects($this->any())
             ->method('create')
             ->with(ConfigWriter::class)
-            ->willReturn($this->configWriter);
+            ->willReturn($configWriter);
 
-        $this->container
+        $container
             ->expects($this->any())
             ->method('getByClass')
-            ->will($this->returnValueMap($map));
+            ->willReturnMap($map);
 
         $actionManagerParams = $this->actionManagerParams;
-        $this->actionManager
+        $actionManager
             ->expects($this->once())
             ->method('getParams')
-            ->will($this->returnValue($actionManagerParams));
+            ->willReturn($actionManagerParams);
 
-        $this->object = new Base($this->container, $this->actionManager);
+        $this->object = new Base($container, $actionManager);
 
         $this->reflection = new ReflectionHelper($this->object);
 
@@ -180,12 +183,12 @@ class BaseTest extends TestCase
         $this->fileManager
             ->expects($this->once())
             ->method('getContents')
-            ->will($this->returnValue($manifest));
+            ->willReturn($manifest);
 
         $this->config
             ->expects($this->once())
             ->method('has')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->reflection->invokeMethod('getManifest');
     }
@@ -205,7 +208,7 @@ class BaseTest extends TestCase
         $this->fileManager
             ->expects($this->once())
             ->method('getContents')
-            ->will($this->returnValue($manifest));
+            ->willReturn($manifest);
 
         $this->assertEquals( json_decode($manifest,true), $this->reflection->invokeMethod('getManifest') );
     }
@@ -229,9 +232,7 @@ class BaseTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider acceptableVersions
-     */
+    #[DataProvider('acceptableVersions')]
     public function testCheckVersions($versions, $currentVersion = null)
     {
         if (!isset($currentVersion)) {
@@ -255,9 +256,7 @@ class BaseTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider unacceptableVersions
-     */
+    #[DataProvider('unacceptableVersions')]
     public function testCheckVersionsException($versions, $currentVersion = null)
     {
         if (!isset($currentVersion)) {
@@ -269,7 +268,7 @@ class BaseTest extends TestCase
         $this->config
             ->expects($this->once())
             ->method('has')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->reflection->invokeMethod('checkVersions', [$versions, $currentVersion, 'error']);
     }
@@ -314,7 +313,7 @@ class BaseTest extends TestCase
         $this->config
             ->expects($this->once())
             ->method('has')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->reflection->setProperty('data', ['manifest' => ['type' => 'upgrade']]);
 

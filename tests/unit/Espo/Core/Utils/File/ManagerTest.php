@@ -29,6 +29,7 @@
 
 namespace tests\unit\Espo\Core\Utils\File;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use tests\unit\ReflectionHelper;
 use Espo\Core\Utils\Util;
@@ -345,9 +346,7 @@ class ManagerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider fileListSets
-     */
+    #[DataProvider('fileListSets')]
     public function testRemoveWithEmptyDirs($name, $result)
     {
         $path = Util::fixPath($this->filesPath . '/Remove/' . $name);
@@ -379,9 +378,7 @@ class ManagerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider existsPathSet
-     */
+    #[DataProvider('existsPathSet')]
     public function testGetExistsPath($input, $result)
     {
         $this->assertEquals(
@@ -527,9 +524,7 @@ class ManagerTest extends TestCase
         return $data;
     }
 
-    /**
-     * @dataProvider relativePathData
-     */
+    #[DataProvider('relativePathData')]
     public function testGetRelativePath($path, $expectedResult, $basePath = null, $dirSeparator = null)
     {
         $this->assertEquals(

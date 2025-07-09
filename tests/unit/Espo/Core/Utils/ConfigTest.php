@@ -44,6 +44,9 @@ class ConfigTest extends TestCase
     private $systemConfigPath = 'tests/unit/testData/Utils/Config/systemConfig.php';
     private $internalConfigPath = 'tests/unit/testData/cache/config-internal.php';
 
+    private $reflection;
+    private $fileManager;
+
     protected function setUp(): void
     {
         $this->fileManager = new ConfigFileManager;
@@ -114,14 +117,14 @@ class ConfigTest extends TestCase
 
         $fileManager
             ->method('isFile')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['data/config.php', true],
                     ['data/config-internal.php', true],
                     ['application/Espo/Resources/defaults/systemConfig.php', true],
                     ['data/config-override.php', false],
                     ['data/config-internal-override.php', false],
-                ])
+                ]
             );
 
         $data = [
@@ -138,12 +141,12 @@ class ConfigTest extends TestCase
 
         $fileManager
             ->method('getPhpContents')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['data/config.php', $data],
                     ['data/config-internal.php', $dataInternal],
                     ['application/Espo/Resources/defaults/systemConfig.php', $dataSystem],
-                ])
+                ]
             );
 
 
@@ -172,14 +175,14 @@ class ConfigTest extends TestCase
 
         $fileManager
             ->method('isFile')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['data/config.php', true],
                     ['data/config-internal.php', true],
                     ['application/Espo/Resources/defaults/systemConfig.php', true],
                     ['data/config-override.php', false],
                     ['data/config-internal-override.php', false],
-                ])
+                ]
             );
 
         $data = [
@@ -201,12 +204,12 @@ class ConfigTest extends TestCase
 
         $fileManager
             ->method('getPhpContents')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['data/config.php', $data],
                     ['data/config-internal.php', $dataInternal],
                     ['application/Espo/Resources/defaults/systemConfig.php', $dataSystem],
-                ])
+                ]
             );
 
         $config = new Config($fileManager);
@@ -230,14 +233,14 @@ class ConfigTest extends TestCase
 
         $fileManager
             ->method('isFile')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['application/Espo/Resources/defaults/systemConfig.php', true],
                     ['data/config.php', true],
                     ['data/config-internal.php', true],
                     ['data/config-override.php', true],
                     ['data/config-internal-override.php', true],
-                ])
+                ]
             );
 
         $dataSystem = [];
@@ -264,14 +267,14 @@ class ConfigTest extends TestCase
 
         $fileManager
             ->method('getPhpContents')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['application/Espo/Resources/defaults/systemConfig.php', $dataSystem],
                     ['data/config.php', $data],
                     ['data/config-internal.php', $dataInternal],
                     ['data/config-override.php', $dataOverride],
                     ['data/config-internal-override.php', $dataInternalOverride],
-                ])
+                ]
             );
 
         $config = new Config($fileManager);

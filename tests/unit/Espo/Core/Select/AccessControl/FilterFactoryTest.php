@@ -45,17 +45,18 @@ use PHPUnit\Framework\TestCase;
 
 class FilterFactoryTest extends TestCase
 {
-    protected $aclManager;
-    protected $acl;
-    protected $metadata;
-    protected $injectableFactory;
+    private $aclManager;
+    private $acl;
+    private $metadata;
+    private $injectableFactory;
+    private $factory;
+    private $user;
 
     protected function setUp() : void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
         $this->metadata = $this->createMock(Metadata::class);
         $this->user = $this->createMock(User::class);
-        $this->fieldHelper = $this->createMock(FieldHelper::class);
         $this->aclManager = $this->createMock(AclManager::class);
         $this->acl = $this->createMock(Acl::class);
 

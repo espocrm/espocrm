@@ -44,14 +44,14 @@ class ConfigWriterTest extends TestCase
     private $internalConfigHelper;
     private $configWriter;
 
+    private $configPath;
+    private $internalConfigPath;
+
     protected function setUp(): void
     {
         $this->fileManager = $this->createMock(ConfigWriterFileManager::class);
-
         $this->config = $this->createMock(Config::class);
-
         $this->helper = $this->createMock(ConfigWriterHelper::class);
-
         $this->internalConfigHelper = $this->createMock(InternalConfigHelper::class);
 
         $this->configWriter = new ConfigWriter(

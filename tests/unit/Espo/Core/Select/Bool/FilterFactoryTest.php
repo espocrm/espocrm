@@ -42,6 +42,11 @@ use PHPUnit\Framework\TestCase;
 
 class FilterFactoryTest extends TestCase
 {
+    private $injectableFactory;
+    private $metadata;
+    private $user;
+    private $factory;
+
     protected function setUp(): void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);

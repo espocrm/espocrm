@@ -51,6 +51,11 @@ use PHPUnit\Framework\TestCase;
 
 class FiltersTest extends TestCase
 {
+    private $queryBuilder;
+    private $fieldHelper;
+    private $user;
+    private $entityType;
+
     protected function setUp(): void
     {
         $this->queryBuilder = $this->createMock(QueryBuilder::class);

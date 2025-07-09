@@ -29,9 +29,11 @@
 
 namespace tests\integration\Espo\Core\Utils\Database;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class AddressFieldTest extends Base
 {
-    public function fieldlist()
+    static public function fieldList()
     {
         return [
             ['testAddressStreet', 255],
@@ -42,9 +44,7 @@ class AddressFieldTest extends Base
         ];
     }
 
-    /**
-     * @dataProvider fieldlist
-     */
+    #[DataProvider('fieldList')]
     public function testColumn($fieldName, $length)
     {
         $column = $this->getColumnInfo('Test', $fieldName);

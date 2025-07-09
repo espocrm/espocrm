@@ -42,6 +42,17 @@ use PHPUnit\Framework\TestCase;
 
 class AccessControlFilterApplierTest extends TestCase
 {
+    private $filterFactory;
+    private $filterResolverFactory;
+    private $user;
+    private $selectManager;
+    private $queryBuilder;
+    private $filterResolver;
+    private $filter;
+    private $mandatoryFilter;
+    private $entityType;
+    private $applier;
+
     protected function setUp() : void
     {
         $this->filterFactory = $this->createMock(AccessControlFilterFactory::class);

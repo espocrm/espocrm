@@ -30,8 +30,10 @@
 namespace tests\unit\Espo\Core\Utils;
 
 use Espo\Core\Utils\Util;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
-class UtilTest extends \PHPUnit\Framework\TestCase
+class UtilTest extends TestCase
 {
     public function testGetSeparator()
     {
@@ -1162,9 +1164,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($testResult, Util::replaceInArray('{0}', 'DONE', $testArray, true));
     }
 
-    /**
-     * @dataProvider getClassNames
-     */
+    #[DataProvider('getClassNames')]
     public function testGetClassName1($path, $expectedClassName = 'Espo\EntryPoints\Download')
     {
         $this->assertEquals($expectedClassName, Util::getClassName($path));
@@ -1614,9 +1614,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider htmlList
-     */
+    #[DataProvider('htmlList')]
     public function testSanitizeHtml($expectedResult, $html)
     {
         $this->assertEquals($expectedResult, Util::sanitizeHtml($html));
@@ -1636,9 +1634,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider urlAddParamList
-     */
+    #[DataProvider('urlAddParamList')]
     public function testUrlAddParam($expectedResult, $url, $paramName, $paramValue)
     {
         $this->assertEquals($expectedResult, Util::urlAddParam($url, $paramName, $paramValue));
@@ -1659,9 +1655,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider urlRemoveParamList
-     */
+    #[DataProvider('urlRemoveParamList')]
     public function testUrlRemoveParam($expectedResult, $url, $paramName, $suffix = '')
     {
         $this->assertEquals($expectedResult, Util::urlRemoveParam($url, $paramName, $suffix));

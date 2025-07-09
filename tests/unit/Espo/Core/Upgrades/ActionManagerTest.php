@@ -41,6 +41,7 @@ class ActionManagerTest extends TestCase
 {
     protected $object;
     protected $objects;
+    private $reflection;
 
     protected $params = [
         'name' => 'Extension',
@@ -66,10 +67,10 @@ class ActionManagerTest extends TestCase
         $container
             ->expects($this->any())
             ->method('getByClass')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     [FileManager::class, $fileManager],
-                ])
+                ]
             );
 
         $this->object = new ActionManager(
@@ -169,5 +170,4 @@ class ActionManagerTest extends TestCase
 
         $class->run([]);
     }
-
 }

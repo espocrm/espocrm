@@ -41,6 +41,13 @@ use PHPUnit\Framework\TestCase;
 
 class PrimaryFilterApplierTest extends TestCase
 {
+    private $filterFactory;
+    private $user;
+    private $selectManager;
+    private $queryBuilder;
+    private $entityType;
+    private $applier;
+
     protected function setUp(): void
     {
         $this->filterFactory = $this->createMock(PrimaryFilterFactory::class);
