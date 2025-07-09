@@ -1,0 +1,22 @@
+{
+    "fields": {
+        "event": "אירוע",
+        "webhook": "Webhook (קריאת שרת אוטומטית)",
+        "target": "יעד",
+        "data": "נתונים",
+        "status": "מצב",
+        "processedAt": "הועבד בתאריך",
+        "attempts": "מספר ניסיונות",
+        "processAt": "יעובד בתאריך"
+    },
+    "links": {
+        "webhook": "ווּבהוּק"
+    },
+    "options": {
+        "status": {
+            "Pending": "ממתין",
+            "Success": "הצלחה",
+            "Failed": "נכשל"
+        }
+    }
+}

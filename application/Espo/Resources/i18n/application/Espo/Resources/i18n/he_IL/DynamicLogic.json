@@ -1,0 +1,31 @@
+{
+    "labels": {
+        "Field": "שדה"
+    },
+    "options": {
+        "operators": {
+            "equals": "שווה ל",
+            "notEquals": "לא שווה ל",
+            "greaterThan": "גדול מ",
+            "lessThan": "קטן מ",
+            "greaterThanOrEquals": "גדול או שווה ל",
+            "lessThanOrEquals": "קטן או שווה ל",
+            "in": "נמצא ב",
+            "notIn": "לא נמצא ב",
+            "inPast": "בעבר",
+            "inFuture": "בעתיד",
+            "isToday": "היום",
+            "isTrue": "נכון",
+            "isFalse": "לא נכון",
+            "isEmpty": "ריק",
+            "isNotEmpty": "לא ריק",
+            "contains": "מכיל",
+            "notContains": "לא מכיל",
+            "has": "מכיל",
+            "notHas": "לא מכיל",
+            "startsWith": "מתחיל ב",
+            "endsWith": "מסתיים ב",
+            "matches": "תואם (reg exp)"
+        }
+    }
+}
