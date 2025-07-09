@@ -51,15 +51,19 @@ use Espo\ORM\SthCollection;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
-use tests\unit\testData\Entities\Test;
 use tests\unit\testData\DB as Entities;
 
 class RDBRepositoryTest extends TestCase
 {
-    /**
-     * @var Repository
-     */
+    /** @var Repository */
     private $repository;
+
+    private $entityManager;
+    private $queryBuilder;
+    private $metadata;
+    private $collection;
+    private $mapper;
+    private $entityFactory;
 
     protected function setUp(): void
     {
@@ -70,31 +74,31 @@ class RDBRepositoryTest extends TestCase
 
         $this->getMockBuilder(EntityFactory::class)->disableOriginalConstructor()->getMock();
 
-        $this->collectionFactory = new CollectionFactory($this->entityManager);
+        $collectionFactory = new CollectionFactory($this->entityManager);
 
         $this->mapper = $this->getMockBuilder(BaseMapper::class)->disableOriginalConstructor()->getMock();
 
         $entityManager
             ->method('getMapper')
-            ->will($this->returnValue($this->mapper));
+            ->willReturn($this->mapper);
 
         $this->queryBuilder = new QueryBuilder();
 
         $entityManager
             ->method('getQueryBuilder')
-            ->will($this->returnValue($this->queryBuilder));
+            ->willReturn($this->queryBuilder);
 
         $entityManager
             ->method('getQueryBuilder')
-            ->will($this->returnValue($this->queryBuilder));
+            ->willReturn($this->queryBuilder);
 
         $entityManager
             ->method('getCollectionFactory')
-            ->will($this->returnValue($this->collectionFactory));
+            ->willReturn($collectionFactory);
 
         $entityManager
             ->method('getEntityFactory')
-            ->will($this->returnValue($this->entityFactory));
+            ->willReturn($this->entityFactory);
 
         $ormMetadata = include('tests/unit/testData/DB/ormMetadata.php');
 
@@ -107,24 +111,16 @@ class RDBRepositoryTest extends TestCase
 
         $this->metadata = new Metadata($metadataDataProvider);
 
-        $this->seed = $this->createEntity('Test', Test::class);
-
-        $this->account = $this->createEntity('Account', Entities\Account::class);
-
-        $this->team = $this->createEntity('Team', Entities\Team::class);
-
         $this->collection = $this->createCollectionMock();
 
         $entityFactory
             ->method('create')
-            ->will(
-                $this->returnCallback(
-                    function (string $entityType) {
-                        $className = 'tests\\unit\\testData\\DB\\' . ucfirst($entityType);
+            ->willReturnCallback(
+                function (string $entityType) {
+                    $className = 'tests\\unit\\testData\\DB\\' . ucfirst($entityType);
 
-                        return $this->createEntity($entityType, $className);
-                    }
-                )
+                    return $this->createEntity($entityType, $className);
+                }
             );
 
         $this->repository = $this->createRepository('Test');
@@ -145,8 +141,8 @@ class RDBRepositoryTest extends TestCase
         $collection
             ->expects($this->any())
             ->method('getIterator')
-            ->will(
-                $this->returnValue($generator)
+            ->willReturn(
+                $generator
             );
 
         return $collection;
@@ -158,7 +154,7 @@ class RDBRepositoryTest extends TestCase
 
         $this->entityManager
             ->method('getRepository')
-            ->will($this->returnValue($repository));
+            ->willReturn($repository);
 
         return $repository;
     }
@@ -185,7 +181,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -209,7 +205,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -231,7 +227,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($select);
 
         $this->repository->where(['name' => 'test'])->findOne();
@@ -250,7 +246,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($select);
 
         $this->repository
@@ -274,7 +270,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -296,7 +292,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('count')
-            ->will($this->returnValue(1))
+            ->willReturn(1)
             ->with($select);
 
         $this->repository
@@ -315,7 +311,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('count')
-            ->will($this->returnValue(1))
+            ->willReturn(1)
             ->with($select);
 
         $this->repository->where(['name' => 'test'])->count();
@@ -331,7 +327,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('count')
-            ->will($this->returnValue(1))
+            ->willReturn(1)
             ->with($select);
 
         $this->repository->count();
@@ -347,7 +343,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('max')
-            ->will($this->returnValue(1))
+            ->willReturn(1)
             ->with($select, 'test');
 
         $this->repository->max('test');
@@ -365,7 +361,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository->where(['name' => 'test'])->find();
@@ -383,7 +379,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository->where('name', 'test')->find();
@@ -401,7 +397,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -423,7 +419,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -443,7 +439,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -464,7 +460,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository->join(['Test1', 'Test2'])->find();
@@ -484,7 +480,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -504,7 +500,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -523,7 +519,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -543,7 +539,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -562,7 +558,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -583,7 +579,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -602,7 +598,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository->distinct()->find();
@@ -618,7 +614,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository->forUpdate()->find();
@@ -634,7 +630,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository->sth()->find();
@@ -650,7 +646,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -668,7 +664,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -686,7 +682,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -709,7 +705,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -733,7 +729,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -752,7 +748,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository->group('id')->find();
@@ -768,7 +764,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -787,7 +783,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -806,7 +802,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -825,7 +821,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository
@@ -843,7 +839,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($paramsExpected);
 
         $this->repository->select(['name', 'date'])->find();
@@ -861,7 +857,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($select);
 
         $this->repository
@@ -880,7 +876,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($select);
 
         $this->repository
@@ -902,7 +898,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($this->collection))
+            ->willReturn($this->collection)
             ->with($select);
 
         $this->repository
@@ -932,7 +928,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('select')
-            ->will($this->returnValue($collection))
+            ->willReturn($collection)
             ->with($selectExpected);
 
         $this->repository
@@ -954,7 +950,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('selectOne')
-            ->will($this->returnValue($entity))
+            ->willReturn($entity)
             ->with($select);
 
         $this->repository->getById('1');
@@ -1019,7 +1015,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('countRelated')
-            ->will($this->returnValue(1))
+            ->willReturn(1)
             ->with($post, 'comments', $select);
 
         $this->createRepository('Post')->getRelation($post, 'comments')->count();
@@ -1042,7 +1038,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('selectRelated')
-            ->will($this->returnValue($collection))
+            ->willReturn($collection)
             ->with($post, 'comments', $select);
 
         $repository->getRelation($post, 'comments')->find();
@@ -1064,7 +1060,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('selectRelated')
-            ->will($this->returnValue($post))
+            ->willReturn($post)
             ->with($comment, 'post', $select);
 
         $result = $this->createRepository('Comment')
@@ -1087,7 +1083,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('selectRelated')
-            ->will($this->returnValue($post))
+            ->willReturn($post)
             ->with($note, 'parent');
 
         $result = $this->createRepository('Note')->getRelation($note, 'parent')->find();
@@ -1108,7 +1104,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('selectRelated')
-            ->will($this->returnValue($post))
+            ->willReturn($post)
             ->with($note, 'parent');
 
         $result = $this->createRepository('Note')->getRelation($note, 'parent')->findOne();
@@ -1160,7 +1156,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('selectRelated')
-            ->will($this->returnValue($collection))
+            ->willReturn($collection)
             ->with($post, 'notes', $select);
 
         $result = $this->createRepository('Post')->getRelation($post, 'notes')->isRelated($note);
@@ -1189,7 +1185,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('selectRelated')
-            ->will($this->returnValue($collection))
+            ->willReturn($collection)
             ->with($post, 'notes', $select);
 
         $result = $this->createRepository('Post')->getRelation($post, 'notes')->isRelated($note);
@@ -1331,7 +1327,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('selectRelated')
-            ->will($this->returnValue($collection))
+            ->willReturn($collection)
             ->with($post, 'comments', $select);
 
         $repository->getRelation($post, 'comments')
@@ -1365,7 +1361,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('selectRelated')
-            ->will($this->returnValue($collection))
+            ->willReturn($collection)
             ->with($post, 'comments', $select);
 
         $repository->getRelation($post, 'comments')
@@ -1409,7 +1405,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('selectRelated')
-            ->will($this->returnValue($collection))
+            ->willReturn($collection)
             ->with($post, 'comments', $select);
 
         $result = $repository->getRelation($post, 'comments')
@@ -1439,7 +1435,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('selectRelated')
-            ->will($this->returnValue($collection))
+            ->willReturn($collection)
             ->with($account, 'teams', $select);
 
 
@@ -1469,9 +1465,8 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('selectRelated')
-            ->will($this->returnValue($collection))
+            ->willReturn($collection)
             ->with($account, 'teams', $select);
-
 
         $this->createRepository('Account')->getRelation($account, 'teams')
             ->columnsWhere([
@@ -1499,7 +1494,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('selectRelated')
-            ->will($this->returnValue($collection))
+            ->willReturn($collection)
             ->with($account, 'teams', $select);
 
         $this->createRepository('Account')
@@ -1530,7 +1525,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('selectRelated')
-            ->will($this->returnValue($collection))
+            ->willReturn($collection)
             ->with($account, 'teams', $select);
 
         $this->createRepository('Account')
@@ -1561,7 +1556,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('selectRelated')
-            ->will($this->returnValue($collection))
+            ->willReturn($collection)
             ->with($account, 'teams', $select);
 
         $this->createRepository('Account')
@@ -1586,7 +1581,7 @@ class RDBRepositoryTest extends TestCase
         $this->mapper
             ->expects($this->once())
             ->method('selectRelated')
-            ->will($this->returnValue($collection))
+            ->willReturn($collection)
             ->with($account, 'teams', $select);
 
         $this->createRepository('Account')

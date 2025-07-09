@@ -34,17 +34,18 @@ use Espo\ORM\Defs;
 use Espo\ORM\Defs\DefsData;
 use Espo\ORM\Metadata;
 use Espo\ORM\MetadataDataProvider;
-
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use tests\unit\testData\DB\Job;
-
 use Espo\Core\ORM\EntityManager;
 
 require_once 'tests/unit/testData/DB/Entities.php';
 
 class EntityTest extends TestCase
 {
+    private $entityManager;
+    private $metadata;
+
     protected function setUp() : void
     {
         $ormMetadata = include('tests/unit/testData/DB/ormMetadata.php');
@@ -68,10 +69,6 @@ class EntityTest extends TestCase
             ->expects($this->any())
             ->method('getDefs')
             ->willReturn($defs);
-    }
-
-    protected function tearDown() : void
-    {
     }
 
     /**

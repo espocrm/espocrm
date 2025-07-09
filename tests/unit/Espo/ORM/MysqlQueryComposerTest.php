@@ -67,6 +67,10 @@ class MysqlQueryComposerTest extends TestCase
     protected $pdo = null;
     protected ?EntityFactory $entityFactory = null;
 
+    private $queryBuilder;
+    private $metadata;
+    private $entityManager;
+
     protected function setUp(): void
     {
         $this->queryBuilder = new QueryBuilder();
@@ -75,7 +79,7 @@ class MysqlQueryComposerTest extends TestCase
         $this->pdo
             ->expects($this->any())
             ->method('quote')
-            ->will($this->returnCallback(function() {
+            ->willReturnCallback(function() {
                 $args = func_get_args();
 
                 $s = $args[0];
@@ -83,7 +87,7 @@ class MysqlQueryComposerTest extends TestCase
                 $s = str_replace("'", "\'", $s);
 
                 return "'" . $s . "'";
-            }));
+            });
 
         $this->entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
 
@@ -103,8 +107,7 @@ class MysqlQueryComposerTest extends TestCase
         $this->entityFactory
             ->expects($this->any())
             ->method('create')
-            ->will(
-                $this->returnCallback(
+            ->willReturnCallback(
                     function () {
                         $args = func_get_args();
 
@@ -114,31 +117,9 @@ class MysqlQueryComposerTest extends TestCase
 
                         return new $className($args[0], $defs, $this->entityManager);
                     }
-                )
             );
 
         $this->query = new QueryComposer($this->pdo, $this->entityFactory, $this->metadata);
-
-        $entityFactory = $this->entityFactory;
-
-        $this->post = $entityFactory->create('Post');
-        $this->comment = $entityFactory->create('Comment');
-        $this->tag = $entityFactory->create('Tag');
-        $this->note = $entityFactory->create('Note');
-
-        $this->contact = $entityFactory->create('Contact');
-        $this->account = $entityFactory->create('Account');
-    }
-
-    protected function tearDown() : void
-    {
-        unset($this->query);
-        unset($this->pdo);
-        unset($this->post);
-        unset($this->tag);
-        unset($this->note);
-        unset($this->contact);
-        unset($this->account);
     }
 
     public function testDelete1()
