@@ -29,7 +29,9 @@
 
 namespace tests\integration\Espo\User;
 
-class CreateUserTest extends \tests\integration\Core\BaseTestCase
+use tests\integration\Core\BaseTestCase;
+
+class CreateUserTest extends BaseTestCase
 {
     protected ?string $dataFile = 'User/Login.php';
 

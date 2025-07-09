@@ -62,6 +62,7 @@ abstract class BaseTestCase extends TestCase
     protected ?string $userName = null;
     /** Password used for authentication. */
     protected ?string $password = null;
+
     /**
      * @var ?array{
      *     entities?: array<string, array<string, mixed>>,
@@ -186,9 +187,6 @@ abstract class BaseTestCase extends TestCase
         $this->espoTester->terminate();
         $this->espoTester = null;
         $this->espoApplication = null;
-
-        //restore_error_handler();
-        //restore_exception_handler();
     }
 
     /**

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Log;
 
+use Espo\Core\Application\ApplicationParams;
 use Espo\Core\ApplicationState;
 use Espo\Core\Log\Handler\DatabaseHandler;
 use Espo\Core\Log\Handler\EspoFileHandler;
@@ -52,7 +53,8 @@ class LogLoader
         private readonly Config $config,
         private readonly HandlerListLoader $handlerListLoader,
         private readonly EntityManagerProxy $entityManagerProxy,
-        private readonly ApplicationState $applicationState
+        private readonly ApplicationState $applicationState,
+        private readonly ApplicationParams $applicationParams,
     ) {}
 
     public function load(): Log
@@ -77,10 +79,12 @@ class LogLoader
             $log->pushHandler($handler);
         }
 
-        $errorHandler = new MonologErrorHandler($log);
+        if (!$this->applicationParams->noErrorHandler) {
+            $errorHandler = new MonologErrorHandler($log);
 
-        $errorHandler->registerExceptionHandler([], false);
-        $errorHandler->registerErrorHandler([], false);
+            $errorHandler->registerExceptionHandler([], false);
+            $errorHandler->registerErrorHandler([], false);
+        }
 
         return $log;
     }
