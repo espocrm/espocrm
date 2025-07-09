@@ -32,7 +32,6 @@ namespace tests\integration\Core;
 use Espo\Core\Api\RequestWrapper;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\Application;
-use Espo\Core\ApplicationRunners\Rebuild;
 use Espo\Core\Container;
 use Espo\Core\DataManager;
 use Espo\Core\InjectableFactory;
@@ -48,6 +47,9 @@ use Slim\Psr7\Factory\RequestFactory;
 use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Factory\StreamFactory;
 
+/**
+ * Note. Rebuild code were removed after PHPUnit upgrading.
+ */
 abstract class BaseTestCase extends TestCase
 {
     private ?Tester $espoTester = null;
@@ -161,8 +163,6 @@ abstract class BaseTestCase extends TestCase
         ];
 
         $this->espoTester = new Tester($params);
-
-        $this->espoTester->getApplication(true)->run(Rebuild::class);
 
         $this->beforeSetUp();
 
