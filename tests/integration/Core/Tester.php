@@ -470,11 +470,11 @@ class Tester
         }
     }
 
-    public function setData(array $data): void
+    /*public function setData(array $data): void
     {
         $this->getDataLoader()->setData($data);
         $this->getApplication(true, true)->run(Rebuild::class);
-    }
+    }*/
 
     public function clearCache(): void
     {
