@@ -32,17 +32,18 @@ namespace tests\unit\Espo\ORM\Repository;
 use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\Modules\Crm\Entities\Lead;
 
-use tests\unit\testData\Entities\Test;
+use PHPUnit\Framework\TestCase;
+use tests\unit\testData\Entities\TestEntity;
 
 use Espo\ORM\Repository\Util;
 
-class UtilTest extends \PHPUnit\Framework\TestCase
+class UtilTest extends TestCase
 {
     public function testGetRDBRepositoryByClass(): void
     {
         $this->assertEquals('Lead', Util::getEntityTypeByClass(Lead::class));
         $this->assertEquals('Case', Util::getEntityTypeByClass(CaseObj::class));
-        $this->assertEquals('Test', Util::getEntityTypeByClass(Test::class));
+        $this->assertEquals('TestEntity', Util::getEntityTypeByClass(TestEntity::class));
     }
 
     public function testGetRDBRepositoryByClassException(): void

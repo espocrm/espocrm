@@ -29,26 +29,19 @@
 
 namespace tests\unit\Espo\Entities;
 
+use Espo\Core\Repositories\Database;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Repository\RDBRepository;
+use PHPUnit\Framework\TestCase;
 
-class EmailTest extends \PHPUnit\Framework\TestCase
+class EmailTest extends TestCase
 {
-    /**
-     * @var Email
-     */
+    /** @var Email */
     private $email;
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * @var RDBRepository
-     */
+    /** @var RDBRepository */
     private $attachmentRepository;
 
     // TODO defs test helper
@@ -437,29 +430,28 @@ class EmailTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->entityManager = $this->createMock(EntityManager::class);
+        $entityManager = $this->createMock(EntityManager::class);
 
         $this->attachmentRepository = $this->createMock(RDBRepository::class);
 
-        $this->entityManager
+        $entityManager
             ->expects($this->any())
             ->method('getRDBRepositoryByClass')
             ->willReturnMap([
                 [Attachment::class, $this->attachmentRepository],
             ]);
 
-        $this->repository =
-          $this->getMockBuilder('Espo\Core\ORM\Repositories\Database')->disableOriginalConstructor()->getMock();
+        $repository = $this->createMock(Database::class);
 
-        $this->entityManager
+        $entityManager
             ->expects($this->any())
             ->method('getRepository')
-            ->will($this->returnValue($this->repository));
+            ->willReturn($repository);
 
         $this->email = new Email(
             entityType: 'Email',
             defs: $this->defs,
-            entityManager: $this->entityManager,
+            entityManager: $entityManager,
         );
     }
 

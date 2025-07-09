@@ -104,7 +104,7 @@ class ClassMapTest extends TestCase
     {
         $expected = [
             'Download' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
-            'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
+            'TestEntry' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\TestEntry',
             'InModule' => 'tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule'
         ];
 
@@ -135,7 +135,7 @@ class ClassMapTest extends TestCase
 
         $result = [
             'Download' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
-            'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
+            'TestEntry' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\TestEntry',
             'InModule' => 'tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule',
        ];
 
@@ -195,7 +195,7 @@ class ClassMapTest extends TestCase
 
         $result = [
             'Download' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
-            'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
+            'TestEntry' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\TestEntry',
             'InModule' => 'tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule',
         ];
 

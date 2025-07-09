@@ -206,7 +206,7 @@ class FieldManagerTest extends TestCase
         $this->metadataHelper
             ->expects($this->once())
             ->method('getFieldDefsByType')
-            ->will($this->returnValue(json_decode('{
+            ->willReturn(json_decode('{
                "params":[
                   {
                      "name":"required",
@@ -243,22 +243,22 @@ class FieldManagerTest extends TestCase
                "personalData": true,
                "textFilter": true,
                "fullTextSearch": true
-            }', true)));
+            }', true));
 
         $this->metadata
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnValueMap($map));
+            ->willReturnMap($map);
 
         $this->metadata
             ->expects($this->exactly(2))
             ->method('getObjects')
-            ->will($this->returnValue((object) $data));
+            ->willReturn((object) $data);
 
         $this->metadata
             ->expects($this->exactly(1))
             ->method('getCustom')
-            ->will($this->returnValue((object) []));
+            ->willReturn((object) []);
 
         $this->metadata
             ->expects($this->never())
@@ -286,22 +286,21 @@ class FieldManagerTest extends TestCase
         $this->metadata
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnValueMap($map));
+            ->willReturnMap($map);
 
         $this->metadata
             ->expects($this->exactly(2))
             ->method('getObjects')
-            ->will($this->returnValue((object) $data));
+            ->willReturn((object) $data);
 
         $this->metadata
             ->expects($this->once())
-            ->method('saveCustom')
-            ->will($this->returnValue(true));
+            ->method('saveCustom');
 
         $this->metadataHelper
             ->expects($this->once())
             ->method('getFieldDefsByType')
-            ->will($this->returnValue(json_decode('{
+            ->willReturn(json_decode('{
                "params":[
                   {
                      "name":"required",
@@ -338,7 +337,7 @@ class FieldManagerTest extends TestCase
                "personalData": true,
                "textFilter": true,
                "fullTextSearch": true
-            }', true)));
+            }', true));
 
         $data = [
             "type" => "varchar",
@@ -367,12 +366,12 @@ class FieldManagerTest extends TestCase
         $this->metadata
             ->expects($this->once())
             ->method('getObjects')
-            ->will($this->returnValue((object) $data));
+            ->willReturn((object) $data);
 
         $this->language
             ->expects($this->once())
             ->method('translate')
-            ->will($this->returnValue('Var Name'));
+            ->willReturn('Var Name');
 
         $this->assertEquals($data, $this->fieldManager->read('Account', 'varName'));
     }
