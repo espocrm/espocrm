@@ -55,6 +55,6 @@ class MetadataTest extends BaseTestCase
         $data = $this->getInjectableFactory()->create(MetadataService::class)->getDataForFrontend();
 
         $this->assertIsArray($data?->entityDefs?->Lead?->fields?->source?->options);
-        $this->assertNull($data->entityDefs->Lead->fields?->name);
+        $this->assertNull($data->entityDefs->Lead->fields?->name ?? null);
     }
 }

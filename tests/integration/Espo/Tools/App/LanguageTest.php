@@ -57,6 +57,6 @@ class LanguageTest extends BaseTestCase
         $data = json_decode(json_encode($data));
 
         $this->assertNotNull($data?->Lead?->options?->source);
-        $this->assertNull($data?->Lead?->options?->status);
+        $this->assertNull($data?->Lead?->options?->status ?? null);
     }
 }

@@ -134,7 +134,7 @@ class ProcessingTest extends BaseTestCase
             ->expects($invokedCount)
             ->method('send')
             ->willReturnCallback(function (Webhook $webhook, $dataList) use ($invokedCount, $dataList1, $dataList2, &$notSame) {
-                if ($invokedCount->getInvocationCount() === 1) {
+                if ($invokedCount->numberOfInvocations() === 1) {
                     if (count($dataList) !== count($dataList1)) {
                         $notSame = true;
                     }
@@ -146,7 +146,7 @@ class ProcessingTest extends BaseTestCase
                     return 200;
                 }
 
-                if ($invokedCount->getInvocationCount() === 2) {
+                if ($invokedCount->numberOfInvocations() === 2) {
                     if (count($dataList) !== count($dataList2)) {
                         $notSame = true;
                     }
@@ -237,7 +237,7 @@ class ProcessingTest extends BaseTestCase
             ->expects($invokedCount)
             ->method('send')
             ->willReturnCallback(function (Webhook $webhook, $dataList) use ($invokedCount, $dataList1, &$notSame) {
-                if ($invokedCount->getInvocationCount() === 1) {
+                if ($invokedCount->numberOfInvocations() === 1) {
                     if ('Account.delete' !== $webhook->getEvent()) {
                         $notSame = true;
                     }
@@ -324,7 +324,7 @@ class ProcessingTest extends BaseTestCase
             ->expects($invokedCount)
             ->method('send')
             ->willReturnCallback(function (Webhook $webhook, $dataList) use ($invokedCount, $dataList1, &$notSame) {
-                if ($invokedCount->getInvocationCount() === 1) {
+                if ($invokedCount->numberOfInvocations() === 1) {
                     if (json_encode($dataList) !== json_encode($dataList1)) {
                         $notSame = true;
                     }
