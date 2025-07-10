@@ -503,6 +503,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
     public function testBodyPlain(): void
     {
         $this->email->setBody('<br />&nbsp;&amp;');
+        $this->email->setIsHtml();
         $bodyPlain = $this->email->getBodyPlain();
 
         $this->assertEquals("  \r\n &", $bodyPlain);
