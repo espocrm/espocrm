@@ -230,6 +230,10 @@ class Email extends Entity
             return $this->getFromContainer(self::ATTR_BODY_PLAIN);
         }
 
+        if (!$this->isHtml()) {
+            return $this->getBody();
+        }
+
         $body = $this->getBody() ?: '';
 
         return EmailUtil::stripHtml($body) ?: null;
