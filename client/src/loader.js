@@ -774,6 +774,13 @@
                         return;
                     }
 
+                    if (type === 'lib') {
+                        this._dataLoaded[id] = undefined;
+                        this._executeLoadCallback(id, undefined);
+
+                        return;
+                    }
+
                     console.warn(`Could not obtain ${id}.`);
                 });
 
