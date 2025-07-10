@@ -36,7 +36,6 @@ export default class extends View {
     targetEntityType = null
     storageKey = 'formulaSandbox'
 
-
     setup() {
         const entityTypeList = [''].concat(
             this.getMetadata()
@@ -132,7 +131,7 @@ export default class extends View {
                 return;
             }
 
-            let dataToStore = {
+            const dataToStore = {
                 script: this.model.get('script'),
                 targetType: this.model.get('targetType'),
                 targetId: this.model.get('targetId'),
@@ -141,6 +140,13 @@ export default class extends View {
 
             this.getSessionStorage().set(this.storageKey, dataToStore);
         });
+    }
+
+    /**
+     * @return {import('views/record/detail').default}
+     */
+    getRecordView() {
+        return this.getView('record');
     }
 
     createRecordView() {
@@ -157,7 +163,7 @@ export default class extends View {
         this.setPageTitle(this.getLanguage().translate('Formula Sandbox', 'labels', 'Admin'));
     }
 
-    run() {
+    async run() {
         const script = this.model.get('script');
 
         this.model.set({
@@ -175,50 +181,62 @@ export default class extends View {
             return;
         }
 
-        Espo.Ajax
-            .postRequest('Formula/action/run', {
+        this.getRecordView().disableActionItems();
+        Espo.Ui.notifyWait();
+
+        /** @var {Record} */
+        let response;
+
+        try {
+            response = await Espo.Ajax.postRequest('Formula/action/run', {
                 expression: script,
                 targetId: this.model.get('targetId'),
                 targetType: this.model.get('targetType'),
-            })
-            .then(response => {
-                this.model.set('output', response.output || null);
-
-                let errorMessage = null;
-
-                if (!response.isSuccess) {
-                    errorMessage = response.message || null;
-                }
-
-                this.model.set('errorMessage', errorMessage);
-
-                if (response.isSuccess) {
-                    Espo.Ui.success(
-                        this.translate('runSuccess', 'messages', 'Formula')
-                    );
-
-                    return;
-                }
-
-                if (response.isSyntaxError) {
-                    let msg = this.translate('checkSyntaxError', 'messages', 'Formula');
-
-                    if (response.message) {
-                        msg += ' ' + response.message;
-                    }
-
-                    Espo.Ui.error(msg);
-
-                    return;
-                }
-
-                let msg = this.translate('runError', 'messages', 'Formula');
-
-                if (response.message) {
-                    msg += ' ' + response.message;
-                }
-
-                Espo.Ui.error(msg);
             });
+        } catch (e) {
+            this.getRecordView().enableActionItems();
+
+            return;
+        }
+
+        this.getRecordView().enableActionItems();
+
+        this.model.set('output', response.output || null);
+
+        let errorMessage = null;
+
+        if (!response.isSuccess) {
+            errorMessage = response.message || null;
+        }
+
+        this.model.set('errorMessage', errorMessage);
+
+        if (response.isSuccess) {
+            Espo.Ui.success(
+                this.translate('runSuccess', 'messages', 'Formula')
+            );
+
+            return;
+        }
+
+        if (response.isSyntaxError) {
+            let msg = this.translate('checkSyntaxError', 'messages', 'Formula');
+
+            if (response.message) {
+                msg += ' ' + response.message;
+            }
+
+            Espo.Ui.error(msg);
+
+            return;
+        }
+
+        let msg = this.translate('runError', 'messages', 'Formula');
+
+        if (response.message) {
+            msg += ' ' + response.message;
+        }
+
+        Espo.Ui.error(msg);
     }
 }
