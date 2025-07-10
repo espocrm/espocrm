@@ -1,5 +1,6 @@
 .filter > .form-group .field .selectize-control,
-.selectize-control.input-sm.form-control {
+.selectize-control.input-sm.form-control,
+.selectize-control.small {
     &.multi {
         .selectize-input {
             font-size: var(--font-size-small);
@@ -12,7 +13,11 @@
             > input {
                 padding-top: var(--1px) !important;
             }
+
+            min-height: var(--input-height-small);
         }
+
+        padding: 0;
     }
 
     &.single {
