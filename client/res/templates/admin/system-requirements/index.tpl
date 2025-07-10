@@ -2,16 +2,23 @@
 <span class="breadcrumb-separator"><span></span></span>
 {{translate 'System Requirements' scope='Admin'}}</h3></div>
 
-<div class="panel panel-default">
-    <table class="table table-striped table-no-overflow table-fixed">
-        <thead>
+{{#if noAccess}}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            {{translate 'error403' category='messages'}}
+        </div>
+    </div>
+{{else}}
+    <div class="panel panel-default">
+        <table class="table table-striped table-no-overflow table-fixed">
+            <thead>
             <tr>
                 <th><h5>{{translate 'PHP Settings' scope='Admin'}}</h5></th>
                 <th style="width: 24%"></th>
                 <th style="width: 24%"></th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {{#each phpRequirementList}}
                 <tr class="list-row">
                     <td class="cell">
@@ -21,27 +28,27 @@
                     <td class="cell">
                         {{#if acceptable}} <span class="text-success">{{translate 'Success' scope='Admin'}}</span>
                         {{else}}
-                        <span class="text-danger">{{translate 'Fail' scope='Admin'}}
-                            {{#ifEqual type 'lib'}} ({{translate 'extension is missing' scope='Admin'}}) {{/ifEqual}}
-                            {{#ifEqual type 'param'}} ({{required}} {{translate 'is recommended' scope='Admin'}}) {{/ifEqual}}
+                            <span class="text-danger">{{translate 'Fail' scope='Admin'}}
+                                {{#ifEqual type 'lib'}} ({{translate 'extension is missing' scope='Admin'}}) {{/ifEqual}}
+                                {{#ifEqual type 'param'}} ({{required}} {{translate 'is recommended' scope='Admin'}}) {{/ifEqual}}
                         </span> {{/if}}
                     </td>
                 </tr>
             {{/each}}
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>
 
-<div class="panel panel-default">
-    <table class="table table-striped table-no-overflow table-fixed">
-        <thead>
+    <div class="panel panel-default">
+        <table class="table table-striped table-no-overflow table-fixed">
+            <thead>
             <tr>
                 <th><h5>{{translate 'Database Settings' scope='Admin'}}</h5></th>
                 <th style="width: 24%"></th>
                 <th style="width: 24%"></th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {{#each databaseRequirementList}}
                 <tr class="">
                     <td class="cell">
@@ -50,29 +57,29 @@
                     <td class="cell" style="width: 24%">{{actual}}</td>
                     <td class="cell" style="width: 24%">
                         {{#if acceptable}}
-                        <span class="text-success">{{translate 'Success' scope='Admin'}}</span>
+                            <span class="text-success">{{translate 'Success' scope='Admin'}}</span>
                         {{else}}
-                        <span class="text-danger">{{translate 'Fail' scope='Admin'}}
-                            {{#ifEqual type 'param'}} ({{required}} {{translate 'is recommended' scope='Admin'}}) {{/ifEqual}}
+                            <span class="text-danger">{{translate 'Fail' scope='Admin'}}
+                                {{#ifEqual type 'param'}} ({{required}} {{translate 'is recommended' scope='Admin'}}) {{/ifEqual}}
                         </span>
                         {{/if}}
                     </td>
                 </tr>
             {{/each}}
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>
 
-<div class="panel panel-default">
-    <table class="table table-striped table-no-overflow table-fixed">
-        <thead>
+    <div class="panel panel-default">
+        <table class="table table-striped table-no-overflow table-fixed">
+            <thead>
             <tr>
                 <th><h5>{{translate 'Permissions' scope='Admin'}}</h5></th>
                 <th style="width: 24%"></th>
                 <th style="width: 24%"></th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {{#each permissionRequirementList}}
                 <tr>
                     <td class="cell">
@@ -81,24 +88,25 @@
                     <td class="cell" style="width: 24%">{{translate type scope='Admin' category='systemRequirements'}}</td>
                     <td class="cell" style="width: 24%">
                         {{#if acceptable}}
-                        <span class="text-success">{{translate 'Success' scope='Admin'}}</span>
+                            <span class="text-success">{{translate 'Success' scope='Admin'}}</span>
                         {{else}}
-                        <span class="text-danger">{{translate 'Fail' scope='Admin'}}</span>
+                            <span class="text-danger">{{translate 'Fail' scope='Admin'}}</span>
                         {{/if}}
                     </td>
                 </tr>
             {{/each}}
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="pull-right">
-            <a
-                target="_blank"
-                href="https://docs.espocrm.com/administration/server-configuration/"
-            ><strong>{{translate 'Configuration Instructions' scope='Admin'}}</strong></a>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="pull-right">
+                <a
+                    target="_blank"
+                    href="https://docs.espocrm.com/administration/server-configuration/"
+                ><strong>{{translate 'Configuration Instructions' scope='Admin'}}</strong></a>
+            </div>
         </div>
     </div>
-</div>
+{{/if}}

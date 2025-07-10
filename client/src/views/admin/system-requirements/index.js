@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import View from 'view';
+import Ajax from 'ajax';
 
 export default class extends View {
 
@@ -35,25 +36,40 @@ export default class extends View {
     /** @type {Record} */
     requirements
 
+    /**
+     * @private
+     * @type {boolean}
+     */
+    noAccess = false
+
     data() {
         return {
             phpRequirementList: this.requirements.php,
             databaseRequirementList: this.requirements.database,
             permissionRequirementList: this.requirements.permission,
+            noAccess: this.noAccess,
         };
     }
 
     setup() {
         this.requirements = {};
 
+        this.wait(this.loadData());
+    }
+
+    async loadData() {
         Espo.Ui.notifyWait();
 
-        const promise = Espo.Ajax.getRequest('Admin/action/systemRequirementList').then(requirements => {
-            this.requirements = requirements;
+        try {
+            this.requirements = await Espo.Ajax.getRequest('Admin/action/systemRequirementList');
+        } catch(e) {
+            this.noAccess = true;
 
-            Espo.Ui.notify();
-        });
+            if ('errorIsHandled' in e) {
+                e.errorIsHandled = true;
+            }
+        }
 
-        this.wait(promise);
+        Espo.Ui.notify();
     }
 }
