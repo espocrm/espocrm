@@ -175,7 +175,7 @@ class EnumFieldView extends BaseFieldView {
         this.styleMap = this.params.style || this.model.getFieldParam(this.name, 'style') || {};
 
         let optionsPath = this.params.optionsPath;
-        /** @type {?string} */
+        /** @type {string|null} */
         const optionsReference = this.params.optionsReference;
 
         if (!optionsPath && optionsReference) {
