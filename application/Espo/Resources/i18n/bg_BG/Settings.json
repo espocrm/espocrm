@@ -13,19 +13,12 @@
     "currencyList": "Списък с валути",
     "language": "Език",
     "companyLogo": "Лого на фирмата",
-    "smtpServer": "Сървър",
-    "smtpPort": "Порт",
     "ldapPort": "Порт",
-    "smtpAuth": "Удостоверяване",
     "ldapAuth": "Удостоверяване",
-    "smtpSecurity": "Сигурност",
     "ldapSecurity": "Сигурност",
-    "smtpUsername": "Потребител",
     "emailAddress": "Електронна поща",
-    "smtpPassword": "Парола",
     "ldapPassword": "Парола",
     "outboundEmailFromName": "От име",
-    "outboundEmailFromAddress": "От Адрес",
     "outboundEmailIsShared": "Споделена с други потребители",
     "recordsPerPage": "Записи на страница",
     "recordsPerPageSmall": "Записи на страница (popup)",
@@ -54,7 +47,7 @@
     "notificationSoundsDisabled": "Изключване на звуците от известията",
     "applicationName": "Име на системата",
     "ldapUserTeams": "Екипи на потребителя",
-    "ldapUserDefaultTeam": "Отдел по подразбиране",
+    "ldapUserDefaultTeam": "Екип по подразбиране",
     "assignmentNotificationsEntityList": "Обекти, за които да се създава известие при назначаване",
     "assignmentEmailNotifications": "Известия при назначаване",
     "assignmentEmailNotificationsEntityList": "Обхват на уведомленията по имейл",
@@ -138,7 +131,8 @@
     "streamEmailWithContentEntityTypeList": "Обекти с оригинален имейл в коментарите",
     "emailScheduledBatchCount": "Максимален брой планирани имейли, изпратени на наведнъж",
     "passwordStrengthSpecialCharacterCount": "Брой специални символи, необходими в паролата",
-    "availableReactions": "Налични реакции"
+    "availableReactions": "Налични реакции",
+    "outboundEmailFromAddress": "Системен имейл адрес"
   },
   "tooltips": {
     "recordsPerPage": "Брой записи, които да се показват в лист UI",
@@ -193,8 +187,6 @@
     "passwordRecoveryNoExposure": "Няма да е възможно да се определи дали конкретен имейл адрес е регистриран в системата.",
     "emailAddressLookupEntityTypeList": "За автоматично довършване на имейл адрес.",
     "emailNotificationsDelay": "Съобщението може да бъде редактирано в рамките на посочения период от време, преди да бъде изпратено известието към потребителя/клиента.",
-    "outboundEmailFromAddress": "Системен имейл адрес.",
-    "smtpServer": "Ако е празно, тогава ще се използва групов имейл акаунт със съответния имейл адрес.",
     "busyRangesEntityList": "Какво ще бъде взето предвид при показване на натоварени времеви диапазони в графика и хронологията.",
     "recordsPerPageSelect": "Брой записи, първоначално показани при избор на записи.",
     "workingTimeCalendar": "Календар на работното време, който ще се прилага за всички потребители по подразбиране.",
@@ -212,7 +204,8 @@
     "authIpAddressWhitelist": "Списък с IP адреси или диапазони в CIDR нотация.\n\nПорталите не са засегнати от ограничението.",
     "emailAddressIsOptedOutByDefault": "При създаване на нов запис имейл адресът ще бъде маркиран като изключен от кореспонденция.",
     "oidcGroupClaim": "Заявление за използване за картографиране на екипи.",
-    "quickSearchFullTextAppendWildcard": "Добавяне на * знак към заявка за търсене с автоматично довършване, когато е активирано пълнотекстово търсене. Намалява ефективността на търсенето."
+    "quickSearchFullTextAppendWildcard": "Добавяне на * знак към заявка за търсене с автоматично довършване, когато е активирано пълнотекстово търсене. Намалява ефективността на търсенето.",
+    "outboundEmailFromAddress": "Системните имейли ще бъдат изпращани от този имейл адрес. Трябва да бъде настроен и правилно конфигуриран [групов имейл акаунт](#InboundEmail) със същия имейл адрес, за да се изпращат имейли."
   },
   "labels": {
     "System": "Системни настройки",

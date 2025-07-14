@@ -41,9 +41,6 @@
     "fromName": "От име",
     "fromString": "От String",
     "isSystem": "е системно",
-    "toEmailAddresses": "До имейл адреси",
-    "bccEmailAddresses": "BCC имейл адреси",
-    "replyToEmailAddresses": "Reply-To имейл адреси",
     "personStringData": "Данни за низове за лице",
     "fromEmailAddress": "От Адрес (линк)",
     "replyToName": "Име Reply-To",
@@ -58,7 +55,10 @@
     "isUsersSent": "Изпратено е от потребителя",
     "inArchive": "В архива",
     "groupStatusFolder": "Папка за статус на групата",
-    "sendAt": "Изпрати на"
+    "sendAt": "Изпрати на",
+    "toEmailAddresses": "До имейл адреси",
+    "bccEmailAddresses": "BCC имейл адреси",
+    "replyToEmailAddresses": "Reply-To имейл адреси"
   },
   "links": {
     "replied": "Отговорено",
