@@ -2236,6 +2236,24 @@ class FormulaTest extends TestCase
         '));
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-01-01 19:30:00', $actual);
+
+        $item = new Argument(self::stringToNode('
+            {
+                "type": "datetime\\\\addSeconds",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2025-01-01 20:00:00"
+                    },
+                    {
+                        "type": "value",
+                        "value": -30
+                    }
+                ]
+            }
+        '));
+        $actual = $this->createProcessor()->process($item);
+        $this->assertEquals('2025-01-01 19:59:30', $actual);
     }
 
     function testDatetimeClosestTime()

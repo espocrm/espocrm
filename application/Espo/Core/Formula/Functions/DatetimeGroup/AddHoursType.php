@@ -31,7 +31,6 @@ namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
 class AddHoursType extends AddIntervalType
 {
-    protected $intervalTypeString = 'hours';
-
-    protected $timeOnly = true;
+    protected string $intervalTypeString = 'hours';
+    protected bool $timeOnly = true;
 }

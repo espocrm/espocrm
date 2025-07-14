@@ -31,8 +31,5 @@ namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
 class AddYearsType extends AddIntervalType
 {
-    /**
-     * @var string
-     */
-    protected $intervalTypeString = 'years';
+    protected string $intervalTypeString = 'years';
 }

@@ -29,7 +29,8 @@
 
 namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
-class AddMonthsType extends AddIntervalType
+class AddSecondsType extends AddIntervalType
 {
-    protected string $intervalTypeString = 'months';
+    protected string $intervalTypeString = 'seconds';
+    protected bool $timeOnly = true;
 }

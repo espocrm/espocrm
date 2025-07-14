@@ -31,13 +31,7 @@ namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
 class AddMinutesType extends AddIntervalType
 {
-    /**
-     * @var string
-     */
-    protected $intervalTypeString = 'minutes';
 
-    /**
-     * @var bool
-     */
-    protected $timeOnly = true;
+    protected string $intervalTypeString = 'minutes';
+    protected bool $timeOnly = true;
 }
