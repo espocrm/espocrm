@@ -19,7 +19,8 @@
     "body": "Съдържание",
     "categories": "Категории",
     "language": "Език",
-    "portals": "Портали"
+    "portals": "Портали",
+    "bodyPlain": "Съдържание само с текст"
   },
   "links": {
     "cases": "Тикети",

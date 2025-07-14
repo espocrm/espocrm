@@ -15,8 +15,9 @@
     "current": "Текущ",
     "time": "време",
     "User List": "Списък с потребители",
-    "Manage Users": "Управление на потребителите",
     "View Calendar": "Вижте календара",
-    "Create Shared View": "Създаване на споделен изглед"
+    "Create Shared View": "Създаване на споделен изглед",
+    "Edit Shared View": "Редактиране на споделения изглед",
+    "Shared Mode Options": "Опции за споделен режим"
   }
 }

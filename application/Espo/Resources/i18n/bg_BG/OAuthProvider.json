@@ -1,0 +1,15 @@
+{
+  "labels": {
+    "Create OAuthProvider": "Създай Oauth доставчик"
+  },
+  "fields": {
+    "isActive": "Е активен",
+    "scopes": "Обхвати"
+  },
+  "links": {
+    "accounts": "Акаунти"
+  },
+  "tooltips": {
+    "authorizationParams": "Допълнителни параметри на заявката, които да бъдат изпратени до крайната точка за оторизация. Посочени във формат JSON."
+  }
+}

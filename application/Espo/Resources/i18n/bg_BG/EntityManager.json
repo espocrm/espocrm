@@ -1,6 +1,6 @@
 {
   "labels": {
-    "Fields": "Полетата",
+    "Fields": "Полета",
     "Relationships": "Релации",
     "Schedule": "График",
     "Log": "Журнал",
@@ -20,8 +20,6 @@
     "linkForeign": "Външна релация",
     "link": "Релация",
     "labelForeign": "Външно наименование",
-    "sortBy": "Сортиране по подразбиране (поле)",
-    "sortDirection": "Сортиране по подразбиране (посока)",
     "linkMultipleField": "Свързане на множество полета",
     "disabled": "Деактивирано",
     "textFilterFields": "Текстови полета, в които да се търси",
@@ -53,7 +51,9 @@
     "assignedUsers": "Множество назначени потребители",
     "collaborators": "Сътрудници",
     "aclContactLink": "ACL за контакт",
-    "aclAccountLink": "ACL за клиент"
+    "aclAccountLink": "ACL за клиент",
+    "sortBy": "Поле за сортиране по подразбиране",
+    "sortDirection": "Посока на сортиране по подразбиране"
   },
   "options": {
     "type": {

@@ -52,7 +52,6 @@
     "storeSentEmails": "Имейлите ще бъдат съхранявани в CRM."
   },
   "presetFilters": {
-    "actual": "Актуални",
     "complete": "Завършени"
   }
 }
