@@ -33,6 +33,13 @@ class TaskDateEndFieldView extends DatetimeOptionalFieldView {
 
     isEnd = true
 
+    getAttributeList() {
+        return [
+            ...super.getAttributeList(),
+            'status',
+        ];
+    }
+
     data() {
         const data = super.data();
 
