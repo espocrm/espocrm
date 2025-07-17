@@ -1984,11 +1984,17 @@ label.attach-file-label {
 }
 
 .gray-box .preview {
-    overflow: hidden;
     overflow-wrap: break-word;
+    max-width: calc(100% - var(--16px));
+    display: inline-block;
 
     a {
         color: @text-color;
+    }
+
+    &:has( > img) {
+        margin-top: var(--3px);
+        margin-bottom: var(--3px);
     }
 }
 
@@ -2024,13 +2030,32 @@ label.attach-file-label {
 }
 
 .attachment-block {
-    display: block;
-    vertical-align: top;
-    margin-bottom: var(--2px);
-}
+    &:not(.attachment-block-preview) {
+        display: flex;
+        gap: var(--4px);
+        align-items: baseline;
+        overflow: hidden;
+        margin-bottom: var(--2px);
 
-.attachment-block:last-child {
-    margin-bottom: 0;
+        > a {
+            flex: 1;
+            min-width: 0;
+            white-space: normal;
+            word-break: break-word;
+        }
+    }
+
+    &.attachment-block-preview {
+        .attachment-preview {
+            display: block;
+            vertical-align: top;
+            margin-bottom: var(--2px);
+        }
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
 
 .list-row > .cell {
