@@ -30,7 +30,7 @@
 
 import View from 'view';
 import {inject} from 'di';
-import {ShortcutManager} from 'helpers/site/shortcut-manager';
+import ShortcutManager from 'helpers/site/shortcut-manager';
 
 /**
  * A base main view. The detail, edit, list views to be extended from.

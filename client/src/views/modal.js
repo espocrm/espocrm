@@ -31,7 +31,7 @@
 import View from 'view';
 import {inject} from 'di';
 import ModalBarProvider from 'helpers/site/modal-bar-provider';
-import {ShortcutManager} from 'helpers/site/shortcut-manager';
+import ShortcutManager from 'helpers/site/shortcut-manager';
 
 /**
  * A base modal view. Can be extended or used directly.

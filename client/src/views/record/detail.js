@@ -35,7 +35,7 @@ import StickyBarHelper from 'helpers/record/misc/sticky-bar';
 import SelectTemplateModalView from 'views/modals/select-template';
 import DebounceHelper from 'helpers/util/debounce';
 import {inject} from 'di';
-import {ShortcutManager} from 'helpers/site/shortcut-manager';
+import ShortcutManager from 'helpers/site/shortcut-manager';
 import WebSocketManager from 'web-socket-manager';
 
 /**

@@ -32,7 +32,7 @@ import {register} from 'di';
 /** @typedef {string|function(KeyboardEvent): void} Key */
 
 @register()
-export class ShortcutManager {
+export default class ShortcutManager {
 
     /**
      * @private

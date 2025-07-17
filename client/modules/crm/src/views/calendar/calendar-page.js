@@ -29,7 +29,7 @@
 import View from 'view';
 import CalendarEditViewModal from 'crm:views/calendar/modals/edit-view';
 import {inject} from 'di';
-import {ShortcutManager} from 'helpers/site/shortcut-manager';
+import ShortcutManager from 'helpers/site/shortcut-manager';
 import DebounceHelper from 'helpers/util/debounce';
 import WebSocketManager from 'web-socket-manager';
 
