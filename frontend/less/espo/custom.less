@@ -2447,7 +2447,6 @@ td > span.color-icon {
 
 .stream-details-container {
     table.audited-summary-table {
-        margin-top: var(--8px);
         background-color: transparent;
         table-layout: fixed;
 
@@ -2463,7 +2462,14 @@ td > span.color-icon {
             &:last-child {
                 padding-right: 0;
             }
+
+            padding-top: var(--padding-small-vertical);
+            padding-bottom: var(--padding-small-vertical);
         }
+    }
+
+    &:has(+ .stream-details-container:not(.hidden) > .audited-summary-table) {
+        margin-bottom: 0;
     }
 
     .none-value {
