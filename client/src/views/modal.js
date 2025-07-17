@@ -457,11 +457,8 @@ class ModalView extends View {
      * @private
      */
     initShortcuts() {
-        if (!this.shortcutKeys) {
-            return;
-        }
-
-        this.shortcutManager.add(this, this.shortcutKeys, {stack: true});
+        // Shortcuts to be added even if there's no keys set – to suppress current shortcuts.
+        this.shortcutManager.add(this, this.shortcutKeys ?? {}, {stack: true});
 
         this.once('remove', () => {
             this.shortcutManager.remove(this);
