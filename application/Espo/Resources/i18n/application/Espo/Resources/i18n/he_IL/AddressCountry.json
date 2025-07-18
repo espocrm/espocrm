@@ -1,0 +1,20 @@
+{
+    "labels": {
+        "Create AddressCountry": "יצירת מדינה",
+        "Populate": "אכלוס"
+    },
+    "fields": {
+        "code": "קוד",
+        "isPreferred": "מועדף"
+    },
+    "tooltips": {
+        "code": "קוד ISO 3166-1 alpha-2",
+        "isPreferred": "מדינות מועדפות מופיעות ראשונות ברשימה"
+    },
+    "messages": {
+        "confirmPopulateDefaults": "כל המדינות הקיימות יימחקו, ותיווצר רשימת מדינות ברירת מחדל. לא ניתן יהיה לבטל את הפעולה.\n\nהאם אתה בטוח?"
+    },
+    "strings": {
+        "populateDefaults": "אכלס עם רשימת מדינות ברירת מחדל"
+    }
+}
