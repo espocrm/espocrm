@@ -131,11 +131,11 @@ class DataUtilTest extends \PHPUnit\Framework\TestCase
     public function testUnsetRemoveEmpty(): void
     {
         $data = (object) [
-            'scopeNames' => [
+            'scopeNames' => (object) [
                 'a' => 'test',
                 'b' => 'test',
             ],
-            'scopeNamesPlural' => [
+            'scopeNamesPlural' => (object) [
                 'a' => 'test',
                 'b' => 'test',
             ],
@@ -145,13 +145,44 @@ class DataUtilTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             (object) [
-                'scopeNames' => [
+                'scopeNames' => (object) [
                     'a' => 'test',
                     'b' => 'test',
                 ],
-                'scopeNamesPlural' => [
+                'scopeNamesPlural' => (object) [
                     'a' => 'test',
                     'b' => 'test',
+                ],
+            ],
+            $data
+        );
+    }
+
+    public function testSetByPath(): void
+    {
+        $data = (object) [
+            'scopeNames' => (object) [
+                'a' => 'A',
+                'b' => 'B',
+            ],
+            'scopeNamesPlural' => (object) [
+                'a' => 'As',
+                'b' => 'Bs',
+            ],
+        ];
+
+        DataUtil::setByPath($data, ['scopeNamesPlural', 'c'], 'Cs');
+
+        $this->assertEquals(
+            (object) [
+                'scopeNames' => (object) [
+                    'a' => 'A',
+                    'b' => 'B',
+                ],
+                'scopeNamesPlural' => (object) [
+                    'a' => 'As',
+                    'b' => 'Bs',
+                    'c' => 'Cs',
                 ],
             ],
             $data
