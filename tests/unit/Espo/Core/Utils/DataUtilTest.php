@@ -128,6 +128,36 @@ class DataUtilTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedResultData, $data1);
     }
 
+    public function testUnsetRemoveEmpty(): void
+    {
+        $data = (object) [
+            'scopeNames' => [
+                'a' => 'test',
+                'b' => 'test',
+            ],
+            'scopeNamesPlural' => [
+                'a' => 'test',
+                'b' => 'test',
+            ],
+        ];
+
+        DataUtil::unsetByKey($data, [['lists', 'k']], true);
+
+        $this->assertEquals(
+            (object) [
+                'scopeNames' => [
+                    'a' => 'test',
+                    'b' => 'test',
+                ],
+                'scopeNamesPlural' => [
+                    'a' => 'test',
+                    'b' => 'test',
+                ],
+            ],
+            $data
+        );
+    }
+
     public function testUnsetByValue()
     {
         $data = json_decode('{

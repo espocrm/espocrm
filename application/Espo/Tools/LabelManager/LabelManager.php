@@ -229,7 +229,20 @@ class LabelManager implements
             'noFallback' => true,
         ]);
 
+        $languageNoCustomObj = $this->injectableFactory->createWith(Language::class, [
+            'language' => $language,
+            'noFallback' => true,
+            'noCustom' => true,
+        ]);
+
+        $languageMainObj = $this->injectableFactory->createWith(Language::class, [
+            'language' => $language,
+        ]);
+
         $customData = $languageObj->getScopeCustom($scope) ?? (object) [];
+
+        $listPaths = [];
+        $lists = [];
 
         foreach ($labels as $key => $value) {
             $arr = explode('[.]', $key);
@@ -243,17 +256,75 @@ class LabelManager implements
                     DataUtil::unsetByKey($customData, [[$category, $name]], true);
                     /** @var stdClass $customData */
                 }
-            } else if (count($arr) === 3) {
-                $attribute = $arr[2];
 
-                if ($value !== '') {
-                    DataUtil::setByPath($customData, [$category, $name, $attribute], $value);
-                } else {
-                    DataUtil::unsetByKey($customData, [[$category, $name, $attribute]], true);
-                    /** @var stdClass $customData */
+                continue;
+            }
+
+            if (count($arr) !== 3) {
+                continue;
+            }
+
+            $attribute = $arr[2];
+
+            $stringPath = "$category.$name";
+
+            $setValue = $lists[$stringPath] ?? $languageMainObj->get([$scope, $category, $name]);
+
+            if (is_array($setValue) && array_is_list($setValue)) {
+                if (!in_array($stringPath, $listPaths)) {
+                    $listPaths[] = $stringPath;
                 }
+
+                $index = intval($attribute);
+
+                $list = $setValue;
+
+                if ($value === '') {
+                    $originalList = $languageNoCustomObj->get([$scope, $category, $name]);
+
+                    if (!array_is_list($originalList)) {
+                        throw new RuntimeException("Not a list.");
+                    }
+
+                    if (!array_key_exists($index, $originalList)) {
+                        throw new RuntimeException("No value in original list.");
+                    }
+
+                    $value = $originalList[$index];
+                }
+
+                if (!array_key_exists($index, $list)) {
+                    throw new RuntimeException("No value in list.");
+                }
+
+                $list[$index] = $value;
+
+                DataUtil::setByPath($customData, [$category, $name], $list);
+                /** @var stdClass $customData */
+
+                $lists[$stringPath] = $list;
+
+                continue;
+            }
+
+            if ($value !== '') {
+                DataUtil::setByPath($customData, [$category, $name, $attribute], $value);
+            } else {
+                DataUtil::unsetByKey($customData, [[$category, $name, $attribute]], true);
+                /** @var stdClass $customData */
             }
         }
+
+        foreach ($lists as $path => $list) {
+            $originalList = $languageNoCustomObj->get("$scope.$path");
+
+            if ($originalList === $list) {
+                DataUtil::unsetByKey($customData, [$path], true);
+                /** @var stdClass $customData */
+            }
+        }
+
+        //die;
 
         $languageObj->saveScopeCustom($scope, $customData);
 
