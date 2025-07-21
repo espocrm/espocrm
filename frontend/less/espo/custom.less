@@ -1981,6 +1981,18 @@ label.attach-file-label {
             padding-right: var(--1px);
         }
     }
+
+    &:has(+ .uploading-message) {
+        margin-bottom: 0;
+    }
+
+    + .uploading-message {
+        display: inline-block;
+        margin-bottom: var(--3px);
+        color: var(--gray-soft);
+        position: relative;
+        top: var(--minus-2px);
+    }
 }
 
 .gray-box .preview {
