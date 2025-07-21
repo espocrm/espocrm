@@ -48,9 +48,7 @@ class LabelManager implements
     use Di\FileManagerSetter;
     use Di\DataCacheSetter;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $ignoreList = [
         'Global.sets',
     ];
@@ -103,7 +101,8 @@ class LabelManager implements
 
             foreach ($this->metadata->get(['entityDefs', $scope, 'fields']) as $field => $item) {
                 if (!array_key_exists($field, $data['fields'])) {
-                    $data['fields'][$field] = $languageObj->get('Global.fields.' . $field);
+                    $data['fields'][$field] = $languageObj->get("Global.fields.$field");
+
                     if (is_null($data['fields'][$field])) {
                         $data['fields'][$field] = '';
                     }
@@ -116,7 +115,8 @@ class LabelManager implements
 
             foreach ($this->metadata->get(['entityDefs', $scope, 'links']) as $link => $item) {
                 if (!array_key_exists($link, $data['links'])) {
-                    $data['links'][$link] = $languageObj->get('Global.links.' . $link);
+                    $data['links'][$link] = $languageObj->get("Global.links.$link");
+
                     if (is_null($data['links'][$link])) {
                         $data['links'][$link] = '';
                     }
@@ -157,10 +157,11 @@ class LabelManager implements
 
                 $optionsData[$option] = $option;
 
-                if (array_key_exists($option, $data['options'][$field])) {
-                    if (!empty($data['options'][$field][$option])) {
-                        $optionsData[$option] = $data['options'][$field][$option];
-                    }
+                if (
+                    array_key_exists($option, $data['options'][$field]) &&
+                    !empty($data['options'][$field][$option])
+                ) {
+                    $optionsData[$option] = $data['options'][$field][$option];
                 }
             }
             $data['options'][$field] = $optionsData;
@@ -197,17 +198,17 @@ class LabelManager implements
         $finalData = [];
 
         foreach ($data as $category => $item) {
-            if (in_array($scope . '.' . $category, $this->ignoreList)) {
+            if (in_array("$scope.$category", $this->ignoreList)) {
                 continue;
             }
 
             foreach ($item as $key => $categoryItem) {
                 if (is_array($categoryItem)) {
                     foreach ($categoryItem as $subKey => $subItem) {
-                        $finalData[$category][$category .'[.]' . $key .'[.]' . $subKey] = $subItem;
+                        $finalData[$category]["{$category}[.]{$key}[.]$subKey"] = $subItem;
                     }
                 } else {
-                    $finalData[$category][$category .'[.]' . $key] = $categoryItem;
+                    $finalData[$category]["{$category}[.]$key"] = $categoryItem;
                 }
             }
         }
@@ -243,20 +244,21 @@ class LabelManager implements
             if (count($arr) == 2) {
                 if ($value !== '') {
                     $languageObj->set($scope, $category, $name, $value);
+
                     $setValue = $value;
                 } else {
                     $setValue = $languageOriginalObj->get(implode('.', [$scope, $category, $name]));
+
                     if (is_null($setValue) && $scope !== 'Global') {
                         $setValue = $languageOriginalObj->get(implode('.', ['Global', $category, $name]));
                     }
 
                     $languageObj->delete($scope, $category, $name);
                 }
-            } else if (count($arr) == 3) {
-                $name = $arr[1];
+            } else if (count($arr) === 3) {
                 $attribute = $arr[2];
 
-                $data = $languageObj->get($scope . '.' . $category . '.' . $name);
+                $data = $languageObj->get("$scope.$category.$name");
 
                 $setPath[] = $attribute;
 
@@ -265,7 +267,7 @@ class LabelManager implements
                         $data[$attribute] = $value;
                         $setValue = $value;
                     } else {
-                        $dataOriginal = $languageOriginalObj->get($scope . '.' . $category . '.' . $name);
+                        $dataOriginal = $languageOriginalObj->get("$scope.$category.$name");
 
                         if (is_array($dataOriginal) && isset($dataOriginal[$attribute])) {
                             $data[$attribute] = $dataOriginal[$attribute];
