@@ -30,11 +30,13 @@
 namespace Espo\Tools\LabelManager;
 
 use Espo\Core\ORM\Type\FieldType;
+use Espo\Core\Utils\DataUtil;
 use Espo\Core\Utils\Json;
 use Espo\Core\Di;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Language;
 
+use RuntimeException;
 use stdClass;
 
 class LabelManager implements
@@ -86,13 +88,14 @@ class LabelManager implements
     {
         $languageObj = $this->injectableFactory->createWith(Language::class, [
             'language' => $language,
+            'noFallback' => true,
         ]);
 
         $data = $languageObj->get($scope);
 
-        if (empty($data)) {
+        /*if (empty($data)) {
             return (object) [];
-        }
+        }*/
 
         if ($this->metadata->get(['scopes', $scope, 'entity'])) {
             if (empty($data['fields'])) {
@@ -155,11 +158,11 @@ class LabelManager implements
                     continue;
                 }
 
-                $optionsData[$option] = $option;
+                $optionsData[$option] = '';
 
                 if (
                     array_key_exists($option, $data['options'][$field]) &&
-                    !empty($data['options'][$field][$option])
+                    isset($data['options'][$field][$option])
                 ) {
                     $optionsData[$option] = $data['options'][$field][$option];
                 }
@@ -223,14 +226,12 @@ class LabelManager implements
     {
         $languageObj = $this->injectableFactory->createWith(Language::class, [
             'language' => $language,
+            'noFallback' => true,
         ]);
 
-        $languageOriginalObj = $this->injectableFactory->createWith(Language::class, [
-            'language' => $language,
-            'noCustom' => true,
-        ]);
+        $customData = $languageObj->getScopeCustom($scope) ?? (object) [];
 
-        $returnDataHash = [];
+        $affectedPaths = [];
 
         foreach ($labels as $key => $value) {
             $arr = explode('[.]', $key);
@@ -239,59 +240,33 @@ class LabelManager implements
 
             $setPath = [$scope, $category, $name];
 
-            $setValue = null;
-
-            if (count($arr) == 2) {
+            if (count($arr) === 2) {
                 if ($value !== '') {
-                    $languageObj->set($scope, $category, $name, $value);
-
-                    $setValue = $value;
+                    DataUtil::setByPath($customData, [$category, $name], $value);
                 } else {
-                    $setValue = $languageOriginalObj->get(implode('.', [$scope, $category, $name]));
-
-                    if (is_null($setValue) && $scope !== 'Global') {
-                        $setValue = $languageOriginalObj->get(implode('.', ['Global', $category, $name]));
-                    }
-
-                    $languageObj->delete($scope, $category, $name);
+                    DataUtil::unsetByKey($customData, [[$category, $name]], true);
+                    /** @var stdClass $customData */
                 }
             } else if (count($arr) === 3) {
                 $attribute = $arr[2];
 
-                $data = $languageObj->get("$scope.$category.$name");
+                $setPath = [$scope, $category, $name, $attribute];
 
-                $setPath[] = $attribute;
-
-                if (is_array($data)) {
-                    if ($value !== '') {
-                        $data[$attribute] = $value;
-                        $setValue = $value;
-                    } else {
-                        $dataOriginal = $languageOriginalObj->get("$scope.$category.$name");
-
-                        if (is_array($dataOriginal) && isset($dataOriginal[$attribute])) {
-                            $data[$attribute] = $dataOriginal[$attribute];
-                            $setValue = $dataOriginal[$attribute];
-                        }
-                    }
-
-                    $languageObj->set($scope, $category, $name, $data);
+                if ($value !== '') {
+                    DataUtil::setByPath($customData, [$category, $name, $attribute], $value);
+                } else {
+                    DataUtil::unsetByKey($customData, [[$category, $name, $attribute]], true);
+                    /** @var stdClass $customData */
                 }
             }
 
-            if (!is_null($setValue)) {
-                $frontKey = implode('[.]', $setPath);
+            $frontKey = implode('[.]', $setPath);
 
-                $returnDataHash[$frontKey] = $setValue;
-            }
+            $affectedPaths[$frontKey] = implode('.', $setPath);
         }
 
-        $languageObj->save();
+        $languageObj->saveScopeCustom($scope, $customData);
 
-        if ($returnDataHash === []) {
-            return (object) [];
-        }
-
-        return json_decode(Json::encode($returnDataHash));
+        return $this->getScopeData($language, $scope);
     }
 }

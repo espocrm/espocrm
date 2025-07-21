@@ -31,6 +31,7 @@ namespace Espo\Core\Utils;
 
 use InvalidArgumentException;
 use LogicException;
+use RuntimeException;
 use stdClass;
 
 class DataUtil
@@ -212,5 +213,37 @@ class DataUtil
 
         /** @var array<string|int, mixed>|stdClass */
         return $overrideData;
+    }
+
+    /**
+     * @param string[] $path
+     * @since 9.2.0
+     * @internal
+     */
+    public static function setByPath(stdClass $data, array $path, mixed $value): void
+    {
+        if (count($path) === 1) {
+            $property = $path[0];
+
+            $data->$property = $value;
+
+            return;
+        }
+
+        if (count($path) < 1) {
+            return;
+        }
+
+        $property = array_shift($path);
+
+        if (!isset($data->$property)) {
+            $data->$property = (object) [];
+        }
+
+        if (!($data->$property instanceof stdClass)) {
+            throw new RuntimeException("Cannot set by path. Not an object.");
+        }
+
+        self::setByPath($data->$property, $path, $value);
     }
 }
