@@ -231,14 +231,10 @@ class LabelManager implements
 
         $customData = $languageObj->getScopeCustom($scope) ?? (object) [];
 
-        $affectedPaths = [];
-
         foreach ($labels as $key => $value) {
             $arr = explode('[.]', $key);
             $category = $arr[0];
             $name = $arr[1];
-
-            $setPath = [$scope, $category, $name];
 
             if (count($arr) === 2) {
                 if ($value !== '') {
@@ -250,8 +246,6 @@ class LabelManager implements
             } else if (count($arr) === 3) {
                 $attribute = $arr[2];
 
-                $setPath = [$scope, $category, $name, $attribute];
-
                 if ($value !== '') {
                     DataUtil::setByPath($customData, [$category, $name, $attribute], $value);
                 } else {
@@ -259,10 +253,6 @@ class LabelManager implements
                     /** @var stdClass $customData */
                 }
             }
-
-            $frontKey = implode('[.]', $setPath);
-
-            $affectedPaths[$frontKey] = implode('.', $setPath);
         }
 
         $languageObj->saveScopeCustom($scope, $customData);
