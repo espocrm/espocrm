@@ -121,6 +121,14 @@ class StatsLoader implements Loader
                                         Expression::column('b.id'),
                                         Expression::column('id'),
                                     ),
+                                    Condition::equal(
+                                        Expression::create('b.action'),
+                                        CampaignLogRecord::ACTION_CLICKED
+                                    ),
+                                    Condition::equal(
+                                        Expression::create('b.isTest'),
+                                        false
+                                    )
                                 )
                             )
                     )
