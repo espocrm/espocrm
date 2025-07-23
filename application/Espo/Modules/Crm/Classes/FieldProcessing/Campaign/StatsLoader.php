@@ -41,6 +41,9 @@ use Espo\Core\FieldProcessing\Loader;
 use Espo\Core\FieldProcessing\Loader\Params;
 use Espo\Core\ORM\EntityManager;
 
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Join;
 use Espo\ORM\Query\SelectBuilder;
 use PDO;
 
@@ -103,22 +106,32 @@ class StatsLoader implements Loader
 
         $clickedCount = $this->entityManager
             ->getRDBRepository(CampaignLogRecord::ENTITY_TYPE)
-            ->where([
-                'campaignId' => $entity->getId(),
-                'action' => CampaignLogRecord::ACTION_CLICKED,
-                'isTest' => false,
-                'id=s' => SelectBuilder::create()
-                    ->select('MIN:id')
+            ->clone(
+                SelectBuilder::create()
                     ->from(CampaignLogRecord::ENTITY_TYPE)
+                    ->leftJoin(
+                        Join::createWithTableTarget(CampaignLogRecord::ENTITY_TYPE, 'b')
+                            ->withConditions(
+                                Condition::and(
+                                    Condition::equal(
+                                        Expression::column('queueItemId'),
+                                        Expression::column('b.queueItemId'),
+                                    ),
+                                    Condition::greater(
+                                        Expression::column('b.id'),
+                                        Expression::column('id'),
+                                    ),
+                                )
+                            )
+                    )
                     ->where([
+                        'campaignId' => $entity->getId(),
                         'action' => CampaignLogRecord::ACTION_CLICKED,
                         'isTest' => false,
-                        'campaignId' => $entity->getId(),
+                        'b.id' => null,
                     ])
-                    ->group('queueItemId')
                     ->build()
-                    ->getRaw(),
-            ])
+            )
             ->count();
 
         $entity->set('clickedCount', $clickedCount);
