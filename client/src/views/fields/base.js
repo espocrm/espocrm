@@ -452,7 +452,7 @@ class BaseFieldView extends View {
         }
 
         if (!this.isReady) {
-            if (!this.mode) {
+            if (!this.mode || !this._initCalled) {
                 this.mode = 'detail';
 
                 return Promise.resolve();
@@ -723,6 +723,12 @@ class BaseFieldView extends View {
         return this.prepare();
     }
 
+    /**
+     * @private
+     * @type {boolean}
+     */
+    _initCalled = false
+
     /** @inheritDoc */
     init() {
         this.validations = Espo.Utils.clone(this.validations);
@@ -800,6 +806,8 @@ class BaseFieldView extends View {
         }
 
         this.mode = undefined;
+
+        this._initCalled = true;
 
         this.wait(
             this.setMode(mode)
