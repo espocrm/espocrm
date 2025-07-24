@@ -88,7 +88,7 @@ class Processor
             throw new Forbidden("No mass-update permission.");
         }
 
-        $service = $this->serviceFactory->create($entityType);
+        $service = $this->serviceFactory->createForUser($entityType, $this->user);
 
         $filteredData = $this->filterData($entityType, $data, $service);
 

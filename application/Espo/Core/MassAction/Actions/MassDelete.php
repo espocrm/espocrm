@@ -71,7 +71,7 @@ class MassDelete implements MassAction
             throw new Forbidden("No mass-update permission.");
         }
 
-        $service = $this->serviceFactory->create($entityType);
+        $service = $this->serviceFactory->createForUser($entityType, $this->user);
 
         $repository = $this->entityManager->getRDBRepository($entityType);
 
