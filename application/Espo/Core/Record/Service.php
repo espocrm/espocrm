@@ -44,6 +44,7 @@ use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Repository\Option\RemoveOption;
 use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\Core\ORM\Repository\Option\SaveOption;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\Access\LinkCheck;
 use Espo\Core\Record\ActionHistory\Action;
 use Espo\Core\Record\ActionHistory\ActionLogger;
@@ -69,6 +70,7 @@ use Espo\Core\Record\Duplicator\EntityDuplicator;
 use Espo\Core\Record\Select\ApplierClassNameListProvider;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Di;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\ORM\Name\Attribute;
@@ -400,6 +402,55 @@ class Service implements Crud,
         $manager = $this->injectableFactory->create(SanitizeManager::class);
 
         $manager->process($this->entityType, $data);
+
+        $this->sanitizeInputForeign($data);
+    }
+
+    private function sanitizeInputForeign(stdClass $data): void
+    {
+        $entityDefs = $this->entityManager->getDefs()->getEntity($this->entityType);
+
+        /** @var array<string, Entity> $map */
+        $map = [];
+
+        foreach ($entityDefs->getFieldList() as $fieldDefs) {
+            if ($fieldDefs->getType() !== FieldType::FOREIGN) {
+                continue;
+            }
+
+            $link = $fieldDefs->getParam(FieldParam::LINK);
+            $foreignField = $fieldDefs->getParam(FieldParam::FIELD);
+
+            if (!$link || !$foreignField) {
+                continue;
+            }
+
+            $foreignEntityType = $entityDefs->tryGetRelation($link)?->tryGetForeignEntityType();
+
+            if (!$foreignEntityType) {
+                continue;
+            }
+
+            $id = $data->{$link . 'Id'} ?? null;
+
+            if (!is_string($id)) {
+                continue;
+            }
+
+            if (!array_key_exists($link, $map)) {
+                $map[$link] = $this->entityManager->getEntityById($foreignEntityType, $id);;
+            }
+
+            $foreignEntity = $map[$link] ?? null;
+
+            if (!$foreignEntity) {
+                continue;
+            }
+
+            $field = $fieldDefs->getName();
+
+            $data->$field = $foreignEntity->get($foreignField);
+        }
     }
 
     protected function filterInput(stdClass $data): void
