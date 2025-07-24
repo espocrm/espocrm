@@ -1,0 +1,64 @@
+{
+  "fields": {
+    "name": "名前",
+    "campaign": "キャンペーン",
+    "isActive": "アクティブです",
+    "subscribeToTargetList": "ターゲットリストを購読する",
+    "subscribeContactToTargetList": "登録する連絡先が存在する場合",
+    "targetList": "ターゲットリスト",
+    "fieldList": "ペイロードフィールド",
+    "optInConfirmation": "ダブルオプトイン",
+    "optInConfirmationEmailTemplate": "オプトイン確認メールテンプレート",
+    "optInConfirmationLifetime": "オプトイン確認の有効期間（時間）",
+    "optInConfirmationSuccessMessage": "オプトイン確認後に表示されるテキスト",
+    "leadSource": "リードソース",
+    "apiKey": " APIキー",
+    "targetTeam": "対象チーム",
+    "exampleRequestMethod": "方法",
+    "exampleRequestPayload": "ペイロード",
+    "createLeadBeforeOptInConfirmation": "確認前にリードを作成する",
+    "duplicateCheck": "重複チェック",
+    "skipOptInConfirmationIfSubscribed": "リードがすでにターゲットリストに含まれている場合は確認をスキップします",
+    "smtpAccount": "SMTPアカウント",
+    "inboundEmail": "グループメールアカウント",
+    "exampleRequestHeaders": "ヘッダー",
+    "phoneNumberCountry": "電話番号の国番号",
+    "fieldParams": "フィールドパラメータ",
+    "formId": "フォームID",
+    "formEnabled": "ウェブフォーム",
+    "formUrl": "フォームURL",
+    "formSuccessText": "フォーム送信後に表示されるテキスト",
+    "formText": "フォームに表示するテキスト",
+    "formSuccessRedirectUrl": "フォーム送信後にリダイレクトするURL",
+    "formLanguage": "フォームで使用される言語",
+    "formFrameAncestors": "フォーム埋め込みに許可されたホスト",
+    "formCaptcha": "キャプチャを使用する",
+    "formTitle": "フォームタイトル",
+    "formTheme": "フォームテーマ"
+  },
+  "links": {
+    "targetList": "ターゲットリスト",
+    "campaign": "キャンペーン",
+    "optInConfirmationEmailTemplate": "オプトイン確認メールテンプレート",
+    "targetTeam": "対象チーム",
+    "logRecords": "ログ",
+    "inboundEmail": "グループメールアカウント"
+  },
+  "labels": {
+    "Create LeadCapture": "エントリポイントの作成",
+    "Generate New API Key": "新しいAPIキーを生成する",
+    "Request": "リクエスト",
+    "Confirm Opt-In": "オプトインの確認",
+    "Generate New Form ID": "新しいフォームIDを生成する",
+    "Web Form": "ウェブフォーム"
+  },
+  "messages": {
+    "generateApiKey": "新しいAPIキーを作成する",
+    "optInConfirmationExpired": "オプトイン確認リンクの有効期限が切れています。",
+    "optInIsConfirmed": "オプトインが確認されました。"
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": " Markdown がサポートされています。",
+    "formCaptcha": "Captcha を使用できるようにするには、**管理** > **統合** で設定する必要があります。"
+  }
+}

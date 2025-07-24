@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "type": "タイプ",
+    "optOut": "オプトアウト",
+    "invalid": "無効",
+    "numeric": "数値"
+  },
+  "presetFilters": {
+    "orphan": "孤児"
+  }
+}

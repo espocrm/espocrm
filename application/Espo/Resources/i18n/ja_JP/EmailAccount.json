@@ -1,0 +1,68 @@
+{
+  "fields": {
+    "name": "名前",
+    "status": "状態",
+    "host": "ホスト",
+    "username": "ユーザー名",
+    "password": "パスワード",
+    "port": "ポート",
+    "monitoredFolders": "監視対象フォルダ",
+    "fetchSince": "取得開始日",
+    "emailAddress": "電子メールアドレス",
+    "sentFolder": "送信済みフォルダ",
+    "storeSentEmails": "送信済みメールを保存する",
+    "keepFetchedEmailsUnread": "取得したメールを未読のままにする",
+    "emailFolder": "フォルダに入れる",
+    "useSmtp": "SMTPを使用する",
+    "smtpHost": "SMTPホスト",
+    "smtpPort": "SMTPポート",
+    "smtpAuth": "SMTP認証",
+    "smtpSecurity": "SMTPセキュリティ",
+    "smtpUsername": "SMTPユーザー名",
+    "smtpPassword": "SMTPパスワード",
+    "useImap": "メールを取得する",
+    "smtpAuthMechanism": "SMTP認証メカニズム",
+    "security": "安全",
+    "connectedAt": "接続先"
+  },
+  "links": {
+    "filters": "フィルター",
+    "emails": "メール"
+  },
+  "options": {
+    "status": {
+      "Active": "アクティブ",
+      "Inactive": "非アクティブ"
+    },
+    "smtpAuthMechanism": {
+      "plain": "無地",
+      "login": "ログイン"
+    },
+    "smtpSecurity": {
+      "TLS": "スタートルズ"
+    },
+    "security": {
+      "TLS": "スタートルズ"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "メールアカウントを作成",
+    "Main": "主要",
+    "Test Connection": "テスト接続",
+    "Send Test Email": "テストメールを送信"
+  },
+  "messages": {
+    "couldNotConnectToImap": "IMAPサーバーに接続できませんでした",
+    "connectionIsOk": "接続は正常です",
+    "imapNotConnected": "[IMAP アカウント](#EmailAccount/view/{id})に接続できませんでした。"
+  },
+  "tooltips": {
+    "monitoredFolders": "複数のフォルダを指定する場合は、カンマで区切ってください。外部メールクライアントから送信されたメールを同期するには、「送信済み」フォルダを追加できます。",
+    "storeSentEmails": "送信されたメールはIMAPサーバーに保存されます。メールアドレス欄は、メールの送信元アドレスと一致する必要があります。",
+    "useSmtp": "電子メールを送信する機能。",
+    "emailAddress": "この電子メール アカウントを送信に使用できるようにするには、ユーザー レコード (割り当てられたユーザー) に同じ電子メール アドレスが必要です。"
+  },
+  "presetFilters": {
+    "active": "アクティブ"
+  }
+}

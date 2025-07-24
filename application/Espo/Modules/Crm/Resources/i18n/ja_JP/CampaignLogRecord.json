@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "action": "アクション",
+    "actionDate": "日付",
+    "data": "データ",
+    "campaign": "キャンペーン",
+    "parent": "ターゲット",
+    "object": "物体",
+    "application": "応用",
+    "queueItem": "キューアイテム",
+    "stringData": "文字列データ",
+    "stringAdditionalData": "文字列追加データ",
+    "isTest": "テスト"
+  },
+  "links": {
+    "queueItem": "キューアイテム",
+    "parent": "親",
+    "object": "物体",
+    "campaign": "キャンペーン"
+  },
+  "options": {
+    "action": {
+      "Sent": "送信済み",
+      "Opened": "オープン",
+      "Opted Out": "オプトアウト",
+      "Bounced": "跳ね返った",
+      "Clicked": "クリックしました",
+      "Lead Created": "リード作成",
+      "Opted In": "オプトイン"
+    }
+  },
+  "labels": {
+    "All": "全て"
+  },
+  "presetFilters": {
+    "sent": "送信済み",
+    "opened": "オープン",
+    "optedOut": "オプトアウト",
+    "bounced": "跳ね返った",
+    "clicked": "クリックしました",
+    "leadCreated": "リード作成",
+    "optedIn": "オプトイン"
+  }
+}

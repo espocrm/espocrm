@@ -1,0 +1,26 @@
+{
+  "labels": {
+    "Create WorkingTimeCalendar": "カレンダーを作成"
+  },
+  "fields": {
+    "timeZone": "タイムゾーン",
+    "timeRanges": "勤務スケジュール",
+    "weekday0": "太陽",
+    "weekday1": "月曜日",
+    "weekday2": "火曜",
+    "weekday3": "水曜",
+    "weekday4": "木曜",
+    "weekday5": "金曜",
+    "weekday6": "土",
+    "weekday0TimeRanges": "日曜日のスケジュール",
+    "weekday1TimeRanges": "月曜日のスケジュール",
+    "weekday2TimeRanges": "火曜スケジュール",
+    "weekday3TimeRanges": "水曜日のスケジュール",
+    "weekday4TimeRanges": "木曜日のスケジュール",
+    "weekday5TimeRanges": "金曜スケジュール",
+    "weekday6TimeRanges": "土曜日のスケジュール"
+  },
+  "links": {
+    "ranges": "例外"
+  }
+}

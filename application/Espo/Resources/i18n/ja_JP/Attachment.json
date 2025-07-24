@@ -1,0 +1,29 @@
+{
+  "insertFromSourceLabels": {
+    "Document": "ドキュメントを挿入"
+  },
+  "fields": {
+    "role": "役割",
+    "related": "関連している",
+    "file": "ファイル",
+    "type": "タイプ",
+    "field": "分野",
+    "sourceId": "ソースID",
+    "storage": "ストレージ",
+    "size": "サイズ（バイト）",
+    "isBeingUploaded": "アップロード中"
+  },
+  "options": {
+    "role": {
+      "Attachment": "添付ファイル",
+      "Inline Attachment": "インライン添付ファイル",
+      "Import File": "ファイルのインポート",
+      "Export File": "ファイルのエクスポート",
+      "Mail Merge": "差し込み印刷",
+      "Mass Pdf": "マスPDF"
+    }
+  },
+  "presetFilters": {
+    "orphan": "孤児"
+  }
+}

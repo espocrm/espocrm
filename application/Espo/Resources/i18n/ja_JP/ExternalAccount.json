@@ -1,0 +1,11 @@
+{
+  "labels": {
+    "Connect": "接続する",
+    "Connected": "接続",
+    "Disconnect": "切断",
+    "Disconnected": "切断"
+  },
+  "messages": {
+    "externalAccountNoConnectDisabled": "統合 '{integration}' の外部アカウントは接続できないため無効になっています。"
+  }
+}

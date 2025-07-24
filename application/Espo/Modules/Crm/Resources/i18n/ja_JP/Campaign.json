@@ -1,0 +1,90 @@
+{
+  "fields": {
+    "name": "名前",
+    "description": "説明",
+    "status": "状態",
+    "type": "タイプ",
+    "startDate": "開始日",
+    "endDate": "終了日",
+    "targetLists": "ターゲットリスト",
+    "excludingTargetLists": "ターゲットリストの除外",
+    "sentCount": "送信済み",
+    "openedCount": "オープン",
+    "clickedCount": "クリックしました",
+    "optedOutCount": "オプトアウト",
+    "bouncedCount": "跳ね返った",
+    "hardBouncedCount": "ハードバウンス",
+    "softBouncedCount": "ソフトバウンス",
+    "leadCreatedCount": "作成されたリード",
+    "revenue": "収益",
+    "revenueConverted": "収益（換算）",
+    "budget": "予算",
+    "budgetConverted": "予算（換算）",
+    "contactsTemplate": "連絡先テンプレート",
+    "leadsTemplate": "リードテンプレート",
+    "accountsTemplate": "アカウントテンプレート",
+    "usersTemplate": "ユーザーテンプレート",
+    "mailMergeOnlyWithAddress": "住所が入力されていないレコードをスキップする",
+    "optedInCount": "オプトイン",
+    "budgetCurrency": "予算通貨"
+  },
+  "links": {
+    "targetLists": "ターゲットリスト",
+    "excludingTargetLists": "ターゲットリストの除外",
+    "accounts": "アカウント",
+    "contacts": "取引先担当者",
+    "leads": "リード",
+    "opportunities": "機会",
+    "campaignLogRecords": "ログ",
+    "massEmails": "大量メール",
+    "trackingUrls": "トラッキングURL",
+    "contactsTemplate": "連絡先テンプレート",
+    "leadsTemplate": "リードテンプレート",
+    "accountsTemplate": "アカウントテンプレート",
+    "usersTemplate": "ユーザーテンプレート"
+  },
+  "options": {
+    "type": {
+      "Email": "メール",
+      "Web": "ウェブ",
+      "Television": "テレビ",
+      "Radio": "無線",
+      "Newsletter": "ニュースレター",
+      "Mail": "郵便",
+      "Informational Email": "情報メール"
+    },
+    "status": {
+      "Planning": "計画",
+      "Active": "アクティブ",
+      "Inactive": "非アクティブ",
+      "Complete": "完了"
+    }
+  },
+  "labels": {
+    "Create Campaign": "キャンペーンを作成",
+    "Target Lists": "ターゲットリスト",
+    "Statistics": "統計",
+    "hard": "難しい",
+    "soft": "柔らかい",
+    "Unsubscribe": "購読解除",
+    "Mass Emails": "大量メール",
+    "Email Templates": "メールテンプレート",
+    "Unsubscribe again": "再度登録解除",
+    "Subscribe again": "再度購読する",
+    "Create Target List": "ターゲットリストを作成する",
+    "Mail Merge": "差し込み印刷",
+    "Generate Mail Merge PDF": "差し込み印刷PDFを生成"
+  },
+  "presetFilters": {
+    "active": "アクティブ"
+  },
+  "messages": {
+    "unsubscribed": "メーリングリストから登録解除されました。",
+    "subscribedAgain": "再度登録されました。",
+    "cannotChangeType": "タイプを変更できません。"
+  },
+  "tooltips": {
+    "targetLists": "メッセージを受信するターゲット。",
+    "excludingTargetLists": "メッセージを受信してはいけないターゲット。"
+  }
+}

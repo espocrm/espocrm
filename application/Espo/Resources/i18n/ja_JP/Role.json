@@ -1,0 +1,71 @@
+{
+  "fields": {
+    "name": "名前",
+    "roles": "役割",
+    "assignmentPermission": "割り当て権限",
+    "userPermission": "ユーザー権限",
+    "portalPermission": "ポータル権限",
+    "groupEmailAccountPermission": "グループメールアカウントの権限",
+    "exportPermission": "輸出許可",
+    "dataPrivacyPermission": "データプライバシー許可",
+    "massUpdatePermission": "一括更新権限",
+    "followerManagementPermission": "フォロワー管理権限",
+    "data": "データ",
+    "fieldData": "フィールドデータ",
+    "messagePermission": "メッセージの許可",
+    "auditPermission": "監査権限",
+    "mentionPermission": "メンション許可",
+    "userCalendarPermission": "ユーザーカレンダー権限"
+  },
+  "links": {
+    "users": "ユーザー",
+    "teams": "チーム"
+  },
+  "labels": {
+    "Access": "アクセス",
+    "Create Role": "ロールの作成",
+    "Scope Level": "スコープレベル",
+    "Field Level": "フィールドレベル"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "未設定",
+      "enabled": "有効",
+      "disabled": "無効"
+    },
+    "levelList": {
+      "all": "全て",
+      "team": "チーム",
+      "account": "アカウント",
+      "contact": "取引先担当者",
+      "own": "自分の",
+      "no": "いいえ",
+      "yes": "はい",
+      "not-set": "未設定"
+    }
+  },
+  "actions": {
+    "read": "読む",
+    "edit": "編集",
+    "delete": "消去",
+    "stream": "ストリーム",
+    "create": "作成する"
+  },
+  "messages": {
+    "changesAfterClearCache": "アクセス制御のすべての変更は、キャッシュがクリアされた後に適用されます。"
+  },
+  "tooltips": {
+    "dataPrivacyPermission": "個人データの表示と消去を許可します。",
+    "followerManagementPermission": "特定のレコードのフォロワーを管理できます。",
+    "messagePermission": "他のユーザーにメッセージを送信できます。 * all – 全員に送信できます * team – チームメイトにのみ送信できます * no – 送信できません",
+    "assignmentPermission": "他のユーザーにレコードを割り当てることができます。 * all – 制限なし * team – チームメイトにのみ割り当て可能 * no – 自分にのみ割り当て可能",
+    "portalPermission": "ポータル情報へのアクセス、ポータル ユーザーにメッセージを投稿する機能。",
+    "groupEmailAccountPermission": "グループ電子メール アカウントへのアクセス、グループ SMTP から電子メールを送信する機能。",
+    "exportPermission": "レコードをエクスポートできます。",
+    "massUpdatePermission": "レコードの一括更新を実行する機能。",
+    "auditPermission": "監査ログを表示できます。",
+    "mentionPermission": "ストリーム内の他のユーザーをメンションできます。 * all – 全員をメンションできます * team – チームメイトのみをメンションできます * no – メンションできません",
+    "userPermission": "他のユーザーのストリームを表示できます。特定のレコードに対する他のユーザーのアクセスレベルを表示できます。",
+    "userCalendarPermission": "他のユーザーのカレンダーを表示できます。"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "links": {
+    "users": "ユーザー"
+  },
+  "labels": {
+    "Access": "アクセス",
+    "Create PortalRole": "ポータルロールの作成",
+    "Scope Level": "スコープレベル",
+    "Field Level": "フィールドレベル"
+  },
+  "fields": {
+    "exportPermission": "輸出許可",
+    "massUpdatePermission": "一括更新権限",
+    "data": "データ",
+    "fieldData": "フィールドデータ"
+  }
+}

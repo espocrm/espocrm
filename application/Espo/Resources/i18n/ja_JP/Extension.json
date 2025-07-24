@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "name": "名前",
+    "version": "バージョン",
+    "description": "説明",
+    "isInstalled": "インストール済み",
+    "checkVersionUrl": "新しいバージョンを確認するためのURL"
+  },
+  "labels": {
+    "Uninstall": "アンインストール",
+    "Install": "インストール"
+  },
+  "messages": {
+    "uninstalled": "拡張機能 {name} がアンインストールされました",
+    "fileExceedsMaxUploadSize": "ファイルサイズが最大アップロードサイズ {maxSize} を超えています。`post_max_size` を増やすか、CLI 経由で拡張機能をインストールすることを検討してください。"
+  }
+}

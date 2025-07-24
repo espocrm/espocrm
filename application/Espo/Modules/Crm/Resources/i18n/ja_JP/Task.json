@@ -1,0 +1,56 @@
+{
+  "fields": {
+    "name": "名前",
+    "parent": "親",
+    "status": "状態",
+    "dateStart": "開始日",
+    "dateEnd": "期日",
+    "dateStartDate": "開始日（終日）",
+    "dateEndDate": "日付終了（終日）",
+    "priority": "優先度",
+    "description": "説明",
+    "isOverdue": "期限が過ぎている",
+    "account": "アカウント",
+    "dateCompleted": "完了日",
+    "attachments": "添付ファイル",
+    "reminders": "リマインダー",
+    "contact": "接触",
+    "originalEmail": "元のメール"
+  },
+  "links": {
+    "attachments": "添付ファイル",
+    "account": "アカウント",
+    "contact": "接触",
+    "email": "メール"
+  },
+  "options": {
+    "status": {
+      "Not Started": "開始されていません",
+      "Started": "開始",
+      "Completed": "完了",
+      "Canceled": "キャンセル",
+      "Deferred": "延期"
+    },
+    "priority": {
+      "Low": "低い",
+      "Normal": "普通",
+      "High": "高い",
+      "Urgent": "緊急"
+    }
+  },
+  "labels": {
+    "Create Task": "タスクを作成",
+    "Complete": "完了",
+    "overdue": "延滞"
+  },
+  "presetFilters": {
+    "completed": "完了",
+    "todays": "今日の",
+    "overdue": "延滞",
+    "deferred": "延期",
+    "actual": "開ける"
+  },
+  "nameOptions": {
+    "replyToEmail": "メールに返信"
+  }
+}

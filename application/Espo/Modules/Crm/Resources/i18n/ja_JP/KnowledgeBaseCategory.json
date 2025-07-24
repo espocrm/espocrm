@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create KnowledgeBaseCategory": "カテゴリを作成",
+    "Manage Categories": "カテゴリを管理する",
+    "Articles": "記事"
+  },
+  "links": {
+    "articles": "記事"
+  }
+}

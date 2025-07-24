@@ -1,0 +1,43 @@
+{
+  "labels": {
+    "Create Document": "ドキュメントを作成",
+    "Details": "詳細"
+  },
+  "fields": {
+    "name": "名前",
+    "status": "状態",
+    "file": "ファイル",
+    "type": "タイプ",
+    "publishDate": "公開日",
+    "expirationDate": "有効期限",
+    "description": "説明",
+    "accounts": "アカウント",
+    "folder": "フォルダ"
+  },
+  "links": {
+    "accounts": "アカウント",
+    "opportunities": "機会",
+    "folder": "フォルダ",
+    "leads": "リード",
+    "contacts": "連絡先"
+  },
+  "options": {
+    "status": {
+      "Active": "アクティブ",
+      "Draft": "下書き",
+      "Expired": "期限切れ",
+      "Canceled": "キャンセル"
+    },
+    "type": {
+      "": "なし",
+      "Contract": "契約",
+      "NDA": "秘密保持契約",
+      "EULA": "エンドユーザー使用許諾契約書",
+      "License Agreement": "ライセンス契約"
+    }
+  },
+  "presetFilters": {
+    "active": "アクティブ",
+    "draft": "下書き"
+  }
+}

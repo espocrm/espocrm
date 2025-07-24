@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "event": "イベント",
+    "webhook": "ウェブフック",
+    "target": "ターゲット",
+    "data": "データ",
+    "status": "状態",
+    "processedAt": "処理場所",
+    "attempts": "試み",
+    "processAt": "プロセス"
+  },
+  "links": {
+    "webhook": "ウェブフック"
+  },
+  "options": {
+    "status": {
+      "Pending": "保留中",
+      "Success": "成功",
+      "Failed": "失敗した"
+    }
+  }
+}

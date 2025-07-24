@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "futureDays": "次のX日",
+    "useLastStage": "最後に到達したステージでグループ化",
+    "team": "チーム"
+  }
+}

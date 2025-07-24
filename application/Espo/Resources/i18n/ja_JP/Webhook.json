@@ -1,0 +1,16 @@
+{
+  "labels": {
+    "Create Webhook": "Webhookを作成する"
+  },
+  "fields": {
+    "event": "イベント",
+    "isActive": "アクティブです",
+    "user": "APIユーザー",
+    "entityType": "エンティティタイプ",
+    "field": "分野",
+    "secretKey": "秘密鍵"
+  },
+  "links": {
+    "user": "ユーザー"
+  }
+}

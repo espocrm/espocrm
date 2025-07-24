@@ -1,0 +1,31 @@
+{
+  "fields": {
+    "name": "名前",
+    "status": "状態",
+    "body": "体",
+    "subject": "主題",
+    "attachments": "添付ファイル",
+    "oneOff": "一度限り",
+    "category": "カテゴリ",
+    "insertField": "プレースホルダー",
+    "isHtml": " HTML"
+  },
+  "labels": {
+    "Create EmailTemplate": "メールテンプレートを作成する",
+    "Info": "情報",
+    "Available placeholders": "利用可能なプレースホルダー"
+  },
+  "tooltips": {
+    "oneOff": "このテンプレートを一度だけ使用する場合はチェックを入れてください。　例　一括メール送信など。"
+  },
+  "placeholderTexts": {
+    "optOutLink": "登録解除リンク",
+    "today": "今日の日付",
+    "now": "現在の日付と時刻",
+    "currentYear": "今年",
+    "optOutUrl": "登録解除リンクのURL"
+  },
+  "messages": {
+    "infoText": "使用可能なプレースホルダー: {optOutUrl} &#8211; 登録解除リンクの URL; {optOutLink} &#8211; 登録解除リンク。"
+  }
+}

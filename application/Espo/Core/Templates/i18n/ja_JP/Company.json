@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "billingAddress": "請求先住所",
+    "shippingAddress": "お届け先の住所",
+    "website": " Webサイト"
+  },
+  "links": {
+    "meetings": "会議",
+    "calls": "通話",
+    "tasks": "タスク"
+  },
+  "labels": {
+    "Create {entityType}": "{entityTypeTranslated} を作成する"
+  }
+}

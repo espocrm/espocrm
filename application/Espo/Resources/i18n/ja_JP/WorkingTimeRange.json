@@ -1,0 +1,31 @@
+{
+  "labels": {
+    "Calendars": "カレンダー",
+    "Create WorkingTimeRange": "例外を作成"
+  },
+  "fields": {
+    "timeRanges": "スケジュール",
+    "dateStart": "開始日",
+    "dateEnd": "終了日",
+    "type": "タイプ",
+    "calendars": "カレンダー",
+    "users": "ユーザー"
+  },
+  "links": {
+    "calendars": "カレンダー",
+    "users": "ユーザー"
+  },
+  "options": {
+    "type": {
+      "Non-working": "非稼働",
+      "Working": "働く"
+    }
+  },
+  "presetFilters": {
+    "actual": "実際の"
+  },
+  "tooltips": {
+    "calendars": "例外を適用するカレンダー。選択したカレンダーのすべてのユーザーに例外が適用されます。特定のユーザーのみに例外を適用する場合は、このフィールドを空白のままにしてください。",
+    "users": "例外を適用する特定のユーザー。"
+  }
+}

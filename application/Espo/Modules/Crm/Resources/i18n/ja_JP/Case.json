@@ -1,0 +1,63 @@
+{
+  "fields": {
+    "name": "名前",
+    "number": "番号",
+    "status": "状態",
+    "account": "アカウント",
+    "contact": "取引先担当者",
+    "contacts": "取引先担当者",
+    "priority": "優先度",
+    "type": "タイプ",
+    "description": "説明",
+    "lead": "鉛",
+    "attachments": "添付ファイル",
+    "inboundEmail": "グループメールアカウント",
+    "originalEmail": "元のメール",
+    "isInternal": "ポータルから隠された"
+  },
+  "links": {
+    "account": "アカウント",
+    "contact": "取引先担当者（メイン）",
+    "Contacts": "取引先担当者",
+    "meetings": "会議",
+    "calls": "通話",
+    "tasks": "タスク",
+    "emails": "メール",
+    "articles": "ナレッジベースの記事",
+    "lead": "鉛",
+    "attachments": "添付ファイル",
+    "inboundEmail": "グループメールアカウント"
+  },
+  "options": {
+    "status": {
+      "New": "新しい",
+      "Assigned": "割り当て済み",
+      "Pending": "保留中",
+      "Closed": "閉鎖",
+      "Rejected": "拒否",
+      "Duplicate": "重複"
+    },
+    "priority": {
+      "Low": "低い",
+      "Normal": "普通",
+      "High": "高い",
+      "Urgent": "緊急"
+    },
+    "type": {
+      "Question": "質問",
+      "Incident": "事件",
+      "Problem": "問題"
+    }
+  },
+  "labels": {
+    "Create Case": "ケースを作成",
+    "Close": "近い",
+    "Reject": "拒否する",
+    "Closed": "閉鎖",
+    "Rejected": "拒否"
+  },
+  "presetFilters": {
+    "open": "開ける",
+    "closed": "閉鎖"
+  }
+}
