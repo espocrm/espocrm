@@ -320,11 +320,12 @@ class FieldManagerEditView extends View {
                         return !(this.globalRestriction.readOnly && item.name === 'required');
                     });
 
-                const customizationDisabled = this.getMetadata()
-                    .get(['entityDefs', this.scope, 'fields', this.field, 'customizationDisabled']);
+                /** @type {Record} */
+                const fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field]) ?? {};
 
                 if (
-                    customizationDisabled ||
+                    fieldDefs.customizationDisabled ||
+                    fieldDefs.utility ||
                     this.globalRestriction.forbidden
                 ) {
                     this.paramList = [];

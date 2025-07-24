@@ -98,9 +98,23 @@ class FieldManagerListView extends View {
                     isCustom: defs.isCustom || false,
                     type: defs.type,
                     label: this.translate(field, 'fields', this.scope),
-                    isEditable: !defs.customizationDisabled && this.isCustomizable,
+                    isEditable: !defs.customizationDisabled &&
+                        !defs.utility &&
+                        this.isCustomizable,
                 });
             });
+
+            this.fieldDefsArray = this.fieldDefsArray.sort((a, b) => {
+                if (a.isEditable && !b.isEditable) {
+                    return -1;
+                }
+
+                if (!a.isEditable && b.isEditable) {
+                    return 1;
+                }
+
+                return 0;
+            })
         });
     }
 
