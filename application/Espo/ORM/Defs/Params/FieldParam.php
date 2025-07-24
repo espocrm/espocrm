@@ -93,4 +93,14 @@ class FieldParam
      * Dependee attributes.
      */
     public const DEPENDEE_ATTRIBUTE_LIST = 'dependeeAttributeList';
+
+    /**
+     * Foreign link.
+     */
+    public const LINK = 'link';
+
+    /**
+     * Foreign field.
+     */
+    public const FIELD = 'field';
 }
