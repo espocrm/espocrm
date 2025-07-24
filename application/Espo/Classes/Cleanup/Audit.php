@@ -71,7 +71,7 @@ class Audit implements Cleanup
             ->where([
                 'parentType' => $entityType,
                 'createdAt<' => $this->getBefore()->toString(),
-                'type' => [Note::TYPE_UPDATE, Note::TYPE_STATUS],
+                'type' => [Note::TYPE_UPDATE],
             ])
             ->build();
 

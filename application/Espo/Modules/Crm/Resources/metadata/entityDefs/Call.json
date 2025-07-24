@@ -263,7 +263,8 @@
             },
             "additionalAttributeList": ["columns"],
             "orderBy": "name",
-            "duplicatorClassName": "Espo\\Modules\\Crm\\Classes\\FieldDuplicators\\Meeting\\Attendees"
+            "duplicatorClassName": "Espo\\Modules\\Crm\\Classes\\FieldDuplicators\\Meeting\\Attendees",
+            "audited": true
         },
         "contacts": {
             "type": "linkMultiple",
@@ -275,7 +276,8 @@
             },
             "additionalAttributeList": ["columns"],
             "orderBy": "name",
-            "duplicatorClassName": "Espo\\Modules\\Crm\\Classes\\FieldDuplicators\\Meeting\\Attendees"
+            "duplicatorClassName": "Espo\\Modules\\Crm\\Classes\\FieldDuplicators\\Meeting\\Attendees",
+            "audited": true
         },
         "leads": {
             "type": "linkMultiple",
@@ -287,7 +289,8 @@
             },
             "additionalAttributeList": ["columns"],
             "orderBy": "name",
-            "duplicatorClassName": "Espo\\Modules\\Crm\\Classes\\FieldDuplicators\\Meeting\\Attendees"
+            "duplicatorClassName": "Espo\\Modules\\Crm\\Classes\\FieldDuplicators\\Meeting\\Attendees",
+            "audited": true
         },
         "createdAt": {
             "type": "datetime",

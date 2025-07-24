@@ -31,7 +31,9 @@
     "formSuccessRedirectUrl": "URL адрес за пренасочване след изпращане на формата",
     "formLanguage": "Език, използван във формата",
     "formFrameAncestors": "Разрешени хостове за вграждане на формуляр (iframe)",
-    "formCaptcha": "Активиране на Captcha"
+    "formCaptcha": "Активиране на Captcha",
+    "formTitle": "Заглавие на формата",
+    "formTheme": "Тема на формата"
   },
   "links": {
     "targetList": "Целеви списък",

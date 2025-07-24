@@ -43,13 +43,19 @@ use PHPUnit\Framework\TestCase;
 
 class BoolFilterListApplierTest extends TestCase
 {
+    private $boolFilterFactory;
+    private $user;
+    private $selectManager;
+    private $queryBuilder;
+    private $entityType;
+    private $applier;
+
     protected function setUp(): void
     {
         $this->boolFilterFactory = $this->createMock(BoolFilterFactory::class);
         $this->user = $this->createMock(User::class);
         $this->selectManager = $this->createMock(SelectManager::class);
         $this->queryBuilder = $this->createMock(QueryBuilder::class);
-        $this->orGroupBuilder = $this->createMock(OrGroupBuilder::class);
 
         $this->entityType = 'Test';
 

@@ -36,10 +36,11 @@ use Espo\Core\Log\Handler\EspoRotatingFileHandler;
 use Espo\Core\Log\HandlerListLoader;
 
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LogLevel;
 
 class HandlerListLoaderTest extends TestCase
 {
+    private $injectableFactory;
+
     protected function setUp() : void
     {
         $this->injectableFactory = $this->getMockBuilder(InjectableFactory::class)

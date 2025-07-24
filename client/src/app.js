@@ -315,9 +315,9 @@ class App {
 
     /**
      * @private
-     * @type {module:web-socket-manager|null}
+     * @type {module:web-socket-manager}
      */
-    webSocketManager = null
+    webSocketManager
 
     /**
      * @private
@@ -436,10 +436,7 @@ class App {
         this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata, this.themeName);
         this.modelFactory = new ModelFactory(this.metadata);
         this.collectionFactory = new CollectionFactory(this.modelFactory, this.settings, this.metadata);
-
-        if (this.settings.get('useWebSocket')) {
-            this.webSocketManager = new WebSocketManager(this.settings);
-        }
+        this.webSocketManager = new WebSocketManager(this.settings);
 
         container.set(AclManager, this.acl);
         container.set(User, this.user);
@@ -494,10 +491,13 @@ class App {
 
         if (this.anotherUser) {
             this.viewHelper.webSocketManager = null;
-            this.webSocketManager = null;
         }
 
-        if (this.webSocketManager) {
+        if (this.settings.get('useWebSocket') && !this.anotherUser) {
+            this.webSocketManager.setEnabled();
+        }
+
+        if (this.webSocketManager.isEnabled()) {
             this.webSocketManager.connect(this.auth, this.user.id);
         }
 
@@ -767,12 +767,13 @@ class App {
         helper.fieldManager = this.fieldManager;
         helper.cache = this.cache;
         helper.themeManager = this.themeManager;
-        helper.webSocketManager = this.webSocketManager;
         helper.numberUtil = this.numberUtil;
         helper.pageTitle = new PageTitle(this.settings);
         helper.basePath = this.basePath;
         helper.appParams = this.appParams;
         helper.broadcastChannel = this.broadcastChannel;
+
+        helper.webSocketManager = this.settings.get('useWebSocket') ? this.webSocketManager : null;
 
         container.set(ViewHelper, this.viewHelper);
         container.set(LayoutManager, helper.layoutManager);
@@ -940,7 +941,7 @@ class App {
             }
         }
 
-        if (this.webSocketManager) {
+        if (this.webSocketManager.isEnabled()) {
             this.webSocketManager.close();
         }
 

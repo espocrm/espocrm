@@ -36,12 +36,17 @@
     "calendarScrollHour": "Календар - Скролване до час",
     "defaultRemindersTask": "Напомняния по подразбиране за задачи",
     "addCustomTabs": "Добавете персонализирани табове",
-    "reactionNotifications": "Известия в приложението за реакции"
+    "reactionNotifications": "Известия в приложението за реакции",
+    "pageContentWidth": "Ширина на екрана"
   },
   "options": {
     "weekStart": {
       "0": "Неделя",
       "1": "Понеделник"
+    },
+    "pageContentWidth": {
+      "": "Нормално",
+      "Wide": "Широко"
     }
   },
   "labels": {

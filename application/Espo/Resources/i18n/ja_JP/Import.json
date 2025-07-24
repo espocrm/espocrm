@@ -1,0 +1,112 @@
+{
+  "labels": {
+    "Revert Import": "インポートを元に戻す",
+    "Return to Import": "インポートに戻る",
+    "Run Import": "インポートを実行",
+    "Back": "戻る",
+    "Field Mapping": "フィールドマッピング",
+    "Default Values": "デフォルト値",
+    "Add Field": "フィールドを追加",
+    "Created": "作成",
+    "Updated": "更新",
+    "Result": "結果",
+    "Show records": "記録を表示",
+    "Remove Duplicates": "重複を削除",
+    "importedCount": "インポート済み（件数）",
+    "duplicateCount": "重複（数）",
+    "updatedCount": "更新（件数）",
+    "Create Only": "作成のみ",
+    "Create and Update": "作成と更新",
+    "Update Only": "更新のみ",
+    "Update by": "更新者",
+    "Set as Not Duplicate": "重複しないように設定",
+    "File (CSV)": "ファイル（CSV）",
+    "First Row Value": "最初の行の値",
+    "Skip": "スキップ",
+    "Header Row Value": "ヘッダー行の値",
+    "Field": "分野",
+    "What to Import?": "何をインポートしますか?",
+    "Entity Type": "エンティティタイプ",
+    "What to do?": "何をするか？",
+    "Properties": "プロパティ",
+    "Header Row": "ヘッダー行",
+    "Person Name Format": "人名の形式",
+    "John Smith": "ジョン・スミス",
+    "Smith John": "スミス・ジョン",
+    "Smith, John": "スミス、ジョン",
+    "Field Delimiter": "フィールド区切り文字",
+    "Date Format": "日付形式",
+    "Decimal Mark": "小数点",
+    "Text Qualifier": "テキスト修飾子",
+    "Time Format": "時刻形式",
+    "Currency": "通貨",
+    "Preview": "プレビュー",
+    "Next": "次",
+    "Step 1": "ステップ1",
+    "Step 2": "ステップ2",
+    "Double Quote": "二重引用符",
+    "Single Quote": "一重引用符",
+    "Imported": "輸入品",
+    "Duplicates": "重複",
+    "Skip searching for duplicates": "重複の検索をスキップ",
+    "Timezone": "タイムゾーン",
+    "Remove Import Log": "インポートログを削除",
+    "New Import": "新規輸入",
+    "Import Results": "インポート結果",
+    "Silent Mode": "サイレントモード",
+    "New import with same params": "同じパラメータを持つ新しいインポート",
+    "Run Manually": "手動で実行",
+    "Export": "輸出"
+  },
+  "messages": {
+    "utf8": "UTF-8でエンコードされている必要があります",
+    "duplicatesRemoved": "重複を削除しました",
+    "inIdle": "アイドル時に実行（ビッグデータ用、cron経由）",
+    "revert": "これにより、インポートされたすべてのレコードが完全に削除されます。",
+    "removeDuplicates": "これにより、重複として認識されたすべてのインポートされたレコードが完全に削除されます。",
+    "confirmRevert": "インポートしたすべてのレコードが完全に削除されます。よろしいですか？",
+    "confirmRemoveDuplicates": "これにより、重複と認識されたすべてのインポート済みレコードが完全に削除されます。よろしいですか？",
+    "removeImportLog": "これによりインポートログが削除されます。インポートされたすべての記録は保持されます。インポートに問題がないことが確実な場合は、このオプションを使用してください。",
+    "confirmRemoveImportLog": "インポートログが削除されます。インポートされたすべてのレコードは保持されます。インポート結果を元に戻すことはできません。よろしいですか？",
+    "importRunning": "インポートを実行中...",
+    "noErrors": "エラーなし"
+  },
+  "fields": {
+    "file": "ファイル",
+    "entityType": "エンティティタイプ",
+    "imported": "インポートされたレコード",
+    "duplicates": "重複レコード",
+    "updated": "更新された記録",
+    "status": "状態"
+  },
+  "options": {
+    "status": {
+      "Failed": "失敗した",
+      "In Process": "処理中",
+      "Complete": "完了",
+      "Standby": "待機する",
+      "Pending": "保留中"
+    },
+    "personNameFormat": {
+      "f l": "名 姓",
+      "l f": "姓 名",
+      "f m l": "名 ミドルネーム 姓",
+      "l f m": "姓 名 ミドルネーム",
+      "l, f": "最後、最初"
+    }
+  },
+  "strings": {
+    "commandToRun": "実行するコマンド（CLIから）",
+    "saveAsDefault": "デフォルトとして保存"
+  },
+  "tooltips": {
+    "manualMode": "チェックを入れると、CLIから手動でインポートを実行する必要があります。インポートの設定後、コマンドが表示されます。",
+    "silentMode": "保存後のスクリプトの大部分がスキップされ、ストリームノートは作成されません。インポートが高速化されます。"
+  },
+  "links": {
+    "errors": "エラー"
+  },
+  "params": {
+    "phoneNumberCountry": "電話番号の国番号"
+  }
+}

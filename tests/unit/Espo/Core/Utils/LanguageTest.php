@@ -29,6 +29,7 @@
 
 namespace tests\unit\Espo\Core\Utils;
 
+use PHPUnit\Framework\TestCase;
 use tests\unit\ReflectionHelper;
 
 use Espo\Core\Utils\Metadata;
@@ -42,11 +43,10 @@ use Espo\Core\Utils\Resource\Reader;
 use Espo\Core\Utils\Resource\PathProvider;
 
 
-class LanguageTest extends \PHPUnit\Framework\TestCase
+class LanguageTest extends TestCase
 {
-    protected $object;
-
-    protected $reflection;
+    private $object;
+    private $reflection;
 
     protected $corePath = 'tests/unit/testData/Utils/I18n/Espo/Resources/';
     protected $modulePath = 'tests/unit/testData/Utils/I18n/Espo/Modules/{*}/Resources/';
@@ -54,21 +54,20 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->fileManager = new FileManager();
+        $fileManager = new FileManager();
 
-        $this->dataCache = $this->createMock(DataCache::class);
+        $dataCache = $this->createMock(DataCache::class);
+        $metadata = $this->createMock(Metadata::class);
 
-        $this->metadata = $this->createMock(Metadata::class);
-
-        $this->metadata->expects($this->any())
+        $metadata->expects($this->any())
             ->method('getModuleList')
-            ->will($this->returnValue(
+            ->willReturn(
                 [
                     'Crm',
                 ]
-            ));
+            );
 
-        $module = new Module($this->fileManager);
+        $module = new Module($fileManager);
 
         $pathProvider = $this->createMock(PathProvider::class);
 
@@ -92,16 +91,16 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
                 }
             );
 
-        $unifierObj = new UnifierObj($this->fileManager, $module, $pathProvider);
-        $unifier = new Unifier($this->fileManager, $module, $pathProvider);
+        $unifierObj = new UnifierObj($fileManager, $module, $pathProvider);
+        $unifier = new Unifier($fileManager, $module, $pathProvider);
 
         $reader = new Reader($unifier, $unifierObj);
 
         $this->object = new Language(
             null,
-            $this->fileManager,
+            $fileManager,
             $reader,
-            $this->dataCache,
+            $dataCache,
             false
         );
 

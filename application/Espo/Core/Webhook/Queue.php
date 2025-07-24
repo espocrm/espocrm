@@ -30,6 +30,7 @@
 namespace Espo\Core\Webhook;
 
 use Espo\Core\Field\DateTime;
+use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
 use Espo\Entities\User;
 use Espo\Entities\Webhook;
@@ -63,7 +64,7 @@ class Queue
         private Config $config,
         private EntityManager $entityManager,
         private AclManager $aclManager,
-        private Log $log
+        private Log $log,
     ) {}
 
     public function process(): void
@@ -76,15 +77,14 @@ class Queue
     {
         $portionSize = $this->config->get('webhookQueueEventPortionSize', self::EVENT_PORTION_SIZE);
 
-        /** @var iterable<WebhookEventQueueItem> $itemList */
-        $itemList = $this->entityManager
-            ->getRDBRepository(WebhookEventQueueItem::ENTITY_TYPE)
+        $items = $this->entityManager
+            ->getRDBRepositoryByClass(WebhookEventQueueItem::class)
             ->where(['isProcessed' => false])
             ->order('number')
             ->limit(0, $portionSize)
             ->find();
 
-        foreach ($itemList as $item) {
+        foreach ($items as $item) {
             $this->createQueueFromEvent($item);
 
             $item->setIsProcessed();
@@ -92,27 +92,25 @@ class Queue
         }
     }
 
-    protected function createQueueFromEvent(WebhookEventQueueItem $item): void
+    protected function createQueueFromEvent(WebhookEventQueueItem $eventItem): void
     {
-        $webhookList = $this->entityManager
-            ->getRDBRepository(Webhook::ENTITY_TYPE)
+        if (!$eventItem->getTargetId() || !$eventItem->getTargetType()) {
+            return;
+        }
+
+        $target = LinkParent::create($eventItem->getTargetType(), $eventItem->getTargetId());
+
+        $webhooks = $this->entityManager
+            ->getRDBRepositoryByClass(Webhook::class)
             ->where([
-                'event' => $item->getEvent(),
+                'event' => $eventItem->getEvent(),
                 'isActive' => true,
             ])
             ->order(Field::CREATED_AT)
             ->find();
 
-        foreach ($webhookList as $webhook) {
-            $this->entityManager->createEntity(WebhookQueueItem::ENTITY_TYPE, [
-                'webhookId' => $webhook->getId(),
-                'event' => $item->getEvent(),
-                'targetId' => $item->getTargetId(),
-                'targetType' => $item->getTargetType(),
-                'status' => WebhookQueueItem::STATUS_PENDING,
-                'data' => $item->getData(),
-                'attempts' => 0,
-            ]);
+        foreach ($webhooks as $webhook) {
+            $this->createItem($eventItem, $webhook, $target);
         }
     }
 
@@ -120,9 +118,12 @@ class Queue
     {
         $portionSize = $this->config->get('webhookQueuePortionSize', self::PORTION_SIZE);
 
-        $groupedItemList = $this->entityManager
-            ->getRDBRepository(WebhookQueueItem::ENTITY_TYPE)
-            ->select(['webhookId', 'number'])
+        $groupedItems = $this->entityManager
+            ->getRDBRepositoryByClass(WebhookQueueItem::class)
+            ->select([
+                'webhookId',
+                'number',
+            ])
             ->where(
                 Cond::in(
                     Cond::column('number'),
@@ -145,8 +146,8 @@ class Queue
             ->order('number')
             ->find();
 
-        foreach ($groupedItemList as $groupItem) {
-            $this->processSendingGroup($groupItem->get('webhookId'));
+        foreach ($groupedItems as $groupItem) {
+            $this->processSendingGroup($groupItem->getWebhookId());
         }
     }
 
@@ -154,8 +155,8 @@ class Queue
     {
         $batchSize = $this->config->get('webhookBatchSize', self::BATCH_SIZE);
 
-        $itemList = $this->entityManager
-            ->getRDBRepository(WebhookQueueItem::ENTITY_TYPE)
+        $items = $this->entityManager
+            ->getRDBRepositoryByClass(WebhookQueueItem::class)
             ->where([
                 'webhookId' => $webhookId,
                 'status' => WebhookQueueItem::STATUS_PENDING,
@@ -171,7 +172,7 @@ class Queue
         $webhook = $this->entityManager->getRDBRepositoryByClass(Webhook::class)->getById($webhookId);
 
         if (!$webhook || !$webhook->isActive()) {
-            foreach ($itemList as $item) {
+            foreach ($items as $item) {
                 $this->deleteQueueItem($item);
             }
 
@@ -186,7 +187,7 @@ class Queue
             $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getById($webhook->getUserId());
 
             if (!$user) {
-                foreach ($itemList as $item) {
+                foreach ($items as $item) {
                     $this->deleteQueueItem($item);
                 }
 
@@ -201,7 +202,7 @@ class Queue
 
         $dataList = [];
 
-        foreach ($itemList as $item) {
+        foreach ($items as $item) {
             $data = $this->prepareItemData($item, $user, $forbiddenAttributeList);
 
             if ($data === null) {
@@ -213,7 +214,7 @@ class Queue
             $dataList[] = $data;
         }
 
-        if (empty($dataList)) {
+        if ($dataList === []) {
             return;
         }
 
@@ -336,8 +337,8 @@ class Queue
 
     protected function dropWebhook(Webhook $webhook): void
     {
-        $itemList = $this->entityManager
-            ->getRDBRepository(WebhookQueueItem::ENTITY_TYPE)
+        $items = $this->entityManager
+            ->getRDBRepositoryByClass(WebhookQueueItem::class)
             ->where([
                 'status' => WebhookQueueItem::STATUS_PENDING,
                 'webhookId' => $webhook->getId(),
@@ -345,7 +346,7 @@ class Queue
             ->order('number')
             ->find();
 
-        foreach ($itemList as $item) {
+        foreach ($items as $item) {
             $this->deleteQueueItem($item);
         }
 
@@ -354,7 +355,6 @@ class Queue
 
     protected function succeedQueueItem(WebhookQueueItem $item): void
     {
-
         $item
             ->setAttempts($item->getAttempts() + 1)
             ->setStatus(WebhookQueueItem::STATUS_SUCCESS)
@@ -383,6 +383,29 @@ class Queue
             $item->setStatus(WebhookQueueItem::STATUS_FAILED);
             $item->setProcessAt(null);
         }
+
+        $this->entityManager->saveEntity($item);
+    }
+
+    private function createItem(WebhookEventQueueItem $eventItem, Webhook $webhook, LinkParent $target): void
+    {
+        if (
+            $webhook->skipOwn() &&
+            $webhook->getUserId() &&
+            $eventItem->getUserId() === $webhook->getUserId()
+        ) {
+            return;
+        }
+
+        $item = $this->entityManager->getRDBRepositoryByClass(WebhookQueueItem::class)->getNew();
+
+        $item
+            ->setEvent($eventItem->getEvent())
+            ->setWebhook($webhook)
+            ->setTarget($target)
+            ->setStatus(WebhookQueueItem::STATUS_PENDING)
+            ->setAttempts(0)
+            ->setData($eventItem->getData());
 
         $this->entityManager->saveEntity($item);
     }

@@ -30,6 +30,7 @@
 namespace Espo\Entities;
 
 use Espo\Core\Field\DateTime;
+use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Entity;
 use stdClass;
 
@@ -48,16 +49,17 @@ class WebhookQueueItem extends Entity
 
     public function setStatus(string $status): self
     {
-        $this->set('status', $status);
+        return $this->set('status', $status);
+    }
 
-        return $this;
+    public function setData(stdClass $data): self
+    {
+        return $this->set('data', $data);
     }
 
     public function setAttempts(?int $attempts): self
     {
-        $this->set('attempts', $attempts);
-
-        return $this;
+        return $this->set('attempts', $attempts);
     }
 
     public function setProcessAt(?DateTime $processAt): self
@@ -96,8 +98,28 @@ class WebhookQueueItem extends Entity
         return $this->get('targetId');
     }
 
+    public function getWebhookId(): string
+    {
+        return $this->get('webhookId') ?? '';
+    }
+
     public function getData(): stdClass
     {
         return $this->get('data') ?? (object) [];
+    }
+
+    public function setEvent(string $event): self
+    {
+        return $this->set('event', $event);
+    }
+
+    public function setWebhook(Webhook $webhook): self
+    {
+        return $this->setRelatedLinkOrEntity('webhook', $webhook);
+    }
+
+    public function setTarget(Entity|LinkParent $target): self
+    {
+        return $this->setRelatedLinkOrEntity('target', $target);
     }
 }

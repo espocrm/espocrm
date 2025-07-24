@@ -323,7 +323,7 @@ class PanelStreamView extends RelationshipPanelView {
     }
 
     subscribeToWebSocket() {
-        if (!this.getHelper().webSocketManager) {
+        if (!this.webSocketManager.isEnabled()) {
             return;
         }
 
@@ -336,7 +336,7 @@ class PanelStreamView extends RelationshipPanelView {
 
         this.isSubscribedToWebSocket = true;
 
-        this.getHelper().webSocketManager.subscribe(topic, (t, /** Record */data) => {
+        this.webSocketManager.subscribe(topic, (t, /** Record */data) => {
             if (data.createdById === this.getUser().id && this._justPosted) {
                 return;
             }
@@ -359,7 +359,7 @@ class PanelStreamView extends RelationshipPanelView {
     }
 
     unsubscribeFromWebSocket() {
-        this.getHelper().webSocketManager.unsubscribe(this.streamUpdateWebSocketTopic);
+        this.webSocketManager.unsubscribe(this.streamUpdateWebSocketTopic);
     }
 
     setupTitle() {

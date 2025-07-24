@@ -2,7 +2,10 @@
     <div class="row">
         <div class="col-sm-7 col-xs-5">
             {{#if displayTitle}}
-            <h3>{{translate 'Stream'}}</h3>
+            <h3><span
+                data-action="fullRefresh"
+                style="user-select: none; cursor: pointer"
+            >{{translate 'Stream'}}</span></h3>
             {{/if}}
         </div>
         <div class="col-sm-5 col-xs-7">

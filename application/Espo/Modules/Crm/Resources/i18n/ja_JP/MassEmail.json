@@ -1,0 +1,57 @@
+{
+  "fields": {
+    "name": "名前",
+    "status": "状態",
+    "storeSentEmails": "送信済みメールを保存する",
+    "startAt": "開始日",
+    "fromAddress": "送信元アドレス",
+    "fromName": "送信者名",
+    "replyToAddress": "返信先アドレス",
+    "replyToName": "返信先名",
+    "campaign": "キャンペーン",
+    "emailTemplate": "メールテンプレート",
+    "inboundEmail": "メールアカウント",
+    "targetLists": "ターゲットリスト",
+    "excludingTargetLists": "ターゲットリストの除外",
+    "optOutEntirely": "完全にオプトアウトする",
+    "smtpAccount": "SMTPアカウント"
+  },
+  "links": {
+    "targetLists": "ターゲットリスト",
+    "excludingTargetLists": "ターゲットリストの除外",
+    "queueItems": "キューアイテム",
+    "campaign": "キャンペーン",
+    "emailTemplate": "メールテンプレート",
+    "inboundEmail": "メールアカウント"
+  },
+  "options": {
+    "status": {
+      "Draft": "下書き",
+      "Pending": "保留中",
+      "In Process": "処理中",
+      "Complete": "完了",
+      "Canceled": "キャンセル",
+      "Failed": "失敗した"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "一括メール作成",
+    "Send Test": "テストを送信",
+    "System SMTP": "システムSMTP",
+    "system": "システム",
+    "group": "グループ"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "少なくとも 1 つのターゲットを選択してください。",
+    "testSent": "送信されるはずのテストメール"
+  },
+  "tooltips": {
+    "optOutEntirely": "登録を解除した受信者のメール アドレスはオプトアウトとしてマークされ、今後大量のメールは受信されなくなります。",
+    "targetLists": "メッセージを受信するターゲット。",
+    "excludingTargetLists": "メッセージを受信してはいけないターゲット。",
+    "storeSentEmails": "メールは CRM に保存されます。"
+  },
+  "presetFilters": {
+    "complete": "完了"
+  }
+}

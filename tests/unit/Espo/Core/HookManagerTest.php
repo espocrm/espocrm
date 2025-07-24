@@ -44,11 +44,13 @@ use Espo\Core\Utils\Module\PathProvider;
 
 class HookManagerTest extends TestCase
 {
-    private $hookManager;
-
     private $filesPath = 'tests/unit/testData/Hooks';
 
     private ?Config\SystemConfig $systemConfig = null;
+
+    private $pathProvider;
+    private $reflection;
+    private $metadata;
 
     protected function setUp(): void
     {
@@ -57,24 +59,24 @@ class HookManagerTest extends TestCase
 
         $this->systemConfig = $this->createMock(Config\SystemConfig::class);
 
-        $this->injectableFactory = $this->createMock(InjectableFactory::class);
-        $this->dataCache = $this->createMock(DataCache::class);
-        $this->fileManager = new FileManager();
+        $injectableFactory = $this->createMock(InjectableFactory::class);
+        $dataCache = $this->createMock(DataCache::class);
+        $fileManager = new FileManager();
         $this->pathProvider = $this->createMock(PathProvider::class);
-        $this->generalInvoker = $this->createMock(GeneralInvoker::class);
+        $generalInvoker = $this->createMock(GeneralInvoker::class);
 
-        $this->hookManager = new HookManager(
-            $this->injectableFactory,
-            $this->fileManager,
+        $hookManager = new HookManager(
+            $injectableFactory,
+            $fileManager,
             $this->metadata,
-            $this->dataCache,
+            $dataCache,
             $this->createMock(Log::class),
             $this->pathProvider,
-            $this->generalInvoker,
+            $generalInvoker,
             $this->systemConfig,
         );
 
-        $this->reflection = new ReflectionHelper($this->hookManager);
+        $this->reflection = new ReflectionHelper($hookManager);
     }
 
     private function initPathProvider(string $folder): void
@@ -260,21 +262,21 @@ class HookManagerTest extends TestCase
         $this->systemConfig
             ->expects($this->exactly(2))
             ->method('useCache')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->metadata
             ->expects($this->once())
             ->method('getModuleList')
-            ->will($this->returnValue(array(
+            ->willReturn([
                 'Crm',
                 'Test',
-            )));
+            ]);
 
         $this->reflection->invokeMethod('loadHooks');
 
-        $result = array (
+        $result = [
           'Note' =>
-          array (
+          [
             'beforeSave' =>
             [
                 [
@@ -282,8 +284,8 @@ class HookManagerTest extends TestCase
                     'order' => 7,
                 ],
             ],
-          ),
-        );
+          ],
+        ];
 
         $this->assertEquals($result, $this->reflection->getProperty('data'));
     }
@@ -295,31 +297,31 @@ class HookManagerTest extends TestCase
         $this->systemConfig
             ->expects($this->exactly(2))
             ->method('useCache')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->metadata
             ->expects($this->once())
             ->method('getModuleList')
-            ->will($this->returnValue(array(
+            ->willReturn([
                 'Crm',
                 'Test',
-            )));
+            ]);
 
         $this->reflection->invokeMethod('loadHooks');
 
-        $result = array (
+        $result = [
           'Note' =>
-          array (
+          [
             'beforeSave' =>
-            array (
-                array (
+            [
+                [
                     'className' =>
                     'tests\\unit\\testData\\Hooks\\testCase2\\application\\Espo\\Modules\\Crm\\Hooks\\Note\\Mentions',
                     'order' => 9,
-                ),
-            ),
-          ),
-        );
+                ],
+            ],
+          ],
+        ];
 
         $this->assertEquals($result, $this->reflection->getProperty('data'));
     }
@@ -331,31 +333,31 @@ class HookManagerTest extends TestCase
         $this->systemConfig
             ->expects($this->exactly(2))
             ->method('useCache')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->metadata
             ->expects($this->once())
             ->method('getModuleList')
-            ->will($this->returnValue(array(
+            ->willReturn([
                 'Test',
                 'Crm',
-            )));
+            ]);
 
         $this->reflection->invokeMethod('loadHooks');
 
-        $result = array (
+        $result = [
           'Note' =>
-          array (
+          [
             'beforeSave' =>
-            array (
-                array (
+            [
+                [
                     'className' =>
                         'tests\\unit\\testData\\Hooks\\testCase2\\application\\Espo\\Modules\\Test\\Hooks\\Note\\Mentions',
                     'order' => 9,
-                ),
-            ),
-          ),
-        );
+                ],
+            ],
+          ],
+        ];
 
         $this->assertEquals($result, $this->reflection->getProperty('data'));
     }
@@ -367,13 +369,12 @@ class HookManagerTest extends TestCase
         $this->systemConfig
             ->expects($this->exactly(2))
             ->method('useCache')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->metadata
             ->expects($this->once())
             ->method('getModuleList')
-            ->will($this->returnValue(array(
-            )));
+            ->willReturn([]);
 
         $this->reflection->invokeMethod('loadHooks');
 

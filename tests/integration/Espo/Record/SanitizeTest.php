@@ -34,6 +34,7 @@ use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\Modules\Crm\Entities\Task;
@@ -220,5 +221,29 @@ class SanitizeTest extends BaseTestCase
             ], CreateParams::create());
 
         $this->assertEquals('2030-12-10', $meeting->get('closeDate'));
+    }
+
+    public function testForeign(): void
+    {
+        $account = $this->getEntityManager()->createEntity(Account::ENTITY_TYPE, [
+            'type' => Account::TYPE_CUSTOMER,
+        ]);
+
+        $serviceContainer = $this->getContainer()->getByClass(ServiceContainer::class);
+
+        $contactService = $serviceContainer->getByClass(Contact::class);
+
+        $data = (object) [
+            'lastName' => 'C-1',
+            'accountId' => $account->getId(),
+        ];
+        $contactService->sanitizeInput($data);
+        $this->assertEquals(Account::TYPE_CUSTOMER, $data->accountType ?? null);
+
+        $data = (object) [
+            'lastName' => 'C-2',
+        ];
+        $contactService->sanitizeInput($data);
+        $this->assertEquals(null, $data->accountType ?? null);
     }
 }

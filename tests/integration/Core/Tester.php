@@ -53,6 +53,8 @@ use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
+use Installer;
+use RuntimeException;
 use Slim\Psr7\Factory\RequestFactory;
 use Slim\Psr7\Response;
 
@@ -194,12 +196,15 @@ class Tester
         $portalId = $portalId ?? $this->portalId ?? null;
 
         if (!isset($this->application) || $reload)  {
-
             if ($clearCache) {
                 $this->clearCache();
             }
 
-            $this->application = !$portalId ? new Application() : new PortalApplication($portalId);
+            $applicationParams = new Application\ApplicationParams(noErrorHandler: true);
+
+            $this->application = !$portalId ?
+                new Application($applicationParams) :
+                new PortalApplication($portalId, $applicationParams);
 
             $auth = $this->application
                 ->getContainer()
@@ -309,7 +314,9 @@ class Tester
 
         require_once('install/core/Installer.php');
 
-        $installer = new \Installer();
+        $applicationParams = new Application\ApplicationParams(noErrorHandler: true);
+
+        $installer = new Installer($applicationParams);
 
         $installer->saveData(array_merge($configData, [
             'language' => 'en_US'
@@ -317,12 +324,12 @@ class Tester
 
         $installer->saveConfig($configData);
 
-        $app = new Application();
+        $app = new Application($applicationParams);
 
         $this->createDatabase($app);
         $this->dropTables($app);
 
-        $installer = new \Installer(); // reload installer to have all config data
+        $installer = new Installer($applicationParams); // reload installer to have all config data
         $installer->rebuild();
         $installer->setSuccess();
     }
@@ -341,7 +348,7 @@ class Tester
         $dbname = $params->getName();
 
         if (!$dbname) {
-            throw new \RuntimeException('No "dbname" in database config.');
+            throw new RuntimeException('No "dbname" in database config.');
         }
 
         $params = $params->withName(null);
@@ -470,11 +477,11 @@ class Tester
         }
     }
 
-    public function setData(array $data): void
+    /*public function setData(array $data): void
     {
         $this->getDataLoader()->setData($data);
         $this->getApplication(true, true)->run(Rebuild::class);
-    }
+    }*/
 
     public function clearCache(): void
     {

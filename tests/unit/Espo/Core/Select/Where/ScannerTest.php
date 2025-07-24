@@ -41,14 +41,15 @@ use PHPUnit\Framework\TestCase;
 
 class ScannerTest extends TestCase
 {
+    private $scanner;
+    private $queryBuilder;
+    private $entity;
+
     protected function setUp() : void
     {
-        $this->entityManager = $this->createMock(EntityManager::class);
-
-        $this->scanner = new Scanner($this->entityManager);
-
-        $this->entityType = 'Test';
-
+        $entityManager = $this->createMock(EntityManager::class);
+        $this->scanner = new Scanner($entityManager);
+        $entityType = 'Test';
         $this->queryBuilder = $this->createMock(QueryBuilder::class);
 
         $query = $this->createMock(Query::class);
@@ -56,7 +57,7 @@ class ScannerTest extends TestCase
         $query
             ->expects($this->any())
             ->method('getFrom')
-            ->willReturn($this->entityType);
+            ->willReturn($entityType);
 
         $this->queryBuilder
             ->expects($this->any())
@@ -65,10 +66,10 @@ class ScannerTest extends TestCase
 
         $this->entity = $this->createMock(Entity::class);
 
-        $this->entityManager
+        $entityManager
             ->expects($this->any())
             ->method('getNewEntity')
-            ->with($this->entityType)
+            ->with($entityType)
             ->willReturn($this->entity);
     }
 
@@ -103,22 +104,34 @@ class ScannerTest extends TestCase
         $this->entity
             ->expects($this->any())
             ->method('hasRelation')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['link1', true],
                     ['link2', true],
                     ['link3', true],
-                ])
+                ]
             );
 
+        $c = $this->exactly(3);
+
         $this->queryBuilder
-            ->expects($this->exactly(3))
+            ->expects($c)
             ->method('leftJoin')
-            ->withConsecutive(
-                ['link2'],
-                ['link3'],
-                ['link4'],
-            );
+            ->willReturnCallback(function ($link) use ($c) {
+                if ($c->numberOfInvocations() === 1) {
+                    $this->assertEquals('link2', $link);
+                }
+
+                if ($c->numberOfInvocations() === 2) {
+                    $this->assertEquals('link3', $link);
+                }
+
+                if ($c->numberOfInvocations() === 3) {
+                    $this->assertEquals('link4', $link);
+                }
+
+                return $this->queryBuilder;
+            });
 
         /*$this->queryBuilder
             ->expects($this->once())
@@ -127,32 +140,32 @@ class ScannerTest extends TestCase
         $this->entity
             ->expects($this->any())
             ->method('getAttributeType')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['test1', OrmEntity::VARCHAR],
                     ['test4', OrmEntity::FOREIGN],
-                ])
+                ]
             );
 
         $this->entity
             ->expects($this->any())
             ->method('getRelationType')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['link2', OrmEntity::HAS_MANY],
                     ['link3', OrmEntity::BELONGS_TO],
-                ])
+                ]
             );
 
         $this->entity
             ->expects($this->any())
             ->method('getAttributeParam')
-            ->will(
-                $this->returnValueMap(
+            ->willReturnMap(
+
                     [
                         ['test4', 'relation', 'link4'],
                     ]
-                )
+
             );
 
         $this->scanner->apply($this->queryBuilder, $item);
@@ -170,21 +183,21 @@ class ScannerTest extends TestCase
         $entity
             ->expects($this->any())
             ->method('hasRelation')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['link2', true],
                     ['link3', true],
-                ])
+                ]
             );
 
         $entity
             ->expects($this->any())
             ->method('getRelationType')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['link2', RelationType::HAS_MANY],
                     ['link3', RelationType::BELONGS_TO],
-                ])
+                ]
             );
 
         $scanner = new Scanner($em);

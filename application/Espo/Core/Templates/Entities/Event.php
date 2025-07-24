@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Templates\Entities;
 
+use Espo\Core\Field\Link;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 
 class Event extends Entity
@@ -47,5 +49,14 @@ class Event extends Entity
     public function setStatus(string $status): self
     {
         return $this->set('status', $status);
+    }
+
+    /**
+     * @since 9.2.0
+     */
+    public function getAssignedUser(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject(Field::ASSIGNED_USER);
     }
 }

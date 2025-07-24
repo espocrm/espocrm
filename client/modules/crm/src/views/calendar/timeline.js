@@ -123,6 +123,28 @@ class TimelineView extends View {
         },
     }
 
+    /**
+     * @param {{
+     *     userId?: string,
+     *     userName?: string|null,
+     *     mode?: string|null,
+     *     date?: string|null,
+     *     $container?: JQuery,
+     *     suppressLoadingAlert?: boolean,
+     *     containerSelector?: string,
+     *     enabledScopeList?: string[],
+     *     calendarType?: string,
+     *     userList?: string[],
+     *     header?: boolean,
+     *     onSave?: function(),
+     * }} options
+     */
+    constructor(options) {
+        super(options);
+
+        this.options = options;
+    }
+
     data() {
         const calendarTypeDataList = this.getCalendarTypeDataList();
 
@@ -550,13 +572,14 @@ class TimelineView extends View {
                         onTag: (tag, html) => html,
                     },
                 },
-                moment: date => {
+                moment: /** Record */date => {
                     const m = moment(date);
 
                     if (date && date.noTimeZone) {
                         return m;
                     }
 
+                    // noinspection JSUnresolvedReference
                     return m.tz(this.getDateTime().getTimeZone());
                 },
                 format: this.getFormatObject(),
@@ -638,7 +661,12 @@ class TimelineView extends View {
         });
     }
 
-    createEvent(dateStart, userId) {
+    /**
+     * @private
+     * @param {string} dateStart
+     * @param {string} [userId]
+     */
+    async createEvent(dateStart, userId) {
         if (!dateStart) {
             const time = (this.timeline.getWindow().end - this.timeline.getWindow().start) / 2 +
                 this.timeline.getWindow().start;
@@ -671,18 +699,23 @@ class TimelineView extends View {
 
         Espo.Ui.notifyWait();
 
-        this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
+        const view = await this.createView('dialog', 'crm:views/calendar/modals/edit', {
             attributes: attributes,
             enabledScopeList: this.enabledScopeList,
             scopeList: this.scopeList
-        }, (view) => {
-            view.render();
-            view.notify(false);
-
-            this.listenTo(view, 'after:save', () => {
-                this.runFetch();
-            });
         });
+
+        this.listenTo(view, 'before:save', () => {
+            if (this.options.onSave) {
+                this.options.onSave();
+            }
+        });
+
+        this.listenTo(view, 'after:save', () => this.runFetch());
+
+        await view.render();
+
+        Espo.Ui.notify();
     }
 
     /**
@@ -700,6 +733,16 @@ class TimelineView extends View {
             entityType: scope,
             id: id,
             removeDisabled: false,
+            beforeSave: () => {
+                if (this.options.onSave) {
+                    this.options.onSave();
+                }
+            },
+            beforeDestroy: () => {
+                if (this.options.onSave) {
+                    this.options.onSave();
+                }
+            },
             afterSave: (model, o) => {
                 if (!o.bypassClose) {
                     modalView.close();
@@ -903,7 +946,7 @@ class TimelineView extends View {
     }
 
     fetchEvents(from, to, callback) {
-        if (!this.options.noFetchLoadingMessage) {
+        if (!this.options.suppressLoadingAlert) {
             Espo.Ui.notifyWait();
         }
 

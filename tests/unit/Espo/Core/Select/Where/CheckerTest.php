@@ -52,6 +52,9 @@ class CheckerTest extends TestCase
     protected ?string $entityType = null;
     protected ?string $foreignEntityType = null;
 
+    private $entity;
+    private $params;
+
     protected function setUp() : void
     {
         $this->entityManager = $this->createMock(EntityManager::class);
@@ -68,14 +71,14 @@ class CheckerTest extends TestCase
 
         $this->params = $this->createMock(Params::class);
         $this->entity = $this->createMock(Entity::class);
-        $this->foreignEntity = $this->createMock(Entity::class);
+        $foreignEntity = $this->createMock(Entity::class);
 
         $this->entityManager
             ->expects($this->any())
             ->method('getNewEntity')
             ->willReturnMap([
                 [$this->entityType, $this->entity],
-                [$this->foreignEntityType, $this->foreignEntity],
+                [$this->foreignEntityType, $foreignEntity],
             ]);
     }
 
@@ -114,15 +117,12 @@ class CheckerTest extends TestCase
         ]);
 
         $this->entity
+            ->expects(self::any())
             ->method('hasAttribute')
-            ->withConsecutive(
-                ['test1'],
-                ['test2']
-            )
-            ->willReturnOnConsecutiveCalls(
-                true,
-                true
-            );
+            ->willReturnMap([
+                ['test1', true],
+                ['test2', true],
+            ]);
 
         $this->entity
             ->expects($this->once())
@@ -158,13 +158,11 @@ class CheckerTest extends TestCase
         ]);
 
         $this->entity
+            ->expects(self::any())
             ->method('hasAttribute')
-            ->withConsecutive(
-                ['test1']
-            )
-            ->willReturnOnConsecutiveCalls(
-                false
-            );
+            ->willReturnMap([
+                ['test1', false]
+            ]);
 
         $this->expectException(BadRequest::class);
 

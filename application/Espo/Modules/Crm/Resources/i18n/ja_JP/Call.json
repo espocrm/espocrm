@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "名前",
+    "parent": "親",
+    "status": "状態",
+    "dateStart": "開始日",
+    "dateEnd": "終了日",
+    "direction": "方向",
+    "duration": "間隔",
+    "description": "説明",
+    "users": "ユーザー",
+    "contacts": "取引先担当者",
+    "leads": "リード",
+    "reminders": "リマインダー",
+    "account": "アカウント",
+    "acceptanceStatus": "承認状況",
+    "uid": "ユーザID"
+  },
+  "options": {
+    "status": {
+      "Planned": "計画済み",
+      "Held": "開催",
+      "Not Held": "開催されなかった"
+    },
+    "direction": {
+      "Outbound": "アウトバウンド",
+      "Inbound": "インバウンド"
+    },
+    "acceptanceStatus": {
+      "None": "なし",
+      "Accepted": "承認済み",
+      "Declined": "拒否",
+      "Tentative": "仮の"
+    }
+  },
+  "massActions": {
+    "setHeld": "セットホールド",
+    "setNotHeld": "セットは保持されません"
+  },
+  "labels": {
+    "Create Call": "通話を作成",
+    "Set Held": "セットホールド",
+    "Set Not Held": "セットは保持されません",
+    "Send Invitations": "招待状を送る"
+  },
+  "presetFilters": {
+    "planned": "計画済み",
+    "held": "開催",
+    "todays": "今日の"
+  }
+}

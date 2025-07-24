@@ -29,24 +29,22 @@
 
 namespace tests\unit\Espo\Core\Select\Where;
 
-use Espo\Core\{
-    Select\Where\ItemConverterFactory,
-    Utils\Metadata,
-    InjectableFactory,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
-
-use Espo\{
-    Entities\User,
-};
-
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Select\Where\ItemConverterFactory;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\User;
+use PHPUnit\Framework\TestCase;
 use tests\unit\testClasses\Core\Select\Where\ItemConverters\TestConverter;
 
-class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
+class ItemConverterFactoryTest extends TestCase
 {
     private $metadata;
+    private $injectableFactory;
+    private $user;
+    private $factory;
 
     protected function setUp(): void
     {

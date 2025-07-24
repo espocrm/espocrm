@@ -30,20 +30,23 @@
 namespace tests\unit\Espo\Core\Select\Order;
 
 use Espo\Entities\User;
-
-use Espo\Core\{
-    Select\Order\ItemConverterFactory,
-    Select\Order\ItemConverter,
-    Select\Order\ItemConverters\EnumType,
-    Utils\Metadata,
-    InjectableFactory,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Select\Order\ItemConverter;
+use Espo\Core\Select\Order\ItemConverterFactory;
+use Espo\Core\Select\Order\ItemConverters\EnumType;
+use Espo\Core\Utils\Metadata;
 
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Binding\ContextualBinder;
+use PHPUnit\Framework\TestCase;
 
-class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
+class ItemConverterFactoryTest extends TestCase
 {
+    private $injectableFactory;
+    private $metadata;
+    private $user;
+    private $factory;
+
     protected function setUp() : void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);

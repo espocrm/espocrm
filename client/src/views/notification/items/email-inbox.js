@@ -30,8 +30,6 @@ import BaseNotificationItemView from 'views/notification/items/base';
 
 class EmailInboxNotificationItemView extends BaseNotificationItemView {
 
-    template = 'notification/items/system'
-
     messageName = 'emailInbox'
 
     // language=Handlebars

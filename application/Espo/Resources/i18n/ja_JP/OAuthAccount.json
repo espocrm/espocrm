@@ -1,0 +1,16 @@
+{
+  "labels": {
+    "Create OAuthAccount": "OAuthアカウントを作成する",
+    "Connection": "繋がり"
+  },
+  "fields": {
+    "provider": "プロバイダー",
+    "hasAccessToken": "アクセストークンあり",
+    "user": "ユーザー",
+    "providerIsActive": "プロバイダーはアクティブです",
+    "data": "データ"
+  },
+  "links": {
+    "provider": "プロバイダー"
+  }
+}

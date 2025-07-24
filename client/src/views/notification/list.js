@@ -77,7 +77,7 @@ class NotificationListView extends View {
             'views/notification/record/list';
 
         const options = {
-            selector: '.list-container',
+            selector: '.notification-list',
             collection: this.collection,
             showCount: false,
             listLayout: {
@@ -95,7 +95,7 @@ class NotificationListView extends View {
                 right: {
                     name: 'read',
                     view: 'views/notification/fields/read-with-menu',
-                    width: '10px',
+                    width: 'var(--10px)',
                 },
             },
         };

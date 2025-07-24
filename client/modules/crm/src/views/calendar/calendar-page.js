@@ -29,13 +29,15 @@
 import View from 'view';
 import CalendarEditViewModal from 'crm:views/calendar/modals/edit-view';
 import {inject} from 'di';
-import {ShortcutManager} from 'helpers/site/shortcut-manager';
+import ShortcutManager from 'helpers/site/shortcut-manager';
+import DebounceHelper from 'helpers/util/debounce';
+import WebSocketManager from 'web-socket-manager';
 
 class CalendarPage extends View {
 
     template = 'crm:calendar/calendar-page'
 
-    el = '#main'
+    //el = '#main'
 
     fullCalendarModeList = [
         'month',
@@ -63,6 +65,31 @@ class CalendarPage extends View {
      */
     @inject(ShortcutManager)
     shortcutManager
+
+    /**
+     * @private
+     * @type {DebounceHelper|null}
+     */
+    webSocketDebounceHelper = null
+
+    /**
+     * @private
+     * @type {number}
+     */
+    webSocketDebounceInterval = 500
+
+    /**
+     * @private
+     * @type {number}
+     */
+    webSocketBlockInterval = 1000
+
+    /**
+     * @private
+     * @type {WebSocketManager}
+     */
+    @inject(WebSocketManager)
+    webSocketManager
 
     /**
      * A shortcut-key => action map.
@@ -149,6 +176,20 @@ class CalendarPage extends View {
         },
     }
 
+    /**
+     * @param {{
+     *     userId?: string,
+     *     userName?: string|null,
+     *     mode?: string|null,
+     *     date?: string|null,
+     * }} options
+     */
+    constructor(options) {
+        super(options);
+
+        this.options = options;
+    }
+
     setup() {
         this.mode = this.mode || this.options.mode || null;
         this.date = this.date || this.options.date || null;
@@ -179,16 +220,64 @@ class CalendarPage extends View {
 
         this.shortcutManager.add(this, this.shortcutKeys);
 
-        this.once('remove', () => {
+        this.on('remove', () => {
             this.shortcutManager.remove(this);
         });
 
         if (!this.mode || ~this.fullCalendarModeList.indexOf(this.mode) || this.mode.indexOf('view-') === 0) {
             this.setupCalendar();
-        }
-        else if (this.mode === 'timeline') {
+        } else if (this.mode === 'timeline') {
             this.setupTimeline();
         }
+        this.initWebSocket();
+    }
+
+    /**
+     * @private
+     */
+    initWebSocket() {
+        if (this.options.userId && this.getUser().id !== this.options.userId) {
+            return;
+        }
+
+        this.webSocketDebounceHelper = new DebounceHelper({
+            interval: this.webSocketDebounceInterval,
+            blockInterval: this.webSocketBlockInterval,
+            handler: () => this.handleWebSocketUpdate(),
+        });
+
+        if (!this.webSocketManager.isEnabled()) {
+            const testHandler = () => this.webSocketDebounceHelper.process();
+
+            this.on('remove', () => window.removeEventListener('calendar-update', testHandler));
+
+            // For testing purpose.
+            window.addEventListener('calendar-update', testHandler);
+
+            return;
+        }
+
+        this.webSocketManager.subscribe('calendarUpdate', () => this.webSocketDebounceHelper.process());
+
+        this.on('remove', () => this.webSocketManager.unsubscribe('calendarUpdate'));
+    }
+
+    /**
+     * @private
+     */
+    handleWebSocketUpdate() {
+        this.getCalendarView()?.actionRefresh({suppressLoadingAlert: true});
+    }
+
+    /**
+     * @private
+     */
+    onSave() {
+        if (!this.webSocketDebounceHelper) {
+            return;
+        }
+
+        this.webSocketDebounceHelper.block()
     }
 
     afterRender() {
@@ -221,6 +310,9 @@ class CalendarPage extends View {
         this.getRouter().navigate(url, {trigger: trigger});
     }
 
+    /**
+     * @private
+     */
     setupCalendar() {
         const viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'calendarView']) ||
             'crm:views/calendar/calendar';
@@ -231,6 +323,7 @@ class CalendarPage extends View {
             userName: this.options.userName,
             mode: this.mode,
             fullSelector: '#main > .calendar-container',
+            onSave: () => this.onSave(),
         }, view => {
             let initial = true;
 
@@ -267,6 +360,9 @@ class CalendarPage extends View {
         });
     }
 
+    /**
+     * @private
+     */
     setupTimeline() {
         const viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'timelineView']) ||
             'crm:views/calendar/timeline';
@@ -276,6 +372,7 @@ class CalendarPage extends View {
             userId: this.options.userId,
             userName: this.options.userName,
             fullSelector: '#main > .calendar-container',
+            onSave: () => this.onSave(),
         }, view => {
             let initial = true;
 

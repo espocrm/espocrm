@@ -29,15 +29,18 @@
 
 namespace tests\unit\Espo\Core\Select\Text;
 
-use Espo\Core\{
-    Select\Text\FullTextSearch\DataComposerFactory as FullTextSearchDataComposerFactory,
-    Select\Text\FullTextSearch\DefaultDataComposer as FullTextSearchDataComposer,
-    Utils\Metadata,
-    InjectableFactory,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Select\Text\FullTextSearch\DataComposerFactory as FullTextSearchDataComposerFactory;
+use Espo\Core\Select\Text\FullTextSearch\DefaultDataComposer as FullTextSearchDataComposer;
+use Espo\Core\Utils\Metadata;
+use PHPUnit\Framework\TestCase;
 
-class FullTextSearchDataComposerFactoryTest extends \PHPUnit\Framework\TestCase
+class FullTextSearchDataComposerFactoryTest extends TestCase
 {
+    private $injectableFactory;
+    private $metadata;
+    private $factory;
+
     protected function setUp() : void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
@@ -64,8 +67,6 @@ class FullTextSearchDataComposerFactoryTest extends \PHPUnit\Framework\TestCase
         $entityType = 'Test';
 
         $defaultClassName = FullTextSearchDataComposer::class;
-
-        $object = $this->createMock($defaultClassName);
 
         $this->metadata
             ->expects($this->once())

@@ -29,24 +29,24 @@
 
 namespace tests\unit\Espo\Core\Select\AccessControl;
 
-use Espo\Core\{
-    Select\AccessControl\DefaultFilterResolver,
-    Select\AccessControl\DefaultPortalFilterResolver,
-    Acl,
-    Portal\Acl as AclPortal,
-};
+use Espo\Core\Acl;
+use Espo\Core\Portal\Acl as AclPortal;
+use Espo\Core\Select\AccessControl\DefaultFilterResolver;
+use Espo\Core\Select\AccessControl\DefaultPortalFilterResolver;
 
-use Espo\{
-    Entities\User,
-};
+use PHPUnit\Framework\TestCase;
 
-class FilterResolverTest extends \PHPUnit\Framework\TestCase
+class FilterResolverTest extends TestCase
 {
+    private $acl;
+    private $aclPortal;
+    private $entityType;
+    private $resolver;
+
     protected function setUp(): void
     {
         $this->acl = $this->createMock(Acl::class);
         $this->aclPortal = $this->createMock(AclPortal::class);
-        $this->user = $this->createMock(User::class);
 
         $this->entityType = 'Test';
     }

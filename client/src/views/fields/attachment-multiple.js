@@ -870,7 +870,7 @@ class AttachmentMultipleFieldView extends BaseFieldView {
                             ' ',
                             $('<a>')
                                 .attr('href', this.getDownloadUrl(id))
-                                .attr('target', '_BLANK')
+                                .attr('target', '_blank')
                                 .text(name)
                         )
                 );

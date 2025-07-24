@@ -29,16 +29,16 @@
 
 namespace tests\integration\Espo\Webhook;
 
+use Espo\Core\InjectableFactory;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Webhook\Queue;
 use Espo\Core\Webhook\Sender;
-
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\Webhook;
-
 use Espo\Modules\Crm\Entities\Account;
+use tests\integration\Core\BaseTestCase;
 
-class ProcessingTest extends \tests\integration\Core\BaseTestCase
+class ProcessingTest extends BaseTestCase
 {
     public function testProcessing1(): void
     {
@@ -58,24 +58,25 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
             ]
         );
 
-        /* @var $em EntityManager */
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $em->createEntity(Webhook::ENTITY_TYPE, [
             'event' => 'Account.create',
             'userId' => $user->getId(),
             'url' => 'https://test',
+            'skipOwn' => true,
         ]);
 
         $em->createEntity(Webhook::ENTITY_TYPE, [
             'event' => 'Account.update',
             'userId' => $user->getId(),
             'url' => 'https://test',
+            'skipOwn' => true,
         ]);
 
         $app = $this->createApplication();
 
-        $em = $app->getContainer()->get('entityManager');
+        $em = $app->getContainer()->getByClass(EntityManager::class);
 
         $account1 = $em->createEntity(Account::ENTITY_TYPE, [
             'name' => 'test1',
@@ -91,14 +92,21 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
             'name' => 'test3',
         ]);
 
+        $em->createEntity(Account::ENTITY_TYPE, [
+            'name' => 'test_skip',
+            'assignedUserId' => $user->getId(),
+        ], [SaveOption::CREATED_BY_ID => $user->getId()]);
+
         $dataList1 = [
             $account1->getValueMap(),
             $account2->getValueMap(),
         ];
 
         $account1->set('name', 'test-1-changed');
-
         $em->saveEntity($account1);
+
+        $account1->set('description', 'test-skip');
+        $em->saveEntity($account1, [SaveOption::MODIFIED_BY_ID => $user->getId()]);
 
         $dataList2 = [
             (object) [
@@ -111,42 +119,52 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
 
         $sender = $this->createMock(Sender::class);
 
-        /* @var $queue Queue */
+        /** @var Queue $queue */
         $queue = $app->getContainer()
-            ->get('injectableFactory')
+            ->getByClass(InjectableFactory::class)
             ->createWith(Queue::class, [
                 'sender' => $sender,
             ]);
 
+        $invokedCount = $this->exactly(2);
+
+        $notSame = false;
+
         $sender
-            ->expects($this->exactly(2))
+            ->expects($invokedCount)
             ->method('send')
-            ->withConsecutive(
-                [
-                    $this->callback(
-                        function (Webhook $webhook){
-                            return $webhook->get('event') === 'Account.create';
-                        }
-                    ),
-                    $dataList1,
-                ],
-                [
-                    $this->callback(
-                        function (Webhook $webhook){
-                            return $webhook->get('event') === 'Account.update';
-                        }
-                    ),
-                    $dataList2,
-                ]
-            )
-            ->willReturn(
-                200,
-                200
-            );
+            ->willReturnCallback(function (Webhook $webhook, $dataList) use ($invokedCount, $dataList1, $dataList2, &$notSame) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    if (count($dataList) !== count($dataList1)) {
+                        $notSame = true;
+                    }
+
+                    if ('Account.create' !== $webhook->getEvent()) {
+                        $notSame = true;
+                    }
+
+                    return 200;
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    if (count($dataList) !== count($dataList2)) {
+                        $notSame = true;
+                    }
+
+                    if ('Account.update' !== $webhook->getEvent()) {
+                        $notSame = true;
+                    }
+
+                    return 200;
+                }
+
+                return 0;
+            });
 
         $queue->process();
-
         $queue->process();
+
+        $this->assertFalse($notSame);
     }
 
     public function testProcessing2(): void
@@ -177,10 +195,16 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
             'assignedUserId' => $user->getId(),
         ]);
 
+        $account2 = $em->createEntity(Account::ENTITY_TYPE, [
+            'name' => 'test2',
+            'assignedUserId' => $user->getId(),
+        ]);
+
         $em->createEntity(Webhook::ENTITY_TYPE, [
             'event' => 'Account.delete',
             'userId' => $user->getId(),
             'url' => 'https://test',
+            'skipOwn' => true,
         ]);
 
         $app = $this->createApplication();
@@ -188,12 +212,7 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
         $em = $app->getContainer()->get('entityManager');
 
         $em->removeEntity($account1);
-
-        $dataList1 = [
-            (object) [
-                'id' => $account1->getId(),
-            ]
-        ];
+        $em->removeEntity($account2, [SaveOption::MODIFIED_BY_ID => $user->getId()]);
 
         $sender = $this->createMock(Sender::class);
 
@@ -204,26 +223,39 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
                 'sender' => $sender,
             ]);
 
+        $dataList1 = [
+            (object) [
+                'id' => $account1->getId(),
+            ]
+        ];
+
+        $invokedCount = $this->exactly(1);
+
+        $notSame = false;
+
         $sender
-            ->expects($this->exactly(1))
+            ->expects($invokedCount)
             ->method('send')
-            ->withConsecutive(
-                [
-                    $this->callback(
-                        function (Webhook $webhook){
-                            return $webhook->get('event') === 'Account.delete';
-                        }
-                    ),
-                    $dataList1,
-                ],
-            )
-            ->willReturn(
-                200,
-            );
+            ->willReturnCallback(function (Webhook $webhook, $dataList) use ($invokedCount, $dataList1, &$notSame) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    if ('Account.delete' !== $webhook->getEvent()) {
+                        $notSame = true;
+                    }
+
+                    if (json_encode($dataList) !== json_encode($dataList1)) {
+                        $notSame = true;
+                    }
+
+                    return 200;
+                }
+
+                return 0;
+            });
 
         $queue->process();
-
         $queue->process();
+
+        $this->assertFalse($notSame);
     }
 
     public function testProcessing3(): void
@@ -284,25 +316,32 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
                 'sender' => $sender,
             ]);
 
+        $invokedCount = $this->exactly(1);
+
+        $notSame = false;
+
         $sender
-            ->expects($this->exactly(1))
+            ->expects($invokedCount)
             ->method('send')
-            ->withConsecutive(
-                [
-                    $this->callback(
-                        function (Webhook $webhook){
-                            return $webhook->get('event') === 'Account.fieldUpdate.name';
-                        }
-                    ),
-                    $dataList1,
-                ],
-            )
-            ->willReturn(
-                200,
-            );
+            ->willReturnCallback(function (Webhook $webhook, $dataList) use ($invokedCount, $dataList1, &$notSame) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    if (json_encode($dataList) !== json_encode($dataList1)) {
+                        $notSame = true;
+                    }
+
+                    if ('Account.fieldUpdate.name' !== $webhook->getEvent()) {
+                        $notSame = true;
+                    }
+
+                    return 200;
+                }
+
+                return 0;
+            });
 
         $queue->process();
-
         $queue->process();
+
+        $this->assertFalse($notSame);
     }
 }

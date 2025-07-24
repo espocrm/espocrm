@@ -45,6 +45,8 @@ class CommandManagerTest extends TestCase
     private ?Metadata $metadata = null;
     private ?CommandManager $manager = null;
 
+    private $command;
+
     protected function setUp() : void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);

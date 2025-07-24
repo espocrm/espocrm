@@ -48,6 +48,13 @@ use PHPUnit\Framework\TestCase;
 
 class FilterResolverFactoryTest extends TestCase
 {
+    private $injectableFactory;
+    private $metadata;
+    private $user;
+    private $aclManager;
+    private $acl;
+    private $factory;
+
     protected function setUp() : void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);

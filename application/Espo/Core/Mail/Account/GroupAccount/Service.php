@@ -35,14 +35,14 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Mail\Account\Fetcher;
 use Espo\Core\Mail\Account\Storage\Params;
 use Espo\Core\Mail\Account\StorageFactory;
-
 use Espo\Core\Mail\Account\Util\NotificationHelper;
 use Espo\Core\Mail\Exceptions\ImapError;
 use Espo\Core\Mail\Exceptions\NoImap;
+use Espo\Core\Mail\Sender\Message;
 use Espo\Core\Utils\Log;
 use Exception;
+
 use Laminas\Mail\Exception\ExceptionInterface;
-use Laminas\Mail\Message;
 
 class Service
 {

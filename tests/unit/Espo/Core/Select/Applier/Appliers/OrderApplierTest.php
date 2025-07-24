@@ -50,6 +50,13 @@ class OrderApplierTest extends TestCase
 {
     private ?OrdererFactory $ordererFactory = null;
 
+    private $metadataProvider;
+    private $itemConverterFactory;
+    private $queryBuilder;
+    private $params;
+    private $entityType;
+    private $applier;
+
     protected function setUp(): void
     {
         $this->metadataProvider = $this->createMock(MetadataProvider::class);
@@ -261,13 +268,11 @@ class OrderApplierTest extends TestCase
             $this->metadataProvider
                 ->expects($this->any())
                 ->method('hasAttribute')
-                ->will(
-                    $this->returnValueMap(
+                ->willReturnMap(
                         [
                             [$this->entityType, $orderBy, !$notExisting],
                             [$this->entityType, 'id', true],
                         ]
-                    )
                 );
 
         if ($converterResult) {

@@ -1,0 +1,24 @@
+{
+  "labels": {
+    "Create OAuthProvider": "OAuthプロバイダーを作成する"
+  },
+  "fields": {
+    "isActive": "アクティブです",
+    "clientId": "クライアントID",
+    "clientSecret": "クライアントシークレット",
+    "authorizationEndpoint": "認可エンドポイント",
+    "tokenEndpoint": "トークンエンドポイント",
+    "authorizationRedirectUri": "承認リダイレクトURI",
+    "scopes": "スコープ",
+    "scopeSeparator": "スコープセパレーター",
+    "hasAccessToken": "アクセストークンあり",
+    "authorizationPrompt": "承認プロンプト",
+    "authorizationParams": "承認パラメータ"
+  },
+  "links": {
+    "accounts": "アカウント"
+  },
+  "tooltips": {
+    "authorizationParams": "認可エンドポイントに送信される追加のクエリパラメータ。JSON 形式で指定します。"
+  }
+}

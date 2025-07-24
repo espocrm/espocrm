@@ -84,8 +84,9 @@ class Installer
         'theme',
     ];
 
-    public function __construct()
-    {
+    public function __construct(
+        private Application\ApplicationParams $applicationParams = new Application\ApplicationParams(),
+    ) {
         $this->initialize();
 
         require_once('install/core/InstallerConfig.php');
@@ -130,7 +131,7 @@ class Installer
             $config->get('defaultPermissions') ?? null
         );
 
-        $injectableFactory = (new Application())
+        $injectableFactory = (new Application($this->applicationParams))
             ->getContainer()
             ->getByClass(InjectableFactory::class);
 
@@ -150,7 +151,7 @@ class Installer
             $configWriter->save();
         }
 
-        $this->app = new Application();
+        $this->app = new Application($this->applicationParams);
     }
 
     private function getContainer(): Container

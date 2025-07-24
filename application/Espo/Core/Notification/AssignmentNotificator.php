@@ -39,5 +39,8 @@ use Espo\Core\Notification\AssignmentNotificator\Params;
  */
 interface AssignmentNotificator
 {
+    /**
+     * @param TEntity $entity
+     */
     public function process(Entity $entity, Params $params): void;
 }

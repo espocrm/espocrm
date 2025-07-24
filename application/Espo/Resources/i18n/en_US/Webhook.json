@@ -9,10 +9,14 @@
         "user": "API User",
         "entityType": "Entity Type",
         "field": "Field",
-        "secretKey": "Secret Key"
+        "secretKey": "Secret Key",
+        "skipOwn": "Skip Own"
     },
     "links": {
         "user": "User",
         "queueItems": "Queue Items"
+    },
+    "tooltips": {
+        "skipOwn": "Do not send if the event was initiated by the user owning the webhook."
     }
 }

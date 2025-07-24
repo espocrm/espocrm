@@ -80,7 +80,7 @@ export default class extends EnumFieldView {
                 this.params.options.push(value);
 
                 this.translatedOptions[value] =
-                    this.translate(entityType, 'scopeName') + ' · ' +
+                    this.translate(entityType, 'scopeNames') + ' · ' +
                     this.translate(field, 'fields', entityType);
             });
         });

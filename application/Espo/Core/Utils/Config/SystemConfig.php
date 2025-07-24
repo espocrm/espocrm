@@ -50,4 +50,14 @@ class SystemConfig
     {
         return (string) $this->config->get('version');
     }
+
+    /**
+     * Is restricted mode.
+     *
+     * @since 9.1.8
+     */
+    public function isRestrictedMode(): bool
+    {
+        return (bool) $this->config->get('restrictedMode');
+    }
 }

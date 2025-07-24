@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "link": "リンク",
+    "notSortable": "並べ替え不可",
+    "align": "整列",
+    "panelName": "パネル名",
+    "style": "スタイル",
+    "isLarge": "大きなフォントサイズ",
+    "dynamicLogicVisible": "パネルが見える条件",
+    "hidden": "隠れた",
+    "dynamicLogicStyled": "条件作成スタイルを適用",
+    "noLabel": "ラベルなし",
+    "tabLabel": "タブラベル",
+    "tabBreak": "タブブレーク",
+    "width": "幅",
+    "noteText": "メモテキスト",
+    "noteStyle": "ノートスタイル",
+    "isMuted": "落ち着いた色",
+    "sticked": "トップにこだわる"
+  },
+  "options": {
+    "align": {
+      "left": "左",
+      "right": "右"
+    },
+    "style": {
+      "default": "デフォルト",
+      "success": "成功",
+      "danger": "危険",
+      "info": "情報",
+      "warning": "警告",
+      "primary": "主要な"
+    }
+  },
+  "labels": {
+    "New panel": "新しいパネル",
+    "Layout": "レイアウト"
+  },
+  "tooltips": {
+    "link": "チェックを入れると、フィールド値がレコードの詳細ビューへのリンクとして表示されます。通常は*名前*フィールドに使用されます。",
+    "hiddenPanel": "パネルを表示するには、「詳細を表示」をクリックする必要があります。",
+    "sticked": "パネルは上のパネルに貼り付けられます。パネル間に隙間はありません。",
+    "panelStyle": "パネルの色。",
+    "dynamicLogicVisible": "設定すると、条件が満たされない限りパネルは非表示になります。",
+    "dynamicLogicStyled": "特定の条件が満たされた場合、色が適用されます。色は*スタイル*パラメータで定義されます。",
+    "tabBreak": "次のタブ区切りまで、パネルと後続のすべてのパネルに個別のタブが設定されます。",
+    "noLabel": "ヘッダーに列ラベルを表示しません。",
+    "notSortable": "列による並べ替え機能を無効にします。",
+    "width": "列の幅。幅を指定しない列を1つ用意することをお勧めします。通常は「名前」フィールドです。",
+    "noteText": "パネルに表示されるテキスト。Markdown がサポートされています。"
+  },
+  "messages": {
+    "cantBeEmpty": "レイアウトは空にできません。",
+    "fieldsIncompatible": "フィールドをレイアウト上に一緒に配置することはできません: {fields}。",
+    "alreadyExists": "レイアウト「{name}」は既に存在します。",
+    "createInfo": "リレーションシップ パネルではカスタム リスト レイアウトを使用できます。"
+  }
+}

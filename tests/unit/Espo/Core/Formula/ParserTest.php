@@ -27,20 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 namespace tests\unit\Espo\Core\Formula;
 
 use Espo\Core\Formula\Exceptions\SyntaxError;
+use Espo\Core\Formula\Parser;
 use Espo\Core\Formula\Parser\Ast\Attribute;
 use Espo\Core\Formula\Parser\Ast\Node;
 use Espo\Core\Formula\Parser\Ast\Value;
 use Espo\Core\Formula\Parser\Ast\Variable;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class ParserTest extends \PHPUnit\Framework\TestCase
+class ParserTest extends TestCase
 {
+    private $parser;
+
     protected function setUp() : void
     {
-        $this->parser = new \Espo\Core\Formula\Parser();
+        $this->parser = new Parser();
     }
 
     private function parse(string $expression): stdClass

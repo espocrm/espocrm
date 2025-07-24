@@ -27,6 +27,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @noinspection PhpVariableIsUsedOnlyInClosureInspection */
+
 namespace tests\unit\Espo\ORM;
 
 use Espo\ORM\CollectionFactory;
@@ -44,6 +46,8 @@ use Espo\ORM\QueryComposer\QueryComposerWrapper;
 use Espo\ORM\Executor\SqlExecutor;
 use Espo\ORM\SthCollection;
 
+use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use tests\unit\testData\DB\Comment;
 use tests\unit\testData\DB\Note;
 use tests\unit\testData\DB\Post;
@@ -54,7 +58,7 @@ use PDOStatement;
 
 require_once 'tests/unit/testData/DB/Entities.php';
 
-class MapperTest extends \PHPUnit\Framework\TestCase
+class MapperTest extends TestCase
 {
     protected $db;
     protected $pdo;
@@ -62,6 +66,15 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     protected $note;
     protected $comment;
     protected $entityFactory;
+    protected $team;
+    protected $account;
+    protected $contact;
+    protected $postData;
+    protected $tag;
+    protected $query;
+    protected $sqlExecutor;
+    protected $metadata;
+
     private ?CollectionFactory $collectionFactory = null;
 
     protected function setUp() : void
@@ -70,11 +83,11 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->pdo
             ->expects($this->any())
             ->method('quote')
-            ->will($this->returnCallback(function() {
+            ->willReturnCallback(function() {
                 $args = func_get_args();
 
                 return "'" . $args[0] . "'";
-            }));
+            });
 
         $ormMetadata = include('tests/unit/testData/DB/ormMetadata.php');
 
@@ -92,28 +105,26 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         $entityManager
             ->method('getMetadata')
-            ->will($this->returnValue($this->metadata));
+            ->willReturn($this->metadata);
 
         $this->entityFactory = $this->createMock(EntityFactory::class);
 
         $this->entityFactory
             ->expects($this->any())
             ->method('create')
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 function () use ($entityManager) {
                     $args = func_get_args();
-
                     $className = "tests\\unit\\testData\\DB\\" . $args[0];
-
                     $defs = $this->metadata->get($args[0]) ?? [];
 
                     return new $className($args[0], $defs, $entityManager);
                 }
-            ));
+            );
 
         $entityManager
             ->method('getEntityFactory')
-            ->will($this->returnValue($this->entityFactory));
+            ->willReturn($this->entityFactory);
 
         $entityFactory = $this->entityFactory;
 
@@ -130,7 +141,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             $this->entityFactory,
             $this->collectionFactory,
             $this->metadata,
-            $queryExecutor
+            $queryExecutor,
         );
 
         $this->post = $entityFactory->create('Post');
@@ -156,7 +167,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         if (!$noIteration) {
             $values = [];
 
-            foreach ($data as $i => $item) {
+            foreach ($data as $item) {
                 $values[] = $item;
             }
 
@@ -167,7 +178,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         $sth->expects($this->any())
             ->method('fetchAll')
-            ->will($this->returnValue($data));
+            ->willReturn($data);
 
         return $sth;
     }
@@ -182,15 +193,14 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         if ($return === true) {
             $return = $this->createSthMock([]);
-        } else
-        if (is_array($return)) {
+        } else if (is_array($return)) {
             $return = $this->createSthMock($return, $noIteration);
         }
 
         $this->sqlExecutor->expects($expects)
-                  ->method('execute')
-                  ->with($sql)
-                  ->will($this->returnValue($return));
+            ->method('execute')
+            ->with($sql)
+            ->willReturn($return);
     }
 
     protected function mockSqlCollection(string $entityType, string $sql, SthCollection $collection)
@@ -206,8 +216,6 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $collection = $this->getMockBuilder(SthCollection::class)->disableOriginalConstructor()->getMock();
 
-        $itemList = $itemList ?? [];
-
         $generator = (function () use ($itemList) {
             foreach ($itemList as $item) {
                 yield $item;
@@ -217,8 +225,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $collection
             ->expects($this->any())
             ->method('getIterator')
-            ->will(
-                $this->returnValue($generator)
+            ->willReturn(
+                $generator
             );
 
         return $collection;
@@ -253,7 +261,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         $post = $this->db->selectOne($select);
 
-        $this->assertEquals($post->id, '1');
+        $this->assertEquals('1', $post->id);
     }
 
     public function testSelect1(): void
@@ -310,7 +318,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($entity instanceof Post);
         $this->assertTrue(isset($entity->id));
-        $this->assertEquals($entity->id, '2');
+        $this->assertEquals('2', $entity->id);
     }
 
     public function testSelectWithSpecifiedParams(): void
@@ -631,7 +639,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         $count = $this->db->countRelated($this->post, 'tags');
 
-        $this->assertEquals($count, 1);
+        $this->assertEquals(1, $count);
     }
 
     public function testCount1(): void
@@ -667,9 +675,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testInsert()
     {
         $query = "INSERT INTO `post` (`id`, `name`) VALUES ('1', 'test')";
-        $return = true;
 
-        $this->mockQuery($query, $return);
+        $this->mockQuery($query);
 
         $this->post->reset();
         $this->post->id = '1';
@@ -684,8 +691,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $query =
             "INSERT INTO `post` (`id`, `name`, `deleted`) VALUES ('1', 'test', 0) " .
             "ON DUPLICATE KEY UPDATE `name` = 'test', `deleted` = 0";
-        $return = true;
-        $this->mockQuery($query, $return);
+
+        $this->mockQuery($query);
 
         $this->post->reset();
         $this->post->id = '1';
@@ -698,8 +705,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testMassInsert()
     {
         $query = "INSERT INTO `post` (`id`, `name`) VALUES ('1', 'test1'), ('2', 'test2')";
-        $return = true;
-        $this->mockQuery($query, $return);
+
+        $this->mockQuery($query);
 
         $post1 = $this->entityFactory->create('Post');
         $post2 = $this->entityFactory->create('Post');
@@ -721,8 +728,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testUpdate1()
     {
         $query = "UPDATE `post` SET post.name = 'test' WHERE post.id = '1' AND post.deleted = 0";
-        $return = true;
-        $this->mockQuery($query, $return);
+        $this->mockQuery($query);
 
         $this->post->reset();
         $this->post->id = '1';
@@ -734,8 +740,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testUpdate2()
     {
         $query = "UPDATE `post` SET post.name = 'test', post.deleted = 0 WHERE post.id = '1' AND post.deleted = 0";
-        $return = true;
-        $this->mockQuery($query, $return);
+        $this->mockQuery($query);
 
         $this->post->reset();
         $this->post->id = '1';
@@ -749,7 +754,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $query = "UPDATE `job` SET job.array = '[\"2\",\"1\"]' WHERE job.id = '1' AND job.deleted = 0";
 
-        $this->mockQuery($query, true);
+        $this->mockQuery($query);
 
         $job = $this->entityFactory->create('Job');
         $job->id = '1';
@@ -763,7 +768,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $query = "UPDATE `job` SET job.array = NULL WHERE job.id = '1' AND job.deleted = 0";
 
-        $this->mockQuery($query, true);
+        $this->mockQuery($query);
 
         $job = $this->entityFactory->create('Job');
         $job->id = '1';
@@ -806,7 +811,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             "UPDATE `note` SET note.parent_id = NULL, note.parent_type = NULL " .
             "WHERE note.id = 'noteId' AND note.parent_id = 'postId' AND note.parent_type = 'Post' AND note.deleted = 0";
 
-        $this->mockQuery($query, true);
+        $this->mockQuery($query);
 
         $this->note->id = 'noteId';
         $this->post->id = 'postId';
@@ -820,7 +825,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             "UPDATE `note` SET note.parent_id = NULL, note.parent_type = NULL " .
             "WHERE note.id = 'noteId' AND note.deleted = 0";
 
-        $this->mockQuery($query, true);
+        $this->mockQuery($query);
 
         $this->note->id = 'noteId';
         $this->db->unrelateAll($this->note, 'parent');
@@ -832,7 +837,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             "UPDATE `comment` SET comment.post_id = NULL " .
             "WHERE comment.id = 'commentId' AND comment.post_id = 'postId' AND comment.deleted = 0";
 
-        $this->mockQuery($query, true);
+        $this->mockQuery($query);
 
         $this->post->id = 'postId';
 
@@ -866,7 +871,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->db->unrelateById($this->post, 'postData', 'dataId');
     }
 
-    public function testRemovenParentToChildren()
+    public function testRemovedParentToChildren()
     {
         $query =
             "UPDATE `note` SET note.parent_id = NULL, note.parent_type = NULL " .
@@ -895,8 +900,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testRemoveManyMany()
     {
         $query = "UPDATE `post_tag` SET post_tag.deleted = 1 WHERE post_tag.post_id = '1' AND post_tag.tag_id = '100'";
-        $return = true;
-        $this->mockQuery($query, $return);
+        $this->mockQuery($query);
 
         $this->post->id = '1';
 
@@ -906,8 +910,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testRemoveAllManyMany()
     {
         $query = "UPDATE `post_tag` SET post_tag.deleted = 1 WHERE post_tag.post_id = '1'";
-        $return = true;
-        $this->mockQuery($query, $return);
+
+        $this->mockQuery($query);
 
         $this->post->id = '1';
 
@@ -920,7 +924,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             "UPDATE `entity_team` SET entity_team.deleted = 1 ".
             "WHERE entity_team.entity_id = '1' AND entity_team.team_id = '100' AND entity_team.entity_type = 'Account'";
 
-        $this->mockQuery($query, true);
+        $this->mockQuery($query);
 
         $this->account->id = '1';
 
@@ -963,13 +967,26 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $query2 =
             "UPDATE `comment` SET comment.post_id = 'p' WHERE comment.id = 'c' AND comment.deleted = 0";
 
-        $this->sqlExecutor->expects($this->exactly(2))
+        $invokedCount = $this->exactly(2);
+
+        $this->sqlExecutor
+            ->expects($invokedCount)
             ->method('execute')
-            ->withConsecutive([$query1], [$query2])
-            ->willReturnOnConsecutiveCalls(
-                $this->createSthMock([['value' => 1]]),
-                $this->createSthMock([])
-            );
+            ->willReturnCallback(function ($sql) use ($invokedCount, $query1, $query2) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals($query1, $sql);
+
+                    return $this->createSthMock([['value' => 1]]);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals($query2, $sql);
+
+                    return $this->createSthMock([]);
+                }
+
+                throw new RuntimeException();
+            });
 
         $this->db->relate($this->post, 'comments', $this->comment);
     }
@@ -986,13 +1003,26 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $query2 =
             "UPDATE `note` SET note.parent_id = 'p', note.parent_type = 'Post' WHERE note.id = 'n' AND note.deleted = 0";
 
-        $this->sqlExecutor->expects($this->exactly(2))
+        $invokedCount = $this->exactly(2);
+
+        $this->sqlExecutor
+            ->expects($invokedCount)
             ->method('execute')
-            ->withConsecutive([$query1], [$query2])
-            ->willReturnOnConsecutiveCalls(
-                $this->createSthMock([['value' => 1]]),
-                $this->createSthMock([])
-            );
+            ->willReturnCallback(function ($sql) use ($invokedCount, $query1, $query2) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals($query1, $sql);
+
+                    return $this->createSthMock([['value' => 1]]);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals($query2, $sql);
+
+                    return $this->createSthMock([]);
+                }
+
+                throw new RuntimeException();
+            });
 
         $this->db->relate($this->post, 'notes', $this->note);
     }
@@ -1005,10 +1035,21 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $query1 =
             "UPDATE `comment` SET comment.post_id = 'p' WHERE comment.id = 'c' AND comment.deleted = 0";
 
-        $this->sqlExecutor->expects($this->exactly(1))
+
+        $invokedCount = $this->exactly(1);
+
+        $this->sqlExecutor
+            ->expects($invokedCount)
             ->method('execute')
-            ->withConsecutive([$query1])
-            ->willReturnOnConsecutiveCalls($this->createSthMock([]));
+            ->willReturnCallback(function ($sql) use ($invokedCount, $query1) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals($query1, $sql);
+
+                    return $this->createSthMock([]);
+                }
+
+                throw new RuntimeException();
+            });
 
         $this->db->relate($this->comment, 'post', $this->post);
     }
@@ -1021,10 +1062,20 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $query1 =
             "UPDATE `note` SET note.parent_id = 'p', note.parent_type = 'Post' WHERE note.id = 'n' AND note.deleted = 0";
 
-        $this->sqlExecutor->expects($this->exactly(1))
+        $invokedCount = $this->exactly(1);
+
+        $this->sqlExecutor
+            ->expects($invokedCount)
             ->method('execute')
-            ->withConsecutive([$query1])
-            ->willReturnOnConsecutiveCalls($this->createSthMock([]));
+            ->willReturnCallback(function ($sql) use ($invokedCount, $query1) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals($query1, $sql);
+
+                    return $this->createSthMock([]);
+                }
+
+                throw new RuntimeException();
+            });
 
         $this->db->relate($this->note, 'parent', $this->post);
     }
@@ -1040,10 +1091,26 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $query2 =
             "UPDATE `post_data` SET post_data.post_id = 'p' WHERE post_data.id = 'd' AND post_data.deleted = 0";
 
-        $this->sqlExecutor->expects($this->exactly(2))
+        $invokedCount = $this->exactly(2);
+
+        $this->sqlExecutor
+            ->expects($invokedCount)
             ->method('execute')
-            ->withConsecutive([$query1], [$query2])
-            ->willReturnOnConsecutiveCalls($this->createSthMock([]), $this->createSthMock([]));
+            ->willReturnCallback(function ($sql) use ($invokedCount, $query1, $query2) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals($query1, $sql);
+
+                    return $this->createSthMock([]);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals($query2, $sql);
+
+                    return $this->createSthMock([]);
+                }
+
+                throw new RuntimeException();
+            });
 
         $this->db->relate($this->postData, 'post', $this->post);
     }
@@ -1063,14 +1130,32 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $query3 =
             "UPDATE `post_data` SET post_data.post_id = 'p' WHERE post_data.id = 'd' AND post_data.deleted = 0";
 
-        $this->sqlExecutor->expects($this->exactly(3))
+        $invokedCount = $this->exactly(3);
+
+        $this->sqlExecutor
+            ->expects($invokedCount)
             ->method('execute')
-            ->withConsecutive([$query1], [$query2], [$query3])
-            ->willReturnOnConsecutiveCalls(
-                $this->createSthMock([['value' => 1]]),
-                $this->createSthMock([]),
-                $this->createSthMock([])
-            );
+            ->willReturnCallback(function ($sql) use ($invokedCount, $query1, $query2, $query3) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals($query1, $sql);
+
+                    return $this->createSthMock([['value' => 1]]);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals($query2, $sql);
+
+                    return $this->createSthMock([]);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 3) {
+                    $this->assertEquals($query3, $sql);
+
+                    return $this->createSthMock([]);
+                }
+
+                throw new RuntimeException();
+            });
 
         $this->db->relate($this->post, 'postData', $this->postData);
     }
@@ -1092,20 +1177,38 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             "INSERT INTO `post_tag` (`post_id`, `tag_id`, `role`) VALUES ('postId', 'tagId', 'Test') " .
             "ON DUPLICATE KEY UPDATE `deleted` = 0, `role` = 'Test'";
 
-        $ps = $this->createMock(\PDOStatement::class);
+        $ps = $this->createMock(PDOStatement::class);
         $ps->expects($this->exactly(1))
             ->method('rowCount')
             ->willReturn(0);
 
+
+        $invokedCount = $this->exactly(3);
+
         $this->sqlExecutor
-            ->expects($this->exactly(3))
+            ->expects($invokedCount)
             ->method('execute')
-            ->withConsecutive([$query1], [$query2], [$query3])
-            ->willReturnOnConsecutiveCalls(
-                $this->createSthMock([['value' => 1]]),
-                $ps,
-                $this->createSthMock([])
-            );
+            ->willReturnCallback(function ($sql) use ($invokedCount, $query1, $query2, $query3, $ps) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals($query1, $sql);
+
+                    return $this->createSthMock([['value' => 1]]);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals($query2, $sql);
+
+                    return $ps;
+                }
+
+                if ($invokedCount->numberOfInvocations() === 3) {
+                    $this->assertEquals($query3, $sql);
+
+                    return $this->createSthMock([]);
+                }
+
+                throw new RuntimeException();
+            });
 
         $this->db->relate($this->post, 'tags', $this->tag, ['role' => 'Test']);
     }
@@ -1127,20 +1230,37 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             "UPDATE `post_tag` SET post_tag.deleted = 0, post_tag.role = 'Test' " .
             "WHERE post_tag.post_id = 'postId' AND post_tag.tag_id = 'tagId'";
 
-        $ps = $this->createMock(\PDOStatement::class);
+        $ps = $this->createMock(PDOStatement::class);
         $ps->expects($this->exactly(1))
             ->method('rowCount')
             ->willReturn(1);
 
+        $invokedCount = $this->exactly(3);
+
         $this->sqlExecutor
-            ->expects($this->exactly(3))
+            ->expects($invokedCount)
             ->method('execute')
-            ->withConsecutive([$query1], [$query2], [$query3])
-            ->willReturnOnConsecutiveCalls(
-                $this->createSthMock([['value' => 1]]),
-                $ps,
-                $this->createSthMock([])
-            );
+            ->willReturnCallback(function ($sql) use ($invokedCount, $query1, $query2, $query3, $ps) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals($query1, $sql);
+
+                    return $this->createSthMock([['value' => 1]]);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals($query2, $sql);
+
+                    return $ps;
+                }
+
+                if ($invokedCount->numberOfInvocations() === 3) {
+                    $this->assertEquals($query3, $sql);
+
+                    return $this->createSthMock([]);
+                }
+
+                throw new RuntimeException();
+            });
 
         $this->db->relate($this->post, 'tags', $this->tag, ['role' => 'Test']);
     }
@@ -1162,20 +1282,37 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             "INSERT INTO `entity_team` (`entity_id`, `team_id`, `entity_type`) VALUES ('accountId', 'teamId', 'Account') " .
             "ON DUPLICATE KEY UPDATE `deleted` = 0";
 
-        $ps = $this->createMock(\PDOStatement::class);
+        $ps = $this->createMock(PDOStatement::class);
         $ps->expects($this->exactly(1))
             ->method('rowCount')
             ->willReturn(0);
 
+        $invokedCount = $this->exactly(3);
+
         $this->sqlExecutor
-            ->expects($this->exactly(3))
+            ->expects($invokedCount)
             ->method('execute')
-            ->withConsecutive([$query1], [$query2], [$query3])
-            ->willReturnOnConsecutiveCalls(
-                $this->createSthMock([['value' => 1]]),
-                $ps,
-                $this->createSthMock([])
-            );
+            ->willReturnCallback(function ($sql) use ($invokedCount, $query1, $query2, $query3, $ps) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals($query1, $sql);
+
+                    return $this->createSthMock([['value' => 1]]);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals($query2, $sql);
+
+                    return $ps;
+                }
+
+                if ($invokedCount->numberOfInvocations() === 3) {
+                    $this->assertEquals($query3, $sql);
+
+                    return $this->createSthMock([]);
+                }
+
+                throw new RuntimeException();
+            });
 
         $this->db->relate($this->account, 'teams', $this->team);
     }
@@ -1197,20 +1334,37 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             "UPDATE `entity_team` SET entity_team.deleted = 0 " .
             "WHERE entity_team.entity_id = 'accountId' AND entity_team.team_id = 'teamId' AND entity_team.entity_type = 'Account'";
 
-        $ps = $this->createMock(\PDOStatement::class);
+        $ps = $this->createMock(PDOStatement::class);
         $ps->expects($this->exactly(1))
             ->method('rowCount')
             ->willReturn(1);
 
+        $invokedCount = $this->exactly(3);
+
         $this->sqlExecutor
-            ->expects($this->exactly(3))
+            ->expects($invokedCount)
             ->method('execute')
-            ->withConsecutive([$query1], [$query2], [$query3])
-            ->willReturnOnConsecutiveCalls(
-                $this->createSthMock([['value' => 1]]),
-                $ps,
-                $this->createSthMock([])
-            );
+            ->willReturnCallback(function ($sql) use ($invokedCount, $query1, $query2, $query3, $ps) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals($query1, $sql);
+
+                    return $this->createSthMock([['value' => 1]]);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals($query2, $sql);
+
+                    return $ps;
+                }
+
+                if ($invokedCount->numberOfInvocations() === 3) {
+                    $this->assertEquals($query3, $sql);
+
+                    return $this->createSthMock([]);
+                }
+
+                throw new RuntimeException();
+            });
 
         $this->db->relate($this->account, 'teams', $this->team);
     }
@@ -1261,7 +1415,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         $value = $this->db->max(Select::fromRaw(['from' => 'Post']), 'id');
 
-        $this->assertEquals($value, 10);
+        $this->assertEquals(10, $value);
     }
 
     public function testMassRelate()
@@ -1271,8 +1425,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             "SELECT '1' AS `v0`, tag.id AS `id` FROM `tag` WHERE tag.name = 'test' AND tag.deleted = 0 ".
             "ON DUPLICATE KEY UPDATE `deleted` = 0";
 
-        $return = true;
-        $this->mockQuery($query, $return);
+        $this->mockQuery($query);
 
         $this->post->id = '1';
 

@@ -56,6 +56,11 @@ class FactoryTest extends TestCase
 {
     private $aclManager;
     private $acl;
+    private $injectableFactory;
+    private $selectManagerFactory;
+    private $user;
+    private $selectManager;
+    private $factory;
 
     protected function setUp(): void
     {

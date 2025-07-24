@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "status": "状態",
+    "processedCount": "処理数"
+  },
+  "options": {
+    "status": {
+      "Pending": "保留中",
+      "Running": "ランニング",
+      "Success": "成功",
+      "Failed": "失敗した"
+    }
+  },
+  "messages": {
+    "infoText": "一括アクションはcronによってアイドル状態で処理されています。完了までには時間がかかる場合があります。このモーダルダイアログを閉じても実行プロセスには影響しません。"
+  }
+}

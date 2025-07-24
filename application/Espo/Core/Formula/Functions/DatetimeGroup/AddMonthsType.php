@@ -31,8 +31,5 @@ namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
 class AddMonthsType extends AddIntervalType
 {
-    /**
-     * @var string
-     */
-    protected $intervalTypeString = 'months';
+    protected string $intervalTypeString = 'months';
 }

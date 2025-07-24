@@ -64,97 +64,15 @@ class Processor
         private FileStorageManager $fileStorageManager,
         private User $user,
         private HtmlizerFactory $htmlizerFactory,
-        private PlaceholdersProvider $placeholdersProvider
+        private PlaceholdersProvider $placeholdersProvider,
+        private EntityMapProvider $entityMapProvider,
     ) {}
 
     public function process(EmailTemplate $template, Params $params, Data $data): Result
     {
-        $entityHash = $data->getEntityHash();
-
         $user = $data->getUser() ?? $this->user;
 
-        if (!isset($entityHash[User::ENTITY_TYPE])) {
-            $entityHash[User::ENTITY_TYPE] = $user;
-        }
-
-        $foundByAddressEntity = null;
-
-        if ($data->getEmailAddress()) {
-            $foundByAddressEntity = $this->getEmailAddressRepository()
-                ->getEntityByAddress(
-                    $data->getEmailAddress(),
-                    null,
-                    [
-                        Contact::ENTITY_TYPE,
-                        Lead::ENTITY_TYPE,
-                        Account::ENTITY_TYPE,
-                        User::ENTITY_TYPE,
-                    ]
-                );
-        }
-
-        if ($foundByAddressEntity) {
-            if ($foundByAddressEntity instanceof Person) {
-                $entityHash[PersonTemplate::TEMPLATE_TYPE] = $foundByAddressEntity;
-            }
-
-            if (!isset($entityHash[$foundByAddressEntity->getEntityType()])) {
-                $entityHash[$foundByAddressEntity->getEntityType()] = $foundByAddressEntity;
-            }
-        }
-
-        if (
-            !$data->getParent() &&
-            $data->getParentId() &&
-            $data->getParentType()
-        ) {
-            $parent = $this->entityManager->getEntityById($data->getParentType(), $data->getParentId());
-
-            if ($parent) {
-                $service = $this->recordServiceContainer->get($data->getParentType());
-
-                $service->loadAdditionalFields($parent);
-
-                if (
-                    $params->applyAcl() &&
-                    !$this->aclManager->checkEntityRead($this->user, $parent)
-                ) {
-                    $parent = null;
-                }
-
-                $data = $data->withParent($parent);
-            }
-        }
-
-        if ($data->getParent()) {
-            $parent = $data->getParent();
-
-            $entityHash[$parent->getEntityType()] = $parent;
-            $entityHash[self::KEY_PARENT] = $parent;
-
-            if (
-                !isset($entityHash[PersonTemplate::TEMPLATE_TYPE]) &&
-                $parent instanceof Person
-            ) {
-                $entityHash[PersonTemplate::TEMPLATE_TYPE] = $parent;
-            }
-        }
-
-        if ($data->getRelatedId() && $data->getRelatedType()) {
-            $related = $this->entityManager->getEntityById($data->getRelatedType(), $data->getRelatedId());
-
-            if (
-                $related &&
-                $params->applyAcl() &&
-                !$this->aclManager->checkEntityRead($this->user, $related)
-            ) {
-                $related = null;
-            }
-
-            if ($related) {
-                $entityHash[$related->getEntityType()] = $related;
-            }
-        }
+        [$entityHash, $data] = $this->prepare($data, $user, $params);
 
         $subject = $template->getSubject() ?? '';
         $body = $template->getBody() ?? '';
@@ -180,27 +98,23 @@ class Processor
 
         foreach ($entityHash as $type => $entity) {
             $subject = $this->processText(
-                $type,
-                $entity,
-                $subject,
-                $user,
-                false,
-                null,
-                !$params->applyAcl(),
-                $template->isHtml()
+                type: $type,
+                entity: $entity,
+                text: $subject,
+                user: $user,
+                skipAcl: !$params->applyAcl(),
+                isHtml: $template->isHtml(),
             );
         }
 
         foreach ($entityHash as $type => $entity) {
             $body = $this->processText(
-                $type,
-                $entity,
-                $body,
-                $user,
-                false,
-                null,
-                !$params->applyAcl(),
-                $template->isHtml()
+                type: $type,
+                entity: $entity,
+                text: $body,
+                user: $user,
+                skipAcl: !$params->applyAcl(),
+                isHtml: $template->isHtml(),
             );
         }
 
@@ -208,14 +122,13 @@ class Processor
         $body = $this->processPlaceholders($body, $data);
 
         $attachmentList = $params->copyAttachments() ?
-            $this->copyAttachments($template) :
-            [];
+            $this->copyAttachments($template) : [];
 
         return new Result(
-            $subject,
-            $body,
-            $template->isHtml(),
-            $attachmentList
+            subject: $subject,
+            body: $body,
+            isHtml: $template->isHtml(),
+            attachmentList: $attachmentList,
         );
     }
 
@@ -281,20 +194,20 @@ class Processor
             $variableName = $attribute;
 
             if (!is_null($prefixLink)) {
-                $variableName = $prefixLink . '.' . $attribute;
+                $variableName = "$prefixLink.$attribute";
             }
 
-            $text = str_replace('{' . $type . '.' . $variableName . '}', $value, $text);
+            $text = str_replace("{{$type}.$variableName}", $value, $text);
         }
 
         if (!$skipLinks && $entity->hasId()) {
             $text = $this->processLinks(
-                $type,
-                $entity,
-                $text,
-                $user,
-                $skipAcl,
-                $isHtml
+                type: $type,
+                entity: $entity,
+                text: $text,
+                user: $user,
+                skipAcl: $skipAcl,
+                isHtml: $isHtml,
             );
         }
 
@@ -307,8 +220,10 @@ class Processor
         string $text,
         User $user,
         bool $skipAcl,
-        bool $isHtml
+        bool $isHtml,
     ): string {
+
+        $entityDefs = $this->entityManager->getDefs()->getEntity($entity->getEntityType());
 
         $forbiddenLinkList = $skipAcl ?
             $this->aclManager->getScopeRestrictedLinkList(
@@ -326,18 +241,24 @@ class Processor
                 continue;
             }
 
-            $relationType = $entity->getRelationType($relation);
+            if (
+                !in_array($entity->getRelationType($relation), [
+                    Entity::BELONGS_TO,
+                    Entity::BELONGS_TO_PARENT,
+                ])
+            ) {
+                continue;
+            }
 
-            $relationTypeIsOk =
-                $relationType === Entity::BELONGS_TO ||
-                $relationType === Entity::BELONGS_TO_PARENT;
-
-            if (!$relationTypeIsOk) {
+            if (
+                !$skipAcl &&
+                $entityDefs->hasField($relation) &&
+                !$this->aclManager->checkField($user, $entity->getEntityType(), $relation)
+            ) {
                 continue;
             }
 
             $relatedEntity = $this->entityManager
-                ->getRDBRepository($entity->getEntityType())
                 ->getRelation($entity, $relation)
                 ->findOne();
 
@@ -345,25 +266,27 @@ class Processor
                 continue;
             }
 
-            try {
-                $hasAccess = $this->aclManager->checkEntityRead($user, $relatedEntity);
-            } catch (Exception) {
-                continue;
-            }
+            if (!$skipAcl) {
+                try {
+                    $hasAccess = $this->aclManager->checkEntityRead($user, $relatedEntity);
+                } catch (Exception) {
+                    continue;
+                }
 
-            if (!$hasAccess) {
-                continue;
+                if (!$hasAccess) {
+                    continue;
+                }
             }
 
             $text = $this->processText(
-                $type,
-                $relatedEntity,
-                $text,
-                $user,
-                true,
-                $relation,
-                $skipAcl,
-                $isHtml
+                type: $type,
+                entity: $relatedEntity,
+                text: $text,
+                user: $user,
+                skipLinks: true,
+                prefixLink: $relation,
+                skipAcl: $skipAcl,
+                isHtml: $isHtml,
             );
         }
 
@@ -375,17 +298,15 @@ class Processor
      */
     private function copyAttachments(EmailTemplate $template): array
     {
-        $copiedAttachmentList = [];
+        $copiedAttachments = [];
 
-        /** @var iterable<Attachment> $attachmentList */
-        $attachmentList = $this->entityManager
-            ->getRDBRepositoryByClass(EmailTemplate::class)
+        /** @var iterable<Attachment> $attachments */
+        $attachments = $this->entityManager
             ->getRelation($template, 'attachments')
             ->find();
 
-        foreach ($attachmentList as $attachment) {
-            /** @var Attachment $clone */
-            $clone = $this->entityManager->getNewEntity(Attachment::ENTITY_TYPE);
+        foreach ($attachments as $attachment) {
+            $clone = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getNew();
 
             $data = $attachment->getValueMap();
 
@@ -394,8 +315,8 @@ class Processor
             unset($data->id);
 
             $clone->set($data);
-            $clone->set('sourceId', $attachment->getSourceId());
-            $clone->set('storage', $attachment->getStorage());
+            $clone->setSourceId($attachment->getSourceId());
+            $clone->setStorage($attachment->getStorage());
 
             if (!$this->fileStorageManager->exists($attachment)) {
                 continue;
@@ -403,10 +324,10 @@ class Processor
 
             $this->entityManager->saveEntity($clone);
 
-            $copiedAttachmentList[] = $clone;
+            $copiedAttachments[] = $clone;
         }
 
-        return $copiedAttachmentList;
+        return $copiedAttachments;
     }
 
     private function createHtmlizer(Params $params, User $user): Htmlizer
@@ -422,5 +343,106 @@ class Processor
     {
         /** @var EmailAddressRepository */
         return $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
+    }
+
+    /**
+     * @return array{array<string, Entity>, Data}
+     */
+    private function prepare(Data $data, User $user, Params $params): array
+    {
+        $entityHash = $data->getEntityHash();
+
+        if (!isset($entityHash[User::ENTITY_TYPE])) {
+            $entityHash[User::ENTITY_TYPE] = $user;
+        }
+
+        $foundByAddressEntity = null;
+
+        if ($data->getEmailAddress()) {
+            $foundByAddressEntity = $this->getEmailAddressRepository()->getEntityByAddress(
+                $data->getEmailAddress(),
+                null,
+                [
+                    Contact::ENTITY_TYPE,
+                    Lead::ENTITY_TYPE,
+                    Account::ENTITY_TYPE,
+                    User::ENTITY_TYPE,
+                ]
+            );
+        }
+
+        if ($foundByAddressEntity) {
+            if ($foundByAddressEntity instanceof Person) {
+                $entityHash[PersonTemplate::TEMPLATE_TYPE] = $foundByAddressEntity;
+            }
+
+            if (!isset($entityHash[$foundByAddressEntity->getEntityType()])) {
+                $entityHash[$foundByAddressEntity->getEntityType()] = $foundByAddressEntity;
+            }
+        }
+
+        if (
+            !$data->getParent() &&
+            $data->getParentId() &&
+            $data->getParentType()
+        ) {
+            $parent = $this->entityManager->getEntityById($data->getParentType(), $data->getParentId());
+
+            if ($parent) {
+                $service = $this->recordServiceContainer->get($data->getParentType());
+
+                $service->loadAdditionalFields($parent);
+
+                if (
+                    $params->applyAcl() &&
+                    !$this->aclManager->checkEntityRead($this->user, $parent)
+                ) {
+                    $parent = null;
+                }
+
+                $data = $data->withParent($parent);
+            }
+        }
+
+        if ($data->getParent()) {
+            $parent = $data->getParent();
+
+            $entityHash[$parent->getEntityType()] = $parent;
+            $entityHash[self::KEY_PARENT] = $parent;
+
+            if (
+                !isset($entityHash[PersonTemplate::TEMPLATE_TYPE]) &&
+                $parent instanceof Person
+            ) {
+                $entityHash[PersonTemplate::TEMPLATE_TYPE] = $parent;
+            }
+        }
+
+        if ($data->getParent()) {
+            $entityHash = array_merge(
+                $entityHash,
+                $this->entityMapProvider->get($data->getParent(), $user, $params->applyAcl())
+            );
+
+            $entityHash[$data->getParent()->getEntityType()] = $data->getParent();
+        }
+
+        if ($data->getRelatedId() && $data->getRelatedType()) {
+            $related = $this->entityManager->getEntityById($data->getRelatedType(), $data->getRelatedId());
+
+            if (
+                $related &&
+                $params->applyAcl() &&
+                !$this->aclManager->checkEntityRead($this->user, $related)
+            ) {
+                $related = null;
+            }
+
+            if ($related) {
+                $entityHash[$related->getEntityType()] = $related;
+            }
+        }
+
+        return [$entityHash, $data];
     }
 }

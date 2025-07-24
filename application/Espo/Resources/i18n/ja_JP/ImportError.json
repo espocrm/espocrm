@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "type": "タイプ",
+    "validationFailures": "検証失敗",
+    "import": "輸入",
+    "rowIndex": "行インデックス",
+    "exportRowIndex": "行インデックスのエクスポート",
+    "lineNumber": "行番号",
+    "exportLineNumber": "エクスポート行番号",
+    "row": "行",
+    "entityType": "エンティティタイプ"
+  },
+  "options": {
+    "type": {
+      "Validation": "検証",
+      "Access": "アクセス",
+      "Not-Found": "見つかりません"
+    }
+  },
+  "tooltips": {
+    "lineNumber": "元の CSV 内の行番号。",
+    "exportLineNumber": "エクスポート CSV 内の行番号。"
+  }
+}

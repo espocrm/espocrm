@@ -34,7 +34,7 @@ export default class extends EnumFieldView {
         super.setup();
 
         if (!this.model.isNew()) {
-            this.setReadOnly(true);
+            this.wait(this.setReadOnly(true));
         }
 
         this.listenTo(this.model, 'change:field', () => {

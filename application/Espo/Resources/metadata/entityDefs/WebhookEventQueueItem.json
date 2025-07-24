@@ -13,6 +13,9 @@
         "target": {
             "type": "linkParent"
         },
+        "user": {
+            "type": "link"
+        },
         "data": {
             "type": "jsonObject"
         },
@@ -25,6 +28,13 @@
         }
     },
     "links": {
+        "target": {
+            "type": "belongsToParent"
+        },
+        "user": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
     },
     "collection": {
         "orderBy": "number",

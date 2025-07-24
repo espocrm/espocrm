@@ -29,11 +29,11 @@
 
 namespace tests\unit\Espo\Core\Mail;
 
-use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 
 use Espo\Core\Notification\AssignmentNotificator;
 
+use Espo\ORM\Metadata;
 use Espo\ORM\Value\ValueAccessor;
 use Espo\ORM\Value\ValueAccessorFactory;
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
@@ -47,14 +47,23 @@ use Espo\Core\Notification\AssignmentNotificatorFactory;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Repositories\Database;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Metadata;
 use Espo\ORM\Repository\RDBSelectBuilder;
 
 use PHPUnit\Framework\TestCase;
 
 class ImporterTest extends TestCase
 {
-    protected $emailRepository;
+    private $emailRepository;
+    private $config;
+    private $assignmentNotificatorFactory;
+    private $parserFactory;
+    private $linkMultipleSaver;
+    private $parentFinder;
+    private $jobSchedulerFactory;
+    private $duplicateFinder;
+    private $email;
+    private $repositoryMap;
+    private $entityManager;
 
     protected function setUp(): void
     {
@@ -78,38 +87,36 @@ class ImporterTest extends TestCase
         $this->parserFactory
             ->expects($this->any())
             ->method('create')
-            ->will(
-                $this->returnCallback(
-                    function () {
-                        return new MailMimeParser($this->entityManager);
-                    }
-                )
+            ->willReturnCallback(
+                function () {
+                    return new MailMimeParser($this->entityManager);
+                }
             );
 
         $emailRepository
             ->expects($this->any())
             ->method('where')
-            ->will($this->returnValue($selectBuilder));
+            ->willReturn($selectBuilder);
 
         $emailRepository
             ->expects($this->any())
             ->method('select')
-            ->will($this->returnValue($selectBuilder));
+            ->willReturn($selectBuilder);
 
         $entityManager
             ->expects($this->any())
             ->method('getMetadata')
-            ->will($this->returnValue($metadata));
+            ->willReturn($metadata);
 
         $metadata
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnValue(null));
+            ->willReturn(null);
 
         $emptyRepository
             ->expects($this->any())
             ->method('where')
-            ->will($this->returnValue($selectBuilder));
+            ->willReturn($selectBuilder);
 
         $this->emailRepository = $emailRepository;
 
@@ -131,12 +138,10 @@ class ImporterTest extends TestCase
             );
 
         $emailDefs = require('tests/unit/testData/Core/Mail/email_defs.php');
-        $attachmentDefs = require('tests/unit/testData/Core/Mail/attachment_defs.php');
+        //$attachmentDefs = require('tests/unit/testData/Core/Mail/attachment_defs.php');
 
         $this->email = new Email('Email', $emailDefs, $entityManager, $valueAccessorFactory);
-        $attachment = new Attachment('Attachment', $attachmentDefs, $entityManager, $valueAccessorFactory);
-
-        $this->attachment = $attachment;
+        //$attachment = new Attachment('Attachment', $attachmentDefs, $entityManager, $valueAccessorFactory);
 
         $this->assignmentNotificatorFactory
             ->expects($this->any())
@@ -160,7 +165,7 @@ class ImporterTest extends TestCase
         $entityManager
             ->expects($this->any())
             ->method('getRDBRepositoryByClass')
-            ->will($this->returnValueMap($this->repositoryMap));
+            ->willReturnMap($this->repositoryMap);
 
         $entityManager
             ->expects($this->exactly(2))
@@ -173,15 +178,15 @@ class ImporterTest extends TestCase
         $this->emailRepository
             ->expects($this->once())
             ->method('getNew')
-            ->will($this->returnValue($email));
+            ->willReturn($email);
 
         $config
             ->expects($this->any())
             ->method('get')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['b2cMode', false]
-                ])
+                ]
             );
 
         $contents = file_get_contents('tests/unit/testData/Core/Mail/test_email_1.eml');
@@ -207,10 +212,6 @@ class ImporterTest extends TestCase
         $email = $importer->import($message, $data);
 
         $this->assertEquals('test 3', $email->get('name'));
-
-        //$teamIdList = $email->getLinkMultipleIdList('teams');
-
-        //$this->assertTrue(in_array('teamTestId', $teamIdList));
 
         $userIdList = $email->getLinkMultipleIdList('users');
         $this->assertTrue(in_array('userTestId', $userIdList));

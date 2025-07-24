@@ -52,6 +52,9 @@ class Note extends Entity
 
     public const TYPE_POST = 'Post';
     public const TYPE_UPDATE = 'Update';
+    /**
+     * @deprecated As of v9.2.0
+     */
     public const TYPE_STATUS = 'Status';
     public const TYPE_CREATE = 'Create';
     public const TYPE_CREATE_RELATED = 'CreateRelated';
@@ -146,7 +149,7 @@ class Note extends Entity
 
     public function isAclProcessed(): bool
     {
-        return (bool) $this->aclIsProcessed;
+        return $this->aclIsProcessed;
     }
 
     public function loadAttachments(): void

@@ -68,7 +68,6 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\Tools\Stream\Service as StreamService;
 use Exception;
-use Laminas\Mail\Message;
 use LogicException;
 
 use const FILTER_VALIDATE_EMAIL;
@@ -215,13 +214,13 @@ class SendService
 
         $this->validateEmailAddresses($entity);
 
-        $message = new Message();
+        $messageContainer = new Sender\MessageContainer();
 
         if (
             $groupAccount instanceof GroupAccount && $groupAccount->storeSentEmails() ||
             $personalAccount instanceof PersonalAccount && $personalAccount->storeSentEmails()
         ) {
-            $sender->withMessage($message);
+            $sender->withMessageContainer($messageContainer);
         }
 
         $this->applyReplied($entity, $sender);
@@ -263,7 +262,7 @@ class SendService
 
         $this->entityManager->saveEntity($entity, [Email::SAVE_OPTION_IS_JUST_SENT => true]);
 
-        $this->store($message, $groupAccount, $personalAccount);
+        $this->store($messageContainer, $groupAccount, $personalAccount);
 
         if ($parent) {
             $this->streamService->noteEmailSent($parent, $entity);
@@ -294,8 +293,18 @@ class SendService
         return $params;
     }
 
-    private function store(Message $message, ?Account $groupAccount, ?Account $personalAccount): void
-    {
+    private function store(
+        Sender\MessageContainer $messageContainer,
+        ?Account $groupAccount,
+        ?Account $personalAccount,
+    ): void {
+
+        $message = $messageContainer->message;
+
+        if (!$message) {
+            return;
+        }
+
         if ($groupAccount instanceof GroupAccount && $groupAccount->storeSentEmails()) {
             $id = $groupAccount->getId() ?? null;
 

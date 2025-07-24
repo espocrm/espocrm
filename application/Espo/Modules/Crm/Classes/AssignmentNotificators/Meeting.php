@@ -55,12 +55,9 @@ class Meeting implements AssignmentNotificator
         private UserEnabledChecker $userEnabledChecker,
         private EntityManager $entityManager,
         private User $user,
-        private Metadata $metadata
+        private Metadata $metadata,
     ) {}
 
-    /**
-     * @param MeetingEntity|Call $entity
-     */
     public function process(Entity $entity, Params $params): void
     {
         // Default assignment notifications not needed if stream is enabled.
@@ -91,14 +88,11 @@ class Meeting implements AssignmentNotificator
         $newIds = array_values($newIds);
 
         foreach ($newIds as $id) {
-            $this->processForUser($entity, $id);
+            $this->processForUser($entity, $id, $params);
         }
     }
 
-    /**
-     * @param MeetingEntity|Call $entity
-     */
-    private function processForUser(Entity $entity, string $userId): void
+    private function processForUser(MeetingEntity|Call $entity, string $userId, Params $params): void
     {
         if (!$this->userEnabledChecker->checkAssignment($entity->getEntityType(), $userId)) {
             return;
@@ -115,23 +109,21 @@ class Meeting implements AssignmentNotificator
             return;
         }
 
-        /** @var Notification $notification */
         $notification = $this->entityManager->getRDBRepositoryByClass(Notification::class)->getNew();
 
         $notification
             ->setType(self::NOTIFICATION_TYPE_EVENT_ATTENDEE)
             ->setUserId($userId)
-            ->setRelated(
-                LinkParent::create($entity->getEntityType(), $entity->getId())
-            )
-            ->setData((object) [
+            ->setRelated(LinkParent::createFromEntity($entity))
+            ->setData([
                 'entityType' => $entity->getEntityType(),
                 'entityId' => $entity->getId(),
                 'entityName' => $entity->getName(),
                 'isNew' => $entity->isNew(),
                 'userId' => $this->user->getId(),
                 'userName' => $this->user->getName(),
-            ]);
+            ])
+            ->setActionId($params->getActionId());
 
         $this->entityManager->saveEntity($notification);
     }

@@ -47,6 +47,9 @@ use Slim\Psr7\Factory\RequestFactory;
 use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Factory\StreamFactory;
 
+/**
+ * Note. Rebuild code were removed after PHPUnit upgrading.
+ */
 abstract class BaseTestCase extends TestCase
 {
     private ?Tester $espoTester = null;
@@ -61,6 +64,7 @@ abstract class BaseTestCase extends TestCase
     protected ?string $userName = null;
     /** Password used for authentication. */
     protected ?string $password = null;
+
     /**
      * @var ?array{
      *     entities?: array<string, array<string, mixed>>,
@@ -116,43 +120,38 @@ abstract class BaseTestCase extends TestCase
 
     protected function getFileManager(): FileManager
     {
-        return $this->getApplication()->getContainer()->get('fileManager');
+        return $this->getApplication()->getContainer()->getByClass(FileManager::class);
     }
 
     protected function getDataManager(): DataManager
     {
-        return $this->getApplication()->getContainer()->get('dataManager');
+        return $this->getApplication()->getContainer()->getByClass(DataManager::class);
     }
 
     protected function getInjectableFactory(): InjectableFactory
     {
-        return $this->getApplication()->getContainer()->get('injectableFactory');
+        return $this->getApplication()->getContainer()->getByClass(InjectableFactory::class);
     }
 
     protected function getMetadata(): Metadata
     {
-        return $this->getApplication()->getContainer()->get('metadata');
+        return $this->getApplication()->getContainer()->getByClass(Metadata::class);
     }
 
     protected function getEntityManager(): EntityManager
     {
-        return $this->getApplication()->getContainer()->get('entityManager');
+        return $this->getApplication()->getContainer()->getByClass(EntityManager::class);
     }
 
     protected function getConfig(): Config
     {
-        return $this->getApplication()->getContainer()->get('config');
+        return $this->getApplication()->getContainer()->getByClass(Config::class);
     }
 
     protected function normalizePath(string $path): string
     {
         return $this->espoTester->normalizePath($path);
     }
-
-    /*protected function sendRequest($method, $action, $data = null)
-    {
-        return $this->espoTester->sendRequest($method, $action, $data);
-    }*/
 
     protected function setUp(): void
     {
@@ -166,8 +165,10 @@ abstract class BaseTestCase extends TestCase
         $this->espoTester = new Tester($params);
 
         $this->beforeSetUp();
+
         $this->espoTester->initialize();
         $this->auth($this->userName, $this->password, null, $this->authenticationMethod);
+
         $this->beforeStartApplication();
         $this->espoApplication = $this->createApplication();
         $this->afterStartApplication();
@@ -237,10 +238,10 @@ abstract class BaseTestCase extends TestCase
         );
     }
 
-    protected function setData(array $data): void
+    /*protected function setData(array $data): void
     {
         $this->espoTester->setData($data);
-    }
+    }*/
 
     /**
      * @todo Revise whether needed.

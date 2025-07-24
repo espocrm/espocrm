@@ -31,6 +31,7 @@ namespace Espo\Core\Utils;
 
 use InvalidArgumentException;
 use LogicException;
+use RuntimeException;
 use stdClass;
 
 class DataUtil
@@ -54,9 +55,9 @@ class DataUtil
 
         foreach ($unsetList as $unsetItem) {
             if (is_array($unsetItem)) {
-                $arr = $unsetItem;
+                $path = $unsetItem;
             } else if (is_string($unsetItem)) {
-                $arr = explode('.', $unsetItem);
+                $path = explode('.', $unsetItem);
             } else {
                 throw new LogicException('Bad unset parameter');
             }
@@ -66,8 +67,8 @@ class DataUtil
             $elementArr = [];
             $elementArr[] = &$pointer;
 
-            foreach ($arr as $i => $key) {
-                if ($i === count($arr) - 1) {
+            foreach ($path as $i => $key) {
+                if ($i === count($path) - 1) {
                     if (is_array($pointer)) {
                         if (array_key_exists($key, $pointer)) {
                             unset($pointer[$key]);
@@ -93,7 +94,7 @@ class DataUtil
                             $previous =& $elementArr[$j - 1];
 
                             if (is_object($previous)) {
-                                $key = $arr[$j - 1];
+                                $key = $path[$j - 1];
                                 unset($previous->$key);
                             }
                         }
@@ -105,6 +106,10 @@ class DataUtil
                 if (is_array($pointer)) {
                     $pointer = &$pointer[$key];
                 } else if (is_object($pointer)) {
+                    if (!property_exists($pointer, $key)) {
+                        break;
+                    }
+
                     $pointer = &$pointer->$key;
                 }
 
@@ -212,5 +217,37 @@ class DataUtil
 
         /** @var array<string|int, mixed>|stdClass */
         return $overrideData;
+    }
+
+    /**
+     * @param string[] $path
+     * @since 9.2.0
+     * @internal
+     */
+    public static function setByPath(stdClass $data, array $path, mixed $value): void
+    {
+        if (count($path) === 1) {
+            $property = $path[0];
+
+            $data->$property = $value;
+
+            return;
+        }
+
+        if (count($path) < 1) {
+            return;
+        }
+
+        $property = array_shift($path);
+
+        if (!isset($data->$property)) {
+            $data->$property = (object) [];
+        }
+
+        if (!($data->$property instanceof stdClass)) {
+            throw new RuntimeException("Cannot set by path. Not an object.");
+        }
+
+        self::setByPath($data->$property, $path, $value);
     }
 }

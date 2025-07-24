@@ -27,22 +27,48 @@
  ************************************************************************/
 
 import View from 'view';
+import {inject} from 'di';
+import WebSocketManager from 'web-socket-manager';
 
 class NotificationBadgeView extends View {
 
     template = 'notification/badge'
 
+    /**
+     * @private
+     * @type {number}
+     */
     notificationsCheckInterval = 10
+
+    /**
+     * @private
+     * @type {number}
+     */
     groupedCheckInterval = 15
+
+    /**
+     * @private
+     * @type {number}
+     */
     waitInterval = 2
 
     /** @private */
     useWebSocket = false
 
+    /**
+     * @private
+     * @type {number|null}
+     */
     timeout = null
+
+    /**
+     * @private
+     * @type {number|null}
+     */
     groupedTimeout = null
 
     /**
+     * @private
      * @type {Object.<string, {
      *     portalDisabled?: boolean,
      *     grouped?: boolean,
@@ -56,14 +82,25 @@ class NotificationBadgeView extends View {
      */
     popupNotificationsData
 
+    /**
+     * @private
+     * @type {string}
+     */
     soundPath = 'client/sounds/pop_cork'
+
+    /**
+     * @private
+     * @type {WebSocketManager}
+     */
+    @inject(WebSocketManager)
+    webSocketManager
 
     setup() {
         this.addActionHandler('showNotifications', () => this.showNotifications());
 
         this.soundPath = this.getBasePath() + (this.getConfig().get('notificationSound') || this.soundPath);
         this.notificationSoundsDisabled = true;
-        this.useWebSocket = !!this.getHelper().webSocketManager;
+        this.useWebSocket = this.webSocketManager.isEnabled();
 
         const clearTimeouts = () => {
             if (this.timeout) {
@@ -304,13 +341,11 @@ class NotificationBadgeView extends View {
             }, this.waitInterval * 1000);
         };
 
-        const webSocketManager = this.getHelper().webSocketManager;
+        this.webSocketManager.subscribe('newNotification', () => onWebSocketNewNotification());
+        this.webSocketManager.subscribeToReconnect(onWebSocketNewNotification);
 
-        webSocketManager.subscribe('newNotification', () => onWebSocketNewNotification());
-        webSocketManager.subscribeToReconnect(onWebSocketNewNotification);
-
-        this.once('remove', () => webSocketManager.unsubscribe('newNotification'));
-        this.once('remove', () => webSocketManager.unsubscribeFromReconnect(onWebSocketNewNotification));
+        this.once('remove', () => this.webSocketManager.unsubscribe('newNotification'));
+        this.once('remove', () => this.webSocketManager.unsubscribeFromReconnect(onWebSocketNewNotification));
     }
 
     /**
@@ -380,7 +415,7 @@ class NotificationBadgeView extends View {
         if (useWebSocket) {
             const category = 'popupNotifications.' + (data.webSocketCategory || name);
 
-            this.getHelper().webSocketManager.subscribe(category, (c, response) => {
+            this.webSocketManager.subscribe(category, (c, response) => {
                 if (!response.list) {
                     return;
                 }

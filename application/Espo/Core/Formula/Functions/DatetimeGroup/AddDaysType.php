@@ -31,5 +31,5 @@ namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
 class AddDaysType extends AddIntervalType
 {
-    protected $intervalTypeString = 'days';
+    protected string $intervalTypeString = 'days';
 }

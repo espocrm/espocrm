@@ -175,7 +175,8 @@ class LabelManagerEditView extends View {
             language: this.language,
             labels: data,
         })
-        .then(returnData => {
+        .then(/** Record.<string, Record<string, string>>*/returnData => {
+            this.scopeData = returnData;
             this.scopeDataInitial = Espo.Utils.cloneDeep(this.scopeData);
             this.dirtyLabelList = [];
             this.setConfirmLeaveOut(false);
@@ -184,9 +185,17 @@ class LabelManagerEditView extends View {
             this.$cancel.removeClass('disabled').removeAttr('disabled');
 
             for (const key in returnData) {
-                const name = key.split('[.]').splice(1).join('[.]');
+                const items = returnData[key];
 
-                this.$el.find(`input.label-value[data-name="${name}"]`).val(returnData[key]);
+                for (const [path, value] of Object.entries(items)) {
+                    const input = this.element.querySelector(`input.label-value[data-name="${path}"]`);
+
+                    if (!(input instanceof HTMLInputElement)) {
+                        continue;
+                    }
+
+                    input.value = value;
+                }
             }
 
             Espo.Ui.success(this.translate('Saved'));

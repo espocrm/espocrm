@@ -32,7 +32,7 @@ import View from 'view';
 import $ from 'jquery';
 import CollapsedModalBarView from 'views/collapsed-modal-bar';
 import {inject} from 'di';
-import {ShortcutManager} from 'helpers/site/shortcut-manager';
+import ShortcutManager from 'helpers/site/shortcut-manager';
 
 class MasterSiteView extends View {
 

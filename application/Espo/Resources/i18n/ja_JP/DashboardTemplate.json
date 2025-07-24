@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "layout": "レイアウト",
+    "append": "追加（ユーザーのタブを削除しない）"
+  },
+  "labels": {
+    "Create DashboardTemplate": "テンプレートを作成",
+    "Deploy to Users": "ユーザーに展開",
+    "Deploy to Team": "チームに展開"
+  }
+}

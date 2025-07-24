@@ -1,0 +1,15 @@
+{
+    "entityLinkMapping": {
+        "Contact": {
+            "Account": "account"
+        },
+        "Opportunity": {
+            "Account": "account",
+            "Contact": "contact"
+        },
+        "Case": {
+            "Account": "account",
+            "Contact": "contact"
+        }
+    }
+}

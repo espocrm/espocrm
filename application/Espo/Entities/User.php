@@ -40,8 +40,8 @@ class User extends Person
 {
     public const ENTITY_TYPE = 'User';
 
-    public const ATTRIBUTE_TYPE = 'type';
-    public const ATTRIBUTE_IS_ACTIVE = 'isActive';
+    public const ATTR_TYPE = 'type';
+    public const ATTR_IS_ACTIVE = 'isActive';
 
     public const LINK_ACCOUNTS = 'accounts';
     public const LINK_CONTACT = 'contact';

@@ -54,6 +54,11 @@ class Binding implements BindingProcessor
     private function bindServices(Binder $binder): void
     {
         $binder->bindService(
+            'Espo\\Core\\Application\\ApplicationParams',
+            'applicationParams'
+        );
+
+        $binder->bindService(
             'Espo\\Core\\InjectableFactory',
             'injectableFactory'
         );

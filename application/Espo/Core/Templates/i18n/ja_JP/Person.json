@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "address": "住所"
+  },
+  "links": {
+    "meetings": "会議",
+    "calls": "通話",
+    "tasks": "タスク"
+  },
+  "labels": {
+    "Create {entityType}": "{entityTypeTranslated} を作成する"
+  }
+}

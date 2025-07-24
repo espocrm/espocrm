@@ -237,6 +237,14 @@ class BaseFieldView extends View {
     readOnly = false
 
     /**
+     * Read-only locked.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    readOnlyLocked = false
+
+    /**
      * A label text.
      *
      * @type {string}
@@ -444,9 +452,13 @@ class BaseFieldView extends View {
         }
 
         if (!this.isReady) {
-            this.mode = 'detail';
+            if (!this.mode || !this._initCalled) {
+                this.mode = 'detail';
 
-            return Promise.resolve();
+                return Promise.resolve();
+            }
+
+            return this.setDetailMode();
         }
 
         if (this.isEditMode()) {
@@ -711,6 +723,12 @@ class BaseFieldView extends View {
         return this.prepare();
     }
 
+    /**
+     * @private
+     * @type {boolean}
+     */
+    _initCalled = false
+
     /** @inheritDoc */
     init() {
         this.validations = Espo.Utils.clone(this.validations);
@@ -788,6 +806,8 @@ class BaseFieldView extends View {
         }
 
         this.mode = undefined;
+
+        this._initCalled = true;
 
         this.wait(
             this.setMode(mode)

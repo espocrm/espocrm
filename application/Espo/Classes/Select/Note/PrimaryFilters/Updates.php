@@ -38,10 +38,7 @@ class Updates implements Filter
     public function apply(QueryBuilder $queryBuilder): void
     {
         $queryBuilder->where([
-            'type' => [
-                Note::TYPE_UPDATE,
-                Note::TYPE_STATUS,
-            ],
+            'type' => Note::TYPE_UPDATE,
         ]);
     }
 }

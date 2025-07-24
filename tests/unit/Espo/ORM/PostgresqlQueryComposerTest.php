@@ -53,6 +53,8 @@ class PostgresqlQueryComposerTest extends TestCase
     private ?QueryComposer $queryComposer;
     private ?EntityManager $entityManager;
 
+    private $queryBuilder;
+
     protected function setUp(): void
     {
         $ormMetadata = include('tests/unit/testData/DB/ormMetadata.php');
@@ -72,11 +74,11 @@ class PostgresqlQueryComposerTest extends TestCase
         $pdo
             ->expects($this->any())
             ->method('quote')
-            ->will($this->returnCallback(function() {
+            ->willReturnCallback(function() {
                 $args = func_get_args();
 
                 return "'" . $args[0] . "'";
-            }));
+            });
 
         $this->entityManager = $this->createMock(EntityManager::class);
         $entityFactory = $this->createMock(EntityFactory::class);
@@ -84,24 +86,17 @@ class PostgresqlQueryComposerTest extends TestCase
         $entityFactory
             ->expects($this->any())
             ->method('create')
-            ->will(
-                $this->returnCallback(function () use ($metadata) {
+            ->willReturnCallback(
+                function () use ($metadata) {
                     $args = func_get_args();
                     $className = "tests\\unit\\testData\\DB\\" . $args[0];
                     $defs = $metadata->get($args[0]) ?? [];
 
                     return new $className($args[0], $defs, $this->entityManager);
-                })
+                }
             );
 
         $this->queryComposer = new QueryComposer($pdo, $entityFactory, $metadata);
-
-        $this->post = $entityFactory->create('Post');
-        $this->comment = $entityFactory->create('Comment');
-        $this->tag = $entityFactory->create('Tag');
-        $this->note = $entityFactory->create('Note');
-        $this->contact = $entityFactory->create('Contact');
-        $this->account = $entityFactory->create('Account');
     }
 
     public function testUpdate1(): void

@@ -34,13 +34,10 @@ use Espo\ORM\Defs;
 use Espo\ORM\Defs\DefsData;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use Espo\ORM\Executor\QueryExecutor;
 use Espo\ORM\Metadata;
 use Espo\ORM\MetadataDataProvider;
 use Espo\Core\ORM\EntityManager;
 
-use Espo\ORM\SthCollection;
-use PDOStatement;
 use PHPUnit\Framework\TestCase;
 use SplObjectStorage;
 
@@ -48,6 +45,9 @@ require_once 'tests/unit/testData/DB/Entities.php';
 
 class CollectionTest extends TestCase
 {
+    private $metadata;
+    private $entityManager;
+
     protected function setUp(): void
     {
         $ormMetadata = include('tests/unit/testData/DB/ormMetadata.php');

@@ -42,6 +42,11 @@ use PHPUnit\Framework\TestCase;
 
 class FilterFactoryTest extends TestCase
 {
+    private $injectableFactory;
+    private $metadata;
+    private $user;
+    private $factory;
+
     protected function setUp(): void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
@@ -113,20 +118,25 @@ class FilterFactoryTest extends TestCase
         );
 
         $this->metadata
+            ->expects(self::any())
             ->method('get')
-            ->withConsecutive(
-                [[
-                    'selectDefs',
-                    $entityType,
-                    'boolFilterClassNameMap',
-                    'badName',
-                ]],
-                [['app', 'select', 'boolFilterClassNameMap', 'badName']],
-            )
-            ->willReturnOnConsecutiveCalls(
-                null,
-                null
-            );
+            ->willReturnMap([
+                [
+                    [
+                        'selectDefs',
+                        $entityType,
+                        'boolFilterClassNameMap',
+                        'badName',
+                    ],
+                    null,
+                    null
+                ],
+                [
+                    ['app', 'select', 'boolFilterClassNameMap', 'badName'],
+                    null,
+                    null
+                ],
+            ]);
 
         $this->assertFalse(
             $this->factory->has($entityType, 'badName')

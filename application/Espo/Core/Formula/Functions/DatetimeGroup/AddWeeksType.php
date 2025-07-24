@@ -31,8 +31,5 @@ namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
 class AddWeeksType extends AddIntervalType
 {
-    /**
-     * @var string
-     */
-    protected $intervalTypeString = 'weeks';
+    protected string $intervalTypeString = 'weeks';
 }

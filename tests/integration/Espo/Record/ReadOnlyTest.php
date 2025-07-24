@@ -29,7 +29,6 @@
 
 namespace tests\integration\Espo\Record;
 
-use Espo\Core\FieldValidation\Type;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Record\UpdateParams;

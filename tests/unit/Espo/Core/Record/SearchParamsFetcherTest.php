@@ -35,11 +35,13 @@ use Espo\Core\Api\RequestWrapper;
 use Espo\Core\Utils\Config;
 use Espo\Core\Select\Text\MetadataProvider as TextMetadataProvider;
 
+use PHPUnit\Framework\TestCase;
 use Slim\Psr7\Factory\RequestFactory;
 
-class SearchParamsFetcherTest extends \PHPUnit\Framework\TestCase
+class SearchParamsFetcherTest extends TestCase
 {
     private $config;
+    private $textMetadataProvider;
 
     protected function setUp(): void
     {

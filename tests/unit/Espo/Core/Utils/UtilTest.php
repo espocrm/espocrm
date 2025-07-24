@@ -30,8 +30,10 @@
 namespace tests\unit\Espo\Core\Utils;
 
 use Espo\Core\Utils\Util;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
-class UtilTest extends \PHPUnit\Framework\TestCase
+class UtilTest extends TestCase
 {
     public function testGetSeparator()
     {
@@ -1162,9 +1164,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($testResult, Util::replaceInArray('{0}', 'DONE', $testArray, true));
     }
 
-    /**
-     * @dataProvider getClassNames
-     */
+    #[DataProvider('getClassNames')]
     public function testGetClassName1($path, $expectedClassName = 'Espo\EntryPoints\Download')
     {
         $this->assertEquals($expectedClassName, Util::getClassName($path));
@@ -1179,7 +1179,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function getClassNames(): array
+    static public function getClassNames(): array
     {
         return [
             'application/Espo/EntryPoints/Download.php' => ['application/Espo/EntryPoints/Download.php'],
@@ -1599,10 +1599,10 @@ class UtilTest extends \PHPUnit\Framework\TestCase
           'newAttr2' => false,
         );
 
-        $this->assertEquals($result, \Espo\Core\Utils\Util::arrayDiff($array1, $array2));
+        $this->assertEquals($result, Util::arrayDiff($array1, $array2));
     }
 
-    public function htmlList()
+    static public function htmlList()
     {
         return [
             ['Test&lt;script&gt;alert(&quot;test&quot;)&lt;/script&gt;', 'Test<script>alert("test")</script>'],
@@ -1614,15 +1614,13 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider htmlList
-     */
+    #[DataProvider('htmlList')]
     public function testSanitizeHtml($expectedResult, $html)
     {
         $this->assertEquals($expectedResult, Util::sanitizeHtml($html));
     }
 
-    public function urlAddParamList()
+    static public function urlAddParamList()
     {
         return [
             ['https://test.link/?param1=1111', 'https://test.link', 'param1', '1111'],
@@ -1636,15 +1634,13 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider urlAddParamList
-     */
+    #[DataProvider('urlAddParamList')]
     public function testUrlAddParam($expectedResult, $url, $paramName, $paramValue)
     {
         $this->assertEquals($expectedResult, Util::urlAddParam($url, $paramName, $paramValue));
     }
 
-    public function urlRemoveParamList()
+    static public function urlRemoveParamList()
     {
         return [
             ['https://test.link', 'https://test.link', 'param1'],
@@ -1659,9 +1655,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider urlRemoveParamList
-     */
+    #[DataProvider('urlRemoveParamList')]
     public function testUrlRemoveParam($expectedResult, $url, $paramName, $suffix = '')
     {
         $this->assertEquals($expectedResult, Util::urlRemoveParam($url, $paramName, $suffix));

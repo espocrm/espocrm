@@ -29,12 +29,13 @@
 
 namespace tests\unit\Espo\Core\Utils\File;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 use tests\unit\ReflectionHelper;
-
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\File\Manager as FileManager;
 
-class ManagerTest extends \PHPUnit\Framework\TestCase
+class ManagerTest extends TestCase
 {
     /**
      * @var FileManager
@@ -42,9 +43,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     private $fileManager;
 
     protected $filesPath = 'tests/unit/testData/FileManager';
-
-    protected $cachePath = 'tests/unit/testData/cache/FileManager';
-
+    protected const CACHE_PATH = 'tests/unit/testData/cache/FileManager';
     protected $reflection;
 
     protected function setUp(): void
@@ -77,7 +76,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testPutContents()
     {
-        $testPath = $this->cachePath;
+        $testPath = self::CACHE_PATH;
 
         $result= 'next value';
 
@@ -159,7 +158,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testUnsetContents()
     {
-        $testPath = $this->cachePath.'/unsets.json';
+        $testPath = self::CACHE_PATH.'/unsets.json';
 
         $initData = '{"fields":{"someName":{"type":"varchar","maxLength":40},"someName2":{"type":"varchar","maxLength":36}}}';
         $this->fileManager->putContents($testPath, $initData);
@@ -314,10 +313,10 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($result, $this->reflection->invokeMethod('getSingleFileList', array($input, false)));
     }
 
-    public function fileListSets()
+    static public function fileListSets()
     {
-        return array(
-          array( 'Set1', array(
+        return [
+          ['Set1', [
                 'custom',
                 'custom/Espo',
                 'custom/Espo/Custom',
@@ -325,10 +324,10 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
                 'custom/Espo/Custom/Modules/TestModule',
                 'custom/Espo/Custom/Modules/TestModule/SubFolder',
                 'custom/Espo/Custom/Modules/TestModule/SubFolder/Tester.txt',
-            )
-          ),
+          ]
+          ],
 
-          array( 'Set2', array(
+          ['Set2', [
                 'custom',
                 'custom/Espo',
                 'custom/Espo/Custom',
@@ -336,24 +335,22 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
                 'custom/Espo/Custom/Resources/metadata',
                 'custom/Espo/Custom/Resources/metadata/entityDefs',
                 'custom/Espo/Custom/Resources/metadata/entityDefs/Account.json',
-            )
-          ),
+          ]
+          ],
 
-          array( 'Set3', array(
+          ['Set3', [
                 'custom',
                 'custom/test.file',
-            )
-          ),
-        );
+          ]
+          ],
+        ];
     }
 
-    /**
-     * @dataProvider fileListSets
-     */
+    #[DataProvider('fileListSets')]
     public function testRemoveWithEmptyDirs($name, $result)
     {
         $path = Util::fixPath($this->filesPath . '/Remove/' . $name);
-        $cachePath = Util::fixPath($this->cachePath . '/' . $name);
+        $cachePath = Util::fixPath(self::CACHE_PATH . '/' . $name);
         $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
         $fileList = array (
@@ -370,20 +367,18 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function existsPathSet()
+    static public function existsPathSet()
     {
-        return array(
-          array( 'application/Espo/Core/Application.php', 'application/Espo/Core/Application.php', ),
-          array( 'application/Espo/Core/NotRealApplication.php', 'application/Espo/Core'),
-          array( 'application/Espo/Core/NotRealApplication.php', 'application/Espo/Core'),
-          array( 'application/NoEspo/Core/Application.php', 'application'),
-          array( 'notRealPath/Espo/Core/Application.php', '.'),
-        );
+        return [
+          ['application/Espo/Core/Application.php', 'application/Espo/Core/Application.php',],
+          ['application/Espo/Core/NotRealApplication.php', 'application/Espo/Core'],
+          ['application/Espo/Core/NotRealApplication.php', 'application/Espo/Core'],
+          ['application/NoEspo/Core/Application.php', 'application'],
+          ['notRealPath/Espo/Core/Application.php', '.'],
+        ];
     }
 
-    /**
-     * @dataProvider existsPathSet
-     */
+    #[DataProvider('existsPathSet')]
     public function testGetExistsPath($input, $result)
     {
         $this->assertEquals(
@@ -395,7 +390,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     public function testCopyTestCase1()
     {
         $path = Util::fixPath($this->filesPath . '/copy/testCase1');
-        $cachePath = Util::fixPath($this->cachePath . '/copy/testCase1');
+        $cachePath = Util::fixPath(self::CACHE_PATH . '/copy/testCase1');
 
         $expectedResult = [
             'custom/Espo/Custom/Modules/ExtensionTest/File.json',
@@ -416,7 +411,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     public function testCopyTestCase2()
     {
         $path = Util::fixPath($this->filesPath . '/copy/testCase2');
-        $cachePath = Util::fixPath($this->cachePath . '/copy/testCase2');
+        $cachePath = Util::fixPath(self::CACHE_PATH . '/copy/testCase2');
 
         $expectedResult = [
             'custom/Espo/Custom/test1.php',
@@ -438,7 +433,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     public function testCopyTestCase3()
     {
         $path = Util::fixPath($this->filesPath . '/copy/testCase3');
-        $cachePath = Util::fixPath($this->cachePath . '/copy/testCase3');
+        $cachePath = Util::fixPath(self::CACHE_PATH . '/copy/testCase3');
 
         $expectedResult = [
             'custom/Espo/Custom/test1.php',
@@ -469,7 +464,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     public function testCopyTestCase4()
     {
         $path = Util::fixPath($this->filesPath . '/copy/testCase4');
-        $cachePath = Util::fixPath($this->cachePath . '/copy/testCase4');
+        $cachePath = Util::fixPath(self::CACHE_PATH . '/copy/testCase4');
 
         $expectedResult = [
             'custom',
@@ -502,9 +497,9 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function relativePathData()
+    static public function relativePathData()
     {
-        $tmpPath = $this->cachePath;
+        $tmpPath = self::CACHE_PATH;
 
         if (!file_exists($tmpPath)) {
             mkdir($tmpPath, 0775, true);
@@ -529,9 +524,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         return $data;
     }
 
-    /**
-     * @dataProvider relativePathData
-     */
+    #[DataProvider('relativePathData')]
     public function testGetRelativePath($path, $expectedResult, $basePath = null, $dirSeparator = null)
     {
         $this->assertEquals(

@@ -1,0 +1,31 @@
+{
+  "options": {
+    "operators": {
+      "equals": "等しい",
+      "notEquals": "等しくない",
+      "greaterThan": "より大きい",
+      "lessThan": "未満",
+      "greaterThanOrEquals": "より大きいか等しい",
+      "lessThanOrEquals": "以下",
+      "in": "で",
+      "notIn": "入っていません",
+      "inPast": "過去に",
+      "inFuture": "未来は",
+      "isToday": "今日は",
+      "isTrue": "本当です",
+      "isFalse": "偽です",
+      "isEmpty": "空です",
+      "isNotEmpty": "空ではありません",
+      "contains": "含まれるもの",
+      "has": "含まれるもの",
+      "notContains": "含まない",
+      "notHas": "含まない",
+      "startsWith": "始まり",
+      "endsWith": "終わり",
+      "matches": "一致（正規表現）"
+    }
+  },
+  "labels": {
+    "Field": "分野"
+  }
+}

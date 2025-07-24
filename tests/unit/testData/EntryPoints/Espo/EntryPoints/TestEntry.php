@@ -2,15 +2,11 @@
 
 namespace tests\unit\testData\EntryPoints\Espo\EntryPoints;
 
-
-class Test
+class TestEntry
 {
     protected $authRequired = true;
 
     public function run()
-    {
-
-
-    }
+    {}
 }
 

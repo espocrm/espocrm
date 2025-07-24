@@ -29,24 +29,22 @@
 
 namespace tests\integration\Espo\Core\Binding;
 
-use Espo\Core\{
-    Container\ContainerBuilder,
-    Binding\BindingLoader,
-    Binding\BindingData,
-    Binding\Binding,
-};
+use Espo\Core\Application\ApplicationParams;
+use Espo\Core\Binding\Binding;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\Binding\BindingLoader;
+use Espo\Core\Container\ContainerBuilder;
 
-use tests\integration\testClasses\Binding\{
-    SomeInterface,
-    SomeImplementation,
-    SomeClass,
-    SomeService,
-    SomeClassRequiringService,
-    SomeClassRequiringValue,
-    SomeFactory,
-};
+use tests\integration\Core\BaseTestCase;
+use tests\integration\testClasses\Binding\SomeClass;
+use tests\integration\testClasses\Binding\SomeClassRequiringService;
+use tests\integration\testClasses\Binding\SomeClassRequiringValue;
+use tests\integration\testClasses\Binding\SomeFactory;
+use tests\integration\testClasses\Binding\SomeImplementation;
+use tests\integration\testClasses\Binding\SomeInterface;
+use tests\integration\testClasses\Binding\SomeService;
 
-class BindingTest extends \tests\integration\Core\BaseTestCase
+class BindingTest extends BaseTestCase
 {
     public function testImplementation(): void
     {
@@ -69,6 +67,7 @@ class BindingTest extends \tests\integration\Core\BaseTestCase
 
         $container = (new ContainerBuilder())
             ->withBindingLoader($bindingLoader)
+            ->withParams(new ApplicationParams(noErrorHandler: true))
             ->build();
 
         $injectableFactory = $container->get('injectableFactory');
@@ -104,6 +103,7 @@ class BindingTest extends \tests\integration\Core\BaseTestCase
 
         $container = (new ContainerBuilder())
             ->withBindingLoader($bindingLoader)
+            ->withParams(new ApplicationParams(noErrorHandler: true))
             ->build();
 
         $injectableFactory = $container->get('injectableFactory');
@@ -141,6 +141,7 @@ class BindingTest extends \tests\integration\Core\BaseTestCase
 
         $container = (new ContainerBuilder())
             ->withBindingLoader($bindingLoader)
+            ->withParams(new ApplicationParams(noErrorHandler: true))
             ->build();
 
         $injectableFactory = $container->get('injectableFactory');
@@ -179,6 +180,7 @@ class BindingTest extends \tests\integration\Core\BaseTestCase
                 'someService' => $someService,
             ])
             ->withBindingLoader($bindingLoader)
+            ->withParams(new ApplicationParams(noErrorHandler: true))
             ->build();
 
         $injectableFactory = $container->get('injectableFactory');
@@ -213,6 +215,7 @@ class BindingTest extends \tests\integration\Core\BaseTestCase
 
         $container = (new ContainerBuilder())
             ->withBindingLoader($bindingLoader)
+            ->withParams(new ApplicationParams(noErrorHandler: true))
             ->build();
 
         $injectableFactory = $container->get('injectableFactory');

@@ -30,13 +30,15 @@
 namespace tests\integration\Espo\Core\FulltextIndex;
 
 use Espo\Core\Utils\Util;
+use PHPUnit\Framework\Attributes\DataProvider;
+use tests\integration\Core\BaseTestCase;
 
-class CheckCreatedIndexTest extends \tests\integration\Core\BaseTestCase
+class CheckCreatedIndexTest extends BaseTestCase
 {
     protected ?string $dataFile = 'InitData.php';
     protected ?string $pathToFiles = 'Core/FulltextIndex/customFiles';
 
-    public function entitylist()
+    static public function entityList()
     {
         return [
             ['Email'],
@@ -45,9 +47,7 @@ class CheckCreatedIndexTest extends \tests\integration\Core\BaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider entitylist
-     */
+    #[DataProvider('entityList')]
     public function testCreatedIndexes($entityName)
     {
         $entityManager = $this->getContainer()->get('entityManager');

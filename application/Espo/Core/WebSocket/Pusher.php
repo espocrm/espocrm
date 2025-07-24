@@ -120,9 +120,11 @@ class Pusher implements WampServerInterface
         $checkCommand = $this->getAccessCheckCommandForTopic($conn, $topic);
 
         if ($checkCommand) {
-            $checkResult = shell_exec($checkCommand);
+            $checkCommand = $checkCommand . ' 2>&1';
 
-            if ($checkResult !== 'true') {
+            $checkResult = exec($checkCommand, $o, $exitCode);
+
+            if ($checkResult !== 'true' || $exitCode !== 0) {
                 if ($this->isDebugMode) {
                     $this->log("$connectionId: check access failed for topic $topicId for user $userId");
                 }

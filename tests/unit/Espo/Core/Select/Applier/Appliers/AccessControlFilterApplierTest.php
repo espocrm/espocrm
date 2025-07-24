@@ -29,22 +29,30 @@
 
 namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
-use Espo\Core\{
-    Select\AccessControl\Applier as AccessControlFilterApplier,
-    Select\SelectManager,
-    Select\AccessControl\FilterFactory as AccessControlFilterFactory,
-    Select\AccessControl\FilterResolverFactory as AccessControlFilterResolverFactory,
-    Select\AccessControl\FilterResolver,
-    Select\AccessControl\Filter as AccessControlFilter,
-};
+use Espo\Core\Select\AccessControl\Applier as AccessControlFilterApplier;
+use Espo\Core\Select\AccessControl\Filter as AccessControlFilter;
+use Espo\Core\Select\AccessControl\FilterFactory as AccessControlFilterFactory;
+use Espo\Core\Select\AccessControl\FilterResolver;
+use Espo\Core\Select\AccessControl\FilterResolverFactory as AccessControlFilterResolverFactory;
+use Espo\Core\Select\SelectManager;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Entities\User,
-};
+use Espo\Entities\User;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use PHPUnit\Framework\TestCase;
 
-class AccessControlFilterApplierTest extends \PHPUnit\Framework\TestCase
+class AccessControlFilterApplierTest extends TestCase
 {
+    private $filterFactory;
+    private $filterResolverFactory;
+    private $user;
+    private $selectManager;
+    private $queryBuilder;
+    private $filterResolver;
+    private $filter;
+    private $mandatoryFilter;
+    private $entityType;
+    private $applier;
+
     protected function setUp() : void
     {
         $this->filterFactory = $this->createMock(AccessControlFilterFactory::class);
@@ -141,14 +149,10 @@ class AccessControlFilterApplierTest extends \PHPUnit\Framework\TestCase
         $this->filterFactory
             ->expects($this->exactly(2))
             ->method('create')
-            ->withConsecutive(
-                [$this->entityType, $this->user, 'mandatory'],
-                [$this->entityType, $this->user, $filterName],
-            )
-            ->willReturnOnConsecutiveCalls(
-                $this->mandatoryFilter,
-                $this->filter
-            );
+            ->willReturnMap([
+                [$this->entityType, $this->user, 'mandatory', $this->mandatoryFilter],
+                [$this->entityType, $this->user, $filterName, $this->filter],
+            ]);
 
         $this->filter
             ->expects($this->once())

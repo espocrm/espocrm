@@ -31,7 +31,7 @@
 import View from 'view';
 import {inject} from 'di';
 import ModalBarProvider from 'helpers/site/modal-bar-provider';
-import {ShortcutManager} from 'helpers/site/shortcut-manager';
+import ShortcutManager from 'helpers/site/shortcut-manager';
 
 /**
  * A base modal view. Can be extended or used directly.
@@ -457,11 +457,8 @@ class ModalView extends View {
      * @private
      */
     initShortcuts() {
-        if (!this.shortcutKeys) {
-            return;
-        }
-
-        this.shortcutManager.add(this, this.shortcutKeys, {stack: true});
+        // Shortcuts to be added even if there's no keys set – to suppress current shortcuts.
+        this.shortcutManager.add(this, this.shortcutKeys ?? {}, {stack: true});
 
         this.once('remove', () => {
             this.shortcutManager.remove(this);

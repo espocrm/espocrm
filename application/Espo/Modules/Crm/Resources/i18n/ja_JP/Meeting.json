@@ -1,0 +1,62 @@
+{
+  "fields": {
+    "name": "名前",
+    "parent": "親",
+    "status": "状態",
+    "dateStart": "開始日",
+    "dateEnd": "終了日",
+    "duration": "間隔",
+    "description": "説明",
+    "users": "ユーザー",
+    "contacts": "連絡先",
+    "leads": "リード",
+    "reminders": "リマインダー",
+    "account": "アカウント",
+    "acceptanceStatus": "承認状況",
+    "dateStartDate": "開始日（終日）",
+    "dateEndDate": "日付終了（終日）",
+    "isAllDay": "終日",
+    "sourceEmail": "ソースメール",
+    "uid": "ユーザID",
+    "joinUrl": "参加URL"
+  },
+  "options": {
+    "status": {
+      "Planned": "計画済み",
+      "Held": "開催",
+      "Not Held": "開催されなかった"
+    },
+    "acceptanceStatus": {
+      "None": "なし",
+      "Accepted": "承認済み",
+      "Declined": "拒否",
+      "Tentative": "仮の"
+    }
+  },
+  "massActions": {
+    "setHeld": "セットホールド",
+    "setNotHeld": "セットは保持されません"
+  },
+  "labels": {
+    "Create Meeting": "会議を作成",
+    "Set Held": "セットホールド",
+    "Set Not Held": "セットは保持されません",
+    "Send Invitations": "招待状を送る",
+    "on time": "時間通りに",
+    "before": "前に",
+    "All-Day": "終日",
+    "Send Cancellation": "キャンセルを送信",
+    "Acceptance": "受け入れ"
+  },
+  "presetFilters": {
+    "planned": "計画済み",
+    "held": "開催",
+    "todays": "今日の"
+  },
+  "messages": {
+    "nothingHasBeenSent": "何も送信されませんでした",
+    "selectAcceptanceStatus": "承認ステータスを設定します。",
+    "sendInvitationsToSelectedAttendees": "選択された参加者に招待メールが送信されます。",
+    "sendCancellationsToSelectedAttendees": "選択された参加者にキャンセルメールが送信されます。"
+  }
+}

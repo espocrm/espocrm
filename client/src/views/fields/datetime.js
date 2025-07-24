@@ -360,6 +360,12 @@ class DatetimeFieldView extends DateFieldView {
 
         return data;
     }
+
+    /**
+     * Not implemented. For datetimeOptions too.
+     * When implementing, keep in mind the duration field.
+     */
+    onAfterChange() {}
 }
 
 export default DatetimeFieldView;

@@ -1,0 +1,12 @@
+{
+  "layouts": {
+    "detailConvert": "リードの変換",
+    "listForAccount": "リスト（アカウント用）",
+    "listForContact": "リスト（連絡先用）"
+  },
+  "templates": {
+    "invitation": "招待",
+    "reminder": "リマインダー",
+    "cancellation": "キャンセル"
+  }
+}

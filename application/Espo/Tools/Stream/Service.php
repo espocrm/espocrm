@@ -33,6 +33,7 @@ use Espo\Core\Field\DateTime;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
+use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\StreamSubscription;
@@ -77,24 +78,6 @@ use stdClass;
 
 class Service
 {
-    /** @var ?array<string, string> */
-    private $statusStyles = null;
-    /** @var ?array<string, string> */
-    private $statusFields = null;
-    /** @var string[] */
-    private $successDefaultStyleList = [
-        'Held',
-        'Closed Won',
-        'Closed',
-        'Completed',
-        'Complete',
-        'Sold',
-    ];
-    /** @var string[] */
-    private $dangerDefaultStyleList = [
-        'Closed Lost',
-    ];
-
     private const FIELD_ASSIGNED_USERS = Field::ASSIGNED_USERS;
 
     /**
@@ -125,47 +108,9 @@ class Service
         private SystemUser $systemUser
     ) {}
 
-    /**
-     * @return array<string, string>
-     */
-    private function getStatusStyles(): array
-    {
-        if (empty($this->statusStyles)) {
-            $this->statusStyles = $this->metadata->get('entityDefs.Note.statusStyles', []);
-        }
-
-        return $this->statusStyles;
-    }
-
     private function getStatusField(string $entityType): ?string
     {
-        return $this->getStatusFields()[$entityType] ?? null;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function getStatusFields(): array
-    {
-        if ($this->statusFields === null) {
-            $this->statusFields = [];
-
-            /** @var array<string, array<string, mixed>> $scopes */
-            $scopes = $this->metadata->get('scopes', []);
-
-            foreach ($scopes as $scope => $data) {
-                /** @var ?string $statusField */
-                $statusField = $data['statusField'] ?? null;
-
-                if (!$statusField) {
-                    continue;
-                }
-
-                $this->statusFields[$scope] = $statusField;
-            }
-        }
-
-        return $this->statusFields;
+        return $this->metadata->get("scopes.$entityType.statusField");
     }
 
     public function checkIsFollowed(Entity $entity, ?string $userId = null): bool
@@ -679,7 +624,6 @@ class Service
             if ($value) {
                 $data['statusValue'] = $value;
                 $data['statusField'] = $field;
-                $data['statusStyle'] = $this->getStatusStyle($entityType, $field, $value);
             }
         }
 
@@ -691,6 +635,8 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::CREATED_BY_ID];
         }
 
+        $noteOptions[SaveContext::NAME] = SaveContext::obtainFromRawOptions($options)?->createDerived();
+
         $this->entityManager->saveEntity($note, $noteOptions);
 
         $superParent = $note->getSuperParent();
@@ -698,34 +644,6 @@ class Service
         if ($superParent && $superParent->getEntityType() !== $entity->getEntityType()) {
             $this->updateStreamUpdatedAt($superParent);
         }
-    }
-
-    /**
-     * @param mixed $value
-     */
-    private function getStatusStyle(string $entityType, string $field, $value): string
-    {
-        $style = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'style', $value]);
-
-        if ($style) {
-            return $style;
-        }
-
-        $statusStyles = $this->getStatusStyles();
-
-        if (isset($statusStyles[$entityType][$value])) {
-            return $statusStyles[$entityType][$value];
-        }
-
-        if (in_array($value, $this->successDefaultStyleList)) {
-            return 'success';
-        }
-
-        if (in_array($value, $this->dangerDefaultStyleList)) {
-            return 'danger';
-        }
-
-        return 'default';
     }
 
     /**
@@ -753,6 +671,8 @@ class Service
         if (!empty($options[SaveOption::CREATED_BY_ID])) {
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::CREATED_BY_ID];
         }
+
+        $noteOptions[SaveContext::NAME] = SaveContext::obtainFromRawOptions($options)?->createDerived();
 
         $this->entityManager->saveEntity($note, $noteOptions);
 
@@ -782,6 +702,8 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::CREATED_BY_ID];
         }
 
+        $noteOptions[SaveContext::NAME] = SaveContext::obtainFromRawOptions($options)?->createDerived();
+
         $this->entityManager->saveEntity($note, $noteOptions);
 
         if (!$this->checkIsEnabled($parent->getEntityType())) {
@@ -809,6 +731,8 @@ class Service
         if (!empty($options[SaveOption::MODIFIED_BY_ID])) {
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
         }
+
+        $noteOptions[SaveContext::NAME] = SaveContext::obtainFromRawOptions($options)?->createDerived();
 
         $this->entityManager->saveEntity($note, $noteOptions);
 
@@ -842,45 +766,18 @@ class Service
             $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
         }
 
+        $noteOptions[SaveContext::NAME] = SaveContext::obtainFromRawOptions($options)?->createDerived();
+
         $this->entityManager->saveEntity($note, $noteOptions);
     }
 
     /**
      * @param array<string, mixed> $options
+     * @deprecated As of v9.2.0. The Update type note carries the status information now.
+     * @todo Remove in v9.3.0.
      */
     public function noteStatus(Entity $entity, string $field, array $options = []): void
-    {
-        $note = $this->getNewNote();
-
-        $note->setType(Note::TYPE_STATUS);
-        $note->setParent(LinkParent::createFromEntity($entity));
-
-        $this->setSuperParent($entity, $note, true);
-
-        $entityType = $entity->getEntityType();
-
-        $value = $entity->get($field);
-
-        $style = $this->getStatusStyle($entityType, $field, $value);
-
-        $note->set('data', [
-            'field' => $field,
-            'value' => $value,
-            'style' => $style,
-        ]);
-
-        $noteOptions = [];
-
-        if (!empty($options[SaveOption::CREATED_BY_ID])) {
-            $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::CREATED_BY_ID];
-        }
-
-        if (!empty($options[SaveOption::MODIFIED_BY_ID])) {
-            $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
-        }
-
-        $this->entityManager->saveEntity($note, $noteOptions);
-    }
+    {}
 
     /**
      * @return array<
@@ -1004,59 +901,11 @@ class Service
      */
     public function handleAudited(Entity $entity, array $options = []): void
     {
-        $auditedFields = $this->getAuditedFieldsData($entity);
+        [$updatedFieldList, $was, $became] = $this->getUpdates($entity);
 
-        $updatedFieldList = [];
+        $statusData = $this->getStatusUpdateDate($entity);
 
-        $was = [];
-        $became = [];
-
-        foreach ($auditedFields as $field => $item) {
-            $updated = false;
-
-            foreach ($item['actualList'] as $attribute) {
-                if ($entity->hasFetched($attribute) && $entity->isAttributeChanged($attribute)) {
-                    $updated = true;
-
-                    break;
-                }
-            }
-
-            if (!$updated) {
-                continue;
-            }
-
-            $updatedFieldList[] = $field;
-
-            foreach ($item['actualList'] as $attribute) {
-                $was[$attribute] = $entity->getFetched($attribute);
-                $became[$attribute] = $entity->get($attribute);
-            }
-
-            foreach ($item['notActualList'] as $attribute) {
-                $was[$attribute] = $entity->getFetched($attribute);
-                $became[$attribute] = $entity->get($attribute);
-            }
-
-            if ($item['fieldType'] === FieldType::LINK_PARENT) {
-                $wasParentType = $was[$field . 'Type'];
-                $wasParentId = $was[$field . 'Id'];
-
-                if (
-                    $wasParentType &&
-                    $wasParentId &&
-                    $this->entityManager->hasRepository($wasParentType)
-                ) {
-                    $wasParent = $this->entityManager->getEntityById($wasParentType, $wasParentId);
-
-                    if ($wasParent) {
-                        $was[$field . 'Name'] = $wasParent->get(Field::NAME);
-                    }
-                }
-            }
-        }
-
-        if (count($updatedFieldList) === 0) {
+        if (count($updatedFieldList) === 0 && !$statusData) {
             return;
         }
 
@@ -1065,21 +914,24 @@ class Service
         $note->setType(Note::TYPE_UPDATE);
         $note->setParent(LinkParent::createFromEntity($entity));
 
-        $note->set('data', [
+        $note->setData([
             'fields' => $updatedFieldList,
             'attributes' => [
                 'was' => (object) $was,
                 'became' => (object) $became,
             ],
+            ...($statusData ?? []),
         ]);
 
-        $o = [];
+        $noteOptions = [];
 
         if (!empty($options['modifiedById'])) {
-            $o['createdById'] = $options['modifiedById'];
+            $noteOptions['createdById'] = $options['modifiedById'];
         }
 
-        $this->entityManager->saveEntity($note, $o);
+        $noteOptions[SaveContext::NAME] = SaveContext::obtainFromRawOptions($options)?->createDerived();
+
+        $this->entityManager->saveEntity($note, $noteOptions);
     }
 
     /**
@@ -1394,5 +1246,86 @@ class Service
     private function toStoreEmailContent(string $entityType): bool
     {
         return in_array($entityType, $this->config->get('streamEmailWithContentEntityTypeList', []));
+    }
+
+    /**
+     * @return array{string[], array<string, mixed>, array<string, mixed>}
+     */
+    private function getUpdates(Entity $entity): array
+    {
+        $auditedFields = $this->getAuditedFieldsData($entity);
+
+        $updatedFieldList = [];
+        $was = [];
+        $became = [];
+
+        foreach ($auditedFields as $field => $item) {
+            $updated = false;
+
+            foreach ($item['actualList'] as $attribute) {
+                if ($entity->hasFetched($attribute) && $entity->isAttributeChanged($attribute)) {
+                    $updated = true;
+
+                    break;
+                }
+            }
+
+            if (!$updated) {
+                continue;
+            }
+
+            $updatedFieldList[] = $field;
+
+            foreach ($item['actualList'] as $attribute) {
+                $was[$attribute] = $entity->getFetched($attribute);
+                $became[$attribute] = $entity->get($attribute);
+            }
+
+            foreach ($item['notActualList'] as $attribute) {
+                $was[$attribute] = $entity->getFetched($attribute);
+                $became[$attribute] = $entity->get($attribute);
+            }
+
+            if ($item['fieldType'] === FieldType::LINK_PARENT) {
+                $wasParentType = $was[$field . 'Type'];
+                $wasParentId = $was[$field . 'Id'];
+
+                if (
+                    $wasParentType &&
+                    $wasParentId &&
+                    $this->entityManager->hasRepository($wasParentType)
+                ) {
+                    $wasParent = $this->entityManager->getEntityById($wasParentType, $wasParentId);
+
+                    if ($wasParent) {
+                        $was[$field . 'Name'] = $wasParent->get(Field::NAME);
+                    }
+                }
+            }
+        }
+
+        return [$updatedFieldList, $was, $became];
+    }
+
+    /**
+     * @param Entity $entity
+     * @return ?array<string, mixed>
+     */
+    private function getStatusUpdateDate(Entity $entity): ?array
+    {
+        $statusField = $this->getStatusField($entity->getEntityType());
+        $statusData = null;
+
+        if (
+            $statusField &&
+            $entity->isAttributeChanged($statusField) &&
+            $entity->get($statusField)
+        ) {
+            $statusData = [
+                'value' => $entity->get($statusField),
+            ];
+        }
+
+        return $statusData;
     }
 }

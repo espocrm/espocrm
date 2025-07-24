@@ -43,18 +43,21 @@ class RouteTest extends TestCase
     private $route;
     private $filesPath = 'tests/unit/testData/Routes';
 
+    private $pathProvider;
+    private $metadata;
+
     protected function setUp(): void
     {
-        $this->fileManager = new FileManager();
+        $fileManager = new FileManager();
 
         $this->metadata = $this->createMock(Metadata::class);
-        $this->dataCache = $this->createMock(DataCache::class);
+        $dataCache = $this->createMock(DataCache::class);
         $this->pathProvider = $this->createMock(PathProvider::class);
 
         $this->route = new Route(
             $this->metadata,
-            $this->fileManager,
-            $this->dataCache,
+            $fileManager,
+            $dataCache,
             $this->pathProvider,
             $this->createMock(Config\SystemConfig::class),
         );

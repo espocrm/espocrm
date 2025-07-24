@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "skipNotifications": "通知をスキップ"
+  },
+  "labels": {
+    "Create EmailFolder": "フォルダを作成",
+    "Manage Folders": "フォルダの管理",
+    "Emails": "メール"
+  }
+}

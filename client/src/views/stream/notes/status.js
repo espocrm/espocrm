@@ -28,6 +28,9 @@
 
 import NoteStreamView from 'views/stream/note';
 
+/**
+ * Legacy as of v9.2.0.
+ */
 class StatusNoteStreamView extends NoteStreamView {
 
     template = 'stream/notes/status'
@@ -53,13 +56,19 @@ class StatusNoteStreamView extends NoteStreamView {
     setup() {
         const data = this.model.get('data');
 
-        const field = data.field;
+        const parentType = this.model.attributes.parentType;
+
+        const field = this.getMetadata().get(`scopes.${parentType}.statusField`) ?? '';
         const value = data.value;
 
         this.style = data.style || 'default';
-        this.statusText = this.getLanguage().translateOption(value, field, this.model.get('parentType'));
+        this.statusText = this.getLanguage().translateOption(value, field, parentType);
 
-        let fieldLabel = this.translate(field, 'fields', this.model.get('parentType'));
+        this.statusStyle = this.getMetadata()
+            .get(`entityDefs.${parentType}.fields.${field}.style.${value}`) ||
+            'default';
+
+        let fieldLabel = this.translate(field, 'fields', parentType);
 
         if (!this.isToUpperCaseStringItems()) {
             fieldLabel = fieldLabel.toLowerCase();

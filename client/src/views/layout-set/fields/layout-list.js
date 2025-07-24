@@ -43,6 +43,7 @@ export default class extends MultiEnumFieldView {
         'sidePanelsEdit',
         'sidePanelsDetailSmall',
         'sidePanelsEditSmall',
+        'defaultSidePanel',
     ]
 
     setupOptions() {

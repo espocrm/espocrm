@@ -33,6 +33,8 @@ import SearchManager from 'search-manager';
 import RecordModal from 'helpers/record-modal';
 import CreateRelatedHelper from 'helpers/record/create-related';
 import SelectRelatedHelper from 'helpers/record/select-related';
+import {inject} from 'di';
+import WebSocketManager from 'web-socket-manager';
 
 /**
  * A relationship panel.
@@ -102,6 +104,16 @@ class RelationshipPanelView extends BottomPanelView {
      * @protected
      */
     listLayoutName
+
+    /**
+     * Also used by the stream panel view.
+     *
+     * @protected
+     * @type {WebSocketManager}
+     * @since 9.2.0
+     */
+    @inject(WebSocketManager)
+    webSocketManager
 
     setup() {
         super.setup();
@@ -909,7 +921,7 @@ class RelationshipPanelView extends BottomPanelView {
      * @protected
      */
     processSyncBack() {
-        if (!this.defs.syncBackWithModel || this.getHelper().webSocketManager) {
+        if (!this.defs.syncBackWithModel || this.webSocketManager.isEnabled()) {
             return;
         }
 

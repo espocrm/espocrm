@@ -47,6 +47,11 @@ class Notification extends Entity
     public const TYPE_USER_REACTION = 'UserReaction';
     public const TYPE_SYSTEM = 'System';
 
+    public const ATTR_READ = 'read';
+    public const ATTR_USER_ID = 'userId';
+    public const ATTR_ACTION_ID = 'actionId';
+    public const ATTR_NUMBER = 'number';
+
     public function getType(): ?string
     {
         return $this->get('type');
@@ -149,5 +154,23 @@ class Notification extends Entity
         $this->set('read', $read);
 
         return $this;
+    }
+
+    /**
+     * @since 9.2.0
+     */
+    public function setActionId(?string $actionId): self
+    {
+        $this->set('actionId', $actionId);
+
+        return $this;
+    }
+
+    /**
+     * @since 9.2.0
+     */
+    public function getActionId(): ?string
+    {
+        return $this->get('actionId');
     }
 }

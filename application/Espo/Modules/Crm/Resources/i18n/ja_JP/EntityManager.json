@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "activityStatusList": "アクティビティステータス",
+    "historyStatusList": "履歴ステータス",
+    "completedStatusList": "完了ステータス",
+    "canceledStatusList": "キャンセルステータス"
+  },
+  "tooltips": {
+    "activityStatusList": "アクティビティ レコードをアクティビティ パネルに表示し、実際のものとして扱うかどうかを決定するステータス値。",
+    "historyStatusList": "アクティビティ レコードを履歴パネルに表示するかどうかを決定するステータス値。",
+    "completedStatusList": "アクティビティが完了したことを決定するステータス値。",
+    "canceledStatusList": "アクティビティがキャンセルされ、空き時間範囲に考慮されないことを決定するステータス値。"
+  }
+}
