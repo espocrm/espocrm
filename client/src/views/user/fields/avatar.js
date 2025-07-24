@@ -101,7 +101,7 @@ class UserAvatarFieldView extends ImageFieldView {
             this.element.appendChild(colorEl);
 
             if (this.colorView) {
-                this.colorView.reRender()
+                this.colorView.render()
                     .then(() => {
                         const el = this.colorView.element.querySelector('input');
 
