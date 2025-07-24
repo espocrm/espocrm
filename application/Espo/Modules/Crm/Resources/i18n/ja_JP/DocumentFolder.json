@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create DocumentFolder": "ドキュメントフォルダを作成",
+    "Manage Categories": "フォルダの管理",
+    "Documents": "文書"
+  },
+  "links": {
+    "documents": "文書"
+  }
+}

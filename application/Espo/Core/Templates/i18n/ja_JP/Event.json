@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "parent": "親",
+    "dateStart": "開始日",
+    "dateEnd": "終了日",
+    "duration": "間隔",
+    "status": "状態",
+    "reminders": "リマインダー",
+    "dateStartDate": "開始日（終日）",
+    "dateEndDate": "日付終了（終日）",
+    "isAllDay": "終日"
+  },
+  "links": {
+    "parent": "親"
+  },
+  "options": {
+    "status": {
+      "Planned": "計画済み",
+      "Held": "開催",
+      "Not Held": "開催されなかった"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "{entityTypeTranslated} を作成する",
+    "Schedule {entityType}": "スケジュール {entityTypeTranslated}",
+    "Log {entityType}": "ログ {entityTypeTranslated}",
+    "Set Held": "セットホールド",
+    "Set Not Held": "セットは保持されません"
+  },
+  "massActions": {
+    "setHeld": "セットホールド",
+    "setNotHeld": "セットは保持されません"
+  },
+  "presetFilters": {
+    "planned": "計画済み",
+    "held": "開催",
+    "todays": "今日の"
+  }
+}

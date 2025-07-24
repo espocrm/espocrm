@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "number": "番号",
+    "data": "データ",
+    "target": "ターゲット",
+    "leadCapture": "リードキャプチャ",
+    "createdAt": "入力日時",
+    "isCreated": "鉛は生成されるか"
+  },
+  "links": {
+    "leadCapture": "リードキャプチャ",
+    "target": "ターゲット"
+  }
+}

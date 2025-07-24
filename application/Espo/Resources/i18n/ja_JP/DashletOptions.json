@@ -1,0 +1,48 @@
+{
+  "fields": {
+    "title": "タイトル",
+    "dateFrom": "開始日",
+    "dateTo": "終了日",
+    "autorefreshInterval": "自動更新間隔",
+    "displayRecords": "レコードを表示",
+    "isDoubleHeight": "高さ2倍",
+    "mode": "モード",
+    "enabledScopeList": "何を表示するか",
+    "users": "ユーザー",
+    "entityType": "エンティティタイプ",
+    "primaryFilter": "プライマリフィルター",
+    "boolFilterList": "追加フィルター",
+    "expandedLayout": "レイアウト",
+    "dateFilter": "日付フィルター",
+    "skipOwn": "自分の記録を表示しない",
+    "text": "文章",
+    "folder": "フォルダ",
+    "includeShared": "共有を含める",
+    "sortBy": "並べ替え",
+    "sortDirection": "注文方向"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "週（アジェンダ）",
+      "basicWeek": "週",
+      "month": "月",
+      "basicDay": "日",
+      "agendaDay": "当日（議題）",
+      "timeline": "タイムライン"
+    },
+    "sortDirection": {
+      "asc": "上昇",
+      "desc": "降順"
+    }
+  },
+  "messages": {
+    "selectEntityType": "ダッシュレット オプションでエンティティ タイプを選択します。"
+  },
+  "tooltips": {
+    "skipOwn": "ユーザーアカウントによって行われたアクションは表示されません。"
+  },
+  "otherFields": {
+    "soft": "ソフトカラー",
+    "small": "小さいフォント"
+  }
+}

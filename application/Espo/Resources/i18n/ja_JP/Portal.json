@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "name": "名前",
+    "logo": "ロゴ",
+    "companyLogo": "ロゴ",
+    "portalRoles": "役割",
+    "isActive": "アクティブです",
+    "isDefault": "デフォルト",
+    "tabList": "タブリスト",
+    "quickCreateList": "クイック作成リスト",
+    "theme": "テーマ",
+    "language": "言語",
+    "dashboardLayout": "ダッシュボードレイアウト",
+    "dateFormat": "日付形式",
+    "timeFormat": "時刻形式",
+    "timeZone": "タイムゾーン",
+    "weekStart": "週の最初の日",
+    "defaultCurrency": "デフォルト通貨",
+    "customUrl": "カスタムURL",
+    "customId": "カスタムID",
+    "layoutSet": "レイアウトセット",
+    "authenticationProvider": "認証プロバイダー",
+    "authTokenLifetime": "認証トークンの有効期間（時間）",
+    "authTokenMaxIdleTime": "認証トークンの最大アイドル時間（時間）",
+    "applicationName": "アプリケーション名"
+  },
+  "links": {
+    "users": "ユーザー",
+    "portalRoles": "役割",
+    "notes": "注記",
+    "layoutSet": "レイアウトセット",
+    "authenticationProvider": "認証プロバイダー"
+  },
+  "tooltips": {
+    "portalRoles": "指定されたポータル ロールは、このポータルのすべてのユーザーに適用されます。",
+    "layoutSet": "標準レイアウトとは異なるレイアウトを作成する機能を提供します。"
+  },
+  "labels": {
+    "Create Portal": "ポータルを作成",
+    "User Interface": "ユーザーインターフェース",
+    "General": "一般的な",
+    "Settings": "設定"
+  }
+}

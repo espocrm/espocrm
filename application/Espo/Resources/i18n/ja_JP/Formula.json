@@ -1,0 +1,23 @@
+{
+  "labels": {
+    "Check Syntax": "構文チェック",
+    "Run": "走る"
+  },
+  "fields": {
+    "target": "ターゲット",
+    "targetType": "ターゲットタイプ",
+    "script": "スクリプト",
+    "output": "出力",
+    "error": "エラー"
+  },
+  "messages": {
+    "runSuccess": "正常に実行されました。",
+    "runError": "エラー。",
+    "checkSyntaxSuccess": "構文は正しいです。",
+    "checkSyntaxError": "構文エラーです。",
+    "emptyScript": "スクリプトが空です。"
+  },
+  "tooltips": {
+    "output": "関数 `output\\printLine` を使用して値を出力します。"
+  }
+}

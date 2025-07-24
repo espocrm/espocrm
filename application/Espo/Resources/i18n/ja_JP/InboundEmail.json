@@ -1,0 +1,102 @@
+{
+  "fields": {
+    "name": "名前",
+    "emailAddress": "電子メールアドレス",
+    "status": "状態",
+    "assignToUser": "ユーザーに割り当てる",
+    "host": "ホスト",
+    "username": "ユーザー名",
+    "password": "パスワード",
+    "port": "ポート",
+    "monitoredFolders": "監視対象フォルダ",
+    "trashFolder": "ゴミ箱フォルダ",
+    "createCase": "ケースを作成",
+    "reply": "自動返信",
+    "caseDistribution": "症例分布",
+    "replyEmailTemplate": "返信メールテンプレート",
+    "replyFromAddress": "返信元アドレス",
+    "replyToAddress": "返信先アドレス",
+    "replyFromName": "返信者名",
+    "targetUserPosition": "ターゲットユーザーの位置",
+    "fetchSince": "取得開始日",
+    "addAllTeamUsers": "すべてのチームユーザー向け",
+    "team": "対象チーム",
+    "teams": "チーム",
+    "sentFolder": "送信済みフォルダ",
+    "storeSentEmails": "送信済みメールを保存する",
+    "useSmtp": "SMTPを使用する",
+    "smtpHost": "SMTPホスト",
+    "smtpPort": "SMTPポート",
+    "smtpAuth": "SMTP認証",
+    "smtpSecurity": "SMTPセキュリティ",
+    "smtpUsername": "SMTPユーザー名",
+    "smtpPassword": "SMTPパスワード",
+    "fromName": "送信者名",
+    "smtpIsShared": " SMTPは共有されます",
+    "smtpIsForMassEmail": "SMTPは大量メール送信用です",
+    "useImap": "メールを取得する",
+    "keepFetchedEmailsUnread": "取得したメールを未読のままにする",
+    "smtpAuthMechanism": "SMTP認証メカニズム",
+    "security": "安全",
+    "groupEmailFolder": "グループメールフォルダ",
+    "connectedAt": "接続先",
+    "excludeFromReply": "返信から除外",
+    "isSystem": "システム"
+  },
+  "tooltips": {
+    "reply": "メールの送信者にメールを受信したことを通知します。ループを防ぐため、一定期間内に特定の受信者に送信されるメールは1通のみです。",
+    "createCase": "受信メールから自動的にケースを作成します。",
+    "replyToAddress": "応答がここに届くようにするには、このメールボックスの電子メール アドレスを指定します。",
+    "caseDistribution": "ケースの割り当て方法。ユーザーに直接割り当てるか、チーム間で割り当てるかを選択します。",
+    "assignToUser": "ユーザーケースが割り当てられます。",
+    "team": "チームケースが割り当てられます。",
+    "teams": " Teams のメールが割り当てられます。",
+    "addAllTeamUsers": "指定されたチームのすべてのユーザーの受信トレイにメールが表示されます。",
+    "targetUserPosition": "指定されたポジションのユーザーにはケースが配布されます。",
+    "monitoredFolders": "複数のフォルダはコンマで区切る必要があります。",
+    "smtpIsShared": "チェックを入れると、ユーザーはこのSMTPを使用してメールを送信できるようになります。利用可否は、グループメールアカウント権限を通じてロールによって制御されます。",
+    "smtpIsForMassEmail": "チェックすると、SMTP が大量メール送信に使用できるようになります。",
+    "storeSentEmails": "送信されたメールは IMAP サーバーに保存されます。",
+    "useSmtp": "電子メールを送信する機能。",
+    "groupEmailFolder": "受信メールをグループ フォルダーに保存します。",
+    "excludeFromReply": "このアカウントのメールアドレスに送信されたメールに返信する場合、そのメールアドレスはCCに追加されません。このパラメータを有効にすると、このアカウントのメールアドレスがメール送信権限を持つユーザーに公開されることに注意してください。",
+    "isSystem": "システムの電子メール アカウントです。"
+  },
+  "links": {
+    "filters": "フィルター",
+    "emails": "メール",
+    "assignToUser": "ユーザーに割り当てる",
+    "groupEmailFolder": "グループメールフォルダ"
+  },
+  "options": {
+    "status": {
+      "Active": "アクティブ",
+      "Inactive": "非アクティブ"
+    },
+    "caseDistribution": {
+      "": "なし",
+      "Direct-Assignment": "直接譲渡",
+      "Round-Robin": "ラウンドロビン",
+      "Least-Busy": "最も混雑していない"
+    },
+    "smtpAuthMechanism": {
+      "plain": "無地",
+      "login": "ログイン"
+    },
+    "smtpSecurity": {
+      "TLS": "スタートルズ"
+    },
+    "security": {
+      "TLS": "スタートルズ"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "メールアカウントを作成",
+    "Actions": "アクション",
+    "Main": "主要"
+  },
+  "messages": {
+    "couldNotConnectToImap": "IMAPサーバーに接続できませんでした",
+    "imapNotConnected": "グループ [IMAP アカウント](#InboundEmail/view/{id}) に接続できませんでした。"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "enabled": "有効",
+    "clientId": "クライアントID",
+    "clientSecret": "クライアントシークレット",
+    "redirectUri": "リダイレクトURI",
+    "apiKey": " APIキー",
+    "siteKey": "サイトキー",
+    "secretKey": "秘密鍵",
+    "scoreThreshold": "スコアしきい値"
+  },
+  "messages": {
+    "selectIntegration": "メニューから統合を選択します。",
+    "noIntegrations": "統合は利用できません。"
+  },
+  "titles": {
+    "GoogleMaps": "Googleマップ"
+  },
+  "help": {
+    "Google": " **Google Developers Console から OAuth 2.0 認証情報を取得します。** [Google Developers Console](https://console.developers.google.com/project) にアクセスして、Google と EspoCRM アプリケーションの両方に知られているクライアント ID やクライアント シークレットなどの OAuth 2.0 認証情報を取得します。",
+    "GoogleMaps": " API キーは [こちら](https://developers.google.com/maps/documentation/javascript/get-api-key) から取得します。",
+    "GoogleReCaptcha": " [Google](https://www.google.com/recaptcha/)からサイトキーとシークレットキーを取得します。"
+  }
+}

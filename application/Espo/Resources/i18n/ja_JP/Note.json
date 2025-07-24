@@ -1,0 +1,67 @@
+{
+  "fields": {
+    "post": "役職",
+    "attachments": "添付ファイル",
+    "targetType": "ターゲット",
+    "teams": "チーム",
+    "users": "ユーザー",
+    "portals": "ポータル",
+    "type": "タイプ",
+    "isGlobal": "グローバル",
+    "isInternal": "社内用（社内ユーザー向け）",
+    "related": "関連している",
+    "createdByGender": "性別によって作成",
+    "data": "データ",
+    "number": "番号",
+    "isPinned": "ピン留めされています"
+  },
+  "filters": {
+    "all": "全て",
+    "posts": "投稿",
+    "updates": "アップデート",
+    "activity": "活動"
+  },
+  "messages": {
+    "writeMessage": "ここにメッセージを書いてください",
+    "pinnedMaxCountExceeded": "これ以上メモをピン留めできません。最大許容数は {count} です。"
+  },
+  "options": {
+    "type": {
+      "Post": "役職",
+      "Create": "作成する",
+      "CreateRelated": "関連項目を作成",
+      "Update": "アップデート",
+      "Status": "状態",
+      "Assign": "割り当てる",
+      "Relate": "関係する",
+      "Unrelate": "関係を断つ",
+      "EmailReceived": "メール受信",
+      "EmailSent": "メール送信"
+    },
+    "targetType": {
+      "self": "自己",
+      "users": "ユーザー",
+      "teams": "チーム",
+      "all": "すべての社内ユーザー",
+      "portals": "ポータルユーザー"
+    }
+  },
+  "links": {
+    "superParent": "スーパーペアレント",
+    "related": "関連している",
+    "portals": "ポータル",
+    "attachments": "添付ファイル"
+  },
+  "labels": {
+    "View Posts": "投稿を表示",
+    "View Activity": "アクティビティを表示",
+    "Pin": "ピン",
+    "Unpin": "ピンを外す",
+    "Pinned": "ピン留め",
+    "Quote Reply": "引用返信",
+    "View Attachments": "添付ファイルを表示"
+  },
+  "otherFields": {
+    "to": "に"
+  }
+}

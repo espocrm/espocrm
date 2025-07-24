@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Primary": "主要な",
+    "Opted Out": "オプトアウト",
+    "Invalid": "無効"
+  },
+  "fields": {
+    "optOut": "オプトアウト",
+    "invalid": "無効"
+  },
+  "presetFilters": {
+    "orphan": "孤児"
+  }
+}

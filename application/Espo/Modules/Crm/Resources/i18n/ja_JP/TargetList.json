@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "name": "名前",
+    "description": "説明",
+    "entryCount": "エントリー数",
+    "campaigns": "キャンペーン",
+    "endDate": "終了日",
+    "targetLists": "ターゲットリスト",
+    "includingActionList": "含む",
+    "excludingActionList": "除外",
+    "optedOutCount": "オプトアウト数",
+    "targetStatus": "ターゲットステータス",
+    "isOptedOut": "オプトアウト",
+    "sourceCampaign": "ソースキャンペーン",
+    "category": "カテゴリ"
+  },
+  "links": {
+    "accounts": "アカウント",
+    "contacts": "連絡先",
+    "leads": "リード",
+    "campaigns": "キャンペーン",
+    "massEmails": "大量メール",
+    "category": "カテゴリ"
+  },
+  "options": {
+    "type": {
+      "Email": "メール",
+      "Web": "ウェブ",
+      "Television": "テレビ",
+      "Radio": "無線",
+      "Newsletter": "ニュースレター"
+    },
+    "targetStatus": {
+      "Opted Out": "オプトアウト",
+      "Listed": "リストに掲載"
+    }
+  },
+  "labels": {
+    "Create TargetList": "ターゲットリストを作成する",
+    "Opted Out": "オプトアウト",
+    "Cancel Opt-Out": "オプトアウトをキャンセル",
+    "Opt-Out": "身を引く"
+  }
+}

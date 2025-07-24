@@ -1,0 +1,23 @@
+{
+  "modes": {
+    "month": "月",
+    "week": "週",
+    "agendaWeek": "週",
+    "day": "日",
+    "agendaDay": "日",
+    "timeline": "タイムライン"
+  },
+  "labels": {
+    "Today": "今日",
+    "Create": "作成する",
+    "Shared": "共有",
+    "Add User": "ユーザーを追加",
+    "current": "現在",
+    "time": "時間",
+    "User List": "ユーザーリスト",
+    "View Calendar": "カレンダーを表示",
+    "Create Shared View": "共有ビューの作成",
+    "Edit Shared View": "共有ビューを編集",
+    "Shared Mode Options": "共有モードのオプション"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "links": {
+    "targetLists": "ターゲットリスト"
+  },
+  "fields": {
+    "acceptanceStatus": "承認状況",
+    "acceptanceStatusMeetings": "承認状況（会議）",
+    "acceptanceStatusCalls": "受付状況（通話）"
+  }
+}

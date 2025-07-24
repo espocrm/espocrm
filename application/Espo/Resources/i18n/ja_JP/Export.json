@@ -1,0 +1,30 @@
+{
+  "fields": {
+    "fieldList": "フィールドリスト",
+    "exportAllFields": "すべてのフィールドをエクスポート",
+    "format": "形式",
+    "status": "状態",
+    "xlsxLite": "ライト",
+    "xlsxRecordLinks": "レコードリンク",
+    "xlsxTitle": "タイトル"
+  },
+  "options": {
+    "format": {
+      "xlsx": " XLSX（エクセル）"
+    },
+    "status": {
+      "Pending": "保留中",
+      "Running": "ランニング",
+      "Success": "成功",
+      "Failed": "失敗した"
+    }
+  },
+  "messages": {
+    "exportProcessed": "エクスポートが処理されました。[ファイル]({url})をダウンロードしてください。",
+    "infoText": "エクスポートはcronによってアイドル状態で処理されています。完了するまでに時間がかかる場合があります。このモーダルダイアログを閉じても実行プロセスには影響しません。"
+  },
+  "tooltips": {
+    "xlsxLite": "メモリ消費量が大幅に削減されます。大量のレコードをエクスポートする場合に推奨されます。",
+    "xlsxTitle": "ヘッダーにタイトルと現在の日付を印刷します。"
+  }
+}

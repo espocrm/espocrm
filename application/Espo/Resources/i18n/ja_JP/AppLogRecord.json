@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "message": "メッセージ",
+    "code": "コード",
+    "level": "レベル",
+    "exceptionClass": "例外クラス",
+    "file": "ファイル",
+    "line": "ライン",
+    "requestMethod": "リクエスト方法",
+    "requestResourcePath": "リクエストリソースパス"
+  },
+  "presetFilters": {
+    "errors": "エラー"
+  }
+}

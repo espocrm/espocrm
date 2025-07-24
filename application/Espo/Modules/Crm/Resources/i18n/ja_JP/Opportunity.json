@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "名前",
+    "account": "取引先",
+    "stage": "ステージ",
+    "amount": "額",
+    "probability": "確率、%",
+    "leadSource": "リードソース",
+    "doNotCall": "電話不可",
+    "closeDate": "締め切り日",
+    "contacts": "取引先担当者",
+    "description": "説明",
+    "amountConverted": "金額（換算後）",
+    "amountWeightedConverted": "加重金額",
+    "campaign": "キャンペーン",
+    "originalLead": "元のリード",
+    "amountCurrency": "金額 通貨",
+    "contactRole": "連絡先の役割",
+    "lastStage": "最終ステージ",
+    "contact": "連絡先（メイン）"
+  },
+  "links": {
+    "contacts": "取引先担当者",
+    "documents": "文書",
+    "campaign": "キャンペーン",
+    "originalLead": "元のリード",
+    "contact": "連絡先（メイン）"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "見込み",
+      "Qualification": "資格",
+      "Needs Analysis": "ニーズ分析",
+      "Value Proposition": "価値提案",
+      "Id. Decision Makers": "同上。意思決定者",
+      "Perception Analysis": "認識分析",
+      "Proposal/Price Quote": "提案/見積",
+      "Negotiation/Review": "交渉/レビュー",
+      "Closed Won": "受注",
+      "Closed Lost": "失注",
+      "Proposal": "提案",
+      "Negotiation": "交渉"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "商談の創出"
+  },
+  "presetFilters": {
+    "open": "オープン",
+    "won": "受注",
+    "lost": "失注"
+  }
+}

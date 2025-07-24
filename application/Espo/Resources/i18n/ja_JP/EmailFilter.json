@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "from": "から",
+    "to": "に",
+    "subject": "主題",
+    "bodyContains": "本文の内容",
+    "action": "アクション",
+    "isGlobal": "グローバル",
+    "emailFolder": "フォルダ",
+    "groupEmailFolder": "グループメールフォルダ",
+    "markAsRead": "既読にする",
+    "bodyContainsAll": "本文にすべてが含まれる",
+    "skipNotification": "通知をスキップ"
+  },
+  "labels": {
+    "Create EmailFilter": "メールフィルターを作成する",
+    "Emails": "メール"
+  },
+  "tooltips": {
+    "from": "指定したアドレスから送信されるメール。不要な場合は空白のままにしてください。ワイルドカード * を使用できます。",
+    "to": "指定したアドレスに送信されるメールです。不要な場合は空白のままにしてください。ワイルドカード * を使用できます。",
+    "name": "フィルターにわかりやすい名前を付けます。",
+    "bodyContains": "電子メールの本文に、指定された単語またはフレーズのいずれかが含まれています。",
+    "isGlobal": "このフィルターをシステムに受信するすべての電子メールに適用します。",
+    "subject": "ワイルドカード * を使用します: * `text*` – テキストで始まります、 * `*text*` – テキストが含まれます、 * `*text` – テキストで終わります。",
+    "bodyContainsAll": "電子メールの本文には、指定された単語またはフレーズがすべて含まれます。"
+  },
+  "options": {
+    "action": {
+      "Skip": "無視する",
+      "Move to Folder": "フォルダに入れる",
+      "None": "なし",
+      "Move to Group Folder": "グループフォルダに入れる"
+    }
+  },
+  "links": {
+    "emailFolder": "フォルダ",
+    "groupEmailFolder": "グループメールフォルダ"
+  }
+}

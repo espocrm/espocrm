@@ -1,0 +1,48 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "記事を作成する",
+    "Any": "どれでも",
+    "Send in Email": "メールで送信",
+    "Move Up": "上へ移動",
+    "Move Down": "下に移動",
+    "Move to Top": "トップへ移動",
+    "Move to Bottom": "一番下へ移動"
+  },
+  "fields": {
+    "name": "名前",
+    "status": "状態",
+    "type": "タイプ",
+    "attachments": "添付ファイル",
+    "publishDate": "公開日",
+    "expirationDate": "有効期限",
+    "description": "説明",
+    "body": "体",
+    "categories": "カテゴリー",
+    "language": "言語",
+    "portals": "ポータル",
+    "bodyPlain": "ボディプレーン"
+  },
+  "links": {
+    "cases": "事例",
+    "opportunities": "機会",
+    "categories": "カテゴリー",
+    "portals": "ポータル"
+  },
+  "options": {
+    "status": {
+      "In Review": "レビュー中",
+      "Draft": "下書き",
+      "Archived": "アーカイブ済み",
+      "Published": "出版"
+    },
+    "type": {
+      "Article": "記事"
+    }
+  },
+  "presetFilters": {
+    "published": "出版"
+  },
+  "tooltips": {
+    "portals": "記事は指定されたポータルでのみ利用可能になります。"
+  }
+}

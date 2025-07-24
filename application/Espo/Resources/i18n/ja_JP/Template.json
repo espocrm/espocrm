@@ -1,0 +1,46 @@
+{
+  "fields": {
+    "name": "名前",
+    "body": "体",
+    "entityType": "エンティティタイプ",
+    "header": "ヘッダ",
+    "footer": "フッター",
+    "leftMargin": "左余白",
+    "topMargin": "上余白",
+    "rightMargin": "右余白",
+    "bottomMargin": "下余白",
+    "printFooter": "印刷フッター",
+    "footerPosition": "フッターの位置",
+    "variables": "利用可能なプレースホルダー",
+    "pageOrientation": "ページの向き",
+    "pageFormat": "論文形式",
+    "fontFace": "フォント",
+    "pageWidth": "ページ幅（mm）",
+    "pageHeight": "ページの高さ（mm）",
+    "headerPosition": "ヘッダーの位置",
+    "printHeader": "印刷ヘッダー",
+    "title": "タイトル",
+    "style": "スタイル"
+  },
+  "labels": {
+    "Create Template": "テンプレートを作成"
+  },
+  "tooltips": {
+    "footer": "ページ番号を印刷するには {pageNumber} を使用します。",
+    "variables": "必要なプレースホルダーをヘッダー、本文、またはフッターにコピーして貼り付けます。"
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "ポートレート",
+      "Landscape": "風景"
+    },
+    "placeholders": {
+      "today": "今日（日付）",
+      "now": "現在（日時）",
+      "pagebreak": "ページ区切り"
+    },
+    "pageFormat": {
+      "Custom": "カスタム"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "urlToUse": "URLの代わりに挿入するコード",
+    "campaign": "キャンペーン",
+    "action": "アクション",
+    "message": "メッセージ"
+  },
+  "links": {
+    "campaign": "キャンペーン"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "トラッキングURLを作成する"
+  },
+  "options": {
+    "action": {
+      "Redirect": "リダイレクト",
+      "Show Message": "メッセージを表示"
+    }
+  },
+  "tooltips": {
+    "url": "受信者はリンクをクリックするとこの場所にリダイレクトされます。",
+    "message": "受信者がリンクをクリックするとメッセージが表示されます。Markdown がサポートされています。"
+  }
+}

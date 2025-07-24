@@ -1,0 +1,71 @@
+{
+  "labels": {
+    "Converted To": "変換先",
+    "Create Lead": "リードを作成",
+    "Convert": "変換する",
+    "convert": "変換する"
+  },
+  "fields": {
+    "name": "名前",
+    "emailAddress": "メール",
+    "title": "タイトル",
+    "website": " Webサイト",
+    "phoneNumber": "電話",
+    "accountName": "アカウント名",
+    "doNotCall": "電話しないでください",
+    "address": "住所",
+    "status": "状態",
+    "source": "ソース",
+    "opportunityAmount": "商談金額",
+    "opportunityAmountConverted": "商談金額（変換後）",
+    "description": "説明",
+    "createdAccount": "アカウント",
+    "createdContact": "接触",
+    "createdOpportunity": "商談",
+    "campaign": "キャンペーン",
+    "targetLists": "ターゲットリスト",
+    "targetList": "ターゲットリスト",
+    "industry": "業界",
+    "acceptanceStatus": "承認状況",
+    "opportunityAmountCurrency": "商談金額通貨",
+    "acceptanceStatusMeetings": "承認状況（会議）",
+    "acceptanceStatusCalls": "受付状況（通話）",
+    "convertedAt": "変換日時",
+    "originalEmail": "元のメール"
+  },
+  "links": {
+    "targetLists": "ターゲットリスト",
+    "campaignLogRecords": "キャンペーンログ",
+    "campaign": "キャンペーン",
+    "createdAccount": "アカウント",
+    "createdContact": "接触",
+    "createdOpportunity": "商談",
+    "cases": "事例",
+    "documents": "文書"
+  },
+  "options": {
+    "status": {
+      "New": "新しい",
+      "Assigned": "割り当て済み",
+      "In Process": "処理中",
+      "Converted": "変換された",
+      "Recycled": "リサイクル",
+      "Dead": "死んだ"
+    },
+    "source": {
+      "Call": "電話",
+      "Email": "メール",
+      "Existing Customer": "既存の顧客",
+      "Partner": "パートナー",
+      "Public Relations": "広報",
+      "Web Site": "Webサイト",
+      "Campaign": "キャンペーン",
+      "Other": "他の"
+    }
+  },
+  "presetFilters": {
+    "active": "アクティブ",
+    "converted": "変換された",
+    "actual": "開ける"
+  }
+}

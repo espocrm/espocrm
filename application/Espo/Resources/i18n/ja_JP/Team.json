@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "name": "名前",
+    "roles": "役割",
+    "positionList": "ポジションリスト",
+    "layoutSet": "レイアウトセット",
+    "workingTimeCalendar": "勤務時間カレンダー",
+    "userRole": "ユーザーロール"
+  },
+  "links": {
+    "users": "ユーザー",
+    "notes": "注記",
+    "roles": "役割",
+    "inboundEmails": "グループメールアカウント",
+    "layoutSet": "レイアウトセット",
+    "workingTimeCalendar": "勤務時間カレンダー",
+    "groupEmailFolders": "グループメールフォルダ"
+  },
+  "tooltips": {
+    "roles": "アクセス ロール。このチームのユーザーは、選択したロールからアクセス制御レベルを取得します。",
+    "positionList": "このチームで利用可能なポジション。例：営業担当者、マネージャー。",
+    "layoutSet": "標準レイアウトとは異なるレイアウトを設定できます。レイアウトセットは、このチームをデフォルトチームとして設定しているユーザーに適用されます。",
+    "workingTimeCalendar": "このチームをデフォルト チームとして設定したユーザーにはカレンダーが適用されます。"
+  },
+  "labels": {
+    "Create Team": "チームを作成"
+  }
+}

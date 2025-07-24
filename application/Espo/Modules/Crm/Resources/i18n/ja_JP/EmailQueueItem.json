@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "name": "名前",
+    "status": "状態",
+    "target": "ターゲット",
+    "sentAt": "送信日",
+    "attemptCount": "試み",
+    "emailAddress": "電子メールアドレス",
+    "massEmail": "大量メール",
+    "isTest": "テスト"
+  },
+  "links": {
+    "target": "ターゲット",
+    "massEmail": "大量メール"
+  },
+  "options": {
+    "status": {
+      "Pending": "保留中",
+      "Sent": "送信済み",
+      "Failed": "失敗した",
+      "Sending": "送信中"
+    }
+  },
+  "presetFilters": {
+    "pending": "保留中",
+    "sent": "送信済み",
+    "failed": "失敗した"
+  }
+}

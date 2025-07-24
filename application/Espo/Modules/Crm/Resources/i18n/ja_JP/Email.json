@@ -1,0 +1,13 @@
+{
+  "labels": {
+    "Create Lead": "リードを作成",
+    "Create Contact": "連絡先を作成",
+    "Create Task": "タスクを作成",
+    "Create Case": "ケースを作成",
+    "Add to Contact": "連絡先に追加",
+    "Add to Lead": "リードに追加"
+  },
+  "fields": {
+    "tasks": "タスク"
+  }
+}

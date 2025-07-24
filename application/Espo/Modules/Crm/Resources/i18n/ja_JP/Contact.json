@@ -1,0 +1,57 @@
+{
+  "fields": {
+    "name": "名前",
+    "emailAddress": "メール",
+    "accountRole": "役職",
+    "account": "取引先",
+    "accounts": "取引先",
+    "phoneNumber": "電話",
+    "accountType": "取引先の業種",
+    "doNotCall": "電話不可",
+    "address": "住所",
+    "opportunityRole": "商談に対する役割",
+    "description": "説明",
+    "campaign": "キャンペーン",
+    "targetLists": "ターゲットリスト",
+    "targetList": "ターゲットリスト",
+    "portalUser": "ポータルユーザー",
+    "originalLead": "オリジナルリード",
+    "acceptanceStatus": "承認状況",
+    "accountIsInactive": "アカウントが非アクティブ",
+    "acceptanceStatusMeetings": "承認状況（会議）",
+    "acceptanceStatusCalls": "受付状況（通話）",
+    "title": "アカウント名",
+    "hasPortalUser": "ポータルユーザーあり",
+    "originalEmail": "元のメール"
+  },
+  "links": {
+    "opportunities": "機会",
+    "cases": "事例",
+    "targetLists": "ターゲットリスト",
+    "campaignLogRecords": "キャンペーンログ",
+    "campaign": "キャンペーン",
+    "account": "アカウント（プライマリ）",
+    "accounts": "アカウント",
+    "casesPrimary": "症例（プライマリー）",
+    "portalUser": "ポータルユーザー",
+    "originalLead": "オリジナルリード",
+    "documents": "文書",
+    "tasksPrimary": "タスク（拡張）",
+    "opportunitiesPrimary": "機会（プライマリ）"
+  },
+  "labels": {
+    "Create Contact": "連絡先を作成"
+  },
+  "options": {
+    "opportunityRole": {
+      "Decision Maker": "意思決定者",
+      "Evaluator": "評価者",
+      "Influencer": "インフルエンサー"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "ポータルユーザー",
+    "notPortalUsers": "ポータルユーザーではない",
+    "accountActive": "アクティブ"
+  }
+}

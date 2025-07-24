@@ -1,0 +1,20 @@
+{
+  "labels": {
+    "Create AddressCountry": "住所国を作成",
+    "Populate": "人口増加"
+  },
+  "fields": {
+    "code": "コード",
+    "isPreferred": "好ましい"
+  },
+  "tooltips": {
+    "code": "ISO 3166-1 アルファ 2 コード。",
+    "isPreferred": "優先国が選択リストの最初に表示されます。"
+  },
+  "messages": {
+    "confirmPopulateDefaults": "既存の国はすべて削除され、デフォルトの国リストが作成されます。この操作を元に戻すことはできません。よろしいですか？"
+  },
+  "strings": {
+    "populateDefaults": "デフォルトの国リストを入力する"
+  }
+}
