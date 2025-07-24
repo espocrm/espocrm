@@ -452,9 +452,13 @@ class BaseFieldView extends View {
         }
 
         if (!this.isReady) {
-            this.mode = 'detail';
+            if (!this.mode) {
+                this.mode = 'detail';
 
-            return Promise.resolve();
+                return Promise.resolve();
+            }
+
+            return this.setDetailMode();
         }
 
         if (this.isEditMode()) {
