@@ -55,7 +55,8 @@ class Service
         private EntityManager $entityManager,
         private Metadata $metadata,
         private Acl $acl,
-        private Config $config
+        private Config $config,
+        private Config\ApplicationConfig $applicationConfig,
     ) {}
 
     /**
@@ -67,7 +68,7 @@ class Service
     public function find(string $filter, int $offset = 0, ?int $maxSize = null): Collection
     {
         $entityTypeList = $this->config->get('globalSearchEntityList') ?? [];
-        $maxSize ??= (int) $this->config->get('recordsPerPage');
+        $maxSize ??= $this->applicationConfig->getRecordsPerPage();
 
         $hasFullTextSearch = false;
 

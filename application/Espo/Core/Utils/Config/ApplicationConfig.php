@@ -64,4 +64,12 @@ class ApplicationConfig
     {
         return $this->config->get('language') ?? 'en_US';
     }
+
+    /**
+     * @since 9.2.0
+     */
+    public function getRecordsPerPage(): int
+    {
+        return (int) $this->config->get('recordsPerPage');
+    }
 }
