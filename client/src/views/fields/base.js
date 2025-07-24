@@ -237,6 +237,14 @@ class BaseFieldView extends View {
     readOnly = false
 
     /**
+     * Read-only locked.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    readOnlyLocked = false
+
+    /**
      * A label text.
      *
      * @type {string}
