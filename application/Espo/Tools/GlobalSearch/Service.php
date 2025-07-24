@@ -30,9 +30,12 @@
 namespace Espo\Tools\GlobalSearch;
 
 use Espo\Core\Acl;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\Collection;
+use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
@@ -42,10 +45,11 @@ use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Query\Part\Expression as Expr;
-
 use Espo\Core\Select\Text\FullTextSearch\DataComposerFactory as FullTextSearchDataComposerFactory;
 use Espo\Core\Select\Text\FullTextSearch\DataComposer\Params as FullTextSearchDataComposerParams;
 use Espo\Core\Select\SelectBuilderFactory;
+use Espo\ORM\Query\UnionBuilder;
+use RuntimeException;
 
 class Service
 {
@@ -57,17 +61,19 @@ class Service
         private Acl $acl,
         private Config $config,
         private Config\ApplicationConfig $applicationConfig,
+        private ServiceContainer $serviceContainer,
     ) {}
 
     /**
      * @param string $filter A search query.
-     * @param int $offset An offset.
+     * @param ?int $offset An offset.
      * @param ?int $maxSize A limit.
      * @return Collection<Entity>
      */
-    public function find(string $filter, int $offset = 0, ?int $maxSize = null): Collection
+    public function find(string $filter, ?int $offset = 0, ?int $maxSize = null): Collection
     {
         $entityTypeList = $this->config->get('globalSearchEntityList') ?? [];
+        $offset ??= 0;
         $maxSize ??= $this->applicationConfig->getRecordsPerPage();
 
         $hasFullTextSearch = false;
@@ -76,12 +82,12 @@ class Service
 
         foreach ($entityTypeList as $i => $entityType) {
             $query = $this->getEntityTypeQuery(
-                $entityType,
-                $i,
-                $filter,
-                $offset,
-                $maxSize,
-                $hasFullTextSearch
+                entityType: $entityType,
+                i: $i,
+                filter: $filter,
+                offset: $offset,
+                maxSize: $maxSize,
+                hasFullTextSearch: $hasFullTextSearch,
             );
 
             if (!$query) {
@@ -95,8 +101,7 @@ class Service
             return new Collection(new EntityCollection(), 0);
         }
 
-        $builder = $this->entityManager->getQueryBuilder()
-            ->union()
+        $builder = UnionBuilder::create()
             ->all()
             ->limit($offset, $maxSize + 1);
 
@@ -105,11 +110,11 @@ class Service
         }
 
         if ($hasFullTextSearch) {
-            $builder->order('relevance', 'DESC');
+            $builder->order('relevance', Order::DESC);
         }
 
-        $builder->order('order', 'DESC');
-        $builder->order(Field::NAME, 'ASC');
+        $builder->order('order', Order::DESC);
+        $builder->order(Field::NAME);
 
         $unionQuery = $builder->build();
 
@@ -118,9 +123,26 @@ class Service
         $sth = $this->entityManager->getQueryExecutor()->execute($unionQuery);
 
         while ($row = $sth->fetch()) {
+            $entityType = $row['entityType'] ?? null;
+
+            if (!is_string($entityType)) {
+                throw new RuntimeException();
+            }
+
+            $statusField = $this->getStatusField($entityType);
+
+            $select = [
+                Attribute::ID,
+                Field::NAME,
+            ];
+
+            if ($statusField) {
+                $select[] = $statusField;
+            }
+
             $entity = $this->entityManager
-                ->getRDBRepository($row['entityType'])
-                ->select([Attribute::ID, Field::NAME])
+                ->getRDBRepository($entityType)
+                ->select($select)
                 ->where([Attribute::ID => $row[Attribute::ID]])
                 ->findOne();
 
@@ -128,26 +150,28 @@ class Service
                 continue;
             }
 
+            $this->serviceContainer->get($entityType)->prepareEntityForOutput($entity);
+
             $collection->append($entity);
         }
 
         return Collection::createNoCount($collection, $maxSize);
     }
 
-    protected function getEntityTypeQuery(
+    private function getEntityTypeQuery(
         string $entityType,
         int $i,
         string $filter,
         int $offset,
         int $maxSize,
-        bool &$hasFullTextSearch
+        bool &$hasFullTextSearch,
     ): ?Select {
 
         if (!$this->acl->checkScope($entityType, Acl\Table::ACTION_READ)) {
             return null;
         }
 
-        if (!$this->metadata->get(['scopes', $entityType])) {
+        if (!$this->metadata->get("scopes.$entityType")) {
             return null;
         }
 
@@ -159,8 +183,7 @@ class Service
 
         $entityDefs = $this->entityManager->getDefs()->getEntity($entityType);
 
-        $nameAttribute = $entityDefs->hasField('name') ?
-            'name' : 'id';
+        $nameAttribute = $entityDefs->hasField(Field::NAME) ? Field::NAME : Attribute::ID;
 
         $selectList = [
             Attribute::ID,
@@ -176,10 +199,7 @@ class Service
             FullTextSearchDataComposerParams::create()
         );
 
-        $isPerson = $this->metadata
-            ->get(['entityDefs', $entityType, 'fields', Field::NAME, 'type']) === FieldType::PERSON_NAME;
-
-        if ($isPerson) {
+        if ($this->isPerson($entityType)) {
             $selectList[] = 'firstName';
             $selectList[] = 'lastName';
         } else {
@@ -187,7 +207,19 @@ class Service
             $selectList[] = ['VALUE:', 'lastName'];
         }
 
-        $query = $selectBuilder->build();
+        $statusField = $this->getStatusField($entityType);
+
+        if ($statusField) {
+            $selectList[] = [$statusField, 'status'];
+        } else {
+            $selectList[] = ['VALUE:', 'status'];
+        }
+
+        try {
+            $query = $selectBuilder->build();
+        } catch (BadRequest|Forbidden $e) {
+            throw new RuntimeException("", 0, $e);
+        }
 
         $queryBuilder = $this->entityManager
             ->getQueryBuilder()
@@ -212,5 +244,17 @@ class Service
         $queryBuilder->order($nameAttribute);
 
         return $queryBuilder->build();
+    }
+
+    private function isPerson(string $entityType): bool
+    {
+        $fieldDefs = $this->entityManager->getDefs()->getEntity($entityType);
+
+        return $fieldDefs->tryGetField(Field::NAME)?->getType() === FieldType::PERSON_NAME;
+    }
+
+    private function getStatusField(string $entityType): ?string
+    {
+        return $this->metadata->get("scopes.$entityType.statusField");
     }
 }

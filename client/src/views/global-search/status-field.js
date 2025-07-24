@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,41 +26,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\GlobalSearch\Api;
+import BaseFieldView from 'views/fields/base';
 
-use Espo\Core\Api\Action;
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use Espo\Core\Api\ResponseComposer;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Record\SearchParamsFetcher;
-use Espo\Tools\GlobalSearch\Service;
+export default class extends BaseFieldView {
 
-/**
- * Global search.
- */
-class Get implements Action
-{
-    public function __construct(
-        private Service $service,
-        private SearchParamsFetcher $searchParamsFetcher,
-    ) {}
+    // language=Handlebars
+    listTemplateContent = `
+        {{~#if stringValue}}
+            <span class="label label-sm label-state label-{{style}}">{{stringValue}}</span>
+        {{/if~}}
+    `
 
-    public function process(Request $request): Response
-    {
-        $query = $request->getQueryParam('q');
+    data() {
+        /** @type {string} */
+        const entityType = this.model.attributes._scope;
 
-        if ($query === null || $query === '') {
-            throw new BadRequest("No `q` parameter.");
+        const field = this.getMetadata().get(`scopes.${entityType}.statusField`);
+
+        if (!field) {
+            return {};
         }
 
-        $searchParams = $this->searchParamsFetcher->fetch($request);
+        const value = this.model.attributes[field];
 
-        $offset = $searchParams->getOffset();
-        $maxSize = $searchParams->getMaxSize();
+        if (!value) {
+            return {};
+        }
 
-        $result = $this->service->find($query, $offset, $maxSize);
+        const stringValue = this.getLanguage().translateOption(value, field, entityType);
+        const style = this.getMetadata().get(`entityDefs.${entityType}.fields.${field}.style.${value}`) ?? 'default';
 
-        return ResponseComposer::json($result->toApiOutput());
+        return {
+            stringValue,
+            style,
+        };
     }
+
 }

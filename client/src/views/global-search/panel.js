@@ -82,6 +82,12 @@ class GlobalSearchPanel extends View {
                             name: 'name',
                             view: 'views/global-search/name-field',
                         }
+                    ],
+                    [
+                        {
+                            name: 'status',
+                            view: 'views/global-search/status-field',
+                        }
                     ]
                 ],
                 right: {
