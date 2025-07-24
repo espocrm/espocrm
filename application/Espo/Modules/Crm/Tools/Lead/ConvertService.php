@@ -69,7 +69,7 @@ class ConvertService
         private User $user,
         private StreamService $streamService,
         private Metadata $metadata,
-        private FieldUtil $fieldUtil
+        private FieldUtil $fieldUtil,
     ) {}
 
     /**
@@ -90,32 +90,32 @@ class ConvertService
         $duplicateCheck = !$params->skipDuplicateCheck();
 
         $account = $this->processAccount(
-            $lead,
-            $records,
-            $duplicateCheck,
-            $duplicateList,
-            $skipSave
+            lead: $lead,
+            records: $records,
+            duplicateCheck: $duplicateCheck,
+            duplicateList: $duplicateList,
+            skipSave: $skipSave,
         );
 
         $contact = $this->processContact(
-            $lead,
-            $records,
-            $duplicateCheck,
-            $duplicateList,
-            $skipSave,
-            $account
+            lead: $lead,
+            records: $records,
+            duplicateCheck: $duplicateCheck,
+            duplicateList: $duplicateList,
+            skipSave: $skipSave,
+            account: $account,
         );
 
         $account ??= $this->getSelectedAccount($contact);
 
         $opportunity = $this->processOpportunity(
-            $lead,
-            $records,
-            $duplicateCheck,
-            $duplicateList,
-            $skipSave,
-            $account,
-            $contact
+            lead: $lead,
+            records: $records,
+            duplicateCheck: $duplicateCheck,
+            duplicateList: $duplicateList,
+            skipSave: $skipSave,
+            account: $account,
+            contact: $contact,
         );
 
         if ($duplicateCheck && count($duplicateList)) {
@@ -145,7 +145,7 @@ class ConvertService
         $values = Values::create();
 
         /** @var string[] $entityList */
-        $entityList = $this->metadata->get('entityDefs.Lead.convertEntityList', []);
+        $entityList = $this->metadata->get('entityDefs.Lead.convertEntityList') ?? [];
 
         $ignoreAttributeList = [
             Field::CREATED_AT,
@@ -157,7 +157,7 @@ class ConvertService
         ];
 
         /** @var array<string, array<string, string>> $convertFieldsDefs */
-        $convertFieldsDefs = $this->metadata->get('entityDefs.Lead.convertFields', []);
+        $convertFieldsDefs = $this->metadata->get('entityDefs.Lead.convertFields') ?? [];
 
         foreach ($entityList as $entityType) {
             if (!$this->acl->checkScope($entityType, Acl\Table::ACTION_CREATE)) {
@@ -290,7 +290,7 @@ class ConvertService
         Values $records,
         bool $duplicateCheck,
         array &$duplicateList,
-        bool &$skipSave
+        bool &$skipSave,
     ): ?Account {
 
         if (!$records->has(Account::ENTITY_TYPE)) {
@@ -344,7 +344,7 @@ class ConvertService
         bool $duplicateCheck,
         array &$duplicateList,
         bool &$skipSave,
-        ?Account $account
+        ?Account $account,
     ): ?Contact {
 
         if (!$records->has(Contact::ENTITY_TYPE)) {
@@ -483,7 +483,7 @@ class ConvertService
         Lead $lead,
         ?Account $account,
         ?Contact $contact,
-        ?Opportunity $opportunity
+        ?Opportunity $opportunity,
     ): void {
 
         $leadRepository = $this->entityManager->getRDBRepositoryByClass(Lead::class);
