@@ -386,6 +386,14 @@ class ConvertService
 
         $lead->set('createdContactId', $contact->getId());
 
+        if (
+            !$account &&
+            $contact->getAccount() &&
+            !$contact->getAccount()->get('originalLeadId')
+        ) {
+            $lead->set('createdAccountId', $contact->getAccount()->getId());
+        }
+
         return $contact;
     }
 
