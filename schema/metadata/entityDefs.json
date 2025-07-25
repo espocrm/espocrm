@@ -1059,7 +1059,7 @@
                 },
                 "loaderClassName": {
                     "type": "string",
-                    "description": "Loader. Must implement Espo\\Core\\FieldProcessing\\Loader. As of v9.1."
+                    "description": "Loader. Must implement Espo\\Core\\FieldProcessing\\Loader. Field loading order is not guaranteed. As of v9.1."
                 },
                 "duplicateIgnore": {
                     "type": "boolean",

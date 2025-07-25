@@ -109,7 +109,7 @@ class ListLoadProcessor
         $additionalList = $this->metadata
             ->get(['recordDefs', $entityType, 'listLoaderClassNameList']) ?? [];
 
-        $list = array_merge($entityLevelList, $list, $additionalList);
+        $list = array_merge($list, $additionalList, $entityLevelList);
 
         return array_values(array_unique($list));
     }
