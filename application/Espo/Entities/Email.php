@@ -74,6 +74,12 @@ class Email extends Entity
 
     public const LINK_REPLIES = 'replies';
 
+    public const ADDRESS_FROM = 'from';
+    public const ADDRESS_TO = 'to';
+    public const ADDRESS_CC = 'cc';
+    public const ADDRESS_BCC = 'bcc';
+    public const ADDRESS_REPLY_TO = 'replyTo';
+
     public function get(string $attribute): mixed
     {
         if ($attribute === 'subject') {

@@ -33,6 +33,11 @@ import EmailHelper from 'email-helper';
 
 class EmailFromAddressVarchar extends BaseFieldView {
 
+    // language=Handlebars
+    listTemplateContent = `
+        {{#if value}}{{{value}}}{{/if}}
+    `
+
     detailTemplate = 'email/fields/email-address-varchar/detail'
 
     validations = ['required', 'email']
@@ -164,7 +169,7 @@ class EmailFromAddressVarchar extends BaseFieldView {
     }
 
     getValueForDisplay() {
-        if (this.mode === this.MODE_DETAIL) {
+        if (this.mode === this.MODE_DETAIL || this.mode === this.MODE_LIST) {
             const address = this.model.get(this.name);
 
             return this.getDetailAddressHtml(address);
@@ -194,45 +199,65 @@ class EmailFromAddressVarchar extends BaseFieldView {
             let avatarHtml = '';
 
             if (entityType === 'User') {
-                avatarHtml = this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
+                const size = this.mode === this.MODE_DETAIL ? 18 : 16;
+
+                avatarHtml = this.getHelper().getAvatarHtml(id, 'small', size, 'avatar-link');
             }
 
-            return $('<div class="email-address-detail-item">')
+            const title = this.mode === this.MODE_LIST ? name : null;
+            const className = this.mode === this.MODE_LIST ? 'text-default' : null;
+
+            const $item = $('<div class="email-address-detail-item">')
                 .append(
                     avatarHtml,
                     $('<a>')
                         .attr('href', `#${entityType}/view/${id}`)
                         .attr('data-scope', entityType)
                         .attr('data-id', id)
+                        .attr('title', title)
+                        .addClass(className)
                         .text(name),
+                );
+
+            if (this.mode === this.MODE_DETAIL) {
+                $item.append(
                     ' ',
                     $('<span>').addClass('text-muted middle-dot'),
                     ' ',
                     $('<span>').text(address)
-                )
-                .get(0).outerHTML;
+                );
+            }
+
+            return $item.get(0).outerHTML;
         }
 
         const $div = $('<div>');
+        $div.addClass('email-address-lines-container')
 
-        if (this.getAcl().check('Contact', 'create') || this.getAcl().check('Lead', 'create')) {
+        if (
+            this.mode !== this.MODE_LIST &&
+            (this.getAcl().check('Contact', 'create') || this.getAcl().check('Lead', 'create'))
+        ) {
             $div.append(
                 this.getCreateHtml(address)
             );
         }
 
         if (name) {
-            $div.append(
-                $('<span>')
-                    .addClass('email-address-line')
-                    .text(name)
-                    .append(
-                        ' ',
-                        $('<span>').addClass('text-muted middle-dot'),
-                        ' ',
-                        $('<span>').text(address)
-                    )
-            );
+            const $span = $('<span>')
+                .addClass('email-address-line')
+                .text(name);
+
+            if (this.mode === this.MODE_DETAIL) {
+                $span.append(
+                    ' ',
+                    $('<span>').addClass('text-muted middle-dot'),
+                    ' ',
+                    $('<span>').text(address),
+                );
+            }
+
+            $div.append($span);
 
             return $div.get(0).outerHTML;
         }

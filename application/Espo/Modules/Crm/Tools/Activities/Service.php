@@ -69,6 +69,7 @@ use Espo\Core\FieldProcessing\ListLoadProcessor;
 use Espo\Core\FieldProcessing\Loader\Params as FieldLoaderParams;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
+use Espo\Repositories\Email as EmailRepository;
 use LogicException;
 use PDO;
 use RuntimeException;
@@ -137,6 +138,8 @@ class Service
                     'status',
                     Field::CREATED_AT,
                     ['false', 'hasAttachment'],
+                    ['null', 'fromEmailAddressName'],
+                    ['null', 'fromString'],
                 ])
                 ->leftJoin(
                     'MeetingUser',
@@ -210,6 +213,8 @@ class Service
                     'status',
                     Field::CREATED_AT,
                     ['false', 'hasAttachment'],
+                    ['null', 'fromEmailAddressName'],
+                    ['null', 'fromString'],
                 ])
                 ->leftJoin(
                     'CallUser',
@@ -284,6 +289,8 @@ class Service
                     'status',
                     Field::CREATED_AT,
                     'hasAttachment',
+                    'fromEmailAddressName',
+                    'fromString',
                 ])
                 ->leftJoin(
                     'EmailUser',
@@ -357,6 +364,8 @@ class Service
                     'status',
                     Field::CREATED_AT,
                     ['false', 'hasAttachment'],
+                    ['null', 'fromEmailAddressName'],
+                    ['null', 'fromString'],
                 ]);
         } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
@@ -485,6 +494,8 @@ class Service
                     'status',
                     Field::CREATED_AT,
                     'hasAttachment',
+                    'fromEmailAddressName',
+                    'fromString',
                 ]);
         } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
@@ -726,7 +737,11 @@ class Service
             }
 
             $itemEntity = $this->entityManager->getNewEntity($itemEntityType);
-            $itemEntity->set($row);
+
+            $itemEntity->setMultiple($row);
+            $itemEntity->setAsFetched();
+
+            $this->prepareEntity($itemEntity);
 
             $collection->append($itemEntity);
         }
@@ -736,6 +751,20 @@ class Service
         }
 
         return RecordCollection::create($collection, $totalCount);
+    }
+
+    private function prepareEntity(Entity $entity): void
+    {
+        if ($entity instanceof Email) {
+            $repo = $this->entityManager->getRepository(Email::ENTITY_TYPE);
+
+            if (!$repo instanceof EmailRepository) {
+                throw new RuntimeException();
+            }
+
+            $repo->loadFromField($entity);
+            $repo->loadNameHash($entity, [Email::ADDRESS_FROM]);
+        }
     }
 
     /**
@@ -1082,6 +1111,8 @@ class Service
                     'status',
                     Field::CREATED_AT,
                     ['false', 'hasAttachment'],
+                    ['null', 'fromEmailAddressName'],
+                    ['null', 'fromString'],
                 ]);
         } catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());

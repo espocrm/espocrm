@@ -55,7 +55,7 @@ class HistoryPanelView extends ActivitiesPanelView {
                         soft: true
                     },
                     {
-                        name: 'status',
+                        name: 'from',
                     },
                     {
                         name: 'hasAttachment',
