@@ -108,7 +108,7 @@ class ReadLoadProcessor
             ->get(['recordDefs', $entityType, 'readLoaderClassNameList']) ?? [];
 
         /** @var class-string<Loader<Entity>>[] $list */
-        $list = array_merge($entityLevelList, $list, $additionalList);
+        $list = array_merge($list, $additionalList, $entityLevelList);
 
         return array_values(array_unique($list));
     }
