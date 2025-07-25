@@ -67,7 +67,7 @@
                 "currency",
                 "date",
                 "datetime",
-                "boolean",
+                "bool",
                 "url",
                 "urlMultiple",
                 "address"
