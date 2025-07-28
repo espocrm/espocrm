@@ -159,7 +159,7 @@ class BeforeSaveValidate implements SaveHook
         }
 
         $mapKey = $isPortal ? 'aclPortalActionLevelListMap' : 'aclActionLevelListMap';
-        $key = $isPortal ? 'aclPortalLevelList' : 'aclActionList';
+        $key = $isPortal ? 'aclPortalLevelList' : 'aclLevelList';
         $defaultLevels = $isPortal ? $this->portalLevelList : $this->levelList;
 
         $levels = $this->metadata->get("scopes.$scope.$mapKey.$action") ??
