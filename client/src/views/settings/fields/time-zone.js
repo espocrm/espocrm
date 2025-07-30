@@ -28,22 +28,15 @@
 
 import EnumFieldView from 'views/fields/enum';
 
-export default class extends EnumFieldView {
+export default class TimeZoneFieldView extends EnumFieldView {
 
     setupOptions() {
-        this.params.options = Espo.Utils.clone(this.getHelper().getAppParam('timeZoneList')) || [];
+        super.setupOptions();
 
         this.translatedOptions = this.params.options.reduce((o, it) => {
             o[it] = it.replace('/', ' / ');
 
             return o;
         }, {});
-
-        /** @type {string} */
-        const systemValue = this.getConfig().get('timeZone') ?? '';
-        const systemLabel = systemValue.replace('/', ' / ');
-
-        this.params.options.unshift('');
-        this.translatedOptions[''] = `${this.translate('Default')} · ${systemLabel}`;
     }
 }
