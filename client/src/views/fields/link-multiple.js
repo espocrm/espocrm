@@ -782,28 +782,43 @@ class LinkMultipleFieldView extends BaseFieldView {
      * @return {HTMLElement}
      */
     prepareEditItemElement(id, name) {
-        // Beware of XSS.
+        const item = document.createElement('div');
+        item.classList.add('link-' + id);
+        item.classList.add('list-group-item');
+        item.dataset.id = id;
 
-        const $el = $('<div>')
-            .addClass('link-' + id)
-            .addClass('list-group-item')
-            .attr('data-id', id);
+        item.append(
+            (() => {
+                const a = document.createElement('a');
+                a.role = 'button';
+                a.tabIndex = 0;
+                a.classList.add('pull-right');
+                a.dataset.id = id;
+                a.dataset.action = 'clearLink';
+                a.append(
+                    (() => {
+                        const span = document.createElement('span');
+                        span.classList.add('fas', 'fa-times');
 
-        $el.text(name).append('&nbsp;');
+                        return span;
+                    })(),
+                );
 
-        $el.prepend(
-            $('<a>')
-                .addClass('pull-right')
-                .attr('role', 'button')
-                .attr('tabindex', '0')
-                .attr('data-id', id)
-                .attr('data-action', 'clearLink')
-                .append(
-                    $('<span>').addClass('fas fa-times')
-                )
+                return a;
+            })()
         );
 
-        return $el.get(0);
+        item.append(
+            (() => {
+                const span = document.createElement('span');
+                span.classList.add('text');
+                span.textContent = name;
+
+                return span;
+            })()
+        );
+
+        return item;
     }
 
     // noinspection JSUnusedLocalSymbols

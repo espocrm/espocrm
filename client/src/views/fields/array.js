@@ -650,31 +650,41 @@ class ArrayFieldView extends BaseFieldView {
             this.translatedOptions[value].toString() :
             value;
 
-        return $('<div>')
-            .addClass('list-group-item')
-            .attr('data-value', value)
-            .css('cursor', 'default')
-            .append(
-                !this.params.keepItems ?
-                    $('<a>')
-                        .attr('role', 'button')
-                        .attr('tabindex', '0')
-                        .addClass('pull-right')
-                        .attr('data-value', value)
-                        .attr('data-action', 'removeValue')
-                        .append(
-                            $('<span>').addClass('fas fa-times')
-                        ) :
-                    undefined
-            )
-            .append(
-                $('<span>')
-                    .addClass('text')
-                    .text(text)
-            )
-            .append('')
-            .get(0)
-            .outerHTML;
+        const div = document.createElement('div');
+        div.classList.add('list-group-item');
+        div.dataset.value = value;
+        div.style.cursor = 'default';
+
+        if (!this.params.keepItems) {
+            const a = document.createElement('a');
+            a.role = 'button';
+            a.tabIndex = 0;
+            a.classList.add('pull-right');
+            a.dataset.value = value;
+            a.dataset.action = 'removeValue';
+            a.append(
+                (() => {
+                    const span = document.createElement('span');
+                    span.classList.add('fas', 'fa-times');
+
+                    return span;
+                })(),
+            );
+
+            div.append(a);
+        }
+
+        div.append(
+            (() => {
+                const span = document.createElement('span');
+                span.classList.add('text');
+                span.textContent = text;
+
+                return span;
+            })(),
+        );
+
+        return div.outerHTML;
     }
 
     /**
