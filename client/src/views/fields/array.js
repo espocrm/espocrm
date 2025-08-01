@@ -31,6 +31,10 @@
 import BaseFieldView from 'views/fields/base';
 import RegExpPattern from 'helpers/reg-exp-pattern';
 import MultiSelect from 'ui/multi-select';
+import ModalView from 'views/modal';
+import Model from 'model';
+import EditForModalRecordView from 'views/record/edit-for-modal';
+import VarcharFieldView from 'views/fields/varchar';
 
 /**
  * An array field.
@@ -67,6 +71,7 @@ class ArrayFieldView extends BaseFieldView {
      * @property {string} [pattern] A regular expression pattern.
      * @property {boolean} [keepItems] Disable the ability to add or remove items. Reordering is allowed.
      * @property {number} [maxItemLength] Max item length. If not specified, 100 is used.
+     * @property {boolean} [itemsEditable] Items are editable. As of v9.2.
      */
 
     /**
@@ -128,6 +133,12 @@ class ArrayFieldView extends BaseFieldView {
      */
     noDragHandle = false
 
+    /**
+     * @protected
+     * @type {string[]}
+     */
+    selected
+
 
     // noinspection JSCheckFunctionSignatures
     /** @inheritDoc */
@@ -171,11 +182,17 @@ class ArrayFieldView extends BaseFieldView {
     setup() {
         super.setup();
 
+        this.addActionHandler('editItem', (e, target) => {
+            this.actionEditItem(target.dataset.value);
+        });
+
         this.noEmptyString = this.params.noEmptyString;
 
         if (this.params.maxItemLength != null) {
             this.maxItemLength = this.params.maxItemLength;
         }
+
+        this.maxItemLength = this.maxItemLength || this.MAX_ITEM_LENGTH;
 
         this.listenTo(this.model, 'change:' + this.name, () => {
             this.selected = Espo.Utils.clone(this.model.get(this.name)) || [];
@@ -704,6 +721,39 @@ class ArrayFieldView extends BaseFieldView {
 
                 return span;
             })(),
+        );
+
+        if (this.params.itemsEditable && this.allowCustomOptions) {
+            div.append(
+                (() => {
+                    const span = document.createElement('span');
+                    span.className = 'item-button'
+                    span.append(
+                        (() => {
+                            const a = document.createElement('a');
+                            a.role = 'button';
+                            a.tabIndex = 0;
+                            a.dataset.value = value;
+                            a.dataset.action = 'editItem';
+                            a.append(
+                                (() => {
+                                    const span = document.createElement('span');
+                                    span.className = 'fas fa-pencil-alt fa-sm';
+
+                                    return span;
+                                })(),
+                            );
+
+                            return a;
+                        })(),
+                    )
+
+                    return span;
+                })(),
+            );
+        }
+
+        div.append(
             (() => {
                 const span = document.createElement('span');
                 span.classList.add('text');
@@ -953,6 +1003,36 @@ class ArrayFieldView extends BaseFieldView {
         });
     }
 
+    /**
+     * @protected
+     * @param value
+     */
+    async actionEditItem(value) {
+        const view = new EditItemModalView({
+            value: value,
+            required: this.noEmptyString,
+            maxLength: this.maxItemLength,
+            onApply: async data => {
+                const index = this.selected.findIndex(it => it === value);
+
+                if (index < 0) {
+                    return;
+                }
+
+                this.selected[index] = data.value;
+
+                this.selected = this.selected.filter((it, i) => this.selected.indexOf(it) === i);
+
+                await this.reRender();
+                this.trigger('change');
+            },
+        });
+
+        await this.assignView('dialog', view);
+        await view.render();
+
+    }
+
     // noinspection JSUnusedGlobalSymbols
     /**
      * @protected
@@ -982,3 +1062,94 @@ class ArrayFieldView extends BaseFieldView {
 }
 
 export default ArrayFieldView;
+
+class EditItemModalView extends ModalView {
+
+    // language=Handlebars
+    templateContent = `
+        <div class="record no-side-margin">{{{record}}}</div>
+    `
+
+    /**
+     * @private
+     * @type {EditForModalRecordView}
+     */
+    recordView
+
+    /**
+     *
+     * @param {{
+     *    value: string,
+     *    maxLength: number,
+     *    required: boolean,
+     *    onApply: function({value: string}),
+     * }} options
+     */
+    constructor(options) {
+        super(options);
+
+        this.options = options;
+    }
+
+    setup() {
+        this.buttonList = [
+            {
+                name: 'apply',
+                label: 'Apply',
+                style: 'danger',
+                onClick: () => this.actionApply(),
+            },
+            {
+                name: 'cancel',
+                label: 'Cancel',
+                onClick: () => this.actionCancel(),
+            },
+        ]
+
+        this.headerText = this.translate('Edit Item');
+
+        this.model = new Model({
+            value: this.options.value,
+        });
+
+        this.recordView = new EditForModalRecordView({
+            model: this.model,
+            detailLayout: [
+                {
+                    rows: [
+                        [
+                            {
+                                view: new VarcharFieldView({
+                                    name: 'value',
+                                    labelText: this.translate('Value'),
+                                    params: {
+                                        required: this.options.required,
+                                        maxLength: this.options.maxLength,
+                                    },
+                                })
+                            },
+                            false
+                        ]
+                    ],
+                },
+            ],
+        });
+
+        this.assignView('record', this.recordView);
+    }
+
+    /**
+     * @private
+     */
+    actionApply() {
+        if (this.recordView.validate()) {
+            return;
+        }
+
+        const value = this.model.attributes.value ?? '';
+
+        this.options.onApply({value});
+
+        this.close();
+    }
+}
