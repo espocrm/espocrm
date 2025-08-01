@@ -1104,7 +1104,11 @@ class EditItemModalView extends ModalView {
                 label: 'Cancel',
                 onClick: () => this.actionCancel(),
             },
-        ]
+        ];
+
+        this.shortcutKeys = {
+            'Control+Enter': () => this.actionApply(),
+        };
 
         this.headerText = this.translate('Edit Item');
 
@@ -1142,7 +1146,9 @@ class EditItemModalView extends ModalView {
      * @private
      */
     actionApply() {
-        if (this.recordView.validate()) {
+        const data = this.recordView.processFetch();
+
+        if (!data) {
             return;
         }
 
