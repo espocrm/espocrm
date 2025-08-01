@@ -1286,9 +1286,9 @@ class BaseRecordView extends View {
     }
 
     /**
-     * Process fetch.
+     * Process fetch. Returns null if not valid.
      *
-     * @return {Object<string,*>|null}
+     * @return {Object<string, *>|null}
      */
     processFetch() {
         const data = this.fetch();
