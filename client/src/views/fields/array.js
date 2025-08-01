@@ -370,6 +370,9 @@ class ArrayFieldView extends BaseFieldView {
         }
     }
 
+    /**
+     * @private
+     */
     controlAddItemButton() {
         const $select = this.$select;
 
@@ -440,6 +443,7 @@ class ArrayFieldView extends BaseFieldView {
     }
 
     /**
+     * @protected
      * @param {string} value
      */
     addValueFromUi(value) {
@@ -537,6 +541,9 @@ class ArrayFieldView extends BaseFieldView {
         });
     }
 
+    /**
+     * @protected
+     */
     fetchFromDom() {
         const selected = [];
 
