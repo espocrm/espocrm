@@ -827,6 +827,43 @@ input.global-search-input {
                 width: calc(100% - var(--18px));
                 display: inline-block;
             }
+
+            > span.drag-handle {
+                display: inline-block;
+                width: var(--18px);
+                color: var(--text-muted-color);
+                cursor: grab;
+                vertical-align: top;
+            }
+
+            > span.item-button {
+                display: inline-block;
+                width: var(--18px);
+                vertical-align: top;
+            }
+
+            &:has(> .item-button) {
+                > span.text {
+                    width: calc(100% - var(--36px));
+                }
+            }
+
+            &:has(> .drag-handle) {
+                > span.text {
+                    width: calc(100% - var(--36px));
+                }
+            }
+
+            &:has(> .item-button):has(> .drag-handle) {
+                > span.text {
+                    width: calc(100% - var(--36px) - var(--18px));
+                }
+            }
+
+            > a[role="button"] {
+                margin-top: var(--1px);
+                margin-left: var(--2px);
+            }
         }
 
         .link-group-item-with-columns {
@@ -943,11 +980,6 @@ input.global-search-input {
 }
 
 .filter .field .link-container .list-group-item a[role="button"] {
-    margin-top: var(--1px);
-    margin-left: var(--2px);
-}
-
-.field .link-container .list-group-item a[role="button"] {
     margin-top: var(--1px);
     margin-left: var(--2px);
 }

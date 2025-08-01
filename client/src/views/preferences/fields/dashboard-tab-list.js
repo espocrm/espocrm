@@ -56,9 +56,25 @@ export default class extends ArrayFieldView {
             .addClass('list-group-item link-with-role form-inline')
             .attr('data-value', value)
             .append(
+                (() => {
+                    const span = document.createElement('span');
+                    span.className = 'drag-handle pull-left';
+                    span.append(
+                        (() => {
+                            const span = document.createElement('span');
+                            span.className = 'fas fa-grip fa-sm';
+
+                            return span;
+                        })(),
+                    );
+
+                    return span;
+                })(),
+            )
+            .append(
                 $('<div>')
                     .addClass('pull-left')
-                    .css('width', '92%')
+                    .css('width', 'calc(100% - var(--36px))')
                     .css('display', 'inline-block')
                     .append(
                         $('<input>')
@@ -67,12 +83,12 @@ export default class extends ArrayFieldView {
                             .attr('data-value', value)
                             .addClass('role form-control input-sm')
                             .attr('value', translatedValue)
-                            .css('width', '65%')
+                            .css('width', 'calc(100% - var(--4px))')
                     )
             )
             .append(
                 $('<div>')
-                    .css('width', '8%')
+                    .css('width', 'var(--18px)')
                     .css('display', 'inline-block')
                     .css('vertical-align', 'top')
                     .append(
@@ -86,9 +102,6 @@ export default class extends ArrayFieldView {
                                 $('<span>').addClass('fas fa-times')
                             )
                     )
-            )
-            .append(
-                $('<br>').css('clear', 'both')
             )
             .get(0).outerHTML;
     }

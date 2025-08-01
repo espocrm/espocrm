@@ -30,6 +30,8 @@ import OptionsView from 'views/admin/field-manager/fields/options';
 
 export default class extends OptionsView {
 
+    noDragHandle = true
+
     setup() {
         super.setup();
 

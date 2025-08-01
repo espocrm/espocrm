@@ -121,6 +121,13 @@ class ArrayFieldView extends BaseFieldView {
      */
     translatedOptions = null
 
+    /**
+     * @protected
+     * @type {boolean}
+     * @since 9.2.0
+     */
+    noDragHandle = false
+
 
     // noinspection JSCheckFunctionSignatures
     /** @inheritDoc */
@@ -434,6 +441,7 @@ class ArrayFieldView extends BaseFieldView {
                 distance: 5,
                 cancel: 'input,textarea,button,select,option,a[role="button"]',
                 cursor: 'grabbing',
+                handle: !this.noDragHandle ? '.drag-handle' : undefined,
             });
         }
 
@@ -658,7 +666,7 @@ class ArrayFieldView extends BaseFieldView {
             value;
 
         const div = document.createElement('div');
-        div.classList.add('list-group-item');
+        div.className = 'list-group-item';
         div.dataset.value = value;
         div.style.cursor = 'default';
 
@@ -672,7 +680,7 @@ class ArrayFieldView extends BaseFieldView {
             a.append(
                 (() => {
                     const span = document.createElement('span');
-                    span.classList.add('fas', 'fa-times');
+                    span.className = 'fas fa-times'
 
                     return span;
                 })(),
@@ -682,6 +690,20 @@ class ArrayFieldView extends BaseFieldView {
         }
 
         div.append(
+            (() => {
+                const span = document.createElement('span');
+                span.className = 'drag-handle';
+                span.append(
+                    (() => {
+                        const span = document.createElement('span');
+                        span.className = 'fas fa-grip fa-sm';
+
+                        return span;
+                    })(),
+                );
+
+                return span;
+            })(),
             (() => {
                 const span = document.createElement('span');
                 span.classList.add('text');
