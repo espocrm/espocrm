@@ -104,7 +104,7 @@
         "conversionDisabled": "The currency conversion action won't be applied to this field.",
         "pattern": "A regular expression to check a field value against. Define an expression or select a predefined one.",
         "options": "A list of possible values and their labels.",
-        "itemsEditable": "Items can be edited. Available only if no options are specified.",
+        "itemsEditable": "Items can be edited. Applicable only if no options are specified.",
         "optionsArray": "A list of possible values and their labels. If empty, the field will allow entering custom values.",
         "maxCount": "Maximum number of items allowed to be selected.",
         "displayAsList": "Each item in a new line.",
