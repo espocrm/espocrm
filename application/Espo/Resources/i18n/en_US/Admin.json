@@ -240,7 +240,8 @@
         "relateOnImport": "Relate on Import",
         "aclScope": "ACL Scope",
         "onlyAdmin": "Only for Admin",
-        "notStorable": "Not Storable"
+        "notStorable": "Not Storable",
+        "itemsEditable": "Items Editable"
     },
     "strings" : {
         "rebuildRequired": "Rebuild is required"
