@@ -70,7 +70,7 @@ class ArrayFieldView extends BaseFieldView {
      * @property {boolean} [allowCustomOptions] Allow custom options.
      * @property {string} [pattern] A regular expression pattern.
      * @property {boolean} [keepItems] Disable the ability to add or remove items. Reordering is allowed.
-     * @property {number} [maxItemLength] Max item length. If not specified, 100 is used.
+     * @property {number} [maxItemLength] Max item length. If not specified, 100 is used. As of v9.1.
      * @property {boolean} [itemsEditable] Items are editable. As of v9.2.
      */
 
