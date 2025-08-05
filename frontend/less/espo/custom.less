@@ -2830,6 +2830,20 @@ div[data-scope="ApiUser"] {
         max-width: 100%;
         max-height: var(--500px);
     }
+
+    input[type="checkbox"] {
+        float: left;
+        position: relative;
+        top: var(--3px);
+        margin-right: var(--6px);
+    }
+
+    li {
+        &:has(> input[type="checkbox"]) {
+            list-style-type: none;
+            margin-left: var(--minus-16px);
+        }
+    }
 }
 
 table.table td.cell .complex-text,
