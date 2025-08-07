@@ -42,8 +42,33 @@ class TimelineView extends View {
 
     eventAttributes = []
     colors = {}
-    scopeList = []
+
+    /**
+     * @private
+     * @type {string[]}
+     */
+    allDayScopeList
+
+    /**
+     * @private
+     * @type {string[]}
+     */
+    scopeList = ['Meeting', 'Call', 'Task']
+
+    /**
+     * @private
+     * @type {string[]}
+     */
+    enabledScopeList
+
+    /**
+     * @private
+     * @type {string[]}
+     */
+    onlyDateScopeList
+
     header = true
+
     modeList = []
     defaultMode = 'timeline'
     maxRange = 120
@@ -166,14 +191,19 @@ class TimelineView extends View {
 
         this.$container = this.options.$container;
 
-        this.colors = Espo.Utils
-            .clone(this.getMetadata().get('clientDefs.Calendar.colors') || this.colors || {});
-        this.modeList = this.getMetadata()
-            .get('clientDefs.Calendar.modeList') || this.modeList || [];
-        this.scopeList = this.getConfig()
-            .get('calendarEntityList') || Espo.Utils.clone(this.scopeList) || [];
-        this.allDayScopeList = this.getMetadata()
-            .get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList || [];
+        this.colors = Espo.Utils.clone(this.getMetadata().get('clientDefs.Calendar.colors') || this.colors || {});
+
+        this.modeList = this.getMetadata().get('clientDefs.Calendar.modeList') || this.modeList || [];
+
+        this.scopeList = this.getConfig().get('calendarEntityList') || Espo.Utils.clone(this.scopeList);
+
+        this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDayScopeList') ?? [];
+
+        this.scopeList.forEach(scope => {
+            if (this.getMetadata().get(`scopes.${scope}.calendarOneDay`) && !this.allDayScopeList.includes(scope)) {
+                this.allDayScopeList.push(scope);
+            }
+        });
 
         this.colors = {...this.colors, ...this.getHelper().themeManager.getParam('calendarColors')};
 
@@ -209,6 +239,10 @@ class TimelineView extends View {
              if (color) {
                 this.colors[item] = color;
             }
+        });
+
+        this.onlyDateScopeList = this.scopeList.filter(scope => {
+            return this.getMetadata().get(`entityDefs.${scope}.fields.dateStart.type`) === 'date';
         });
 
         if (this.options.calendarType) {
@@ -403,7 +437,7 @@ class TimelineView extends View {
             event[attr] = o[attr];
         });
 
-        if (o.dateStart) {
+        if (o.dateStart || o.dateStartDate) {
             if (!o.dateStartDate) {
                 event.start = this.getDateTime().toMoment(o.dateStart);
             } else {
@@ -411,7 +445,7 @@ class TimelineView extends View {
             }
         }
 
-        if (o.dateEnd) {
+        if (o.dateEnd || o.dateEndDate) {
             if (!o.dateEndDate) {
                 event.end = this.getDateTime().toMoment(o.dateEnd);
             } else {
@@ -419,7 +453,7 @@ class TimelineView extends View {
             }
         }
 
-        if (o.dateStartDate && !~this.allDayScopeList.indexOf(o.scope)) {
+        if (o.dateStartDate && !this.allDayScopeList.includes(o.scope) && event.end) {
             event.end = event.end.clone().add(1, 'days');
         }
 
@@ -427,7 +461,7 @@ class TimelineView extends View {
             return event;
         }
 
-        if (~this.allDayScopeList.indexOf(o.scope)) {
+        if (this.allDayScopeList.includes(o.scope)) {
             event.type = 'box';
 
             if (event.end) {
@@ -697,11 +731,13 @@ class TimelineView extends View {
             attributes.assignedUserName = userName || userId;
         }
 
+        const scopeList = this.enabledScopeList.filter(it => !this.onlyDateScopeList.includes(it));
+
         Espo.Ui.notifyWait();
 
         const view = await this.createView('dialog', 'crm:views/calendar/modals/edit', {
             attributes: attributes,
-            enabledScopeList: this.enabledScopeList,
+            enabledScopeList: scopeList,
             scopeList: this.scopeList
         });
 

@@ -5,7 +5,6 @@
         "Task": "#70c173"
     },
     "scopeList": ["Meeting", "Call", "Task"],
-    "allDayScopeList": ["Task"],
     "modeList": ["month", "agendaWeek", "timeline", "agendaDay"],
     "sharedViewModeList": ["basicWeek", "month", "basicDay"],
     "additionalColorList": ["#AB78AD", "#CC9B45"],

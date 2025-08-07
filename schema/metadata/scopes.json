@@ -249,6 +249,10 @@
             "description": "Whether the entity can be displayed on the Calendar.",
             "type": "boolean"
         },
+        "calendarOneDay": {
+            "description": "Display as one-day events in the calendar.",
+            "type": "boolean"
+        },
         "activity": {
             "description": "Whether the entity can be displayed on the Activities panel.",
             "type": "boolean"

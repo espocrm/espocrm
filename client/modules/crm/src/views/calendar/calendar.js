@@ -51,8 +51,31 @@ class CalendarView extends View {
 
     eventAttributes = []
     colors = {}
-    allDayScopeList = ['Task']
+
+    /**
+     * @private
+     * @type {string[]}
+     */
+    allDayScopeList
+
+    /**
+     * @private
+     * @type {string[]}
+     */
     scopeList = ['Meeting', 'Call', 'Task']
+
+    /**
+     * @private
+     * @type {string[]}
+     */
+    onlyDateScopeList
+
+    /**
+     * @private
+     * @type {string[]}
+     */
+    enabledScopeList
+
     header = true
     modeList = []
     fullCalendarModeList = [
@@ -204,11 +227,19 @@ class CalendarView extends View {
         this.modeList = this.getMetadata()
             .get('clientDefs.Calendar.modeList') || this.modeList;
 
-        this.scopeList = this.getConfig()
-            .get('calendarEntityList') || Espo.Utils.clone(this.scopeList);
+        this.scopeList = this.getConfig().get('calendarEntityList') || Espo.Utils.clone(this.scopeList);
 
-        this.allDayScopeList = this.getMetadata()
-            .get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList;
+        this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDayScopeList') ?? [];
+
+        this.scopeList.forEach(scope => {
+            if (this.getMetadata().get(`scopes.${scope}.calendarOneDay`) && !this.allDayScopeList.includes(scope)) {
+                this.allDayScopeList.push(scope);
+            }
+        });
+
+        this.onlyDateScopeList = this.scopeList.filter(scope => {
+            return this.getMetadata().get(`entityDefs.${scope}.fields.dateStart.type`) === 'date';
+        });
 
         this.slotDuration = this.options.slotDuration ||
             this.getPreferences().get('calendarSlotDuration') ||
@@ -553,13 +584,13 @@ class CalendarView extends View {
         let start;
         let end;
 
-        if (o.dateStart) {
+        if (o.dateStart || o.dateStartDate) {
             start = !o.dateStartDate ?
                 this.getDateTime().toMoment(o.dateStart) :
                 this.dateToMoment(o.dateStartDate);
         }
 
-        if (o.dateEnd) {
+        if (o.dateEnd || o.dateEndDate) {
             end = !o.dateEndDate ?
                 this.getDateTime().toMoment(o.dateEnd) :
                 this.dateToMoment(o.dateEndDate);
@@ -737,7 +768,7 @@ class CalendarView extends View {
             event.allDay = true;
             event.allDayCopy = event.allDay;
 
-            if (!afterDrop) {
+            if (!afterDrop && end) {
                 end.add(1, 'days')
             }
 
@@ -988,6 +1019,12 @@ class CalendarView extends View {
                 const delta = info.delta;
 
                 const scope = event.extendedProps.scope;
+
+                if (this.onlyDateScopeList.includes(scope)) {
+                    info.revert();
+
+                    return;
+                }
 
                 if (!event.allDay && event.extendedProps.allDayCopy) {
                     info.revert();
@@ -1249,11 +1286,13 @@ class CalendarView extends View {
             attributes.assignedUserName = this.options.userName || this.options.userId;
         }
 
+        const scopeList = this.enabledScopeList.filter(it => !this.onlyDateScopeList.includes(it));
+
         Espo.Ui.notifyWait();
 
         const view = await this.createView('dialog', 'crm:views/calendar/modals/edit', {
             attributes: attributes,
-            enabledScopeList: this.enabledScopeList,
+            enabledScopeList: scopeList,
             scopeList: this.scopeList,
             allDay: values.allDay,
             dateStartDate: values.dateStartDate,

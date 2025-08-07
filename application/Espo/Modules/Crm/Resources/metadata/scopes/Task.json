@@ -14,6 +14,7 @@
     "importable": true,
     "notifications": true,
     "calendar": true,
+    "calendarOneDay": true,
     "object": true,
     "statusField": "status",
     "stream": true,
