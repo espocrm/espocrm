@@ -46,6 +46,12 @@ export default class extends EntityTypeListFieldView {
                 return;
             }
 
+            const fieldType = this.getFieldManager().getEntityTypeFieldParam(scope, 'dateStart', 'type');
+
+            if (fieldType === 'date') {
+                return false;
+            }
+
             return true;
         });
     }
