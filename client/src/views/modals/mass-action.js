@@ -48,7 +48,7 @@ class MassActionModalView extends ModalView {
         this.status = 'Pending';
 
         this.headerText =
-            this.translate('Mass Action', 'scopeNames') + ': ' +
+            this.translate('Mass Action', 'scopeNames') + ' · ' +
             this.translate(this.action, 'massActions', this.options.scope);
 
         this.model = new Model();
