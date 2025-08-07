@@ -41,6 +41,7 @@ use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Type\RelationType;
 use LogicException;
 use RuntimeException;
+use WeakReference;
 
 /**
  * @internal
@@ -51,7 +52,9 @@ class RDBRelations implements Relations
     private array $data = [];
     /** @var array<string, Entity|null> */
     private array $setData = [];
-    private ?Entity $entity = null;
+
+    /** @var WeakReference<Entity>|null  */
+    private ?WeakReference $entity = null;
 
     /** @var string[] */
     private array $manyTypeList = [
@@ -68,13 +71,22 @@ class RDBRelations implements Relations
         $this->defs = $this->entityManager->getDefs();
     }
 
+    public function getEntity(): Entity
+    {
+        if (!$this->entity) {
+            throw new LogicException("Entity not set.");
+        }
+
+        return $this->entity->get() ?? throw new LogicException("Entity was destroyed.");
+    }
+
     public function setEntity(Entity $entity): void
     {
         if ($this->entity) {
             throw new LogicException("Entity is already set.");
         }
 
-        $this->entity = $entity;
+        $this->entity = WeakReference::create($entity);
     }
 
     public function reset(string $relation): void
@@ -134,7 +146,7 @@ class RDBRelations implements Relations
         if ($related) {
             $nameAttribute = $this->entityManager
                 ->getDefs()
-                ->getEntity($this->entity->getEntityType())
+                ->getEntity($this->getEntity()->getEntityType())
                 ->getRelation($relation)
                 ->getParam('nameAttribute') ?? 'name';
 
@@ -157,7 +169,7 @@ class RDBRelations implements Relations
             }
         }
 
-        $this->entity->setMultiple($valueMap);
+        $this->getEntity()->setMultiple($valueMap);
 
         $this->setData[$relation] = $related;
     }
@@ -226,7 +238,7 @@ class RDBRelations implements Relations
             throw new LogicException();
         }
 
-        if (!$this->entity->hasId() && $this->getRelationType($relation) === RelationType::HAS_ONE) {
+        if (!$this->getEntity()->hasId() && $this->getRelationType($relation) === RelationType::HAS_ONE) {
             return null;
         }
 
@@ -250,7 +262,7 @@ class RDBRelations implements Relations
 
         // We use the Mapper as RDBRelation requires an entity with ID.
 
-        $entity = $mapper->selectRelated($this->entity, $relation);
+        $entity = $mapper->selectRelated($this->getEntity(), $relation);
 
         if (!$entity) {
             return null;
@@ -272,13 +284,13 @@ class RDBRelations implements Relations
             throw new LogicException();
         }
 
-        if (!$this->entity->hasId()) {
+        if (!$this->getEntity()->hasId()) {
             /** @var EntityCollection<Entity> */
             return new EntityCollection();
         }
 
         $relationDefs = $this->defs
-            ->getEntity($this->entity->getEntityType())
+            ->getEntity($this->getEntity()->getEntityType())
             ->getRelation($relation);
 
         $orderBy = null;
@@ -292,7 +304,7 @@ class RDBRelations implements Relations
             }
         }
 
-        $builder = $this->entityManager->getRelation($this->entity, $relation);
+        $builder = $this->entityManager->getRelation($this->getEntity(), $relation);
 
         if ($orderBy) {
             $builder->order($orderBy, $order);
@@ -315,7 +327,7 @@ class RDBRelations implements Relations
         }
 
         return $this->defs
-            ->getEntity($this->entity->getEntityType())
+            ->getEntity($this->getEntity()->getEntityType())
             ->tryGetRelation($relation)
             ?->getType();
     }
@@ -327,7 +339,7 @@ class RDBRelations implements Relations
         }
 
         $defs = $this->defs
-            ->getEntity($this->entity->getEntityType())
+            ->getEntity($this->getEntity()->getEntityType())
             ->getRelation($relation);
 
         if (!$defs->getParam(RelationParam::DEFERRED_LOAD)) {
@@ -342,14 +354,14 @@ class RDBRelations implements Relations
         if ($relationType === RelationType::BELONGS_TO) {
             $foreignEntityType = $defs->getForeignEntityType();
             $nameAttribute = $relation . 'Name';
-            $id = $this->entity->get($relation . 'Id');
-            $name = $this->entity->get($nameAttribute);
+            $id = $this->getEntity()->get($relation . 'Id');
+            $name = $this->getEntity()->get($nameAttribute);
 
             if (
                 $id &&
                 $name === null &&
-                $this->entity->hasAttribute($nameAttribute) &&
-                $this->entity->has($nameAttribute)
+                $this->getEntity()->hasAttribute($nameAttribute) &&
+                $this->getEntity()->has($nameAttribute)
             ) {
                 $hasDeleted = $this->defs
                     ->getEntity($foreignEntityType)
@@ -362,8 +374,8 @@ class RDBRelations implements Relations
                 }
             }
         } else if ($relationType === RelationType::BELONGS_TO_PARENT) {
-            $foreignEntityType = $this->entity->get($relation . 'Type');
-            $id = $this->entity->get($relation . 'Id');
+            $foreignEntityType = $this->getEntity()->get($relation . 'Type');
+            $id = $this->getEntity()->get($relation . 'Id');
 
             if (!$this->entityManager->hasRepository($foreignEntityType)) {
                 return false;
