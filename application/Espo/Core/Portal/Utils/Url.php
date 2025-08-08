@@ -69,8 +69,10 @@ class Url
 
         $scriptNameModified = str_replace('public/api/', 'api/', $scriptName);
 
+        $idIndex = count(explode('/', $scriptNameModified)) - 1;
+
         if ($url) {
-            $portalId = explode('/', $url)[count(explode('/', $scriptNameModified)) - 1] ?? null;
+            $portalId = explode('/', $url)[$idIndex] ?? null;
 
             if (str_contains($url, '=')) {
                 $portalId = null;
@@ -87,7 +89,7 @@ class Url
             return null;
         }
 
-        $portalId = explode('/', $url)[count(explode('/', $scriptNameModified)) - 1] ?? null;
+        $portalId = explode('/', $url)[$idIndex] ?? null;
 
         if ($portalId === '') {
             $portalId = null;
@@ -113,7 +115,7 @@ class Url
 
         $url = rtrim($a[0], '/');
 
-        return strpos($url, '/portal') !== false;
+        return str_contains($url, '/portal');
     }
 
     public static function detectIsInPortalWithId(): bool
