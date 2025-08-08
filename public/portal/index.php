@@ -48,8 +48,18 @@ if (Url::detectIsInPortalDir()) {
 
     if (Url::detectIsInPortalWithId()) {
         $basePath = '../../';
-    }
 
+        $redirectUrl = Url::getRedirectUrlWithTrailingSlash();
+
+        if ($redirectUrl) {
+            header('Location: ' . $redirectUrl, true, 301);
+
+            exit;
+        }
+    }
+}
+
+if ($basePath !== null) {
     $app->setClientBasePath($basePath);
 }
 

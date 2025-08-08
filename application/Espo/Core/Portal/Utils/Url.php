@@ -138,4 +138,23 @@ class Url
 
         return false;
     }
+
+    public static function getRedirectUrlWithTrailingSlash(): ?string
+    {
+        $uri = $_SERVER['REQUEST_URI'];
+
+        if ($uri === '' || $uri === '/' || str_ends_with($uri, '/')) {
+            return null;
+        }
+
+        $output = $uri . '/';
+
+        $queryString = $_SERVER['QUERY_STRING'] ?? null;
+
+        if ($queryString !== null && $queryString !== '') {
+            $output .= '?' . $_SERVER['QUERY_STRING'];
+        }
+
+        return $output;
+    }
 }
