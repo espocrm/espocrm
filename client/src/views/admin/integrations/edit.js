@@ -33,79 +33,107 @@ export default class IntegrationsEditView extends View {
 
     template = 'admin/integrations/edit'
 
+    /**
+     * @protected
+     * @type {string}
+     */
+    integration
+
+    /**
+     * @private
+     * @type {string|null}
+     */
+    helpText = null
+
+    /**
+     * @private
+     * @type {{name: string, label: string}[]}
+     */
+    fieldDataList
+
+    /**
+     * @private
+     * @type {string[]}
+     */
+    fieldList
+
     data() {
         return {
             integration: this.integration,
-            dataFieldList: this.dataFieldList,
-            helpText: this.helpText
+            fieldDataList: this.fieldDataList,
+            helpText: this.helpText,
         };
     }
 
-    events = {
-        /** @this IntegrationsEditView */
-        'click button[data-action="cancel"]': function () {
-            this.getRouter().navigate('#Admin/integrations', {trigger: true});
-        },
-        /** @this IntegrationsEditView */
-        'click button[data-action="save"]': function () {
-            this.save();
-        },
-    }
-
     setup() {
-        this.integration = this.options.integration;
+        this.addActionHandler('save', () => this.save());
+        this.addActionHandler('cancel', () => this.actionCancel());
 
-        this.helpText = false;
+        this.integration = this.options.integration;
 
         if (this.getLanguage().has(this.integration, 'help', 'Integration')) {
             this.helpText = this.translate(this.integration, 'help', 'Integration');
         }
 
         this.fieldList = [];
+        this.fieldDataList = [];
 
-        this.dataFieldList = [];
+        this.model = new Model({}, {
+            entityType: 'Integration',
+            urlRoot: 'Integration',
+        });
 
-        this.model = new Model();
         this.model.id = this.integration;
-        this.model.name = 'Integration';
-        this.model.urlRoot = 'Integration';
 
-        this.model.defs = {
-            fields: {
-                enabled: {
-                    required: true,
-                    type: 'bool',
-                },
-            }
+        const fieldDefs = {
+            enabled: {
+                required: true,
+                type: 'bool',
+            },
         };
 
-        this.wait(true);
+        const fields = /** @type {Record<string, Record>} */
+            this.getMetadata().get(`integrations.${this.integration}.fields`) ?? {};
 
-        this.fields = this.getMetadata().get(`integrations.${this.integration}.fields`);
+        Object.keys(fields).forEach(name => {
+            fieldDefs[name] = fields[name];
 
-        Object.keys(this.fields).forEach(name => {
-            this.model.defs.fields[name] = this.fields[name];
-            this.dataFieldList.push(name);
+            this.fieldDataList.push({
+                name: name,
+                label: this.translate(name, 'fields', 'Integration'),
+            });
         });
 
+        this.model.setDefs({fields: fieldDefs});
         this.model.populateDefaults();
 
-        this.listenToOnce(this.model, 'sync', () => {
-            this.createFieldView('bool', 'enabled');
+        this.wait(
+            (async () => {
+                await this.model.fetch();
 
-            Object.keys(this.fields).forEach(name => {
-                this.createFieldView(this.fields[name]['type'], name, null, this.fields[name]);
-            });
+                this.createFieldView('bool', 'enabled');
 
-            this.wait(false);
-        });
-
-        this.model.fetch();
+                Object.keys(fields).forEach(name => {
+                    this.createFieldView(fields[name].type, name, undefined, fields[name]);
+                });
+            })()
+        );
     }
 
+    /**
+     * @private
+     */
+    actionCancel() {
+        this.getRouter().navigate('#Admin/integrations', {trigger: true});
+    }
+
+    /**
+     * @protected
+     * @param {string} name
+     */
     hideField(name) {
-        this.$el.find('label[data-name="'+name+'"]').addClass('hide');
-        this.$el.find('div.field[data-name="'+name+'"]').addClass('hide');
+        this.$el.find('label[data-name="' + name + '"]').addClass('hide');
+        this.$el.find('div.field[data-name="' + name + '"]').addClass('hide');
 
         const view = this.getView(name);
 
@@ -114,9 +142,13 @@ export default class IntegrationsEditView extends View {
         }
     }
 
+    /**
+     * @protected
+     * @param {string} name
+     */
     showField(name) {
-        this.$el.find('label[data-name="'+name+'"]').removeClass('hide');
-        this.$el.find('div.field[data-name="'+name+'"]').removeClass('hide');
+        this.$el.find(`label[data-name="${name}"]`).removeClass('hide');
+        this.$el.find(`div.field[data-name="${name}"]`).removeClass('hide');
 
         const view = this.getFieldView(name);
 
@@ -135,31 +167,34 @@ export default class IntegrationsEditView extends View {
     }
 
     afterRender() {
-        if (!this.model.get('enabled')) {
-            this.dataFieldList.forEach(name => {
-                this.hideField(name);
-            });
+        if (!this.model.attributes.enabled) {
+            this.fieldDataList.forEach(it => this.hideField(it.name));
         }
 
         this.listenTo(this.model, 'change:enabled', () => {
-            if (this.model.get('enabled')) {
-                this.dataFieldList.forEach(name => this.showField(name));
+            if (this.model.attributes.enabled) {
+                this.fieldDataList.forEach(it => this.showField(it.name));
             } else {
-                this.dataFieldList.forEach(name => this.hideField(name));
+                this.fieldDataList.forEach(it => this.hideField(it.name));
             }
         });
     }
 
+    /**
+     * @protected
+     * @param {string} type
+     * @param {string} name
+     * @param {boolean} [readOnly]
+     * @param {Record} [params]
+     */
     createFieldView(type, name, readOnly, params) {
         const viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
 
         this.createView(name, viewName, {
+            name: name,
             model: this.model,
             selector: `.field[data-name="${name}"]`,
-            defs: {
-                name: name,
-                params: params
-            },
+            params: params,
             mode: readOnly ? 'detail' : 'edit',
             readOnly: readOnly,
         });
@@ -167,6 +202,9 @@ export default class IntegrationsEditView extends View {
         this.fieldList.push(name);
     }
 
+    /**
+     * @protected
+     */
     save() {
         this.fieldList.forEach(field => {
             const view = this.getFieldView(field);
