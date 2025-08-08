@@ -178,6 +178,9 @@ div.list-kanban > div > table {
 .list-kanban-container {
     overflow-x: auto;
     overflow-y: hidden;
+
+    // Fixes a dragging issue in Safari. https://github.com/espocrm/espocrm/issues/3447
+    -webkit-user-select: none;
 }
 
 .list-kanban {
