@@ -27,12 +27,10 @@
                     <label class="control-label" data-name="label">{{translate 'label' scope='Admin' category='fields'}}</label>
                     <div class="field" data-name="label">{{{label}}}</div>
                 </div>
-                {{#each paramList}}
+                {{#each paramDataList}}
                     {{#unless hidden}}
                     <div class="cell form-group" data-name="{{name}}">
-                        <label class="control-label" data-name="{{name}}">
-                            {{translate name scope='Admin' category='fields'}}
-                        </label>
+                        <label class="control-label" data-name="{{name}}">{{label}}</label>
                         <div class="field" data-name="{{name}}">{{{var name ../this}}}</div>
                     </div>
                     {{/unless}}

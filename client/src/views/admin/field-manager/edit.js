@@ -70,17 +70,29 @@ class FieldManagerEditView extends View {
         'nonAdminReadOnly',
     ]
 
-    /** @type {Model & {fetchedAttributes?: Record}}*/
+    /**
+     * @type {Model & {fetchedAttributes?: Record}}
+     */
     model
-    /** @type {Record[]} */
+
+    /**
+     * @private
+     * @type {Record[]}
+     */
     paramList
+
+    /**
+     * @private
+     * @type {Record[]}
+     */
+    paramDataList
 
     data() {
         return {
             scope: this.scope,
             field: this.field,
             defs: this.defs,
-            paramList: this.paramList,
+            paramDataList: this.paramDataList,
             type: this.type,
             fieldList: this.fieldList,
             isCustom: this.defs.isCustom,
@@ -210,17 +222,16 @@ class FieldManagerEditView extends View {
             .then(() => {
                 const promiseList = [];
                 this.paramList = [];
-                const paramList = Espo.Utils.clone(this.getFieldManager().getParamList(this.type) || []);
+
+                const paramList = Espo.Utils.cloneDeep(this.getFieldManager().getParamList(this.type));
 
                 if (!this.isNew) {
                     const fieldManagerAdditionalParamList =
                         this.getMetadata()
-                            .get([
-                                'entityDefs', this.scope, 'fields',
-                                this.field, 'fieldManagerAdditionalParamList'
-                            ]) || [];
+                            .get(['entityDefs', this.scope, 'fields', this.field, 'fieldManagerAdditionalParamList'])
+                            ?? [];
 
-                    fieldManagerAdditionalParamList.forEach((item) =>  {
+                    fieldManagerAdditionalParamList.forEach(item =>  {
                         paramList.push(item);
                     });
                 }
@@ -394,6 +405,19 @@ class FieldManagerEditView extends View {
                     promiseList.push(
                         this.createFieldView(o.type, o.name, null, o, options)
                     );
+                });
+
+                this.paramDataList = this.paramList.map(o => {
+                    let label = this.translate(o.name, 'fields', 'Admin');
+
+                    if (o.labelTranslation) {
+                        label = this.getLanguage().translatePath(o.labelTranslation);
+                    }
+
+                    return {
+                        ...o,
+                        label: label,
+                    };
                 });
 
                 Promise.all(promiseList).then(() => callback());
@@ -658,20 +682,24 @@ class FieldManagerEditView extends View {
     createFieldView(type, name, readOnly, params, options, callback) {
         const viewName = (params || {}).view || this.getFieldManager().getViewName(type);
 
+        let labelText = undefined;
+
+        if (params && params.labelTranslation) {
+            labelText = this.getLanguage().translatePath(params.labelTranslation);
+        }
+
         const o = {
             model: this.model,
             selector: `.field[data-name="${name}"]`,
-            defs: {
-                name: name,
-                params: params
-            },
+            name: name,
+            params: params,
             mode: readOnly ? 'detail' : 'edit',
             readOnly: readOnly,
             scope: this.scope,
             field: this.field,
+            labelText: labelText,
+            ...options,
         };
-
-        _.extend(o, options || {});
 
         const promise = this.createView(name, viewName, o, callback);
 
