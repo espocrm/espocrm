@@ -54,7 +54,7 @@ import DefaultValueProvider from 'helpers/model/default-value-provider';
  *
  * @typedef module:model~defs
  * @type {Object}
- * @property {Object.<string, module:model~fieldDefs>} [fields] Fields.
+ * @property {Object.<string, module:model~fieldDefs & Record>} [fields] Fields.
  * @property {Object.<string, Object.<string, *>>} [links] Links.
  */
 
@@ -62,7 +62,7 @@ import DefaultValueProvider from 'helpers/model/default-value-provider';
  * Field definitions.
  *
  * @typedef module:model~fieldDefs
- * @type {Object & Record}
+ * @type {Object}
  * @property {string} type A type.
  */
 

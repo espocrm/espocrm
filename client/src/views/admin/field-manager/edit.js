@@ -645,6 +645,16 @@ class FieldManagerEditView extends View {
         }
     }
 
+    /**
+     * @private
+     * @param {string|null} type
+     * @param {string} name
+     * @param {boolean|null} readOnly
+     * @param {Record} params
+     * @param {Record} [options]
+     * @param {function} [callback]
+     * @return {Promise<Bull.View>}
+     */
     createFieldView(type, name, readOnly, params, options, callback) {
         const viewName = (params || {}).view || this.getFieldManager().getViewName(type);
 
