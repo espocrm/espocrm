@@ -96,11 +96,19 @@ export default class IntegrationsEditView extends View {
             this.getMetadata().get(`integrations.${this.integration}.fields`) ?? {};
 
         Object.keys(fields).forEach(name => {
-            fieldDefs[name] = fields[name];
+            const defs = {...fields[name]};
+
+            fieldDefs[name] = defs;
+
+            let label = this.translate(name, 'fields', 'Integration');
+
+            if (defs.labelTranslation) {
+                label = this.getLanguage().translatePath(defs.labelTranslation);
+            }
 
             this.fieldDataList.push({
                 name: name,
-                label: this.translate(name, 'fields', 'Integration'),
+                label: label,
             });
         });
 
@@ -190,6 +198,12 @@ export default class IntegrationsEditView extends View {
     createFieldView(type, name, readOnly, params) {
         const viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
 
+        let labelText = undefined;
+
+        if (params && params.labelTranslation) {
+            labelText = this.getLanguage().translatePath(params.labelTranslation);
+        }
+
         this.createView(name, viewName, {
             name: name,
             model: this.model,
@@ -197,6 +211,7 @@ export default class IntegrationsEditView extends View {
             params: params,
             mode: readOnly ? 'detail' : 'edit',
             readOnly: readOnly,
+            labelText: labelText,
         });
 
         this.fieldList.push(name);
