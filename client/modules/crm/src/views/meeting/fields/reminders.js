@@ -32,11 +32,27 @@ import BaseFieldView from 'views/fields/base';
 
 class MeetingRemindersField extends BaseFieldView {
 
-    dateField = 'dateStart'
-
     detailTemplate = 'crm:meeting/fields/reminders/detail'
     listTemplate = 'crm:meeting/fields/reminders/detail'
     editTemplate = 'crm:meeting/fields/reminders/edit'
+
+    /**
+     * @private
+     * @type {string}
+     */
+    dateField = 'dateStart'
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    isDateTimeOptional
+
+    /**
+     * @private
+     * @type {number}
+     */
+    minAllDaySeconds = 120 * 60
 
     getAttributeList() {
         return [this.name];
@@ -72,6 +88,8 @@ class MeetingRemindersField extends BaseFieldView {
                 this.reRender();
             }
         });
+
+        this.isDateTimeOptional = this.model.getFieldParam(this.dateField, 'type') === 'datetimeOptional';
     }
 
     /**
@@ -165,8 +183,12 @@ class MeetingRemindersField extends BaseFieldView {
         const limitDate = this.model.get(this.dateField) ?
             this.getDateTime().toMoment(this.model.get(this.dateField)) : null;
 
-        /** @var {Number[]} secondsList */
-        const secondsList = Espo.Utils.clone(this.secondsList);
+        /** @var {number[]} secondsList */
+        let secondsList = Espo.Utils.clone(this.secondsList);
+
+        if (this.isDateTimeOptional && this.model.attributes[this.dateField + 'Date']) {
+            secondsList = secondsList.filter(seconds => !seconds || seconds >= this.minAllDaySeconds);
+        }
 
         if (!secondsList.includes(item.seconds)) {
             secondsList.push(item.seconds);
