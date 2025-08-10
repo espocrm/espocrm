@@ -34,7 +34,6 @@ use Espo\Core\Di\LogSetter;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Mail\Exceptions\SendingError;
-use Espo\Entities\Team as TeamEntity;
 use Espo\Entities\User as UserEntity;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
@@ -89,21 +88,6 @@ class User extends Record implements LogAware
         $passwordHash = $this->injectableFactory->create(PasswordHash::class);
 
         return $passwordHash->hash($password);
-    }
-
-    protected function filterInput(stdClass $data): void
-    {
-        parent::filterInput($data);
-
-        if (!$this->user->isSuperAdmin()) {
-            unset($data->isSuperAdmin);
-        }
-
-        if (!$this->user->isAdmin()) {
-            if (!$this->acl->checkScope(TeamEntity::ENTITY_TYPE)) {
-                unset($data->defaultTeamId);
-            }
-        }
     }
 
     /**

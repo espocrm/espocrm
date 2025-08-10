@@ -12,6 +12,12 @@
         "userName",
         "type"
     ],
+    "createInputFilterClassNameList": [
+        "Espo\\Classes\\Record\\User\\InputFilter"
+    ],
+    "updateInputFilterClassNameList": [
+        "Espo\\Classes\\Record\\User\\InputFilter"
+    ],
     "outputFilterClassNameList": [
         "Espo\\Classes\\Record\\User\\OutputFilter"
     ],
