@@ -70,16 +70,16 @@ class AccessChecker implements AccessEntityCREDSChecker
             return false;
         }
 
-        if ($entity->isPortal()) {
-            if ($this->aclManager->getPermissionLevel($user, Permission::PORTAL) === Table::LEVEL_YES) {
-                return true;
-            }
-
+        if ($entity->isSuperAdmin() && !$user->isSuperAdmin()) {
             return false;
         }
 
-        if ($entity->isSuperAdmin() && !$user->isSuperAdmin()) {
+        if ($entity->isSystem()) {
             return false;
+        }
+
+        if ($entity->isPortal()) {
+            return $this->aclManager->getPermissionLevel($user, Permission::PORTAL) === Table::LEVEL_YES;
         }
 
         return $this->defaultAccessChecker->checkEntityRead($user, $entity, $data);

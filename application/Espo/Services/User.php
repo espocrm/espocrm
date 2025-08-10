@@ -54,29 +54,6 @@ class User extends Record implements LogAware
 {
     use LogSetter;
 
-    /**
-     * @throws Forbidden
-     */
-    public function getEntity(string $id): ?Entity
-    {
-        /** @var ?UserEntity $entity */
-        $entity = parent::getEntity($id);
-
-        if (!$entity) {
-            return null;
-        }
-
-        if ($entity->isSuperAdmin() && !$this->user->isSuperAdmin()) {
-            throw new Forbidden();
-        }
-
-        if ($entity->isSystem()) {
-            throw new Forbidden();
-        }
-
-        return $entity;
-    }
-
     private function hashPassword(#[SensitiveParameter] string $password): string
     {
         $passwordHash = $this->injectableFactory->create(PasswordHash::class);
