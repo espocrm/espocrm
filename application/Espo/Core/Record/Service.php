@@ -440,7 +440,7 @@ class Service implements Crud,
             }
 
             if (!array_key_exists($link, $map)) {
-                $map[$link] = $this->entityManager->getEntityById($foreignEntityType, $id);;
+                $map[$link] = $this->entityManager->getEntityById($foreignEntityType, $id);
             }
 
             $foreignEntity = $map[$link] ?? null;
