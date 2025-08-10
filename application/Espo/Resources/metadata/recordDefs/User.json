@@ -32,5 +32,8 @@
     ],
     "afterUpdateHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\User\\AfterUpdate"
+    ],
+    "beforeDeleteHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\User\\BeforeDelete"
     ]
 }

@@ -38,7 +38,6 @@ use Espo\Entities\User as UserEntity;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\CreateParams;
-use Espo\Core\Record\DeleteParams;
 use Espo\Core\Record\UpdateParams;
 use Espo\Core\Utils\PasswordHash;
 use Espo\ORM\Entity;
@@ -212,15 +211,6 @@ class User extends Record implements LogAware
         if ($util->checkExists($user)) {
             throw new Conflict('userNameExists');
         }
-    }
-
-    public function delete(string $id, DeleteParams $params): void
-    {
-        if ($id === $this->user->getId()) {
-            throw new Forbidden("Can't delete own user.");
-        }
-
-        parent::delete($id, $params);
     }
 
     /**
