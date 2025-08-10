@@ -317,6 +317,7 @@ class RecordBase extends Base implements
      * @throws BadRequest
      * @throws Forbidden
      * @throws NotFound
+     * @throws Conflict
      * @noinspection PhpUnused
      */
     public function postActionRestoreDeleted(Request $request): bool

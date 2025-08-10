@@ -281,6 +281,10 @@
             "items": {
                 "type": "string"
             }
+        },
+        "deletedRestorerClassName": {
+            "type": "string",
+            "description": "A deleted record restorer. Should implement `Espo\\Core\\Record\\Deleted\\Restorer`. As of v9.2."
         }
     }
 }

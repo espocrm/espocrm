@@ -51,6 +51,8 @@ use Espo\Core\Record\ActionHistory\ActionLogger;
 use Espo\Core\Record\ConcurrencyControl\OptimisticProcessor;
 use Espo\Core\Record\Defaults\Populator as DefaultsPopulator;
 use Espo\Core\Record\Defaults\PopulatorFactory as DefaultsPopulatorFactory;
+use Espo\Core\Record\Deleted\DefaultRestorer;
+use Espo\Core\Record\Deleted\Restorer;
 use Espo\Core\Record\DynamicLogic\InputFilterProcessor;
 use Espo\Core\Record\Formula\Processor as FormulaProcessor;
 use Espo\Core\Record\Input\Data;
@@ -950,11 +952,12 @@ class Service implements Crud,
      *
      * @throws NotFound If not found.
      * @throws Forbidden If no access.
+     * @throws Conflict If a conflict occurred.
      */
     public function restoreDeleted(string $id): void
     {
         if (!$this->user->isAdmin()) {
-            throw new Forbidden();
+            throw new Forbidden("Only admin can restore.");
         }
 
         $entity = $this->getEntityEvenDeleted($id);
@@ -963,24 +966,14 @@ class Service implements Crud,
             throw new NotFound();
         }
 
-        if (!$entity->get(Attribute::DELETED)) {
-            throw new Forbidden("No 'deleted' attribute.");
-        }
+        /** @var class-string<Restorer<Entity>> $restorerClassName */
+        $restorerClassName = $this->metadata->get("recordDefs.$this->entityType.deletedRestorerClassName") ??
+            DefaultRestorer::class;
 
-        $this->entityManager->getTransactionManager()
-            ->run(function () use ($entity) {
-                $this->getRepository()->restoreDeleted($entity->getId());
+        /** @var Restorer<Entity> $restorer */
+        $restorer = $this->injectableFactory->createWithBinding($restorerClassName, $this->createBinding());
 
-                if (
-                    $entity->hasAttribute('deleteId') &&
-                    $this->metadata->get("entityDefs.$this->entityType.deleteId")
-                ) {
-                    $this->entityManager->refreshEntity($entity);
-
-                    $entity->set('deleteId', '0');
-                    $this->getRepository()->save($entity, [SaveOption::SILENT => true]);
-                }
-            });
+        $restorer->restore($entity);
     }
 
     public function getMaxSelectTextAttributeLength(): ?int

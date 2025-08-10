@@ -35,5 +35,6 @@
     ],
     "beforeDeleteHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\User\\BeforeDelete"
-    ]
+    ],
+    "deletedRestorerClassName": "Espo\\Classes\\Record\\User\\DeletedRestorer"
 }
