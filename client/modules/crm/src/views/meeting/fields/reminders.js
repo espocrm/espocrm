@@ -38,42 +38,21 @@ class MeetingRemindersField extends BaseFieldView {
     listTemplate = 'crm:meeting/fields/reminders/detail'
     editTemplate = 'crm:meeting/fields/reminders/edit'
 
-    events = {
-        /** @this MeetingRemindersField */
-        'click [data-action="addReminder"]': function () {
-            const type = this.getMetadata().get('entityDefs.Reminder.fields.type.default');
-            const seconds = this.getMetadata().get('entityDefs.Reminder.fields.seconds.default') || 0;
-
-            const item = {
-                type: type,
-                seconds: seconds,
-            };
-
-            this.reminderList.push(item);
-
-            this.addItemHtml(item);
-            this.trigger('change');
-
-            this.focusOnButton();
-        },
-        /** @this MeetingRemindersField */
-        'click [data-action="removeReminder"]': function (e) {
-            const $reminder = $(e.currentTarget).closest('.reminder');
-            const index = $reminder.index();
-
-            $reminder.remove();
-
-            this.reminderList.splice(index, 1);
-
-            this.focusOnButton();
-        },
-    }
-
     getAttributeList() {
         return [this.name];
     }
 
     setup() {
+        this.addActionHandler('addReminder', () => this.actionAddReminder());
+
+        this.addActionHandler('removeReminder', (e, target) => {
+            const element = target.closest('.reminder');
+
+            const index = Array.from(element.parentElement.childNodes).indexOf(element);
+
+            this.removeReminder(index);
+        });
+
         this.setupReminderList();
 
         this.listenTo(this.model, 'change:' + this.name, () => {
@@ -95,6 +74,9 @@ class MeetingRemindersField extends BaseFieldView {
         });
     }
 
+    /**
+     * @private
+     */
     setupReminderList() {
         if (this.model.isNew() && !this.model.get(this.name) && this.model.entityType !== 'Preferences') {
             let param = 'defaultReminders';
@@ -128,16 +110,30 @@ class MeetingRemindersField extends BaseFieldView {
             .focus({preventScroll: true});
     }
 
+    /**
+     * @private
+     * @param {string} type
+     * @param {number} index
+     */
     updateType(type, index) {
         this.reminderList[index].type = type;
         this.trigger('change');
     }
 
+    /**
+     * @private
+     * @param {number} seconds
+     * @param {number} index
+     */
     updateSeconds(seconds, index) {
         this.reminderList[index].seconds = seconds;
         this.trigger('change');
     }
 
+    /**
+     * @private
+     * @param {{type: string, seconds: number}} item
+     */
     addItemHtml(item) {
         const $item = $('<div>').addClass('input-group').addClass('reminder');
 
@@ -302,10 +298,21 @@ class MeetingRemindersField extends BaseFieldView {
         });
     }
 
+    /**
+     * @private
+     * @param {number} seconds
+     * @param {moment.Moment} limitDate
+     * @return {boolean}
+     */
     isBefore(seconds, limitDate) {
         return moment.utc().add(seconds, 'seconds').isBefore(limitDate);
     }
 
+    /**
+     * @private
+     * @param {number} totalSeconds
+     * @return {string}
+     */
     stringifySeconds(totalSeconds) {
         if (!totalSeconds) {
             return this.translate('on time', 'labels', 'Meeting');
@@ -340,6 +347,11 @@ class MeetingRemindersField extends BaseFieldView {
         return parts.join(' ') + ' ' + this.translate('before', 'labels', 'Meeting');
     }
 
+    /**
+     * @private
+     * @param {{type: string, seconds: number}} item
+     * @return {string}
+     */
     getDetailItemHtml(item) {
         return $('<div>')
             .append(
@@ -368,6 +380,44 @@ class MeetingRemindersField extends BaseFieldView {
         data[this.name] = Espo.Utils.cloneDeep(this.reminderList);
 
         return data;
+    }
+
+    /**
+     * @private
+     */
+    actionAddReminder() {
+        const type = this.getMetadata().get('entityDefs.Reminder.fields.type.default');
+        const seconds = this.getMetadata().get('entityDefs.Reminder.fields.seconds.default') || 0;
+
+        const item = {
+            type: type,
+            seconds: seconds,
+        };
+
+        this.reminderList.push(item);
+
+        this.addItemHtml(item);
+        this.trigger('change');
+
+        this.focusOnButton();
+    }
+
+    /**
+     * @private
+     * @param {number} index
+     */
+    removeReminder(index) {
+        const element = this.element.querySelectorAll('.reminder')[index] ?? null;
+
+        if (!element) {
+            return;
+        }
+
+        element.parentElement.removeChild(element);
+
+        this.reminderList.splice(index, 1);
+
+        this.focusOnButton();
     }
 }
 
