@@ -57,6 +57,12 @@ class SanitizeTest extends BaseTestCase
 
         $this->reCreateApplication();
 
+        $em = $this->getEntityManager();
+
+        $user = $em->getRDBRepositoryByClass(User::class)->getNew();
+        $user->setUserName('test');
+        $em->saveEntity($user);
+
         $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(Account::class);
@@ -158,7 +164,7 @@ class SanitizeTest extends BaseTestCase
                 'name' => 'Test',
                 'dateStart' => '2030-12-10 10:11:12',
                 'dateEnd' => '2030-12-10T10:11:12-01:00',
-                'assignedUserId' => $this->getContainer()->getByClass(User::class)->getId(),
+                'assignedUserId' => $user->getId(),
             ], CreateParams::create());
 
         $this->assertEquals('2030-12-10 10:11:12', $meeting->get('dateStart'));
@@ -174,7 +180,7 @@ class SanitizeTest extends BaseTestCase
                 'name' => 'Test',
                 'dateStartDate' => '2030-12-10T10:11:12-01:00',
                 'dateEnd' => '2030-12-10T10:11:12-01:00',
-                'assignedUserId' => $this->getContainer()->getByClass(User::class)->getId(),
+                'assignedUserId' => $user->getId(),
             ], CreateParams::create());
 
         $this->assertEquals('2030-12-10', $task->get('dateStartDate'));
@@ -187,7 +193,7 @@ class SanitizeTest extends BaseTestCase
             ->create((object) [
                 'name' => 'Test',
                 'dateStartDate' => '2030-12-10',
-                'assignedUserId' => $this->getContainer()->getByClass(User::class)->getId(),
+                'assignedUserId' => $user->getId(),
             ], CreateParams::create());
 
         $this->assertEquals('2030-12-10', $task->get('dateStartDate'));
@@ -201,7 +207,7 @@ class SanitizeTest extends BaseTestCase
             ->create((object) [
                 'name' => 'Test',
                 'closeDate' => '2030-12-10T10:11:12-01:00',
-                'assignedUserId' => $this->getContainer()->getByClass(User::class)->getId(),
+                'assignedUserId' => $user->getId(),
                 'probability' => 10,
                 'amount' => 1.0,
             ], CreateParams::create());
@@ -215,7 +221,7 @@ class SanitizeTest extends BaseTestCase
             ->create((object) [
                 'name' => 'Test',
                 'closeDate' => '2030-12-10',
-                'assignedUserId' => $this->getContainer()->getByClass(User::class)->getId(),
+                'assignedUserId' => $user->getId(),
                 'probability' => 10,
                 'amount' => 1.0,
             ], CreateParams::create());
