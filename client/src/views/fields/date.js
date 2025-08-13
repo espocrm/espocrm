@@ -129,6 +129,10 @@ class DateFieldView extends BaseFieldView {
         'between',
     ]
 
+    emptyRequired = [
+        'isEmpty',
+    ]
+
     initialSearchIsNotIdle = true
 
     /**
@@ -476,7 +480,7 @@ class DateFieldView extends BaseFieldView {
                 },
             };
         }
-        else if (type === 'isEmpty') {
+        else if (this.emptyRequired.includes(type)) {
             data = {
                 type: 'isNull',
                 data: {
