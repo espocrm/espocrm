@@ -260,7 +260,7 @@ class InFolder implements ItemConverter
     }
 
     /**
-     * @return array
+     * @return array<string>
      */
     protected function getUserGroupEmailFoldersIds(): array
     {
