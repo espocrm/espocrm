@@ -262,10 +262,11 @@ class InFolder implements ItemConverter
     /**
      * @return array<string>
      */
-    protected function getUserGroupEmailFoldersIds(): array
+    private function getUserGroupEmailFoldersIds(): array
     {
         $selectBuilder = $this->selectBuilderFactory
             ->create()
+            ->forUser($this->user)
             ->from(GroupEmailFolder::ENTITY_TYPE)
             ->withAccessControlFilter();
 
