@@ -29,6 +29,8 @@
 
 namespace Espo\Classes\Select\Email\Where\ItemConverters;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Name\Link;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Select\Where\ItemConverter;
@@ -44,6 +46,7 @@ use Espo\ORM\EntityManager;
 use Espo\Entities\User;
 use Espo\Classes\Select\Email\Helpers\JoinHelper;
 use Espo\Tools\Email\Folder;
+use RuntimeException;
 
 /**
  * @noinspection PhpUnused
@@ -260,7 +263,7 @@ class InFolder implements ItemConverter
     }
 
     /**
-     * @return array<string>
+     * @return string[]
      */
     private function getUserGroupEmailFoldersIds(): array
     {
@@ -270,10 +273,15 @@ class InFolder implements ItemConverter
             ->from(GroupEmailFolder::ENTITY_TYPE)
             ->withAccessControlFilter();
 
-        $groupEmailFolders = $this->entityManager
-            ->getRDBRepository(GroupEmailFolder::ENTITY_TYPE)
-            ->clone($selectBuilder->build())
-            ->find();
+        try {
+            $groupEmailFolders = $this->entityManager
+                ->getRDBRepositoryByClass(GroupEmailFolder::class)
+                ->clone($selectBuilder->build())
+                ->select([Attribute::ID])
+                ->find();
+        } catch (BadRequest|Forbidden $e) {
+            throw new RuntimeException('', 0, $e);
+        }
 
         $groupEmailFoldersIds = [];
 

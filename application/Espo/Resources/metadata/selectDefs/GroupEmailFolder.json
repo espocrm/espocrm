@@ -1,0 +1,5 @@
+{
+    "accessControlFilterClassNameMap": {
+        "onlyTeam": "Espo\\Classes\\Select\\GroupEmailFolder\\AccessControlFilters\\OnlyTeam"
+    }
+}
