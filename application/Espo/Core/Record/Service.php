@@ -59,6 +59,8 @@ use Espo\Core\Record\Input\Data;
 use Espo\Core\Record\Input\Filter;
 use Espo\Core\Record\Input\FilterProvider;
 use Espo\Core\Select\Primary\Filters\One;
+use Espo\Core\Select\SelectBuilder;
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Json;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table as AclTable;
@@ -109,7 +111,6 @@ class Service implements Crud,
     Di\FieldUtilAware,
     Di\FieldValidationManagerAware,
     Di\RecordServiceContainerAware,
-    Di\SelectBuilderFactoryAware,
     Di\AssignmentCheckerManagerAware
 {
     use Di\ConfigSetter;
@@ -122,7 +123,6 @@ class Service implements Crud,
     use Di\FieldUtilSetter;
     use Di\FieldValidationManagerSetter;
     use Di\RecordServiceContainerSetter;
-    use Di\SelectBuilderFactorySetter;
     use Di\AssignmentCheckerManagerSetter;
 
     protected string $entityType;
@@ -156,10 +156,20 @@ class Service implements Crud,
 
     protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 10000;
 
-    public function __construct(string $entityType = '')
-    {
+    public function __construct(
+        protected SelectBuilderFactory $selectBuilderFactory,
+        string $entityType = '',
+    ) {
         $this->entityType = $entityType;
+
+        $this->initEntityType();
     }
+
+    /**
+     * @internal
+     */
+    protected function initEntityType(): void
+    {}
 
     /**
      * @return RDBRepository<TEntity>
@@ -240,8 +250,7 @@ class Service implements Crud,
     public function getEntity(string $id): ?Entity
     {
         try {
-            $builder = $this->selectBuilderFactory
-                ->create()
+            $builder = $this->selectBuilderFactory->create()
                 ->from($this->entityType)
                 ->withSearchParams(
                     SearchParams::create()
@@ -887,9 +896,7 @@ class Service implements Crud,
 
         $preparedSearchParams = $this->prepareSearchParams($searchParams);
 
-        $selectBuilder = $this->selectBuilderFactory->create();
-
-        $query = $selectBuilder
+        $query = $this->selectBuilderFactory->create()
             ->from($this->entityType)
             ->withStrictAccessControl()
             ->withSearchParams($preparedSearchParams)

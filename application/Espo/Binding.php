@@ -134,11 +134,6 @@ class Binding implements BindingProcessor
         );
 
         $binder->bindService(
-            'Espo\\Core\\Select\\SelectBuilderFactory',
-            'selectBuilderFactory'
-        );
-
-        $binder->bindService(
             'Espo\\Core\\ServiceFactory',
             'serviceFactory'
         );

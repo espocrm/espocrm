@@ -32,6 +32,7 @@ namespace Espo\Core\Formula\Functions\RecordGroup;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
 use Espo\Core\Formula\ArgumentList;
@@ -42,14 +43,19 @@ use Espo\Core\Di;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Type\RelationType;
 
+/**
+ * @noinspection PhpUnused
+ */
 class FindRelatedOneType extends BaseFunction implements
     Di\EntityManagerAware,
-    Di\SelectBuilderFactoryAware,
-    Di\MetadataAware
+    Di\MetadataAware,
+    Di\InjectableFactoryAware,
+    Di\UserAware
 {
     use Di\EntityManagerSetter;
-    use Di\SelectBuilderFactorySetter;
     use Di\MetadataSetter;
+    use Di\InjectableFactorySetter;
+    use Di\UserSetter;
 
     public function process(ArgumentList $args)
     {
@@ -142,8 +148,9 @@ class FindRelatedOneType extends BaseFunction implements
             $this->throwError("Not supported link '$link'.");
         }
 
-        $builder = $this->selectBuilderFactory
+        $builder = $this->injectableFactory->create(SelectBuilderFactory::class)
             ->create()
+            ->forUser($this->user)
             ->from($foreignEntityType);
 
         $whereClause = [];

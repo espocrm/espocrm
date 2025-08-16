@@ -29,18 +29,27 @@
 
 namespace Espo\Core\Select;
 
+use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\InjectableFactory;
+use Espo\Entities\User;
 
 /**
  * Creates instances of Select Builder.
  */
 class SelectBuilderFactory
 {
-    public function __construct(private InjectableFactory $injectableFactory)
-    {}
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private User $user,
+    ) {}
 
     public function create(): SelectBuilder
     {
-        return $this->injectableFactory->create(SelectBuilder::class);
+        return $this->injectableFactory->createWithBinding(
+            SelectBuilder::class,
+            BindingContainerBuilder::create()
+                ->bindInstance(User::class, $this->user)
+                ->build()
+        );
     }
 }

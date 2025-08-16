@@ -26,9 +26,6 @@
     "number": {
         "loaderClassName": "Espo\\Core\\Loaders\\NumberUtil"
     },
-    "selectBuilderFactory": {
-        "className": "Espo\\Core\\Select\\SelectBuilderFactory"
-    },
     "selectManagerFactory": {
         "className": "Espo\\Core\\Select\\SelectManagerFactory"
     },

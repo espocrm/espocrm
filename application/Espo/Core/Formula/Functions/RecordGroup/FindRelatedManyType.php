@@ -41,20 +41,24 @@ use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Di;
 use Espo\Core\Select\Helpers\RandomStringGenerator;
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Type\RelationType;
 
+/**
+ * @noinspection PhpUnused
+ */
 class FindRelatedManyType extends BaseFunction implements
     Di\EntityManagerAware,
-    Di\SelectBuilderFactoryAware,
     Di\MetadataAware,
-    Di\InjectableFactoryAware
+    Di\InjectableFactoryAware,
+    Di\UserAware
 {
     use Di\EntityManagerSetter;
-    use Di\SelectBuilderFactorySetter;
     use Di\MetadataSetter;
     use Di\InjectableFactorySetter;
+    use Di\UserSetter;
 
     /**
      * @throws Error
@@ -158,8 +162,9 @@ class FindRelatedManyType extends BaseFunction implements
             $this->throwError("Not supported link '$link'.");
         }
 
-        $builder = $this->selectBuilderFactory
+        $builder = $this->injectableFactory->create(SelectBuilderFactory::class)
             ->create()
+            ->forUser($this->user)
             ->from($foreignEntityType);
 
         $whereClause = [];
