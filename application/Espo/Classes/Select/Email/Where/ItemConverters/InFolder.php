@@ -213,7 +213,6 @@ class InFolder implements ItemConverter
             return WhereClause::fromRaw([
                 'groupFolderId' => $groupFolderId,
                 'groupStatusFolder' => null,
-                'createdById!=' => $this->user->getId(),
                 'fromEmailAddressId!=' => $this->getEmailAddressIdList(),
                 'status' => [
                     Email::STATUS_ARCHIVED,
