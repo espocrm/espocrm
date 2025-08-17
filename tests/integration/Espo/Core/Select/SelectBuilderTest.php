@@ -648,12 +648,10 @@ class SelectBuilderTest extends BaseTestCase
             Email::ALIAS_INBOX . '.userId' => $userId,
             [
                 'status' => ['Archived', 'Sent'],
-                [
-                    'OR' => [
-                        'groupFolderId' => null,
-                        'groupFolderId!=' => [],
-                    ]
-                ],
+                'OR' => [
+                    'groupFolderId' => null,
+                    'groupFolderId!=' => [],
+                ]
             ],
             'fromEmailAddressId!=' => [$emailAddressId],
             [
