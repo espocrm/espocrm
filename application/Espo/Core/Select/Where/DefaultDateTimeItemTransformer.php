@@ -116,7 +116,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 break;
 
             case Type::PAST:
-                $where['type'] = Type::BEFORE;
+                $where['type'] = Type::LESS_THAN_OR_EQUALS;
 
                 $dt->setTimezone(new DateTimeZone('UTC'));
 
@@ -140,7 +140,6 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 $dtTo = clone $dt;
 
                 $dtTo->setTimezone(new DateTimeZone('UTC'));
-                $dtTo->modify('-1 second');
 
                 $to = $dtTo->format($format);
 
@@ -161,7 +160,6 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 $dtTo = clone $dt;
 
                 $dtTo->setTimezone(new DateTimeZone('UTC'));
-                $dtTo->modify('-1 second');
 
                 $to = $dtTo->format($format);
 
@@ -203,7 +201,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 $number = strval(intval($value));
 
-                $dt->modify('-'.$number.' day');
+                $dt->modify("-$number day");
                 $dt->setTime(0, 0);
                 $dt->setTimezone(new DateTimeZone('UTC'));
 
@@ -212,11 +210,11 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 break;
 
             case Type::AFTER_X_DAYS:
-                $where['type'] = Type::AFTER;
+                $where['type'] = Type::GREATER_THAN_OR_EQUALS;
 
                 $number = strval(intval($value));
 
-                $dt->modify('+'.$number.' day');
+                $dt->modify("+$number day");
                 $dt->setTime(0, 0);
                 $dt->setTimezone(new DateTimeZone('UTC'));
 
