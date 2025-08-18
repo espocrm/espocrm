@@ -327,10 +327,11 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 }
 
                 $dtTo = clone $dtFrom;
-                $dtTo->modify('+1 month');
+                $dtTo->modify('+1 month')->modify('-1 second');
 
                 $dtFrom->setTimezone(new DateTimeZone('UTC'));
                 $dtTo->setTimezone(new DateTimeZone('UTC'));
+
 
                 $where['value'] = [$dtFrom->format($format), $dtTo->format($format)];
 
@@ -367,7 +368,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 }
 
                 $dtTo = clone $dtFrom;
-                    $dtTo->add(new DateInterval('P3M'));
+                    $dtTo->add(new DateInterval('P3M'))->modify('-1 second');
                     $dtFrom->setTimezone(new DateTimeZone('UTC'));
                     $dtTo->setTimezone(new DateTimeZone('UTC'));
 
@@ -395,7 +396,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 }
 
                 $dtTo = clone $dtFrom;
-                $dtTo = $dtTo->modify('+1 year');
+                $dtTo = $dtTo->modify('+1 year')->modify('-1 second');
                 $dtFrom->setTimezone(new DateTimeZone('UTC'));
                 $dtTo->setTimezone(new DateTimeZone('UTC'));
 
@@ -434,7 +435,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 $dtFrom = clone $dt;
                 $dtTo = clone $dt;
-                $dtTo = $dtTo->modify('+1 year');
+                $dtTo = $dtTo->modify('+1 year')->modify('-1 second');
 
                 $dtFrom->setTimezone(new DateTimeZone('UTC'));
                 $dtTo->setTimezone(new DateTimeZone('UTC'));
@@ -493,7 +494,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 $dtFrom = clone $dt;
                 $dtTo = clone $dt;
-                $dtTo = $dtTo->modify('+3 months');
+                $dtTo = $dtTo->modify('+3 months')->modify('-1 second');
 
                 $dtFrom->setTimezone(new DateTimeZone('UTC'));
                 $dtTo->setTimezone(new DateTimeZone('UTC'));
