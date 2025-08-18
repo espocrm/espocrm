@@ -51,9 +51,8 @@ class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
             $campaignType === Campaign::TYPE_NEWSLETTER
         ) {
             $headers->addTextHeader('Auto-Submitted', 'auto-generated');
+            $headers->addTextHeader('X-Auto-Response-Suppress', 'AutoReply');
         }
-
-        $headers->addTextHeader('X-Auto-Response-Suppress', 'AutoReply');
 
         $this->addMandatoryOptOut($headers, $data);
     }
