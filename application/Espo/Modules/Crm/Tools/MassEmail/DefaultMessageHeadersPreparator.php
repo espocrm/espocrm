@@ -43,7 +43,17 @@ class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
     {
         $headers->addTextHeader('X-Queue-Item-Id', $data->getId());
         $headers->addTextHeader('Precedence', 'bulk');
-        $headers->addTextHeader('Auto-Submitted', 'auto-generated');
+
+        $campaignType = $this->getCampaignType($data);
+
+        if (
+            $campaignType === Campaign::TYPE_INFORMATIONAL_EMAIL ||
+            $campaignType === Campaign::TYPE_NEWSLETTER
+        ) {
+            $headers->addTextHeader('Auto-Submitted', 'auto-generated');
+        }
+
+        $headers->addTextHeader('X-Auto-Response-Suppress', 'AutoReply');
 
         $this->addMandatoryOptOut($headers, $data);
     }
@@ -57,9 +67,7 @@ class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
 
     private function addMandatoryOptOut(Headers $headers, Data $data): void
     {
-        $campaignType = $data->getQueueItem()->getMassEmail()?->getCampaign()?->getType();
-
-        if ($campaignType === Campaign::TYPE_INFORMATIONAL_EMAIL) {
+        if ($this->getCampaignType($data) === Campaign::TYPE_INFORMATIONAL_EMAIL) {
             return;
         }
 
@@ -73,5 +81,10 @@ class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
 
         $headers->addTextHeader('List-Unsubscribe-Post', 'List-Unsubscribe=One-Click');
         $headers->addTextHeader('List-Unsubscribe', "<$url>");
+    }
+
+    private function getCampaignType(Data $data): ?string
+    {
+        return $data->getQueueItem()->getMassEmail()?->getCampaign()?->getType();
     }
 }
