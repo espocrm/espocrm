@@ -137,9 +137,12 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 $where['type'] = Type::BETWEEN;
 
                 $dtFrom = clone $dt;
+                $dtTo = clone $dt;
 
-                $dt->setTimezone(new DateTimeZone('UTC'));
-                $to = $dt->format($format);
+                $dtTo->setTimezone(new DateTimeZone('UTC'));
+                $dtTo->modify('-1 second');
+
+                $to = $dtTo->format($format);
 
                 $dtFrom->modify('-7 day');
                 $dtFrom->setTime(0, 0);
@@ -155,10 +158,12 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 $where['type'] = Type::BETWEEN;
 
                 $dtFrom = clone $dt;
+                $dtTo = clone $dt;
 
-                $dt->setTimezone(new DateTimeZone('UTC'));
+                $dtTo->setTimezone(new DateTimeZone('UTC'));
+                $dtTo->modify('-1 second');
 
-                $to = $dt->format($format);
+                $to = $dtTo->format($format);
 
                 $number = strval(intval($value));
 
