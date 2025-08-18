@@ -43,6 +43,7 @@ class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
     {
         $headers->addTextHeader('X-Queue-Item-Id', $data->getId());
         $headers->addTextHeader('Precedence', 'bulk');
+        $headers->addTextHeader('Auto-Submitted', 'auto-generated');
 
         $this->addMandatoryOptOut($headers, $data);
     }

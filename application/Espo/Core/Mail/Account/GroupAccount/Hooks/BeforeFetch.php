@@ -75,7 +75,7 @@ class BeforeFetch implements BeforeFetchInterface
 
         return BeforeFetchResult::create()
             ->with('skipAutoReply', $this->checkMessageCannotBeAutoReplied($message))
-            ->with('isAutoReply', $this->checkMessageIsAutoReply($message));
+            ->with('isAutoSubmitted', $this->checkMessageIsAutoSubmitted($message));
     }
 
     private function processBounced(Message $message): bool
@@ -127,16 +127,23 @@ class BeforeFetch implements BeforeFetchInterface
 
     private function checkMessageIsAutoReply(Message $message): bool
     {
+        if ($this->checkMessageIsAutoSubmitted($message)) {
+            return true;
+        }
+
         return $this->autoReplyDetector->detect($message);
     }
 
     private function checkMessageCannotBeAutoReplied(Message $message): bool
     {
-        if ($message->getHeader('X-Auto-Response-Suppress') === 'AutoReply') {
+        if (
+            $message->getHeader('X-Auto-Response-Suppress') === 'AutoReply' ||
+            $message->getHeader('X-Auto-Response-Suppress') === 'All'
+        ) {
             return true;
         }
 
-        if ($message->getHeader('X-Auto-Response-Suppress') === 'All') {
+        if ($this->checkMessageIsAutoSubmitted($message)) {
             return true;
         }
 
@@ -145,5 +152,15 @@ class BeforeFetch implements BeforeFetchInterface
         }
 
         return false;
+    }
+
+    private function checkMessageIsAutoSubmitted(Message $message): bool
+    {
+        if ($this->autoReplyDetector->detect($message)) {
+            return true;
+        }
+
+        return $message->getHeader('Auto-Submitted') &&
+            strtolower($message->getHeader('Auto-Submitted')) !== 'no';
     }
 }

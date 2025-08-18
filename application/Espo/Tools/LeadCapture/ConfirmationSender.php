@@ -218,6 +218,7 @@ class ConfirmationSender
         }
 
         $sender
+            ->withAddedHeader('Auto-Submitted', 'auto-generated')
             ->withAttachments($emailData->getAttachmentList())
             ->send($email);
     }

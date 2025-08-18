@@ -31,7 +31,6 @@ namespace Espo\Core\Mail\Account\GroupAccount\Hooks;
 
 use Espo\Core\Name\Field;
 use Espo\Core\Name\Link;
-use Laminas\Mail\Message;
 
 use Espo\Core\Mail\Account\GroupAccount\AccountFactory as GroupAccountFactory;
 use Espo\Core\Mail\SenderParams;
@@ -97,7 +96,7 @@ class AfterFetch implements AfterFetchInterface
         }
 
         if ($account->createCase()) {
-            if ($beforeFetchResult->get('isAutoReply')) {
+            if ($beforeFetchResult->get('isAutoSubmitted')) {
                 return;
             }
 
@@ -117,7 +116,10 @@ class AfterFetch implements AfterFetchInterface
         }
 
         if ($account->autoReply()) {
-            if ($beforeFetchResult->get('skipAutoReply')) {
+            if (
+                $beforeFetchResult->get('isAutoSubmitted') ||
+                $beforeFetchResult->get('skipAutoReply')
+            ) {
                 return;
             }
 

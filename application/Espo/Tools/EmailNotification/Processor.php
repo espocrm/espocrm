@@ -339,8 +339,7 @@ class Processor
         $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'mention-email-subject', $data, true);
         $body = $this->getHtmlizer()->render($note, $bodyTpl, 'mention-email-body', $data, true);
 
-        /** @var Email $email */
-        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
+        $email = $this->entityManager->getRDBRepositoryByClass(Email::class)->getNew();
 
         $email
             ->setSubject($subject)
@@ -365,10 +364,15 @@ class Processor
             }
         }
 
+        $sender = $this->emailSender
+            ->withParams($senderParams);
+
+        if ($note->getType() !== Note::TYPE_POST) {
+            $sender = $sender->withAddedHeader('Auto-Submitted', 'auto-generated');
+        }
+
         try {
-            $this->emailSender
-                ->withParams($senderParams)
-                ->send($email);
+            $sender->send($email);
         } catch (Exception $e) {
             $this->log->error("Email notification: {$e->getMessage()}", ['exception' => $e]);
         }

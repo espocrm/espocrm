@@ -44,8 +44,8 @@ class DefaultAutoReplyDetector implements AutoReplyDetector
         }
 
         if (
-            $message->getHeader('Auto-submitted') &&
-            strtolower($message->getHeader('Auto-submitted')) !== 'no'
+            $message->getHeader('Auto-Submitted') &&
+            strtolower($message->getHeader('Auto-Submitted')) === 'auto-replied'
         ) {
             return true;
         }
