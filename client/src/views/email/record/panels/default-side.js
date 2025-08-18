@@ -34,26 +34,45 @@ export default class extends DefaultSidePanelView {
         super.setupFields();
 
         this.fieldList.push({
+            name: 'isAutoReply',
+        });
+
+        this.fieldList.push({
             name: 'hasAttachment',
             view: 'views/email/fields/has-attachment',
             noLabel: true,
         });
 
         this.controlHasAttachmentField();
-
         this.listenTo(this.model, 'change:hasAttachment', () => this.controlHasAttachmentField());
+
+        this.controlIsAutoReply();
+        this.listenTo(this.model, 'change:isAutoReply', () => this.controlIsAutoReply());
     }
 
     /**
      * @private
      */
     controlHasAttachmentField() {
-        if (this.model.get('hasAttachment')) {
+        if (this.model.attributes.hasAttachment) {
             this.recordViewObject.showField('hasAttachment');
 
             return;
         }
 
         this.recordViewObject.hideField('hasAttachment');
+    }
+
+    /**
+     * @private
+     */
+    controlIsAutoReply() {
+        if (this.model.attributes.isAutoReply) {
+            this.recordViewObject.showField('isAutoReply');
+
+            return;
+        }
+
+        this.recordViewObject.hideField('isAutoReply');
     }
 }

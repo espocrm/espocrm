@@ -408,7 +408,8 @@
             "type": "bool",
             "readOnly": true,
             "customizationDisabled": true,
-            "layoutDefaultSidePanelDisabled": true
+            "layoutDefaultSidePanelDisabled": true,
+            "layoutDetailDisabled": true
         },
         "parent": {
             "type": "linkParent",
@@ -446,7 +447,9 @@
         "isAutoReply": {
             "type": "bool",
             "readOnly": true,
-            "fieldManagerParamList": []
+            "fieldManagerParamList": [],
+            "layoutDefaultSidePanelDisabled": true,
+            "layoutDetailDisabled": true
         },
         "createdAt": {
             "type": "datetime",
