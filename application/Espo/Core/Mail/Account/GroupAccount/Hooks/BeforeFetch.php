@@ -32,6 +32,7 @@ namespace Espo\Core\Mail\Account\GroupAccount\Hooks;
 use Espo\Core\Mail\Account\Hook\BeforeFetch as BeforeFetchInterface;
 use Espo\Core\Mail\Account\Hook\BeforeFetchResult;
 use Espo\Core\Mail\Account\Account;
+use Espo\Core\Mail\Importer\AutoReplyDetector;
 use Espo\Core\Mail\Message;
 use Espo\Core\Mail\Account\GroupAccount\BouncedRecognizer;
 use Espo\Core\Utils\Log;
@@ -50,6 +51,7 @@ class BeforeFetch implements BeforeFetchInterface
         private EntityManager $entityManager,
         private BouncedRecognizer $bouncedRecognizer,
         private CampaignService $campaignService,
+        private AutoReplyDetector $autoReplyDetector,
     ) {}
 
     public function process(Account $account, Message $message): BeforeFetchResult
@@ -125,22 +127,7 @@ class BeforeFetch implements BeforeFetchInterface
 
     private function checkMessageIsAutoReply(Message $message): bool
     {
-        if ($message->getHeader('X-Autoreply')) {
-            return true;
-        }
-
-        if ($message->getHeader('X-Autorespond')) {
-            return true;
-        }
-
-        if (
-            $message->getHeader('Auto-submitted') &&
-            strtolower($message->getHeader('Auto-submitted')) !== 'no'
-        ) {
-            return true;
-        }
-
-        return false;
+        return $this->autoReplyDetector->detect($message);
     }
 
     private function checkMessageCannotBeAutoReplied(Message $message): bool

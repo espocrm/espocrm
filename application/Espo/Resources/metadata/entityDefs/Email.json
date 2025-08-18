@@ -443,6 +443,11 @@
                 "Espo\\Classes\\FieldValidators\\Email\\SendAt\\Future"
             ]
         },
+        "isAutoReply": {
+            "type": "bool",
+            "readOnly": true,
+            "fieldManagerParamList": []
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true,

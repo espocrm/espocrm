@@ -39,6 +39,17 @@ class EmailSubjectFieldView extends VarcharFieldView {
         data.isImportant = this.model.has('isImportant') && this.model.get('isImportant');
         data.hasAttachment = this.model.has('hasAttachment') && this.model.get('hasAttachment');
         data.isReplied = this.model.has('isReplied') && this.model.get('isReplied');
+        data.isAutoReply = this.model.has('isAutoReply') && this.model.attributes.isAutoReply;
+
+        data.hasIcon = data.hasAttachment || data.isAutoReply;
+
+        if (data.hasIcon) {
+            data.iconCount = 1;
+
+            if (data.hasAttachment && data.isAutoReply) {
+                data.iconCount = 2;
+            }
+        }
 
         data.inTrash = this.model.attributes.groupFolderId ?
             this.model.attributes.groupStatusFolder === 'Trash' :
@@ -88,6 +99,7 @@ class EmailSubjectFieldView extends VarcharFieldView {
             'hasAttachment',
             'inTrash',
             'groupStatusFolder',
+            'isAutoReply',
         ];
     }
 

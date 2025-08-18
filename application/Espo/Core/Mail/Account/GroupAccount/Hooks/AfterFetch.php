@@ -244,26 +244,22 @@ class AfterFetch implements AfterFetchInterface
 
             $subject = $replyData->getSubject();
 
-            if ($case) {
-                $subject = '[#' . $case->get('number'). '] ' . $subject;
+            if ($case && $case->getNumber() !== null) {
+                $subject = "[#{$case->getNumber()}] $subject";
             }
 
-            /** @var Email $reply */
             $reply = $this->entityManager->getRDBRepositoryByClass(Email::class)->getNew();
 
             $reply
                 ->addToAddress($fromAddress)
                 ->setSubject($subject)
                 ->setBody($replyData->getBody())
-                ->setIsHtml($replyData->isHtml());
-
-            if ($email->has('teamsIds')) {
-                $reply->set('teamsIds', $email->get('teamsIds'));
-            }
+                ->setIsHtml($replyData->isHtml())
+                ->setIsAutoReply()
+                ->setTeams($email->getTeams());
 
             if ($email->getParentId() && $email->getParentType()) {
-                $reply->set('parentId', $email->getParentId());
-                $reply->set('parentType', $email->getParentType());
+                $reply->setParent($email->getParent());
             }
 
             $this->entityManager->saveEntity($reply);

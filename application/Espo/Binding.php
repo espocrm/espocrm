@@ -317,6 +317,11 @@ class Binding implements BindingProcessor
             'Espo\\Core\\Mail\\Importer',
             'Espo\\Core\\Mail\\Importer\\DefaultImporter'
         );
+
+        $binder->bindImplementation(
+            'Espo\\Core\\Mail\\Importer\\AutoReplyDetector',
+            'Espo\\Core\\Mail\\Importer\\DefaultAutoReplyDetector'
+        );
     }
 
     private function bindAcl(Binder $binder): void

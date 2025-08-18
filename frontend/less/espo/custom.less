@@ -374,6 +374,18 @@ div.list-expanded > ul > li > div.expanded-row {
                     display: inline-block;
                 }
             }
+
+            &:has(.list-icon-container[data-icon-count="2"]) {
+                > span {
+                    > span:first-child {
+                        width: calc(100% - var(--32px));
+                    }
+
+                    > span.list-icon-container {
+                        width: var(--32px);
+                    }
+                }
+            }
         }
     }
 }
