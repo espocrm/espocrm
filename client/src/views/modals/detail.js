@@ -32,6 +32,7 @@ import ModalView from 'views/modal';
 import ActionItemSetup from 'helpers/action-item-setup';
 import Backbone from 'backbone';
 import RecordModal from 'helpers/record-modal';
+import Utils from 'utils';
 
 /**
  * A quick view modal.
@@ -67,7 +68,7 @@ class DetailModalView extends ModalView {
                 return;
             }
 
-            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+            if (Utils.isKeyEventInTextInput(e)) {
                 return;
             }
 
@@ -769,7 +770,7 @@ class DetailModalView extends ModalView {
             return;
         }
 
-        if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+        if (Utils.isKeyEventInTextInput(e)) {
             return;
         }
 
@@ -792,7 +793,7 @@ class DetailModalView extends ModalView {
             return;
         }
 
-        if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+        if (Utils.isKeyEventInTextInput(e)) {
             return;
         }
 
