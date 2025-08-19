@@ -548,7 +548,7 @@ class EmailFieldView extends VarcharFieldView {
 
         if (
             this.model.collection &&
-            ('patentModel' in this.model.collection) &&
+            ('parentModel' in this.model.collection) &&
             this.model.collection.parentModel
         ) {
             if (this.checkParentTypeAvailability(this.model.collection.parentModel.entityType)) {
