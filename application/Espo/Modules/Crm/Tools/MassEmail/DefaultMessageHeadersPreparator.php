@@ -36,8 +36,10 @@ use Espo\Modules\Crm\Tools\MassEmail\MessagePreparator\Headers;
 
 class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
 {
-    public function __construct(private Config $config)
-    {}
+    public function __construct(
+        private Config $config,
+        private Config\ApplicationConfig $applicationConfig,
+    ) {}
 
     public function prepare(Headers $headers, Data $data): void
     {
@@ -59,7 +61,7 @@ class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
 
     private function getSiteUrl(): string
     {
-        $url = $this->config->get('massEmailSiteUrl') ?? $this->config->get('siteUrl');
+        $url = $this->config->get('massEmailSiteUrl') ?? $this->applicationConfig->getSiteUrl();
 
         return rtrim($url, '/');
     }
