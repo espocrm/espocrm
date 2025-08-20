@@ -31,6 +31,7 @@
 import MainView from 'views/main';
 import SearchManager from 'search-manager';
 import RecordModal from 'helpers/record-modal';
+import Utils from 'utils';
 
 /**
  * A list view.
@@ -881,10 +882,6 @@ class ListView extends MainView {
             return;
         }
 
-        /*if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
-            return;
-        }*/
-
         if (!this.getAcl().checkScope(this.scope, 'create')) {
             return;
         }
@@ -948,21 +945,27 @@ class ListView extends MainView {
         this.getSearchView().selectNextPreset();
     }
 
-    // noinspection JSUnusedLocalSymbols
     /**
      * @protected
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyControlArrowLeft(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
         this.getRecordView().trigger('request-page', 'previous');
     }
 
-    // noinspection JSUnusedLocalSymbols
     /**
      * @protected
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyControlArrowRight(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
         this.getRecordView().trigger('request-page', 'next');
     }
 

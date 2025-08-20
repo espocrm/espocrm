@@ -32,6 +32,7 @@ import {inject} from 'di';
 import ShortcutManager from 'helpers/site/shortcut-manager';
 import DebounceHelper from 'helpers/util/debounce';
 import WebSocketManager from 'web-socket-manager';
+import Utils from 'utils';
 
 class CalendarPage extends View {
 
@@ -456,6 +457,10 @@ class CalendarPage extends View {
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyHome(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
         e.preventDefault();
 
         this.getCalendarView().actionToday();
@@ -466,6 +471,17 @@ class CalendarPage extends View {
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyArrowLeft(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
+        if (
+            e.target instanceof HTMLElement &&
+            e.target.parentElement instanceof HTMLLIElement
+        ) {
+            return;
+        }
+
         e.preventDefault();
 
         this.getCalendarView().actionPrevious();
@@ -476,6 +492,17 @@ class CalendarPage extends View {
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyArrowRight(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
+        if (
+            e.target instanceof HTMLElement &&
+            e.target.parentElement instanceof HTMLLIElement
+        ) {
+            return;
+        }
+
         e.preventDefault();
 
         this.getCalendarView().actionNext();
@@ -486,6 +513,10 @@ class CalendarPage extends View {
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyMinus(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
         if (!this.getCalendarView().actionZoomOut) {
             return;
         }
@@ -500,6 +531,10 @@ class CalendarPage extends View {
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyPlus(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
         if (!this.getCalendarView().actionZoomIn) {
             return;
         }
@@ -515,6 +550,10 @@ class CalendarPage extends View {
      * @param {Number} digit
      */
     handleShortcutKeyDigit(e, digit) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
         const modeList = this.getCalendarView().hasView('modeButtons') ?
             this.getCalendarView()
                 .getModeButtonsView()
@@ -544,6 +583,10 @@ class CalendarPage extends View {
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyControlSpace(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
         if (!this.getCalendarView().createEvent) {
             return;
         }

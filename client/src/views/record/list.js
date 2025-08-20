@@ -2369,7 +2369,7 @@ class ListRecordView extends View {
             follow: {groupIndex: 4},
             unfollow: {groupIndex: 4},
             convertCurrency: {groupIndex: 6},
-            printToPdf: {groupIndex: 8},
+            printPdf: {groupIndex: 8},
             ...this.getMetadata().get(['clientDefs', 'Global', 'massActionDefs']) || {},
             ...this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs']) || {},
         };

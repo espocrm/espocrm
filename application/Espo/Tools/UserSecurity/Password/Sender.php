@@ -88,7 +88,9 @@ class Sender
             ->setSubject($subject)
             ->setBody($body);
 
-        $this->createSender()->send($email);
+        $this->createSender()
+            ->withAddedHeader('Auto-Submitted', 'auto-generated')
+            ->send($email);
     }
 
     /**
@@ -127,7 +129,9 @@ class Sender
             ->setBody($body)
             ->addToAddress($emailAddress);
 
-        $this->createSender()->send($email);
+        $this->createSender()
+            ->withAddedHeader('Auto-Submitted', 'auto-generated')
+            ->send($email);
     }
 
     private function createSender(): EmailSenderSender

@@ -34,16 +34,22 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Formula\Exceptions\Error;
 use Espo\Core\Formula\Functions\Base;
 use Espo\Core\Formula\Functions\RecordGroup\Util\FindQueryUtil;
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\Core\Di;
 use stdClass;
 
+/**
+ * @noinspection PhpUnused
+ */
 class CountRelatedType extends Base implements
     Di\EntityManagerAware,
-    Di\SelectBuilderFactoryAware
+    Di\InjectableFactoryAware,
+    Di\UserAware
 {
     use Di\EntityManagerSetter;
-    use Di\SelectBuilderFactorySetter;
+    use Di\InjectableFactorySetter;
+    use Di\UserSetter;
 
     /**
      * @return int
@@ -77,8 +83,9 @@ class CountRelatedType extends Base implements
             throw new Error();
         }
 
-        $builder = $this->selectBuilderFactory
+        $builder = $this->injectableFactory->create(SelectBuilderFactory::class)
             ->create()
+            ->forUser($this->user)
             ->from($foreignEntityType);
 
         if ($filter) {

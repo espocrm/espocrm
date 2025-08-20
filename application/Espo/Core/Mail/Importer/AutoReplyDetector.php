@@ -27,19 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Di;
+namespace Espo\Core\Mail\Importer;
 
-use Espo\Core\Select\SelectBuilderFactory;
+use Espo\Core\Mail\Message;
 
-trait SelectBuilderFactorySetter
+/**
+ * Detects if an email is auto-response.
+ *
+ * @since 9.2.0
+ */
+interface AutoReplyDetector
 {
-    /**
-     * @var SelectBuilderFactory
-     */
-    protected $selectBuilderFactory;
-
-    public function setSelectBuilderFactory(SelectBuilderFactory $selectBuilderFactory): void
-    {
-        $this->selectBuilderFactory = $selectBuilderFactory;
-    }
+    public function detect(Message $message): bool;
 }

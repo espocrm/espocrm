@@ -134,11 +134,6 @@ class Binding implements BindingProcessor
         );
 
         $binder->bindService(
-            'Espo\\Core\\Select\\SelectBuilderFactory',
-            'selectBuilderFactory'
-        );
-
-        $binder->bindService(
             'Espo\\Core\\ServiceFactory',
             'serviceFactory'
         );
@@ -321,6 +316,11 @@ class Binding implements BindingProcessor
         $binder->bindImplementation(
             'Espo\\Core\\Mail\\Importer',
             'Espo\\Core\\Mail\\Importer\\DefaultImporter'
+        );
+
+        $binder->bindImplementation(
+            'Espo\\Core\\Mail\\Importer\\AutoReplyDetector',
+            'Espo\\Core\\Mail\\Importer\\DefaultAutoReplyDetector'
         );
     }
 

@@ -36,29 +36,39 @@ use Espo\Modules\Crm\Tools\MassEmail\MessagePreparator\Headers;
 
 class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
 {
-    public function __construct(private Config $config)
-    {}
+    public function __construct(
+        private Config $config,
+        private Config\ApplicationConfig $applicationConfig,
+    ) {}
 
     public function prepare(Headers $headers, Data $data): void
     {
         $headers->addTextHeader('X-Queue-Item-Id', $data->getId());
         $headers->addTextHeader('Precedence', 'bulk');
 
+        $campaignType = $this->getCampaignType($data);
+
+        if (
+            $campaignType === Campaign::TYPE_INFORMATIONAL_EMAIL ||
+            $campaignType === Campaign::TYPE_NEWSLETTER
+        ) {
+            $headers->addTextHeader('Auto-Submitted', 'auto-generated');
+            $headers->addTextHeader('X-Auto-Response-Suppress', 'AutoReply');
+        }
+
         $this->addMandatoryOptOut($headers, $data);
     }
 
     private function getSiteUrl(): string
     {
-        $url = $this->config->get('massEmailSiteUrl') ?? $this->config->get('siteUrl');
+        $url = $this->config->get('massEmailSiteUrl') ?? $this->applicationConfig->getSiteUrl();
 
         return rtrim($url, '/');
     }
 
     private function addMandatoryOptOut(Headers $headers, Data $data): void
     {
-        $campaignType = $data->getQueueItem()->getMassEmail()?->getCampaign()?->getType();
-
-        if ($campaignType === Campaign::TYPE_INFORMATIONAL_EMAIL) {
+        if ($this->getCampaignType($data) === Campaign::TYPE_INFORMATIONAL_EMAIL) {
             return;
         }
 
@@ -72,5 +82,10 @@ class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
 
         $headers->addTextHeader('List-Unsubscribe-Post', 'List-Unsubscribe=One-Click');
         $headers->addTextHeader('List-Unsubscribe', "<$url>");
+    }
+
+    private function getCampaignType(Data $data): ?string
+    {
+        return $data->getQueueItem()->getMassEmail()?->getCampaign()?->getType();
     }
 }

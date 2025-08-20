@@ -192,14 +192,15 @@ class ImporterTest extends TestCase
         $contents = file_get_contents('tests/unit/testData/Core/Mail/test_email_1.eml');
 
         $importer = new Importer\DefaultImporter(
-            $entityManager,
-            $config,
-            $this->assignmentNotificatorFactory,
-            $this->parserFactory,
-            $this->linkMultipleSaver,
-            $this->duplicateFinder,
-            $this->jobSchedulerFactory,
-            $this->parentFinder
+            entityManager: $entityManager,
+            config: $config,
+            notificatorFactory: $this->assignmentNotificatorFactory,
+            parserFactory: $this->parserFactory,
+            linkMultipleSaver: $this->linkMultipleSaver,
+            duplicateFinder: $this->duplicateFinder,
+            jobSchedulerFactory: $this->jobSchedulerFactory,
+            parentFinder: $this->parentFinder,
+            autoReplyDetector: $this->createMock(Importer\AutoReplyDetector::class),
         );
 
         $message = new MessageWrapper(0, null, null, $contents);

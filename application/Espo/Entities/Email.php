@@ -893,4 +893,14 @@ class Email extends Entity
     {
         return $this->set('isReplied', $isReplied);
     }
+
+    public function isAutoReply(): bool
+    {
+        return $this->get('isAutoReply');
+    }
+
+    public function setIsAutoReply(bool $isAutoReply = true): self
+    {
+        return $this->set('isAutoReply', $isAutoReply);
+    }
 }

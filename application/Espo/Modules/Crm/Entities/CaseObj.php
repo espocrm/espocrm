@@ -50,6 +50,11 @@ class CaseObj extends Entity
 
     protected $entityType = 'Case';
 
+    public function getNumber(): ?int
+    {
+        return $this->get('number');
+    }
+
     public function setName(?string $name): self
     {
         return $this->set(Field::NAME, $name);

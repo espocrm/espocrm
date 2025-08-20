@@ -35,6 +35,7 @@ use Espo\Core\Mail\EmailSender;
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Templates\Entities\Person;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Core\Utils\DateTime;
 use Espo\Core\Utils\Language;
@@ -59,6 +60,7 @@ class ConfirmationSender
         private DateTime $dateTime,
         private EmailTemplateProcessor $emailTemplateProcessor,
         private ApplicationConfig $appConfig,
+        private Config $config,
     ) {}
 
     /**
@@ -166,7 +168,7 @@ class ConfirmationSender
             }
         }
 
-        $url = $this->appConfig->getSiteUrl() . '/?entryPoint=confirmOptIn&id=' . $uniqueId->getIdValue();
+        $url = $this->getSiteUrl() . '/?entryPoint=confirmOptIn&id=' . $uniqueId->getIdValue();
 
         $linkHtml =
             '<a href='.$url.'>' .
@@ -218,7 +220,13 @@ class ConfirmationSender
         }
 
         $sender
+            ->withAddedHeader('Auto-Submitted', 'auto-generated')
             ->withAttachments($emailData->getAttachmentList())
             ->send($email);
+    }
+
+    private function getSiteUrl(): string
+    {
+        return $this->config->get('leadCaptureSiteUrl') ?? $this->appConfig->getSiteUrl();
     }
 }

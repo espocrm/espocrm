@@ -61,7 +61,8 @@
         "icsEventDateStart": "ICS Event Date Start",
         "groupFolder": "Group Folder",
         "groupStatusFolder": "Group Status Folder",
-        "sendAt": "Send At"
+        "sendAt": "Send At",
+        "isAutoReply": "Is Auto-Reply"
     },
     "links": {
         "replied": "Replied",

@@ -305,7 +305,7 @@ class Sender
 
         $params = array_merge($this->params, $this->overrideParams);
 
-        $this->applyHeaders($message);
+        $this->applyHeaders($email, $message);
         $this->applyFrom($email, $message, $params);
         $this->addRecipientAddresses($email, $message);
         $this->applyReplyTo($email, $message, $params);
@@ -589,7 +589,7 @@ class Sender
         $message->subject($email->getSubject() ?? '');
     }
 
-    private function applyHeaders(Message $message): void
+    private function applyHeaders(Email $email, Message $message): void
     {
         foreach ($this->headers as $item) {
             $message->getHeaders()->addTextHeader($item[0], $item[1]);
@@ -604,6 +604,10 @@ class Sender
 
                 $message->getHeaders()->addTextHeader($it->getFieldName(), $it->getFieldValue());
             }
+        }
+
+        if ($email->isAutoReply() && !$message->getHeaders()->has('Auto-Submitted')) {
+            $message->getHeaders()->addTextHeader('Auto-Submitted', 'auto-replied');
         }
     }
 

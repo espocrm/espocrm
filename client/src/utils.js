@@ -681,6 +681,40 @@ Espo.Utils = {
     },
 
     /**
+     * Check whether the pressed key is in a text input.
+     *
+     * @param {KeyboardEvent} e A key event.
+     * @return {boolean}
+     * @since 9.2.0
+     */
+    isKeyEventInTextInput: function (e) {
+        if (!(e.target instanceof HTMLElement)) {
+            return false;
+        }
+
+        if (e.target.tagName === 'TEXTAREA') {
+            return true;
+        }
+
+        if (e.target instanceof HTMLInputElement) {
+            if (
+                e.target.type === 'radio' ||
+                e.target.type === 'checkbox'
+            ) {
+                return false;
+            }
+
+            return true;
+        }
+
+        if (e.target.classList.contains('note-editable')) {
+            return true;
+        }
+
+        return false;
+    },
+
+    /**
      * Generate an ID. Not to be used by 3rd party code.
      *
      * @internal

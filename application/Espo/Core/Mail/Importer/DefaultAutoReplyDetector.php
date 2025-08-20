@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,53 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import DefaultSidePanelView from 'views/record/panels/default-side';
+namespace Espo\Core\Mail\Importer;
 
-export default class extends DefaultSidePanelView {
+use Espo\Core\Mail\Message;
 
-    setupFields() {
-        super.setupFields();
-
-        this.fieldList.push({
-            name: 'isAutoReply',
-        });
-
-        this.fieldList.push({
-            name: 'hasAttachment',
-            view: 'views/email/fields/has-attachment',
-            noLabel: true,
-        });
-
-        this.controlHasAttachmentField();
-        this.listenTo(this.model, 'change:hasAttachment', () => this.controlHasAttachmentField());
-
-        this.controlIsAutoReply();
-        this.listenTo(this.model, 'change:isAutoReply', () => this.controlIsAutoReply());
-    }
-
-    /**
-     * @private
-     */
-    controlHasAttachmentField() {
-        if (this.model.attributes.hasAttachment) {
-            this.recordViewObject.showField('hasAttachment');
-
-            return;
+class DefaultAutoReplyDetector implements AutoReplyDetector
+{
+    public function detect(Message $message): bool
+    {
+        if ($message->getHeader('X-Autoreply')) {
+            return true;
         }
 
-        this.recordViewObject.hideField('hasAttachment');
-    }
-
-    /**
-     * @private
-     */
-    controlIsAutoReply() {
-        if (this.model.attributes.isAutoReply) {
-            this.recordViewObject.showField('isAutoReply');
-
-            return;
+        if ($message->getHeader('X-Autorespond')) {
+            return true;
         }
 
-        this.recordViewObject.hideField('isAutoReply');
+        if (
+            $message->getHeader('Auto-Submitted') &&
+            strtolower($message->getHeader('Auto-Submitted')) === 'auto-replied'
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

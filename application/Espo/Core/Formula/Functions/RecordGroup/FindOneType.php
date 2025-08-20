@@ -36,6 +36,7 @@ use Espo\Core\Formula\Exceptions\Error as FormulaError;
 use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Di;
 use Espo\Core\Formula\Functions\RecordGroup\Util\FindQueryUtil;
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Order;
 
@@ -44,10 +45,12 @@ use Espo\ORM\Query\Part\Order;
  */
 class FindOneType extends BaseFunction implements
     Di\EntityManagerAware,
-    Di\SelectBuilderFactoryAware
+    Di\InjectableFactoryAware,
+    Di\UserAware
 {
     use Di\EntityManagerSetter;
-    use Di\SelectBuilderFactorySetter;
+    use Di\InjectableFactorySetter;
+    use Di\UserSetter;
 
     public function process(ArgumentList $args)
     {
@@ -59,8 +62,9 @@ class FindOneType extends BaseFunction implements
         $orderBy = $this->evaluate($args[1]);
         $order = $this->evaluate($args[2]) ?? Order::ASC;
 
-        $builder = $this->selectBuilderFactory
+        $builder = $this->injectableFactory->create(SelectBuilderFactory::class)
             ->create()
+            ->forUser($this->user)
             ->from($entityType);
 
         $whereClause = [];

@@ -29,11 +29,15 @@
 
 namespace Espo\Classes\Select\Email\Where\ItemConverters;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Name\Link;
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Select\Where\ItemConverter;
 use Espo\Core\Select\Where\Item;
 
 use Espo\Entities\Email;
+use Espo\Entities\GroupEmailFolder;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
@@ -42,6 +46,7 @@ use Espo\ORM\EntityManager;
 use Espo\Entities\User;
 use Espo\Classes\Select\Email\Helpers\JoinHelper;
 use Espo\Tools\Email\Folder;
+use RuntimeException;
 
 /**
  * @noinspection PhpUnused
@@ -51,7 +56,8 @@ class InFolder implements ItemConverter
     public function __construct(
         private User $user,
         private EntityManager $entityManager,
-        private JoinHelper $joinHelper
+        private JoinHelper $joinHelper,
+        private SelectBuilderFactory $selectBuilderFactory
     ) {}
 
     public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
@@ -74,6 +80,8 @@ class InFolder implements ItemConverter
     {
         $this->joinEmailUser($queryBuilder);
 
+        $groupEmailFoldersIds = $this->getUserGroupEmailFoldersIds();
+
         $whereClause = [
             Email::ALIAS_INBOX . '.inTrash' => false,
             Email::ALIAS_INBOX . '.inArchive' => false,
@@ -84,7 +92,10 @@ class InFolder implements ItemConverter
                     Email::STATUS_ARCHIVED,
                     Email::STATUS_SENT,
                 ],
-                'groupFolderId' => null,
+                'OR' => [
+                    'groupFolderId' => null,
+                    'groupFolderId!=' => $groupEmailFoldersIds,
+                ]
             ],
         ];
 
@@ -202,7 +213,6 @@ class InFolder implements ItemConverter
             return WhereClause::fromRaw([
                 'groupFolderId' => $groupFolderId,
                 'groupStatusFolder' => null,
-                'createdById!=' => $this->user->getId(),
                 'fromEmailAddressId!=' => $this->getEmailAddressIdList(),
                 'status' => [
                     Email::STATUS_ARCHIVED,
@@ -249,5 +259,35 @@ class InFolder implements ItemConverter
         }
 
         return $emailAddressIdList;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getUserGroupEmailFoldersIds(): array
+    {
+        $selectBuilder = $this->selectBuilderFactory
+            ->create()
+            ->forUser($this->user)
+            ->from(GroupEmailFolder::ENTITY_TYPE)
+            ->withAccessControlFilter();
+
+        try {
+            $groupEmailFolders = $this->entityManager
+                ->getRDBRepositoryByClass(GroupEmailFolder::class)
+                ->clone($selectBuilder->build())
+                ->select([Attribute::ID])
+                ->find();
+        } catch (BadRequest|Forbidden $e) {
+            throw new RuntimeException('', 0, $e);
+        }
+
+        $groupEmailFoldersIds = [];
+
+        foreach ($groupEmailFolders as $groupEmailFolder) {
+            $groupEmailFoldersIds[] = $groupEmailFolder->getId();
+        }
+
+        return $groupEmailFoldersIds;
     }
 }

@@ -116,7 +116,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 break;
 
             case Type::PAST:
-                $where['type'] = Type::BEFORE;
+                $where['type'] = Type::LESS_THAN_OR_EQUALS;
 
                 $dt->setTimezone(new DateTimeZone('UTC'));
 
@@ -137,9 +137,11 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 $where['type'] = Type::BETWEEN;
 
                 $dtFrom = clone $dt;
+                $dtTo = clone $dt;
 
-                $dt->setTimezone(new DateTimeZone('UTC'));
-                $to = $dt->format($format);
+                $dtTo->setTimezone(new DateTimeZone('UTC'));
+
+                $to = $dtTo->format($format);
 
                 $dtFrom->modify('-7 day');
                 $dtFrom->setTime(0, 0);
@@ -155,10 +157,11 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 $where['type'] = Type::BETWEEN;
 
                 $dtFrom = clone $dt;
+                $dtTo = clone $dt;
 
-                $dt->setTimezone(new DateTimeZone('UTC'));
+                $dtTo->setTimezone(new DateTimeZone('UTC'));
 
-                $to = $dt->format($format);
+                $to = $dtTo->format($format);
 
                 $number = strval(intval($value));
 
@@ -198,7 +201,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 $number = strval(intval($value));
 
-                $dt->modify('-'.$number.' day');
+                $dt->modify("-$number day");
                 $dt->setTime(0, 0);
                 $dt->setTimezone(new DateTimeZone('UTC'));
 
@@ -207,11 +210,11 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 break;
 
             case Type::AFTER_X_DAYS:
-                $where['type'] = Type::AFTER;
+                $where['type'] = Type::GREATER_THAN_OR_EQUALS;
 
                 $number = strval(intval($value));
 
-                $dt->modify('+'.$number.' day');
+                $dt->modify("+$number day");
                 $dt->setTime(0, 0);
                 $dt->setTimezone(new DateTimeZone('UTC'));
 
@@ -327,10 +330,11 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 }
 
                 $dtTo = clone $dtFrom;
-                $dtTo->modify('+1 month');
+                $dtTo->modify('+1 month')->modify('-1 second');
 
                 $dtFrom->setTimezone(new DateTimeZone('UTC'));
                 $dtTo->setTimezone(new DateTimeZone('UTC'));
+
 
                 $where['value'] = [$dtFrom->format($format), $dtTo->format($format)];
 
@@ -367,7 +371,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 }
 
                 $dtTo = clone $dtFrom;
-                    $dtTo->add(new DateInterval('P3M'));
+                    $dtTo->add(new DateInterval('P3M'))->modify('-1 second');
                     $dtFrom->setTimezone(new DateTimeZone('UTC'));
                     $dtTo->setTimezone(new DateTimeZone('UTC'));
 
@@ -395,7 +399,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 }
 
                 $dtTo = clone $dtFrom;
-                $dtTo = $dtTo->modify('+1 year');
+                $dtTo = $dtTo->modify('+1 year')->modify('-1 second');
                 $dtFrom->setTimezone(new DateTimeZone('UTC'));
                 $dtTo->setTimezone(new DateTimeZone('UTC'));
 
@@ -434,7 +438,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 $dtFrom = clone $dt;
                 $dtTo = clone $dt;
-                $dtTo = $dtTo->modify('+1 year');
+                $dtTo = $dtTo->modify('+1 year')->modify('-1 second');
 
                 $dtFrom->setTimezone(new DateTimeZone('UTC'));
                 $dtTo->setTimezone(new DateTimeZone('UTC'));
@@ -493,7 +497,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
                 $dtFrom = clone $dt;
                 $dtTo = clone $dt;
-                $dtTo = $dtTo->modify('+3 months');
+                $dtTo = $dtTo->modify('+3 months')->modify('-1 second');
 
                 $dtFrom->setTimezone(new DateTimeZone('UTC'));
                 $dtTo->setTimezone(new DateTimeZone('UTC'));

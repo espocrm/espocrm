@@ -32,6 +32,7 @@ namespace Espo\Core\Mail\Account\GroupAccount\Hooks;
 use Espo\Core\Mail\Account\Hook\BeforeFetch as BeforeFetchInterface;
 use Espo\Core\Mail\Account\Hook\BeforeFetchResult;
 use Espo\Core\Mail\Account\Account;
+use Espo\Core\Mail\Importer\AutoReplyDetector;
 use Espo\Core\Mail\Message;
 use Espo\Core\Mail\Account\GroupAccount\BouncedRecognizer;
 use Espo\Core\Utils\Log;
@@ -50,6 +51,7 @@ class BeforeFetch implements BeforeFetchInterface
         private EntityManager $entityManager,
         private BouncedRecognizer $bouncedRecognizer,
         private CampaignService $campaignService,
+        private AutoReplyDetector $autoReplyDetector,
     ) {}
 
     public function process(Account $account, Message $message): BeforeFetchResult
@@ -73,7 +75,7 @@ class BeforeFetch implements BeforeFetchInterface
 
         return BeforeFetchResult::create()
             ->with('skipAutoReply', $this->checkMessageCannotBeAutoReplied($message))
-            ->with('isAutoReply', $this->checkMessageIsAutoReply($message));
+            ->with('isAutoSubmitted', $this->checkMessageIsAutoSubmitted($message));
     }
 
     private function processBounced(Message $message): bool
@@ -125,31 +127,23 @@ class BeforeFetch implements BeforeFetchInterface
 
     private function checkMessageIsAutoReply(Message $message): bool
     {
-        if ($message->getHeader('X-Autoreply')) {
+        if ($this->checkMessageIsAutoSubmitted($message)) {
             return true;
         }
 
-        if ($message->getHeader('X-Autorespond')) {
-            return true;
-        }
-
-        if (
-            $message->getHeader('Auto-submitted') &&
-            strtolower($message->getHeader('Auto-submitted')) !== 'no'
-        ) {
-            return true;
-        }
-
-        return false;
+        return $this->autoReplyDetector->detect($message);
     }
 
     private function checkMessageCannotBeAutoReplied(Message $message): bool
     {
-        if ($message->getHeader('X-Auto-Response-Suppress') === 'AutoReply') {
+        if (
+            $message->getHeader('X-Auto-Response-Suppress') === 'AutoReply' ||
+            $message->getHeader('X-Auto-Response-Suppress') === 'All'
+        ) {
             return true;
         }
 
-        if ($message->getHeader('X-Auto-Response-Suppress') === 'All') {
+        if ($this->checkMessageIsAutoSubmitted($message)) {
             return true;
         }
 
@@ -158,5 +152,15 @@ class BeforeFetch implements BeforeFetchInterface
         }
 
         return false;
+    }
+
+    private function checkMessageIsAutoSubmitted(Message $message): bool
+    {
+        if ($this->autoReplyDetector->detect($message)) {
+            return true;
+        }
+
+        return $message->getHeader('Auto-Submitted') &&
+            strtolower($message->getHeader('Auto-Submitted')) !== 'no';
     }
 }

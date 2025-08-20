@@ -37,6 +37,7 @@ import DebounceHelper from 'helpers/util/debounce';
 import {inject} from 'di';
 import ShortcutManager from 'helpers/site/shortcut-manager';
 import WebSocketManager from 'web-socket-manager';
+import Utils from 'utils';
 
 /**
  * A detail record view.
@@ -4093,7 +4094,7 @@ class DetailRecordView extends BaseRecordView {
             return;
         }
 
-        if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+        if (Utils.isKeyEventInTextInput(e)) {
             return;
         }
 
@@ -4211,7 +4212,7 @@ class DetailRecordView extends BaseRecordView {
             return;
         }
 
-        if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+        if (Utils.isKeyEventInTextInput(e)) {
             return;
         }
 
@@ -4244,7 +4245,7 @@ class DetailRecordView extends BaseRecordView {
             return;
         }
 
-        if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+        if (Utils.isKeyEventInTextInput(e)) {
             return;
         }
 

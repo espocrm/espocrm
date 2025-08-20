@@ -27,11 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Di;
+namespace Espo\Classes\Select\GroupEmailFolder\AccessControlFilters;
 
-use Espo\Core\Select\SelectBuilderFactory;
+use Espo\Core\Name\Field;
+use Espo\Core\Select\AccessControl\Filter;
+use Espo\Core\Select\Helpers\RelationQueryHelper;
+use Espo\Entities\GroupEmailFolder;
+use Espo\Entities\User;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
-interface SelectBuilderFactoryAware
+/**
+ * @noinspection PhpUnused
+ */
+class OnlyTeam implements Filter
 {
-    public function setSelectBuilderFactory(SelectBuilderFactory $selectBuilderFactory): void;
+    public function __construct(
+        private User $user,
+        private RelationQueryHelper $relationQueryHelper,
+    ) {}
+
+    public function apply(QueryBuilder $queryBuilder): void
+    {
+        $where = $this->relationQueryHelper
+            ->prepareLinkWhereMany(GroupEmailFolder::ENTITY_TYPE, Field::TEAMS, $this->user->getTeamIdList());
+
+        $queryBuilder->where($where);
+    }
 }

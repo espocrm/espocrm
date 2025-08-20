@@ -189,6 +189,7 @@ return [
         'adminNotificationsCronIsNotConfigured',
         'adminNotificationsNewExtensionVersion',
         'leadCaptureAllowOrigin',
+        'leadCaptureSiteUrl',
         'cronDisabled',
         'defaultPortalId',
         'cleanupDeletedRecords',
