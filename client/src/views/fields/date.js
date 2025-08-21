@@ -87,6 +87,10 @@ class DateFieldView extends BaseFieldView {
         'before',
     ]
 
+    /**
+     * @protected
+     * @type {string[]}
+     */
     searchTypeList = [
         'lastSevenDays',
         'ever',
@@ -111,6 +115,39 @@ class DateFieldView extends BaseFieldView {
         'between',
     ]
 
+    /**
+     * @protected
+     * @type {string[]}
+     */
+    searchWithPrimaryTypeList = [
+        'on',
+        'notOn',
+        'after',
+        'before',
+    ]
+
+    /**
+     * @protected
+     * @type {string[]}
+     */
+    searchWithRangeTypeList = [
+        'between',
+    ]
+
+    /**
+     * @protected
+     * @type {string[]}
+     */
+    searchWithAdditionalNumberTypeList = [
+        'lastXDays',
+        'nextXDays',
+        'olderThanXDays',
+        'afterXDays',
+    ]
+
+    /**
+     * @inheritDoc
+     */
     initialSearchIsNotIdle = true
 
     /**
@@ -118,6 +155,12 @@ class DateFieldView extends BaseFieldView {
      * @type {import('ui/datepicker').default}
      */
     datepicker
+
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    useNumericFormat
 
     setup() {
         super.setup();
@@ -151,7 +194,6 @@ class DateFieldView extends BaseFieldView {
             });
         }
 
-        /** @protected */
         this.useNumericFormat = this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat;
     }
 
@@ -175,7 +217,7 @@ class DateFieldView extends BaseFieldView {
             data.dateValue = this.getDateTime().toDisplayDate(value);
             data.dateValueTo = this.getDateTime().toDisplayDate(valueTo);
 
-            if (['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].includes(this.getSearchType())) {
+            if (this.searchWithAdditionalNumberTypeList.includes(this.getSearchType())) {
                 data.number = this.searchParams.value;
             }
         }
@@ -304,6 +346,8 @@ class DateFieldView extends BaseFieldView {
 
     afterRender() {
         if (this.mode === this.MODE_EDIT || this.mode === this.MODE_SEARCH) {
+
+
             this.$element = this.$el.find(`[data-name="${this.name}"]`);
 
             /** @type {HTMLElement} */
@@ -369,23 +413,41 @@ class DateFieldView extends BaseFieldView {
         });
     }
 
+    /**
+     * @protected
+     * @param {string} type
+     */
     handleSearchType(type) {
-        this.$el.find('div.primary').addClass('hidden');
-        this.$el.find('div.additional').addClass('hidden');
-        this.$el.find('div.additional-number').addClass('hidden');
+        const primary = this.element?.querySelector('div.primary');
+        const additional = this.element?.querySelector('div.additional');
+        const additionalNumber = this.element?.querySelector('div.additional-number');
 
-        if (['on', 'notOn', 'after', 'before'].includes(type)) {
-            this.$el.find('div.primary').removeClass('hidden');
+        primary?.classList.add('hidden');
+        additional?.classList.add('hidden');
+        additionalNumber?.classList.add('hidden');
+
+        if (this.searchWithPrimaryTypeList.includes(type)) {
+            primary?.classList.remove('hidden');
+
+            return;
         }
-        else if (['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].includes(type)) {
-            this.$el.find('div.additional-number').removeClass('hidden');
+
+        if (this.searchWithAdditionalNumberTypeList.includes(type)) {
+            additionalNumber?.classList.remove('hidden');
+
+            return;
         }
-        else if (type === 'between') {
-            this.$el.find('div.primary').addClass('hidden');
-            this.$el.find('div.additional').removeClass('hidden');
+
+        if (this.searchWithRangeTypeList.includes(type)) {
+            additional?.classList.remove('hidden');
         }
     }
 
+    /**
+     * @protected
+     * @param {string} string
+     * @return {string|-1}
+     */
     parseDate(string) {
         return this.getDateTime().fromDisplayDate(string);
     }
@@ -402,7 +464,9 @@ class DateFieldView extends BaseFieldView {
         return this.parseDate(string);
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     */
     fetch() {
         const data = {};
 
@@ -411,13 +475,18 @@ class DateFieldView extends BaseFieldView {
         return data;
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     */
     fetchSearch() {
         const type = this.fetchSearchType();
 
-        if (type === 'between') {
-            const valueFrom = this.parseDate(this.$el.find('input.filter-from').val());
-            const valueTo = this.parseDate(this.$el.find('input.filter-to').val());
+        if (this.searchWithRangeTypeList.includes(type)) {
+            const inputFrom = this.element?.querySelector('input.filter-from');
+            const inputTo = this.element?.querySelector('input.filter-to');
+
+            const valueFrom = inputFrom instanceof HTMLInputElement ? this.parseDate(inputFrom.value) : undefined;
+            const valueTo = inputTo instanceof HTMLInputElement ? this.parseDate(inputTo.value) : undefined;
 
             if (!valueFrom || !valueTo) {
                 return null;
@@ -433,24 +502,28 @@ class DateFieldView extends BaseFieldView {
             };
         }
 
-        let data;
-        const value = this.parseDate(this.$element.val());
+        if (this.searchWithAdditionalNumberTypeList.includes(type)) {
+            const input = this.element?.querySelector('input.number');
 
-        if (['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].includes(type)) {
-            const number = this.$el.find('input.number').val();
+            const number = input instanceof HTMLInputElement ? input.value : undefined;
 
-            data = {
+            return {
                 type: type,
                 value: number,
                 date: true,
             };
         }
-        else if (['on', 'notOn', 'after', 'before'].includes(type)) {
+
+        if (this.searchWithPrimaryTypeList.includes(type)) {
+            const input = this.element?.querySelector(`[data-name="${this.name}"]`);
+
+            const value = input instanceof HTMLInputElement ? this.parseDate(input.value) : undefined;
+
             if (!value) {
                 return null;
             }
 
-            data = {
+            return {
                 type: type,
                 value: value,
                 data: {
@@ -458,22 +531,20 @@ class DateFieldView extends BaseFieldView {
                 },
             };
         }
-        else if (type === 'isEmpty') {
-            data = {
+
+        if (type === 'isEmpty') {
+            return {
                 type: 'isNull',
                 data: {
                     type: type,
                 },
             };
         }
-        else {
-            data = {
-                type: type,
-                date: true,
-            };
-        }
 
-        return data;
+        return {
+            type: type,
+            date: true,
+        };
     }
 
     getSearchType() {
