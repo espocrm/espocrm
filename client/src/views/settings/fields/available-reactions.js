@@ -80,7 +80,7 @@ export default class extends ArrayFieldView {
 
         const icon = this.createIconElement(value);
 
-        item.prepend(icon);
+        item.querySelector('.text').prepend(icon);
 
         return item.outerHTML;
     }
