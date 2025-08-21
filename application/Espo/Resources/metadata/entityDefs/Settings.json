@@ -945,6 +945,11 @@
             "validatorClassNameList": [
                 "Espo\\Classes\\FieldValidators\\Settings\\AvailableReactions\\Valid"
             ]
+        },
+        "baselineRole": {
+            "type": "link",
+            "entity": "Role",
+            "tooltip": true
         }
     }
 }

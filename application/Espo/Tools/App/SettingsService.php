@@ -73,6 +73,7 @@ class SettingsService
         private ThemeManager $themeManager,
         private Config\SystemConfig $systemConfig,
         private EmailConfigDataProvider $emailConfigDataProvider,
+        private Acl\Cache\Clearer $aclCacheClearer,
     ) {}
 
     /**
@@ -236,6 +237,10 @@ class SettingsService
 
         if (isset($data->personNameFormat)) {
             $this->dataManager->clearCache();
+        }
+
+        if (property_exists($data, 'baselineRoleId')) {
+            $this->aclCacheClearer->clearForAllInternalUsers();
         }
 
         if (isset($data->defaultCurrency) || isset($data->baseCurrency) || isset($data->currencyRates)) {

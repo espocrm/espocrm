@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,37 +26,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+import BaseFieldView from 'views/fields/base';
 
-use Espo\Core\Field\Link;
-use Espo\Core\ORM\Entity;
+export default class extends BaseFieldView {
 
-class Team extends Entity
-{
-    public const ENTITY_TYPE = 'Team';
-
-    public const RELATIONSHIP_ENTITY_TEAM = 'EntityTeam';
-    public const RELATIONSHIP_TEAM_USER = 'TeamUser';
-
-    public const LINK_ROLES = 'roles';
-
-    public function getWorkingTimeCalendar(): ?Link
-    {
-        /** @var ?Link */
-        return $this->getValueObject('workingTimeCalendar');
-    }
-
-    public function getLayoutSet(): ?Link
-    {
-        /** @var ?Link */
-        return $this->getValueObject('layoutSet');
-    }
+    // language=Handlebars
+    listTemplateContent = ``
 
     /**
-     * @return string[]
+     * @private
+     * @type {string|null}
      */
-    public function getPositionList(): array
-    {
-        return $this->get('positionList') ?? [];
+    baselineRoleId
+
+    setup() {
+        super.setup();
+
+        this.baselineRoleId = this.getConfig().get('baselineRoleId');
+    }
+
+    afterRenderList() {
+        super.afterRenderList();
+
+        if (this.baselineRoleId && this.model.id === this.baselineRoleId) {
+            this.element?.append(
+                (() => {
+                    const span = document.createElement('span');
+
+                    span.className = 'label label-default';
+                    span.textContent = this.translate('Baseline', 'labels', 'Role');
+
+                    return span;
+                })()
+            )
+        }
     }
 }

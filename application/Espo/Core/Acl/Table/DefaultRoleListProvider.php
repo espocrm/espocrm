@@ -30,6 +30,7 @@
 namespace Espo\Core\Acl\Table;
 
 use Espo\Core\Name\Field;
+use Espo\Core\Utils\Config;
 use Espo\Entities\Team;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
@@ -37,8 +38,13 @@ use Espo\Entities\Role as RoleEntity;
 
 class DefaultRoleListProvider implements RoleListProvider
 {
-    public function __construct(private User $user, private EntityManager $entityManager)
-    {}
+    private const PARAM_BASELINE_ROLE_ID = 'baselineRoleId';
+
+    public function __construct(
+        private User $user,
+        private EntityManager $entityManager,
+        private Config $config,
+    ) {}
 
     /**
      * @return Role[]
@@ -47,10 +53,15 @@ class DefaultRoleListProvider implements RoleListProvider
     {
         $roleList = [];
 
+        $baselineRole = $this->getBaselineRole();
+
+        if ($baselineRole) {
+            $roleList[] = $baselineRole;
+        }
+
         /** @var iterable<RoleEntity> $userRoleList */
         $userRoleList = $this->entityManager
-            ->getRDBRepository(User::ENTITY_TYPE)
-            ->getRelation($this->user, 'roles')
+            ->getRelation($this->user, User::LINK_ROLES)
             ->find();
 
         foreach ($userRoleList as $role) {
@@ -59,15 +70,13 @@ class DefaultRoleListProvider implements RoleListProvider
 
         /** @var iterable<Team> $teamList */
         $teamList = $this->entityManager
-            ->getRDBRepository(User::ENTITY_TYPE)
             ->getRelation($this->user, Field::TEAMS)
             ->find();
 
         foreach ($teamList as $team) {
             /** @var iterable<RoleEntity> $teamRoleList */
             $teamRoleList = $this->entityManager
-                ->getRDBRepository(Team::ENTITY_TYPE)
-                ->getRelation($team, 'roles')
+                ->getRelation($team, Team::LINK_ROLES)
                 ->find();
 
             foreach ($teamRoleList as $role) {
@@ -76,10 +85,19 @@ class DefaultRoleListProvider implements RoleListProvider
         }
 
         return array_map(
-            function (RoleEntity $role): RoleEntityWrapper {
-                return new RoleEntityWrapper($role);
-            },
+            fn (RoleEntity $role) => new RoleEntityWrapper($role),
             $roleList
         );
+    }
+
+    private function getBaselineRole(): ?RoleEntity
+    {
+        $roleId = $this->config->get(self::PARAM_BASELINE_ROLE_ID);
+
+        if (!$roleId) {
+            return null;
+        }
+
+        return $this->entityManager->getRDBRepositoryByClass(RoleEntity::class)->getById($roleId);
     }
 }

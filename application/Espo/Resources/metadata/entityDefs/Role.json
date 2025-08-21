@@ -6,6 +6,13 @@
             "type": "varchar",
             "pattern": "$noBadCharacters"
         },
+        "info": {
+            "type": "base",
+            "orderDisabled": true,
+            "notStorable": true,
+            "readOnly": true,
+            "view": "views/role/fields/info"
+        },
         "assignmentPermission": {
             "type": "enum",
             "options": ["not-set", "all", "team", "no"],
