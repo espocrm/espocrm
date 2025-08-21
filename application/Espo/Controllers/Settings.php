@@ -33,7 +33,6 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Api\Request;
-use Espo\Core\Utils\Metadata;
 use Espo\Tools\App\SettingsService as Service;
 use Espo\Entities\User;
 
@@ -41,16 +40,10 @@ use stdClass;
 
 class Settings
 {
-    private Service $service;
-    private User $user;
-
     public function __construct(
-        Service $service,
-        User $user
-    ) {
-        $this->service = $service;
-        $this->user = $user;
-    }
+        private Service $service,
+        private User $user,
+    ) {}
 
     public function getActionRead(): stdClass
     {
