@@ -299,12 +299,21 @@ class BaseFieldView extends View {
     $label = null
 
     /**
-     * A form element.
+     * A main form element. Use `mainInputElement` instead.
      *
      * @type {JQuery|null}
      * @protected
      */
     $element = null
+
+    /**
+     * A main form element.
+     *
+     * @protected
+     * @type {HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement|null}
+     * @since 9.2.0
+     */
+    mainInputElement = null
 
     /**
      * Is searchable once a search filter is added (no need to type or selecting anything).
@@ -1168,15 +1177,11 @@ class BaseFieldView extends View {
      * @protected
      */
     initElement() {
-        this.$element = this.$el.find('[data-name="' + this.name + '"]');
+        this.mainInputElement = this.element?.querySelector(`[data-name="${this.name}"]`) ??
+            this.element?.querySelector(`[name="${this.name}"]`) ??
+            this.element?.querySelector('.main-element');
 
-        if (!this.$element.length) {
-            this.$element = this.$el.find('[name="' + this.name + '"]');
-        }
-
-        if (!this.$element.length) {
-            this.$element = this.$el.find('.main-element');
-        }
+        this.$element = this.mainInputElement ? $(this.mainInputElement) : $();
 
         if (this.isEditMode()) {
             this.$element.on('change', () => {

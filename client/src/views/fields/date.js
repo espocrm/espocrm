@@ -237,7 +237,11 @@ class DateFieldView extends BaseFieldView {
     setupSearch() {
         this.addHandler('change', 'select.search-type', (e, /** HTMLSelectElement */target) => {
             this.handleSearchType(target.value);
+
+            this.trigger('change');
         });
+
+        this.addHandler('change', 'input.number', () => this.trigger('change'));
     }
 
     stringifyDateValue(value) {
@@ -345,13 +349,10 @@ class DateFieldView extends BaseFieldView {
     }
 
     afterRender() {
-        if (this.mode === this.MODE_EDIT || this.mode === this.MODE_SEARCH) {
+        if (this.isEditMode() || this.isSearchMode()) {
+            this.mainInputElement = this.element?.querySelector(`[data-name="${this.name}"]`);
 
-
-            this.$element = this.$el.find(`[data-name="${this.name}"]`);
-
-            /** @type {HTMLElement} */
-            const element = this.$element.get(0);
+            this.$element = $(this.mainInputElement);
 
             const options = {
                 format: this.getDateTime().dateFormat,
@@ -362,35 +363,34 @@ class DateFieldView extends BaseFieldView {
 
             this.datepicker = undefined;
 
-            if (element) {
-                this.datepicker = new Datepicker(element, {
+            if (this.mainInputElement instanceof HTMLInputElement) {
+                this.datepicker = new Datepicker(this.mainInputElement, {
                     ...options,
                     onChange: () => this.trigger('change'),
                 });
             }
 
-            if (this.mode === this.MODE_SEARCH) {
-                this.$el.find('select.search-type').on('change', () => this.trigger('change'));
-                this.$el.find('input.number').on('change', () => this.trigger('change'));
+            if (this.isSearchMode()) {
+                const additionalGroup = this.element?.querySelector('.input-group.additional');
 
-                const element = this.$el.find('.input-group.additional').get(0);
-
-                if (element) {
-                    new Datepicker(element, options)
+                if (additionalGroup) {
+                    new Datepicker(additionalGroup, options)
 
                     this.initDatePickerEventHandlers('input.filter-from');
                     this.initDatePickerEventHandlers('input.filter-to');
                 }
             }
 
-            this.$element.parent().find('button.date-picker-btn').on('click', () => {
-                this.datepicker.show();
-            });
+            const button = this.mainInputElement?.parentNode.querySelector('button.date-picker-btn');
 
-            if (this.mode === this.MODE_SEARCH) {
-                const $searchType = this.$el.find('select.search-type');
+            if (button instanceof HTMLElement) {
+                button.addEventListener('click', () => this.datepicker.show());
+            }
 
-                this.handleSearchType($searchType.val());
+            if (this.isSearchMode()) {
+                const type = this.fetchSearchType();
+
+                this.handleSearchType(type);
             }
         }
     }
@@ -400,14 +400,18 @@ class DateFieldView extends BaseFieldView {
      * @param {string} selector
      */
     initDatePickerEventHandlers(selector) {
-        const $input = this.$el.find(selector);
+        const input = this.element?.querySelector(selector);
 
-        $input.on('change', /** Record */e => {
+        if (!(input instanceof HTMLInputElement)) {
+            return;
+        }
+
+        $(input).on('change', /** Record */e => {
             this.trigger('change');
 
             if (e.isTrigger) {
-                if (document.activeElement !== $input.get(0)) {
-                    $input.focus();
+                if (document.activeElement !== input) {
+                    input.focus({preventScroll: true});
                 }
             }
         });
@@ -470,7 +474,7 @@ class DateFieldView extends BaseFieldView {
     fetch() {
         const data = {};
 
-        data[this.name] = this.parse(this.$element.val());
+        data[this.name] = this.parse(this.mainInputElement?.value ?? '');
 
         return data;
     }
