@@ -35,12 +35,8 @@ use stdClass;
 
 class RoleEntityWrapper implements Role
 {
-    private $entity;
-
-    public function __construct(Entity $entity)
-    {
-        $this->entity = $entity;
-    }
+    public function __construct(private Entity $entity)
+    {}
 
     public function getScopeTableData(): stdClass
     {
