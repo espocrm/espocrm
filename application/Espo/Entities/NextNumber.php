@@ -34,4 +34,34 @@ use Espo\Core\ORM\Entity;
 class NextNumber extends Entity
 {
     public const ENTITY_TYPE = 'NextNumber';
+
+    public function getNumberValue(): ?int
+    {
+        return $this->get('value');
+    }
+
+    public function setNumberValue(int $value): self
+    {
+        return $this->set('value', $value);
+    }
+
+    public function setTargetEntityType(string $entityType): self
+    {
+        return $this->set('entityType', $entityType);
+    }
+
+    public function setTargetFieldName(string $fieldName): self
+    {
+        return $this->set('fieldName', $fieldName);
+    }
+
+    public function getTargetEntityType(): string
+    {
+        return $this->get('entityType');
+    }
+
+    public function getTargetFieldName(): string
+    {
+        return $this->get('fieldName');
+    }
 }

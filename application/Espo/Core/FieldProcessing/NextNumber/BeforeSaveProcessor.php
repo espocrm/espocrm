@@ -31,6 +31,7 @@ namespace Espo\Core\FieldProcessing\NextNumber;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\Repository\Option\SaveOption;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\NextNumber;
 
 use Espo\Core\ORM\Entity;
@@ -41,19 +42,13 @@ use const STR_PAD_LEFT;
 
 class BeforeSaveProcessor
 {
-    private Metadata $metadata;
-    private EntityManager $entityManager;
-
-    /**
-     * @var array<string, string[]>
-     */
+    /** @var array<string, string[]> */
     private $fieldListMapCache = [];
 
-    public function __construct(Metadata $metadata, EntityManager $entityManager)
-    {
-        $this->metadata = $metadata;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        private Metadata $metadata,
+        private EntityManager $entityManager,
+    ) {}
 
     /**
      * For an existing record.
@@ -87,10 +82,8 @@ class BeforeSaveProcessor
      */
     private function processItem(Entity $entity, string $field, array $options, bool $populate = false): void
     {
-        if (!empty($options[SaveOption::IMPORT])) {
-            if ($entity->has($field)) {
-                return;
-            }
+        if (!empty($options[SaveOption::IMPORT]) && $entity->has($field)) {
+            return;
         }
 
         if (!$entity->isNew()) {
@@ -103,46 +96,22 @@ class BeforeSaveProcessor
             }
         }
 
-        $this->entityManager->getTransactionManager()->start();
+        $this->entityManager->getTransactionManager()->run(function () use ($entity, $field) {
+            $nextNumber = $this->getNextNumberEntity($entity, $field);
 
-        $nextNumber = $this->entityManager
-            ->getRDBRepository(NextNumber::ENTITY_TYPE)
-            ->where([
-                'fieldName' => $field,
-                'entityType' => $entity->getEntityType(),
-            ])
-            ->forUpdate()
-            ->findOne();
+            $entity->set($field, $this->composeNumberStringValue($nextNumber));
 
-        if (!$nextNumber) {
-            $nextNumber = $this->entityManager->getNewEntity(NextNumber::ENTITY_TYPE);
+            $nextNumber->setNumberValue($this->prepareNextNumberValue($nextNumber));
 
-            $nextNumber->set('entityType', $entity->getEntityType());
-            $nextNumber->set('fieldName', $field);
-        }
-
-        $entity->set($field, $this->composeNumberAttribute($nextNumber));
-
-        $value = $nextNumber->get('value');
-
-        if (!$value) {
-            $value = 1;
-        }
-
-        $value++;
-
-        $nextNumber->set('value', $value);
-
-        $this->entityManager->saveEntity($nextNumber);
-
-        $this->entityManager->getTransactionManager()->commit();
+            $this->entityManager->saveEntity($nextNumber);
+        });
     }
 
-    private function composeNumberAttribute(NextNumber $nextNumber): string
+    private function composeNumberStringValue(NextNumber $nextNumber): string
     {
-        $entityType = $nextNumber->get('entityType');
-        $fieldName = $nextNumber->get('fieldName');
-        $value = $nextNumber->get('value');
+        $entityType = $nextNumber->getTargetEntityType();
+        $fieldName = $nextNumber->getTargetFieldName();
+        $value = $nextNumber->getNumberValue();
 
         $prefix = $this->metadata->get(['entityDefs', $entityType, 'fields', $fieldName, 'prefix'], '');
         $padLength = $this->metadata->get(['entityDefs', $entityType, 'fields', $fieldName, 'padLength'], 0);
@@ -168,7 +137,7 @@ class BeforeSaveProcessor
         foreach ($entityDefs->getFieldNameList() as $name) {
             $defs = $entityDefs->getField($name);
 
-            if ($defs->getType() !== 'number') {
+            if ($defs->getType() !== FieldType::NUMBER) {
                 continue;
             }
 
@@ -178,5 +147,40 @@ class BeforeSaveProcessor
         $this->fieldListMapCache[$entityType] = $list;
 
         return $list;
+    }
+
+    private function prepareNextNumberValue(NextNumber $nextNumber): int
+    {
+        $value = $nextNumber->getNumberValue();
+
+        if (!$value) {
+            $value = 1;
+        }
+
+        $value++;
+
+        return $value;
+    }
+
+    private function getNextNumberEntity(Entity $entity, string $field): NextNumber
+    {
+        $nextNumber = $this->entityManager
+            ->getRDBRepositoryByClass(NextNumber::class)
+            ->where([
+                'fieldName' => $field,
+                'entityType' => $entity->getEntityType(),
+            ])
+            ->forUpdate()
+            ->findOne();
+
+        if (!$nextNumber) {
+            $nextNumber = $this->entityManager->getRDBRepositoryByClass(NextNumber::class)->getNew();
+
+            $nextNumber
+                ->setTargetEntityType($entity->getEntityType())
+                ->setTargetFieldName($field);
+        }
+
+        return $nextNumber;
     }
 }
