@@ -627,15 +627,14 @@ class Renamer
                 $data->$to = $data->$from;
                 unset($data->$from);
 
-
-                $role->set('data', $data);
+                $role->setRawData($data);
             }
 
             if (isset($fieldData->$from)) {
                 $fieldData->$to = $fieldData->$from;
                 unset($fieldData->$from);
 
-                $role->set('fieldData', $fieldData);
+                $role->setRawFieldData($fieldData);
             }
 
             $this->entityManager->saveEntity($role);
@@ -654,14 +653,14 @@ class Renamer
                 $data->$to = $data->$from;
                 unset($data->$from);
 
-                $role->set('data', $data);
+                $role->setRawData($data);
             }
 
             if (isset($fieldData->$from)) {
                 $fieldData->$to = $fieldData->$from;
                 unset($fieldData->$from);
 
-                $role->set('fieldData', $fieldData);
+                $role->setRawFieldData($fieldData);
             }
 
             $this->entityManager->saveEntity($role);

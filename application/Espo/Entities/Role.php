@@ -45,4 +45,20 @@ class Role extends Entity
     {
         return $this->get('fieldData') ?? (object) [];
     }
+
+    /**
+     * @param array<string, mixed>|stdClass $data
+     */
+    public function setRawData(array|stdClass $data): self
+    {
+        return $this->set('data', $data);
+    }
+
+    /**
+     * @param array<string, mixed>|stdClass $fieldData
+     */
+    public function setRawFieldData(array|stdClass $fieldData): self
+    {
+        return $this->set('fieldData', $fieldData);
+    }
 }
