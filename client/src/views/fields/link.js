@@ -402,8 +402,9 @@ class LinkFieldView extends BaseFieldView {
     /**
      * Select.
      *
-     * @param {module:model} model A model.
+     * @param {import('model').default} model A model.
      * @protected
+     * @return {Promise|void}
      */
     select(model) {
         this.$elementName.val(model.get('name') || model.id);
@@ -709,9 +710,10 @@ class LinkFieldView extends BaseFieldView {
                     forceHide: true,
                     triggerSelectOnValidInput: false,
                     onSelect: item => {
-                        this.getModelFactory().create(this.foreignScope, model => {
+                        this.getModelFactory().create(this.foreignScope, async model => {
                             model.set(item.attributes);
-                            this.select(model);
+
+                            await (this.select(model) ?? await Promise.resolve());
 
                             this.$elementName.focus();
                         });
