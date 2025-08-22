@@ -375,12 +375,7 @@ class LinkFieldView extends BaseFieldView {
 
         if (this.isSearchMode()) {
             this.addActionHandler('selectLinkOneOf', () => this.actionSelectOneOf());
-
-            this.events['click a[data-action="clearLinkOneOf"]'] = e =>{
-                const id = $(e.currentTarget).data('id').toString();
-
-                this.deleteLinkOneOf(id);
-            };
+            this.addActionHandler('clearLinkOneOf', (e, target) => this.deleteLinkOneOf(target.dataset.id));
         }
 
         this.autocompleteOnEmpty = this.params.autocompleteOnEmpty || this.autocompleteOnEmpty;
