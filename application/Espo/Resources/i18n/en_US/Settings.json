@@ -324,6 +324,7 @@
         "Recovery": "Recovery"
     },
     "messages": {
-        "ldapTestConnection": "The connection successfully established."
+        "ldapTestConnection": "The connection successfully established.",
+        "confirmBaselineRoleChange": "Are you sure you want to change the baseline role? An unconsidered change may grant unintended permissions to all users."
     }
 }

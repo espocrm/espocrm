@@ -949,7 +949,8 @@
         "baselineRole": {
             "type": "link",
             "entity": "Role",
-            "tooltip": true
+            "tooltip": true,
+            "view": "views/settings/fields/baseline-role"
         }
     }
 }
