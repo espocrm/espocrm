@@ -36,6 +36,7 @@ use Espo\Core\ORM\EntityManager;
 use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\Defs\Params\RelationParam;
+use RuntimeException;
 
 /**
  * Saves a link-multiple field or has-many relation set in a link stub attribute.
@@ -199,6 +200,10 @@ class LinkMultipleSaver
             foreach ($specifiedIdList as $id) {
                 if (!in_array($id, $existingIdList)) {
                     $toCreateIdList[] = $id;
+                }
+
+                if (!is_string($id)) {
+                    throw new RuntimeException("Non-string ID in link-multiple.");
                 }
             }
         }
