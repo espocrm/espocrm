@@ -205,6 +205,10 @@ class LinkMultipleSaver
                 if (!is_string($id)) {
                     throw new RuntimeException("Non-string ID in link-multiple.");
                 }
+
+                if ($id === '') {
+                    throw new RuntimeException("An entity ID value in link-multiple.");
+                }
             }
         }
 
