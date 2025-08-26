@@ -16,7 +16,19 @@
     "unit-tests": "php vendor/bin/phpunit ./tests/unit",
     "integration-tests": "php vendor/bin/phpunit ./tests/integration"
   },
-  "author": "Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko",
+  "homepage": "https://www.espocrm.com",
+  "author": "EspoCRM, Inc.",
+  "contributors": [
+    {
+      "name": "Yurii Kuznietsov"
+    },
+    {
+      "name": "Taras Machyshyn"
+    },
+    {
+      "name": "Oleksii Avramenko"
+    }
+  ],
   "license": "AGPL-3.0-or-later",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.6",
