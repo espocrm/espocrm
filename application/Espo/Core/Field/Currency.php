@@ -44,13 +44,13 @@ class Currency
     private string $code;
 
     /**
-     * @param numeric-string|float $amount An amount.
+     * @param numeric-string|float|int $amount An amount.
      * @param string $code A currency code.
      * @throws RuntimeException
      */
     public function __construct($amount, string $code)
     {
-        if (!is_string($amount) && !is_float($amount)) {
+        if (!is_string($amount) && !is_float($amount) && !is_int($amount)) {
             throw new InvalidArgumentException();
         }
 
@@ -58,7 +58,7 @@ class Currency
             throw new RuntimeException("Bad currency code.");
         }
 
-        if (is_float($amount)) {
+        if (is_float($amount) || is_int($amount)) {
             $amount = (string) $amount;
         }
 
@@ -197,7 +197,7 @@ class Currency
     /**
      * Create from an amount and code.
      *
-     * @param numeric-string|float $amount An amount.
+     * @param numeric-string|float|int $amount An amount.
      * @param string $code A currency code.
      * @throws RuntimeException
      */
