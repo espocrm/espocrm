@@ -42,14 +42,10 @@ use Espo\Tools\Pdf\Service;
 
 class Pdf implements EntryPoint
 {
-    private EntityManager $entityManager;
-    private Service $service;
-
-    public function __construct(EntityManager $entityManager, Service $service)
-    {
-        $this->entityManager = $entityManager;
-        $this->service = $service;
-    }
+    public function __construct(
+        private EntityManager $entityManager,
+        private Service $service,
+    ) {}
 
     public function run(Request $request, Response $response): void
     {
