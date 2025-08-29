@@ -635,6 +635,10 @@
                             "max": {
                                 "type": "integer",
                                 "description": "A maximum value."
+                            },
+                            "disableFormatting": {
+                                "type": "boolean",
+                                "description": "Disable number formatting."
                             }
                         }
                     }
