@@ -704,7 +704,7 @@ class Util
     public static function sanitizeFileName(string $fileName): string
     {
         /** @var string */
-        return preg_replace("/([^\w\s\d\-_~,;:\[\]\(\).])/u", '_', $fileName);
+        return preg_replace("/([^\w\d\-_~,;:\[\]\(\).])/u", '_', $fileName);
     }
 
     /**

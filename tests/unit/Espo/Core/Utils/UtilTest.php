@@ -1660,4 +1660,22 @@ class UtilTest extends TestCase
     {
         $this->assertEquals($expectedResult, Util::urlRemoveParam($url, $paramName, $suffix));
     }
+
+    /**
+     * @return string[]
+     */
+    static public function sanitizeFileNameList(): array
+    {
+        return [
+            ['test%', 'test_'],
+            ["test\n", 'test_'],
+            ["test test", 'test_test'],
+        ];
+    }
+
+    #[DataProvider('sanitizeFileNameList')]
+    public function testSanitizeFileName(string $input, string $expected): void
+    {
+        $this->assertEquals($expected, Util::sanitizeFileName($input));
+    }
 }
