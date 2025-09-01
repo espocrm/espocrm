@@ -55,7 +55,8 @@
         "league/oauth2-client": "^2.8",
         "symfony/mailer": "^6",
         "league/html-to-markdown": "^5.1",
-        "psr/clock": "^1.0"
+        "psr/clock": "^1.0",
+        "react/child-process": "^0.6.6"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.5",
