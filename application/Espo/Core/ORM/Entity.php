@@ -405,8 +405,10 @@ class Entity extends BaseEntity
 
     /**
      * Set a link-multiple name.
+     *
+     * @return static As of v9.2.
      */
-    public function setLinkMultipleName(string $field, string $id, ?string $value): void
+    public function setLinkMultipleName(string $field, string $id, ?string $value): static
     {
         $namesAttribute = $field . 'Names';
 
@@ -415,7 +417,7 @@ class Entity extends BaseEntity
         }
 
         if (!$this->has($namesAttribute)) {
-            return;
+            return $this;
         }
 
         $object = $this->get($namesAttribute) ?? (object) [];
@@ -427,6 +429,8 @@ class Entity extends BaseEntity
         $object->$id = $value;
 
         $this->set($namesAttribute, $object);
+
+        return $this;
     }
 
     /**
@@ -455,8 +459,10 @@ class Entity extends BaseEntity
 
     /**
      * Set a link-multiple column value.
+     *
+     * @return static As of v9.2.
      */
-    public function setLinkMultipleColumn(string $field, string $column, string $id, mixed $value): void
+    public function setLinkMultipleColumn(string $field, string $column, string $id, mixed $value): static
     {
         $columnsAttribute = $field . 'Columns';
 
@@ -478,14 +484,17 @@ class Entity extends BaseEntity
         $object->$id->$column = $value;
 
         $this->set($columnsAttribute, $object);
+
+        return $this;
     }
 
     /**
      * Set link-multiple IDs.
      *
      * @param string[] $idList
+     * @return static As of v9.2.
      */
-    public function setLinkMultipleIdList(string $field, array $idList): void
+    public function setLinkMultipleIdList(string $field, array $idList): static
     {
         $idsAttribute = $field . 'Ids';
 
@@ -494,12 +503,16 @@ class Entity extends BaseEntity
         }
 
         $this->set($idsAttribute, $idList);
+
+        return $this;
     }
 
     /**
      * Add an ID to a link-multiple field.
+     *
+     * @return static As of v9.2.
      */
-    public function addLinkMultipleId(string $field, string $id): void
+    public function addLinkMultipleId(string $field, string $id): static
     {
         $idsAttribute = $field . 'Ids';
 
@@ -516,7 +529,7 @@ class Entity extends BaseEntity
         }
 
         if (!$this->has($idsAttribute)) {
-            return;
+            return $this;
         }
 
         $idList = $this->get($idsAttribute);
@@ -530,21 +543,25 @@ class Entity extends BaseEntity
         }
 
         if (in_array($id, $idList)) {
-            return;
+            return $this;
         }
 
         $idList[] = $id;
 
         $this->set($idsAttribute, $idList);
+
+        return $this;
     }
 
     /**
      * Remove an ID from link-multiple field.
+     *
+     * @return static As of v9.2.
      */
-    public function removeLinkMultipleId(string $field, string $id): void
+    public function removeLinkMultipleId(string $field, string $id): static
     {
         if (!$this->hasLinkMultipleId($field, $id)) {
-            return;
+            return $this;
         }
 
         $list = $this->getLinkMultipleIdList($field);
@@ -558,6 +575,8 @@ class Entity extends BaseEntity
         }
 
         $this->setLinkMultipleIdList($field, $list);
+
+        return $this;
     }
 
     /**
