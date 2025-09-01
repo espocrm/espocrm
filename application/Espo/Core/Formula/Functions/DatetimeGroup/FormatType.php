@@ -32,9 +32,10 @@ namespace Espo\Core\Formula\Functions\DatetimeGroup;
 use Espo\Core\Di;
 
 use Espo\Core\Formula\{
+    Exceptions\Error,
     Functions\BaseFunction,
-    ArgumentList,
-};
+    ArgumentList};
+use RuntimeException;
 
 class FormatType extends BaseFunction implements Di\DateTimeAware
 {
@@ -59,10 +60,14 @@ class FormatType extends BaseFunction implements Di\DateTimeAware
             $format = $args[2];
         }
 
-        if (strlen($value) > 11) {
-            return $this->dateTime->convertSystemDateTime($value, $timezone, $format);
-        } else {
-            return $this->dateTime->convertSystemDate($value, $format);
+        try {
+            if (strlen($value) > 11) {
+                return $this->dateTime->convertSystemDateTime($value, $timezone, $format);
+            } else {
+                return $this->dateTime->convertSystemDate($value, $format);
+            }
+        } catch (RuntimeException $e) {
+            throw new Error($e->getMessage(), 500, $e);
         }
     }
 }
