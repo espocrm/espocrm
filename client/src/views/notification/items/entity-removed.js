@@ -28,7 +28,7 @@
 
 import BaseNotificationItemView from 'views/notification/items/base';
 
-class EmailRemovedNotificationItemView extends BaseNotificationItemView {
+class EntityRemovedNotificationItemView extends BaseNotificationItemView {
 
     messageName = 'entityRemoved'
 
@@ -59,4 +59,4 @@ class EmailRemovedNotificationItemView extends BaseNotificationItemView {
     }
 }
 
-export default EmailRemovedNotificationItemView;
+export default EntityRemovedNotificationItemView;
