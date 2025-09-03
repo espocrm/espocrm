@@ -42,7 +42,7 @@ use Closure;
 /**
  * A standard collection of entities. It allocates a memory for all entities.
  *
- * @template TEntity of Entity
+ * @template TEntity of Entity = Entity
  * @implements Iterator<int, TEntity>
  * @implements Collection<TEntity>
  * @implements ArrayAccess<int, TEntity>

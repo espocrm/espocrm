@@ -36,7 +36,7 @@ use Espo\ORM\Repository\Option\MassRelateOptions;
 /**
  * An afterMassRelate hook.
  *
- * @template TEntity of Entity
+ * @template TEntity of Entity = Entity
  */
 interface AfterMassRelate
 {

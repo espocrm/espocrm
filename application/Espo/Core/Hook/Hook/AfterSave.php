@@ -35,7 +35,7 @@ use Espo\ORM\Repository\Option\SaveOptions;
 /**
  * An afterSave hook.
  *
- * @template TEntity of Entity
+ * @template TEntity of Entity = Entity
  */
 interface AfterSave
 {

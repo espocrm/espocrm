@@ -35,7 +35,8 @@ use Espo\ORM\Repository\Option\RelateOptions;
 /**
  * An afterRelate hook.
  *
- * @template TEntity of Entity
+ * @template TEntity of Entity = Entity
+ * @template TRelatedEntity of Entity = Entity
  */
 interface AfterRelate
 {
@@ -44,7 +45,7 @@ interface AfterRelate
      *
      * @param TEntity $entity An entity.
      * @param string $relationName A relation name.
-     * @param Entity $relatedEntity An entity is being related.
+     * @param TRelatedEntity $relatedEntity An entity is being related.
      * @param array<string, mixed> $columnData Middle table role values.
      * @param RelateOptions $options Options.
      */

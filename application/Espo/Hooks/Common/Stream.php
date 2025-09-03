@@ -42,13 +42,6 @@ use Espo\ORM\Repository\Option\SaveOptions;
 use Espo\ORM\Repository\Option\UnrelateOptions;
 use Espo\Tools\Stream\HookProcessor;
 
-/**
- * @implements BeforeSave<Entity>
- * @implements AfterSave<Entity>
- * @implements AfterRemove<Entity>
- * @implements AfterRelate<Entity>
- * @implements AfterUnrelate<Entity>
- */
 class Stream implements BeforeSave, AfterSave, AfterRemove, AfterRelate, AfterUnrelate
 {
     public static int $order = 9;

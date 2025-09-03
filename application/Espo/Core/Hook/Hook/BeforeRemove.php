@@ -35,7 +35,7 @@ use Espo\ORM\Repository\Option\RemoveOptions;
 /**
  * An beforeRemove hook.
  *
- * @template TEntity of Entity
+ * @template TEntity of Entity = Entity
  */
 interface BeforeRemove
 {
