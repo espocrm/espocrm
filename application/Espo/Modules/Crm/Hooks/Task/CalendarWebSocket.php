@@ -61,7 +61,7 @@ class CalendarWebSocket implements AfterSave, AfterRemove
     private function process(Task $entity): void
     {
         if ($entity->hasLinkMultipleField(Field::ASSIGNED_USERS)) {
-            foreach ($entity->getLinkMultipleIdList(Field::ASSIGNED_USER) as $userId) {
+            foreach ($entity->getLinkMultipleIdList(Field::ASSIGNED_USERS) as $userId) {
                 $this->submission->submit('calendarUpdate', $userId);
             }
 
