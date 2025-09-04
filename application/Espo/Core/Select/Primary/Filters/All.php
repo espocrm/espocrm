@@ -34,7 +34,7 @@ use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 /**
  * A dummy filter 'all'. Can be detected in a custom AdditionalApplier to instruct that the filter needs to be
- * bypassed. Use this filter for special cases from code. Users can pass this filter too. Do not relly on this filter
+ * bypassed. Use this filter for special cases from code. Users can pass this filter too. Do not rely on this filter
  * when dealing with access control logic.
  *
  * @since 9.2.0
