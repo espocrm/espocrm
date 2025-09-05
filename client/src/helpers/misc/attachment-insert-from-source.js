@@ -81,6 +81,7 @@ export default class AttachmentInsertSourceFromHelper {
             filters = this.view['getSelectFilters' + source]() || {};
         }
 
+        // @todo EntityType => link mapping defined in metadata for automatic filtering.
         if (this.model.attributes.parentId && this.model.attributes.parentType === 'Account') {
             if (
                 this.metadata.get(`entityDefs.${source}.fields.account.type`) === 'link' &&
