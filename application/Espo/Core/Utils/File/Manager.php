@@ -521,6 +521,7 @@ class Manager
             return true;
         }
 
+        // Needs if umask was applied.
         @chmod($path, $permission);
 
         if (!empty($defaultPermissions['user'])) {
