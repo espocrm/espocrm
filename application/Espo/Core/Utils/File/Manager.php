@@ -514,18 +514,14 @@ class Manager
             return true;
         }
 
-        $umask = umask(0);
-
         $result = mkdir($path, $permission);
-
-        if ($umask) {
-            umask($umask);
-        }
 
         if (!$result && is_dir($path)) {
             // Dir can be created by a concurrent process.
             return true;
         }
+
+        @chmod($path, $permission);
 
         if (!empty($defaultPermissions['user'])) {
             $this->getPermissionUtils()->chown($path);
