@@ -390,8 +390,10 @@ class Htmlizer
                     $translationPath = $this->metadata
                         ->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'translation']);
 
-                    if ($translationPath) {
-                        $data[$attribute] = $this->language->get($translationPath . '.' . $data[$keyRaw], $data[$attribute]);
+                    if ($translationPath && $data[$keyRaw] !== null) {
+                        $path = $translationPath . '.' . $data[$keyRaw];
+
+                        $data[$attribute] = $this->language->get($path, $data[$keyRaw]);
                     }
                 }
 
