@@ -28,7 +28,10 @@
 
 import IntegrationsEditView from 'views/admin/integrations/edit';
 
-// noinspection JSUnusedGlobalSymbols
+/**
+ * @deprecated As of v9.2.
+ * @todo Remove in v9.3.
+ */
 export default class IntegrationsOauth2EditView extends IntegrationsEditView {
 
     template = 'admin/integrations/oauth2'
