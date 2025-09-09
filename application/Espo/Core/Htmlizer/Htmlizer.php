@@ -391,7 +391,7 @@ class Htmlizer
                         ->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'translation']);
 
                     if ($translationPath) {
-                        $data[$attribute] = $this->language->get($translationPath . '.' . $attribute, $data[$attribute]);
+                        $data[$attribute] = $this->language->get($translationPath . '.' . $data[$keyRaw], $data[$attribute]);
                     }
                 }
 
