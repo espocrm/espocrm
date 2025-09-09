@@ -109,14 +109,13 @@ class MasterSiteView extends View {
     }
 
     afterRender() {
+        /** @type {Object.<string, Record>} */
         const params = this.getThemeManager().getParam('params');
 
-        const $body = $('body');
+        const body = document.body;
 
-        for (const param in params) {
-            const value = this.getThemeManager().getParam(param);
-
-            $body.attr('data-' + Espo.Utils.camelCaseToHyphen(param), value);
+        for (const param of Object.keys(params)) {
+            body.dataset[param] = this.getThemeManager().getParam(param);
         }
 
         const footerView = this.getView('footer');
