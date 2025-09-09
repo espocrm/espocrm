@@ -88,7 +88,7 @@ class Contacts implements AfterSave
             return;
         }
 
-        $relation->relateById($contactId, [
+        $relation->relateById($contactId, null, [
             SaveContext::NAME => $options->get(SaveContext::NAME),
         ]);
     }
