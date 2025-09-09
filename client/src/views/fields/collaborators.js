@@ -94,7 +94,9 @@ export default class CollaboratorsFieldView extends LinkMultipleFieldView {
         if (avatarHtml) {
             const img = new DOMParser().parseFromString(avatarHtml, 'text/html').body.childNodes[0];
 
-            itemElement.prepend(img);
+            const textElement = itemElement.querySelector('.text');
+
+            textElement?.prepend(img);
         }
 
         return itemElement;
