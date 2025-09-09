@@ -129,6 +129,8 @@ class Integration
             if ($type === FieldType::PASSWORD) {
                 $entity->clear($field);
             }
+
+            // @todo Clear readOnly.
         }
     }
 }
