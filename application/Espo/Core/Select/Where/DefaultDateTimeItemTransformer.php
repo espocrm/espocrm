@@ -511,6 +511,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
 
             default:
                 $where['type'] = $type;
+                $where['value'] = $value;
         }
 
         return Item::fromRaw($where);
