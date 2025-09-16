@@ -411,7 +411,8 @@ class Htmlizer
 
                 if (
                     $relationType !== Entity::BELONGS_TO &&
-                    $relationType !== Entity::BELONGS_TO_PARENT
+                    $relationType !== Entity::BELONGS_TO_PARENT &&
+                    $relationType !== Entity::HAS_ONE
                 ) {
                     continue;
                 }

@@ -173,7 +173,7 @@ export default class extends BaseFieldView {
         linkList.forEach(link => {
             const type = links[link].type;
 
-            if (type !== 'belongsTo') {
+            if (type !== 'belongsTo' && type !== 'hasOne') {
                 return;
             }
 
