@@ -418,7 +418,6 @@ class Htmlizer
                 }
 
                 $relatedEntity = $this->entityManager
-                    ->getRDBRepository($entity->getEntityType())
                     ->getRelation($entity, $relation)
                     ->findOne();
 
