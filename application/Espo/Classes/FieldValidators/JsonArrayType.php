@@ -35,6 +35,11 @@ use stdClass;
 
 class JsonArrayType
 {
+    public function checkRequired(Entity $entity, string $field): bool
+    {
+        return $this->isNotEmpty($entity, $field);
+    }
+
     public function rawCheckArray(stdClass $data, string $field): bool
     {
         if (isset($data->$field) && !is_array($data->$field)) {
