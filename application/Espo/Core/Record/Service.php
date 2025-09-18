@@ -59,7 +59,6 @@ use Espo\Core\Record\Input\Data;
 use Espo\Core\Record\Input\Filter;
 use Espo\Core\Record\Input\FilterProvider;
 use Espo\Core\Select\Primary\Filters\One;
-use Espo\Core\Select\SelectBuilder;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Json;
 use Espo\Core\Acl;
@@ -896,14 +895,18 @@ class Service implements Crud,
 
         $preparedSearchParams = $this->prepareSearchParams($searchParams);
 
-        $query = $this->selectBuilderFactory->create()
-            ->from($this->entityType)
-            ->withStrictAccessControl()
-            ->withSearchParams($preparedSearchParams)
-            ->withAdditionalApplierClassNameList(
-                $this->createSelectApplierClassNameListProvider()->get($this->entityType)
-            )
-            ->build();
+        try {
+            $query = $this->selectBuilderFactory->create()
+                ->from($this->entityType)
+                ->withStrictAccessControl()
+                ->withSearchParams($preparedSearchParams)
+                ->withAdditionalApplierClassNameList(
+                    $this->createSelectApplierClassNameListProvider()->get($this->entityType)
+                )
+                ->build();
+        } catch (Forbidden $e) {
+            throw new BadRequest($e->getMessage(), 400, $e);
+        }
 
         $collection = $this->getRepository()
             ->clone($query)
@@ -1079,7 +1082,11 @@ class Service implements Crud,
             $selectBuilder->withWherePermissionCheck();
         }
 
-        $query = $selectBuilder->build();
+        try {
+            $query = $selectBuilder->build();
+        } catch (Forbidden $e) {
+            throw new BadRequest($e->getMessage(), 400, $e);
+        }
 
         $collection = $this->entityManager
             ->getRDBRepository($this->entityType)
