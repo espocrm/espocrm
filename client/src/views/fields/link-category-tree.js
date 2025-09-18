@@ -40,8 +40,8 @@ class LinkCategoryTreeFieldView extends LinkFieldView {
             return data;
         }
 
-        if (data.typeFront === 'is') {
-            data.field = this.name;
+        if (data.type === 'equals') {
+            data.attribute = this.name;
             data.type = 'inCategory';
         }
 
