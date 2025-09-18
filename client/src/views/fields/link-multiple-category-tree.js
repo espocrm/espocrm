@@ -36,18 +36,6 @@ class LinkMultipleCategoryTreeFieldView extends LinkMultipleFieldView {
     getUrl(id) {
         return '#' + this.entityType + '/list/categoryId=' + id;
     }
-
-    fetchSearch() {
-        const data = super.fetchSearch();
-
-        if (!data) {
-            return data;
-        }
-
-        data.type = 'inCategory';
-
-        return data;
-    }
 }
 
 // noinspection JSUnusedGlobalSymbols
