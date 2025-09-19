@@ -46,6 +46,10 @@
             "type": "link",
             "readOnly": true
         },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
         "contents": {
             "type": "text",
             "notStorable": true,
