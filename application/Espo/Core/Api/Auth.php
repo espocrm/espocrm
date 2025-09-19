@@ -112,7 +112,8 @@ class Auth
 
         $showDialog =
             ($this->isEntryPoint || !$this->isXMLHttpRequest($request)) &&
-            !$request->getHeader('Referer');
+            !$request->getHeader('Referer') &&
+            $request->getMethod() !== Method::POST;
 
         $this->handleUnauthorized($response, null, $showDialog);
 
@@ -167,7 +168,8 @@ class Auth
         if ($result->isFail()) {
             $showDialog =
                 $this->isEntryPoint &&
-                !$request->getHeader('Referer');
+                !$request->getHeader('Referer') &&
+                $request->getMethod() !== Method::POST;
 
             $this->handleUnauthorized($response, $result, $showDialog);
         }
