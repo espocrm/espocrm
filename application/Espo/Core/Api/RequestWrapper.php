@@ -267,32 +267,26 @@ class RequestWrapper implements ApiRequest
 
     public function isGet(): bool
     {
-        return $this->getMethod() === 'GET';
+        return $this->getMethod() === Method::GET;
     }
 
     public function isPut(): bool
     {
-        return $this->getMethod() === 'PUT';
-    }
-
-    /** @noinspection PhpUnused */
-    public function isUpdate(): bool
-    {
-        return $this->getMethod() === 'UPDATE';
+        return $this->getMethod() === Method::PUT;
     }
 
     public function isPost(): bool
     {
-        return $this->getMethod() === 'POST';
+        return $this->getMethod() === Method::POST;
     }
 
     public function isPatch(): bool
     {
-        return $this->getMethod() === 'PATCH';
+        return $this->getMethod() === Method::PATCH;
     }
 
     public function isDelete(): bool
     {
-        return $this->getMethod() === 'DELETE';
+        return $this->getMethod() === Method::DELETE;
     }
 }
