@@ -173,10 +173,6 @@ class RecordBase extends Base implements
      */
     public function postActionCreate(Request $request, Response $response): stdClass
     {
-        if ($request->getHeader('Content-Type') !== 'application/json') {
-            throw new BadRequest("Not supported content type.");
-        }
-
         if (method_exists($this, 'actionCreate')) {
             // For backward compatibility.
             return (object) $this->actionCreate($request->getRouteParams(), $request->getParsedBody(), $request);

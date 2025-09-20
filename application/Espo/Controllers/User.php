@@ -29,14 +29,26 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Api\Response;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Api\Request;
 use Espo\Core\Controllers\Record;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\Where\Item as WhereItem;
+use stdClass;
 
 class User extends Record
 {
+    public function postActionCreate(Request $request, Response $response): stdClass
+    {
+        if ($request->getHeader('Content-Type') !== 'application/json') {
+            throw new BadRequest("Not supported content type.");
+        }
+
+        return parent::postActionCreate($request, $response);
+    }
+
     public function postActionCreateLink(Request $request): bool
     {
         if (!$this->user->isAdmin()) {
