@@ -37,6 +37,7 @@ use Espo\Core\Name\Field;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Note;
 use Espo\Entities\Notification;
@@ -59,6 +60,7 @@ class RecordService
         private Metadata $metadata,
         private NoteAccessControl $noteAccessControl,
         private SelectBuilderFactory $selectBuilderFactory,
+        private Config $config,
     ) {}
 
     /**
@@ -458,7 +460,6 @@ class RecordService
 
     private function isGroupingEnabled(): bool
     {
-        // @todo Config param?
-        return true;
+        return (bool) ($this->config->get('notificationGrouping') ?? true);
     }
 }

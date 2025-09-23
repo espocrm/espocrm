@@ -184,6 +184,7 @@ return [
     'emailMessageMaxSize' => 10,
     'emailRecipientAddressMaxCount' => 100,
     'notificationsCheckInterval' => 10,
+    'notificationGrouping' => true,
     'popupNotificationsCheckInterval' => 15,
     'maxEmailAccountCount' => 2,
     'followCreatedEntities' => false,
