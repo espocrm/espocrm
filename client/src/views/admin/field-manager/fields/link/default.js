@@ -46,8 +46,11 @@ export default class extends LinkFieldView {
     setup() {
         super.setup();
 
-        this.foreignScope = this.getMetadata()
-            .get(['entityDefs', this.options.scope, 'links', this.options.field, 'entity']);
+        const entityType = this.options.scope;
+        const field = this.options.field;
+
+        this.foreignScope = this.getMetadata().get(['entityDefs', entityType, 'links', field, 'entity']) ??
+            this.getMetadata().get(`entityDefs.${entityType}.fields.${field}.entity`);
     }
 
     fetch() {
