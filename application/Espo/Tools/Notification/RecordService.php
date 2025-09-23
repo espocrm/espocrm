@@ -460,6 +460,7 @@ class RecordService
 
     private function isGroupingEnabled(): bool
     {
+        // @todo Param in preferences?
         return (bool) ($this->config->get('notificationGrouping') ?? true);
     }
 }
