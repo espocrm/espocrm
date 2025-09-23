@@ -83,40 +83,6 @@ class RecordService
             $queryBuilder->where($this->getActionIdWhere($user->getId()));
         }
 
-        /*$queryBuilder
-            ->leftJoin(
-                Join
-                    ::createWithSubQuery(
-                        SelectBuilder::create()
-                            ->from(Notification::ENTITY_TYPE)
-                            ->select('actionId')
-                            ->select(
-                                Selection::create(
-                                    Expr::max(Expr::column('number')),
-                                    'maxNumber'
-                                )
-                            )
-                            ->where(
-                                Expr::isNotNull(Expr::column('actionId'))
-                            )
-                            ->group('actionId')
-                            ->build(),
-                        'subLatest'
-                    )
-                    ->withConditions(
-                        Cond::and(
-                            Cond::equal(
-                                Expr::column('notification.actionId'),
-                                Expr::alias('subLatest.actionId')
-                            ),
-                            Cond::equal(
-                                Expr::column('notification.number'),
-                                Expr::alias('subLatest.maxNumber')
-                            ),
-                        )
-                    )
-            );*/
-
         $offset = $searchParams->getOffset();
         $limit = $searchParams->getMaxSize();
 
@@ -492,6 +458,7 @@ class RecordService
 
     private function isGroupingEnabled(): bool
     {
+        // @todo Config param?
         return true;
     }
 }
