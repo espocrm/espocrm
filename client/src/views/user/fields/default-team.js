@@ -55,6 +55,11 @@ class UserDefaultTeamFieldView extends LinkFieldView {
             return false;
         }
 
+        if (!this.model.has('teamsIds')) {
+            // Mass update.
+            return false;
+        }
+
         if (this.model.getTeamIdList().includes(id)) {
             return false;
         }
