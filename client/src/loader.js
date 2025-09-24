@@ -351,9 +351,9 @@
             }
 
             if (!id) {
-                console.error(value);
+                console.warn(`Lib without id.`);
                 // Libs can define w/o id and set to the root.
-                // Not supposed to happen as should be suppressed by require.amd = false;
+                // Not supposed to happen as should be suppressed by define.amd = false;
                 return;
             }
 
