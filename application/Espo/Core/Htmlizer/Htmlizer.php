@@ -221,204 +221,20 @@ class Htmlizer
         ?array $additionalData = null,
     ): array {
 
-        $entityType = $entity->getEntityType();
+        $data = $this->prepareData($entity, $additionalData);
 
-        $data = get_object_vars($entity->getValueMap());
-
-        if ($additionalData) {
-            foreach ($additionalData as $k => $value) {
-                $data[$k] = $value;
-            }
-        }
-
-        $forbiddenAttributeList = $this->getForbiddenAttributes($entityType);
-        $forbiddenLinkList = $this->getRestrictedLinks($entity);
-
-        if (
-            !$skipLinks &&
-            $level === 0 &&
-            $entity->hasId()
-        ) {
+        if (!$skipLinks && $level === 0 && $entity->hasId()) {
             $this->loadRelatedCollections($entity, $template, $data);
         }
 
         $skipAttributeList = [];
 
-        foreach ($data as $key => $value) {
-            if (!$value instanceof Collection) {
-                continue;
-            }
+        $this->applyCollections($data, $skipAttributeList, $skipLinks, $level);
 
-            $skipAttributeList[] = $key;
-
-            /** @var iterable<Entity> $collection */
-            $collection = $value;
-
-            $list = [];
-
-            foreach ($collection as $item) {
-                $list[] = $this->getDataFromEntity($item, $skipLinks, $level + 1);
-            }
-
-            $data[$key] = $list;
-        }
-
-        foreach ($entity->getAttributeList() as $attribute) {
-            if (in_array($attribute, $forbiddenAttributeList)) {
-                unset($data[$attribute]);
-
-                continue;
-            }
-
-            if (in_array($attribute, $skipAttributeList)) {
-                continue;
-            }
-
-            if ($additionalData && array_key_exists($attribute, $additionalData)) {
-                continue;
-            }
-
-            $type = $entity->getAttributeType($attribute);
-
-            $fieldType = null;
-
-            if ($entity instanceof CoreEntity) {
-                $fieldType = $entity->getAttributeParam($attribute, 'fieldType');
-            }
-
-            if ($type == Entity::DATETIME) {
-                if (!empty($data[$attribute])) {
-                    $data[$attribute . '_RAW'] = $data[$attribute];
-                    $data[$attribute] = $this->dateTime->convertSystemDateTime($data[$attribute]);
-                }
-            } else if ($type == Entity::DATE) {
-                if (!empty($data[$attribute])) {
-                    $data[$attribute . '_RAW'] = $data[$attribute];
-                    $data[$attribute] = $this->dateTime->convertSystemDate($data[$attribute]);
-                }
-            } else if ($type == Entity::JSON_ARRAY) {
-                if (!empty($data[$attribute])) {
-                    $list = $data[$attribute];
-
-                    $newList = [];
-
-                    foreach ($list as $item) {
-                        $v = $item;
-
-                        if ($item instanceof stdClass) {
-                            $v = json_decode(
-                                Json::encode($v, JSON_PRESERVE_ZERO_FRACTION),
-                                true
-                            );
-                        }
-
-                        if (is_array($v)) {
-                            foreach ($v as $k => $w) {
-                                $keyRaw = $k . '_RAW';
-                                $v[$keyRaw] = $v[$k];
-                                $v[$k] = $this->format($v[$k]);
-                            }
-                        }
-
-                        $newList[] = $v;
-                    }
-                    $data[$attribute] = $newList;
-                }
-            } else if ($type == Entity::JSON_OBJECT) {
-                if (!empty($data[$attribute])) {
-                    $value = $data[$attribute];
-
-                    if ($value instanceof stdClass) {
-                        $data[$attribute] = json_decode(
-                            Json::encode($value, JSON_PRESERVE_ZERO_FRACTION),
-                            true
-                        );
-                    }
-
-                    foreach ($data[$attribute] as $k => $w) {
-                        $keyRaw = $k . '_RAW';
-
-                        $data[$attribute][$keyRaw] = $data[$attribute][$k];
-                        $data[$attribute][$k] = $this->format($data[$attribute][$k]);
-                    }
-                }
-            } else if ($type === Entity::PASSWORD) {
-                unset($data[$attribute]);
-            }
-
-            if (
-                $fieldType === FieldType::CURRENCY &&
-                $entity instanceof CoreEntity &&
-                $entity->getAttributeParam($attribute, 'attributeRole') === 'currency'
-            ) {
-                $currencyValue = $data[$attribute] ?? null;
-
-                if ($currencyValue) {
-                    $data[$attribute . 'Symbol'] =
-                        $this->metadata->get(['app', 'currency', 'symbolMap', $currencyValue]);
-                }
-            }
-
-            if (!array_key_exists($attribute, $data)) {
-                continue;
-            }
-
-            $keyRaw = $attribute . '_RAW';
-
-            if (!isset($data[$keyRaw])) {
-                $data[$keyRaw] = $data[$attribute];
-            }
-
-            $fieldType = $this->getFieldType($entity->getEntityType(), $attribute);
-
-            if ($fieldType === FieldType::ENUM) {
-                $data[$attribute] = $this->language->translateOption(
-                    $data[$attribute], $attribute, $entity->getEntityType()
-                );
-
-                $translationPath = $this->metadata
-                    ->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'translation']);
-
-                if ($translationPath && $data[$keyRaw] !== null) {
-                    $path = $translationPath . '.' . $data[$keyRaw];
-
-                    $data[$attribute] = $this->language->get($path, $data[$keyRaw]);
-                }
-            }
-
-            $data[$attribute] = $this->format($data[$attribute]);
-        }
+        $this->applyValues($entity, $data, $skipAttributeList, $additionalData);
 
         if (!$skipLinks) {
-            foreach ($entity->getRelationList() as $relation) {
-                if (in_array($relation, $forbiddenLinkList)) {
-                    continue;
-                }
-
-                $relationType = $entity->getRelationType($relation);
-
-                if (
-                    $relationType !== Entity::BELONGS_TO &&
-                    $relationType !== Entity::BELONGS_TO_PARENT &&
-                    $relationType !== Entity::HAS_ONE
-                ) {
-                    continue;
-                }
-
-                $relatedEntity = $this->entityManager
-                    ->getRelation($entity, $relation)
-                    ->findOne();
-
-                if (!$relatedEntity) {
-                    continue;
-                }
-
-                if ($this->acl && !$this->acl->checkEntityRead($relatedEntity)) {
-                    continue;
-                }
-
-                $data[$relation] = $this->getDataFromEntity($relatedEntity, true, $level + 1);
-            }
+            $this->applyOneLinks($entity, $level, $data);
         }
 
         return $data;
@@ -1073,5 +889,222 @@ class Htmlizer
                 Acl\GlobalRestriction::TYPE_ONLY_ADMIN,
             ]
         );
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function applyOneLinks(Entity $entity, int $level, array &$data): void
+    {
+        $forbiddenLinkList = $this->getRestrictedLinks($entity);
+
+        foreach ($entity->getRelationList() as $relation) {
+            if (in_array($relation, $forbiddenLinkList)) {
+                continue;
+            }
+
+            $relationType = $entity->getRelationType($relation);
+
+            if (
+                $relationType !== Entity::BELONGS_TO &&
+                $relationType !== Entity::BELONGS_TO_PARENT &&
+                $relationType !== Entity::HAS_ONE
+            ) {
+                continue;
+            }
+
+            $relatedEntity = $this->entityManager
+                ->getRelation($entity, $relation)
+                ->findOne();
+
+            if (!$relatedEntity) {
+                continue;
+            }
+
+            if ($this->acl && !$this->acl->checkEntityRead($relatedEntity)) {
+                continue;
+            }
+
+            $data[$relation] = $this->getDataFromEntity($relatedEntity, true, $level + 1);
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @param string[] $skipAttributeList
+     * @param ?array<string, mixed> $additionalData
+     */
+    private function applyValues(Entity $entity, array &$data, array $skipAttributeList, ?array $additionalData): void
+    {
+        $forbiddenAttributeList = $this->getForbiddenAttributes($entity->getEntityType());
+
+        foreach ($entity->getAttributeList() as $attribute) {
+            if (in_array($attribute, $forbiddenAttributeList)) {
+                unset($data[$attribute]);
+
+                continue;
+            }
+
+            if (in_array($attribute, $skipAttributeList)) {
+                continue;
+            }
+
+            if ($additionalData && array_key_exists($attribute, $additionalData)) {
+                continue;
+            }
+
+            $type = $entity->getAttributeType($attribute);
+
+            $fieldType = null;
+
+            if ($entity instanceof CoreEntity) {
+                $fieldType = $entity->getAttributeParam($attribute, 'fieldType');
+            }
+
+            if ($type == Entity::DATETIME) {
+                if (!empty($data[$attribute])) {
+                    $data[$attribute . '_RAW'] = $data[$attribute];
+                    $data[$attribute] = $this->dateTime->convertSystemDateTime($data[$attribute]);
+                }
+            } else if ($type == Entity::DATE) {
+                if (!empty($data[$attribute])) {
+                    $data[$attribute . '_RAW'] = $data[$attribute];
+                    $data[$attribute] = $this->dateTime->convertSystemDate($data[$attribute]);
+                }
+            } else if ($type == Entity::JSON_ARRAY) {
+                if (!empty($data[$attribute])) {
+                    $list = $data[$attribute];
+
+                    $newList = [];
+
+                    foreach ($list as $item) {
+                        $v = $item;
+
+                        if ($item instanceof stdClass) {
+                            $v = json_decode(
+                                Json::encode($v, JSON_PRESERVE_ZERO_FRACTION),
+                                true
+                            );
+                        }
+
+                        if (is_array($v)) {
+                            foreach ($v as $k => $w) {
+                                $keyRaw = $k . '_RAW';
+                                $v[$keyRaw] = $v[$k];
+                                $v[$k] = $this->format($v[$k]);
+                            }
+                        }
+
+                        $newList[] = $v;
+                    }
+                    $data[$attribute] = $newList;
+                }
+            } else if ($type == Entity::JSON_OBJECT) {
+                if (!empty($data[$attribute])) {
+                    $value = $data[$attribute];
+
+                    if ($value instanceof stdClass) {
+                        $data[$attribute] = json_decode(
+                            Json::encode($value, JSON_PRESERVE_ZERO_FRACTION),
+                            true
+                        );
+                    }
+
+                    foreach ($data[$attribute] as $k => $w) {
+                        $keyRaw = $k . '_RAW';
+
+                        $data[$attribute][$keyRaw] = $data[$attribute][$k];
+                        $data[$attribute][$k] = $this->format($data[$attribute][$k]);
+                    }
+                }
+            } else if ($type === Entity::PASSWORD) {
+                unset($data[$attribute]);
+            }
+
+            if (
+                $fieldType === FieldType::CURRENCY &&
+                $entity instanceof CoreEntity &&
+                $entity->getAttributeParam($attribute, 'attributeRole') === 'currency'
+            ) {
+                $currencyValue = $data[$attribute] ?? null;
+
+                if ($currencyValue) {
+                    $data[$attribute . 'Symbol'] =
+                        $this->metadata->get(['app', 'currency', 'symbolMap', $currencyValue]);
+                }
+            }
+
+            if (!array_key_exists($attribute, $data)) {
+                continue;
+            }
+
+            $keyRaw = $attribute . '_RAW';
+
+            if (!isset($data[$keyRaw])) {
+                $data[$keyRaw] = $data[$attribute];
+            }
+
+            $fieldType = $this->getFieldType($entity->getEntityType(), $attribute);
+
+            if ($fieldType === FieldType::ENUM) {
+                $data[$attribute] = $this->language->translateOption(
+                    $data[$attribute], $attribute, $entity->getEntityType()
+                );
+
+                $translationPath = $this->metadata
+                    ->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'translation']);
+
+                if ($translationPath && $data[$keyRaw] !== null) {
+                    $path = $translationPath . '.' . $data[$keyRaw];
+
+                    $data[$attribute] = $this->language->get($path, $data[$keyRaw]);
+                }
+            }
+
+            $data[$attribute] = $this->format($data[$attribute]);
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @param string[] $skipAttributeList
+     */
+    private function applyCollections(array &$data, array &$skipAttributeList, bool $skipLinks, int $level): void
+    {
+        foreach ($data as $key => $value) {
+            if (!$value instanceof Collection) {
+                continue;
+            }
+
+            $skipAttributeList[] = $key;
+
+            /** @var iterable<Entity> $collection */
+            $collection = $value;
+
+            $list = [];
+
+            foreach ($collection as $item) {
+                $list[] = $this->getDataFromEntity($item, $skipLinks, $level + 1);
+            }
+
+            $data[$key] = $list;
+        }
+    }
+
+    /**
+     * @param ?array<string, mixed> $additionalData
+     * @return array<string, mixed>
+     */
+    private function prepareData(Entity $entity, ?array $additionalData): array
+    {
+        $data = get_object_vars($entity->getValueMap());
+
+        if ($additionalData) {
+            foreach ($additionalData as $k => $value) {
+                $data[$k] = $value;
+            }
+        }
+
+        return $data;
     }
 }
