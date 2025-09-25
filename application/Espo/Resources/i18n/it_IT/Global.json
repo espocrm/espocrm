@@ -60,7 +60,8 @@
     "WorkingTimeRange": "Eccezione Lavorativa",
     "AddressCountry": "Indirizzo Paese",
     "OAuthProvider": "Fornitore OAuth",
-    "OAuthAccount": "Account OAuth"
+    "OAuthAccount": "Account OAuth",
+    "WebhookEventQueueItem": "Elemento della coda degli eventi Webhook"
   },
   "scopeNamesPlural": {
     "Email": "Email",
@@ -115,7 +116,8 @@
     "AddressCountry": "Indirizzi Paesi",
     "AppSecret": "App Secret",
     "OAuthProvider": "Fornitori OAuth",
-    "OAuthAccount": "Account OAuth"
+    "OAuthAccount": "Account OAuth",
+    "WebhookEventQueueItem": "Elementi della coda degli eventi Webhook"
   },
   "labels": {
     "Misc": "Varie",
@@ -254,12 +256,12 @@
     "Manage Categories": "Gestisci categorie",
     "Manage Folders": "Gestisci cartelle",
     "Convert to": "Converti in",
-    "View Personal Data": "Visualizza i dati personali",
+    "View Personal Data": "Vedi i dati personali",
     "Personal Data": "Dati personali",
     "Erase": "Cancella",
     "Move Over": "Sposta",
     "Restore": "Ripristina",
-    "View Followers": "Visualizza follower",
+    "View Followers": "Vedi follower",
     "Convert Currency": "Converti valuta",
     "Middle Name": "Secondo Nome",
     "View on Map": "Vedi su Mappa",
@@ -306,7 +308,9 @@
     "View User Access": "Vedi accesso utente",
     "Reacted": "Reagito",
     "Reaction Removed": "Reazione rimossa",
-    "Reactions": "Reazioni"
+    "Reactions": "Reazioni",
+    "Network error": "Errore di rete",
+    "Edit Item": "Modifica elemento"
   },
   "messages": {
     "pleaseWait": "Attendere...",
@@ -422,7 +426,8 @@
     "cannotRemoveNotEmptyCategory": "Impossibile rimuovere una categoria non vuota.",
     "arrayInputNotEmpty": "L' elemento è stato inserito ma non aggiunto",
     "error403": "Non hai accesso a quest'area.",
-    "sameRecordIsAlreadyBeingEdited": "Il record è attualmente in fase di modifica."
+    "sameRecordIsAlreadyBeingEdited": "Il record è attualmente in fase di modifica.",
+    "changesLossConfirmation": "Le modifiche non salvate andranno perse. Sei sicuro?"
   },
   "boolFilters": {
     "onlyMy": "Solo i miei",
@@ -433,7 +438,8 @@
   "presetFilters": {
     "followed": "Seguito",
     "all": "Tutti",
-    "starred": "Preferiti"
+    "starred": "Preferiti",
+    "active": "Attivo"
   },
   "massActions": {
     "remove": "Rimuovi",

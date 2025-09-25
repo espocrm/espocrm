@@ -3,7 +3,8 @@
     "enabled": "Abilitato",
     "clientId": "Identificativo cliente",
     "redirectUri": "URI di Reindirizzamento",
-    "scoreThreshold": "Soglia punteggio"
+    "scoreThreshold": "Soglia punteggio",
+    "mapId": "ID Mappa"
   },
   "messages": {
     "selectIntegration": "Seleziona un'integrazione dal menù.",

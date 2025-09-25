@@ -58,7 +58,8 @@
     "sendAt": "Invia alle",
     "toEmailAddresses": "Indirizzi email A",
     "bccEmailAddresses": "Indirizzi email CCN",
-    "replyToEmailAddresses": "Indirizzi email Rispondi a"
+    "replyToEmailAddresses": "Indirizzi email Rispondi a",
+    "isAutoReply": "Autorisposta"
   },
   "links": {
     "replied": "Risposto",

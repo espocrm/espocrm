@@ -6,7 +6,8 @@
   },
   "fields": {
     "optOut": "Cancellato",
-    "invalid": "Invalido"
+    "invalid": "Invalido",
+    "lower": "Nome in minuscolo"
   },
   "presetFilters": {
     "orphan": "Orfano"

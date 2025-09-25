@@ -99,7 +99,8 @@
     "readOnlyAfterCreate": "Il valore del campo può essere specificato quando si crea un nuovo record. Successivamente, il campo diventerà di sola lettura. Può comunque essere calcolato con una formula.",
     "linkReadOnly": "Il valore del campo non può essere specificato dall'utente. Ma può essere calcolato con una formula.\n\nInoltre, disabilita la possibilità di creare un record correlato dai pannelli delle relazioni.",
     "relateOnImport": "Quando si importa con questo campo, si mette automaticamente in relazione un record con un record straniero corrispondente. Utilizzare questa funzionalità solo se il campo straniero è considerato unico.",
-    "preview": "Mostra il pulsante di anteprima. Applicabile se è abilitato il Markdown."
+    "preview": "Mostra il pulsante di anteprima. Applicabile se è abilitato il Markdown.",
+    "itemsEditable": "Gli elementi possono essere modificati. Applicabile solo se non vi sono opzioni specificate."
   },
   "fieldParts": {
     "address": {

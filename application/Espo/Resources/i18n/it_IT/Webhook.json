@@ -8,9 +8,14 @@
     "user": "Utente API",
     "entityType": "Tipo di Entità",
     "field": "Campo",
-    "secretKey": "Chiave segreta"
+    "secretKey": "Chiave segreta",
+    "skipOwn": "Salta proprio"
   },
   "links": {
-    "user": "Utente"
+    "user": "Utente",
+    "queueItems": "Elementi coda"
+  },
+  "tooltips": {
+    "skipOwn": "Non inviare se l'evento è stato attivato dall'utente proprietario del webhook."
   }
 }
