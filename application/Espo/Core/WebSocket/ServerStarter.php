@@ -38,7 +38,6 @@ use React\Socket\SecureServer as SocketSecureServer;
 use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
-use Ratchet\Wamp\WampServer;
 
 /**
  * Starts a web-socket server.
@@ -90,7 +89,7 @@ class ServerStarter
             $socketServer = new SocketSecureServer($socketServer, $loop, $sslParams);
         }
 
-        $wsServer = new WsServer(new WampServer($pusher));
+        $wsServer = new WsServer(new Ratchet\EspoWampServer($pusher));
         $wsServer->enableKeepAlive($loop, 60);
 
         new IoServer(

@@ -29,10 +29,12 @@
 
 namespace Espo\Core\WebSocket;
 
+use Espo\Core\Utils\Json;
 use GuzzleHttp\Psr7\Query;
 
 use Psr\Http\Message\RequestInterface;
 use Ratchet\ConnectionInterface;
+use Ratchet\Wamp\ServerProtocol as WAMP;
 use Ratchet\Wamp\Topic;
 use Ratchet\Wamp\WampConnection;
 use Ratchet\Wamp\WampServerInterface;
@@ -408,6 +410,8 @@ class Pusher implements WampServerInterface
             }
 
             $this->subscribeUser($conn, $userId);
+
+            $this->sendWelcome($conn);
         });
     }
 
@@ -571,5 +575,16 @@ class Pusher implements WampServerInterface
         }
 
         $this->topicHash[$topicId] = $topic;
+    }
+
+    private function sendWelcome(ConnectionInterface $conn): void
+    {
+        /**
+         * @noinspection PhpPossiblePolymorphicInvocationInspection
+         * @phpstan-ignore property.notFound
+         */
+        $sessionId = $conn->WAMP->sessionId;
+
+        $conn->send(Json::encode([WAMP::MSG_WELCOME, $sessionId, 1]));
     }
 }
