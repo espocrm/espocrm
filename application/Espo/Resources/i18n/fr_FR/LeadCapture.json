@@ -5,7 +5,7 @@
     "isActive": "Actif",
     "subscribeToTargetList": "S'abonner à la liste des cibles",
     "subscribeContactToTargetList": "S'abonner Contact si existe",
-    "targetList": "Liste de cibles",
+    "targetList": "Liste de diffusion",
     "fieldList": "Champs de charge utile",
     "optInConfirmation": "Double opt-in",
     "optInConfirmationEmailTemplate": "Modèle d'e-mail de confirmation d'adhésion",
@@ -37,11 +37,10 @@
     "formTheme": "Thème du formulaire"
   },
   "links": {
-    "targetList": "Liste de cibles",
+    "targetList": "Liste de diffusion",
     "campaign": "Campagne",
     "optInConfirmationEmailTemplate": "Modèle d'e-mail de confirmation d'adhésion",
     "targetTeam": "Équipe cible",
-    "logRecords": "Bûche",
     "inboundEmail": "Compte de messagerie de groupe"
   },
   "labels": {

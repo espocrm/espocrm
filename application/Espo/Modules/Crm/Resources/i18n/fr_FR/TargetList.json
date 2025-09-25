@@ -4,7 +4,7 @@
     "entryCount": "Compteur d'entrées",
     "campaigns": "Campagnes",
     "endDate": "Date de fin",
-    "targetLists": "Listes de cibles",
+    "targetLists": "Listes de diffusion",
     "optedOutCount": "Décompté",
     "targetStatus": "Statut cible",
     "isOptedOut": "Est exclu",
@@ -28,7 +28,8 @@
     }
   },
   "labels": {
-    "Create TargetList": "Créer une liste de cibles",
-    "Opted Out": "Désinscrit"
+    "Create TargetList": "Créer une liste de diffusion",
+    "Opted Out": "Désinscrit",
+    "Cancel Opt-Out": "Annuler Opt-Out"
   }
 }

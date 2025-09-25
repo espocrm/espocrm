@@ -11,14 +11,14 @@
     "campaign": "Campagne",
     "emailTemplate": "Modèle d'email",
     "inboundEmail": "Compte email",
-    "targetLists": "Listes de cibles",
-    "excludingTargetLists": "Liste des cibles à exclure",
+    "targetLists": "Listes de diffusion",
+    "excludingTargetLists": "Liste de diffusion à exclure",
     "optOutEntirely": "Désinscription email globale",
     "smtpAccount": "Compte SMTP"
   },
   "links": {
-    "targetLists": "Listes de cibles",
-    "excludingTargetLists": "Liste des cibles à exclure",
+    "targetLists": "Listes de diffusion",
+    "excludingTargetLists": "Liste de diffusion à exclure",
     "queueItems": "File d'attente",
     "campaign": "Campagne",
     "emailTemplate": "Modèle d'email",

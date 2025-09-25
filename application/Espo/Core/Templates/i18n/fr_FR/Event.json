@@ -1,6 +1,8 @@
 {
   "fields": {
     "dateStart": "Date de début",
+    "dateEnd": "Date de fin",
+    "reminders": "Rappels",
     "dateStartDate": "Date de début (toute la journée)",
     "dateEndDate": "Date de fin (toute la journée)",
     "isAllDay": "Est toute la journée"
