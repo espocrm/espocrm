@@ -218,7 +218,7 @@ class Htmlizer
         bool $skipLinks = false,
         int $level = 0,
         ?string $template = null,
-        ?array $additionalData = null
+        ?array $additionalData = null,
     ): array {
 
         $entityType = $entity->getEntityType();
@@ -231,26 +231,8 @@ class Htmlizer
             }
         }
 
-        $attributeList = $entity->getAttributeList();
-
-        $forbiddenAttributeList = [];
-        $skipAttributeList = [];
-        $forbiddenLinkList = [];
-
-        if ($this->acl) {
-            $forbiddenAttributeList = array_merge(
-                $this->acl->getScopeForbiddenAttributeList($entityType),
-                $this->acl->getScopeRestrictedAttributeList(
-                    $entityType,
-                    ['forbidden', 'internal', 'onlyAdmin']
-                )
-            );
-
-            $forbiddenLinkList = $this->acl->getScopeRestrictedLinkList(
-                $entity->getEntityType(),
-                ['forbidden', 'internal', 'onlyAdmin']
-            );
-        }
+        $forbiddenAttributeList = $this->getForbiddenAttributes($entityType);
+        $forbiddenLinkList = $this->getRestrictedLinks($entity);
 
         if (
             !$skipLinks &&
@@ -260,24 +242,28 @@ class Htmlizer
             $this->loadRelatedCollections($entity, $template, $data);
         }
 
+        $skipAttributeList = [];
+
         foreach ($data as $key => $value) {
-            if ($value instanceof Collection) {
-                $skipAttributeList[] = $key;
-
-                /** @var iterable<Entity> $collection */
-                $collection = $value;
-
-                $list = [];
-
-                foreach ($collection as $item) {
-                    $list[] = $this->getDataFromEntity($item, $skipLinks, $level + 1);
-                }
-
-                $data[$key] = $list;
+            if (!$value instanceof Collection) {
+                continue;
             }
+
+            $skipAttributeList[] = $key;
+
+            /** @var iterable<Entity> $collection */
+            $collection = $value;
+
+            $list = [];
+
+            foreach ($collection as $item) {
+                $list[] = $this->getDataFromEntity($item, $skipLinks, $level + 1);
+            }
+
+            $data[$key] = $list;
         }
 
-        foreach ($attributeList as $attribute) {
+        foreach ($entity->getAttributeList() as $attribute) {
             if (in_array($attribute, $forbiddenAttributeList)) {
                 unset($data[$attribute]);
 
@@ -373,32 +359,34 @@ class Htmlizer
                 }
             }
 
-            if (array_key_exists($attribute, $data)) {
-                $keyRaw = $attribute . '_RAW';
-
-                if (!isset($data[$keyRaw])) {
-                    $data[$keyRaw] = $data[$attribute];
-                }
-
-                $fieldType = $this->getFieldType($entity->getEntityType(), $attribute);
-
-                if ($fieldType === FieldType::ENUM) {
-                    $data[$attribute] = $this->language->translateOption(
-                        $data[$attribute], $attribute, $entity->getEntityType()
-                    );
-
-                    $translationPath = $this->metadata
-                        ->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'translation']);
-
-                    if ($translationPath && $data[$keyRaw] !== null) {
-                        $path = $translationPath . '.' . $data[$keyRaw];
-
-                        $data[$attribute] = $this->language->get($path, $data[$keyRaw]);
-                    }
-                }
-
-                $data[$attribute] = $this->format($data[$attribute]);
+            if (!array_key_exists($attribute, $data)) {
+                continue;
             }
+
+            $keyRaw = $attribute . '_RAW';
+
+            if (!isset($data[$keyRaw])) {
+                $data[$keyRaw] = $data[$attribute];
+            }
+
+            $fieldType = $this->getFieldType($entity->getEntityType(), $attribute);
+
+            if ($fieldType === FieldType::ENUM) {
+                $data[$attribute] = $this->language->translateOption(
+                    $data[$attribute], $attribute, $entity->getEntityType()
+                );
+
+                $translationPath = $this->metadata
+                    ->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'translation']);
+
+                if ($translationPath && $data[$keyRaw] !== null) {
+                    $path = $translationPath . '.' . $data[$keyRaw];
+
+                    $data[$attribute] = $this->language->get($path, $data[$keyRaw]);
+                }
+            }
+
+            $data[$attribute] = $this->format($data[$attribute]);
         }
 
         if (!$skipLinks) {
@@ -1044,5 +1032,46 @@ class Htmlizer
         $template = $this->handleAttributeHelper($template, 'x-if', 'if', $helpers);
 
         return $template;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getForbiddenAttributes(string $entityType): array
+    {
+        if (!$this->acl) {
+            return [];
+        }
+
+        return array_merge(
+            $this->acl->getScopeForbiddenAttributeList($entityType),
+            $this->acl->getScopeRestrictedAttributeList(
+                $entityType,
+                [
+                    Acl\GlobalRestriction::TYPE_FORBIDDEN,
+                    Acl\GlobalRestriction::TYPE_INTERNAL,
+                    Acl\GlobalRestriction::TYPE_ONLY_ADMIN,
+                ]
+            )
+        );
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getRestrictedLinks(Entity $entity): array
+    {
+        if (!$this->acl) {
+            return [];
+        }
+
+        return $this->acl->getScopeRestrictedLinkList(
+            $entity->getEntityType(),
+            [
+                Acl\GlobalRestriction::TYPE_FORBIDDEN,
+                Acl\GlobalRestriction::TYPE_INTERNAL,
+                Acl\GlobalRestriction::TYPE_ONLY_ADMIN,
+            ]
+        );
     }
 }
