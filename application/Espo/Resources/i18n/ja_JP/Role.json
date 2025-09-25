@@ -52,20 +52,20 @@
     "create": "作成する"
   },
   "messages": {
-    "changesAfterClearCache": "アクセス制御のすべての変更は、キャッシュがクリアされた後に適用されます。"
+    "changesAfterClearCache": "アクセス制御のすべての変更は、キャッシュがクリアされた後に適用されます"
   },
   "tooltips": {
-    "dataPrivacyPermission": "個人データの表示と消去を許可します。",
-    "followerManagementPermission": "特定のレコードのフォロワーを管理できます。",
-    "messagePermission": "他のユーザーにメッセージを送信できます。 * all – 全員に送信できます * team – チームメイトにのみ送信できます * no – 送信できません",
-    "assignmentPermission": "他のユーザーにレコードを割り当てることができます。 * all – 制限なし * team – チームメイトにのみ割り当て可能 * no – 自分にのみ割り当て可能",
-    "portalPermission": "ポータル情報へのアクセス、ポータル ユーザーにメッセージを投稿する機能。",
-    "groupEmailAccountPermission": "グループ電子メール アカウントへのアクセス、グループ SMTP から電子メールを送信する機能。",
-    "exportPermission": "レコードをエクスポートできます。",
-    "massUpdatePermission": "レコードの一括更新を実行する機能。",
-    "auditPermission": "監査ログを表示できます。",
-    "mentionPermission": "ストリーム内の他のユーザーをメンションできます。 * all – 全員をメンションできます * team – チームメイトのみをメンションできます * no – メンションできません",
-    "userPermission": "他のユーザーのストリームを表示できます。特定のレコードに対する他のユーザーのアクセスレベルを表示できます。",
-    "userCalendarPermission": "他のユーザーのカレンダーを表示できます。"
+    "dataPrivacyPermission": "個人データの表示と消去を許可します",
+    "followerManagementPermission": "特定のレコードのフォロワーを管理できます",
+    "messagePermission": "他のユーザーにメッセージを送信できます * all – 全員に送信できます * team – チームメイトにのみ送信できます * no – 送信できません",
+    "assignmentPermission": "他のユーザーにレコードを割り当てることができます * all – 制限なし * team – チームメイトにのみ割り当て可能 * no – 自分にのみ割り当て可能",
+    "portalPermission": "ポータル情報へのアクセス、ポータル ユーザーにメッセージを投稿する機能",
+    "groupEmailAccountPermission": "グループ電子メール アカウントへのアクセス、グループ SMTP から電子メールを送信する機能",
+    "exportPermission": "レコードをエクスポートできます",
+    "massUpdatePermission": "レコードの一括更新を実行する機能",
+    "auditPermission": "監査ログを表示できます",
+    "mentionPermission": "ストリーム内の他のユーザーをメンションできます * all – 全員をメンションできます * team – チームメイトのみをメンションできます * no – メンションできません",
+    "userPermission": "他のユーザーのストリームを表示できます特定のレコードに対する他のユーザーのアクセスレベルを表示できます",
+    "userCalendarPermission": "他のユーザーのカレンダーを表示できます"
   }
 }

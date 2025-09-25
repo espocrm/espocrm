@@ -19,6 +19,6 @@
     "accounts": "アカウント"
   },
   "tooltips": {
-    "authorizationParams": "認可エンドポイントに送信される追加のクエリパラメータ。JSON 形式で指定します。"
+    "authorizationParams": "認可エンドポイントに送信される追加のクエリパラメータJSON 形式で指定します"
   }
 }

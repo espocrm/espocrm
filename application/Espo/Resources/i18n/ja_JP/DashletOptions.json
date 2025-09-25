@@ -27,7 +27,7 @@
       "basicWeek": "週",
       "month": "月",
       "basicDay": "日",
-      "agendaDay": "当日（議題）",
+      "agendaDay": "当日（アジェンダ）",
       "timeline": "タイムライン"
     },
     "sortDirection": {
@@ -36,10 +36,10 @@
     }
   },
   "messages": {
-    "selectEntityType": "ダッシュレット オプションでエンティティ タイプを選択します。"
+    "selectEntityType": "ダッシュレット オプションでエンティティ タイプを選択します"
   },
   "tooltips": {
-    "skipOwn": "ユーザーアカウントによって行われたアクションは表示されません。"
+    "skipOwn": "ユーザーアカウントによって行われたアクションは表示されません"
   },
   "otherFields": {
     "soft": "ソフトカラー",

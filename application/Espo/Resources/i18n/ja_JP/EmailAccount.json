@@ -47,20 +47,20 @@
   },
   "labels": {
     "Create EmailAccount": "メールアカウントを作成",
-    "Main": "主要",
+    "Main": "メイン",
     "Test Connection": "テスト接続",
     "Send Test Email": "テストメールを送信"
   },
   "messages": {
     "couldNotConnectToImap": "IMAPサーバーに接続できませんでした",
     "connectionIsOk": "接続は正常です",
-    "imapNotConnected": "[IMAP アカウント](#EmailAccount/view/{id})に接続できませんでした。"
+    "imapNotConnected": "[IMAP アカウント](#EmailAccount/view/{id})に接続できませんでした"
   },
   "tooltips": {
-    "monitoredFolders": "複数のフォルダを指定する場合は、カンマで区切ってください。外部メールクライアントから送信されたメールを同期するには、「送信済み」フォルダを追加できます。",
-    "storeSentEmails": "送信されたメールはIMAPサーバーに保存されます。メールアドレス欄は、メールの送信元アドレスと一致する必要があります。",
-    "useSmtp": "電子メールを送信する機能。",
-    "emailAddress": "この電子メール アカウントを送信に使用できるようにするには、ユーザー レコード (割り当てられたユーザー) に同じ電子メール アドレスが必要です。"
+    "monitoredFolders": "複数のフォルダを指定する場合は、カンマで区切ってください外部メールクライアントから送信されたメールを同期するには、「送信済み」フォルダを追加できます",
+    "storeSentEmails": "送信されたメールはIMAPサーバーに保存されますメールアドレス欄は、メールの送信元アドレスと一致する必要があります",
+    "useSmtp": "電子メールを送信する機能",
+    "emailAddress": "この電子メール アカウントを送信に使用できるようにするには、ユーザー レコード (割り当てられたユーザー) に同じ電子メール アドレスが必要です"
   },
   "presetFilters": {
     "active": "アクティブ"

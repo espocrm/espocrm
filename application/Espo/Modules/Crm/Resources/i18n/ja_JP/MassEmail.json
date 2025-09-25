@@ -42,14 +42,14 @@
     "group": "グループ"
   },
   "messages": {
-    "selectAtLeastOneTarget": "少なくとも 1 つのターゲットを選択してください。",
+    "selectAtLeastOneTarget": "少なくとも 1 つのターゲットを選択してください",
     "testSent": "送信されるはずのテストメール"
   },
   "tooltips": {
-    "optOutEntirely": "登録を解除した受信者のメール アドレスはオプトアウトとしてマークされ、今後大量のメールは受信されなくなります。",
-    "targetLists": "メッセージを受信するターゲット。",
-    "excludingTargetLists": "メッセージを受信してはいけないターゲット。",
-    "storeSentEmails": "メールは CRM に保存されます。"
+    "optOutEntirely": "登録を解除した受信者のメール アドレスはオプトアウトとしてマークされ、今後大量のメールは受信されなくなります",
+    "targetLists": "メッセージを受信するターゲット",
+    "excludingTargetLists": "メッセージを受信してはいけないターゲット",
+    "storeSentEmails": "メールは CRM に保存されます"
   },
   "presetFilters": {
     "complete": "完了"

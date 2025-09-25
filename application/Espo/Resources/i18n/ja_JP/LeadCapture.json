@@ -54,11 +54,11 @@
   },
   "messages": {
     "generateApiKey": "新しいAPIキーを作成する",
-    "optInConfirmationExpired": "オプトイン確認リンクの有効期限が切れています。",
-    "optInIsConfirmed": "オプトインが確認されました。"
+    "optInConfirmationExpired": "オプトイン確認リンクの有効期限が切れています",
+    "optInIsConfirmed": "オプトインが確認されました"
   },
   "tooltips": {
-    "optInConfirmationSuccessMessage": " Markdown がサポートされています。",
-    "formCaptcha": "Captcha を使用できるようにするには、**管理** > **統合** で設定する必要があります。"
+    "optInConfirmationSuccessMessage": " Markdown がサポートされています",
+    "formCaptcha": "Captcha を使用できるようにするには、**管理** > **統合** で設定する必要があります"
   }
 }

@@ -6,6 +6,6 @@
     "Disconnected": "切断"
   },
   "messages": {
-    "externalAccountNoConnectDisabled": "統合 '{integration}' の外部アカウントは接続できないため無効になっています。"
+    "externalAccountNoConnectDisabled": "統合 '{integration}' の外部アカウントは接続できないため無効になっています"
   }
 }
