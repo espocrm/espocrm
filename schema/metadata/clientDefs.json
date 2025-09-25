@@ -527,8 +527,9 @@
                         "description": "Attributes to carry over to a related record when creating. Mapping Parent => Related."
                     },
                     "buttonList": {
-                        "type": "object",
-                        "properties": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
                             "name": {
                                 "type": "string",
                                 "description": "A name."
