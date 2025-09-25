@@ -310,7 +310,7 @@ class IntFieldView extends BaseFieldView {
     setupMaxLength() {
         let maxValue = this.getMaxValue();
 
-        if (typeof max !== 'undefined' && max !== null) {
+        if (maxValue !== null) {
             maxValue = this.formatNumber(maxValue);
 
             this.params.maxLength = maxValue.toString().length;
