@@ -138,12 +138,12 @@ class Htmlizer
 
         if (!array_key_exists('today', $data)) {
             $data['today'] = $this->dateTime->getTodayString();
-            $data['today_RAW'] = date('Y-m-d');
+            $data['today_RAW'] = $this->dateTime->getTodayString(null, DateTime::SYSTEM_DATE_FORMAT);
         }
 
         if (!array_key_exists('now', $data)) {
             $data['now'] = $this->dateTime->getNowString();
-            $data['now_RAW'] = date('Y-m-d H:i:s');
+            $data['now_RAW'] = date(DateTime::SYSTEM_DATE_TIME_FORMAT);
         }
 
         $data['__injectableFactory'] = $this->injectableFactory;
