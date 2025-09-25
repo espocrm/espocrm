@@ -107,8 +107,6 @@ class IntFieldView extends BaseFieldView {
     setup() {
         super.setup();
 
-        this.setupMaxLength();
-
         if (this.getPreferences().has('thousandSeparator')) {
             this.thousandSeparator = this.getPreferences().get('thousandSeparator');
         }
@@ -279,8 +277,11 @@ class IntFieldView extends BaseFieldView {
         }
     }
 
+    /**
+     * @return {number|null}
+     */
     getMaxValue() {
-        let maxValue = this.model.getFieldParam(this.name, 'max') || null;
+        let maxValue = this.model.getFieldParam(this.name, 'max') ?? null;
 
         if (!maxValue && maxValue !== 0) {
             maxValue = null;
@@ -293,10 +294,13 @@ class IntFieldView extends BaseFieldView {
         return maxValue;
     }
 
+    /**
+     * @return {number|null}
+     */
     getMinValue() {
-        let minValue = this.model.getFieldParam(this.name, 'min');
+        let minValue = this.model.getFieldParam(this.name, 'min') ?? null;
 
-        if (!minValue && minValue !== 0) {
+        if (minValue != null) {
             minValue = null;
         }
 
@@ -305,16 +309,6 @@ class IntFieldView extends BaseFieldView {
         }
 
         return minValue;
-    }
-
-    setupMaxLength() {
-        let maxValue = this.getMaxValue();
-
-        if (typeof max !== 'undefined' && max !== null) {
-            maxValue = this.formatNumber(maxValue);
-
-            this.params.maxLength = maxValue.toString().length;
-        }
     }
 
     // noinspection JSUnusedGlobalSymbols

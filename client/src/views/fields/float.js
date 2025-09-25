@@ -172,8 +172,6 @@ class FloatFieldView extends IntFieldView {
         return parts.join(this.decimalMark);
     }
 
-    setupMaxLength() {}
-
     validateFloat() {
         const value = this.model.get(this.name);
 
