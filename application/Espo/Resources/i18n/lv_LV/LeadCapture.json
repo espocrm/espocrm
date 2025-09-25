@@ -22,7 +22,20 @@
     "skipOptInConfirmationIfSubscribed": "Izlaist apstiprinājumu, ja līderis jau ir mērķa sarakstā",
     "smtpAccount": "SMTP konts",
     "inboundEmail": "Grupas e-pasta konts",
-    "exampleRequestHeaders": "Virsraksti"
+    "exampleRequestHeaders": "Virsraksti",
+    "phoneNumberCountry": "Tālruņa valsts kods",
+    "fieldParams": "Lauka params",
+    "formId": "Veidlapas ID",
+    "formEnabled": "Tīmekļa veidlapa",
+    "formUrl": "Veidlapas URL",
+    "formSuccessText": "Teksts, kas tiks parādīts pēc veidlapas iesniegšanas",
+    "formText": "Veidlapā parādāmā teksta rādīšana",
+    "formSuccessRedirectUrl": "URL, uz kuru pāradresēt pēc veidlapas iesniegšanas",
+    "formLanguage": "Veidlapā lietotā valoda",
+    "formFrameAncestors": "Atļautie veidlapas iegultošanas mitekļi",
+    "formCaptcha": "Izmantojiet Captcha",
+    "formTitle": "Veidlapas nosaukums",
+    "formTheme": "Formas tēma"
   },
   "links": {
     "targetList": "Mērķa adresātu saraksts",
@@ -36,7 +49,9 @@
     "Create LeadCapture": "Izveidot ieejas punktu",
     "Generate New API Key": "Ģenerēt jaunu API atslēgu",
     "Request": "Pieprasīt",
-    "Confirm Opt-In": "Apstiprināt izvēlēšanos"
+    "Confirm Opt-In": "Apstiprināt izvēlēšanos",
+    "Generate New Form ID": "Izveidot jaunu veidlapas ID",
+    "Web Form": "Tīmekļa veidlapa"
   },
   "messages": {
     "generateApiKey": "Izveidot jaunu API atslēgu",
@@ -44,6 +59,7 @@
     "optInIsConfirmed": "Izvēlēšanās ir apstiprināta."
   },
   "tooltips": {
-    "optInConfirmationSuccessMessage": "Tiek atbalstīts \"Markdown\"."
+    "optInConfirmationSuccessMessage": "Tiek atbalstīts \"Markdown\".",
+    "formCaptcha": "Lai varētu izmantot Captcha, tas jākonfigurē sadaļā **Administrācija** > **Integrācija**."
   }
 }

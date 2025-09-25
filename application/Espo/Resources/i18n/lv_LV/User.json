@@ -39,7 +39,8 @@
     "auth2FAMethod": "2FA metode",
     "auth2FATotpSecret": "2FA TOTP noslēpums",
     "workingTimeCalendar": "Darba laika kalendārs",
-    "layoutSet": "Izkārtojuma komplekts"
+    "layoutSet": "Izkārtojuma komplekts",
+    "avatarColor": "Avatāra krāsa"
   },
   "links": {
     "teams": "Grupas",
@@ -55,8 +56,8 @@
     "dashboardTemplate": "Informācijas paneļa veidne",
     "userData": "Lietotāja dati",
     "workingTimeCalendar": "Darba laika kalendārs",
-    "workingTimeRanges": "Darba laika diapazoni",
-    "layoutSet": "Izkārtojuma komplekts"
+    "layoutSet": "Izkārtojuma komplekts",
+    "workingTimeRanges": "Darba laika izņēmumi"
   },
   "labels": {
     "Create User": "Izveidot lietotāju",
@@ -129,7 +130,11 @@
     "enterCodeSentBySms": "Ievadiet kodu, kas nosūtīts ar SMS uz jūsu tālruņa numuru.",
     "passwordChangeRequestNotFound": "Paroles maiņas pieprasījums nav atrasts. Iespējams, tā derīguma termiņš ir beidzies. Mēģiniet uzsākt jaunas paroles atjaunošanu no [pieteikšanās lapas]({url}).",
     "loginAs": "Atveriet pieteikšanās saiti inkognito logā, lai saglabātu pašreizējo sesiju. Lai pieteiktos, izmantojiet savus administratora akreditācijas datus.",
-    "failedToLogIn": "Neizdevās pieteikties"
+    "failedToLogIn": "Neizdevās pieteikties",
+    "2faMethodNotConfigured": "Sistēmā nav pilnībā konfigurēta 2FA metode.",
+    "loginError": "Kļūda radusies",
+    "defaultTeamIsNotUsers": "Noklusējuma komandai jābūt vienai no lietotāja komandām.",
+    "passwordStrengthSpecialCharacterCount": "Jāietver vismaz {count} speciālo(-o) rakstzīmju(-u)."
   },
   "boolFilters": {
     "onlyMyTeam": "Tikai manai grupai"
@@ -154,5 +159,8 @@
     "authMethod": {
       "ApiKey": "API atslēga"
     }
+  },
+  "actions": {
+    "changePosition": "Mainīt pozīciju"
   }
 }

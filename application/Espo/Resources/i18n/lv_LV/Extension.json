@@ -11,6 +11,7 @@
     "Install": "Instalēt"
   },
   "messages": {
-    "uninstalled": "Paplašinājums {name} jau ir atinstalēts"
+    "uninstalled": "Paplašinājums {name} jau ir atinstalēts",
+    "fileExceedsMaxUploadSize": "Faila lielums pārsniedz maksimālo augšupielādes lielumu {maxSize}. Apsveriet iespēju palielināt `post_max_size` vai instalēt paplašinājumu, izmantojot CLI."
   }
 }

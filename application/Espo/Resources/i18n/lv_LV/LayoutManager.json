@@ -1,20 +1,22 @@
 {
   "fields": {
-    "width": "Platums (%)",
     "link": "Saite",
     "notSortable": "Nevar kārtot",
     "align": "Līdzināt",
     "panelName": "Paneļa nosaukums",
     "style": "Stils",
-    "sticked": "Nostiprināts",
     "isLarge": "Liels šrifta izmērs",
     "dynamicLogicVisible": "Nosacījumi, lai panelis kļūtu redzams",
     "hidden": "Slēptais",
     "dynamicLogicStyled": "Nosacījumi, kas nosaka piemērojamo stilu",
-    "widthPx": "Platums (px)",
     "noLabel": "Nav etiķetes",
     "tabLabel": "Cilnes etiķete",
-    "tabBreak": "Tabulatora pārrāvums"
+    "tabBreak": "Tabulatora pārrāvums",
+    "width": "Platums",
+    "noteText": "Piezīme Teksts",
+    "noteStyle": "Piezīme Stils",
+    "isMuted": "Izkliedēta krāsa",
+    "sticked": "Pietuvoties pie augšas"
   },
   "options": {
     "align": {
@@ -44,8 +46,8 @@
     "tabBreak": "Atsevišķa cilne panelim un visiem nākamajiem paneļiem līdz nākamajam cilnes pārrāvumam.",
     "noLabel": "Kolonnas etiķete nav redzama galvenē.",
     "notSortable": "Izslēdz iespēju šķirot pēc kolonnas.",
-    "width": "A kolonnas platums procentos. Ieteicams izmantot vienu kolonnu ar nenoteiktu platumu, parasti tas ir *Nosaukuma* lauks.",
-    "widthPx": "Kolonnas platums pikseļos. Iedarbojas tikai tad, ja nav iestatīta vērtība (%). Slejas platumu padara fiksētu."
+    "width": "Kolonnas platums. Ieteicams izveidot vienu kolonnu bez norādīta platuma, parasti tas ir *Nosaukuma* lauks.",
+    "noteText": "Teksts, kas tiks parādīts panelī. Tiek atbalstīts Markdown."
   },
   "messages": {
     "cantBeEmpty": "Izkārtojums nevar būt tukšs.",

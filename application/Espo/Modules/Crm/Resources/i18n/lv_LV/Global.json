@@ -36,7 +36,8 @@
     "Activities": "Aktivitātes",
     "KnowledgeBaseArticle": "Zināšanu bāzes raksts",
     "KnowledgeBaseCategory": "Zināšanu bāzes kategorija",
-    "CampaignLogRecord": "Kampaņas reģistra ieraksts"
+    "CampaignLogRecord": "Kampaņas reģistra ieraksts",
+    "TargetListCategory": "Mērķsaraksta kategorija"
   },
   "scopeNamesPlural": {
     "Account": "Konti",
@@ -59,7 +60,8 @@
     "Activities": "Aktivitātes",
     "KnowledgeBaseArticle": "Zināšanu bāze",
     "KnowledgeBaseCategory": "Zināšanu bāzes kategorijas",
-    "CampaignLogRecord": "Kampaņas reģistra ieraksts"
+    "CampaignLogRecord": "Kampaņas reģistra ieraksts",
+    "TargetListCategory": "Mērķa saraksta kategorijas"
   },
   "dashlets": {
     "Leads": "Mans potenciālais klients",

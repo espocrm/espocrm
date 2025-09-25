@@ -21,7 +21,8 @@
       "AuthTokenControl": "Autentifikācijas tokenu vadība",
       "SendEmailNotifications": "Nosūtīt e-pasta paziņojumus",
       "CheckNewVersion": "Pārbaudīt, vai ir jauna versija",
-      "ProcessWebhookQueue": "Webhook rindas apstrāde"
+      "ProcessWebhookQueue": "Webhook rindas apstrāde",
+      "SendScheduledEmails": "Sūtīt plānotos e-pasta ziņojumus"
     },
     "cronSetup": {
       "linux": "Piezīme: lai izpildītu \"Espo\" ieplānotos darbus, pievienojiet uzdevumu plānotāja ciļņa failam šo rindu: ",

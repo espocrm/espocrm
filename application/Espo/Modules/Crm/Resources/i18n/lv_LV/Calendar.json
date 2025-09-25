@@ -15,8 +15,9 @@
     "current": "Pašreizējais",
     "time": "Laiks",
     "User List": "Lietotāju saraksts",
-    "Manage Users": "Pārvaldīt lietotājus",
     "View Calendar": "Skatīt kalendāru",
-    "Create Shared View": "Izveidot kopīgoto skatījumu"
+    "Create Shared View": "Izveidot kopīgoto skatījumu",
+    "Edit Shared View": "Rediģēt kopīgo skatu",
+    "Shared Mode Options": "Koplietošanas režīma opcijas"
   }
 }

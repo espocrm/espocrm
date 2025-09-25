@@ -81,7 +81,12 @@
     "Configuration Instructions": "Konfigurēšanas norādījumi",
     "Working Time Calendars": "Darba laika kalendāri",
     "Group Email Folders": "Grupas e-pasta mapes",
-    "Authentication Providers": "Autentifikācijas nodrošinātāji"
+    "Authentication Providers": "Autentifikācijas nodrošinātāji",
+    "Setup": "Iestatīšana",
+    "App Log": "Lietojumprogrammu žurnāls",
+    "Address Countries": "Adrese Valstis",
+    "App Secrets": "Lietotņu noslēpumi",
+    "OAuth Providers": "OAuth nodrošinātāji"
   },
   "layouts": {
     "list": "Saraksts",
@@ -150,7 +155,8 @@
     "checklist": "Kontrolsaraksts",
     "linkOne": "Pirmā saite",
     "barcode": "Svītrkods",
-    "urlMultiple": "Url numurs Vairāki"
+    "urlMultiple": "Url numurs Vairāki",
+    "base": "Bāze"
   },
   "fields": {
     "type": "Tips",
@@ -178,7 +184,6 @@
     "minHeight": "Min. augstums (pikseļos)",
     "provider": "Pakalpojuma sniedzējs",
     "typeList": "Tipu saraksts",
-    "rows": "Rindiņu skaits teksta apgabalā",
     "lengthOfCut": "Izgriezuma garums",
     "sourceList": "Avotu saraksts",
     "tooltipText": "Rīka padoma teksts",
@@ -220,7 +225,20 @@
     "globalRestrictions": "Globālie ierobežojumi",
     "decimal": "Decimālskaitļi",
     "optionsReference": "Atsauce uz opcijām",
-    "copyToClipboard": "Poga Kopēt uz starpliktuvi"
+    "copyToClipboard": "Poga Kopēt uz starpliktuvi",
+    "rows": "Maksimālais rindu skaits",
+    "readOnlyAfterCreate": "Tikai lasīšanai Pēc izveides",
+    "createButton": "Izveidot pogu",
+    "autocompleteOnEmpty": "Automātiskā papildināšana tukšā ievades laukā",
+    "relateOnImport": "Saistīties ar importu",
+    "aclScope": "ACL darbības joma",
+    "onlyAdmin": "Tikai administratoram",
+    "activeOptions": "Aktīvās opcijas",
+    "labelType": "Etiķetes veids",
+    "preview": "Priekšskatījums",
+    "attachmentField": "Pielikuma lauks",
+    "dynamicLogicReadOnlySaved": "Saglabātie stāvokļa nosacījumi, padarot lauku tikai lasāmo",
+    "notStorable": "Nav uzglabājams"
   },
   "messages": {
     "selectEntityType": "Atlasīt vienību tipu kreisajā izvēlnē.",
@@ -242,7 +260,9 @@
     "upgradeRecommendation": "Šāds atjaunināšanas veids nav ieteicams. Labāk ir atjaunināt no CLI.",
     "newVersionIsAvailable": "Ir pieejama jauna EspoCRM versija {latestVersion}. Lūdzu, sekojiet [norādījumiem](https://www.espocrm.com/documentation/administration/upgrading/), lai atjauninātu savu instanci.",
     "formulaFunctions": "Vairāk funkciju var atrast [documentation]({documentationUrl}).",
-    "rebuildRequired": "Pārbūve ir jāveic no CLI."
+    "rebuildRequired": "Pārbūve ir jāveic no CLI.",
+    "cronIsDisabled": "Cron ir atspējots, lietojumprogramma nav pilnībā funkcionāla. Iespējot cron [iestatījumi](#Admin/settings).",
+    "cacheIsDisabled": "Kešatmiņa ir atspējota, lietojumprogramma darbosies lēni. Atļaujiet kešatmiņu [iestatījumos](#Admin/settings)."
   },
   "descriptions": {
     "settings": "Lietotnes sistēmas iestatījumi.",
@@ -275,7 +295,6 @@
     "actionHistory": "Lietotāja darbību reģistrs.",
     "labelManager": "Pielāgot lietotnes etiķetes.",
     "authLog": "Pieteikšanās vēsture.",
-    "leadCapture": "API ieraksts norāda uz pāreju no tīmekļa kontakta uz potenciālo klientu.",
     "attachments": "Visi failu pielikumi tiek uzglabāti sistēmā.",
     "templateManager": "Pielāgojiet ziņojumu veidnes.",
     "systemRequirements": "Sistēmas prasības EspoCRM.",
@@ -292,7 +311,12 @@
     "formulaSandbox": "Rakstīt un testēt formulas skriptus.",
     "workingTimeCalendars": "Darba grafiks.",
     "groupEmailFolders": "E-pasta mapes, kas kopīgotas komandām.",
-    "authenticationProviders": "Papildu autentificēšanas pakalpojumu sniedzēji portāliem."
+    "authenticationProviders": "Papildu autentificēšanas pakalpojumu sniedzēji portāliem.",
+    "appLog": "Pieteikumu žurnāls.",
+    "addressCountries": "Adreses laukiem pieejamās valstis.",
+    "appSecrets": "Uzglabāt sensitīvu informāciju, piemēram, API atslēgas, paroles un citus noslēpumus.",
+    "leadCapture": "Vadītāju piesaistes galapunkti un tīmekļa veidlapas.",
+    "oAuthProviders": "OAuth pakalpojumu sniedzēji integrācijām."
   },
   "options": {
     "previewSize": {
@@ -301,6 +325,10 @@
       "medium": "Vidējs",
       "large": "Liels",
       "": "Noklusējuma"
+    },
+    "labelType": {
+      "state": "Valsts",
+      "regular": "Regulāri"
     }
   },
   "logicalOperators": {
@@ -344,6 +372,12 @@
     "entityManager": "lauki,attiecības,attiecības,attiecības",
     "templateManager": "paziņojumi",
     "authentication": "parole,drošība,ldap",
-    "labelManager": "valoda,tulkošana"
+    "labelManager": "valoda,tulkošana",
+    "appSecrets": "atslēga, atslēgas, parole",
+    "leadCapture": "tīmekļa veidlapas"
+  },
+  "tooltips": {
+    "tabUrl": "Var sākt ar `#`, lai pārietu uz lietojumprogrammas lapu.",
+    "tabUrlAclScope": "Šī cilne būs pieejama lietotājiem, kuriem ir piekļuve norādītajam darbības jomai."
   }
 }

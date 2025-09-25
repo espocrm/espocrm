@@ -102,5 +102,9 @@
     "customers": "Klienti",
     "partners": "Partneri",
     "recentlyCreated": "Nesen izveidots"
+  },
+  "tabs": {
+    "Account": "Konts",
+    "Support": "Atbalsts"
   }
 }

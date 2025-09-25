@@ -1,0 +1,16 @@
+{
+  "labels": {
+    "Create OAuthAccount": "Izveidot OAuth kontu",
+    "Connection": "Savienojums"
+  },
+  "fields": {
+    "provider": "Nodrošinātājs",
+    "hasAccessToken": "Ir piekļuves žetons",
+    "user": "Lietotājs",
+    "providerIsActive": "Nodrošinātājs ir aktīvs",
+    "data": "Dati"
+  },
+  "links": {
+    "provider": "Nodrošinātājs"
+  }
+}

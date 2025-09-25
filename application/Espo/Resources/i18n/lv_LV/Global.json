@@ -55,9 +55,16 @@
     "Note": "Piezīme",
     "ImportError": "Importēšanas kļūda",
     "WorkingTimeCalendar": "Darba laika kalendārs",
-    "WorkingTimeRange": "Darba laika diapazons",
     "GroupEmailFolder": "Grupas e-pasta mape",
-    "AuthenticationProvider": "Autentifikācijas nodrošinātājs"
+    "AuthenticationProvider": "Autentifikācijas nodrošinātājs",
+    "GlobalStream": "Globālā plūsma",
+    "WebhookQueueItem": "Webhook rindas elements",
+    "AppLogRecord": "Lietotņu žurnāla ieraksts",
+    "WorkingTimeRange": "Darba laika izņēmums",
+    "AddressCountry": "Adrese Valsts",
+    "AppSecret": "Lietotņu noslēpums",
+    "OAuthProvider": "OAuth nodrošinātājs",
+    "OAuthAccount": "OAuth konts"
   },
   "scopeNamesPlural": {
     "Email": "E-pasti",
@@ -104,9 +111,16 @@
     "Note": "Piezīmes",
     "ImportError": "Importēšanas kļūdas",
     "WorkingTimeCalendar": "Darba laika kalendāri",
-    "WorkingTimeRange": "Darba laika diapazoni",
     "GroupEmailFolder": "Grupas e-pasta mapes",
-    "AuthenticationProvider": "Autentifikācijas nodrošinātāji"
+    "AuthenticationProvider": "Autentifikācijas nodrošinātāji",
+    "GlobalStream": "Globālā plūsma",
+    "WebhookQueueItem": "Webhook rindas elementi",
+    "AppLogRecord": "Lietojumprogrammu žurnāls",
+    "WorkingTimeRange": "Darba laika izņēmumi",
+    "AddressCountry": "Adrese Valstis",
+    "AppSecret": "Lietotņu noslēpumi",
+    "OAuthProvider": "OAuth nodrošinātāji",
+    "OAuthAccount": "OAuth konti"
   },
   "labels": {
     "Misc": "Dažādi",
@@ -275,11 +289,36 @@
     "Log in as": "Piesakieties kā",
     "Sign in": "Pierakstīties",
     "Global Search": "Globālā meklēšana",
-    "Show Navigation Panel": "Rādīt navigācijas paneli",
-    "Hide Navigation Panel": "Navigācijas paneļa paslēpšana",
+    "Navigation Panel": "Rādīt navigācijas paneli",
     "Print": "Drukāt",
     "Copy to Clipboard": "Kopēt uz starpliktuvi",
-    "Copied to clipboard": "Kopēts uz starpliktuvi"
+    "Copied to clipboard": "Kopēts uz starpliktuvi",
+    "Audit Log": "Revīzijas žurnāls",
+    "View Audit Log": "Skatīt revīzijas žurnālu",
+    "Previous Page": "Iepriekšējā lapa",
+    "Next Page": "Nākamā lappuse",
+    "First Page": "Pirmā lapa",
+    "Last Page": "Pēdējā lapa",
+    "Page": "Lapa",
+    "Star": "Zvaigzne",
+    "Starred": "Ar zvaigznīti",
+    "Remove Filter": "Noņemt filtru",
+    "Ready": "Gatavs",
+    "Column Resize": "Kolonnu izmēru maiņa",
+    "General": "Vispārīgi",
+    "Send": "Sūtīt",
+    "Timeout": "Laika pārtraukums",
+    "No internet": "Interneta nav",
+    "Scheduled": "Plānotais",
+    "Now": "Tagad",
+    "Expanded": "Paplašināts",
+    "Collapsed": "Salikts",
+    "Top Level": "Augstākā līmeņa",
+    "Fields": "Lauki",
+    "View User Access": "Pārskatīt lietotāja piekļuvi",
+    "Reacted": "Reaģēja",
+    "Reaction Removed": "Noņemta reakcija",
+    "Reactions": "Reakcijas"
   },
   "messages": {
     "pleaseWait": "Lūdzu, uzgaidiet...",
@@ -341,6 +380,7 @@
     "notUpdated": "Nav atjaunināts",
     "maintenanceMode": "Pašlaik lietojumprogramma ir uzturēšanas režīmā. Piekļuve ir tikai administratoram.\n\nUzturēšanas režīmu var atspējot sadaļā Administrācija → Iestatījumi.",
     "fieldInvalid": "{field} ir nederīgs",
+    "fieldPhoneInvalid": "{field} ir nederīgs",
     "resolveSaveConflict": "Ieraksts ir mainīts. Pirms ieraksta saglabāšanas ir jāatrisina konflikts.",
     "massActionProcessed": "Ir apstrādāta masveida darbība.",
     "fieldUrlExceedsMaxLength": "Kodētais URL pārsniedz maksimālo garumu {maxLength}",
@@ -357,7 +397,6 @@
     "validationFailure": "Backend validācijas kļūda.\n\nLauks: `{field}`\nApstiprināšana: `{tips}`",
     "confirmAppRefresh": "Pieteikums ir atjaunināts. Ieteicams atjaunināt lapu, lai nodrošinātu tās pareizu darbību.",
     "error404": "Jūsu pieprasīto url failu nevar apstrādāt.",
-    "error403": "Jums nav piekļuves šai zonai.",
     "extensionLicenseInvalid": "Nederīga '{name}' paplašinājuma licence.",
     "extensionLicenseExpired": "Paplašinājuma '{nosaukums}' licences abonēšanas termiņš ir beidzies.",
     "extensionLicenseSoftExpired": "Paplašinājuma '{nosaukums}' licences abonēšanas termiņš ir beidzies.",
@@ -366,7 +405,6 @@
     "noAccessToForeignRecord": "Operācijai nepieciešama `{action}` piekļuve svešam ierakstam.",
     "fieldShouldBeNumber": "{field} jābūt derīgam skaitlim",
     "maintenanceModeError": "Pašlaik lietojumprogramma ir uzturēšanas režīmā.",
-    "noLinkAccess": "Konkrētam ierakstam nav piekļuves sasaistes operācijai.",
     "cannotRelateNonExisting": "Nevar saistīt ar neesošu {foreignEntityType} ierakstu.",
     "cannotRelateForbidden": "Nevar saistīt ar aizliegto {foreignEntityType} ierakstu. Nepieciešama piekļuve `{action}`.",
     "cannotRelateForbiddenLink": "Nav piekļuves saitei '{link}'.",
@@ -374,16 +412,40 @@
     "fieldNotMatchingPattern$uriOptionalProtocol": "{field} jābūt derīgam URL",
     "fieldShouldBeLess": "{field} nedrīkst būt lielāks par {value}",
     "fieldShouldBeGreater": "{field} nedrīkst būt mazāks par {value}",
-    "cannotUnrelateRequiredLink": "Nevarat atvienot pieprasīto saiti."
+    "cannotUnrelateRequiredLink": "Nevarat atvienot pieprasīto saiti.",
+    "fieldPhoneInvalidCode": "Nederīgs valsts kods",
+    "fieldPhoneTooShort": "{lauks} ir pārāk īss",
+    "fieldPhoneTooLong": "{lauks} ir pārāk garš",
+    "barcodeInvalid": "{field} nav derīgs {type}",
+    "noLinkAccess": "Nevar saistīt ar {foreignEntityType} ierakstu, izmantojot saiti '{link}'. Nav piekļuves.",
+    "attemptIntervalFailure": "Operācija nav atļauta noteiktā laika intervālā. Pirms nākamā mēģinājuma pagaidiet kādu laiku.",
+    "confirmRestoreFromAudit": "Iepriekšējās vērtības tiks iestatītas formā. Pēc tam varat saglabāt ierakstu, lai atjaunotu iepriekšējās vērtības.",
+    "pageNumberIsOutOfBound": "Lapas numurs ir nesaistīts",
+    "fieldPhoneExtensionTooLong": "Paplašinājums nedrīkst būt garāks par {maxLength}",
+    "cannotLinkAlreadyLinked": "Nevar sasaistīt jau sasaistītu ierakstu.",
+    "starsLimitExceeded": "Zvaigžņu skaits pārsniedza noteikto limitu.",
+    "select2OrMoreRecords": "Izvēlieties 2 vai vairāk ierakstus",
+    "selectNotMoreThanNumberRecords": "Atlasiet ne vairāk kā {skaits} ierakstu",
+    "selectAtLeastOneRecord": "Atlasiet vismaz vienu ierakstu",
+    "fieldNotMatchingPattern$phoneNumberLoose": "{laukā} ir tālruņa numurā neatļautas rakstzīmes",
+    "duplicateConflict": "Ieraksts jau pastāv.",
+    "confirmMassUpdate": "Vai esat pārliecināts, ka vēlaties masveidā atjaunināt atlasītos ierakstus?",
+    "cannotRemoveCategoryWithChildCategory": "Nevar noņemt kategoriju, kurai ir pakārtotā kategorija.",
+    "cannotRemoveNotEmptyCategory": "Nevar noņemt kategoriju, kas nav tukša.",
+    "arrayInputNotEmpty": "Vienība ir ievadīta, bet nav pievienota",
+    "error403": "Jums nav piekļuves šai zonai.",
+    "sameRecordIsAlreadyBeingEdited": "Ieraksts jau tiek rediģēts."
   },
   "boolFilters": {
     "onlyMy": "Tikai manējie",
     "followed": "Kuriem sekoju",
-    "onlyMyTeam": "Mana komanda"
+    "onlyMyTeam": "Mana komanda",
+    "shared": "Koplietošanas vietne"
   },
   "presetFilters": {
     "followed": "Kuriem sekoju",
-    "all": "Visus"
+    "all": "Visus",
+    "starred": "Ar zvaigznīti"
   },
   "massActions": {
     "remove": "Dzēst",
@@ -435,7 +497,11 @@
     "types": "Veidi",
     "middleName": "Vidējais vārds",
     "emailAddressIsInvalid": "E-pasta adrese ir nederīga",
-    "phoneNumberIsInvalid": "Tālruņa numurs ir nederīgs"
+    "phoneNumberIsInvalid": "Tālruņa numurs ir nederīgs",
+    "users": "Lietotāji",
+    "childList": "Bērnu saraksts",
+    "collaborators": "Sadarbības partneri",
+    "streamUpdatedAt": "Stream atjaunināts pie"
   },
   "links": {
     "assignedUser": "Piešķirtais lietotājs",
@@ -446,7 +512,9 @@
     "teams": "Grupas",
     "users": "Lietotāji",
     "parent": "Primārais",
-    "children": "Sekundārais"
+    "children": "Sekundārais",
+    "assignedUsers": "Piešķirtie lietotāji",
+    "collaborators": "Sadarbības partneri"
   },
   "dashlets": {
     "Stream": "Straumēšana",
@@ -456,7 +524,10 @@
   "notificationMessages": {
     "assign": "Jums tika piešķirts {entityType} {entity} ",
     "emailReceived": "Saņemts e-pasts no {from}",
-    "entityRemoved": "{user} izdzēsa {entityType} {entity}"
+    "entityRemoved": "{user} izdzēsa {entityType} {entity}",
+    "emailInbox": "{lietotājs} pievienoja e-pastu {entity} savā pastkastītē",
+    "userPostReaction": "{lietotājs} reaģēja uz jūsu {post}",
+    "userPostInParentReaction": "{lietotājs} reaģēja uz jūsu {post} jo {entityType} {entitāte}"
   },
   "streamMessages": {
     "post": "{user} publicēja {entityType} {entity}",
@@ -483,6 +554,7 @@
     "createAssigned": "{user} izveidoja {entityType} vienību {entity}, kas piešķirta {assignee}",
     "assign": "{user} piešķīra {entityType} {entity} {assignee}",
     "assignThis": "{user} piešķīra šo {entityType} {assignee}",
+    "assignMultiAddThis": "{user} piešķīra šo {entityType} {assignee}",
     "postThis": "{user} publicēja",
     "attachThis": "{user} pievienoja",
     "statusThis": "{user} atjaunināja {field}",
@@ -513,7 +585,12 @@
     "assignThisSelf": "{user} iecēla sevi {entityType} atbildīgo",
     "assignSelf": "{user} iecēla sevi par {entityType} {entity} atbildīgo",
     "unrelate": "{lietotājs} nesaistīts {relatedEntityType} {relatedEntity} no {entityType} {entity}",
-    "unrelateThis": "{lietotājs} nesaistīts {relatedEntityType} {relatedEntity} no šī {entityType}"
+    "unrelateThis": "{lietotājs} nesaistīts {relatedEntityType} {relatedEntity} no šī {entityType}",
+    "assignMultiAdd": "{lietotājs} piešķīra {entitāti} {saņēmējam}",
+    "assignMultiRemove": "{lietotājs} atcēla {entitāti} no {atceltāPiešķīrēja}",
+    "assignMultiAddRemove": "{lietotājs} piešķīra {entity} {assignee} un atcēla no {removedAssignee}",
+    "assignMultiRemoveThis": "{lietotājs} atcēla šo {entityType} no {removedAssignee}",
+    "assignMultiAddRemoveThis": "{lietotājs} piešķīra šo {entityType} {assignee} un atcēla no {removedAssignee}."
   },
   "lists": {
     "monthNames": [
@@ -629,7 +706,9 @@
       "isNotEmpty": "Nav tukšs",
       "notLike": "Nav līdzīgs (%)",
       "notContains": "Nesatur",
-      "notEquals": "Nav vienāds ar"
+      "notEquals": "Nav vienāds ar",
+      "anyOf": "Jebkurš no",
+      "noneOf": "Neviens no"
     },
     "intSearchRanges": {
       "equals": "Vienāds ar",
@@ -744,12 +823,12 @@
       "color": {
         "recent": "Nesen izmantot krāsa",
         "more": "Vairāk krāsu",
-        "background": "Fona krāsa",
-        "foreground": "Fonta krāsa",
         "transparent": "Caurspīdīgs",
         "setTransparent": "Iestatīt caurspīdīgu",
         "reset": "Atiestatīt",
-        "resetToDefault": "Atiestatīt noklusējumu"
+        "resetToDefault": "Atiestatīt noklusējumu",
+        "background": "Aizmugures krāsa",
+        "foreground": "Fonta krāsa"
       },
       "shortcut": {
         "shortcuts": "Klaviatūras saīsne",
@@ -793,10 +872,10 @@
     "phoneNumber": "Derīgs tālruņa numurs",
     "array": "Masīvs",
     "arrayOfString": "Virkņu masīvs",
-    "valid": "Derīgs",
     "noEmptyString": "Nav tukšas virknes",
     "max": "Maksimālā vērtība",
-    "min": "Minimālā vērtība"
+    "min": "Minimālā vērtība",
+    "valid": "Derīgums"
   },
   "fieldValidationExplanations": {
     "url_valid": "Nederīga URL vērtība.",
@@ -811,12 +890,57 @@
     "enum_valid": "Nederīga enuma vērtība. Vērtībai jābūt vienai no definētajām enuma opcijām. Tukša vērtība ir atļauta tikai tad, ja laukam ir tukša opcija.",
     "multiEnum_valid": "Nederīga daudznosaukuma vērtība. Vērtībai jābūt vienai no definētajām lauka opcijām.",
     "int_valid": "Nederīga veselā skaitļa vērtība.",
-    "float_valid": "Nederīga skaitļa vērtība."
+    "float_valid": "Nederīga skaitļa vērtība.",
+    "valid": "Nederīga vērtība.",
+    "maxLength": "Vērtības garums pārsniedz maksimālo vērtību.",
+    "phone_valid": "Tālruņa numurs nav derīgs. Iespējams, iemesls ir nepareizs vai tukšs valsts kods."
   },
   "navbarTabs": {
     "Business": "Uzņēmējdarbība",
     "Marketing": "Mārketings",
     "Support": "Atbalsts",
     "Activities": "Aktivitātes"
+  },
+  "wysiwygLabels": {
+    "cell": "Šūnas",
+    "align": "Saskaņot",
+    "width": "Platums",
+    "height": "Augstums",
+    "borderWidth": "Robežu platums",
+    "borderColor": "Robežu krāsa",
+    "cellPadding": "Šūnu polsterējums",
+    "backgroundColor": "Fona krāsa",
+    "verticalAlign": "Vertikālā izlīdzināšana"
+  },
+  "wysiwygOptions": {
+    "align": {
+      "left": "Kreisā",
+      "center": "Centrs",
+      "right": "Tiesības"
+    },
+    "verticalAlign": {
+      "bottom": "Apakšējā daļa"
+    }
+  },
+  "detailViewModes": {
+    "detail": "Detalizēta informācija"
+  },
+  "reactions": {
+    "Surprise": "Pārsteigums",
+    "Laugh": "Smieties",
+    "Sad": "Skumji",
+    "Love": "Mīlestība",
+    "Like": "Tāpat kā",
+    "Dislike": "Nepatīk"
+  },
+  "recordActions": {
+    "create": "Izveidot",
+    "read": "Lasīt",
+    "edit": "Rediģēt",
+    "delete": "Dzēst",
+    "stream": "Straume"
+  },
+  "tabs": {
+    "Stream": "Straume"
   }
 }

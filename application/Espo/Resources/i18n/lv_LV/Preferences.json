@@ -28,17 +28,25 @@
     "followCreatedEntities": "Automātiski sekot izveidotajiem ierakstiem",
     "followCreatedEntityTypeList": "Automātiski sekot izveidotajiem ierakstiem par noteiktiem vienību tipiem",
     "emailUseExternalClient": "Lietot ārējā e-pasta klientu",
-    "scopeColorsDisabled": "Izslēgt tvēruma krāsas",
-    "tabColorsDisabled": "Izslēgt ciļņa krāsas",
     "assignmentNotificationsIgnoreEntityTypeList": "Aplikācijā pieejamie uzdevuma paziņojumi",
     "assignmentEmailNotificationsIgnoreEntityTypeList": "Paziņojumi par uzdevumiem pa e-pastu",
     "dashboardLocked": "Bloķēt paneli",
-    "textSearchStoringDisabled": "Teksta filtra saglabāšanas atspējošana"
+    "textSearchStoringDisabled": "Teksta filtra saglabāšanas atspējošana",
+    "calendarSlotDuration": "Kalendāra laika nišas ilgums",
+    "calendarScrollHour": "Kalendāra ritināšana uz stundu",
+    "defaultRemindersTask": "Uzdevumu noklusējuma atgādinājumi",
+    "addCustomTabs": "Pievienot pielāgotas cilnes",
+    "reactionNotifications": "Aplikācijā pieejamie paziņojumi par reakcijām",
+    "pageContentWidth": "Satura platums"
   },
   "options": {
     "weekStart": {
       "0": "Svētdiena",
       "1": "Pirmdiena"
+    },
+    "pageContentWidth": {
+      "": "Parasts",
+      "Wide": "Plašs"
     }
   },
   "labels": {
@@ -52,6 +60,12 @@
     "autoFollowEntityTypeList": "Automātiski sekot VISIEM jaunajiem (jebkura lietotāja izveidotajiem) ierakstiem par noteiktiem atlasīto vienību tipiem. Šādi varēsiet skatīt informāciju straumēšanā un saņemt paziņojumus par visiem ierakstiem sistēmā.",
     "doNotFillAssignedUserIfNotRequired": "Izveidojot ierakstu, kā piešķirtie lietotāji netiks norādīti pašu lietotāji, izņemot gadījumus, kad šis lauks būs obligāti aizpildāms.",
     "followCreatedEntities": "Izveidojot jaunus ierakstus, tiem tiks automātiski sekots, pat ja tie būs piešķirti citam lietotājam.",
-    "followCreatedEntityTypeList": "Izveidojot jaunus ierakstus no atlasītajiem vienību tipiem, tiem tiks automātiski sekots, pat ja tie būs piešķirti citam lietotājam."
+    "followCreatedEntityTypeList": "Izveidojot jaunus ierakstus no atlasītajiem vienību tipiem, tiem tiks automātiski sekots, pat ja tie būs piešķirti citam lietotājam.",
+    "addCustomTabs": "Ja ir atzīmēts, noklusējuma cilnēm tiks pievienotas pielāgotās cilnes. Pretējā gadījumā noklusējuma cilnes vietā tiks izmantotas pielāgotās cilnes."
+  },
+  "tabFields": {
+    "label": "Etiķete",
+    "iconClass": "Ikona",
+    "color": "Krāsa"
   }
 }

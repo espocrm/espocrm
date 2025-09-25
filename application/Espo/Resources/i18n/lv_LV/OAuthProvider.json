@@ -1,0 +1,24 @@
+{
+  "labels": {
+    "Create OAuthProvider": "Izveidot OAuth nodrošinātāju"
+  },
+  "fields": {
+    "isActive": "Vai ir aktīvs",
+    "clientId": "Klienta ID",
+    "clientSecret": "Klienta noslēpums",
+    "authorizationEndpoint": "Autorizācijas galapunkts",
+    "tokenEndpoint": "Žetons Galapunkts",
+    "authorizationRedirectUri": "Autorizācijas novirzīšanas URI",
+    "scopes": "Darbības joma",
+    "scopeSeparator": "Darbības jomas atdalītājs",
+    "hasAccessToken": "Ir piekļuves žetons",
+    "authorizationPrompt": "Autorizācijas uzvednis",
+    "authorizationParams": "Autorizācijas params"
+  },
+  "links": {
+    "accounts": "Konti"
+  },
+  "tooltips": {
+    "authorizationParams": "Papildu vaicājuma parametri, kas jānosūta autorizācijas galapunktam. Norādīts JSON formātā."
+  }
+}

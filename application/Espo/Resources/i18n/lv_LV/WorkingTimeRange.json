@@ -1,7 +1,7 @@
 {
   "labels": {
-    "Create WorkingTimeRange": "Izveidot diapazonu",
-    "Calendars": "Kalendāri"
+    "Calendars": "Kalendāri",
+    "Create WorkingTimeRange": "Izņēmuma izveide"
   },
   "fields": {
     "timeRanges": "Grafiks",
@@ -23,5 +23,9 @@
   },
   "presetFilters": {
     "actual": "Faktiskais"
+  },
+  "tooltips": {
+    "calendars": "Kalendāri, kuriem piemērot izņēmumu. Izņēmums tiks piemērots visiem atlasīto kalendāru lietotājiem.\n\nAtstājiet šo lauku tukšu, ja izņēmumu vēlaties piemērot tikai konkrētiem lietotājiem.",
+    "users": "Konkrēti lietotāji, kuriem jāpiemēro izņēmums."
   }
 }

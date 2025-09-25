@@ -12,13 +12,14 @@
     "entityType": "Vienību tips",
     "primaryFilter": "Primārais filtrs",
     "boolFilterList": "Papildu filtri",
-    "sortBy": "Kārtot (lauks)",
-    "sortDirection": "Kārtot (virziens)",
     "expandedLayout": "Izkārtojums",
     "dateFilter": "Datumu filtrs",
     "skipOwn": "Neparādiet savus ierakstus",
     "text": "Teksts",
-    "folder": "Mapes"
+    "folder": "Mapes",
+    "includeShared": "Iekļaut koplietošanas",
+    "sortBy": "Pasūtīt pēc",
+    "sortDirection": "Pasūtījuma virziens"
   },
   "options": {
     "mode": {
@@ -28,6 +29,10 @@
       "basicDay": "Diena",
       "agendaDay": "Diena (dienas kārtība)",
       "timeline": "Laika grafiks"
+    },
+    "sortDirection": {
+      "asc": "Augošais",
+      "desc": "Lejupejošais"
     }
   },
   "messages": {
@@ -35,5 +40,9 @@
   },
   "tooltips": {
     "skipOwn": "Jūsu lietotāja konta veiktās darbības netiks rādītas."
+  },
+  "otherFields": {
+    "soft": "Mīksta krāsa",
+    "small": "Mazais fonts"
   }
 }

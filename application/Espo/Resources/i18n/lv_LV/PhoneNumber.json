@@ -2,7 +2,8 @@
   "fields": {
     "type": "Tips",
     "optOut": "Izslēgts",
-    "invalid": "Nederīgs"
+    "invalid": "Nederīgs",
+    "numeric": "Skaitliskā vērtība"
   },
   "presetFilters": {
     "orphan": "Bāreņi"

@@ -4,7 +4,8 @@
     "roles": "Lomas",
     "positionList": "Amatu saraksts",
     "layoutSet": "Izkārtojuma komplekts",
-    "workingTimeCalendar": "Darba laika kalendārs"
+    "workingTimeCalendar": "Darba laika kalendārs",
+    "userRole": "Lietotāja loma"
   },
   "links": {
     "users": "Lietotāji",

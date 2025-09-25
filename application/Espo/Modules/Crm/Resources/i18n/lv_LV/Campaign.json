@@ -49,7 +49,8 @@
       "Web": "Vietne",
       "Television": "Televīzija",
       "Newsletter": "Biļetens",
-      "Mail": "Pasts"
+      "Mail": "Pasts",
+      "Informational Email": "Informatīvs e-pasts"
     },
     "status": {
       "Planning": "Plānošana",
@@ -78,7 +79,8 @@
   },
   "messages": {
     "unsubscribed": "Jūsu e-pasts tika izņemts no sūtījumu adresātu saraksta.",
-    "subscribedAgain": "Abonēšana veikta no jauna"
+    "subscribedAgain": "Abonēšana veikta no jauna",
+    "cannotChangeType": "Veidu mainīt nevar."
   },
   "tooltips": {
     "targetLists": "Mērķa adresāti, kuriem nav jāsaņem ziņojumi.",
