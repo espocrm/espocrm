@@ -765,6 +765,26 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {"const": "linkMultiple"},
+                                    {"const": "linkOne"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "noLoad": {
+                                "type": "boolean",
+                                "description": "Do not load the field."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
                                     {"const": "linkMultiple"}
                                 ]
                             }
