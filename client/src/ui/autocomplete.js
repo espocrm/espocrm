@@ -55,6 +55,7 @@ class Autocomplete {
      *     autoSelectFirst?: boolean,
      *     handleFocusMode?: 1|2|3,
      *     focusOnSelect?: boolean,
+     *     catchFastEnter?: boolean,
      * }} module:ui/autocomplete~options
      */
 
@@ -66,9 +67,32 @@ class Autocomplete {
         /** @private */
         this.$element = $(element);
 
+        let deferredEnter = false;
+        let catchEnter = false;
+        let catchEnterTimeout = null;
+
         this.$element.on('keydown', e => {
             if (e.code === 'Tab' && !this.$element.val()) {
                 e.stopImmediatePropagation();
+            }
+
+            // Scanner input.
+            if (options.catchFastEnter) {
+                if (e.code !== 'Enter') {
+                    catchEnter = true;
+
+                    if (catchEnterTimeout) {
+                        clearTimeout(catchEnterTimeout);
+                    }
+
+                    catchEnterTimeout = setTimeout(() => catchEnter = false, 40);
+                }
+
+                if (catchEnter && e.code === 'Enter' && this.$element.val()) {
+                    deferredEnter = true;
+                } else {
+                    deferredEnter = false;
+                }
             }
         });
 
@@ -119,6 +143,24 @@ class Autocomplete {
                         e.preventDefault();
                     });
                 }
+
+                if (deferredEnter) {
+                    setTimeout(() => {
+                        element.dispatchEvent(
+                            new KeyboardEvent("keydown", {
+                                key: 'Enter',
+                                code: 'Enter',
+                                keyCode: 13,
+                                which: 13,
+                                bubbles: true,
+                                cancelable: true
+                            })
+                        );
+                    }, 100);
+                }
+
+                catchEnter = false;
+                deferredEnter = false;
             },
             lookup: lookup,
             minChars: options.minChars || 0,
@@ -143,6 +185,9 @@ class Autocomplete {
                 if (options.focusOnSelect) {
                     this.$element.focus();
                 }
+
+                catchEnter = false;
+                deferredEnter = false;
             },
             triggerSelectOnValidInput: options.triggerSelectOnValidInput || false,
         });

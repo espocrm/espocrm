@@ -709,6 +709,7 @@ class LinkFieldView extends BaseFieldView {
                     autoSelectFirst: true,
                     forceHide: true,
                     triggerSelectOnValidInput: false,
+                    catchFastEnter: true,
                     onSelect: item => {
                         this.getModelFactory().create(this.foreignScope, async model => {
                             model.set(item.attributes);
