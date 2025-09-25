@@ -5,7 +5,8 @@
     "Invalid": "Ungültig"
   },
   "fields": {
-    "invalid": "Ungültig"
+    "invalid": "Ungültig",
+    "lower": "Name in Kleinbuchstaben"
   },
   "presetFilters": {
     "orphan": "Verwaist"

@@ -8,9 +8,14 @@
     "user": "API-Benutzer",
     "entityType": "Entitätstyp",
     "field": "Feld",
-    "secretKey": "Geheimer Schlüssel"
+    "secretKey": "Geheimer Schlüssel",
+    "skipOwn": "Eigene überspringen"
   },
   "links": {
-    "user": "Benutzer"
+    "user": "Benutzer",
+    "queueItems": "Elemente in Warteschlange"
+  },
+  "tooltips": {
+    "skipOwn": "Nicht senden, wenn das Ereignis vom Benutzer ausgelöst wurde, dem der Webhook gehört."
   }
 }

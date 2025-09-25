@@ -55,7 +55,8 @@
     "AddressCountry": "Adresse Land",
     "AppSecret": "App-Geheimnis",
     "OAuthProvider": "OAuth-Anbieter",
-    "OAuthAccount": "OAuth-Konto"
+    "OAuthAccount": "OAuth-Konto",
+    "WebhookEventQueueItem": "Webhook-Ereigniswarteschlange-Element"
   },
   "scopeNamesPlural": {
     "Email": "E-Mails",
@@ -105,7 +106,8 @@
     "AddressCountry": "Adresse Länder",
     "AppSecret": "App-Geheimnisse",
     "OAuthProvider": "OAuth-Anbieter",
-    "OAuthAccount": "OAuth-Konten"
+    "OAuthAccount": "OAuth-Konten",
+    "WebhookEventQueueItem": "Webhook-Ereigniswarteschlange-Elemente"
   },
   "labels": {
     "Misc": "Verschiedenes",
@@ -234,7 +236,7 @@
     "Skip": "überspringen",
     "Attribute": "Attribut",
     "Function": "Funktion",
-    "Self-Assign": "sich selbst zuweisen",
+    "Self-Assign": "Sich selbst zuweisen",
     "Self-Assigned": "Selbst zugewiesen",
     "Return to Application": "Zurück zur Applikation",
     "Select All Results": "Alle auswählen",
@@ -297,7 +299,9 @@
     "View User Access": "Benutzerzugriff anzeigen",
     "Reacted": "Reagierte",
     "Reaction Removed": "Reaktion entfernt",
-    "Reactions": "Reaktionen"
+    "Reactions": "Reaktionen",
+    "Network error": "Netzwerkfehler",
+    "Edit Item": "Element editieren"
   },
   "messages": {
     "pleaseWait": "Bitte warten...",
@@ -413,7 +417,8 @@
     "cannotRemoveNotEmptyCategory": "Eine nicht leere Kategorie kann nicht entfernt werden.",
     "arrayInputNotEmpty": "Artikel wird eingegeben, aber nicht hinzugefügt",
     "error403": "Sie haben keinen Zugang zu diesem Bereich.",
-    "sameRecordIsAlreadyBeingEdited": "Der Datensatz wird bereits bearbeitet."
+    "sameRecordIsAlreadyBeingEdited": "Der Datensatz wird bereits bearbeitet.",
+    "changesLossConfirmation": "Nicht gespeicherte Änderungen gehen verloren. Sind Sie sicher?"
   },
   "boolFilters": {
     "onlyMy": "Nur meine",
@@ -424,7 +429,8 @@
   "presetFilters": {
     "followed": "Abonniert",
     "all": "Alle",
-    "starred": "Mit Stern markiert"
+    "starred": "Mit Stern markiert",
+    "active": "Aktiv"
   },
   "massActions": {
     "remove": "Löschen",
