@@ -199,6 +199,8 @@
             "layoutListDisabled": true,
             "importDisabled": true,
             "exportDisabled": true,
+            "directAccessDisabled": true,
+            "filtersEnabled": true,
             "noLoad": true
         },
         "targetList": {

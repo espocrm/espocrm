@@ -1029,6 +1029,10 @@
                     "type": "boolean",
                     "description": "Indicates that access to the field through a link is not feasible."
                 },
+                "filtersEnabled": {
+                    "type": "boolean",
+                    "description": "Indicates that the field can be used in filters regardless directAccessDisabled being true. To be used only with directAccessDisabled."
+                },
                 "importDisabled": {
                     "type": "boolean",
                     "description": "Disables the ability to import the field."

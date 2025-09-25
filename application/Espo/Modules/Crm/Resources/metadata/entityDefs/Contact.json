@@ -410,6 +410,8 @@
             "type": "enum",
             "notStorable": true,
             "orderDisabled": true,
+            "directAccessDisabled": true,
+            "filtersEnabled": true,
             "directUpdateDisabled": true,
             "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
@@ -424,6 +426,8 @@
             "notStorable": true,
             "orderDisabled": true,
             "directUpdateDisabled": true,
+            "directAccessDisabled": true,
+            "filtersEnabled": true,
             "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
             "exportDisabled": true,
@@ -474,6 +478,8 @@
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "importDisabled": true,
+            "directAccessDisabled": true,
+            "filtersEnabled": true,
             "noLoad": true
         },
         "targetList": {
