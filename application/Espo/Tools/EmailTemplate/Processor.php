@@ -245,6 +245,7 @@ class Processor
                 !in_array($entity->getRelationType($relation), [
                     Entity::BELONGS_TO,
                     Entity::BELONGS_TO_PARENT,
+                    Entity::HAS_ONE,
                 ])
             ) {
                 continue;
