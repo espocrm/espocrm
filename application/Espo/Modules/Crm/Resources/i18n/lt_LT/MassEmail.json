@@ -52,7 +52,6 @@
     "storeSentEmails": "El. laiškai bus saugomi CRM."
   },
   "presetFilters": {
-    "actual": "Esamas",
     "complete": "Įvykdyta"
   }
 }

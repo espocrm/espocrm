@@ -37,7 +37,10 @@
     "keepFetchedEmailsUnread": "Laikykite gautus laiškus neperskaitytus",
     "smtpAuthMechanism": "SMTP autentifikavimo mechanizmas",
     "security": "Apsauga",
-    "groupEmailFolder": "Grupės el. pašto aplankas"
+    "groupEmailFolder": "Grupės el. pašto aplankas",
+    "connectedAt": "Prijungtas prie",
+    "excludeFromReply": "Neįtraukti į atsakymą",
+    "isSystem": "Ar sistema"
   },
   "tooltips": {
     "reply": "Pranešti siuntėjams, kad jų el. Laiškai buvo gauti.\n\n  Tam tikram gavėjui per tam tikrą laikotarpį bus išsiųstas tik vienas el. laiškas, kad būtų išvengta kartojimų.",
@@ -54,7 +57,9 @@
     "smtpIsForMassEmail": "Jei pažymėta, SMTP bus prieinamas masiniams el.laiškams.",
     "storeSentEmails": "Išsiųsti el. laiškai bus saugomi IMAP serveryje.",
     "useSmtp": "Galimybė siųsti el. laiškus.",
-    "groupEmailFolder": "Gautus el. laiškus sudėkite į grupinį aplanką."
+    "groupEmailFolder": "Gautus el. laiškus sudėkite į grupinį aplanką.",
+    "excludeFromReply": "Atsakant į el. laiškus, siunčiamus šios paskyros el. pašto adresu, jos el. pašto adresas nebus įtrauktas į CC.\n\nAtkreipkite dėmesį, kad įjungus šį parametrą, šios paskyros el. pašto adresas bus matomas naudotojams, turintiems teisę siųsti el. laiškus.",
+    "isSystem": "yra sistemos el. pašto paskyra."
   },
   "links": {
     "filters": "Filtrai",
@@ -82,6 +87,7 @@
     "Main": "Pagrindinis"
   },
   "messages": {
-    "couldNotConnectToImap": "Nepavyko prisijungti prie IMAP serverio"
+    "couldNotConnectToImap": "Nepavyko prisijungti prie IMAP serverio",
+    "imapNotConnected": "Nepavyko prisijungti prie grupės [IMAP paskyra](#InboundEmail/view/{id})."
   }
 }

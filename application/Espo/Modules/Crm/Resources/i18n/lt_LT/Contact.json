@@ -21,7 +21,8 @@
     "acceptanceStatusMeetings": "Priėmimo statusas (susirinkimai)",
     "acceptanceStatusCalls": "Priėmimo statusas (skambučiai)",
     "title": "Sąskaitos pavadinimas",
-    "hasPortalUser": "Turi portalo naudotoją"
+    "hasPortalUser": "Turi portalo naudotoją",
+    "originalEmail": "Originalus el. paštas"
   },
   "links": {
     "opportunities": "Galimybės",

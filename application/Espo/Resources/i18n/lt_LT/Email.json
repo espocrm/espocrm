@@ -27,6 +27,7 @@
     "isReplied": "Yra atsakyta",
     "isNotReplied": "Yra neatsakyta",
     "folder": "Aplankas",
+    "folderString": "Aplankas",
     "inboundEmails": "Grupės paskyros",
     "emailAccounts": "Asmeninės paskyros",
     "hasAttachment": "Turi prisegtuką",
@@ -40,9 +41,6 @@
     "fromName": "Nuo",
     "fromString": "Iš stygos",
     "isSystem": "Yra Sistema",
-    "toEmailAddresses": "El. Pašto adresai",
-    "bccEmailAddresses": "BCC el. Pašto adresai",
-    "replyToEmailAddresses": "Atsakymas į el. Pašto adresus",
     "personStringData": "Asmens eilutės duomenys",
     "fromEmailAddress": "Iš Adresas (nuoroda)",
     "replyToName": "Atsakyti į pavadinimą",
@@ -53,7 +51,14 @@
     "createdEvent": "Sukurtas įvykis",
     "event": "Renginys",
     "icsEventDateStart": "ICS Renginio data Pradžia",
-    "groupFolder": "Grupės aplankas"
+    "groupFolder": "Grupės aplankas",
+    "isUsersSent": "Ar vartotojo išsiųstas",
+    "inArchive": "Archyve",
+    "groupStatusFolder": "Grupės būsenos aplankas",
+    "sendAt": "Siųsti adresu",
+    "toEmailAddresses": "Į el. pašto adresus",
+    "bccEmailAddresses": "BCC el. pašto adresai",
+    "replyToEmailAddresses": "Atsakyti į el. pašto adresus"
   },
   "links": {
     "replied": "Atsakyta",
@@ -64,20 +69,25 @@
     "sentBy": "Išsiųsta",
     "attachments": "Priedas",
     "fromEmailAddress": "Nuo el. Pašto adreso",
-    "toEmailAddresses": "El. Pašto adresai",
-    "ccEmailAddresses": "CC el. Pašto adresai",
-    "bccEmailAddresses": "BCC el. Pašto adresai",
-    "replyToEmailAddresses": "Atsakymas į el. Pašto adresus",
-    "groupFolder": "Grupės aplankas"
+    "groupFolder": "Grupės aplankas",
+    "createdEvent": "Sukurtas įvykis",
+    "toEmailAddresses": "Į el. pašto adresus",
+    "ccEmailAddresses": "CC el. pašto adresai",
+    "bccEmailAddresses": "BCC el. pašto adresai",
+    "replyToEmailAddresses": "Atsakyti į el. pašto adresus"
   },
   "options": {
     "status": {
       "Draft": "Juodraštis",
       "Sending": "Siunčiama",
       "Sent": "Išsiųsta",
-      "Archived": "Suarchyvuota",
       "Received": "Gauta",
-      "Failed": "Nepavyko"
+      "Failed": "Nepavyko",
+      "Archived": "Importuota"
+    },
+    "groupStatusFolder": {
+      "Archive": "Archyvas",
+      "Trash": "Šiukšliadėžė"
     }
   },
   "labels": {
@@ -111,8 +121,14 @@
     "No Subject": "Nėra temos",
     "Insert Field": "Įterpti lauką",
     "Event": "Renginys",
-    "Moving to folder": "Perkėlimas į aplanką",
-    "Group Folders": "Grupės aplankai"
+    "Group Folders": "Grupės aplankai",
+    "View Attachments": "Peržiūrėti priedus",
+    "Import EML": "Importuoti EML",
+    "Moved to Archive": "Perkelta į archyvą",
+    "Moved to Trash": "Perkelta į šiukšliadėžę",
+    "Retrieved from Trash": "Gauta iš šiukšliadėžės",
+    "No Records Moved": "Nėra perkeltų įrašų",
+    "Schedule Send": "Tvarkaraščio siuntimas"
   },
   "messages": {
     "testEmailSent": "Bandomasis el. laiškas išsiųstas",
@@ -120,17 +136,30 @@
     "savedAsDraft": "Juodraštis šsaugotas",
     "confirmInsertTemplate": "El. Paštas bus prarastas. Ar tikrai norite įterpti šabloną?",
     "noSmtpSetup": "SMTP nėra sukonfigūruotas: {link}",
+    "confirmSend": "Siųsti el. laišką?",
     "sendConfirm": "Siųsti el. laišką?",
     "removeSelectedRecordsConfirmation": "Ar tikrai norite ištrinti pasirinktus el. laiškus?\n\nJie bus ištrinti ir kitiems naudotojams.",
-    "removeRecordConfirmation": "Ar tikrai norite ištrinti el. laišką?\n\nJis bus ištrintas ir kitiems naudotojams."
+    "removeRecordConfirmation": "Ar tikrai norite ištrinti el. laišką?\n\nJis bus ištrintas ir kitiems naudotojams.",
+    "invalidCredentials": "Neteisingi įgaliojimai.",
+    "unknownError": "Nežinoma klaida.",
+    "recipientAddressRejected": "Gavėjo adresas atmestas.",
+    "alreadyImported": "Sistemoje jau egzistuoja [el. paštas]({ryšys}).",
+    "couldNotSentScheduledEmail": "Nepavyko išsiųsti suplanuoto [el. pašto]({link})",
+    "notEditAccess": "Nėra prieigos prie el. pašto redagavimo.",
+    "groupFolderNoAccess": "Nėra prieigos prie grupės aplanko.",
+    "groupMoveOutNoEditAccess": "Negalima iškelti iš grupės aplanko. Nėra prieigos prie el. pašto redagavimo.",
+    "groupMoveToNoEditAccess": "Negalima perkelti į grupės aplanką. Nėra prieigos prie el. pašto redagavimo.",
+    "groupMoveToTrashNoEditAccess": "Negalima perkelti el. laiško iš grupės aplanko į šiukšliadėžę. Nėra prieigos prie el. pašto redagavimo.",
+    "groupMoveToArchiveNoEditAccess": "Negalima perkelti iš grupės aplanko į archyvą. Nėra prieigos prie el. pašto redagavimo."
   },
   "presetFilters": {
     "sent": "Išsiųsta",
-    "archived": "Suarchyvuota",
     "inbox": "Gautieji",
     "drafts": "Juodraščiai",
     "trash": "Šiukšlinė",
-    "important": "Svarbu"
+    "important": "Svarbu",
+    "archived": "Importuota",
+    "archive": "Archyvas"
   },
   "massActions": {
     "markAsRead": "Pažymėti kaip skaitytą",
@@ -139,9 +168,17 @@
     "markAsNotImportant": "Atšaukti svarbą",
     "moveToTrash": "Perkelti į šiukšlinę",
     "moveToFolder": "Perkelti į aplanką",
-    "retrieveFromTrash": "Iškelti iš šiukšlinės"
+    "retrieveFromTrash": "Iškelti iš šiukšlinės",
+    "moveToArchive": "Archyvas"
   },
   "strings": {
-    "sendingFailed": "Nepavyko išsiųsti el. laiško"
+    "sendingFailed": "Nepavyko išsiųsti el. laiško",
+    "group": "Grupė"
+  },
+  "actions": {
+    "moveToArchive": "Archyvas"
+  },
+  "otherFields": {
+    "file": "Failas"
   }
 }

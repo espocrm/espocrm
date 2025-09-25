@@ -17,9 +17,6 @@
   "tooltips": {
     "oneOff": "Pažymėkite, jei ketinate naudoti šį šabloną tik vieną kartą. Pavyzdžiui masiniems el. laiškams."
   },
-  "presetFilters": {
-    "actual": "Esamas"
-  },
   "placeholderTexts": {
     "optOutLink": "atsisakyti prenumeratos nuorodą",
     "today": "Šiandienos data",

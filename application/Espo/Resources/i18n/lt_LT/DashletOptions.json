@@ -12,13 +12,14 @@
     "entityType": "Vedinio tipas",
     "primaryFilter": "Pirminis filtras",
     "boolFilterList": "Papildomi filtrai",
-    "sortBy": "Rikiavimas (laukelių)",
-    "sortDirection": "Rikiavimas kryptis)",
     "expandedLayout": "Išdėstymas",
     "dateFilter": "Datos filtras",
     "skipOwn": "Nerodyti savo įrašų",
     "text": "Tekstas",
-    "folder": "Aplankas"
+    "folder": "Aplankas",
+    "includeShared": "Įtraukite bendrus",
+    "sortBy": "Užsakyti pagal",
+    "sortDirection": "Užsakymo kryptis"
   },
   "options": {
     "mode": {
@@ -28,6 +29,10 @@
       "basicDay": "Diena",
       "agendaDay": "Diena (darbotvarkė) ",
       "timeline": "Chronologija"
+    },
+    "sortDirection": {
+      "asc": "Kylantis",
+      "desc": "Nusileidžiantis"
     }
   },
   "messages": {
@@ -35,5 +40,9 @@
   },
   "tooltips": {
     "skipOwn": "Jūsų naudotojo paskyros veiksmai nebus rodomi."
+  },
+  "otherFields": {
+    "soft": "Minkšta spalva",
+    "small": "Mažasis šriftas"
   }
 }

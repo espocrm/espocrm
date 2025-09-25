@@ -40,7 +40,8 @@
     "auth2FAMethod": "2FA metodas",
     "auth2FATotpSecret": "2FA TOTP paslaptis",
     "workingTimeCalendar": "Darbo laiko kalendorius",
-    "layoutSet": "Maketų rinkinys"
+    "layoutSet": "Maketų rinkinys",
+    "avatarColor": "Avataro spalva"
   },
   "links": {
     "teams": "Komandos",
@@ -56,8 +57,8 @@
     "dashboardTemplate": "Prietaisų skydelio šablonas",
     "userData": "Naudotojo duomenys",
     "workingTimeCalendar": "Darbo laiko kalendorius",
-    "workingTimeRanges": "Darbo laiko intervalai",
-    "layoutSet": "Maketų rinkinys"
+    "layoutSet": "Maketų rinkinys",
+    "workingTimeRanges": "Darbo laiko išimtys"
   },
   "labels": {
     "Create User": "Sukurti vartotoją",
@@ -131,7 +132,11 @@
     "enterCodeSentBySms": "Įveskite SMS žinute į savo telefono numerį atsiųstą kodą.",
     "passwordChangeRequestNotFound": "Slaptažodžio keitimo užklausa nerasta. Gali būti, kad jo galiojimo laikas pasibaigęs. Pabandykite inicijuoti naujo slaptažodžio atkūrimą iš [prisijungimo puslapio]({url}).",
     "loginAs": "Atidarykite prisijungimo nuorodą inkognito lange, kad išsaugotumėte dabartinę sesiją. Prisijungimui naudokite savo administratoriaus įgaliojimus.",
-    "failedToLogIn": "Nepavyko prisijungti"
+    "failedToLogIn": "Nepavyko prisijungti",
+    "2faMethodNotConfigured": "2FA metodas nėra visiškai sukonfigūruotas sistemoje.",
+    "loginError": "Įvyko klaida",
+    "defaultTeamIsNotUsers": "Numatytoji komanda turėtų būti viena iš naudotojo komandų",
+    "passwordStrengthSpecialCharacterCount": "Turi būti bent {count} specialiųjų ženklų."
   },
   "boolFilters": {
     "onlyMyTeam": "Tik mano komanda"
@@ -158,5 +163,8 @@
     "authMethod": {
       "ApiKey": "API raktas"
     }
+  },
+  "actions": {
+    "changePosition": "Pakeisti poziciją"
   }
 }

@@ -19,7 +19,8 @@
     "pageHeight": "Puslapio aukštis (mm)",
     "headerPosition": "Antraštės padėtis",
     "printHeader": "Spausdinti antraštę",
-    "title": "Pavadinimas"
+    "title": "Pavadinimas",
+    "style": "Stilius"
   },
   "labels": {
     "Create Template": "Sukurti šabloną"
@@ -37,17 +38,6 @@
       "today": "Šiandien (data)",
       "now": "Dabar (data-laikas)",
       "pagebreak": "Puslapio pertrauka"
-    },
-    "fontFace": {
-      "aefurat": "Aefuratas",
-      "dejavuserif": "DejaVu Serifas",
-      "freemono": "\"FreeMono\"",
-      "freeserif": "\"FreeSerif\"",
-      "kozgopromedium": "\"Kozgo Pro Medium\"",
-      "kozminproregular": "\"Kozmin Pro Regular\"",
-      "pdfasymbol": "PDFA simbolis",
-      "symbol": "Simbolis",
-      "times": "Laikai"
     },
     "pageFormat": {
       "Custom": "Pasirinktinis"

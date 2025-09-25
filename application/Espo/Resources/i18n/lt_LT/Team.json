@@ -4,7 +4,8 @@
     "roles": "Rolės",
     "positionList": "Pozicijų sąrašas",
     "layoutSet": "Maketų rinkinys",
-    "workingTimeCalendar": "Darbo laiko kalendorius"
+    "workingTimeCalendar": "Darbo laiko kalendorius",
+    "userRole": "Naudotojo vaidmuo"
   },
   "links": {
     "users": "Vartotojai",

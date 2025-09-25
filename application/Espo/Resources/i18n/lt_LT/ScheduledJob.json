@@ -18,7 +18,8 @@
       "AuthTokenControl": "Autentikavimo žymės kontrolė",
       "SendEmailNotifications": "Siųsti pranešimus el. paštu",
       "CheckNewVersion": "Patikrinkite, ar nėra naujos versijos",
-      "ProcessWebhookQueue": "Apdoroti \"Webhook\" eilę"
+      "ProcessWebhookQueue": "Apdoroti \"Webhook\" eilę",
+      "SendScheduledEmails": "Siųsti suplanuotus el. laiškus"
     },
     "cronSetup": {
       "linux": "Pastaba: įtraukite šią eilutę į crontab failą, kad paleistumėte \"Espo Suplanuoti darbai\":",

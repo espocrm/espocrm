@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "message": "Žinutė",
+    "code": "Kodas",
+    "level": "Lygis",
+    "exceptionClass": "Išimčių klasė",
+    "file": "Failas",
+    "line": "Linija",
+    "requestMethod": "Užklausos metodas",
+    "requestResourcePath": "Užklausos išteklių kelias"
+  },
+  "presetFilters": {
+    "errors": "Klaidos"
+  }
+}

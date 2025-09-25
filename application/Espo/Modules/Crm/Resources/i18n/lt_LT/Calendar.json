@@ -15,8 +15,9 @@
     "current": "esamas",
     "time": "laikas",
     "User List": "Vartotojų sąrašas",
-    "Manage Users": "Tvarkyti vartotojus",
     "View Calendar": "Peržiūrėti kalendorių",
-    "Create Shared View": "Sukurkite bendrąjį rodinį"
+    "Create Shared View": "Sukurkite bendrąjį rodinį",
+    "Edit Shared View": "Redaguoti bendrą vaizdą",
+    "Shared Mode Options": "Bendrojo režimo parinktys"
   }
 }

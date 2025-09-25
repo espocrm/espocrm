@@ -49,7 +49,8 @@
       "Television": "Televizija",
       "Radio": "Radijas",
       "Newsletter": "Naujienlaiškis",
-      "Mail": "Paštas"
+      "Mail": "Paštas",
+      "Informational Email": "Informacinis el. paštas"
     },
     "status": {
       "Planning": "Planuojama",
@@ -78,7 +79,8 @@
   },
   "messages": {
     "unsubscribed": "Jūsų el, pašto adresas buvo pašalintas iš mūsų adresatų sąrašo.",
-    "subscribedAgain": "Jūs užsisakėte prenumeratą dar kartą"
+    "subscribedAgain": "Jūs užsisakėte prenumeratą dar kartą",
+    "cannotChangeType": "Negalima pakeisti tipo."
   },
   "tooltips": {
     "targetLists": "Adresatai, kurie turėtų gauti laiškus.",

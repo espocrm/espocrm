@@ -30,7 +30,8 @@
     "opportunityAmountCurrency": "Galimybių suma Valiuta",
     "acceptanceStatusMeetings": "Priėmimo statusas (susirinkimai)",
     "acceptanceStatusCalls": "Priėmimo statusas (skambučiai)",
-    "convertedAt": "Konvertuota į"
+    "convertedAt": "Konvertuota į",
+    "originalEmail": "Originalus el. paštas"
   },
   "links": {
     "targetLists": "Adresatų sarašai",
@@ -64,7 +65,7 @@
   },
   "presetFilters": {
     "active": "Aktyvus",
-    "actual": "Esamas",
-    "converted": "Konvertuota"
+    "converted": "Konvertuota",
+    "actual": "Atviras"
   }
 }

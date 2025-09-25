@@ -19,7 +19,10 @@
     "customUrl": "Pritaikytas URL",
     "customId": "Pritaikytas ID",
     "layoutSet": "Maketų rinkinys",
-    "authenticationProvider": "Autentifikavimo teikėjas"
+    "authenticationProvider": "Autentifikavimo teikėjas",
+    "authTokenLifetime": "Auth žetono veikimo laikas (valandos)",
+    "authTokenMaxIdleTime": "Auth žetonas Maksimalus neveikimo laikas (valandos)",
+    "applicationName": "Programos pavadinimas"
   },
   "links": {
     "users": "Vartotojai",

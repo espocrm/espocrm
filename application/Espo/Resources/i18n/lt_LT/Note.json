@@ -12,30 +12,56 @@
     "related": "Susijęs",
     "createdByGender": "Sukurta pagal lytį",
     "data": "Duomenys",
-    "number": "Numeris"
+    "number": "Numeris",
+    "isPinned": "Yra prisegtas"
   },
   "filters": {
     "all": "Visi",
     "posts": "Pranešimai",
-    "updates": "Atnaujinimai"
+    "updates": "Atnaujinimai",
+    "activity": "Veikla"
   },
   "messages": {
-    "writeMessage": "Žinutę rašykite čia"
+    "writeMessage": "Žinutę rašykite čia",
+    "pinnedMaxCountExceeded": "Negalima prisegti daugiau pastabų. Didžiausias leistinas skaičius yra {skaičius}."
   },
   "options": {
-    "targetType": {
-      "self": "sau",
-      "users": "konkrečiam vartotojui (ams)",
-      "teams": "konkrečiai komandai (oms)",
-      "all": "visiems vidiniams vartotojams",
-      "portals": "konkretiems vartotojams"
-    },
     "type": {
-      "Post": "Paštas"
+      "Post": "Paštas",
+      "Create": "Sukurti",
+      "CreateRelated": "Sukurti Susiję",
+      "Update": "Atnaujinti",
+      "Status": "Statusas",
+      "Assign": "Priskirti",
+      "Relate": "Susiję",
+      "Unrelate": "Nesusijęs",
+      "EmailReceived": "Gautas el. paštas",
+      "EmailSent": "Išsiųstas el. paštas"
+    },
+    "targetType": {
+      "self": "Savarankiškai",
+      "users": "Vartotojai",
+      "teams": "Komandos",
+      "all": "Visi vidaus naudotojai",
+      "portals": "Portalo naudotojai"
     }
   },
   "links": {
     "superParent": "Super tėvų",
-    "related": "Susijęs"
+    "related": "Susijęs",
+    "portals": "Portalai",
+    "attachments": "Priedai"
+  },
+  "labels": {
+    "View Posts": "Peržiūrėti pranešimus",
+    "View Activity": "Peržiūrėti veiklą",
+    "Pin": "Kaištis",
+    "Unpin": "Atjunkite",
+    "Pinned": "Prisegtas",
+    "Quote Reply": "Citata Atsakyti",
+    "View Attachments": "Peržiūrėti priedus"
+  },
+  "otherFields": {
+    "to": "Į"
   }
 }

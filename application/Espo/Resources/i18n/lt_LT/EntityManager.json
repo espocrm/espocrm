@@ -5,7 +5,8 @@
     "Schedule": "Tvarkaraštis",
     "Log": "Žurnalas",
     "Formula": "Formulė",
-    "Layouts": "Maketai"
+    "Layouts": "Maketai",
+    "Parameters": "Parametrai"
   },
   "fields": {
     "name": "Vardas",
@@ -19,8 +20,6 @@
     "linkForeign": "Išorinis ryšys",
     "link": "Nuoroda",
     "labelForeign": "Išorinė etiketė",
-    "sortBy": "Numatytas rikiavimas (laukeliai)",
-    "sortDirection": "Numatytas rikiavimas (kryptis)",
     "relationName": "Vidurinis lentelės pavadinimas",
     "linkMultipleField": "Susieti kelis laukelius",
     "linkMultipleFieldForeign": "Išoriniai ryšiai keli laukai",
@@ -45,7 +44,17 @@
     "layout": "Maketavimas",
     "author": "Autorius",
     "module": "Modulis",
-    "version": "Versija"
+    "version": "Versija",
+    "selectFilter": "Pasirinkite filtrą",
+    "primaryFilters": "Pirminiai filtrai",
+    "stars": "Žvaigždės",
+    "preserveAuditLog": "Išsaugoti audito žurnalą",
+    "assignedUsers": "Keli priskirti naudotojai",
+    "collaborators": "Bendradarbiai",
+    "aclContactLink": "ACL kontaktinė nuoroda",
+    "aclAccountLink": "ACL paskyros nuoroda",
+    "sortBy": "Numatytojo užsakymo laukas",
+    "sortDirection": "Numatytoji užsakymo kryptis"
   },
   "options": {
     "type": {
@@ -69,6 +78,9 @@
     "sortDirection": {
       "asc": "Didėjančia tvarka",
       "desc": "Mažėjančia tvarka"
+    },
+    "module": {
+      "Custom": "Pasirinktinis"
     }
   },
   "messages": {
@@ -80,12 +92,13 @@
     "beforeSaveApiScript": "Skriptas, iškviečiamas kuriant ir atnaujinant API užklausas prieš išsaugant esybę. Naudokite pasirinktiniam patvirtinimui ir dublikatų tikrinimui.",
     "nameIsAlreadyUsed": "Vardas \"{name}\" jau naudojamas.",
     "nameIsNotAllowed": "Vardas '{name}' yra neleistinas.",
-    "nameIsTooLong": "Vardas yra per ilgas."
+    "nameIsTooLong": "Vardas yra per ilgas.",
+    "confirmRemoveLink": "Ar tikrai norite pašalinti ryšį *{link}*?",
+    "urlHashCopiedToClipboard": "Į iškarpinę nukopijuojamas *{pavadinimas}* filtro URL fragmentas. Jį galite įtraukti į naršymo juostą."
   },
   "tooltips": {
     "statusField": "Šio lauko atnaujinimai įrašomi sraute.",
     "textFilterFields": "Laukeliai, naudojami teksto paieškoje.",
-    "stream": "Nesvarbu, ar objektas turi srautą",
     "disabled": "Patikrinkite, ar jums nereikia šio objekto sistemoje.",
     "linkAudited": "Susijusio įrašo kūrimas ir susiejimas su esamu įrašu bus registruojamas sraute.",
     "linkMultipleField": "\"Susieti daugelį laukelių\" yra patogus būdas redaguoti sasajas. Nenaudokite to, jei galite turėti daug panašių įrašų.",
@@ -94,6 +107,15 @@
     "countDisabled": "Bendras skaičius nebus rodomas sąrašo rodinyje. Gali sutrumpėti krovimo laikas, kai DB lentelė yra didelė.",
     "optimisticConcurrencyControl": "Užkerta kelią rašymo konfliktams.",
     "duplicateCheckFieldList": "Kuriuos laukus tikrinti tikrinant, ar nėra dublikatų.",
-    "updateDuplicateCheck": "Atlikite dublikatų tikrinimą, kai atnaujinate įrašą."
+    "updateDuplicateCheck": "Atlikite dublikatų tikrinimą, kai atnaujinate įrašą.",
+    "linkSelectFilter": "Pirminis filtras, kuris pagal nutylėjimą taikomas pasirenkant įrašą.",
+    "stars": "Galimybė įrašus žymėti žvaigždutėmis. Žvaigždutėmis naudotojai gali žymėti įrašus.",
+    "aclContactLink": "Nuoroda su Contact, kurią reikia naudoti taikant prieigos kontrolę portalo naudotojams.",
+    "aclAccountLink": "Nuoroda su paskyra, kurią reikia naudoti taikant prieigos valdymą portalo naudotojams.",
+    "collaborators": "Galimybė bendrinti įrašus su konkrečiais naudotojais.",
+    "assignedUsers": "Galimybė priskirti kelis naudotojus prie įrašo.\n\nAtkreipkite dėmesį, kad įjungus šį parametrą, esami priskirti naudotojai nebus perkeliami į naująjį lauką *Priteisti naudotojai*.",
+    "preserveAuditLog": "Išjungiamas audito žurnalo valymas. Šis parametras taikomas tik tuo atveju, jei parametras Stream yra išjungtas. Jei srautas įjungtas, audito žurnalo įrašai netrinami.",
+    "stream": "Ar subjektas turi \"Stream\".",
+    "linkParamReadOnly": "Nuorodos, skirtos tik skaitymui, negalima redaguoti naudojant API užklausas *link* ir *unlink*. Susieti ir panaikinti įrašų nebus galima per ryšių skydelį. Vis dar bus galima redaguoti tik skaitymui skirtas nuorodas per nuorodų ir nuorodų daugybinių laukų laukus."
   }
 }

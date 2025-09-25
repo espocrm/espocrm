@@ -82,7 +82,12 @@
     "Formula Sandbox": "Formulės smėlio dėžė",
     "Working Time Calendars": "Darbo laiko kalendoriai",
     "Group Email Folders": "Grupės el. pašto aplankai",
-    "Authentication Providers": "Autentifikavimo paslaugų teikėjai"
+    "Authentication Providers": "Autentifikavimo paslaugų teikėjai",
+    "Setup": "Sąranka",
+    "App Log": "Programos žurnalas",
+    "Address Countries": "Adresas Šalys",
+    "App Secrets": "Programėlių paslaptys",
+    "OAuth Providers": "OAuth teikėjai"
   },
   "layouts": {
     "list": "Sąrašas",
@@ -144,7 +149,8 @@
     "checklist": "Kontrolinis sąrašas",
     "linkOne": "Pirmoji sąsaja",
     "barcode": "Brūkšninis kodas",
-    "urlMultiple": "Keli URL adresai"
+    "urlMultiple": "Keli URL adresai",
+    "base": "Bazinis"
   },
   "fields": {
     "type": "Tipas",
@@ -170,7 +176,6 @@
     "minHeight": "Minimalus aukštis (px)",
     "provider": "Tiekėjas",
     "typeList": "Tipų sąrašas",
-    "rows": "Teksto eilučių eilučių skaičius",
     "lengthOfCut": "Iškirpimo ilgis",
     "sourceList": "Šaltinių sąrašas",
     "tooltipText": "Įrankių juostos tekstas",
@@ -212,7 +217,20 @@
     "globalRestrictions": "Visuotiniai apribojimai",
     "decimal": "Dešimtainis",
     "optionsReference": "Parinktys Nuoroda",
-    "copyToClipboard": "Kopijavimo į iškarpinę mygtukas"
+    "copyToClipboard": "Kopijavimo į iškarpinę mygtukas",
+    "rows": "Didžiausias eilučių skaičius",
+    "readOnlyAfterCreate": "Tik nuskaityti Po sukūrimo",
+    "createButton": "Sukurti mygtuką",
+    "autocompleteOnEmpty": "Automatinis užbaigimas tuščioje įvestyje",
+    "relateOnImport": "Susiję su importu",
+    "aclScope": "ACL taikymo sritis",
+    "onlyAdmin": "Tik administratoriui",
+    "activeOptions": "Aktyvios parinktys",
+    "labelType": "Etiketės tipas",
+    "preview": "Peržiūra",
+    "attachmentField": "Priedo laukas",
+    "dynamicLogicReadOnlySaved": "Išsaugotos būsenos sąlygos, dėl kurių laukas yra tik skaitomas",
+    "notStorable": "Nesaugomas"
   },
   "messages": {
     "selectEntityType": "Pasirinkite objekto tipą kairiajame meniu.",
@@ -234,7 +252,9 @@
     "upgradeRecommendation": "Šis atnaujinimo būdas nerekomenduojamas. Geriau atnaujinti iš CLI.",
     "newVersionIsAvailable": "Yra nauja \"EspoCRM\" versija {latestVersion}. Norėdami atnaujinti savo instanciją, vadovaukitės [instrukcijomis](https://www.espocrm.com/documentation/administration/upgrading/).",
     "formulaFunctions": "Daugiau funkcijų rasite [dokumentacija]({documentationUrl}).",
-    "rebuildRequired": "Reikia paleisti atkūrimą iš CLI."
+    "rebuildRequired": "Reikia paleisti atkūrimą iš CLI.",
+    "cronIsDisabled": "\"Cron\" yra išjungtas, programa neveikia iki galo. Įjunkite \"cron\" [nustatymuose] (#Admin/settings).",
+    "cacheIsDisabled": "Išjungus spartinančiąją atmintinę, programa veiks lėtai. Įjunkite talpyklą [nustatymuose] (#Admin/settings)."
   },
   "descriptions": {
     "settings": "Sistemos programos nustatymai.",
@@ -267,7 +287,6 @@
     "actionHistory": "Vartotojo veiksmų žurnalas.",
     "labelManager": "Prisitaikykite aplikacijų etiketes",
     "authLog": "Prisijungimo istorija.",
-    "leadCapture": "API prisijungimo taškai \"Web-to-Lead\".",
     "attachments": "Visi failo priedai, saugomi sistemoje.",
     "templateManager": "Koreguoti pranešimų šablonus.",
     "systemRequirements": "EspoCRM sistemos reikalavimai",
@@ -284,7 +303,12 @@
     "formulaSandbox": "Rašykite ir išbandykite formulių scenarijus.",
     "workingTimeCalendars": "Darbo grafikas.",
     "groupEmailFolders": "Komandoms bendrinami el. pašto aplankai.",
-    "authenticationProviders": "Papildomi portalų autentifikavimo paslaugų teikėjai."
+    "authenticationProviders": "Papildomi portalų autentifikavimo paslaugų teikėjai.",
+    "appLog": "Paraiškų registravimo žurnalas.",
+    "addressCountries": "Šalys, kuriose galima naudoti adreso laukus.",
+    "appSecrets": "saugokite slaptą informaciją, pavyzdžiui, API raktus, slaptažodžius ir kitas paslaptis.",
+    "leadCapture": "Galutiniai lyderių surinkimo taškai ir žiniatinklio formos.",
+    "oAuthProviders": "\"OAuth\" teikėjai, skirti integracijai."
   },
   "options": {
     "previewSize": {
@@ -293,6 +317,10 @@
       "medium": "Vidutinis",
       "large": "Didelis",
       "": "Numatytoji"
+    },
+    "labelType": {
+      "state": "Valstybė",
+      "regular": "Įprasta"
     }
   },
   "logicalOperators": {
@@ -336,6 +364,12 @@
     "entityManager": "laukai,santykiai,ryšiai",
     "templateManager": "pranešimai",
     "authentication": "slaptažodis, saugumas, ldap",
-    "labelManager": "kalba, vertimas"
+    "labelManager": "kalba, vertimas",
+    "appSecrets": "raktas, raktai, slaptažodis",
+    "leadCapture": "žiniatinklio formos"
+  },
+  "tooltips": {
+    "tabUrl": "Gali prasidėti simboliu `#`, kad pereitumėte į programos puslapį.",
+    "tabUrlAclScope": "Skirtukas bus prieinamas naudotojams, turintiems prieigą prie nurodytos srities."
   }
 }

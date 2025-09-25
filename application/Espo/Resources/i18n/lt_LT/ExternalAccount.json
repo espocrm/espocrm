@@ -4,5 +4,8 @@
     "Connected": "Prisijungta",
     "Disconnect": "Atjunkite",
     "Disconnected": "Atjungtas"
+  },
+  "messages": {
+    "externalAccountNoConnectDisabled": "Integracijos \"{integration}\" išorinė paskyra buvo išjungta, nes nepavyko prisijungti."
   }
 }
