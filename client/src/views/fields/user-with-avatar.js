@@ -61,12 +61,20 @@ class UserWithAvatarFieldView extends UserFieldView {
     setup() {
         super.setup();
 
-        this.addHandler('keydown', `input[data-name="${this.nameName}"]`, (e, target) => {
+        this.addHandler('keydown', `input[data-name="${this.nameName}"]`, (/** KeyboardEvent */e, target) => {
+            if (e.code === 'Enter') {
+                return;
+            }
+
             target.classList.add('being-typed');
         });
 
         this.addHandler('change', `input[data-name="${this.nameName}"]`, (e, target) => {
             setTimeout(() => target.classList.remove('being-typed'), 200);
+        });
+
+        this.addHandler('blur', `input[data-name="${this.nameName}"]`, (e, target) => {
+            target.classList.remove('being-typed');
         });
 
         this.on('change', () => {
