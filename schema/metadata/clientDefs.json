@@ -482,11 +482,11 @@
                     },
                     "selectHandler": {
                         "type": "string",
-                        "description": "A select handler for providing filters when selecting related records. Should have a method *getFilters* returning a promise. \n\nPromise value:\n```{bool?: string[], primary?: string, orderBy?: string, order?: 'asc'|'desc', advanced: Record}```"
+                        "description": "A select handler for providing filters when selecting related records. Should have a method *getFilters* returning a promise.  Optionally, extend from `handlers/select-related`. \n\nPromise value:\n```{bool?: string[], primary?: string, orderBy?: string, order?: 'asc'|'desc', advanced: Record}```"
                     },
                     "createHandler": {
                         "type": "string",
-                        "description": "A create handler. Provides attributes when creating a new related record. Should have a method *getAttributes* returning a promise."
+                        "description": "A create handler. Provides attributes when creating a new related record. Should have a method *getAttributes* returning a promise. Optionally, extend from `handlers/create-related`."
                     },
                     "selectFieldHandler": {
                         "type": "string",
