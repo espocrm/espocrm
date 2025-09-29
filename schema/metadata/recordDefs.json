@@ -157,7 +157,7 @@
                     },
                     "massLink": {
                         "type": "boolean",
-                        "default": "Allow mass link. As of v8.2."
+                        "description": "Allow mass link. As of v8.2."
                     },
                     "linkOnlyNotLinked": {
                         "type": "boolean",
