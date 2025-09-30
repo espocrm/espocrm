@@ -69,7 +69,6 @@
      * @property {string|null} exportsAs
      * @property {string} [url]
      * @property {boolean} [useCache]
-     * @property {boolean} [suppressAmd]
      */
 
     /**
@@ -570,7 +569,6 @@
             let dataType, type, path, exportsTo, exportsAs;
 
             let realName = id;
-            let suppressAmd = false;
 
             if (id.indexOf('lib!') === 0) {
                 dataType = 'script';
@@ -599,14 +597,6 @@
 
                 if (isDefinedLib && !exportsTo) {
                     type = 'amd';
-                }
-
-                if (!isDefinedLib && id.slice(-3) === '.js') {
-                    suppressAmd = true;
-                }
-
-                if (exportsAs) {
-                    suppressAmd = true;
                 }
 
                 if (path.indexOf(':') !== -1) {
@@ -698,7 +688,6 @@
                 errorCallback: errorCallback,
                 exportsAs: exportsAs,
                 exportsTo: exportsTo,
-                suppressAmd: suppressAmd,
             };
 
             if (path in this._pathsBeingLoaded) {
@@ -736,19 +725,11 @@
 
                 const fullUrl = urlObj.toString();
 
-                if (suppressAmd) {
-                    define.amd = false;
-                }
-
                 if (type === 'amd') {
                     this._urlIdMap[fullUrl] = id;
                 }
 
                 this._addScript(fullUrl, () => {
-                    if (suppressAmd) {
-                        define.amd = true;
-                    }
-
                     let value;
 
                     if (type === 'amd') {
